@@ -3210,7 +3210,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
         if (!pattern.isEmpty()) {
 
-            KVStringPair* kv = new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer(), fGrammarPoolMemoryManager);
+            KVStringPair* kv = new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer(), pattern.getLen(), fGrammarPoolMemoryManager);
             if (!janPatternAnnot.isDataNull())
                 fSchemaGrammar->putAnnotation(kv, janPatternAnnot.release());
             facets->put((void*) SchemaSymbols::fgELT_PATTERN, kv);
@@ -3705,6 +3705,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                             (
                                 SchemaSymbols::fgELT_PATTERN
                                 , pattern.getRawBuffer()
+                                , pattern.getLen()
                                 , fGrammarPoolMemoryManager
                             )
                     );

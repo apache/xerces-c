@@ -65,6 +65,22 @@ public:
     void           reset();
 };
 
+inline DOMNode *DOMNodeVector::elementAt(XMLSize_t index) {
+    if (index >= nextFreeSlot)
+        return 0;
+	return data[index];
+}
+
+inline DOMNode *DOMNodeVector::lastElement() {
+	if (nextFreeSlot == 0)
+		return 0;
+	return data[nextFreeSlot-1];
+}
+
+inline XMLSize_t DOMNodeVector::size() {
+	return nextFreeSlot;
+}
+
 XERCES_CPP_NAMESPACE_END
 
 #endif

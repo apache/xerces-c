@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2005/02/21 18:19:45  cargilld
+ * Performance fixes from Christian Will.
+ *
  * Revision 1.8  2005/01/07 15:12:10  amassari
  * Removed warnings
  *
@@ -121,6 +124,35 @@ KVStringPair::KVStringPair(const XMLCh* const key,
    set(key, value);
 }
 
+KVStringPair::KVStringPair(const XMLCh* const key,
+                           const XMLCh* const value,
+                           const unsigned int valueLength,
+                           MemoryManager* const manager)
+:fKeyAllocSize(0)
+,fValueAllocSize(0)
+,fKey(0)
+,fValue(0)
+,fMemoryManager(manager)
+{
+    setKey(key);
+    setValue(value, valueLength);
+}
+
+KVStringPair::KVStringPair(const XMLCh* const key,
+                           const unsigned int keyLength,
+                           const XMLCh* const value,
+                           const unsigned int valueLength,
+                           MemoryManager* const manager)
+:fKeyAllocSize(0)
+,fValueAllocSize(0)
+,fKey(0)
+,fValue(0)
+,fMemoryManager(manager)
+{    
+    setKey(key, keyLength);
+    setValue(value, valueLength);
+}
+
 KVStringPair::KVStringPair(const KVStringPair& toCopy)
 :XSerializable(toCopy)
 ,XMemory(toCopy)
@@ -137,45 +169,6 @@ KVStringPair::~KVStringPair()
 {
     fMemoryManager->deallocate(fKey); //delete [] fKey;
     fMemoryManager->deallocate(fValue); //delete [] fValue;
-}
-
-
-// ---------------------------------------------------------------------------
-//  KVStringPair: Setters
-// ---------------------------------------------------------------------------
-void KVStringPair::setKey(const XMLCh* const newKey)
-{
-    const unsigned int  len = XMLString::stringLen(newKey);
-
-    if (len >= fKeyAllocSize)
-    {
-        fMemoryManager->deallocate(fKey); //delete [] fKey;
-        fKeyAllocSize = len + 1;
-        fKey = (XMLCh*) fMemoryManager->allocate(fKeyAllocSize * sizeof(XMLCh)); //new XMLCh[fKeyAllocSize];
-    }
-
-    XMLString::copyString(fKey, newKey);
-}
-
-void KVStringPair::setValue(const XMLCh* const newValue)
-{
-    const unsigned int  len = XMLString::stringLen(newValue);
-
-    if (len >= fValueAllocSize)
-    {
-        fMemoryManager->deallocate(fValue); //delete [] fValue;
-        fValueAllocSize = len + 1;
-        fValue = (XMLCh*) fMemoryManager->allocate(fValueAllocSize * sizeof(XMLCh)); //new XMLCh[fValueAllocSize];
-    }
-
-    XMLString::copyString(fValue, newValue);
-}
-
-void KVStringPair::set(  const   XMLCh* const    newKey
-                       , const   XMLCh* const    newValue)
-{
-    setKey(newKey);
-    setValue(newValue);
 }
 
 /***

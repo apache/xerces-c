@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2005/02/21 18:19:45  cargilld
+ * Performance fixes from Christian Will.
+ *
  * Revision 1.9  2004/10/28 20:14:41  peiyongz
  * Data member reshuffle
  *
@@ -122,6 +125,21 @@ public:
         , const XMLCh* const value
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+    KVStringPair
+    (
+        const XMLCh* const key
+        , const XMLCh* const value
+        , const unsigned int valueLength
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    KVStringPair
+    (
+        const XMLCh* const key
+        , const unsigned int keyLength
+        , const XMLCh* const value
+        , const unsigned int valueLength
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     KVStringPair(const KVStringPair& toCopy);
     ~KVStringPair();
 
@@ -142,12 +160,28 @@ public:
     // -----------------------------------------------------------------------
     void setKey(const XMLCh* const newKey);
     void setValue(const XMLCh* const newValue);
+    void setKey
+    (
+        const   XMLCh* const newKey
+        , const unsigned int newKeyLength
+    );
+    void setValue
+    (
+        const   XMLCh* const newValue
+        , const unsigned int newValueLength
+    );
     void set
     (
-        const   XMLCh* const    newKey
-        , const XMLCh* const    newValue
+        const   XMLCh* const newKey
+        , const XMLCh* const newValue
     );
-
+    void set
+    (
+        const     XMLCh* const newKey
+        , const   unsigned int newKeyLength
+        , const   XMLCh* const newValue
+        , const   unsigned int newValueLength
+    );
 
     /***
      * Support for Serialization/De-serialization
@@ -203,6 +237,62 @@ inline XMLCh* KVStringPair::getValue()
 {
     return fValue;
 }
+
+// ---------------------------------------------------------------------------
+//  KVStringPair: Setters
+// ---------------------------------------------------------------------------
+inline void KVStringPair::setKey(const XMLCh* const newKey)
+{
+    setKey(newKey, XMLString::stringLen(newKey));
+}
+
+inline void KVStringPair::setValue(const XMLCh* const newValue)
+{
+    setValue(newValue, XMLString::stringLen(newValue));
+}
+
+inline void KVStringPair::setKey(  const XMLCh* const newKey
+                                 , const unsigned int newKeyLength)
+{
+    if (newKeyLength >= fKeyAllocSize)
+    {
+        fMemoryManager->deallocate(fKey); //delete [] fKey;
+        fKeyAllocSize = newKeyLength + 1;
+        fKey = (XMLCh*) fMemoryManager->allocate(fKeyAllocSize * sizeof(XMLCh)); //new XMLCh[fKeyAllocSize];
+    }
+
+    memcpy(fKey, newKey, (newKeyLength+1) * sizeof(XMLCh)); // len+1 because of the 0 at the end
+}
+
+inline void KVStringPair::setValue(  const XMLCh* const newValue
+                                   , const unsigned int newValueLength)
+{
+    if (newValueLength >= fValueAllocSize)
+    {
+        fMemoryManager->deallocate(fValue); //delete [] fValue;
+        fValueAllocSize = newValueLength + 1;
+        fValue = (XMLCh*) fMemoryManager->allocate(fValueAllocSize * sizeof(XMLCh)); //new XMLCh[fValueAllocSize];
+    }
+
+    memcpy(fValue, newValue, (newValueLength+1) * sizeof(XMLCh)); // len+1 because of the 0 at the end
+}
+
+inline void KVStringPair::set(  const   XMLCh* const    newKey
+                              , const   XMLCh* const    newValue)
+{
+    setKey(newKey, XMLString::stringLen(newKey));
+    setValue(newValue, XMLString::stringLen(newValue));
+}
+
+inline void KVStringPair::set(  const   XMLCh* const newKey
+                              , const   unsigned int newKeyLength
+                              , const   XMLCh* const newValue
+                              , const   unsigned int newValueLength)
+{
+    setKey(newKey, newKeyLength);
+    setValue(newValue, newValueLength);
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -563,6 +563,8 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                 return attCount;
             }
 
+            const XMLCh* curAttNameBuf = fAttNameBuf.getRawBuffer();
+ 
             // And next must be an equal sign
             if (!scanEq())
             {
@@ -605,7 +607,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  Next should be the quoted attribute value. We just do a simple
             //  and stupid scan of this value. The only thing we do here
             //  is to expand entity references.
-            if (!basicAttrValueScan(fAttNameBuf.getRawBuffer(), fAttValueBuf))
+            if (!basicAttrValueScan(curAttNameBuf, fAttValueBuf))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -642,10 +644,10 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  Make sure that the name is basically well formed for namespace
             //  enabled rules. It either has no colons, or it has one which
             //  is neither the first or last char.
-            const int colonFirst = XMLString::indexOf(fAttNameBuf.getRawBuffer(), chColon);
+            const int colonFirst = XMLString::indexOf(curAttNameBuf, chColon);
             if (colonFirst != -1)
             {
-                const int colonLast = XMLString::lastIndexOf(fAttNameBuf.getRawBuffer(), chColon);
+                const int colonLast = XMLString::lastIndexOf(chColon, curAttNameBuf, fAttNameBuf.getLen());
 
                 if (colonFirst != colonLast)
                 {
@@ -668,8 +670,10 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             {
                 curPair = new (fMemoryManager) KVStringPair
                 (
-                    fAttNameBuf.getRawBuffer()
+                    curAttNameBuf
+                    , fAttNameBuf.getLen()
                     , fAttValueBuf.getRawBuffer()
+                    , fAttValueBuf.getLen()
                     , fMemoryManager
                 );
                 toFill.addElement(curPair);
@@ -677,7 +681,13 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
              else
             {
                 curPair = toFill.elementAt(attCount);
-                curPair->set(fAttNameBuf.getRawBuffer(), fAttValueBuf.getRawBuffer());
+                curPair->set
+                (
+                    curAttNameBuf
+                    , fAttNameBuf.getLen()
+                    , fAttValueBuf.getRawBuffer()
+                    , fAttValueBuf.getLen()
+                );
             }
 
             // And bump the count of attributes we've gotten
@@ -2745,7 +2755,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 //  are legal if escaped only. And some escape chars are not subject to
 //  normalization rules.
 bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
-                                      , const XMLCh* const        attrName
+                                      , const XMLCh* const        attName
                                       , const XMLCh* const        value
                                       ,       XMLBuffer&          toFill)
 {
@@ -2772,54 +2782,68 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
 
     //  Loop through the chars of the source value and normalize it according
     //  to the type.
-    States curState = InContent;
-    bool escaped;
+    States curState = InContent;    
     bool firstNonWS = false;
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
-    while (*srcPtr)
-    {
-        //  Get the next character from the source. We have to watch for
-        //  escaped characters (which are indicated by a 0xFFFF value followed
-        //  by the char that was escaped.)
-        nextCh = *srcPtr;
-        escaped = (nextCh == 0xFFFF);
-        if (escaped)
-            nextCh = *++srcPtr;
 
-        //  If its not escaped, then make sure its not a < character, which is
-        //  not allowed in attribute values.
-        if (!escaped && (*srcPtr == chOpenAngle))
-        {
-            emitError(XMLErrs::BracketInAttrValue, attrName);
-            retVal = false;
-        }
-
-        if (type == XMLAttDef::CData || type > XMLAttDef::Notation)
-        {
-            if (!escaped)
+    if (type == XMLAttDef::CData || type > XMLAttDef::Notation) {
+        while (*srcPtr) {
+            //  Get the next character from the source. We have to watch for
+            //  escaped characters (which are indicated by a 0xFFFF value followed
+            //  by the char that was escaped.)
+            nextCh = *srcPtr;
+            
+            // Do we have an escaped character ?
+            if (nextCh == 0xFFFF)
             {
-                if ((nextCh == 0x09) || (nextCh == 0x0A) || (nextCh == 0x0D))
+                nextCh = *++srcPtr;
+            } 
+            else if ( (nextCh <= 0x0D) && (nextCh == 0x09 || nextCh == 0x0A || nextCh == 0x0D) ) {
+                // Check Validity Constraint for Standalone document declaration
+                // XML 1.0, Section 2.9
+                if (fStandalone && fValidate && isAttExternal)
                 {
-                    // Check Validity Constraint for Standalone document declaration
-                    // XML 1.0, Section 2.9
-                    if (fStandalone && fValidate && isAttExternal)
-                    {
-                        // Can't have a standalone document declaration of "yes" if  attribute
-                        // values are subject to normalisation
-                        fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                        if (getPSVIHandler())
-                        {
-                            // REVISIT:               
-                            // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
-                        }
-                    }
-                    nextCh = chSpace;
+                     // Can't have a standalone document declaration of "yes" if  attribute
+                     // values are subject to normalisation
+                     fValidator->emitError(XMLValid::NoAttNormForStandalone, attName);
                 }
+                nextCh = chSpace;
             }
+            else if (nextCh == chOpenAngle) {
+                //  If its not escaped, then make sure its not a < character, which is
+                //  not allowed in attribute values.                                
+                emitError(XMLErrs::BracketInAttrValue, attName);
+                retVal = false;                
+            }
+
+            // Add this char to the target buffer
+            toFill.append(nextCh);
+
+            // And move up to the next character in the source
+            srcPtr++;
         }
-        else
+    }
+    else {
+        while (*srcPtr)
         {
+            //  Get the next character from the source. We have to watch for
+            //  escaped characters (which are indicated by a 0xFFFF value followed
+            //  by the char that was escaped.)
+            nextCh = *srcPtr;
+
+            // Do we have an escaped character ?
+            if (nextCh == 0xFFFF)
+            {
+                nextCh = *++srcPtr;
+            } 
+            else if (nextCh == chOpenAngle) { 
+                //  If its not escaped, then make sure its not a < character, which is
+                //  not allowed in attribute values.                               
+                emitError(XMLErrs::BracketInAttrValue, attName);
+                retVal = false;
+            }
+
             if (curState == InWhitespace)
             {
                 if (!fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
@@ -2850,25 +2874,20 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                         {
                             // Can't have a standalone document declaration of "yes" if  attribute
                             // values are subject to normalisation
-                            fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                            if (getPSVIHandler())
-                            {
-                                // REVISIT:                
-                                // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
-                            }
+                            fValidator->emitError(XMLValid::NoAttNormForStandalone, attName);
                         }
                     }
                     continue;
                 }
                 firstNonWS = true;
             }
+
+            // Add this char to the target buffer
+            toFill.append(nextCh);
+
+            // And move up to the next character in the source
+            srcPtr++;
         }
-
-        // Add this char to the target buffer
-        toFill.append(nextCh);
-
-        // And move up to the next character in the source
-        srcPtr++;
     }
 
     return retVal;

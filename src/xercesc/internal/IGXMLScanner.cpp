@@ -632,6 +632,8 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                 return attCount;
             }
 
+            const XMLCh* curAttNameBuf = fAttNameBuf.getRawBuffer();
+
             // And next must be an equal sign
             if (!scanEq())
             {
@@ -674,7 +676,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  Next should be the quoted attribute value. We just do a simple
             //  and stupid scan of this value. The only thing we do here
             //  is to expand entity references.
-            if (!basicAttrValueScan(fAttNameBuf.getRawBuffer(), fAttValueBuf))
+            if (!basicAttrValueScan(curAttNameBuf, fAttValueBuf))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -711,10 +713,10 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  Make sure that the name is basically well formed for namespace
             //  enabled rules. It either has no colons, or it has one which
             //  is neither the first or last char.
-            const int colonFirst = XMLString::indexOf(fAttNameBuf.getRawBuffer(), chColon);
+            const int colonFirst = XMLString::indexOf(curAttNameBuf, chColon);
             if (colonFirst != -1)
             {
-                const int colonLast = XMLString::lastIndexOf(fAttNameBuf.getRawBuffer(), chColon);
+                const int colonLast = XMLString::lastIndexOf(chColon, curAttNameBuf, fAttNameBuf.getLen());
 
                 if (colonFirst != colonLast)
                 {
@@ -737,16 +739,24 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             {
                 curPair = new (fMemoryManager) KVStringPair
                 (
-                    fAttNameBuf.getRawBuffer()
+                    curAttNameBuf
+                    , fAttNameBuf.getLen()
                     , fAttValueBuf.getRawBuffer()
+                    , fAttValueBuf.getLen()
                     , fMemoryManager
                 );
                 toFill.addElement(curPair);
             }
              else
             {
-                curPair = toFill.elementAt(attCount);
-                curPair->set(fAttNameBuf.getRawBuffer(), fAttValueBuf.getRawBuffer());
+                curPair = toFill.elementAt(attCount);                
+                curPair->set
+                (
+                    curAttNameBuf,
+                    fAttNameBuf.getLen(),
+                    fAttValueBuf.getRawBuffer(),
+                    fAttValueBuf.getLen()
+                );
             }
 
             // And bump the count of attributes we've gotten

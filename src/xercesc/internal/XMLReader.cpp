@@ -591,6 +591,8 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
             return false;
     }
 
+    unsigned int fCharIndex_start = fCharIndex;
+
     //  Lets check the first char for being a first name char. If not, then
     //  what's the point in living mannnn? Just give up now. We only do this
     //  if its a name and not a name token that they want.
@@ -603,56 +605,73 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
            if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
                return false;
 
-            // Looks ok, so lets eat it and put it in our buffer
-            toFill.append(fCharBuf[fCharIndex++]);
-            fCurCol++;
-            toFill.append(fCharBuf[fCharIndex++]);
-            fCurCol++;
+            // Looks ok, so lets eat it
+            fCharIndex += 2;
         }
         else {
             if (!isFirstNameChar(fCharBuf[fCharIndex]))
                 return false;
 
-            // Looks ok, so lets eat it and put it in our buffer.  Update column also!
-            toFill.append(fCharBuf[fCharIndex++]);
-            fCurCol++;
+            // Looks ok, so lets eat it
+            fCharIndex ++;
         }
 
     }
 
     //  And now we loop until we run out of data in this reader or we hit
     //  a non-name char.
-    do {
-
-        while (fCharIndex < fCharsAvail)
+    while (true)
+    {
+        if (fXMLVersion == XMLV1_1)
         {
-            //  Check the current char and take it if its a name char. Else
-            //  break out.
-            if (fXMLVersion == XMLV1_1 && ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))) {
-                // make sure one more char is in the buffer, the transcoder
-                // should put only a complete surrogate pair into the buffer
-                assert(fCharIndex+1 < fCharsAvail);
-                if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
-                    return !toFill.isEmpty();
-
-                toFill.append(fCharBuf[fCharIndex++]);
-                fCurCol++;
-                toFill.append(fCharBuf[fCharIndex++]);
-                fCurCol++;
-            }
-            else {
-                if (!isNameChar(fCharBuf[fCharIndex]))
+            while (fCharIndex < fCharsAvail)
+            {
+                //  Check the current char and take it if its a name char. Else
+                //  break out.
+                if ( (fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) )
                 {
-                    return !toFill.isEmpty();
-                }
+                    // make sure one more char is in the buffer, the transcoder
+                    // should put only a complete surrogate pair into the buffer
+                    assert(fCharIndex+1 < fCharsAvail);
+                    if ( (fCharBuf[fCharIndex+1] < 0xDC00) ||
+                         (fCharBuf[fCharIndex+1] > 0xDFFF)  )
+                        break;
+                    fCharIndex += 2;
 
-                toFill.append(fCharBuf[fCharIndex++]);
-                fCurCol++;
+                } 
+                else
+                {
+                    if (!isNameChar(fCharBuf[fCharIndex]))
+                        break;
+                    fCharIndex++;
+                }
+            }
+        }
+        else // XMLV1_0
+        {
+            while (fCharIndex < fCharsAvail)
+            {
+                if (!isNameChar(fCharBuf[fCharIndex]))
+                    break;
+                fCharIndex++;
             }
         }
 
-    // If we don't get no more, then break out.
-    } while (refreshCharBuffer());
+        // we have to copy the accepted character(s), and update column
+        if (fCharIndex != fCharIndex_start)
+        {
+            fCurCol += fCharIndex - fCharIndex_start;
+            toFill.append(&fCharBuf[fCharIndex_start], fCharIndex - fCharIndex_start);
+        }
+
+        // something is wrong if there is still something in the buffer
+        // or if we don't get no more, then break out.
+        if ((fCharIndex < fCharsAvail) ||
+             !refreshCharBuffer())
+            break;
+
+        fCharIndex_start = fCharIndex;
+    }
 
     return !toFill.isEmpty();
 }

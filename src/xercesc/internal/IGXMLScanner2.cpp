@@ -900,48 +900,67 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
     //  Loop through the chars of the source value and normalize it according
     //  to the type.
     States curState = InContent;
-    bool escaped;
     bool firstNonWS = false;
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
-    while (*srcPtr)
-    {
-        //  Get the next character from the source. We have to watch for
-        //  escaped characters (which are indicated by a 0xFFFF value followed
-        //  by the char that was escaped.)
-        nextCh = *srcPtr;
-        escaped = (nextCh == 0xFFFF);
-        if (escaped)
-            nextCh = *++srcPtr;
 
-        //  If its not escaped, then make sure its not a < character, which is
-        //  not allowed in attribute values.
-        if (!escaped && (*srcPtr == chOpenAngle))
-        {
-            emitError(XMLErrs::BracketInAttrValue, attName);
-            retVal = false;
-        }
-
-        if (type == XMLAttDef::CData || type > XMLAttDef::Notation)
-        {
-            if (!escaped)
+    if (type == XMLAttDef::CData || type > XMLAttDef::Notation) {
+        while (*srcPtr) {
+            //  Get the next character from the source. We have to watch for
+            //  escaped characters (which are indicated by a 0xFFFF value followed
+            //  by the char that was escaped.)
+            nextCh = *srcPtr;
+            
+            // Do we have an escaped character ?
+            if (nextCh == 0xFFFF)
             {
-                if ((nextCh == 0x09) || (nextCh == 0x0A) || (nextCh == 0x0D))
+                nextCh = *++srcPtr;
+            } 
+            else if ( (nextCh <= 0x0D) && (nextCh == 0x09 || nextCh == 0x0A || nextCh == 0x0D) ) {
+                // Check Validity Constraint for Standalone document declaration
+                // XML 1.0, Section 2.9
+                if (fStandalone && fValidate && isAttExternal)
                 {
-                    // Check Validity Constraint for Standalone document declaration
-                    // XML 1.0, Section 2.9
-                    if (fStandalone && fValidate && isAttExternal)
-                    {
-                         // Can't have a standalone document declaration of "yes" if  attribute
-                         // values are subject to normalisation
-                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attName);
-                    }
-                    nextCh = chSpace;
+                     // Can't have a standalone document declaration of "yes" if  attribute
+                     // values are subject to normalisation
+                     fValidator->emitError(XMLValid::NoAttNormForStandalone, attName);
                 }
+                nextCh = chSpace;
             }
+            else if (nextCh == chOpenAngle) {
+                //  If its not escaped, then make sure its not a < character, which is
+                //  not allowed in attribute values.                                
+                emitError(XMLErrs::BracketInAttrValue, attName);
+                retVal = false;                
+            }
+
+            // Add this char to the target buffer
+            toFill.append(nextCh);
+
+            // And move up to the next character in the source
+            srcPtr++;
         }
-        else
+    }
+    else {
+        while (*srcPtr)
         {
+            //  Get the next character from the source. We have to watch for
+            //  escaped characters (which are indicated by a 0xFFFF value followed
+            //  by the char that was escaped.)
+            nextCh = *srcPtr;
+
+            // Do we have an escaped character ?
+            if (nextCh == 0xFFFF)
+            {
+                nextCh = *++srcPtr;
+            } 
+            else if (nextCh == chOpenAngle) { 
+                //  If its not escaped, then make sure its not a < character, which is
+                //  not allowed in attribute values.                               
+                emitError(XMLErrs::BracketInAttrValue, attName);
+                retVal = false;
+            }
+
             if (curState == InWhitespace)
             {
                 if (!fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
@@ -979,15 +998,15 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                 }
                 firstNonWS = true;
             }
+
+            // Add this char to the target buffer
+            toFill.append(nextCh);
+
+            // And move up to the next character in the source
+            srcPtr++;
         }
-
-        // Add this char to the target buffer
-        toFill.append(nextCh);
-
-        // And move up to the next character in the source
-        srcPtr++;
     }
-
+ 
     return retVal;
 }
 

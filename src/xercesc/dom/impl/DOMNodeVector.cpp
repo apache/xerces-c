@@ -88,19 +88,6 @@ void DOMNodeVector::checkSpace() {
     }
 }
 
-	
-DOMNode *DOMNodeVector::elementAt(XMLSize_t index) {
-    if (index >= nextFreeSlot)
-        return 0;
-	return data[index];
-}
-
-DOMNode *DOMNodeVector::lastElement() {
-	if (nextFreeSlot == 0)
-		return 0;
-	return data[nextFreeSlot-1];
-}
-
 
 void DOMNodeVector::insertElementAt(DOMNode *elem, XMLSize_t index) {
 	XMLSize_t i;
@@ -134,11 +121,6 @@ void DOMNodeVector::setElementAt(DOMNode *elem, XMLSize_t index) {
 	data[index] = elem;
 }
 
-
-XMLSize_t DOMNodeVector::size() {
-	return nextFreeSlot;
-}
-		
 
 XERCES_CPP_NAMESPACE_END
 
