@@ -16,6 +16,11 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/09/23 21:22:47  peiyongz
+ * Documentation
+ * st_noContent added
+ * unused parameter removed
+ *
  * Revision 1.11  2004/09/13 21:24:20  peiyongz
  * 1. returned data to contain datatype in addition to value
  * 2. registry to map type name (in string) to type name enum
@@ -335,7 +340,10 @@ bool XSValue::validate(const XMLCh*         const content
 {
 
     if (!content || !*content)
+    {
+        status=st_NoContent;
         return false;
+    }
 
     switch (inGroup[datatype])
     {
@@ -366,7 +374,10 @@ XSValue::getCanonicalRepresentation(const XMLCh*         const content
 {
  
     if (!content || !*content)
+    {
+        status=st_NoContent;
         return 0;
+    }
     
     switch (inGroup[datatype])
     {
@@ -396,15 +407,19 @@ XSValue* XSValue::getActualValue(const XMLCh*         const content
 {
 
     if (!content || !*content)
+    {
+        status=st_NoContent;
         return 0;
+    }
+
 
     switch (inGroup[datatype])
     {
     case XSValue::dg_numerics :
-        return getActValNumerics(content, datatype,  status, version, toValidate, manager);
+        return getActValNumerics(content, datatype,  status, version, manager);
         break;
     case XSValue::dg_datetimes:
-        return getActValDateTimes(content, datatype,  status, version, toValidate, manager);
+        return getActValDateTimes(content, datatype,  status, version, manager);
         break;
     case XSValue::dg_strings:
         return getActValStrings(content, datatype,  status, version, toValidate, manager);
@@ -1274,7 +1289,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
                          ,       DataType             datatype
                          ,       Status&              status
                          ,       XMLVersion           version
-                         ,       bool                 toValidate
                          ,       MemoryManager* const manager)
 {
 
@@ -1635,7 +1649,6 @@ XSValue::getActValDateTimes(const XMLCh*         const content
                           ,       DataType             datatype
                           ,       Status&              status
                           ,       XMLVersion           version
-                          ,       bool                 toValidate
                           ,       MemoryManager* const manager)
 {
     try

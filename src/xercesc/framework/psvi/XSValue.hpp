@@ -16,6 +16,11 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/09/23 21:22:47  peiyongz
+ * Documentation
+ * st_noContent added
+ * unused parameter removed
+ *
  * Revision 1.11  2004/09/13 21:24:20  peiyongz
  * 1. returned data to contain datatype in addition to value
  * 2. registry to map type name (in string) to type name enum
@@ -120,7 +125,8 @@ public:
 
     enum Status {
             st_Init,
-            st_InvalidRange,    
+            st_InvalidRange,
+            st_NoContent,
             st_NoCanRep,
             st_NoActVal,
             st_NotSupported,
@@ -149,6 +155,15 @@ public:
     /** @name Externalization methods */
     //@{
 
+    /** 
+      * Validate a given string of the data type specified
+      *
+      * @param  content    data to be validated
+      * @param  datatype   schema datatype
+      * @param  status     validation status which is set upon validation fails
+      * @param  version    xml version
+      * @param  manager    memory manager provided
+      */
     static
     bool     validate
              (
@@ -159,6 +174,17 @@ public:
               ,       MemoryManager*  const manager    = XMLPlatformUtils::fgMemoryManager
              );
 
+    /** 
+      * Get the canonical representation for a given string of the 
+      * data type specified
+      *
+      * @param  content    raw data
+      * @param  datatype   schema datatype
+      * @param  status     validation status which is set upon validation fails
+      * @param  version    xml version
+      * @param  toValidate to validate the content before generate canonical representation
+      * @param  manager    memory manager provided
+      */
     static
     XMLCh*   getCanonicalRepresentation
              (
@@ -170,6 +196,19 @@ public:
               ,       MemoryManager*  const manager    = XMLPlatformUtils::fgMemoryManager
              );
 
+    /** 
+      * Get the actual value, in the form of XSValue, for a given string of the 
+      * data type specified
+      *
+      * Client application is responsible for the deleletion of the XSValue returned.
+      *
+      * @param  content    raw data
+      * @param  datatype   schema datatype
+      * @param  status     validation status which is set upon validation fails
+      * @param  version    xml version
+      * @param  toValidate to validate the content before generate actual value
+      * @param  manager    memory manager provided
+      */
     static
     XSValue* getActualValue
              (
@@ -345,7 +384,6 @@ private:
               ,       DataType              datatype
               ,       Status&               status
               ,       XMLVersion            version
-              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -356,7 +394,6 @@ private:
               ,       DataType              datatype
               ,       Status&               status
               ,       XMLVersion            version
-              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
