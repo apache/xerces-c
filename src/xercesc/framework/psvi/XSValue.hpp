@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/08/17 21:11:41  peiyongz
+ * no more Unrepresentable
+ *
  * Revision 1.4  2004/08/13 21:29:20  peiyongz
  * fMemAllocated
  *
@@ -89,7 +92,6 @@ public:
             st_Invalid,
             st_InvalidChar,     //for numeric
             st_InvalidRange,    //for numeric
-            st_UnRepresentable, //for numeric
             st_NoCanRep,
             st_NoActVal,
             st_NotSupported,

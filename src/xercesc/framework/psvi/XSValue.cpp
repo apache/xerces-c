@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/08/17 21:11:41  peiyongz
+ * no more Unrepresentable
+ *
  * Revision 1.3  2004/08/13 21:29:21  peiyongz
  * fMemAllocated
  *
@@ -365,7 +368,7 @@ XSValue::validateNumerics(const XMLCh*         const content
             XMLFloat data(content, manager);
             if (data.isDataConverted())
             {
-                context.fStatus = XSValueContext::st_UnRepresentable;
+                context.fStatus = XSValueContext::st_InvalidRange;
                 return false;
             }
         }
@@ -376,7 +379,7 @@ XSValue::validateNumerics(const XMLCh*         const content
             XMLDouble  data(content, manager);
             if (data.isDataConverted())
             {
-                context.fStatus = XSValueContext::st_UnRepresentable;
+                context.fStatus = XSValueContext::st_InvalidRange;
                 return false;
             }
         }
@@ -395,8 +398,8 @@ XSValue::validateNumerics(const XMLCh*         const content
                  datatype == XSValue::dt_long               ||
                  datatype == XSValue::dt_unsignedLong        )
         {
-            XMLCh* compareData = (XMLCh*) manager->allocate(XMLString::stringLen(content) * sizeof(XMLCh));
-            ArrayJanitor<XMLCh> janName(compareData);
+            XMLCh* compareData = (XMLCh*) manager->allocate((XMLString::stringLen(content) + 1) * sizeof(XMLCh));
+            ArrayJanitor<XMLCh> janName(compareData, manager);
             int    signValue = 0;
             XMLBigInteger::parseBigInteger(content, compareData, signValue,  manager);
 
@@ -487,14 +490,20 @@ XSValue::validateNumerics(const XMLCh*         const content
                 }
                 break;
             case XSValue::dt_unsignedLong:
-                // error: > 18446744073709551615
+                // error: < 0 || > 18446744073709551615 
                 {
-                    if (XMLBigInteger::compareValues(compareData
-                                                   , signValue
-                                                   , XMLUni::fgULongMaxInc
-                                                   , 1
-                                                   , manager) 
-                                                   == XMLNumber::GREATER_THAN)
+                    if ((XMLBigInteger::compareValues(compareData
+                                                    , signValue
+                                                    , XMLUni::fgValueZero
+                                                    , 0
+                                                    , manager) 
+                                                    == XMLNumber::LESS_THAN) ||
+                        (XMLBigInteger::compareValues(compareData
+                                                    , signValue
+                                                    , XMLUni::fgULongMaxInc
+                                                    , 1
+                                                    , manager) 
+                                                    == XMLNumber::GREATER_THAN))
                     {
                         context.fStatus = XSValueContext::st_InvalidRange;
                         return false;
@@ -505,6 +514,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 return false;
                 break;
             }
+
         }
         /***
          *   For all singed integer types
@@ -707,7 +717,11 @@ bool XSValue::validateStrings(const XMLCh*         const content
                         break;
                 }
 
-                return (i == XMLUni::fgBooleanValueSpaceArraySize)? false : true;
+                if (i == XMLUni::fgBooleanValueSpaceArraySize)
+                {
+                    context.fStatus = XSValueContext::st_Invalid;
+                    return false;
+                }
             }
             break;
         case XSValue::dt_hexBinary:
@@ -997,7 +1011,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         }  
         else 
         {
-            retVal = XMLBigInteger::getCanonicalRepresentation(content, manager);
+            retVal = XMLBigInteger::getCanonicalRepresentation(content, manager, datatype == XSValue::dt_nonPositiveInteger);
 
             if (!retVal)
                 context.fStatus = XSValueContext::st_InvalidChar;
@@ -1097,12 +1111,24 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
             }
             break;
         case XSValue::dt_hexBinary: 
-            //HexBin::getCanonicalRepresentation does validation automatically
-            return HexBin::getCanonicalRepresentation(content, manager);
+            {
+                //HexBin::getCanonicalRepresentation does validation automatically
+                XMLCh* canRep = HexBin::getCanonicalRepresentation(content, manager);
+                if (!canRep)
+                    context.fStatus = XSValueContext::st_Invalid;
+
+                return canRep;
+            }
             break;
         case XSValue::dt_base64Binary:
-            //Base64::getCanonicalRepresentation does validation automatically
-            return Base64::getCanonicalRepresentation(content, manager);
+            {
+                //Base64::getCanonicalRepresentation does validation automatically
+                XMLCh* canRep = Base64::getCanonicalRepresentation(content, manager);
+                if (!canRep)
+                    context.fStatus = XSValueContext::st_Invalid;
+
+                return canRep;
+            }
             break;
         case XSValue::dt_anyURI:
         case XSValue::dt_QName:
@@ -1199,19 +1225,37 @@ XSValue::getActValNumerics(const XMLCh*         const content
         }
         else if (datatype == XSValue::dt_float)
         {
+            //XMLFloat takes care of 0, -0, -INF, INF and NaN
             //XMLFloat::checkBoundary() handles error and outofbound issues
             XMLFloat data(content, manager);
-            XSValue* retVal = new (manager) XSValue(manager);
-            retVal->fData.f_float = (float) data.getValue();
-            return retVal;
+            if (data.isDataConverted())
+            {
+                context.fStatus = XSValueContext::st_InvalidRange;
+                return 0;
+            }
+            else
+            {
+                XSValue* retVal = new (manager) XSValue(manager);
+                retVal->fData.f_float = (float) data.getValue();
+                return retVal;
+            }
         }
         else if (datatype == XSValue::dt_double)
         {
+            //XMLDouble takes care of 0, -0, -INF, INF and NaN
             //XMLDouble::checkBoundary() handles error and outofbound issues
             XMLDouble  data(content, manager);
-            XSValue* retVal = new (manager) XSValue(manager);
-            retVal->fData.f_double = data.getValue();
-            return retVal;
+            if (data.isDataConverted())
+            {
+                context.fStatus = XSValueContext::st_InvalidRange;
+                return 0;
+            }
+            else
+            {
+                XSValue* retVal = new (manager) XSValue(manager);
+                retVal->fData.f_double = data.getValue();
+                return retVal;
+            }
         }
         else if (datatype == XSValue::dt_integer            ||
                  datatype == XSValue::dt_negativeInteger    ||
@@ -1558,9 +1602,18 @@ XSValue::getActValStrings(const XMLCh*         const content
             break;
         case XSValue::dt_hexBinary:
             {
-                //todo: HexBinary::decode()
+                XMLCh* decodedData = HexBin::decode(content, manager);
+
+                if (!decodedData)
+                {
+                    context.fStatus = XSValueContext::st_Invalid;
+                    return 0;
+                }
+
                 XSValue* retVal = new (manager) XSValue(manager);
-                return retVal;
+                retVal->fData.f_strVal = decodedData;
+                retVal->fMemAllocated = true;
+                return retVal;                
             }       
             break;
         case XSValue::dt_base64Binary:
@@ -1640,7 +1693,14 @@ bool XSValue::getActualValue(const XMLCh*         const content
     }
     else if (ct == convert_2_ulong)
     {
+        if (-1 != XMLString::indexOf(content, chDash))
+        {
+            context.fStatus = XSValueContext::st_InvalidRange;
+            return false;
+        }
+
         retVal.f_ulong = strtoul(nptr, &endptr, base);
+
     }
 
     // check if all chars are valid char
@@ -1653,9 +1713,10 @@ bool XSValue::getActualValue(const XMLCh*         const content
     // check if overflow/underflow occurs
     if (errno == ERANGE)
     {
-        context.fStatus = XSValueContext::st_UnRepresentable;
+        context.fStatus = XSValueContext::st_InvalidRange;
         return false;
     }
+
 
     return true;
 }
