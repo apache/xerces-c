@@ -2,6 +2,303 @@
 <!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
 <faqs title="Building on Other Platforms">
+    <faq title="Building &XercesCName; on iSeries (AS/400)">
+    <q>Building &XercesCName; on iSeries (AS/400)</q>
+    <a>
+            <p>The following addresses the requirements and build of
+           &XercesCName; natively on the iSeries.
+            </p>
+            <s3 title="Building &XercesCName; library">
+                <p><em>Requirements:</em></p>
+
+                <ul>
+                    <li>OS/400 <code>QSHELL</code> interpreter installed (install base option 30, operating system)</li>
+                    <li>OS/400 - Portable App Solutions Environment (PASE) installed (install base option 33, operating system)</li>
+                    <li>QShell Utilities, PRPQ 5799-XEH</li>
+                    <li>iSeries Tools for Developers, PRPQ 5799-PTL (these are the gnu utilities)</li>
+                </ul>
+
+                <p>Compiler:</p>
+                <ul>
+                    <li>For v4r5m0: ILE C++ for AS/400, PRPQ 5799-GDW</li>
+                    <li>For v5: WebSphere Development ToolsSet, 5722-WDS ( installed  option 52, Compiler - ILE C++)</li>
+                </ul>
+
+                <p><em>Recommendations:</em></p>
+
+                <ul>
+                <li>There is one option when building the XML4C parser on iSeries.
+                For code page translation, you can use the iSeries
+                native <code>Iconv400</code> support or ICU as the transcoder plugin. If you choose ICU, follow the instructions
+                to build the ICU service program with the ICU download. Those instructions
+                are not included here.</li>
+
+                <li>We recommend the use of <code>Iconv400</code>.
+                The binary posted on Alphaworks uses Iconv400.</li>
+                </ul>
+
+                <p><em>Setup Instructions:</em></p>
+
+                <ul>
+                <li>Make sure that you have the requirements installed on your iSeries.
+                We highly recommend that you read the writeup that accompanies the
+                iSeries Tools for Developers PRPQ. There are install instructions as well as
+                information about how modules, programs and service programs can be
+                created in Unix-like fashion using gnu utilities. Note that symbolic
+                links are use in the file system to point to actual iSeries <code>*module</code>,
+                <code>*pgm</code> and <code>*srvpgm</code> objects in libraries.</li>
+
+                <li>Download the source zip file (NT version) directly to an iSeries IFS directory
+                    after creating a directory  (eg. /XML4Cxxx) and then extract	
+                    the source using a mapped drive. To do this, from Windows Explorer,
+                    select Tools -> Map Network Drive.  Then select an available drive (e.g. F:) and
+                    specify an iSeries system you want to extract the zip file to
+                    (e.g. \\&lt;your iSeries name&gt;\root).  Click on Finish.   Then find the .zip file
+                    and right click on it and select Extract To ...
+                    Then select the files you want to extract to the iSeries system.</li>
+
+                 <li>Create iSeries target library. This library will be the target
+                     for the resulting modules and &XercesCName; service program. You will
+                     specify this library on the OUTPUTDIR environment variable
+                     in step 4.</li>
+
+                 <li>Set up the following environment variables in your build process
+                     (use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
+                 </ul>
+<source>
+XERCESCROOT - &lt;the full path up to the &XercesCName; src directory, but not including 'src'&gt;
+MAKE   - '/usr/bin/gmake'
+OUTPUTDIR  - &lt;identifies target iSeries library for *module, *pgm and *srvpgm objects&gt;
+ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;
+</source>
+
+                <ul>
+                <li>For v4r5m0 systems, add QCXXN, to your build process library list.
+                    This results in the resolution of CRTCPPMOD used by the icc compiler.</li>
+                 </ul>
+
+         <p>You may want to put the environment variables and library list
+            setup instructions in a <code>CL</code> program so you will not forget these steps
+            during your build.</p>
+
+         <p><em>Configure</em></p>
+
+         <p>To configure the make files for an iSeries build do the following under Qsh:</p>
+<source>qsh:
+cd &lt;full path to &XercesCName;&gt;/src
+runConfigure -p os400 -x icc -c icc -m inmem -t Iconv400</source>
+
+         <p>Troubleshooting:</p>
+<source>error: configure: error: installation or configuration problem:
+C compiler cannot create executables.</source>
+
+         <p>If during runConfigure you see the above error message, it
+         can mean one of a few things. Either QCXXN is not on your library
+         list <em>OR</em> the <code>runConfigure</code> cannot create the temporary
+         modules (<code>CONFTest1</code>, etc) it uses to test out the compiler
+         options or <code>PASE</code> is not installed. The second reason happens because the test modules already exist
+         from a previous run of <code>runConfigure</code>. To correct the problem,
+         do the following:</p>
+<source>CL:
+DLTMOD &lt;OUTPUTDIR library&gt;/CONFT* and
+DLTPGM &lt;OUTPUTDIR library&gt;/CONFT*</source>
+
+        <p><em>Build</em></p>
+
+<source>qsh:
+cd &lt;full path to &XercesCName;&gt;/src
+gmake</source>
+
+         <p>The above gmake should result in a service program being created
+         in your specified library and a symbolic link to that service program
+         placed in &lt;path to &XercesCName;/lib&gt;. It is highly possible that the
+         service program will not create however due to number of modules and path names,
+         see trouble shooting for the workaround.</p>
+
+         <p>After the service program has successfully been created and a link established,
+         you can either bind your XML application programs directly to the parser's service program
+         via the <code>BNDSRVPGM</code> option on the <code>CRTPGM</code> or
+         <code>CRTSRVPGM</code> command  or you can specify a binding directory
+         on your <code>icc</code>  command. To specify an archive file to bind to,
+         use the  <code>-L, -l</code> binding options on icc.  An archive file
+         on iSeries is a binding directory.  To create an archive file, use
+         <code>qar</code> command.  (see the iSeries Tools for Developers write up).
+         </p>
+
+         <p>After building the Xerces-C service program, create a binding directory
+         by doing the following (note, this binding directory is used when building
+         the samples.  Also, note that the .a file below can have a different
+         name based on the parser version (using apache xerces versioning)):</p>
+<source>qsh:
+cd &lt;full path to &XercesCName;&gt;/lib
+qar -cuv &XercesCUnixLib;.a *.o
+will results in
+command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/&XercesCUnixLib;.a')
+command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
+
+
+         <p><em>Troubleshooting gmake problem:</em></p>
+         <p>Due to the  number of modules (the .o symbolic links)  that make up the
+         service program and the path to get to those modules, the qshell ld request
+         to create the service program will likely fail because the request is too large,
+         you may get a message like the following at the end of the gmake request:</p>
+<source>
+FAILURE: spawnp()  with errno = 3491
+GMAKE: vfork: Argument list too long.
+</source>
+
+         <p>If this is the case, you can manually create the service progam by doing the following:</p>
+
+<source>CL:
+CRTSRVPGM  (&lt;OUTPUTDIR-library&gt;/libxercesc)  MODULE(&lt;OUTPUTDIR-library&gt;/*ALL) EXPORT(*ALL) TEXT('XML4C parser version xxx')
+OPTION(*DUPPROC *DUPVAR)
+</source>
+
+         <p>Note that if you manually create the service program you want to make sure that
+         you do not include any CONFT* modules or samples modules in the OUTPUTDIR library.
+         After the service program is manually created you can add a symbolic link to the
+         service program  into the appropriate /lib directory by qsh:</p>
+
+<source>
+qsh:
+cd &lt;full path to &XercesCName;&gt;/lib
+ln -s /qsys.lib/&lt;outputdir&gt;.lib/libxercesc.srvpgm   &XercesCUnixLib;.o
+qar -cuv &XercesCUnixLib;.a *.o
+</source>
+
+         <p>If you are on a v4 system using the ILE C++ PRPQ compiler (which is referred
+         to as the 'old' compiler) you will get compiler errors requiring a few manual changes
+         to the source:</p>
+
+         <ul>
+         <li>src/dom/DocumentImpl.cpp</li>
+         <li>src/dom/DocumentImpl.hpp</li>
+         <li>src/idom/IDDocumentImpl.cpp</li>
+         <li>src/idom/IDDocumentImpl.hpp</li>
+         <li>src/validators/common/ContentSpecNode.hpp</li>
+         </ul>
+
+         <p>Update  the following routines in src/dom/DocumentImpl.cpp as follows:</p>
+<source>
+ void DocumentImpl::setUserData(NodeImpl* n, void* data)
+ {
+	if (!userData &amp;&amp; data)
+  #ifdef __OS400__
+		userData = new RefHashTableOf&lt;char&gt;(29, false, new HashPtr());
+  #else
+		userData = new RefHashTableOf&lt;void&gt;(29, false, new HashPtr());
+  #endif
+	if (!data &amp;&amp; userData)
+		userData-&gt;removeKey((void*)n);
+	else
+  #ifdef __OS400__
+		userData-&gt;put((void*)n,(char*)data);
+  #else
+		userData-&gt;put((void*)n,data);
+  #endif
+ }
+
+ void* DocumentImpl::getUserData(NodeImpl* n)
+ {
+	if (userData)
+  #ifdef __OS400__
+		return (void*)userData-&gt;get((void*)n);
+  #else
+		return userData-&gt;get((void*)n);
+  #endif
+	else
+		return null;
+ }
+</source>
+
+         <p>To update src/dom/DoumentImpl.hpp as follows:</p>
+
+<source>
+ #ifdef __OS400__
+	RefHashTableOf&lt;char&gt;		*userData;
+ #else
+
+	RefHashTableOf&lt;void&gt;		*userData;
+ #endif
+</source>
+
+          <p>Update  the following routines in src/idom/IDDocumentImpl.cpp as follows:</p>
+<source>
+ void IDDocumentImpl::setUserData(IDOM_Node* n, void* data)
+ {
+	if (!fUserData &amp;&amp; data)
+ #ifdef __OS400__
+		fUserData = new (this) RefHashTableOf&lt;char&gt;(29, false, new (this) HashPtr());
+ #else
+		fUserData = new (this) RefHashTableOf&lt;void&gt;(29, false, new (this) HashPtr());
+ #endif
+
+	if (!data &amp;&amp; fUserData)
+		fUserData-&gt;removeKey((void*)n);
+	else
+ #ifdef __OS400__
+		fUserData-&gt;put((void*)n,(char*)data);
+ #else
+		fUserData-&gt;put((void*)n,data);
+ #endif
+ }
+
+ void* IDDocumentImpl::getUserData(const IDOM_Node* n) const
+ {
+	if (fUserData)
+ #ifdef __OS400__
+		return (void*) fUserData-&gt;get((void*)n);
+ #else
+		return fUserData-&gt;get((void*)n);
+ #endif
+
+	else
+		return 0;
+ }
+</source>
+
+          <p>To update src/idom/IDDocumentImpl.hpp:</p>
+<source>
+ #ifdef __OS400__
+    RefHashTableOf&lt;char&gt;        *fUserData;
+ #else
+    RefHashTableOf&lt;void&gt;        *fUserData;
+ #endif
+</source>
+          <p>Update validators/common/ContentSpecNode.hpp removing the following:</p>
+<source>
+ #ifndef __OS400__
+ inline
+ #endif
+ ContentSpecNode::~ContentSpecNode()
+</source>
+
+         <p>To build for transcoder ICU:</p>
+         <ol>
+          <li>Make sure you have an <code>ICUROOT</code> path set up so that you can
+          find the ICU header files (usually <code>/usr/local</code>)</li>
+          <li>Make sure you have created a binding directory (symbolic link)
+          in the file system so that you can bind the &XercesCName; service program
+          to the ICU service program and specify that on the <code>EXTRA_LINK_OPTIONS</code>
+          in <code>src/Makefile.incl</code> (usually the default is a link
+          in <code>/usr/local/lib</code>).</li>
+         </ol>
+
+        </s3>
+
+        <s3 title="Building Samples on iSeries">
+
+          <p>Note that the samples will create programs bind to the BND directory object
+             created by qar referenced above.</p>
+<source>qsh
+cd &lt;full path to &XercesCName;&gt;/samples
+runConfigure -p os400 -x icc -c icc
+gmake </source>
+
+        </s3>
+    </a>
+    </faq>
+
     <faq title="Building &XercesCName; on OS/2 using Visual Age C++">
     <q>Building &XercesCName; on OS/2 using Visual Age C++</q>
     <a>
@@ -160,212 +457,6 @@
         </ul>
         </s3>
 
-    </a>
-    </faq>
-
-    <faq title="Building &XercesCName; on AS/400">
-    <q>Building &XercesCName; on AS/400</q>
-    <a>
-            <p>The following addresses the requirements and build of
-           &XercesCName; natively on the AS/400.
-            </p>
-            <s3 title="Building &XercesCName; library">
-                <p><em>Requirements:</em></p>
-
-                <ul>
-                    <li><code>QSHELL</code> interpreter installed (install base option 30, operating system)</li>
-                    <li>QShell Utilities,  PRPQ  5799-XEH</li>
-                    <li>ILE C++ for AS/400,  PRPQ 5799-GDW</li>
-                    <li>GNU facilities  (the gnu facilities are currently available by request
-                    only.  Send e-mail to <jump href="mailto:rchgo400@us.ibm.com">rchgo400@us.ibm.com</jump>)</li>
-                </ul>
-
-                <p><em>Recommendations:</em></p>
-
-                <ul>
-                <li>There are a couple of options when building the &XercesCName; parser on AS/400.
-                For messaging support, you can use the in memory message option or the
-                message file support. For code page translation, you can use the AS/400
-                native <code>Iconv400</code> support or ICU. If you choose ICU, follow the instructions
-                to build the ICU service program with the ICU download. Those instructions
-                are not included here.</li>
-
-                <li>Currently we recommend that you take the options of <code>MsgFile</code> and
-                <code>Iconv400</code> (see below)</li>
-                </ul>
-
-                <p><em>Setup Instructions:</em></p>
-
-                <ul>
-                <li>Make sure that you have the requirements installed on your AS/400.
-                We highly recommend that you read the writeup that accompanies the gnu
-                facilities download.  There are install instructions as well as
-                information about how modules, programs and service programs can be
-                created in Unix-like fashion using gnu utilities.  Note that symbolic
-                links are use in the file system to point to actual AS/400 <code>*module</code>,
-                <code>*pgm</code> and <code>*srvpgm</code> objects in libraries.</li>
-                <li>Download the tar file  (unix version) to the AS/400
-                (using a mapped drive), and decompress and <code>untar</code> the source.
-                We have had difficulty with the tar command on AS/400. This is under
-                investigation.  If you have trouble, we recommend the following work
-                around:</li></ul>
-<source>qsh:
-gunzip -d &lt;tar file.gz&gt;
-pax -r -f &lt;uncompressed tar file&gt;</source>
-
-                <ul>
-                <li>Create AS400 target library. This library will be the target
-                for the resulting  modules and  &XercesCName; service program. You will
-                specify this library on the <code>OUTPUTDIR</code> environment variable
-                in step 4</li>
-                <li>Set up the following environment variables in your build process
-                (use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
-                </ul>
-<source>XERCESCROOT - &lt;the full path to your &XercesCName; sources&gt;
-PLATFORM  - 'OS400'
-MAKE   - '/usr/bin/gmake'
-OUTPUTDIR  - &lt;identifies target as400 library for *module, *pgm and *srvpgm objects&gt;
-ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source>
-
-                <ul>
-                <li>Add <code>QCXXN</code>, to your build process library list.
-                This results in the resolution of <code>CRTCPPMOD</code> used by the
-                <code>icc</code> compiler.</li>
-
-                <li>The runConfigure instruction below uses <code>'egrep'</code>.
-                This is not on the AS/400 but you can create it by doing the following:
-                <code>edtf '/usr/bin/egrep'</code> with the following source:</li>
-                </ul>
-
-<source>#!/usr/bin/sh
-/usr/bin/grep -e "$@"</source>
-
-         <p>You may want to put the environment variables and library list
-         setup instructions in a <code>CL</code> program so you will not forget these steps
-         during your build.</p>
-
-         <p><em>Configure</em></p>
-
-         <p>To configure the make files for an AS/400 build do the following:</p>
-<source>qsh
-cd &lt;full path to &XercesCName;&gt;/src
-runConfigure -p os400 -x icc -c icc -m MsgFile -t Iconv400</source>
-
-         <p>Troubleshooting:</p>
-<source>error: configure: error: installation or configuration problem:
-C compiler cannot create executables.</source>
-
-         <p>If during <code>runConfigure</code> you see the above error message, it
-         can mean one of two things. Either <code>QCXXN</code> is not on your library
-         list  <em>OR</em> the <code>runConfigure</code> cannot create the temporary
-         modules (<code>CONFTest1</code>, etc) it uses to test out the compiler
-         options. The second reason happens because the test modules already exist
-         from a previous run of <code>runConfigure</code>. To correct the problem,
-         do the following:</p>
-<source>DLTMOD &lt;your OUTPUTDIR library&gt;/CONFT* and
-DLTPGM your &lt;OUTPUTDIR library&gt;/CONFT*</source>
-
-        <p><em>Build</em></p>
-
-<source>qsh
-gmake -e</source>
-
-         <p>The above gmake will result in a service program being created
-         in your specified library and a symbolic link to that service program
-         placed in &lt;path to &XercesCName;/lib&gt;. You can either bind your
-         XML application programs directly to the parser's service program
-         via the <code>BNDSRVPGM</code> option on the <code>CRTPGM</code> or
-         <code>CRTSRVPGM</code> command  or you can specify a binding directory
-         on your <code>icc</code>  command. To specify an archive file to bind to,
-         use the  <code>-L, -l</code> binding options on icc.  An archive file
-         on AS/400 is a binding directory. To create an archive file, use
-         <code>qar</code> command.  (see the gnu facilities write up).
-         </p>
-
-         <p>
-         After building the &XercesCName; service program, create a binding directory
-         by doing the following (note, this binding directory is used when building
-         the samples):</p>
-<source>qsh
-cd &lt;full path to &XercesCName;>/lib&gt;
-qar -cuv libxercesc1_1.a *.o
-command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/libxercesc1_1.a')
-command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
-
-
-         <p><em>Troubleshooting:</em></p>
-         <p>If you are on a V4R3 system, you will get a bind problem
-         <code>'descriptor  QlgCvtTextDescToDesc not found'</code> using Iconv400.
-         On V4R3 the system doesn't automatically pick up the <code>QSYS/QLGUSR</code> service
-         program for you when resolving this function. This is not the case on V4R4.
-         To fix this, you can either manually create the service program after creating
-         all the resulting modules in your &lt;OUTPUTDIR&gt; library or you can create
-         a symbolic link to a binding directory that points to  the <code>QLGUSR</code>
-         service program and then specify  an additional <code>-L, -l</code> on the
-         <code>EXTRA_LINK_OPTIONS</code> in <code>Makefile.incl</code>.
-         See the <code>ln</code> and <code>qar</code> function in the gnu utilities.</p>
-
-         <p>To build for transcoder ICU:</p>
-         <ol>
-          <li>Make sure you have an <code>ICUROOT</code> path set up so that you can
-          find the ICU header files (usually <code>/usr/local</code>)</li>
-          <li>Make sure you have created a binding directory (symbolic link)
-          in the file system so that you can bind the &XercesCName; service program
-          to the ICU service program and specify that on the <code>EXTRA_LINK_OPTIONS</code>
-          in <code>src/Makefile.incl</code> (usually the default is a link
-          in <code>/usr/local/lib</code>).</li>
-         </ol>
-
-         <p><em>Creating AS400 XML parser message file:</em></p>
-         <p>As specified earlier, the <code>-m</code> MsgFile support on the
-         <code>runConfigure</code> enable the parser messages to be pulled from
-         an AS/400 message file. To view the source for creating  the message file
-         and the XML parser messages, see the following stream file:</p>
-<source>EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</source>
-
-         <p>In the prolog of <code>CrtXMLMsgs</code> there are instructions to create
-         the message file:</p>
-         <ol>
-         <li>Use the <code>CPYFRMSTMF</code> to copy the CL source to an AS/400 source
-         physical file. Note that the target source file needs to have record length
-         of about 200 bytes to avoid any truncation.</li>
-         <li>Create the CL program to create the message file and add the various
-         message descriptions</li>
-         <li>Call the CL program, providing the name of the message file
-         (use <code>QXMLMSG</code> as default) and a library  (this can be any
-         library, including any product library in which you wish to embed
-         the xml parser)</li>
-         </ol>
-
-         <p>Note that the &XercesCName; source code for resolving parser messages is
-         using by default message file  <code>QXMLMSG, *LIBL</code>.
-         If you want to change either the message file name or explicitly qualify the
-         library to match your product needs, you must edit the following <code>.cpp</code>
-         files prior to your build.</p>
-<source>&lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/MsgLoader.cpp
-&lt;full path to &XercesCName;&gt;/src/util/Platforms/OS400/OS400PlatformUtils.cpp</source>
-
-         <p><em>Troubleshooting:</em></p>
-         <p>If you are using the parser and are failing to get any  message text
-         for error codes, it may be because of the <code>*LIBL</code> resolution of
-         the message file.</p>
-        </s3>
-
-        <s3 title="Building Samples on AS/400">
-<source>qsh
-cd &lt;full path to &XercesCName;&gt;/samples
-runConfigure -p os400 -x icc -c icc
-gmake -e</source>
-
-            <p><em>Troubleshooting:</em></p>
-            <p>If you take a <code>'sed'</code> error, while trying to make the samples.
-            This is an AS400 anomaly having to do with certain new line character and
-            the <code>sed</code> function. A temporary work around is to use <code>EDTF</code>
-            on the configure stream file (<code>../samples/configure</code>) and delete the
-            following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
-            </p>
-
-        </s3>
     </a>
     </faq>
 
