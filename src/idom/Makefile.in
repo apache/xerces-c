@@ -132,7 +132,7 @@ IDOM_CPP_PRIVHEADERS =  \
        IDProcessingInstructionImpl.hpp \
        IDRangeImpl.hpp \
        IDTextImpl.hpp \
-       IDTreeWalker.hpp \
+       IDTreeWalkerImpl.hpp \
        IDXMLDeclImpl.hpp
 
 IDOM_C_FILES = \
@@ -170,7 +170,7 @@ IDOM_CPP_OBJECTS = \
        IDRangeImpl.$(TO) \
        IDStringPool.$(TO) \
        IDTextImpl.$(TO) \
-       IDTreeWalker.$(TO) \
+       IDTreeWalkerImpl.$(TO) \
        IDXMLDeclImpl.$(TO)
 
 
