@@ -548,8 +548,8 @@ void DOMParser::parseReset(XMLPScanToken& token)
 // ---------------------------------------------------------------------------
 //  DOMParser: Implementation of the XMLErrorReporter interface
 // ---------------------------------------------------------------------------
-void DOMParser::error(  const   unsigned int                code
-                      , const XMLCh* const                msgDomain
+void DOMParser::error(  const   unsigned int              /*code*/
+                      , const XMLCh* const                /*msgDomain*/
                       , const XMLErrorReporter::ErrTypes  errType
                       , const XMLCh* const                errorText
                       , const XMLCh* const                systemId
@@ -597,7 +597,7 @@ void DOMParser::resetErrors()
 InputSource*
 DOMParser::resolveEntity(const XMLCh* const publicId,
                          const XMLCh* const systemId,
-                         const XMLCh* const baseURI)
+                         const XMLCh* const /*baseURI*/)
 {
     //
     //  Just map it to the SAX entity resolver. If there is not one installed,
@@ -682,7 +682,7 @@ void DOMParser::docPI(  const   XMLCh* const    target
 }
 
 
-void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
+void DOMParser::endEntityReference(const XMLEntityDecl& /*entDecl*/)
 {
     if (fCreateEntityReferenceNodes == true)
     {
@@ -695,10 +695,10 @@ void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 }
 
 
-void DOMParser::endElement( const   XMLElementDecl&    elemDecl
-                           , const unsigned int        urlId
-                           , const bool                isRoot
-                           , const XMLCh* const        elemPrefix)
+void DOMParser::endElement( const   XMLElementDecl&    /*elemDecl*/
+                           , const unsigned int        /*urlId*/
+                           , const bool                /*isRoot*/
+                           , const XMLCh* const        /*elemPrefix*/)
 {
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fNodeStack->pop();
@@ -711,7 +711,7 @@ void DOMParser::endElement( const   XMLElementDecl&    elemDecl
 
 void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
                                     , const unsigned int    length
-                                    , const bool            cdataSection)
+                                    , const bool            /*cdataSection*/)
 {
     // Ignore chars before the root element
     if (!fWithinElement || !fIncludeIgnorableWhitespace)
@@ -883,7 +883,7 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 void DOMParser::XMLDecl(const   XMLCh* const version
                         , const XMLCh* const encoding
                         , const XMLCh* const standalone
-                        , const XMLCh* const actualEncStr)
+                        , const XMLCh* const /*actualEncStr*/)
 {
     //This is a non-standard extension to creating XMLDecl type nodes and attching to DOM Tree
     // currently this flag it set to false unless user explicitly asks for it
@@ -932,7 +932,7 @@ void DOMParser::attDef
 (
     const   DTDElementDecl&     elemDecl
     , const DTDAttDef&          attDef
-    , const bool                ignoring
+    , const bool                /*ignoring*/
 	)
 {	
     if (fDocumentType->isIntSubsetReading())
@@ -992,24 +992,29 @@ void DOMParser::attDef
                 break;
 
             case XMLAttDef::Enumeration :
-                attString.appendData(chSpace);
-                //  attString.appendData(XMLUni::fgEnumerationString);
-                const XMLCh* enumString = attDef.getEnumeration();
-                int length = XMLString::stringLen(enumString);
-                if (length > 0) {
+                {
+                    attString.appendData(chSpace);
+                    //  attString.appendData(XMLUni::fgEnumerationString);
+                    const XMLCh* enumString = attDef.getEnumeration();
+                    int length = XMLString::stringLen(enumString);
+                    if (length > 0) {
 
-                    DOMString anotherEnumString;
+                        DOMString anotherEnumString;
 
-                    anotherEnumString.appendData(chOpenParen );
-                    for(int i=0; i<length; i++) {
-                        if (enumString[i] == chSpace)
-                            anotherEnumString.appendData(chPipe);
-                        else
-                            anotherEnumString.appendData(enumString[i]);
+                        anotherEnumString.appendData(chOpenParen );
+                        for(int i=0; i<length; i++) {
+                            if (enumString[i] == chSpace)
+                                anotherEnumString.appendData(chPipe);
+                            else
+                                anotherEnumString.appendData(enumString[i]);
+                        }
+                        anotherEnumString.appendData(chCloseParen);
+                        attString.appendData(anotherEnumString);
                     }
-                    anotherEnumString.appendData(chCloseParen);
-                    attString.appendData(anotherEnumString);
                 }
+                break;
+            default:
+                // remaining types don't belong to a DTD
                 break;
             }
             //get te default types of the attlist
@@ -1027,6 +1032,9 @@ void DOMParser::attDef
             case XMLAttDef::Fixed :
                 attString.appendData(chSpace);
                 attString.appendData(XMLUni::fgFixedString);
+                break;
+            default:
+                // remaining types don't belong to a DTD
                 break;
             }
 
@@ -1071,8 +1079,8 @@ void DOMParser::doctypeDecl
     const   DTDElementDecl& elemDecl
     , const XMLCh* const    publicId
     , const XMLCh* const    systemId
-    , const bool            hasIntSubset
-    , const bool            hasExtSubset
+    , const bool            /*hasIntSubset*/
+    , const bool            /*hasExtSubset*/
 )
 {
 	DOM_DocumentType dt;
@@ -1109,7 +1117,7 @@ void DOMParser::doctypePI
 void DOMParser::doctypeWhitespace
 (
     const   XMLCh* const    chars
-    , const unsigned int    length
+    , const unsigned int    /*length*/
 )
 {
     if (fDocumentType->isIntSubsetReading())
@@ -1119,7 +1127,7 @@ void DOMParser::doctypeWhitespace
 void DOMParser::elementDecl
 (
     const   DTDElementDecl& decl
-    , const bool            isIgnored
+    , const bool            /*isIgnored*/
 )
 {
     if (fDocumentType->isIntSubsetReading())
@@ -1240,8 +1248,8 @@ void DOMParser::endExtSubset()
 void DOMParser::entityDecl
 (
     const   DTDEntityDecl&  entityDecl
-    , const bool            isPEDecl
-    , const bool            isIgnored
+    , const bool            /*isPEDecl*/
+    , const bool            /*isIgnored*/
 )
 {
 	EntityImpl* entity = ((DocumentImpl*)fDocument.fImpl)->createEntity(entityDecl.getName());
@@ -1323,7 +1331,7 @@ void DOMParser::resetDocType()
 void DOMParser::notationDecl
 (
     const   XMLNotationDecl&    notDecl
-    , const bool                isIgnored
+    , const bool                /*isIgnored*/
 )
 {
 	NotationImpl* notation = ((DocumentImpl*)fDocument.fImpl)->createNotation(notDecl.getName());
@@ -1345,7 +1353,7 @@ void DOMParser::notationDecl
 
 void DOMParser::startAttList
 (
-    const   DTDElementDecl& elemDecl
+    const   DTDElementDecl& /*elemDecl*/
 )
 {
 }
@@ -1361,8 +1369,8 @@ void DOMParser::startExtSubset()
 
 void DOMParser::TextDecl
 (
-    const   XMLCh* const    versionStr
-    , const XMLCh* const    encodingStr
+    const   XMLCh* const    /*versionStr*/
+    , const XMLCh* const    /*encodingStr*/
 )
 {
 }

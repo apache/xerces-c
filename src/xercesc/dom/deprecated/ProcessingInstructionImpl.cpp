@@ -39,7 +39,7 @@ ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *ownerDoc,
 
 ProcessingInstructionImpl::ProcessingInstructionImpl(
                                         const ProcessingInstructionImpl &other,
-                                        bool deep)
+                                        bool /*deep*/)
     : ChildNode(other)
 {
     target = other.target.clone();

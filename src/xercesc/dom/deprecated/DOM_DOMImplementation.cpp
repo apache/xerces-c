@@ -66,24 +66,24 @@ static XMLRegisterCleanup DOM_DOMImplementationCleanup;
 //              created with the default constructor.
 //
 DOM_DOMImplementation::DOM_DOMImplementation() {
-};
+}
 
 
 
-DOM_DOMImplementation::DOM_DOMImplementation(const DOM_DOMImplementation & other)
+DOM_DOMImplementation::DOM_DOMImplementation(const DOM_DOMImplementation & /*other*/)
 {
-};
+}
 
 
 DOM_DOMImplementation::~DOM_DOMImplementation()
 {
-};
+}
 
 
-DOM_DOMImplementation & DOM_DOMImplementation::operator = (const DOM_DOMImplementation & other)
+DOM_DOMImplementation & DOM_DOMImplementation::operator = (const DOM_DOMImplementation & /*other*/)
 {
     return *this;
-};
+}
 
 // -----------------------------------------------------------------------
 //  Reset the singleton DOM_DOMImplementation
@@ -118,7 +118,7 @@ DOM_DOMImplementation &DOM_DOMImplementation::getImplementation() {
 
     }
     return *gDomimp;
-};
+}
 
 bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMString &version)
 {

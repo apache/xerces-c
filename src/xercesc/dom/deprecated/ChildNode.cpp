@@ -30,7 +30,7 @@ ChildNode::ChildNode(DocumentImpl *ownerDoc)
 {
     this->previousSibling  = null;
     this->nextSibling  = null;
-};
+}
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
@@ -41,27 +41,27 @@ ChildNode::ChildNode(const ChildNode &other)
     this->previousSibling = null;
     this->nextSibling = null;
     isFirstChild(false);
-};
+}
 
 ChildNode::~ChildNode() {
-};
+}
 
 NodeImpl * ChildNode::getNextSibling() {
     return nextSibling;
-};
+}
 
 NodeImpl * ChildNode::getParentNode()
 {
     // if we have an owner, ownerNode is our parent, otherwise it's
     // our ownerDocument and we don't have a parent
     return isOwned() ? ownerNode : null;
-};
+}
 
 NodeImpl * ChildNode::getPreviousSibling() {
     // if we are the firstChild, previousSibling actually refers to our
     // parent's lastChild, but we hide that
     return isFirstChild() ? null : previousSibling;
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

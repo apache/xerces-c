@@ -36,7 +36,7 @@ XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc)
     encoding (DOMString(XMLUni::fgUTF8EncodingString)),
     standalone (DOMString(XMLUni::fgNoString))
 {
-};
+}
 
 
 //Introduced in DOM Level 2
@@ -47,21 +47,21 @@ XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc, const DOMString &ver,
     encoding ( enc.clone() ),
     standalone ( isStd.clone() )
 {
-};
+}
 
 
-XMLDeclImpl::XMLDeclImpl(const XMLDeclImpl &other, bool deep)
+XMLDeclImpl::XMLDeclImpl(const XMLDeclImpl &other, bool /*deep*/)
     : ChildNode(other)
 {
     version     = other.version.clone();
     encoding    = other.encoding.clone();
     standalone  = other.standalone.clone();
-};
+}
 
 
 XMLDeclImpl::~XMLDeclImpl()
 {
-};
+}
 
 NodeImpl * XMLDeclImpl::cloneNode(bool deep)
 {

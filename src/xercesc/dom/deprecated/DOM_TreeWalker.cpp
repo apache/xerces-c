@@ -57,7 +57,7 @@ DOM_TreeWalker & DOM_TreeWalker::operator = (const DOM_TreeWalker &other)
 };
 
 
-DOM_TreeWalker & DOM_TreeWalker::operator = (const DOM_NullPtr *other)
+DOM_TreeWalker & DOM_TreeWalker::operator = (const DOM_NullPtr * /*other*/)
 {
     RefCountedImpl::removeRef(this->fImpl);
     this->fImpl = 0;
@@ -87,13 +87,13 @@ bool       DOM_TreeWalker::operator == (const DOM_TreeWalker & other) const
     return this->fImpl == other.fImpl;
 };
 
-bool       DOM_TreeWalker::operator != (const DOM_NullPtr * other) const
+bool       DOM_TreeWalker::operator != (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl != 0;
 };
 
 
-bool       DOM_TreeWalker::operator == (const DOM_NullPtr * other) const
+bool       DOM_TreeWalker::operator == (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl == 0;
 };

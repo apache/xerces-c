@@ -40,18 +40,18 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 RangeImpl::RangeImpl(DOM_Document doc)
 
-    :   fDocument(doc),
-        fStartContainer(doc),
+    :   fStartContainer(doc),
         fStartOffset(0),
         fEndContainer(doc),
         fEndOffset(0),
-        fDetached(false),
         fCollapsed(true),
+        fDocument(doc),
+        fDetached(false),
         fRemoveChild(0)
 {
 }
 
-RangeImpl::RangeImpl(const RangeImpl& other)
+RangeImpl::RangeImpl(const RangeImpl& other) : RefCountedImpl()
 {
     fDocument = other.fDocument;
     fStartContainer = other.fStartContainer;
@@ -544,6 +544,9 @@ short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* src
         offsetB = srcRange->getEndOffset();
         offsetA = fEndOffset;
         break;
+    default:
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
     }
 
     // case 1: same container
@@ -892,10 +895,6 @@ const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Nod
 
 void RangeImpl::checkIndex(const DOM_Node& node, unsigned int offset) const
 {
-    if (offset < 0) {
-        throw DOM_DOMException( DOM_DOMException::INDEX_SIZE_ERR, null );
-    }
-
     short type = node.getNodeType();
 
     if((type == DOM_Node::TEXT_NODE

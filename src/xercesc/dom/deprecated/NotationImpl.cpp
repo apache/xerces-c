@@ -53,53 +53,53 @@ NotationImpl::NotationImpl(DocumentImpl *ownerDoc, const DOMString &nName)
     : NodeImpl(ownerDoc)
 {
     name = nName.clone();
-};
+}
 
-NotationImpl::NotationImpl(const NotationImpl &other, bool deep)
+NotationImpl::NotationImpl(const NotationImpl &other, bool /*deep*/)
     : NodeImpl(other)
 {
     name = other.name.clone();
-};
+}
 
 
 NotationImpl::~NotationImpl()
 {
-};
+}
 
 
 NodeImpl *NotationImpl::cloneNode(bool deep)
 {
     return new NotationImpl(*this, deep);
-};
+}
 
 
 DOMString NotationImpl::getNodeName() {
     return name;
-};
+}
 
 
 short NotationImpl::getNodeType() {
     return DOM_Node::NOTATION_NODE;
-};
+}
 
 
 // Notation nodes do not have a parent
 NodeImpl * NotationImpl::getParentNode()
 {
     return 0;
-};
+}
 
 
 DOMString NotationImpl::getPublicId()
 {
     return publicId.clone();
-};
+}
 
 
 DOMString NotationImpl::getSystemId()
 {
     return systemId.clone();
-};
+}
 
 
 void NotationImpl::setPublicId(const DOMString &arg)
@@ -109,7 +109,7 @@ void NotationImpl::setPublicId(const DOMString &arg)
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
 
     publicId = arg.clone();
-};
+}
 
 
 void NotationImpl::setSystemId(const DOMString &arg)
@@ -119,7 +119,7 @@ void NotationImpl::setSystemId(const DOMString &arg)
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
 
     systemId = arg.clone();
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

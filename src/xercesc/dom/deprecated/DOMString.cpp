@@ -78,7 +78,7 @@ XMLLCPTranscoder*  getDomConverter()
             cleanupDomConverter.registerCleanup(reinitDomConverter);
     }
     return gDomConverter;
-};
+}
 
 //
 //  There is one global mutex that is used to synchronize access to the
@@ -123,14 +123,14 @@ void DOMStringData::removeRef()
         fRefCount     = 0xcccc;
         XMLPlatformUtils::fgMemoryManager->deallocate(this);//delete [] this;  //  was allocated with new char[size] !
         XMLPlatformUtils::atomicDecrement(DOMString::gLiveStringDataCount);
-    };
-};
+    }
+}
 
 
 void DOMStringData::addRef()
 {
     XMLPlatformUtils::atomicIncrement(fRefCount);
-};
+}
 
 
 DOMStringData *DOMStringData::allocateBuffer(unsigned int length)
@@ -238,7 +238,7 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
 
     XMLPlatformUtils::atomicIncrement(DOMString::gLiveStringHandleCount);
     return retPtr;
-};
+}
 
 
 //
@@ -268,13 +268,13 @@ void DOMStringHandle::operator delete(void *pMem)
     }
 
 
-};
+}
 
 
 void DOMStringHandle::addRef()
 {
     XMLPlatformUtils::atomicIncrement(fRefCount);
-};
+}
 
 
 void DOMStringHandle::removeRef()
@@ -286,8 +286,8 @@ void DOMStringHandle::removeRef()
 //        delete this;
         DOMStringHandle* ptr = this;
         delete ptr;
-    };
-};
+    }
+}
 
 
 DOMStringHandle *DOMStringHandle::createNewStringHandle(unsigned int bufLength)
@@ -298,7 +298,7 @@ DOMStringHandle *DOMStringHandle::createNewStringHandle(unsigned int bufLength)
     h -> fRefCount = 1;
     h -> fDSData = DOMStringData::allocateBuffer(bufLength);
     return h;
-};
+}
 
 
 DOMStringHandle *DOMStringHandle::cloneStringHandle()
@@ -321,15 +321,16 @@ DOMStringHandle *DOMStringHandle::cloneStringHandle()
 DOMString::DOMString()
 {
     fHandle = 0;
-};
+}
 
 
-DOMString::DOMString(const DOMString &other)
+DOMString::DOMString(const DOMString &other) :
+    XMemory(other)
 {
     fHandle = other.fHandle;
     if (fHandle)
         fHandle->addRef();
-};
+}
 
 
 DOMString::DOMString(const XMLCh *data)
@@ -420,7 +421,7 @@ DOMString::DOMString(const char *srcString)
         }
         fHandle->fLength = srcLen;
     }
-};
+}
 
 
 
@@ -428,7 +429,7 @@ DOMString::DOMString(int nullValue)
 {
    assert(nullValue == 0);
    fHandle = 0;
-};
+}
 
 
 DOMString::~DOMString()
@@ -437,7 +438,7 @@ DOMString::~DOMString()
         fHandle->removeRef();
 
     fHandle = 0;
-};
+}
 
 
 DOMString & DOMString::operator =(const DOMString &other)
@@ -454,7 +455,7 @@ DOMString & DOMString::operator =(const DOMString &other)
         fHandle->addRef();
 
     return *this;
-};
+}
 
 
 DOMString & DOMString::operator = (DOM_NullPtr *arg)
@@ -465,31 +466,31 @@ DOMString & DOMString::operator = (DOM_NullPtr *arg)
 
     fHandle = 0;
     return *this;
-};
+}
 
 
 
 bool DOMString::operator ==(const DOMString &other) const
 {
     return this->fHandle == other.fHandle;
-};
+}
 
 
 bool DOMString::operator !=(const DOMString &other) const
 {
     return this->fHandle != other.fHandle;
-};
+}
 
 
-bool DOMString::operator == (const DOM_NullPtr *p) const
+bool DOMString::operator == (const DOM_NullPtr * /*p*/) const
 {
     return (fHandle == 0);
-};
+}
 
-bool DOMString::operator != (const DOM_NullPtr *p) const
+bool DOMString::operator != (const DOM_NullPtr * /*p*/) const
 {
     return (fHandle != 0);
-};
+}
 
 
 
@@ -627,7 +628,7 @@ XMLCh     DOMString::charAt(unsigned int index) const
     if ((fHandle != 0) && (index < fHandle->fLength))
         retCh = fHandle->fDSData->fData[index];
     return retCh;
-};
+}
 
 
 DOMString DOMString::clone() const
@@ -638,14 +639,14 @@ DOMString DOMString::clone() const
         retString.fHandle = this->fHandle->cloneStringHandle();
 
     return retString;
-};
+}
 
 
 
 void DOMString::deleteData(unsigned int offset, unsigned int delLength)
 {
     unsigned int stringLen = this->length();
-    if (offset > stringLen || offset < 0 || delLength < 0)
+    if (offset > stringLen)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
 
     // Cap the value of delLength to avoid trouble with overflows
@@ -703,7 +704,7 @@ void DOMString::deleteData(unsigned int offset, unsigned int delLength)
         // no characters are moved.
         fHandle->fLength = newStringLength;
     }
-};
+}
 
 
 
@@ -741,7 +742,7 @@ bool DOMString::equals(const DOMString &other) const
 
     }
     return retVal;
-};
+}
 
 
 
@@ -786,7 +787,7 @@ bool DOMString::equals(const XMLCh *other) const
 
     return true;  // Both strings are empty.  DOMString treats zero-length
                   //   and a null data pointer as equivalent.
-};
+}
 
 
 void DOMString::insertData(unsigned int offset, const DOMString &src)
@@ -845,7 +846,7 @@ void DOMString::insertData(unsigned int offset, const DOMString &src)
         unsigned int j;
         for (j=0; j<srcLength; j++)
             destP[j+offset] = srcP[j];
-    };
+    }
 
     fHandle->fLength += srcLength;
 }
@@ -859,7 +860,7 @@ unsigned int DOMString::length() const
         len = fHandle->fLength;
 
     return len;
-};
+}
 
 
 
@@ -875,14 +876,14 @@ void DOMString::print() const
 
         XMLPlatformUtils::fgMemoryManager->deallocate(pc);//delete [] pc;
     }
-};
+}
 
 
 void DOMString::println() const
 {
 	print();
     putchar('\n');
-};
+}
 
 
 
@@ -895,7 +896,7 @@ const XMLCh *DOMString::rawBuffer() const
         retP[fHandle->fLength]=0;
     }
     return retP;
-};
+}
 
 
 char *DOMString::transcode() const
@@ -1011,16 +1012,16 @@ int DOMString::compareString(const DOMString &other) const
             return -1;
         else if (thisP[i] > otherP[i])
             return 1;
-    };
+    }
 
     return 0;
-};
+}
 
 
 DOMString DOMString::substringData(unsigned int offset, unsigned int count) const
 {
     unsigned int thisLen = length();
-    if (offset > thisLen || offset < 0 || count < 0)
+    if (offset > thisLen)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
 
     // Cap count to the string length to eliminate overflow
@@ -1045,14 +1046,14 @@ DOMString DOMString::substringData(unsigned int offset, unsigned int count) cons
         DOMString retString = this->clone();
         retString.fHandle->fLength = count;
         return retString;
-    };
+    }
 
     // The substring starts somewhere in the interior of the orignal string.
     // Create a completely new DOMString.  No buffer sharing is possible.
     XMLCh *data = fHandle->fDSData->fData;
     return DOMString(data+offset, count);
 
-};
+}
 
 
 DOMString operator + (const DOMString &lhs, const DOMString &rhs)
@@ -1101,14 +1102,14 @@ static void reinitDomConverter()
 {
         delete gDomConverter;           //  Delete the local code page converter.
         gDomConverter = 0;
-};
+}
 
 
 static void reinitDomMutex()
 {
         delete DOMStringHandleMutex;    //  Delete the synchronization mutex,
         DOMStringHandleMutex = 0;
-};
+}
 
 
 XERCES_CPP_NAMESPACE_END

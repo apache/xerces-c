@@ -35,8 +35,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 //////////////////////////////////////////////////////////////////////
 
 NodeIteratorImpl::NodeIteratorImpl ()
-: fDetached(false),
-    fNodeFilter(0)
+:   fNodeFilter(0),
+    fDetached(false)
 {
 }	
 
@@ -57,26 +57,27 @@ NodeIteratorImpl::NodeIteratorImpl (
                                     unsigned long whatToShow,
                                     DOM_NodeFilter* nodeFilter,
                                     bool expandEntityRef)
-:   fDetached(false),
-    fRoot(root),
-    fCurrentNode(0),
+:   fRoot(root),
     fWhatToShow(whatToShow),
     fNodeFilter(nodeFilter),
-    fForward(true),
-    fExpandEntityReferences(expandEntityRef)
+    fExpandEntityReferences(expandEntityRef),
+    fDetached(false),
+    fCurrentNode(0),
+    fForward(true)
 {
 	
 }
 
 
 NodeIteratorImpl::NodeIteratorImpl ( const NodeIteratorImpl& toCopy)
-    :   fDetached(toCopy.fDetached),
+:   RefCountedImpl(),
     fRoot(toCopy.fRoot),
-    fCurrentNode(toCopy.fCurrentNode),
     fWhatToShow(toCopy.fWhatToShow),
     fNodeFilter(toCopy.fNodeFilter),
-    fForward(toCopy.fForward),
-    fExpandEntityReferences(toCopy.fExpandEntityReferences)
+    fExpandEntityReferences(toCopy.fExpandEntityReferences),
+    fDetached(toCopy.fDetached),
+    fCurrentNode(toCopy.fCurrentNode),
+    fForward(toCopy.fForward)
 {
 }
 

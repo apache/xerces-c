@@ -61,7 +61,7 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
     value.child = null;
 };
 
-AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
+AttrImpl::AttrImpl(const AttrImpl &other, bool /*deep*/)
     : NodeImpl(other)
 {
     name = other.name.clone();

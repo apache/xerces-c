@@ -35,7 +35,7 @@ DOM_NamedNodeMap::DOM_NamedNodeMap()
 {
     fImpl = 0;
 	flagElem = NNM_OTHER;
-};
+}
 
 
 DOM_NamedNodeMap::DOM_NamedNodeMap(const DOM_NamedNodeMap & other)
@@ -44,7 +44,7 @@ DOM_NamedNodeMap::DOM_NamedNodeMap(const DOM_NamedNodeMap & other)
 	this->flagElem = other.flagElem;
 	(other.flagElem == NNM_ELEMENT) ? NodeImpl::addRef((NodeImpl *)fImpl) :	
 	                                  NamedNodeMapImpl::addRef((NamedNodeMapImpl *)fImpl);
-};
+}
 
 
 DOM_NamedNodeMap::DOM_NamedNodeMap(NamedNodeMapImpl *impl)
@@ -53,7 +53,7 @@ DOM_NamedNodeMap::DOM_NamedNodeMap(NamedNodeMapImpl *impl)
 	flagElem = NNM_OTHER;
 	if (impl != null)
 		NamedNodeMapImpl::addRef((NamedNodeMapImpl *)fImpl);
-};
+}
 
 DOM_NamedNodeMap::DOM_NamedNodeMap(NodeImpl *impl)
 {
@@ -67,30 +67,30 @@ DOM_NamedNodeMap::~DOM_NamedNodeMap()
 {
 	(flagElem == NNM_OTHER) ? NamedNodeMapImpl::removeRef((NamedNodeMapImpl *)fImpl) :
 	                          NodeImpl::removeRef((NodeImpl *)fImpl);
-};
+}
 
 bool DOM_NamedNodeMap::operator == (const DOM_NamedNodeMap &other) const
 {
     return this->fImpl == other.fImpl;
-};
+}
 
 
 bool DOM_NamedNodeMap::operator != (const DOM_NamedNodeMap &other) const
 {
     return this->fImpl != other.fImpl;
-};
+}
 
 
-bool DOM_NamedNodeMap::operator == (const DOM_NullPtr *p) const
+bool DOM_NamedNodeMap::operator == (const DOM_NullPtr * /*p*/) const
 {
     return this->fImpl == 0;
-};
+}
 
 
-bool DOM_NamedNodeMap::operator != (const DOM_NullPtr *p) const
+bool DOM_NamedNodeMap::operator != (const DOM_NullPtr * /*p*/) const
 {
     return this->fImpl != 0;
-};
+}
 
 
 DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NamedNodeMap & other)
@@ -106,52 +106,52 @@ DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NamedNodeMap & other)
         (flagElem == NNM_OTHER) ? NamedNodeMapImpl::addRef((NamedNodeMapImpl *)fImpl) : NodeImpl::addRef((NodeImpl *)fImpl);
     }
     return *this;
-};
+}
 
 
-DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NullPtr *other)
+DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NullPtr * /*other*/)
 {
 
     (flagElem == NNM_OTHER) ? NamedNodeMapImpl::removeRef((NamedNodeMapImpl *)fImpl) : NodeImpl::removeRef((NodeImpl *)fImpl);
     this->fImpl = 0;
 	this->flagElem = NNM_OTHER;
     return *this;
-};
+}
 
 
 DOM_Node DOM_NamedNodeMap::getNamedItem(const DOMString &name) const
 {
 	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->getNamedItem(name)) :
 	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_getNamedItem(name));
-};
+}
 
 
 DOM_Node DOM_NamedNodeMap::setNamedItem(DOM_Node arg)
 {
 	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->setNamedItem(arg.fImpl)) :
 	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_setNamedItem(arg.fImpl));
-};
+}
 
 
 DOM_Node DOM_NamedNodeMap::removeNamedItem(const DOMString &name)
 {
 	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->removeNamedItem(name)) :
 	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_removeNamedItem(name));
-};
+}
 
 
 DOM_Node DOM_NamedNodeMap::item(unsigned int index) const
 {
 	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->item(index)) :
 	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_item(index));
-};
+}
 
 
 unsigned int DOM_NamedNodeMap::getLength() const
 {
 	return (flagElem == NNM_OTHER) ? ((NamedNodeMapImpl *)fImpl)->getLength() :
 	                                 ((ElementImpl *)fImpl)->NNM_getLength();
-};
+}
 
 
 //Introduced in DOM Level 2

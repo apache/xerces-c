@@ -38,7 +38,7 @@ ElementDefinitionImpl::ElementDefinitionImpl(DocumentImpl *ownerDoc,
 
 ElementDefinitionImpl::ElementDefinitionImpl(
                                             const ElementDefinitionImpl& other,
-                                            bool deep)
+                                            bool /*deep*/)
     : NodeImpl(other)
 {
     name = other.name.clone();

@@ -32,10 +32,10 @@ TreeWalkerImpl::TreeWalkerImpl (
                                 unsigned long whatToShow,
                                 DOM_NodeFilter* nodeFilter,
                                 bool expandEntityRef)
-:   fCurrentNode(root),
-    fRoot(root),
-    fWhatToShow(whatToShow),
+:   fWhatToShow(whatToShow),
     fNodeFilter(nodeFilter),
+    fCurrentNode(root),
+    fRoot(root),
     fExpandEntityReferences(expandEntityRef)
 
 {
@@ -43,10 +43,11 @@ TreeWalkerImpl::TreeWalkerImpl (
 
 
 TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi)
-: fCurrentNode(twi.fCurrentNode),
-    fRoot(twi.fRoot),
+:   RefCountedImpl(),
     fWhatToShow(twi.fWhatToShow),
     fNodeFilter(twi.fNodeFilter),
+    fCurrentNode(twi.fCurrentNode),
+    fRoot(twi.fRoot),
     fExpandEntityReferences(twi.fExpandEntityReferences)
 {
 }

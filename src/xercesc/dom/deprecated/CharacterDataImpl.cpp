@@ -33,7 +33,7 @@ CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc,
     this->data = dat.clone();
 };
 
-CharacterDataImpl::CharacterDataImpl(const CharacterDataImpl &other, bool deep)
+CharacterDataImpl::CharacterDataImpl(const CharacterDataImpl &other, bool /*deep*/)
     : ChildNode(other)
 {
     data = other.data.clone();

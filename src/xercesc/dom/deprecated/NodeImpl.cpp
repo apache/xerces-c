@@ -74,7 +74,8 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
-NodeImpl::NodeImpl(const NodeImpl &other) {
+NodeImpl::NodeImpl(const NodeImpl &other) : NodeListImpl() 
+{
     this->flags = other.flags;
     this->isReadOnly(false);
 
@@ -252,87 +253,87 @@ void NodeImpl::setOwnerDocument(DocumentImpl *doc) {
 NodeImpl * NodeImpl::getParentNode()
 {
     return null;                // overridden in ChildNode
-};
+}
 
 
 NodeImpl*  NodeImpl::getPreviousSibling()
 {
     return null;                // overridden in ChildNode
-};
+}
 
 
 void *NodeImpl::getUserData()
 {
 	return (hasUserData()) ? getOwnerDocument()->getUserData(this) : null;
-};
+}
 
 
 bool NodeImpl::hasChildNodes()
 {
     return false;
-};
+}
 
 
 
-NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
+NodeImpl *NodeImpl::insertBefore(NodeImpl * /*newChild*/, NodeImpl * /*refChild*/) {
     throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     return 0;
-};
+}
 
-NodeImpl *NodeImpl::item(unsigned int index) {
+NodeImpl *NodeImpl::item(unsigned int /*index*/) {
     return 0;
-};
+}
 
 
-NodeImpl *NodeImpl::removeChild(NodeImpl *oldChild)
+NodeImpl *NodeImpl::removeChild(NodeImpl * /*oldChild*/)
 {
     throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
     return 0;
-};
+}
 
 
-NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
+NodeImpl *NodeImpl::replaceChild(NodeImpl * /*newChild*/, NodeImpl * /*oldChild*/)
 {
     throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     return 0;
-};
+}
 
 
-  void NodeImpl::referenced()
-  {
-      RefCountedImpl::addRef(this->getOwnerDocument());
-  };
+void NodeImpl::referenced()
+{
+    RefCountedImpl::addRef(this->getOwnerDocument());
+}
 
 
-  //
-  //    unreferenced  will be called whenever the refernce count on
-  //            this node goes from 1 to 0.  This node will only be
-  //            directly deleted here  (by deleteIf) if it is outside
-  //            of the document tree.
-  //
-  void NodeImpl::unreferenced()
-  {
-      DocumentImpl *doc = this->getOwnerDocument();
-      deleteIf(this);       // This gets nodes outside of the document -
-      //   deleteIf() deletes only if the parent
-      //   node is null.
+//
+//    unreferenced  will be called whenever the refernce count on
+//            this node goes from 1 to 0.  This node will only be
+//            directly deleted here  (by deleteIf) if it is outside
+//            of the document tree.
+//
+void NodeImpl::unreferenced()
+{
+    DocumentImpl *doc = this->getOwnerDocument();
+    deleteIf(this);       // This gets nodes outside of the document -
+    //   deleteIf() deletes only if the parent
+    //   node is null.
 
-      // If this was the last external reference within the document,
-      //    the entire document will be deleted as well.
-      RefCountedImpl::removeRef(doc);
-  };
+    // If this was the last external reference within the document,
+    //    the entire document will be deleted as well.
+    RefCountedImpl::removeRef(doc);
+}
 
 
-void NodeImpl::setNodeValue(const DOMString &val)
+void NodeImpl::setNodeValue(const DOMString & /*val*/)
 {
     // Default behavior is to do nothing, overridden in some subclasses
-};
+}
 
 
 
-void NodeImpl::setReadOnly(bool readOnl, bool deep)
+void NodeImpl::setReadOnly(bool readOnly, bool /*deep*/)
 {
-    this->isReadOnly(readOnl);
+    this->isReadOnly(readOnly);
     // by default we do not have children, so deep is meaningless
     // this is overridden by ParentNode
 }
@@ -384,7 +385,7 @@ DOMString NodeImpl::getLocalName()
 }
 
 
-void NodeImpl::setPrefix(const DOMString &fPrefix)
+void NodeImpl::setPrefix(const DOMString & /*fPrefix*/)
 {
     throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR,null);
 }

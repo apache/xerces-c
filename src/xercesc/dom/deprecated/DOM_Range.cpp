@@ -62,7 +62,7 @@ DOM_Range & DOM_Range::operator = (const DOM_Range &other)
 };
 
 
-DOM_Range & DOM_Range::operator = (const DOM_NullPtr *other)
+DOM_Range & DOM_Range::operator = (const DOM_NullPtr * /*other*/)
 {
     RefCountedImpl::removeRef(this->fImpl);
     this->fImpl = 0;
@@ -80,13 +80,13 @@ bool       DOM_Range::operator == (const DOM_Range & other) const
     return this->fImpl == other.fImpl;
 };
 
-bool       DOM_Range::operator != (const DOM_NullPtr * other) const
+bool       DOM_Range::operator != (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl != 0;
 };
 
 
-bool       DOM_Range::operator == (const DOM_NullPtr * other) const
+bool       DOM_Range::operator == (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl == 0;
 }

@@ -29,21 +29,21 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOM_NodeList::DOM_NodeList()
 {
     fImpl = 0;
-};
+}
 
 
 DOM_NodeList::DOM_NodeList(NodeListImpl *impl)
 {
     fImpl = impl;
     RefCountedImpl::addRef(fImpl);
-};
+}
 
 
 DOM_NodeList::DOM_NodeList(const DOM_NodeList &other)
 {
     fImpl = other.fImpl;
     RefCountedImpl::addRef(fImpl);
-};
+}
 
 
 DOM_NodeList & DOM_NodeList::operator = (const DOM_NodeList &other)
@@ -55,46 +55,46 @@ DOM_NodeList & DOM_NodeList::operator = (const DOM_NodeList &other)
         RefCountedImpl::addRef(this->fImpl);
     }
     return *this;
-};
+}
 
 
-DOM_NodeList & DOM_NodeList::operator = (const DOM_NullPtr *other)
+DOM_NodeList & DOM_NodeList::operator = (const DOM_NullPtr * /*other*/)
 {
     RefCountedImpl::removeRef(this->fImpl);
     this->fImpl = 0;
     return *this;
-};
+}
 
 
 DOM_NodeList::~DOM_NodeList()
 {
     RefCountedImpl::removeRef(this->fImpl);
     fImpl = 0;
-};
+}
 
 
 bool DOM_NodeList::operator == (const DOM_NodeList &other) const
 {
     return this->fImpl == other.fImpl;
-};
+}
 
 
 bool DOM_NodeList::operator != (const DOM_NodeList &other) const
 {
     return this->fImpl != other.fImpl;
-};
+}
 
 
-bool DOM_NodeList::operator == (const DOM_NullPtr *nullPtr) const
+bool DOM_NodeList::operator == (const DOM_NullPtr * /*nullPtr*/) const
 {
     return this->fImpl == 0;
-};
+}
 
 
-bool DOM_NodeList::operator != (const DOM_NullPtr *nullPtr) const
+bool DOM_NodeList::operator != (const DOM_NullPtr * /*nullPtr*/) const
 {
     return this->fImpl != 0;
-};
+}
 
 
 
@@ -102,13 +102,13 @@ bool DOM_NodeList::operator != (const DOM_NullPtr *nullPtr) const
 DOM_Node  DOM_NodeList::item(unsigned int index) const
 {
     return DOM_Node(fImpl->item(index));
-};
+}
 
 
 unsigned int DOM_NodeList::getLength() const
 {
     return fImpl->getLength();
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

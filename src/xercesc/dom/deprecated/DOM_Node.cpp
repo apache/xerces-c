@@ -32,21 +32,21 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOM_Node::DOM_Node()
 {
     fImpl = null;
-};
+}
 
 
 DOM_Node::DOM_Node(NodeImpl *impl)
 {
     fImpl = impl;
     RefCountedImpl::addRef(fImpl);
-};
+}
 
 
 DOM_Node::DOM_Node(const DOM_Node &other)
 {
 	this->fImpl = other.fImpl;
     RefCountedImpl::addRef(fImpl);
-};
+}
 
 
 DOM_Node & DOM_Node::operator = (const DOM_Node &other)
@@ -58,15 +58,15 @@ DOM_Node & DOM_Node::operator = (const DOM_Node &other)
         RefCountedImpl::addRef(this->fImpl);
     }
     return *this;
-};
+}
 
 
-DOM_Node & DOM_Node::operator = (const DOM_NullPtr *other)
+DOM_Node & DOM_Node::operator = (const DOM_NullPtr * /*other*/)
 {
     RefCountedImpl::removeRef(this->fImpl);
     this->fImpl = 0;
     return *this;
-};
+}
 
 
 
@@ -74,7 +74,7 @@ DOM_Node::~DOM_Node()
 {
     RefCountedImpl::removeRef (this->fImpl);
     fImpl = 0;
-};
+}
 
 //
 //      Comparison operators.  Equivalent of Java object reference ==
@@ -83,24 +83,24 @@ DOM_Node::~DOM_Node()
 bool       DOM_Node::operator != (const DOM_Node & other) const
 {
     return this->fImpl != other.fImpl;
-};
+}
 
 
 bool       DOM_Node::operator == (const DOM_Node & other) const
 {
     return this->fImpl == other.fImpl;
-};
+}
 
-bool       DOM_Node::operator != (const DOM_NullPtr * other) const
+bool       DOM_Node::operator != (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl != 0;
-};
+}
 
 
-bool       DOM_Node::operator == (const DOM_NullPtr * other) const
+bool       DOM_Node::operator == (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl == 0;
-};
+}
 
 
 
@@ -108,67 +108,67 @@ bool       DOM_Node::operator == (const DOM_NullPtr * other) const
 DOM_Node   DOM_Node::appendChild(const DOM_Node &newChild)
 {
     return DOM_Node(fImpl->appendChild(newChild.fImpl));
-};
+}
 
 
 DOM_Node      DOM_Node::cloneNode(bool deep) const
 {
     return DOM_Node(fImpl->cloneNode(deep));
-};
+}
 
 
 DOMString  DOM_Node::getNodeName()  const
 {
     return fImpl->getNodeName().clone();
-};
+}
 
 
 DOMString  DOM_Node::getNodeValue() const
 {
     return fImpl->getNodeValue().clone();
-};
+}
 
 
 short   DOM_Node::getNodeType() const
 {
     return fImpl->getNodeType();
-};
+}
 
 
 DOM_Node      DOM_Node::getParentNode() const
 {
     return DOM_Node(fImpl->getParentNode());
-};
+}
 
 
 DOM_NodeList      DOM_Node::getChildNodes() const
 {
     return DOM_NodeList(fImpl);
-};
+}
 
 
 DOM_Node      DOM_Node::getFirstChild() const
 {
     return DOM_Node(fImpl->getFirstChild());
-};
+}
 
 
 DOM_Node      DOM_Node::getLastChild() const
 {
     return DOM_Node(fImpl->getLastChild());
-};
+}
 
 
 DOM_Node      DOM_Node::getPreviousSibling() const
 {
     return DOM_Node(fImpl->getPreviousSibling());
-};
+}
 
 
 DOM_Node       DOM_Node::getNextSibling() const
 {
     return DOM_Node(fImpl->getNextSibling());
-};
+}
 
 
 void          *DOM_Node::getUserData() const
@@ -182,46 +182,46 @@ DOM_NamedNodeMap DOM_Node::getAttributes() const
 		return (fImpl->getAttributes() == null) ? DOM_NamedNodeMap(fImpl) : DOM_NamedNodeMap(fImpl->getAttributes());
 	else
 		return DOM_NamedNodeMap();
-};
+}
 
 
 DOM_Document   DOM_Node::getOwnerDocument() const
 {
     return fImpl->getOwnerDocument();
-};
+}
 
 
 bool           DOM_Node::hasChildNodes() const
 {
     return fImpl->hasChildNodes();
-};
+}
 
 
 DOM_Node       DOM_Node::insertBefore(const DOM_Node &newChild, const DOM_Node &refChild){
     return DOM_Node(fImpl->insertBefore(newChild.fImpl, refChild.fImpl));
-};
+}
 
 
 bool               DOM_Node::isNull() const
 {
     return fImpl == null;
-};
+}
 
 
 DOM_Node       DOM_Node::replaceChild(const DOM_Node &newChild, const DOM_Node &oldChild){
     return DOM_Node(fImpl->replaceChild(newChild.fImpl, oldChild.fImpl));
-};
+}
 
 
 DOM_Node       DOM_Node::removeChild(const DOM_Node &oldChild){
     return DOM_Node(fImpl->removeChild(oldChild.fImpl));
-};
+}
 
 
 void           DOM_Node::setNodeValue(const DOMString &nodeValue)
 {
     fImpl->setNodeValue(nodeValue);
-};
+}
 
 
 void            DOM_Node::setUserData(void *p)
@@ -235,7 +235,7 @@ void            DOM_Node::setUserData(void *p)
 void              DOM_Node::normalize()
 {
     fImpl->normalize();
-};
+}
 
 
 bool              DOM_Node::isSupported(const DOMString &feature,

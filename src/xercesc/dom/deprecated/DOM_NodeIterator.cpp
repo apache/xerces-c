@@ -58,7 +58,7 @@ DOM_NodeIterator & DOM_NodeIterator::operator = (const DOM_NodeIterator &other)
 };
 
 
-DOM_NodeIterator & DOM_NodeIterator::operator = (const DOM_NullPtr *other)
+DOM_NodeIterator & DOM_NodeIterator::operator = (const DOM_NullPtr * /*other*/)
 {
     RefCountedImpl::removeRef(this->fImpl);
     this->fImpl = 0;
@@ -88,13 +88,13 @@ bool       DOM_NodeIterator::operator == (const DOM_NodeIterator & other) const
     return this->fImpl == other.fImpl;
 };
 
-bool       DOM_NodeIterator::operator != (const DOM_NullPtr * other) const
+bool       DOM_NodeIterator::operator != (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl != 0;
 };
 
 
-bool       DOM_NodeIterator::operator == (const DOM_NullPtr * other) const
+bool       DOM_NodeIterator::operator == (const DOM_NullPtr * /*other*/) const
 {
     return this->fImpl == 0;
 }
