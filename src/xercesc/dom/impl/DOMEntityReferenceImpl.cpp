@@ -98,6 +98,35 @@ DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
 }
 
 
+DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
+                                         const XMLCh *entityName,
+                                         bool cloneChild)
+    : fNode(ownerDoc), fParent(ownerDoc), fBaseURI(0)
+{
+    fName = ((DOMDocumentImpl *)getOwnerDocument())->getPooledString(entityName);
+    // EntityReference behaves as a read-only node, since its contents
+    // reflect the Entity it refers to -- but see setNodeName().
+    //retrieve the corresponding entity content
+
+    if (ownerDoc) {
+        if (ownerDoc->getDoctype()) {
+            if (ownerDoc->getDoctype()->getEntities()) {
+                DOMEntityImpl* entity = (DOMEntityImpl*)ownerDoc->getDoctype()->getEntities()->getNamedItem(entityName);
+                if (entity) {
+                    fBaseURI = entity->getBaseURI();
+                    if (cloneChild) {
+                        DOMEntityReference* refEntity = entity->getEntityRef();
+                        if (refEntity) {
+                            fParent.cloneChildren(refEntity);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fNode.setReadOnly(true, true);
+}
 
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(const DOMEntityReferenceImpl &other,
                                          bool deep)

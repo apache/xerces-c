@@ -1015,7 +1015,7 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         entity->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
     fCurrentEntity = entity;
 
-    DOMEntityReference *er = fDocument->createEntityReference(entName);
+    DOMEntityReference *er = fDocument->createEntityReferenceByParser(entName);
 
     //set the readOnly flag to false before appending node, will be reset in endEntityReference
     DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;

@@ -362,7 +362,14 @@ DOMEntityReference *DOMDocumentImpl::createEntityReference(const XMLCh *nam)
     return new (this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(this, nam);
 };
 
+DOMEntityReference *DOMDocumentImpl::createEntityReferenceByParser(const XMLCh *nam)
+{
+    if (!nam || !isXMLName(nam))
+        throw DOMException(
+        DOMException::INVALID_CHARACTER_ERR, 0);
 
+    return new (this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(this, nam, false);
+};
 
 DOMNotation *DOMDocumentImpl::createNotation(const XMLCh *nam)
 {

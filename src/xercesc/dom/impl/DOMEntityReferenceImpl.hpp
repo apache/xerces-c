@@ -94,6 +94,7 @@ private:
 
 public:
     DOMEntityReferenceImpl(DOMDocument *ownerDoc, const XMLCh *entityName);
+    DOMEntityReferenceImpl(DOMDocument *ownerDoc, const XMLCh *entityName, bool cloneChild);
     DOMEntityReferenceImpl(const DOMEntityReferenceImpl &other, bool deep=false);
     virtual ~DOMEntityReferenceImpl();
 

@@ -197,6 +197,10 @@ public:
     virtual void                 removeNodeIterator(DOMNodeIteratorImpl* nodeIterator); //non-standard api
 
 
+    // Extension to be called by the Parser
+    DOMEntityReference*  createEntityReferenceByParser(const XMLCh * name);
+
+
     //
     // Functions to keep track of document mutations, so that node list chached
     //   information can be invalidated.  One global changes counter per document.
