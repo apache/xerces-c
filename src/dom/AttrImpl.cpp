@@ -125,8 +125,14 @@ bool AttrImpl::getSpecified()
 
 DOMString AttrImpl::getValue() 
 {
+    if (firstChild == null) {
+        return 0; // return "";
+    }
+    ChildNode *node = firstChild->nextSibling;
+    if (node == null) {
+        return firstChild->getNodeValue().clone();
+    }
     int             length = 0;
-    ChildNode        *node;
     for (node = firstChild; node != null; node = node->nextSibling)
         length += node->getNodeValue().length();
     
