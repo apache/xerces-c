@@ -1963,7 +1963,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMNodeIteratorImpl.obj" \
 	"$(INTDIR)\DOMNodeListImpl.obj" \
 	"$(INTDIR)\DOMNodeVector.obj" \
-	"$(INTDIR)\DOMNormalizer.obj" \	
+	"$(INTDIR)\DOMNormalizer.obj" \
 	"$(INTDIR)\DOMNotationImpl.obj" \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
@@ -2634,7 +2634,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMNodeIteratorImpl.obj" \
 	"$(INTDIR)\DOMNodeListImpl.obj" \
 	"$(INTDIR)\DOMNodeVector.obj" \
-	"$(INTDIR)\DOMNormalizer.obj" \	
+	"$(INTDIR)\DOMNormalizer.obj" \
 	"$(INTDIR)\DOMNotationImpl.obj" \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
