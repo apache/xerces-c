@@ -1282,7 +1282,7 @@ XMLScanner::getLastExtLocation(         XMLCh* const    sysIdToFill
                                 ,       XMLCh* const    pubIdToFill
                                 , const unsigned int    maxPubIdChars
                                 ,       XMLSSize_t&     lineToFill
-                                ,       XMLSSize_t&     colToFill)
+                                ,       XMLSSize_t&     colToFill) const
 {
     // Create a local info object and get it filled in by the reader manager
     ReaderMgr::LastExtEntityInfo lastInfo;
@@ -4378,7 +4378,7 @@ Grammar* XMLScanner::loadGrammar(const   InputSource& src
     {
         // This is a 'first fatal error' type exit, so reset and fall through
         fReaderMgr.reset();
-       
+
     }
 
     catch(const XMLException& excToCatch)

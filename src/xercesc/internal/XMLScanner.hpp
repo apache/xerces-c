@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/07/31 18:49:29  tng
+ * [Bug 6227] Make method getLastExtLocation() constant.
+ *
  * Revision 1.8  2002/07/11 18:22:13  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -384,7 +387,7 @@ public :
         , const unsigned int    maxPubIdChars
         ,       XMLSSize_t&     lineToFill
         ,       XMLSSize_t&     colToFill
-    );
+    ) const;
     const Locator* getLocator() const;
     const ReaderMgr* getReaderMgr() const;
     unsigned int getSrcOffset() const;
