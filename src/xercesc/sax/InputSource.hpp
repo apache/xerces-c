@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:08  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:01  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
+ * sane_include
  *
  * Revision 1.10  2001/11/21 16:14:32  tng
  * Schema: New method InputSource::get/setIssueFatalErrorIfNotFound to tell the parser whether to issue fatal error or not if cannot find it (the InputSource).  This is required for schema processing as it shouldn't be a fatal error if the schema is not found.
@@ -270,8 +273,8 @@ public:
     * Indicates if the parser should issue fatal error if this input source
     * is not found.  If set to false, the parser issue warning message instead.
     *
-    * @param  True if the parser should issue fatal error if this input source is not found.
-    *         If set to false, the parser issue warning message instead.  (Default: true)
+    * @param  flag True if the parser should issue fatal error if this input source is not found.
+    *               If set to false, the parser issue warning message instead.  (Default: true)
     *
     * @see #getIssueFatalErrorIfNotFound
     */

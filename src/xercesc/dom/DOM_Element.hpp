@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/20 18:17:00  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
  * Revision 1.2  2002/02/04 20:03:48  tng
  * Add DOM Level missing functions:
  * 1. NodeIterator::getRoot
@@ -186,7 +189,7 @@ public:
       *   for an extended time,  when the storage belonging to the underlying
       *   node needs to be reclaimed.
       *
-      * @param val.  Only a value of 0, or null, is allowed.
+      * @param val   Only a value of 0, or null, is allowed.
       */
     DOM_Element & operator = (const DOM_NullPtr *val);
 
@@ -461,7 +464,7 @@ public:
      * Returns <code>true</code> when an attribute with a given name is
      * specified on this element or has a default value, <code>false</code>
      * otherwise.
-     * @param nameThe name of the attribute to look for.
+     * @param name The name of the attribute to look for.
      * @return <code>true</code> if an attribute with the given name is
      *   specified on this element or has a default value, <code>false</code>
      *    otherwise.
@@ -473,8 +476,8 @@ public:
      * namespace URI is specified on this element or has a default value,
      * <code>false</code> otherwise. HTML-only DOM implementations do not
      * need to implement this method.
-     * @param namespaceURIThe namespace URI of the attribute to look for.
-     * @param localNameThe local name of the attribute to look for.
+     * @param namespaceURI The namespace URI of the attribute to look for.
+     * @param localName The local name of the attribute to look for.
      * @return <code>true</code> if an attribute with the given local name
      *   and namespace URI is specified or has a default value on this
      *   element, <code>false</code> otherwise.

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:44  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:00  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:44  peiyongz
+ * sane_include
  *
  * Revision 1.12  2000/06/02 00:45:42  andyh
  * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
@@ -156,7 +159,7 @@ public:
       * Constructor to build a DOMString from an XML character array.
       * (XMLCh is a 16 bit UNICODE character).
       *
-      * @param other The null-terminated character array to be 
+      * @param other The null-terminated character array to be
       *   that provides the initial value for the DOMString.
       */
     DOMString(const XMLCh *other);
@@ -187,7 +190,7 @@ public:
       * Assignment operator.  Make destination DOMString refer to the same
       *      underlying string in memory as the source string.
       *
-      * @param the source DOMString.
+      * @param other the source DOMString.
       */
     DOMString &        operator = (const DOMString &other);
 
@@ -222,11 +225,11 @@ public:
     //@{
 
     /**
-      * Equality operator.  
+      * Equality operator.
       *
       * @param other The object to be compared with.
       * @return True if the two DOMStrings refer to the same underlying string
-      *  in memory.  
+      *  in memory.
       *  <p>
       *  WARNING:  operator == does NOT compare the contents of
       *  the two  strings.  To do this, use the <code>DOMString::equals()</code>
@@ -255,7 +258,7 @@ public:
       *   variable in Java.
       *
       * @param other must be 0 or null.
-      * @return 
+      * @return
       */
     bool        operator == (const DOM_NullPtr *other) const;
 
@@ -281,7 +284,7 @@ public:
       */
     void reserve(unsigned int size);
 
-    
+
     /**
       * Appends the content of another <code>DOMString</code> to this string.
       *
@@ -292,7 +295,7 @@ public:
     /**
       * Append a single Unicode character to this string.
       *
-      * @param other The object to be appended
+      * @param ch The single character to be appended
       */
     void        appendData(XMLCh ch);
 
@@ -339,7 +342,7 @@ public:
     /**
       * Inserts a string within the existing <code>DOMString</code> at an arbitrary position.
       *
-      * @param offset The offset from the beginning at which the insertion needs to be done 
+      * @param offset The offset from the beginning at which the insertion needs to be done
       *               in <code>this</code> object
       * @param data The <code>DOMString</code> containing the data that needs to be inserted
       * @return The object to be returned.
@@ -440,13 +443,13 @@ public:
     /**
       * Compares a DOMString with another.
       *
-      * This compareString does not match the semantics of the standard C strcmp.  
-      * All it needs to do is define some less than - equals - greater than 
+      * This compareString does not match the semantics of the standard C strcmp.
+      * All it needs to do is define some less than - equals - greater than
       * ordering of strings.  How doesn't matter.
       *
       *
       * @param other The object to be compared with
-      * @return Either -1, 0, or 1 based on the comparison. 
+      * @return Either -1, 0, or 1 based on the comparison.
       */
     int         compareString(const DOMString &other) const;
 

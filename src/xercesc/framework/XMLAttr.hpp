@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:01  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
+ * sane_include
  *
  * Revision 1.9  2001/11/02 14:21:18  knoaman
  * Add support for identity constraints.
@@ -271,9 +274,6 @@ public:
       *                     the value content. Make sure that the value
       *                     set meets the constraints!
       *
-      * @param  specified   Indicates whether the attribute was explicitly
-      *                     specified or not. If not, then it was faulted
-      *                     in from a FIXED or DEFAULT value.
       */
     void set
     (
@@ -308,7 +308,7 @@ public:
     /**
       * This method will update the specified state of the object.
       *
-      * @param  specified   Indicates whether the attribute was explicitly
+      * @param  newValue    Indicates whether the attribute was explicitly
       *                     specified or not. If not, then it was faulted
       *                     in from a FIXED or DEFAULT value.
       */
@@ -327,7 +327,7 @@ public:
     /**
       * This method will update the value field of the attribute.
       *
-      * @param  attrValue   The value string of the attribute, which should
+      * @param  newValue    The value string of the attribute, which should
       *                     be fully normalized by XML rules according to the
       *                     attribute type.
       */
@@ -337,6 +337,8 @@ public:
       * This method will set the URI id field of this attribute. This is
       * generally only ever called internally by the parser itself during
       * the parsing process.
+      *
+      * @param  uriId       The uriId of the attribute.
       */
     void setURIId(const unsigned int uriId);
 

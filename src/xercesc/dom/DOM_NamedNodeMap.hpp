@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/20 18:17:00  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
  * Revision 1.2  2002/02/04 19:57:15  tng
  * Remove the phrase "Experimental".
  *
@@ -200,7 +203,7 @@ public:
      *  named node map as the other reference object.  This does not
      *  compare the contents of two different objects.
      *
-     *  @param arg p The value to be compared
+     *  @param other The value to be compared
      *  @return Returns true if the underlying named node map is same
      */
     bool operator == (const DOM_NamedNodeMap &other) const;
@@ -210,7 +213,7 @@ public:
      *  named node map as the other reference object.  This does not
      *  compare the contents of two different objects.
      *
-     *  @param arg p The value to be compared
+     *  @param other The value to be compared
      *  @return Returns true if the underlying named node map is different
      */
     bool operator != (const DOM_NamedNodeMap &other) const;
@@ -220,7 +223,7 @@ public:
      *  Use this comparison operator to test whether a Named Node Map reference
      *  is null.
      *
-     *  @param arg p The value to be compared, which must be 0 or null.
+     *  @param p The value to be compared, which must be 0 or null.
      *  @return Returns true if the named node map is null
      */
     bool operator == (const DOM_NullPtr *p) const;
@@ -229,7 +232,7 @@ public:
      *  Use this comparison operator to test whether a Named Node Map reference
      *  is not null.
      *
-     *  @param arg p The value to be compared, which must not be 0 or null.
+     *  @param p The value to be compared, which must not be 0 or null.
      *  @return Returns true if the named node map is not null
      */
     bool operator != (const DOM_NullPtr *p) const;

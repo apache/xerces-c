@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/20 18:17:01  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
  * Revision 1.2  2002/02/04 21:20:59  tng
  * Add DOM 2 Level missing functions:
  *   1. NodeIterator::getRoot
@@ -387,7 +390,7 @@ public:
      * Returns <code>true</code> when an attribute with a given name is
      * specified on this element or has a default value, <code>false</code>
      * otherwise.
-     * @param nameThe name of the attribute to look for.
+     * @param name The name of the attribute to look for.
      * @return <code>true</code> if an attribute with the given name is
      *   specified on this element or has a default value, <code>false</code>
      *    otherwise.
@@ -399,8 +402,8 @@ public:
      * namespace URI is specified on this element or has a default value,
      * <code>false</code> otherwise. HTML-only DOM implementations do not
      * need to implement this method.
-     * @param namespaceURIThe namespace URI of the attribute to look for.
-     * @param localNameThe local name of the attribute to look for.
+     * @param namespaceURI The namespace URI of the attribute to look for.
+     * @param localName The local name of the attribute to look for.
      * @return <code>true</code> if an attribute with the given local name
      *   and namespace URI is specified or has a default value on this
      *   element, <code>false</code> otherwise.

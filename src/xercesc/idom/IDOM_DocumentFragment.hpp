@@ -109,7 +109,6 @@ protected:
     IDOM_DocumentFragment() {};
     IDOM_DocumentFragment(const IDOM_DocumentFragment &other) {};
     IDOM_DocumentFragment & operator = (const IDOM_DocumentFragment &other) {return *this;};
-	//@}
     /** @name Destructor */
     //@{
 	

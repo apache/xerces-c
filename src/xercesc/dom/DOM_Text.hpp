@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/20 18:17:00  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
  * Revision 1.2  2002/02/04 19:57:15  tng
  * Remove the phrase "Experimental".
  *
@@ -164,7 +167,7 @@ class CDOM_EXPORT DOM_Text: public DOM_CharacterData {
       *   for an extended time,  when the storage belonging to the underlying
       *   node needs to be reclaimed.
       *
-      * @param val.  Only a value of 0, or null, is allowed.
+      * @param val  Only a value of 0, or null, is allowed.
       */
     DOM_Text & operator = (const DOM_NullPtr *val);
 

@@ -621,7 +621,7 @@ public :
       * documents: e.g, "http://www.example.com file_name.xsd". The user can
       * specify more than one XML Schema in the list.
       *
-      * @param the list of schemas to use
+      * @param schemaLocation the list of schemas to use
       *
       * @see #getExternalSchemaLocation
       */
@@ -632,7 +632,7 @@ public :
       * This method is same as setExternalSchemaLocation(const XMLCh* const).
       * It takes native char string as parameter
       *
-      * @param the list of schemas to use
+      * @param schemaLocation the list of schemas to use
       *
       * @see #setExternalSchemaLocation(const XMLCh* const)
       */
@@ -648,7 +648,7 @@ public :
       * The syntax is the same as for the noNamespaceSchemaLocation attribute
       * that may occur in an instance document: e.g."file_name.xsd".
       *
-      * @param the XML Schema Location with no target namespace
+      * @param noNamespaceSchemaLocation the XML Schema Location with no target namespace
       *
       * @see #getExternalNoNamespaceSchemaLocation
       */
@@ -658,7 +658,7 @@ public :
       * This method is same as setExternalNoNamespaceSchemaLocation(const XMLCh* const).
       * It takes native char string as parameter
       *
-      * @param the XML Schema Location with no target namespace
+      * @param noNamespaceSchemaLocation the XML Schema Location with no target namespace
       *
       * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
       */
@@ -918,7 +918,7 @@ public :
       * This classification is defined by the XML specification.
       *
       * @param errCode An integer code for the error.
-      * @param msgdomain A const pointer to an Unicode string representing
+      * @param msgDomain A const pointer to an Unicode string representing
       *                  the message domain to use.
       * @param errType An enumeration classifying the severity of the error.
       * @param errorText A const pointer to an Unicode string representing
@@ -1249,9 +1249,9 @@ public :
       *                    the encoding string value.
       * @param standaloneStr A const pointer to a Unicode string
       *                      representing the standalone string value.
-      * @param actualEncodingStr A const pointer to a Unicode string
-      *                          representing the actual encoding string
-      *                          value.
+      * @param actualEncStr A const pointer to a Unicode string
+      *                     representing the actual encoding string
+      *                     value.
       */
     virtual void XMLDecl
     (

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
  /*
   * $Log$
-  * Revision 1.1  2002/02/01 22:21:51  peiyongz
-  * Initial revision
+  * Revision 1.2  2002/02/20 18:17:01  tng
+  * [Bug 5977] Warnings on generating apiDocs.
+  *
+  * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
+  * sane_include
   *
   * Revision 1.8  2000/03/02 19:54:24  roddey
   * This checkin includes many changes done while waiting for the
@@ -104,8 +107,8 @@ class XMLEntityDecl;
 /**
   * This abstract class provides the interface for the scanner to return
   * XML document information up to the parser as it scans through the
-  * document. 
-  * 
+  * document.
+  *
   * The interface is very similar to org.sax.DocumentHandler, but
   * has some extra methods required to get all the data out.
   */
@@ -141,7 +144,7 @@ public:
       * @param  length          The number of characters to read from the array.
       * @param  cdataSection    Indicates that this data is inside a CDATA
       *                         section.
-      * @see #ignorableWhitespace 
+      * @see #ignorableWhitespace
       * @see Locator
       */
     virtual void docCharacters
@@ -194,9 +197,9 @@ public:
       * endElement() event, but not necessarily the other way around. For
       * empty tags, there is only a startElement() call.
       *
-      * @param  elementDecl The name of the element whose end tag was just
+      * @param  elemDecl The name of the element whose end tag was just
       *                     parsed.
-      * @param  uriId       The ID of the URI in the URI pool (only valid if 
+      * @param  uriId       The ID of the URI in the URI pool (only valid if
       *                     name spaces is enabled)
       * @param  isRoot      Indicates if this is the root element.
       */
@@ -212,7 +215,7 @@ public:
       * This method is called when scanner encounters the end of an entity
       * reference.
       *
-      * @param  entityName  The name of the entity reference just scanned.
+      * @param  entDecl  The name of the entity reference just scanned.
       */
     virtual void endEntityReference
     (
@@ -269,9 +272,9 @@ public:
       * All elements must always have a startElement() tag. Empty tags will
       * only have the startElement() tag and no endElement() tag.
       *
-      * @param  elementDecl The name of the element whose start tag was just
+      * @param  elemDecl The name of the element whose start tag was just
       *                     parsed.
-      * @param  uriId       The ID of the URI in the URI pool (only valid if 
+      * @param  uriId       The ID of the URI in the URI pool (only valid if
       *                     name spaces is enabled)
       * @param  prefixName  The string representing the prefix name
       * @param  attrList    List of attributes in the element
@@ -296,7 +299,7 @@ public:
       * This is currently useful only to DOM parser configurations as SAX
       * does not provide any api to return this information.
       *
-      * @param  entityName  The name of the entity that was referenced.
+      * @param  entDecl  The name of the entity that was referenced.
       */
     virtual void startEntityReference(const XMLEntityDecl& entDecl) = 0;
 

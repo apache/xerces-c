@@ -132,7 +132,7 @@ class  CDOM_EXPORT DOM_Node {
       *   for an extended time,  when the storage belonging to the underlying
       *   node needs to be reclaimed.
       *
-      * @param val.  Only a value of 0, or null, is allowed.
+      * @param val   Only a value of 0, or null, is allowed.
       */
     DOM_Node & operator = (const DOM_NullPtr *val);
 

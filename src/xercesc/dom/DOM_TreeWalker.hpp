@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/20 18:17:00  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
  * Revision 1.2  2002/02/04 20:03:48  tng
  * Add DOM Level missing functions:
  * 1. NodeIterator::getRoot
@@ -156,7 +159,7 @@ class CDOM_EXPORT DOM_TreeWalker {
           * Assignment operator.  This overloaded variant is provided for
           *   the sole purpose of setting a DOM_NodeIterator to null.
           *
-          * @param val.  Only a value of 0, or null, is allowed.
+          * @param val  Only a value of 0, or null, is allowed.
           */
         DOM_TreeWalker & operator = (const DOM_NullPtr *val);
         //@}
