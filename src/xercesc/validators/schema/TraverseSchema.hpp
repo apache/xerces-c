@@ -128,11 +128,11 @@ public:
     ~TraverseSchema();
 
 private:
-   	// This enumeration is defined here for compatibility with the CodeWarrior
-   	// compiler, which apparently doesn't like to accept default parameter
-   	// arguments that it hasn't yet seen. The Not_All_Context argument is
-   	// used in the declaration of checkMinMax, below.
-   	//
+  	 // This enumeration is defined here for compatibility with the CodeWarrior
+  	 // compiler, which apparently doesn't like to accept default parameter
+  	 // arguments that it hasn't yet seen. The Not_All_Context argument is
+  	 // used in the declaration of checkMinMax, below.
+  	 //
     // Flags indicate any special restrictions on minOccurs and maxOccurs
     // relating to "all".
     //    Not_All_Context    - not processing an <all>
@@ -749,7 +749,8 @@ private:
     RefHashTableOf<ComplexTypeInfo>*               fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*               fGroupRegistry;
     RefHashTableOf<XercesAttGroupInfo>*            fAttGroupRegistry;
-    RefHash2KeysTableOf<SchemaInfo>*               fSchemaInfoList;
+    RefHashTableOf<ElemVector>*                    fIC_ElementsNS;
+    RefHashTableOf<SchemaInfo>*                    fPreprocessedNodes;
     SchemaInfo*                                    fSchemaInfo;
     XercesGroupInfo*                               fCurrentGroupInfo;
     XercesAttGroupInfo*                            fCurrentAttGroupInfo;
@@ -759,17 +760,16 @@ private:
     ValueVectorOf<unsigned int>*                   fIC_NamespaceDepth;
     ValueVectorOf<SchemaElementDecl*>*             fIC_Elements;
     ValueVectorOf<const DOMElement*>*              fDeclStack;
-    GeneralAttributeCheck                          fAttributeCheck;
-    RefHash2KeysTableOf<XMLCh>*                    fGlobalDeclarations;
+    ValueVectorOf<unsigned int>**                  fGlobalDeclarations;
+    RefHashTableOf<ValueVectorOf<DOMElement*> >*   fIC_NodeListNS;
+    RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
     RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;
     RefHash2KeysTableOf<XMLCh>*                    fRedefineComponents;
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
     RefHash2KeysTableOf<ElemVector>*               fValidSubstitutionGroups;
-    RefHashTableOf<ValueVectorOf<DOMElement*> >*   fIC_NodeListNS;
-    RefHashTableOf<ElemVector>*                    fIC_ElementsNS;
-    RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
+    RefHash2KeysTableOf<SchemaInfo>*               fSchemaInfoList;
+    GeneralAttributeCheck                          fAttributeCheck;
     XSDDOMParser*                                  fParser;
-    RefHashTableOf<SchemaInfo>*                    fPreprocessedNodes;
     XSDErrorReporter                               fXSDErrorReporter;
     XSDLocator*                                    fLocator;
 

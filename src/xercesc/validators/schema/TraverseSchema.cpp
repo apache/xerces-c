@@ -174,6 +174,17 @@ const XMLCh* fgIdentityConstraints[] =
     SchemaSymbols::fgELT_KEYREF
 };
 
+// Flags for global declaration
+enum {
+    ENUM_ELT_SIMPLETYPE,
+    ENUM_ELT_COMPLEXTYPE,
+    ENUM_ELT_ELEMENT,
+    ENUM_ELT_ATTRIBUTE,
+    ENUM_ELT_ATTRIBUTEGROUP,
+    ENUM_ELT_GROUP,
+    ENUM_ELT_SIZE
+};
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -4147,15 +4158,15 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         else if (XMLString::equals(name, SchemaSymbols::fgELT_SIMPLETYPE)) {
 
             if (typeName && *typeName) {
-                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_SIMPLETYPE, fullNameId)
-                    || fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId)) {
+                if (fGlobalDeclarations[ENUM_ELT_SIMPLETYPE]->containsElement(fullNameId)
+                    || fGlobalDeclarations[ENUM_ELT_COMPLEXTYPE]->containsElement(fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalType,
                                       SchemaSymbols::fgELT_SIMPLETYPE, typeName, SchemaSymbols::fgELT_COMPLEXTYPE);
                     continue;
                 }
                 else {
-                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_SIMPLETYPE, fullNameId, 0);
+                    fGlobalDeclarations[ENUM_ELT_SIMPLETYPE]->addElement(fullNameId);
                 }
             }
 
@@ -4164,15 +4175,15 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         else if (XMLString::equals(name, SchemaSymbols::fgELT_COMPLEXTYPE)) {
 
             if (typeName && *typeName) {
-                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_SIMPLETYPE, fullNameId)
-                    || fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId)) {
+                if (fGlobalDeclarations[ENUM_ELT_SIMPLETYPE]->containsElement(fullNameId)
+                    || fGlobalDeclarations[ENUM_ELT_COMPLEXTYPE]->containsElement(fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalType,
                                       SchemaSymbols::fgELT_COMPLEXTYPE, typeName, SchemaSymbols::fgELT_SIMPLETYPE);
                     continue;
                 }
                 else {
-                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId, 0);
+                    fGlobalDeclarations[ENUM_ELT_COMPLEXTYPE]->addElement(fullNameId);
                 }
             }
 
@@ -4181,14 +4192,14 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         else if (XMLString::equals(name, SchemaSymbols::fgELT_ELEMENT)) {
 
             if (typeName && *typeName) {
-                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ELEMENT, fullNameId)) {
+                if (fGlobalDeclarations[ENUM_ELT_ELEMENT]->containsElement(fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
                                       SchemaSymbols::fgELT_ELEMENT, typeName);
                     continue;
                 }
                 else {
-                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_ELEMENT, fullNameId, 0);
+                    fGlobalDeclarations[ENUM_ELT_ELEMENT]->addElement(fullNameId);
                 }
             }
 
@@ -4198,14 +4209,14 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         else if (XMLString::equals(name, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
 
             if (typeName && *typeName) {
-                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ATTRIBUTEGROUP, fullNameId)) {
+                if (fGlobalDeclarations[ENUM_ELT_ATTRIBUTEGROUP]->containsElement(fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
                                       SchemaSymbols::fgELT_ATTRIBUTEGROUP, typeName);
                     continue;
                 }
                 else {
-                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_ATTRIBUTEGROUP, fullNameId, 0);
+                    fGlobalDeclarations[ENUM_ELT_ATTRIBUTEGROUP]->addElement(fullNameId);
                 }
             }
 
@@ -4216,13 +4227,13 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         else if (XMLString::equals(name, SchemaSymbols::fgELT_ATTRIBUTE)) {
 
             if (typeName && *typeName) {
-                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ATTRIBUTE, fullNameId)) {
+                if (fGlobalDeclarations[ENUM_ELT_ATTRIBUTE]->containsElement(fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, typeName);
                     continue;
                 }
                 else {
-                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_ATTRIBUTE, fullNameId, 0);
+                    fGlobalDeclarations[ENUM_ELT_ATTRIBUTE]->addElement(fullNameId);
                 }
             }
 
@@ -4233,14 +4244,14 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         else if (XMLString::equals(name, SchemaSymbols::fgELT_GROUP)) {
 
             if (typeName && *typeName) {
-                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_GROUP, fullNameId)) {
+                if (fGlobalDeclarations[ENUM_ELT_GROUP]->containsElement(fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
                                       SchemaSymbols::fgELT_GROUP, typeName);
                     continue;
                 }
                 else {
-                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_GROUP, fullNameId, 0);
+                    fGlobalDeclarations[ENUM_ELT_GROUP]->addElement(fullNameId);
                 }
             }
 
@@ -7819,7 +7830,11 @@ void TraverseSchema::init() {
     fEmptyNamespaceURI = fScanner->getEmptyNamespaceId();
     fCurrentTypeNameStack = new ValueVectorOf<unsigned int>(8);
     fCurrentGroupStack = new ValueVectorOf<unsigned int>(8);
-    fGlobalDeclarations = new RefHash2KeysTableOf<XMLCh>(29, false);
+
+    fGlobalDeclarations = new ValueVectorOf<unsigned int>*[ENUM_ELT_SIZE];
+    for(unsigned int i=0; i < ENUM_ELT_SIZE; i++)
+        fGlobalDeclarations[i] = new ValueVectorOf<unsigned int>(8);
+
     fNotationRegistry = new RefHash2KeysTableOf<XMLCh>(13, false);
     fSchemaInfoList = new RefHash2KeysTableOf<SchemaInfo>(29);
     fPreprocessedNodes = new RefHashTableOf<SchemaInfo>(29, false, new HashPtr());
@@ -7832,7 +7847,12 @@ void TraverseSchema::cleanUp() {
     delete fSchemaInfoList;
     delete fCurrentTypeNameStack;
     delete fCurrentGroupStack;
-    delete fGlobalDeclarations;
+
+    for(unsigned int i=0; i < ENUM_ELT_SIZE; i++)
+        delete fGlobalDeclarations[i];
+
+    delete [] fGlobalDeclarations;
+
     delete fNotationRegistry;
     delete fRedefineComponents;
     delete fIdentityConstraintNames;
