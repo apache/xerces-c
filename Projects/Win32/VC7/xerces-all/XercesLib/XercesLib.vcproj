@@ -1653,6 +1653,12 @@
 					RelativePath="..\..\..\..\..\src\xercesc\validators\datatype\UnionDatatypeValidator.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\datatype\YearDatatypeValidator.cpp">
 				</File>
 				<File
