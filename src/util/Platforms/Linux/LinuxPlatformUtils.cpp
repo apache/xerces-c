@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/22 00:58:15  aruna1
+ * openFile API updated
+ *
  * Revision 1.9  2000/02/06 07:48:28  rahulj
  * Year 2K copyright swat.
  *
@@ -432,7 +435,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     return (unsigned int)retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     const char* tmpFileName = XMLString::transcode(fileName);
     ArrayJanitor<char> janText((char*)tmpFileName);
@@ -443,6 +446,14 @@ FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+{
+    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
+
+    if (retVal == NULL)
+        return 0;
+    return retVal;
+}
 
 
 FileHandle XMLPlatformUtils::openStdInHandle()
