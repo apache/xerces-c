@@ -81,10 +81,11 @@ class DOMImplementationImpl: public XMemory,
                              public DOMImplementation,
                              public DOMImplementationSource
 {
-protected:
-    DOMImplementationImpl() {};
+private:
     DOMImplementationImpl(const DOMImplementationImpl & other) {};
     DOMImplementationImpl & operator = (const DOMImplementationImpl & other) {return *this;};
+protected:
+    DOMImplementationImpl() {};
 public:
     virtual ~DOMImplementationImpl() {};
     static DOMImplementationImpl*   getDOMImplementationImpl();
