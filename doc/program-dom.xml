@@ -630,7 +630,7 @@
                 <tr><th colspan="2"><em>void useImplementation(const XMLCh* const)</em></th></tr>
                 <tr><th><em>Description</em></th><td>This property allows the user to specify a set of features
                             which the parser will then use to acquire an implementation from which it will create
-                            the DOMDocument to use when reading in an XML file.
+                            the DOMDocument to use when reading in an XML file.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
             </table>
 
@@ -1286,7 +1286,7 @@
                 <tr><th colspan="2"><em>http://apache.org/xml/properties/parser-use-DOMDocument-from-Implementation</em></th></tr>
                 <tr><th><em>Description</em></th><td>This property allows the user to specify a set of features
                             which the parser will then use to acquire an implementation from which it will create
-                            the DOMDocument to use when reading in an XML file.
+                            the DOMDocument to use when reading in an XML file.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
 
             </table>
