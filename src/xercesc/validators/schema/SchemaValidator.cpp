@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2003/01/29 20:01:20  gareth
+ * We now detect when elements/attributes are validated and the result of the validation is stored.
+ *
  * Revision 1.26  2003/01/20 19:04:48  knoaman
  * Fix for particle derivation checking.
  *
@@ -273,6 +276,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                                  , QName** const         children
                                  , const unsigned int    childCount)
 {
+    bool valid = true;
+
     //
     //  Look up the element id in our element decl pool. This will get us
     //  the element decl in our own way of looking at them.
@@ -294,8 +299,9 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         //  We can do this one here. It cannot have any children. If it does
         //  we return 0 as the index of the first bad child.
         //
-        if (childCount)
+        if (childCount) {
             return 0;
+        }
     }
     else if ((modelType == SchemaElementDecl::Mixed_Simple)
          ||  (modelType == SchemaElementDecl::Mixed_Complex)
@@ -307,8 +313,11 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         // character or element information item [children].
         //
         if (fNil) {
-            if (childCount > 0 || !XMLString::equals(fDatatypeBuffer.getRawBuffer(), XMLUni::fgZeroLenString))
+            if (childCount > 0 || !XMLString::equals(fDatatypeBuffer.getRawBuffer(), XMLUni::fgZeroLenString)) {
                 emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+                valid = false;
+            }
 
         }
         else {
@@ -325,6 +334,11 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                                                       , fGrammarResolver
                                                       , getScanner()->getURIStringPool());
             }
+
+            if(result != -1) {
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+            }
+
             return result;
         }
     }
@@ -333,8 +347,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         // Normally for SchemaElementDecl::Any, We pass no judgement on it and anything goes
         // but if there is a fXsiTypeValidator, we need to use it for validation
 
+
         if (modelType == SchemaElementDecl::Simple && childCount > 0) {
             emitError(XMLValid::SimpleTypeHasChild, elemDecl->getFullName());
+            valid = false;
         } else {
             try {
                 DatatypeValidator* fCurrentDV = 0;
@@ -350,8 +366,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     fXsiTypeValidator = 0;
                 }
                 if (!fCurrentDV) {
-                    if (modelType == SchemaElementDecl::Simple)
+                    if (modelType == SchemaElementDecl::Simple) {
                         emitError(XMLValid::NoDatatypeValidatorForSimpleType, elemDecl->getFullName());
+                        valid = false;
+                    }
                 } else {
                     XMLCh* value = fDatatypeBuffer.getRawBuffer();
                     XMLCh* elemDefaultValue = ((SchemaElementDecl*) elemDecl)->getDefaultValue();
@@ -445,9 +463,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         // a default value was specified
 
                         // if nillable, it's an error to have default value
-                        if (fNil)
+                        if (fNil) {
                             emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
-
+                            valid = false;
+                        }
                         if (XMLString::equals(value, XMLUni::fgZeroLenString)) {
                             // if this element didn't specified any value
                             // use default value
@@ -465,13 +484,17 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             // this element has specified some value
                             // if the flag is FIXED, then this value must be same as default value
                             if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_FIXED) != 0) {
-                                if (fCurrentDV->compare(value, elemDefaultValue) != 0 )
+                                if (fCurrentDV->compare(value, elemDefaultValue) != 0 ) {
                                     emitError(XMLValid::FixedDifferentFromActual, elemDecl->getFullName());
+                                    valid = false;
+                                }
                             }
 
                             // if nillable, it's an error to have value
-                            if (fNil)
+                            if (fNil) {
                                 emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
+                                valid = false;
+                            }
                             else
                                 fCurrentDV->validate(value);
                         }
@@ -484,6 +507,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         }
                         else if (fNil) {
                             emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
+                            valid = false;
                         }
                         else
                             fCurrentDV->validate(value);
@@ -492,8 +516,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             }
             catch (XMLException& idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+                valid = false;
             }
             catch (...) {
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 emitError(XMLValid::GenericError);
                 throw;
             }
@@ -508,6 +534,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     fNil = false;
     fTrailing=false;
 
+    if(!valid) {
+        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+    }
+       
     // Went ok, so return success
     return -1;
 }
@@ -553,6 +583,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                                        , bool                  preValidation
                                        , const XMLElementDecl* elemDecl)
 {
+
     //
     //  Get quick refs to lot of the stuff in the passed objects in
     //  order to simplify the code below, which will reference them very
@@ -561,6 +592,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     XMLAttDef::AttTypes            type      = attDef->getType();
     const XMLAttDef::DefAttTypes   defType   = attDef->getDefaultType();
     const XMLCh* const             fullName  = attDef->getFullName();
+    bool valid = true;
 
     //
     //  If the default type is fixed, then make sure the passed value maps
@@ -573,20 +605,25 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     if ((defType == XMLAttDef::Fixed || defType == XMLAttDef::Required_And_Fixed) && !preValidation)
     {
         const XMLCh* const valueText = attDef->getValue();
-        if (!XMLString::equals(attrValue, valueText))
+        if (!XMLString::equals(attrValue, valueText)) {
             emitError(XMLValid::NotSameAsFixedValue, fullName, attrValue, valueText);
+            valid = false;
+        }
     }
 
     // An empty string cannot be valid for non_CDATA any of the other types
     if (!attrValue[0] && type != XMLAttDef::Simple)
     {
         emitError(XMLValid::InvalidEmptyAttValue, fullName);
+        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+        ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
         return;
     }
 
     DatatypeValidator* attDefDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
     if (!attDefDV) {
         emitError(XMLValid::NoDatatypeValidatorForAttribute, fullName);
+        valid = false;
     }
     else {
         try {
@@ -673,34 +710,48 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
             }
             else {
                 if (thisIsAnId) {
-                    if (fSeenId)
+                    if (fSeenId) {
                         emitError
                         (
                             XMLValid::MultipleIdAttrs
                             , elemDecl->getFullName()
                         );
+                        valid = false;
+                    }
                     else
                         fSeenId = true;
                 }
                 attDefDV->validate(attrValue);
             }
-
         }
         catch (XMLException& idve) {
-                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+            valid = false;
+            emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());       
         }
         catch (...) {
             emitError(XMLValid::GenericError);
+            ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+            ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
             throw;
         }
     }
+
+    if(!valid) {
+        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+        ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+    }
+    
     fTrailing = false;
+
+
 }
 
 void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 {
     ComplexTypeInfo* elemTypeInfo = ((SchemaElementDecl*)elemDef)->getComplexTypeInfo();
     fTypeStack->push(elemTypeInfo);
+
+    bool valid = true;
 
     if (fXsiType) {
         // handle "xsi:type" right here
@@ -711,6 +762,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
             uri != XMLElementDecl::fgPCDataElemId &&
             uri != XMLContentModel::gEpsilonFakeId &&
             uri != XMLContentModel::gEOCFakeId) {
+
             // retrieve Grammar for the uri
             const XMLCh* uriStr = getScanner()->getURIText(uri);
             SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uriStr);
@@ -722,21 +774,29 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
                     fXsiTypeValidator = fGrammarResolver->getDatatypeValidator(uriStr, localPart);
 
-                    if (!fXsiTypeValidator)
+                    if (!fXsiTypeValidator) {
                         emitError(XMLValid::BadXsiType, fXsiType->getRawName());
+                        valid = false;
+                    }
                     else {
+                        ((SchemaElementDecl*)elemDef)->setXsiSimpleTypeInfo(fXsiTypeValidator);
+
                         DatatypeValidator* ancestorValidator = ((SchemaElementDecl*)elemDef)->getDatatypeValidator();
                         if (ancestorValidator && !ancestorValidator->isSubstitutableBy(fXsiTypeValidator)) {
                             // the type is not derived from ancestor
                             emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                            valid = false;
                         }
                         else {
                             // the type is derived from ancestor
-                            if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION)
+                            if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION) {
                                 emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                                valid = false;
+                            }
                             if (elemDef->hasAttDefs()) {
                                 // if we have an attribute but xsi:type's type is simple, we have a problem...
                                 emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                                valid = false;
                             }
                         }
                     }
@@ -744,18 +804,23 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                 else {
                     // Grammar not found
                     emitError(XMLValid::GrammarNotFound, uriStr);
+                    valid = false;
                 }
             }
             else if (sGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
                 emitError(XMLValid::GrammarNotFound, uriStr);
+                valid = false;
             }
             else {
                 // retrieve complexType registry and DatatypeValidator registry
                 RefHashTableOf<ComplexTypeInfo>* complexTypeRegistry = sGrammar->getComplexTypeRegistry();
 
-                if (!complexTypeRegistry)
+                if (!complexTypeRegistry) {
                     emitError(XMLValid::BadXsiType, fXsiType->getRawName());
+                    valid = false;
+                }
                 else {
+
                     // retrieve the typeInfo specified in xsi:type
                     XMLBuffer aBuffer;
                     aBuffer.set(uriStr);
@@ -775,7 +840,6 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         ComplexTypeInfo* destType = ((SchemaElementDecl*)elemDef)->getComplexTypeInfo();
                         ComplexTypeInfo* tempType = typeInfo;
                         if (destType) {
-
                             while (tempType) {
                                 if (XMLString::equals(tempType->getTypeName(), destType->getTypeName()))
                                     break;
@@ -804,31 +868,40 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         }
 
                         if (!error) {
-
                             ((SchemaElementDecl*)elemDef)->setXsiComplexTypeInfo(typeInfo);
                             fTypeStack->pop();
                             fTypeStack->push(typeInfo);
                         }
+                        valid = !error;
                     }
                     else {
                         // typeInfo not found
                         fXsiTypeValidator = fGrammarResolver->getDatatypeValidator(uriStr, localPart);
 
-                        if (!fXsiTypeValidator)
+                        if (!fXsiTypeValidator) {
                             emitError(XMLValid::BadXsiType, fXsiType->getRawName());
+                            valid = false;
+                        }
                         else {
+
+                            ((SchemaElementDecl*)elemDef)->setXsiSimpleTypeInfo(fXsiTypeValidator);
                             DatatypeValidator* ancestorValidator = ((SchemaElementDecl*)elemDef)->getDatatypeValidator();
                             if (ancestorValidator && !ancestorValidator->isSubstitutableBy(fXsiTypeValidator)) {
                                 // the type is not derived from ancestor
                                 emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                                valid = false;
                             }
                             else {
                                 // the type is derived from ancestor
-                                if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION)
+                                if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION) {
                                     emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                                    valid = false;
+                                    
+                                }
                                 if (elemDef->hasAttDefs()) {
                                     // if we have an attribute but xsi:type's type is simple, we have a problem...
                                     emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                                    valid = false;
                                 }
                             }
 
@@ -847,6 +920,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         //
         if (elemTypeInfo && elemTypeInfo->getAbstract()) {
             emitError(XMLValid::NoUseAbstractType, elemDef->getFullName());
+            valid = false;
         }
     }
 
@@ -856,6 +930,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     int miscFlags = ((SchemaElementDecl*)elemDef)->getMiscFlags();
     if ((miscFlags & SchemaSymbols::XSD_ABSTRACT) != 0) {
         emitError(XMLValid::NoDirectUseAbstractElement, elemDef->getFullName());
+        valid = false;
     }
 
     //
@@ -864,11 +939,16 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     if (fNil && (miscFlags & SchemaSymbols::XSD_NILLABLE) == 0 ) {
         fNil = false;
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());
+        valid = false;
     }
 
     fDatatypeBuffer.reset();
     fTrailing = false;
     fSeenId = false;
+
+    if(!valid) {
+        ((SchemaElementDecl *)(elemDef))->setValidity(PSVIDefs::INVALID);    
+    }
 }
 
 void SchemaValidator::preContentValidation(bool reuseGrammar,
