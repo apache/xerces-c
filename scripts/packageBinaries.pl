@@ -11,12 +11,6 @@ $|=1;   # Force a flush after every print
 &Getopt('sopcxmntr');
 $XERCESCROOT = $opt_s;
 $targetdir = $opt_o;
-$ccompiler = $opt_c;
-$cppcompiler = $opt_x;
-$msgloader = $opt_m;
-$netaccessor = $opt_n;
-$transcoder = $opt_t;
-$thread = $opt_r;
 
 # Check for the environment variables and exit if error
 if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
@@ -65,16 +59,14 @@ $targetdir =~ s/\\/\//g;
 open(PLATFORM, "uname -s|");
 $platform = <PLATFORM>;
 chomp($platform);
-#$platform =~ m/(^\w*)\s/;
-#$platform = $1;
 close (PLATFORM);
 
 print "Packaging binaries for \`" . $platform . "\` in " . $targetdir . " ...\n";
 
 #Construct the name of the zip file by extracting the last directory name
-$zipfiles = $targetdir . "/*";
-# $zipfiles =~ m/\/(\w*$)/;
-# $zipfiles = $1 . "/*";
+$zipfiles = $targetdir;
+$zipfiles =~ s/.*\/([\w|-]*)$/$1/g;
+$zipfiles = $zipfiles . "/*";
 
 $buildmode = "Release";    # Universally, why do you want to package Debug builds anyway?
 
@@ -281,7 +273,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
            $icuCompileFlags = 'CXX="xlC_r -L/usr/lpp/xlC/lib" CC="xlc_r -L/usr/lpp/xlC/lib" C_FLAGS="-w -O" CXX_FLAGS="-w -O"'; 
         }
         if ($platform eq 'HP-UX') {
-            if ($ccompiler eq 'CC') {
+            if ($opt_c eq 'CC') {
                 $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"'; 
             }
             else {
@@ -303,9 +295,6 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
                 exit(1);
         }
 
-        $srczipfiles = $srctargetdir . "/*";
-
-        $srctargetdir = $OUTPUTDIR . $srctargetdir;
         if (-e $srctargetdir.".tar") {
                 print ("Error: The target file \'$srctargetdir.tar\' already exists.\n");
                 print ("       You must delete the file \'$srctargetdir.tar\' to package your product.\n");
@@ -377,7 +366,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 			system ("gmake");
 			# For the antiquated CC compiler under HPUX, we need to invoke
 			# gmake one extra time to generate the .cnv files.
-			if ( ($platform eq 'HP-UX') && ($compiler eq 'CC') ) {
+			if ( ($platform eq 'HP-UX') && ($opt_c eq 'CC') ) {
 				system ("gmake");
 			}
 		}
@@ -487,9 +476,8 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         chdir ("$targetdir/..");
         $zipname = $targetdir . ".tar";
         $platformzipname = $zipname;
-        $platformzipname =~ s/\.tar/$platformextension\.tar/g;
 
-        print ("tar -cvf $platfromzipname $zipfiles\n");
+        print ("tar -cvf $platformzipname $zipfiles\n");
         system ("tar -cvf $platformzipname $zipfiles");
 
         # Finally compress the files

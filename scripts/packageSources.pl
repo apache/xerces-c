@@ -50,15 +50,11 @@ while ($fileline = <VERSIONFILE>) {
    if ($fileline =~ /gXML4CFullVersionStr = \"(.*)\"/) {
      $binarytargetdir = $1;  # We found the version string inside this file
    }
-   if ($fileline =~ /gXML4CVersionStr = \"(.*)\"/) {
-      $libraryversion = $1;
-   }
 }
 close(VERSIONFILE);
 
 $binarytargetdir =~ s/\./_/g;    # Substitute the dots
 $binarytargetdir =~ s/\s/_/g;    # Substitute the blanks
-$binarydirectoryname = "xerces-c_" . $binarytargetdir;  # Is the name of the binary directory
 $binarytargetdir =~ s/\\/\//g;   # Fix the backslashes, if they exist, probably doesn't
 
 # Now check if the target directory exists, exit if it does
@@ -68,8 +64,10 @@ if (-e $OUTPUTDIR) {
         exit(1);
 }
 
-
-$srczipfiles = $OUTPUTDIR . "/*";
+#Construct the name of the zip file by extracting the last directory name
+$srczipfiles = $OUTPUTDIR;
+$srczipfiles =~ s/.*\/([\w|-]*)$/$1/g;
+$srczipfiles = $srczipfiles . "/*";
 $srctargetdir = $OUTPUTDIR;
 
 # Find out the platform from 'uname -a'
