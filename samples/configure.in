@@ -65,6 +65,9 @@ AC_SUBST(cxxflags)
 cflags=${CFLAGS}
 AC_SUBST(cflags)
 
+ldflags=${LDFLAGS}
+AC_SUBST(ldflags)
+
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
 SAXCount/Makefile \
