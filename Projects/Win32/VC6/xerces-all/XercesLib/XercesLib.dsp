@@ -1371,6 +1371,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRecognizer.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRefInfo.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRefInfo.hpp
 # End Source File
 # Begin Source File
