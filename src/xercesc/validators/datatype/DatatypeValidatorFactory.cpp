@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/12/02 16:01:24  gareth
+ * Fix to bug #12188. NCNAME validator now has a base validator of NAME. Patch by Peter Volchek.
+ *
  * Revision 1.7  2002/12/02 13:25:51  gareth
  * Fix for bug #12188. Create NMTOKEN, ID, IDREF, ENTITY, NAME, NCNAME with appropriate base types. Some reordering of creation was required where dependencies resulted.
  *
@@ -475,7 +478,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
             fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NAME,
                            new NameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_TOKEN), 0, 0, 0));
             fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,
-                           new NCNameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_TOKEN), 0, 0, 0));
+                           new NCNameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NAME), 0, 0, 0));
 
 
             // Create 'NMTOKEN' datatype validator
@@ -651,15 +654,6 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
 
     if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
-        /*        fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
-                           new IDDatatypeValidator());
-        fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
-                           new IDREFDatatypeValidator());
-        fUserDefinedRegistry->put((void*) XMLUni::fgEntityString,
-                           new ENTITYDatatypeValidator());
-        */
-
-
         fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
                            new IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
         fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
