@@ -147,21 +147,22 @@ public:
     void              setReadOnly(bool readOnly, bool deep);
     bool              isSupported(const XMLCh *feature, const XMLCh *version) const;
     bool              hasAttributes() const;
-    void              release();
+
+    // Introduced in DOM Level 3
+    void*             setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler);
+    void*             getUserData(const XMLCh* key) const;
     bool              isSameNode(const DOMNode* other);
     bool              isEqualNode(const DOMNode* arg);
 
-    static  bool      isKidOK(DOMNode *parent, DOMNode *child);
-
-    // user data utility
-    void*             setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler);
-    void*             getUserData(const XMLCh* key) const;
+    // Helper functions for DOM Level 3
+    void              release();
     void              callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
                                            const DOMNode* src,
                                            const DOMNode* dst) const;
 
 
     //Utility, not part of DOM Level 2 API
+    static  bool      isKidOK(DOMNode *parent, DOMNode *child);
     static const XMLCh *mapPrefix(const XMLCh *prefix,
                                const XMLCh *namespaceURI, short nType);
 

@@ -430,61 +430,31 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
     if (arg->getNodeType() != thisNode->getNodeType()) {
         return false;
     }
-    // in theory nodeName can't be null but better be careful
-    // who knows what other implementations may be doing?...
-    if (!thisNode->getNodeName()) {
-        if (arg->getNodeName()) {
-            return false;
-        }
-    }
-    else if (XMLString::compareString(thisNode->getNodeName(), arg->getNodeName())) {
+
+    // the compareString will check null string as well
+    if (XMLString::compareString(thisNode->getNodeName(), arg->getNodeName())) {
         return false;
     }
 
-    if (!thisNode->getLocalName()) {
-        if (arg->getLocalName()) {
-            return false;
-        }
-    }
-    else if (XMLString::compareString(thisNode->getLocalName(),arg->getLocalName())) {
+    if (XMLString::compareString(thisNode->getLocalName(),arg->getLocalName())) {
         return false;
     }
 
-    if (!thisNode->getNamespaceURI()) {
-        if (arg->getNamespaceURI()) {
-            return false;
-        }
-    }
-    else if (XMLString::compareString(thisNode->getNamespaceURI(), arg->getNamespaceURI())) {
+    if (XMLString::compareString(thisNode->getNamespaceURI(), arg->getNamespaceURI())) {
         return false;
     }
 
-    if (!thisNode->getPrefix()) {
-        if (arg->getPrefix()) {
-            return false;
-        }
-    }
-    else if (XMLString::compareString(thisNode->getPrefix(), arg->getPrefix())) {
+    if (XMLString::compareString(thisNode->getPrefix(), arg->getPrefix())) {
         return false;
     }
 
-    if (!thisNode->getNodeValue()) {
-        if (arg->getNodeValue()) {
-            return false;
-        }
-    }
-    else if (XMLString::compareString(thisNode->getNodeValue(), arg->getNodeValue())) {
+    if (XMLString::compareString(thisNode->getNodeValue(), arg->getNodeValue())) {
         return false;
     }
 
 // baseURI not suppported yet
 /*
-    if (!thisNode->getBaseURI()) {
-        if (arg->getBaseURI()) {
-            return false;
-        }
-    }
-    else if (XMLString::compareString(thisNode->getBaseURI(), arg->getBaseURI())) {
+    if (XMLString::compareString(thisNode->getBaseURI(), arg->getBaseURI())) {
         return false;
     }*/
 
