@@ -93,7 +93,6 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    bool                getAdoptContentSpec() const;
     int                 getScope() const;
     unsigned int        elementCount() const;
     ContentSpecNode*    getContentSpec() const;
@@ -105,7 +104,6 @@ public:
     // -----------------------------------------------------------------------
     void setScope(const int other);
     void setContentSpec(ContentSpecNode* const other);
-    void setAdoptContentSpec(const bool toAdopt);
     void addElement(SchemaElementDecl* const toAdd);
 
 	// -----------------------------------------------------------------------
