@@ -1051,38 +1051,38 @@ sub populateSamples() {
 
     print ("\n\nCopying sample files ...\n");    
     
-    psystem("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+    psystem("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
     psystem("rm -f $targetdir/samples/SAXCount/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
+    psystem("cp -Rf $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
     psystem("rm -f $targetdir/samples/SAX2Count/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+    psystem("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
     psystem("rm -f $targetdir/samples/SAXPrint/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
+    psystem("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
     psystem("rm -f $targetdir/samples/SAX2Print/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+    psystem("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
     psystem("rm -f $targetdir/samples/DOMCount/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+    psystem("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
     psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+    psystem("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
     psystem("rm -f $targetdir/samples/Redirect/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+    psystem("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
     psystem("rm -f $targetdir/samples/MemParse/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+    psystem("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
     psystem("rm -f $targetdir/samples/PParse/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+    psystem("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
     psystem("rm -f $targetdir/samples/StdInParse/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
+    psystem("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
     psystem("rm -f $targetdir/samples/EnumVal/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/SEnumVal/* $targetdir/samples/SEnumVal");
+    psystem("cp -Rf $XERCESCROOT/samples/SEnumVal/* $targetdir/samples/SEnumVal");
     psystem("rm -f $targetdir/samples/SEnumVal/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
+    psystem("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
     psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/PSVIWriter/* $targetdir/samples/PSVIWriter");
+    psystem("cp -Rf $XERCESCROOT/samples/PSVIWriter/* $targetdir/samples/PSVIWriter");
     psystem("rm -f $targetdir/samples/PSVIWriter/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/SCMPrint/* $targetdir/samples/SCMPrint");
+    psystem("cp -Rf $XERCESCROOT/samples/SCMPrint/* $targetdir/samples/SCMPrint");
     psystem("rm -f $targetdir/samples/SCMPrint/Makefile");
         
-    psystem("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");	
+    psystem("cp -Rf $XERCESCROOT/samples/data/* $targetdir/samples/data");	
            
 }
 
@@ -1094,7 +1094,7 @@ sub populateMisc() {
 
     # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
-    psystem("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
+    psystem("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
     psystem("cp $XERCESCROOT/Readme.html $targetdir");
     psystem("cp $XERCESCROOT/credits.txt $targetdir");
     psystem("cp $XERCESCROOT/LICENSE.txt $targetdir");
