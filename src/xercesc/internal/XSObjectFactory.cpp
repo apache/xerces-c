@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/01 20:41:25  neilg
+ * fix for infinite loop between XSComplexTypeDefinitions and XSElementDeclarations; from David Cargill
+ *
  * Revision 1.7  2003/11/27 16:42:00  neilg
  * fixes for segfaults and infinite loops in schema component model implementation; thanks to David Cargill
  *
@@ -434,9 +437,9 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
         if (elemDecl->getSubstitutionGroupElem())
             xsSubElem = addOrFind(elemDecl->getSubstitutionGroupElem(), xsModel);
 
-        if (elemDecl->getComplexTypeInfo())
-            xsType = addOrFind(elemDecl->getComplexTypeInfo(), xsModel);
-        else if (elemDecl->getDatatypeValidator())
+        // defer checking for complextypeinfo until later as it could
+        // eventually need this elemement
+        if (elemDecl->getDatatypeValidator())
             xsType = addOrFind(elemDecl->getDatatypeValidator(), xsModel);
 
         unsigned int count = elemDecl->getIdentityConstraintCount();
@@ -491,6 +494,12 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
             , fMemoryManager
         );
         putObjectInMap(elemDecl, xsObj, xsModel);
+
+        if (!xsType && elemDecl->getComplexTypeInfo())
+        {
+            xsType = addOrFind(elemDecl->getComplexTypeInfo(), xsModel);
+            xsObj->setTypeDefinition(xsType);
+        }
     }
 
     return xsObj;

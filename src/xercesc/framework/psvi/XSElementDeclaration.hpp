@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/01 20:41:25  neilg
+ * fix for infinite loop between XSComplexTypeDefinitions and XSElementDeclarations; from David Cargill
+ *
  * Revision 1.6  2003/11/23 16:20:16  knoaman
  * PSVI: pass scope and enclosing type during construction.
  *
@@ -285,6 +288,8 @@ public:
       */
     void setId(unsigned int id);
 
+    void setTypeDefinition(XSTypeDefinition* typeDefinition);
+
     //@}
 private:
 
@@ -356,6 +361,10 @@ inline XSComplexTypeDefinition *XSElementDeclaration::getEnclosingCTDefinition()
     return fEnclosingTypeDefinition;
 }
 
+inline void XSElementDeclaration::setTypeDefinition(XSTypeDefinition* typeDefinition)
+{
+    fTypeDefinition = typeDefinition;
+}
 
 XERCES_CPP_NAMESPACE_END
 
