@@ -70,6 +70,7 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+TRANSCODER = @transcoder@
 
 include ../Makefile.incl
 

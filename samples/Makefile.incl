@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.5  1999/12/20 23:53:58  aruna1
+# "transcoder information checked instead of ICUROOT"
+#
 # Revision 1.4  1999/12/01 01:08:20  aruna1
 # Added notempinc for AIX
 #
@@ -76,7 +79,8 @@ LIB_DIR=${XERCESCROOT}/lib
 LIBNAME=xerces-c
 THISLIB=${LIB_DIR}/${LIBNAME}
 VER=1_0
-ifdef ICUROOT
+
+ifeq (${TRANSCODER}, ICU)
    ICU_LIB_DIR=${ICUROOT}/lib
    ICU_LIBNAME=icu-uc
    LIBRARY_NAMES=-l${ICU_LIBNAME} -l${LIBNAME}${VER}
