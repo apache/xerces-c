@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/12/12 16:53:25  peiyongz
+ * Message file name changed.
+ *
  * Revision 1.10  2002/12/06 16:29:17  peiyongz
  * $XERCESCROOT/msg created as home directory for message files, and
  * set default locale.
@@ -198,7 +201,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     /***
 	Open the locale-specific resource bundle
     ***/
-    strcat(locationBuf, "XercescErrMsg");
+    strcat(locationBuf, "XercesMessages");
     UErrorCode err = U_ZERO_ERROR;
     uloc_setDefault("en_US", &err);   // in case user-specified locale unavailable
     err = U_ZERO_ERROR;

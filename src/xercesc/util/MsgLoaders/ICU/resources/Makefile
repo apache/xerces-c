@@ -15,7 +15,7 @@
 #
 #
 
-PKGNAME  = XercescErrMsg
+PKGNAME  = XercesMessages
 TARGETS  = $(PKGNAME)_en_US.res
 GENRB    = $(ICUROOT)/bin/genrb
 GENRBOPT = -s. -d. --package-name $(PKGNAME)

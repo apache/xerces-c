@@ -14,7 +14,7 @@
 #    . AND to the file res-file-list.txt if *dll is to be built
 #
 #
-PKGNAME  = XercescErrMsg
+PKGNAME  = XercesMessages
 TARGETS  = $(PKGNAME)_en_US.res
 GENRB    = $(ICUROOT)\bin\genrb.exe
 GENRBOPT = -s. -d. --package-name $(PKGNAME)
