@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.35  2003/05/12 16:08:11  gareth
+ * fix to #18832. Corrected serilization with regards to namespace nodes. Patch by Alby Massari.
+ *
  * Revision 1.34  2003/05/06 13:48:35  neilg
  * fix GCC compilation problem and incorrect #include
  *
@@ -397,6 +400,21 @@ static const XMLByte  BOM_utf16le[] = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte) 0
 static const XMLByte  BOM_ucs4be[]  = {(XMLByte)0x00, (XMLByte)0x00, (XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
 static const XMLByte  BOM_ucs4le[]  = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte)0x00, (XMLByte)0x00, (XMLByte) 0};
 
+static const XMLCh s_xmlnsURI[] = // "http://www.w3.org/2000/xmlns/"
+    {  chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
+       chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
+       chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+       chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash,
+       chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chForwardSlash, chNull};
+static const XMLCh s_xmlns[] = {chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
+static const XMLCh s_xmlURI[] =    // "http://www.w3.org/XML/1998/namespace"
+    { chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
+      chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
+      chLatin_o, chLatin_r, chLatin_g, chForwardSlash, chLatin_X, chLatin_M, chLatin_L, chForwardSlash,
+      chDigit_1, chDigit_9, chDigit_9, chDigit_8, chForwardSlash,
+      chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e,
+      chNull};
+
 //
 // Notification of the error though error handler
 //
@@ -431,7 +449,7 @@ DOMWriterImpl::~DOMWriterImpl()
 {
     delete [] fEncoding;
     delete [] fNewLine;
-
+    delete fNamespaceStack;
     // we don't own/adopt error handler and filter
 }
 
@@ -447,7 +465,10 @@ DOMWriterImpl::DOMWriterImpl()
 ,fFormatter(0)
 ,fErrorCount(0)
 ,fCurrentLine(0)
+,fNamespaceStack(0)
 {
+    fNamespaceStack=new RefVectorOf< RefHashTableOf<XMLCh> >(0,true);
+
     //
     // set features to default setting
     //
@@ -885,6 +906,10 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             //track the line number the current node begins on
             int nodeLine = fCurrentLine;
 
+			// add an entry in the namespace stack
+			RefHashTableOf<XMLCh>* namespaceMap=new RefHashTableOf<XMLCh>(12,false);
+			fNamespaceStack->addElement(namespaceMap);
+
             if ( filterAction == DOMNodeFilter::FILTER_ACCEPT)
             {
                 //           this element    attributes   child elements
@@ -903,6 +928,39 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 setURCharRef();
                 DOMNamedNodeMap *attributes = nodeToWrite->getAttributes();
                 int attrCount = attributes->getLength();
+
+                // check if the namespace for the current node is already defined
+                const XMLCh* prefix = nodeToWrite->getPrefix();
+                const XMLCh* uri = nodeToWrite->getNamespaceURI();
+                if(uri && uri[0])
+                {
+                    if(prefix==0 || prefix[0]==0)
+                        prefix=XMLUni::fgZeroLenString;
+                    bool bPrefixDeclared=false;
+                    for(int i=fNamespaceStack->size()-1;i>=0;i--)
+                    {
+                        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
+                        const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
+                        if(thisUri && XMLString::equals(thisUri,nodeToWrite->getNamespaceURI()))
+                        {
+                            bPrefixDeclared=true;
+                            break;
+                        }
+                    }
+                    if(!bPrefixDeclared)
+                    {
+                        namespaceMap->put((void*)prefix,(XMLCh*)nodeToWrite->getNamespaceURI());
+                        *fFormatter  << XMLFormatter::NoEscapes
+                                     << chSpace << s_xmlns;
+                        if(!XMLString::equals(prefix,XMLUni::fgZeroLenString))
+                            *fFormatter  << chColon << prefix;
+                        *fFormatter  << chEqual << chDoubleQuote
+                                     << XMLFormatter::AttrEscapes
+                                     << nodeToWrite->getNamespaceURI()
+                                     << XMLFormatter::NoEscapes
+                                     << chDoubleQuote;
+                    }
+                }
 
                 bool discard = getFeature(DISCARD_DEFAULT_CONTENT_ID);
                 for (int i = 0; i < attrCount; i++)
@@ -937,6 +995,47 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     //  escaping.
                     //
 
+                    // if this attribute is a namespace declaration, add it to the namespace map for the current level
+                    const XMLCh* ns = attribute->getNamespaceURI();
+                    if (ns != 0 )
+                    {
+                        if(XMLString::equals(ns, s_xmlnsURI)) 
+                        {
+                            if(namespaceMap->containsKey((void*)attribute->getLocalName()))
+                                continue;
+                            namespaceMap->put((void*)attribute->getLocalName(),(XMLCh*)attribute->getNodeValue());
+                        }
+                        else if(!XMLString::equals(ns, s_xmlURI)) 
+                        {
+                            // check if the namespace for the current node is already defined
+                            const XMLCh* prefix = attribute->getPrefix();
+                            if(prefix && prefix[0])
+                            {
+                                bool bPrefixDeclared=false;
+                                for(int i=fNamespaceStack->size()-1;i>=0;i--)
+                                {
+                                    RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
+                                    const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
+                                    if(thisUri && XMLString::equals(thisUri,attribute->getNamespaceURI()))
+                                    {
+                                        bPrefixDeclared=true;
+                                        break;
+                                    }
+                                }
+                                if(!bPrefixDeclared)
+                                {
+                                    namespaceMap->put((void*)prefix,(XMLCh*)attribute->getNamespaceURI());
+                                    *fFormatter  << XMLFormatter::NoEscapes
+                                                 << chSpace << s_xmlns << chColon << prefix
+                                                 << chEqual << chDoubleQuote
+                                                 << XMLFormatter::AttrEscapes
+                                                 << attribute->getNamespaceURI()
+                                                 << XMLFormatter::NoEscapes
+                                                 << chDoubleQuote;
+                                }
+                            }
+                        }
+                    }
                     *fFormatter  << XMLFormatter::NoEscapes
                                  << chSpace << attribute->getNodeName()
                                  << chEqual << chDoubleQuote
@@ -1010,6 +1109,9 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     )
                 }
             }
+
+            // remove the namespace map at this level
+            fNamespaceStack->removeLastElement();
 
             break;
         }

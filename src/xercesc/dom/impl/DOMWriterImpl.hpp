@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/05/12 16:08:11  gareth
+ * fix to #18832. Corrected serilization with regards to namespace nodes. Patch by Alby Massari.
+ *
  * Revision 1.13  2003/03/16 05:42:04  peiyongz
  * Bug#17983 Formatter does not escape control characters
  *
@@ -324,6 +327,8 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMWriter.hpp>
 #include <xercesc/util/XMLDOMMsg.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -481,7 +486,7 @@ private:
     int                           fErrorCount;
     int                           fCurrentLine;
 
-
+    RefVectorOf< RefHashTableOf<XMLCh> >* fNamespaceStack;
 };
 
 inline void DOMWriterImpl::setFeature(const int featureId
