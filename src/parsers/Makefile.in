@@ -76,6 +76,7 @@ MODULE = parsers
 
 PARSERS_CPP_PUBHEADERS = \
 	DOMParser.hpp \
+	IDOMParser.hpp \
 	SAXParser.hpp \
 	SAX2XMLReaderImpl.hpp
 
@@ -85,6 +86,7 @@ PARSERS_C_FILES =
 
 PARSERS_CPP_OBJECTS = \
 	DOMParser.$(TO) \
+	IDOMParser.$(TO) \
 	SAXParser.$(TO) \
 	SAX2XMLReaderImpl.$(TO)
 
