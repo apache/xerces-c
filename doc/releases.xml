@@ -42,7 +42,7 @@
     <tr>
         <td>2001-12-13</td>
         <td>Khaled Noamanc</td>
-        <td>[Bug 5410] non-schema <attribute> attributes cause error.
+        <td>[Bug 5410] non-schema &lt;attribute&gt; attributes cause error.
         </td>
     </tr>
 
