@@ -78,7 +78,6 @@ class CDOM_EXPORT AttrNSImpl: public AttrImpl {
 protected:
     //Introduced in DOM Level 2
     DOMString namespaceURI;     //namespace URI of this node
-    DOMString prefix;           //namespace prefix of this node
     DOMString localName;        //local part of qualified name
     
     

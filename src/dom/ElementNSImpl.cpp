@@ -66,7 +66,6 @@ ElementNSImpl::ElementNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
     ElementImpl(ownerDoc, name)
 {
     this->namespaceURI=null;	//DOM Level 2
-    this->prefix=null;          //DOM Level 2
     this->localName=null;       //DOM Level 2
 }
 
@@ -83,13 +82,14 @@ ElementNSImpl::ElementNSImpl(DocumentImpl *ownerDoc,
     this->name = qualifiedName.clone();
 
     int index = DocumentImpl::indexofQualifiedName(qualifiedName);
+    DOMString prefix;
     if (index < 0)
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     if (index == 0) {	//qualifiedName contains no ':'
-	this -> prefix = null;
+        prefix = null;
 	this -> localName = this -> name;
     } else {	//0 < index < this->name.length()-1
-	this -> prefix = this->name.substringData(0, index);
+	prefix = this->name.substringData(0, index);
 	this -> localName =
             this->name.substringData(index+1, this->name.length()-index-1);
     }
@@ -103,7 +103,6 @@ ElementNSImpl::ElementNSImpl(const ElementNSImpl &other, bool deep) :
     ElementImpl(other, deep)
 {
     this->namespaceURI = other.namespaceURI.clone();	//DOM Level 2
-    this->prefix = other.prefix.clone();                //DOM Level 2
     this->localName = other.localName.clone();          //DOM Level 2
 };
 
@@ -118,7 +117,11 @@ DOMString ElementNSImpl::getNamespaceURI()
 
 DOMString ElementNSImpl::getPrefix()
 {
-    return prefix;
+    int index = DocumentImpl::indexofQualifiedName(name);
+    if (index == 0)
+        return null;
+    else
+        return name.substringData(0, index);
 }
 
 DOMString ElementNSImpl::getLocalName()
@@ -143,7 +146,6 @@ void ElementNSImpl::setPrefix(const DOMString &prefix)
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     if (prefix == null || prefix.length() == 0) {
-        this -> prefix = null;
         name = localName;
         return;
     }
@@ -156,6 +158,5 @@ void ElementNSImpl::setPrefix(const DOMString &prefix)
         if (*p++ == chColon)	//prefix is malformed
             throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    this -> prefix = prefix;
     name = prefix + chColon + localName; //nodeName is changed too
 }

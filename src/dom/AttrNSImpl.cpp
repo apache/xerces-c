@@ -66,7 +66,6 @@ AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
     AttrImpl(ownerDoc, name)
 {
     this->namespaceURI=null;	//DOM Level 2
-    this->prefix=null;          //DOM Level 2
     this->localName=null;       //DOM Level 2
 }
 
@@ -81,6 +80,7 @@ AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc,
     this->name = qualifiedName.clone();
 
     int index = DocumentImpl::indexofQualifiedName(qualifiedName);
+    DOMString prefix;
     if (index < 0)
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     bool xmlnsAlone = false;	//true if attribute name is "xmlns"
@@ -90,10 +90,10 @@ AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc,
 		throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 	    xmlnsAlone = true;
 	}
-	this -> prefix = null;
+	prefix = null;
 	this -> localName = this -> name;
     } else {	//0 < index < this->name.length()-1
-	this -> prefix = this->name.substringData(0, index);
+	prefix = this->name.substringData(0, index);
 	this -> localName =
             this->name.substringData(index+1, this->name.length()-index-1);
     }
@@ -107,7 +107,6 @@ AttrNSImpl::AttrNSImpl(const AttrNSImpl &other, bool deep) :
     AttrImpl(other, deep)
 {
     this->namespaceURI = other.namespaceURI.clone();	//DOM Level 2
-    this->prefix = other.prefix.clone();                //DOM Level 2
     this->localName = other.localName.clone();          //DOM Level 2
 };
 
@@ -123,7 +122,11 @@ DOMString AttrNSImpl::getNamespaceURI()
 
 DOMString AttrNSImpl::getPrefix()
 {
-    return prefix;
+    int index = DocumentImpl::indexofQualifiedName(name);
+    if (index == 0)
+        return null;
+    else
+        return name.substringData(0, index);
 }
 
 DOMString AttrNSImpl::getLocalName()
@@ -148,7 +151,6 @@ void AttrNSImpl::setPrefix(const DOMString &prefix)
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
 
     if (prefix == null || prefix.length() == 0) {
-        this -> prefix = null;
         name = localName;
         return;
     }
@@ -162,6 +164,5 @@ void AttrNSImpl::setPrefix(const DOMString &prefix)
         if (*p++ == chColon)	//prefix is malformed
             throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    this -> prefix = prefix;
     name = prefix + chColon + localName; //nodeName is changed too
 }
