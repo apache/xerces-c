@@ -615,6 +615,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\NullPointerException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\OutOfMemoryException.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.cpp
 # End Source File
 # Begin Source File

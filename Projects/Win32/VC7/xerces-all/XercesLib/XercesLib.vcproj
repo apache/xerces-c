@@ -258,6 +258,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\NullPointerException.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\OutOfMemoryException.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\PanicHandler.cpp">
 			</File>
 			<File
