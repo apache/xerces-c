@@ -93,6 +93,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "DOMTypeInfoTest"=".\DOMTypeInfoTest\DOMTypeInfoTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "DeprecatedDOMCount"=".\DeprecatedDOMCount\DeprecatedDOMCount.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -403,6 +418,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name DeprecatedDOMCount
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMTypeInfoTest
     End Project Dependency
 }}}
 

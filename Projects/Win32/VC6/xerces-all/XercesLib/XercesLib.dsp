@@ -2226,6 +2226,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementNSImpl.cpp
 # End Source File
 # Begin Source File
@@ -2924,6 +2928,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocumentType.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMElement.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMTypeInfo.hpp
 # End Source File
 # Begin Source File
 
