@@ -56,6 +56,14 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/06/27 22:11:12  jpolast
+ * added more general functionality to hashtables.
+ * able to specify which hasher to use.
+ * default: HashXMLCh [hashes XMLCh* strings]
+ *
+ * future todo: make hasher class references static so only
+ * one instance of a hasher is ever created.
+ *
  * Revision 1.3  2000/03/02 19:54:44  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -84,15 +92,35 @@
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> RefHashTableOf<TVal>::
-RefHashTableOf( const   unsigned int    modulus
-                , const bool            adoptElems) :
-
-    fAdoptedElems(adoptElems)
-    , fBucketList(0)
-    , fHashModulus(modulus)
+template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems) 
+	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
 {
-    if (modulus == 0)
+    initialize(modulus);
+	
+	// create default hasher
+	fHash = new HashXMLCh();
+}
+
+template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems, const HashBase* hash)
+	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
+{
+	initialize(modulus);
+	// set hasher
+	fHash = hash;
+}
+
+template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus)
+	: fAdoptedElems(true), fBucketList(0), fHashModulus(modulus)
+{
+	initialize(modulus);
+
+	// create default hasher
+	fHash = new HashXMLCh();
+}
+
+template <class TVal> void RefHashTableOf<TVal>::initialize(const unsigned int modulus)
+{
+	if (modulus == 0)
         ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
@@ -105,8 +133,9 @@ template <class TVal> RefHashTableOf<TVal>::~RefHashTableOf()
 {
     removeAll();
 
-    // Then delete the bucket list
+    // Then delete the bucket list & hasher
     delete [] fBucketList;
+	delete fHash;
 }
 
 
@@ -125,7 +154,7 @@ template <class TVal> bool RefHashTableOf<TVal>::isEmpty() const
 }
 
 template <class TVal> bool RefHashTableOf<TVal>::
-containsKey(const XMLCh* const key) const
+containsKey(const void* const key) const
 {
     unsigned int hashVal;
     const RefHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
@@ -133,7 +162,7 @@ containsKey(const XMLCh* const key) const
 }
 
 template <class TVal> void RefHashTableOf<TVal>::
-removeKey(const XMLCh* const key)
+removeKey(const void* const key)
 {
     unsigned int hashVal;
     removeBucketElem(key, hashVal);
@@ -170,7 +199,7 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Getters
 // ---------------------------------------------------------------------------
-template <class TVal> TVal* RefHashTableOf<TVal>::get(const XMLCh* const key)
+template <class TVal> TVal* RefHashTableOf<TVal>::get(const void* const key)
 {
     unsigned int hashVal;
     RefHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
@@ -180,7 +209,7 @@ template <class TVal> TVal* RefHashTableOf<TVal>::get(const XMLCh* const key)
 }
 
 template <class TVal> const TVal* RefHashTableOf<TVal>::
-get(const XMLCh* const key) const
+get(const void* const key) const
 {
     unsigned int hashVal;
     const RefHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
@@ -193,15 +222,11 @@ get(const XMLCh* const key) const
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Putters
 // ---------------------------------------------------------------------------
-template <class TVal> void RefHashTableOf<TVal>::put(TVal* const valueToAdopt)
+template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valueToAdopt)
 {
     // First see if the key exists already
     unsigned int hashVal;
-    RefHashTableBucketElem<TVal>* newBucket = findBucketElem
-    (
-        valueToAdopt->getKey()
-        , hashVal
-    );
+    RefHashTableBucketElem<TVal>* newBucket = findBucketElem(key, hashVal);
 
     //
     //  If so,then update its value. If not, then we need to add it to
@@ -212,12 +237,19 @@ template <class TVal> void RefHashTableOf<TVal>::put(TVal* const valueToAdopt)
         if (fAdoptedElems)
             delete newBucket->fData;
         newBucket->fData = valueToAdopt;
+		newBucket->fKey = key;
     }
      else
     {
-        newBucket = new RefHashTableBucketElem<TVal>(valueToAdopt, fBucketList[hashVal]);
+        newBucket = new RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
+}
+
+// this function is deprecated in favor of put(key,value).  use at your own risk.
+template <class TVal> void RefHashTableOf<TVal>::put(TVal* const valueToAdopt)
+{
+	put((void*)(valueToAdopt->getKey()), valueToAdopt);
 }
 
 
@@ -226,10 +258,10 @@ template <class TVal> void RefHashTableOf<TVal>::put(TVal* const valueToAdopt)
 //  RefHashTableOf: Private methods
 // ---------------------------------------------------------------------------
 template <class TVal> RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
-findBucketElem(const XMLCh* const key, unsigned int& hashVal)
+findBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = XMLString::hash(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus);
     if (hashVal > fHashModulus)
         ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
 
@@ -237,7 +269,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal)
     RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-        if (!XMLString::compareString(key, curElem->fData->getKey()))
+		if (fHash->equals(key, curElem->fKey))
             return curElem;
 
         curElem = curElem->fNext;
@@ -246,10 +278,10 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal)
 }
 
 template <class TVal> const RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
-findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
+findBucketElem(const void* const key, unsigned int& hashVal) const
 {
     // Hash the key
-    hashVal = XMLString::hash(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus);
     if (hashVal > fHashModulus)
         ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
 
@@ -257,7 +289,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
     const RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-        if (!XMLString::compareString(key, curElem->fData->getKey()))
+        if (fHash->equals(key, curElem->fKey))
             return curElem;
 
         curElem = curElem->fNext;
@@ -267,10 +299,10 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
 
 
 template <class TVal> void RefHashTableOf<TVal>::
-removeBucketElem(const XMLCh* const key, unsigned int& hashVal)
+removeBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = XMLString::hash(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus);
     if (hashVal > fHashModulus)
         ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
 
@@ -283,7 +315,7 @@ removeBucketElem(const XMLCh* const key, unsigned int& hashVal)
 
     while (curElem)
     {
-        if (!XMLString::compareString(key, curElem->fData->getKey()))
+        if (fHash->equals(key, curElem->fKey))
         {
             if (!lastElem)
             {
@@ -322,12 +354,8 @@ removeBucketElem(const XMLCh* const key, unsigned int& hashVal)
 //  RefHashTableOfEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal> RefHashTableOfEnumerator<TVal>::
-RefHashTableOfEnumerator(       RefHashTableOf<TVal>* const toEnum
-                        , const bool                        adopt) :
-    fAdopted(adopt)
-    , fCurElem(0)
-    , fCurHash((unsigned int)-1)
-    , fToEnum(toEnum)
+RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum, const bool adopt)
+	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
 {
     //
     //  Find the next available bucket element in the hash table. If it
@@ -349,8 +377,7 @@ template <class TVal> RefHashTableOfEnumerator<TVal>::~RefHashTableOfEnumerator(
 // ---------------------------------------------------------------------------
 //  RefHashTableOfEnumerator: Enum interface
 // ---------------------------------------------------------------------------
-template <class TVal> bool RefHashTableOfEnumerator<TVal>::
-hasMoreElements() const
+template <class TVal> bool RefHashTableOfEnumerator<TVal>::hasMoreElements() const
 {
     //
     //  If our current has is at the max and there are no more elements

@@ -56,6 +56,14 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/06/27 22:11:12  jpolast
+ * added more general functionality to hashtables.
+ * able to specify which hasher to use.
+ * default: HashXMLCh [hashes XMLCh* strings]
+ *
+ * future todo: make hasher class references static so only
+ * one instance of a hasher is ever created.
+ *
  * Revision 1.5  2000/03/02 19:54:44  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -86,12 +94,15 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/KeyValuePair.hpp>
+#include <util/HashBase.hpp>
 #include <util/IllegalArgumentException.hpp>
 #include <util/NoSuchElementException.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/XMLExceptMsgs.hpp>
 #include <util/XMLEnumerator.hpp>
 #include <util/XMLString.hpp>
+#include <util/HashBase.hpp>
+#include <util/HashXMLCh.hpp>
 
 
 //
@@ -108,29 +119,31 @@ template <class TVal> struct RefHashTableBucketElem;
 //
 template <class TVal> struct RefHashTableBucketElem
 {
-    RefHashTableBucketElem(TVal* const value, RefHashTableBucketElem<TVal>* next) :
-
-        fData(value)
-        , fNext(next)
+    RefHashTableBucketElem(void* key, TVal* const value, RefHashTableBucketElem<TVal>* next) 
+		: fData(value), fNext(next), fKey(key)
         {
         }
 
     TVal*                           fData;
     RefHashTableBucketElem<TVal>*   fNext;
+	void*							fKey;
 };
 
 
 template <class TVal> class RefHashTableOf
 {
-public :
+public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefHashTableOf
-    (
-        const   unsigned int    modulus
-        , const bool            adoptElems = true
-    );
+	// backwards compatability - default hasher is HashXMLCh
+    RefHashTableOf(const unsigned int modulus);
+	// backwards compatability - default hasher is HashXMLCh
+    RefHashTableOf(const unsigned int modulus, const bool adoptElems);
+	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
+	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
+	// may delete the hasher of a different hashtable if both use the same hasher.
+    RefHashTableOf(const unsigned int modulus, const bool adoptElems, const HashBase* hash);
     ~RefHashTableOf();
 
 
@@ -138,22 +151,23 @@ public :
     //  Element management
     // -----------------------------------------------------------------------
     bool isEmpty() const;
-    bool containsKey(const XMLCh* const key) const;
-    void removeKey(const XMLCh* const key);
+    bool containsKey(const void* const key) const;
+    void removeKey(const void* const key);
     void removeAll();
 
 
     // -----------------------------------------------------------------------
     //  Getters
     // -----------------------------------------------------------------------
-    TVal* get(const XMLCh* const key);
-    const TVal* get(const XMLCh* const key) const;
+    TVal* get(const void* const key);
+    const TVal* get(const void* const key) const;
 
 
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
-    void put(TVal* const valueToAdopt);
+	void put(void* key, TVal* const valueToAdopt);
+	void put(TVal* const valueToAdopt); // deprecated. use at your own risk. instead use put(key, value)
 
 
 private :
@@ -167,17 +181,10 @@ private:
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------
-    RefHashTableBucketElem<TVal>* findBucketElem
-    (
-        const XMLCh* const   key,
-        unsigned int&        hashVal
-    );
-    const RefHashTableBucketElem<TVal>* findBucketElem
-    (
-        const   XMLCh* const    key
-        ,       unsigned int&   hashVal
-    )   const;
-    void removeBucketElem(const XMLCh* const key, unsigned int& hashVal);
+    RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal);
+    const RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal) const;
+    void removeBucketElem(const void* const key, unsigned int& hashVal);
+	void initialize(const unsigned int modulus);
 
 
     // -----------------------------------------------------------------------
@@ -195,10 +202,14 @@ private:
     //  fHashModulus
     //      The modulus used for this hash table, to hash the keys. This is
     //      also the number of elements in the bucket list.
+	//
+	//  fHash
+	//      The hasher for the key data type.
     // -----------------------------------------------------------------------
     bool                                fAdoptedElems;
     RefHashTableBucketElem<TVal>**      fBucketList;
     unsigned int                        fHashModulus;
+	HashBase*							fHash;
 };
 
 
@@ -213,11 +224,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefHashTableOfEnumerator
-    (
-                RefHashTableOf<TVal>* const toEnum
-        , const bool                        adopt = false
-    );
+    RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum, const bool adopt = false);
     ~RefHashTableOfEnumerator();
 
 
