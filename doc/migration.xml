@@ -4,75 +4,68 @@
 <s1 title="Migration">
     <s2 title="Migration Archive">
 
-       <p>For migration information to &XercesCName; 2.3.0 or earlier,
+       <p>For migration information to &XercesCName; 2.4.0 or earlier,
           please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>
 
-    <s2 title="Migrating from &XercesCName; 2.3.0 to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; 2.4.0 to &XercesCName; &XercesCVersion;">
       <p>The following section is a discussion of the technical differences between
-      &XercesCName; 2.3.0 code base and the &XercesCName; &XercesCVersion;.</p>
+      &XercesCName; 2.4.0 code base and the &XercesCName; &XercesCVersion;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures240">New features in &XercesCName; &XercesCVersion;</link></li>
-        <li><link anchor="API240">Public API Changes</link></li>
+        <li><link anchor="NewFeatures250">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="API250">Public API Changes</link></li>
         <ul>
-            <li><link anchor="NewAPI240">New Public API</link></li>
-            <li><link anchor="ModifiedAPI240">Modified Public API</link></li>
-            <li><link anchor="DeprecatedAPI240">Deprecated/Removed Public API</link></li>
+            <li><link anchor="NewAPI250">New Public API</link></li>
+            <li><link anchor="ModifiedAPI250">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI250">Deprecated/Removed Public API</link></li>
         </ul>
       </ul>
 
-    <anchor name="NewFeatures240"/>
+    <anchor name="NewFeatures250"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
-        <li>PSVI</li>
-        <li>Performance enhancement</li>        
-        <li>Stateless Grammar </li>
-        <li>Grammar Serialization/Deserialiation</li>
+              <li>Fix duplicate attribute detection when namespaces are disabled </li>
+              <li>Stricter use of static memory manager for static data only</li>
+              <li>PSVI bug fix and enhencement </li>
+              <li>ThreadTest with grammar caching</li>
+              <li>Re-pluggable Panic Handler</li>
+              <li>Enhenced mutex creation to impove thread safety</li>
+              <li>Intrinsic transcoding support for 390.</li>
+              <li>Canonical Representation Support </li>              
+              <li>New sample SCMPrint</li>
+              <li>New sample PSVIWriter</li>
+              <li>New test XSerializerTest</li>
       </ul>
     </s3>
 
-    <anchor name="API240"/>
+    <anchor name="API250"/>
     <s3 title="Public API Changes">
 
         <p>The following lists the public API changes between the &XercesCName;
-           2.3.0; and the &XercesCName; &XercesCVersion; releases
+           2.4.0; and the &XercesCName; &XercesCVersion; releases
            of the parser. </p>
 
-        <anchor name="NewAPI240"/>
+        <anchor name="NewAPI250"/>
         <s4 title="New Public API">
             <ul>
-              <li>PSVI related</li>
-              <li>Grammar serialization/deserialization related</li>              
+              <li></li>            
             </ul>
         </s4>
 
-        <anchor name="ModifiedAPI240"/>
+        <anchor name="ModifiedAPI250"/>
         <s4 title="Modified Public API">
             <ul>
               <li></li>
             </ul>
         </s4>
 
-        <anchor name="DeprecatedAPI240"/>
+        <anchor name="DeprecatedAPI250"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
-              <li>XMLAttDef: getProvided, getDOMTypeInfoUri, getDOMTypeInfoName, setProvided</li>
-              <li>XMLAttDefList: hasMoreElements, nextElement, Reset</li>
-              <li>DTDAttDefList: hasMoreElements, nextElement, Reset</li>
-              <li>SchemaAttDefList: hasMoreElements, nextElement, Reset</li>       
-              <li>XMLElementDecl: LookupOpts</li>
-              <li>XMLNumber family: toString</li>
-              <li>ENTITYDatatypeValidator: setEntityDeclPool</li>
-              <li>IDDatatypeValidator: setIDRefList</li>
-              <li>IDREFDatatypeValidator: setIDRefList</li>
-              <li>GeneralAttributeCheck: setIDRefList</li>
-              <li>SchemaGrammar: getIDRefList</li>
-              <li>SchemaElementDecl: all non thread safe methods </li>
-              <li>SchemaAttDef: getters </li>
-              <li>DTDGrammar: getRootElemId</li>                           
+              <li></li>              
             </ul>
         </s4>
 

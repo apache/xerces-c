@@ -4,6 +4,7 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
+        <li><link anchor="Migrateto240">Migrating from &XercesCName; 2.3.0 to 2.4.0</link></li>      
         <li><link anchor="Migrateto230">Migrating from &XercesCName; 2.2.0 to 2.3.0</link></li>
         <li><link anchor="Migrateto220">Migrating from &XercesCName; 2.1.0 to 2.2.0</link></li>
         <li><link anchor="Migrateto210">Migrating from &XercesCName; 2.0.0 to 2.1.0</link></li>
@@ -15,6 +16,77 @@
       </ul>
     </s2>
 
+    <anchor name="Migrateto240"/>
+    <s2 title="Migrating from &XercesCName; 2.3.0 to &XercesCName; 2.4.0">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.3.0 code base and the &XercesCName; 2.4.0.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures240">New features in &XercesCName; 2.4.0</link></li>
+        <li><link anchor="API240">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI240">New Public API</link></li>
+            <li><link anchor="ModifiedAPI240">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI240">Deprecated/Removed Public API</link></li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures240"/>
+    <s3 title="New features in &XercesCName; 2.4.0">
+      <ul>
+        <li>PSVI</li>
+        <li>Performance enhancement</li>        
+        <li>Stateless Grammar </li>
+        <li>Grammar Serialization/Deserialiation</li>
+      </ul>
+    </s3>
+
+    <anchor name="API240"/>
+    <s3 title="Public API Changes">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           2.3.0; and the &XercesCName; 2.4.0 releases
+           of the parser. </p>
+
+        <anchor name="NewAPI240"/>
+        <s4 title="New Public API">
+            <ul>
+              <li>PSVI related</li>
+              <li>Grammar serialization/deserialization related</li>              
+            </ul>
+        </s4>
+
+        <anchor name="ModifiedAPI240"/>
+        <s4 title="Modified Public API">
+            <ul>
+              <li></li>
+            </ul>
+        </s4>
+
+        <anchor name="DeprecatedAPI240"/>
+        <s4 title="Deprecated/Removed Public API">
+            <ul>
+              <li>XMLAttDef: getProvided, getDOMTypeInfoUri, getDOMTypeInfoName, setProvided</li>
+              <li>XMLAttDefList: hasMoreElements, nextElement, Reset</li>
+              <li>DTDAttDefList: hasMoreElements, nextElement, Reset</li>
+              <li>SchemaAttDefList: hasMoreElements, nextElement, Reset</li>       
+              <li>XMLElementDecl: LookupOpts</li>
+              <li>XMLNumber family: toString</li>
+              <li>ENTITYDatatypeValidator: setEntityDeclPool</li>
+              <li>IDDatatypeValidator: setIDRefList</li>
+              <li>IDREFDatatypeValidator: setIDRefList</li>
+              <li>GeneralAttributeCheck: setIDRefList</li>
+              <li>SchemaGrammar: getIDRefList</li>
+              <li>SchemaElementDecl: all non thread safe methods </li>
+              <li>SchemaAttDef: getters </li>
+              <li>DTDGrammar: getRootElemId</li>                           
+            </ul>
+        </s4>
+
+    </s3>
+    </s2>
+    
     <anchor name="Migrateto230"/>
     <s2 title="Migrating from &XercesCName; 2.2.0 to &XercesCName; 2.3.0">
       <p>The following section is a discussion of the technical differences between

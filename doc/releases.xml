@@ -12,12 +12,12 @@
 
 <s2 title="Releases Archive">
 
-    <p> For release information about &XercesCName; 2.3.0 or earlier,
+    <p> For release information about &XercesCName; 2.4.0 or earlier,
         please refer to <jump href="releases_archive.html">Releases Archive</jump>.
     </p>
 </s2>
 
-<s2 title="Release Information of &XercesCName; &XercesCVersion;: Dec. 2, 2003">
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: Feb. 16, 2004">
 
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=02%2F07%2F03&amp;chfieldto=05%2F23%2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
@@ -32,1380 +32,1051 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     </tr>
 
     <tr>
-        <td>2003-12-01</td>
-        <td>Jeroen Witmond/Neil Graham</td>
-        <td>fix Doxygen warnings; bug 25118</td>
+        <td>2004-02-13</td>
+        <td>Khaled Noaman</td>
+        <td>Remove the limitation on providing PSVI information</td>
+    </tr>
+       
+    <tr>
+        <td>2004-02-13</td>
+        <td>David Cargill</td>
+        <td>Update threadtest to accept -init option instead of using compiler directive.</td>
+    </tr>
+        
+    <tr>
+        <td>2004-02-13</td>
+        <td>David Cargill</td>
+        <td>Remove unnecessary if statement</td>
+    </tr>
+        
+    <tr>
+        <td>2004-02-13</td>
+        <td>David Cargill</td>
+        <td>Bug#26900 fix, remove virtual on destructor</td>
+    </tr>
+        
+    <tr>
+        <td>2004-02-12</td>
+        <td>Alberto Massari</td>
+        <td>Xercesc2_5_0 Updates</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-12</td>
+        <td>PeiYong Zhang</td>
+        <td>Xercesc2_5_0 Updates</td>        
     </tr>
 
     <tr>
-        <td>2003-12-01</td>
-        <td>Neil Graham</td>
-        <td>fix bug 28084</td>
-    </tr>
-    <tr>
-        <td>2003-11-28</td>
-        <td>Khaled Noaman</td>
-        <td>Set root element if not previpusly set, Use memory manager when creating root element name</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-27</td>
-        <td>Neil Graham</td>
-        <td>in preparation for stateless DOMTypeInfo for elements</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-27</td>
-        <td>Neil Graham</td>
-        <td>Fix state-ful duplicate attribute detection when the integrated
-            scanner is in use and namespaces are off.  Also, implement
-            change to PSVIHandler interface to remove prefix passing.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-27</td>
-        <td>Khaled Noaman</td>
-        <td>PSVIElement implementation</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-27</td>
+        <td>2004-02-12</td>
         <td>David Cargill</td>
-        <td>implement writeAnnotation</td>
+        <td>PSVIWriter documentation updates</td>        
     </tr>
     
     <tr>
-        <td>2003-11-27</td>
-        <td>Neil Graham</td>
-        <td>create XSModels if a PSVIHandler has been set on the scanner. Make PSVI production more robust  </td>
+        <td>2004-02-12</td>
+        <td>Merlin</td>
+        <td>Bug#26607 fix</td>
     </tr>
     
     <tr>
-        <td>2003-11-27</td>
-        <td>Pete Lloyd</td>
-        <td>implement isSpecified</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-27</td>
-        <td>David Cargill</td>
-        <td>fixes for segfaults and infinite loops in schema component model implementation;</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-26</td>
-        <td>Neil Graham</td>
-        <td>mark DOMTypeInfo-related methods on XMLElementDecl deprecated since they are not thread-safe</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-26</td>
-        <td>Vitaly Prapirny</td>
-        <td>Bug#24983: Proposed changes of bcc.551 and bcb6 project files for forthcoming 2.4.0 release </td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-26</td>
-        <td>PeiYong Zhang</td>
-        <td>DOMPrint run result updated.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-26</td>
-        <td>Neil Graham</td>
-        <td>more complete implementation of PSVIAttributeList; remove some problematic const-ness  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-26</td>
-        <td>Khaled Noaman</td>
-        <td>Store XSModel.</td>
-    </tr>
-                                
-    <tr>
-        <td>2003-11-25</td>
-        <td>Neil Graham</td>
-        <td>remove XMLIBM1047Transcoder's dependence on iostream</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-25</td>
-        <td>Khaled Noaman</td>
-        <td>Add a method to return the XSObject mapped to a schema grammar component</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-25</td>
-        <td>James Berry</td>
-        <td>Update Mac OS Codewarrior project, Cleanup build errors/warnings from CodeWarrior</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-25</td>
-        <td>David Cargill</td>
-        <td>Serialize enclosing complex type, Check for out of memory exception and document updates</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-25</td>
-        <td>David Cargill</td>
-        <td>Make XSObjectFactory inherit from XMemory</td>
-    </tr>
-        
-    <tr>
-        <td>2003-11-25</td>
-        <td>David Cargill</td>
-        <td>Misc. PSVI updates</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-25</td>
-        <td>David Cargill</td>
-        <td>Update expected result</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-25</td>
-        <td>Khaled Noaman</td>
-        <td>Fix AIX linking error</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-25</td>
-        <td>James Berry</td>
-        <td>Add Mac OS project for Xcode, Revise build instructions to reflect deprecation 
-            of Project Builder projects, and elevation of the Xcode projects. </td>
-    </tr>
-
-    <tr>
-        <td>2003-11-24</td>
-        <td>James Berry</td>
-        <td> Eliminate some compiler warnings concerning comments inside of comments</td>
-    </tr>
-        
-    <tr>
-        <td>2003-11-24</td>
-        <td>Hongguo He</td>
-        <td>add IBM1047 to the list of intrinsic transcoders</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-24</td>
-        <td>Neil Graham</td>
-        <td>allow classes derived from XMLTransService to tailor the intrinsic maps to their taste.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-24</td>
-        <td>Khaled Noaman</td>
-        <td>Reset memory manager in Terminate</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-24</td>
-        <td>Khaled Noaman</td>
-        <td>PSVI: finish construction of XSSimpleTypeDefinition</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-24</td>
-        <td>Gareth Reakes</td>
-        <td>added in support for xml-declaration feature.</td>
-    </tr>
-        
-    <tr>
-        <td>2003-11-24</td>
-        <td>Adam Heinz</td>
-        <td>Fix for bug 22917</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-23</td>
-        <td>Neil Graham</td>
-        <td>update method documentation</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-23</td>
-        <td>Neil Graham</td>
-        <td>DatatypeValidator support for PSVI</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-23</td>
-        <td>Khaled Noaman</td>
-        <td>PSVI updates</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-</td>
-        <td>David Cargill</td>
-        <td>Enable grammar pools and grammar resolvers to manufacture
-            XSModels.  This also cleans up handling in the parser classes by eliminating the need to tell
-            the grammar pool that schema compoments need to be produced. </td>
-    </tr>
-        
-    <tr>
-        <td>2003-11-21</td>
-        <td>David Cargill</td>
-        <td>Setting the stage for PSVI (element and attribute) implementation:
-            pointing out all places in scanners where validation updates need to occur</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-21</td>
-        <td>David Cargill</td>
-        <td>More schema component model implementation, In particular, this cleans up 
-            and completes the XSModel, XSNamespaceItem, XSAttributeDeclaration and 
-            XSAttributeGroup implementations. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-21</td>
-        <td>Khaled Noaman</td>
-        <td>PSVI: Use XSObjectFactory to create various components.</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-21</td>
+        <td>2004-02-12</td>
         <td>Alberto Massari</td>
-        <td>insertElementAt was not checking if there was room for the new element (bug#24714)</td>
-    </tr>
-
+        <td>Bug#21965: A substitution group with no type is always valid </td>
+    </tr>            
+       
     <tr>
-        <td>2003-11-21</td>
-        <td>Jeroen Witmond</td>
-        <td>Wrong filename in error messages (bug#24883)</td>
-    </tr>
-                                               
-    <tr>
-        <td>2003-11-21</td>
-        <td>Alberto Massari</td>
-        <td>Protect getEntityDeclPool from invoking a method on a NULL pointer (bug#24881)</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-21</td>
-        <td>Alberto Massari</td>
-        <td>Updated COM for xerces-c_2_4_0</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-21</td>
-        <td>Alberto Massari</td>
-        <td>Updated project to copy xerces-c_2_4_0, not xerces-c_2_3_0</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-20</td>
-        <td>Khaled Noaman</td>
-        <td>PSVI: element declaration, content model, PSVIutil </td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-20</td>
-        <td>Alberto Massari</td>
-        <td>Updated Borland makefile</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-20</td>
-        <td>Neil Graham</td>
-        <td> PSVI: store name and namespace information</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-20</td>
-        <td>PeiYong Zhang</td>
-        <td>build xercesc2_4_0 with icu2.6.1</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-19</td>
-        <td>Neil Graham</td>
-        <td>increment version to 2.4.0 in docs</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-19</td>
-        <td>PeiYong Zhang</td>
-        <td>build xercesc2_4_0</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-17</td>
-        <td>Pete Lloyd, Neil Graham</td>
-        <td>PSVIAttributeList needs to be included by PSVIHandler</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-17</td>
-        <td>PeiYong Zhang</td>
-        <td>Fix to  #4556</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-17</td>
-        <td>Ronald  Landheer-Cieslak</td>
-        <td>Fix for bug 23930</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-17</td>
-        <td>Alberto Massari</td>
-        <td>Fixed documentation bug#24746</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-14</td>
-        <td>David Cargill </td>
-        <td>changes in support of second phase of XSModel implementation</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-14</td>
-        <td>David Cargill </td>
-        <td>removed methods made unnecessary by new XSModel implementation design</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-14</td>
-        <td>Neil Graham</td>
-        <td>PSVI updates</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-14</td>
-        <td>Alberto Massari</td>
-        <td>When invoking resolveEntity, specify the current document as the base URI</td>
-    </tr>
-    
-        <tr>
-        <td>2003-11-14</td>
-        <td>Graham Bennett</td>
-        <td>Fix to bug #4556</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-13</td>
-        <td>PeiYong Zhang</td>
-        <td>Pass correct initSize to container during deserialization</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-13</td>
-        <td>PeiYong Zhang</td>
-        <td>Solve Compilation/Linkage error on AIX/Solaris/HP/Linux</td>
-    </tr>
-    
-        <tr>
-        <td>2003-11-12</td>
-        <td>PeiYong Zhang</td>
-        <td>Stateless Grammar: Validation Context</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-11</td>
-        <td>Khaled Noaman</td>
-        <td>Serialization of XSAnnotation.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-10</td>
-        <td>Neil Graham</td>
-        <td>implementation for new stateless means of traversing attribute definition lists</td>
-    </tr>
-
-    <tr>
-        <td>2003-11-10</td>
-        <td>Alberto Massari</td>
-        <td>Fixed memory leak</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-08</td>
-        <td>Abe Backus</td>
-        <td>fix for bug 24287</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-07</td>
+        <td>2004-02-12</td>
         <td>David Cargill</td>
-        <td>PSVI/schema component model implementation</td>
-    </tr>
-    
-        <tr>
-        <td>2003-11-07</td>
-        <td>David Cargill</td>
-        <td>fix compilation errors on AIX and HPUX </td>
+        <td>SCMPrint build error fix</td>
     </tr>
     
     <tr>
-        <td>2003-11-07</td>
-        <td>Khaled Noaman</td>
-        <td>For PSVI support, distinguish wildcard elements with namespace lists.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-06</td>
-        <td>Neil Graham</td>
-        <td>update KEYS file with public key as newly-signed by two other Apache-ites</td>
-    </tr>
-    
-        <tr>
-        <td>2003-11-06</td>
-        <td>James Berry</td>
-        <td>Add Mac OS X DYLD_LIBRARY_PATH notes to unix build instructions</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-06</td>
-        <td>Neil Graham</td>
-        <td>update grammar pool interface so that cacheGrammar(Grammar) can tell the caller 
-            whether the grammar was accepted.  Also fix some documentation errors.  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-06</td>
-        <td>PeiYong Zhang</td>
-        <td>Patch to Solaris compiler error</td>
-    </tr>
-                            
-    <tr>
-        <td>2003-11-06</td>
-        <td>Khaled Noaman</td>
-        <td>PSVI support for annotations.</td>
-    </tr>
-                
-    <tr>
-        <td>2003-11-06</td>
-        <td>David Cargill</td>
-        <td>first part of PSVI/schema component model implementation.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-05</td>
-        <td>PeiYong Zhang</td>
-        <td>Grammar Pool Specification updates</td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-05</td>
-        <td>PeiYong Zhang</td>
-        <td></td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-05</td>
-        <td>PeiYong Zhang</td>
-        <td>don't serialize built-in baseValidator, and don't serialize localName/uriName</td>
-    </tr>
-        
-    <tr>
-        <td>2003-11-04</td>
+        <td>2004-02-12</td>
         <td>Alberto Massari</td>
-        <td>When invoking resolveEntity, specify the base URI</td>
+        <td>Xercesc2_5_0: com updates</td>
     </tr>
     
     <tr>
-        <td>2003-11-04</td>
-        <td>Alberto Massari</td>
-        <td>When loading a grammar that's going to be cached, re-use the grammars already in the cache
-            </td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-03</td>
-        <td>Alberto Massari</td>
-        <td>A version of lastIndexOf would crash the application if the character to be 
-            searched was not found in the string  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-11-01</td>
-        <td>Alberto Massari</td>
-        <td> Updated BCB6 project</td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-31</td>
-        <td>PeiYong Zhang</td>
-        <td>Serialization test fix</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-30</td>
-        <td>David Cargill</td>
-        <td>Enhanced Entity Resolver Support.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-29</td>
-        <td>PeiYong Zhang</td>
-        <td> GrammarPool serialization/deserialization </td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-29</td>
-        <td>PeiYong Zhang</td>
-        <td>Support for Template serialization/deserialization added</td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-29</td>
-        <td>PeiYong Zhang</td>
-        <td>XObjectComparator/XTemplateComparator</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-27</td>
-        <td>James Berry</td>
-        <td>Add comment regarding permissible values for XML_PLATFORM_NEW_BLOCK_ALIGNMENT.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-24</td>
-        <td>David Cargill.</td>
-        <td>Fix for bug #24207</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-23</td>
-        <td>Khaled Noaman</td>
-        <td>Fix memory leak</td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-22</td>
-        <td>Khaled Noaman</td>
-        <td>Annotation support</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-21</td>
-        <td>Alberto Massari</td>
-        <td>Fixed memory leak [bug 23073]</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-21</td>
-        <td>Alberto Massari</td>
-        <td>Update COM project files</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-21</td>
-        <td>PeiYong Zhang</td>
-        <td>update XercesLib.mak</td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-21</td>
-        <td>Alberto Massari</td>
-        <td>Inside a schema, the properties "fixed" and "default" for a reference to an attribute
-            were ignored unless the "required" property were also present [bug 11767]</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-20</td>
-        <td>Khaled Noaman</td>
-        <td>Fix multithreading problem </td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-20</td>
-        <td>Gareth Reakes</td>
-        <td>Pass in memory manager to constructors and use for creation of enumerators.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-18</td>
-        <td>James Berry</td>
-        <td>Open files for reading as "r", not "r+". on MacOS</td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-18</td>
-        <td>PeiYong Zhang</td>
-        <td>Support for Template class serialization/deserialization</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-17</td>
-        <td>Khaled Noaman</td>
-        <td>Fix multithreading problem for regular expression.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-15</td>
-        <td>PeiYong Zhang</td>
-        <td>Implementation of Serialization/Deserialization for Schema components</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-10</td>
-        <td>Neil Graham</td>
-        <td>update XSModel and XSObject interface so that IDs can be used to query components
-            in XSModels, and so that those IDs can be recovered from components  </td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-10</td>
-        <td>PeiYong Zhang</td>
-        <td>Implementation of Serialization/Deserialization for Grammar components</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-09</td>
-        <td>David Cargill</td>
-        <td>fix for bug 21780</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-09</td>
-        <td>Neil Graham</td>
-        <td>Synchronized StringPool for thread-safe updates.  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-08</td>
-        <td>PeiYong Zhang</td>
-        <td>Synchronize ContentSpec/ContentModel/FormattedModel</td>
-    </tr>
-                                                                                
-    <tr>
-        <td>2003-10-07</td>
-        <td>PeiYong Zhang</td>
-        <td>API for Template_Class Object Serialization/Deserialization</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-07</td>
-        <td>David Cargill.</td>
-        <td>Fix #23413</td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-06</td>
-        <td>Mike Pawlowski</td>
-        <td>Rewrite packageSources </td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-04</td>
-        <td>Neil Graham</td>
-        <td>Stateless Grammar</td>
-    </tr>
-         
-    <tr>
-        <td>2003-10-02</td>
-        <td>PeiYong Zhang</td>
-        <td>Implementation of Serialization/Deserialization for Datatype Validators</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-02</td>
-        <td>Gareth Reakes</td>
-        <td>Removed ^Z from end of files which was preventing compilation under gcc 2.96.</td>
-    </tr>
-        
-    <tr>
-        <td>2003-10-01</td>
-        <td>David Cargill.</td>
-        <td>improve handling of out of memory conditions, bug #23415</td>
-    </tr>
-    
-    <tr>
-        <td>2003-10-01</td>
-        <td>Khaled Noaman</td>
-        <td>Refactoring of some code to improve performance.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-26</td>
-        <td>PeiYong Zhang</td>
-        <td>Synchronize ContentSpecNode and formattedModel</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-26</td>
-        <td>David Cargill</td>
-        <td>fix for bug #23427</td>
-    </tr>
-        
-    <tr>
-        <td>2003-09-25</td>
-        <td>PeiYong Zhang</td>
-        <td>Loose the assert condition so that Serializable class need NOT to check the
-            actual string length before read/write.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-24</td>
-        <td>Alby</td>
-        <td> useImplementation should use memory maneger.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-23</td>
-        <td>PeiYong Zhang</td>
-        <td>Inplementation for Serialization/Deserialization </td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-23</td>
-        <td>PeiYong Zhang</td>
-        <td>Macro re-organized: provide create/nocreate macros for abstract and nonabstract classes</td>
-    </tr>
-        
-    <tr>
-        <td>2003-09-22</td>
-        <td>Neil Graham</td>
-        <td>change Grammar::putElemDecl(XMLElementDecl, bool) so that it does not require the 
-            Grammar object to be const.  Also, mark findOrAddGrammar as being dangerous in
-            multithreaded situations  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-22</td>
-        <td>Gareth Reakes</td>
-        <td> doc fix</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-18</td>
-        <td>PeiYong Zhang</td>
-        <td>OSU: Object Serialization Utilities  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-18</td>
-        <td>Gareth Reakes</td>
-        <td>updated the distribution directory.</td>
-    </tr>
-        
-    <tr>
-        <td>2003-09-16</td>
-        <td>Neil Graham</td>
-        <td>make Grammar pool be responsible for creating and owning URI string pools.  This is
-            one more step towards having grammars be independent of the parsers involved in their 
-            creation  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-16</td>
-        <td>Neil Graham</td>
-        <td>PSVI/schema component model classes </td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-12</td>
-        <td>Jay Hansen</td>
-        <td>enable MemParse to work on OS400.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-10</td>
-        <td>Neil Graham</td>
-        <td>fix compiler warnings on ISeries; add Apache copyright notice</td>
-    </tr>
-        
-    <tr>
-        <td>2003-09-08</td>
-        <td>PeiYong Zhang</td>
-        <td>Restore pre2.3 constructors</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-06</td>
-        <td>Dave Bertoni</td>
-        <td>Fix bug #22938. Deletion of void* is illegal.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-04</td>
-        <td>Gareth Reakes</td>
-        <td>Fix for bug #22008. Removed the ability to adopt the DOMObject.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-09-04</td>
-        <td>David Cargill.</td>
-        <td> Fix bug #19605. Problem with CDATA END TAG</td>
-    </tr>
-        
-    <tr>
-        <td>2003-09-01</td>
-        <td>Gareth Reakes</td>
-        <td>added API to get an enumerator for the cached grammars.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-31</td>
-        <td>Shin'ya Morino.</td>
-        <td>Fix for bug 21990</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-29</td>
-        <td>Gareth Reakes</td>
-        <td>If a type was explicitly declared as anyType that now gets set in DOMTypeInfo.
-            Added test cases.  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-27</td>
-        <td>James Berry</td>
-        <td>Add new static global that always points to array-allocating memory manager</td>
-    </tr>
-        
-    <tr>
-        <td>2003-08-27</td>
-        <td>Gareth Reakes</td>
-        <td>Fixed a bug where multiple invalid elements with the same name/uri were not being 
-            set with appropriate PSVI info. Added a test case to expose the problem.  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-26</td>
-        <td>James Berry</td>
-        <td>Add new memory allocator that allocates using new[], for use where returned memory 
-            must be able to be deleted using delete []. This saves duplicated code in cases where 
-            a routine is optionally called with a specific memory manager, such as in the case of transcode  </td>
-    </tr>
-                                        
-    <tr>
-        <td>2003-08-26</td>
-        <td>Neil Graham</td>
-        <td>fix compilation errors on HPUX and Solaris</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-26</td>
-        <td> benoit.blaquiere@ign.fr  </td>
-        <td>Fix bug #22697; transcodeFrom incorrectly throws on kTECOutputBufferFullStatus.</td>
-    </tr>
-        
-    <tr>
-        <td>2003-08-25</td>
-        <td>Alberto Massari</td>
-        <td>fix for bug 22178</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-22</td>
-        <td>Alberto Massari </td>
-        <td>keep the fGrammarFromPool in sync to avoid problems when parseing multiple times. </td>
-    </tr>
-         
-    <tr>
-        <td>2003-08-22</td>
-        <td>Gareth Reakes</td>
-        <td>Not all unknown attributes are faulted in. In these cases the DOMTypeINfo should 
-            report AnySimpleType, not AnyURI as they were.  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-21</td>
-        <td>Neil Graham</td>
-        <td>add the Apache license to various Perl scripts that did not have it</td>
-    </tr>
-        
-    <tr>
-        <td>2003-08-21</td>
-        <td>PeiYong Zhang</td>
-        <td>use PlatformUtils::panic()</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-20</td>
-        <td>Neil Graham</td>
-        <td>Added a method for use in XercesDOMParser (and others derived from 
-            AbstractDOMParser) and a feature in DOMBuilder that allows the creation of the
-            document during parse to be from an DOMImplementation other than the default. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-20</td>
-        <td>Gareth Reakes</td>
-        <td>Changed constuctors to protected to be derivatable </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-20</td>
-        <td>Gareth Reakes</td>
-        <td>Reorderd initializer list to prevent compiler warning.</td>
-    </tr>
-        
-    <tr>
-        <td>2003-08-20</td>
-        <td>Steven White</td>
-        <td>A basic perl script that takes a DOM header file and creates the format used in 
-            HTML bindings file. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-20</td>
-        <td>Gareth Reakes</td>
-        <td>Added Level 3 XPath interfaces.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-20</td>
-        <td>David Cargill</td>
-        <td>fix for bug 22565</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-19</td>
-        <td>David Cargill</td>
-        <td>fixing bug 21001</td>
-    </tr>
-        
-    <tr>
-        <td>2003-08-19</td>
-        <td>Neil Graham</td>
-        <td>fix for bug 22537</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-16</td>
-        <td>Neil Graham</td>
-        <td>fix for bug 22457.  Union types that are restrictions of other union types were
-            previously considered not to inherit their parents member types.  This is at variance
-            with the behaviour of the Java parser and apparently with the spec. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-14</td>
-        <td>Gareth Reakes</td>
-        <td>Method added to allow serilization of custom nodes from derived classes.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-14</td>
-        <td>Vitaly Prapirny</td>
-        <td>patch for bug 16933</td>
-    </tr>
-        
-    <tr>
-        <td>2003-08-13</td>
-        <td>Khaled Noaman</td>
-        <td> Code refactoring to improve performance of validation.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-13</td>
-        <td>Alberto Massari</td>
-        <td>fix to bug 22177</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-13</td>
-        <td>David Cargill</td>
-        <td>fix for bug 20058</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-12</td>
-        <td>Caroline Rioux.</td>
-        <td>Added serialization for attribute nodes </td>
-    </tr>
-        
-    <tr>
-        <td>2003-08-08</td>
-        <td>Steve Dulin.</td>
-        <td>fixes to make OS390PlatformUtils.cpp compile</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-07</td>
-        <td>Neil Graham</td>
-        <td>fix segmentation faults that may arise when the parser throws exceptions during 
-            document parsing.  In general, XMLPlatformUtils::Terminate() should not be called
-            from within a catch statement.  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-04</td>
-        <td> Zeid Derhally </td>
-        <td>Update Win32 CodeWarrior project for recent file additions/deletions;</td>
-    </tr>
-    
-    <tr>
-        <td>2003-08-04</td>
-        <td>James Berry</td>
-        <td>Update Mac OS ProjectBuilder project for recent file additions/deletions</td>
-    </tr>
-        
-    <tr>
-        <td>2003-07-31</td>
-        <td>James Berry</td>
-        <td>Resolve bug #21623; document that XMLParsePath... routines may fail if the file doesn't exist</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-31</td>
-        <td>PeiYong Zhang</td>
-        <td>GrammarPool</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-28</td>
-        <td>Steve Dulin</td>
-        <td>fix to permit the samples source to be copied from a non-writable to a writable 
-            part of the filesystem, then compiled.  Binaries will also be dropped in a writable
-            directory.  This should make experimentation easier on multi-user systems. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-25</td>
-        <td>Michael Glavassevich</td>
-        <td>The patch fixes Bugzilla #19787, #20006, #20009, #20010 and #20287, and
-            several other issues. </td>
-    </tr>
-        
-    <tr>
-        <td>2003-07-24</td>
-        <td>Michael Glavassevich</td>
-        <td> Fix for bug #20005 </td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-24</td>
-        <td>David Cargill </td>
-        <td>Patch for bug  #20530 - Attributes which have the same expanded name are not considered duplicates. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-24</td>
+        <td>2004-02-12</td>
         <td>Erik Rydgren</td>
-        <td>getTextContent fix</td>
+        <td>Implemented setTextContent </td>
     </tr>
     
     <tr>
-        <td>2003-07-22</td>
-        <td>Steven White.</td>
-        <td>Fix build under VC7</td>
-    </tr>
-        
-    <tr>
-        <td>2003-07-21</td>
-        <td>June Ng</td>
-        <td>fixing bug 21573</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-17</td>
-        <td>Pedro Lopes and Vitaly Prapirny</td>
-        <td>fix for bug 18860</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-16</td>
+        <td>2004-02-11</td>
         <td>PeiYong Zhang</td>
-        <td>Documentation on system call, strtod</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-14</td>
-        <td>Vitaly Prapirny and Anthon Pang</td>
-        <td>patch to bug 20353</td>
-    </tr>
-        
-    <tr>
-        <td>2003-07-14</td>
-        <td>Abe Backus</td>
-        <td>patch to bug 21527</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-10</td>
-        <td>PeiYong Zhang</td>
-        <td>Stateless Grammar: create grammar components with grammarPool's memory Manager</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-10</td>
-        <td>PeiYong Zhang</td>
-        <td>Stateless Grammar: Initialize scanner with grammarResolver</td>
-    </tr>
-    
-    <tr>
-        <td>2003-07-04</td>
-        <td>PeiYong Zhang</td>
-        <td>specify library with version on AIX</td>
-    </tr>
-        
-    <tr>
-        <td>2003-06-26</td>
-        <td>PeiYong Zhang</td>
-        <td>GrammarPool</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-23</td>
-        <td>PeiYong Zhang</td>
-        <td>to solve unresolved symbol on Solaris</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-23</td>
-        <td>PeiYong Zhang</td>
-        <td>clean up temporary XMLGrammarDescription to make MemoryTest happy</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-20</td>
-        <td>PeiYong Zhang</td>
-        <td>Stateless Grammar Pool :: Part I</td>
-    </tr>
-        
-    <tr>
-        <td>2003-06-16</td>
-        <td>Tuan Hoang</td>
-        <td>update xerces-c.spec file</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-10</td>
-        <td>James Berry</td>
-        <td>Add support to threadtest for Mac OS X </td>
-    </tr>
-                                                        
-    <tr>
-        <td>2003-06-09</td>
-        <td>James Berry</td>
-        <td>Add DYLIB_LIBRARY_PATH directions for running samples under Mac OS X.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-06</td>
-        <td>Robort Buck</td>
-        <td>Bug#20552 Updated VC7 Project files.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-03</td>
-        <td>PeiYong Zhang</td>
-        <td>for build on WinXP.NET and Intel Electron</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-02</td>
-        <td>Neil Graham</td>
-        <td>new test for the pluggable memory management mechanism.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-02</td>
-        <td>Berin Lautenbach</td>
-        <td>fix for bug #20092</td>
-    </tr>
-    
-    <tr>
-        <td>2003-06-02</td>
-        <td>Berin Lautenbach</td>
-        <td>Bug 20413 Xerces 2.3 does not compile under NetBSD 1.6</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-30</td>
-        <td>Alberto Massari</td>
-        <td>Fixes so we compile under VC7.1. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-30</td>
-        <td>Gareth Reakes</td>
-        <td>Use new macros for iostream.h and std:: issues.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-30</td>
-        <td>Sean McInerney</td>
-        <td>fix to bug #20350. Fix 2 typos.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-29</td>
-        <td>Gareth Reakes</td>
-        <td>fixed typo for version number</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-29</td>
-        <td>Khaled Noaman</td>
-        <td>Fix memory leak when using deprecated dom.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-29</td>
-        <td>Nathan Codding</td>
-        <td>Fix to bug #16817. Non leaf nodes and attributes now get notified of release </td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-29</td>
-        <td>Gareth Reakes</td>
-        <td>fix to bug #20325. Removed unused file and updated Projects.</td>
-    </tr>
-                                
-    <tr>
-        <td>2003-05-29</td>
-        <td>Gareth Reakes</td>
-        <td>Added macros in so we can determine whether to do things like iostream as opposed
-            to iostream.h and whether to use std:: or not.  </td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-28</td>
-        <td>Neil Graham</td>
-        <td>update copyright notice</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-27</td>
-        <td>Neil Graham</td>
-        <td>upload public key used for signing releases</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-27</td>
-        <td>Michael Glavassevich</td>
-        <td>fix typo that could have been impacting correct operation of reference counting. </td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-26</td>
-        <td>PeiYong Zhang</td>
-        <td>Use memory manager embedded in rather than the one passed in to
-            de-allocate memory.</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-24</td>
-        <td>Neil Graham</td>
-        <td>fix segfault on GCC 2.9x.  The depreacted DOM attribute implementation had a cute
-            trick where a void * field could be either a NodeChild pointer or a DOMString; the
-            latter played havoc with the new memory management paradigm.  Now a union of a
-            DOMString * and a ChildNode * is used.  </td>
-    </tr>
-                                
-    <tr>
-        <td>2003-05-22</td>
-        <td>Neil Graham</td>
-        <td>make GCC happy and make it clearer what we actually use 
-            alignPointerForNewBlockAllocation() for in our code.  </td>
-    </tr>
-        
-    <tr>
-        <td>2003-05-22</td>
-        <td>James Berry</td>
-        <td>Move pointer alignment functionality into XMLPlatform header; revise XMemory and 
-            DOMDocumentImpl to return blocks aligned by this function </td>
+        <td>Project SUMPrint</td>
     </tr>
 
     <tr>
-        <td>2003-05-22</td>
+        <td>2004-02-11</td>
         <td>PeiYong Zhang</td>
-        <td>removal of isOwnerDocSingleton</td>
+        <td>PSVIWriter to build with intel</td>
     </tr>
     
     <tr>
-        <td>2003-05-22</td>
+        <td>2004-02-11</td>
+        <td>David Cargill</td>
+        <td>PSVIWriter to build on AIX</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-11</td>
+        <td>David Bertoni</td>
+        <td>Bug#26648 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-11</td>
+        <td>David Cargill</td>
+        <td>Bug#26131fix.</td>
+    </tr>
+
+    <tr>
+        <td>2004-02-11</td>
+        <td>David Cargill</td>
+        <td>Bug#25541fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-10</td>
+        <td>David Cargill</td>
+        <td>PSVIWriter build fix</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-02-09</td>
+        <td>C-J Berg</td>
+        <td>Bug#20684 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-09</td>
+        <td>David Cargill</td>
+        <td>PSVIWriter build fix and usage update</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-06</td>
         <td>PeiYong Zhang</td>
-        <td>Build memory manager on hp</td>
+        <td>Project PSVIWriter</td>
     </tr>
     
     <tr>
-        <td>2003-05-22</td>
-        <td>Neil Graham</td>
-        <td>PanicHandler interface should not inherit from XMemory</td>
+        <td>2004-02-06</td>
+        <td>David Cargill</td>
+        <td>Misc 390 changes.</td>
+    </tr>
+           
+    <tr>
+        <td>2004-02-06</td>
+        <td>David Cargill</td>
+        <td>Intrinsic transcoding support for 390.</td>
     </tr>
     
     <tr>
-        <td>2003-05-22</td>
-        <td>Gareth Reakes</td>
-        <td> Removed usage of std to compile under gcc and other platforms</td>
+        <td>2004-02-05</td>
+        <td>David Cargill</td>
+        <td>Fix a seg fault with PSVI and set basetype of anysimpletype to be anytype.</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-02-05</td>
+        <td>David Cargill</td>
+        <td>Code cleanup changes to get rid of various compiler diagnostic messages.</td>
     </tr>
     
     <tr>
-        <td>2003-05-22</td>
-        <td>Magnus Strand</td>
-        <td>Fix another case where use of fallback characters during transcode could cause
-            undesired failure of transcode  </td>
+        <td>2004-02-04</td>
+        <td>Alberto Massari</td>
+        <td>Added support for the Interix platform (Windows Services for Unix 3.5)</td>
     </tr>
     
     <tr>
-        <td>2003-05-21</td>
-        <td>James Berry</td>
-        <td>Ensure proper block alignment for blocks allocated with XMemory new operators</td>
+        <td>2004-02-04</td>
+        <td>Berin Lautenbach</td>
+        <td>Bug#26426 fix</td>
     </tr>
     
     <tr>
-        <td>2003-05-21</td>
-        <td>Khaled Noaman</td>
-        <td>Handle allocation of document types not created by a DOM document</td>
-    </tr>
-    
-    <tr>
-        <td>2003-05-21</td>
-        <td>Khaled Noaman</td>
-        <td>Fix to HP-UX compiler's complaint about the duplicate overload of delete</td>
-    </tr>
-                                                
-    <tr>
-        <td>2003-05-21</td>
-        <td>Khaled Noaman</td>
-        <td>fix to gcc 2.95.x internal error for some template definitions</td>
-    </tr>
-    <tr>
-        <td>2003-05-21</td>
+        <td>2004-02-03</td>
         <td>PeiYong Zhang</td>
-        <td>release document</td>
-    </tr>
-    <tr>
-        <td>2003-05-21</td>
-        <td>James Berry</td>
-        <td>Mac OS LCP transcoder fix</td>
-    </tr>
-    <tr>
-        <td>2003-05-21</td>
-        <td>James Berry</td>
-        <td>CodeWarrior Mac OS Project File updates</td>
+        <td>Bug#26315 fix</td>
     </tr>
     
     <tr>
-        <td>2003-05-21</td>
-        <td>Zeid Derhally</td>
-        <td>CodeWarror Win32 Project File updates</td>
+        <td>2004-02-03</td>
+        <td>PeiYong Zhang</td>
+        <td>put back the parameter to build debug</td>
     </tr>
-                                                       
+    
     <tr>
-        <td>2003-05-21</td>
+        <td>2004-01-31</td>
+        <td>David Cargill</td>
+        <td>Update script to flush buffer</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-01-29</td>
+        <td>David Cargill</td>
+        <td>Update sanity tests so that each test result can be uniquely identified</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-29</td>
+        <td>David Cargill</td>
+        <td>Code cleanup changes to get rid of various compiler diagnostic messages.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-28</td>
         <td>James Berry</td>
-        <td>First cut at Mac OS X Project Builder changes </td>
-    </tr>          
+        <td>Add include for unistd.h</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-28</td>
+        <td>James Berry</td>
+        <td>Define away some gcc garbage so that /usr/include/unistd.h will compile with the CodeWarrior MachO target  </td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-26</td>
+        <td>James Berry</td>
+        <td>Add a check for a corner-case buffer condition</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Bug #26419 fix</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Step around CodeWarrior compiler warning</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Update Mac OS Xcode project to reflect recent file additions</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Update Mac OS CodeWarrior project to reflect recent file additions</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-21</td>
+        <td>PeiYong Zhang</td>
+        <td>Bug#25751fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-19</td>
+        <td>Alberto Massari</td>
+        <td>WideCharToMultiByte and MultiByteToWideChar return 0 on failure, not -1</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-16</td>
+        <td>PeiYong Zhang</td>
+        <td>maintain the same size on both 32/64 bit architecture</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-01-16</td>
+        <td>PeiYong Zhang</td>
+        <td>Project XSerializerTest</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-16</td>
+        <td>Alberto Massari</td>
+        <td>In the Win32LCPTranscoder, don't use wcstombs or mbstowcs, as they don't pick up 
+               the correct local code page; use the Win32 API using CP_ACP as the code page  </td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-16</td>
+        <td>Alberto Massari</td>
+        <td>Removed usage of undeclared macro MIN</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-15</td>
+        <td>PeiYong Zhang</td>
+        <td>proper allignment for built-in datatype read/write</td>
+    </tr>
+                                   
+    <tr>
+        <td>2004-01-15</td>
+        <td>Khaled Noaman</td>
+        <td>HP compiler (after upgrade) is no longer complaining about placement delete</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-15</td>
+        <td>Alberto Massari</td>
+        <td>Bug#18341 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-15</td>
+        <td>Michael Wuschek</td>
+        <td>Bug#24929 fix </td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>PeiYong Zhang</td>
+        <td>revert code back to previous version</td>
+    </tr>
             
     <tr>
-        <td>2003-05-20</td>
+        <td>2004-01-13</td>
+        <td>Kahled Noaman</td>
+        <td>Remove unnecessary local static data</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-13</td>
         <td>PeiYong Zhang</td>
-        <td>Apply Memory Manager to Base64</td>
-    </tr>        
+        <td>set optimization level#2 on hp aCC</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>David Cargill</td>
+        <td>Misc build updates</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>David Cargill</td>
+        <td>Undo previous change memory management changes.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>David Cargill</td>
+        <td>Misc memory management changes</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-13</td>
+        <td>Khaled Noaman</td>
+        <td>For sanity, use class name to qualify method</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>Khaled Noaman</td>
+        <td>Fix wrong size of allocation</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Neil Graham</td>
+        <td>remove unused static member</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Neil Graham</td>
+        <td>update Copyright year</td>
+    </tr>
         
     <tr>
-        <td>2003-05-20</td>
-        <td>Khaled Noaman</td>
-        <td>Initialize ValueVectorOf</td>
-    </tr>        
+        <td>2004-01-12</td>
+        <td>David Cargill</td>
+        <td>Minor performance change for handling reserved and unreserved characters.</td>
+    </tr>
            
     <tr>
-        <td>2003-05-19</td>
-        <td>Gareth Reakes</td>
-        <td>NetBSD compilation fix</td>
-    </tr>        
+        <td>2004-01-12</td>
+        <td>David Cargill</td>
+        <td>Fix 390 compilation errors.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Khaled Noaman</td>
+        <td>Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Neil Graham</td>
+        <td>remove use of static buffers</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>David Cargill</td>
+        <td>Avoid throwing malformedurl exceptions in XMLURL to avoid a threading problem on AIX.</td>
+    </tr>
            
+    <tr>
+        <td>2004-01-06</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: inherit facets from base type</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Neil Graham</td>
+        <td>Bug#25660 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Joanne Bogart, Neil Graham</td>
+        <td>Bug#25542 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Alberto Massari</td>
+        <td>Bug#25768 fix: Replaced the call to wcstombs using a NULL target buffer with the equivalent call 
+               to WideCharToMultiByte ()  </td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-06</td>
+        <td>Jeroen Witmond, Neil Graham</td>
+        <td>Bug#25412 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Khaled Noaman</td>
+        <td>Fix segfault when adding S4S</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Khaled Noaman</td>    
+        <td>Reset list of grammars after building XSModel</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>PeiYong Zhang</td>
+        <td>using the no-exception-thrown ctor</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-06</td>
+        <td>Reid Spencer, Neil Graham</td>
+        <td>Bug#28517 static initialization problems</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Neil Graham</td>
+        <td>make sure locally-declared attributes have declarations in the PSVI</td>
+    </tr>
+
+    <tr>
+        <td>2004-01-06</td>
+        <td>Neil Graham</td>
+        <td>On some platforms, it is problematic to throw a different exception from inside the 
+               catch block of another exception  </td>
+    </tr>
+        
+    <tr>
+        <td>2004-01-05</td>
+        <td>Khaled Noaman</td>
+        <td>Various PSVI fixes</td>
+    </tr>                                                                       
+   
+    <tr>
+        <td>2004-01-03</td>
+        <td>PeiYong Zhang</td>
+        <td>using ctor/parseContent to avoid exception thrown from ctor</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-31</td>
+        <td>David Cargill</td>
+        <td>Update AIX build to generate .a libraries as -brtl is no longer used so that a 
+               build generated without using packageBinaires.pl will be clean.  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-31</td>
+        <td>David Cargill</td>
+        <td>Release memory when an error is encountered.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-31</td>
+        <td>Alberto Massari</td>
+        <td>Updated project for BCC551</td>
+    </tr>                
+           
+    <tr>
+        <td>2003-12-31</td>
+        <td>Alberto Massari</td>
+        <td>Made virtual function checkAdditionalFacet 'const', so that it matches the 
+                declaration in a derived class  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>Even if the resolver has no grammars, since all schema
+               processors are aware of the schema-for-schemas, an XSModel
+               should be produced.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>fix one more buffer overrun, affecting boolean lists</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>enable production of canonical representations for dates with negative years, or 
+               years >9999  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>ensure an XSModel</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>even if there are no grammars to add to an XSModel, the S4S grammar must be
+               included  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>do not report anything about default/fixed values for non-global attribute declarations</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>use a null-terminated string when tokenizing pattern facets</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>more PSVI bug fixes</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>some indices in the PSVIAttributeList were 1 off</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>fix segfault when validation of a union type fails</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>initialize undeclared attribute registry appropriately for its local use in scanStartTag</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>allow schema normalized values to be associated with a PSVIAttribute after it is reset</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>PeiYong Zhang</td>
+        <td>use the original memory manager to deallocate in assignment operator</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: return value constraint only if global declaration</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: add whitespace facet if missing</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Khaled Noaman</td>
+        <td>More PSVI updates</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Alberto Massari</td>
+        <td>When parsing a new element, clear the maps holding the unparsed attribute we have seen.
+                This because these maps keep pointers to the name of the attributes object that gets recycled
+                for every element (and their name is deallocated when recycled)</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-24</td>
+        <td>David Cargill</td>
+        <td>Memory management update.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-24</td>
+        <td>David Cargill</td>
+        <td>Improved algorithm for finding derivedFrom.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-24</td>
+        <td>David Cargill</td>
+        <td>More updates to memory management so that the static memory manager.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-23</td>
+        <td>PeiYong Zhang</td>
+        <td>Absorb exception thrown in getCanonicalRepresentation and return 0,
+                only validate when required</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-22</td>
+        <td>Michael Glavassevich</td>
+        <td>Bug#18611 fix.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-22</td>
+        <td>Gareth Reakes</td>
+        <td>Bug #25699 fix: made getRootElemID const. </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-22</td>
+        <td>Jeroen N. Witmond, Gareth Reakes</td>
+        <td>Bug#25164: Patch for doc enhancement</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-20</td>
+        <td>Neil Graham</td>
+        <td>add attribute names to PSVIAttributeList and fix some problems with calculation of 
+                canonical values in element content  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-20</td>
+        <td>Neil Graham</td>
+        <td>fix canonical representation production</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-20</td>
+        <td>Neil Graham</td>
+        <td>store name/namespace of corresponding attribute in PSVIAttributeList; not all
+               PSVIAttributes have XSAttributeDeclarations  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>David Cargill</td>
+        <td>Fix compiler messages on OS390.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>David Cargill</td>
+        <td>More memory management updates.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: process 'final' information</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>Neil Graham</td>
+        <td>when validating a skipped element or attribute, we should not look for a declaration.  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>Neil Graham</td>
+        <td>remove a throw clause inserted during debugging</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-18</td>
+        <td>PeiYong Zhang</td>
+        <td>do not assert memorymanager in placement delete.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>David Cargill</td>
+        <td>Fix AIX compiler error.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: Use complex type info if present, otherwise use datatype validator</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: fix for annotation of attributes in attributeGroup/derived types  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Neil Graham</td>
+        <td>fix two overflow conditions</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Neil Graham</td>
+        <td>fix a segfault and a possible buffer overflow condition</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>David Cargill</td>
+        <td>Update for memory management so that the static memory manager (one
+               used to call Initialize) is only for static data.</td>
+    </tr>                        
+           
+    <tr>
+        <td>2003-12-17</td>
+        <td>Khaled Noaman</td>
+        <td>Check for NULL when building XSParticle</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Neil Graham</td>
+        <td>fix compilation error</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Neil Graham</td>
+        <td>ensure all uses of ArrayJanitor use a memory manager</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Neil Graham</td>
+        <td>add default memory manager parameter to loadMsg method that uses char * parameters</td>
+    </tr>
+               
+    <tr>
+        <td>2003-12-16</td>
+        <td>David Cargill</td>
+        <td>Fix memhandlertest failure (memory not deleted).</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>PeiYong Zhang</td>
+        <td>XSerializerTest updates</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>PeiYong Zhang</td>
+        <td>exception thrown upon invalid number, thanks Gareth Reakes.</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Khaled Noaman</td>
+        <td>Make IC_Field stateless, fMayMatch is no longer a data member of IC_Field</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Khaled Noaman</td>
+        <td>Add nextElementKey method</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-</td>
+        <td></td>
+        <td>BinMemOutputStream</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Alberto Massari</td>
+        <td>The DOMTypeInfo should have a NULL namespace and type name when DTD validation is 
+                used, not empty strings  </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>PeiYong Zhang</td>
+        <td>don't expand ContextSpecNode when deserilized</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>update</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>David Cargill</td>
+        <td>Change a conditional expression to an if-else to avoid a compiler problem. </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-15</td>
+        <td>Neil Graham</td>
+        <td>fix segfault when a writeAnnotation() method was called</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-15</td>
+        <td>David Cargill</td>
+        <td>psvi updates; cleanup revisits and bug fixes</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-14</td>
+        <td>Neil Graham</td>
+        <td>make use of XMLDocumentHandler::elementTypeInfo instead of non-thread-safe XMLElementDecl methods  </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-13</td>
+        <td>Han Ming, Neil Graham</td>
+        <td>Bug#25494 fix</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-13</td>
+        <td>Neil Graham</td>
+        <td>fix compilation errors under gcc</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-13</td>
+        <td>Neil Graham</td>
+        <td>configure scripts need to be told about XSerializerTests before they can build its Makefile</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-12</td>
+        <td>Michael Glavassevich, Neil Graham</td>
+        <td>fix small bugs that made sanity tests fails</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-12</td>
+        <td>PeiYong Zhang</td>
+        <td>Project XSerializerTest</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-11</td>
+        <td>PeiYong Zhang</td>
+        <td>trailing zeros for double/float w/o decimal point</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-</td>
+        <td>Michael Glavassevich, Neil Graham</td>
+        <td>fixes for the URI implementation to take registry names into account </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-11</td>
+        <td>PeiYong Zhang</td>
+        <td>Canonical Representation Support</td> 
+    </tr>
+    
+    <tr>
+        <td>2003-12-11</td>
+        <td>Khaled Noaman</td>
+        <td>Store non schema attributes from parent in XSAnnotation</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>OS/390 updates</td>
+    </tr>
+            
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>make documentation accord with what Xerces-C supports</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>ICU has deprecated the -s390 encoding suffix.  This patch uses the new convention 
+               for XML documents that make use of this suffix  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>make CreateDOMDocument sample more robust </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Neil Graham</td>
+        <td>fixes for canonical value production; memory management was not implemented correctly </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Stephen Dulin</td>
+        <td>Eliminate the preparsing stage </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-10</td>
+        <td>Neil Graham</td>
+        <td>change some hash constants</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Neil Graham</td>
+        <td>fix seg fault caused when a complex type had simple content; we were not processing 
+               the complex type itself, only its base </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-09</td>
+        <td>James Berry</td>
+        <td>Remove GCC2 build styles from xcode samples</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-09</td>
+        <td>Han Ming Ong</td>
+        <td>Bug #25343  Add xcode project for SEnumVal sample </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-09</td>
+        <td>Han Ming Ong</td>
+        <td>Bug#25337: Enable DEPLOYMENT_POSTPROCESSING for Mac OS X GCC3 Deployment Build. </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-07</td>
+        <td>Neil Graham</td>
+        <td>fix bug in PSVI where a segfault would occur if an attribute was not defined</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-07</td>
+        <td>Neil Graham</td>
+        <td>fix duplicate attribute detection when namespaces are disabled</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-03</td>
+        <td>Neil Graham</td>
+        <td>PSVI fix:  cannot allow validator to reset its element content buffer before exposing it to the application  </td>        
+    </tr>
+           
+    <tr>
+        <td>2003-12-03</td>
+        <td>Neil Graham</td>
+        <td>uninitialize panic handlers so they will be ready for subsequent initalizations</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-03</td>
+        <td>Pete Lloyd, Neil Graham</td>
+        <td>when an empty element is valid, it will not have a datatype validator </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Jeroen Whitmond, Neil Graham</td>
+        <td>Bug#25118, additional fix once again </td>
+    </tr>                                                                                                                                         
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Neil Graham</td>
+        <td>since there are certain things, such as schemaLocation attributes, that have a 
+               datatype and which we nonetheless do not validate, make canonical-value production 
+               dependent on validity being valid  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Pete Lloyd, Neil Graham</td>
+        <td>fix for ArrayIndexOutOfBoundsException in PSVIAttributeList</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Bug#20169, openFile was opening the file for read and write, while only read was required </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Removed /version option from the linker</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Don't use the word "exception" as a variable name, as VC 7.1 complains about it</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Bug#16055 fix, Make the code compilable on Windows when UNICODE is defined </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-01</td>
+        <td>Khaled Noaman</td>
+        <td> Properly set fAnnotation data member</td>
+    </tr>
+                       
 </table>
 </s2>
 
