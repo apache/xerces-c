@@ -56,8 +56,8 @@
 
 /**
  * $Log$
- * Revision 1.6  2000/02/08 02:35:19  abagchi
- * Changed panic function
+ * Revision 1.7  2000/02/08 18:37:28  abagchi
+ * set __MUTEX_RECURSIVE
  *
  * Revision 1.4  2000/02/06 07:48:29  rahulj
  * Year 2K copyright swat.
@@ -80,6 +80,10 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#ifdef OS390
+#define _OPEN_SYS
+#endif
+
 #ifndef APP_NO_THREADS
 #include    <pthread.h>
 #endif
@@ -625,12 +629,19 @@ void* XMLPlatformUtils::makeMutex()
 	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
     }
 
-    if (pthread_mutex_init(mutex, NULL))
+    pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
+    pthread_mutexattr_init(attr);
+    pthread_mutexattr_setkind_np(attr, __MUTEX_RECURSIVE);
+    if (pthread_mutex_init(mutex, attr))
     {
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::Mutex_CouldNotCreate);
+                XML4CExcepts::Mutex_CouldNotCreate);
     }
+    pthread_mutexattr_destroy(attr);
+    delete attr;
+
     return (void*)(mutex);
+
 #ifdef OS390BATCH
     } // __isPosixOn
     else {
