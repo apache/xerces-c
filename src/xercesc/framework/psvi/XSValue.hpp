@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/08/13 21:29:20  peiyongz
+ * fMemAllocated
+ *
  * Revision 1.3  2004/08/12 14:24:34  peiyongz
  * HP aCC A.03
  *
@@ -464,7 +467,8 @@ private:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    MemoryManager*      fMemoryManager;    
+    bool                fMemAllocated;
+    MemoryManager*      fMemoryManager;
 };
 
 

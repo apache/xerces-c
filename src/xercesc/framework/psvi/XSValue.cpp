@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/08/13 21:29:21  peiyongz
+ * fMemAllocated
+ *
  * Revision 1.2  2004/08/11 17:06:44  peiyongz
  * Do not panic if can't create RegEx
  *
@@ -231,14 +234,14 @@ static const int base_decimal    = 10;
 //  XSValue: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XSValue::XSValue(MemoryManager*  const manager)
-:fMemoryManager(manager)
+:fMemAllocated(false)
+,fMemoryManager(manager)
 {
-    fData.f_strVal = 0;
 }
 
 XSValue::~XSValue()
 {
-    if (fData.f_strVal)
+    if (fMemAllocated)
         fMemoryManager->deallocate(fData.f_strVal);
 }
   
@@ -971,17 +974,35 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         if (context.getValidation() && !validateNumerics(content, datatype, context, manager))
             return 0;
 
+        XMLCh* retVal;
+
         if (datatype == XSValue::dt_decimal)
         {
-            return XMLBigDecimal::getCanonicalRepresentation(content, manager);
+            retVal = XMLBigDecimal::getCanonicalRepresentation(content, manager);
+
+            if (!retVal)
+                context.fStatus = XSValueContext::st_InvalidChar;
+
+            return retVal;
+
         }
         else if (datatype == XSValue::dt_float || datatype == XSValue::dt_double  )
         {
-            return XMLAbstractDoubleFloat::getCanonicalRepresentation(content, manager);
+            retVal = XMLAbstractDoubleFloat::getCanonicalRepresentation(content, manager);
+
+            if (!retVal)
+                context.fStatus = XSValueContext::st_InvalidChar;
+
+            return retVal;
         }  
         else 
         {
-            return XMLBigInteger::getCanonicalRepresentation(content, manager);
+            retVal = XMLBigInteger::getCanonicalRepresentation(content, manager);
+
+            if (!retVal)
+                context.fStatus = XSValueContext::st_InvalidChar;
+
+            return retVal;
         }
     }
 
@@ -1555,6 +1576,7 @@ XSValue::getActValStrings(const XMLCh*         const content
 
                 XSValue* retVal = new (manager) XSValue(manager);
                 retVal->fData.f_strVal = decodedData;
+                retVal->fMemAllocated = true;
                 return retVal;
             }
             break;
