@@ -120,7 +120,7 @@ public:
      */
 	enum ExceptionCode {
 		INVALID_EXPRESSION_ERR = 51,
-		TYPE_ERR = 52,
+		TYPE_ERR = 52
 	};
     //@}
 
