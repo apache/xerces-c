@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/02/05 18:28:39  tng
+ * [Bug 13437] Incorrect memory management in XXXPlatformUtils.cpp.
+ *
  * Revision 1.1  2002/12/12 21:24:20  peiyongz
  * typo fix
  *
@@ -158,7 +161,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 #if defined (XML_USE_ICU_MESSAGELOADER)
         retVal = new ICUMsgLoader(msgDomain);
 #elif defined (XML_USE_ICONV_MESSAGELOADER)
-        retVal = new MsgCatalogLoader(msgDomain);        
+        retVal = new MsgCatalogLoader(msgDomain);
 #else
         // same as -DXML_USE_INMEM_MESSAGELOADER
         retVal = new InMemMsgLoader(msgDomain);
@@ -582,7 +585,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
             ThrowXML(XMLPlatformUtilsException,
                      XMLExcepts::Mutex_CouldNotDestroy);
         }
-        delete mtxHandle;
+        delete (pthread_mutex_t*) mtxHandle;
     }
 }
 

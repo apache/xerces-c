@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/02/05 18:29:27  tng
+ * [Bug 13437] Incorrect memory management in XXXPlatformUtils.cpp.
+ *
  * Revision 1.5  2003/01/09 15:30:39  tng
  * Missing panic function in Tandem
  *
@@ -328,7 +331,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
         throw XMLPlatformUtilsException("Could not destroy a mutex");
     }
     if ( (pthread_mutex_t*)mtxHandle)
-        delete mtxHandle;
+        delete (pthread_mutex_t*) mtxHandle;
 }
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
