@@ -683,85 +683,87 @@ $set 3
 278  Not supported
 279  Invalid child index
 280  Invalid quantifier in '{0}'
-281  Enabling the NEL option can only be called once per process.
-282  {0}
-283  operator new fails.  Possibly running Of memory
-284  Operation is not allowed
-285  Selectors cannot select attributes
-286  Not allowed to have '|' at the beginning of an xpath value
-287  Not allowed to have '||' in an xpath value
-288  Missing attribute name in xpath
-289  Expected xpath token 'NAMETEST_QNAME' or 'NAMETEST_ANY' or 'NAMETEST_NAMESPACE'
-290  Prefix '{0}' not bound to namespace URI in an xpath value
-291  Not allowed to have double colon in the xpath expression
-292  Expected step following token 'AXISNAME_CHILD::'
-293  Expected step following '//' in xpath
-294  Expected step following '/' in xpath
-295  '/' not allowed after '//' in xpath
-296  '//' only allowed after '.' at the beginning of an xpath
-297  Not allowed to have '/' at the beginning of an xpath value
-298  Not allowed to select the root of an xpath
-299  Empty xpath expression
-300  The xpath expression cannot end with '|'
-301  Invalid character following '.' in xpath
-302  XPath token not supported
-303  Find a solution!
-304  buffer not initialized yet!
-305  'T' is missing! '{0}' 
-306  invalid gDay! '{0}' 
-307  invalid gMonth! '{0}' 
-308  invalid gMonthDay! '{0}' 
-309  Duration shall start with '-' or 'P'! '{0}' 
-310  Duration shall always have 'P'! '{0}' 
-311  '-' can only appear at first! '{0}' 
-312  Duration has invalid stuff before 'T'! '{0}' 
-313  Duration has no time elements after 'T'! '{0}' 
-314  Duration shall have at least element ! '{0}' 
-315  Duration shall have at least one digit after the . ! '{0}' 
-316  Incomplete Date ! '{0}' 
-317  Invalid Date ! '{0}' 
-318  Incomplete Time ! '{0}' 
-319  Invalid Time ! '{0}' 
-320  ms shall be present once '.' is present ! '{0}' 
-321  Incomplete YearMonth! '{0}' 
-322  Year separator is missing or misplaced ! '{0}' 
-323  Year must have 'CCYY' format ! '{0}' 
-324  Invalid leading zero in year! '{0}' 
-325  no month in YearMonth ! '{0}' 
-326  TimeZone is expected ! '{0}' 
-327  Expecting nothing after 'Z'! '{0}' 
-328  Invalid TimeZone! '{0}' 
-329  The year (0000) is an illegal year value! '{0}' 
-330  The month must have values 1 to 12! '{0}' 
-331  The day must have values 1 to 31! '{0}' 
-332  Hour must have values 0-23! '{0}' 
-333  Minute must have values 0-59! '{0}' 
-334  Second must have values 0-60! '{0}' 
+281  Replace pattern cannot match zero length string
+282  Invalid replace pattern
+283  Enabling the NEL option can only be called once per process.
+284  {0}
+285  operator new fails.  Possibly running Of memory
+286  Operation is not allowed
+287  Selectors cannot select attributes
+288  Not allowed to have '|' at the beginning of an xpath value
+289  Not allowed to have '||' in an xpath value
+290  Missing attribute name in xpath
+291  Expected xpath token 'NAMETEST_QNAME' or 'NAMETEST_ANY' or 'NAMETEST_NAMESPACE'
+292  Prefix '{0}' not bound to namespace URI in an xpath value
+293  Not allowed to have double colon in the xpath expression
+294  Expected step following token 'AXISNAME_CHILD::'
+295  Expected step following '//' in xpath
+296  Expected step following '/' in xpath
+297  '/' not allowed after '//' in xpath
+298  '//' only allowed after '.' at the beginning of an xpath
+299  Not allowed to have '/' at the beginning of an xpath value
+300  Not allowed to select the root of an xpath
+301  Empty xpath expression
+302  The xpath expression cannot end with '|'
+303  Invalid character following '.' in xpath
+304  XPath token not supported
+305  Find a solution!
+306  buffer not initialized yet!
+307  'T' is missing! '{0}' 
+308  invalid gDay! '{0}' 
+309  invalid gMonth! '{0}' 
+310  invalid gMonthDay! '{0}' 
+311  Duration shall start with '-' or 'P'! '{0}' 
+312  Duration shall always have 'P'! '{0}' 
+313  '-' can only appear at first! '{0}' 
+314  Duration has invalid stuff before 'T'! '{0}' 
+315  Duration has no time elements after 'T'! '{0}' 
+316  Duration shall have at least element ! '{0}' 
+317  Duration shall have at least one digit after the . ! '{0}' 
+318  Incomplete Date ! '{0}' 
+319  Invalid Date ! '{0}' 
+320  Incomplete Time ! '{0}' 
+321  Invalid Time ! '{0}' 
+322  ms shall be present once '.' is present ! '{0}' 
+323  Incomplete YearMonth! '{0}' 
+324  Year separator is missing or misplaced ! '{0}' 
+325  Year must have 'CCYY' format ! '{0}' 
+326  Invalid leading zero in year! '{0}' 
+327  no month in YearMonth ! '{0}' 
+328  TimeZone is expected ! '{0}' 
+329  Expecting nothing after 'Z'! '{0}' 
+330  Invalid TimeZone! '{0}' 
+331  The year (0000) is an illegal year value! '{0}' 
+332  The month must have values 1 to 12! '{0}' 
+333  The day must have values 1 to 31! '{0}' 
+334  Hour must have values 0-23! '{0}' 
 335  Minute must have values 0-59! '{0}' 
-336  Particle Derivation Restriction: The derived complexType has content, while base is empty.
-337  NSCompat: The namespace of '{0}' is not allowed by wildcard in base
-338  The occurrence range of '{0}' is not a valid restriction of base element's range
-339  NameAndTypeOK: The Element name/uri in restriction does not match that of corresponding base element
-340  NameAndTypeOK: Element '{0}' is nillable in the restriction, while it's not in the base
-341  NameAndTypeOK: Element '{0}' is either not fixed, or is not fixed with the same value as in the base
-342  NameAndTypeOK: The disallowed substitutions, for element '{0}', are not a superset of those of the base element
-343  NameAndTypeOK: Element '{0}' has a type that does not derive from that of the base
-344  NameAndTypeOK: Derived element '{0}' has fewer Identity Constraints than base element '{1}'
-345  NameAndTypeOK: Derived element '{0}' has an Identity Constraint that does not appear on base element '{1}'
-346  RecurseAsIfGroup: Element '{0}' belongs to a group of a variety different from that of the base
-347  Occurrence range of group is not a valid restriction of occurrence range of base group
-348  Recurse: There is not a complete functional mapping between the particles
-349  Forbidden restriction of 'any': Choice,Seq,All,Elt
-350  Forbidden restriction of 'all': Choice,Seq,Elt
-351  Forbidden restriction of 'choice': All,Seq,Leaf
-352  Forbidden restriction of 'sequence': Elt
-353  Wildcard's occurrence range not a restriction of base wildcard's range
-354  Wildcard is not a subset of corresponding wildcard in base
-355  Group's occurrence range not a restriction of base wildcard's range
-356  RecurseUnordered: There is not a complete functional mapping between the particles
-357  MapAndSum: There is not a complete functional mapping between the particles
-358  Particle derivation: Invalid content spec node type
-359  NodeIDMap overflows and exceeds the largest available size
+336  Second must have values 0-60! '{0}' 
+337  Minute must have values 0-59! '{0}' 
+338  Particle Derivation Restriction: The derived complexType has content, while base is empty.
+339  NSCompat: The namespace of '{0}' is not allowed by wildcard in base
+340  The occurrence range of '{0}' is not a valid restriction of base element's range
+341  NameAndTypeOK: The Element name/uri in restriction does not match that of corresponding base element
+342  NameAndTypeOK: Element '{0}' is nillable in the restriction, while it's not in the base
+343  NameAndTypeOK: Element '{0}' is either not fixed, or is not fixed with the same value as in the base
+344  NameAndTypeOK: The disallowed substitutions, for element '{0}', are not a superset of those of the base element
+345  NameAndTypeOK: Element '{0}' has a type that does not derive from that of the base
+346  NameAndTypeOK: Derived element '{0}' has fewer Identity Constraints than base element '{1}'
+347  NameAndTypeOK: Derived element '{0}' has an Identity Constraint that does not appear on base element '{1}'
+348  RecurseAsIfGroup: Element '{0}' belongs to a group of a variety different from that of the base
+349  Occurrence range of group is not a valid restriction of occurrence range of base group
+350  Recurse: There is not a complete functional mapping between the particles
+351  Forbidden restriction of 'any': Choice,Seq,All,Elt
+352  Forbidden restriction of 'all': Choice,Seq,Elt
+353  Forbidden restriction of 'choice': All,Seq,Leaf
+354  Forbidden restriction of 'sequence': Elt
+355  Wildcard's occurrence range not a restriction of base wildcard's range
+356  Wildcard is not a subset of corresponding wildcard in base
+357  Group's occurrence range not a restriction of base wildcard's range
+358  RecurseUnordered: There is not a complete functional mapping between the particles
+359  MapAndSum: There is not a complete functional mapping between the particles
+360  Particle derivation: Invalid content spec node type
+361  NodeIDMap overflows and exceeds the largest available size
 
 
 $set 4
