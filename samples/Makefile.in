@@ -85,98 +85,98 @@ all::	saxprint sax2print saxcount sax2count domprint domcount idomprint idomcoun
 
 saxprint::
 	@echo Building "SAXPrint"
-	cd $(SAXPrint_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(SAXPrint_DIR) $(MAKE_FLAGS)
 
 sax2print::
 	@echo Building "SAX2Print"
-	cd $(SAX2Print_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(SAX2Print_DIR) $(MAKE_FLAGS)
 
 saxcount::
 	@echo Building "SAXCount"
-	cd $(SAXCount_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(SAXCount_DIR) $(MAKE_FLAGS)
 
 sax2count::
 	@echo Building "SAX2Count"
-	cd $(SAX2Count_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(SAX2Count_DIR) $(MAKE_FLAGS)
 
 domprint::
 	@echo Building "DOMPrint"
-	cd $(DOMPrint_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(DOMPrint_DIR) $(MAKE_FLAGS)
 
 domcount::
 	@echo Building "DOMCount"
-	cd $(DOMCount_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(DOMCount_DIR) $(MAKE_FLAGS)
 
 idomprint::
 	@echo Building "IDOMPrint"
-	cd $(IDOMPrint_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(IDOMPrint_DIR) $(MAKE_FLAGS)
 
 idomcount::
 	@echo Building "IDOMCount"
-	cd $(IDOMCount_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(IDOMCount_DIR) $(MAKE_FLAGS)
 
 memparse::
 	@echo Building "MemParse"
-	cd $(MemParse_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(MemParse_DIR) $(MAKE_FLAGS)
 
 redirect::
 	@echo Building "Redirect"
-	cd $(Redirect_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(Redirect_DIR) $(MAKE_FLAGS)
 
 pparse::
 	@echo Building "PParse"
-	cd $(PParse_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(PParse_DIR) $(MAKE_FLAGS)
 
 stdinparse::
 	@echo Building "StdInParse"
-	cd $(StdInParse_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(StdInParse_DIR) $(MAKE_FLAGS)
 
 enumval::
 	@echo Building "EnumVal"
-	cd $(EnumVal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(EnumVal_DIR) $(MAKE_FLAGS)
 
 senumval::
 	@echo Building "SEnumVal"
-	cd $(SEnumVal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(SEnumVal_DIR) $(MAKE_FLAGS)
 
 createdomdocument::
 	@echo Building "CreateDOMDocument"
-	cd $(CreateDOMDocument_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	$(MAKE) -C $(CreateDOMDocument_DIR) $(MAKE_FLAGS)
 
 
 clean::
-	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
-	cd $(SAX2Print_DIR) && $(MAKE) $@ && cd ..
-	cd $(SAXCount_DIR) && $(MAKE) $@ && cd ..
-	cd $(SAX2Count_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMPrint_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMCount_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMPrint_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMCount_DIR) && $(MAKE) $@ && cd ..
-	cd $(MemParse_DIR) && $(MAKE) $@ && cd ..
-	cd $(Redirect_DIR) && $(MAKE) $@ && cd ..
-	cd $(PParse_DIR) && $(MAKE) $@ && cd ..
-	cd $(StdInParse_DIR) && $(MAKE) $@ && cd ..
-	cd $(EnumVal_DIR) && $(MAKE) $@ && cd ..
-	cd $(SEnumVal_DIR) && $(MAKE) $@ && cd ..
-	cd $(CreateDOMDocument_DIR) && $(MAKE) $@ && cd ..
+	$(MAKE) -C $(SAXPrint_DIR) $@
+	$(MAKE) -C $(SAX2Print_DIR) $@
+	$(MAKE) -C $(SAXCount_DIR) $@
+	$(MAKE) -C $(SAX2Count_DIR) $@
+	$(MAKE) -C $(DOMPrint_DIR) $@
+	$(MAKE) -C $(DOMCount_DIR) $@
+	$(MAKE) -C $(IDOMPrint_DIR) $@
+	$(MAKE) -C $(IDOMCount_DIR) $@
+	$(MAKE) -C $(MemParse_DIR) $@
+	$(MAKE) -C $(Redirect_DIR) $@
+	$(MAKE) -C $(PParse_DIR) $@
+	$(MAKE) -C $(StdInParse_DIR) $@
+	$(MAKE) -C $(EnumVal_DIR) $@
+	$(MAKE) -C $(SEnumVal_DIR) $@
+	$(MAKE) -C $(CreateDOMDocument_DIR) $@
 
 distclean::
-	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
-	cd $(SAX2Print_DIR) && $(MAKE) $@ && cd ..
-	cd $(SAXCount_DIR) && $(MAKE) $@ && cd ..
-	cd $(SAX2Count_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMPrint_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMCount_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMPrint_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMCount_DIR) && $(MAKE) $@ && cd ..
-	cd $(MemParse_DIR) && $(MAKE) $@ && cd ..
-	cd $(Redirect_DIR) && $(MAKE) $@ && cd ..
-	cd $(PParse_DIR) && $(MAKE) $@ && cd ..
-	cd $(StdInParse_DIR) && $(MAKE) $@ && cd ..
-	cd $(EnumVal_DIR) && $(MAKE) $@ && cd ..
-	cd $(SEnumVal_DIR) && $(MAKE) $@ && cd ..
-	cd $(CreateDOMDocument_DIR) && $(MAKE) $@ && cd ..
+	$(MAKE) -C $(SAXPrint_DIR) $@
+	$(MAKE) -C $(SAX2Print_DIR) $@
+	$(MAKE) -C $(SAXCount_DIR) $@
+	$(MAKE) -C $(SAX2Count_DIR) $@
+	$(MAKE) -C $(DOMPrint_DIR) $@
+	$(MAKE) -C $(DOMCount_DIR) $@
+	$(MAKE) -C $(IDOMPrint_DIR) $@
+	$(MAKE) -C $(IDOMCount_DIR) $@
+	$(MAKE) -C $(MemParse_DIR) $@
+	$(MAKE) -C $(Redirect_DIR) $@
+	$(MAKE) -C $(PParse_DIR) $@
+	$(MAKE) -C $(StdInParse_DIR) $@
+	$(MAKE) -C $(EnumVal_DIR) $@
+	$(MAKE) -C $(SEnumVal_DIR) $@
+	$(MAKE) -C $(CreateDOMDocument_DIR) $@
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
 

@@ -112,92 +112,92 @@ Prepare::
 	@echo Preparing the directory structure for a build ...
 	-${MKDIR} -p ${XML_OBJ_DIR}
 	-${MKDIR} -p ${XML_LIB_DIR}
-	${CD} $(UTIL_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(SAX_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(SAX2_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(INTERNAL_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(FRAMEWORK_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(PARSERS_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(VALIDATORS_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(DOM_DIR) ; $(MAKE) includes ; ${CD} ..
-	${CD} $(IDOM_DIR) ; $(MAKE) includes ; ${CD} ..
+	${MAKE} -C $(UTIL_DIR) includes
+	${MAKE} -C $(SAX_DIR) includes
+	${MAKE} -C $(SAX2_DIR) includes
+	${MAKE} -C $(INTERNAL_DIR) includes
+	${MAKE} -C $(FRAMEWORK_DIR) includes
+	${MAKE} -C $(PARSERS_DIR) includes
+	${MAKE} -C $(VALIDATORS_DIR) includes
+	${MAKE} -C $(DOM_DIR) includes
+	${MAKE} -C $(IDOM_DIR) includes
 
 Util::
 	@echo Building "util"
-	${CD} $(UTIL_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(UTIL_DIR) $(MAKE_FLAGS)
 
 Sax::
 	@echo Building "sax"
-	${CD} $(SAX_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(SAX_DIR) $(MAKE_FLAGS)
 
 
 Internal::
 	@echo Building "internal"
-	${CD} $(INTERNAL_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(INTERNAL_DIR) $(MAKE_FLAGS)
 
 Framework::
 	@echo Building "framework"
-	${CD} $(FRAMEWORK_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(FRAMEWORK_DIR) $(MAKE_FLAGS)
 
 Parsers::
 	@echo Building "parsers"
-	${CD} $(PARSERS_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(PARSERS_DIR) $(MAKE_FLAGS)
 
 Sax2::
 	@echo Building "sax2"
-	${CD} $(SAX2_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(SAX2_DIR) $(MAKE_FLAGS)
 
 Dom::
 	@echo Building "dom"
-	${CD} $(DOM_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(DOM_DIR) $(MAKE_FLAGS)
 
 IDom::
 	@echo Building "idom"
-	${CD} $(IDOM_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(IDOM_DIR) $(MAKE_FLAGS)
 
 Validators::
 	@echo Building "validators"
-	${CD} $(VALIDATORS_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(VALIDATORS_DIR) $(MAKE_FLAGS)
 
 ${THISLIB}${VER}${SHLIBSUFFIX}:: compile
 	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
-	${CD} $(XML_OBJ_DIR)/.. ; $(MAKE) -k $(MAKE_FLAGS) ; ${CD} ..
+	${MAKE} -C $(XML_OBJ_DIR)/.. -k $(MAKE_FLAGS)
 
 install::
-	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(SAX2_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(IDOM_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(VALIDATORS_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
+	${MAKE} -C $(UTIL_DIR) $@
+	${MAKE} -C $(SAX_DIR) $@
+	${MAKE} -C $(SAX2_DIR) $@
+	${MAKE} -C $(INTERNAL_DIR) $@
+	${MAKE} -C $(FRAMEWORK_DIR) $@
+	${MAKE} -C $(PARSERS_DIR) $@
+	${MAKE} -C $(DOM_DIR) $@
+	${MAKE} -C $(IDOM_DIR) $@
+	${MAKE} -C $(VALIDATORS_DIR) $@
+	${MAKE} -C $(XML_OBJ) $@
 
 clean::
-	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(SAX2_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(IDOM_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(VALIDATORS_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
+	${MAKE} -C $(UTIL_DIR) $@
+	${MAKE} -C $(SAX_DIR) $@
+	${MAKE} -C $(SAX2_DIR) $@
+	${MAKE} -C $(INTERNAL_DIR) $@
+	${MAKE} -C $(FRAMEWORK_DIR) $@
+	${MAKE} -C $(PARSERS_DIR) $@
+	${MAKE} -C $(DOM_DIR) $@
+	${MAKE} -C $(IDOM_DIR) $@
+	${MAKE} -C $(VALIDATORS_DIR) $@
+	${MAKE} -C $(XML_OBJ) $@
 
 distclean::
-	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(SAX2_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(IDOM_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(VALIDATORS_DIR) && $(MAKE) $@ && ${CD} ..
-	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
+	${MAKE} -C $(UTIL_DIR) $@
+	${MAKE} -C $(SAX_DIR) $@
+	${MAKE} -C $(SAX2_DIR) $@
+	${MAKE} -C $(INTERNAL_DIR) $@
+	${MAKE} -C $(FRAMEWORK_DIR) $@
+	${MAKE} -C $(PARSERS_DIR) $@
+	${MAKE} -C $(DOM_DIR) $@
+	${MAKE} -C $(IDOM_DIR) $@
+	${MAKE} -C $(VALIDATORS_DIR) $@
+	${MAKE} -C $(XML_OBJ) $@
 	rm -f Makefile config.cache config.log config.status
 	find . -name Makefile -print -exec rm -f {} \;
 	rm -f *~ core
@@ -205,7 +205,7 @@ distclean::
 #docs::
 
 samples::
-	${CD} ../samples; ${MAKE}; ${CD} ../src
+	${MAKE} -C ../samples
 
 copy:: lib samples
 	@echo Make the target directory and its main subdirectories

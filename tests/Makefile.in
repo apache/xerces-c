@@ -96,85 +96,85 @@ bindir::
 
 domidtest::
 	@echo Building "DOMIDTest"
-	cd $(DOMIDTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(DOMIDTest_DIR) $(MAKE_FLAGS)
 
 dommemtest::
 	@echo Building "DOMMemTest"
-	cd $(DOMMemTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(DOMMemTest_DIR) $(MAKE_FLAGS)
 
 idommemtest::
 	@echo Building "IDOMMemTest"
-	cd $(IDOMMemTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(IDOMMemTest_DIR) $(MAKE_FLAGS)
 
 domtest::
 	@echo Building "DOMTest"
-	cd $(DOMTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(DOMTest_DIR) $(MAKE_FLAGS)
 
 idomtest::
 	@echo Building "IDOMTest"
-	cd $(IDOMTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(IDOMTest_DIR) $(MAKE_FLAGS)
 
 threadtest::
 	@echo Building "ThreadTest"
-	cd $(ThreadTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(ThreadTest_DIR) $(MAKE_FLAGS)
 
 ithreadtest::
 	@echo Building "IThreadTest"
-	cd $(IThreadTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(IThreadTest_DIR) $(MAKE_FLAGS)
 
 encodingtest::
 	@echo Building "EncodingTest"
-	cd $(EncodingTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(EncodingTest_DIR) $(MAKE_FLAGS)
 
 traversal::
 	@echo Building "Traversal"
-	cd $(Traversal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(Traversal_DIR) $(MAKE_FLAGS)
 
 itraversal::
 	@echo Building "ITraversal"
-	cd $(ITraversal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(ITraversal_DIR) $(MAKE_FLAGS)
 
 rangetest::
 	@echo Building "Range"
-	cd $(DOMRange_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(DOMRange_DIR) $(MAKE_FLAGS)
 
 irangetest::
 	@echo Building "Range"
-	cd $(IDOMRange_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(IDOMRange_DIR) $(MAKE_FLAGS)
 
 inittermtest::
 	@echo Building "InitTermTest"
-	cd $(InitTermTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+	${MAKE} -C $(InitTermTest_DIR) $(MAKE_FLAGS)
 
 clean::
-	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMMemTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(IThreadTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(Traversal_DIR) && $(MAKE) $@ && cd ..
-	cd $(ITraversal_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMRange_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMRange_DIR) && $(MAKE) $@ && cd ..
-	cd $(InitTermTest_DIR) && $(MAKE) $@ && cd ..
+	${MAKE} -C $(DOMIDTest_DIR) $@
+	${MAKE} -C $(DOMMemTest_DIR) $@
+	${MAKE} -C $(IDOMMemTest_DIR) $@
+	${MAKE} -C $(DOMTest_DIR) $@
+	${MAKE} -C $(IDOMTest_DIR) $@
+	${MAKE} -C $(ThreadTest_DIR) $@
+	${MAKE} -C $(IThreadTest_DIR) $@
+	${MAKE} -C $(EncodingTest_DIR) $@
+	${MAKE} -C $(Traversal_DIR) $@
+	${MAKE} -C $(ITraversal_DIR) $@
+	${MAKE} -C $(DOMRange_DIR) $@
+	${MAKE} -C $(IDOMRange_DIR) $@
+	${MAKE} -C $(InitTermTest_DIR) $@
 
 distclean::
-	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMMemTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(IThreadTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(Traversal_DIR) && $(MAKE) $@ && cd ..
-	cd $(ITraversal_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMRange_DIR) && $(MAKE) $@ && cd ..
-	cd $(IDOMRange_DIR) && $(MAKE) $@ && cd ..
-	cd $(InitTermTest_DIR) && $(MAKE) $@ && cd ..
+	${MAKE} -C $(DOMIDTest_DIR) $@
+	${MAKE} -C $(DOMMemTest_DIR) $@
+	${MAKE} -C $(IDOMMemTest_DIR) $@
+	${MAKE} -C $(DOMTest_DIR) $@
+	${MAKE} -C $(IDOMTest_DIR) $@
+	${MAKE} -C $(ThreadTest_DIR) $@
+	${MAKE} -C $(IThreadTest_DIR) $@
+	${MAKE} -C $(EncodingTest_DIR) $@
+	${MAKE} -C $(Traversal_DIR) $@
+	${MAKE} -C $(ITraversal_DIR) $@
+	${MAKE} -C $(DOMRange_DIR) $@
+	${MAKE} -C $(IDOMRange_DIR) $@
+	${MAKE} -C $(InitTermTest_DIR) $@
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
 

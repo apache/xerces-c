@@ -55,8 +55,11 @@
 #
 #
 # $Log$
-# Revision 1.1  2002/02/01 22:22:23  peiyongz
-# Initial revision
+# Revision 1.2  2002/02/11 18:19:19  tng
+# [Bug 2715] Build recursion suppresses make failures.
+#
+# Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
+# sane_include
 #
 # Revision 1.16  2001/11/29 18:25:18  tng
 # FreeBSD support by Michael Huedepohl.
@@ -169,16 +172,16 @@ ifeq (${PLATFORM}, MACOSX)
 endif
 
 includes::
-	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
+	${MAKE} -C $(SUBMODULE) $@
 
 all::
-	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
+	${MAKE} -C $(SUBMODULE) $@
 
 clean::
-	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
+	${MAKE} -C $(SUBMODULE) $@
 
 distclean::
-	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
+	${MAKE} -C $(SUBMODULE) $@
 
 install::
-	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
+	${MAKE} -C $(SUBMODULE) $@

@@ -55,8 +55,11 @@
 #
 #
 # $Log$
-# Revision 1.1  2002/02/01 22:22:37  peiyongz
-# Initial revision
+# Revision 1.2  2002/02/11 18:19:19  tng
+# [Bug 2715] Build recursion suppresses make failures.
+#
+# Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
+# sane_include
 #
 # Revision 1.6  2001/07/08 20:13:04  jberry
 # Simplify file existance checks
@@ -110,26 +113,26 @@ VALIDATORS_CPP_OBJECTS =
 all:: includes $(VALIDATORS_CPP_OBJECTS) common datatype DTD schema
 
 includes:: pubheaders $(VALIDATORS_C_FILES)
-	cd common ; $(MAKE) $@ ; cd ..
-	cd datatype ; $(MAKE) $@ ; cd ..
-	cd DTD ; $(MAKE) $@ ; cd ..
-	cd schema ; $(MAKE) $@ ; cd ..
+	${MAKE} -C common $@
+	${MAKE} -C datatype $@
+	${MAKE} -C DTD $@
+	${MAKE} -C schema $@
 
 
 common::
-	cd common ; $(MAKE) ; cd ..
+	${MAKE} -C common
 
 
 datatype::
-	cd datatype ; $(MAKE) ; cd ..
+	${MAKE} -C datatype
 
 
 DTD::
-	cd DTD ; $(MAKE) ; cd ..
+	${MAKE} -C DTD
 
 
 schema::
-	cd schema ; $(MAKE) ; cd ..
+	${MAKE} -C schema
 
 
 pubheaders::
@@ -146,10 +149,10 @@ clean::
 ifneq ($(strip $(VALIDATORS_CPP_OBJECTS)),)
 	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_CPP_OBJECTS))
 endif
-	cd common ; $(MAKE) $@ ; cd ..
-	cd datatype ; $(MAKE) $@ ; cd ..
-	cd DTD ; $(MAKE) $@ ; cd ..
-	cd schema ; $(MAKE) $@ ; cd ..
+	${MAKE} -C common $@
+	${MAKE} -C datatype $@
+	${MAKE} -C DTD $@
+	${MAKE} -C schema $@
 
 
 
@@ -162,15 +165,15 @@ endif
 ifneq ($(strip $(VALIDATORS_C_FILES)),)
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_C_FILES))
 endif
-	cd common ; $(MAKE) $@ ; cd ..
-	cd datatype ; $(MAKE) $@ ; cd ..
-	cd DTD ; $(MAKE) $@ ; cd ..
-	cd schema ; $(MAKE) $@ ; cd ..
+	${MAKE} -C common $@
+	${MAKE} -C datatype $@
+	${MAKE} -C DTD $@
+	${MAKE} -C schema $@
 
 
 install::
 	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
-	cd common ; $(MAKE) $@ ; cd ..
-	cd datatype ; $(MAKE) $@ ; cd ..
-	cd DTD ; $(MAKE) $@ ; cd ..
-	cd schema ; $(MAKE) $@ ; cd ..
+	${MAKE} -C common $@
+	${MAKE} -C datatype $@
+	${MAKE} -C DTD $@
+	${MAKE} -C schema $@
