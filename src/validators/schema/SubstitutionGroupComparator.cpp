@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/29 19:47:22  knoaman
+ * Fix bug -  memory was not allocated before call to XMLString::subString
+ *
  * Revision 1.4  2001/05/28 20:55:42  tng
  * Schema: Null pointer checking in SubsitutionGropuComparator
  *
@@ -122,15 +125,19 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
 
     while (substitutionGroupFullName)
     {
-        int commaAt = XMLString::indexOf(substitutionGroupFullName, ',');
-        XMLCh* tmpURI = 0;
-        XMLCh* tmpLocalpart = substitutionGroupFullName;
+        int commaAt = XMLString::indexOf(substitutionGroupFullName, chComma);
+        XMLCh tmpURI[256];
+        XMLCh tmpLocalpart[256];
+
         if (commaAt >= 0)
         {
             if (commaAt > 0)
                  XMLString::subString(tmpURI, substitutionGroupFullName, 0, commaAt);
-
+           
             XMLString::subString(tmpLocalpart, substitutionGroupFullName, commaAt+1, XMLString::stringLen(substitutionGroupFullName));
+        }
+        else {
+            XMLString::subString(tmpLocalpart, substitutionGroupFullName, 0, XMLString::stringLen(substitutionGroupFullName));
         }
 
         if (!tmpURI)
