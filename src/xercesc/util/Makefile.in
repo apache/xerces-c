@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.15  2002/10/22 17:53:43  peiyongz
+# Build resource bundles on Unix
+#
 # Revision 1.14  2002/09/17 21:24:01  peiyongz
 # RPM for Xerces2.1.0, patch from Thomas Woerner (thomas@linux.de)
 #
@@ -561,6 +564,9 @@ endif
 endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)
 
+ifeq (${MESSAGELOADER},ICU)
+	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)/resources
+endif
 
 compilers::
 	${MAKE} -C Compilers
