@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/05/18 16:51:37  knoaman
+ * Added circular check for complexType + more error messages.
+ *
  * Revision 1.8  2001/05/17 18:11:11  knoaman
  * More constraint and attribute checking.
  *
@@ -298,7 +301,6 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
         );
     }
 
-	try {
 
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_STRING,
                        new StringDatatypeValidator());
@@ -338,10 +340,6 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
 		            getDatatypeValidator(XMLUni::fgNmTokenString), 0, true, 0, false);
 
         fRegistryExpanded = 1;
-    }
-	catch(...) {
-        throw;
-    }
 }
 
 
@@ -356,7 +354,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         initializeDTDRegistry();
     }
 
-	try {
+
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN, 
                        new BooleanDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,
@@ -593,10 +591,6 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 */
 
         fRegistryExpanded = 2;
-    }
-    catch(...){
-        throw;
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -611,6 +605,11 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
                                                   const bool userDefined)
 {
 	if (baseValidator == 0) {
+
+        if (facets) {
+            Janitor<KVStringPairHashTable> janFacets(facets);
+        }
+
         return 0;
     }
 

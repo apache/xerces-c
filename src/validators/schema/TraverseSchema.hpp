@@ -75,6 +75,7 @@
 #include <framework/XMLBuffer.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <util/ValueVectorOf.hpp>
+#include <util/RefHash2KeysTableOf.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -464,7 +465,7 @@ private:
                           const unsigned int locationId);
 
     void restoreSchemaInfo();
-    int resetSimpleTypeNameStack(const int);
+    int resetCurrentTypeNameStack(const int);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -497,8 +498,9 @@ private:
     SchemaInfo*                      fCurrentSchemaInfo;
     ValueVectorOf<unsigned int>*     fImportLocations;
     ValueVectorOf<unsigned int>*     fIncludeLocations;
-    ValueVectorOf<unsigned int>*     fSimpleTypeStack;
+    ValueVectorOf<unsigned int>*     fCurrentTypeNameStack;
     GeneralAttributeCheck*           fAttributeCheck;
+    RefHash2KeysTableOf<XMLCh>*      fGlobalTypes;
     static XMLStringPool             fStringPool;
 
     friend class GeneralAttributeCheck;
@@ -642,12 +644,12 @@ TraverseSchema::locationsContain(const ValueVectorOf<unsigned int>* const locati
     return false;
 }
 
-inline int TraverseSchema::resetSimpleTypeNameStack(const int value) {
+inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
 
-    unsigned int stackSize = fSimpleTypeStack->size();
+    unsigned int stackSize = fCurrentTypeNameStack->size();
 
-	if (stackSize != 0) {
-        fSimpleTypeStack->removeElementAt(stackSize - 1);
+    if (stackSize != 0) {
+        fCurrentTypeNameStack->removeElementAt(stackSize - 1);
     }
 
     return value;

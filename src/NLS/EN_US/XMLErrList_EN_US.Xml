@@ -105,6 +105,9 @@
             <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in '{1}'"/>
             <Message Id="InvalidMin2MaxOccurs" Text="Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'"/>
             <Message Id="AnyAttributeContentError" Text="'anyAttribute' elements can contain at most one 'annotation' element in their children"/>
+            <Message Id="NoNameGlobalElement" Text="Global {0} must have a name - declaration ignored"/>
+            <Message Id="NoCircularDefinition" Text="No circular definitions are allowed: '{0}'"/>
+            <Message Id="DuplicateGlobalType" Text="Global {0}: '{1}' declared more than once or also declared as {2}"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
@@ -526,6 +529,11 @@
             <Message Id="VALUE_exceed_maxExcl" Text="Value '{0}' must be less than MaxExclusive '{1}' "/>
             <Message Id="VALUE_exceed_minIncl" Text="Value '{0}' must be greater than or equal to MinInclusive '{1}' "/>
             <Message Id="VALUE_exceed_minExcl" Text="Value '{0}' must be greater than MinExclusive '{1}' "/>
+            <Message Id="XMLNUM_emptyString" Text=" Empty string encountered."/>
+            <Message Id="XMLNUM_WSString" Text=" String contains whitespaces only."/>
+            <Message Id="XMLNUM_2ManyDecPoint" Text=" More than one decimal points encountered."/>
+            <Message Id="XMLNUM_Inv_chars" Text=" Invalid chars encountered."/>
+            <Message Id="XMLNUM_null_ptr" Text=" Null pointer encountered."/>
             <Message Id="Regex_Result_Not_Set" Text="A result is not set."/>
             <Message Id="Regex_CompactRangesError" Text="CompactRanges - Internal Error"/>
             <Message Id="Regex_MergeRangesTypeMismatch" Text="Merge Ranges - Mismatched type"/>

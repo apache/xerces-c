@@ -141,7 +141,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     TokenFactory(const TokenFactory&);
-    operator=(const TokenFactory&);
+    void operator=(const TokenFactory&);
 
     // -----------------------------------------------------------------------
     //  Private Helpers methods
