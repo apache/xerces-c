@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/07/17 21:30:12  peiyongz
+ * bug fix: numBase->getMinInclusive()->toString()
+ *
  * Revision 1.10  2001/06/20 17:56:32  peiyongz
  * support for "fixed" option on constrainning facets
  *
@@ -529,7 +532,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         {
                             XMLCh* value1 = getMaxExclusive()->toString();
                             ArrayJanitor<XMLCh> jan1(value1);
-                            XMLCh* value2 = numBase->getMinExclusive()->toString();
+                            XMLCh* value2 = numBase->getMinInclusive()->toString();
                             ArrayJanitor<XMLCh> jan2(value2);
                             ThrowXML2(InvalidDatatypeFacetException
                                 , XMLExcepts::FACET_maxExcl_base_minExcl
