@@ -155,6 +155,10 @@ system ("PParse -n -s personal-schema.xml");
 system ("EnumVal");
 system ("EnumVal personal.xml");
 
+#  Run SEnumVal
+system ("SEnumVal");
+system ("SEnumVal personal-schema.xml");
+
 #  Run CreateDOMDocument
 system ("CreateDOMDocument");
 
