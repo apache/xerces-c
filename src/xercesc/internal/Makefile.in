@@ -84,6 +84,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	ElemStack.hpp \
 	EndOfEntityException.hpp \
 	IANAEncodings.hpp \
+	MemoryManagerArrayImpl.hpp \
 	MemoryManagerImpl.hpp \
 	ReaderMgr.hpp \
 	SGXMLScanner.hpp \
@@ -106,6 +107,7 @@ INTERNAL_CPP_OBJECTS = \
 	ElemStack.$(TO) \
 	IGXMLScanner.$(TO) \
 	IGXMLScanner2.$(TO) \
+	MemoryManagerArrayImpl.$(TO) \
 	MemoryManagerImpl.$(TO) \
 	ReaderMgr.$(TO) \
 	SGXMLScanner.$(TO) \
