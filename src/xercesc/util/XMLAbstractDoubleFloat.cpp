@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2003/12/12 04:51:29  peiyongz
+ * trailing zeros for double/float w/o decimal point
+ *
  * Revision 1.18  2003/12/11 21:38:12  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -549,18 +552,36 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
         *retPtr++ = manBuf[0];
         *retPtr++ = chPeriod;
 
-        if (totalDigits - 1 > 0)
+        //XMLBigDecimal::parseDecimal() will eliminate trailing zeros
+        // iff there is a decimal points
+        // eg. 56.7800e0  -> manBuf = 5678, totalDigits = 4, fractDigits = 2
+        // we print it as 5.678e1
+        //
+        // but it wont remove trailing zeros if there is no decimal point.
+        // eg.  567800e0 -> manBuf = 567800, totalDigits = 6, fractDigits = 0
+        // we print it 5.67800e5
+        //
+        // for the latter, we need to print it as 5.678e5 instead
+        //
+        XMLCh* endPtr = manBuf + totalDigits;
+
+        if (fractDigits == 0)
         {
-            XMLString::copyNString(retPtr, &(manBuf[1]), totalDigits - 1);
-            retPtr += (totalDigits - 1);
+            while(*(endPtr - 1) == chDigit_0)
+                endPtr--;
+        }
+
+        int remainLen = endPtr - &(manBuf[1]);
+
+        if (remainLen)
+        {
+            XMLString::copyNString(retPtr, &(manBuf[1]), remainLen);
+            retPtr += remainLen;
         }
         else
         {
             *retPtr++ = chDigit_0;
         }
-
-        *retPtr++  = chLatin_E;
-        *retPtr = chNull;
 
         /***
          * 
@@ -572,6 +593,10 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
          ***/
         expValue += (totalDigits - 1) - fractDigits ;
         XMLString::binToText(expValue, expStr, strLen, 10);
+        *retPtr++  = chLatin_E;
+        *retPtr = chNull;
+
+
         XMLString::catString(&(retBuffer[0]), expStr);
 
     }
