@@ -522,7 +522,6 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
         very first invocation to XMLPlatformUtils::Initialize() by supplying
         a parameter for the target locale intended. The defaul locale is "en_US".
         </p>
-    </s2>
 
 <source>
 
@@ -538,6 +537,7 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
     }
 ..
 </source>
+    </s2>
 
 
     <anchor name="SpecifyLocationForMessageLoader"/>
@@ -550,7 +550,6 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
         very first invocation to XMLPlatformUtils::Initialize() by supplying
         a parameter for the alternative location intended.
         </p>
-    </s2>
 
 <source>
 
@@ -565,7 +564,8 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
     {
     }
 ..
-</source>
+</source> 
+    </s2>
 
     <anchor name="PluggablePanicHandler"/>
     <s2 title="Pluggable Panic Handler">
@@ -583,7 +583,6 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
            panic handler is installed and used, which aborts program whenever a panic
            is seen.
         </p>
-    </s2>
 
 <source>
 
@@ -603,7 +602,141 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
     }
 ..
 </source>
+    </s2>
 
+    <anchor name="PluggableMemoryManager"/>
+    <s2 title="Pluggable Memory Manager">
+        <p>Certain applications wish to maintain precise control over
+        memory allocation.  This enables them to recover more easily
+        from crashes of individual components, as well as to allocate
+        memory more efficiently than a general-purpose OS-level
+        procedure with no knowledge of the characteristics of the
+        program making the requests for memory.  Xerces-C 2.3.0 now
+        supports these needs via our Pluggable Memory Handler.
+        </p>
+        <p>Users that have no particular memory management
+        requirements (beyond that components don't leak memory or
+        attempt to read from or write to areas of memory they haven't
+        been assigned), should notice no behavioural changes in the
+        parser, so long as their code conforms to Xerces-C best
+        practices (e.g., avoids implicit destruction of objects
+        related to the parser after XMLPlatformUtils::Terminate() has
+        been called; see <jump href="faq-parse.html#faq-7">the FAQ
+        entry describing a reason why applications may suddenly start
+        segfaulting with Xerces-C 2.3.0</jump> for details.).  Such users can ignore this subsection and
+        continue using the parser as they always had.
+        </p>
+        <p>Users who wish to implement their own MemoryManager,
+        an interface found in xercesc/framework/MemoryManager.hpp, need
+        implement only two methods:</p>
+<source>
+// This method allocates requested memory.
+// the parameter is the requested memory size
+// A pointer to the allocated memory is returned.
+virtual void* allocate(size_t size) = 0;
+
+// This method deallocates memory
+// The parameter is a pointer to the allocated memory to be deleted
+virtual void deallocate(void* p) = 0;
+</source>
+        <p>To maximize the amount of flexibility that applications
+        have in terms of controlling memory allocation, a
+        MemoryManager instance may be set as part of the call to
+        XMLPlatformUtils::Initialize() to allow for static
+        initialization to be done with the given MemoryHandler; a
+        (possibly different) MemoryManager may be passed in to the
+        constructors of all Xerces parser objects as well, and all
+        dynamic allocations within the parsers will make use of this
+        object.  Assuming that MyMemoryHandler is a class that
+        implements the MemoryManager interface, here is a bit of
+        pseudocode which illustrates thiese ideas:
+        </p>
+<source>
+MyMemoryHandler *mm_for_statics = new MyMemoryHandler();
+MyMemoryHandler *mm_for_particular_parser = new MyMemoryManager();
+
+// initialize the parser information; try/catch
+// removed for brevity
+XMLPlatformUtils::Initialize(XMLUni::fgXercescDefaultLocale, 0,0,
+        mm_for_statics);
+
+// create a parser object
+XercesDOMParser *parser = new
+        XercesDomParser(mm_for_particular_parser);
+
+// ...
+delete parser;
+XMLPlatformUtils::Terminate(); 
+</source>
+      <p>
+        Notice that, to maintain backward compatibility, the
+        MemoryManager parameter is positioned last in the list of
+        parameters to XMLPlatformUtils::Initialize(); this means that
+        all other parameters must be specified with their defaults as
+        found in Xerces code if all other aspects of standard
+        behaviour are to be preserved.  
+      </p>
+      <p>
+        If a user provides a MemoryManager object to the parser, then
+        the user owns that object.  It is also important to note that
+        Xerces default implementation simply uses the global new and
+        delete.
+      </p>
+    </s2>
+
+    <anchor name="SecurityManager"/>
+    <s2 title="Managing Security Vulnerabilities">
+      <p> 
+        The purpose of the SecurityManager class is to permit applications a
+        means to have the parser reject documents whose processing would
+        otherwise consume large amounts of system resources.  Malicious
+        use of such documents could be used to launch a denial-of-service
+        attack against a system running the parser.  Initially, the
+        SecurityManager only knows about attacks that can result from
+        exponential entity expansion; this is the only known attack that
+        involves processing a single XML document.  Other, simlar attacks
+        can be launched if arbitrary schemas may be parsed; there already
+        exist means (via use of the EntityResolver interface) by which
+        applications can deny processing of untrusted schemas.  In future,
+        the SecurityManager will be expanded to take these other exploits
+        into account.
+      </p>
+      <p>
+        The SecurityManager class is very simple:  It will contain
+        getters and setters corresponding to each known variety of
+        exploit.  These will reflect limits that the application may
+        impose on the parser with respect to the processing of various
+        XML constructs.  When an instance of SecurityManager is
+        instantiated, default values for these limits will be provided
+        that should suit most applications.
+      </p>
+      <p>
+        By default, Xerces-C is a wholly conformant XML parser; that
+        is, no security-related considerations will be observed by
+        default.  An application must set an instance of the
+        SecurityManager class on a Xerces parser in order to make that
+        parser behave in a security-conscious manner.  i.e.:
+      </p>
+<source>
+SAXParser *myParser = new SAXParser();
+SecurityManager *myManager = new SecurityManager();
+myManager->setEntityExpansionLimit(100000); // larger than default
+myParser->setSecurityManager(myManager); 
+// ... use the parser
+</source>
+      <p>
+        Note that SecurityManager instances may be set on all kinds of
+        Xerces parsers; please see the documentation for the
+        individual parsers for details.
+      </p>
+      <p>
+        Note also that the application always owns the SecurityManager
+        instance.  The default SecurityManager that Xerces provides is
+        not thread-safe; although it only uses primitive operations at
+        the moment, users may need to extend the class with a
+        thread-safe implementation on some platforms.
+      </p>
+    </s2>
 <anchor name="UseSpecificScanner"/>
     <s2 title="Use Specific Scanner">
 

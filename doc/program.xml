@@ -85,6 +85,8 @@
       <li><jump href="program-others.html#SpecifylocationforMessageLoader">Specify Location for Message Loader</jump></li>
       <li><jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump></li>
       <li><jump href="program-others.html#PluggablePanicHandler">Pluggable Panic Handler</jump></li>      
+      <li><jump href="program-others.html#PluggableMemoryManager">Pluggable Memory Manager</jump></li>      
+      <li><jump href="program-others.html#SecurityManager">Managing Security Vulnerabilities</jump></li>      
     </ul>
   </s2>
 
