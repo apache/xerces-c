@@ -122,7 +122,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 }
 
 
-#elif defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined (OS390) || defined(FREEBSD) || defined(__CYGWIN__) || defined(__QNXNTO__)
+#elif defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined (OS390) || defined(MACOSX) || defined(FREEBSD) || defined(__CYGWIN__) || defined(__QNXNTO__)
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
