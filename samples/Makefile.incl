@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2000/02/11 01:24:30  abagchi
+# Fixed some AS/400 compiler options
+#
 # Revision 1.11  2000/02/09 22:05:52  abagchi
 # AS/400 change
 #
@@ -145,11 +148,11 @@ MYCC = cross compiler path here
 TO = qwobj
 else
 MYCC = icc
-LINK =  ${CC} -v  -qOPTION=*DUPPROC
+LINK =  ${CC} -v
 endif
 CMP= -c -DOS400 ${CXXFLAGS}
-CXX = $(MYCC) -c
-CC = $(MYCC) -c
+CXX = $(MYCC)
+CC = $(MYCC)
 #INCLUDES    += -I${ICUROOT}/include
 SHLIBSUFFIX=.a
 endif
