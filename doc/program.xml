@@ -35,6 +35,7 @@
       <li><jump href="program-dom.html#DOMWriter">DOMWriter</jump></li>
       <ul>
           <li><jump href="program-dom.html#ConstructDOMWriter">Constructing a DOMWriter</jump></li>
+          <li><jump href="program-dom.html#DOMWriterEntityRef">How does DOMWriter handle built-in entity Reference in node value?</jump></li>
           <li><jump href="program-dom.html#DOMWriterFeatures">Supported Features</jump></li>
       </ul>
       <li><jump href="program-dom.html#Deprecated">Deprecated - Java-like DOM</jump></li>
