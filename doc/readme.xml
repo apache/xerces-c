@@ -91,7 +91,7 @@
         </tr>
         <tr>
           <td>Redhat Linux 7.2</td>
-          <td>g++ 3.1</td>
+          <td>Intel C++ Compiler v6, icc</td>
         </tr>
         <tr>
           <td>AIX 5.1</td>
