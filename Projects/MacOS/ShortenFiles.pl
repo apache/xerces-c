@@ -1,3 +1,17 @@
+#
+#	ShortenFiles.pl
+#
+#	Shorten file names to fit Mac HFS 31 character name limit. Names
+#	are shortened using a table of hints.
+#
+
+#
+#	$Log$
+#	Revision 1.4  2000/09/06 21:55:40  jberry
+#	Allow ShortenFiles to work even when the destination directory already exists
+#
+#
+
 use Config;
 use FindBin;
 use File::Find;
@@ -37,13 +51,13 @@ $gDstBase = $gScriptBase.$gPathSep."MacSrc";
 	["Parent",			"Par"		],
 	["Fragment",		"Frag"		],
 	["Construction",	"Constr"	],
-	["Default",		"Def"		],
+	["Default",			"Def"		],
 	["Processor",		"Proc"		],
-	["Compare",		"Comp"		],
+	["Compare",			"Comp"		],
 	["Execution",		"Exe"		],
-	["Functor",		"Func"		],
+	["Functor",			"Func"		],
 	["Collation",		"Col"		],
-	["Element",		"El"		],
+	["Element",			"El"		],
 );
 
 sub GetPathSeparator
@@ -146,11 +160,14 @@ sub Copy
 	
 #print "srcName $srcName, dstName $dstName, srcPath $srcPath, dstPath $dstPath\n";
 	
-	if (-d $srcPath && not -e $dstPath)
+	if (-d $srcPath)
 	{
-		# make the dst directory
-		print "Making directory $dstPath\n";
-		mkpath($dstPath);
+		# make the dst directory if it doesn't already exist
+		if (not -e $dstPath)
+		{
+			print "Making directory $dstPath\n";
+			mkpath($dstPath);
+		}
 	}
 	else
 	{
@@ -216,6 +233,7 @@ print "Destination Directory: $gDstBase\n";
 print "\n";
 
 #-- Scan phase
+#NOTE: we actually don't limit our processing to the file types listed here!!!
 #for each .cpp or .hpp or .c or .cc file in tree
 #	if name too long
 #		shorten the name
