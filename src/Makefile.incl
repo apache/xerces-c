@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2000/02/10 21:30:58  abagchi
+# Fixed OS/390 icudata path
+#
 # Revision 1.15  2000/02/10 21:28:02  abagchi
 # Added libicudata library
 #
@@ -382,7 +385,7 @@ ifeq (${TRANSCODER}, ICU)
     ifeq (${OS390BATCH},1)
 	ALLLIBS = "//'${LOADEXP}(ICUUC)'"
     else
-	ALLLIBS = ${ICUROOT}/lib/libicu-uc.x ${ICUROOT}/lib/data/libicudata.x
+	ALLLIBS = ${ICUROOT}/lib/libicu-uc.x ${ICUROOT}/data/libicudata.x
     endif
 else
 	ALLLIBS =
