@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2002/05/08 18:18:46  knoaman
+ * Fix bor bug 8301: INFINITY used as enum member.
+ *
  * Revision 1.9  2002/04/17 20:18:08  tng
  * [Bug 7493] The word "occured" is misspelled and it is a global error.
  *
@@ -310,21 +313,14 @@ void process(char* const xmlFile)
 			cout << "Misc. Flags:\t";
 		}
 
-		if( mflags == SchemaSymbols::INFINITY  )
-		{
-			cout << "Infinity ";
-		}
-		else
-		{
-			if ( mflags & SchemaSymbols::NILLABLE  != 0 )
-				cout << "Nillable ";
+        if ( mflags & SchemaSymbols::NILLABLE  != 0 )
+			cout << "Nillable ";
 
-			if ( mflags & SchemaSymbols::ABSTRACT  != 0 )
-				cout << "Abstract ";
+		if ( mflags & SchemaSymbols::ABSTRACT  != 0 )
+			cout << "Abstract ";
 
-			if ( mflags & SchemaSymbols::FIXED     != 0 )
-				cout << "Fixed ";
-		}
+		if ( mflags & SchemaSymbols::FIXED     != 0 )
+			cout << "Fixed ";
 
 		if( mflags !=0 )
 		{
