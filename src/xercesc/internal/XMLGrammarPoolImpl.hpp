@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/06 21:53:52  neilg
+ * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
+ *
  * Revision 1.10  2003/11/06 15:30:06  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -127,10 +130,17 @@ public :
     /**
       * cacheGrammar
       *
+      * Provide the grammar pool with an opportunity
+      * to cache the given grammar.  If the pool does not choose to do so,
+      * it should return false; otherwise, it should return true, so that
+      * the caller knows whether the grammar has been adopted.
+      *
       * @param gramToCache: the Grammar to be cached in the grammar pool
+      * @return true if the grammar pool has elected to cache the grammar (in which case
+      * it is assumed to have adopted it); false if it does not cache it
 	  *
       */
-    virtual void           cacheGrammar(Grammar* const               gramToCache);
+    virtual bool           cacheGrammar(Grammar* const               gramToCache);
     
 
     /**
@@ -234,18 +244,21 @@ public :
     //@{
 
     /***
-      * If the grammar pool has been locked, this method returns 
-      * an XSModel corresponding to the schema components represented
-      * by the objects stored in the pool.  If the pool has not been 
-      * locked, this must return null.  If the pool is unlocked at
-      * any point, the underlying XSModel will be destroyed;
-      * applications must take care that, if they wish to unlock
-      * a pool, no further access is made to the XSModel
-      * it produced.  The pool's XSModel will not be serialized,
-      * but, if a locked pool is deserialized, its XSModel
-      * will be recreated.
+      * Return an XSModel derived from the components of all SchemaGrammars
+      * in the grammar pool.  If the pool is locked, this should
+      * be a thread-safe operation.  It should return null if and only if
+      * the pool is empty.
+      *
+      * In this implementation, a new XSModel will be
+      * computed each this time the pool is called if the pool is not locked (and the
+      * previous one will be destroyed at that time).  When the lockPool()
+      * method is called, an XSModel will be generated and returned whenever this method is called
+      * while the pool is in the locked state.  This will be destroyed if the unlockPool()
+      * operation is called.  The XSModel will not be serialized,
+      * but will be recreated if a deserialized pool is in the 
+      * locked state.
       */
-    virtual XSModel *getXSModel() const;
+    virtual XSModel *getXSModel();
 	
     // @}
     // -----------------------------------------------------------------------

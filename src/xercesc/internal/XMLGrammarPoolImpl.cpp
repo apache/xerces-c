@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/06 21:53:52  neilg
+ * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
+ *
  * Revision 1.10  2003/11/06 15:30:06  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -135,10 +138,12 @@ XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 // -----------------------------------------------------------------------
 // Implementation of Grammar Pool Interface 
 // -----------------------------------------------------------------------
-void XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
+bool XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 {
+    if(fLocked)
+        return false;
     if (!gramToCache )
-        return;
+        return false;
 
     const XMLCh* grammarKey = gramToCache->getGrammarDescription()->getGrammarKey();
 
@@ -157,6 +162,7 @@ void XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
         }
         updatePSVIvectorElemIds(fPSVIvectorElemDecls, (SchemaGrammar*) gramToCache);
     }
+    return true;
 
 }
 
@@ -261,14 +267,13 @@ XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* c
 	return new (getMemoryManager()) XMLSchemaDescriptionImpl(targetNamespace, getMemoryManager()); 
 }
 
-inline XSModel *XMLGrammarPoolImpl::getXSModel() const
+XSModel *XMLGrammarPoolImpl::getXSModel() 
 {
-    if(!fLocked)
-        return 0;
-    return fXSModel;
+    // REVISIT:  implement along with XSModel implementation
+    return 0;
 }
 
-inline XMLStringPool *XMLGrammarPoolImpl::getURIStringPool() 
+XMLStringPool *XMLGrammarPoolImpl::getURIStringPool() 
 {
     if(fLocked)
         return fSynchronizedStringPool;

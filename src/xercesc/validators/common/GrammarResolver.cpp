@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/11/06 21:53:52  neilg
+ * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
+ *
  * Revision 1.19  2003/09/16 18:30:54  neilg
  * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
  *
@@ -329,7 +332,11 @@ void GrammarResolver::putGrammar(Grammar* const grammarToAdopt)
      */
     if (fCacheGrammar)
     {
-       fGrammarPool->cacheGrammar(grammarToAdopt);
+       if(!fGrammarPool->cacheGrammar(grammarToAdopt)) 
+       {
+            // grammar pool doesn't want it; we're stuck with looking after it
+            fGrammarBucket->put( (void*) grammarToAdopt->getGrammarDescription()->getGrammarKey(), grammarToAdopt );
+        }
     }
     else
     {
@@ -370,12 +377,16 @@ void GrammarResolver::cacheGrammars()
     for (unsigned int i = 0; i < keyCount; i++) 
     {
         XMLCh* grammarKey = keys.elementAt(i);    
-        Grammar* grammar = fGrammarBucket->orphanKey(grammarKey);
 
         /***
          * It is up to the GrammarPool implementation to handle duplicated grammar
          */
-        fGrammarPool->cacheGrammar(grammar);
+        Grammar* grammar = fGrammarBucket->get(grammarKey);
+        if(fGrammarPool->cacheGrammar(grammar))
+        {
+            // only orphan grammar is grammar pool accepts
+            fGrammarBucket->orphanKey(grammarKey);
+        }
     }
 
 }
