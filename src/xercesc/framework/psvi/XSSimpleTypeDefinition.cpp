@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/10/15 21:32:54  cargilld
+ * Fix similar problem to that in jira bug 1234.  Infinite loop in XSSimpleTypeDefinition::derviedFromType.
+ *
  * Revision 1.9  2004/09/08 13:56:09  peiyongz
  * Apache License Version 2.0
  *
@@ -232,9 +235,12 @@ bool XSSimpleTypeDefinition::derivedFromType(const XSTypeDefinition * const ance
         return false;
 
     XSTypeDefinition* type = this;
+    XSTypeDefinition* lastType = 0;  // anysimple type has a base type of anytype
+                                     // anytype has a basetype of anytype so will have infinite loop...
 
-    while (type && (type != ancestorType))
+    while (type && (type != ancestorType) && (type != lastType))
     {
+        lastType = type;
         type = type->getBaseType();
     }
 
