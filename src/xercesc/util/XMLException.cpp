@@ -166,7 +166,7 @@ XMLException::XMLException() :
     , fSrcFile(0)
     , fSrcLine(0)
     , fMsg(0)
-    , fMemoryManager(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 }
 
