@@ -164,7 +164,7 @@ Building Xerces-C++ on UNIX platforms
 
         Operating System                      C++, C Compilers
         ----------------                      ----------------
-        Redhat Linux 6.1                      g++, gcc (egcs)
+        Redhat Linux 7.2                      g++, gcc (egcs)
         AIX 4.3                               xlC_r, xlc_r
         Solaris 2.6                           CC, cc
         HP-UX 11                              aCC, cc

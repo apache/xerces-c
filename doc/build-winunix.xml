@@ -154,7 +154,7 @@
 
         <table>
             <tr><td><em>Operating System</em></td><td><em>C++, C Compilers</em></td></tr>
-            <tr><td>Redhat Linux 6.1</td><td>g++, gcc (egcs)</td></tr>
+            <tr><td>Redhat Linux 7.2</td><td>g++, gcc (egcs)</td></tr>
             <tr><td>AIX 4.3</td><td>xlC_r, xlc_r</td></tr>
             <tr><td>Solaris 2.6</td><td>CC, cc</td></tr>
             <tr><td>HP-UX 11</td><td>aCC, cc</td></tr>

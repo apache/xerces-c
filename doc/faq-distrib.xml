@@ -22,8 +22,8 @@
           <td>MSVC 6.0 SP3</td>
         </tr>
         <tr>
-          <td>Redhat Linux 6.1</td>
-          <td>egcs-2.91.66 and glibc-2.1.2-11</td>
+          <td>Redhat Linux 7.2</td>
+          <td>g++ 2.96</td>
         </tr>
         <tr>
           <td>AIX 4.3</td>
@@ -69,7 +69,7 @@
             the Apache license (because of Xerces-C) and X License (because of ICU).</p>
 
             <p>XML4C binaries are published for Solaris 2.6 using Forte C++ 6.2
-            compiler, HPUX 11.0 using aCC, Redhat Linux 6.1 using gcc 2.91,
+            compiler, HPUX 11.0 using aCC, Redhat Linux 7.2 using g++ 2.96,
             Windows NT 4.0 using MSVC 6.0 SP3, AIX 4.3 using xlC_r v5.0.2.</p>
 
         </a>
