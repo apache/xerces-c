@@ -184,29 +184,30 @@ public :
     static const XMLCh fgZeroLenString[];
 
 
-
-	static const XMLCh fgArrayIndexOutOfBoundsException_Name[];
-	static const XMLCh fgEmptyStackException_Name[];
-	static const XMLCh fgIllegalArgumentException_Name[];
-	static const XMLCh fgInvalidCastException_Name[];
-	static const XMLCh fgIOException_Name[];
-	static const XMLCh fgNoSuchElementException_Name[];
-	static const XMLCh fgNullPointerException_Name[];
-	static const XMLCh fgXMLPlatformUtilsException_Name[];
-	static const XMLCh fgRuntimeException_Name[];
-	static const XMLCh fgTranscodingException_Name[];
-	static const XMLCh fgUnexpectedEOFException_Name[];
-	static const XMLCh fgUnsupportedEncodingException_Name[];
-	static const XMLCh fgUTFDataFormatException_Name[];
-	static const XMLCh fgNetAccessorException_Name[];
-	static const XMLCh fgMalformedURLException_Name[];
-	static const XMLCh fgNumberFormatException_Name[];
-	static const XMLCh fgParseException_Name[];
-	static const XMLCh fgInvalidDatatypeFacetException_Name[];
-	static const XMLCh fgInvalidDatatypeValueException_Name[];
-	static const XMLCh fgSchemaDateTimeException_Name[];
+    // Exception Name
+    static const XMLCh fgArrayIndexOutOfBoundsException_Name[];
+    static const XMLCh fgEmptyStackException_Name[];
+    static const XMLCh fgIllegalArgumentException_Name[];
+    static const XMLCh fgInvalidCastException_Name[];
+    static const XMLCh fgIOException_Name[];
+    static const XMLCh fgNoSuchElementException_Name[];
+    static const XMLCh fgNullPointerException_Name[];
+    static const XMLCh fgXMLPlatformUtilsException_Name[];
+    static const XMLCh fgRuntimeException_Name[];
+    static const XMLCh fgTranscodingException_Name[];
+    static const XMLCh fgUnexpectedEOFException_Name[];
+    static const XMLCh fgUnsupportedEncodingException_Name[];
+    static const XMLCh fgUTFDataFormatException_Name[];
+    static const XMLCh fgNetAccessorException_Name[];
+    static const XMLCh fgMalformedURLException_Name[];
+    static const XMLCh fgNumberFormatException_Name[];
+    static const XMLCh fgParseException_Name[];
+    static const XMLCh fgInvalidDatatypeFacetException_Name[];
+    static const XMLCh fgInvalidDatatypeValueException_Name[];
+    static const XMLCh fgSchemaDateTimeException_Name[];
     static const XMLCh fgXPathException_Name[];
 
+    // Numerical String
     static const XMLCh fgNegINFString[];
     static const XMLCh fgNegZeroString[];
     static const XMLCh fgPosZeroString[];
@@ -216,20 +217,24 @@ public :
     static const XMLCh fgZeroString[];
     static const XMLCh fgNullString[];
 
+    // Xerces features/properties names
+    static const XMLCh fgXercesDynamic[];
+    static const XMLCh fgXercesReuseValidator[];
+    static const XMLCh fgXercesReuseGrammar[];
+    static const XMLCh fgXercesSchema[];
+    static const XMLCh fgXercesSchemaFullChecking[];
+    static const XMLCh fgXercesSchemaExternalSchemaLocation[];
+    static const XMLCh fgXercesSchemaExternalNoNameSpaceSchemaLocation[];
+    static const XMLCh fgXercesLoadExternalDTD[];
+    static const XMLCh fgXercesContinueAfterFatalError[];
+    static const XMLCh fgXercesValidationErrorAsFatal[];
+
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];
     static const XMLCh fgSAX2CoreNameSpaces[];
     static const XMLCh fgSAX2CoreNameSpacePrefixes[];
-    static const XMLCh fgSAX2XercesDynamic[];
-    static const XMLCh fgSAX2XercesReuseValidator[];
-    static const XMLCh fgSAX2XercesReuseGrammar[];
-    static const XMLCh fgSAX2XercesSchema[];
-    static const XMLCh fgSAX2XercesSchemaFullChecking[];
-    static const XMLCh fgSAX2XercesSchemaExternalSchemaLocation[];
-    static const XMLCh fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[];
-    static const XMLCh fgSAX2XercesLoadExternalDTD[];
 
-	// Introduced in DOM Level 3
+    // Introduced in DOM Level 3
     // DOMBuilder features
     static const XMLCh fgDOMCanonicalForm[];
     static const XMLCh fgDOMCDATASections[];
