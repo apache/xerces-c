@@ -7,18 +7,18 @@
 CFG=DOMPrint - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "DOMPrint.mak".
-!MESSAGE 
+!MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "DOMPrint.mak" CFG="DOMPrint - Win32 Debug"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "DOMPrint - Win32 Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE 
+!MESSAGE
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -60,7 +60,7 @@ SOURCE=..\..\..\..\DOMPrint\DOMPrint.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DomTreeErrorReporter.cpp
+SOURCE=..\..\..\..\DOMPrint\DOMTreeErrorReporter.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -72,7 +72,7 @@ SOURCE=..\..\..\..\DOMPrint\DOMPrint.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DomTreeErrorReporter.hpp
+SOURCE=..\..\..\..\DOMPrint\DOMTreeErrorReporter.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
