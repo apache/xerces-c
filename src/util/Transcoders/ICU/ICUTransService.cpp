@@ -533,7 +533,7 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     void* orgContent;
     ucnv_setFromUCallBack
     (
-        (UConverter*)&fConverter
+        fConverter
         , (options == UnRep_Throw) ? UCNV_FROM_U_CALLBACK_STOP
                                    : UCNV_FROM_U_CALLBACK_SUBSTITUTE
         , NULL
@@ -621,7 +621,7 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
 
      ucnv_setFromUCallBack
          (
-         (UConverter*)&fConverter
+         fConverter
          , UCNV_FROM_U_CALLBACK_STOP
          , NULL
          , &oldCB
