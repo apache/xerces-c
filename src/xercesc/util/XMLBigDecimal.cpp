@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/03/19 01:15:55  peiyongz
+ * store/load fRawData
+ *
  * Revision 1.21  2004/01/13 19:50:56  peiyongz
  * remove parseContent()
  *
@@ -188,7 +191,8 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
         (
             ((fRawDataLen*2) + 2) * sizeof(XMLCh) //fRawData and fIntVal
         );
-        memcpy(fRawData, strValue, (fRawDataLen+1) * sizeof(XMLCh));
+        memcpy(fRawData, strValue, fRawDataLen * sizeof(XMLCh));
+        fRawData[fRawDataLen] = chNull;
         fIntVal = fRawData + fRawDataLen + 1;
         parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale, fMemoryManager);
     }
@@ -210,9 +214,6 @@ XMLBigDecimal::~XMLBigDecimal()
 
 void XMLBigDecimal::cleanUp()
 {
-//    if (fIntVal)
-//        fMemoryManager->deallocate(fIntVal); //delete [] fIntVal;
-
     if (fRawData)
         fMemoryManager->deallocate(fRawData); //XMLString::release(&fRawData);
 }
@@ -222,18 +223,19 @@ void XMLBigDecimal::setDecimalValue(const XMLCh* const strValue)
     fScale = fTotalDigits = 0;
     unsigned int valueLen = XMLString::stringLen(strValue);
 
-    if (valueLen > fRawDataLen) {
-
+    if (valueLen > fRawDataLen)
+    {
         fMemoryManager->deallocate(fRawData);
-        fRawDataLen = valueLen;
         fRawData = (XMLCh*) fMemoryManager->allocate
         (
-            ((fRawDataLen*2) + 2) * sizeof(XMLCh)
+            ((valueLen * 2) + 4) * sizeof(XMLCh)
         );//XMLString::replicate(strValue, fMemoryManager);
-        fIntVal = fRawData + fRawDataLen + 1;
     }
 
-    memcpy(fRawData, strValue, (valueLen + 1) * sizeof(XMLCh));
+    memcpy(fRawData, strValue, valueLen * sizeof(XMLCh));
+    fRawData[valueLen] = chNull;
+    fRawDataLen = valueLen;
+    fIntVal = fRawData + fRawDataLen + 1;
     parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale, fMemoryManager);
 
 }
@@ -509,7 +511,6 @@ void XMLBigDecimal::serialize(XSerializeEngine& serEng)
         serEng<<fSign;
         serEng<<fTotalDigits;
         serEng<<fScale;
-        serEng<<fRawDataLen;   // we purposely write this seperatly
 
         serEng.writeString(fRawData);
         serEng.writeString(fIntVal);
@@ -520,10 +521,30 @@ void XMLBigDecimal::serialize(XSerializeEngine& serEng)
         serEng>>fSign;
         serEng>>fTotalDigits;
         serEng>>fScale;
-        serEng>>fRawDataLen;
 
-        serEng.readString(fRawData);
-        serEng.readString(fIntVal);
+        XMLCh* rawdataStr;
+        serEng.readString(rawdataStr);
+        ArrayJanitor<XMLCh> rawdataName(rawdataStr, serEng.getMemoryManager());
+        fRawDataLen = XMLString::stringLen(rawdataStr);
+
+        XMLCh* intvalStr;
+        serEng.readString(intvalStr);
+        ArrayJanitor<XMLCh> intvalName(intvalStr, serEng.getMemoryManager());
+        unsigned int intvalStrLen = XMLString::stringLen(intvalStr);
+
+        if (fRawData)
+            fMemoryManager->deallocate(fRawData);
+
+        fRawData = (XMLCh*) fMemoryManager->allocate
+        (
+            ((fRawDataLen + intvalStrLen) + 4) * sizeof(XMLCh)
+        );
+
+        memcpy(fRawData, rawdataStr, fRawDataLen * sizeof(XMLCh));
+        fRawData[fRawDataLen] = chNull;
+        fIntVal = fRawData + fRawDataLen + 1;
+        memcpy(fIntVal, intvalStr,  intvalStrLen * sizeof(XMLCh));
+        fIntVal[intvalStrLen] = chNull;
 
     }
 
