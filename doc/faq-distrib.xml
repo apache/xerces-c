@@ -68,9 +68,9 @@
             site. The license to use XML4C is simply to comply with
             the Apache license (because of Xerces-C) and X License (because of ICU).</p>
 
-            <p>XML4C binaries are published for Solaris using SunWorkshop
-            compiler, HPUX 10.20 and 11.0 using CC and aCC, Redhat
-            Linux using gcc, Windows NT using MSVC, AIX using xlC.</p>
+            <p>XML4C binaries are published for Solaris 2.6 using Forte C++ 6.2
+            compiler, HPUX 11.0 using aCC, Redhat Linux 6.1 using gcc 2.91,
+            Windows NT 4.0 using MSVC 6.0 SP3, AIX 4.3 using xlC_r v5.0.2.</p>
 
         </a>
     </faq>
