@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/10/09 20:48:39  peiyongz
+ * init(): take 1 arg
+ *
  * Revision 1.3  2001/10/02 18:59:59  peiyongz
  * Invalid_Name to replace Invalid_NCName.
  *
@@ -91,7 +94,7 @@ NameDatatypeValidator::NameDatatypeValidator(
                         , const int                           finalSet)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Name)
 {
-    init(baseValidator, facets, enums);
+    init(enums);
 }
 
 DatatypeValidator* NameDatatypeValidator::newInstance(

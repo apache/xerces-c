@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/10/09 20:50:02  peiyongz
+ * init(): take 1 arg
+ *
  * Revision 1.5  2001/09/27 13:51:25  peiyongz
  * DTV Reorganization: ctor/init created to be used by derived class
  *
@@ -98,7 +101,7 @@ IDDatatypeValidator::IDDatatypeValidator(
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ID)
 ,fIDRefList(0)
 {
-    init(baseValidator, facets, enums);
+    init(enums);
 }
 
 IDDatatypeValidator::~IDDatatypeValidator()

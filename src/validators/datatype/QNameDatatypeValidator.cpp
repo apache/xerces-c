@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/10/09 20:47:05  peiyongz
+ * init(): take 1 arg
+ *
  * Revision 1.8  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
  *
@@ -105,7 +108,7 @@ QNameDatatypeValidator::QNameDatatypeValidator(
                         , const int                           finalSet)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::QName)
 {
-    init(baseValidator, facets, enums);
+    init(enums);
 }
 
 DatatypeValidator* QNameDatatypeValidator::newInstance(

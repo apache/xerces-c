@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/10/09 20:48:39  peiyongz
+ * init(): take 1 arg
+ *
  * Revision 1.2  2001/09/27 13:51:25  peiyongz
  * DTV Reorganization: ctor/init created to be used by derived class
  *
@@ -144,10 +147,6 @@ protected:
                         , const int                           finalSet
                         , const ValidatorType                 type);
 
-    inline void init(DatatypeValidator*            const baseValidator
-                   , RefHashTableOf<KVStringPair>* const facets
-                   , RefVectorOf<XMLCh>*           const enums);
-
     virtual void checkValueSpace(const XMLCh* const content);
 
 private:
@@ -159,14 +158,6 @@ private:
     // -----------------------------------------------------------------------
 
 };
-
-void NameDatatypeValidator::init(
-                               DatatypeValidator*            const baseValidator
-                             , RefHashTableOf<KVStringPair>* const facets
-                             , RefVectorOf<XMLCh>*           const enums)
-{
-    StringDatatypeValidator::init(baseValidator, facets, enums);
-}
 
 /**
   * End of file NameDatatypeValidator.hpp

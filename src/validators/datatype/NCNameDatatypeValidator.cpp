@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/10/09 20:49:09  peiyongz
+ * init(): take 1 arg
+ *
  * Revision 1.2  2001/09/27 13:51:25  peiyongz
  * DTV Reorganization: ctor/init created to be used by derived class
  *
@@ -88,7 +91,7 @@ NCNameDatatypeValidator::NCNameDatatypeValidator(
                         , const int                           finalSet)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::NCName)
 {
-    init(baseValidator, facets, enums);
+    init(enums);
 }
 
 DatatypeValidator* NCNameDatatypeValidator::newInstance(

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/10/09 20:50:27  peiyongz
+ * init(): take 1 arg
+ *
  * Revision 1.5  2001/09/27 13:51:25  peiyongz
  * DTV Reorganization: ctor/init created to be used by derived class
  *
@@ -165,10 +168,6 @@ protected:
                           , const int                           finalSet
                           , const ValidatorType                 type);
 
-    inline void init(DatatypeValidator*            const baseValidator
-                   , RefHashTableOf<KVStringPair>* const facets
-                   , RefVectorOf<XMLCh>*           const enums);
-
     virtual void checkValueSpace(const XMLCh* const content);
 
 private:
@@ -190,14 +189,6 @@ private:
 void ENTITYDatatypeValidator::setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool)
 {
     fEntityDeclPool = entityDeclPool;
-}
-
-void ENTITYDatatypeValidator::init(
-                               DatatypeValidator*            const baseValidator
-                             , RefHashTableOf<KVStringPair>* const facets
-                             , RefVectorOf<XMLCh>*           const enums)
-{
-    StringDatatypeValidator::init(baseValidator, facets, enums);
 }
 
 /**
