@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/17 14:50:29  knoaman
+ * Fix for bug 23930 by Ronald  Landheer-Cieslak.
+ *
  * Revision 1.11  2003/08/27 16:41:56  jberry
  * Add new static global that always points to array-allocating memory manager
  *
@@ -235,6 +238,17 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     //
     if (gInitFlag == LONG_MAX)
         return;
+	
+    //
+    //  Make sure we haven't already been initialized. Note that this is not
+    //  thread safe and is not intended for that. Its more for those COM
+    //  like processes that cannot keep up with whether they have initialized
+    //  us yet or not.
+    //
+    gInitFlag++;
+
+    if (gInitFlag > 1)
+      return;
 
     // Set pluggable memory manager
     if (!fgMemoryManager)
@@ -249,17 +263,6 @@ void XMLPlatformUtils::Initialize(const char*          const locale
             fgMemoryManager = new MemoryManagerImpl();
         }
     }
-	
-    //
-    //  Make sure we haven't already been initialized. Note that this is not
-    //  thread safe and is not intended for that. Its more for those COM
-    //  like processes that cannot keep up with whether they have initialized
-    //  us yet or not.
-    //
-    gInitFlag++;
-
-    if (gInitFlag > 1)
-      return;
 
     /***
      * Panic Handler:
