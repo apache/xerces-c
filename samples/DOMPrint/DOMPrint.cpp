@@ -184,19 +184,16 @@ static const XMLCh  gNotation[] =
 class DOMPrintFormatTarget : public XMLFormatTarget
 {
 public:
-    DOMPrintFormatTarget()  {}
-    ~DOMPrintFormatTarget() {} 
+    DOMPrintFormatTarget()  {};
+    ~DOMPrintFormatTarget() {};
 
     // -----------------------------------------------------------------------
     //  Implementations of the format target interface
     // -----------------------------------------------------------------------
-    void writeChars(const   XMLByte* const  toWrite)
-    {
-    }
 
     void writeChars(const   XMLByte* const  toWrite,
                     const   unsigned int    count,
-                            XMLFormatter *  formatter)
+                            XMLFormatter * const formatter)
     {
         // Surprisingly, Solaris was the only platform on which
         // required the char* cast to print out the string correctly.
@@ -204,7 +201,7 @@ public:
         // Quite annoying, considering every other platform printed
         // the string with the explicit cast to char* below.
         cout.write((char *) toWrite, (int) count);
-    }
+    };
 
 private:
     // -----------------------------------------------------------------------
