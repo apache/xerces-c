@@ -3635,17 +3635,19 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         parser.setUserEntityHandler(fEntityHandler);
         parser.setUserErrorReporter(fErrorReporter);
 
+        //Normalize sysId 
+        XMLBufBid nnSys(&fBufMgr);
+        XMLBuffer& normalizedSysId = nnSys.getBuffer();
+        XMLString::removeChar(loc, 0xFFFF, normalizedSysId);
+        const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
+
         // Create a buffer for expanding the system id
         XMLBufBid bbSys(&fBufMgr);
         XMLBuffer& expSysId = bbSys.getBuffer();
-        XMLBuffer& normalizedSysId = bbSys.getBuffer();
-
-        XMLString::removeChar(loc, 0xFFFF, normalizedSysId);
 
         //  Allow the entity handler to expand the system id if they choose
         //  to do so.
         InputSource* srcToFill = 0;
-        const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
         if (fEntityHandler)
         {
             if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
@@ -3794,13 +3796,15 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
 
 InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
 {
+    //Normalize sysId 
+    XMLBufBid nnSys(&fBufMgr);
+    XMLBuffer& normalizedSysId = nnSys.getBuffer();
+    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
+    const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
+
     // Create a buffer for expanding the system id
     XMLBufBid bbSys(&fBufMgr);
     XMLBuffer& expSysId = bbSys.getBuffer();
-
-    XMLBuffer& normalizedSysId = bbSys.getBuffer();
-    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
-    const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
 
     //  Allow the entity handler to expand the system id if they choose
     //  to do so.

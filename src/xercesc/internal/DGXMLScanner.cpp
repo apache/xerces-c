@@ -2473,13 +2473,15 @@ void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, 
 
 InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
 {
-    // Create a buffer for expanding the system id
-    XMLBufBid bbSys(&fBufMgr);
-    XMLBuffer& expSysId = bbSys.getBuffer();
-
-    XMLBuffer& normalizedSysId = bbSys.getBuffer();
+    //Normalize sysId 
+    XMLBufBid nnSys(&fBufMgr);
+    XMLBuffer& normalizedSysId = nnSys.getBuffer();
     XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
     const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
+
+    // Create a buffer for expanding the normalized system id
+    XMLBufBid bbSys(&fBufMgr);
+    XMLBuffer& expSysId = bbSys.getBuffer();
 
     //  Allow the entity handler to expand the system id if they choose
     //  to do so.

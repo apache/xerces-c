@@ -507,12 +507,13 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                                     ,       InputSource*&       srcToFill
                                     , const bool                calcSrcOfs)
 {
-    // Create a buffer for expanding the system id
-    XMLBuffer expSysId(1023, fMemoryManager);
-
-    XMLBuffer& normalizedSysId = expSysId;
+    //Normalize sysId 
+    XMLBuffer normalizedSysId(1023, fMemoryManager);
     XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
     const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
+
+    // Create a buffer for expanding the system id
+    XMLBuffer expSysId(1023, fMemoryManager);
 
     //
     //  Allow the entity handler to expand the system id if they choose
@@ -653,12 +654,14 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                                     ,       InputSource*&       srcToFill
                                     , const bool                calcSrcOfs)
 {
+    //Normalize sysId 
+    XMLBuffer normalizedSysId(1023, fMemoryManager);
+    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
+    const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
+
     // Create a buffer for expanding the system id
     XMLBuffer expSysId(1023, fMemoryManager);
 
-    XMLBuffer& normalizedSysId = expSysId;
-    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
-    const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
     //
     //  Allow the entity handler to expand the system id if they choose
     //  to do so.
