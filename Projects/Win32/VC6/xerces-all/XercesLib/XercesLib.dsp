@@ -784,6 +784,10 @@ SOURCE=..\..\..\..\..\src\sax\Parser.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\sax\SAXException.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\sax\SAXException.hpp
 # End Source File
 # Begin Source File
