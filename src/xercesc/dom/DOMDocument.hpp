@@ -22,10 +22,10 @@
 */
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "DOMNode.hpp"
-#include "DOMDocumentRange.hpp"
-#include "DOMDocumentTraversal.hpp"
-#include "DOMXPathEvaluator.hpp"
+#include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/dom/DOMDocumentRange.hpp>
+#include <xercesc/dom/DOMDocumentTraversal.hpp>
+#include <xercesc/dom/DOMXPathEvaluator.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

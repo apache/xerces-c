@@ -22,7 +22,7 @@
  */
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "DOMCharacterData.hpp"
+#include <xercesc/dom/DOMCharacterData.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

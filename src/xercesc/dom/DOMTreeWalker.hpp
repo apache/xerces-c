@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#include "DOMNode.hpp"
-#include "DOMNodeFilter.hpp"
+#include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/dom/DOMNodeFilter.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
