@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/27 06:10:32  neilg
+ * PSVIAttribute implementation
+ *
  * Revision 1.4  2003/11/25 16:14:28  neilg
  * move inlines into PSVIItem.hpp
  *
@@ -286,6 +289,8 @@ protected:
     //  The schema normalized value (when present)
     // fDefaultValue
     //  default value specified in the schema, if any
+    // fCanonicalValue
+    //  canonicalized version of normalizedValue
     // fValidityState
     //  Whether this item is valid or not
     // fAssessmentType
@@ -293,30 +298,30 @@ protected:
     // fIsSpecified
     //  Whether this item exists because a default was specified in the schema
     // fType
-    //  Type definition that validated this item
+    //  type responsible for validating this item
     // fMemberType
     //  If fType is a union type, the member type that validated this item
     MemoryManager* const        fMemoryManager;
     const XMLCh*                fValidationContext;
     const XMLCh*                fNormalizedValue;
     const XMLCh*                fDefaultValue;
+    const XMLCh*                fCanonicalValue;
     VALIDITY_STATE              fValidityState;
     ASSESSMENT_TYPE             fAssessmentType;
     bool                        fIsSpecified;
-    XSTypeDefinition*           fType;
+    XSTypeDefinition *          fType;
     XSSimpleTypeDefinition*     fMemberType;
 };
+
 inline PSVIItem::~PSVIItem() {}
 
 inline const XMLCh *PSVIItem::getValidationContext() 
 {
-    // REVISIT
     return fValidationContext;
 }
 
 inline const XMLCh* PSVIItem::getSchemaNormalizedValue() 
 {
-    // REVISIT
     return fNormalizedValue;
 }
 
@@ -327,8 +332,7 @@ inline const XMLCh* PSVIItem::getSchemaDefault()
 
 inline const XMLCh* PSVIItem::getCanonicalRepresentation() 
 {
-    // REVISIT
-    return 0;
+    return fCanonicalValue;
 }
 
 inline PSVIItem::VALIDITY_STATE PSVIItem::getValidity() const

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/27 06:10:32  neilg
+ * PSVIAttribute implementation
+ *
  * Revision 1.2  2003/11/06 21:50:33  neilg
  * fix compilation errors under gcc 3.3.
  *
@@ -72,6 +75,31 @@ PSVIAttribute::PSVIAttribute( MemoryManager* const manager ):
         PSVIItem(manager),
         fAttributeDecl(0)
 {
+}
+
+void PSVIAttribute::reset(
+            const XMLCh * const         valContext
+            , PSVIItem::VALIDITY_STATE  state
+            , PSVIItem::ASSESSMENT_TYPE assessmentType
+            , const XMLCh * const       normalizedValue
+            , XSSimpleTypeDefinition *  validatingType
+            , XSSimpleTypeDefinition *  memberType
+            , const XMLCh * const       defaultValue
+            , const bool                isSpecified
+            , const XMLCh * const       canonicalValue
+            , XSAttributeDeclaration *  attrDecl
+        )
+{
+    fValidationContext = valContext;
+    fValidityState = state;
+    fAssessmentType = assessmentType;
+    fNormalizedValue = normalizedValue;
+    fType = validatingType;
+    fMemberType = memberType;
+    fDefaultValue = defaultValue;
+    fIsSpecified = isSpecified;
+    fCanonicalValue = canonicalValue;
+    fAttributeDecl = attrDecl;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -80,6 +80,9 @@
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/XMLDTDDescription.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
+#include <xercesc/framework/psvi/PSVIAttribute.hpp>
+#include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
+#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
@@ -136,6 +139,12 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     //  So just return zero in this case.
     if (!hasDefs && !attCount)
         return 0;
+
+    // PSVI handling
+    if(fGrammarType == Grammar::SchemaGrammarType && getPSVIHandler())
+        fPSVIAttrList->reset();
+    PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
+    PSVIItem::ASSESSMENT_TYPE attrAssessed = PSVIItem::VALIDATION_FULL;
 
     // Keep up with how many attrs we end up with total
     unsigned int retCount = 0;
@@ -221,7 +230,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             if (fGrammarType == Grammar::SchemaGrammarType && currType) {
 
                 //retrieve the att def
-                // currType must be non-null for schema grammars
                 attDef = currType->getAttDef(suffPtr, uriId);
 
                 // if not found or faulted in - check for a matching wildcard attribute
@@ -265,8 +273,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
                                     if (getPSVIHandler())
                                     {
-                                        // REVISIT:                                   
-                                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                                        attrValid = PSVIItem::VALIDITY_INVALID;
                                     }                                
                                 }
                             }
@@ -287,8 +294,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
                                     if (getPSVIHandler())
                                     {
-                                        // REVISIT:                                   
-                                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                                        attrValid = PSVIItem::VALIDITY_INVALID;
                                     }
                                 }
                             }
@@ -379,17 +385,26 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //we may have set it to invalid already, but this is the first time we are guarenteed to have the attDef
                 if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)             
                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::VALID);
-                // REVISIT: need to check getValidity...
-                if (getPSVIHandler())
-                {
-                    // REVISIT:                                   
-                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
-                }                    
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::FULL);
-                if (getPSVIHandler())
+            }
+            if(getPSVIHandler())
+            {
+                // if we've found either an attDef or an attDefForWildCard,
+                // then we're doing full validation and it may still be valid.
+                if(!attDef && !attDefForWildCard)
                 {
-                    // REVISIT:                                   
-                    // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                    if(!laxThisOne && !skipThisOne)
+                        attrValid = PSVIItem::VALIDITY_INVALID;
+                    else if(laxThisOne)
+                    {
+                        attrValid = PSVIItem::VALIDITY_NOTKNOWN;
+                        attrAssessed = PSVIItem::VALIDATION_PARTIAL;
+                    }
+                    else
+                    {
+                        attrValid = PSVIItem::VALIDITY_NOTKNOWN;
+                        attrAssessed = PSVIItem::VALIDATION_NONE;
+                    }
                 }
             }
 
@@ -421,50 +436,12 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 );
                 if(fGrammarType == Grammar::SchemaGrammarType && attDef) {
                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
-                    if (getPSVIHandler())
-                    {
-                        // REVISIT:                                   
-                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
-                    }
                 }
             }
             else if(errorCondition && laxThisOne && fGrammarType == Grammar::SchemaGrammarType && attDef) {
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::NONE);
                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::UNKNOWN);
-                if (getPSVIHandler())
-                {
-                    // REVISIT:                                   
-                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_NOTKNOWN);
-                    // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_NONE);
-                }
             }
-
-
-            /**** REVISIT:  excise this dead code
-            //  If its already provided, then there are more than one of
-            //  this attribute in this start tag, so emit an error.
-            if (attDef->getProvided())
-            {
-                emitError
-                ( 
-                    XMLErrs::AttrAlreadyUsedInSTag
-                    , attDef->getFullName()
-                    , elemDecl->getFullName()
-                );
-                if(fGrammarType == Grammar::SchemaGrammarType) {
-                    ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
-                    if (getPSVIHandler())
-                    {
-                        // REVISIT:                                   
-                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                       
-                    }
-                }
-            }
-            else
-            {
-                attDef->setProvided(true);
-            }
-            ********/
 
             //  Now normalize the raw value since we have the attribute type. We
             //  don't care about the return status here. If it failed, an error
@@ -504,6 +481,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , elemDecl
                     );
                     attrValidator = ((SchemaValidator*)fValidator)->getMostRecentAttrValidator();
+                    if(getPSVIHandler() && ((SchemaValidator *)fValidator)->getErrorOccurred())
+                        attrValid = PSVIItem::VALIDITY_INVALID;
                 }
                 else // no decl; default DOMTypeInfo to anySimpleType
                     attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
@@ -555,6 +534,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , elemDecl
                         );
                         attrValidator = ((SchemaValidator*)fValidator)->getMostRecentAttrValidator();
+                        if(getPSVIHandler() && ((SchemaValidator *)fValidator)->getErrorOccurred())
+                            attrValid = PSVIItem::VALIDITY_INVALID;
                     }
                     else if(fGrammarType == Grammar::SchemaGrammarType)
                         attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
@@ -576,7 +557,53 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
 
             }
-        }
+
+            // now fill in the PSVIAttributes entry for this attribute:
+	        if(getPSVIHandler())
+	        {
+	            SchemaAttDef *actualAttDef = 0;
+	            if(attDef)
+	                actualAttDef = (SchemaAttDef *)attDef;
+	            else if (attDefForWildCard)
+	                actualAttDef = (SchemaAttDef *)attDefForWildCard;
+	            XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
+	            PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
+	            XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(actualAttDef->getDatatypeValidator());
+	            if(attrValid != PSVIItem::VALIDITY_VALID)
+	            {
+	                toFill->reset(
+	                    fRootElemName
+	                    , attrValid
+	                    , attrAssessed
+	                    , normBuf.getRawBuffer()
+	                    , validatingType
+	                    , 0
+	                    , actualAttDef->getValue()
+	                    , false
+	                    , 0
+	                    , attrDecl
+	                );
+	            }
+	            else
+	            {
+	                XSSimpleTypeDefinition *memberType = 0;
+	                if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
+	                    memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
+	                toFill->reset(
+	                    fRootElemName
+	                    , attrValid
+	                    , attrAssessed
+	                    , normBuf.getRawBuffer()
+	                    , validatingType
+	                    , memberType
+	                    , actualAttDef->getValue()
+	                    , false
+	                    , 0
+	                    , attrDecl
+	                );
+	            }
+	        }
+	    }
         else
         {
             // Just normalize as CDATA
@@ -590,6 +617,26 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             if((uriId == fXMLNSNamespaceId)
                   || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI))
                 attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
+            if(getPSVIHandler())
+            {
+	            PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
+	            XSSimpleTypeDefinition *validatingType = (attrValidator)
+                            ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
+                            : 0;
+                // no attribute declarations for these...
+	            toFill->reset(
+	                fRootElemName
+	                , PSVIItem::VALIDITY_NOTKNOWN
+	                , PSVIItem::VALIDATION_NONE
+                    , normBuf.getRawBuffer()
+	                , validatingType
+	                , 0
+	                , 0
+                    , false
+	                , 0
+	                , 0
+                );
+            }
         }
 
         //  Add this attribute to the attribute list that we use to pass them
@@ -675,13 +722,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(fGrammarType == Grammar::SchemaGrammarType) {
                     ((SchemaAttDef *)curDef)->setValidationAttempted(PSVIDefs::FULL);
                     ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::VALID);
-                    if (getPSVIHandler())
-                    {
-                        // REVISIT:                                   
-                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_VALID;
-                        // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_FULL);
-                    }
                 }
+                // note that since there is no attribute information
+                // item present, there is no PSVI infoset to augment here *except*
+                // that the element is invalid
 
                 //the attribute is not provided
                 if (fValidate)
@@ -699,11 +743,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         if(fGrammarType == Grammar::SchemaGrammarType) 
                         {
                             ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
-                            if (getPSVIHandler())
-                            {
-                                // REVISIT:                                   
-                                // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                                
-                            }
                         }
                     }
                     else if ((defType == XMLAttDef::Default) ||
@@ -717,11 +756,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             if(fGrammarType == Grammar::SchemaGrammarType)
                             {
                                 ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
-                                if (getPSVIHandler())
-                                {
-                                    // REVISIT:                                   
-                                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                   
-                                }
                             }
                         }
                     }
@@ -769,6 +803,52 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     // Indicate it was not explicitly specified and bump count
                     curAtt->setSpecified(false);
                     retCount++;
+                    if(getPSVIHandler())
+                    {
+                        PSVIAttribute *defAttrToFill = fPSVIAttrList->getPSVIAttributeToFill();
+                        XSAttributeDeclaration *defAttrDecl = (XSAttributeDeclaration *)fModel->getXSObject((void *)curDef);
+                        XSSimpleTypeDefinition *defAttrType = 
+                            (XSSimpleTypeDefinition*)fModel->getXSObject(((SchemaAttDef *)curDef)->getDatatypeValidator());
+                        // would have occurred during validation of default value
+                        if(((SchemaValidator *)fValidator)->getErrorOccurred())
+                        {
+                            defAttrToFill->reset(
+                                fRootElemName
+                                , PSVIItem::VALIDITY_INVALID
+                                , PSVIItem::VALIDATION_FULL
+                                , curDef->getValue()
+                                , defAttrType
+                                , 0
+                                , curDef->getValue()
+                                , true 
+                                , 0
+                                , defAttrDecl
+                            );
+                        }
+                        else
+                        {
+                            XSSimpleTypeDefinition *defAttrMemberType = 0;
+                            if(defAttrType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
+                            {
+                                defAttrMemberType = (XSSimpleTypeDefinition *)fModel->getXSObject
+                                (
+                                    ((SchemaValidator*)fValidator)->getMostRecentAttrValidator()
+                                );
+                            }
+                            defAttrToFill->reset(
+                                fRootElemName
+                                , PSVIItem::VALIDITY_VALID
+                                , PSVIItem::VALIDATION_FULL
+                                , curDef->getValue()
+                                , defAttrType
+                                , defAttrMemberType
+                                , curDef->getValue()
+                                , true
+                                , 0
+                                , defAttrDecl
+                            );
+                        }
+                    }
                 }
 
                 if(fGrammarType == Grammar::SchemaGrammarType)
@@ -779,20 +859,27 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 //attribute is provided
                 // (schema) report error for PROHIBITED attrs that are present (V_TAGc)
-                if (defType == XMLAttDef::Prohibited && fValidate) {
+                if (defType == XMLAttDef::Prohibited && fValidate) 
+                {
                     fValidator->emitError
                     (
                         XMLValid::ProhibitedAttributePresent
                         , curDef->getFullName()
                     );
-                    if(fGrammarType == Grammar::SchemaGrammarType) {
+                    if(fGrammarType == Grammar::SchemaGrammarType) 
+                    {
                         ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
                         ((SchemaElementDecl *)elemDecl)->updateValidityFromAttribute((SchemaAttDef *)curDef);
                         if (getPSVIHandler())
                         {
-                            // REVISIT:                                   
-                            // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
-                            // new function?                            
+                            QName *attQName = ((SchemaAttDef *)curDef)->getAttName();
+                            // bad luck...
+                            PSVIAttribute *prohibitedAttr = fPSVIAttrList->getAttributePSVIByName
+                            (
+                                attQName->getLocalPart(), 
+                                fURIStringPool->getValueForId(attQName->getURI())
+                            );
+                            prohibitedAttr->updateValidity(PSVIItem::VALIDITY_INVALID);
                         }
                     }
                 }

@@ -74,6 +74,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/XMLDTDDescription.hpp>
+#include <xercesc/framework/psvi/PSVIHandler.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
@@ -113,6 +114,7 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistry(0)
     , fUndeclaredAttrRegistryNS(0)
+    , fPSVIAttrList(0)
     , fModel(0)
 {
     try
@@ -160,6 +162,7 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistry(0)
     , fUndeclaredAttrRegistryNS(0)
+    , fPSVIAttrList(0)
     , fModel(0)
 {
     try
@@ -578,6 +581,7 @@ void IGXMLScanner::commonInit()
     (
         509, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
     );
+    fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 }
 
 void IGXMLScanner::cleanUp()
@@ -595,6 +599,7 @@ void IGXMLScanner::cleanUp()
     delete fAttDefRegistry;
     delete fUndeclaredAttrRegistry;
     delete fUndeclaredAttrRegistryNS;
+    delete fPSVIAttrList;
 }
 
 // ---------------------------------------------------------------------------
@@ -2711,6 +2716,20 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             , attCount
             , false
             , isRoot
+        );
+    }
+
+    // if we have a PSVIHandler, now's the time to call
+    // its handleAttributesPSVI method:
+    if(fPSVIHandler)
+    {
+        QName *eName = elemDecl->getElementName();
+        fPSVIHandler->handleAttributesPSVI
+        (
+            eName->getLocalPart()
+            , fURIStringPool->getValueForId(eName->getURI())
+            , eName->getPrefix()
+            , fPSVIAttrList
         );
     }
 

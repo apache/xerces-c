@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/11/27 06:10:31  neilg
+ * PSVIAttribute implementation
+ *
  * Revision 1.20  2003/11/24 05:13:20  neilg
  * expose validator that actually validated attribute.  Clean up union handling
  *
@@ -264,6 +267,7 @@ public:
     ComplexTypeInfo* getCurrentTypeInfo() const;
     DatatypeValidator *getCurrentDatatypeValidator() const;
     DatatypeValidator *getMostRecentAttrValidator() const;
+    bool getErrorOccurred();
 
 private:
     // -----------------------------------------------------------------------
@@ -397,6 +401,8 @@ private:
     //      Stack of complex type declarations.
     //  fMostRecentAttrValidator
     //      DatatypeValidator that validated attribute most recently processed
+    //  fErrorOccurred
+    //      whether an error occurred in the most recent operation
     // -----------------------------------------------------------------------
     MemoryManager*                  fMemoryManager;
     SchemaGrammar*                  fSchemaGrammar;
@@ -411,6 +417,7 @@ private:
     XSDErrorReporter                fSchemaErrorReporter;
     ValueStackOf<ComplexTypeInfo*>* fTypeStack;
     DatatypeValidator *             fMostRecentAttrValidator;
+    bool                            fErrorOccurred;
 };
 
 
@@ -508,6 +515,11 @@ SchemaValidator::isOccurrenceRangeOK(const int min1, const int max1,
         return true;
     }
     return false;
+}
+
+inline bool SchemaValidator::getErrorOccurred()
+{
+    return fErrorOccurred;
 }
 
 XERCES_CPP_NAMESPACE_END

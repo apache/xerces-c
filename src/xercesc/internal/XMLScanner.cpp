@@ -228,6 +228,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fUIntPoolRow(0)
     , fUIntPoolCol(0)
     , fUIntPoolRowTotal(2)
+    , fPSVIHandler(0)
 {
    commonInit();
 
@@ -303,6 +304,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fUIntPoolRow(0)
     , fUIntPoolCol(0)
     , fUIntPoolRowTotal(2)
+    , fPSVIHandler(0)
 {
    commonInit();
 

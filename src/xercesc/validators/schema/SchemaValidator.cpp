@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.45  2003/11/27 06:10:31  neilg
+ * PSVIAttribute implementation
+ *
  * Revision 1.44  2003/11/24 05:13:20  neilg
  * expose validator that actually validated attribute.  Clean up union handling
  *
@@ -577,6 +580,7 @@ void SchemaValidator::reset()
     fCurrentDatatypeValidator = 0;
     fNil = false;
     fDatatypeBuffer.reset();
+    fErrorOccurred = false;
 }
 
 bool SchemaValidator::requiresNamespaces() const
@@ -590,6 +594,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                                        , const XMLElementDecl* elemDecl)
 {
 
+    fErrorOccurred = false;
     //turn on IdRefList checking
     getScanner()->getValidationContext()->toCheckIdRefList(true);
 
@@ -600,7 +605,6 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     //
     XMLAttDef::AttTypes            type      = attDef->getType();
     const XMLAttDef::DefAttTypes   defType   = attDef->getDefaultType();
-    bool valid = true;
 
     //
     //  If the default type is fixed, then make sure the passed value maps
@@ -615,7 +619,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         const XMLCh* const valueText = attDef->getValue();
         if (!XMLString::equals(attrValue, valueText)) {
             emitError(XMLValid::NotSameAsFixedValue, attDef->getFullName(), attrValue, valueText);
-            valid = false;
+            fErrorOccurred = true;
         }
     }
 
@@ -627,13 +631,14 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
         // accords with original DOMTypeInfo implementation, but this does not feel right.
         fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
+        fErrorOccurred = true;
         return;
     }
 
     DatatypeValidator* attDefDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
     if (!attDefDV) {
         emitError(XMLValid::NoDatatypeValidatorForAttribute, attDef->getFullName());
-        valid = false;
+        fErrorOccurred = true;
     }
     else {
         DatatypeValidator::ValidatorType attDefDVType = attDefDV->getType();
@@ -668,7 +673,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
 
         }
         catch (XMLException& idve) {
-            valid = false;
+            fErrorOccurred = true;
             emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());       
         }
         catch(const OutOfMemoryException&)
@@ -680,6 +685,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
             ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
             ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
             fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
+            fErrorOccurred = true;
             throw;
         } 
         fMostRecentAttrValidator = attDefDV;
@@ -734,7 +740,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                     XMLValid::MultipleIdAttrs
                     , elemDecl->getFullName()
                 );
-                valid = false;
+                fErrorOccurred = true;
             }
             else
                 fSeenId = true;
@@ -742,7 +748,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
 
     }
 
-    if(!valid) {
+    if(fErrorOccurred) {
         ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
         ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
         fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);

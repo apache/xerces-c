@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/27 06:10:32  neilg
+ * PSVIAttribute implementation
+ *
  * Revision 1.3  2003/11/06 21:50:33  neilg
  * fix compilation errors under gcc 3.3.
  *
@@ -71,6 +74,7 @@
 #define PSVIATTRIBUTE_HPP
 
 #include <xercesc/framework/psvi/PSVIItem.hpp>
+#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -145,6 +149,29 @@ public:
 
     //@{
 
+    /**
+      * reset this object.  Intended to be called by
+      * the implementation.
+      */
+    void reset(
+            const XMLCh * const         valContext
+            , PSVIItem::VALIDITY_STATE  state
+            , PSVIItem::ASSESSMENT_TYPE assessmentType
+            , const XMLCh * const       normalizedValue
+            , XSSimpleTypeDefinition *  validatingType
+            , XSSimpleTypeDefinition *  memberType
+            , const XMLCh * const       defaultValue
+            , const bool                isSpecified
+            , const XMLCh * const       canonicalValue
+            , XSAttributeDeclaration *  attrDecl
+        );
+
+    /**
+      * set VALIDITY_STATE to specified value; intended to be
+      * called by implementation.
+      */
+    void updateValidity(VALIDITY_STATE newValue);
+
     //@}
 
 private:
@@ -160,8 +187,8 @@ private:
     //  data members
     // -----------------------------------------------------------------------
     // fAttributeDecl
-    //  attribute declaration component that validated this attribute 
-    XSAttributeDeclaration *fAttributeDecl;
+    //      attribute declaration component that validated this attribute 
+    XSAttributeDeclaration *    fAttributeDecl;
 };
 inline PSVIAttribute::~PSVIAttribute() {}
 
@@ -178,6 +205,11 @@ inline XSTypeDefinition* PSVIAttribute::getTypeDefinition()
 inline XSSimpleTypeDefinition* PSVIAttribute::getMemberTypeDefinition() 
 {
     return fMemberType;
+}
+
+inline void PSVIAttribute::updateValidity(VALIDITY_STATE newValue)
+{
+    fValidityState = newValue;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/27 06:10:31  neilg
+ * PSVIAttribute implementation
+ *
  * Revision 1.12  2003/11/26 16:20:00  knoaman
  * Store XSModel.
  *
@@ -105,6 +108,8 @@
 #include <xercesc/util/RefHash3KeysIdPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
+#include <xercesc/framework/psvi/PSVIAttribute.hpp>
+#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -327,7 +332,9 @@ private :
     // fUndeclaredAttrRegistryNS
     //      mapping of namespaceId/localName pairs to the count of the last
     //      start tag in which they occurred.
-    //
+    //  fPSVIAttrList
+    //      PSVI attribute list implementation that needs to be
+    //      filled when a PSVIHandler is registered
     //
     // -----------------------------------------------------------------------
     bool                        fSeeXsi;
@@ -346,6 +353,7 @@ private :
     unsigned int                            fElemCount;
     RefHashTableOf<unsigned int>*           fAttDefRegistry;
     RefHash2KeysTableOf<unsigned int>*      fUndeclaredAttrRegistryNS;
+    PSVIAttributeList *                     fPSVIAttrList;
     XSModel*                                fModel;
 };
 
