@@ -413,7 +413,7 @@ Usage:
     DOMPrint [options] <XML file>
 
 This program invokes the DOM parser, and builds the DOM tree.
-It then asks the DOMWriter to serialize the DOM tree
+It then asks the DOMWriter to serialize the DOM tree.
 Options:
     -e          create entity reference nodes. Default is no expansion.
     -v=xxx      Validation scheme [always | never | auto*].
