@@ -135,6 +135,13 @@ public:
      */
     RefHashTableOfEnumerator<Grammar> getGrammarEnumerator() const;
 
+    /**
+     * Get an enumeration of the cached Grammar in the Grammar pool
+     *
+     * @return enumeration of cached Grammar in Grammar pool
+     */
+    RefHashTableOfEnumerator<Grammar> getCachedGrammarEnumerator() const;
+
 
     /**
      * Get a string pool of schema grammar element/attribute names/prefixes

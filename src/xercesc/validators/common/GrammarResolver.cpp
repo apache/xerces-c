@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/09/01 12:59:59  gareth
+ * added API to get an enumerator for the cached grammars.
+ *
  * Revision 1.16  2003/08/22 09:04:41  gareth
  * keep the fGrammarFromPool in sync to avoid problems when parseing multiple times. Patch by Alberto Massari.
  *
@@ -290,6 +293,12 @@ RefHashTableOfEnumerator<Grammar>
 GrammarResolver::getGrammarEnumerator() const
 {
     return RefHashTableOfEnumerator<Grammar>(fGrammarBucket);
+}
+
+RefHashTableOfEnumerator<Grammar>
+GrammarResolver::getCachedGrammarEnumerator() const
+{
+    return RefHashTableOfEnumerator<Grammar>(fGrammarFromPool);
 }
 
 bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
