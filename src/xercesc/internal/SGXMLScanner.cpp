@@ -999,9 +999,6 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         }
 
     }
-    if(!isRoot)
-        ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(topElem->fThisElement, fGrammarType);
-
     if (fPSVIHandler)
     {
         endElementPSVI
@@ -1023,49 +1020,10 @@ void SGXMLScanner::scanEndTag(bool& gotData)
             , isRoot
             , fPrefixBuf.getRawBuffer()
         );
-        // pass information about type info:
-        const XMLCh *typeName = SchemaSymbols::fgATTVAL_ANYTYPE;
-        const XMLCh *typeURI = SchemaSymbols::fgURI_SCHEMAFORSCHEMA; 
-        if(!fPSVIElemContext.fErrorOccurred)
-        {
-            if(fPSVIElemContext.fCurrentTypeInfo != 0)
-            {
-                if(fPSVIElemContext.fCurrentTypeInfo->getAnonymous())
-                    typeName = XMLUni::fgZeroLenString;
-                else 
-                    typeName = fPSVIElemContext.fCurrentTypeInfo->getTypeLocalName();
-                typeURI = fPSVIElemContext.fCurrentTypeInfo->getTypeUri();
-            } 
-            else
-            {
-                DatatypeValidator *actualDV = (psviMemberType)?psviMemberType:fPSVIElemContext.fCurrentDV;
-                if(actualDV)
-                {
-                    if(actualDV->getAnonymous())
-                        typeName = XMLUni::fgZeroLenString;
-                    else
-                        typeName = actualDV->getTypeLocalName();
-                    typeURI = actualDV->getTypeUri();
-                }
-            }
-        }
-        else 
-        {
-            // idiosyncratically, if there's an
-            // error but this element was simpleType-validated,
-            // the tests demand anySimpleType be returned
-            if(fPSVIElemContext.fCurrentDV)
-                typeName = SchemaSymbols::fgDT_ANYSIMPLETYPE;
-        }
-        fDocHandler->elementTypeInfo(typeName, typeURI);
     }
 
-    // reset xsi:type ComplexTypeInfo    
-    ((SchemaElementDecl*)topElem->fThisElement)->reset();
     if (!isRoot)
     {
-        ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
-            setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
         // update error information
         fErrorStack->push(fErrorStack->pop() || fPSVIElemContext.fErrorOccurred);
     }
@@ -1478,9 +1436,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             fValidate = false;
             fElemStack.setValidationFlag(fValidate);
         }
-        else if(fValidate) {
-            ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
-        }
 
         // If validating then emit an error
         if (fValidate)
@@ -1494,24 +1449,14 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 XMLValid::ElementNotDefined
                 , elemDecl->getFullName()
             );
-            ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
             fPSVIElemContext.fErrorOccurred = true;
         }
     }
     else
     {
-        if(!laxBeforeElementFound) {
-            if (fValidate) {
-                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::VALID);
-            }
-        }
-
         // If its not marked declared and validating, then emit an error
         if (!elemDecl->isDeclared()) {
             if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
                 fPSVIElemContext.fErrorOccurred = true;
             }
             if (laxThisOne) {
@@ -1528,15 +1473,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 );
             }
         }
-        
-        ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
-        ((SchemaElementDecl*)elemDecl)->setXsiSimpleTypeInfo(0);
     }
 
-
-    if(errorBeforeElementFound) {
-        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-    }
 
     //  Now we can update the element stack to set the current element
     //  decl. We expanded the stack above, but couldn't store the element
@@ -1608,13 +1546,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                         XMLValid::GrammarNotFound
                         , prefixBuf.getRawBuffer()
                     );
-                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 }
-                else if(errorCondition) {
-                    ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::NONE);
-                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::UNKNOWN);
-                }
-
             }
         }
     }
@@ -1638,7 +1570,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             //  XMLValidator::checkRootElement
             if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId())) {
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
             }
         }
     }
@@ -1763,7 +1694,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     , elemDecl->getFullName()
                     , elemDecl->getFormattedContentModel()
                 );
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
             }
 
             if (((SchemaValidator*) fValidator)->getErrorOccurred())
@@ -1793,9 +1723,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         }
 
-        if(!isRoot)
-           ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(elemDecl, fGrammarType);
-
         if (fPSVIHandler)
         {
             endElementPSVI
@@ -1814,48 +1741,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 , isRoot
                 , fPrefixBuf.getRawBuffer()
             );
-            // pass information about type info:
-            const XMLCh *typeName = SchemaSymbols::fgATTVAL_ANYTYPE;
-            const XMLCh *typeURI = SchemaSymbols::fgURI_SCHEMAFORSCHEMA; 
-            if(!fPSVIElemContext.fErrorOccurred)
-            {
-                if(fPSVIElemContext.fCurrentTypeInfo != 0)
-                {
-                    if(fPSVIElemContext.fCurrentTypeInfo->getAnonymous())
-                        typeName = XMLUni::fgZeroLenString;
-                    else 
-                        typeName = fPSVIElemContext.fCurrentTypeInfo->getTypeLocalName();
-                    typeURI = fPSVIElemContext.fCurrentTypeInfo->getTypeUri();
-                } 
-                else
-                {
-                    DatatypeValidator *actualDV = (psviMemberType)?psviMemberType:fPSVIElemContext.fCurrentDV;
-                    if(actualDV)
-                    {
-                        if(actualDV->getAnonymous())
-                            typeName = XMLUni::fgZeroLenString;
-                        else
-                            typeName = actualDV->getTypeLocalName();
-                        typeURI = actualDV->getTypeUri();
-                    }
-                }
-            }
-            else 
-            {
-                // idiosyncratically, if there's an
-                // error but this element was simpleType-validated,
-                // the tests demand anySimpleType be returned
-                if(fPSVIElemContext.fCurrentDV)
-                    typeName = SchemaSymbols::fgDT_ANYSIMPLETYPE;
-            }
-            fDocHandler->elementTypeInfo(typeName, typeURI);
         }
-
-        // reset xsi:type ComplexTypeInfo        
-        ((SchemaElementDecl*)elemDecl)->reset();
-        if (!isRoot)
-            ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
-                setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
         // If the elem stack is empty, then it was an empty root
         if (isRoot)
@@ -2285,7 +2171,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     XMLValid::AttributeNotQualified
                                     , attDef->getFullName()
                                 );
-                                ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
                                 fPSVIElemContext.fErrorOccurred = true;
                                 if (getPSVIHandler())
                                 {
@@ -2304,7 +2189,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     XMLValid::AttributeNotUnQualified
                                     , attDef->getFullName()
                                 );
-                                ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
                                 fPSVIElemContext.fErrorOccurred = true;
                                 if (getPSVIHandler())
                                 {
@@ -2361,14 +2245,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     fPSVIElemContext.fErrorOccurred = true;
                 }
             }
-            if(!skipThisOne && fGrammarType == Grammar::SchemaGrammarType && attDef) {
-                //we may have set it to invalid already, but this is the first time we are guarenteed to have the attDef
-                if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)
-                {
-                    ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::VALID);                
-                }   
-                ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::FULL);
-            }
 
             // if we've found either an attDef or an attDefForWildCard,
             // then we're doing full validation and it may still be valid.
@@ -2423,20 +2299,12 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     , bufMsg.getRawBuffer()
                     , elemDecl->getFullName()
                 );
-                if(attDef)
-                    ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
-            }
-            else if(errorCondition && laxThisOne && attDef) {
-                ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::NONE);
-                ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::UNKNOWN);
             }
 
             //  Now normalize the raw value since we have the attribute type. We
             //  don't care about the return status here. If it failed, an error
             //  was issued, which is all we care about.
             if (attDefForWildCard) {
-                if(attDef)
-                    ((SchemaAttDef*)attDef)->setAnyDatatypeValidator(((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator());
                 normalizeAttValue
                 (
                     attDefForWildCard
@@ -2481,13 +2349,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                 // Save the type for later use
                 attType = attDefForWildCard->getType();
-
-                if(attDef)
-                    ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
-
-                DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
-                if(tempDV && tempDV->getType() == DatatypeValidator::Union && attDef)
-                    ((SchemaAttDef*)attDef)->setMembertypeValidator(attrValidator);
             }
             else {
                 normalizeAttValue
@@ -2540,10 +2401,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                 // Save the type for later use
                 attType = (attDef)?attDef->getType():XMLAttDef::CData;
-                if(attDef)
-                {
-                    ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
-                } 
             }
 
             // now fill in the PSVIAttributes entry for this attribute:
@@ -2660,8 +2517,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , attType
                 , true
                 , fMemoryManager
-                , attrValidator
-                , true
             );
             toFill.addElement(curAttr);
         }
@@ -2675,8 +2530,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , prefPtr
                 , normBuf.getRawBuffer()
                 , attType
-                , attrValidator
-                , true
             );
             curAttr->setSpecified(true);
         }
@@ -2708,8 +2561,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             unsigned int *attCountPtr = fAttDefRegistry->get(curDef);
             if (!attCountPtr || *attCountPtr < fElemCount)
             { // did not occur
-                ((SchemaAttDef *)curDef)->setValidationAttempted(PSVIDefs::FULL);
-                ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::VALID);
                 // note that since there is no attribute information
                 // item present, there is no PSVI infoset to augment here *except*
                 // that the element is invalid
@@ -2727,7 +2578,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             XMLValid::RequiredAttrNotProvided
                             , curDef->getFullName()
                         );
-                        ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
                         fPSVIElemContext.fErrorOccurred = true;
                     }
                     else if ((defType == XMLAttDef::Default) ||
@@ -2738,7 +2588,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             // XML 1.0 Section 2.9
                             // Document is standalone, so attributes must not be defaulted.
                             fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef->getFullName(), elemDecl->getFullName());
-                            ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
                         }
                     }
                 }
@@ -2827,8 +2676,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         defAttrToFill->setValue(curDef->getValue());
                     }
                 }
-
-                ((SchemaElementDecl *)elemDecl)->updateValidityFromAttribute((SchemaAttDef *)curDef);
             }
             else if (attCountPtr)
             {
@@ -2841,7 +2688,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         XMLValid::ProhibitedAttributePresent
                         , curDef->getFullName()
                     );
-                    ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::INVALID);         
                     fPSVIElemContext.fErrorOccurred = true;
                     if (getPSVIHandler())
                     {
@@ -2855,7 +2701,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         prohibitedAttr->updateValidity(PSVIItem::VALIDITY_INVALID);
                     }
                 }
-                ((SchemaElementDecl *)elemDecl)->updateValidityFromAttribute((SchemaAttDef *)curDef);
             }
         }
     }
@@ -2936,8 +2781,6 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                         // Can't have a standalone document declaration of "yes" if  attribute
                         // values are subject to normalisation
                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                        if(attDef)
-                            ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);     
                         if (getPSVIHandler())
                         {
                             // REVISIT:               
@@ -2981,8 +2824,6 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                             // Can't have a standalone document declaration of "yes" if  attribute
                             // values are subject to normalisation
                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                            if(attDef)
-                                ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
                             if (getPSVIHandler())
                             {
                                 // REVISIT:                
@@ -3002,9 +2843,6 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
         // And move up to the next character in the source
         srcPtr++;
     }
-
-    if(attDef)
-        ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromAttribute((SchemaAttDef *)attDef);
 
     return retVal;
 }
@@ -3303,7 +3141,6 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
         {
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
-            ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
             if (getPSVIHandler())
             {
                 // REVISIT:           
@@ -3392,7 +3229,6 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
             else
             {
                 fValidator->emitError(XMLValid::NoCharDataInCM);
-                ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
                 if (getPSVIHandler())
                 {
                     // REVISIT:                
@@ -4137,7 +3973,6 @@ void SGXMLScanner::scanCDSection()
                     // Error - standalone should have a value of "no" as whitespace detected in an
                     // element type with element content whose element declaration was external
                     fValidator->emitError(XMLValid::NoWSForStandalone);
-                    ((SchemaElementDecl *)(topElem->fThisElement))->setValidity(PSVIDefs::INVALID);
                     if (getPSVIHandler())
                     {
                         // REVISIT:                
@@ -4178,7 +4013,6 @@ void SGXMLScanner::scanCDSection()
                 {
                     // They definitely cannot handle any type of char data
                     fValidator->emitError(XMLValid::NoCharDataInCM);
-                    ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
                     if (getPSVIHandler())
                     {
                         // REVISIT:                
@@ -4466,7 +4300,6 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
                     // element type with element content whose element declaration was external
                     //
                     fValidator->emitError(XMLValid::NoWSForStandalone);
-                    ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->setValidity(PSVIDefs::INVALID);
                     if (getPSVIHandler())
                     {
                         // REVISIT:                
@@ -4723,7 +4556,6 @@ bool SGXMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned in
         if (defType == XMLAttDef::ProcessContents_Skip) {
             // attribute should just be bypassed,
             skipThisOne = true;
-            attWildCard->setValidationAttempted(PSVIDefs::NONE);
             if (getPSVIHandler())
             {
                 // REVISIT:

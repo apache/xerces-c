@@ -16,6 +16,9 @@
 
  /*
   * $Log$
+  * Revision 1.11  2004/09/20 15:00:49  amassari
+  * Added a setCreateSchemaInfo method to the DOM parsers, to store PSVI informations in element and attribute nodes
+  *
   * Revision 1.10  2004/09/08 13:55:58  peiyongz
   * Apache License Version 2.0
   *
@@ -332,7 +335,8 @@ public:
       *                         most recent endElement() callback
       * @param  typeURI         namespace of the type that actually validated
       *                         the content of the element corresponding to the
-      *                         most recent endElement() callback      
+      *                         most recent endElement() callback
+      * @deprecated
       */
     virtual void elementTypeInfo
     (

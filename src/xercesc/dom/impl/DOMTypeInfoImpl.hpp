@@ -31,20 +31,33 @@
 //  Includes
 //------------------------------------------------------------------------------------
 #include <xercesc/dom/DOMTypeInfo.hpp>
+#include <xercesc/dom/DOMPSVITypeInfo.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMDocumentImpl;
 
-class CDOM_EXPORT DOMTypeInfoImpl : public DOMTypeInfo
+class CDOM_EXPORT DOMTypeInfoImpl : public DOMTypeInfo, public DOMPSVITypeInfo
 {
 public:
 
     //-----------------------------------------------------------------------------------
     //  Constructor
     //-----------------------------------------------------------------------------------
-    DOMTypeInfoImpl(const XMLCh* name, const XMLCh* namespaceURI, DOMDocumentImpl *impl);
-    DOMTypeInfoImpl();
+    DOMTypeInfoImpl(const XMLCh* namespaceUri=0, const XMLCh* name=0);
+
+    static DOMTypeInfoImpl  g_DtdValidatedElement;
+    static DOMTypeInfoImpl  g_DtdNotValidatedAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedCDATAAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedIDAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedIDREFAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedIDREFSAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedENTITYAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedENTITIESAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedNMTOKENAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedNMTOKENSAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedNOTATIONAttribute;
+    static DOMTypeInfoImpl  g_DtdValidatedENUMERATIONAttribute;
 
     //@{
     // -----------------------------------------------------------------------
@@ -75,11 +88,60 @@ public:
      * @since DOM level 3
      */
     virtual const XMLCh* getNamespace() const;
+
+    /**
+     * Returns the string value of the specified PSVI property associated to a 
+     * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return the string value of the specified PSVI property associated to a 
+     * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.
+     */
+    virtual const XMLCh* getStringProperty(PSVIProperty prop) const;
+
+    /**
+     * Returns the numeric value of the specified PSVI property associated to a 
+     * <code>DOMElement</code> or <code>DOMAttr</code>, or 0 if not available.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return the numeric value of the specified PSVI property associated to a 
+     * <code>DOMElement</code> or <code>DOMAttr</code>, or 0 if not available.
+     */
+    virtual int getNumericProperty(PSVIProperty prop) const;
+    //@}
+
+    //@{
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+
+    /**
+     * Set the value for a string PSVI property.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     */
+    virtual void setStringProperty(PSVIProperty prop, const XMLCh* value);
+
+    /**
+     * Set the value for a numeric PSVI property.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     */
+    virtual void setNumericProperty(PSVIProperty prop, int value);
     //@}
   
   private:
-    const XMLCh* name;
-    const XMLCh* namespaceURI;
+    int             fBitFields;
+    const XMLCh*    fTypeName;
+    const XMLCh*    fTypeNamespace;
+    const XMLCh*    fMemberTypeName;
+    const XMLCh*    fMemberTypeNamespace;
+    const XMLCh*    fDefaultValue;
+    const XMLCh*    fNormalizedValue;
     
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators

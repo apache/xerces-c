@@ -21,6 +21,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include "DOMElementNSImpl.hpp"
 #include "DOMDocumentImpl.hpp"
+#include "DOMTypeInfoImpl.hpp"
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
@@ -33,6 +34,7 @@ DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
     this->fNamespaceURI=0;	  //DOM Level 2
     this->fLocalName=0;       //DOM Level 2
     this->fPrefix=0;
+    this->fSchemaType = 0;
 }
 
 //Introduced in DOM Level 2
@@ -42,6 +44,7 @@ DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc,
     DOMElementImpl(ownerDoc, qualifiedName)
 {
     setName(namespaceURI, qualifiedName);
+    this->fSchemaType = 0;
 }
 
 DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
@@ -50,6 +53,7 @@ DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
     this->fNamespaceURI = other.fNamespaceURI;	        //DOM Level 2
     this->fLocalName = other.fLocalName;                //DOM Level 2
     this->fPrefix = other.fPrefix;
+    this->fSchemaType = other.fSchemaType;
 }
 
 DOMNode * DOMElementNSImpl::cloneNode(bool deep) const {
@@ -232,6 +236,25 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
             DOMNode::ELEMENT_NODE
         );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
+}
+
+const DOMTypeInfo *DOMElementNSImpl::getTypeInfo() const
+{
+    if(!fSchemaType) 
+        return &DOMTypeInfoImpl::g_DtdValidatedElement;
+    return fSchemaType;
+}
+
+void DOMElementNSImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo) 
+{
+    fSchemaType = typeInfo;
+}
+
+DOMNode * DOMElementNSImpl::getInterface(const XMLCh* feature)
+{
+    if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
+        return (DOMNode*)(DOMPSVITypeInfo*)fSchemaType;
+    return DOMElementImpl::getInterface(feature);
 }
 
 XERCES_CPP_NAMESPACE_END

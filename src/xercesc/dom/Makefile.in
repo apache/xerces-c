@@ -47,7 +47,7 @@ DOM_CPP_PUBHEADERS = \
 	DOMCDATASection.hpp \
 	DOMCharacterData.hpp \
 	DOMComment.hpp \
-  DOMConfiguration.hpp \
+	DOMConfiguration.hpp \
 	DOMDocument.hpp \
 	DOMDocumentRange.hpp \
 	DOMDocumentTraversal.hpp \
@@ -73,6 +73,7 @@ DOM_CPP_PUBHEADERS = \
 	DOMNodeList.hpp \
 	DOMNotation.hpp \
 	DOMProcessingInstruction.hpp \
+	DOMPSVITypeInfo.hpp \
 	DOMRange.hpp \
 	DOMRangeException.hpp \
 	DOMText.hpp \

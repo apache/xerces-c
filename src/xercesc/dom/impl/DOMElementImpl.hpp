@@ -39,7 +39,6 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMParentNode.hpp"
 
-//#include "AttrImpl.hpp"
 #include "DOMAttrMapImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -60,9 +59,6 @@ public:
     DOMAttrMapImpl    *fAttributes;
     DOMAttrMapImpl    *fDefaultAttributes;
     const XMLCh      *fName;
-
-private:
-    const DOMTypeInfo *fSchemaType;
 
 public:
     DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *name);
@@ -105,6 +101,7 @@ public:
     virtual void setIdAttribute(const XMLCh* name);
     virtual void setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName);
     virtual void setIdAttributeNode(const DOMAttr *idAttr);
+    virtual const DOMTypeInfo * getTypeInfo() const;
 
     // for handling of default attribute
     virtual DOMAttr*          setDefaultAttributeNode(DOMAttr *newAttr);
@@ -113,11 +110,6 @@ public:
 
     // helper function for DOM Level 3 renameNode
     virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
-
-    virtual const DOMTypeInfo * getTypeInfo() const;
-
-    //helper function for DOM Level 3 TypeInfo
-    virtual void setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI);
 
 protected:
     // default attribute helper functions

@@ -31,6 +31,7 @@
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include <xercesc/framework/XMLBufferMgr.hpp>
+#include <xercesc/framework/psvi/PSVIHandler.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -55,6 +56,7 @@ class PARSERS_EXPORT AbstractDOMParser :
     , public XMLErrorReporter
     , public XMLEntityHandler
     , public DocTypeHandler
+    , public PSVIHandler
 {
 public :
     // -----------------------------------------------------------------------
@@ -76,6 +78,7 @@ public :
         , Val_Always
         , Val_Auto
     };
+
     //@}
 
 
@@ -393,6 +396,17 @@ public :
       * @return A const pointer to the installed PSVI handler object.
       */
     const PSVIHandler* getPSVIHandler() const;
+
+    /** Get the 'associate schema info' flag
+      *
+      * This method returns the flag that specifies whether
+      * the parser is storing schema informations in the element 
+      * and attribute nodes in the DOM tree being produced.
+      *
+      * @return  The state of the associate schema info flag.
+      * @see #setCreateSchemaInfo
+      */
+    bool  getCreateSchemaInfo() const;
 
     //@}
 
@@ -729,6 +743,17 @@ public :
       */
     virtual void setPSVIHandler(PSVIHandler* const handler);
 
+    /** Set the 'associate schema info' flag
+      *
+      * This method allows users to specify whether 
+      * the parser should store schema informations in the element 
+      * and attribute nodes in the DOM tree being produced.
+      *
+      * @return  The state of the associate schema info flag.
+      * @see #getCreateSchemaInfo
+      */
+    void  setCreateSchemaInfo(const bool newState);
+
     //@}
 
 
@@ -940,6 +965,48 @@ public :
       */
     void parseReset(XMLPScanToken& token);
 
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the PSVIHandler interface.
+    // -----------------------------------------------------------------------
+    
+    /** @name Implementation of the PSVIHandler interface. */
+    //@{
+
+    /** Receive notification of the PSVI properties of an element.
+      * The scanner will issue this call after the XMLDocumentHandler
+      * endElement call.  Since the scanner will issue the psviAttributes
+      * call immediately after reading the start tag of an element, all element
+      * content will be effectively bracketed by these two calls.
+      * @param  localName The name of the element whose end tag was just
+      *                     parsed.
+      * @param  uri       The namespace to which the element is bound
+      * @param  elementInfo    Object containing the element's PSVI properties
+      */
+    virtual void handleElementPSVI
+    (
+        const   XMLCh* const            localName 
+        , const XMLCh* const            uri
+        ,       PSVIElement *           elementInfo
+    );
+    /**
+      * Enables PSVI information about attributes to be passed back to the
+      * application.  This callback will be made on *all*
+      * elements; on elements with no attributes, the final parameter will
+      * be null.
+      * @param  localName The name of the element upon which start tag 
+      *          these attributes were encountered.
+      * @param  uri       The namespace to which the element is bound
+      * @param  psviAttributes   Object containing the attributes' PSVI properties
+      *          with information to identify them.
+      */
+    virtual void handleAttributesPSVI
+    (
+        const   XMLCh* const            localName 
+        , const XMLCh* const            uri
+        ,       PSVIAttributeList *     psviAttributes
+    );
     //@}
 
     // -----------------------------------------------------------------------
@@ -1175,7 +1242,8 @@ public :
       *                         most recent endElement() callback
       * @param  typeURI         namespace of the type that actually validated
       *                         the content of the element corresponding to the
-      *                         most recent endElement() callback      
+      *                         most recent endElement() callback
+      * @deprecated
       */
     virtual void elementTypeInfo
     (
@@ -1539,6 +1607,9 @@ protected:
     //      The grammar pool passed from external application (through derivatives).
     //      which could be 0, not owned.
     //
+    //  fCreateSchemaInfo
+    //      Indicates whether element and attributes will have schema info associated
+    //
     // -----------------------------------------------------------------------
     bool                          fCreateEntityReferenceNodes;
     bool                          fIncludeIgnorableWhitespace;
@@ -1546,6 +1617,7 @@ protected:
     bool                          fParseInProgress;
     bool                          fCreateCommentNodes;
     bool                          fDocumentAdoptedByUser;
+    bool                          fCreateSchemaInfo;
     XMLScanner*                   fScanner;
     XMLCh*                        fImplementationFeatures;
     DOMNode*                      fCurrentParent;
@@ -1612,6 +1684,11 @@ inline PSVIHandler* AbstractDOMParser::getPSVIHandler()
 inline const PSVIHandler* AbstractDOMParser::getPSVIHandler() const
 {
     return fPSVIHandler;
+}
+
+inline bool AbstractDOMParser::getCreateSchemaInfo() const
+{
+    return fCreateSchemaInfo;
 }
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods

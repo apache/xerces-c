@@ -227,6 +227,10 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         getScanner()->setStandardUriConformant(state);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0)
+    {
+        setCreateSchemaInfo(state);
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -314,6 +318,9 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     else if(XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) {
         return fUserAdoptsDocument;
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) {
+        return getCreateSchemaInfo();
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -333,7 +340,8 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
         (XMLString::compareIString(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)) {
+        (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0) ||
+        (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0)) {
         return true;
     }
 

@@ -1144,9 +1144,6 @@ void IGXMLScanner::scanEndTag(bool& gotData)
 
     if (fGrammarType == Grammar::SchemaGrammarType)
     {
-        if(!isRoot)
-            ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(topElem->fThisElement, fGrammarType);
-
         if (fPSVIHandler)
         {
             endElementPSVI(
@@ -1167,57 +1164,11 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             , isRoot
             , fPrefixBuf.getRawBuffer()
         );
-        // pass information about type info:
-        if(fGrammarType == Grammar::SchemaGrammarType)
-        {
-            const XMLCh *typeName = SchemaSymbols::fgATTVAL_ANYTYPE;
-            const XMLCh *typeURI = SchemaSymbols::fgURI_SCHEMAFORSCHEMA; 
-            if(!fPSVIElemContext.fErrorOccurred)
-            {
-                if(fPSVIElemContext.fCurrentTypeInfo != 0)
-                {
-                    if(fPSVIElemContext.fCurrentTypeInfo->getAnonymous())
-                        typeName = XMLUni::fgZeroLenString;
-                    else 
-                        typeName = fPSVIElemContext.fCurrentTypeInfo->getTypeLocalName();
-                    typeURI = fPSVIElemContext.fCurrentTypeInfo->getTypeUri();
-                } 
-                else
-                {
-                    DatatypeValidator *actualDV = (psviMemberType)?psviMemberType:fPSVIElemContext.fCurrentDV;
-                    if(actualDV)
-                    {
-                        if(actualDV->getAnonymous())
-                            typeName = XMLUni::fgZeroLenString;
-                        else
-                            typeName = actualDV->getTypeLocalName();
-                        typeURI = actualDV->getTypeUri();
-                    }
-                }
-            }
-            else 
-            {
-                // idiosyncratically, if there's an
-                // error but this element was simpleType-validated,
-                // the tests demand anySimpleType be returned
-                if(fPSVIElemContext.fCurrentDV)
-                    typeName = SchemaSymbols::fgDT_ANYSIMPLETYPE;
-            }
-            fDocHandler->elementTypeInfo(typeName, typeURI);
-        }
-        else 
-        {
-            fDocHandler->elementTypeInfo(0, 0); 
-        }
     }
 
-    // reset xsi:type ComplexTypeInfo
     if (fGrammarType == Grammar::SchemaGrammarType) {        
-        ((SchemaElementDecl*)topElem->fThisElement)->reset();
         if (!isRoot)
         {
-            ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
-                setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
             // update error information
             fErrorStack->push(fErrorStack->pop() || fPSVIElemContext.fErrorOccurred);
         }
@@ -2605,27 +2556,16 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
             if(fGrammarType == Grammar::SchemaGrammarType)
             {
-                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);\
                 fPSVIElemContext.fErrorOccurred = true;
             }
         }
     }
     else
     {
-        if(!laxBeforeElementFound && fGrammarType == Grammar::SchemaGrammarType) {
-            if (fValidate) {
-                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::VALID);
-            }
-        }
-
         // If its not marked declared and validating, then emit an error
         if (!elemDecl->isDeclared()) {
             if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
                 if(fGrammarType == Grammar::SchemaGrammarType) {
-                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-                    ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
                     fPSVIElemContext.fErrorOccurred = true;
                 }
             }
@@ -2643,17 +2583,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 );
             }
         }
-       
-        if (fGrammarType == Grammar::SchemaGrammarType) {
-            ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
-            ((SchemaElementDecl*)elemDecl)->setXsiSimpleTypeInfo(0);
-        }
     }
-
-    if(errorBeforeElementFound && fGrammarType == Grammar::SchemaGrammarType) {
-        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-    }
-
 
     //  Now we can update the element stack to set the current element
     //  decl. We expanded the stack above, but couldn't store the element
@@ -2731,11 +2661,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                             XMLValid::GrammarNotFound
                             , prefixBuf.getRawBuffer()
                         );                        
-                        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);                                    
-                    }
-                    else if(errorCondition) {                        
-                        ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::NONE);
-                        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::UNKNOWN);
                     }
                 }
             }
@@ -2766,11 +2691,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             //  XMLValidator::checkRootElement
             if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
-
-            if(fGrammarType == Grammar::SchemaGrammarType)
-            {
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-            }
         }
     }
     else if (parentValidation)
@@ -2901,7 +2821,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 if (((SchemaValidator*) fValidator)->getErrorOccurred())
                 {
                     fPSVIElemContext.fErrorOccurred = true;
-                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 }
                 else 
                 {
@@ -2931,9 +2850,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
         if (fGrammarType == Grammar::SchemaGrammarType)
         {
-            if(!isRoot)
-                ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(elemDecl, fGrammarType);
-
             if (fPSVIHandler)
             {
                 endElementPSVI((SchemaElementDecl*)elemDecl, psviMemberType);
@@ -2950,56 +2866,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 , isRoot
                 , fPrefixBuf.getRawBuffer()
             );
-            // pass information about type info:
-            if(fGrammarType == Grammar::SchemaGrammarType)
-            {
-                const XMLCh *typeName = SchemaSymbols::fgATTVAL_ANYTYPE;
-                const XMLCh *typeURI = SchemaSymbols::fgURI_SCHEMAFORSCHEMA; 
-                if(!fPSVIElemContext.fErrorOccurred)
-                {
-                    if(fPSVIElemContext.fCurrentTypeInfo != 0)
-                    {
-                        if(fPSVIElemContext.fCurrentTypeInfo->getAnonymous())
-                            typeName = XMLUni::fgZeroLenString;
-                        else 
-                            typeName = fPSVIElemContext.fCurrentTypeInfo->getTypeLocalName();
-                        typeURI = fPSVIElemContext.fCurrentTypeInfo->getTypeUri();
-                    } 
-                    else
-                    {
-                        DatatypeValidator *actualDV = (psviMemberType)?psviMemberType:fPSVIElemContext.fCurrentDV;
-                        if(actualDV)
-                        {
-                            if(actualDV->getAnonymous())
-                                typeName = XMLUni::fgZeroLenString;
-                            else
-                                typeName = actualDV->getTypeLocalName();
-                            typeURI = actualDV->getTypeUri();
-                        }
-                    }
-                }
-                else 
-                {
-                    // idiosyncratically, if there's an
-                    // error but this element was simpleType-validated,
-                    // the tests demand anySimpleType be returned
-                    if(fPSVIElemContext.fCurrentDV)
-                        typeName = SchemaSymbols::fgDT_ANYSIMPLETYPE;
-                }
-                fDocHandler->elementTypeInfo(typeName, typeURI);
-            }
-            else 
-            {
-                fDocHandler->elementTypeInfo(0, 0); 
-            }
-        }
-
-        // reset xsi:type ComplexTypeInfo
-        if (fGrammarType == Grammar::SchemaGrammarType) {           
-            ((SchemaElementDecl*)elemDecl)->reset();
-            if (!isRoot)
-                ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
-                    setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
         }
 
         // If the elem stack is empty, then it was an empty root

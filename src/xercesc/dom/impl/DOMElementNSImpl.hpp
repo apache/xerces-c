@@ -35,6 +35,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class DOMTypeInfoImpl;
 
 class CDOM_EXPORT DOMElementNSImpl: public DOMElementImpl {
 protected:
@@ -43,6 +44,8 @@ protected:
     const XMLCh * fLocalName;        //local part of qualified name
     const XMLCh * fPrefix;
 
+private:
+    const DOMTypeInfoImpl *fSchemaType;
 
 public:
     DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *name);
@@ -51,6 +54,8 @@ public:
     DOMElementNSImpl(const DOMElementNSImpl &other, bool deep=false);
 
     virtual DOMNode * cloneNode(bool deep) const;
+    virtual DOMNode * getInterface(const XMLCh* feature);
+
     //Introduced in DOM Level 2
     virtual const XMLCh *getNamespaceURI() const;
     virtual const XMLCh *getPrefix() const;
@@ -60,10 +65,14 @@ public:
 
     //Introduced in DOM Level 3
     virtual const XMLCh *getBaseURI() const;
+    virtual const DOMTypeInfo * getTypeInfo() const;
 
    // helper function for DOM Level 3 renameNode
    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
    void setName(const XMLCh* namespaceURI, const XMLCh* name);
+
+    //helper function for DOM Level 3 TypeInfo
+    virtual void setTypeInfo(const DOMTypeInfoImpl* typeInfo);
 
 private:
     // -----------------------------------------------------------------------

@@ -612,6 +612,15 @@ const XMLCh XMLUni::fgXMLURIName[] =
     ,   chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e, chNull
 };
 
+const XMLCh XMLUni::fgInfosetURIName[] = 
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w
+    ,   chDigit_3, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_T, chLatin_R, chForwardSlash, chLatin_R, chLatin_E, chLatin_C
+    ,   chDash, chLatin_x, chLatin_m, chLatin_l, chNull
+};
+
 const XMLCh XMLUni::fgYesString[] =
 {
         chLatin_y, chLatin_e, chLatin_s, chNull
@@ -1072,6 +1081,18 @@ const XMLCh XMLUni::fgXercesStandardUriConformant[] =
     ,   chLatin_m, chLatin_a, chLatin_n, chLatin_t, chNull
 };
 
+//Xerces: http://apache.org/xml/features/dom-has-psvi-info
+const XMLCh XMLUni::fgXercesDOMHasPSVIInfo[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_d, chLatin_o, chLatin_m, chDash, chLatin_h
+    ,   chLatin_a, chLatin_s, chDash, chLatin_p, chLatin_s, chLatin_v, chLatin_i
+    ,   chDash, chLatin_i, chLatin_n, chLatin_f, chLatin_o, chNull
+};
 
 //Property
 //Xerces: http://apache.org/xml/properties/schema/external-schemaLocation
@@ -1382,6 +1403,13 @@ const XMLCh XMLUni::fgDOMXMLDeclaration[] =
     chLatin_x, chLatin_m, chLatin_l, chDash, chLatin_d, chLatin_e, chLatin_c,
     chLatin_l, chLatin_a, chLatin_r, chLatin_a, chLatin_t, chLatin_i, chLatin_o,
     chLatin_n, chNull 
+};
+
+const XMLCh XMLUni::fgXercescInterfacePSVITypeInfo[] =
+{
+    chLatin_D, chLatin_O, chLatin_M, chLatin_P, chLatin_S, chLatin_V, chLatin_I,
+    chLatin_T, chLatin_y, chLatin_p, chLatin_e, chLatin_I, chLatin_n, chLatin_f,
+    chLatin_o, chNull
 };
 
 // en_US

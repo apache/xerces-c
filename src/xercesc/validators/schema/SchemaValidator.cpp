@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.56  2004/09/20 15:00:50  amassari
+ * Added a setCreateSchemaInfo method to the DOM parsers, to store PSVI informations in element and attribute nodes
+ *
  * Revision 1.55  2004/09/08 13:56:57  peiyongz
  * Apache License Version 2.0
  *
@@ -348,7 +351,6 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     //
     // the top of the type stack always knows best...
     ComplexTypeInfo* currType = fTypeStack->pop();
-    ((SchemaElementDecl*) elemDecl)->setXsiComplexTypeInfo(currType);
 
     const SchemaElementDecl::ModelTypes modelType = (currType)
             ? (SchemaElementDecl::ModelTypes)(currType->getContentType())
@@ -377,7 +379,6 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         if (fNil) {
             if (childCount > 0 || !XMLString::equals(fDatatypeBuffer.getRawBuffer(), XMLUni::fgZeroLenString)) {
                 emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 fErrorOccurred = true;
             }
         }
@@ -397,7 +398,6 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             }
 
             if(result != -1) {
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 fErrorOccurred = true;
             }
 
@@ -510,7 +510,6 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     }
                     catch (...)
                     {
-                        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                         emitError(XMLValid::GenericError);
                         throw;
                     }
@@ -533,10 +532,6 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     fNil = false;
     fTrailing=false;
 
-    if(fErrorOccurred) {
-        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-    }
-       
     // Went ok, so return success
     return -1;
 }
@@ -558,8 +553,6 @@ void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)
         , attName->getPrefix()
         , schemaAttDef->getValue()
         , schemaAttDef->getType()
-        , getMostRecentAttrValidator()
-        , true
     );
 }
 
@@ -620,8 +613,6 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     if (!attrValue[0] && type != XMLAttDef::Simple)
     {
         emitError(XMLValid::InvalidEmptyAttValue, attDef->getFullName());
-        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-        ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
         // accords with original DOMTypeInfo implementation, but this does not feel right.
         fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
         fErrorOccurred = true;
@@ -677,8 +668,6 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         }
         catch (...) {
             emitError(XMLValid::GenericError);
-            ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-            ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
             fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
             fErrorOccurred = true;
             throw;
@@ -747,14 +736,8 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     }
 
     if(fErrorOccurred) {
-        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-        ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
         fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
     }
-    else if(attDefDV && attDefDV->getType() == DatatypeValidator::Union) 
-        // in a thread-safe world, this is entirely bogus;REVISIT and remove 
-        // once the appropriate methods have been removed!
-        ((SchemaAttDef *)attDef)->setMembertypeValidator(((UnionDatatypeValidator *)attDefDV)->getMemberTypeValidator());
     fTrailing = false;
 
 
@@ -796,8 +779,6 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         fErrorOccurred = true;
                     }
                     else {
-                        ((SchemaElementDecl*)elemDef)->setXsiSimpleTypeInfo(xsiTypeDV);
-
                         if (elemTypeInfo || (fCurrentDatatypeValidator  
                                 && !fCurrentDatatypeValidator->isSubstitutableBy(xsiTypeDV))) {
                             // the type is not derived from ancestor
@@ -886,7 +867,6 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
                             if (!fErrorOccurred)
                             {
-                                ((SchemaElementDecl*)elemDef)->setXsiComplexTypeInfo(typeInfo);
                                 fTypeStack->pop();
                                 fTypeStack->push(typeInfo);
                                 fCurrentDatatypeValidator = typeInfo->getDatatypeValidator();
@@ -903,7 +883,6 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                             fErrorOccurred = true;
                         }
                         else {
-                            ((SchemaElementDecl*)elemDef)->setXsiSimpleTypeInfo(xsiTypeDV);
                             if (fCurrentDatatypeValidator && !fCurrentDatatypeValidator->isSubstitutableBy(xsiTypeDV)) {
                                 // the type is not derived from ancestor
                                 emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
@@ -964,9 +943,6 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     fDatatypeBuffer.reset();
     fTrailing = false;
     fSeenId = false;
-
-    if(fErrorOccurred)
-        ((SchemaElementDecl *)(elemDef))->setValidity(PSVIDefs::INVALID);    
 }
 
 void SchemaValidator::preContentValidation(bool,

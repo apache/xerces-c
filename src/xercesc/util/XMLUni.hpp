@@ -151,6 +151,7 @@ public :
     static const XMLCh fgXMLNSURIName[];
     static const XMLCh fgXMLErrDomain[];
     static const XMLCh fgXMLURIName[];
+    static const XMLCh fgInfosetURIName[];
     static const XMLCh fgYesString[];
     static const XMLCh fgZeroLenString[];
     static const XMLCh fgDTDEntityString[];
@@ -218,6 +219,7 @@ public :
     static const XMLCh fgXercesParserUseDocumentFromImplementation[];
     static const XMLCh fgXercesCalculateSrcOfs[];
     static const XMLCh fgXercesStandardUriConformant[];
+    static const XMLCh fgXercesDOMHasPSVIInfo[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];
@@ -253,6 +255,8 @@ public :
     static const XMLCh fgDOMWRTBOM[];
     static const XMLCh fgDOMXMLDeclaration[];
 
+    // Private interface names
+    static const XMLCh fgXercescInterfacePSVITypeInfo[];
 
     // Locale
     static const char  fgXercescDefaultLocale[];

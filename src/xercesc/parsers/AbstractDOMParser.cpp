@@ -31,22 +31,26 @@
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 #include <xercesc/internal/XMLScannerResolver.hpp>
 #include <xercesc/internal/ElemStack.hpp>
-//#include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
+#include <xercesc/framework/psvi/PSVIElement.hpp>
+#include <xercesc/framework/psvi/PSVIAttribute.hpp>
+#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
+#include <xercesc/framework/psvi/XSElementDeclaration.hpp>
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/impl/DOMAttrImpl.hpp>
+#include <xercesc/dom/impl/DOMTypeInfoImpl.hpp>
 #include <xercesc/dom/DOMCDATASection.hpp>
 #include <xercesc/dom/DOMComment.hpp>
 #include <xercesc/dom/impl/DOMTextImpl.hpp>
 #include <xercesc/dom/impl/DOMDocumentImpl.hpp>
 #include <xercesc/dom/impl/DOMDocumentTypeImpl.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/impl/DOMElementImpl.hpp>
+#include <xercesc/dom/impl/DOMElementNSImpl.hpp>
 #include <xercesc/dom/impl/DOMEntityImpl.hpp>
 #include <xercesc/dom/impl/DOMEntityReferenceImpl.hpp>
 #include <xercesc/dom/impl/DOMNotationImpl.hpp>
@@ -75,6 +79,7 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
 , fParseInProgress(false)
 , fCreateCommentNodes(true)
 , fDocumentAdoptedByUser(false)
+, fCreateSchemaInfo(false)
 , fScanner(0)
 , fImplementationFeatures(0)
 , fCurrentParent(0)
@@ -305,9 +310,9 @@ void AbstractDOMParser::setPSVIHandler(PSVIHandler* const handler)
 {
     fPSVIHandler = handler;
     if (fPSVIHandler) {
-        fScanner->setPSVIHandler(fPSVIHandler);        
+        fScanner->setPSVIHandler(this);
     }
-    else {
+    else if(!fCreateSchemaInfo) {
         fScanner->setPSVIHandler(0);        
     }
 }
@@ -413,6 +418,15 @@ void AbstractDOMParser::useScanner(const XMLCh* const scannerName)
         delete fScanner;
         fScanner = tempScanner;
     }
+}
+
+void AbstractDOMParser::setCreateSchemaInfo(const bool create)
+{
+    fCreateSchemaInfo = create;
+    if(fCreateSchemaInfo)
+        fScanner->setPSVIHandler(this);
+    else if(!fPSVIHandler)
+        fScanner->setPSVIHandler(0);
 }
 
 // ---------------------------------------------------------------------------
@@ -544,6 +558,106 @@ void AbstractDOMParser::parseReset(XMLPScanToken& token)
 }
 
 
+// ---------------------------------------------------------------------------
+//  AbstractDOMParser: Implementation of PSVIHandler interface
+// ---------------------------------------------------------------------------
+void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localName 
+                                        , const XMLCh* const            uri
+                                        ,       PSVIElement *           elementInfo)
+{
+    // associate the info now; if the user wants, she can override what we did
+    if(fCreateSchemaInfo)
+    {
+        DOMTypeInfoImpl* typeInfo=new (getDocument()) DOMTypeInfoImpl();
+        typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validity, elementInfo->getValidity());
+        typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted, elementInfo->getValidationAttempted());
+        if(elementInfo->getTypeDefinition())
+        {
+            typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, elementInfo->getTypeDefinition()->getTypeCategory());
+            typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous, elementInfo->getTypeDefinition()->getAnonymous());
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace, 
+                fDocument->getPooledString(elementInfo->getTypeDefinition()->getNamespace()));
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name, 
+                fDocument->getPooledString(elementInfo->getTypeDefinition()->getName()));
+        }
+        else if(elementInfo->getValidity()==PSVIItem::VALIDITY_VALID)
+        {
+            // if we are valid but we don't have a type validator, we are xs:anyType
+            typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, XSTypeDefinition::COMPLEX_TYPE);
+            typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous, false);
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name, SchemaSymbols::fgATTVAL_ANYTYPE);
+        }
+        if(elementInfo->getMemberTypeDefinition())
+        {
+            typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Anonymous, elementInfo->getMemberTypeDefinition()->getAnonymous());
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace, 
+                fDocument->getPooledString(elementInfo->getMemberTypeDefinition()->getNamespace()));
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name, 
+                fDocument->getPooledString(elementInfo->getMemberTypeDefinition()->getName()));
+        }
+        if(elementInfo->getElementDeclaration())
+            typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Nil, elementInfo->getElementDeclaration()->getNillable());
+        typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Default, fDocument->getPooledString(elementInfo->getSchemaDefault()));
+        typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Normalized_Value, fDocument->getPooledString(elementInfo->getSchemaNormalizedValue()));
+        typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified, true);
+        ((DOMElementNSImpl*)fCurrentParent)->setTypeInfo(typeInfo);
+    }
+    if(fPSVIHandler)
+        fPSVIHandler->handleElementPSVI(localName, uri, elementInfo);
+}
+
+void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            localName 
+                                            , const XMLCh* const            uri
+                                            ,       PSVIAttributeList *     psviAttributes)
+{
+    if(fCreateSchemaInfo)
+    {
+        for (unsigned int index=0; index < psviAttributes->getLength(); index++) {
+            XERCES_CPP_NAMESPACE_QUALIFIER PSVIAttribute *attrInfo=psviAttributes->getAttributePSVIAtIndex(index);
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* pAttrNode=fCurrentNode->getAttributes()->getNamedItemNS(psviAttributes->getAttributeNamespaceAtIndex(index),
+                                                                                                            psviAttributes->getAttributeNameAtIndex(index));
+            if(pAttrNode!=NULL)
+            {
+                DOMTypeInfoImpl* typeInfo=new (getDocument()) DOMTypeInfoImpl();
+                typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validity, attrInfo->getValidity());
+                typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted, attrInfo->getValidationAttempted());
+                if(attrInfo->getTypeDefinition())
+                {
+                    typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, XSTypeDefinition::SIMPLE_TYPE);
+                    typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous, attrInfo->getTypeDefinition()->getAnonymous());
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace, 
+                        fDocument->getPooledString(attrInfo->getTypeDefinition()->getNamespace()));
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name, 
+                        fDocument->getPooledString(attrInfo->getTypeDefinition()->getName()));
+                }
+                else if(attrInfo->getValidity()==PSVIItem::VALIDITY_VALID)
+                {
+                    // if we are valid but we don't have a type validator, we are xs:anySimpleType
+                    typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, XSTypeDefinition::SIMPLE_TYPE);
+                    typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous, false);
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name, SchemaSymbols::fgDT_ANYSIMPLETYPE);
+                }
+                if(attrInfo->getMemberTypeDefinition())
+                {
+                    typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Anonymous, attrInfo->getMemberTypeDefinition()->getAnonymous());
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace, 
+                        fDocument->getPooledString(attrInfo->getMemberTypeDefinition()->getNamespace()));
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name, 
+                        fDocument->getPooledString(attrInfo->getMemberTypeDefinition()->getName()));
+                }
+                typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Default, fDocument->getPooledString(attrInfo->getSchemaDefault()));
+                typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Normalized_Value, fDocument->getPooledString(attrInfo->getSchemaNormalizedValue()));
+                typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified, true);
+                ((DOMAttrImpl*)pAttrNode)->setTypeInfo(typeInfo);
+            }
+        }
+    }
+    // associate the info now; if the user wants, she can override what we did
+    if(fPSVIHandler)
+        fPSVIHandler->handleAttributesPSVI(localName, uri, psviAttributes);
+}
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Implementation of XMLDocumentHandler interface
@@ -649,12 +763,6 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
 void AbstractDOMParser::elementTypeInfo( const   XMLCh * const  typeName
                            , const XMLCh *const                 typeURI)
 {
-    // very tightly coupled to endElement().  The state of the
-    // object must not have changed between these calls!
-
-    //validation is performed after the startElement event so we have to associate the info here
-    ((DOMElementImpl *)(fCurrentNode))->setTypeInfo(typeName, typeURI);
-
 }
 
 
@@ -737,6 +845,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 {
     DOMElement     *elem;
     DOMElementImpl *elemImpl;
+    const XMLCh* namespaceURI = 0;
 
     //get the list for use in the loop
     XMLAttDefList* defAttrs = 0;
@@ -745,8 +854,6 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
     }
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
-
-        const XMLCh* namespaceURI = 0;
 
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
 
@@ -770,9 +877,19 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
         }
 
         elemImpl = (DOMElementImpl *) elem;
+    }
+    else {    //DOM Level 1
+        elem = fDocument->createElement(elemDecl.getFullName());
+        elemImpl = (DOMElementImpl *) elem;
+    }
+    for (unsigned int index = 0; index < attrCount; ++index) {
+        const XMLAttr* oneAttrib = attrList.elementAt(index);
+        DOMAttrImpl *attr = 0;
+        DOMNode* remAttr = 0;
 
-        for (unsigned int index = 0; index < attrCount; ++index) {
-            const XMLAttr* oneAttrib = attrList.elementAt(index);
+        //  revisit.  Optimize to init the named node map to the
+        //            right size up front.
+        if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;            
             if (XMLString::equals(oneAttrib -> getName(), XMLUni::fgXMLNSString)) {   //for xmlns=...
@@ -781,61 +898,47 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                 namespaceURI = fScanner->getURIText(attrURIId);   //get namespaceURI
             }
-            //  revisit.  Optimize to init the named node map to the
-            //            right size up front.
-            DOMAttrImpl *attr = (DOMAttrImpl *)
-                fDocument->createAttributeNS(namespaceURI, oneAttrib->getQName());
-            attr->setValue(oneAttrib -> getValue());
-            DOMNode* remAttr = elemImpl->setAttributeNodeNS(attr);
-            if (remAttr)
-                remAttr->release();
-
-            //DOMAttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
-            //    oneAttrib -> getValue());
-
-            // Attributes of type ID.  If this is one, add it to the hashtable of IDs
-            //   that is constructed for use by GetElementByID().
-            //
-            if (oneAttrib->getType()==XMLAttDef::ID)
-            {
-                if (fDocument->fNodeIDMap == 0)
-                    fDocument->fNodeIDMap = new (fDocument) DOMNodeIDMap(500, fDocument);
-                fDocument->fNodeIDMap->add(attr);
-                attr->fNode.isIdAttr(true);
-            }
-
-            attr->setSpecified(oneAttrib->getSpecified());
-
-            attr->setTypeInfo(oneAttrib->getValidatingTypeName(), oneAttrib->getValidatingTypeURI());
+            attr = (DOMAttrImpl *)fDocument->createAttributeNS(namespaceURI, oneAttrib->getQName());
+            remAttr = elemImpl->setAttributeNodeNS(attr);
         }
-    }
-    else {    //DOM Level 1
-        elem = fDocument->createElement(elemDecl.getFullName());
-        elemImpl = (DOMElementImpl *) elem;
-			for (unsigned int index = 0; index < attrCount; ++index) {
-				const XMLAttr* oneAttrib = attrList.elementAt(index);
-            //AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-            DOMAttrImpl *attr = (DOMAttrImpl *)
-                fDocument->createAttribute(oneAttrib->getName());
-            attr->setValue(oneAttrib -> getValue());
-            DOMNode* rem = elemImpl->setAttributeNode(attr);
-            if (rem)
-                rem->release();
-				attr->setSpecified(oneAttrib->getSpecified());
+        else {
+            attr = (DOMAttrImpl *)fDocument->createAttribute(oneAttrib->getName());
+            remAttr = elemImpl->setAttributeNode(attr);
+        }
+        attr->setValue(oneAttrib -> getValue());
+        if (remAttr)
+            remAttr->release();
 
-				// Attributes of type ID.  If this is one, add it to the hashtable of IDs
-				//   that is constructed for use by GetElementByID().
-				//
-				if (oneAttrib->getType()==XMLAttDef::ID)
-				{
-                if (fDocument->fNodeIDMap == 0)
-                    fDocument->fNodeIDMap = new (fDocument) DOMNodeIDMap(500, fDocument);
-                fDocument->fNodeIDMap->add(attr);
-                attr->fNode.isIdAttr(true);
+        // Attributes of type ID.  If this is one, add it to the hashtable of IDs
+        //   that is constructed for use by GetElementByID().
+        //
+        if (oneAttrib->getType()==XMLAttDef::ID)
+        {
+            if (fDocument->fNodeIDMap == 0)
+                fDocument->fNodeIDMap = new (fDocument) DOMNodeIDMap(500, fDocument);
+            fDocument->fNodeIDMap->add(attr);
+            attr->fNode.isIdAttr(true);
+        }
+
+        attr->setSpecified(oneAttrib->getSpecified());
+
+        // store DTD validation information
+        if(fCreateSchemaInfo)
+        {
+            switch(oneAttrib->getType())
+            {
+            case XMLAttDef::CData:          attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedCDATAAttribute); break;
+            case XMLAttDef::ID:             attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDAttribute); break;
+            case XMLAttDef::IDRef:          attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFAttribute); break;
+            case XMLAttDef::IDRefs:         attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFSAttribute); break;
+            case XMLAttDef::Entity:         attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITYAttribute); break;
+            case XMLAttDef::Entities:       attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITIESAttribute); break;
+            case XMLAttDef::NmToken:        attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENAttribute); break;
+            case XMLAttDef::NmTokens:       attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENSAttribute); break;
+            case XMLAttDef::Notation:       attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNOTATIONAttribute); break;
+            case XMLAttDef::Enumeration:    attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENUMERATIONAttribute); break;
+            default:                        attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdNotValidatedAttribute); break;
             }
-
-            attr->setTypeInfo(oneAttrib->getValidatingTypeName(), oneAttrib->getValidatingTypeURI());
-
         }
     }
 
@@ -874,20 +977,12 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                         namespaceURI = fScanner->getURIText(uriId);
                     }
 
-                    insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(
-                                                                              namespaceURI,     // NameSpaceURI
+                    insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(namespaceURI,     // NameSpaceURI
                                                                               qualifiedName);   // qualified name
 
                     DOMAttr* remAttr = elemImpl->setDefaultAttributeNodeNS(insertAttr);
                     if (remAttr)
                         remAttr->release();
-
-                    if (attr->getValue() != 0)
-                    {
-                        insertAttr->setValue(attr->getValue());
-                        insertAttr->setSpecified(false);
-                    }
-
                 }
                 else
                 {
@@ -897,18 +992,32 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                     DOMNode* remAttr = elemImpl->setDefaultAttributeNode(insertAttr);
                     if (remAttr)
                         remAttr->release();
-
-                    //need to do this before the get as otherwise we overwrite any value in the attr
-                    if (attr->getValue() != 0)
-                    {
-                        insertAttr->setValue(attr->getValue());
-                        insertAttr->setSpecified(false);
-                    }
+                }
+                //need to do this before the get as otherwise we overwrite any value in the attr
+                if (attr->getValue() != 0)
+                {
+                    insertAttr->setValue(attr->getValue());
+                    insertAttr->setSpecified(false);
                 }
 
-                // REVISIT:  this won't work in multithreaded code...
-                insertAttr->setTypeInfo(attr->getDOMTypeInfoName(), attr->getDOMTypeInfoUri());
-
+                // store DTD validation information
+                if(fCreateSchemaInfo)
+                {
+                    switch(attr->getType())
+                    {
+                    case XMLAttDef::CData:          insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedCDATAAttribute); break;
+                    case XMLAttDef::ID:             insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDAttribute); break;
+                    case XMLAttDef::IDRef:          insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFAttribute); break;
+                    case XMLAttDef::IDRefs:         insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFSAttribute); break;
+                    case XMLAttDef::Entity:         insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITYAttribute); break;
+                    case XMLAttDef::Entities:       insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITIESAttribute); break;
+                    case XMLAttDef::NmToken:        insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENAttribute); break;
+                    case XMLAttDef::NmTokens:       insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENSAttribute); break;
+                    case XMLAttDef::Notation:       insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNOTATIONAttribute); break;
+                    case XMLAttDef::Enumeration:    insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENUMERATIONAttribute); break;
+                    default:                        insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdNotValidatedAttribute); break;
+                    }
+                }
             }
 
             insertAttr = 0;

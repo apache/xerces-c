@@ -36,13 +36,13 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMAttr.hpp>
-#include <xercesc/dom/DOMTypeInfo.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include "DOMNodeIDMap.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMElementImpl;
+class DOMTypeInfoImpl;
 
 class CDOM_EXPORT DOMAttrImpl: public DOMAttr {
 
@@ -52,7 +52,7 @@ public:
     const XMLCh       *fName;
 
 private:
-    const DOMTypeInfo *fSchemaType;
+    const DOMTypeInfoImpl *fSchemaType;
 
 public:
     DOMAttrImpl(DOMDocument *ownerDocument, const XMLCh *aName);
@@ -79,13 +79,14 @@ public:
     virtual const DOMTypeInfo* getTypeInfo() const;
 
     //helper function for DOM Level 3 TypeInfo
-    virtual void setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI);
+    virtual void setTypeInfo(const DOMTypeInfoImpl* typeInfo);
 
    // helper method that sets this attr to an idnode and places it into the document map
    virtual void addAttrToIDNodeMap();
 
    // helper to remove this attr from from the id map if it is in there
    virtual void removeAttrFromIDNodeMap();
+
 private:
     void getTextValue(DOMNode* node, XMLBuffer& buf) const;
 

@@ -282,18 +282,24 @@ DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
 const DOMTypeInfo *DOMAttrImpl::getTypeInfo() const
 {
     if(!fSchemaType)
-        ((DOMAttrImpl *)(this))->fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(0, 0, (DOMDocumentImpl *)getOwnerDocument());
+        return &DOMTypeInfoImpl::g_DtdNotValidatedAttribute;
 
     return fSchemaType;
 }
 
 
-void DOMAttrImpl::setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI) 
+void DOMAttrImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo) 
 {
-    if(typeName || typeURI)
-        fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(typeName, typeURI, (DOMDocumentImpl *)getOwnerDocument());
+    fSchemaType = typeInfo;
 }
 
+
+DOMNode * DOMAttrImpl::getInterface(const XMLCh* feature)
+{
+    if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
+        return (DOMNode*)(DOMPSVITypeInfo*)fSchemaType;
+    return fNode.getInterface(feature); 
+}
 
            DOMNode*         DOMAttrImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); }
            DOMNamedNodeMap* DOMAttrImpl::getAttributes() const                   {return fNode.getAttributes (); }
@@ -330,7 +336,6 @@ void DOMAttrImpl::setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI)
            const XMLCh*     DOMAttrImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
            bool             DOMAttrImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMAttrImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
-           DOMNode*         DOMAttrImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
 
 XERCES_CPP_NAMESPACE_END
 
