@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/05/05 01:44:29  rahulj
+ * Fixed defect in progressive parsing 'parseNext()' reported by Tim
+ * Johnston <tim@gntsoftware.com>. Fix provided by Dean Roddey.
+ *
  * Revision 1.15  2000/04/19 00:04:33  roddey
  * Don't allow spaces before PI target. Bug #42
  *
@@ -640,13 +644,35 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
     if (!isLegalToken(token))
         ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
 
+    // Find the next token and remember the reader id
+    unsigned int orgReader;
+    XMLTokens curToken;
+
+    //
+    //  We have to handle any end of entity exceptions that happen here.
+    //  We could be at the end of X nested entities, each of which will
+    //  generate an end of entity exception as we try to move forward.
+    //
+    
+    while (true)
+    {
+        try
+        {
+            curToken = senseNextToken(orgReader);
+            break;
+        }
+        
+        catch(const EndOfEntityException& toCatch)
+        {
+            // Send an end of entity reference event
+            if (fDocHandler)
+                fDocHandler->endEntityReference(toCatch.getEntity());
+        }
+    }
+    
     bool retVal = true;
     try
     {
-        // Find the next token and remember the reader id
-        unsigned int orgReader;
-        const XMLTokens curToken = senseNextToken(orgReader);
-
         if (curToken == Token_CharData)
         {
             scanCharData(fCDataBuf);
