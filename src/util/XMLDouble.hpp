@@ -56,62 +56,64 @@
 
 /*
  * $Id$
+ * $Log$
+ * Revision 1.1  2001/07/24 13:58:11  peiyongz
+ * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
+ *
  */
 
-#ifndef XML_BIGDECIMAL_HPP
-#define XML_BIGDECIMAL_HPP
+#ifndef XML_DOUBLE_HPP
+#define XML_DOUBLE_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/XMLBigInteger.hpp>
+#include <util/XMLBigDecimal.hpp>
 
-class XMLUTIL_EXPORT XMLBigDecimal
+/***
+ * 3.2.5.1 Lexical representation
+ *
+ *   double values have a lexical representation consisting of a mantissa followed, 
+ *   optionally, by the character "E" or "e", followed by an exponent. 
+ *
+ *   The exponent ·must· be an integer. 
+ *   The mantissa must be a decimal number. 
+ *   The representations for exponent and mantissa must follow the lexical rules 
+ *   for integer and decimal. 
+ *
+ *   If the "E" or "e" and the following exponent are omitted, 
+ *   an exponent value of 0 is assumed. 
+***/
+
+class XMLUTIL_EXPORT XMLDouble
 {
 public:
 
 	/**
-	 * Constructs a newly allocated <code>XMLBigDecimal</code> object that
+	 * Constructs a newly allocated <code>XMLDouble</code> object that
 	 * represents the value represented by the string.
 	 *
 	 * @param      the <code>String</code> to be converted to an
-	 *                 <code>XMLBigDecimal</code>.
+	 *                 <code>XMLDouble</code>.
 	 * @exception  NumberFormatException  if the <code>String</code> does not
-	 *               contain a parsable XMLBigDecimal.
+	 *               contain a parsable XMLDouble.
 	 */
 
-    XMLBigDecimal(const XMLCh* const strValue);
+    enum LiteralType
+    {
+        NegINF,
+        NegZero,
+        PosZero,
+        PosINF,
+        NaN,
+        SpecialTypeNum = 5,
+        Normal,
+    };
 
-    ~XMLBigDecimal();
+    XMLDouble(const XMLCh* const strValue);
 
-    XMLBigDecimal(const XMLBigDecimal& toCopy);
+    ~XMLDouble();
 
-    XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent);
-
-    static void           parseBigDecimal(const XMLCh* const strValue
-                                        , XMLCh* const       retValue
-                                        , unsigned int&      scaleValue);
-
-    static int            compareValues(const XMLBigDecimal* const lValue
-                                      , const XMLBigDecimal* const rValue);
-
-    static void           matchScale(XMLBigDecimal* const lValue
-                                   , XMLBigDecimal* const rValue);
-
-	/**
-	 * Returns the sign of this number
-     *
-     * -1   negative
-     *  0   zero
-     *  1   positive
-	 *
-	 */
-    int                   getSign() const;
-
-    XMLBigInteger*        getValue() const;
-
-    unsigned int          getScale() const;
-
-    unsigned int          getTotalDigit() const;
-
+    XMLDouble(const XMLDouble& toCopy);
+   
     double                doubleValue() const;
 
 	/**
@@ -125,63 +127,71 @@ public:
 	/**
 	 * Compares this object to the specified object.
 	 * The result is <code>true</code> if and only if the argument is not
-	 * <code>null</code> and is an <code>XMLBigDecimal</code> object that contains
+	 * <code>null</code> and is an <code>XMLDouble</code> object that contains
 	 * the same <code>int</code> value as this object.
 	 *
 	 * @param   obj   the object to compare with.
 	 * @return  <code>true</code> if the objects are the same;
 	 *          <code>false</code> otherwise.
 	 */
-	bool operator==(const XMLBigDecimal& toCompare) const;
+	bool operator==(const XMLDouble& toCompare) const;
+
+    static int            compareValues(const XMLDouble* const lValue
+                                      , const XMLDouble* const rValue);
+
+    static const XMLCh fgNegINFString[];
+    static const XMLCh fgNegZeroString[];
+    static const XMLCh fgPosZeroString[];
+    static const XMLCh fgPosINFString[];
+    static const XMLCh fgNaNString[];
 
 private:
 
-    void         reScale(unsigned int newValue);
+    bool                  isSpecialValue() const;
+
+    static int            compareSpecial(const XMLDouble* const specialValue
+                                       , const XMLDouble* const normalValue);
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fIntVal
-    //     the XMLBigInteger holding the value of this BigDecimal.
+    //  fMantissa
+    //     the XMLBigDecimal holding the value of mantissa.
     //
-	//  fScale
-    //     the number of digits to the right of the decimal point
+    //  fExponent
+    //     the XMLBigInteger holding the value of exponent.
     //
     // -----------------------------------------------------------------------
 
-	XMLBigInteger*   fIntVal;
-	unsigned int     fScale;
+    XMLBigDecimal*          fMantissa;
+	XMLBigInteger*          fExponent;   
+    LiteralType             fType;
+    double                  fValue;
 
 };
 
-inline XMLBigDecimal::~XMLBigDecimal()
+inline XMLDouble::~XMLDouble()
 {
-    delete fIntVal;
+    if (fMantissa)
+        delete fMantissa;
+
+    if (fExponent)
+        delete fExponent;
 }
 
-inline int XMLBigDecimal::getSign() const
+inline double XMLDouble::doubleValue() const
 {
-    return fIntVal->getSign();
+    return fValue;
 }
 
-inline XMLBigInteger* XMLBigDecimal::getValue() const
+inline bool XMLDouble::operator==(const XMLDouble& toCompare) const
 {
-    return fIntVal;
+    return ( XMLBigInteger::compareValues(this->fExponent, toCompare.fExponent) == 0 ? true : false);
 }
 
-inline unsigned int XMLBigDecimal::getScale() const
+inline bool XMLDouble::isSpecialValue() const
 {
-    return fScale;
-}
-
-inline unsigned int XMLBigDecimal::getTotalDigit() const
-{
-    return fIntVal->getTotalDigit();
-}
-
-inline bool XMLBigDecimal::operator==(const XMLBigDecimal& toCompare) const
-{
-    return ( XMLBigInteger::compareValues(this->fIntVal, toCompare.fIntVal) == 0 ? true : false);
+    return (fType < SpecialTypeNum);
 }
 
 #endif

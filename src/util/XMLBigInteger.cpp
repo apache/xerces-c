@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/07/24 13:58:11  peiyongz
+ * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
+ *
  * Revision 1.5  2001/05/31 17:50:26  knoaman
  * small modification to XMLBigInteger::toString.
  *
@@ -342,4 +345,14 @@ XMLCh*  XMLBigInteger::toString() const
     retBuf[strLen+1] = chNull;
 
     return retBuf;
+}
+
+//
+//
+//
+int XMLBigInteger::intValue() const
+{
+    unsigned int retVal;
+    XMLString::textToBin(fMagnitude, retVal);
+    return retVal * getSign();
 }

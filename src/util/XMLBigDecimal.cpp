@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/07/24 13:58:11  peiyongz
+ * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
+ *
  * Revision 1.5  2001/06/07 20:55:21  tng
  * Fix no newline at the end warning.  By Pei Yong Zhang.
  *
@@ -83,6 +86,7 @@
 #include <util/NumberFormatException.hpp>
 #include <util/TransService.hpp>
 #include <util/Janitor.hpp>
+#include <math.h>
 
 /**
  * Constructs a BigDecimal from a string containing an optional (plus | minus)
@@ -120,6 +124,33 @@ XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy)
 {
     //invoke XMLBigInteger' copy ctor
     fIntVal = new XMLBigInteger(*(toCopy.getValue()));
+}
+
+XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent)
+:fIntVal(0)
+,fScale(toCopy.getScale())
+{
+    //invoke XMLBigInteger' copy ctor
+    fIntVal = new XMLBigInteger(*(toCopy.getValue()));
+ 
+    if ( addExponent > 0 )
+    {
+        if (fScale >= (unsigned int)addExponent)
+        {
+            fScale -= addExponent;
+        }
+        else
+        {
+            fIntVal->multiply(addExponent - fScale);
+            fScale = 0;
+        }
+
+    }
+    else // addExponent <= 0
+    {
+        fScale += abs(addExponent);
+    }
+
 }
 
 /***
@@ -327,4 +358,12 @@ XMLCh*  XMLBigDecimal::toString() const
     // De-allocate the memory allocated by XMLBigInteger
     delete[] tmpBuf;
     return retBuf;
+}
+
+//
+//
+//
+double XMLBigDecimal::doubleValue() const
+{
+    return (double)(fIntVal->intValue()) * (double) pow(10.0, (double) getScale() * -1);
 }

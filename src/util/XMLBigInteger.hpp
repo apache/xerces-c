@@ -124,6 +124,8 @@ public:
 	 */
 	int getSign() const;
 
+    int intValue() const;
+
 private:
 
 	void setSign(int);
