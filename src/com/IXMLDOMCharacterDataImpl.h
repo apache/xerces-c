@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/07/07 00:12:51  jpolast
+ * bug fixes for non-null terminated strings
+ *
  * Revision 1.2  2000/03/30 02:00:13  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -70,6 +73,16 @@ template <class T, const IID* piid, const GUID* plibid = &CComModule::m_libid, W
 WORD wMinor = 0, class tihclass = CComTypeInfoHolder>
 class ATL_NO_VTABLE IXMLDOMCharacterDataImpl: public IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>
 {
+private:
+	XMLCh* DOMStringToXMLCh(DOMString str)
+	{
+		XMLCh* cdata = new XMLCh[str.length()+1];
+		for (unsigned int i=0; i < str.length(); i++)
+			cdata[i] = str.charAt(i);
+		cdata[str.length()] = 0;
+		return cdata;
+	}
+
 public:
 
 	virtual DOM_CharacterData& get_DOM_CharacterData() = 0; 
@@ -88,7 +101,8 @@ STDMETHOD(get_data)(BSTR  *pVal)
 	
 	try
 	{
-		*pVal = SysAllocString(get_DOM_CharacterData().getData().rawBuffer());
+		//*pVal = SysAllocString(get_DOM_CharacterData().getData().rawBuffer());
+		*pVal = SysAllocString(DOMStringToXMLCh(get_DOM_CharacterData().getData()));
 	}
 	catch(...)
 	{
@@ -148,7 +162,8 @@ STDMETHOD(substringData)(long offset, long count, BSTR  *data)
 
 	try
 	{
-		*data = SysAllocString(get_DOM_CharacterData().substringData(offset, count).rawBuffer());
+		// need to copy the string to a new buffer since DOMString doesn't null terminate the substring.
+		*data = SysAllocString(DOMStringToXMLCh(get_DOM_CharacterData().substringData(offset, count)));
 	}
 	catch(...)
 	{
