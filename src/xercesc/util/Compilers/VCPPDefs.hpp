@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:19  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/17 20:30:01  tng
+ * [Bug 7583] Build warnings with MS Visual Studio .NET.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:19  peiyongz
+ * sane_include
  *
  * Revision 1.13  2001/06/04 20:11:54  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
@@ -182,7 +185,7 @@ const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr;
 //  Bypass compiler warning:
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
-#if _MSC_VER == 1200 /* VC++ 6.0 */
+#if _MSC_VER >= 1200 /* VC++ 6.0 */
 class IDOM_Document;
 inline void operator delete(void* ptr, IDOM_Document *doc)
 {
