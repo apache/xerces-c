@@ -4,8 +4,8 @@
 
 
 //---------------------------------------------------------------------------
-USELIB("..\..\..\..\Build\Win32\BCB4\XercesLib.lib");
-USEUNIT("..\..\..\..\samples\SAX2Count\SAX2CountHandlers.cpp");
+USELIB("..\..\..\..\..\Build\Win32\BCB4\XercesLib.lib");
+USEUNIT("..\..\..\..\..\samples\SAX2Count\SAX2CountHandlers.cpp");
 
 //---------------------------------------------------------------------------
 

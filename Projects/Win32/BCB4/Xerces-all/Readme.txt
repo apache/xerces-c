@@ -1,4 +1,7 @@
 $Log$
+Revision 1.3  2001/04/19 19:20:09  knoaman
+BCB project changes submitted by William I Hopper.
+
 Revision 1.2  2000/09/07 00:11:04  aruna1
 Borland related project files intoroduced
 
@@ -40,3 +43,7 @@ For building from the command line...
 Either way, the output (.dll, .lib, .exe) files will be created
 under Build\Win32\BCB4 (Build is on the same level as src).
 
+-- In Win32PlatformUtils.cpp, the compareAndSwap method uses inline
+assembler to avoid an API not suported in Windows 95.
+If you don't need Win95 support, changing it to  #if 0  will greatly
+improve your build times.

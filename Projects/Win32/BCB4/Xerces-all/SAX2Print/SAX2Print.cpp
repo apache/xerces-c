@@ -3,8 +3,8 @@
 #include <condefs.h>
 
 //---------------------------------------------------------------------------
-USELIB("..\..\..\..\Build\Win32\BCB4\XercesLib.lib");
-USEUNIT("..\..\..\..\samples\SAX2Print\SAX2PrintHandlers.cpp");
+USELIB("..\..\..\..\..\Build\Win32\BCB4\XercesLib.lib");
+USEUNIT("..\..\..\..\..\samples\SAX2Print\SAX2PrintHandlers.cpp");
 
 //---------------------------------------------------------------------------
 
