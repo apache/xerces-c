@@ -392,13 +392,13 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     	
         print ("\n\nCopying icu outputs ...\n");        	
         # Copy the ICU dlls and libs
-        psystem("cp -fv $ICUROOT/bin/icuuc26.dll $targetdir/bin");
-        psystem("cp -fv $ICUROOT/bin/icuuc26d.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc30.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc30d.dll $targetdir/bin");
 
-        # it seems icudt26*.DLL is generated (upper case dll)
+        # it seems icudt30*.DLL is generated (upper case dll)
         # but just case, try lower case .dll as well
-        psystem("cp -fv $ICUROOT/bin/icudt26*.DLL $targetdir/bin");
-        psystem("cp -fv $ICUROOT/bin/icudt26*.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt30*.DLL $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt30*.dll $targetdir/bin");
 
         psystem("cp -fv $ICUROOT/lib/icudata.lib $targetdir/lib");
 
@@ -684,14 +684,14 @@ if ( ($platform =~ m/AIX/i)      ||
 
             if ($platform =~ m/ptx/i) {
                 psystem ("chmod +x runConfigureICU");
-                psystem ("./runConfigureICU PTX");
+                psystem ("sh ./runConfigureICU PTX");
             } else {
             # set the 32 bit or 64 bit
                 if ($opt_b eq "32") {
-                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags configure --prefix=$ICUROOT --disable-64bit-libs");
+                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT --disable-64bit-libs");
                 }
                 else {
-                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags configure --prefix=$ICUROOT");
+                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
                 }
             }
         
@@ -703,8 +703,8 @@ if ( ($platform =~ m/AIX/i)      ||
        
             # on AIX, create '.a' version for building libxerces-c
             if ( $platform eq "aix") {
-                psystem("ln -s $ICUROOT/lib/libicudata26.1.so $ICUROOT/lib/libicudata26.a");
-                psystem("ln -s $ICUROOT/lib/libicuuc26.1.so   $ICUROOT/lib/libicuuc26.a");
+                psystem("ln -s $ICUROOT/lib/libicudata30.0.so $ICUROOT/lib/libicudata30.a");
+                psystem("ln -s $ICUROOT/lib/libicuuc30.0.so   $ICUROOT/lib/libicuuc30.a");
             }
 
         } #opt_j
@@ -1117,48 +1117,48 @@ sub copyICUOnUNIX() {
         #
         # copy icudata dll
         # For ICU 2.6:
-        # on AIX,              it is called libicudata26.1.so
-        # on Solaris/Linux, it is called libicudata.so.26.1
-        # on HP,               it is called libicudata.sl.26.1
+        # on AIX,              it is called libicudata30.0.so
+        # on Solaris/Linux, it is called libicudata.so.30.0
+        # on HP,               it is called libicudata.sl.30.0
         #
         psystem("rm -f libicudata*");
-        psystem("cp -f $ICUROOT/lib/libicudata26.1.so .");
-        psystem("cp -f $ICUROOT/lib/libicudata.so.26.1 .");
-        psystem("cp -f $ICUROOT/lib/libicudata.sl.26.1 .");
+        psystem("cp -f $ICUROOT/lib/libicudata30.0.so .");
+        psystem("cp -f $ICUROOT/lib/libicudata.so.30.0 .");
+        psystem("cp -f $ICUROOT/lib/libicudata.sl.30.0 .");
         
-        psystem("find . -name 'libicudata26.1.so' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata26.1.so' -exec ln -s {} libicudata26.so \\;");
+        psystem("find . -name 'libicudata30.0.so' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata30.0.so' -exec ln -s {} libicudata30.so \\;");
 
-        psystem("find . -name 'libicudata.so.26.1' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata.so.26.1' -exec ln -s {} libicudata.so.26 \\;");
+        psystem("find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so.30 \\;");
 
-        psystem("find . -name 'libicudata.sl.26.1' -exec ln -s {} libicudata.sl \\;");
-        psystem("find . -name 'libicudata.sl.26.1' -exec ln -s {} libicudata.sl.26 \\;");
+        psystem("find . -name 'libicudata.sl.30.0' -exec ln -s {} libicudata.sl \\;");
+        psystem("find . -name 'libicudata.sl.30.0' -exec ln -s {} libicudata.sl.30 \\;");
 
         #
         # copy icuuc dll
-        # on AIX,              it is called libicuuc26.1.so
-        # on Solaris/Linux, it is called libicuuc.so.26.1
-        # on HP,               it is called libicuuc.sl.26.1
+        # on AIX,              it is called libicuuc30.0.so
+        # on Solaris/Linux, it is called libicuuc.so.30.0
+        # on HP,               it is called libicuuc.sl.30.0
         #
         psystem("rm -f libicuuc*");
-        psystem("cp -f $ICUROOT/lib/libicuuc26.1.so .");
-        psystem("cp -f $ICUROOT/lib/libicuuc.so.26.1  .");
-        psystem("cp -f $ICUROOT/lib/libicuuc.sl.26.1  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc30.0.so .");
+        psystem("cp -f $ICUROOT/lib/libicuuc.so.30.0  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc.sl.30.0  .");
         
-        psystem("find . -name 'libicuuc26.1.so' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc26.1.so' -exec ln -s {} libicuuc26.so \\;");
+        psystem("find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc30.so \\;");
         
-        psystem("find . -name 'libicuuc.so.26.1' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc.so.26.1' -exec ln -s {} libicuuc.so.26 \\;");
+        psystem("find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so.30 \\;");
 
-        psystem("find . -name 'libicuuc.sl.26.1' -exec ln -s {} libicuuc.sl \\;");
-        psystem("find . -name 'libicuuc.sl.26.1' -exec ln -s {} libicuuc.sl.26 \\;");
+        psystem("find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl.30 \\;");
         
         # on AIX, copy '.a' version
         if ( $platform eq "aix") {
-            psystem("ln -s libicudata26.so libicudata26.a");
-            psystem("ln -s libicuuc26.so   libicuuc26.a");
+            psystem("ln -s libicudata30.so libicudata30.a");
+            psystem("ln -s libicuuc30.so   libicuuc30.a");
         }        	
         
 }
