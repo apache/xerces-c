@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.1  2001/06/25 16:19:56  tng
+ * Rename iconv_util.h to iconv_util.hpp.  AS400 changes by Linda Swan.
+ *
  * Revision 1.1  2000/02/10 18:08:28  abagchi
  * Initial checkin
  *
@@ -65,8 +68,8 @@
 #include <util/Platforms/OS400/OS400PlatformUtils.hpp>
 #include <stdlib.h>
 #include <unistd.h>
-#include <iconv_util.h>
-#include <iconv_cnv.h>
+#include <iconv_util.hpp>
+#include <iconv_cnv.hpp>
 #include <ctype.h>
 #define COPYRIGHT_STRING_LENGTH  200
 #define MAX_STRLEN 0x00FFFFF
@@ -95,17 +98,17 @@ const char* iconv_getDefaultCodepage()
 
 
 
-int32_t  
-u_strlen(const UChar *s) 
+int32_t
+u_strlen(const UChar *s)
 {
   int32_t  i = 0;
-  
+
   while(*s++)
     i++;
   return  i;
 }
 
-/* note sure if needed -  think that this is needed in cnv.c */ 
+/* note sure if needed -  think that this is needed in cnv.c */
 char* u_austrcpy(char *s1,
          const UChar *ucs2 )
 {
@@ -117,10 +120,10 @@ char* u_austrcpy(char *s1,
                 MAX_STRLEN,
                 ucs2,
                 &err);
-  
+
   s1[len] = '\0';
   return s1;
-  
+
 }
 
 /*Logic determines if the converter is Algorithmic AND/OR cached
@@ -141,9 +144,9 @@ UConverter *
   char uppercased_converterName[MAX_CONVERTER_NAME_LENGTH];
   UConverter *myUConverter = NULL;
   UConverterSharedData *mySharedConverterData = NULL;
- 
+
   /* following parameters are passed to the convert text decscriptor
-     to descriptor          */ 
+     to descriptor          */
   int  InType;
   int  OutType=1;
   char *InDescriptor;
@@ -152,20 +155,20 @@ UConverter *
   int  OutDescSize;
   int  JobCCSID=0;
   char *inchar, *outchar; /* input and output conversion pointers*/
-  int tempchar; 
+  int tempchar;
   if (U_FAILURE (*err))
     return NULL;
 /******************************************************************/
 /* assume name is in EBCDIC. The convetername is assumed to be
 /* either upper/lower case ebcdic  and the text converter requires
-/* upper case - Since we do not know we will convert to upper case 
-** just in case 
+/* upper case - Since we do not know we will convert to upper case
+** just in case
 /******************************************************************/
 inchar = (char*)converterName;
 outchar = &uppercased_converterName[0];
-while (*inchar) /*except for null terminator uppercase inputs*/ 
-{ 
-   tempchar = (int)(*inchar); 
+while (*inchar) /*except for null terminator uppercase inputs*/
+{
+   tempchar = (int)(*inchar);
    *outchar=(char)toupper(tempchar);
    inchar ++;
    outchar ++;
@@ -180,17 +183,17 @@ while (*inchar) /*except for null terminator uppercase inputs*/
 /******************************************************************/
 /* convert name to AS/400 CCSID
 ** if CCSID is returned then we can complete building the converter
-** otherwise we will return the same error as ICU converters 
+** otherwise we will return the same error as ICU converters
 */
 /******************************************************************/
- InType = 11; /*set for IANA initially */ 
- if (QlgCvtTextDescToDesc(InType, OutType,(char *)uppercased_converterName,                          strlen(uppercased_converterName),&OutDescriptor[0],sizeof(OutDescriptor),JobCCSID)<0)   
+ InType = 11; /*set for IANA initially */
+ if (QlgCvtTextDescToDesc(InType, OutType,(char *)uppercased_converterName,                          strlen(uppercased_converterName),&OutDescriptor[0],sizeof(OutDescriptor),JobCCSID)<0)
     {
      InType = 3; /* change to AIX 4.1 if we fail above */
      if (QlgCvtTextDescToDesc(InType, OutType,(char *)uppercased_converterName,                          strlen(uppercased_converterName),&OutDescriptor[0],sizeof(OutDescriptor),JobCCSID)<0)
      {
       *err = U_INVALID_TABLE_FILE;
-      send_message((char *)converterName,ICONV_CCSID_PROBLEM,'d'); 
+      send_message((char *)converterName,ICONV_CCSID_PROBLEM,'d');
       return NULL;
      }
     }
@@ -207,7 +210,7 @@ while (*inchar) /*except for null terminator uppercase inputs*/
 
 }
 
- 
+
 UConverter* createNewConverter(const char *name, UErrorCode *err)
 {
   char temp[33];
@@ -220,8 +223,8 @@ UConverter* createNewConverter(const char *name, UErrorCode *err)
   int32_t myCheck;
   int8_t errorLevel = 0;
   char throwAway[COPYRIGHT_STRING_LENGTH];
-  char UNICODE_CCSID_ID_O[33]="IBMCCSID134880000000"; 
-  char UNICODE_CCSID_ID_I[33]="IBMCCSID13488"; 
+  char UNICODE_CCSID_ID_O[33]="IBMCCSID134880000000";
+  char UNICODE_CCSID_ID_I[33]="IBMCCSID13488";
   char my_CCSID_ID[33]="\0";
   char CONVERT_ID_START[9] ="IBMCCSID"; /* include null terminator for strcat */
   char DEFAULTS[9] = "00000000";
@@ -234,7 +237,7 @@ UConverter* createNewConverter(const char *name, UErrorCode *err)
       *err = U_MEMORY_ALLOCATION_ERROR;
       return NULL;
     }
-/* create the "shared area' and link into the shell */ 
+/* create the "shared area' and link into the shell */
   myConverter->sharedData =
     (UConverterSharedData *) malloc (sizeof (UConverterSharedData));
   if (myConverter->sharedData == NULL)
@@ -250,20 +253,20 @@ UConverter* createNewConverter(const char *name, UErrorCode *err)
   memcpy(&my_CCSID_ID[13],&DEFAULTS[0],7);
   memset(temp, '\0', 33);
   memcpy(temp, my_CCSID_ID, 13);
-    
+
   myConverter->sharedData->toiconv_handle = iconv_open(UNICODE_CCSID_ID_I,my_CCSID_ID);
 /*  memset(&my_CCSID_ID[13],'0',19);  clear out the non necessary data to reverse */
   my_CCSID_ID[13] = '\0';
   myConverter->sharedData->fromiconv_handle = iconv_open(temp,UNICODE_CCSID_ID_O);
   if ((myConverter->sharedData->toiconv_handle.return_value ==-1) ||(myConverter->sharedData->fromiconv_handle.return_value==-1))
-  
+
       {
 	/*If it isn't any of the above, the file is invalid */
 	*err = U_INVALID_TABLE_FILE;
 	free (myConverter->sharedData);
 	free (myConverter);
       }
- 
+
   return myConverter;
 
 
