@@ -287,13 +287,54 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
                             , const EscapeFlags             escapeFlags
                             , const UnRepFlags              unrepFlags
                             ,       MemoryManager* const    manager)
+    : fEscapeFlags(escapeFlags)
+    , fOutEncoding(0)
+    , fTarget(target)
+    , fUnRepFlags(unrepFlags)
+    , fXCoder(0)  
+    , fAposRef(0)
+    , fAposLen(0)
+    , fAmpRef(0)    
+    , fAmpLen(0)    
+    , fGTRef(0)
+    , fGTLen(0)
+    , fLTRef(0)
+    , fLTLen(0)
+    , fQuoteRef(0)
+    , fQuoteLen(0) 
+    , fIsXML11(false)
+    , fMemoryManager(manager)
 {
-    XMLFormatter(outEncoding
-               , "1.0"
-               , target
-               , escapeFlags
-               , unrepFlags
-               , manager);
+    // this constructor uses "1.0" for the docVersion
+
+    // Transcode the encoding string
+    fOutEncoding = XMLString::transcode(outEncoding, fMemoryManager);
+
+    // Try to create a transcoder for this encoding
+    XMLTransService::Codes resCode;
+    fXCoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+    (
+        fOutEncoding
+        , resCode
+        , kTmpBufSize
+        , fMemoryManager
+    );
+
+    if (!fXCoder)
+    {
+        fMemoryManager->deallocate(fOutEncoding); //delete [] fOutEncoding;
+        ThrowXML1
+        (
+            TranscodingException
+            , XMLExcepts::Trans_CantCreateCvtrFor
+            , outEncoding
+        );
+    }
+
+    //XMLCh* const tmpDocVer = XMLString::transcode("1.0", fMemoryManager);
+    //ArrayJanitor<XMLCh> jname(tmpDocVer, fMemoryManager);
+    //fIsXML11 = XMLString::equals(tmpDocVer, XMLUni::fgVersion1_1);
+    fIsXML11 = false;  // docVersion 1.0 is not 1.1!
 }
 
 
@@ -302,13 +343,51 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
                             , const EscapeFlags             escapeFlags
                             , const UnRepFlags              unrepFlags
                             ,       MemoryManager* const    manager)
+    : fEscapeFlags(escapeFlags)
+    , fOutEncoding(0)
+    , fTarget(target)
+    , fUnRepFlags(unrepFlags)
+    , fXCoder(0)  
+    , fAposRef(0)
+    , fAposLen(0)
+    , fAmpRef(0)    
+    , fAmpLen(0)    
+    , fGTRef(0)
+    , fGTLen(0)
+    , fLTRef(0)
+    , fLTLen(0)
+    , fQuoteRef(0)
+    , fQuoteLen(0) 
+    , fIsXML11(false)
+    , fMemoryManager(manager)
 {
-    XMLFormatter(outEncoding
-               , XMLUni::fgVersion1_0
-               , target
-               , escapeFlags
-               , unrepFlags
-               , manager);
+    // this constructor uses XMLUni::fgVersion1_0 for the docVersion
+
+    // Try to create a transcoder for this encoding
+    XMLTransService::Codes resCode;
+    fXCoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+    (
+        outEncoding
+        , resCode
+        , kTmpBufSize
+        , fMemoryManager
+    );
+
+    if (!fXCoder)
+    {
+        ThrowXML1
+        (
+            TranscodingException
+            , XMLExcepts::Trans_CantCreateCvtrFor
+            , outEncoding
+        );
+    }
+
+    // Copy the encoding string
+    fOutEncoding = XMLString::replicate(outEncoding, fMemoryManager);
+
+    //fIsXML11 = XMLString::equals(docVersion, XMLUni::fgVersion1_1);
+    fIsXML11 = false;  // docVersion 1.0 is not 1.1!
 }
 
 XMLFormatter::~XMLFormatter()
