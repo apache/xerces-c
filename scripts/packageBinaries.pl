@@ -615,7 +615,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         # on Solaris/Linux, it is called libicuuc.so.20.2
         # on HP, it is called libicuuc.sl.20.2
         #
-        psystem("cp -f $ICUROOT/lib/libicuuc20.2.so");
+        psystem("cp -f $ICUROOT/lib/libicuuc20.2.so .");
         psystem("cp -f $ICUROOT/lib/libicuuc.so.20.2  .");
         psystem("cp -f $ICUROOT/lib/libicuuc.sl.20.2  .");
         psystem("rm -f libicuuc.so");
