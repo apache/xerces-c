@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/01/03 16:39:45  tng
+ * Performance: no need to create that many members for fBuiltInRegistry
+ *
  * Revision 1.9  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -220,10 +223,10 @@ const XMLCh fgTokPattern[] =
 //"([a-zA-Z]{1,8})(-[a-zA-Z0-9]{1,8})*"
 const XMLCh fgLangPattern[] =
 {
-    chOpenParen,   chOpenSquare,  chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z, 
+    chOpenParen,   chOpenSquare,  chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
     chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8, chCloseCurly, chCloseParen,
     chOpenParen,   chDash, chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
-	chDigit_0,     chDash, chDigit_9, chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8, 
+	chDigit_0,     chDash, chDigit_9, chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8,
     chCloseCurly,  chCloseParen, chAsterisk, chNull
 };
 
@@ -401,7 +404,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 
     // Initialize common Schema/DTD Datatype validator set if not initialized
     if (fBuiltInRegistry == 0) {
-        RefHashTableOf<DatatypeValidator>* t = new RefHashTableOf<DatatypeValidator>(109);
+        RefHashTableOf<DatatypeValidator>* t = new RefHashTableOf<DatatypeValidator>(29);
         if (XMLPlatformUtils::compareAndSwap((void **)&fBuiltInRegistry, t, 0) != 0)
         {
             delete t;
@@ -663,7 +666,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                            new IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
         fUserDefinedRegistry->put((void*) XMLUni::fgEntityString,
                            new ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
-        
+
 
         // Create 'IDREFS' datatype validator
     	 createDatatypeValidator(XMLUni::fgIDRefsString,
