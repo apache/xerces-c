@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2004/05/05 22:08:07  amassari
+ * Content reported by a web site as text/xml is now read correctly; added an extra way of getting the size of the document in case no redirection has been performed
+ *
  * Revision 1.5  2004/01/29 11:51:20  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -164,7 +167,7 @@ private :
     XMLByte*            fBuffer;
     unsigned int        fBufferIndex;
     unsigned int        fBufferSize;
-    unsigned int        fRemoteFileSize;
+    int                 fRemoteFileSize;
     unsigned int        fBytesProcessed;
     MemoryManager*      fMemoryManager;
 };

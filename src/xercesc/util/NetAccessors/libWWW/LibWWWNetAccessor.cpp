@@ -82,8 +82,10 @@ LibWWWNetAccessor::LibWWWNetAccessor()
     // Initialize the libWWW library here.
     //
     HTProfile_newPreemptiveClient("XercesC", gXercesFullVersionStr);
+    HTConversion_add(HTFormat_conversion(), "text/xml",         "*/*", HTThroughLine, 1.0, 0.0, 0.0);
+    HTConversion_add(HTFormat_conversion(), "application/xml",  "*/*", HTThroughLine, 1.0, 0.0, 0.0);
 #ifdef XML_DEBUG
-	HTSetTraceMessageMask("sop");
+    HTSetTraceMessageMask("sop");
 #endif
     HTAlert_setInteractive(NO);
     HTHost_setEventTimeout(5000);
@@ -94,13 +96,13 @@ LibWWWNetAccessor::~LibWWWNetAccessor()
 {
     // Cleanup the libWWW library here.
 
-	/* Quote from http://www.w3.org/Library/src/HTProfil.html#Client:
-	 *
-	 * This call also supersedes the termination function for the
-	 * Library core, HTLibTerminate() so that you don't have to call
-	 * that after calling this function.
-	 */
-	HTProfile_delete();
+    /* Quote from http://www.w3.org/Library/src/HTProfil.html#Client:
+     *
+     * This call also supersedes the termination function for the
+     * Library core, HTLibTerminate() so that you don't have to call
+     * that after calling this function.
+    */
+    HTProfile_delete();
 }
 
 
@@ -112,7 +114,7 @@ BinInputStream* LibWWWNetAccessor::makeNew(const XMLURL&  urlSource)
         case XMLURL::HTTP:
         {
             BinURLInputStream* retStrm =
-				new (urlSource.getMemoryManager()) BinURLInputStream(urlSource);
+                new (urlSource.getMemoryManager()) BinURLInputStream(urlSource);
             return retStrm;
         }
 

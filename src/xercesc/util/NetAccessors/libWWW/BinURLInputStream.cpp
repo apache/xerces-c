@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2004/05/05 22:08:07  amassari
+ * Content reported by a web site as text/xml is now read correctly; added an extra way of getting the size of the document in case no redirection has been performed
+ *
  * Revision 1.6  2004/01/16 14:29:21  amassari
  * Removed usage of undeclared macro MIN
  *
@@ -202,16 +205,21 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
     BOOL  status = HTLoadToStream(uriAsCharStar, counterStrm, request);
     if (status == YES)
     {
-        // Patch by Artur Klauser
-        // When a redirection is processed in libWWW, it seems that
-        // HTAnchor_length(anchor) == -1 on the original anchor, whereas
-        // HTResponse_length(response) gives the correct content length of
-        // the redirection target. This has confusedfRemoteFileSize and it was
-        // not checked for a -1 response at all.
-        HTResponse * response = HTRequest_response (request);
-        fRemoteFileSize = HTResponse_length(response);
-        if (fRemoteFileSize < 0) {
-            ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_LengthError, fMemoryManager);
+        HTParentAnchor * anchor = HTRequest_anchor(request);
+        fRemoteFileSize=HTAnchor_length(anchor);
+        if(fRemoteFileSize < 0)
+        {
+            // Patch by Artur Klauser
+            // When a redirection is processed in libWWW, it seems that
+            // HTAnchor_length(anchor) == -1 on the original anchor, whereas
+            // HTResponse_length(response) gives the correct content length of
+            // the redirection target. This has confused fRemoteFileSize and it was
+            // not checked for a -1 response at all.
+            HTResponse * response = HTRequest_response (request);
+            fRemoteFileSize = HTResponse_length(response);
+            if (fRemoteFileSize < 0) {
+                ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_LengthError, fMemoryManager);
+            }
         }
     }
 
@@ -295,7 +303,6 @@ unsigned int BinURLInputStream::readBytes(XMLByte* const  toFill
         fBytesProcessed += bytesAsked;
         retval = bytesAsked;
     }
-
     else
     {
         // ...will need to read some more bytes out of the stream.
