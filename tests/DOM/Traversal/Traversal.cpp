@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,14 +48,14 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
 
 //
-//  Various DOM tests.
+//  Various IDOM tests.
 //     Contents include
 //       1.  NodeIterator tests
 //       2.  Tree Walker tests
@@ -66,43 +66,44 @@
 
 /**
  * $Log$
- * Revision 1.6  2002/03/07 21:42:14  peiyongz
+ * Revision 1.7  2002/05/21 18:51:37  tng
+ * Test case update: this is the original tests/IDom/ITraversal/ITraversal.cpp
+ *
+ * Revision 1.8  2002/03/07 21:41:58  peiyongz
  * Call Terminate() to avoid memory tools reporting memory leak
  *
- * Revision 1.5  2002/02/04 20:12:43  tng
- * Test DOM Level missing functions:
- * 1. NodeIterator::getRoot
- * 2. TreeWalker::getRoot
+ * Revision 1.7  2002/02/04 21:56:57  tng
+ * Test DOM Level 2 function getRoot.
  *
- * Revision 1.4  2002/02/01 22:43:48  peiyongz
+ * Revision 1.6  2002/02/04 19:02:37  tng
+ * Memory leak fix in samples / test cases.
+ *
+ * Revision 1.5  2002/02/01 22:44:51  peiyongz
  * sane_include
  *
- * Revision 1.3  2001/11/23 16:18:54  tng
+ * Revision 1.4  2001/11/23 16:18:54  tng
  * Elimiate compiler warning: Warning: String literal converted to char* in formal argument file in call to tassert(bool, char*, int).
  *
- * Revision 1.2  2000/03/11 03:19:57  chchou
- * Fix bug # 19, add const keyword to API.
- * As a result, update test case.
+ * Revision 1.3  2001/07/19 20:45:16  tng
+ * Add some test cases in the tests folder to sanityTest.pl
  *
- * Revision 1.1  2000/02/18 23:01:01  abagchi
- * Initial checkin
+ * Revision 1.2  2001/06/05 11:58:31  tng
+ * Delete the document at the end for clearing the memory.
  *
- * Revision 1.2  2000/02/15 00:59:58  aruna1
- * Previous node iterator related changes in.
+ * Revision 1.1  2001/06/04 20:11:55  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
  *
- * Revision 1.1  2000/02/08 02:08:58  aruna1
- * DOM NodeIterator and TreeWalker tests initial check in
  *
 
  */
 
 #include <stdio.h>
 #include <string.h>
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DomMemDebug.hpp>
+#include <xercesc/idom/IDOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
@@ -114,22 +115,13 @@ void tassert(bool c, const char *file, int line)
 };
 
 
-#define TESTPROLOG entryMemState = DomMemDebug();
-
-#define TESTEPILOG    exitMemState = DomMemDebug(); \
-    if (entryMemState != exitMemState) { \
-        printf(" Memory leak at line %d, file %s:  ", __LINE__, __FILE__);  \
-        exitMemState.printDifference(entryMemState); \
-    }
-
-
 #define EXCEPTION_TEST(operation, expected_exception)               \
 {                                                                   \
     try {                                                           \
     operation;                                                      \
     printf(" Error: no exception thrown at line %d\n", __LINE__);   \
 }                                                                   \
-    catch (DOM_DOMException &e) {                                       \
+    catch (IDOM_DOMException &e) {                                       \
     if (e.code != expected_exception)                       \
     printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
 }                                                                 \
@@ -138,11 +130,11 @@ void tassert(bool c, const char *file, int line)
 }                                                                   \
 }
 
-class  MyFilter : public DOM_NodeFilter {
+class  MyFilter : public IDOM_NodeFilter {
 public:
 
-  MyFilter(short nodeType, bool reject=false) : DOM_NodeFilter(), fNodeType(nodeType), fReject(reject) {};
-  virtual short acceptNode(const DOM_Node &node) const;
+  MyFilter(short nodeType, bool reject=false) : IDOM_NodeFilter(), fNodeType(nodeType), fReject(reject) {};
+  virtual short acceptNode(const IDOM_Node* node) const;
 private:
     short fNodeType;
     bool fReject;
@@ -162,13 +154,13 @@ private:
         DOCUMENT_FRAGMENT_NODE = 11,
         NOTATION_NODE        = 12
 */
-short  MyFilter::acceptNode(const DOM_Node &node) const {
+short  MyFilter::acceptNode(const IDOM_Node* node) const {
     if (fNodeType == 0)
-        return  DOM_NodeFilter::FILTER_ACCEPT;
-	if (node.getNodeType() ==  fNodeType) {
-       	return  DOM_NodeFilter::FILTER_ACCEPT;
+        return  IDOM_NodeFilter::FILTER_ACCEPT;
+	if (node->getNodeType() ==  fNodeType) {
+       	return  IDOM_NodeFilter::FILTER_ACCEPT;
 	} else {
-	    return  fReject ? DOM_NodeFilter::FILTER_REJECT : DOM_NodeFilter::FILTER_SKIP;
+	    return  fReject ? IDOM_NodeFilter::FILTER_REJECT : IDOM_NodeFilter::FILTER_SKIP;
 	}
 }
 
@@ -176,8 +168,6 @@ short  MyFilter::acceptNode(const DOM_Node &node) const {
 
 int  main()
 {
-    DomMemDebug     entryMemState, exitMemState;
-
 	try {
 		XMLPlatformUtils::Initialize();
 	}
@@ -188,6 +178,9 @@ int  main()
         delete [] pMessage;
         return -1;
     }
+
+    // Create a XMLCh buffer for string manipulation
+    XMLCh tempStr[4000];
 
 
     //
@@ -209,50 +202,77 @@ int  main()
                       - comment
          */
 
-        DOM_Document    doc = DOM_Document::createDocument();
+        IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
+        IDOM_Document* doc = impl->createDocument();
+
         //Creating a root element
-        DOM_Element     root = doc.createElement("RootElement");
-        doc.appendChild(root);
+        XMLString::transcode("RootElement", tempStr, 3999);
+        IDOM_Element*     root = doc->createElement(tempStr);
+        doc->appendChild(root);
+
         //Creating the siblings of root
-        DOM_Element     E11 = doc.createElement("FirstSibling");
-        root.appendChild(E11);
-        DOM_Element     E12 = doc.createElement("SecondSibling");
-        root.appendChild(E12);
-        DOM_Element     E13 = doc.createElement("ThirdSibling");
-        root.appendChild(E13);
+        XMLString::transcode("FirstSibling", tempStr, 3999);
+        IDOM_Element*     E11 = doc->createElement(tempStr);
+        root->appendChild(E11);
+
+        XMLString::transcode("SecondSibling", tempStr, 3999);
+        IDOM_Element*     E12 = doc->createElement(tempStr);
+        root->appendChild(E12);
+
+        XMLString::transcode("ThirdSibling", tempStr, 3999);
+        IDOM_Element*     E13 = doc->createElement(tempStr);
+        root->appendChild(E13);
+
         //Attaching texts to few siblings
-        DOM_Text        textNode1 = doc.createTextNode("Text1");
-        E11.appendChild(textNode1);
-        DOM_Text        textNode2 = doc.createTextNode("Text2");
-        E12.appendChild(textNode2);
+        XMLString::transcode("Text1", tempStr, 3999);
+        IDOM_Text*        textNode1 = doc->createTextNode(tempStr);
+        E11->appendChild(textNode1);
+
+        XMLString::transcode("Text2", tempStr, 3999);
+        IDOM_Text*        textNode2 = doc->createTextNode(tempStr);
+        E12->appendChild(textNode2);
+
         //creating child of siblings
-        DOM_Element     E111 = doc.createElement("FirstSiblingChild1");
-        E11.appendChild(E111);
-        DOM_Attr        attr01  = doc.createAttribute("Attr01");
-        E11.setAttributeNode(attr01);
+        XMLString::transcode("FirstSiblingChild1", tempStr, 3999);
+        IDOM_Element*     E111 = doc->createElement(tempStr);
+        E11->appendChild(E111);
 
-        DOM_Element     E112 = doc.createElement("FirstSiblingChild2");
-        E11.appendChild(E112);
+        XMLString::transcode("Attr01", tempStr, 3999);
+        IDOM_Attr*        attr01  = doc->createAttribute(tempStr);
+        E11->setAttributeNode(attr01);
 
-        DOM_Element     E121 = doc.createElement("SecondSiblingChild1");
-        E12.appendChild(E121);
-        DOM_Attr attr02 = doc.createAttribute("Attr01");
-        E12.setAttributeNode(attr02);
+        XMLString::transcode("FirstSiblingChild2", tempStr, 3999);
+        IDOM_Element*     E112 = doc->createElement(tempStr);
+        E11->appendChild(E112);
 
-        DOM_Element     E122 = doc.createElement("SecondSiblingChild2");
-        E12.appendChild(E122);
+        XMLString::transcode("SecondSiblingChild1", tempStr, 3999);
+        IDOM_Element*     E121 = doc->createElement(tempStr);
+        E12->appendChild(E121);
 
-        DOM_Element     E131 = doc.createElement("ThirdSiblingChild1");
-        E13.appendChild(E131);
+        XMLString::transcode("Attr01", tempStr, 3999);
+        IDOM_Attr* attr02 = doc->createAttribute(tempStr);
+        E12->setAttributeNode(attr02);
 
-        DOM_Comment comment = doc.createComment("DocComment");
-        root.appendChild(comment);
+        XMLString::transcode("SecondSiblingChild2", tempStr, 3999);
+        IDOM_Element*     E122 = doc->createElement(tempStr);
+        E12->appendChild(E122);
 
-        DOM_CDATASection  cdataSec = doc.createCDATASection("DocCDataSection");
-        E11.appendChild(cdataSec);
+        XMLString::transcode("ThirdSiblingChild1", tempStr, 3999);
+        IDOM_Element*     E131 = doc->createElement(tempStr);
+        E13->appendChild(E131);
 
-        DOM_ProcessingInstruction  docPI = doc.createProcessingInstruction("DocPI", "DocTarget");
-        E13.appendChild(docPI);
+        XMLString::transcode("DocComment", tempStr, 3999);
+        IDOM_Comment* comment = doc->createComment(tempStr);
+        root->appendChild(comment);
+
+        XMLString::transcode("DocCDataSection", tempStr, 3999);
+        IDOM_CDATASection*  cdataSec = doc->createCDATASection(tempStr);
+        E11->appendChild(cdataSec);
+
+        XMLString::transcode("DocPI", tempStr, 3999);
+        XMLCh piStr[] = {chLatin_D, chLatin_o, chLatin_c, chLatin_P, chLatin_I, chNull};
+        IDOM_ProcessingInstruction*  docPI = doc->createProcessingInstruction(piStr, tempStr);
+        E13->appendChild(docPI);
 
 
         /*
@@ -274,307 +294,303 @@ int  main()
 
         ////////// NodeIterator Test Cases ////////////////
 
-        TESTPROLOG;
+
         {
             // all node iterating test
 
-            DOM_Node    node = doc.getFirstChild();
-            unsigned long       whatToShow = DOM_NodeFilter::SHOW_ALL;
+            IDOM_Node*    node = doc->getFirstChild();
+            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_ALL;
             MyFilter* filter = new MyFilter(0);
 
-            DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
-            TASSERT(iter.getWhatToShow() == 65535);
-            TASSERT(iter.getExpandEntityReferences() == 1);
+            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            TASSERT(iter->getWhatToShow() == 65535);
+            TASSERT(iter->getExpandEntityReferences() == 1);
 
-            DOM_Node  nd;
-            nd = iter.nextNode();
+            IDOM_Node*  nd;
+            nd = iter->nextNode();
             TASSERT (nd ==root);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT (nd ==E11);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == textNode1);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E111);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E112);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == cdataSec);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E12);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == textNode2);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E121);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E122);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E13);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E131);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == docPI);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == comment);
-            nd = iter.previousNode();
+            nd = iter->previousNode();
             TASSERT(nd == comment);
-            nd = iter.previousNode();
+            nd = iter->previousNode();
             TASSERT(nd == docPI);
-            nd = iter.previousNode();
+            nd = iter->previousNode();
             TASSERT(nd == E131);
 
             //test getRoot
-            TASSERT(iter.getRoot() == root);
-            TASSERT(iter.getRoot() != doc);
+            TASSERT(iter->getRoot() == root);
+            TASSERT(iter->getRoot() != doc);
 
-			delete filter;
+            delete filter;
+
         }
-        TESTEPILOG;
 
-        TESTPROLOG;
+
+
         {
             //element node iterating test
 
-            DOM_Node    node = doc.getFirstChild();
-            unsigned long       whatToShow = DOM_NodeFilter::SHOW_ELEMENT;
-            MyFilter* filter = new MyFilter(DOM_Node::ELEMENT_NODE);
+            IDOM_Node*    node = doc->getFirstChild();
+            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_ELEMENT;
+            MyFilter* filter = new MyFilter(IDOM_Node::ELEMENT_NODE);
 
-            DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
-            TASSERT(iter.getWhatToShow() == 1);
-            TASSERT(iter.getExpandEntityReferences() == 1);
+            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            TASSERT(iter->getWhatToShow() == 1);
+            TASSERT(iter->getExpandEntityReferences() == 1);
 
-            DOM_Node  nd;
-            nd = iter.nextNode();
+            IDOM_Node*  nd;
+            nd = iter->nextNode();
             TASSERT (nd ==root);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT (nd ==E11);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E111);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E112);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E12);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E121);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E122);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E13);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == E131);
-            nd = iter.previousNode();
+            nd = iter->previousNode();
             TASSERT(nd == E131);
-            nd = iter.previousNode();
+            nd = iter->previousNode();
             TASSERT(nd == E13);
-            nd = iter.previousNode();
+            nd = iter->previousNode();
             TASSERT(nd == E122);
 
-			delete filter;
+            delete filter;
         }
-        TESTEPILOG;
 
 
 
-        TESTPROLOG;
+
+
         {
             // Text node iterating test
 
-            DOM_Node    node = doc.getFirstChild();
-            unsigned long       whatToShow = DOM_NodeFilter::SHOW_TEXT;
-            MyFilter* filter = new MyFilter(DOM_Node::TEXT_NODE);
+            IDOM_Node*    node = doc->getFirstChild();
+            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_TEXT;
+            MyFilter* filter = new MyFilter(IDOM_Node::TEXT_NODE);
 
-            DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
+            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
 
-            TASSERT(iter.getWhatToShow() == 4);
-            TASSERT(iter.getExpandEntityReferences() == 1);
+            TASSERT(iter->getWhatToShow() == 4);
+            TASSERT(iter->getExpandEntityReferences() == 1);
 
-            DOM_Node  nd;
-            nd = iter.nextNode();
+            IDOM_Node*  nd;
+            nd = iter->nextNode();
             TASSERT (nd ==textNode1);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT (nd ==textNode2);
-            nd = iter.previousNode();
+            nd = iter->previousNode();
             TASSERT(nd == textNode2);
 
-			delete filter;
+            delete filter;
         }
-        TESTEPILOG;
-        TESTPROLOG;
+
+
         {
             //CDataSection node itearating test
 
-            DOM_Node    node = doc.getFirstChild();
-            unsigned long       whatToShow = DOM_NodeFilter::SHOW_CDATA_SECTION;
-            MyFilter* filter = new MyFilter(DOM_Node::CDATA_SECTION_NODE);
+            IDOM_Node*    node = doc->getFirstChild();
+            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_CDATA_SECTION;
+            MyFilter* filter = new MyFilter(IDOM_Node::CDATA_SECTION_NODE);
 
-            DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
-            TASSERT(iter.getWhatToShow() == 8);
-            TASSERT(iter.getExpandEntityReferences() == 1);
+            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            TASSERT(iter->getWhatToShow() == 8);
+            TASSERT(iter->getExpandEntityReferences() == 1);
 
-            DOM_Node  nd;
-            nd = iter.nextNode();
+            IDOM_Node*  nd;
+            nd = iter->nextNode();
             TASSERT(nd == cdataSec);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == 0);
 
-			delete filter;
+            delete filter;
         }
-        TESTEPILOG;
-        TESTPROLOG;
+
+
         {
             // PI nodes iterating test
 
-            DOM_Node    node = doc.getFirstChild();
-            unsigned long       whatToShow = DOM_NodeFilter::SHOW_PROCESSING_INSTRUCTION;
-            MyFilter* filter = new MyFilter(DOM_Node::PROCESSING_INSTRUCTION_NODE);
+            IDOM_Node*    node = doc->getFirstChild();
+            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_PROCESSING_INSTRUCTION;
+            MyFilter* filter = new MyFilter(IDOM_Node::PROCESSING_INSTRUCTION_NODE);
 
-            DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
-            TASSERT(iter.getWhatToShow() == 64);
-            TASSERT(iter.getExpandEntityReferences() == 1);
+            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            TASSERT(iter->getWhatToShow() == 64);
+            TASSERT(iter->getExpandEntityReferences() == 1);
 
-            DOM_Node  nd;
-            nd = iter.nextNode();
+            IDOM_Node*  nd;
+            nd = iter->nextNode();
             TASSERT(nd == docPI);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == 0);
 
-			delete filter;
-
+            delete filter;
         }
-        TESTEPILOG;
 
-        TESTPROLOG;
+
+
         {
-            DOM_Node    node = doc.getFirstChild();
-            unsigned long       whatToShow = DOM_NodeFilter::SHOW_COMMENT;
-            MyFilter* filter = new MyFilter(DOM_Node::COMMENT_NODE);
+            IDOM_Node*    node = doc->getFirstChild();
+            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_COMMENT;
+            MyFilter* filter = new MyFilter(IDOM_Node::COMMENT_NODE);
 
-            DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
-            TASSERT(iter.getWhatToShow() == 128);
-            TASSERT(iter.getExpandEntityReferences() == 1);
+            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            TASSERT(iter->getWhatToShow() == 128);
+            TASSERT(iter->getExpandEntityReferences() == 1);
 
-            DOM_Node  nd;
-            nd = iter.nextNode();
+            IDOM_Node*  nd;
+            nd = iter->nextNode();
             TASSERT(nd == comment);
-            nd = iter.nextNode();
+            nd = iter->nextNode();
             TASSERT(nd == 0);
 
-			delete filter;
+            delete filter;
         }
-        TESTEPILOG;
+
 
 
 
         ////////// TreeWalker Test Cases ////////////////
 
 
-        TESTPROLOG;
-        {
-            unsigned long whatToShow = DOM_NodeFilter::SHOW_ALL;
-            DOM_TreeWalker tw = doc.createTreeWalker(doc, whatToShow, 0, true);
 
-            TASSERT(tw.getCurrentNode() == doc);
-            TASSERT(tw.firstChild() == root);
-            TASSERT(tw.nextSibling() == 0);
-            TASSERT(tw.lastChild() == comment);
-            TASSERT(tw.firstChild() == 0);
-            TASSERT(tw.lastChild() == 0);
-            TASSERT(tw.nextSibling() == 0);
-            TASSERT(tw.nextNode() == 0);
-            TASSERT(tw.previousSibling() == E13);
-            TASSERT(tw.previousNode() == E122);
-            TASSERT(tw.parentNode() == E12);
-            TASSERT(tw.firstChild() == textNode2);
-            TASSERT(tw.previousSibling() == 0);
-            TASSERT(tw.nextSibling() == E121);
-            TASSERT(tw.nextNode() == E122);
-            TASSERT(tw.parentNode() == E12);
-            TASSERT(tw.previousSibling() == E11);
-            TASSERT(tw.previousNode() == root);
-            TASSERT(tw.previousNode() == doc);
-            TASSERT(tw.previousNode() == 0);
-            TASSERT(tw.parentNode() == 0);
-            TASSERT(tw.getCurrentNode() == doc);
+        {
+            unsigned long whatToShow = IDOM_NodeFilter::SHOW_ALL;
+            IDOM_TreeWalker* tw = doc->createTreeWalker(doc, whatToShow, 0, true);
+
+            TASSERT(tw->getCurrentNode() == doc);
+            TASSERT(tw->firstChild() == root);
+            TASSERT(tw->nextSibling() == 0);
+            TASSERT(tw->lastChild() == comment);
+            TASSERT(tw->firstChild() == 0);
+            TASSERT(tw->lastChild() == 0);
+            TASSERT(tw->nextSibling() == 0);
+            TASSERT(tw->nextNode() == 0);
+            TASSERT(tw->previousSibling() == E13);
+            TASSERT(tw->previousNode() == E122);
+            TASSERT(tw->parentNode() == E12);
+            TASSERT(tw->firstChild() == textNode2);
+            TASSERT(tw->previousSibling() == 0);
+            TASSERT(tw->nextSibling() == E121);
+            TASSERT(tw->nextNode() == E122);
+            TASSERT(tw->parentNode() == E12);
+            TASSERT(tw->previousSibling() == E11);
+            TASSERT(tw->previousNode() == root);
+            TASSERT(tw->previousNode() == doc);
+            TASSERT(tw->previousNode() == 0);
+            TASSERT(tw->parentNode() == 0);
+            TASSERT(tw->getCurrentNode() == doc);
         }
-        TESTEPILOG;
 
-        TESTPROLOG;
+
+
         {
-            MyFilter mf(DOM_Node::ELEMENT_NODE);
-            unsigned long whatToShow = DOM_NodeFilter::SHOW_ALL;
-            DOM_TreeWalker tw = doc.createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(IDOM_Node::ELEMENT_NODE);
+            unsigned long whatToShow = IDOM_NodeFilter::SHOW_ALL;
+            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
-            TASSERT(tw.getCurrentNode() == root);
-            TASSERT(tw.parentNode() == 0);  //should not change currentNode
-            TASSERT(tw.getCurrentNode() == root);
-            TASSERT(tw.nextNode() == E11);
-            TASSERT(tw.nextNode() == E111);
-            tw.setCurrentNode(E12);
+            TASSERT(tw->getCurrentNode() == root);
+            TASSERT(tw->parentNode() == 0);  //should not change currentNode
+            TASSERT(tw->getCurrentNode() == root);
+            TASSERT(tw->nextNode() == E11);
+            TASSERT(tw->nextNode() == E111);
+            tw->setCurrentNode(E12);
             //when first is not visible, should it go to its sibling?
-            TASSERT(tw.firstChild() == E121);   //first visible child
-            TASSERT(tw.previousSibling() == 0);
+            TASSERT(tw->firstChild() == E121);   //first visible child
+            TASSERT(tw->previousSibling() == 0);
         }
-        TESTEPILOG;
 
-        TESTPROLOG;
+
+
         {
-            MyFilter mf(DOM_Node::ELEMENT_NODE, true);
-            unsigned long whatToShow = DOM_NodeFilter::SHOW_ELEMENT;
-            DOM_TreeWalker tw = doc.createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(IDOM_Node::ELEMENT_NODE, true);
+            unsigned long whatToShow = IDOM_NodeFilter::SHOW_ELEMENT;
+            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
-            tw.setCurrentNode(E12);
-            TASSERT(tw.firstChild() == E121);   //still first visible child
+            tw->setCurrentNode(E12);
+            TASSERT(tw->firstChild() == E121);   //still first visible child
         }
-        TESTEPILOG;
 
-        TESTPROLOG;
+
+
         {
-            MyFilter mf(DOM_Node::TEXT_NODE);
-            unsigned long whatToShow = DOM_NodeFilter::SHOW_TEXT;
-            DOM_TreeWalker tw = doc.createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(IDOM_Node::TEXT_NODE);
+            unsigned long whatToShow = IDOM_NodeFilter::SHOW_TEXT;
+            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
             //when first is not visible, should it go to its descendent?
-            TASSERT(tw.firstChild() == textNode1);   //E11 skipped
-            TASSERT(tw.firstChild() == 0);
-            TASSERT(tw.nextNode() == textNode2);
-            TASSERT(tw.nextSibling() == 0);
-            TASSERT(tw.parentNode() == 0);  //no visible ancestor
-            TASSERT(tw.getCurrentNode() == textNode2);
-            tw.setCurrentNode(root);
+            TASSERT(tw->firstChild() == textNode1);   //E11 skipped
+            TASSERT(tw->firstChild() == 0);
+            TASSERT(tw->nextNode() == textNode2);
+            TASSERT(tw->nextSibling() == 0);
+            TASSERT(tw->parentNode() == 0);  //no visible ancestor
+            TASSERT(tw->getCurrentNode() == textNode2);
+            tw->setCurrentNode(root);
             //when last is not visible, should it go to its sibling & descendent?
-            TASSERT(tw.lastChild() == textNode2);   //last visible child
-            tw.setCurrentNode(E12);
+            TASSERT(tw->lastChild() == textNode2);   //last visible child
+            tw->setCurrentNode(E12);
             //when next sibling is not visible, should it go to its descendent?
-            TASSERT(tw.nextSibling() == 0);
+            TASSERT(tw->nextSibling() == 0);
         }
-        TESTEPILOG;
 
-        TESTPROLOG;
+
+
         {
-            MyFilter mf(DOM_Node::TEXT_NODE, true);
-            unsigned long whatToShow = DOM_NodeFilter::SHOW_TEXT;
-            DOM_TreeWalker tw = doc.createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(IDOM_Node::TEXT_NODE, true);
+            unsigned long whatToShow = IDOM_NodeFilter::SHOW_TEXT;
+            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
-            TASSERT(tw.firstChild() == 0);   //E11 rejected and no children is TEXT
-            TASSERT(tw.getCurrentNode() == root);
-            TASSERT(tw.nextNode() == 0);    //E11 rejected so can't get to textNode1
+            TASSERT(tw->firstChild() == 0);   //E11 rejected and no children is TEXT
+            TASSERT(tw->getCurrentNode() == root);
+            TASSERT(tw->nextNode() == 0);    //E11 rejected so can't get to textNode1
 
             //test getRoot
-            TASSERT(tw.getRoot() == root);
-            TASSERT(tw.getRoot() != doc);
+            TASSERT(tw->getRoot() == root);
+            TASSERT(tw->getRoot() != doc);
         }
-        TESTEPILOG;
+
+        delete doc;
 
     };
-
-
-    //
-    //  Print Final allocation stats for full test
-    //
-    DomMemDebug().print();
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
+    printf("Test Run Successfully\n");
     return 0;
-    };
+};
 
