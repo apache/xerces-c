@@ -163,6 +163,22 @@ void DOMTextImpl::setIgnorableWhitespace(bool ignorable)
 }
 
 
+bool DOMTextImpl::getIsWhitespaceInElementContent() const
+{
+    return isIgnorableWhitespace();
+}
+
+const XMLCh* DOMTextImpl::getWholeText() {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+DOMText* DOMTextImpl::replaceWholeText(const XMLCh* content){
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+
 void DOMTextImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
@@ -209,6 +225,15 @@ void DOMTextImpl::release()
            void*            DOMTextImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                  {return fNode.setUserData(key, data, handler); };
            void*            DOMTextImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
+           const XMLCh*     DOMTextImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
+           short            DOMTextImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           const XMLCh*     DOMTextImpl::getTextContent() const                  {return fNode.getTextContent(); };
+           void             DOMTextImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
+           const XMLCh*     DOMTextImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMTextImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMTextImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           DOMNode*         DOMTextImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
 
 
 //
