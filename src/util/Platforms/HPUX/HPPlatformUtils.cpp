@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/20 20:37:55  abagchi
+ * Removed fgLibLocation and cleaned up ICU path related stuff
+ *
  * Revision 1.4  2000/01/18 21:33:17  aruna1
  * Changed getBasePath to getFullPath,
  * added weavePath()
@@ -165,28 +168,6 @@ static void WriteUStrStdOut(const XMLCh* const toWrite)
 }
 
 
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
-
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
-{
-    WriteCharStr(stderr, toWrite);
-}
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    WriteUStrStdErr(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    WriteUStrStdOut(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    WriteCharStr(stdout, toWrite);
-}
-
-
 //
 //  This method is called by the platform independent part of this class
 //  during initialization. We have to create the type of net accessor that
@@ -213,43 +194,6 @@ void XMLPlatformUtils::platformInit()
     // mutex creation that must be broken.
     atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
 
-
-    // Here you would also set the fgLibLocation global variable
-    // XMLPlatformUtils::fgLibLocation is the variable to be set
-
-    char*           libraryPath = 0;
-    char            libName[256];
-    shl_descriptor* desc = NULL;
-    int             ret = 0;
-    int             index = 1;
-
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".sl");
-
-    ret = shl_get(index, &desc);
-    while (ret != -1)
-    {
-       char* fileName = desc->filename;
-       if (strstr(fileName, libName) != NULL)
-       {
-           char* lastSlash = strrchr(fileName, '/');
-           size_t chars_to_extract = lastSlash - fileName;
-           libraryPath = new char[chars_to_extract + 1];
-           strncpy(libraryPath, fileName, chars_to_extract);
-           libraryPath[chars_to_extract] = 0;
-           break;
-       }
-       index++;
-       ret = shl_get(index, &desc);
-    }
-
-    XMLPlatformUtils::fgLibLocation = libraryPath;
-
-    if (XMLPlatformUtils::fgLibLocation == NULL)
-    {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
-    }
 }
 
 
@@ -293,52 +237,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 {
 
 #if defined (XML_USE_ICU_TRANSCODER)
-    //
-    //  We need to figure out the path to the ICU converter files.
-    //
-
-    static const char * xml4cIntlDirEnvVar = "ICU_DATA";
-    char *              intlPath        = 0;
-
-    //
-    // Check if environment variable 'ICU_DATA' is set.
-    //
-
-    char* envVal = getenv(xml4cIntlDirEnvVar);
-
-    if (envVal != NULL)
-    {
-        unsigned int pathLen  = strlen(envVal);
-        intlPath = new char[pathLen + 2];
-
-        strcpy((char *) intlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) intlPath, "/");
-        }
-
-        ICUTransService::setICUPath(intlPath);
-        delete intlPath;
-
-        return new ICUTransService;
-    }
-
-    //
-    //  If the environment variable ICU_DATA is not set, assume that the
-    //  converter files are stored relative to the Xerces-C library.
-    //
-
-    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
-                         strlen("/icu/data/") + 1;
-    intlPath = new char[lent];
-    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
-    strcat(intlPath, "/icu/data/");
-
-    ICUTransService::setICUPath(intlPath);
-    delete intlPath;
-
     return new ICUTransService;
-
 #else
 
     // Use native transcoding services.
