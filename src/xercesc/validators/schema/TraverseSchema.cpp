@@ -231,7 +231,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
 
     try {
 
-        if (fGrammarResolver && schemaRoot) {
+        if (fGrammarResolver && schemaRoot && fURIStringPool) {
 
             init();
             preprocessSchema(schemaRoot, schemaURL);
@@ -2394,7 +2394,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                         int    elemURI = elemDecl->getURI();
                         int    subsElemURI = subsElemDecl->getURI();
 
-                        elemDecl->setSubstitutionGroupName(fBuffer.getRawBuffer());
+                        elemDecl->setSubstitutionGroupElem(subsElemDecl);
                         fSubstitutionGroups->put((void*) elemBaseName, elemURI, subsElemDecl);
                         ValueVectorOf<SchemaElementDecl*>* subsElements =
                            fValidSubstitutionGroups->get(subsElemBaseName, subsElemURI);
@@ -2537,7 +2537,6 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         elemDecl->setDatatypeValidator(validator);
         elemDecl->setComplexTypeInfo(typeInfo);
         elemDecl->setDefaultValue(deflt);
-//        elemDecl->setDefinedScope(scopeDefined);
         elemDecl->setModelType(contentSpecType);
         elemDecl->setContentSpec(contentSpecNode);
 
@@ -4821,18 +4820,20 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     int                  saveScope = fCurrentScope;
+    unsigned int         uriId = fURIStringPool->addOrFind(nameURI);
+    bool                 wasAdded = false;
 
     if (XMLString::compareString(nameURI, fTargetNSURIString) != 0) {
 
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
-        unsigned int uriId = fURIStringPool->addOrFind(nameURI);
-
         if (!fSchemaInfo->isImportingNS(uriId)) {
 
+            noErrorDetected = false;
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, nameURI);
-            return 0;
+            return (SchemaElementDecl*) fSchemaGrammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                     0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
         }
 
         Grammar* grammar = fGrammarResolver->getGrammar(nameURI);
@@ -4843,8 +4844,10 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
         }
         else {
 
+            noErrorDetected = false;
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::GrammarNotFound, nameURI);
-            return 0;
+            return (SchemaElementDecl*) fSchemaGrammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                     0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
         }
 
         if (!elemDecl) {
@@ -4853,8 +4856,10 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
 
             if (!impInfo || impInfo->getProcessed()) {
 
+                noErrorDetected = false;
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
-                return 0;
+                return (SchemaElementDecl*) grammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                  0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
             }
 
             infoType = SchemaInfo::IMPORT;
@@ -4879,16 +4884,14 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
             if (subsGroupQName) {
                 elemDecl = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(fTargetNSURI, localPart,0, Grammar::TOP_LEVEL_SCOPE);
             }
-
-            if (!elemDecl) {
-
-                noErrorDetected = false;
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
-            }
         }
-        else {
+
+        if (!elemDecl) {
+
             noErrorDetected = false;
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
+            elemDecl = (SchemaElementDecl*) fSchemaGrammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                         0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
         }
     }
 

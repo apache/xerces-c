@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/07/12 15:17:48  knoaman
+ * For a given global element, store info about a substitution group element
+ * as a SchemaElementDecl and not as a string.
+ *
  * Revision 1.5  2002/04/01 15:47:06  knoaman
  * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
  *
@@ -219,14 +223,13 @@ public :
     ModelTypes getModelType() const;
     DatatypeValidator* getDatatypeValidator() const;
     int getEnclosingScope() const;
-    int getDefinedScope() const;
     int getFinalSet() const;
     int getBlockSet() const;
     int getMiscFlags() const;
     XMLCh* getDefaultValue() const;
-    XMLCh* getSubstitutionGroupName() const;
     ComplexTypeInfo* getComplexTypeInfo() const;
     virtual bool isGlobalDecl() const;
+    SchemaElementDecl* getSubstitutionGroupElem() const;
 
 
     // -----------------------------------------------------------------------
@@ -235,15 +238,14 @@ public :
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setEnclosingScope(const int enclosingScope);
-    void setDefinedScope(const int definedScope);
     void setFinalSet(const int finalSet);
     void setBlockSet(const int blockSet);
     void setMiscFlags(const int flags);
     void setDefaultValue(const XMLCh* const value);
-    void setSubstitutionGroupName(const XMLCh* const name);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setAttWildCard(SchemaAttDef* const attWildCard);
+    void setSubstitutionGroupElem(SchemaElementDecl* const elemDecl);
 
     // -----------------------------------------------------------------------
     //  IC methods
@@ -266,9 +268,6 @@ private :
     //  fEnclosingScope
     //      The enclosing scope where this element is declared.
     //
-    //  fDefinedScope
-    //      The Complex Element that this element belongs to.
-    //
     //  fFinalSet
     //      The value set of the 'final' attribute.
     //
@@ -280,9 +279,6 @@ private :
     //
     //  fDefaultValue
     //      The defalut/fixed value
-    //
-    //  fSubstitutionGroupName
-    //      The substitution group full name ("uristring','local")
     //
     //  fComplexTypeInfo
     //      Stores complex type information
@@ -304,21 +300,23 @@ private :
     //  fAttWildCard
     //      Store wildcard attribute in the case of an element with a type of
     //      'anyType'.
+    //
+    //  fSubstitutionGroupElem
+    //      The substitution group element declaration.
     // -----------------------------------------------------------------------
     ModelTypes                         fModelType;
     DatatypeValidator*                 fDatatypeValidator;
     int                                fEnclosingScope;
-    int                                fDefinedScope;
     int                                fFinalSet;
     int                                fBlockSet;
     int                                fMiscFlags;
     XMLCh*                             fDefaultValue;
-    XMLCh*                             fSubstitutionGroupName;
     ComplexTypeInfo*                   fComplexTypeInfo;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     ComplexTypeInfo*                   fXsiComplexTypeInfo;
     RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
     SchemaAttDef*                      fAttWildCard;
+    SchemaElementDecl*                 fSubstitutionGroupElem;
 };
 
 // ---------------------------------------------------------------------------
@@ -401,11 +399,6 @@ inline int SchemaElementDecl::getEnclosingScope() const
     return fEnclosingScope;
 }
 
-inline int SchemaElementDecl::getDefinedScope() const
-{
-    return fDefinedScope;
-}
-
 inline int SchemaElementDecl::getFinalSet() const
 {
     return fFinalSet;
@@ -424,12 +417,6 @@ inline int SchemaElementDecl::getMiscFlags() const
 inline XMLCh* SchemaElementDecl::getDefaultValue() const
 {
     return fDefaultValue;
-}
-
-inline XMLCh* SchemaElementDecl::getSubstitutionGroupName() const
-{
-
-    return fSubstitutionGroupName;
 }
 
 inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
@@ -470,6 +457,12 @@ inline bool SchemaElementDecl::isGlobalDecl() const {
     return (fEnclosingScope == Grammar::TOP_LEVEL_SCOPE);
 }
 
+inline SchemaElementDecl*
+SchemaElementDecl::getSubstitutionGroupElem() const {
+
+    return fSubstitutionGroupElem;
+}
+
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Setter methods
 // ---------------------------------------------------------------------------
@@ -487,11 +480,6 @@ inline void SchemaElementDecl::setDatatypeValidator(DatatypeValidator* newDataty
 inline void SchemaElementDecl::setEnclosingScope(const int newEnclosingScope)
 {
     fEnclosingScope = newEnclosingScope;
-}
-
-inline void SchemaElementDecl::setDefinedScope(const int newDefinedScope)
-{
-    fDefinedScope = newDefinedScope;
 }
 
 inline void SchemaElementDecl::setFinalSet(const int finalSet)
@@ -518,15 +506,6 @@ inline void SchemaElementDecl::setDefaultValue(const XMLCh* const value)
     fDefaultValue = XMLString::replicate(value);
 }
 
-inline void SchemaElementDecl::setSubstitutionGroupName(const XMLCh* const name)
-{
-    if (fSubstitutionGroupName) {
-        delete [] fSubstitutionGroupName;
-    }
-
-    fSubstitutionGroupName = XMLString::replicate(name);
-}
-
 inline void
 SchemaElementDecl::setComplexTypeInfo(ComplexTypeInfo* const typeInfo)
 {
@@ -546,6 +525,12 @@ SchemaElementDecl::setAttWildCard(SchemaAttDef* const attWildCard) {
         delete fAttWildCard;
 
     fAttWildCard = attWildCard;
+}
+
+inline void
+SchemaElementDecl::setSubstitutionGroupElem(SchemaElementDecl* const elemDecl) {
+
+    fSubstitutionGroupElem = elemDecl;
 }
 
 // ---------------------------------------------------------------------------

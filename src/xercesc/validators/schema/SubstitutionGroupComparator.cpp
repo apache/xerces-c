@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/12 15:17:48  knoaman
+ * For a given global element, store info about a substitution group element
+ * as a SchemaElementDecl and not as a string.
+ *
  * Revision 1.2  2002/02/25 21:18:18  tng
  * Schema Fix: Ensure no invalid uri index for UPA checking.
  *
@@ -148,45 +152,17 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
     if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
         return false;
 
-    SchemaElementDecl* pElemDecl = (SchemaElementDecl*) sGrammar->getElemDecl(uriId, localpart, 0, Grammar::TOP_LEVEL_SCOPE);
-    if (!pElemDecl)
+    SchemaElementDecl* anElementDecl = (SchemaElementDecl*) sGrammar->getElemDecl(uriId, localpart, 0, Grammar::TOP_LEVEL_SCOPE);
+    if (!anElementDecl)
         return false;
 
-    SchemaElementDecl* anElementDecl = pElemDecl;     // to preserve the ElementDecl for anElement
-    XMLCh* substitutionGroupFullName = pElemDecl->getSubstitutionGroupName();
+    SchemaElementDecl* pElemDecl = anElementDecl->getSubstitutionGroupElem();
     bool foundIt = false;
 
-    while (substitutionGroupFullName)
+    while (pElemDecl) //(substitutionGroupFullName)
     {
-        int commaAt = XMLString::indexOf(substitutionGroupFullName, chComma);
-        XMLCh tmpURI[256];
-        tmpURI[0] = chNull;
-        XMLCh tmpLocalpart[256];
-        tmpLocalpart[0] = chNull;
-
-        if (commaAt >= 0)
-        {
-            if (commaAt > 0)
-                 XMLString::subString(tmpURI, substitutionGroupFullName, 0, commaAt);
-
-            XMLString::subString(tmpLocalpart, substitutionGroupFullName, commaAt+1, XMLString::stringLen(substitutionGroupFullName));
-        }
-        else {
-            XMLString::subString(tmpLocalpart, substitutionGroupFullName, 0, XMLString::stringLen(substitutionGroupFullName));
-        }
-
-        sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(tmpURI);
-        if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
-            return false;
-
-        uriId = fStringPool->addOrFind(tmpURI);
-        pElemDecl = (SchemaElementDecl*) sGrammar->getElemDecl(uriId, tmpLocalpart, 0, Grammar::TOP_LEVEL_SCOPE);
-
-        if (!pElemDecl)
-            return false;
-
-        if ((XMLString::compareString(tmpLocalpart, exemplar->getLocalPart()) == 0) &&
-            (uriId == exemplar->getURI()))
+        if ((XMLString::compareString(pElemDecl->getBaseName(), exemplar->getLocalPart()) == 0) &&
+            (pElemDecl->getURI() == exemplar->getURI()))
         {
             // time to check for block value on element
             if((pElemDecl->getBlockSet() & SchemaSymbols::SUBSTITUTION) != 0)
@@ -196,7 +172,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
             break;
         }
 
-        substitutionGroupFullName = pElemDecl->getSubstitutionGroupName();
+        pElemDecl = pElemDecl->getSubstitutionGroupElem();
     }//while
 
     if (!foundIt)

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/07/12 15:17:48  knoaman
+ * For a given global element, store info about a substitution group element
+ * as a SchemaElementDecl and not as a string.
+ *
  * Revision 1.4  2002/05/08 13:53:37  peiyongz
  * Bug#8898: SchemaElementDecl doesn't compile with Intel C++ for IA32,
  *                   patch from Curt Arnold
@@ -148,12 +152,12 @@ SchemaElementDecl::SchemaElementDecl() :
     , fFinalSet(0)
     , fMiscFlags(0)
     , fDefaultValue(0)
-    , fSubstitutionGroupName(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
     , fAttWildCard(0)
+    , fSubstitutionGroupElem(0)
 {
 }
 
@@ -170,12 +174,12 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fFinalSet(0)
     , fMiscFlags(0)
     , fDefaultValue(0)
-    , fSubstitutionGroupName(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
     , fAttWildCard(0)
+    , fSubstitutionGroupElem(0)
 {
     setElementName(prefix, localPart, uriId);
 }
@@ -191,12 +195,12 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fFinalSet(0)
     , fMiscFlags(0)
     , fDefaultValue(0)
-    , fSubstitutionGroupName(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
     , fAttWildCard(0)
+    , fSubstitutionGroupElem(0)
 {
     setElementName(elementName);
 }
@@ -204,7 +208,6 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
 SchemaElementDecl::~SchemaElementDecl()
 {
     delete [] fDefaultValue;
-    delete [] fSubstitutionGroupName;
     delete fAttDefs;
     delete fIdentityConstraints;
     delete fAttWildCard;
