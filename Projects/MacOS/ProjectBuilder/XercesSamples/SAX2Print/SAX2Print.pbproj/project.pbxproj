@@ -10,8 +10,8 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				GCC_VERSION = 2.x;
 				OPTIMIZATION_CFLAGS = "-O0";
-				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
 			name = "Development GCC2";
@@ -21,7 +21,7 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				USE_GCC3 = NO;
+				GCC_VERSION = 2.x;
 			};
 			isa = PBXBuildStyle;
 			name = "Deployment GCC2";
@@ -79,6 +79,7 @@
 				F57843050313FA0D01A80065,
 				F57843060313FA1301A80065,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 08FB7794FE84155DC02AAC07;
 			projectDirPath = "";
@@ -140,7 +141,6 @@
 			productInstallPath = "$(HOME)/bin";
 			productName = IDOMPrint;
 			productReference = 0249A660FF388D4511CA2CEA;
-			shouldUseHeadermap = 1;
 		};
 		08FB77A0FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -206,10 +206,11 @@
 //F53
 //F54
 		F52345FA03AE621701A80065 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = xerces_sample_prefix.h;
-			path = "/Volumes/Rock/Users/jberry/Projects/xml-apache/xml-xerces/c/Projects/MacOS/ProjectBuilder/XercesSamples/xerces_sample_prefix.h";
-			refType = 0;
+			path = ../xerces_sample_prefix.h;
+			refType = 2;
 		};
 		F52345FB03AE621701A80065 = {
 			fileRef = F52345FA03AE621701A80065;
@@ -218,21 +219,25 @@
 			};
 		};
 		F54F8B8B00F8F37F01000001 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = SAX2Print.cpp;
 			refType = 4;
 		};
 		F54F8B8C00F8F37F01000001 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = SAX2Print.hpp;
 			refType = 4;
 		};
 		F54F8B8D00F8F37F01000001 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = SAX2PrintHandlers.cpp;
 			refType = 4;
 		};
 		F54F8B8E00F8F37F01000001 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = SAX2PrintHandlers.hpp;
 			refType = 4;
@@ -267,7 +272,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
-				USE_GCC3 = YES;
 			};
 			isa = PBXBuildStyle;
 			name = "Development GCC3";
@@ -277,7 +281,6 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				USE_GCC3 = YES;
 			};
 			isa = PBXBuildStyle;
 			name = "Deployment GCC3";

@@ -41,16 +41,19 @@
 			refType = 4;
 		};
 		02DDAA62FF8BF5E17F000001 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DOMPrint.cpp;
 			refType = 4;
 		};
 		02DDAA63FF8BF5E17F000001 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DOMTreeErrorReporter.hpp;
 			refType = 4;
 		};
 		02DDAA64FF8BF5E17F000001 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DOMTreeErrorReporter.cpp;
 			refType = 4;
@@ -94,6 +97,7 @@
 				F58B304702DE343B0195DDC8,
 				F58B304802DE34410195DDC8,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 08FB7794FE84155DC02AAC07;
 			projectDirPath = "";
@@ -103,6 +107,7 @@
 		};
 		08FB7794FE84155DC02AAC07 = {
 			children = (
+				F52345F503AE603601A80065,
 				08FB7795FE84155DC02AAC07,
 				0249A662FF388D9811CA2CEA,
 				1AB674ADFE9D54B511CA2CBB,
@@ -114,7 +119,6 @@
 		};
 		08FB7795FE84155DC02AAC07 = {
 			children = (
-				F52345F503AE603601A80065,
 				02DDAA62FF8BF5E17F000001,
 				02DDAA63FF8BF5E17F000001,
 				02DDAA64FF8BF5E17F000001,
@@ -124,9 +128,9 @@
 				F58FFD0902C4FB8D01A80065,
 			);
 			isa = PBXGroup;
-			name = Source;
-			path = "";
-			refType = 4;
+			name = DOMPrint;
+			path = ../../../../../samples/DOMPrint;
+			refType = 2;
 		};
 		08FB779FFE84155DC02AAC07 = {
 			buildPhases = (
@@ -158,7 +162,6 @@
 			name = DOMPrint;
 			productName = DOMPrint;
 			productReference = 0249A660FF388D4511CA2CEA;
-			shouldUseHeadermap = 1;
 		};
 		08FB77A0FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -230,8 +233,8 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				GCC_VERSION = 2.x;
 				OPTIMIZATION_CFLAGS = "-O0";
-				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
 			name = "Development GCC2";
@@ -241,7 +244,7 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				USE_GCC3 = NO;
+				GCC_VERSION = 2.x;
 			};
 			isa = PBXBuildStyle;
 			name = "Deployment GCC2";
@@ -257,10 +260,11 @@
 //F53
 //F54
 		F52345F503AE603601A80065 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = xerces_sample_prefix.h;
-			path = "/Volumes/Rock/Users/jberry/Projects/xml-apache/xml-xerces/c/Projects/MacOS/ProjectBuilder/XercesSamples/xerces_sample_prefix.h";
-			refType = 0;
+			path = ../xerces_sample_prefix.h;
+			refType = 2;
 		};
 		F52345F603AE603601A80065 = {
 			fileRef = F52345F503AE603601A80065;
@@ -274,7 +278,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
-				USE_GCC3 = YES;
 			};
 			isa = PBXBuildStyle;
 			name = "Development GCC3";
@@ -284,27 +287,30 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				USE_GCC3 = YES;
 			};
 			isa = PBXBuildStyle;
 			name = "Deployment GCC3";
 		};
 		F58FFD0602C4FB8D01A80065 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DOMPrintErrorHandler.cpp;
 			refType = 4;
 		};
 		F58FFD0702C4FB8D01A80065 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DOMPrintErrorHandler.hpp;
 			refType = 4;
 		};
 		F58FFD0802C4FB8D01A80065 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DOMPrintFilter.cpp;
 			refType = 4;
 		};
 		F58FFD0902C4FB8D01A80065 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DOMPrintFilter.hpp;
 			refType = 4;
