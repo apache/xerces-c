@@ -55,7 +55,7 @@ BEGIN
             VALUE "OriginalFilename", "xerces-c_1_4.dll\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Xerces-C Version 1.4.0\0"
-            VALUE "ProductVersion", "1, 3, 0\0"
+            VALUE "ProductVersion", "1, 4, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END

@@ -3,7 +3,7 @@
 
 <s1 title="Releases">
 
-<s2 title="Xerces-C Version 1.4.0: January 19, 2001">
+<s2 title="Xerces-C Version 1.4.0: January 31, 2001">
 
 <table>
     <tr>
@@ -13,14 +13,71 @@
     </tr>
 
     <tr>
-        <td >2000/01/12</td>
+        <td >2001-01-18</td>
+        <td >Bill Schindler</td>
+        <td >Spell check, fix typos, fix grammar, readability editing, clean up formatting,
+             re-organize so related topics appear together.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-18</td>
+        <td >Bill Schindler</td>
+        <td >Project file updated due to removal of ChildAndParentNode.cpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-17</td>
+        <td >Arnaud LeHors</td>
+        <td >DOM Implementation Optimization.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-17</td>
+        <td >Volker Krause</td>
+        <td >ElementImpl::getAttributeNS should check null pointer.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-17</td>
+        <td >Arnaud LeHors</td>
+        <td >Have a single counter global to the document.  Removed node basis change counter.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-17</td>
+        <td >Arnaud LeHors</td>
+        <td >Removed unused field in NodeImpl that was left over.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001/01/17</td>
+        <td >Tinny Ng</td>
+        <td >Access violations and stack overflows in insertBefore.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001/01/15</td>
+        <td >David Bertoni</td>
+        <td >Performance Patches.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001/01/12</td>
         <td >Tinny Ng</td>
         <td >Fix style-ibm.zip for documentation generation.
         </td>
     </tr>
 
     <tr>
-        <td >2000/01/12</td>
+        <td >2001/01/12</td>
         <td >Tinny Ng</td>
         <td >Remove the two obsolete file: stylesheets\Copy of book2project.xsl and
              stylesheets\Copy of document2html.xsl in style-apachexml.jar
@@ -28,23 +85,23 @@
     </tr>
 
     <tr>
-        <td >2000/01/12</td>
+        <td >2001/01/12</td>
         <td >Tinny Ng</td>
         <td >Documentation Enhancement: explain values of Val_Scheme.
         </td>
     </tr>
 
     <tr>
-        <td >2000/01/12</td>
+        <td >2001/01/12</td>
         <td >Tinny Ng</td>
         <td >Documentation Enhancement: Add list of SAX2 feature strings that are supported.
         </td>
     </tr>
 
     <tr>
-        <td >2000/01/04</td>
+        <td >2001/01/04</td>
         <td >Khaled Noaman</td>
-        <td >Assertion `size > 0' failure when cloning a node if the last attributes.
+        <td >Assertion `size > 0' failure when cloning a node if the last attributes
              has been removed.
         </td>
     </tr>
