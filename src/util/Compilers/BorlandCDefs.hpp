@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/25 23:07:34  roddey
+ * Updated the Borland compiler header for all of the recent changes and
+ * additions of stuff that needs to be defined per compiler.
+ *
  * Revision 1.2  1999/12/02 19:02:57  roddey
  * Get rid of a few statically defined XMLMutex objects, and lazy eval them
  * using atomic compare and swap. I somehow let it get by me that we don't
@@ -88,10 +92,28 @@
 
 
 // ---------------------------------------------------------------------------
+//  We support L prefixed wide character constants
+// ---------------------------------------------------------------------------
+#define XML_LSTRSUPPORT
+
+
+// ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef wchar_t  XMLCh;
 
+
+// ---------------------------------------------------------------------------
+//  Define our version of a strict UTF16 character
+// ---------------------------------------------------------------------------
+typedef unsigned short  UTF16Ch;
+
+
+// ---------------------------------------------------------------------------
+//  Define unsigned 16 and 32 bits integers
+// ---------------------------------------------------------------------------
+typedef unsigned short  XMLUInt16;
+typedef unsigned int    XMLUInt32;
 
 
 // ---------------------------------------------------------------------------
@@ -106,4 +128,4 @@ typedef wchar_t  XMLCh;
 //  The name of the DLL as built by the Borland projects. At this time, it
 //  does not use the versioning stuff.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "XercesLib;
+const char* const XML4C_DLLName = "XercesLib";
