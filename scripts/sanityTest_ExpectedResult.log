@@ -1,8 +1,9 @@
 
 Usage:
-    SAXCount [options] <XML file>
+    SAXCount [options] <XML file> | List file>
 
 Options:
+    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
@@ -13,8 +14,11 @@ white spaces and other non-white space characters in the input file.
 
   * = Default if not provided explicitly
 
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+==Parsing== personal-schema.xml
 personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
 
 Usage: SAXPrint [options] file
@@ -156,13 +160,13 @@ The parser has intrinsic support for the following encodings:
 
 </personnel>
 Usage:
-    SAX2Count [options] <XML file>
+    SAX2Count [options] <XML file> | List file>
 
 Options:
+    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Disable namespace processing. Defaults to on.
     -s          Disable schema processing. Defaults to on.
-
     -f          Enable full schema constraint checking processing. Defaults to off.
 
 This program prints the number of elements, attributes,
@@ -170,8 +174,11 @@ white spaces and other non-white space characters in the input file.
 
   * = Default if not provided explicitly
 
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+==Parsing== personal-schema.xml
 personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
 
 Usage: SAX2Print [options] file
@@ -185,7 +192,6 @@ Options:
     -e          Expand Namespace Alias with URI's.
     -x=XXX      Use a particular encoding for output (LATIN1*).
     -s          Disable schema processing. Defaults to on.
-
     -f          Enable full schema constraint checking processing. Defaults to off.
 
     -?          Show this help
@@ -373,13 +379,14 @@ attributes in the given XML file.
 personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 
 Usage:
-    DOMCount [options] <XML file>
+    DOMCount [options] <XML file> | List file>
 
 This program invokes the XML4C DOM parser, builds
 the DOM tree, and then prints the number of elements
 found in the input XML file.
 
 Options:
+    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
@@ -388,8 +395,11 @@ Options:
   * = Default if not provided explicitly
 
 
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems).
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems).
+==Parsing== personal-schema.xml
 personal-schema.xml:{timing removed}(37 elems).
 
 Usage: DOMPrint [options] <XML file>
@@ -548,13 +558,14 @@ The parser has intrinsic support for the following encodings:
 
 
 Usage:
-    IDOMCount [options] <XML file>
+    IDOMCount [options] <XML file> | List file>
 
 This program invokes the XML4C DOM parser, builds
 the DOM tree, and then prints the number of elements
 found in the input XML file.
 
 Options:
+    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
@@ -563,8 +574,11 @@ Options:
   * = Default if not provided explicitly
 
 
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems).
+==Parsing== personal.xml
 personal.xml:{timing removed}(37 elems).
+==Parsing== personal-schema.xml
 personal-schema.xml:{timing removed}(37 elems).
 
 Usage: IDOMPrint [options] <XML file>
