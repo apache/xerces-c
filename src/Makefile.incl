@@ -195,9 +195,9 @@ ifeq (${PLATFORM}, AIX)
 #endif
 
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -licudata -lbsd
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -licudata
 else
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -lbsd
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
 endif
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 MAKE_SHARED = makeC++SharedLib_r -p 5000
