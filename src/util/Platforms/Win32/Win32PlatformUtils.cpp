@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.22  2000/05/10 00:39:20  andyh
+ * Japanese and Korean Encoding Problems with WIndows
+ * file names.  Win98 fix, and relative paths fix.
+ *
  * Revision 1.21  2000/05/09 00:22:41  andyh
  * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
  * allocated memory; memory leak checking tools will no longer report
@@ -255,6 +259,34 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
+
+//
+//  Functions to look for Unicode forward and back slashes.
+//  This operation is complicated by the fact that some Japanese and Korean
+//    encodings use the same encoding for both '\' and their currency symbol
+//    (Yen or Won).  In these encodings, which is meant is context dependent.
+//    Unicode converters choose the currency symbols.  But in the context
+//    of a Windows file name, '\' is generally what was intended.
+//
+//    So we make a leap of faith, and assume that if we get a Yen or Won
+//    here, in the context of a file name, that it originated in one of
+//    these encodings, and is really supposed to be a '\'.
+//
+static bool isBackSlash(XMLCh c) {
+    return c == chBackSlash ||
+           c == chYenSign   ||
+           c == chWonSign;
+}
+
+static bool isAnySlash(XMLCh c) {
+    return c == chBackSlash    ||
+           c == chForwardSlash ||
+           c == chYenSign      ||
+           c == chWonSign;
+}
+
+
+
 unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 {
     // Get the current position
@@ -315,80 +347,77 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     if (!fileName)
         return 0;
 
+    //  Ok, this might look stupid but its a semi-expedient way to deal
+    //  with a thorny problem. Shift-JIS and some other Asian encodings
+    //  are fundamentally broken and map both the backslash and the Yen
+    //  sign to the same code point. Transcoders have to pick one or the
+    //  other to map '\' to Unicode and tend to choose the Yen sign. 
+    //
+    //  Unicode Yen or Won signs as directory separators will fail.
+    //
+    //  So, we will check this path name for Yen or won signs and, if they are
+    //  there, we'll replace them with slashes.  
+    //
+    //  A further twist:  we replace Yen and Won with forward slashes rather 
+    //   than back slashes.  Either form of slash will work as a directory
+    //   separator.  On Win 95 and 98, though, Unicode back-slashes may
+    //   fail to transode back to 8-bit 0x5C with some Unicode converters
+    //   to  some of the problematic code pages.  Forward slashes always
+    //   transcode correctly back to 8 bit char * form.
+    //
+    XMLCh *tmpUName = 0;
+    const XMLCh *nameToOpen = fileName;
+    
+    const XMLCh* srcPtr = fileName;
+    while (*srcPtr)
+    {
+        if (*srcPtr == chYenSign ||
+            *srcPtr == chWonSign)
+            break;
+        srcPtr++;
+    }
+    
+    //
+    //  If we found a yen, then we have to create a temp file name. Else
+    //  go with the file name as is and save the overhead.
+    //
+    if (*srcPtr)
+    {
+        tmpUName = XMLString::replicate(fileName);
+        
+        XMLCh* tmpPtr = tmpUName;
+        while (*tmpPtr)
+        {
+            if (*tmpPtr == chYenSign ||
+                *tmpPtr == chWonSign)
+                *tmpPtr = chForwardSlash;
+            tmpPtr++;
+        }
+        nameToOpen = tmpUName;
+    }
     FileHandle retVal = 0;
     if (gOnNT)
     {
-        //
-        //  Ok, this might look stupid but its a semi-expedient way to deal
-        //  with a thorny problem. Shift-JIS and some other Asian encodings
-        //  are fundamentally broken and map both the backslash and the Yen
-        //  sign to the same code point. Transcoders have to pick one or the
-        //  other to map '\' to Unicode and tend to choose the Yen sign. Since we
-        //  never transcode back to the local code page, the Unicode Yen signs
-        //  will still be in the path and will fail.
-        //
-        //  So, we will check this path name for Yen signs and, if they are
-        //  there, we'll replace them with back slashes.  The Korean Won
-        //  currency symbol has the same problem.
-        //
-        const XMLCh* srcPtr = fileName;
-        while (*srcPtr)
-        {
-            if (*srcPtr == chYenSign ||
-				*srcPtr == chWonSign)
-                    break;
-            srcPtr++;
-        }
-
-        //
-        //  If we found a yen, then we have to create a temp file name. Else
-        //  go with the file name as is and save the overhead.
-        //
-        if (*srcPtr)
-        {
-            XMLCh* tmpName = XMLString::replicate(fileName);
-
-            XMLCh* srcPtr = tmpName;
-            while (*srcPtr)
-            {
-                if (*srcPtr == chYenSign ||
-					*srcPtr == chWonSign)
-                    *srcPtr = chBackSlash;
-                srcPtr++;
-            }
-
-            retVal = ::CreateFileW
+        retVal = ::CreateFileW
             (
-                tmpName
-                , GENERIC_READ
-                , FILE_SHARE_READ
-                , 0
-                , OPEN_EXISTING
-                , FILE_FLAG_SEQUENTIAL_SCAN
-                , 0
+            nameToOpen
+            , GENERIC_READ
+            , FILE_SHARE_READ
+            , 0
+            , OPEN_EXISTING
+            , FILE_FLAG_SEQUENTIAL_SCAN
+            , 0
             );
-
-            delete [] tmpName;
-        }
-         else
-        {
-            retVal = ::CreateFileW
-            (
-                fileName
-                , GENERIC_READ
-                , FILE_SHARE_READ
-                , 0
-                , OPEN_EXISTING
-                , FILE_FLAG_SEQUENTIAL_SCAN
-                , 0
-            );
-        }
     }
-     else
+    else
     {
-        char* tmpName = XMLString::transcode(fileName);
+        //
+        //  We are Win 95 / 98.  Take the Unicode file name back to (char *)
+        //    so that we can open it.
+        //
+        char* tmpName = XMLString::transcode(nameToOpen);
         retVal = ::CreateFileA
-        (
+            (
             tmpName
             , GENERIC_READ
             , FILE_SHARE_READ
@@ -396,13 +425,16 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
             , OPEN_EXISTING
             , FILE_FLAG_SEQUENTIAL_SCAN
             , 0
-        );
+            );
         delete [] tmpName;
     }
 
+    if (tmpUName)  
+        delete [] tmpUName;
+    
     if (retVal == INVALID_HANDLE_VALUE)
         return 0;
-
+    
     return retVal;
 }
 
@@ -528,9 +560,9 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
     //
     //  If it starts with a double slash, then it cannot be relative since
-    //  its a remote file.
+    //  it's a remote file.
     //
-    if ((toCheck[0] == chBackSlash) && (toCheck[1] == chBackSlash))
+    if (isBackSlash(toCheck[0]) && isBackSlash(toCheck[1]))
         return false;
 
     // Else assume its a relative path
@@ -565,14 +597,9 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     }
 
     const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
-    if ((*basePtr != chForwardSlash)
-    &&  (*basePtr != chBackSlash))
+    while ((basePtr >= basePath)  &&  ((isAnySlash(*basePtr) == false)))
     {
-        while ((basePtr >= basePath)
-        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
-        {
-            basePtr--;
-        }
+        basePtr--;
     }
 
     // There is no relevant base path, so just take the relative part
@@ -605,8 +632,7 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
         }
 
         // Has to be followed by a \ or / or the null to mean anything
-        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
-        &&  *pathPtr)
+        if (isAnySlash(*pathPtr) == false &&  *pathPtr)
         {
             break;
         }
@@ -617,8 +643,7 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
         if (periodCount == 2)
         {
             basePtr--;
-            while ((basePtr >= basePath)
-            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            while ((basePtr >= basePath) &&  (isAnySlash(*basePtr) == false))
             {
                 basePtr--;
             }
@@ -814,7 +839,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 void XMLPlatformUtils::platformInit()
 {
 
-#if 1 && _DEBUG
+#if 0 && _DEBUG
     //  Enable this code for memeory leak testing
     
    // Send all reports to STDOUT
