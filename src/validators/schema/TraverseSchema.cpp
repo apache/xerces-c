@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/05/30 17:38:28  knoaman
+ * o Reset fScopeCount after traversing complexType.
+ * o Fix problem of deleting ContentSpecNode prematurely
+ * when composing final content model of a child complex type.
+ *
  * Revision 1.13  2001/05/29 19:37:37  knoaman
  * Added substitution group constraint checking.
  *
@@ -1042,6 +1047,9 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     fCurrentScope = previousScope;
     resetCurrentTypeNameStack(0);
+    if (fCurrentScope == Grammar::TOP_LEVEL_SCOPE) {
+        fScopeCount = 0;
+    }
 
     return typeNameIndex;
 }
@@ -4146,6 +4154,7 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
             }
 
             //REVISIT: !!!really hairy stuff to check the particle derivation OK in 5.10
+
         }
         else {
 
@@ -4157,18 +4166,22 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
             }
 
             // Compose the final content model by concatenating the base and
-            // the current in sequence
-            if (typeInfo->getContentSpec() == 0) {
+            // the current in sequence            
+            if (!specNode) {
 
                 typeInfo->setContentSpec(baseSpecNode);
                 typeInfo->setAdoptContentSpec(false);
             }
             else if (baseSpecNode != 0) {
 
+                bool toAdoptSpecNode = typeInfo->getAdoptContentSpec();
+
+                typeInfo->setAdoptContentSpec(false);
                 typeInfo->setContentSpec(
                     new ContentSpecNode(ContentSpecNode::Sequence, baseSpecNode,
-                                        typeInfo->getContentSpec(), false,
-                                        typeInfo->getAdoptContentSpec()));
+                                        specNode, false,
+                                        toAdoptSpecNode));
+                typeInfo->setAdoptContentSpec(true);
             }
         }
     }
