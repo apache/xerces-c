@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/25 23:14:19  roddey
+ * Borland does not support wcsupr(), but does support _wcsupr(). Since VC++ does also,
+ * _wcsupr() was used in order to have the both work with the same transcoding code.
+ *
  * Revision 1.6  2000/01/25 22:49:58  roddey
  * Moved the supportsSrcOfs() method from the individual transcoder to the
  * transcoding service, where it should have been to begin with.
@@ -161,7 +165,7 @@ bool Win32TransService::supportsSrcOfs() const
 
 void Win32TransService::upperCase(XMLCh* const toUpperCase) const
 {
-    wcsupr(toUpperCase);
+    _wcsupr(toUpperCase);
 }
 
 
