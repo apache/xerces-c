@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/12/10 20:52:27  neilg
+ * fixes for canonical value production; memory management was not implemented correctly
+ *
  * Revision 1.13  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -507,14 +510,14 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
     temp->checkContent(tokenVector, rawData, 0, false);
 
     MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
-    int  retBufSize = 2 * XMLString::stringLen(rawData);
+    unsigned int  retBufSize = 2 * XMLString::stringLen(rawData);
     XMLCh* retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh));
     XMLCh* retBufPtr = retBuf;
 
     DatatypeValidator* itemDv = this->getItemTypeDTV();
     for (unsigned int i = 0; i < tokenVector->size(); i++)
     {
-        XMLCh* itemCanRep = (XMLCh*) itemDv->getCanonicalRepresentation(tokenVector->elementAt(i), memMgr);
+        XMLCh* itemCanRep = (XMLCh*) itemDv->getCanonicalRepresentation(tokenVector->elementAt(i), toUse);
         XMLString::catString(retBufPtr, itemCanRep);
         retBufPtr = retBufPtr + XMLString::stringLen(itemCanRep) + 1;
         *(retBufPtr++) = chSpace;
@@ -522,7 +525,7 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
         toUse->deallocate(itemCanRep);
     }
 
-    return 0;
+    return retBuf;
 }
 
 /***

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2003/12/10 20:55:18  neilg
+ * fixes for canonical value production; memory management was not implemented correctly
+ *
  * Revision 1.19  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -487,6 +490,7 @@ const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*    
 
     //get the native unionDv
     UnionDatatypeValidator* bdv = (UnionDatatypeValidator*) temp->getBaseValidator();
+    MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
     while (bdv)
     {
         temp = bdv;
@@ -500,7 +504,7 @@ const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*    
         try
         {
             fMemberTypeValidators->elementAt(i)->validate(rawData, 0);
-            return fMemberTypeValidators->elementAt(i)->getCanonicalRepresentation(rawData);
+            return fMemberTypeValidators->elementAt(i)->getCanonicalRepresentation(rawData, toUse);
         }
         catch (XMLException&)
         {
