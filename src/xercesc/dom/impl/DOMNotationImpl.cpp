@@ -193,9 +193,9 @@ void DOMNotationImpl::release()
            short            DOMNotationImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMNotationImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMNotationImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMNotationImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMNotationImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMNotationImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           const XMLCh*     DOMNotationImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMNotationImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMNotationImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMNotationImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 

@@ -157,9 +157,9 @@ void DOMCommentImpl::release()
            short            DOMCommentImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMCommentImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMCommentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMCommentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMCommentImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMCommentImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           const XMLCh*     DOMCommentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMCommentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMCommentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMCommentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 

@@ -680,9 +680,9 @@ int             DOMDocumentImpl::changes() const{
            short            DOMDocumentImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMDocumentImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMDocumentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMDocumentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMDocumentImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMDocumentImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           const XMLCh*     DOMDocumentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMDocumentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMDocumentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMDocumentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 

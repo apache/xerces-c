@@ -499,9 +499,9 @@ void DOMElementImpl::release()
            short            DOMElementImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMElementImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMElementImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMElementImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMElementImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMElementImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           const XMLCh*     DOMElementImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMElementImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMElementImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMElementImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 

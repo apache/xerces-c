@@ -911,7 +911,7 @@ public:
      * @since DOM Level 3
      */
     virtual const XMLCh*           lookupNamespacePrefix(const XMLCh* namespaceURI,
-                                                         bool useDefault) = 0;
+                                                         bool useDefault) const = 0;
 
     /**
      * This method checks if the specified <code>namespaceURI</code> is the
@@ -924,7 +924,7 @@ public:
      *   is the default namespace, <code>false</code> otherwise.
      * @since DOM Level 3
      */
-    virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) = 0;
+    virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) const = 0;
 
     /**
      * Look up the namespace URI associated to the given prefix, starting from
@@ -939,7 +939,7 @@ public:
      *   none is found.
      * @since DOM Level 3
      */
-    virtual const XMLCh*           lookupNamespaceURI(const XMLCh* prefix) = 0;
+    virtual const XMLCh*           lookupNamespaceURI(const XMLCh* prefix) const  = 0;
 
     /**
      * This method makes available a <code>DOMNode</code>'s specialized interface

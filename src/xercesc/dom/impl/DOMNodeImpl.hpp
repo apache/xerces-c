@@ -95,6 +95,7 @@ class DOMNamedNodeMap;
 class DOMNodeList;
 class DOMNode;
 class DOMDocument;
+class DOMElement;
 
 class CDOM_EXPORT DOMNodeImpl {
 public:
@@ -157,9 +158,9 @@ public:
     short             compareTreePosition(DOMNode* other) ;
     const XMLCh*      getTextContent() const ;
     void              setTextContent(const XMLCh* textContent) ;
-    const XMLCh*      lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) ;
-    bool              isDefaultNamespace(const XMLCh* namespaceURI) ;
-    const XMLCh*      lookupNamespaceURI(const XMLCh* prefix) ;
+    const XMLCh*      lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const ;
+    bool              isDefaultNamespace(const XMLCh* namespaceURI) const ;
+    const XMLCh*      lookupNamespaceURI(const XMLCh* prefix) const  ;
     DOMNode*          getInterface(const XMLCh* feature) ;
 
 
@@ -184,6 +185,8 @@ public:
 
 public: // should really be protected - ALH
 
+      DOMNode* getElementAncestor (const DOMNode* currentNode) const;
+      const XMLCh* lookupNamespacePrefix(const XMLCh* const namespaceURI, bool useDefaultx, DOMElement *el) const ;
      void setOwnerDocument(DOMDocument *doc);
 
     /*
@@ -351,9 +354,9 @@ public: // should really be protected - ALH
     virtual short                  compareTreePosition(DOMNode* other) ;\
     virtual const XMLCh*           getTextContent() const ;\
     virtual void                   setTextContent(const XMLCh* textContent) ;\
-    virtual const XMLCh*           lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) ;\
-    virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) ;\
-    virtual const XMLCh*           lookupNamespaceURI(const XMLCh* prefix) ;\
+    virtual const XMLCh*           lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  ;\
+    virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) const;\
+    virtual const XMLCh*           lookupNamespaceURI(const XMLCh* prefix) const  ;\
     virtual       DOMNode*         getInterface(const XMLCh* feature) ;\
     virtual       void             release()
 
@@ -397,9 +400,9 @@ public: // should really be protected - ALH
            short            xxx::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     xxx::getTextContent() const                  {return fNode.getTextContent(); };
            void             xxx::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     xxx::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             xxx::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     xxx::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           const XMLCh*     xxx::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             xxx::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     xxx::lookupNamespaceURI(const XMLCh* prefix) const {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         xxx::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 
