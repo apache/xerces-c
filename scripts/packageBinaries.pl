@@ -122,7 +122,7 @@ if ($platform eq "" )
     psystem ("mkdir $targetdir\\samples");
     psystem ("mkdir $targetdir\\samples\\Projects");
     psystem ("mkdir $targetdir\\samples\\Projects\\Win64");
-    psystem ("mkdir $targetdir\\samples\\Projects\\Win64\Nmake");
+    psystem ("mkdir $targetdir\\samples\\Projects\\Win64\\Nmake");
     psystem ("mkdir $targetdir\\samples\\data");
     psystem ("mkdir $targetdir\\samples\\SAXCount");
     psystem ("mkdir $targetdir\\samples\\SAX2Count");
