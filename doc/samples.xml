@@ -134,6 +134,15 @@
 					<br/>EnumVal shows how to enumerate the markup decls in a DTD Validator.</li>
 				<li><link idref="createdoc">CreateDOMDocument</link>
 					<br/>CreateDOMDocument creates a DOM tree in memory from scratch.</li>
+				<li><link idref="sax2count">SAX2Count</link>
+					<br/>SAX2Count counts the elements, attributes, spaces and
+					characters in an XML file.</li>
+				<li><link idref="sax2print">SAX2Print</link>
+					<br/>SAX2Print parses an XML file and prints it out.</li>
+				<li><link idref="idomcount">IDOMCount</link>
+					<br/>IDOMCount counts the elements in a XML file.</li>
+				<li><link idref="idomprint">IDOMPrint</link>
+					<br/>IDOMPrint parses an XML file and prints it out.</li>
 			</ul>
 		</s3>
     </s2>

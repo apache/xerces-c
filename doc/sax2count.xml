@@ -1,0 +1,65 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 11: SAX2Count">
+
+    <s2 title="SAX2Count">
+        <p>SAX2Count is the simplest application that counts the elements and characters of
+        a given XML file using the (event based) SAX2 API.</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked SAX2Count.</p>
+        </s3>
+
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd SAX2Count
+gmake</source>
+	        <p>This will create the object files in the current directory
+			and the executable named
+	        SAX2Count in '&XercesCInstallDir;-linux/bin' directory.</p>
+
+	        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running SAX2Count">
+
+          <p>The SAX2Count sample parses an XML file and prints out a count of the number of
+          elements in the file. To run SAX2Count, enter the following </p>
+          <source>SAX2Count &lt;XML File&gt;</source>
+          <p>The following parameters may be set from the command line </p>
+<source>Usage:
+    SAX2Count [options] &lt;XML file>
+
+Options:
+    -v=xxx      Validation scheme [always | never | auto*]
+    -n          Enable namespace processing. Defaults to off.
+    -s          Disable schema processing. Defaults to on.
+
+This program prints the number of elements, attributes,
+white spaces and other non-white space characters in the input file.
+
+  * = Default if not provided explicitly</source>
+          <p><em>-v=always</em> will force validation<br/>
+             <em>-v=never</em> will not use any validation<br/>
+             <em>-v=auto</em> will validate if a DOCTYPE declaration is present in the XML document</p>
+          <p>Here is a sample output from SAX2Count</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+SAX2Count -v=always personal.xml
+personal.xml: 60 ms (37 elems, 12 attrs, 134 spaces, 134 chars)</source>
+          <p>Running SAX2Count with the validating parser gives a different result because
+          ignorable white-space is counted separately from regular characters.</p>
+<source>SAX2Count -v=never personal.xml
+personal.xml: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+          <p>Note that the sum of spaces and chracters in both versions is the same.</p>
+
+          <note>The time reported by the program may be different depending on your
+          machine processor.</note>
+        </s3>
+
+    </s2>
+</s1>

@@ -1,0 +1,62 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 13: IDOMCount">
+
+    <s2 title="IDOMCount">
+        <p>IDOMCount uses the provided IDOM API to parse an XML file,
+		constructs the DOM tree and walks through the tree counting
+		the elements (using just one API call).</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked IDOMCount.</p>
+        </s3>
+
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd IDOMCount
+gmake</source>
+        <p>This will create the object files in the current directory
+		and the executable named IDOMCount in ' &XercesCInstallDir;-linux/bin'
+		directory.</p>
+
+        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running IDOMCount">
+
+          <p>The IDOMCount sample parses an XML file and prints out a count of the number of
+          elements in the file. To run IDOMCount, enter the following </p>
+<source>IDOMCount &lt;XML file&gt;</source>
+          <p>The following parameters may be set from the command line </p>
+<source>Usage:
+    IDOMCount [-v -n] {XML file}
+
+This program invokes the XML4C IDOM parser, builds
+the DOM tree, and then prints the number of elements
+found in the input XML file.
+
+Options:
+    -v=xxx      Validation scheme [always | never | auto*]
+    -n          Enable namespace processing. Defaults to off.
+
+  * = Default if not provided explicitly</source>
+          <p><em>-v=always</em> will force validation<br/>
+             <em>-v=never</em>  will not use any validation<br/>
+             <em>-v=auto</em>   will validate if a DOCTYPE declaration is present in the XML document</p>
+          <p>Here is a sample output from IDOMCount</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+IDOMCount -v=always personal.xml
+personal.xml: 20 ms (37 elems)</source>
+
+          <p>The output of both versions should be same.</p>
+
+          <note>The time reported by the system may be different, depending on your
+          processor type.</note>
+        </s3>
+    </s2>
+</s1>
