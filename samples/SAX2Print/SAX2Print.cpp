@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/02/13 16:11:06  knoaman
+ * Update samples to use SAX2 features/properties constants from XMLUni.
+ *
  * Revision 1.8  2002/02/06 16:36:51  knoaman
  * Added a new flag '-p' to SAX2 samples to set the 'namespace-prefixes' feature.
  *
@@ -285,24 +288,24 @@ int main(int argC, char* argV[])
     //
     if (valScheme == SAX2XMLReader::Val_Auto)
     {
-        parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
-        parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), true);
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        parser->setFeature(XMLUni::fgSAX2XercesDynamic, true);
     }
 
     if (valScheme == SAX2XMLReader::Val_Never)
     {
-        parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), false);
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
     }
 
     if (valScheme == SAX2XMLReader::Val_Always)
     {
-        parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
-        parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), false);
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        parser->setFeature(XMLUni::fgSAX2XercesDynamic, false);
     }
 
-    parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), doSchema);
-    parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking"), schemaFullChecking);
-    parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespace-prefixes"), namespacePrefixes);
+    parser->setFeature(XMLUni::fgSAX2XercesSchema, doSchema);
+    parser->setFeature(XMLUni::fgSAX2XercesSchemaFullChecking, schemaFullChecking);
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
 
     //
     //  Create the handler object and install it as the document and error
