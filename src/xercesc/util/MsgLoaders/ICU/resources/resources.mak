@@ -21,9 +21,9 @@ include ..\..\..\..\..\..\version.incl
 
 RESFILES= en_US.res 
 
-PKGNAME       = XercesMessages
-TARGET_DLL    = $(PKGNAME)$(VER).DLL
-TARGET_LIB    = $(PKGNAME)$(VER).lib
+PKGNAME       = XercesMessages$(VER)
+TARGET_DLL    = $(PKGNAME).DLL
+TARGET_LIB    = $(PKGNAME).lib
 
 GENRB    = $(ICUROOT)\bin\genrb.exe
 PKGDATA  = $(ICUROOT)\bin\pkgdata
@@ -50,5 +50,5 @@ REN      = ren
 all: $(TARGET_DLL)
 
 $(TARGET_DLL): $(RESFILES)
-	$(PKGDATA) --name $(PKGNAME)$(VER) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt
+	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt
 

@@ -59,7 +59,7 @@ LDFLAGS_USTDIO =$(shell icu-config --ldflags-ustdio)
 INVOKE=$(shell icu-config --invoke)
 #GENRB=$(shell icu-config --invoke=genrb)
 GENRB=genrb
-GENRBOPT=--package-name $(RESNAME)
+GENRBOPT=--package-name $(PKGNAME)
 #PKGDATA=$(shell icu-config --invoke=pkgdata)
 PKGDATA=pkgdata
 SO=$(shell icu-config --so)
@@ -81,6 +81,7 @@ RESMODE=dll
 
 # Resource shortname
 RESNAME=XercesMessages
+PKGNAME=XercesMessages$(VER)
 
 RESLDFLAGS=
 CHECK_VARS= ICU_DATA=$(RESDIR)
@@ -112,7 +113,7 @@ $(TARGET): $(OBJECTS)
 
 $(RESTARGET): $(RESFILES)
 	@echo building ${FQ_RESLIB_REAL_NAME}
-	$(PKGDATA) --name $(RESNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST)
+	$(PKGDATA) --name $(PKGNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST)
 	mv $(RESTARGET) ${FQ_RESLIB_REAL_NAME}
 	@echo symlink ${FQ_RESLIB_SO_NAME}
 	ln -s ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_SO_NAME}
@@ -120,7 +121,7 @@ $(RESTARGET): $(RESFILES)
 	ln -s ${FQ_RESLIB_SO_NAME} ${FQ_RESLIB_LINK_NAME}
 	
 res-install: $(RESTARGET)
-	$(PKGDATA) --name $(RESNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST) --install $(shell icu-config --libdir)
+	$(PKGDATA) --name $(PKGNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST) --install $(shell icu-config --libdir)
 
 # clean out files
 distclean clean: $(CLEAN_SUBDIR)
@@ -132,7 +133,7 @@ check: $(TARGET)
 	$(INVOKE) $(CHECK_VARS) ./$(TARGET) $(CHECK_ARGS) | tee $(TARGET).out
 
 ## resources
-$(RESNAME)_%.res: %.txt
+$(PKGNAME)_%.res: %.txt
 	@echo "generating $@"
 	$(GENRB) $(GENRBOPT) $^
 
