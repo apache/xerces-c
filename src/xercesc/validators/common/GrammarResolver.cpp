@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/06/23 15:53:50  peiyongz
+ * clean up temporary XMLGrammarDescription to make MemoryTest happy
+ *
  * Revision 1.9  2003/06/20 18:58:45  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -199,8 +202,8 @@ Grammar* GrammarResolver::getGrammar(const XMLCh* const nameSpaceKey)
     if (!nameSpaceKey)
         return 0;
 
-    // we don't care the leakage
     XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
+    Janitor<XMLGrammarDescription> janName(gramDesc);
     return getGrammar(gramDesc);
 
 }
@@ -238,7 +241,6 @@ bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
 //Deprecated
 void GrammarResolver::putGrammar( const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt )
 {
-    // we don't care the leakage
     XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
     putGrammar(gramDesc, grammarToAdopt);
 }
@@ -318,8 +320,8 @@ void GrammarResolver::cacheGrammarFromParse(const bool aValue)
 
 Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
-    // we don't care the leakage
     XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
+    Janitor<XMLGrammarDescription> janName(gramDesc);
     return orphanGrammar(gramDesc);
 }
 
