@@ -5035,7 +5035,10 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
             DatatypeValidator* elemDV = typeInfo->getDatatypeValidator();
             DatatypeValidator* subsValidator = subsElemDecl->getDatatypeValidator();
 
-            if (subsValidator && subsValidator->isSubstitutableBy(elemDV)) {
+            if (elemDV == subsValidator) {
+                return true;
+            }
+            else if (subsValidator && subsValidator->isSubstitutableBy(elemDV)) {
                 if ((subsElemDecl->getFinalSet() & derivationMethod) == 0) {
                     return true;
                 }
@@ -5047,6 +5050,10 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
         else { // complex content
 
             ComplexTypeInfo* subsTypeInfo = subsElemDecl->getComplexTypeInfo();
+
+            if (subsTypeInfo == typeInfo)
+                return true;
+
             const ComplexTypeInfo* elemTypeInfo = typeInfo;
 
             for (; elemTypeInfo && elemTypeInfo != subsTypeInfo;
@@ -5068,7 +5075,10 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
         // first, check for type relation.
         DatatypeValidator* subsValidator = subsElemDecl->getDatatypeValidator();
 
-        if (subsValidator && subsValidator->isSubstitutableBy(validator)
+        if (subsValidator == validator) {
+            return true;
+        }
+        else if (subsValidator && subsValidator->isSubstitutableBy(validator)
             && ((subsElemDecl->getFinalSet() & SchemaSymbols::XSD_RESTRICTION) == 0)) {
                 return true;
         }
