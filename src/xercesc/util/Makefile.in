@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.29  2003/03/09 21:49:07  peiyongz
+# Makefile:559: *** missing separator.
+#
 # Revision 1.28  2003/03/09 16:40:47  peiyongz
 # PanicHandler
 #
@@ -554,7 +557,7 @@ UTIL_CPP_OBJECTS = \
     HexBin.$(TO) \
     KVStringPair.$(TO) \
     Mutexes.$(TO) \
-    PanicHandler.$(TO) \    
+    PanicHandler.$(TO) \
     PlatformUtils.$(TO) \
     QName.$(TO) \
     StringPool.$(TO) \
