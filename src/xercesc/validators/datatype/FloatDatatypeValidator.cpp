@@ -57,11 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.13  2004/01/06 18:13:59  peiyongz
- * using the no-exception-thrown ctor
- *
- * Revision 1.12  2004/01/03 00:04:36  peiyongz
- * using ctor/parseContent to avoid exception thrown from ctor
+ * Revision 1.14  2004/01/13 20:57:06  peiyongz
+ * revert code back to previous version
  *
  * Revision 1.11  2003/12/19 23:02:25  cargilld
  * More memory management updates.
@@ -161,10 +158,8 @@ int FloatDatatypeValidator::compare(const XMLCh* const lValue
                                   , const XMLCh* const rValue
                                   , MemoryManager* const manager)
 {
-    XMLFloat lObj(manager);
-    lObj.parseContent(lValue);
-    XMLFloat rObj(manager);
-    rObj.parseContent(rValue);
+    XMLFloat lObj(lValue, manager);
+    XMLFloat rObj(rValue, manager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -201,26 +196,22 @@ int  FloatDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  FloatDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new (fMemoryManager) XMLFloat(fMemoryManager);
-    fMaxInclusive->parseContent(value);
+    fMaxInclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new (fMemoryManager) XMLFloat(fMemoryManager);
-    fMaxExclusive->parseContent(value);
+    fMaxExclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new (fMemoryManager) XMLFloat(fMemoryManager);
-    fMinInclusive->parseContent(value);
+    fMinInclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new (fMemoryManager) XMLFloat(fMemoryManager);
-    fMinExclusive->parseContent(value);
+    fMinExclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setEnumeration(MemoryManager* const manager)
@@ -269,9 +260,7 @@ void  FloatDatatypeValidator::setEnumeration(MemoryManager* const manager)
 
     for ( i = 0; i < enumLength; i++)
     {
-        XMLFloat *data = new (manager) XMLFloat(manager);
-        data->parseContent(fStrEnumeration->elementAt(i));
-        fEnumeration->insertElementAt(data, i);
+        fEnumeration->insertElementAt(new (fMemoryManager) XMLFloat(fStrEnumeration->elementAt(i), fMemoryManager), i);
     }
 }
 
@@ -295,9 +284,7 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
         // lazy construction
         if (getRegex() ==0) {
             try {
-                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
-                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
-                setRegex(regEx);
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
             }
             catch (XMLException &e)
             {
@@ -321,8 +308,7 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
         return;
 
     try {
-        XMLFloat theValue(manager);
-        theValue.parseContent(content);
+        XMLFloat theValue(content, manager);
         XMLFloat *theData = &theValue;
 
         if (getEnumeration() != 0)

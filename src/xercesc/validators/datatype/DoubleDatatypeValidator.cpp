@@ -57,11 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.12  2004/01/06 18:13:59  peiyongz
- * using the no-exception-thrown ctor
- *
- * Revision 1.11  2004/01/03 00:04:36  peiyongz
- * using ctor/parseContent to avoid exception thrown from ctor
+ * Revision 1.13  2004/01/13 20:57:06  peiyongz
+ * revert code back to previous version
  *
  * Revision 1.10  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
@@ -156,10 +153,8 @@ int DoubleDatatypeValidator::compare(const XMLCh* const lValue
                                    , const XMLCh* const rValue
                                    , MemoryManager* const manager)
 {
-    XMLDouble lObj(manager);
-    lObj.parseContent(lValue);
-    XMLDouble rObj(manager);
-    rObj.parseContent(rValue);
+    XMLDouble lObj(lValue, manager);
+    XMLDouble rObj(rValue, manager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -196,26 +191,22 @@ int  DoubleDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  DoubleDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new (fMemoryManager) XMLDouble(fMemoryManager);
-    fMaxInclusive->parseContent(value);
+    fMaxInclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new (fMemoryManager) XMLDouble(fMemoryManager);
-    fMaxExclusive->parseContent(value);
+    fMaxExclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new (fMemoryManager) XMLDouble(fMemoryManager);
-    fMinInclusive->parseContent(value);
+    fMinInclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new (fMemoryManager) XMLDouble(fMemoryManager);
-    fMinExclusive->parseContent(value);
+    fMinExclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setEnumeration(MemoryManager* const manager)
@@ -264,9 +255,7 @@ void  DoubleDatatypeValidator::setEnumeration(MemoryManager* const manager)
 
     for ( i = 0; i < enumLength; i++)
     {
-        XMLDouble *data = new (manager) XMLDouble(manager);
-        data->parseContent(fStrEnumeration->elementAt(i));
-        fEnumeration->insertElementAt(data, i);
+        fEnumeration->insertElementAt(new (manager) XMLDouble(fStrEnumeration->elementAt(i), manager), i);
     }
 }
 
@@ -291,9 +280,7 @@ void DoubleDatatypeValidator::checkContent(const XMLCh*             const conten
         // lazy construction
         if (getRegex() ==0) {
             try {
-                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
-                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
-                setRegex(regEx);
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
             }
             catch (XMLException &e)
             {
@@ -317,8 +304,7 @@ void DoubleDatatypeValidator::checkContent(const XMLCh*             const conten
         return;
 
     try {
-        XMLDouble theValue(manager);
-        theValue.parseContent(content);
+        XMLDouble theValue(content, manager);
         XMLDouble *theData = &theValue;
 
         if (getEnumeration())
