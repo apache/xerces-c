@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2005/04/04 15:03:44  cargilld
+ * Fix memory leak when deserializing grammars.
+ *
  * Revision 1.33  2005/03/07 20:10:21  knoaman
  * Eliminate lazy creation of attribute lists.
  *
@@ -1079,6 +1082,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng>>fBaseComplexTypeInfo;
         serEng>>fContentSpec;
         serEng>>fAttWildCard;
+        delete fAttList; // will recreate it next...
         serEng>>fAttList;
 
         /***
@@ -1087,6 +1091,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
          * Deserialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
         XTemplateSerializer::loadObject(&fElements, 8, false, serEng);
+        delete fAttDefs; // will recreate it next...
         XTemplateSerializer::loadObject(&fAttDefs, 29, true, serEng);
 
          /***
