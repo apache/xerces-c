@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/05/30 21:13:50  knoaman
+ * Typo fix
+ *
  * Revision 1.14  2001/05/30 17:38:28  knoaman
  * o Reset fScopeCount after traversing complexType.
  * o Fix problem of deleting ContentSpecNode prematurely
@@ -4587,7 +4590,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
 
 void TraverseSchema::restoreSchemaInfo() {
 
-    fCurrentSchemaURL = fCurrentSchemaInfo->getCurrentSchemaURL();
+    setCurrentSchemaURL(fCurrentSchemaInfo->getCurrentSchemaURL());
     fCurrentScope = fCurrentSchemaInfo->getCurrentScope();
     fElementDefaultQualified = fCurrentSchemaInfo->isElementDefaultQualified();
     fAttributeDefaultQualified = fCurrentSchemaInfo->isAttributeDefaultQualified();
