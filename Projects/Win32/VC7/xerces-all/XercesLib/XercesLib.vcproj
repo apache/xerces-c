@@ -280,6 +280,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\RefVectorOf.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\RuntimeException.hpp">
 			</File>
 			<File

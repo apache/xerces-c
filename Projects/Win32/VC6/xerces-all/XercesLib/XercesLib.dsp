@@ -659,6 +659,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RefVectorOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RuntimeException.hpp
 # End Source File
 # Begin Source File
