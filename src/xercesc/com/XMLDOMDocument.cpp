@@ -1496,15 +1496,18 @@ STDMETHODIMP CXMLDOMDocument::save(VARIANT location)
 		return E_FAIL;
 	}
 
-	FILE* fp;
-	if ((fp = _tfopen(file, "wt")) == NULL) {
+	FILE* fp = _tfopen(file, "wt");
+	if (fp == NULL)
 		return E_FAIL;
-	}
 
-	if(text.length()>0)
-		_fputts(text, fp);
+	if(text.length()>0 && _fputts(text, fp)<0)
+    {
+        fclose(fp);
+        return E_FAIL;
+    }
 	
-	fclose(fp);
+	if(fclose(fp)!=0)
+        return E_FAIL;
 
 	return S_OK;
 }
