@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/04/07 16:52:13  peiyongz
+ * Bug# 18672: IconvGNUTranscoder can't be build when namespaces is on.
+ *                       Patch from Bacek@yandex-team.ru (Vasily Tchekalkin)
+ *
  * Revision 1.5  2003/03/09 17:03:25  peiyongz
  * PanicHandler
  *
@@ -83,7 +87,30 @@
 #include <errno.h>
 #include <endian.h>
 
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TranscodingException.hpp>
+#include "IconvGNUTransService.hpp"
+
+#if !defined(APP_NO_THREADS)
+#include <xercesc/util/Mutexes.hpp>
+#endif /* !APP_NO_THREADS */
+
 XERCES_CPP_NAMESPACE_BEGIN
+
+#if !defined(APP_NO_THREADS)
+
+// Iconv() access syncronization point
+static XMLMutex    *gIconvMutex = NULL;
+#  define ICONV_LOCK    XMLMutexLock lockConverter(gIconvMutex);
+
+#else /* APP_NO_THREADS */
+
+# define ICONV_LOCK
+
+#endif /* !APP_NO_THREADS */
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -164,13 +191,6 @@ static const IconvGNUEncoding    gIconvGNUEncodings[] = {
 #include <wchar.h>
 
 
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/TranscodingException.hpp>
-#include "IconvGNUTransService.hpp"
-
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -200,19 +220,6 @@ static unsigned int getWideCharLength(const XMLCh* const src)
     return len;
 }
 
-
-#if !defined(APP_NO_THREADS)
-
-#include <xercesc/util/Mutexes.hpp>
-// Iconv() access syncronization point
-static XMLMutex    *gIconvMutex = NULL;
-#  define ICONV_LOCK    XMLMutexLock lockConverter(gIconvMutex);
-
-#else /* APP_NO_THREADS */
-
-# define ICONV_LOCK
-
-#endif /* !APP_NO_THREADS */
 
 //----------------------------------------------------------------------------
 // There is implementation of the libiconv for FreeBSD (available through the
