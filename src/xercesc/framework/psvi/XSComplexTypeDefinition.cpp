@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -77,98 +80,63 @@
  */
 
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
-#include <xercesc/validators/schema/ComplexTypeInfo.hpp>
-#include <xercesc/validators/schema/SchemaElementDecl.hpp>
-#include <xercesc/validators/schema/SchemaAttDefList.hpp>
 #include <xercesc/framework/psvi/XSWildcard.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
+#include <xercesc/validators/schema/ComplexTypeInfo.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
+#include <xercesc/validators/schema/SchemaAttDefList.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSComplexTypeDefinition::XSComplexTypeDefinition(ComplexTypeInfo*       complexTypeInfo,
-                                                 XSModel*               xsModel,
-                                                 MemoryManager* const   manager ):  
-        fComplexTypeInfo(complexTypeInfo),
-        fXSWildcard(0),
-        fXSAttributeUseList(0),
-        fXSSimpleTypeDefinition(0),
-        fProhibitedSubstitution(0),
-        fXSAnnotationList(0),
-        XSTypeDefinition(COMPLEX_TYPE, xsModel, manager)
+// ---------------------------------------------------------------------------
+//  XSComplexTypeDefinition: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSComplexTypeDefinition::XSComplexTypeDefinition
+(
+    ComplexTypeInfo* const          complexTypeInfo
+    , XSWildcard* const             xsWildcard
+    , XSSimpleTypeDefinition* const xsSimpleType
+    , XSAttributeUseList* const     xsAttList
+    , XSTypeDefinition* const       xsBaseType
+    , XSParticle* const             xsParticle
+    , XSAnnotation* const           headAnnot
+    , XSModel* const                xsModel
+    , MemoryManager* const          manager
+)
+    : XSTypeDefinition(COMPLEX_TYPE, xsBaseType, xsModel, manager)
+    , fComplexTypeInfo(complexTypeInfo)
+    , fXSWildcard(xsWildcard)
+    , fXSAttributeUseList(xsAttList)
+    , fXSSimpleTypeDefinition(xsSimpleType)
+    , fXSAnnotationList(0)
+    , fParticle(xsParticle)
+    , fProhibitedSubstitution(0)
 {
-    int blockset;
-    if (blockset = fComplexTypeInfo->getBlockSet()) 
+    int blockset = fComplexTypeInfo->getBlockSet();
+    if (blockset)
     {
         if (blockset & SchemaSymbols::XSD_EXTENSION)
-        {
             fProhibitedSubstitution |= XSConstants::DERIVATION_EXTENSION;
-        }
+
         if (blockset & SchemaSymbols::XSD_RESTRICTION)
-        {
             fProhibitedSubstitution |= XSConstants::DERIVATION_RESTRICTION;
-        }
     }
 
-    if (fComplexTypeInfo->getAttWildCard()) 
-    {       
-        fXSWildcard = (XSWildcard*) getObjectFromMap(fComplexTypeInfo->getAttWildCard());
-        if (!fXSWildcard)
-        {
-            fXSWildcard = new (manager) XSWildcard(fComplexTypeInfo->getAttWildCard(), fXSModel, manager);
-            putObjectInMap((void*)fComplexTypeInfo->getAttWildCard(), fXSWildcard);
-        }
-    }
+    if (headAnnot)
+    {
+        // REVISIT Size
+        fXSAnnotationList = new (manager) RefVectorOf<XSAnnotation>(3, false, manager);
+        XSAnnotation* annot = headAnnot;
 
-    if ((fComplexTypeInfo->getContentType() == SchemaElementDecl::Simple) &&
-        (fComplexTypeInfo->getDatatypeValidator()))
-    {
-        fXSSimpleTypeDefinition = (XSSimpleTypeDefinition*) getObjectFromMap((void *)fComplexTypeInfo->getDatatypeValidator());
-        if (!fXSSimpleTypeDefinition)
+        do
         {
-            fXSSimpleTypeDefinition = new (manager) XSSimpleTypeDefinition(fComplexTypeInfo->getDatatypeValidator(), fXSModel, manager);
-            putObjectInMap((void *)fComplexTypeInfo->getDatatypeValidator(), fXSSimpleTypeDefinition);
-        }
-    }
-
-    if (fComplexTypeInfo->hasAttDefs())
-    {
-        SchemaAttDefList& schemaAttDefList = (SchemaAttDefList&) fComplexTypeInfo->getAttDefList();
-        // REVISIT: size of vector...
-        fXSAttributeUseList = new (manager) RefVectorOf <XSAttributeUse> (10, false, manager);
-            
-        for(unsigned int i=0; i<schemaAttDefList.getAttDefCount(); i++)
-        {
-            SchemaAttDef& attDef = (SchemaAttDef&) schemaAttDefList.getAttDef(i);
-            XSAttributeUse* attrUse = (XSAttributeUse*) getObjectFromMap((void*)&attDef);
-            if (!attrUse)
-            {
-                attrUse = new (manager) XSAttributeUse(&attDef, fXSModel, manager);
-                putObjectInMap((void*)&attDef, attrUse);
-            }
-            fXSAttributeUseList->addElement(attrUse);
-        }
-    }
-
-    // compute fBase
-    if (fComplexTypeInfo->getBaseComplexTypeInfo())
-    {
-        fBaseType = (XSTypeDefinition*) getObjectFromMap(fComplexTypeInfo->getBaseComplexTypeInfo());
-        if (!fBaseType)
-        {
-            fBaseType = new (fMemoryManager) XSComplexTypeDefinition(fComplexTypeInfo->getBaseComplexTypeInfo(), fXSModel, fMemoryManager);
-            putObjectInMap((void*)fComplexTypeInfo->getBaseComplexTypeInfo(), fBaseType);
-        }
-    }
-    else if (fComplexTypeInfo->getBaseDatatypeValidator())
-    {
-        fBaseType = (XSTypeDefinition*) getObjectFromMap(fComplexTypeInfo->getBaseDatatypeValidator());
-        if (!fBaseType)
-        {
-             fBaseType = new (fMemoryManager) XSSimpleTypeDefinition(fComplexTypeInfo->getBaseDatatypeValidator(), fXSModel, fMemoryManager);
-             putObjectInMap((void*)fComplexTypeInfo->getBaseDatatypeValidator(), fBaseType);
-        }
+            fXSAnnotationList->addElement(annot);
+            annot = annot->getNext();        
+        } while (annot);
     }
 }
 
@@ -177,22 +145,15 @@ XSComplexTypeDefinition::~XSComplexTypeDefinition()
     // don't delete fXSWildcard - deleted by XSModel
     // don't delete fXSSimpleTypeDefinition - deleted by XSModel
     if (fXSAttributeUseList)
-    {
         delete fXSAttributeUseList;
-    }
+
     if (fXSAnnotationList)
-    {
         delete fXSAnnotationList;
-    }
 }
 
-// XSComplexTypeDefinition methods
-
-/**
- * [derivation method]: either <code>DERIVATION_EXTENSION</code>, 
- * <code>DERIVATION_RESTRICTION</code>, or <code>DERIVATION_NONE</code> 
- * (see <code>XSObject</code>). 
- */
+// ---------------------------------------------------------------------------
+//  XSComplexTypeDefinition: access methods
+// ---------------------------------------------------------------------------
 XSConstants::DERIVATION_TYPE XSComplexTypeDefinition::getDerivationMethod() const
 {
     switch(fComplexTypeInfo->getDerivedBy()) {
@@ -205,38 +166,12 @@ XSConstants::DERIVATION_TYPE XSComplexTypeDefinition::getDerivationMethod() cons
     }
 }
 
-/**
- * [abstract]: a boolean. Complex types for which <code>abstract</code> is 
- * true must not be used as the type definition for the validation of 
- * element information items. 
- */
 bool XSComplexTypeDefinition::getAbstract() const
 {
     return fComplexTypeInfo->getAbstract();
 }
 
-/**
- *  A set of attribute uses. 
- */
-XSAttributeUseList *XSComplexTypeDefinition::getAttributeUses()
-{
-    return fXSAttributeUseList;
-}
 
-/**
- * Optional.An attribute wildcard. 
- */
-XSWildcard *XSComplexTypeDefinition::getAttributeWildcard()
-{
-    return fXSWildcard;
-}
-
-/**
- * [content type]: one of empty (<code>CONTENTTYPE_EMPTY</code>), a simple 
- * type definition (<code>CONTENTTYPE_SIMPLE</code>), mixed (
- * <code>CONTENTTYPE_MIXED</code>), or element-only (
- * <code>CONTENTTYPE_ELEMENT</code>). 
- */
 XSComplexTypeDefinition::CONTENT_TYPE XSComplexTypeDefinition::getContentType() const
 {
     switch(fComplexTypeInfo->getContentType()) {
@@ -254,74 +189,22 @@ XSComplexTypeDefinition::CONTENT_TYPE XSComplexTypeDefinition::getContentType() 
     }
 }
 
-/**
- * A simple type definition corresponding to simple content model, 
- * otherwise <code>null</code> 
- */
-XSSimpleTypeDefinition *XSComplexTypeDefinition::getSimpleType()
-{
-    return fXSSimpleTypeDefinition;
-}
-
-/**
- * A particle for mixed or element-only content model, otherwise 
- * <code>null</code> 
- */
-XSParticle *XSComplexTypeDefinition::getParticle()
-{
-    // REVISIT
-    return 0;
-}
-
-/**
- * [prohibited substitutions]: a subset of {extension, restriction}
- * @param restriction  Extention or restriction constants (see 
- *   <code>XSObject</code>). 
- * @return True if toTest is a prohibited substitution, otherwise 
- *   false.
- */
 bool XSComplexTypeDefinition::isProhibitedSubstitution(XSConstants::DERIVATION_TYPE toTest)                                                     
 {
     if (fProhibitedSubstitution & toTest)
-    {
         return true;
-    }
+
     return false;
 }
 
-/**
- *  [prohibited substitutions]: A subset of {extension, restriction} or 
- * <code>DERIVATION_NONE</code> represented as a bit flag (see 
- * <code>XSObject</code>). 
- */
-short XSComplexTypeDefinition::getProhibitedSubstitutions()
-{
-    return fProhibitedSubstitution;
-}
-
-/**
- * A set of [annotations]. 
- */
 XSAnnotationList *XSComplexTypeDefinition::getAnnotations()
 {    
-    if (fXSAnnotationList)
-    {
-        return fXSAnnotationList;    
-    }
-    // REVISIT Size
-    fXSAnnotationList = new (fMemoryManager) RefVectorOf <XSAnnotation> (3, false, fMemoryManager);
-    XSAnnotation* annot = getAnnotationFromModel(fComplexTypeInfo);
-    while (annot)
-    {
-        fXSAnnotationList->addElement(annot);
-        annot = annot->getNext();        
-    }
     return fXSAnnotationList;
 }
 
-/**
- * virtual function from XSTypeDefinition
- */
+// ---------------------------------------------------------------------------
+//  XSComplexTypeDefinition: virtual methods
+// ---------------------------------------------------------------------------
 const XMLCh *XSComplexTypeDefinition::getName() 
 {
     return fComplexTypeInfo->getTypeLocalName();
@@ -334,7 +217,7 @@ const XMLCh *XSComplexTypeDefinition::getNamespace()
 
 XSNamespaceItem *XSComplexTypeDefinition::getNamespaceItem() 
 {
-    return getNamespaceItemFromHash(getNamespace());
+    return fXSModel->getNamespaceItem(getNamespace());
 }
 
 bool XSComplexTypeDefinition::getAnonymous() const

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -90,9 +93,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 // forward declarations
 class XSAttributeDeclaration;
 
-class SchemaAttDef;
-class XMLStringPool;
-
 class XMLPARSER_EXPORT XSAttributeUse : public XSObject
 {
 public:
@@ -107,9 +107,12 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSAttributeUse(SchemaAttDef*            attDef,
-                XSModel*                    xsModel,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSAttributeUse
+    (
+        XSAttributeDeclaration* const xsAttDecl,
+        XSModel* const xsModel,
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -134,7 +137,7 @@ public:
      * [attribute declaration]: provides the attribute declaration itself, 
      * which will in turn determine the simple type definition used. 
      */
-    XSAttributeDeclaration *getAttrDeclaration();
+    XSAttributeDeclaration *getAttrDeclaration() const;
 
     /**
      * Value Constraint: one of default, fixed. 
@@ -168,9 +171,14 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    SchemaAttDef*               fAttDef;
-    XSAttributeDeclaration*     fXSAttributeDeclaration;
+    XSAttributeDeclaration* fXSAttributeDeclaration;
 };
+
+inline XSAttributeDeclaration *XSAttributeUse::getAttrDeclaration() const
+{
+    return fXSAttributeDeclaration;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

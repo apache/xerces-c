@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -91,9 +94,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XSAnnotation;
 class XSComplexTypeDefinition;
 class XSSimpleTypeDefinition;
-
 class SchemaAttDef;
-class XMLStringPool;
 
 class XMLPARSER_EXPORT XSAttributeDeclaration : public XSObject
 {
@@ -109,9 +110,14 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSAttributeDeclaration(SchemaAttDef*            attDef,
-                XSModel*                            xsModel,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSAttributeDeclaration
+    (
+        SchemaAttDef* const             attDef
+        , XSSimpleTypeDefinition* const typeDef
+        , XSAnnotation* const           annot
+        , XSModel* const                xsModel
+        , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -160,7 +166,7 @@ public:
     /**
      * [type definition]: A simple type definition 
      */
-    XSSimpleTypeDefinition *getTypeDefinition();
+    XSSimpleTypeDefinition *getTypeDefinition() const;
 
     /**
      * Optional. One of <code>SCOPE_GLOBAL</code>, <code>SCOPE_LOCAL</code>, 
@@ -189,7 +195,7 @@ public:
     /**
      * Optional. Annotation. 
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -201,6 +207,8 @@ public:
       * Set the id to be returned on getId().
       */
     void setId(unsigned int id);
+
+    bool getRequired() const;
     //@}
 
 private:
@@ -218,8 +226,29 @@ protected:
     // -----------------------------------------------------------------------
     SchemaAttDef*               fAttDef;
     XSSimpleTypeDefinition*     fTypeDefinition;
+    XSAnnotation*               fAnnotation;
     unsigned int                fId;
 };
+
+// ---------------------------------------------------------------------------
+//  XSAttributeDeclaration: inline methods
+// ---------------------------------------------------------------------------
+inline XSSimpleTypeDefinition* XSAttributeDeclaration::getTypeDefinition() const
+{
+    return fTypeDefinition;
+}
+
+inline void XSAttributeDeclaration::setId(unsigned int id)
+{
+    fId = id;
+}
+
+inline XSAnnotation *XSAttributeDeclaration::getAnnotation() const
+{
+    return fAnnotation;
+}
+
+
 
 XERCES_CPP_NAMESPACE_END
 

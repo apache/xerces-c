@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -77,39 +80,37 @@
  */
 
 #include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
-#include <xercesc/validators/schema/SchemaAttDef.hpp>
-#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
-#include <xercesc/util/QName.hpp>
-#include <xercesc/util/StringPool.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/psvi/XSNamespaceItem.hpp>
+#include <xercesc/util/StringPool.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
+#include <xercesc/validators/schema/SchemaAttDef.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAttributeDeclaration::XSAttributeDeclaration(SchemaAttDef*            attDef,
-                                               XSModel*                 xsModel,
-                                               MemoryManager * const    manager):
-    fAttDef(attDef),
-    fTypeDefinition(0),
-    XSObject(XSConstants::ATTRIBUTE_DECLARATION, xsModel, manager)
+// ---------------------------------------------------------------------------
+//  XSAttributeDeclaration: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSAttributeDeclaration::XSAttributeDeclaration(SchemaAttDef* const           attDef,
+                                               XSSimpleTypeDefinition* const typeDef,
+                                               XSAnnotation* const           annot,
+                                               XSModel* const                xsModel,
+                                               MemoryManager * const         manager)
+    : XSObject(XSConstants::ATTRIBUTE_DECLARATION, xsModel, manager)
+    , fAttDef(attDef)
+    , fTypeDefinition(typeDef)
+    , fAnnotation(annot)
 {
-    if (fAttDef->getDatatypeValidator())
-    {
-        fTypeDefinition = (XSSimpleTypeDefinition*) getObjectFromMap((void *)fAttDef->getDatatypeValidator());
-        if (!fTypeDefinition)
-        {
-            fTypeDefinition = new (manager) XSSimpleTypeDefinition(fAttDef->getDatatypeValidator(), fXSModel, manager);
-            putObjectInMap((void *)fAttDef->getDatatypeValidator(), fTypeDefinition);
-        }
-    }
 }
 
 XSAttributeDeclaration::~XSAttributeDeclaration() 
 {
     // don't delete fTypeDefinition - deleted by XSModel
 }
-// XSObject methods
+
+// ---------------------------------------------------------------------------
+//  XSAttributeDeclaration: XSObject virtual methods
+// ---------------------------------------------------------------------------
 const XMLCh *XSAttributeDeclaration::getName() 
 {
     return fAttDef->getAttName()->getLocalPart();
@@ -122,24 +123,18 @@ const XMLCh *XSAttributeDeclaration::getNamespace()
 
 XSNamespaceItem *XSAttributeDeclaration::getNamespaceItem() 
 {
-    return getNamespaceItemFromHash(getNamespace());
+    return fXSModel->getNamespaceItem(getNamespace());
 }
 
-// XSAttributeDeclaration methods
-
-/**
- * [type definition]: A simple type definition 
- */
-XSSimpleTypeDefinition *XSAttributeDeclaration::getTypeDefinition()
+unsigned int XSAttributeDeclaration::getId() const
 {
-    return fTypeDefinition;
+    return fId;
 }
 
-/**
- * Optional. One of <code>SCOPE_GLOBAL</code>, <code>SCOPE_LOCAL</code>, 
- * or <code>SCOPE_ABSENT</code>. If the scope is local, then the 
- * <code>enclosingCTDefinition</code> is present. 
- */
+
+// ---------------------------------------------------------------------------
+//  XSAttributeDeclaration: access methods
+// ---------------------------------------------------------------------------
 XSConstants::SCOPE XSAttributeDeclaration::getScope() const
 {   
     // REVISIT: review... what about SCOPE_ABSENT?
@@ -149,64 +144,37 @@ XSConstants::SCOPE XSAttributeDeclaration::getScope() const
     if (((XSAttributeDeclaration*) this)->getNamespaceItem()->getSchemaGrammar()->getAttributeDeclRegistry()->get(fAttDef))
         return XSConstants::SCOPE_GLOBAL;
     return XSConstants::SCOPE_LOCAL;
-
 }
 
-/**
- * The complex type definition for locally scoped declarations (see 
- * <code>scope</code>). 
- */
 XSComplexTypeDefinition *XSAttributeDeclaration::getEnclosingCTDefinition()
 {
-    // REVISIT
     return 0;
 }
 
-/**
- * Value constraint: one of <code>VC_NONE, VC_DEFAULT, VC_FIXED</code>. 
- */
 XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
 {
     if (fAttDef->getDefaultType() & XMLAttDef::Default)
-    {
         return XSConstants::VC_DEFAULT;
-    }
+
     if (fAttDef->getDefaultType() & XMLAttDef::Fixed ||
         fAttDef->getDefaultType() & XMLAttDef::Required_And_Fixed)
-    {
         return XSConstants::VC_FIXED;
-    }
+
     return XSConstants::VC_NONE;
 }
 
-/**
- * Value constraint: The actual value with respect to the [type definition
- * ]. 
- */
 const XMLCh *XSAttributeDeclaration::getConstraintValue()
 {
     return fAttDef->getValue();
 }
 
-/**
- * Optional. Annotation. 
- */
-XSAnnotation *XSAttributeDeclaration::getAnnotation()
+bool XSAttributeDeclaration::getRequired() const
 {
-    return getAnnotationFromModel(fAttDef);
-}
+    if (fAttDef->getDefaultType() == XMLAttDef::Required ||
+        fAttDef->getDefaultType() == XMLAttDef::Required_And_Fixed)
+        return true;
 
-/**
- * Process Id
- */ 
-void XSAttributeDeclaration::setId(unsigned int id)
-{
-    fId = id;
-}
-
-unsigned int XSAttributeDeclaration::getId() const
-{
-    return fId;
+    return false;
 }
 
 XERCES_CPP_NAMESPACE_END

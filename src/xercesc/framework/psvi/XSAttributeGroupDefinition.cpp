@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -74,81 +77,39 @@
  */
 
 #include <xercesc/framework/psvi/XSAttributeGroupDefinition.hpp>
-#include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
-#include <xercesc/framework/psvi/XSWildcard.hpp>
+#include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAttributeGroupDefinition::XSAttributeGroupDefinition(XercesAttGroupInfo*  xercesAttGroupInfo,
-                                                       XSModel*             xsModel,
-                                                       MemoryManager * const manager):
-    fXercesAttGroupInfo(xercesAttGroupInfo),
-    fXSAttributeUseList(0),
-    fXSWildcard(0),
-    XSObject(XSConstants::ATTRIBUTE_GROUP_DEFINITION, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSAttributeGroupDefinition: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSAttributeGroupDefinition::XSAttributeGroupDefinition
+(
+    XercesAttGroupInfo* const   xercesAttGroupInfo
+    , XSAttributeUseList* const xsAttList
+    , XSWildcard* const         xsWildcard
+    , XSAnnotation* const       xsAnnot
+    , XSModel* const            xsModel
+    , MemoryManager * const     manager
+)
+    : XSObject(XSConstants::ATTRIBUTE_GROUP_DEFINITION, xsModel, manager)
+    , fXercesAttGroupInfo(xercesAttGroupInfo)
+    , fXSAttributeUseList(xsAttList)
+    , fXSWildcard(xsWildcard)
+    , fAnnotation(xsAnnot)
 {
-    unsigned int attCount = fXercesAttGroupInfo->attributeCount();
-    if (attCount)
-    {
-        fXSAttributeUseList = new (manager) RefVectorOf <XSAttributeUse> (attCount, false, manager);
-        for (unsigned int i=0; i < attCount; i++) 
-        {
-            XSAttributeUse* attrUse = (XSAttributeUse*) getObjectFromMap((void*)fXercesAttGroupInfo->attributeAt(i));
-            if (!attrUse)
-            {
-                attrUse = new (manager) XSAttributeUse(fXercesAttGroupInfo->attributeAt(i), fXSModel, manager);
-                putObjectInMap((void*)fXercesAttGroupInfo->attributeAt(i), attrUse);
-            }
-            fXSAttributeUseList->addElement(attrUse);
-        }
-    }
-    
-    if (fXercesAttGroupInfo->getCompleteWildCard()) 
-    {
-        fXSWildcard = (XSWildcard*) getObjectFromMap(fXercesAttGroupInfo->getCompleteWildCard());
-        if (!fXSWildcard)
-        {
-            fXSWildcard = new (manager) XSWildcard(fXercesAttGroupInfo->getCompleteWildCard(), fXSModel, manager);
-            putObjectInMap((void*)fXercesAttGroupInfo->getCompleteWildCard(), fXSWildcard);
-        }
-    }
 }
 
 XSAttributeGroupDefinition::~XSAttributeGroupDefinition()
 {
     if (fXSAttributeUseList)
-    {
         delete fXSAttributeUseList;
-    }
+
     // don't delete fXSWildcard - deleted by XSModel
 }
 
-// XSAttributeGroupDefinition methods
-
-/**
- * A set of [attribute uses]. 
- */
-XSAttributeUseList *XSAttributeGroupDefinition::getAttributeUses()
-{
-    return fXSAttributeUseList;
-}
-
-/**
- * Optional. A [wildcard]. 
- */
-XSWildcard *XSAttributeGroupDefinition::getAttributeWildcard()
-{
-    return fXSWildcard;
-}
-
-/**
- * Optional. An [annotation]. 
- */
-XSAnnotation *XSAttributeGroupDefinition::getAnnotation()
-{    
-    return getAnnotationFromModel(fXercesAttGroupInfo);
-}
 
 XERCES_CPP_NAMESPACE_END
 

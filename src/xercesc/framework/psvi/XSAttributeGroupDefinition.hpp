@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -91,9 +94,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XSAnnotation;
 class XSAttributeUse;
 class XSWildcard;
-
 class XercesAttGroupInfo;
-class XMLStringPool;
 
 class XMLPARSER_EXPORT XSAttributeGroupDefinition : public XSObject
 {
@@ -109,9 +110,15 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSAttributeGroupDefinition(XercesAttGroupInfo* xercesAttGroupInfo,
-                XSModel*             xsModel,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSAttributeGroupDefinition
+    (
+        XercesAttGroupInfo* const   xercesAttGroupInfo
+        , XSAttributeUseList* const xsAttList
+        , XSWildcard* const         xsWildcard
+        , XSAnnotation* const       xsAnnot
+        , XSModel* const            xsModel
+        , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -133,12 +140,12 @@ public:
     /**
      * Optional. A [wildcard]. 
      */
-    XSWildcard *getAttributeWildcard();
+    XSWildcard *getAttributeWildcard() const;
 
     /**
      * Optional. An [annotation]. 
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -164,7 +171,23 @@ protected:
     XercesAttGroupInfo*     fXercesAttGroupInfo;
     XSAttributeUseList*     fXSAttributeUseList;
     XSWildcard*             fXSWildcard;
+    XSAnnotation*           fAnnotation;
 };
+
+inline XSAttributeUseList* XSAttributeGroupDefinition::getAttributeUses()
+{
+    return fXSAttributeUseList;
+}
+
+inline XSWildcard* XSAttributeGroupDefinition::getAttributeWildcard() const
+{
+    return fXSWildcard;
+}
+
+inline XSAnnotation* XSAttributeGroupDefinition::getAnnotation() const
+{
+    return fAnnotation;
+}
 
 XERCES_CPP_NAMESPACE_END
 

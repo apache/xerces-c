@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -75,22 +78,18 @@
 
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
 #include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
-#include <xercesc/validators/schema/SchemaAttDef.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAttributeUse::XSAttributeUse(SchemaAttDef*            attDef,
-                               XSModel*                 xsModel,
-                               MemoryManager * const    manager):
-    fAttDef(attDef),
-    XSObject(XSConstants::ATTRIBUTE_USE, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSAttributeUse: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSAttributeUse::XSAttributeUse(XSAttributeDeclaration* const xsAttDecl,
+                               XSModel* const xsModel,
+                               MemoryManager* const manager)
+    : XSObject(XSConstants::ATTRIBUTE_USE, xsModel, manager)
+    , fXSAttributeDeclaration(xsAttDecl)
 {
-    fXSAttributeDeclaration = (XSAttributeDeclaration*) getObjectFromMap(fAttDef);
-    if (!fXSAttributeDeclaration)
-    {
-        fXSAttributeDeclaration = new (manager) XSAttributeDeclaration(fAttDef, xsModel, manager);
-        putObjectInMap((void*)fAttDef, fXSAttributeDeclaration);
-    }
 }
 
 
@@ -101,55 +100,22 @@ XSAttributeUse::~XSAttributeUse()
 // XSAttributeUse methods
 
 
-/**
- * [required]: determines whether this use of an attribute declaration 
- * requires an appropriate attribute information item to be present, or 
- * merely allows it. 
- */
+// ---------------------------------------------------------------------------
+//  XSAttributeUse: access methods
+// ---------------------------------------------------------------------------
 bool XSAttributeUse::getRequired() const
 {
-    if (fAttDef->getDefaultType() == XMLAttDef::Required ||
-        fAttDef->getDefaultType() == XMLAttDef::Required_And_Fixed)
-    {
-        return true;
-    }
-    return false;
+    return fXSAttributeDeclaration->getRequired();
 }
 
-/**
- * [attribute declaration]: provides the attribute declaration itself, 
- * which will in turn determine the simple type definition used. 
- */
-XSAttributeDeclaration *XSAttributeUse::getAttrDeclaration()
-{
-    return fXSAttributeDeclaration;
-}
-
-/**
- * Value Constraint: one of default, fixed. 
- */
 XSConstants::VALUE_CONSTRAINT XSAttributeUse::getConstraintType() const
 {
-    // REVISIT: same as XSAttributeDeclaration????
-    if (fAttDef->getDefaultType() & XMLAttDef::Default)
-    {
-        return XSConstants::VC_DEFAULT;
-    }
-    if (fAttDef->getDefaultType() & XMLAttDef::Fixed ||
-        fAttDef->getDefaultType() & XMLAttDef::Required_And_Fixed)
-    {
-        return XSConstants::VC_FIXED;
-    }
-    return XSConstants::VC_NONE;
+    return fXSAttributeDeclaration->getConstraintType();
 }
 
-/**
- * Value Constraint: The actual value. 
- */
 const XMLCh *XSAttributeUse::getConstraintValue()
 {
-    // REVISIT: same as XSAttributeDeclaration????
-    return fAttDef->getValue();
+    return fXSAttributeDeclaration->getConstraintValue();
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:19:30  knoaman
+ * PSVI update.
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -94,9 +97,7 @@ class XSAttributeUse;
 class XSSimpleTypeDefinition;
 class XSParticle;
 class XSWildcard;
-
 class ComplexTypeInfo;
-class XMLStringPool;
 
 class XMLPARSER_EXPORT XSComplexTypeDefinition : public XSTypeDefinition
 {
@@ -137,9 +138,18 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSComplexTypeDefinition(ComplexTypeInfo*        complexTypeInfo,
-                            XSModel*                xsModel,
-                            MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager);
+    XSComplexTypeDefinition
+    (
+        ComplexTypeInfo* const          complexTypeInfo
+        , XSWildcard* const             xsWildcard
+        , XSSimpleTypeDefinition* const xsSimpleType
+        , XSAttributeUseList* const     xsAttList
+        , XSTypeDefinition* const       xsBaseType
+        , XSParticle* const             xsParticle
+        , XSAnnotation* const           headAnnot
+        , XSModel* const                xsModel
+        , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -175,7 +185,7 @@ public:
     /**
      * Optional.An attribute wildcard. 
      */
-    XSWildcard *getAttributeWildcard();
+    XSWildcard *getAttributeWildcard() const;
 
     /**
      * [content type]: one of empty (<code>CONTENTTYPE_EMPTY</code>), a simple 
@@ -189,13 +199,13 @@ public:
      * A simple type definition corresponding to simple content model, 
      * otherwise <code>null</code> 
      */
-    XSSimpleTypeDefinition *getSimpleType();
+    XSSimpleTypeDefinition *getSimpleType() const;
 
     /**
      * A particle for mixed or element-only content model, otherwise 
      * <code>null</code> 
      */
-    XSParticle *getParticle();
+    XSParticle *getParticle() const;
 
     /**
      * [prohibited substitutions]: a subset of {extension, restriction}
@@ -211,7 +221,7 @@ public:
      * <code>DERIVATION_NONE</code> represented as a bit flag (see 
      * <code>XSObject</code>). 
      */
-    short getProhibitedSubstitutions();
+    short getProhibitedSubstitutions() const;
 
     /**
      * A set of [annotations]. 
@@ -270,7 +280,9 @@ public:
 
     //@{
 
+
     //@}
+
 private:
 
     // -----------------------------------------------------------------------
@@ -284,13 +296,40 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    ComplexTypeInfo*            fComplexTypeInfo;
-    XSWildcard*                 fXSWildcard;
-    XSAttributeUseList*         fXSAttributeUseList;
-    XSSimpleTypeDefinition*     fXSSimpleTypeDefinition;
-    XSAnnotationList*           fXSAnnotationList;
-    short                       fProhibitedSubstitution;
+    ComplexTypeInfo*        fComplexTypeInfo;
+    XSWildcard*             fXSWildcard;
+    XSAttributeUseList*     fXSAttributeUseList;
+    XSSimpleTypeDefinition* fXSSimpleTypeDefinition;
+    XSAnnotationList*       fXSAnnotationList;
+    XSParticle*             fParticle;
+    short                   fProhibitedSubstitution;
 };
+
+
+inline XSAttributeUseList* XSComplexTypeDefinition::getAttributeUses()
+{
+    return fXSAttributeUseList;
+}
+
+inline XSWildcard* XSComplexTypeDefinition::getAttributeWildcard() const
+{
+    return fXSWildcard;
+}
+
+inline XSSimpleTypeDefinition* XSComplexTypeDefinition::getSimpleType() const
+{
+    return fXSSimpleTypeDefinition;
+}
+
+inline short XSComplexTypeDefinition::getProhibitedSubstitutions() const
+{
+    return fProhibitedSubstitution;
+}
+
+inline XSParticle *XSComplexTypeDefinition::getParticle() const
+{
+    return fParticle;
+}
 
 
 XERCES_CPP_NAMESPACE_END
