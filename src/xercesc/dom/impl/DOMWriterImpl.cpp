@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2002/12/02 23:08:09  peiyongz
+ * fix to bug#14528: output n+1 cdatasection
+ *
  * Revision 1.20  2002/11/13 21:51:22  peiyongz
  * fix to Bug#14528
  *
@@ -263,6 +266,8 @@ static const XMLCh  gEndCDATA[] =
 //    chCloseSquare, chCloseAngle, chCloseAngle, chNull  // test only: ]>>
       chCloseSquare, chCloseSquare, chCloseAngle, chNull
 };
+
+static const int offset = XMLString::stringLen(gEndCDATA);
 
 //<!--
 static const XMLCh  gStartComment[] =
@@ -1198,10 +1203,18 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
 void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
                                    , const DOMNode* const nodeToWrite)
 {
-    XMLCh* curPtr  = (XMLCh*) nodeValue;
+    /***
+     * Append a ']]>' at the end
+     */
+    XMLCh* repNodeValue = new XMLCh [XMLString::stringLen(nodeValue) + offset + 1];
+    XMLString::copyString(repNodeValue, nodeValue);
+    XMLString::catString(repNodeValue, gEndCDATA);
+    ArrayJanitor<XMLCh>  jName(repNodeValue);
+
+    XMLCh* curPtr  = (XMLCh*) repNodeValue;
     XMLCh* nextPtr = 0;
     int    endTagPos = -1;
-    int    offset = XMLString::stringLen(gEndCDATA);
+
     bool   endTagFound = true;
 
     while (endTagFound)
