@@ -1106,8 +1106,16 @@ void DOMParser::entityDecl
 			entityName.appendData(id);
 			entityName.appendData(chDoubleQuote);
 		}
-		entityName.appendData(chCloseAngle);
-		fDocumentType->internalSubset.appendData(entityName);
+        id = entityDecl.getValue();
+        if (id !=0) {
+            entityName.appendData(chSpace);
+            entityName.appendData(chDoubleQuote);
+            entityName.appendData(id);
+            entityName.appendData(chDoubleQuote);
+        }
+    }
+    entityName.appendData(chCloseAngle);
+    fDocumentType->internalSubset.appendData(entityName);
 	}
 
 	if (fOldDocTypeHandler)
