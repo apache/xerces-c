@@ -81,25 +81,8 @@
 
     <a>
 
-      <p>Check the bug list at the
-        <jump href="http://xml.apache.org/xerces-c/index.html">Apache Xerces-C Web
-        site</jump>. The problem may already be known, or even fixed. </p>
-
-      <p>Otherwise, send the bugs to the <jump href="mailto:&XercesCEmailAddress;">
-        Xerces-C mailing list</jump>. The more
-        information that you provide, the better our chance of understanding what
-        happened, or what the problem really is. Please include:</p>
-
-      <ul>
-        <li>The version of &XercesCName;</li>
-        <li>What kind of machine</li>
-        <li>Operating system and OS version number</li>
-        <li>Whether you built the &XercesCName; library yourself or used the
-          binary distribution</li>
-        <li>The XML document (or excerpt) that fails</li>
-        <li>The C++ application code that failed</li>
-        <li>What happened</li>
-      </ul>
+      <p>See <jump href="bug-report.html">Bug Reporting</jump>.
+      </p>
 
     </a>
   </faq>

@@ -44,7 +44,7 @@
 
   <document id="releases"    label="Releases"     source="releases.xml"/>
   <document id="feedback"    label="Feedback"     source="feedback.xml"/>
-  <document id="bug-todo"    label="Bug-Todo"     source="bug-todo.xml"/>
+  <document id="bug-report"    label="Bug-Reporting"     source="bug-report.xml"/>
   <document id="pdf"         label="PDF Document" source="pdf-c.xml"/>
 
   <separator/>

@@ -6,25 +6,15 @@
 
         <p>Please browse through this bundled documentation completely.  Most of
         the common questions have been answered in the FAQ's. Specifically, do
-        read the answer to "<jump href="faq-other.html#faq-4">I have a question
-        not covered here - who may I contact?</jump>". Browsing this
+        read the answer to "<jump href="faq-other.html#faq-4"> Is there any kind
+        of support available for Xerces-C?</jump>". Browsing this
         documentation, may be the quickest way to get an answer. Of course, if
         all else fails, as mentioned in the link above, you can post a question
         to the <jump href="mailto:&XercesCEmailAddress;">Xerces-C mailing list</jump>.</p>
 
-        <p>If you are reporting a defect (greatly appreciated!), please provide
-        the following information:</p>
+        <p>See <jump href="bug-report.html">Bug Reporting</jump> if you would like
+		to report a defect (greatly appreciated!).</p>
 
-        <ul>
-            <li>Version number of &XercesCName; (&XercesCVersion;?) </li>
-
-            <li>Which OS platform/version you are using (NT4+SP4? Win98? Redhat
-            Linux 6.0? Solaris2.6? AIX 4.3? HP-UX10? HP-UX11?) </li>
-
-            <li>Which compiler/version you are using (MSVC6? gcc? cc? aCC?) </li>
-            <li>Sample XML file that causes the bug</li>
-            <li>Sample DTD file (if required to recreate the bug)</li>
-        </ul>
     </s2>
 
     <s2 title="Acknowledgements">
@@ -52,6 +42,7 @@
             <li>Sumit Chawla</li>
             <li>Chih Hsiang Chou</li>
             <li>Radovan Chytracek</li>
+            <li>Hiram Clawson</li>
             <li>Todd Collins</li>
             <li>Michael Crawford</li>
             <li>Murray Cumming</li>
@@ -65,6 +56,7 @@
             <li>William L. Hopper</li>
             <li>Rahul Jain</li>
             <li>Tom Jordahl</li>
+            <li>Martin Kalen</li>
             <li>Joe Kesselman</li>
             <li>Bob Kline</li>
             <li>Richard Ko</li>
@@ -103,6 +95,7 @@
             <li>Dietrich Wolf</li>
             <li>Kirk Wylie</li>
             <li>Grace Yan</li>
+            <li>Pei Yong Zhang</li>
         </ul>
     </s2>
 </s1>

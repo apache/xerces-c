@@ -322,7 +322,9 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         can find out if others have
         solved this same problem before you, by checking the Apache XML
         mailing list archives at <jump href="http://archive.covalent.net ">
-        http://archive.covalent.net</jump>.</p>
+        http://archive.covalent.net</jump> and the
+		<jump href="http://nagoya.apache.org/bugzilla/">Bugzilla</jump>
+		Apache bug database.</p>
     </a>
     </faq>
 
