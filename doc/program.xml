@@ -70,7 +70,7 @@
     }
     catch (const XMLException&amp; toCatch) {
         cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; toCatch.getMessage() &lt;&lt; "\n";
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n";
         return 1;
     }
 
@@ -88,9 +88,17 @@
         parser->parse(xmlFile);
     }
     catch (const XMLException&amp; toCatch) {
-        cout &lt;&lt; "\nFile not found: '" &lt;&lt; xmlFile &lt;&lt; "'\n"
-             &lt;&lt; "Exception message is: \n"
-             &lt;&lt; toCatch.getMessage() &lt;&lt; "\n" ;
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (const SAXParseException&amp; toCatch) {
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
         return -1;
     }
 }</source>
@@ -187,7 +195,7 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
     }
     catch (const XMLException&amp; toCatch) {
         cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; toCatch.getMessage() &lt;&lt; "\n";
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n";
         return 1;
     }
 
@@ -205,9 +213,17 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
         parser->parse(xmlFile);
     }
     catch (const XMLException&amp; toCatch) {
-        cout &lt;&lt; "\nFile not found: '" &lt;&lt; xmlFile &lt;&lt; "'\n"
-             &lt;&lt; "Exception message is: \n"
-             &lt;&lt; toCatch.getMessage() &lt;&lt; "\n" ;
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (const SAXParseException&amp; toCatch) {
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
         return -1;
     }
 }</source>
@@ -706,7 +722,7 @@ int main (int argc, char* args[]) {
     }
     catch (const XMLException&amp; toCatch) {
         cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; toCatch.getMessage() &lt;&lt; "\n";
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n";
         return 1;
     }
 
@@ -722,10 +738,18 @@ int main (int argc, char* args[]) {
         parser->parse(xmlFile);
     }
     catch (const XMLException&amp; toCatch) {
-        cout &lt;&lt; "\nFile not found: '" &lt;&lt; xmlFile &lt;&lt; "'\n"
-             &lt;&lt; "Exception message is: \n"
-             &lt;&lt; toCatch.getMessage() &lt;&lt; "\n" ;
-       return -1;
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (const SAXParseException&amp; toCatch) {
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
     }
 
     return 0;
