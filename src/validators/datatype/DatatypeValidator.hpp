@@ -183,6 +183,13 @@ public:
       */
     ValidatorType getType() const;
 
+    /**
+      * Returns whether the type is atomic or not
+      *
+      * To be redefined in List/Union validators  
+      */
+    virtual bool isAtomic() const;
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -470,6 +477,11 @@ inline RegularExpression* DatatypeValidator::getRegex() const
 inline void DatatypeValidator::setRegex(RegularExpression* const regex)
 {
     fRegex = regex;
+}
+
+inline bool DatatypeValidator::isAtomic() const {
+
+    return true;
 }
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2001/07/12 15:32:57  knoaman
+ * Added constraint checking for simple types (list/union).
+ *
  * Revision 1.29  2001/07/10 18:12:53  knoaman
  * Modified the 'throw' in complexType processing.
  *
@@ -876,7 +879,8 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
   *
   * traverse <list>|<restriction>|<union>
   */
-int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
+int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
+                                           int baseRefContext)
 {
     // ------------------------------------------------------------------
     // Check attributes
@@ -898,37 +902,30 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
         return -1;
     }
 
-    if (XMLString::stringLen(fTargetNSURIString) != 0) {
-
-        fBuffer.set(fTargetNSURIString);
-        fBuffer.append(chComma);
-        fBuffer.append(name);
-    }
-    else {
-        fBuffer.set(name);
-    }
-
-    //check if we have already traversed the same simpleType decl
-    if (fDatatypeRegistry->getDatatypeValidator(fBuffer.getRawBuffer())!= 0) {
-        return fStringPool.addOrFind(fBuffer.getRawBuffer());
-    }
-
-    int newSimpleTypeName = -1;
-
     if (XMLString::stringLen(name) == 0) { // anonymous simpleType
         name = genAnonTypeName(fgAnonSNamePrefix, fSimpleTypeAnonCount);
     }
 
-    newSimpleTypeName = fStringPool.addOrFind(name);
+    fBuffer.set(fTargetNSURIString);
+    fBuffer.append(chComma);
+    fBuffer.append(name);
+
+    XMLCh* fullName = fBuffer.getRawBuffer();
+    int    fullTypeName = fStringPool.addOrFind(fullName);
+
+    //check if we have already traversed the same simpleType decl
+    if (fDatatypeRegistry->getDatatypeValidator(fullName)!= 0) {
+        return fStringPool.addOrFind(fullName);
+    }
 
     // Circular constraint checking
-    if (locationsContain(fCurrentTypeNameStack, newSimpleTypeName)){
+    if (locationsContain(fCurrentTypeNameStack, fullTypeName)){
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, name);
         return -1;
     }
 
-    fCurrentTypeNameStack->addElement(newSimpleTypeName);
+    fCurrentTypeNameStack->addElement(fullTypeName);
 
     // Get 'final' values
     const XMLCh* finalVal = getElementAttValue(childElem, SchemaSymbols::fgATT_FINAL);
@@ -946,17 +943,35 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
     }
 
     DOMString varietyName = content.getLocalName();
+    int newSimpleTypeName = fStringPool.addOrFind(name);
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+    fAttributeCheck->checkAttributes(content, GeneralAttributeCheck::LocalContext, this);
 
     // Remark: some code will be repeated in list|restriction| union but it
     //         is cleaner that way
     if (varietyName.equals(SchemaSymbols::fgELT_LIST)) { //traverse List
+        if (baseRefContext & SchemaSymbols::LIST != 0) {
+
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType);
+            return resetCurrentTypeNameStack(-1);
+        }
+
         return traverseByList(childElem, content, newSimpleTypeName, finalSet);
     }
     else if (varietyName.equals(SchemaSymbols::fgELT_RESTRICTION)) { //traverse Restriction
         return traverseByRestriction(childElem, content, newSimpleTypeName, finalSet);
     }
     else if (varietyName.equals(SchemaSymbols::fgELT_UNION)) { //traverse union
-        return traverseByUnion(childElem, content, newSimpleTypeName, finalSet);
+        if (baseRefContext & SchemaSymbols::UNION != 0) {
+
+           reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MemberTypeNoUnion);
+           return resetCurrentTypeNameStack(-1);
+        }
+
+        return traverseByUnion(childElem, content, newSimpleTypeName, finalSet, baseRefContext);
     }
     else {
 
@@ -2066,12 +2081,6 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
                                    const int typeNameIndex,
                                    const int finalSet) {
 
-    // -----------------------------------------------------------------------
-    // Check Attributes
-    // -----------------------------------------------------------------------
-    unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(contentElem, scope, this);
-
     DatatypeValidator* baseValidator = 0;
     DOM_Element        content = contentElem;
     const XMLCh*       typeName = fStringPool.getValueForId(typeNameIndex);
@@ -2092,7 +2101,7 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
         }
 
         if (content.getLocalName().equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
-            baseValidator = checkForSimpleTypeValidator(content);
+            baseValidator = checkForSimpleTypeValidator(content, SchemaSymbols::LIST);
         }
         else {
 
@@ -2106,10 +2115,17 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
 
         baseValidator = findDTValidator(rootElem, baseTypeName,
                                         SchemaSymbols::LIST);
+
         content = checkContent(rootElem, XUtil::getFirstChildElement(content), true);
     }
 
     if (baseValidator == 0) {
+        return resetCurrentTypeNameStack(-1);
+    }
+
+    if (!baseValidator->isAtomic()) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType, baseTypeName);
         return resetCurrentTypeNameStack(-1);
     }
 
@@ -2156,12 +2172,6 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                                           const DOM_Element& contentElem,
                                           const int typeNameIndex,
                                           const int finalSet) {
-
-    // -----------------------------------------------------------------------
-    // Check Attributes
-    // -----------------------------------------------------------------------
-    unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(contentElem, scope, this);
 
     DatatypeValidator* baseValidator = 0;
     DOM_Element        content = contentElem;
@@ -2211,6 +2221,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
     DOMString                      facetName;
     XMLCh                          fixedFlagStr[16];
     unsigned int                   fixedFlag = 0;
+    unsigned int                   scope = GeneralAttributeCheck::LocalContext;
     bool                           isFirstPattern = true;
 
     while (content != 0) {
@@ -2345,13 +2356,8 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
                                     const DOM_Element& contentElem,
                                     const int typeNameIndex,
-                                    const int finalSet) {
-
-    // -----------------------------------------------------------------------
-    // Check Attributes
-    // -----------------------------------------------------------------------
-    unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(contentElem, scope, this);
+                                    const int finalSet,
+                                    int baseRefContext) {
 
     int                             size = 1;
     DOM_Element                     content = contentElem;
@@ -2368,35 +2374,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
     }
 
-    if (XMLString::stringLen(baseTypeName) == 0) { // must 'see' <simpleType>
-
-        content = checkContent(rootElem, XUtil::getFirstChildElement(content), false);
-
-        if (content == 0) {
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInUnion, typeName);
-            return resetCurrentTypeNameStack(-1);
-        }
-
-        if (content.getLocalName().equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
-
-            baseValidator = checkForSimpleTypeValidator(content);
-
-            if (baseValidator == 0) {
-                return resetCurrentTypeNameStack(-1);
-            }
-
-            validators->addElement(baseValidator);
-        }
-        else {
-
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
-            return resetCurrentTypeNameStack(-1);
-        }
-
-        content = XUtil::getNextSiblingElement(content);
-
-    }
-    else { //base was provided - get proper validator.
+    if (XMLString::stringLen(baseTypeName)) { //base was provided - get proper validator.
 
         XMLStringTokenizer unionMembers(baseTypeName);
         int             tokCount = unionMembers.countTokens();
@@ -2412,10 +2390,30 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
                 return resetCurrentTypeNameStack(-1);
             }
 
+            if (baseValidator->getType() == DatatypeValidator::Union) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MemberTypeNoUnion, baseTypeName);
+                return resetCurrentTypeNameStack(-1);
+            }
+
             validators->addElement(baseValidator);
         }
 
         content = checkContent(rootElem, XUtil::getFirstChildElement(content), true);
+    }
+    else { // must 'see' <simpleType>
+
+        content = checkContent(rootElem, XUtil::getFirstChildElement(content), false);
+
+        if (content == 0) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInUnion, typeName);
+            return resetCurrentTypeNameStack(-1);
+        }
+
+        if (!content.getLocalName().equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
+            return resetCurrentTypeNameStack(-1);
+        }
     }
 
     // process union content of simpleType children if any
@@ -2423,16 +2421,22 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
 
         if (content.getLocalName().equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
 
-            baseValidator = checkForSimpleTypeValidator(content);
+            baseValidator = checkForSimpleTypeValidator(content, baseRefContext | SchemaSymbols::UNION);
 
             if (baseValidator == 0) {
+                return resetCurrentTypeNameStack(-1);
+            }
+
+            if (baseValidator->getType() == DatatypeValidator::Union) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MemberTypeNoUnion, baseTypeName);
                 return resetCurrentTypeNameStack(-1);
             }
 
             validators->addElement(baseValidator);
         }
         else {
-            // REVISIT - should we return. For now, we will continue and move to
+            // REVISIT - should we break. For now, we will continue and move to
             // the next sibling
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
         }
@@ -3261,9 +3265,10 @@ XMLCh* TraverseSchema::getQualifiedName(const int typeNameIndex) {
 
 
 DatatypeValidator*
-TraverseSchema::checkForSimpleTypeValidator(const DOM_Element& content) {
+TraverseSchema::checkForSimpleTypeValidator(const DOM_Element& content,
+                                            int baseRefContext) {
 
-    int typeNameIndex = traverseSimpleTypeDecl(content);
+    int typeNameIndex = traverseSimpleTypeDecl(content, baseRefContext);
     DatatypeValidator* baseValidator = 0;
 
     if (typeNameIndex != -1) {

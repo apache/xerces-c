@@ -159,7 +159,8 @@ private:
                                                const DOM_Element& contentDecl,
                                                ComplexTypeInfo* const typeInfo,
                                                const bool isMixed);
-    int              traverseSimpleTypeDecl(const DOM_Element& childElem);
+    int              traverseSimpleTypeDecl(const DOM_Element& childElem,
+                                            int baseRefContext = SchemaSymbols::EMPTY_SET);
     int              traverseComplexTypeDecl(const DOM_Element& childElem);
     int              traverseByList(const DOM_Element& rootElem,
                                     const DOM_Element& contentElem,
@@ -172,7 +173,8 @@ private:
     int              traverseByUnion(const DOM_Element& rootElem,
                                      const DOM_Element& contentElem,
                                      const int typeNameIndex,
-                                     const int finalSet);
+                                     const int finalSet,
+                                     int baseRefContext);
     QName*           traverseElementDecl(const DOM_Element& childElem);
     XMLCh*           traverseNotationDecl(const DOM_Element& childElem);
     ContentSpecNode* traverseChoiceSequence(const DOM_Element& elemDecl,
@@ -251,7 +253,8 @@ private:
       * Process simpleType content of a list|restriction|union
       * Return a dataype validator if valid type, otherwise 0.
       */
-    DatatypeValidator* checkForSimpleTypeValidator(const DOM_Element& content);
+    DatatypeValidator* checkForSimpleTypeValidator(const DOM_Element& content,
+                                                   int baseRefContext = SchemaSymbols::EMPTY_SET);
 
     /**
       * Process complexType content of an element
