@@ -531,6 +531,14 @@ BinInputStream* XMLURL::makeNewStream() const
                             realPath = fPath + 1;
                         }
                     }
+
+                    // Similarly for UNC paths
+                    if ( *(fPath + 1) == *(fPath + 2) && 
+                         (*(fPath + 1) == chForwardSlash ||
+                          *(fPath + 1) == chBackSlash) )
+                    {
+                        realPath = fPath + 1;
+                    }
                 }
             }
 
