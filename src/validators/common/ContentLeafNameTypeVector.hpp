@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/08/07 15:21:20  knoaman
+ * The value of 'fLeafCount' was not set.
+ *
  * Revision 1.3  2001/05/11 13:27:17  tng
  * Copyright update.
  *
@@ -151,6 +154,7 @@ inline void ContentLeafNameTypeVector::init(const unsigned int size)
 {
 	fLeafNames = new QName*[size];
 	fLeafTypes = new ContentSpecNode::NodeTypes [size];
+	fLeafCount = size;
 }
 
 #endif
