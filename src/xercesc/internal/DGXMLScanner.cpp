@@ -1555,6 +1555,8 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
                                    , const short        grammarType
                                    , const bool         toCache)
 {
+    Grammar* loadedGrammar = 0;
+
     try
     {
         fGrammarResolver->cacheGrammarFromParse(false);
@@ -1572,7 +1574,7 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
         fHasNoDTD = true;
 
         if (grammarType == Grammar::DTDGrammarType) {
-            return loadDTDGrammar(src, toCache);
+            loadedGrammar = loadDTDGrammar(src, toCache);
         }
 
         // Reset the reader manager to close all files, sockets, etc...
@@ -1640,7 +1642,7 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
         throw;
     }
 
-    return 0;
+    return loadedGrammar;
 }
 
 Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,

@@ -1754,6 +1754,8 @@ Grammar* SGXMLScanner::loadGrammar(const   InputSource& src
                                    , const short        grammarType
                                    , const bool         toCache)
 {
+    Grammar* loadedGrammar = 0;
+
     try
     {
         fGrammarResolver->cacheGrammarFromParse(false);
@@ -1772,7 +1774,7 @@ Grammar* SGXMLScanner::loadGrammar(const   InputSource& src
         fSeeXsi = false;
 
         if (grammarType == Grammar::SchemaGrammarType) {
-            return loadXMLSchemaGrammar(src, toCache);
+            loadedGrammar = loadXMLSchemaGrammar(src, toCache);
         }
 
         // Reset the reader manager to close all files, sockets, etc...
@@ -1840,7 +1842,7 @@ Grammar* SGXMLScanner::loadGrammar(const   InputSource& src
         throw;
     }
 
-    return 0;
+    return loadedGrammar;
 }
 
 // ---------------------------------------------------------------------------
