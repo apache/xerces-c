@@ -72,8 +72,7 @@
               <li>SchemaGrammar: getIDRefList</li>
               <li>SchemaElementDecl: all non thread safe methods </li>
               <li>SchemaAttDef: getters </li>
-              <li>DTDGrammar: getRootElemId</li>
-              <li></li>              
+              <li>DTDGrammar: getRootElemId</li>                           
             </ul>
         </s4>
 

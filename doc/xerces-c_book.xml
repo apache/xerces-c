@@ -43,6 +43,8 @@
      <hidden   id="sax2count"   source="sax2count.xml"/>
      <hidden   id="sax2print"   source="sax2print.xml"/>
      <hidden   id="senumval"    source="senumval.xml"/>
+     <hidden   id="psviwriter"  source="psviwriter.xml"/>
+     <hidden   id="scmprint"    source="scmprint.xml"/>
 
      <document id="api"         label="API Docs"     source="apidocs.xml"/>
 

@@ -222,7 +222,7 @@ parser->parse(xmlFile2);
 
         <p>In order to support the local message loading services, all the error messages
         are captured in an XML file in the src/xercesc/NLS/ directory.
-        There is a simple program, in the Tools/NLSXlat/ directory,
+        There is a simple program, in the tools/NLS/Xlat/ directory,
         which can spit out that text in various formats. It currently
         supports a simple 'in memory' format (i.e. an array of
         strings), the Win32 resource format, and the message catalog
@@ -262,7 +262,7 @@ parser->parse(xmlFile2);
         Unix platforms. The Win32 version only provides native code
         page services, so it can only handle XML code in the intrinsic
         encodings ASCII, UTF-8, UTF-16 (Big/Small Endian), UCS4
-        (Big/Small Endian), EBCDIC code pages IBM037 and
+        (Big/Small Endian), EBCDIC code pages IBM037, IBM1047 and
         IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. The ICU version
         provides all of the encodings that ICU supports. The
         <ref>iconv</ref> version will support the encodings supported
@@ -354,7 +354,7 @@ parser->parse(xmlFile2);
       <ul>
         <li>Does ICU compile on your platform? If not, then you'll need to
             create a transcoder implementation that uses your local transcoding
-            services. The Iconv transcoder should work for you, though perhaps
+            services. The iconv transcoder should work for you, though perhaps
             with some modifications.</li>
         <li>What message loader will you use? To get started, you can use the
             "in memory" one, which is very simple and easy. Then, once you get
@@ -611,8 +611,8 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
         from crashes of individual components, as well as to allocate
         memory more efficiently than a general-purpose OS-level
         procedure with no knowledge of the characteristics of the
-        program making the requests for memory.  Xerces-C 2.3.0 now
-        supports these needs via our Pluggable Memory Handler.
+        program making the requests for memory.  As of Xerces-C 2.3.0 this
+        is supported via the Pluggable Memory Handler.
         </p>
         <p>Users that have no particular memory management
         requirements (beyond that components don't leak memory or
@@ -836,7 +836,7 @@ parser.setLoadExternalDTD(true);
 SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 
 // Specify scanner name
-parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgSGXMLScanner);
+parser->setProperty(XMLUni::fgXercesScannerName, (void *)XMLUni::fgSGXMLScanner);
 
 // Specify other parser features, e.g.
 parser->setFeature(XMLUni::fgXercesSchemaFullChecking, false);
@@ -857,7 +857,7 @@ parser->setFeature(XMLUni::fgXercesSchemaFullChecking, false);
 DOMBuilder *parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
 
 // Specify scanner name - This is optional as IGXMLScanner is the default
-parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgIGXMLScanner);
+parser->setProperty(XMLUni::fgXercesScannerName, (void *)XMLUni::fgIGXMLScanner);
 
 // Specify other parser features, e.g.
 parser->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);

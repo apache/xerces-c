@@ -165,6 +165,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Perform Namespace processing. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not perform Namespace processing. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgSAX2CoreNameSpaces </td></tr>
                 <tr><th><em>note:</em></th><td> If the validation feature is set to true, then the
                 document must contain a grammar that supports the use of namespaces. </td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -182,6 +183,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Report the original prefixed names and attributes used for Namespace declarations. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not report attributes used for Namespace declarations, and optionally do not report original prefixed names. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgSAX2CoreNameSpacePrefixes </td></tr>
             </table>
 
             <p/>
@@ -192,6 +194,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Report all validation errors. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not report validation errors. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgSAX2CoreValidation </td></tr>
                 <tr><th><em>note:</em></th><td> If this feature is set to true, the document must
                 specify a grammar.  If this feature is set to false and document specifies a grammar,
                 that grammar might be parsed but no validation of the document contents will be
@@ -213,6 +216,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> The parser will validate the document only if a grammar is specified.  (http://xml.org/sax/features/validation must be true). </td></tr>
                 <tr><th><em>false:</em></th><td> Validation is determined by the state of the http://xml.org/sax/features/validation feature. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesDynamic </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="validation">http://xml.org/sax/features/validation</link>
                 </td></tr>
@@ -226,6 +230,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Enable the parser's schema support.  </td></tr>
                 <tr><th><em>false:</em></th><td> Disable the parser's schema support. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchema </td></tr>
                 <tr><th><em>note</em></th><td> If set to true, namespace processing must also be turned on. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="namespaces">http://xml.org/sax/features/namespaces</link>
@@ -242,9 +247,10 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                              are controlled by this option. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable full schema constraint checking. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>note:</em></th><td> This feature checks the Schema grammar itself for
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaFullChecking </td></tr>
+                <tr><th><em>note:</em></th><td> This feature checks the schema grammar itself for
                 additional errors that are time-consuming or memory intensive. It does <em>not</em> affect the
-                level of checking performed on document instances that use Schema grammars. </td></tr>
+                level of checking performed on document instances that use schema grammars. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="schema">http://apache.org/xml/features/validation/schema</link>
                 </td></tr>
@@ -255,9 +261,10 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             <anchor name="load-external-dtd"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/nonvalidating/load-external-dtd</em></th></tr>
-                <tr><th><em>true:</em></th><td> Load the External DTD. </td></tr>
+                <tr><th><em>true:</em></th><td> Load the external DTD. </td></tr>
                 <tr><th><em>false:</em></th><td> Ignore the external DTD completely. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesLoadExternalDTD </td></tr>
                 <tr><th><em>note</em></th><td> This feature is ignored and DTD is always loaded when validation is on. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="validation">http://xml.org/sax/features/validation</link>
@@ -272,6 +279,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Attempt to continue parsing after a fatal error. </td></tr>
                 <tr><th><em>false:</em></th><td> Stops parse on first fatal error. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesContinueAfterFatalError </td></tr>
                 <tr><th><em>note:</em></th><td> The behavior of the parser when this feature is set to
                 true is <em>undetermined</em>! Therefore use this feature with extreme caution because
                 the parser may get stuck in an infinite loop or worse. </td></tr>
@@ -287,6 +295,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 </td></tr>
                 <tr><th><em>false:</em></th><td> The parser will report the error and continue processing. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidationErrorAsFatal </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this true does not mean the validation error will
                 be printed with the word "Fatal Error".   It is still printed as "Error", but the parser
                 will exit if
@@ -305,6 +314,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td>Use cached grammar if it exists in the pool.</td></tr>
                 <tr><th><em>false:</em></th><td>Parse the schema grammar.</td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesUseCachedGrammarInParse </td></tr>
                 <tr><th><em>note:</em></th><td>If http://apache.org/xml/features/validation/cache-grammarFromParse is enabled,
                 this feature is set to true automatically. Any setting to this feature by the users is a no-op.</td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -320,6 +330,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td>Cache the grammar in the pool for re-use in subsequent parses.</td></tr>
                 <tr><th><em>false:</em></th><td>Do not cache the grammar in the pool</td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesCacheGrammarFromParse </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, the http://apache.org/xml/features/validation/use-cachedGrammarInParse
                 is also set to true automatically.</td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -335,6 +346,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Force standard uri conformance. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not force standard uri conformance. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesStandardUriConformant </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, malformed uri will be rejected
                 and fatal error will be issued. </td></tr>
             </table>
@@ -346,6 +358,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Enable src offset calculation. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable src offset calculation. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesCalculateSrcOfs </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, the user can inquire about
                 the current src offset within the input source. Setting it to false (default)
                 improves the performance.</td></tr>
@@ -394,6 +407,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                                  in instance documents: e.g, "http://www.example.com file_name.xsd".
                                  The user can specify more than one XML Schema in the list. </td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaExternalSchemaLocation </td></tr>
             </table>
 
             <p/>
@@ -408,6 +422,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>Value</em></th><td> The syntax is the same as for the noNamespaceSchemaLocation
                             attribute that may occur in an instance document: e.g."file_name.xsd". </td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaExternalNoNameSpaceSchemaLocation </td></tr>
             </table>
             <p/>
 
@@ -421,9 +436,11 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                             2. "DGXMLScanner" - scanner that handles XML documents with DTD grammar information.<br/>
                             3. "SGXMLScanner" - scanner that handles XML documents with XML schema grammar information.<br/>
 			    4. "IGXMLScanner" - scanner that handles XML documents with DTD or/and XML schema grammar information.<br/>
-                            Users can use the predefined constants defined in XMLUni directly or a string that matches the value of
+                            Users can use the predefined constants defined in XMLUni directly (fgWFXMLScanner, fgDGXMLScanner,
+                            fgSGXMLScanner, or fgIGXMLScanner) or a string that matches the value of
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesScannerName </td></tr>
                 <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
                 for more programming details. </td></tr>
             </table>
@@ -446,7 +463,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>Value</em></th>
                 <td> 
                     An instance of the SecurityManager class (see
-                    <code>xercesc/util/SecurityManager</code>.  This
+                    <code>xercesc/util/SecurityManager</code>).  This
                     class's documentation describes the particular limits
                     that may be set.  Note that, when instantiated, default
                     values for limits that should be appropriate in most
@@ -462,6 +479,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                     performed.
                 </td></tr>
                 <tr><th><em>Value Type</em></th><td> SecurityManager* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSecurityManager </td></tr>
             </table>
             <p/>
           </s4>

@@ -477,11 +477,6 @@ configure
 If the result of the above commands look OK to you, go to the directory
 $HOME/&XercesCSrcInstallDir;/src/xercesc and type "gmake" to make the XERCES-C system.</source>
 
-<note>The error message concerning <code>conf.h</code>
-is NOT an indication of a problem. This code has been inserted to make it
-work on AS/400, but it gives this message which appears to be an error. The problem
-will be fixed in future.</note>
-
             <p>So now you see what the wrapper script has actually been doing! It has
             invoked <code>configure</code>
             to create the Makefiles in the individual sub-directories, but in addition

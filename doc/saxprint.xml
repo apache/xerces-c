@@ -39,7 +39,7 @@ Options:
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037.
+    WINDOWS-1252, IBM1140, IBM037, IBM1047.
 </source>
 
           <p><em>-u=fail</em> will fail when unrepresentable characters are encountered<br/>

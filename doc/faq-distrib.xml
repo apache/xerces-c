@@ -79,7 +79,7 @@
         <a>
 
             <p>Xerces-C has intrinsic support for ASCII, UTF-8, UTF-16
-            (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037 and
+            (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037, IBM1047 and
             IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can parse
             input XML files in these above mentioned encodings.</p>
 
@@ -199,7 +199,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
 
     <faq title="I do not see binaries for my platform. When will they be available?">
 
-        <q>I do not see binaries for my platform. When will they be available?"</q>
+        <q>I do not see binaries for my platform. When will they be available?</q>
 
         <a>
             <p>The reason why you see binaries only for some specific

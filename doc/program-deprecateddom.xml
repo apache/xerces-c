@@ -608,7 +608,8 @@
                             2. "DGXMLScanner" - scanner that handles XML documents with DTD grammar information.<br/>
                             3. "SGXMLScanner" - scanner that handles XML documents with XML schema grammar information.<br/>
 			    4. "IGXMLScanner" - scanner that handles XML documents with DTD or/and XML schema grammar information.<br/>
-                            Users can use the predefined constants defined in XMLUni directly or a string that matches the value of
+                            Users can use the predefined constants defined in XMLUni directly (fgWFXMLScanner, fgDGXMLScanner,
+                            fgSGXMLScanner, or fgIGXMLScanner) or a string that matches the value of
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
                 <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>

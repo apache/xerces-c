@@ -171,7 +171,7 @@ catch (const XMLException&amp; toCatch) {
 
   <faq title="Why does my application crash after calling XMLPlatformUtils::Terminate()?">
 
-    <q>Why does my application crash after calling XMLPlatformUtils::Terminate()?></q>
+    <q>Why does my application crash after calling XMLPlatformUtils::Terminate()?</q>
 
     <a>
 
@@ -548,7 +548,7 @@ void myParsingFunction()
     <a>
 
       <p>Xerces-C has intrinsic support for ASCII, UTF-8, UTF-16 (Big/Small
-        Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037 and IBM1140
+        Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037, IBM1047 and IBM1140
         encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can
         parse input XML files in these above mentioned encodings.</p>
 
@@ -621,18 +621,18 @@ void myParsingFunction()
 
     <a>
 
-      <p>Yes, &XercesCName; supports EBCDIC. When creating EBCDIC encoded XML
-        data, the preferred encoding is ibm1140. Also supported is ibm037 (and its
-        alternate name, ebcdic-cp-us); this encoding is almost the same as ibm1140, but
+      <p>Yes, &XercesCName; supports EBCDIC with the ibm1140, ibm037 and ibm1047 encodings.
+        When creating EBCDIC encoded XML data, the preferred encoding is ibm1140. The ibm037 encoding,
+        and its alternate name, ebcdic-cp-us, is almost the same as ibm1140, but
         it lacks the Euro symbol.</p>
 
-      <p>These two encodings, ibm1140 and ibm037, are available on both
+      <p>These three encodings, ibm1140, ibm037 and ibm1047, are available on both
         Xerces-C and IBM XML4C, on all platforms.</p>
 
-      <p>On IBM System 390, XML4C also supports two alternative forms,
-        ibm037-s390 and ibm1140-s390. These are similar to the base ibm037 and ibm1140
+      <p>On IBM System 390, XML4C also supports three alternative forms,
+        ibm037-s390, ibm1140-s390, and ibm1047-s390. These are similar to the base ibm037, ibm1140, and ibm1047
         encodings, but with alternate mappings of the EBCDIC new-line character, which
-        allows them to appear as normal text files on System 390s. These encodings are
+        allows them to appear as normal text files on System 390. These encodings are
         not supported on other platforms, and should not be used for portable data.</p>
 
       <p>XML4C on System 390 and AS/400 also provides additional EBCDIC
@@ -683,7 +683,7 @@ void myParsingFunction()
             through with it.
 
            NOTE: You must provide a maximum block size that you will pass to the transcoder
-           at one time, and you must blocks of characters of this count or smaller when
+           at one time, and you must pass blocks of characters of this count or smaller when
            you do your transcoding. The reason for this is that this is really an
            internal API and is used by the parser itself to do transcoding. The parser
            always does transcoding in known block sizes, and this allows transcoders to
@@ -866,7 +866,7 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
 
     <a>
 
-      <p>In most cases, parser is taking care of perper deletion of documents from parsing, if application
+      <p>In most cases, the parser handles deleting documents when the parser gets deleted.  However, if an application
          needs to release a document, it shall adopt the document before releasing it, so that the parser 
          knows that the ownership of this particular document is transfered to the application and will not 
          try to delete it once the parser gets deleted.

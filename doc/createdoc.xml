@@ -14,8 +14,7 @@
              in memory from scratch. To run CreateDOMDocument, enter the following</p>
 <source>CreateDOMDocument</source>
           <p>Here is a sample output from CreateDOMDocument</p>
-<source>cd &XercesCInstallDir;-linux/samples/data
-CreateDOMDocument
+<source>CreateDOMDocument
 The tree just created contains: 4 elements.</source>
 
         </s3>

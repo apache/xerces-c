@@ -4,7 +4,7 @@
 <s1 title="&XercesCName; Samples">
 
     <s2 title="Introduction">
-    <p>&XercesCName; comes packaged with 13 sample applications that
+    <p>&XercesCName; comes packaged with sample applications that
     demonstrate salient features of the parser using simple
     applications written on top of the SAX and DOM APIs provided by
     the parser.  Sample XML data files are provided in the samples/data directory.</p>
@@ -71,6 +71,7 @@
 set XERCESC_NLS_HOME=$XERCESCROOT\msg
 or
 export XERCESC_NLS_HOME=$XERCESCROOT/msg
+or
 setenv XERCESC_NLS_HOME=$XERCESCROOT/msg
 </source>
                
@@ -108,6 +109,10 @@ setenv XERCESC_NLS_HOME=$XERCESCROOT/msg
 					characters in an XML file.</li>
 				<li><link idref="sax2print">SAX2Print</link>
 					<br/>SAX2Print parses an XML file and prints it out.</li>
+				<li><link idref="psviwriter">PSVIWriter</link>
+					<br/>PSVIWriter exposes the underlying PSVI of the parsed XML file.</li>
+				<li><link idref="scmprint">SCMPrint</link>
+					<br/>SCMPrint parses an XSD file and prints information about the Schema Component Model.</li>										
 			</ul>
 		</s3>
     </s2>

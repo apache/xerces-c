@@ -102,13 +102,13 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         <p>Then build the &XercesCName; with ICU.  This is similar to building a standalone
         &XercesCName; library as instructed in <jump href="build-winunix.html#UNIX">
         "Building &XercesCName; on UNIX platforms"</jump>; except that you have to specify
-        the transcoder option <code>'-t icu'</code>.  For example:</p>
+        the transcoder option <code>'-t icu'</code> and/or the message loader option
+        <code>'-m icu'</code>.  For example:</p>
 <source>runConfigure -plinux -cgcc -xg++ -minmem -nsocket -ticu -rpthread</source>
 
         <p>Or instead of building the ICU and &XercesCName; manually in two steps,
         you can use the bundled perl script '<code>packageBinaries.pl</code>' which
-        will build both of them in one step.  Specify the option <code>'-t icu'</code>
-        when invoking the script.   For example:</p>
+        will build both of them in one step.  For example:</p>
 <source>export XERCESCROOT=$HOME/&XercesCSrcInstallDir;
 export ICUROOT=$HOME/icu
 cd $HOME/&XercesCSrcInstallDir;/scripts

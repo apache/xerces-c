@@ -445,7 +445,7 @@
                              which may be time-consuming or memory intensive. Currently, particle unique
                              attribution constraint checking and particle derivation restriction checking
                              are controlled by this option. </td></tr>
-                <tr><th><em>false:</em></th><td> Disable full schema constraint checking . </td></tr>
+                <tr><th><em>false:</em></th><td> Disable full schema constraint checking. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>note:</em></th><td> This feature checks the Schema grammar itself for
                 additional errors that are time-consuming or memory intensive. It does <em>not</em> affect the
@@ -617,7 +617,8 @@
                             2. "DGXMLScanner" - scanner that handles XML documents with DTD grammar information.<br/>
                             3. "SGXMLScanner" - scanner that handles XML documents with XML schema grammar information.<br/>
 			    4. "IGXMLScanner" - scanner that handles XML documents with DTD or/and XML schema grammar information.<br/>
-                            Users can use the predefined constants defined in XMLUni directly or a string that matches the value of
+                            Users can use the predefined constants defined in XMLUni directly (fgWFXMLScanner, fgDGXMLScanner,
+                            fgSGXMLScanner, or fgIGXMLScanner) or a string that matches the value of
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
                 <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
@@ -654,7 +655,7 @@
                 <tr><th><em>Value</em></th>
                 <td> 
                     An instance of the SecurityManager class (see
-                    <code>xercesc/util/SecurityManager</code>.  This
+                    <code>xercesc/util/SecurityManager</code>).  This
                     class's documentation describes the particular limits
                     that may be set.  Note that, when instantiated, default
                     values for limits that should be appropriate in most
@@ -1275,7 +1276,8 @@
                             2. "DGXMLScanner" - scanner that handles XML documents with DTD grammar information.<br/>
                             3. "SGXMLScanner" - scanner that handles XML documents with XML schema grammar information.<br/>
 			    4. "IGXMLScanner" - scanner that handles XML documents with DTD or/and XML schema grammar information.<br/>
-                            Users can use the predefined constants defined in XMLUni directly or a string that matches the value of
+                            Users can use the predefined constants defined in XMLUni directly (fgWFXMLScanner, fgDGXMLScanner,
+                            fgSGXMLScanner, or fgIGXMLScanner) or a string that matches the value of
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
                 <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
@@ -1307,7 +1309,7 @@
                 <tr><th><em>Value</em></th>
                 <td> 
                     An instance of the SecurityManager class (see
-                    <code>xercesc/util/SecurityManager</code>.  This
+                    <code>xercesc/util/SecurityManager</code>).  This
                     class's documentation describes the particular limits
                     that may be set.  Note that, when instantiated, default
                     values for limits that should be appropriate in most
