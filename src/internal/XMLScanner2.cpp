@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/05/11 23:11:33  andyh
+ * Add missing validity checks for stand-alone documents, character range
+ * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
+ * <sean.Macroibeaird@ireland.sun.com>
+ *
  * Revision 1.12  2000/04/12 22:58:28  roddey
  * Added support for 'auto validate' mode.
  *
@@ -189,7 +194,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
     //
     //  We need a buffer into which raw scanned attribute values will be
-    //  normalized. 
+    //  normalized.
     //
     XMLBufBid bbNormal(&fBufMgr);
     XMLBuffer& normBuf = bbNormal.getBuffer();
@@ -419,7 +424,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                 //
                 //  Fault in the value if needed, and bump the att count.
-                //  We have to 
+                //  We have to
                 //
                 if ((defType == XMLAttDef::Default)
                 ||  (defType == XMLAttDef::Fixed))
@@ -466,7 +471,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 void XMLScanner::checkIDRefs()
 {
     //
-    //  
+    //
     //  Iterate the id ref list. If we find any entries here which are used
     //  but not declared, then that's an error.
     //
@@ -938,7 +943,7 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
     fReaderMgr.getNextChar();
     orgReader = fReaderMgr.getCurrentReaderNum();
 
-    // 
+    //
     //  Ok, so lets go through the things that it could be at this point which
     //  are all some form of markup.
     //
@@ -1156,7 +1161,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                 //
                 //  Check for an entity ref . We ignore the empty flag in
                 //  this one.
-                //  
+                //
                 escaped = false;
                 if (nextCh == chAmpersand)
                 {
@@ -1336,7 +1341,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
             //  Check for an entity ref now, before we let it affect our
             //  whitespace normalization logic below. We ignore the empty flag
             //  in this one.
-            //  
+            //
             escaped = false;
             if (nextCh == chAmpersand)
             {
@@ -1429,6 +1434,18 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                 {
                     if (XMLReader::isWhitespace(nextCh))
                     {
+                        //
+                        // Check Validity Constraint for Standalone document declaration
+                        // XML 1.0, Section 2.9
+                        //
+                        if (fValidate && fStandalone)
+                        {
+                             //
+                             // Can't have a standalone document declaration of "yes" if  attribute
+                             // values are subject to normalisation
+                             //
+                             emitError(XMLErrs::BadStandalone);
+                        }
                         curState = InWhitespace;
                         continue;
                     }
@@ -1510,6 +1527,15 @@ void XMLScanner::scanCDSection()
         {
             emitError(XMLErrs::UnterminatedCDATASection);
             ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+        }
+
+        if (fValidate && fStandalone && (XMLReader::isWhitespace(nextCh)))
+        {
+            //
+            // This document is standalone; this ignorable CDATA whitespace is forbidden.
+            // XML 1.0, Section 2.9
+            //
+            emitError(XMLErrs::BadStandalone);
         }
 
         //
@@ -1766,7 +1792,38 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
             fDocHandler->endEntityReference(toCatch.getEntity());
     }
     }
+    //
+    // Check the validity constraints as per XML 1.0 Section 2.9
+    //
 
+    const XMLCh* rawBuf = toUse.getRawBuffer();
+    const unsigned int len = toUse.getLen();
+
+    if (fValidate)
+    {
+      // See if the text contains whitespace
+      // Get the raw data we need for the callback
+      const bool isSpaces = XMLReader::containsWhiteSpace(rawBuf, len);
+      if (isSpaces)
+      {
+        // And see if the current element is a 'Children' style content model
+        const ElemStack::StackElem* topElem = fElemStack.topElement();
+
+        // Get the character data opts for the current element
+        XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+
+	if (charOpts == XMLElementDecl::SpacesOk)  // => Element Content
+	{
+	  if ((fStandalone) && (topElem->fThisElement->isExternal()))
+	  {
+	    // Error - standalone should have a value of "no" as whitespace detected in an
+	    // element type with element content whose element declaration was external
+	    //
+	    emitError(XMLErrs::BadStandalone);
+	  }
+	}
+      }
+    }
     // Send any char data that we accumulated into the buffer
     sendCharData(toUse);
 }
@@ -1865,6 +1922,31 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
         // And eat the last char
         fReaderMgr.getNextChar();
     }
+
+    //
+    //  [2] Char ::= #x9 | #xA | #xD | [#x20-#xD7FF]        // any Unicode character, excluding the
+    //               | [#xE000-#xFFFD] | [#x10000-#x10FFFF] // surrogate blocks, FFFE, and FFFF.
+    //
+    bool validChar = false;
+    if (value < 0x20)
+    {
+      if (value == 0x09 || value == 0x0A || value == 0x0D)
+      {
+          validChar = true;
+      }
+    }
+    else if (value <= 0xD7FF || (value >= 0xE000 && (value <= 0xFFFD || (value >= 0x10000 && value <= 0x10FFFF))))
+    {
+          validChar = true;
+    }
+
+    if (!validChar)
+    {
+      //
+      // Character reference was not in the valid range
+      emitError(XMLErrs::InvalidCharacterRef);
+      return false;
+      }
 
     // Return the char (or chars)
     if (value >= 0x10000)

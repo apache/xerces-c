@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/05/11 23:11:33  andyh
+ * Add missing validity checks for stand-alone documents, character range
+ * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
+ * <sean.Macroibeaird@ireland.sun.com>
+ *
  * Revision 1.13  2000/05/11 00:41:48  rahulj
  * Defect reported by SHOGO SAWAKI <shogo_sawaki@mx.nasw.mhi.co.jp>
  *
@@ -168,6 +173,25 @@ bool XMLReader::isAllSpaces(const   XMLCh* const    toCheck
     }
     return true;
 }
+
+
+//
+//  Checks whether at least one of the chars in the passed buffer are whitespace or
+//  not.
+//
+bool XMLReader::containsWhiteSpace(const   XMLCh* const    toCheck
+                            , const unsigned int    count)
+{
+    const XMLCh* curCh = toCheck;
+    const XMLCh* endPtr = toCheck + count;
+    while (curCh < endPtr)
+    {
+        if (fgCharCharsTable[*curCh++] & gWhitespaceCharMask)
+            return true;
+    }
+    return false;
+}
+
 
 
 //
