@@ -58,8 +58,11 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:09:26  twl
-# Initial revision
+# Revision 1.2  1999/11/12 19:12:40  abagchi
+# Changed instances of XML4CROOT to XERCESCROOT
+#
+# Revision 1.1.1.1  1999/11/09 01:09:26  twl
+# Initial checkin
 #
 # Revision 1.4  1999/11/08 20:43:34  rahul
 # Swat for adding in Product name and CVS comment log variable.
@@ -87,12 +90,12 @@ if test ${1}o = "o"; then
    exit -1
 fi
 
-if test ${XML4CROOT}o = "o"; then
-   echo ERROR : You have not set your XML4CROOT environment variable
+if test ${XERCESCROOT}o = "o"; then
+   echo ERROR : You have not set your XERCESCROOT environment variable
    echo Though this environment variable has nothing to do with creating makefiles,
    echo this is just a general warning to prevent you from pitfalls in future. Please
-   echo set an environment variable called XML4CROOT to indicate where you installed
-   echo the XML4C files, and run this command again to proceed. See the documentation
+   echo set an environment variable called XERCESCROOT to indicate where you installed
+   echo the XERCES-C files, and run this command again to proceed. See the documentation
    echo for an example if you are still confused.
    exit -1
 fi
@@ -200,7 +203,7 @@ rm -f config.status
 
 echo
 echo If the result of the above commands look OK to you, go to the directory
-echo ${XML4CROOT}/src and type \"make\" to make the XML4C system.
+echo ${XERCESCROOT}/src and type \"make\" to make the XERCES-C system.
 
 exit 0;
 

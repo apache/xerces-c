@@ -55,8 +55,11 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:09:25  twl
-# Initial revision
+# Revision 1.2  1999/11/12 19:12:37  abagchi
+# Changed instances of XML4CROOT to XERCESCROOT
+#
+# Revision 1.1.1.1  1999/11/09 01:09:25  twl
+# Initial checkin
 #
 # Revision 1.3  1999/11/08 20:43:34  rahul
 # Swat for adding in Product name and CVS comment log variable.
@@ -65,9 +68,9 @@
 
 ################## LIBRARY NAMES AND DIRECTORIES ##################
 
-INCLUDES= -I. -I${XML4CROOT}/include
-LIB_DIR=${XML4CROOT}/lib
-LIBNAME=IXXML4C
+INCLUDES= -I. -I${XERCESCROOT}/include
+LIB_DIR=${XERCESCROOT}/lib
+LIBNAME=xerces-c
 THISLIB=${LIB_DIR}/${LIBNAME}
 VER=3_0
 ifdef ICUROOT
@@ -133,7 +136,7 @@ ifeq (${PLATFORM}, HPUX)
       CXXFLAGS = -w +O1
     endif
     APPL_NAME = $(notdir $(shell pwd))
-    TEMPLATESDIR = $(XML4CROOT)/bin/obj/$(APPL_NAME)/ptrepository
+    TEMPLATESDIR = $(XERCESCROOT)/bin/obj/$(APPL_NAME)/ptrepository
     COMMON_CMP = $(CXXFLAGS) -D_HP_UX -DHPCC +DAportable -w +eh +z -z \
         -ptr$(TEMPLATESDIR)
     CMP = -c $(COMMON_CMP)
@@ -151,19 +154,7 @@ endif
 # Before you try to run the Makefile, make sure you have two      #
 # environment variables set.                                      #
 #                                                                 #
-#   export XML4CROOT=<the directory where you installed XML4C>    #
-# XML4C can be built in two ways (1) using ICU and                #
-#                                (2) using Iconv (not ICU)        #
-#                                                                 #
-# To use ICU, you must:                                           #
-#   export ICUROOT=<the directory where you installed ICU>        #
-# To disable ICU and use Iconv instead:                           #
-#   unset ICUROOT                                                 #
-#                                                                 #
-# Also, to enable debugging, you must type:                       #
-#   export DEBUG=1                                                #
-# To disable debugging, you must type:                            #
-#   unset DEBUG                                                   #
+# export XERCESCROOT=<the directory where you installed XERCES-C> #
 #                                                                 #
 # If you are going to do the OS390BATCH build, make sure you have #
 # the OS390BATCH environment variable set.                        #
