@@ -569,7 +569,6 @@ inline const XMLCh* DatatypeValidator::getTypeLocalName() const {
 inline const XMLCh* DatatypeValidator::getTypeUri() const {
     if(!fTypeUri) {
         int index = XMLString::indexOf(fTypeName, chComma);
-        int length = XMLString::stringLen(fTypeName);
         XMLCh *uri = new XMLCh[index + 1];
         XMLString::subString(uri, fTypeName, 0, index);
         ((DatatypeValidator *)this)->fTypeUri = uri;

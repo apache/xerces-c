@@ -412,10 +412,8 @@ inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const
 
 inline const XMLCh* ComplexTypeInfo::getTypeUri() const
 {
-
     if(!fTypeUri) {
         int index = XMLString::indexOf(fTypeName, chComma);
-        int length = XMLString::stringLen(fTypeName);
         XMLCh *uri = new XMLCh[index + 1];
         XMLString::subString(uri, fTypeName, 0, index);
         ((ComplexTypeInfo *)this)->fTypeUri = uri;
