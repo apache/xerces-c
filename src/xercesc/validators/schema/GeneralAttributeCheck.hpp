@@ -72,6 +72,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
+#include <xercesc/framework/ValidationContext.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -228,7 +229,11 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+
+    //deprecated
     void setIDRefList(RefHashTableOf<XMLRefInfo>* const refList);
+
+    inline void setValidationContext(ValidationContext* const);
 
     // -----------------------------------------------------------------------
     //  Validation methods
@@ -284,7 +289,7 @@ private:
     static unsigned short                    fgElemAttTable[E_Count][A_Count];
     static const XMLCh*                      fAttNames[A_Count];
     MemoryManager*                           fMemoryManager;
-    RefHashTableOf<XMLRefInfo>*              fIDRefList;
+    ValidationContext*                       fValidationContext;
     IDDatatypeValidator                      fIDValidator;
 };
 
@@ -301,10 +306,15 @@ GeneralAttributeCheck::getFacetId(const XMLCh* const facetName) {
 // ---------------------------------------------------------------------------
 //  GeneralAttributeCheck: Setter methods
 // ---------------------------------------------------------------------------
+inline void GeneralAttributeCheck::setValidationContext(ValidationContext* const newValidationContext)
+{
+    fValidationContext = newValidationContext;
+}
+
 inline void
 GeneralAttributeCheck::setIDRefList(RefHashTableOf<XMLRefInfo>* const refList) {
 
-    fIDRefList = refList;
+    fValidationContext->setIdRefList(refList);
 }
 
 XERCES_CPP_NAMESPACE_END

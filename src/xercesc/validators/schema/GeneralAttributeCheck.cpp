@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/11/12 20:35:31  peiyongz
+ * Stateless Grammar: ValidationContext
+ *
  * Revision 1.15  2003/10/20 15:57:22  knoaman
  * Fix multithreading problem.
  *
@@ -225,7 +228,7 @@ DatatypeValidator*                GeneralAttributeCheck::fAnyURIDV = 0;
 // ---------------------------------------------------------------------------
 GeneralAttributeCheck::GeneralAttributeCheck(MemoryManager* const manager)
     : fMemoryManager(manager)
-    , fIDRefList(0)
+    , fValidationContext(0)
     , fIDValidator(manager)
 {
     mapElements();
@@ -417,7 +420,7 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
                     const XMLCh* attrVal = attribute->getNodeValue();
 
                     try {
-                        dv->validate(attrVal);
+                        dv->validate(attrVal, fValidationContext);
                     }
                     catch(const XMLException& excep) {
                         schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
@@ -550,17 +553,16 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
         dv = fAnyURIDV;
         break;
     case DV_ID:
-        if (fIDRefList) {
-
+        if (fValidationContext)
+        {
             dv = &fIDValidator;
-            ((IDDatatypeValidator*) dv)->setIDRefList(fIDRefList);
         }
         break;
     }
 
     if (dv) {
         try {
-            dv->validate(attValue);
+            dv->validate(attValue, fValidationContext);
         }
         catch(const XMLException& excep) {
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());

@@ -392,7 +392,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     gramDesc->setTargetNamespace(fTargetNSURIString);
 
     fGrammarResolver->putGrammar(fSchemaGrammar);
-    fAttributeCheck.setIDRefList(fSchemaGrammar->getIDRefList());
+    fAttributeCheck.setValidationContext(fSchemaGrammar->getValidationContext());
 
     // Save current schema info
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
@@ -1819,7 +1819,8 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                 }
                 else {
                     try {
-                        anyURIDV->validate(tokenElem);
+                        anyURIDV->validate(tokenElem
+                                         , fSchemaGrammar->getValidationContext());
                     }
                     catch(const XMLException& excep) {
                         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
@@ -2232,7 +2233,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     if (attType == XMLAttDef::Simple && dv && valueToCheck) {
 
         try {
-            dv->validate(valueToCheck);
+            dv->validate(valueToCheck
+                      , fSchemaGrammar->getValidationContext());
         }
         catch (const XMLException& excep) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -2707,10 +2709,12 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
         try {
             if(validator == 0) { // in this case validate according to xs:string
-                fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_STRING)->validate(deflt);
+                fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_STRING)->validate(deflt
+                                                                                            , fSchemaGrammar->getValidationContext());                    
             } else {
-                validator->validate(deflt);
-            }
+                validator->validate(deflt
+                                  , fSchemaGrammar->getValidationContext());
+             }
         }
         catch (const XMLException& excep) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -4022,7 +4026,8 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
             else {
 
                 try {
-                    anyURIDV->validate(token);
+                    anyURIDV->validate(token
+                                     , fSchemaGrammar->getValidationContext());
                 }
                 catch(const XMLException& excep) {
                     reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
@@ -5793,7 +5798,8 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                     }
                     else {
                         try {
-                            attDV->validate(valueConstraint);
+                            attDV->validate(valueConstraint
+                                          , fSchemaGrammar->getValidationContext());
                         }
                         catch(const XMLException& excep) {
                             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -6701,7 +6707,8 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
         fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
         fNamespaceScope = fSchemaGrammar->getNamespaceScope();
-        fAttributeCheck.setIDRefList(fSchemaGrammar->getIDRefList());
+        fAttributeCheck.setValidationContext(fSchemaGrammar->getValidationContext());
+
     }
 
     fSchemaInfo = toRestore;

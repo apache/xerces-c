@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/12 20:35:31  peiyongz
+ * Stateless Grammar: ValidationContext
+ *
  * Revision 1.11  2003/11/06 19:28:11  knoaman
  * PSVI support for annotations.
  *
@@ -146,6 +149,7 @@
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
+#include <xercesc/framework/ValidationContext.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -283,7 +287,11 @@ public:
     DatatypeValidatorFactory* getDatatypeRegistry();
     NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
+
+    //deprecated
     RefHashTableOf<XMLRefInfo>* getIDRefList() const;
+
+    ValidationContext*          getValidationContext() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -424,7 +432,7 @@ private:
     RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
     NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
-    RefHashTableOf<XMLRefInfo>*            fIDRefList;
+    ValidationContext*                     fValidationContext;
     MemoryManager*                         fMemoryManager;
     bool                                   fValidated;
     DatatypeValidatorFactory               fDatatypeRegistry;
@@ -483,7 +491,12 @@ SchemaGrammar::getValidSubstitutionGroups() const {
 
 inline RefHashTableOf<XMLRefInfo>* SchemaGrammar::getIDRefList() const {
 
-    return fIDRefList;
+    return fValidationContext->getIdRefList();
+}
+
+inline ValidationContext* SchemaGrammar::getValidationContext() const {
+
+    return fValidationContext;
 }
 
 inline XMLGrammarDescription* SchemaGrammar::getGrammarDescription() const

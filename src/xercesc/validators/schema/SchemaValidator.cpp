@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.42  2003/11/12 20:35:31  peiyongz
+ * Stateless Grammar: ValidationContext
+ *
  * Revision 1.41  2003/11/10 21:56:54  neilg
  * make internal code use the new, stateless, method of traversing attribute lists
  *
@@ -421,68 +424,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
 
                     DatatypeValidator::ValidatorType eleDefDVType = fCurrentDatatypeValidator->getType();
 
-                    // set up the entitydeclpool in ENTITYDatatypeValidator
-                    // and the idreflist in ID/IDREFDatatypeValidator
-                    if (eleDefDVType == DatatypeValidator::List) {
-                        DatatypeValidator* itemDTV = ((ListDatatypeValidator*)fCurrentDatatypeValidator)->getItemTypeDTV();
-                        DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
-                        if (itemDTVType == DatatypeValidator::ENTITY)
-                            ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                        else if (itemDTVType == DatatypeValidator::ID)
-                            ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                        else if (itemDTVType == DatatypeValidator::IDREF) {
-                            ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                        }
-                        else if (itemDTVType == DatatypeValidator::Union) {
-                            RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)itemDTV)->getMemberTypeValidators();
-                            unsigned int memberTypeNumber = memberDTV->size();
-                            for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
-                            {
-                                DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
-                                if (memberDTVType == DatatypeValidator::ENTITY)
-                                    ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                                else if (memberDTVType == DatatypeValidator::ID)
-                                    ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                                else if (memberDTVType == DatatypeValidator::IDREF) {
-                                    ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                                }
-                            }
-                        }
-                    }
-                    else if (eleDefDVType == DatatypeValidator::Union) {
-                        RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)fCurrentDatatypeValidator)->getMemberTypeValidators();
-                        unsigned int memberTypeNumber = memberDTV->size();
-                        for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
-                        {
-                            DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
-                            if (memberDTVType == DatatypeValidator::ENTITY)
-                                ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                            else if (memberDTVType == DatatypeValidator::ID)
-                                ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                            else if (memberDTVType == DatatypeValidator::IDREF) {
-                                ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                            }
-                            else if (memberDTVType == DatatypeValidator::List) {
-                                DatatypeValidator* itemDTV = ((ListDatatypeValidator*)memberDTV->elementAt(memberIndex))->getItemTypeDTV();
-                                DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
-                                if (itemDTVType == DatatypeValidator::ENTITY)
-                                    ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                                else if (itemDTVType == DatatypeValidator::ID)
-                                    ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                                else if (itemDTVType == DatatypeValidator::IDREF) {
-                                    ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                                }
-                            }
-                        }
-                    }
-                    else if (eleDefDVType == DatatypeValidator::ENTITY)
-                        ((ENTITYDatatypeValidator*)fCurrentDatatypeValidator)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                    else if (eleDefDVType == DatatypeValidator::ID)
-                        ((IDDatatypeValidator*)fCurrentDatatypeValidator)->setIDRefList(getScanner()->getIDRefList());
-                    else if (eleDefDVType == DatatypeValidator::IDREF) {
-                        ((IDREFDatatypeValidator*)fCurrentDatatypeValidator)->setIDRefList(getScanner()->getIDRefList());
-                    }
-                    else if (eleDefDVType == DatatypeValidator::NOTATION)
+                    if (eleDefDVType == DatatypeValidator::NOTATION)
                     {
                         // if notation, need to bind URI to notation first
                         if (!fNotationBuf)
@@ -524,7 +466,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             // complex type (if any)
                             if ((fCurrentDatatypeValidator != ((SchemaElementDecl*)elemDecl)->getDatatypeValidator())
                                     && (!fTypeStack->peek() || (fCurrentDatatypeValidator != fTypeStack->peek()->getDatatypeValidator())))
-                                fCurrentDatatypeValidator->validate(elemDefaultValue);
+                                fCurrentDatatypeValidator->validate(elemDefaultValue
+                                                                  , getScanner()->getValidationContext());
 
                         }
                         else {
@@ -543,21 +486,24 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                                 valid = false;
                             }
                             else
-                                fCurrentDatatypeValidator->validate(value);
+                                fCurrentDatatypeValidator->validate(value
+                                                                  , getScanner()->getValidationContext());
                         }
                     }
                     else {
                         // no default value, then check nillable
                         if (XMLString::equals(value, XMLUni::fgZeroLenString)) {
                             if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_NILLABLE) == 0)
-                                fCurrentDatatypeValidator->validate(value);
+                                fCurrentDatatypeValidator->validate(value
+                                                                  , getScanner()->getValidationContext());
                         }
                         else if (fNil) {
                             emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
                             valid = false;
                         }
                         else
-                            fCurrentDatatypeValidator->validate(value);
+                            fCurrentDatatypeValidator->validate(value
+                                                              , getScanner()->getValidationContext());
                     }
                 }
             }
@@ -635,6 +581,9 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                                        , const XMLElementDecl* elemDecl)
 {
 
+    //turn on IdRefList checking
+    getScanner()->getValidationContext()->toCheckIdRefList(true);
+
     //
     //  Get quick refs to lot of the stuff in the passed objects in
     //  order to simplify the code below, which will reference them very
@@ -688,18 +637,14 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
             if (attDefDVType == DatatypeValidator::List) {
                 DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDefDV)->getItemTypeDTV();
                 DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
-                if (itemDTVType == DatatypeValidator::ENTITY)
-                    ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                else if (itemDTVType == DatatypeValidator::ID) {
-                    ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                if (itemDTVType == DatatypeValidator::ID) {
                     thisIsAnId = true;
                 }
                 else if (itemDTVType == DatatypeValidator::IDREF) {
                     // if in prevalidatoin, do not add attDef to IDREFList
                     if (preValidation)
-                        ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(0);
-                    else
-                        ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                        //todo: when to setIdRefList back to non-null
+                        getScanner()->getValidationContext()->toCheckIdRefList(false);
                 }
             }
             else if (attDefDVType == DatatypeValidator::Union) {
@@ -708,33 +653,24 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
                 {
                     DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
-                    if (memberDTVType == DatatypeValidator::ENTITY)
-                        ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                    else if (memberDTVType == DatatypeValidator::ID) {
-                        ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                    if (memberDTVType == DatatypeValidator::ID) {
                         thisIsAnId = true;
                     }
                     else if (memberDTVType == DatatypeValidator::IDREF) {
                         // if in prevalidatoin, do not add attDef to IDREFList
                         if (preValidation)
-                            ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(0);
-                        else
-                            ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                            getScanner()->getValidationContext()->toCheckIdRefList(false);
+
                     }
                 }
             }
-            else if (attDefDVType == DatatypeValidator::ENTITY)
-                ((ENTITYDatatypeValidator*)attDefDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
             else if (attDefDVType == DatatypeValidator::ID) {
-                ((IDDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
                 thisIsAnId = true;
             }
             else if (attDefDVType == DatatypeValidator::IDREF) {
                 // if in prevalidatoin, do not add attDef to IDREFList
                 if (preValidation)
-                    ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(0);
-                else
-                    ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+                    getScanner()->getValidationContext()->toCheckIdRefList(false);
             }
 
             // now validate the attribute value
@@ -756,7 +692,8 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 notationBuf.append(chColon);
                 notationBuf.append(&attrValue[colonPos + 1]);
 
-                attDefDV->validate(notationBuf.getRawBuffer());
+                attDefDV->validate(notationBuf.getRawBuffer()
+                                 , getScanner()->getValidationContext());
             }
             else {
                 if (thisIsAnId) {
@@ -771,7 +708,8 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                     else
                         fSeenId = true;
                 }
-                attDefDV->validate(attrValue);
+                attDefDV->validate(attrValue
+                                 , getScanner()->getValidationContext());
             }
         }
         catch (XMLException& idve) {
@@ -1088,6 +1026,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
             if (curElem.hasAttDefs()) {
                 XMLAttDefList& attDefList = curElem.getAttDefList();
                 bool seenId = false;
+
                 for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
                 {
                     const XMLAttDef& curAttDef = attDefList.getAttDef(i);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/11/12 20:35:31  peiyongz
+ * Stateless Grammar: ValidationContext
+ *
  * Revision 1.16  2003/11/11 22:48:13  knoaman
  * Serialization of XSAnnotation.
  *
@@ -156,6 +159,7 @@
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/internal/ValidationContextImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -174,7 +178,7 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fAttGroupInfoRegistry(0)
     , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
-    , fIDRefList(0)
+    , fValidationContext(0)
     , fMemoryManager(manager)
     , fValidated(false)
     , fDatatypeRegistry(manager)
@@ -195,7 +199,7 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
         // fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
         fGroupElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, false, 128, fMemoryManager);
         fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
-        fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(29, fMemoryManager);
+        fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
         fDatatypeRegistry.expandRegistryToFullSchemaSet();
 
         //REVISIT: use grammarPool to create
@@ -327,7 +331,7 @@ void SchemaGrammar::cleanUp()
     delete fAttGroupInfoRegistry;
     delete fNamespaceScope;
     delete fValidSubstitutionGroups;
-    delete fIDRefList;
+    delete fValidationContext;
     delete fGramDesc;
     delete fAnnotations;
 }
@@ -373,7 +377,8 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
 {
 
     /***
-     * don't serialize NamespaceScope* fNamespaceScope;
+     * don't serialize NamespaceScope*    fNamespaceScope;
+     *                 ValidationContext* fValidationContext;
      ***/
 
     Grammar::serialize(serEng);
@@ -414,8 +419,6 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::storeObject(fComplexTypeRegistry, serEng);
         XTemplateSerializer::storeObject(fGroupInfoRegistry, serEng);
         XTemplateSerializer::storeObject(fAttGroupInfoRegistry, serEng);
-        //fIDRefList todo: tobe removed
-        XTemplateSerializer::storeObject(fIDRefList, serEng);
        
         /***
          * Serialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
@@ -467,8 +470,6 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::loadObject(&fComplexTypeRegistry, 29, true, serEng);
         XTemplateSerializer::loadObject(&fGroupInfoRegistry, 29, true, serEng);
         XTemplateSerializer::loadObject(&fAttGroupInfoRegistry, 29, true, serEng);
-        //todo: fIDRefList to be removed
-        XTemplateSerializer::loadObject(&fIDRefList, 29, true, serEng);
        
         /***
          * Deserialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
