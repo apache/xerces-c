@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/08/08 01:00:36  aruna1
+ * detach functionality removed from TreeWalker
+ *
  * Revision 1.8  2000/02/24 20:11:29  abagchi
  * Swat for removing Log from API docs
  *
@@ -310,20 +313,7 @@ class CDOM_EXPORT DOM_TreeWalker {
         void			setCurrentNode(DOM_Node currentNode);
         //@}
 
-        /** @name Detaching functions. */
-        //@{
-        /**
-          * Detaches the iterator from the set which it iterated over, releasing any
-          * computational resources and placing the iterator in the INVALID state. After
-          * <code>detach</code> has been invoked, calls to <code>nextNode</code> or
-          * <code>previousNode</code> will raise the exception INVALID_STATE_ERR.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
-          */
-        void			detach();
-        //@}
-
+        
     protected:
         DOM_TreeWalker(TreeWalkerImpl* impl);
 

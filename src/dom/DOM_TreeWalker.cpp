@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/08/08 01:00:36  aruna1
+ * detach functionality removed from TreeWalker
+ *
  * Revision 1.4  2000/03/02 19:53:58  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -213,6 +216,3 @@ DOM_Node								DOM_TreeWalker::nextNode() {
 }
 
 
-void DOM_TreeWalker::detach () {	
-	fImpl->detach();
-}

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/08/08 01:00:36  aruna1
+ * detach functionality removed from TreeWalker
+ *
  * Revision 1.7  2000/03/28 23:22:17  aruna1
  * Modified return statements in functions  to avoid warnings on HP.
  *
@@ -102,7 +105,6 @@ TreeWalkerImpl::TreeWalkerImpl (
     fRoot(root),
     fWhatToShow(whatToShow),
     fNodeFilter(nodeFilter),
-    fDetached(false),
     fExpandEntityReferences(expandEntityRef)
 
 {
@@ -114,7 +116,6 @@ TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi)
     fRoot(twi.fRoot),
     fWhatToShow(twi.fWhatToShow),
     fNodeFilter(twi.fNodeFilter),
-    fDetached(false),
     fExpandEntityReferences(twi.fExpandEntityReferences)
 {
 }
@@ -127,18 +128,12 @@ TreeWalkerImpl& TreeWalkerImpl::operator= (const TreeWalkerImpl& twi) {
         fRoot                   = twi.fRoot;
         fWhatToShow             = twi.fWhatToShow;
         fNodeFilter             = twi.fNodeFilter;
-		fDetached               = twi.fDetached;
-        fExpandEntityReferences = twi.fExpandEntityReferences;
+		fExpandEntityReferences = twi.fExpandEntityReferences;
     }
 
     return *this;
 }
 
-
-void TreeWalkerImpl::detach ()
-{
-	fDetached = true;
-}
 
 
 void TreeWalkerImpl::unreferenced()
@@ -186,8 +181,6 @@ bool TreeWalkerImpl::getExpandEntityReferences() {
 
 /** Return the current Node. */
 DOM_Node TreeWalkerImpl::getCurrentNode () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     return fCurrentNode;
 }
@@ -195,8 +188,6 @@ DOM_Node TreeWalkerImpl::getCurrentNode () {
 
 /** Return the current Node. */
 void TreeWalkerImpl::setCurrentNode (DOM_Node node) {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     fCurrentNode = node;
 }
@@ -207,8 +198,6 @@ void TreeWalkerImpl::setCurrentNode (DOM_Node node) {
  *  If result is not null, set the current Node.
  */
 DOM_Node TreeWalkerImpl::parentNode () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
 	DOM_Node result;
 
@@ -228,8 +217,6 @@ DOM_Node TreeWalkerImpl::parentNode () {
  *  If result is not null, set the current Node.
  */
 DOM_Node TreeWalkerImpl::firstChild () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
 	DOM_Node result;
 
@@ -248,10 +235,8 @@ DOM_Node TreeWalkerImpl::firstChild () {
  *  If result is not null, set the current Node.
  */
 DOM_Node TreeWalkerImpl::lastChild () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
-		
-	DOM_Node result;
+
+    DOM_Node result;
 
     if (fCurrentNode.isNull()) return result;
 
@@ -269,8 +254,6 @@ DOM_Node TreeWalkerImpl::lastChild () {
  */
 
 DOM_Node TreeWalkerImpl::previousSibling () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 	
 	DOM_Node result;
 
@@ -290,8 +273,6 @@ DOM_Node TreeWalkerImpl::previousSibling () {
  */
 
 DOM_Node TreeWalkerImpl::nextSibling () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 		
 	DOM_Node result;
 
@@ -311,9 +292,7 @@ DOM_Node TreeWalkerImpl::nextSibling () {
  */
 
 DOM_Node TreeWalkerImpl::previousNode () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
-
+	
     DOM_Node result;
 
     if (fCurrentNode.isNull()) return result;
@@ -355,8 +334,6 @@ DOM_Node TreeWalkerImpl::previousNode () {
  */
 
 DOM_Node TreeWalkerImpl::nextNode () {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 	
 	DOM_Node result;
 
@@ -400,8 +377,6 @@ DOM_Node TreeWalkerImpl::nextNode () {
  */
 
 DOM_Node TreeWalkerImpl::getParentNode (DOM_Node node) {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 	
 	DOM_Node result;
 
@@ -427,8 +402,6 @@ DOM_Node TreeWalkerImpl::getParentNode (DOM_Node node) {
  */
 
 DOM_Node TreeWalkerImpl::getNextSibling (DOM_Node node) {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 	
 	DOM_Node result;
 
@@ -474,8 +447,6 @@ DOM_Node TreeWalkerImpl::getNextSibling (DOM_Node node) {
  */
 
 DOM_Node TreeWalkerImpl::getPreviousSibling (DOM_Node node) {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 		
 	DOM_Node result;
 
@@ -520,8 +491,6 @@ DOM_Node TreeWalkerImpl::getPreviousSibling (DOM_Node node) {
  */
 
 DOM_Node TreeWalkerImpl::getFirstChild (DOM_Node node) {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 		
 	DOM_Node result;
 
@@ -551,9 +520,7 @@ DOM_Node TreeWalkerImpl::getFirstChild (DOM_Node node) {
  */
 
 DOM_Node TreeWalkerImpl::getLastChild (DOM_Node node) {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
-
+	
 	DOM_Node result;
 
     if (node.isNull()) return result;
@@ -580,9 +547,7 @@ DOM_Node TreeWalkerImpl::getLastChild (DOM_Node node) {
 /** The node is accepted if it passes the whatToShow and the filter. */
 
 short TreeWalkerImpl::acceptNode (DOM_Node node) {
-	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
-
+	
     if (fNodeFilter == 0) {
         if ( ( fWhatToShow & (1 << (node.getNodeType() - 1))) != 0)
         {

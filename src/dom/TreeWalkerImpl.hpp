@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/08/08 01:00:37  aruna1
+ * detach functionality removed from TreeWalker
+ *
  * Revision 1.5  2000/02/24 20:11:31  abagchi
  * Swat for removing Log from API docs
  *
@@ -109,8 +112,7 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
     // Return the NodeFilter.
     DOM_NodeFilter* getFilter ();
 
-	void detach ();
-
+	
     // Return the current DOM_Node.
     DOM_Node getCurrentNode ();
 
@@ -208,8 +210,6 @@ private:
 
     // The expandEntity reference flag.
     bool fExpandEntityReferences;
-
-	bool fDetached;
 };
 
 #endif
