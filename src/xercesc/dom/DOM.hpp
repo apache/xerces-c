@@ -97,6 +97,7 @@
 // Introduced in DOM Level 3
 // Experimental - subject to change
 #include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/dom/DOMEntityResolver.hpp>
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
