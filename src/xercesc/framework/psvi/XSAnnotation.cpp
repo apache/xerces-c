@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/15 19:04:55  neilg
+ * fix segfault when a writeAnnotation() method was called
+ *
  * Revision 1.6  2003/11/27 21:29:05  neilg
  * implement writeAnnotation; thanks to Dave Cargill
  *
@@ -133,6 +136,7 @@ void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
         , false
         , fMemoryManager
     );
+    memBufIS->setEncoding(XMLUni::fgXMLChEncodingString);
 
     try
     {        
@@ -140,6 +144,7 @@ void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
     }
     catch (const XMLException&)
     {
+        throw;
     }
 
     DOMNode* newElem = futureOwner->importNode((parser->getDocument())->getDocumentElement(), true);
@@ -165,6 +170,7 @@ void XSAnnotation::writeAnnotation(ContentHandler* handler)
         , false
         , fMemoryManager
     );
+    memBufIS->setEncoding(XMLUni::fgXMLChEncodingString);
 
     try
     {        
