@@ -2018,6 +2018,10 @@ bool XMLScanner::scanStartTag(bool& gotData)
         // If validating then emit an error
         if (fValidate)
         {
+            // This is to tell the reuse Validator that this element was
+            // faulted-in, was not an element in the validator pool originally
+            elemDecl->setCreateReason(XMLElementDecl::JustFaultIn);
+
             fValidator->emitError
             (
                 XMLValid::ElementNotDefined
@@ -2202,12 +2206,37 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 //
                 if (fValidate)
                 {
+                   // This is to tell the reuse Validator that this attribute was
+                   // faulted-in, was not an attribute in the attdef originally
+                    if(!fReuseValidator)
+                       attDef->setCreateReason(XMLAttDef::JustFaultIn);
+
                     fValidator->emitError
                     (
                         XMLValid::AttNotDefinedForElement
                         , fAttNameBuf.getRawBuffer()
                         , elemDecl->getFullName()
                     );
+                }
+            }
+            else
+            {
+               // If we are reusing validator and this attribute was faulted-in,
+               // then emit an error
+               if (fValidate)
+               {
+                  if (fReuseValidator && attDef->getCreateReason()==XMLAttDef::JustFaultIn)
+                  {
+                      //reset the CreateReason to avoid redundant error
+                      attDef->setCreateReason(XMLAttDef::NoReason);
+
+                      fValidator->emitError
+                      (
+                          XMLValid::AttNotDefinedForElement
+                          , fAttNameBuf.getRawBuffer()
+                          , elemDecl->getFullName()
+                      );
+                   }
                 }
             }
 
@@ -2652,6 +2681,10 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         // If validating then emit an error
         if (fValidate)
         {
+            // This is to tell the reuse Validator that this element was
+            // faulted-in, was not an element in the validator pool originally
+            elemDecl->setCreateReason(XMLElementDecl::JustFaultIn);
+
             fValidator->emitError
             (
                 XMLValid::ElementNotDefined

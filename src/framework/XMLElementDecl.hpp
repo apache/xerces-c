@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/11/30 18:22:38  andyh
+ * reuseValidator - fix bugs (spurious errors) that occured on reuse due to
+ * pools already containing some items.  Fixed by Tinny Ng.
+ *
  * Revision 1.6  2000/05/11 23:11:32  andyh
  * Add missing validity checks for stand-alone documents, character range
  * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
@@ -138,6 +142,7 @@ class XMLPARSER_EXPORT XMLElementDecl
         , AttList
         , InContentModel
         , AsRootElem
+        , JustFaultIn
     };
 
     enum LookupOpts

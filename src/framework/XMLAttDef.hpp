@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/11/30 18:22:38  andyh
+ * reuseValidator - fix bugs (spurious errors) that occured on reuse due to
+ * pools already containing some items.  Fixed by Tinny Ng.
+ *
  * Revision 1.6  2000/07/07 22:23:38  jpolast
  * remove useless getKey() functions.
  *
@@ -117,6 +121,11 @@ public:
     //  DefAttTypes
     //      The modifiers that an attribute decl can have, which indicates
     //      whether instances of that attributes are required, implied, etc..
+    //
+    //  CreateReasons
+    //      This type is used to store how an attribute declaration got into
+    //      the elementdecl's attribute pool.
+    //
     // -----------------------------------------------------------------------
 	enum AttTypes
     {
@@ -150,6 +159,11 @@ public:
         , DefAttTypes_Unknown = -1
 	};
 
+    enum CreateReasons
+    {
+        NoReason
+        , JustFaultIn
+    };
 
     // -----------------------------------------------------------------------
     //  Public static data members
@@ -300,6 +314,16 @@ public:
       */
     const XMLCh* getValue() const;
 
+    /** Get the create reason for this attribute
+      *
+      * This method returns an enumeration which indicates why this attribute
+      * declaration exists.
+      *
+      * @return An enumerated value that indicates the reason why this attribute
+      * was added to the attribute table.
+      */
+    CreateReasons getCreateReason() const;
+
     //@}
 
 
@@ -373,6 +397,13 @@ public:
       */
     void setEnumeration(const XMLCh* const newValue);
 
+    /** Update the create reason for this attribute type.
+      *
+      * This method will update the 'create reason' field for this attribute
+      * decl object.
+      */
+    void setCreateReason(const CreateReasons newReason);
+
     //@}
 
 protected :
@@ -434,6 +465,11 @@ private :
     //  fValue
     //      This is the value of the attribute, which is the default value
     //      given in the attribute declaration.
+    //
+    //  fCreateReason
+    //      This flag tells us how this attribute got created.  Sometimes even
+    //      the attribute was not declared for the element, we want to fault
+    //      fault it into the pool to avoid lots of redundant errors.
     // -----------------------------------------------------------------------
     DefAttTypes     fDefaultType;
     XMLCh*          fEnumeration;
@@ -441,6 +477,7 @@ private :
     bool            fProvided;
     AttTypes        fType;
     XMLCh*          fValue;
+    CreateReasons       fCreateReason;
 };
 
 
@@ -478,6 +515,11 @@ inline const XMLCh* XMLAttDef::getValue() const
     return fValue;
 }
 
+inline XMLAttDef::CreateReasons XMLAttDef::getCreateReason() const
+{
+    return fCreateReason;
+}
+
 
 // ---------------------------------------------------------------------------
 //  XMLAttDef: Setter methods
@@ -512,6 +554,12 @@ inline void XMLAttDef::setValue(const XMLCh* const newValue)
 {
     delete [] fValue;
     fValue = XMLString::replicate(newValue);
+}
+
+inline void
+XMLAttDef::setCreateReason(const XMLAttDef::CreateReasons newReason)
+{
+    fCreateReason = newReason;
 }
 
 #endif

@@ -215,6 +215,11 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 if (fValidate && !isNSAttr)
                 {
+                    // This is to tell the reuse Validator that this attribute was
+                    // faulted-in, was not an attribute in the attdef originally
+                    if(!fReuseValidator)
+                       attDef->setCreateReason(XMLAttDef::JustFaultIn);
+
                     XMLBuffer bufURI;
                     fValidator->getURIText(uriId, bufURI);
                     XMLBuffer bufMsg;
@@ -230,6 +235,33 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     );
                 }
             }
+            else
+            {
+                // If we are reusing validator and this attribute was faulted-in,
+                // then emit an error
+                if (fValidate && !isNSAttr)
+                {
+                   if (fReuseValidator && attDef->getCreateReason()==XMLAttDef::JustFaultIn)
+                   {
+                      //reset the CreateReason to avoid redundant error
+                      attDef->setCreateReason(XMLAttDef::NoReason);
+
+                      XMLBuffer bufURI;
+                      fValidator->getURIText(uriId, bufURI);
+                      XMLBuffer bufMsg;
+                      bufMsg.append(chOpenCurly);
+                      bufMsg.append(bufURI.getRawBuffer());
+                      bufMsg.append(chCloseCurly);
+                      bufMsg.append(suffPtr);
+                      fValidator->emitError
+                      (
+                          XMLValid::AttNotDefinedForElement
+                          , bufMsg.getRawBuffer()
+                          , elemDecl.getFullName()
+                      );
+                   }
+                }
+             }
 
             // Mark this one as provided (even if it was faulted in)
             attDef->setProvided(true);

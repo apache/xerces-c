@@ -821,6 +821,9 @@ void DTDValidator::scanDTD(const bool reuseValidator)
                 else
                 {
                     #if defined(XERCES_DEBUG)
+                      if(reuseValidator && reason == XMLElementDecl::JustFaultIn){
+                      }
+                      else
                     ThrowXML(RuntimeException, XMLExcepts::DTD_UnknownCreateReason);
                     #endif
                 }

@@ -150,6 +150,7 @@ XMLAttDef::XMLAttDef(const  XMLAttDef::AttTypes     type
     , fProvided(false)
     , fType(type)
     , fValue(0)
+    , fCreateReason(XMLAttDef::NoReason)
 {
 }
 
@@ -164,6 +165,7 @@ XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
     , fProvided(false)
     , fType(type)
     , fValue(0)
+    , fCreateReason(XMLAttDef::NoReason)
 {
     try
     {
