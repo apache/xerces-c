@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/12/05 20:12:30  knoaman
+ * Use getLocalName instead of getNodeName.
+ *
  * Revision 1.5  2001/11/02 14:13:45  knoaman
  * Add support for identity constraints.
  *
@@ -316,7 +319,7 @@ DOM_Element XUtil::getFirstChildElementNS(const DOM_Node     &parent
             for (unsigned int i = 0; i < length; i++)
 			{
                 if (child.getNamespaceURI().equals(uriStr) &&
-					XMLString::compareString(child.getNodeName().rawBuffer(), elemNames[i]) ==0)
+                    XMLString::compareString(child.getLocalName().rawBuffer(), elemNames[i]) ==0)
                     return (DOM_Element&)child;
 			}
 		}
@@ -513,7 +516,7 @@ DOM_Element XUtil::getNextSiblingElementNS(const DOM_Node     &node
             for (unsigned int i = 0; i < length; i++)
 			{
                 if (sibling.getNamespaceURI().equals(uriStr) &&
-					XMLString::compareString(sibling.getNodeName().rawBuffer(), elemNames[i]) ==0)
+                    XMLString::compareString(sibling.getLocalName().rawBuffer(), elemNames[i]) ==0)
                     return (DOM_Element&)sibling;
 			}
 		}
