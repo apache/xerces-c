@@ -62,16 +62,17 @@
 #if !defined(GRAMMARRESOLVER_HPP)
 #define GRAMMARRESOLVER_HPP
 
+#include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
 class DatatypeValidator;
 class DatatypeValidatorFactory;
-class XMLGrammarPool;
 class XMLGrammarDescription;
 class GrammarEntry;
 
@@ -147,6 +148,8 @@ public:
     bool containsNameSpace( const XMLCh* const nameSpaceKey );
 
     inline XMLGrammarPool* const getGrammarPool() const;
+
+    inline MemoryManager* const getGrammarPoolMemoryManager() const;
 
     //@}
 
@@ -246,6 +249,11 @@ inline void GrammarResolver::useCachedGrammarInParse(const bool aValue)
 inline XMLGrammarPool* const GrammarResolver::getGrammarPool() const
 {
     return fGrammarPool;
+}
+
+inline MemoryManager* const GrammarResolver::getGrammarPoolMemoryManager() const
+{
+    return fGrammarPool->getMemoryManager();
 }
 
 XERCES_CPP_NAMESPACE_END
