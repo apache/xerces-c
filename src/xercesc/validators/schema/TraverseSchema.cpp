@@ -3469,6 +3469,20 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
         throw TraverseSchema::InvalidComplexTypeInfo;
     }
 
+    //Skip over any annotations in the restriction or extension elements
+    DOMElement* content = checkContent(simpleContent, XUtil::getFirstChildElement(simpleContent), true);
+    if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
+    {
+        fAnnotation = generateSyntheticAnnotation(simpleContent, fNonXSAttList);        
+    }
+    if (fAnnotation)
+    {
+        if (janAnnot->isDataNull())
+            janAnnot->reset(fAnnotation);
+        else
+            janAnnot->get()->setNext(fAnnotation);
+    }
+
     // -----------------------------------------------------------------------
     // Handle the base type name
     // -----------------------------------------------------------------------
@@ -3542,20 +3556,6 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Process the content of the derivation
     // -----------------------------------------------------------------------
-    //Skip over any annotations in the restriction or extension elements
-    DOMElement* content = checkContent(simpleContent, XUtil::getFirstChildElement(simpleContent), true);
-    if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
-    {
-        fAnnotation = generateSyntheticAnnotation(simpleContent, fNonXSAttList);        
-    }
-    if (fAnnotation)
-    {
-        if (janAnnot->isDataNull())
-            janAnnot->reset(fAnnotation);
-        else
-            janAnnot->get()->setNext(fAnnotation);
-    }
-
     if (typeInfo->getDerivedBy() == SchemaSymbols::XSD_RESTRICTION) {
 
         //Schema Spec: 5.11: Complex Type Definition Properties Correct: 2
