@@ -55,14 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/06/19 20:05:57  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.2  2000/03/30 02:00:12  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -79,7 +72,8 @@ STDMETHODIMP CXMLDOMAttribute::get_name(BSTR  *pVal)
 
 	try
 	{
-		*pVal = SysAllocString(attr.getName().rawBuffer());
+		DOMString val = attr.getName();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -102,7 +96,8 @@ STDMETHODIMP CXMLDOMAttribute::get_value(VARIANT  *pVal)
 	try
 	{
 		V_VT(pVal)   = VT_BSTR;
-		V_BSTR(pVal) = SysAllocString(attr.getValue().rawBuffer());
+		DOMString val = attr.getValue();
+		V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -146,6 +141,31 @@ STDMETHODIMP CXMLDOMAttribute::get_specified(VARIANT_BOOL  *pVal)
 		return E_FAIL;
 	}
 	
+	return S_OK;
+}
+
+
+STDMETHODIMP CXMLDOMAttribute::get_nodeValue(VARIANT  *pVal)
+{
+	ATLTRACE(_T("CXMLDOMAttribute::get_nodeValue\n"));
+
+	if (NULL == pVal)
+		return E_POINTER;
+
+	::VariantInit(pVal);
+
+	try
+	{
+		V_VT(pVal)   = VT_BSTR;
+		DOMString val = attr.getValue();
+		V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
+	}
+	catch(...)
+	{
+		return E_FAIL;
+	}
+
+
 	return S_OK;
 }
 

@@ -55,10 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2000/03/30 02:00:09  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -77,7 +74,8 @@ STDMETHODIMP CXMLDOMProcessingInstruction::get_target(BSTR  *pVal)
 
 	try
 	{
-		*pVal = SysAllocString(processingInstruction.getTarget().rawBuffer());
+		DOMString val = processingInstruction.getTarget();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -98,7 +96,8 @@ STDMETHODIMP CXMLDOMProcessingInstruction::get_data(BSTR  *pVal)
 
 	try
 	{
-		*pVal = SysAllocString(processingInstruction.getData().rawBuffer());
+		DOMString val = processingInstruction.getData();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{

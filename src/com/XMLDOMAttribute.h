@@ -55,17 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/06/19 20:05:57  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.3  2000/06/03 00:28:55  andyh
- * COM Wrapper changes from Curt Arnold
- *
- * Revision 1.2  2000/03/30 02:00:12  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #ifndef ___xmldomattribute_h___
@@ -108,6 +98,12 @@ END_COM_MAP()
 	STDMETHOD(get_name)(BSTR  *pVal);
 	STDMETHOD(get_value)(VARIANT  *pVal);
 	STDMETHOD(put_value)(VARIANT newVal);
+
+	//
+	//   override IXMLDOMNodeImpl to always return a string
+	//      even when empty
+	//
+	STDMETHOD(get_nodeValue)(VARIANT* pVal);
 
 	DOM_Attr attr;
 };

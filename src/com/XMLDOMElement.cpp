@@ -55,17 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/07/07 00:14:12  jpolast
- * bug fix
- *
- * Revision 1.3  2000/06/19 20:05:58  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.2  2000/03/30 02:00:11  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -86,7 +76,8 @@ STDMETHODIMP CXMLDOMElement::get_tagName(BSTR  *pVal)
 
 	try
 	{
-		*pVal = SysAllocString(element.getTagName().rawBuffer());
+		DOMString val = element.getTagName();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -110,7 +101,7 @@ STDMETHODIMP CXMLDOMElement::getAttribute(BSTR name, VARIANT  *pVal)
 
 	try {
 		V_VT(pVal)   = VT_BSTR;
-		V_BSTR(pVal) = SysAllocString(a.rawBuffer());
+		V_BSTR(pVal) = SysAllocStringLen(a.rawBuffer(),a.length());
 	}
 	catch(...) {
 		return E_FAIL;
@@ -162,7 +153,6 @@ STDMETHODIMP CXMLDOMElement::getAttributeNode(BSTR name, IXMLDOMAttribute  **att
 	if (NULL == attr)
 		return E_POINTER;
 
-	if(*attr) (*attr)->Release();
 	*attr = NULL;
 	DOM_Attr attrNode(element.getAttributeNode(name));
 	if(attrNode.isNull())
@@ -202,52 +192,60 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 	if (NULL == attr || NULL == attributeNode)
 		return E_POINTER;
 
-	if(*attributeNode) (*attributeNode)->Release();
 	*attributeNode = NULL;
 
-	long id = 0;
+	DOM_Attr* newAttr = NULL;
 	IIBMXMLDOMNodeIdentity* nodeID = NULL;
-	if(SUCCEEDED(attr->QueryInterface(IID_IIBMXMLDOMNodeIdentity,(void**) &nodeID))) {
-		nodeID->get_NodeId(&id);
+	HRESULT sc = attr->QueryInterface(IID_IIBMXMLDOMNodeIdentity,(void**) &nodeID);
+	if(SUCCEEDED(sc)) {
+		long id = 0;
+		sc = nodeID->get_NodeId(&id);
 		nodeID->Release();
+		if(SUCCEEDED(sc)) {
+			//
+			//   any subsequent failure will be reported as an invalid arg
+			//
+			sc = E_INVALIDARG;
+			try {
+				DOM_Node* newNode = (DOM_Node*) id;
+				if(newNode->getNodeType() == DOM_Node::ATTRIBUTE_NODE) {
+					newAttr = (DOM_Attr*) newNode;
+				}
+			}
+			catch(...) {
+			}
+		}
 	}
 
-	DOM_Attr attrNode;
-	try {
-		attrNode = (element.setAttributeNode(*((DOM_Attr*) id)));
-		if(attrNode.isNull())
-			return S_OK;
-	}
-	catch(...) {
-		return E_FAIL;
-	}
+	//
+	//   if we couldn't extract an attribute out of the
+	//       argument, then return with a failure code
+	if(newAttr == NULL) return sc;
 
-
-
-	CXMLDOMAttributeObj *pObj = NULL;
-	HRESULT hr = CXMLDOMAttributeObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
-		return hr;
-	
-	pObj->AddRef();
-	pObj->SetOwnerDoc(m_pIXMLDOMDocument);
-
+	sc = S_OK;
 	try
 	{
-		pObj->attr = element.setAttributeNode(attrNode);
+		DOM_Attr& oldAttr = element.setAttributeNode(*newAttr);
+		if(!oldAttr.isNull()) {
+			CXMLDOMAttributeObj *pObj = NULL;
+			sc = CXMLDOMAttributeObj::CreateInstance(&pObj);
+			if (SUCCEEDED(sc)) {
+				pObj->attr = oldAttr;
+				pObj->AddRef();
+				pObj->SetOwnerDoc(m_pIXMLDOMDocument);
+
+				sc = pObj->QueryInterface(IID_IXMLDOMAttribute, reinterpret_cast<LPVOID*> (attributeNode));
+				pObj->Release();
+			}
+		}
 	}
 	catch(...)
 	{
-		pObj->Release(); 
 		return E_FAIL;
 	}
-	
-	hr = pObj->QueryInterface(IID_IXMLDOMAttribute, reinterpret_cast<LPVOID*> (attributeNode));
-	if (S_OK != hr) 
-		*attributeNode = NULL;
 
-	pObj->Release();
-	return hr;
+
+	return sc;
 }
 
 STDMETHODIMP CXMLDOMElement::removeAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAttribute  * *attributeNode)

@@ -55,10 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2000/03/30 02:00:11  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -78,7 +75,8 @@ STDMETHODIMP CXMLDOMDocumentType::get_name(BSTR  *pVal)
 
 	try
 	{
-		*pVal = SysAllocString(documentType.getName().rawBuffer());
+		DOMString val = documentType.getName();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{

@@ -55,17 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/06/19 20:05:57  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.3  2000/06/03 00:28:57  andyh
- * COM Wrapper changes from Curt Arnold
- *
- * Revision 1.2  2000/03/30 02:00:11  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -264,7 +254,6 @@ STDMETHODIMP CXMLDOMDocument::get_doctype(IXMLDOMDocumentType  **pVal)
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 	DOM_DocumentType doctype = m_Document.getDoctype();
 
@@ -1345,8 +1334,14 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 
 
 
-	if (!pThis->m_bParseError && !pThis->m_bAbort)
+	if (!pThis->m_bParseError && !pThis->m_bAbort) {
 		parser.setDoValidation(pThis->m_bThreadValidate);
+		//
+		//   this brings the COM component into better mimicry to MSXML
+		//      by not throwing a validation error when there is no DOCTYPE
+		//
+		parser.setValidationScheme(pThis->m_bThreadValidate ? DOMParser::Val_Auto : DOMParser::Val_Never);
+	}
 
 	if (!pThis->m_bParseError && !pThis->m_bAbort)
 		parser.setErrorHandler(pThis);

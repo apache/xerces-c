@@ -55,10 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2000/03/30 02:00:12  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #ifndef ___nodecontainerimpl_h___
@@ -82,7 +79,7 @@ public:
 		}	
 
 		iterator(const T& container,int idx,IXMLDOMDocument *p)
-			:m_container(m_container)
+			:m_container(container)
 			,m_NextNodeIndex(idx)
 			,m_pIXMLDOMDocument(p)
 		{
@@ -104,6 +101,25 @@ public:
 			return (m_NextNodeIndex != rhs.m_NextNodeIndex);
 		}
 		
+		iterator& operator=(const iterator& rhs)
+		{
+			if (this != &rhs) {
+				if (m_pIXMLDOMDocument != NULL) {
+					m_pIXMLDOMDocument->Release() ;
+					m_pIXMLDOMDocument = NULL ;
+				}
+				m_container = rhs.m_container ;
+				m_NextNodeIndex = rhs.m_NextNodeIndex ;
+				m_NextVar = rhs.m_NextVar ;
+				m_pIXMLDOMDocument = rhs.m_pIXMLDOMDocument ;
+				if (m_pIXMLDOMDocument != NULL) {
+					m_pIXMLDOMDocument->AddRef() ;
+				}
+			}
+			return *this ;
+		}
+
+
 		VARIANT& operator*()
 		{
 			if (m_container == 0)

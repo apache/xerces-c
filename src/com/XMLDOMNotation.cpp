@@ -55,10 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2000/03/30 02:00:10  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -77,7 +74,8 @@ STDMETHODIMP CXMLDOMNotation::get_publicId(VARIANT  *pVal)
 	try
 	{
 		V_VT(pVal) = VT_BSTR;
-		V_BSTR(pVal) = SysAllocString(notation.getPublicId().rawBuffer());
+		DOMString val = notation.getPublicId();
+		V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -100,7 +98,8 @@ STDMETHODIMP CXMLDOMNotation::get_systemId(VARIANT  *pVal)
 	try
 	{
 		V_VT(pVal) = VT_BSTR;
-		V_BSTR(pVal) = SysAllocString(notation.getSystemId().rawBuffer());
+		DOMString val = notation.getSystemId();
+		V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{

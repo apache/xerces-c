@@ -55,20 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/07/07 00:13:29  jpolast
- * bug fixes for better DOM level 1 spec conformance.
- *
- * Revision 1.4  2000/06/19 20:05:56  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.3  2000/06/03 00:28:54  andyh
- * COM Wrapper changes from Curt Arnold
- *
- * Revision 1.2  2000/03/30 02:00:12  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 
@@ -91,7 +78,8 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeName(BSTR *pVal)
 
 	try
 	{
-		*pVal = SysAllocString(get_DOM_Node().getNodeName().rawBuffer());
+		DOMString val = get_DOM_Node().getNodeName();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -115,10 +103,12 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeValue(VARIANT *pV
 
 	try
 	{
-		if (get_DOM_Node().getNodeValue() != 0)
+		DOMString val = get_DOM_Node().getNodeValue();
+		if (val != 0)
 		{
 			V_VT(pVal)   = VT_BSTR;
-			V_BSTR(pVal) = SysAllocString(get_DOM_Node().getNodeValue().rawBuffer());
+
+			V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
 		}
 		else
 			V_VT(pVal) = VT_NULL;
@@ -176,7 +166,6 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_parentNode(IXMLDOMNod
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 	HRESULT hr = S_OK;
 
@@ -242,7 +231,6 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_firstChild(IXMLDOMNod
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 
 	HRESULT hr = S_OK;
@@ -274,7 +262,6 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_lastChild(IXMLDOMNode
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 
 	HRESULT hr = S_OK;
@@ -303,7 +290,6 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_previousSibling(IXMLD
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 	HRESULT hr = S_OK;
 
@@ -331,7 +317,6 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nextSibling(IXMLDOMNo
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 
 	HRESULT hr = S_OK;
@@ -683,12 +668,8 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_text(BSTR *pVal)
 	if (NULL == pVal)
 		return E_POINTER;
 
-	*pVal = NULL;
-
-	_bstr_t text;
-	GetText(get_DOM_Node(), text);
-
-	*pVal = text.copy();
+	DOMString val = GetText(get_DOM_Node());
+	*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 
 	return S_OK;
 }
@@ -870,7 +851,8 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_namespaceURI(BSTR *pV
 	*pVal = NULL;
 
 	try {
-		*pVal = SysAllocString(get_DOM_Node().getNamespaceURI().rawBuffer());
+		DOMString val = get_DOM_Node().getNamespaceURI();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -892,7 +874,8 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_prefix(BSTR *pVal)
 	*pVal = NULL;
 
 	try {
-		*pVal = SysAllocString(get_DOM_Node().getPrefix().rawBuffer());
+		DOMString val = get_DOM_Node().getPrefix();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{
@@ -914,7 +897,8 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_baseName(BSTR *pVal)
 	*pVal = NULL;
 
 	try {
-		*pVal = SysAllocString(get_DOM_Node().getLocalName().rawBuffer());
+		DOMString val = get_DOM_Node().getLocalName();
+		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
 	catch(...)
 	{

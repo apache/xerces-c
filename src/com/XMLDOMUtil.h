@@ -55,17 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/06/19 20:05:59  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.3  2000/06/03 00:29:03  andyh
- * COM Wrapper changes from Curt Arnold
- *
- * Revision 1.2  2000/03/30 02:00:09  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #ifndef ___wrapnode_h___
@@ -77,7 +67,7 @@ extern const OLECHAR* g_DomNodeName[];
 extern const int	g_DomNodeNameSize;
 
 void GetXML (const DOM_Node &node, _bstr_t &text);
-void GetText(const DOM_Node& node, _bstr_t &text);
+DOMString GetText(const DOM_Node& node);
 HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal);
 
 

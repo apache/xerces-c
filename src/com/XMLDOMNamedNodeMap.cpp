@@ -55,14 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/06/19 20:05:58  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.2  2000/03/30 01:59:11  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -131,8 +124,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::setNamedItem(IXMLDOMNode  *newItem, IXMLDOMNod
 	try
 	{
 		DOMString  name = pNewItemNode->getNodeName();
-		m_container.setNamedItem(*pNewItemNode);
-		DOM_Node n = m_container.getNamedItem(name);
+		//
+		//  returns old node
+		//
+		DOM_Node n = m_container.setNamedItem(*pNewItemNode);
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}

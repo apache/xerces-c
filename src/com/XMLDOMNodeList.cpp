@@ -55,14 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/06/19 20:05:58  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.2  2000/03/30 02:00:10  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -80,7 +73,6 @@ STDMETHODIMP CXMLDOMNodeList::get_item(long index, IXMLDOMNode  **pVal)
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 	HRESULT hr = S_OK;
 

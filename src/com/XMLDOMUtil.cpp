@@ -55,17 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/06/19 20:05:59  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.3  2000/06/03 00:29:02  andyh
- * COM Wrapper changes from Curt Arnold
- *
- * Revision 1.2  2000/03/30 02:00:09  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"
@@ -85,6 +75,7 @@
 #include "XMLDOMXMLDecl.h"
 #include "XMLDOMUtil.h"
 #include <util/PlatformUtils.hpp>
+#include <util/XMLUniDefs.hpp>
 
 
 const OLECHAR* g_DomNodeName[] = 
@@ -106,30 +97,33 @@ const OLECHAR* g_DomNodeName[] =
  
 const int g_DomNodeNameSize = sizeof(g_DomNodeName) / sizeof(OLECHAR*);
 
-void GetText(const DOM_Node& node, _bstr_t &text)
+DOMString GetText(const DOM_Node& node)
 {
 	DOM_Node::NodeType type = static_cast<DOM_Node::NodeType> (node.getNodeType());
-		
+	DOMString val;		
+
 	if (DOM_Node::DOCUMENT_TYPE_NODE		  == type || 
 		DOM_Node::NOTATION_NODE				  == type)
-		return;
+		return val;
 	
 	if (DOM_Node::CDATA_SECTION_NODE		  == type || 
 		DOM_Node::COMMENT_NODE				  == type ||
 		DOM_Node::PROCESSING_INSTRUCTION_NODE == type || 
 		DOM_Node::TEXT_NODE					  == type) {
-		text += node.getNodeValue().rawBuffer();
-		return;
+		val = node.getNodeValue();
+		return val;
 	}
 
 	DOM_NodeList l =  node.getChildNodes();
 	int length = l.getLength();
 	if (length > 0) { 
 		for (int i = 0; i < length; ++i) 
-			GetText(l.item(i), text);
+			val.appendData(GetText(l.item(i)));
 	}
-	else
-		text += node.getNodeValue().rawBuffer();
+	else {
+		val = node.getNodeValue();
+	}
+	return val;
 }
 
 

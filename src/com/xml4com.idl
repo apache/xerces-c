@@ -54,10 +54,9 @@
  * <http://www.apache.org/>.
  */
 
-
-
-// xml4com.idl : IDL source 
-//
+/*
+ * $Id$
+ */
  
 // This file will be processed by the MIDL tool to
 // produce the type library (xml4com.tlb) and marshalling code.
@@ -65,9 +64,9 @@
 import "oaidl.idl"; 
 
 [
-	uuid(79516F60-3AEA-11D3-BC47-0004ACB7DBEB),
-	version(1.0),
-	helpstring("Xerces XML Parser")
+	uuid(C58E1141-26F6-4d3a-AF76-6214CA435238),
+	version(1.3),
+	helpstring("Xerces XML Parser 1.3")
 ]
 library Xerces
 {
@@ -122,7 +121,7 @@ library Xerces
 	};
 
 	[
-		uuid(79516F6F-3AEA-11D3-BC47-0004ACB7DBEB),
+		uuid(988AE1AE-12FF-4c11-8847-BDD79C1B6B59),
 		helpstring("DOMDocument Class")
 	]
 	coclass DOMDocument
@@ -132,7 +131,7 @@ library Xerces
 	};
 
 	[
-	  uuid(1C598E82-9AB9-456b-9C24-D711F08F3584),
+	  uuid(3A725053-15FB-4065-9171-BC02BCF3876C),
 	  helpstring("XMLHTTPRequest class.")
 	]
 	coclass XMLHTTPRequest

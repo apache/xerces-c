@@ -53,7 +53,9 @@
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
+/*
+ * $Id$
+ */
 
 #include "stdafx.h"
 #include "xml4com.h"
@@ -123,7 +125,7 @@ STDMETHODIMP CXMLDOMXMLDecl::get_data(BSTR  *pVal)
 		totalLen = len;
 		if(len > 0) {
 			wcscpy(*pVal,OLESTR("version=\""));
-			wcscat(*pVal,version.rawBuffer());
+			wcsncat(*pVal,version.rawBuffer(),len);
 			wcscat(*pVal,OLESTR("\""));
 		}
 
@@ -133,7 +135,7 @@ STDMETHODIMP CXMLDOMXMLDecl::get_data(BSTR  *pVal)
 				wcscat(*pVal,OLESTR(" standalone=\""));
 			else
 				wcscat(*pVal,OLESTR("standalone=\""));
-			wcscat(*pVal,standalone.rawBuffer());
+			wcsncat(*pVal,standalone.rawBuffer(),len);
 			wcscat(*pVal,OLESTR("\""));
 			totalLen += len;
 		}
@@ -144,7 +146,7 @@ STDMETHODIMP CXMLDOMXMLDecl::get_data(BSTR  *pVal)
 				wcscat(*pVal,OLESTR(" encoding=\""));
 			else
 				wcscat(*pVal,OLESTR("encoding=\""));
-			wcscat(*pVal,encoding.rawBuffer());
+			wcsncat(*pVal,encoding.rawBuffer(),len);
 			wcscat(*pVal,OLESTR("\""));
 		}
 

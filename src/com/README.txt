@@ -1,3 +1,7 @@
+
+COM Wrapper
+-----------
+
 xerces-com.dll needs to be registered before its first use.  This can be done using either through the References Dialog in Microsoft(r) Visual Basic (tm) or Microsoft(r) Excel or using REGSVR32.EXE,
 provided with many Windows development environments.
 
@@ -23,11 +27,18 @@ The following lines would create an instance of a Xerces parser:
 Dim xmlparser as new Xerces.DOMDocument
 Dim xmlparser as new DOMDocument
 Set object = CreateObject("Xerces.DOMDocument") 
-set object = CreateObject("Xerces.DOMDocument.1.2")
+set object = CreateObject("Xerces.DOMDocument.1.3")
 
 If you leave both MSXML and Xerces in the same project, you may need to disambiguate interfaces by prepending MSXML or Xerces.
 
 For many applications, MSXML and Xerces will be interchangable.  However, there may be documents that MSXML rejects and Xerces accepts and vice versa and the DOM presented to the application may be
-slightly different.  
+slightly different.  Specific examples include:
 
-Xerces conforms more closely to the XML 1.0 Standard than MSXML 2.0 in independent tests.  DOM conformance is typically better with MSXML 2.0.
+MSXML represents entity references as entity reference elements,
+Xerces expands the entity references.
+
+MSXML represents the XML declaration as a processing instruction node,
+Xerces does not represent the XML declaration.
+
+MSXML will suppress whitespace nodes regardless of validation setting when preserveWhitespace = false,
+Xerces will only suppress whitespace when validation = true.

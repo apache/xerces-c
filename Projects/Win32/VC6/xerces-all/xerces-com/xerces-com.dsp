@@ -18,11 +18,7 @@ CFG=xml4com - Win32 Debug
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "xml4com - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "xml4com - Win32 Unicode Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "xml4com - Win32 Release MinSize" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "xml4com - Win32 Release MinDependency" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "xml4com - Win32 Unicode Release MinSize" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "xml4com - Win32 Unicode Release MinDependency" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -55,12 +51,12 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1D.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1D.lib /nologo /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\xml4com\Debug/xerces13-com.dll" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
 TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces-com.dll
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces13-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces13-com.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -71,90 +67,6 @@ SOURCE="$(InputPath)"
 	
 # End Custom Build
 
-!ELSEIF  "$(CFG)" == "xml4com - Win32 Unicode Debug"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "DebugU"
-# PROP BASE Intermediate_Dir "DebugU"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "..\..\..\..\..\Build\Win32\xml4com\DebugU"
-# PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\xml4com\DebugU"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\com" /D "_DEBUG" /D "_UNICODE" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
-# Begin Custom Build - Performing registration
-OutDir=.\..\..\..\..\..\Build\Win32\xml4com\DebugU
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\DebugU\xerces-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\DebugU\xerces-com.dll
-SOURCE="$(InputPath)"
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if "%OS%"=="" goto NOTNT 
-	if not "%OS%"=="Windows_NT" goto NOTNT 
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	goto end 
-	:NOTNT 
-	echo Warning : Cannot register Unicode DLL on Windows 95 
-	:end 
-	
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinSize"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "ReleaseMinSize"
-# PROP BASE Intermediate_Dir "ReleaseMinSize"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize"
-# PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_DLL" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
-# Begin Custom Build - Performing registration
-OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize
-TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
-SOURCE="$(InputPath)"
-
-BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
-	regsvr32 /s /c "$(TargetPath)" \
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
-	
-
-"$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-# End Custom Build
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinDependency"
 
@@ -178,12 +90,12 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency/xerces13-com.dll" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
 TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces13-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces13-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
@@ -191,106 +103,6 @@ BuildCmds= \
 	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
-	
-
-"$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "xml4com - Win32 Unicode Release MinSize"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "ReleaseUMinSize"
-# PROP BASE Intermediate_Dir "ReleaseUMinSize"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize"
-# PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\com" /D "NDEBUG" /D "_UNICODE" /D "_ATL_DLL" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
-# Begin Custom Build - Performing registration
-OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize
-TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
-SOURCE="$(InputPath)"
-
-BuildCmds= \
-	if "%OS%"=="" goto NOTNT \
-	if not "%OS%"=="Windows_NT" goto NOTNT \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
-	regsvr32 /s /c "$(TargetPath)" \
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
-	goto end \
-	:NOTNT \
-	echo Warning : Cannot register Unicode DLL on Windows 95 \
-	:end \
-	
-
-"$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "xml4com - Win32 Unicode Release MinDependency"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "ReleaseUMinDependency"
-# PROP BASE Intermediate_Dir "ReleaseUMinDependency"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency"
-# PROP Intermediate_Dir ".\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\com" /D "NDEBUG" /D "_UNICODE" /D "_ATL_STATIC_REGISTRY" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386
-# Begin Custom Build - Performing registration
-OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency
-TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
-SOURCE="$(InputPath)"
-
-BuildCmds= \
-	if "%OS%"=="" goto NOTNT \
-	if not "%OS%"=="Windows_NT" goto NOTNT \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
-	regsvr32 /s /c "$(TargetPath)" \
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
-	goto end \
-	:NOTNT \
-	echo Warning : Cannot register Unicode DLL on Windows 95 \
-	:end \
 	
 
 "$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -305,11 +117,7 @@ BuildCmds= \
 # Begin Target
 
 # Name "xml4com - Win32 Debug"
-# Name "xml4com - Win32 Unicode Debug"
-# Name "xml4com - Win32 Release MinSize"
 # Name "xml4com - Win32 Release MinDependency"
-# Name "xml4com - Win32 Unicode Release MinSize"
-# Name "xml4com - Win32 Unicode Release MinDependency"
 # Begin Group "com"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl;cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
