@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2000/04/12 18:41:28  roddey
+ * Fixed a small 'one off' problem in the calls to ICU.
+ *
  * Revision 1.17  2000/04/07 01:02:00  roddey
  * Fixed an error message so that it indicated the correct radix for the rep
  * token. Get all of the basic output formatting functionality in place for
@@ -1029,7 +1032,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
         (
             fConverter
             , targetBuf
-            , maxChars + 1
+            , maxChars
             , toTranscode
             , srcLen
             , &err
@@ -1109,7 +1112,7 @@ bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
         (
             fConverter
             , toFill
-            , maxChars + 1
+            , maxChars
             , actualSrc
             , &err
         );
