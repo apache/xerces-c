@@ -5565,24 +5565,8 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                 throw TraverseSchema::InvalidComplexTypeInfo; // REVISIT - should we continue
             }
 
-            // Check for derivation valid (extension) - 1.4.2.2
-            if (baseContentType != SchemaElementDecl::Empty
-                && baseContentType != SchemaElementDecl::Simple) {
-                if ((isMixed && baseContentType == SchemaElementDecl::Children)
-                    || (!isMixed && baseContentType != SchemaElementDecl::Children)) {
-
-                    reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::MixedOrElementOnly, baseLocalPart, typeName);
-                    throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
-                }
-            }
-
             processElements(ctElem, baseTypeInfo, typeInfo);
         }
-    }
-    else if (isBaseAnyType && typeDerivedBy == SchemaSymbols::XSD_EXTENSION && !isMixed) {
-
-        reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::MixedOrElementOnly, baseLocalPart, typeName);
-        throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
     }
 
     if (childElem != 0) {
@@ -5687,6 +5671,14 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                     throw TraverseSchema::InvalidComplexTypeInfo; // REVISIT - should we continue
                 }
 
+                // Check for derivation valid (extension) - 1.4.3.2.2.1
+                if ((isMixed && baseContentType == SchemaElementDecl::Children)
+                    || (!isMixed && baseContentType != SchemaElementDecl::Children)) {
+
+                    reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::MixedOrElementOnly, baseLocalPart, typeName);
+                    throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
+                }
+
                 typeInfo->setAdoptContentSpec(false);
                 typeInfo->setContentSpec(
                     new ContentSpecNode(ContentSpecNode::Sequence,
@@ -5723,6 +5715,12 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             typeInfo->setAdoptContentSpec(false);
             typeInfo->setContentSpec(new ContentSpecNode(ContentSpecNode::Sequence, anySpecNode, specNode));
             typeInfo->setAdoptContentSpec(true);
+
+            if (!isMixed) {
+
+                reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::MixedOrElementOnly, baseLocalPart, typeName);
+                throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
+            }
         }
 
         typeInfo->setContentType(SchemaElementDecl::Mixed_Complex);
