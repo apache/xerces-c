@@ -660,3 +660,36 @@ const XMLCh XMLUni::fgMalformedURLException_Name[] =
     ,   chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t
     ,   chLatin_i, chLatin_o, chLatin_n, chNull
 };
+
+const XMLCh XMLUni::fgNumberFormatException_Name[] =
+{
+        chLatin_N, chLatin_u, chLatin_m, chLatin_b, chLatin_e, chLatin_r
+    ,   chLatin_F, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_t
+    ,   chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t
+    ,   chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgParseException_Name[] = 
+{
+        chLatin_P, chLatin_a, chLatin_r, chLatin_s, chLatin_e
+    ,   chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t
+    ,   chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgInvalidDatatypeFacetException_Name[] = 
+{
+        chLatin_I, chLatin_n, chLatin_v, chLatin_a, chLatin_l, chLatin_i
+    ,   chLatin_d, chLatin_D, chLatin_a, chLatin_t, chLatin_a, chLatin_t
+    ,   chLatin_y, chLatin_p, chLatin_e, chLatin_F, chLatin_a, chLatin_c
+    ,   chLatin_e, chLatin_t, chLatin_E, chLatin_x, chLatin_c, chLatin_e
+    ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgInvalidDatatypeValueException_Name[] = 
+{
+        chLatin_I, chLatin_n, chLatin_v, chLatin_a, chLatin_l, chLatin_i
+    ,   chLatin_d, chLatin_D, chLatin_a, chLatin_t, chLatin_a, chLatin_t
+    ,   chLatin_y, chLatin_p, chLatin_e, chLatin_V, chLatin_a, chLatin_l
+    ,   chLatin_u, chLatin_e, chLatin_E, chLatin_x, chLatin_c, chLatin_e
+    ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};

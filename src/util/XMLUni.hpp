@@ -186,7 +186,10 @@ public :
 	static const XMLCh fgUTFDataFormatException_Name[];
 	static const XMLCh fgNetAccessorException_Name[];
 	static const XMLCh fgMalformedURLException_Name[];
-
+	static const XMLCh fgNumberFormatException_Name[];
+	static const XMLCh fgParseException_Name[];
+	static const XMLCh fgInvalidDatatypeFacetException_Name[];
+	static const XMLCh fgInvalidDatatypeValueException_Name[];
 };
 
 #endif
