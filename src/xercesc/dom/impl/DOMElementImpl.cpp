@@ -77,7 +77,6 @@
 
 #include "DOMDeepNodeListImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
-#include "DOMNamedNodeMapImpl.hpp"
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

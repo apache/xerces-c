@@ -62,10 +62,10 @@
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMEntityImpl.hpp"
 #include "DOMEntityReferenceImpl.hpp"
-#include "DOMNamedNodeMapImpl.hpp"
 
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
