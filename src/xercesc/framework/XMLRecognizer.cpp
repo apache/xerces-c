@@ -171,13 +171,13 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
     //
     if ((rawBuffer[0] == 0x00) || (rawBuffer[0] == 0x3C))
     {
-        if (!memcmp(rawBuffer, fgUCS4BPre, fgUCS4PreLen))
+        if (rawByteCount >= fgUCS4PreLen && !memcmp(rawBuffer, fgUCS4BPre, fgUCS4PreLen))
             return UCS_4B;
-        else if (!memcmp(rawBuffer, fgUCS4LPre, fgUCS4PreLen))
+        else if (rawByteCount >= fgUCS4PreLen && !memcmp(rawBuffer, fgUCS4LPre, fgUCS4PreLen))
             return UCS_4L;
-        else if (!memcmp(rawBuffer, fgUTF16BPre, fgUTF16PreLen))
+        else if (rawByteCount >= fgUTF16PreLen && !memcmp(rawBuffer, fgUTF16BPre, fgUTF16PreLen))
             return UTF_16B;
-        else if (!memcmp(rawBuffer, fgUTF16LPre, fgUTF16PreLen))
+        else if (rawByteCount >= fgUTF16PreLen && !memcmp(rawBuffer, fgUTF16LPre, fgUTF16PreLen))
             return UTF_16L;
     }
 
