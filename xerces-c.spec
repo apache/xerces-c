@@ -85,6 +85,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(755,root,root)
 %{prefix}/bin/*
 %{prefix}/lib/libxerces-c.so*
+%{prefix}/lib/libxerces-depdom.so* 
 
 %files devel
 %defattr(-,root,root)
