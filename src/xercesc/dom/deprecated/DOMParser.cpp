@@ -147,7 +147,7 @@ void DOMParser::initialize()
 {
     // Create grammar resolver and URI string pool to pass to the scanner
     fGrammarResolver = new (fMemoryManager) GrammarResolver(fGrammarPool, fMemoryManager);
-    fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
+    fURIStringPool = fGrammarResolver->getStringPool();
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
@@ -165,7 +165,8 @@ void DOMParser::cleanUp()
     delete fNodeStack;
     delete fScanner;
     delete fGrammarResolver;
-    delete fURIStringPool;
+    // grammar pool must do this
+    //delete fURIStringPool;
 
     if (fValidator)
         delete fValidator;

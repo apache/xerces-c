@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/09/16 18:30:54  neilg
+ * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
+ *
  * Revision 1.4  2003/09/02 08:59:02  gareth
  * Added API to get enumerator of grammars.
  *
@@ -92,13 +95,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 XMLGrammarPoolImpl::~XMLGrammarPoolImpl()
 {
     delete fGrammarRegistry;
+    delete fStringPool;
 }
 
 XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 :XMLGrammarPool(memMgr)
 ,fGrammarRegistry(0)
+,fStringPool(0)
 {
     fGrammarRegistry = new (memMgr) RefHashTableOf<Grammar>(29, true, memMgr);
+    fStringPool = new (memMgr) XMLStringPool(109, memMgr);
 }
 
 // -----------------------------------------------------------------------
@@ -180,6 +186,11 @@ XMLDTDDescription*  XMLGrammarPoolImpl::createDTDDescription(const XMLCh* const 
 XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* const targetNamespace)
 {
 	return new (getMemoryManager()) XMLSchemaDescriptionImpl(targetNamespace, getMemoryManager()); 
+}
+
+inline XMLStringPool *XMLGrammarPoolImpl::getURIStringPool() 
+{
+    return fStringPool;
 }
 
 XERCES_CPP_NAMESPACE_END

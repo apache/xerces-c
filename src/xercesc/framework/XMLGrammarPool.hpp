@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/09/16 18:30:54  neilg
+ * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
+ *
  * Revision 1.3  2003/09/02 08:59:02  gareth
  * Added API to get enumerator of grammars.
  *
@@ -73,8 +76,8 @@
 #define XMLGRAMMARPOOL_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -85,6 +88,7 @@ class DTDGrammar;
 class SchemaGrammar;
 class XMLDTDDescription;
 class XMLSchemaDescription;
+class XMLStringPool;
 
 class XMLPARSER_EXPORT XMLGrammarPool : public XMemory
 {
@@ -151,17 +155,19 @@ public :
     virtual void           clear() = 0;
         
     /**
-      * lookPool
+      * lockPool
       *
-	  * The grammar pool is looked and accessed exclusively by the looking thread
+	  * When this method is called by the application, the 
+      * grammar pool should stop adding new grammars to the cache.
       *
       */
     virtual void           lockPool() = 0;
     
     /**
-      * lookPool
+      * unlockPool
       *
-	  * The grammar pool is accessible by multi threads
+	  * After this method has been called, the grammar pool implementation
+      * should return to its default behaviour when cacheGrammars(...) is called.
       *
       */
     virtual void           unlockPool() = 0;
@@ -194,6 +200,7 @@ public :
       *
       */		
     virtual XMLSchemaDescription*  createSchemaDescription(const XMLCh* const targetNamespace) = 0;
+
     //@}
 	
     // -----------------------------------------------------------------------
@@ -210,6 +217,13 @@ public :
         return fMemMgr;
     }
 
+    /**
+      * Return an XMLStringPool for use by validation routines.  
+      * Implementations should not create a string pool on each call to this
+      * method, but should maintain one string pool for all grammars
+      * for which this pool is responsible.
+      */
+    virtual XMLStringPool *getURIStringPool() = 0;
     //@}
 	
 protected :

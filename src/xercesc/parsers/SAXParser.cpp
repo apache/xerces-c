@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2003/09/16 18:30:54  neilg
+ * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
+ *
  * Revision 1.24  2003/08/13 15:43:24  knoaman
  * Use memory manager when creating SAX exceptions.
  *
@@ -314,7 +317,7 @@ void SAXParser::initialize()
 {
     // Create grammar resolver and string pool to pass to scanner
     fGrammarResolver = new (fMemoryManager) GrammarResolver(fGrammarPool, fMemoryManager);
-    fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
+    fURIStringPool = fGrammarResolver->getStringPool();
 
     // Create our scanner and tell it what validator to use
     fScanner = XMLScannerResolver::getDefaultScanner(fValidator, fGrammarResolver, fMemoryManager);
@@ -333,7 +336,8 @@ void SAXParser::cleanUp()
     fMemoryManager->deallocate(fAdvDHList);//delete [] fAdvDHList;
     delete fScanner;
     delete fGrammarResolver;
-    delete fURIStringPool;
+    // grammar pool must do this
+    //delete fURIStringPool;
 
     if (fValidator)
         delete fValidator;

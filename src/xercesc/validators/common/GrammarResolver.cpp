@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/09/16 18:30:54  neilg
+ * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
+ *
  * Revision 1.18  2003/09/02 09:04:44  gareth
  * added API to get enumerator to referenced grammars.
  *
@@ -147,7 +150,7 @@ GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
 :fCacheGrammar(false)
 ,fUseCachedGrammar(false)
 ,fGrammarPoolFromExternalApplication(true)
-,fStringPool(109, manager)
+,fStringPool(0)
 ,fGrammarBucket(0)
 ,fGrammarFromPool(0)
 ,fDataTypeReg(0)
@@ -172,6 +175,7 @@ GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
         fGrammarPool = new (manager) XMLGrammarPoolImpl(manager);     
         fGrammarPoolFromExternalApplication=false;
     }
+    fStringPool = fGrammarPool->getURIStringPool();
 
 }
 

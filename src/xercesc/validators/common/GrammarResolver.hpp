@@ -228,6 +228,7 @@ private:
     //
     //  fStringPool            The string pool used by TraverseSchema to store
     //                         element/attribute names and prefixes.
+    //                         Always owned by Grammar pool implementation
     //
     //  fGrammarBucket         The parsed Grammar Pool, if no caching option.
     //
@@ -243,7 +244,7 @@ private:
     bool                       fCacheGrammar;
     bool                       fUseCachedGrammar;
     bool                       fGrammarPoolFromExternalApplication;
-    XMLStringPool              fStringPool;
+    XMLStringPool*             fStringPool;
     RefHashTableOf<Grammar>*   fGrammarBucket;
     RefHashTableOf<Grammar>*   fGrammarFromPool;
     DatatypeValidatorFactory*  fDataTypeReg;
@@ -253,7 +254,7 @@ private:
 
 inline XMLStringPool* GrammarResolver::getStringPool() {
 
-    return &fStringPool;
+    return fStringPool;
 }
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/09/16 18:30:54  neilg
+ * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
+ *
  * Revision 1.4  2003/09/02 08:59:02  gareth
  * Added API to get enumerator of grammars.
  *
@@ -146,17 +149,19 @@ public :
     virtual void           clear();
         
     /**
-      * lookPool
+      * lockPool
       *
-	  * The grammar pool is looked and accessed exclusively by the looking thread
+	  * When this method is called by the application, the 
+      * grammar pool should stop adding new grammars to the cache.
       *
       */
     virtual void           lockPool();
     
     /**
-      * lookPool
+      * unlockPool
       *
-	  * The grammar pool is accessible by multi threads
+	  * After this method has been called, the grammar pool implementation
+      * should return to its default behaviour when cacheGrammars(...) is called.
       *
       */
     virtual void           unlockPool();
@@ -191,6 +196,20 @@ public :
     virtual XMLSchemaDescription*  createSchemaDescription(const XMLCh* const targetNamespace);
     //@}
 	
+    // -----------------------------------------------------------------------
+    /** @name  Getter */
+    // -----------------------------------------------------------------------                                                        
+    //@{
+
+    /**
+      * Return an XMLStringPool for use by validation routines.  
+      * Implementations should not create a string pool on each call to this
+      * method, but should maintain one string pool for all grammars
+      * for which this pool is responsible.
+      */
+    virtual XMLStringPool *getURIStringPool();
+
+    // @}
 private:
     // -----------------------------------------------------------------------
     /** name  Unimplemented copy constructor and operator= */
@@ -205,9 +224,12 @@ private:
     // fGrammarRegistry: 
     //
 	//    container
+    // fStringPool
+    //    grammars need a string pool for URI -> int mappings
     //
     // -----------------------------------------------------------------------
     RefHashTableOf<Grammar>* fGrammarRegistry; 
+    XMLStringPool         * fStringPool;
 
 };
 
