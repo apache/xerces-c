@@ -669,7 +669,14 @@ void XSAXMLScanner::scanRawAttrListforNameSpaces(int attCount)
 void XSAXMLScanner::switchGrammar( const XMLCh* const uriStr
                                  , bool laxValidate)
 {
-    Grammar* tempGrammar = fGrammarResolver->getGrammar(uriStr);
+    Grammar* tempGrammar = 0;
+
+    if (XMLString::equals(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
+        tempGrammar = fSchemaGrammar;
+    }
+    else {
+        tempGrammar = fGrammarResolver->getGrammar(uriStr);
+    }
 
     if (tempGrammar && tempGrammar->getGrammarType() == Grammar::SchemaGrammarType)
     {

@@ -8899,14 +8899,24 @@ void TraverseSchema::validateAnnotations() {
     complexType->setAnonymous();
     complexType->setContentType(SchemaElementDecl::Mixed_Complex);
     annotElemDecl->setComplexTypeInfo(complexType);
-
-    // Revisit: is this okay for a key?
+    
     fBuffer.set(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
     fBuffer.append(chComma);
     fBuffer.append(chLatin_C);
-    fBuffer.append(chDigit_0);        
-    grammar->getComplexTypeRegistry()->put((void*) fBuffer.getRawBuffer(), complexType);
-
+    fBuffer.append(chDigit_0);     
+    const XMLCh* fullName = fStringPool->getValueForId(fStringPool->addOrFind(fBuffer.getRawBuffer()));
+    grammar->getComplexTypeRegistry()->put((void*) fullName, complexType);
+    complexType->setTypeName(fullName);    
+	complexType->setAttWildCard
+    (
+        new (memMgr) SchemaAttDef
+        (
+            XMLUni::fgZeroLenString, XMLUni::fgZeroLenString,
+            fEmptyNamespaceURI, XMLAttDef::Any_Any,
+            XMLAttDef::ProcessContents_Lax, memMgr
+        )
+    );
+    
     SchemaElementDecl* appInfoElemDecl = new (memMgr) SchemaElementDecl
     (
         XMLUni::fgZeroLenString , SchemaSymbols::fgELT_APPINFO
@@ -8932,7 +8942,7 @@ void TraverseSchema::validateAnnotations() {
         XMLUni::fgZeroLenString , SchemaSymbols::fgELT_DOCUMENTATION
         , fURIStringPool->addOrFind(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
         , SchemaElementDecl::Any, Grammar::TOP_LEVEL_SCOPE , memMgr
-    );
+   );
         
     docElemDecl->setCreateReason(XMLElementDecl::Declared);
     docElemDecl->setAttWildCard
@@ -8985,7 +8995,7 @@ void TraverseSchema::validateAnnotations() {
         XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();
         memBufIS->resetMemBufInputSource((const XMLByte*)xsAnnot.getAnnotationString()
                                         , XMLString::stringLen(xsAnnot.getAnnotationString())*sizeof(XMLCh));
-        //scanner->scanDocument(*memBufIS);
+        scanner->scanDocument(*memBufIS);
     }
     
     delete scanner;
