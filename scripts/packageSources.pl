@@ -46,8 +46,8 @@ if ($openresult == 0) {
 }
 
 while ($fileline = <VERSIONFILE>) {
-   if ($fileline =~ /gXML4CFullVersionStr = \"(.*)\"/) {
-     $binarytargetdir = $1;  # We found the version string inside this file
+   if ($fileline =~ /gXML4CFullVersionStr = \"(.*)\"/) {   # "
+     $binarytargetdir = $1;  # We found the version string inside this file 
    }
 }
 close(VERSIONFILE);
@@ -72,11 +72,11 @@ $srctargetdir = $OUTPUTDIR;
 # Find out the platform from 'uname -a'
 open(PLATFORM, "uname -a|");
 $platform = <PLATFORM>;
-$platform =~ m/(^\w*\s)/;
+$platform =~ m/(\w*)/;
 $platform = $1;
 close (PLATFORM);
 
-print "\nPackaging XERCES-C sources in " . $srctargetdir . " on platform " . $platform . "...\n";
+print "\nPackaging XERCES-C sources in $srctargetdir on platform $platform ...\n";
 
 &package_sources();
 
@@ -97,14 +97,14 @@ sub package_sources {
    system("cp -Rf $XERCESCROOT/* $srctargetdir");
 
    chdir ("$srctargetdir/doc");
-   system ("doxygen");
+   # system ("doxygen");
 
    # Now create the User documentation from the XML sources
    if (length($ICUROOT) > 0) {
    	change_documentation_entities("$srctargetdir/doc/entities.ent");
    }
 
-   if ($platform =~ m/Windows/) {
+   if ($platform =~ m/Windows/ || $platform =~ m/CYGWIN_NT/) {
       $RM = "rm";
       system("$RM -rf *.obj");
       system("$RM -rf *.dep");
@@ -200,7 +200,7 @@ sub package_sources {
    }
 
    chdir ("$srctargetdir/..");
-   if ($platform =~ m/Windows/) {
+   if ($platform =~ m/Windows/ || $platform =~ m/CYGWIN/) {
 
       # Now package it all up using ZIP
       print ("\n\nZIPping up all source files ...\n");

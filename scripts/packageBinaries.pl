@@ -338,7 +338,12 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
     # Decide on the platform specific stuff first
     if ($platform =~ m/AIX/i) {
-        $icuCompileFlags = 'CXX="xlC_r -L/usr/lpp/xlC/lib" CC="xlc_r -L/usr/lpp/xlC/lib" C_FLAGS="-w -O" CXX_FLAGS="-w -O"';
+        $icuCompileFlags = 'CXX="xlC_r" ' .
+                          # '-L/usr/lpp/xlC/lib" ' .
+                           'CC="xlc_r" ' .
+                          # '-L/usr/lpp/xlC/lib" ' . 
+                           'C_FLAGS="-w -O" ' .
+                           'CXX_FLAGS="-w -O" ';
     }
     if ($platform eq 'HP-UX') {
         if ($opt_x eq 'CC') {
@@ -462,22 +467,23 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     
     # Build ICU if needed
     if (length($ICUROOT) > 0) {
-        # First make the ICU files
+        print("\n\nBuild ICU ...\n");
+        # First make the ICU files executable
         chdir ("$ICUROOT/source");
-        system ("chmod 777 configure");
-        system ("chmod 777 install-sh");
+        psystem ("chmod +x configure config.*");
+        psystem ("chmod +x install-sh");
+        $ENV{'ICU_DATA'} = "$ICUROOT/data";
         if ($platform =~ m/ptx/i) {
-            system ("chmod 777 runConfigureICU");
+            system ("chmod +x runConfigureICU");
             system ("runConfigureICU PTX");
         } else {
-            print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
-            system ("$icuCompileFlags configure --prefix=$ICUROOT");
+            psystem ("$icuCompileFlags configure --prefix=$ICUROOT");
         }
-        system ("gmake clean"); # Clean up the build, may want to comment this line out!
-        system ("rm -f $ICUROOT/data/*.o"); # gmake clean is not enough
-        system ("rm -f $ICUROOT/data/*.c"); # same for .c files
-        system ("gmake");       # This will take a long time!
-        system ("gmake install"); # Make this separate since this breaks on Solaris
+        psystem ("gmake clean"); # Clean up the build, may want to comment this line out!
+        psystem ("rm -f $ICUROOT/data/*.o"); # gmake clean is not enough
+        psystem ("rm -f $ICUROOT/data/*.c"); # same for .c files
+        psystem ("gmake");       # This will take a long time!
+        psystem ("gmake install"); # Make this separate since this breaks on Solaris
         
         # Please check if the following needs any change in Version 1.4
         # For the antiquated CC compiler under HPUX, we need to invoke
@@ -493,6 +499,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     }
     
     # make the source files
+    print("\n\nBuild the xerces-c library ...\n");
     chdir ("$XERCESCROOT/src");
     
     if ( $platform =~ m/sunos/i ) {
@@ -505,30 +512,32 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         $platform = "ptx";
     }
     
-    system ("chmod +x run* con* install-sh");
+    psystem ("chmod +x run* con* install-sh");
     
     if (length($opt_r) > 0) {
-        system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
+        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
     } else {
-        system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t");
+        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t");
     }
     
-    system ("gmake clean");     # May want to comment this line out to speed up
-    system ("gmake");
+    psystem ("gmake clean");     # May want to comment this line out to speed up
+    psystem ("gmake");
     
     # Now build the samples
+    print("\n\nBuild the samples ...\n");
     chdir ("$XERCESCROOT/samples");
-    system ("chmod +x run* con* install-sh");
-    system ("runConfigure -p$platform -c$opt_c -x$opt_x");
-    system ("gmake clean");     # May want to comment this line out to speed up
+    psystem ("chmod +x run* con* install-sh");
+    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x");
+    psystem ("gmake clean");     # May want to comment this line out to speed up
     system ("gmake");
     
     # Next build the tests
+    print("\n\nBuild the tests ...\n");
     chdir ("$XERCESCROOT/tests");
-    system ("chmod +x run* con* install-sh");
-    system ("runConfigure -p$platform -c$opt_c -x$opt_x");
-    system ("gmake clean");     # May want to comment this line out to speed up
-    system ("gmake");
+    psystem ("chmod +x run* con* install-sh");
+    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x");
+    psystem ("gmake clean");     # May want to comment this line out to speed up
+    psystem ("gmake");
     
     chdir ($targetdir);
     
@@ -573,8 +582,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
     
     if (length($ICUROOT) > 0) {
-        print "\nICU files are being copied from \'" . $ICUROOT . "\'";
-        system("cp -Rf $ICUROOT/include/* $targetdir/include");
+        print "\nICU files are being copied from \'$ICUROOT\'";
+        psystem("cp -Rf $ICUROOT/include/* $targetdir/include");
     }
     
     # Populate the binary output directory
@@ -641,11 +650,11 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("rm -f $targetdir/doc/*.gif");
     
     # Change the directory permissions
-    system ("chmod 644 `find $targetdir -type f`");
-    system ("chmod 755 $targetdir/bin/* $targetdir/lib/*.sl $targetdir/lib/*.so $targetdir/lib/*.a");
-    system ("chmod +x $targetdir/samples/runConfigure $targetdir/samples/configure $targetdir/samples/install-sh");
-    system ("chmod +x $targetdir/samples/config.sub $targetdir/samples/config.guess $targetdir/samples/config.status");
-    system ("chmod 755 `find $targetdir -type d`");
+    psystem ("chmod 644 `find $targetdir -type f`");
+    psystem ("chmod 755 $targetdir/bin/* $targetdir/lib/*.sl $targetdir/lib/*.so $targetdir/lib/*.a");
+    psystem ("chmod +x $targetdir/samples/runConfigure $targetdir/samples/configure $targetdir/samples/install-sh");
+    psystem ("chmod +x $targetdir/samples/config.sub $targetdir/samples/config.guess $targetdir/samples/config.status");
+    psystem ("chmod 755 `find $targetdir -type d`");
     
     # Now package it all up using tar
     print ("\n\nTARing up all files ...\n");
@@ -653,14 +662,21 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     $zipname = $targetdir . ".tar";
     $platformzipname = $zipname;
     
-    print ("tar -cvf $platformzipname $zipfiles\n");
-    system ("tar -cvf $platformzipname $zipfiles");
+    psystem ("tar -cvf $platformzipname $zipfiles");
     
     # Finally compress the files
     print ("Compressing $platformzipname ...\n");
-    system ("gzip $platformzipname");
+    psystem ("gzip $platformzipname");
 }
   
+#
+#  This subroutine both prints and executes a system command.
+#
+sub psystem() {
+    print("$_[0]\n");
+    system($_[0]);
+    }
+    
     
 sub change_windows_project_for_ICU() {
     my ($thefile) = @_;
@@ -671,12 +687,9 @@ sub change_windows_project_for_ICU() {
     open (FIZZLE, $thefiledotbak);
     open (FIZZLEOUT, ">$thefile");
     while ($line = <FIZZLE>) {
-        #$line =~ s/\/D "PROJ_XMLPARSER"/\/I \"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\include" \/D "PROJ_XMLPARSER"/g;
         $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"$ICUROOT\\include" \/D "PROJ_XMLPARSER"/g;
-        #$line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\data"/g;
-         $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\bin\\Debug"/g;
-        #$line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
-         $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"$ICUROOT\\lib\\Release" \/libpath:"$ICUROOT\\bin\\Release"/g;
+        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\bin\\Debug"/g;
+        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"$ICUROOT\\lib\\Release" \/libpath:"$ICUROOT\\bin\\Release"/g;
         $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
         $line =~ s/user32\.lib/user32\.lib icuuc\.lib icudata\.lib/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;
@@ -732,7 +745,7 @@ sub changeWindowsProjectForFileOnlyNA() {
         
         # From the remaining lines, remove any references to the #defines and
         # the WinSock library.
-        $aline =~ s/\/D \"XML_USE_NETACCESSOR_WINSOCK\" //g;
+        $aline =~ s/\/D \"XML_USE_NETACCESSOR_WINSOCK\" //g;  # "
         $aline =~ s/wsock32.lib //g;
         
         print PROJFILEOUT $aline;
