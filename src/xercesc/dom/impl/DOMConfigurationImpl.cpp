@@ -237,101 +237,37 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
             case FEATURE_CANONICAL_FORM: 
                 if(booleanValue) return false;      // optional //
                 else             return true;       // required // 
-              
             case FEATURE_CDATA_SECTIONS: 
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return true;       // required //
-                 */
+                return true;
             case FEATURE_COMMENTS:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return true;       // required //
-                 */
+                return true;
             case FEATURE_DATATYPE_NORMALIZATION:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return true;       // required //
-                 */
+                if(booleanValue) return false;       // required //
+                else             return true;        // required //
             case FEATURE_DISCARD_DEFAULT_CONTENT:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return true;       // required //
-                 */
+                if(booleanValue) return false;       // required //
+                else             return true;        // required //
             case FEATURE_ENTITIES:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return true;       // required //
-                 */
+                if(booleanValue) return true;       // required //
+                else             return true;       // required //
             case FEATURE_INFOSET:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return false;      // no effect//
-                 */
+                if(booleanValue) return false;       // required //
+                else             return true;       // no effect//
             case FEATURE_NAMESPACES:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-             
-                /* if(booleanValue) return true;       // required //
-                 * else             return false;      // optional //
-                 */
+                return true;       
             case FEATURE_NAMESPACE_DECLARATIONS:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return true;       // required //
-                 */
+                if(booleanValue) return true;      // optional //
+                else             return false;       // required //
             case FEATURE_NORMALIZE_CHARACTERS:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return false;      // optional //
-                 * else             return true;       // required //
-                 */
+                if(booleanValue) return false;      // optional //
+                else             return true;       // required //
             case FEATURE_SPLIT_CDATA_SECTIONS:  
-                // code that supports this feature is not yet implemented. 
-                // Return false regardless. Revisit: uncomment code below 
-                // when this feature is supported
-                return false;
-              
-                /* if(booleanValue) return true;       // required //
-                 * else             return true;       // required //
-                 */
+                //we dont report an error in the false case so we cant claim we do it
+                if(booleanValue) return false;       // required //
+                else             return false;       // required //
             case FEATURE_VALIDATE:  
                 if(booleanValue) return false;      // optional //
                 else             return true;       // required //
-              
             case FEATURE_VALIDATE_IF_SCHEMA:  
                 if(booleanValue) return false;      // optional //
                 else             return true;       // required //
@@ -339,7 +275,6 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
             case FEATURE_WHITESPACE_IN_ELEMENT_CONTENT:  
                 if(booleanValue) return true;       // required //
                 else             return false;      // optional //
-              
             default: return false; // should never be here
         }
     } else {
@@ -396,7 +331,7 @@ DOMConfigurationImpl::DOMConfigurationFeature DOMConfigurationImpl::getFeatureFl
         
 }
 
-const DOMErrorHandler* DOMConfigurationImpl::getErrorHandler() const {
+DOMErrorHandler* DOMConfigurationImpl::getErrorHandler() const {
     return fErrorHandler;
 }
 
@@ -408,7 +343,7 @@ const XMLCh* DOMConfigurationImpl::getSchemaLocation() const {
     return fSchemaLocation;
 }
 
-void DOMConfigurationImpl::setErrorHandler(const DOMErrorHandler *erHandler) {
+void DOMConfigurationImpl::setErrorHandler(DOMErrorHandler *erHandler) {
     fErrorHandler = erHandler;
 }
 

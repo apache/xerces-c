@@ -141,13 +141,13 @@ public:
     /* specific get and set methods for non-boolean parameters
      * */
 
-    const DOMErrorHandler* getErrorHandler() const;
+    DOMErrorHandler* getErrorHandler() const;
 
     const XMLCh* getSchemaType() const;
 
     const XMLCh* getSchemaLocation() const;
 
-    void setErrorHandler(const DOMErrorHandler *erHandler);
+    void setErrorHandler(DOMErrorHandler *erHandler);
 
     void setSchemaType(const XMLCh* st);
 
@@ -186,7 +186,7 @@ private:
     DOMConfigurationFeature getFeatureFlag(const XMLCh* name) const;
 
     // the error handler
-    const DOMErrorHandler* fErrorHandler;
+    DOMErrorHandler* fErrorHandler;
     
     // the schema type
     const XMLCh* fSchemaType;
