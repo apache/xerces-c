@@ -1038,21 +1038,21 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
                 popCurrentTypeNameStack();
                 return 0;
             }
-            
+
             DatatypeValidator *tmpDV = traverseByList(childElem, content, name, fullName, finalSet);
-            if(nameEmpty)
+            if(tmpDV && nameEmpty)
                 tmpDV->setAnonymous();
             return tmpDV;
         }
         else if (XMLString::equals(varietyName, SchemaSymbols::fgELT_RESTRICTION)) { //traverse Restriction
             DatatypeValidator *tmpDV = traverseByRestriction(childElem, content, name, fullName, finalSet);
-            if(nameEmpty)
+            if(tmpDV && nameEmpty)
                 tmpDV->setAnonymous();
             return tmpDV;
         }
         else if (XMLString::equals(varietyName, SchemaSymbols::fgELT_UNION)) { //traverse union
             DatatypeValidator *tmpDV = traverseByUnion(childElem, content, name, fullName, finalSet, baseRefContext);
-            if(nameEmpty)
+            if(tmpDV && nameEmpty)
                 tmpDV->setAnonymous();
             return tmpDV;
         }
@@ -1158,7 +1158,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
         // ------------------------------------------------------------------
         typeInfo = new ComplexTypeInfo();
         if(isAnonymous) {
-            typeInfo->setAnonymous(); 
+            typeInfo->setAnonymous();
         }
 
         fCurrentScope = fScopeCount++;
@@ -6777,7 +6777,7 @@ TraverseSchema::attWildCardIntersection(SchemaAttDef* const resultWildCard,
 
                 unsigned int nameURI = nameURIList->elementAt(i);
 
-                if (nameURI != compareURI && 
+                if (nameURI != compareURI &&
                     nameURI != (unsigned int) fEmptyNamespaceURI) {
                     tmpURIList.addElement(nameURI);
                 }
@@ -6932,7 +6932,7 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
     // 6. If either O1 or O2 is a pair of not and absent and the other is a
     //    set, then:
     //    1. If the set includes absent then any must be the value.
-    //    2. If the set does not include absent, then a pair of not and 
+    //    2. If the set does not include absent, then a pair of not and
     //       absent.
     if ((typeC == XMLAttDef::Any_Other && typeR == XMLAttDef::Any_List) ||
 		(typeR == XMLAttDef::Any_Other && typeC == XMLAttDef::Any_List)) {
@@ -6955,7 +6955,7 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
 
             if (nameURIList) {
 
-                // 6.1 result is any 
+                // 6.1 result is any
                 if (nameURIList->containsElement(compareURI)) {
 
                     resultWildCard->setType(XMLAttDef::Any_Any);
@@ -6977,19 +6977,19 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
         }
         // 5. not and namespace
         else {
-        
+
             // 5.3 result is not expressible
             if (!nameURIList) {
                 resultWildCard->setType(XMLAttDef::AttTypes_Unknown);
                 attNameR->setURI(fEmptyNamespaceURI);
             }
             else {
-                bool containsAbsent = 
+                bool containsAbsent =
                     nameURIList->containsElement(fEmptyNamespaceURI);
-                bool containsNamespace = 
+                bool containsNamespace =
                     nameURIList->containsElement(compareURI);
 
-                // 5.1 result is any 
+                // 5.1 result is any
                 if (containsAbsent && containsNamespace) {
 
                     resultWildCard->setType(XMLAttDef::Any_Any);
