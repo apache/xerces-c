@@ -65,7 +65,7 @@
 
 
 AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
-    AttrImpl(ownerDoc, name)
+    AttrImpl(ownerDoc, nam)
 {
     this->namespaceURI=null;	//DOM Level 2
     this->localName=null;       //DOM Level 2
