@@ -21,6 +21,7 @@ group xerces_util =
     BASE_DIR "\\src\\util\\XMLBigDecimal.cpp",
     BASE_DIR "\\src\\util\\XMLBigInteger.cpp",
     BASE_DIR "\\src\\util\\XMLChTranscoder.cpp",
+    BASE_DIR "\\src\\util\\XMLAbstractDoubleFloat.cpp",
     BASE_DIR "\\src\\util\\XMLDouble.cpp",
     BASE_DIR "\\src\\util\\XMLDateTime.cpp",
     BASE_DIR "\\src\\util\\XMLEBCDICTranscoder.cpp",

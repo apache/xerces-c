@@ -162,6 +162,7 @@ USEUNIT("..\..\..\..\..\src\util\XMLNumber.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLBigDecimal.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLBigInteger.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLChTranscoder.cpp");
+USEUNIT("..\..\..\..\..\src\util\XMLAbstractDoubleFloat.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLDouble.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLDateTime.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLEBCDICTranscoder.cpp");

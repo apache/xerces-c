@@ -155,6 +155,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLBigDecimal.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLBigInteger.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLChTranscoder.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\XMLAbstractDoubleFloat.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLDouble.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLDateTime.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLEBCDICTranscoder.obj \

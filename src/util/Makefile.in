@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.51  2001/11/19 21:59:00  peiyongz
+# Reorganization: Double/Float
+#
 # Revision 1.50  2001/11/12 20:36:54  peiyongz
 # SchemaDateTimeException defined
 #
@@ -369,6 +372,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLNumber.hpp \
     XMLBigDecimal.hpp \
     XMLBigInteger.hpp \
+    XMLAbstractDoubleFloat.hpp \
     XMLDouble.hpp \
     XMLDateTime.hpp \
     XMLChTranscoder.hpp \
@@ -438,6 +442,7 @@ UTIL_CPP_OBJECTS = \
     XMLNumber.$(TO) \
     XMLBigDecimal.$(TO) \
     XMLBigInteger.$(TO) \
+    XMLAbstractDoubleFloat.$(TO) \
     XMLDouble.$(TO) \
     XMLDateTime.$(TO) \
     XMLChTranscoder.$(TO) \

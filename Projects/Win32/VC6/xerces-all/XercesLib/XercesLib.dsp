@@ -656,6 +656,14 @@ SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLAbstractDoubleFloat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLAbstractDoubleFloat.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.cpp
 # End Source File
 # Begin Source File
