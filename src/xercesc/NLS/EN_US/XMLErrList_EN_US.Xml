@@ -16,7 +16,7 @@
             <Message Id="XMLException_Warning" Text="An exception occurred! Type:{0}, Message:{1}"/>
         </Warning>
         <Error>
-            <Message Id="FeatureUnsupported" Text="{0} is unsupported"/>
+            <Message Id="FeatureUnsupported" Text="'{0}' is not allowed for the content of a simpleType.  Only list, union and restriction are allowed."/>
             <Message Id="TopLevelNoNameComplexType" Text="Error: Top level complexType has no name - declaration ignored"/>
             <Message Id="TopLevelNoNameAttribute" Text="Globally-declared attribute must have a name - attribute declaration ignored"/>
             <Message Id="NoNameRefAttribute" Text="Attribute must have a name or a ref - attribute declaration ignored"/>
