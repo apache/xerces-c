@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2001/10/24 14:06:59  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.1  2001/06/25 16:19:56  tng
  * Rename iconv_util.h to iconv_util.hpp.  AS400 changes by Linda Swan.
  *
@@ -83,6 +86,18 @@ void   shareConverterData (UConverterSharedData * data,char *InDescriptor) ;
 UConverterSharedData *getSharedConverterData(char *Descriptor);
 #define defaultConverter (_defaultConverter==NULL)?_defaultConverter=ucnv_open(NULL, &gErr):_defaultConverter
 
+
+/* Cleans up the default converter if it has been allocated.
+   This is a little messy, but I know the code well enough to
+   do anything neater.
+ */
+void cleanupDefaultConverter()
+{
+	if (_defaultConverter != NULL) {
+		ucnv_close(_defaultConverter);
+		_defaultConverter = NULL;
+	}
+}
 
 static char DEFAULT_CONVERTER_NAME[60] = "";
 const char* iconv_getDefaultCodepage()
