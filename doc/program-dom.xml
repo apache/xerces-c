@@ -1107,17 +1107,17 @@
 
         // optionally you can implement your DOMWriterFilter (e.g. MyDOMWriterFilter)
         // and set it to the serializer
-        MyDOMWriterFilter* myFilter = new myDOMWriterFilter();
+        DOMWriterFilter* myFilter = new myDOMWriterFilter();
         theSerializer->setFilter(myFilter);
 
         // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
         // and set it to the serializer
-        MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
+        DOMErrorHandler* errHandler = new myDOMErrorHandler();
         theSerializer->setErrorHandler(myErrorHandler);
 
         // StdOutFormatTarget prints the resultant XML stream
         // to stdout once it receives any thing from the serializer.
-        StdOutFormatTarget *myFormTarget = new StdOutFormatTarget();
+        XMLFormatTarget *myFormTarget = new StdOutFormatTarget();
 
         try {
             // do the serialization through DOMWriter::writeNode();
