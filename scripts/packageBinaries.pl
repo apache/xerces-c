@@ -412,9 +412,10 @@ if ($platform eq "win64bit" )
 #     End of Itanium Builds.
 
 #
-#   WINDOWS builds happen here ...
+#   WINDOWS builds happen here, as long as they
+#     aren't using gcc...
 #
-if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
+if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/))) {
 
     if ($opt_b eq "64")
     {
@@ -819,7 +820,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 #
 if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeOS/i) ||
      ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ||
-	 ($platform =~ m/Darwin/i) ) {
+	 ($platform =~ m/Darwin/i)  || ($platform =~ m/CYGWIN/ && ($opt_c =~ m/gcc/))) {
 
     # Echo the current PATH to see what compiler it picks up
     psystem ("echo PATH=$ENV{'PATH'}");
@@ -953,6 +954,10 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
             $ENV{'XMLINSTALL'} = $targetdir;
         }
         $XMLINSTALL = $ENV{'XMLINSTALL'};
+    }
+    if(($platform =~ m/CYGWIN/) && ($opt_c =~ m/gcc/)) {
+        $MAKE = "make";
+        $platform = "CYGWIN";
     }
 
     # Set defaults for platform-independent options.
