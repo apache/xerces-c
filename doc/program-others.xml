@@ -371,7 +371,7 @@ parser->parse(xmlFile2);
     <anchor name="CPPNamespace"/>
     <s2 title="Using C++ Namespace">
 
-        <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.</p>
+        <p>&XercesCName; &XercesCVersion; supports C++ Namespace.</p>
 
         <p>The macro <code>XERCES_HAS_CPP_NAMESPACE</code> is defined in each Compiler
            Definition file if C++ Namespace is supported.</p>
