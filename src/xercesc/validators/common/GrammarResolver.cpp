@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/08/22 09:04:41  gareth
+ * keep the fGrammarFromPool in sync to avoid problems when parseing multiple times. Patch by Alberto Massari.
+ *
  * Revision 1.15  2003/07/31 17:08:39  peiyongz
  * Grammar embed grammar description
  * fGrammarFromPool introduced
@@ -370,6 +373,7 @@ Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
     if (fCacheGrammar)
     {
+        fGrammarFromPool->removeKey(nameSpaceKey);
         return fGrammarPool->orphanGrammar(nameSpaceKey);
     }
     else
