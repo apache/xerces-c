@@ -115,11 +115,11 @@
 
       <table>
         <tr>
-          <td><em>Operating System</em></td>
-          <td><em>Compiler</em></td>
+          <th><em>Operating System</em></th>
+          <th><em>Compiler</em></th>
         </tr>
         <tr>
-          <td><em>32-bit binary</em></td>
+          <th><em>32-bit binary</em></th>
           <td></td>
         </tr>
         <tr>
@@ -139,7 +139,7 @@
           <td>aCC A.03.13 with pthreads</td>
         </tr>
         <tr>
-          <td><em>64-bit binary</em></td>
+          <th><em>64-bit binary</em></th>
           <td></td>
         </tr>
         <tr>

@@ -9,7 +9,7 @@
             using the following components:
         </p>
         <table>
-            <tr><td><em>Component</em></td><td><em>Description</em></td></tr>
+            <tr><th><em>Component</em></th><th><em>Description</em></th></tr>
             <tr><td>DOM</td><td>Items specific to DOM</td></tr>
             <tr><td>SAX/SAX2</td><td>Items specific to SAX or SAX2</td></tr>
             <tr><td>Non-Validating Parser</td><td>General Parsing Problem</td></tr>

@@ -336,41 +336,41 @@
 
             <anchor name="createEntityRef"/>
             <table>
-                <tr><td colspan="2"><em>void setCreateEntityReferenceNodes(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> Create EntityReference nodes in the DOM tree.   The
+                <tr><th colspan="2"><em>void setCreateEntityReferenceNodes(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Create EntityReference nodes in the DOM tree.   The
                 EntityReference nodes and their child nodes will be read-only. </td></tr>
-                <tr><td><em>false:</em></td><td> Do not create EntityReference nodes in the DOM tree.  No
+                <tr><th><em>false:</em></th><td> Do not create EntityReference nodes in the DOM tree.  No
                 EntityReference nodes will be created, only the nodes corresponding to their fully
                 expanded sustitution text will be created.  </td></tr>
-                <tr><td><em>default:</em></td><td> true </td></tr>
-                <tr><td><em>note:</em></td><td> This feature only affects the appearance of
+                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>note:</em></th><td> This feature only affects the appearance of
                 EntityReference nodes in the DOM tree. The document will always contain the entity
                 reference child nodes. </td></tr>
             </table>
             <p/>
 
             <table>
-                <tr><td colspan="2"><em>void setExpandEntityReferences(const bool)</em> (deprecated) <br/>
-                please use <link anchor="createEntityRef">setCreateEntityReferenceNodes</link> </td></tr>
-                <tr><td><em>true:</em></td><td> Do not create EntityReference nodes in the DOM tree.  No
+                <tr><th colspan="2"><em>void setExpandEntityReferences(const bool)</em> (deprecated) <br/>
+                please use <link anchor="createEntityRef">setCreateEntityReferenceNodes</link> </th></tr>
+                <tr><th><em>true:</em></th><td> Do not create EntityReference nodes in the DOM tree.  No
                 EntityReference nodes will be created, only the nodes corresponding to their fully
                 expanded sustitution text will be created.  </td></tr>
-                <tr><td><em>false:</em></td><td> Create EntityReference nodes in the DOM tree.   The
+                <tr><th><em>false:</em></th><td> Create EntityReference nodes in the DOM tree.   The
                 EntityReference nodes and their child nodes will be read-only. </td></tr>
-                <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="createEntityRef">setCreateEntityReferenceNodes</link>
                 </td></tr>
             </table>
             <p/>
 
             <table>
-                <tr><td colspan="2"><em>void setIncludeIgnorableWhitespace(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> Include text nodes that can be considered "ignorable
+                <tr><th colspan="2"><em>void setIncludeIgnorableWhitespace(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Include text nodes that can be considered "ignorable
                 whitespace" in the DOM tree. </td></tr>
-                <tr><td><em>false:</em></td><td> Do not include ignorable whitespace in the DOM tree. </td></tr>
-                <tr><td><em>default:</em></td><td> true </td></tr>
-                <tr><td><em>note:</em></td><td> The only way that the parser can determine if text is
+                <tr><th><em>false:</em></th><td> Do not include ignorable whitespace in the DOM tree. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>note:</em></th><td> The only way that the parser can determine if text is
                 ignorable is by reading the associated grammar and having a content model for the
                 document. When ignorable whitespace text nodes are included in the DOM tree,
                 they will be flagged as ignorable; and the method DOMText::isIgnorableWhitespace()
@@ -380,13 +380,13 @@
 
             <anchor name="namespaces"/>
             <table>
-                <tr><td colspan="2"><em>void setDoNamespaces(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> Perform Namespace processing </td></tr>
-                <tr><td><em>false:</em></td><td> Do not perform Namespace processing</td></tr>
-                <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td> If the validation scheme is set to Val_Always or Val_Auto, then the
+                <tr><th colspan="2"><em>void setDoNamespaces(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Perform Namespace processing </td></tr>
+                <tr><th><em>false:</em></th><td> Do not perform Namespace processing</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> If the validation scheme is set to Val_Always or Val_Auto, then the
                 document must contain a grammar that supports the use of namespaces </td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="validation-dynamic">setValidationScheme</link>
                 </td></tr>
             </table>
@@ -394,15 +394,15 @@
 
             <anchor name="validation"/>
             <table>
-                <tr><td colspan="2"><em>void setDoValidation(const bool)</em> (deprecated) <br/>
+                <tr><th colspan="2"><em>void setDoValidation(const bool)</em> (deprecated) <br/>
                 please use <link anchor="validation-dynamic">setValidationScheme</link>
-                </td></tr>
-                <tr><td><em>true:</em></td><td> Report all validation errors. </td></tr>
-                <tr><td><em>false:</em></td><td> Do not report validation errors. </td></tr>
-                <tr><td><em>default:</em></td><td> see the default of
+                </th></tr>
+                <tr><th><em>true:</em></th><td> Report all validation errors. </td></tr>
+                <tr><th><em>false:</em></th><td> Do not report validation errors. </td></tr>
+                <tr><th><em>default:</em></th><td> see the default of
                 <link anchor="validation-dynamic">setValidationScheme</link>
                 </td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="validation-dynamic">setValidationScheme</link>
                 </td></tr>
             </table>
@@ -411,16 +411,16 @@
 
             <anchor name="validation-dynamic"/>
             <table>
-                <tr><td colspan="2"><em>void setValidationScheme(const ValSchemes)</em></td></tr>
-                <tr><td><em>Val_Auto:</em></td><td> The parser will report validation errors only if a grammar is specified.</td></tr>
-                <tr><td><em>Val_Always:</em></td><td> The parser will always report validation errors. </td></tr>
-                <tr><td><em>Val_Never:</em></td><td> Do not report validation errors. </td></tr>
-                <tr><td><em>default:</em></td><td> Val_Auto </td></tr>
-                <tr><td><em>note:</em></td><td> If set to Val_Always, the document must
+                <tr><th colspan="2"><em>void setValidationScheme(const ValSchemes)</em></th></tr>
+                <tr><th><em>Val_Auto:</em></th><td> The parser will report validation errors only if a grammar is specified.</td></tr>
+                <tr><th><em>Val_Always:</em></th><td> The parser will always report validation errors. </td></tr>
+                <tr><th><em>Val_Never:</em></th><td> Do not report validation errors. </td></tr>
+                <tr><th><em>default:</em></th><td> Val_Auto </td></tr>
+                <tr><th><em>note:</em></th><td> If set to Val_Always, the document must
                 specify a grammar.  If this feature is set to Val_Never and document specifies a grammar,
                 that grammar might be parsed but no validation of the document contents will be
                 performed. </td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="load-external-dtd">setLoadExternalDTD</link>
                 </td></tr>
             </table>
@@ -429,12 +429,12 @@
 
             <anchor name="schema"/>
             <table>
-                <tr><td colspan="2"><em>void setDoSchema(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> Enable the parser's schema support.  </td></tr>
-                <tr><td><em>false:</em></td><td> Disable the parser's schema support. </td></tr>
-                <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note</em></td><td> If set to true, namespace processing must also be turned on. </td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th colspan="2"><em>void setDoSchema(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable the parser's schema support.  </td></tr>
+                <tr><th><em>false:</em></th><td> Disable the parser's schema support. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note</em></th><td> If set to true, namespace processing must also be turned on. </td></tr>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="namespaces">setDoNamespaces</link>
                 </td></tr>
             </table>
@@ -442,17 +442,17 @@
             <p/>
 
             <table>
-                <tr><td colspan="2"><em>void setValidationSchemaFullChecking(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> Enable full schema constraint checking, including checking
+                <tr><th colspan="2"><em>void setValidationSchemaFullChecking(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable full schema constraint checking, including checking
                              which may be time-consuming or memory intensive. Currently, particle unique
                              attribution constraint checking and particle derivation restriction checking
                              are controlled by this option. </td></tr>
-                <tr><td><em>false:</em></td><td> Disable full schema constraint checking . </td></tr>
-                <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td> This feature checks the Schema grammar itself for
+                <tr><th><em>false:</em></th><td> Disable full schema constraint checking . </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> This feature checks the Schema grammar itself for
                 additional errors that are time-consuming or memory intensive. It does <em>not</em> affect the
                 level of checking performed on document instances that use Schema grammars.</td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="schema">setDoSchema</link>
                 </td></tr>
             </table>
@@ -461,13 +461,13 @@
 
             <anchor name="load-external-dtd"/>
             <table>
-                <tr><td colspan="2"><em>void setLoadExternalDTD(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> Load the External DTD . </td></tr>
-                <tr><td><em>false:</em></td><td> Ignore the external DTD completely. </td></tr>
-                <tr><td><em>default:</em></td><td> true </td></tr>
-                <tr><td><em>note</em></td><td> This feature is ignored and DTD is always loaded
+                <tr><th colspan="2"><em>void setLoadExternalDTD(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Load the External DTD . </td></tr>
+                <tr><th><em>false:</em></th><td> Ignore the external DTD completely. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>note</em></th><td> This feature is ignored and DTD is always loaded
                 if the validation scheme is set to Val_Always or Val_Auto. </td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="validation-dynamic">setValidationScheme</link>
                 </td></tr>
             </table>
@@ -476,11 +476,11 @@
 
             <anchor name="continue-after-fatal"/>
             <table>
-                <tr><td colspan="2"><em>void setExitOnFirstFatalError(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> Stops parse on first fatal error. </td></tr>
-                <tr><td><em>false:</em></td><td> Attempt to continue parsing after a fatal error. </td></tr>
-                <tr><td><em>default:</em></td><td> true </td></tr>
-                <tr><td><em>note:</em></td><td> The behavior of the parser when this feature is set to
+                <tr><th colspan="2"><em>void setExitOnFirstFatalError(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Stops parse on first fatal error. </td></tr>
+                <tr><th><em>false:</em></th><td> Attempt to continue parsing after a fatal error. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>note:</em></th><td> The behavior of the parser when this feature is set to
                 false is <em>undetermined</em>! Therefore use this feature with extreme caution because
                 the parser may get stuck in an infinite loop or worse.</td></tr>
             </table>
@@ -488,19 +488,19 @@
             <p/>
 
             <table>
-                <tr><td colspan="2"><em>void setValidationConstraintFatal(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td> The parser will treat validation error as fatal and will
+                <tr><th colspan="2"><em>void setValidationConstraintFatal(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> The parser will treat validation error as fatal and will
                 exit depends on the state of
                 <link anchor="continue-after-fatal">setExitOnFirstFatalError</link>
                 </td></tr>
-                <tr><td><em>false:</em></td><td> The parser will report the error and continue processing. </td></tr>
-                <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td> Setting this true does not mean the validation error will
+                <tr><th><em>false:</em></th><td> The parser will report the error and continue processing. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> Setting this true does not mean the validation error will
                 be printed with the word "Fatal Error".   It is still printed as "Error", but the parser
                 will exit if
                 <link anchor="continue-after-fatal">setExitOnFirstFatalError</link>
                 is set to true.</td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="continue-after-fatal">setExitOnFirstFatalError</link>
                 </td></tr>
             </table>
@@ -509,14 +509,14 @@
 
             <anchor name="use-cached"/>
             <table>
-                <tr><td colspan="2"><em>void useCachedGrammarInParse(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td>Use cached grammar if it exists in the pool.</td></tr>
-                <tr><td><em>false:</em></td><td>Parse the schema grammar.</td></tr>
-                <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td>The getter function for this method is called isUsingCachedGrammarInParse</td></tr>
-                <tr><td><em>note:</em></td><td>If the grammar caching option is enabled, this option is set to true automatically.
+                <tr><th colspan="2"><em>void useCachedGrammarInParse(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td>Use cached grammar if it exists in the pool.</td></tr>
+                <tr><th><em>false:</em></th><td>Parse the schema grammar.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td>The getter function for this method is called isUsingCachedGrammarInParse</td></tr>
+                <tr><th><em>note:</em></th><td>If the grammar caching option is enabled, this option is set to true automatically.
                 Any setting to this option by the users is a no-op.</td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="cache-grammar">cacheGrammarFromParse</link>
                 </td></tr>
             </table>
@@ -525,14 +525,14 @@
 
             <anchor name="cache-grammar"/>
             <table>
-                <tr><td colspan="2"><em>void cacheGrammarFromParse(const bool)</em></td></tr>
-                <tr><td><em>true:</em></td><td>cache the grammar in the pool for re-use in subsequent parses.</td></tr>
-                <tr><td><em>false:</em></td><td>Do not cache the grammar in the pool</td></tr>
-                <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td>The getter function for this method is called isCachingGrammarFromParse</td></tr>
-                <tr><td><em>note:</em></td><td> If set to true, the useCachedGrammarInParse
+                <tr><th colspan="2"><em>void cacheGrammarFromParse(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td>cache the grammar in the pool for re-use in subsequent parses.</td></tr>
+                <tr><th><em>false:</em></th><td>Do not cache the grammar in the pool</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td>The getter function for this method is called isCachingGrammarFromParse</td></tr>
+                <tr><th><em>note:</em></th><td> If set to true, the useCachedGrammarInParse
                 is also set to true automatically.</td></tr>
-                <tr><td><em>see:</em></td><td>
+                <tr><th><em>see:</em></th><td>
                 <link anchor="use-cached">useCachedGrammarInParse</link>
                 </td></tr>
             </table>
@@ -540,8 +540,8 @@
             <p/>
 
             <table>
-                <tr><td colspan="2"><em>void setExternalSchemaLocation(const XMLCh* const)</em></td></tr>
-                <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                <tr><th colspan="2"><em>void setExternalSchemaLocation(const XMLCh* const)</em></th></tr>
+                <tr><th><em>Description</em></th><td> The XML Schema Recommendation explicitly states that
                             the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
                             instance document is only a hint; it does not mandate that these attributes
                             must be used to locate schemas.  Similar situation happens to &lt;import&gt;
@@ -553,24 +553,24 @@
                             element, the schema specified by the user using this property will
                             be used (i.e., the schemaLocation attribute in the instance document
                             or on the &lt;import&gt; element will be effectively ignored).</td></tr>
-                <tr><td><em>Value</em></td><td> The syntax is the same as for schemaLocation attributes
+                <tr><th><em>Value</em></th><td> The syntax is the same as for schemaLocation attributes
                                  in instance documents: e.g, "http://www.example.com file_name.xsd".
                                  The user can specify more than one XML Schema in the list.</td></tr>
-                <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+                <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
             </table>
 
             <p/>
             <table>
-                <tr><td colspan="2"><em>void setExternalNoNamespaceSchemaLocation(const XMLCh* const)</em></td></tr>
-                <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                <tr><th colspan="2"><em>void setExternalNoNamespaceSchemaLocation(const XMLCh* const)</em></th></tr>
+                <tr><th><em>Description</em></th><td> The XML Schema Recommendation explicitly states that
                             the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
                             instance document is only a hint; it does not mandate that these attributes
                             must be used to locate schemas.  This property allows the user to specify the
                             no target namespace XML Schema Location externally.  If specified, the instance
                             document's noNamespaceSchemaLocation attribute will be effectively ignored.</td></tr>
-                <tr><td><em>Value</em></td><td> The syntax is the same as for the noNamespaceSchemaLocation
+                <tr><th><em>Value</em></th><td> The syntax is the same as for the noNamespaceSchemaLocation
                             attribute that may occur in an instance document: e.g."file_name.xsd".</td></tr>
-                <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+                <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
             </table>
 
             <p/>
