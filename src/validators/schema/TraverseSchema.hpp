@@ -485,6 +485,9 @@ private:
       */
     int  getMinTotalRange(const ContentSpecNode* const specNode);
 
+    void checkFixedFacet(const DOM_Element&, const DatatypeValidator* const,
+                         unsigned int&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------

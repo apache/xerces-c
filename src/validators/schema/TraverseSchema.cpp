@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/06/18 19:52:18  knoaman
+ * Add support for 'fixed' facet.
+ *
  * Revision 1.22  2001/06/15 22:55:53  knoaman
  * Added constraint checking for ref on elements.
  *
@@ -213,6 +216,11 @@ const XMLCh fgLax[] =
 const XMLCh fgStrict[] =
 {
     chLatin_s, chLatin_t, chLatin_r, chLatin_i, chLatin_c, chLatin_t, chNull
+};
+
+const XMLCh fgValueOne[] =
+{
+    chDigit_1, chNull
 };
 
 // ---------------------------------------------------------------------------
@@ -2129,6 +2137,8 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
     RefVectorOf<XMLCh>*            enums = 0;
     XMLBuffer                      pattern;
     DOMString                      facetName;
+    XMLCh                          fixedFlagStr[16];
+    unsigned int                   fixedFlag = 0;
     bool                           isFirstPattern = true;
 
     while (content != 0) {
@@ -2201,6 +2211,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                     }
                     else {
                         facets->put((void*) facetStr, new KVStringPair(facetStr, attVal));
+                        checkFixedFacet(content, baseValidator, fixedFlag);
                     }
                 }
             }
@@ -2217,6 +2228,13 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
     if (!pattern.isEmpty()) {
         facets->put((void*) SchemaSymbols::fgELT_PATTERN,
                     new KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer()));
+    }
+
+    if (fixedFlag) {
+
+        XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
+        facets->put((void*) SchemaSymbols::fgATT_FIXED,
+                    new KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr));
     }
 
     XMLCh* qualifiedName = getQualifiedName(typeNameIndex);
@@ -2545,6 +2563,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             RefVectorOf<XMLCh>*            enums = 0;
             XMLBuffer                      pattern;
             const XMLCh*                   facetName;
+            XMLCh                          fixedFlagStr[16];
+            unsigned int                   fixedFlag = 0;
             int                            facetId;
             bool                           isFirstPattern = true;
 
@@ -2603,6 +2623,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         else {
                             facets->put((void*) facetName,
                                 new KVStringPair(facetName,fBuffer.getRawBuffer()));
+                            checkFixedFacet(content, typeInfo->getBaseDatatypeValidator(), fixedFlag);
                         }
                     }
                 }
@@ -2622,6 +2643,13 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                                 pattern.getRawBuffer()
                             )
                     );
+                }
+
+                if (fixedFlag) {
+
+                    XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
+                    facets->put((void*) SchemaSymbols::fgATT_FIXED,
+                        new KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr));
                 }
 
                 XMLCh* qualifiedName =
@@ -4712,6 +4740,48 @@ int TraverseSchema::getMinTotalRange(const ContentSpecNode* const specNode) {
     }
 
     return min;
+}
+
+void TraverseSchema::checkFixedFacet(const DOM_Element& elem,
+                                     const DatatypeValidator* const baseDV,
+                                     unsigned int& flags)
+{
+    const XMLCh* fixedFacet = 
+                    getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
+
+    if (fixedFacet && 
+        (!XMLString::compareString(fixedFacet, SchemaSymbols::fgATTVAL_TRUE)
+         || !XMLString::compareString(fixedFacet, fgValueOne))) {
+
+        if (!XMLString::compareString(SchemaSymbols::fgELT_MINLENGTH, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_MINLENGTH;
+        }
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXLENGTH, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_MAXLENGTH;
+        }
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXEXCLUSIVE, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_MAXEXCLUSIVE;
+        }
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXINCLUSIVE, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_MAXINCLUSIVE;
+        }
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MINEXCLUSIVE, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_MINEXCLUSIVE;
+        }
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MININCLUSIVE, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_MININCLUSIVE;
+        }
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_TOTALDIGITS, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_TOTALDIGITS;
+        }
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_FRACTIONDIGITS, fixedFacet)) {
+            flags |= DatatypeValidator::FACET_FRACTIONDIGITS;
+        }
+        else if ((!XMLString::compareString(SchemaSymbols::fgELT_WHITESPACE, fixedFacet)) &&
+                 baseDV->getType() == DatatypeValidator::String) {
+            flags |= DatatypeValidator::FACET_WHITESPACE;
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
