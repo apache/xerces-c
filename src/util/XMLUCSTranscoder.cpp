@@ -73,7 +73,6 @@ XMLUCS4Transcoder::XMLUCS4Transcoder(const  XMLCh* const    encodingName
                                     , const bool            swapped) :
 
     XMLTranscoder(encodingName, blockSize)
-    , fSpareCh(0)
     , fSwapped(swapped)
 {
 }
@@ -87,66 +86,8 @@ XMLUCS4Transcoder::~XMLUCS4Transcoder()
 // ---------------------------------------------------------------------------
 //  XMLUCS4Transcoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-bool XMLUCS4Transcoder::supportsSrcOfs() const
-{
-    // Yes we support this
-    return true;
-}
-
-
-XMLCh
-XMLUCS4Transcoder::transcodeOne(const   XMLByte* const  srcData
-                                , const unsigned int    srcBytes
-                                ,       unsigned int&   bytesEaten)
-{
-    // If there is a spare char, return it first
-    if (fSpareCh)
-    {
-        const XMLCh retCh = fSpareCh;
-        fSpareCh = 0;
-        return retCh;
-    }
-
-    // If not enough bytes for an input char, return zero
-    if (srcBytes < sizeof(UCS4Ch))
-        return 0;
-
-    //
-    //  Get the next char. If the source is swapped from native format,
-    //  unswap it
-    //
-    UCS4Ch nextCh = *((const UCS4Ch*)srcData);
-    if (fSwapped)
-        nextCh = BitOps::swapBytes(nextCh);
-
-    //
-    //  See if this requires a surrogate pair to store. If so, then we
-    //  return the first and save the next. Else just return the one
-    //  resulting char.
-    //
-    XMLCh retCh;
-    if (nextCh & 0xFFFF0000)
-    {
-        const XMLCh ch1 = XMLCh(((nextCh - 0x10000) >> 10) + 0xD800);
-        const XMLCh ch2 = XMLCh(((nextCh - 0x10000) & 0x3FF) + 0xDC00);
-
-        retCh = ch1;
-        fSpareCh = ch2;
-    }
-     else
-    {
-        // No surrogate, so just cast it to the correct type
-        retCh = XMLCh(nextCh);
-    }
-
-    // We ate one UCS4 char's worth of bytes
-    bytesEaten = sizeof(UCS4Ch);
-    return retCh;
-}
-
-
 unsigned int
-XMLUCS4Transcoder::transcodeXML(const   XMLByte* const          srcData
+XMLUCS4Transcoder::transcodeFrom(const  XMLByte* const          srcData
                                 , const unsigned int            srcCount
                                 ,       XMLCh* const            toFill
                                 , const unsigned int            maxChars
@@ -158,52 +99,38 @@ XMLUCS4Transcoder::transcodeXML(const   XMLByte* const          srcData
     checkBlockSize(maxChars);
     #endif
 
-    // This will be the index into the output buffer and init the bytes eaten
-    unsigned int charsRead = 0;
-    bytesEaten = 0;
+    //
+    //  Get pointers to the start and end of the source buffer in terms of
+    //  UCS-4 characters.
+    //
+    const UCS4Ch*   srcPtr = (const UCS4Ch*)srcData;
+    const UCS4Ch*   srcEnd = srcPtr + (srcCount / sizeof(UCS4Ch));
 
     //
-    //  If there is a spare character, then we have to take that one first
-    //  being sure to bump the chars read.
+    //  Get pointers to the start and end of the target buffer, which is
+    //  in terms of the XMLCh chars we output.
     //
-    if (fSpareCh)
+    XMLCh*  outPtr = toFill;
+    XMLCh*  outEnd = toFill + maxChars;
+
+    //
+    //  And get a pointer into the char sizes buffer. We will run this
+    //  up as we put chars into the output buffer.
+    //
+    unsigned char* sizePtr = charSizes;
+
+    //
+    //  Now process chars until we either use up all our source or all of
+    //  our output space.
+    //
+    while ((outPtr < outEnd) && (srcPtr < srcEnd))
     {
         //
-        //  This char was a trailing surrogate so it took no space from
-        //  the original source itself. The leading surrogate accounted
-        //  for all the source eaten.
+        //  Get the next UCS char out of the buffer. Don't bump the ptr
+        //  yet since we might not have enough storage for it in the target
+        //  (if its causes a surrogate pair to be created.
         //
-        charSizes[charsRead] = 0;
-        toFill[charsRead++] = fSpareCh;
-        fSpareCh = chNull;
-    }
-
-    //
-    //  Calculate how many UCS-4 characters could possibly be pulled out
-    //  of the raw buffer right now. If none, return zero. Shouldn't happen
-    //  unless an odd number of bytes is in the buffer, since an empty
-    //  buffer would have been refilled before we were called.
-    //
-    const unsigned int charsAvail = (srcCount / sizeof(UCS4Ch));
-    if (!charsAvail)
-        return 0;
-
-    //
-    //  Calculate the maximum chars we can do. Its the lesser of the chars
-    //  requested and the UCS-4 chars available in the buffer. We have to
-    //  account for the possibility that we used one target position on
-    //  the trailing surrogate above.
-    //
-    const unsigned int charsToDo = ((maxChars - charsRead) < charsAvail) ?
-                                    (maxChars - charsRead): charsAvail;
-
-    // Just loop until we get the max chars we need or run out of source
-    const UCS4Ch* asUCS4 = (const UCS4Ch*)srcData;
-    while (charsRead < charsToDo)
-    {
-        // Get the next int out of the buffer
-        UCS4Ch nextVal = *asUCS4++;
-        bytesEaten += sizeof(UCS4Ch);
+        UCS4Ch nextVal = *srcPtr;
 
         // If it needs to be swapped, then do it
         if (fSwapped)
@@ -212,38 +139,146 @@ XMLUCS4Transcoder::transcodeXML(const   XMLByte* const          srcData
         // Handle a surrogate pair if needed
         if (nextVal & 0xFFFF0000)
         {
+            //
+            //  If we don't have room for both of the chars, then we
+            //  bail out now.
+            //
+            if (outPtr + 1 == outEnd)
+                break;
+
             const XMLCh ch1 = XMLCh(((nextVal - 0x10000) >> 10) + 0xD800);
             const XMLCh ch2 = XMLCh(((nextVal - 0x10000) & 0x3FF) + 0xDC00);
 
             //
-            //  If we have room for two chars, then put them both in and bump
-            //  the chars read by two. Otherwise, put one in and store the
-            //  other in the spare char for the next round.
+            //  We have room so store them both. But note that the
+            //  second one took up no source bytes!
             //
-            if (charsRead + 1 == maxChars)
-            {
-                charSizes[charsRead] = sizeof(UCS4Ch);
-                toFill[charsRead++] = ch1;
-                fSpareCh = ch2;
-            }
-             else
-            {
-                //
-                //  We have room so store them both. But note that the
-                //  second one took up no source bytes!
-                //
-                charSizes[charsRead] = sizeof(UCS4Ch);
-                toFill[charsRead++] = ch1;
-                charSizes[charsRead] = 0;
-                toFill[charsRead++] = ch2;
-            }
+            *sizePtr++ = sizeof(UCS4Ch);
+            *outPtr++ = ch1;
+            *sizePtr++ = 0;
+            *outPtr++ = ch2;
         }
          else
         {
-            // No surrogate, so just store it and bump the count
-            charSizes[charsRead] = sizeof(UCS4Ch);
-            toFill[charsRead++] = XMLCh(nextVal);
+            //
+            //  No surrogate, so just store it and bump the count of chars
+            //  read. Update the char sizes buffer for this char's entry.
+            //
+            *sizePtr++ = sizeof(UCS4Ch);
+            *outPtr++ = XMLCh(nextVal);
+        }
+
+        // Indicate that we ate another UCS char's worth of bytes
+        srcPtr++;
+    }
+
+    // Set the bytes eaten parameter
+    bytesEaten = ((const XMLByte*)srcPtr) - srcData;
+
+    // And return the chars written into the output buffer
+    return outPtr - toFill;
+}
+
+
+unsigned int
+XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
+                                , const unsigned int    srcCount
+                                ,       XMLByte* const  toFill
+                                , const unsigned int    maxBytes
+                                ,       unsigned int&   charsEaten
+                                , const UnRepOpts       options)
+{
+    // If debugging, make sure that the block size is legal
+    #if defined(XERCES_DEBUG)
+    checkBlockSize(maxBytes);
+    #endif
+
+    //
+    //  Get pointers to the start and end of the source buffer, which
+    //  is in terms of XMLCh chars.
+    //
+    const XMLCh*  srcPtr = srcData;
+    const XMLCh*  srcEnd = srcData + srcCount;
+
+    //
+    //  Get pointers to the start and end of the target buffer, in terms
+    //  of UCS-4 chars.
+    //
+    UCS4Ch*   outPtr = (UCS4Ch*)toFill;
+    UCS4Ch*   outEnd = outPtr + (maxBytes / sizeof(UCS4Ch));
+
+    //
+    //  Now loop until we either run out of source characters or we
+    //  fill up our output buffer.
+    //
+    XMLCh trailCh;
+    while ((outPtr < outEnd) && (srcPtr < srcEnd))
+    {
+        //
+        //  Get out an XMLCh char from the source. Don't bump up the
+        //  pointer yet, since it might be a leading for which we don't
+        //  have the trailing.
+        //
+        const XMLCh curCh = *srcPtr;
+
+        //
+        //  If its a leading char of a surrogate pair handle it one way,
+        //  else just cast it over into the target.
+        //
+        if ((curCh >= 0xD800) && (curCh <= 0xDBFF))
+        {
+            //
+            //  Ok, we have to have another source char available or we
+            //  just give up without eating the leading char.
+            //
+            if (srcPtr + 1 == srcEnd)
+                break;
+
+            //
+            //  We have the trailing char, so eat the first char and the
+            //  trailing char from the source.
+            //
+            srcPtr++;
+            trailCh = *srcPtr++;
+
+            //
+            //  Then make sure its a legal trailing char. If not, throw
+            //  an exception.
+            //
+            ThrowXML(TranscodingException, XMLExcepts::Trans_BadTrailingSurrogate);
+
+            // And now combine the two into a single output char
+            *outPtr++ = ((curCh - 0xD800) << 10)
+                        + (trailCh - 0xDC00) + 0x10000;
+        }
+         else
+        {
+            //
+            //  Its just a char, so we can take it as is. If we need to
+            //  swap it, then swap it. Because of flakey compilers, use
+            //  a temp first.
+            //
+            const UCS4Ch tmpCh = UCS4Ch(curCh);
+            if (fSwapped)
+                *outPtr++ = BitOps::swapBytes(tmpCh);
+            else
+                *outPtr++ = tmpCh;
+
+            // Bump the source pointer
+            srcPtr++;
         }
     }
-    return charsRead;
+
+    // Set the chars we ate from the source
+    charsEaten = srcPtr - srcData;
+
+    // Return the bytes we wrote to the output
+    return ((XMLByte*)outPtr) - toFill;
+}
+
+
+bool XMLUCS4Transcoder::canTranscodeTo(const unsigned int toCheck) const
+{
+    // We can handle anything
+    return true;
 }

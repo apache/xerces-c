@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/03/18 00:00:02  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.14  2000/03/17 02:37:55  rahulj
  * First cut at adding HTTP capability via native sockets.
  * Still need to add:
@@ -533,11 +536,9 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
                 basePtr--;
             }
 
+            // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-            {
-                // The base cannot provide enough levels, so its in error
-                // <TBD>
-            }
+                ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_BasePathUnderflow);
         }
     }
 

@@ -185,6 +185,8 @@
             <Message Id="CM_UnaryOpHadBinType" Text="The unary operation node had a binary node type"/>
             <Message Id="CM_UnknownCMType" Text="Unknown content model type"/>
             <Message Id="CM_UnknownCMSpecType" Text="Unknown content spec type"/>
+            <Message Id="CM_NoParentCSN" Text="The parent element has no content spec node"/>
+            <Message Id="DTD_UnknownCreateReason" Text="The creation reason enum has an unknown value"/>
             <Message Id="ElemStack_EmptyStack" Text="The element stack is empty"/>
             <Message Id="ElemStack_BadIndex" Text="The element stack index given was beyond the stack top"/>
             <Message Id="ElemStack_StackUnderflow" Text="The element stack was already empty when a pop request occured"/>
@@ -200,6 +202,7 @@
             <Message Id="File_CouldNotResetFile" Text="Could not reset file to beginning"/>
             <Message Id="File_CouldNotGetSize" Text="Could not acertain the file size"/>
             <Message Id="File_CouldNotGetBasePathName" Text="Could not determine base pathname of the file"/>
+            <Message Id="File_BasePathUnderflow" Text="The base path had too few levels to weave in relative part"/>
             <Message Id="Gen_ParseInProgress" Text="Parse may not be called while parsing"/>
             <Message Id="Gen_NoDTDValidator" Text="A DOCTYPE was seen but the installed validator does not understand DTDs"/>
             <Message Id="Gen_CouldNotOpenDTD" Text="Could not open DTD file '{0}'"/>
@@ -223,8 +226,6 @@
             <Message Id="Reader_CantCreateCvtrFor" Text="Could not create a converter for encoding: {0}"/>
             <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
             <Message Id="Reader_EOIInMultiSeq" Text="End of input was hit in the middle of a multibyte sequence"/>
-            <Message Id="Reader_BadUTF8Seq" Text="Invalid second byte of a UTF-8 character sequence"/>
-            <Message Id="Reader_BadSurrogateInUTF8" Text="Invalid surrogate character found in UTF-8 data"/>
             <Message Id="Reader_SrcOfsNotSupported" Text="The current transcoding service does not support source offset information"/>
             <Message Id="Reader_EncodingStrRequired" Text="EBCDIC files must provide an encoding= string"/>
             <Message Id="Scan_CouldNotOpenSource" Text="The primary document entity could not be opened. Id={0}"/>
@@ -240,11 +241,14 @@
             <Message Id="Strm_StdOutWriteFailure" Text="Could not write to standard out"/>
             <Message Id="Strm_ConWriteFailure" Text="Could not write to console"/>
             <Message Id="StrPool_IllegalId" Text="String pool id was not legal"/>
-            <Message Id="Trans_CouldNotXCodeXMLData" Text="The block of XML data could not be transcoded"/>
             <Message Id="Trans_CouldNotCreateDefCvtr" Text="Could not create a default transcoder"/>
             <Message Id="Trans_InvalidSizeReq" Text="The maximum size to xlat is larger than the declared block size"/>
-            <Message Id="Trans_Unrepresentable" Text="Got an representable code point for encoding {0}"/>
-            <Message Id="Trans_NotInSourceSet" Text="A source character was not in the code point set for encoding {0}"/>
+            <Message Id="Trans_Unrepresentable" Text="Unicode char {0} is representable in encoding {1}"/>
+            <Message Id="Trans_NotValidForEncoding" Text="Character {0} is not valid for encoding {1}"/>
+            <Message Id="Trans_BadBlockSize" Text="The requested block size is not equal to the size set during construction"/>
+            <Message Id="Trans_BadSrcSeq" Text="An invalid multi-byte source text sequence was encountered"/>
+            <Message Id="Trans_BadSrcCP" Text="{0} is not a valid value for encoding {1}"/>
+            <Message Id="Trans_BadTrailingSurrogate" Text="Leading surrogate was not followed by trailing"/>
             <Message Id="URL_MalformedURL" Text="The URL was not correctly formed"/>
             <Message Id="URL_UnsupportedProto" Text="The URL used an unsupported protocol"/>
             <Message Id="URL_UnsupportedProto1" Text="Unsupported URL protocol: '{0}'"/>
@@ -253,6 +257,8 @@
             <Message Id="URL_ExpectingTwoSlashes" Text="Expected // after protocol"/>
             <Message Id="URL_IncorrectEscapedCharRef" Text="% must be followed by two hex digits"/>
             <Message Id="URL_UnterminatedHostComponent" Text="Unterminated host component"/>
+            <Message Id="URL_RelativeBaseURL" Text="The base part of the URL cannot be relative"/>
+            <Message Id="URL_BaseUnderflow" Text="The base part has too few levels to weave in relative part"/>
             <Message Id="Vector_BadIndex" Text="The passed index is past the end of the vector"/>
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
             <Message Id="Val_CantHaveIntSS" Text="When reusing the validator, no internal subset is allowed"/>

@@ -86,42 +86,13 @@ XMLUTF16Transcoder::~XMLUTF16Transcoder()
 // ---------------------------------------------------------------------------
 //  XMLUTF16Transcoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-bool XMLUTF16Transcoder::supportsSrcOfs() const
-{
-    // Yes we support this
-    return true;
-}
-
-
-XMLCh
-XMLUTF16Transcoder::transcodeOne(const  XMLByte* const  srcData
-                                , const unsigned int    srcBytes
-                                ,       unsigned int&   bytesEaten)
-{
-    // If not enough source bytes, return zero
-    if (srcBytes < sizeof(UTF16Ch))
-        return 0;
-
-    // We are going to eat one UTF16 char's worth of bytes
-    bytesEaten = sizeof(UTF16Ch);
-
-    // Get the byte out and swap it if needed
-    UTF16Ch nextCh = *((const UTF16Ch*)srcData);
-    if (fSwapped)
-        nextCh = BitOps::swapBytes(nextCh);
-
-    // And return the value, cast to an XMLCh
-    return XMLCh(nextCh);
-}
-
-
 unsigned int
-XMLUTF16Transcoder::transcodeXML(const  XMLByte* const          srcData
-                                , const unsigned int            srcCount
-                                ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten
-                                ,       unsigned char* const    charSizes)
+XMLUTF16Transcoder::transcodeFrom(  const   XMLByte* const       srcData
+                                    , const unsigned int         srcCount
+                                    ,       XMLCh* const         toFill
+                                    , const unsigned int         maxChars
+                                    ,       unsigned int&        bytesEaten
+                                    ,       unsigned char* const charSizes)
 {
     // If debugging, make sure that the block size is legal
     #if defined(XERCES_DEBUG)
@@ -138,6 +109,9 @@ XMLUTF16Transcoder::transcodeXML(const  XMLByte* const          srcData
     // Look at the source data as UTF16 chars
     const UTF16Ch* asUTF16 = (const UTF16Ch*)srcData;
 
+    // And get a mutable pointer to the output
+    XMLCh* outPtr = toFill;
+
     //
     //  If its swapped, we have to do a char by char swap and cast. Else
     //  we have to check whether our XMLCh and UTF16Ch types are the same
@@ -148,10 +122,10 @@ XMLUTF16Transcoder::transcodeXML(const  XMLByte* const          srcData
         //
         //  And then do the swapping loop for the count we precalculated. Note
         //  that this also handles size conversion as well if XMLCh is not the
-        //  same size as UTF16Char.
+        //  same size as UTF16Ch.
         //
         for (unsigned int index = 0; index < countToDo; index++)
-            toFill[index] = BitOps::swapBytes(*asUTF16++);
+            *outPtr++ = BitOps::swapBytes(*asUTF16++);
     }
      else
     {
@@ -170,7 +144,7 @@ XMLUTF16Transcoder::transcodeXML(const  XMLByte* const          srcData
          else
         {
             for (unsigned int index = 0; index < countToDo; index++)
-                toFill[index] = XMLCh(*asUTF16++);
+                *outPtr++ = XMLCh(*asUTF16++);
         }
     }
 
@@ -182,4 +156,85 @@ XMLUTF16Transcoder::transcodeXML(const  XMLByte* const          srcData
 
     // Return the chars we transcoded
     return countToDo;
+}
+
+
+unsigned int
+XMLUTF16Transcoder::transcodeTo(const   XMLCh* const    srcData
+                                , const unsigned int    srcCount
+                                ,       XMLByte* const  toFill
+                                , const unsigned int    maxBytes
+                                ,       unsigned int&   charsEaten
+                                , const UnRepOpts       options)
+{
+    // If debugging, make sure that the block size is legal
+    #if defined(XERCES_DEBUG)
+    checkBlockSize(maxBytes);
+    #endif
+
+    //
+    //  Calculate the max chars we can do here. Its the lesser of the
+    //  chars that we can fit into the output buffer, and the source
+    //  chars available.
+    //
+    const unsigned int maxOutChars = maxBytes / sizeof(UTF16Ch);
+    const unsigned int countToDo = srcCount < maxOutChars ? srcCount : maxOutChars;
+
+    //
+    //  Get a pointer tot he output buffer in the UTF-16 character format
+    //  that we need to work with. And get a mutable pointer to the source
+    //  character buffer.
+    //
+    UTF16Ch*        outPtr = (UTF16Ch*)toFill;
+    const XMLCh*    srcPtr = srcData;
+
+    //
+    //  If the target format is swapped from our native format, then handle
+    //  it one way, else handle it another.
+    //
+    if (fSwapped)
+    {
+        //
+        //  And then do the swapping loop for the count we precalculated. Note
+        //  that this also handles size conversion as well if XMLCh is not the
+        //  same size as UTF16Ch.
+        //
+        for (unsigned int index = 0; index < countToDo; index++)
+        {
+            // To avoid flakey compilers, use a temp
+            const UTF16Ch tmpCh = UTF16Ch(*srcPtr++);
+            *outPtr++ = BitOps::swapBytes(tmpCh);
+        }
+    }
+     else
+    {
+        //
+        //  If XMLCh and UTF16Ch are the same size, we can just do a fast
+        //  memory copy. Otherwise, we have to do a loop and downcast each
+        //  character into its new 16 bit storage.
+        //
+        if (sizeof(XMLCh) == sizeof(UTF16Ch))
+        {
+            //  Notice we convert char count to byte count here!!!
+            memcpy(toFill, srcData, countToDo * sizeof(UTF16Ch));
+        }
+         else
+        {
+            for (unsigned int index = 0; index < countToDo; index++)
+                *outPtr++ = UTF16Ch(*srcPtr++);
+        }
+    }
+
+    // Set the chars eaten to the calculated number we ate
+    charsEaten = countToDo;
+
+    //Return the bytes we ate. Note we convert to a byte count here!
+    return countToDo * sizeof(UTF16Ch);
+}
+
+
+bool XMLUTF16Transcoder::canTranscodeTo(const unsigned int toCheck) const
+{
+    // We can handle anything
+    return true;
 }

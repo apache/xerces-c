@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/03/18 00:00:04  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.1  2000/03/08 23:40:37  roddey
  * Oops, I think I forgot to commit this new file
  *
@@ -293,7 +296,12 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
 // ---------------------------------------------------------------------------
 void Win32TransService::initCPMap()
 {
-    // Open up the registry key that contains the info we want
+    //
+    //  Open up the registry key that contains the info we want. Note that,
+    //  if this key does not exist, then we just return. It will just mean
+    //  that we don't have any support except for intrinsic encodings supported
+    //  by the parser itself (and the LCP support of course.
+    //
     HKEY charsetKey;
     if (::RegOpenKeyExA
     (
@@ -303,7 +311,7 @@ void Win32TransService::initCPMap()
         , KEY_READ
         , &charsetKey))
     {
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+        return;
     }
 
     //

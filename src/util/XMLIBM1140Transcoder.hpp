@@ -58,7 +58,7 @@
 #define XMLIBM1140TRANSCODER_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/TransService.hpp>
+#include <util/XML256TableTranscoder.hpp>
 
 
 //
@@ -69,7 +69,7 @@
 //  transcoders using the same transcoder abstraction as the pluggable
 //  transcoding services do.
 //
-class XMLUTIL_EXPORT XMLIBM1140Transcoder : public XMLTranscoder
+class XMLUTIL_EXPORT XMLIBM1140Transcoder : public XML256TableTranscoder
 {
 public :
     // -----------------------------------------------------------------------
@@ -90,33 +90,11 @@ public :
     virtual ~XMLIBM1140Transcoder();
 
 
-    // -----------------------------------------------------------------------
-    //  Implementation of the XMLTranscoder interface
-    // -----------------------------------------------------------------------
-    virtual bool supportsSrcOfs() const;
-
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
-    (
-        const   XMLByte* const          srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
-        ,       unsigned char* const    charSizes
-    );
-
-
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
+    XMLIBM1140Transcoder();
     XMLIBM1140Transcoder(const XMLIBM1140Transcoder&);
     void operator=(const XMLIBM1140Transcoder&);
 };

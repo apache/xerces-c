@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/03/17 23:59:55  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.8  2000/03/02 19:54:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -675,10 +678,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
 {
     // The base URL cannot be relative
     if (baseURL.isRelative())
-    {
-        // <TBD> Add an error for this
-        // ThrowXML(MalformedURLException, XMLExcepts::URL_BaseWasRelative);
-    }
+        ThrowXML(MalformedURLException, XMLExcepts::URL_RelativeBaseURL);
 
     //
     //  Check a special case. If all we have is a fragment, then we want
@@ -1093,11 +1093,9 @@ void XMLURL::weavePaths(const XMLCh* const basePart)
                 basePtr--;
             }
 
+            // There are not enough levels to handle all the .. parts
             if (basePtr < basePart)
-            {
-                // The base cannot provide enough levels, so its in error
-                // <TBD>
-            }
+                ThrowXML(MalformedURLException, XMLExcepts::URL_BaseUnderflow);
         }
     }
 

@@ -88,16 +88,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the XMLTranscoder interface
     // -----------------------------------------------------------------------
-    virtual bool supportsSrcOfs() const;
-
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
+    virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
         , const unsigned int            srcCount
@@ -106,6 +97,21 @@ public :
         ,       unsigned int&           bytesEaten
         ,       unsigned char* const    charSizes
     );
+
+    virtual unsigned int transcodeTo
+    (
+        const   XMLCh* const    srcData
+        , const unsigned int    srcCount
+        ,       XMLByte* const  toFill
+        , const unsigned int    maxBytes
+        ,       unsigned int&   charsEaten
+        , const UnRepOpts       options
+    );
+
+    virtual bool canTranscodeTo
+    (
+        const   unsigned int    toCheck
+    )   const;
 
 
 private :
@@ -119,16 +125,10 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fSpareCh
-    //      If we decode a surrogate pair, and only have space for one of
-    //      the values in the output, then we have to store the trailing
-    //      value until the next time.
-    //
     //  fSwapped
     //      This tells us if our input is going to be in the same endianess
     //      as the local host or swapped.
     // -----------------------------------------------------------------------
-    XMLCh   fSpareCh;
     bool    fSwapped;
 };
 

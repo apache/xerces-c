@@ -58,7 +58,7 @@
 #define XMLEBCDICTRANSCODER_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/TransService.hpp>
+#include <util/XML256TableTranscoder.hpp>
 
 
 //
@@ -71,7 +71,7 @@
 //
 //  EBCDIC-US is the same as IBM037, CP37, EBCDIC-CP-US, etc...
 //
-class XMLUTIL_EXPORT XMLEBCDICTranscoder : public XMLTranscoder
+class XMLUTIL_EXPORT XMLEBCDICTranscoder : public XML256TableTranscoder
 {
 public :
     // -----------------------------------------------------------------------
@@ -92,33 +92,11 @@ public :
     virtual ~XMLEBCDICTranscoder();
 
 
-    // -----------------------------------------------------------------------
-    //  Implementation of the XMLTranscoder interface
-    // -----------------------------------------------------------------------
-    virtual bool supportsSrcOfs() const;
-
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
-    (
-        const   XMLByte* const          srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
-        ,       unsigned char* const    charSizes
-    );
-
-
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
+    XMLEBCDICTranscoder();
     XMLEBCDICTranscoder(const XMLEBCDICTranscoder&);
     void operator=(const XMLEBCDICTranscoder&);
 };

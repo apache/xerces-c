@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/03/18 00:00:03  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.15  2000/03/02 19:55:34  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -148,9 +151,13 @@ static const XMLCh gMyServiceId[] =
 //  When XMLCh and ICU's UChar are not the same size, we have to do a temp
 //  conversion of all strings. These local helper methods make that easier.
 //
-static UChar* convertToUChar(const XMLCh* const toConvert)
+static UChar* convertToUChar(   const   XMLCh* const    toConvert
+                                , const unsigned int    srcLen = 0)
 {
-    UChar* tmpBuf = new UChar[XMLString::stringLen(toConvert) + 1];
+    const unsigned int actualLen = srcLen
+                                   ? srcLen : XMLString::stringLen(toConvert);
+
+    UChar* tmpBuf = new UChar[srcLen + 1];
     const XMLCh* srcPtr = toConvert;
     UChar* outPtr = tmpBuf;
     while (*srcPtr)
@@ -400,36 +407,8 @@ ICUTranscoder::~ICUTranscoder()
 // ---------------------------------------------------------------------------
 //  ICUTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-XMLCh ICUTranscoder::transcodeOne(  const   XMLByte* const  srcData
-                                    , const unsigned int    srcBytes
-                                    ,       unsigned int&   bytesEaten)
-{
-    // Check for stupid stuff
-    if (!srcBytes)
-        return 0;
-
-    UErrorCode err = U_ZERO_ERROR;
-    const XMLByte* startSrc = srcData;
-    const UChar chRet = ucnv_getNextUChar
-    (
-        fConverter
-        , (const char**)&startSrc
-        , (const char*)((srcData + srcBytes) - 1)
-        , &err
-    );
-
-    // Bail out if an error
-    if (U_FAILURE(err))
-        return 0;
-
-    // Calculate the bytes eaten and return the char
-    bytesEaten = startSrc - srcData;
-    return XMLCh(chRet);
-}
-
-
 unsigned int
-ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
+ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
                             , const unsigned int            srcCount
                             ,       XMLCh* const            toFill
                             , const unsigned int            maxChars
@@ -441,7 +420,7 @@ ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
     checkBlockSize(maxChars);
     #endif
 
-    // Set up pointers to the source buffers
+    // Set up pointers to the start and end of the source buffer
     const XMLByte*  startSrc = srcData;
     const XMLByte*  endSrc = srcData + srcCount;
 
@@ -478,7 +457,23 @@ ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
     {
         if (orgTarget != (UChar*)toFill)
             delete [] orgTarget;
-        ThrowXML(TranscodingException, XMLExcepts::Trans_CouldNotXCodeXMLData);
+
+        if (fFixed)
+        {
+            XMLCh tmpBuf[16];
+            XMLString::binToText((unsigned int)(*startTarget), tmpBuf, 16, 16);
+            ThrowXML2
+            (
+                TranscodingException
+                , XMLExcepts::Trans_BadSrcCP
+                , tmpBuf
+                , getEncodingName()
+            );
+        }
+         else            
+        {
+            ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+        }
     }
 
     // Calculate the bytes eaten and store in caller's param
@@ -541,6 +536,112 @@ ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
     return charsDecoded;
 }
 
+
+unsigned int
+ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
+                            , const unsigned int    srcCount
+                            ,       XMLByte* const  toFill
+                            , const unsigned int    maxBytes
+                            ,       unsigned int&   charsEaten
+                            , const UnRepOpts       options)
+{
+    //
+    //  Get a pointer to the buffer to transcode. If UChar and XMLCh are
+    //  the same size here, then use the original. Else, create a temp
+    //  one and put a janitor on it.
+    //
+    const UChar* srcPtr;
+    UChar* tmpBufPtr = 0;
+    if (sizeof(XMLCh) == sizeof(UChar))
+    {
+        srcPtr = (const UChar*)srcData;
+    }
+     else
+    {
+        tmpBufPtr = convertToUChar(srcData, srcCount);
+        srcPtr = tmpBufPtr;
+    }
+    ArrayJanitor<UChar> janTmpBuf(tmpBufPtr);
+
+    //
+    //  Ok, lets transcode as many chars as we we can in one shot. The
+    //  ICU API gives enough info not to have to do this one char by char.
+    //
+    UErrorCode  err = U_ZERO_ERROR;
+    XMLByte*        startTarget = toFill;
+    const UChar*    startSrc = srcPtr;
+    ucnv_fromUnicode
+    (
+        fConverter
+        , (char**)&startTarget
+        , (char*)(startTarget + maxBytes)
+        , &startSrc
+        , srcPtr + srcCount
+        , 0
+        , false
+        , &err
+    );
+
+    //
+    // <TBD>
+    //  This is really right yet. We need to differentiate between
+    //  just an error and the use of a replacement char.
+    //
+    if (err != U_ZERO_ERROR)
+    {
+    }
+
+    // Fill in the chars we ate from the input
+    charsEaten = startSrc - srcPtr;
+
+    // Return the chars we stored
+    return startTarget - toFill;
+}
+
+
+bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
+{
+    //
+    //  If the passed value is really a surrogate embedded together, then
+    //  we need to break it out into its two chars. Else just one. While
+    //  we are ate it, convert them to UChar format if required.
+    //
+    UChar           srcBuf[2];
+    unsigned int    srcCount = 1;
+    if (toCheck & 0xFFFF0000)
+    {
+        srcBuf[0] = UChar((toCheck >> 10) + 0xD800);
+        srcBuf[1] = UChar(toCheck & 0x3FF) + 0xDC00;
+        srcCount++;
+    }
+     else
+    {
+        srcBuf[0] = UChar(toCheck);
+    }
+
+    char tmpBuf[64];
+
+
+    UErrorCode  err = U_ZERO_ERROR;
+    char*           startTarget = tmpBuf;
+    const UChar*    startSrc = srcBuf;
+    ucnv_fromUnicode
+    (
+        fConverter
+        , &startTarget
+        , startTarget + 64
+        , &startSrc
+        , srcBuf + srcCount
+        , 0
+        , false
+        , &err
+    );
+
+    if (err != U_ZERO_ERROR)
+        return false;
+
+    return true;
+}
 
 
 
@@ -700,8 +801,9 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
     retBuf = new char[targetLen + 1];
 
     //
-    //  Lock now while we call the converter. Use a faux block to dot he
+    //  Lock now while we call the converter. Use a faux block to do the
     //  lock so that it unlocks immediately afterwards.
+    //
     UErrorCode err = U_ZERO_ERROR;
     int32_t targetCap;
     {
@@ -870,6 +972,10 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
     else
         targetBuf = new UChar[maxChars + 1];
 
+    //
+    //  Use a faux block to enforce a lock on the converter, which will
+    //  unlock immediately after its completed.
+    //
     UErrorCode err = U_ZERO_ERROR;
     {
         XMLMutexLock lockConverter(&fMutex);
@@ -945,6 +1051,10 @@ bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
     // Insure that the temp buffer, if any, gets cleaned up via the nc pointer
     ArrayJanitor<UChar> janTmp(ncActual);
 
+    //
+    //  Use a faux block to enforce a lock on the converter while we do this.
+    //  It will be released immediately after its done.
+    //
     UErrorCode err = U_ZERO_ERROR;
     int32_t targetCap;
     {

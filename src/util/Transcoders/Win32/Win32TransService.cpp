@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/18 00:00:04  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.10  2000/03/07 23:45:36  roddey
  * First cut for additions to Win32 xcode. Based very loosely on a
  * prototype from Eric Ulevik.
@@ -107,6 +110,7 @@
 // ---------------------------------------------------------------------------
 #include <util/TranscodingException.hpp>
 #include <util/XMLException.hpp>
+#include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 #include "Win32TransService.hpp"
 #include <windows.h>
@@ -212,39 +216,8 @@ Win32Transcoder::~Win32Transcoder()
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-XMLCh Win32Transcoder::transcodeOne(const   XMLByte* const  srcData
-                                    , const unsigned int    srcBytes
-                                    ,       unsigned int&   bytesEaten)
-{
-    // See how many bytes we'll need for one wide char
-    const unsigned int toEat = ::IsDBCSLeadByteEx(fWinCP, *srcData) ? 2 : 1;
-
-    // Make sure we have this many bytes. If not, return a failure
-    if (toEat > srcBytes)
-        return 0;
-
-    // We have enough bytes, so try to do it
-    XMLCh outCh;
-    if (::MultiByteToWideChar
-    (
-        fWinCP
-        , MB_PRECOMPOSED | MB_ERR_INVALID_CHARS
-        , (const char*)srcData
-        , toEat
-        , &outCh
-        , 1) != 1)
-    {
-        ThrowXML(TranscodingException, XMLExcepts::Trans_CouldNotXCodeXMLData);
-    }
-
-    // Indicate the bytes eaten and return the char we got
-    bytesEaten = toEat;
-    return outCh;
-}
-
-
 unsigned int
-Win32Transcoder::transcodeXML(  const   XMLByte* const      srcData
+Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
                                 , const unsigned int        srcCount
                                 ,       XMLCh* const        toFill
                                 , const unsigned int        maxChars
@@ -291,8 +264,22 @@ Win32Transcoder::transcodeXML(  const   XMLByte* const      srcData
 
         if (converted != 1)
         {
-            DWORD err = ::GetLastError();
-            ThrowXML(TranscodingException, XMLExcepts::Trans_CouldNotXCodeXMLData);
+            if (toEat == 1)
+            {
+                XMLCh tmpBuf[16];
+                XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16);
+                ThrowXML
+                (
+                    TranscodingException
+                    , XMLExcepts::Trans_BadSrcCP
+                    , tmpBuf
+                    , getEncodingName()
+                );
+            }
+             else            
+            {
+                ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+            }
         }
 
         // Update the char sizes array for this round
@@ -310,6 +297,123 @@ Win32Transcoder::transcodeXML(  const   XMLByte* const      srcData
     return (outPtr - toFill);
 }
 
+
+unsigned int
+Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
+                            , const unsigned int    srcCount
+                            ,       XMLByte* const  toFill
+                            , const unsigned int    maxBytes
+                            ,       unsigned int&   charsEaten
+                            , const UnRepOpts       options)
+{
+    // Get pointers to the start and end of each buffer
+    const XMLCh*    srcPtr = srcData;
+    const XMLCh*    srcEnd = srcData + srcCount;
+    XMLByte*        outPtr = toFill;
+    XMLByte*        outEnd = toFill + maxBytes;
+
+    //
+    //  Now loop until we either get our max chars, or cannot get a whole
+    //  character from the input buffer.
+    //
+    //  NOTE: We have to use a loop for this unfortunately because the
+    //  conversion API is too dumb to tell us how many chars it converted if
+    //  it couldn't do the whole source.
+    //
+    BOOL usedDef;
+    while ((outPtr < outEnd) && (srcPtr < srcEnd))
+    {
+        //
+        //  Do one char and see if it made it.
+        const unsigned int bytesStored = ::WideCharToMultiByte
+        (
+            fWinCP
+            , WC_COMPOSITECHECK | WC_SEPCHARS
+            , srcPtr
+            , 1
+            , (char*)outPtr
+            , outEnd - outPtr
+            , 0
+            , &usedDef
+        );
+
+        // If we didn't transcode anything, then we are done
+        if (!bytesStored)
+            break;
+
+        //
+        //  If the defaault char was used and the options indicate that
+        //  this isn't allowed, then throw.
+        //
+        if (usedDef && (options == UnRep_Throw))
+        {
+            XMLCh tmpBuf[16];
+            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
+            ThrowXML2
+            (
+                TranscodingException
+                , XMLExcepts::Trans_Unrepresentable
+                , tmpBuf
+                , getEncodingName()
+            );
+        }
+
+        // Update our pointers
+        outPtr += bytesStored;
+        srcPtr++;
+    }
+
+    // Update the chars eaten
+    charsEaten = srcPtr - srcData;
+
+    // And return the bytes we stored
+    return outPtr - toFill;
+}
+
+
+bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck) const
+{
+    //
+    //  If the passed value is really a surrogate embedded together, then
+    //  we need to break it out into its two chars. Else just one.
+    //
+    XMLCh           srcBuf[2];
+    unsigned int    srcCount = 1;
+    if (toCheck & 0xFFFF0000)
+    {
+        srcBuf[0] = XMLCh((toCheck >> 10) + 0xD800);
+        srcBuf[1] = XMLCh(toCheck & 0x3FF) + 0xDC00;
+        srcCount++;
+    }
+     else
+    {
+        srcBuf[0] = XMLCh(toCheck);
+    }
+
+    //
+    //  Use a local temp buffer that would hold any sane multi-byte char
+    //  sequence and try to transcode this guy into it.
+    //
+    char tmpBuf[64];
+
+    BOOL usedDef;
+    const unsigned int bytesStored = ::WideCharToMultiByte
+    (
+        fWinCP
+        , WC_COMPOSITECHECK | WC_SEPCHARS
+        , srcBuf
+        , srcCount
+        , tmpBuf
+        , 64
+        , 0
+        , &usedDef
+    );
+
+    if (!bytesStored || usedDef)
+        return false;
+
+    return true;
+}
 
 
 // ---------------------------------------------------------------------------

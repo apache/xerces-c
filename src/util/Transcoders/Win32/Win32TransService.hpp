@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/03/18 00:00:04  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.8  2000/03/07 23:45:36  roddey
  * First cut for additions to Win32 xcode. Based very loosely on a
  * prototype from Eric Ulevik.
@@ -179,14 +182,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
+    virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
         , const unsigned int            srcCount
@@ -195,6 +191,21 @@ public :
         ,       unsigned int&           bytesEaten
         ,       unsigned char* const    charSizes
     );
+
+    virtual unsigned int transcodeTo
+    (
+        const   XMLCh* const    srcData
+        , const unsigned int    srcCount
+        ,       XMLByte* const  toFill
+        , const unsigned int    maxBytes
+        ,       unsigned int&   charsEaten
+        , const UnRepOpts       options
+    );
+
+    virtual bool canTranscodeTo
+    (
+        const   unsigned int    toCheck
+    )   const;
 
 
 private :

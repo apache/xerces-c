@@ -173,77 +173,83 @@ $set 3
  15  The unary operation node had a binary node type
  16  Unknown content model type
  17  Unknown content spec type
- 18  The element stack is empty
- 19  The element stack index given was beyond the stack top
- 20  The element stack was already empty when a pop request occured
- 21  A parent operation was requested, but only one element is on the stack
- 22  The enumerator contains no more elements
- 23  Could not open file: {0}
- 24  Could not query the current file position
- 25  Could not close the file
- 26  Could not seek to end of file
- 27  Could not seek to required position in file
- 28  Could not duplicate the handle
- 29  Could not read data from file
- 30  Could not reset file to beginning
- 31  Could not acertain the file size
- 32  Could not determine base pathname of the file
- 33  Parse may not be called while parsing
- 34  A DOCTYPE was seen but the installed validator does not understand DTDs
- 35  Could not open DTD file '{0}'
- 36  Could not open external entity '{0}'
- 37  The end of input was not expected
- 38  The hash modulus cannot be zero
- 39  Hashing the key returned an invalid bad hash value
- 40  The key '{0}' could not be found in the hash table
- 41  Could not create mutex
- 42  Could not close mutex
- 43  Could not lock mutex
- 44  Could not unlock mutex
- 45  Could not destroy mutex
- 46  Error on {0} NetAccessor. Msg: {1}
- 47  The element {0} already exists
- 48  Hashing the key returned an invalid bad hash value
- 49  The passed id is not valid for this pool
- 50  The modulus value cannot be zero
- 51  The indicated reader id was never found
- 52  The auto encoding enum has an unknown value
- 53  Could not create a converter for encoding: {0}
- 54  Could not decode first line of entity: {0}
- 55  End of input was hit in the middle of a multibyte sequence
- 56  Invalid second byte of a UTF-8 character sequence
- 57  Invalid surrogate character found in UTF-8 data
- 58  The current transcoding service does not support source offset information
- 59  EBCDIC files must provide an encoding= string
- 60  The primary document entity could not be opened. Id={0}
- 61  Unbalanced start/end tags found, cannot continue
- 62  The call to scanNext() is illegal at this time
- 63  The index is past the top of stack
- 64  The stack is empty, cannot access members
- 65  The target buffer cannot have a max size of zero
- 66  The given radix is not supported. Use 2, 8, 10, or 16
- 67  The target buffer is too small to accept the results
- 68  The start index is past the end of the string
- 69  Could not write to standard err
- 70  Could not write to standard out
- 71  Could not write to console
- 72  String pool id was not legal
- 73  The block of XML data could not be transcoded
+ 18  The parent element has no content spec node
+ 19  The creation reason enum has an unknown value
+ 20  The element stack is empty
+ 21  The element stack index given was beyond the stack top
+ 22  The element stack was already empty when a pop request occured
+ 23  A parent operation was requested, but only one element is on the stack
+ 24  The enumerator contains no more elements
+ 25  Could not open file: {0}
+ 26  Could not query the current file position
+ 27  Could not close the file
+ 28  Could not seek to end of file
+ 29  Could not seek to required position in file
+ 30  Could not duplicate the handle
+ 31  Could not read data from file
+ 32  Could not reset file to beginning
+ 33  Could not acertain the file size
+ 34  Could not determine base pathname of the file
+ 35  The base path had too few levels to weave in relative part
+ 36  Parse may not be called while parsing
+ 37  A DOCTYPE was seen but the installed validator does not understand DTDs
+ 38  Could not open DTD file '{0}'
+ 39  Could not open external entity '{0}'
+ 40  The end of input was not expected
+ 41  The hash modulus cannot be zero
+ 42  Hashing the key returned an invalid bad hash value
+ 43  The key '{0}' could not be found in the hash table
+ 44  Could not create mutex
+ 45  Could not close mutex
+ 46  Could not lock mutex
+ 47  Could not unlock mutex
+ 48  Could not destroy mutex
+ 49  Error on {0} NetAccessor. Msg: {1}
+ 50  The element {0} already exists
+ 51  Hashing the key returned an invalid bad hash value
+ 52  The passed id is not valid for this pool
+ 53  The modulus value cannot be zero
+ 54  The indicated reader id was never found
+ 55  The auto encoding enum has an unknown value
+ 56  Could not create a converter for encoding: {0}
+ 57  Could not decode first line of entity: {0}
+ 58  End of input was hit in the middle of a multibyte sequence
+ 59  The current transcoding service does not support source offset information
+ 60  EBCDIC files must provide an encoding= string
+ 61  The primary document entity could not be opened. Id={0}
+ 62  Unbalanced start/end tags found, cannot continue
+ 63  The call to scanNext() is illegal at this time
+ 64  The index is past the top of stack
+ 65  The stack is empty, cannot access members
+ 66  The target buffer cannot have a max size of zero
+ 67  The given radix is not supported. Use 2, 8, 10, or 16
+ 68  The target buffer is too small to accept the results
+ 69  The start index is past the end of the string
+ 70  Could not write to standard err
+ 71  Could not write to standard out
+ 72  Could not write to console
+ 73  String pool id was not legal
  74  Could not create a default transcoder
  75  The maximum size to xlat is larger than the declared block size
- 76  Got an representable code point for encoding {0}
- 77  A source character was not in the code point set for encoding {0}
- 78  The URL was not correctly formed
- 79  The URL used an unsupported protocol
- 80  Unsupported URL protocol: '{0}'
- 81  Only localhost is supported at this time
- 82  No protocol prefix present
- 83  Expected // after protocol
- 84  % must be followed by two hex digits
- 85  Unterminated host component
- 86  The passed index is past the end of the vector
- 87  The element id was invalid
- 88  When reusing the validator, no internal subset is allowed
- 89  The passed recognizer encoding was not known
+ 76  Unicode char {0} is representable in encoding {1}
+ 77  Character {0} is not valid for encoding {1}
+ 78  The requested block size is not equal to the size set during construction
+ 79  An invalid multi-byte source text sequence was encountered
+ 80  {0} is not a valid value for encoding {1}
+ 81  Leading surrogate was not followed by trailing
+ 82  The URL was not correctly formed
+ 83  The URL used an unsupported protocol
+ 84  Unsupported URL protocol: '{0}'
+ 85  Only localhost is supported at this time
+ 86  No protocol prefix present
+ 87  Expected // after protocol
+ 88  % must be followed by two hex digits
+ 89  Unterminated host component
+ 90  The base part of the URL cannot be relative
+ 91  The base part has too few levels to weave in relative part
+ 92  The passed index is past the end of the vector
+ 93  The element id was invalid
+ 94  When reusing the validator, no internal subset is allowed
+ 95  The passed recognizer encoding was not known
 
 

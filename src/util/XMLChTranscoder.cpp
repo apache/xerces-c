@@ -83,32 +83,8 @@ XMLChTranscoder::~XMLChTranscoder()
 // ---------------------------------------------------------------------------
 //  XMLChTranscoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-bool XMLChTranscoder::supportsSrcOfs() const
-{
-    // Yes we support this
-    return true;
-}
-
-
-XMLCh
-XMLChTranscoder::transcodeOne(  const   XMLByte* const  srcData
-                                , const unsigned int    srcBytes
-                                ,       unsigned int&   bytesEaten)
-{
-    // If not enough source bytes, return zero
-    if (srcBytes < sizeof(XMLCh))
-        return 0;
-
-    // We are going to eat one XMLCh char's worth of bytes
-    bytesEaten = sizeof(XMLCh);
-
-    // Just cast the src bufer and deref the char currently there
-    return *((const XMLCh*)srcData);
-}
-
-
 unsigned int
-XMLChTranscoder::transcodeXML(  const   XMLByte* const          srcData
+XMLChTranscoder::transcodeFrom( const   XMLByte* const          srcData
                                 , const unsigned int            srcCount
                                 ,       XMLCh* const            toFill
                                 , const unsigned int            maxChars
@@ -141,4 +117,48 @@ XMLChTranscoder::transcodeXML(  const   XMLByte* const          srcData
 
     // Return the chars we transcoded
     return countToDo;
+}
+
+
+unsigned int
+XMLChTranscoder::transcodeTo(const  XMLCh* const    srcData
+                            , const unsigned int    srcCount
+                            ,       XMLByte* const  toFill
+                            , const unsigned int    maxBytes
+                            ,       unsigned int&   charsEaten
+                                , const UnRepOpts   options)
+{
+    // If debugging, make sure that the block size is legal
+    #if defined(XERCES_DEBUG)
+    checkBlockSize(maxBytes);
+    #endif
+
+    
+    //
+    //  Calculate the max chars we can do here. Its the lesser of the
+    //  max chars we can store in the output byte buffer, and the number
+    //  of chars in the source.
+    //
+    const unsigned int maxOutChars  = maxBytes / sizeof(XMLCh);
+    const unsigned int countToDo    = maxOutChars < srcCount
+                                    ? maxOutChars : srcCount;
+
+    //
+    //  Copy over the number of chars we calculated. Note that we have
+    //  to convert the char count to a byte count!!
+    //
+    memcpy(toFill, srcData, countToDo * sizeof(XMLCh));
+
+    // Set the chars eaten
+    charsEaten = countToDo;
+
+    // Return the bytes we transcoded
+    return countToDo * sizeof(XMLCh);
+}
+
+
+bool XMLChTranscoder::canTranscodeTo(const unsigned int toCheck) const
+{
+    // We can handle anything 
+    return true;
 }

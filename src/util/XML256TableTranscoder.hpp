@@ -54,39 +54,36 @@
  * <http://www.apache.org/>.
  */
 
-#ifndef XMLUTF16TRANSCODER_HPP
-#define XMLUTF16TRANSCODER_HPP
+/*
+ * $Log$
+ * Revision 1.1  2000/03/18 00:00:32  roddey
+ * Initial updates for two way transcoding support
+ *
+ */
 
-#include <util/XercesDefs.hpp>
+
+#ifndef XML256TABLETRANSCODER_HPP
+#define XML256TABLETRANSCODER_HPP
+
 #include <util/TransService.hpp>
 
-
 //
-//  This class provides an implementation of the XMLTranscoder interface
-//  for a simple UTF16 transcoder. The parser does some encodings
-//  intrinsically without depending upon external transcoding services.
-//  To make everything more orthagonal, we implement these internal
-//  transcoders using the same transcoder abstraction as the pluggable
-//  transcoding services do.
+//  This class implements the functionality of a common type of transcoder
+//  for an 8 bit, single byte encoding based on a set of 'to' and 'from'
+//  translation tables. Actual derived classes are trivial and just have to
+//  provide us with pointers to their tables and we do all the work.
 //
-class XMLUTIL_EXPORT XMLUTF16Transcoder : public XMLTranscoder
+class XMLUTIL_EXPORT XML256TableTranscoder : public XMLTranscoder
 {
 public :
     // -----------------------------------------------------------------------
     //  Public constructors and destructor
     // -----------------------------------------------------------------------
-    XMLUTF16Transcoder
-    (
-        const   XMLCh* const    encodingName
-        , const unsigned int    blockSize
-        , const bool            swapped
-    );
-
-    virtual ~XMLUTF16Transcoder();
+    virtual ~XML256TableTranscoder();
 
 
     // -----------------------------------------------------------------------
-    //  Implementation of the XMLTranscoder interface
+    //  The virtual transcoding interface
     // -----------------------------------------------------------------------
     virtual unsigned int transcodeFrom
     (
@@ -114,22 +111,74 @@ public :
     )   const;
 
 
+protected :
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    XML256TableTranscoder
+    (
+        const   XMLCh* const                        encodingName
+        , const unsigned int                        blockSize
+        , const XMLCh* const                        fromTable
+        , const XMLTransService::TransRec* const    toTable
+        , const unsigned int                        toTableSize
+    );
+
+
+    // -----------------------------------------------------------------------
+    //  Protected helper methods
+    // -----------------------------------------------------------------------
+    XMLByte xlatOneTo
+    (
+        const   XMLCh       toXlat
+    )   const;
+
+
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    XMLUTF16Transcoder(const XMLUTF16Transcoder&);
-    void operator=(const XMLUTF16Transcoder&);
+    XML256TableTranscoder();
+    XML256TableTranscoder(const XML256TableTranscoder&);
+    void operator=(const XML256TableTranscoder&);
 
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fSwapped
-    //      Indicates whether the encoding is of the opposite endianness from
-    //      the local host.
+    //  fFromTable
+    //      This is the 'from' table that we were given during construction.
+    //      It is a 256 entry table of XMLCh chars. Each entry is the
+    //      Unicode code point for the external encoding point of that value.
+    //      So fFromTable[N] is the Unicode translation of code point N of
+    //      the source encoding.
+    //
+    //      We don't own this table, we just refer to it. It is assumed that
+    //      the table is static, for performance reasons.
+    //
+    //  fToSize
+    //      The 'to' table is variable sized. This indicates how many records
+    //      are in it.
+    //
+    //  fToTable
+    //      This is a variable sized table of TransRec structures. It must
+    //      be sorted by the intCh field, i.e. the XMLCh field. It is searched
+    //      binarily to find the record for a particular Unicode char. Then
+    //      that record's extch field is the translation record.
+    //
+    //      We don't own this table, we just refer to it. It is assumed that
+    //      the table is static, for performance reasons.
+    //
+    //      NOTE: There may be dups of the extCh field, since there might be
+    //      multiple Unicode code points which map to the same external code
+    //      point. Normally this won't happen, since the parser assumes that
+    //      internalization is normalized, but we have to be prepared to do
+    //      the right thing if some client code gives us non-normalized data
+    //      itself.
     // -----------------------------------------------------------------------
-    bool    fSwapped;
+    const XMLCh*                        fFromTable;
+    unsigned int                        fToSize;
+    const XMLTransService::TransRec*    fToTable;
 };
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/18 00:00:03  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.9  2000/03/02 19:55:34  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -178,14 +181,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
+    virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
         , const unsigned int            srcCount
@@ -194,6 +190,22 @@ public :
         ,       unsigned int&           bytesEaten
         ,       unsigned char* const    charSizes
     );
+
+    virtual unsigned int transcodeTo
+    (
+        const   XMLCh* const    srcData
+        , const unsigned int    srcCount
+        ,       XMLByte* const  toFill
+        , const unsigned int    maxBytes
+        ,       unsigned int&   charsEaten
+        , const UnRepOpts       options
+    );
+
+    virtual bool canTranscodeTo
+    (
+        const   unsigned int    toCheck
+    )   const;
+
 
 
 private :

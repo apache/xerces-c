@@ -84,16 +84,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the XMLTranscoder interface
     // -----------------------------------------------------------------------
-    virtual bool supportsSrcOfs() const;
-
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
+    virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
         , const unsigned int            srcCount
@@ -102,6 +93,21 @@ public :
         ,       unsigned int&           bytesEaten
         ,       unsigned char* const    charSizes
     );
+
+    virtual unsigned int transcodeTo
+    (
+        const   XMLCh* const    srcData
+        , const unsigned int    srcCount
+        ,       XMLByte* const  toFill
+        , const unsigned int    maxBytes
+        ,       unsigned int&   charsEaten
+        , const UnRepOpts       options
+    );
+
+    virtual bool canTranscodeTo
+    (
+        const   unsigned int    toCheck
+    )   const;
 
 
 private :

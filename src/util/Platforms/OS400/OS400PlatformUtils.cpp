@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/18 00:00:01  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.2  2000/03/02 21:10:38  abagchi
  * Added empty function platformTerm()
  *
@@ -517,11 +520,9 @@ XMLCh* XMLPlatformUtils::weavePaths
                 basePtr--;
             }
 
+            // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-            {
-                // The base cannot provide enough levels, so its in error
-                // <TBD>
-            }
+                ThrowXML(PlatformUtilsException, File_BasePathUnderflow);
         }
     }
 

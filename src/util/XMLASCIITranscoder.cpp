@@ -84,46 +84,13 @@ XMLASCIITranscoder::~XMLASCIITranscoder()
 // ---------------------------------------------------------------------------
 //  XMLASCIITranscoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-bool XMLASCIITranscoder::supportsSrcOfs() const
-{
-    // Yes we support this
-    return true;
-}
-
-
-XMLCh
-XMLASCIITranscoder::transcodeOne(const  XMLByte* const  srcData
-                                , const unsigned int    srcBytes
-                                ,       unsigned int&   bytesEaten)
-{
-    // If no source, then give up
-    if (!srcBytes)
-        return 0;
-
-    // If the source char is invalid, then give up
-    if (*srcData > 0x7F)
-    {
-        ThrowXML1
-        (
-            TranscodingException
-            , XMLExcepts::Trans_NotInSourceSet
-            , XMLUni::fgUSASCIIEncodingString
-        );
-    }
-
-    // We eat one source byte and just cast the ASCII char to XMLCh
-    bytesEaten = 1;
-    return XMLCh(*srcData);
-}
-
-
 unsigned int
-XMLASCIITranscoder::transcodeXML(const  XMLByte* const          srcData
-                                , const unsigned int            srcCount
-                                ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten
-                                ,       unsigned char* const    charSizes)
+XMLASCIITranscoder::transcodeFrom(  const   XMLByte* const       srcData
+                                    , const unsigned int         srcCount
+                                    ,       XMLCh* const         toFill
+                                    , const unsigned int         maxChars
+                                    ,       unsigned int&        bytesEaten
+                                    ,       unsigned char* const charSizes)
 {
     // If debugging, make sure that the block size is legal
     #if defined(XERCES_DEBUG)
@@ -132,7 +99,7 @@ XMLASCIITranscoder::transcodeXML(const  XMLByte* const          srcData
 
     //
     //  Calculate the max chars we can do here. Its the lesser of the
-    //  max output chars and the source count.
+    //  max output chars and the source byte count.
     //
     const unsigned int countToDo = srcCount < maxChars ? srcCount : maxChars;
 
@@ -141,15 +108,15 @@ XMLASCIITranscoder::transcodeXML(const  XMLByte* const          srcData
     //  over to the XMLCh format. Check each source that its really a
     //  valid ASCI char.
     //
-    const XMLByte*  inPtr = srcData;
+    const XMLByte*  srcPtr = srcData;
     XMLCh*          outPtr = toFill;
     unsigned int    countDone = 0;
     for (; countDone < countToDo; countDone++)
     {
         // Do the optimistic work up front
-        if (*inPtr < 0x80)
+        if (*srcPtr < 0x80)
         {
-            *outPtr++ = XMLCh(*inPtr++);
+            *outPtr++ = XMLCh(*srcPtr++);
             continue;
         }
 
@@ -161,11 +128,14 @@ XMLASCIITranscoder::transcodeXML(const  XMLByte* const          srcData
         if (countDone > 32)
             break;
 
-        ThrowXML1
+        XMLCh tmpBuf[16];
+        XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
+        ThrowXML2
         (
             TranscodingException
-            , XMLExcepts::Trans_NotInSourceSet
-            , XMLUni::fgUSASCIIEncodingString
+            , XMLExcepts::Trans_Unrepresentable
+            , tmpBuf
+            , getEncodingName()
         );
     }
 
@@ -177,4 +147,69 @@ XMLASCIITranscoder::transcodeXML(const  XMLByte* const          srcData
 
     // Return the chars we transcoded
     return countDone;
+}
+
+
+unsigned int
+XMLASCIITranscoder::transcodeTo(const   XMLCh* const    srcData
+                                , const unsigned int    srcCount
+                                ,       XMLByte* const  toFill
+                                , const unsigned int    maxBytes
+                                ,       unsigned int&   charsEaten
+                                , const UnRepOpts       options)
+{
+    // If debugging, make sure that the block size is legal
+    #if defined(XERCES_DEBUG)
+    checkBlockSize(maxBytes);
+    #endif
+
+    //
+    //  Calculate the max chars we can do here. Its the lesser of the
+    //  max output chars and the source byte count.
+    //
+    const unsigned int countToDo = srcCount < maxBytes ? srcCount : maxBytes;
+
+    const XMLCh*    srcPtr = srcData;
+    XMLByte*        outPtr = toFill;
+    for (unsigned int index; index < countToDo; index++)
+    {
+        // If its legal, do it and jump back to the top
+        if (*srcPtr < 0x80)
+        {
+            *outPtr++ = XMLByte(*srcPtr++);
+            continue;
+        }
+
+        //
+        //  Its not representable so use a replacement char. According to
+        //  the options, either throw or use the replacement.
+        //
+        if (options == UnRep_Throw)
+        {
+            XMLCh tmpBuf[16];
+            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
+            ThrowXML2
+            (
+                TranscodingException
+                , XMLExcepts::Trans_Unrepresentable
+                , tmpBuf
+                , getEncodingName()
+            );
+        }
+
+        // Use the replacement char
+        *outPtr++ = 0x1A;
+    }
+
+    // Set the chars we ate
+    charsEaten = countToDo;
+
+    // Return the byte we transcoded
+    return countToDo;
+}
+
+
+bool XMLASCIITranscoder::canTranscodeTo(const unsigned int toCheck) const
+{
+    return (toCheck < 0x80);
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/18 00:00:05  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.6  2000/03/03 01:29:35  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -842,7 +845,7 @@ void DTDValidator::scanDTD(const bool reuseValidator)
                 else
                 {
                     #if defined(XERCES_DEBUG)
-                    // <TBD> Should throw here
+                    ThrowXML(RuntimeException, XMLExcepts::DTD_UnknownCreateReason);
                     #endif
                 }
             }

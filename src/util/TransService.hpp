@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/03/17 23:59:54  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.8  2000/03/02 19:54:46  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -126,6 +129,12 @@ public :
         , UnsupportedEncoding
         , InternalFailure
         , SupportFilesNotFound
+    };
+
+    struct TransRec
+    {
+        XMLCh       intCh;
+        XMLByte     extCh;
     };
 
 
@@ -209,26 +218,32 @@ private :
 
 
 //
-//  There are two levels of transcoding required by the parser system. One
-//  is used for transcoding raw binary data from XML source into the 
-//  internalized Unicode format. These also always take an encoding name
-//  and are intended to work for arbritrary encodings.
-//
-//  The other level of transcoding involves transcoding to and from the
-//  local code page. These are used more generally throughout the system
-//  to make XMLCh data displayable on the local host, or to internalize
-//  local code page strings passed into the parser from client code. These
-//  don't take an encoding name, but are just created by the transcoding
-//  service for the appopriate local code page encoding.
-//
-//  The basic level of transcoding is implemented in XMLTranscoder. The
-//  local code version is implemented in XMLLCPTranscoder. The purpose of
-//  this distinction is that there are a set of intrinsically supported
-//  encodings which only want to implement the basic transcoding interface.
+//  This type of transcoder is for non-local code page encodings, i.e.
+//  named encodings. These are used internally by the scanner to internalize
+//  raw XML into the internal Unicode format, and by writer classes to
+//  convert that internal Unicode format (which comes out of the parser)
+//  back out to a format that the receiving client code wants to use.
 //
 class XMLUTIL_EXPORT XMLTranscoder
 {
 public :
+    // -----------------------------------------------------------------------
+    //  This enum is used by the transcodeTo() method to indicate how to
+    //  react to unrepresentable characters. The transcodeFrom() method always
+    //  works the same. It will consider any invalid data to be an error and
+    //  throw.
+    //
+    //  The options mean:
+    //      Throw   - Throw an exception
+    //      RepChar - Use the replacement char
+    // -----------------------------------------------------------------------
+    enum UnRepOpts
+    {
+        UnRep_Throw
+        , UnRep_RepChar
+    };
+
+
     // -----------------------------------------------------------------------
     //  Public constructors and destructor
     // -----------------------------------------------------------------------
@@ -238,14 +253,7 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual transcoding interface
     // -----------------------------------------------------------------------
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    ) = 0;
-
-    virtual unsigned int transcodeXML
+    virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
         , const unsigned int            srcCount
@@ -254,6 +262,21 @@ public :
         ,       unsigned int&           bytesEaten
         ,       unsigned char* const    charSizes
     ) = 0;
+
+    virtual unsigned int transcodeTo
+    (
+        const   XMLCh* const    srcData
+        , const unsigned int    srcCount
+        ,       XMLByte* const  toFill
+        , const unsigned int    maxBytes
+        ,       unsigned int&   charsEaten
+        , const UnRepOpts       options
+    ) = 0;
+
+    virtual bool canTranscodeTo
+    (
+        const   unsigned int    toCheck
+    )   const = 0;
 
 
     // -----------------------------------------------------------------------
@@ -307,6 +330,12 @@ private :
 };
 
 
+//
+//  This class is a specialized transcoder that only transcodes between
+//  the internal XMLCh format and the local code page. It is specialized
+//  for the very common job of translating data from the client app's
+//  native code page to the internal format and vice versa.
+//
 class XMLUTIL_EXPORT XMLLCPTranscoder
 {
 public :

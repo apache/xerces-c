@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/17 23:59:53  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.10  2000/03/02 19:54:29  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -1694,9 +1697,9 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
             return 0;
     }
 
-    // Ask the transcoder to do another batch
+    // Ask the transcoder to internalize another batch of chars
     unsigned int bytesEaten;
-    const unsigned int charsDone = fTranscoder->transcodeXML
+    const unsigned int charsDone = fTranscoder->transcodeFrom
     (
         &fRawByteBuf[fRawBufIndex]
         , fRawBytesAvail - fRawBufIndex

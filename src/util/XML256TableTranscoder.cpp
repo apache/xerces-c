@@ -58,34 +58,29 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/BitOps.hpp>
 #include <util/TranscodingException.hpp>
-#include <util/XML88591Transcoder.hpp>
+#include <util/XML256TableTranscoder.hpp>
 #include <util/XMLString.hpp>
 #include <memory.h>
 
 
 
+
 // ---------------------------------------------------------------------------
-//  XML88591Transcoder: Constructors and Destructor
+//  XML256TableTranscoder: Public Destructor
 // ---------------------------------------------------------------------------
-XML88591Transcoder::XML88591Transcoder( const   XMLCh* const    encodingName
-                                        , const unsigned int    blockSize) :
-
-    XMLTranscoder(encodingName, blockSize)
+XML256TableTranscoder::~XML256TableTranscoder()
 {
-}
-
-
-XML88591Transcoder::~XML88591Transcoder()
-{
+    // We don't own the tables, we just reference them
 }
 
 
 // ---------------------------------------------------------------------------
-//  XML88591Transcoder: Implementation of the transcoder API
+//  XML256TableTranscoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
 unsigned int
-XML88591Transcoder::transcodeFrom(  const   XMLByte* const       srcData
+XML256TableTranscoder::transcodeFrom(const  XMLByte* const       srcData
                                     , const unsigned int         srcCount
                                     ,       XMLCh* const         toFill
                                     , const unsigned int         maxChars
@@ -99,22 +94,32 @@ XML88591Transcoder::transcodeFrom(  const   XMLByte* const       srcData
 
     //
     //  Calculate the max chars we can do here. Its the lesser of the
-    //  max output chars and the number of bytes in the source.
+    //  max output chars and the number of chars in the source.
     //
     const unsigned int countToDo = srcCount < maxChars ? srcCount : maxChars;
 
     //
-    //  Loop through the bytes to do and convert over each byte. Its just
-    //  a cast to the wide char type.
+    //  Loop through the count we have to do and map each char via the
+    //  lookup table.
     //
     const XMLByte*  srcPtr = srcData;
-    XMLCh*          destPtr = toFill;
-    const XMLByte*  srcEnd = srcPtr + countToDo;
-    while (srcPtr < srcEnd)
-        *destPtr++ = XMLCh(*srcPtr++);
+    const XMLByte*  endPtr = (srcPtr + countToDo);
+    XMLCh*          outPtr = toFill;
+    while (srcPtr < endPtr)
+    {
+        const XMLCh uniCh = fFromTable[*srcPtr++];
+        if (uniCh != 0xFFFF)
+        {
+            *outPtr++ = uniCh;
+            continue;
+        }
+    }
 
-    // Set the bytes eaten, and set the char size array to the fixed size
+
+    // Set the bytes eaten
     bytesEaten = countToDo;
+
+    // Set the character sizes to the fixed size
     memset(charSizes, 1, countToDo);
 
     // Return the chars we transcoded
@@ -123,12 +128,12 @@ XML88591Transcoder::transcodeFrom(  const   XMLByte* const       srcData
 
 
 unsigned int
-XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
-                                , const unsigned int    srcCount
-                                ,       XMLByte* const  toFill
-                                , const unsigned int    maxBytes
-                                ,       unsigned int&   charsEaten
-                                , const UnRepOpts       options)
+XML256TableTranscoder::transcodeTo( const   XMLCh* const    srcData
+                                    , const unsigned int    srcCount
+                                    ,       XMLByte* const  toFill
+                                    , const unsigned int    maxBytes
+                                    ,       unsigned int&   charsEaten
+                                    , const UnRepOpts       options)
 {
     // If debugging, make sure that the block size is legal
     #if defined(XERCES_DEBUG)
@@ -137,29 +142,34 @@ XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
 
     //
     //  Calculate the max chars we can do here. Its the lesser of the
-    //  max output bytes and the number of chars in the source.
+    //  max output chars and the number of chars in the source.
     //
     const unsigned int countToDo = srcCount < maxBytes ? srcCount : maxBytes;
 
     //
-    //  Loop through the bytes to do and convert over each byte. Its just
-    //  a downcast of the wide char, checking for unrepresentable chars.
+    //  Loop through the count we have to do and map each char via the
+    //  lookup table.
     //
-    const XMLCh*    srcPtr  = srcData;
-    const XMLCh*    srcEnd  = srcPtr + countToDo;
-    XMLByte*        destPtr = toFill;
-    while (srcPtr < srcEnd)
+    const XMLCh*    srcPtr = srcData;
+    const XMLCh*    endPtr = (srcPtr + countToDo);
+    XMLByte*        outPtr = toFill;
+    XMLByte         nextOut;
+    while (srcPtr < endPtr)
     {
-        // If its legal, take it and jump back to top
-        if (*srcPtr < 0x256)
+        //
+        //  Get the next src char out to a temp, then do a binary search
+        //  of the 'to' table for this entry.
+        //
+        if ((nextOut = xlatOneTo(*srcPtr)))
         {
-            *destPtr++ = XMLByte(*srcPtr++);
+            *outPtr++ = nextOut;
+            srcPtr++;
             continue;
         }
 
         //
-        //  Its not representable so use a replacement char. According to
-        //  the options, either throw or use the replacement.
+        //  Its not representable so, according to the options, either
+        //  throw or use the replacement.
         //
         if (options == UnRep_Throw)
         {
@@ -173,7 +183,10 @@ XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
                 , getEncodingName()
             );
         }
-        *destPtr++ = 0x1A;
+
+        // Eat the source char and use the replacement char
+        srcPtr++;
+        *outPtr++ = 0x3F;
     }
 
     // Set the chars eaten
@@ -184,7 +197,60 @@ XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
 }
 
 
-bool XML88591Transcoder::canTranscodeTo(const unsigned int toCheck) const
+bool XML256TableTranscoder::canTranscodeTo(const unsigned int toCheck) const
 {
-    return (toCheck < 256);
+    return (xlatOneTo(toCheck) != 0);
+}
+
+
+// ---------------------------------------------------------------------------
+//  XML256TableTranscoder: Hidden constructor
+// ---------------------------------------------------------------------------
+XML256TableTranscoder::
+XML256TableTranscoder(  const   XMLCh* const                     encodingName
+                        , const unsigned int                     blockSize
+                        , const XMLCh* const                     fromTable
+                        , const XMLTransService::TransRec* const toTable
+                        , const unsigned int                     toTableSize) :
+
+    XMLTranscoder(encodingName, blockSize)
+    , fFromTable(fromTable)
+    , fToSize(toTableSize)
+    , fToTable(toTable)
+{
+}
+
+
+// ---------------------------------------------------------------------------
+//  XML256TableTranscoder: Private helper methods
+// ---------------------------------------------------------------------------
+XMLByte XML256TableTranscoder::xlatOneTo(const XMLCh toXlat) const
+{
+    unsigned int    lowOfs = 0;
+    unsigned int    hiOfs = fToSize - 1;
+    XMLByte         curByte = 0;
+    do
+    {
+        // Calc the mid point of the low and high offset.
+        const unsigned int midOfs = ((hiOfs - lowOfs) / 2) + lowOfs;
+
+        //
+        //  If our test char is greater than the mid point char, then
+        //  we move up to the upper half. Else we move to the lower
+        //  half. If its equal, then its our guy.
+        //
+        if (toXlat > fToTable[midOfs].intCh)
+        {
+            lowOfs = midOfs;
+        }
+         else if (toXlat < fToTable[midOfs].intCh)
+        {
+            hiOfs = midOfs;
+        }
+         else
+        {
+            return fToTable[midOfs].extCh;
+        }
+    }   while (lowOfs + 1 < hiOfs);
+    return 0;
 }

@@ -223,13 +223,9 @@ XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
 // ---------------------------------------------------------------------------
 void XMLTranscoder::checkBlockSize(const unsigned int toCheck)
 {
-    if (toCheck > fBlockSize)
-    {
-        // <TBD> Throw an exception here
-    }
+//    if (toCheck > fBlockSize)
+//        ThrowXML(TranscodingException, XMLExcepts::Trans_BadBlockSize);
 }
-
-
 
 
 // ---------------------------------------------------------------------------

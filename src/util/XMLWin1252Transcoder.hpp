@@ -58,7 +58,7 @@
 #define XMLWIN2152TRANSCODER_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/TransService.hpp>
+#include <util/XML256TableTranscoder.hpp>
 
 
 //
@@ -66,7 +66,7 @@
 //  for the Windows variant of Latin1, called Windows-1252. Its close to
 //  Latin1, but is somewhat different.
 //
-class XMLUTIL_EXPORT XMLWin1252Transcoder : public XMLTranscoder
+class XMLUTIL_EXPORT XMLWin1252Transcoder : public XML256TableTranscoder
 {
 public :
     // -----------------------------------------------------------------------
@@ -81,33 +81,11 @@ public :
     virtual ~XMLWin1252Transcoder();
 
 
-    // -----------------------------------------------------------------------
-    //  Implementation of the XMLTranscoder interface
-    // -----------------------------------------------------------------------
-    virtual bool supportsSrcOfs() const;
-
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
-    (
-        const   XMLByte* const          srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
-        ,       unsigned char* const    charSizes
-    );
-
-
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
+    XMLWin1252Transcoder();
     XMLWin1252Transcoder(const XMLWin1252Transcoder&);
     void operator=(const XMLWin1252Transcoder&);
 };

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/18 00:00:05  roddey
+ * Initial updates for two way transcoding support
+ *
  * Revision 1.3  2000/03/02 19:55:39  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -107,9 +110,7 @@ MixedContentModel::MixedContentModel(const DTDElementDecl& parentElem)
     //
     const ContentSpecNode* curNode = parentElem.getContentSpec();
     if (!curNode)
-    {
-        // <TBD> This is an error
-    }
+        ThrowXML(RuntimeException, XMLExcepts::CM_NoParentCSN);
 
     // And now call the private recursive method that iterates the tree
     buildChildList(*curNode, childIds);
