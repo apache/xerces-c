@@ -1742,10 +1742,8 @@ void XMLString::collapseWS(XMLCh* const toConvert)
  * 1. Windows: fix 'x:' to 'file:///x:' and convert any backslash to forward slash
  * 2. UNIX: fix '/blah/blahblah' to 'file:///blah/blahblah'
  */
-void XMLString::fixURI(const XMLCh* const str, XMLBuffer& toFill)
+void XMLString::fixURI(const XMLCh* const str, XMLCh* const target)
 {
-    toFill.reset();
-
     if (!str || !*str)
         return;
 
@@ -1755,27 +1753,34 @@ void XMLString::fixURI(const XMLCh* const str, XMLBuffer& toFill)
     // If starts with a '/' we assume
     // this is an absolute (UNIX) file path and prefix it with file://
     if (colonIdx == -1 && XMLString::indexOf(str, chForwardSlash) == 0) {
-        const XMLCh FILE_SCHEME[] = {
-            chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon,
-            chForwardSlash, chForwardSlash, chNull};
-
-        toFill.set(FILE_SCHEME);
+        unsigned index = 0;
+        target[index++] = chLatin_f;
+        target[index++] = chLatin_i;
+        target[index++] = chLatin_l;
+        target[index++] = chLatin_e;
+        target[index++] = chColon;
+        target[index++] = chForwardSlash;
+        target[index++] = chForwardSlash;
 
         // copy the string
         const XMLCh* inPtr = str;
         while (*inPtr)
-            toFill.append(*inPtr++);
+            target[index++] = *inPtr++;
 
-        toFill.append(chNull);
+        target[index] = chNull;
     }
     else if (colonIdx == 1 && XMLString::isAlpha(*str)) {
         // If starts with a driver letter 'x:' we assume
         // this is an absolute (Windows) file path and prefix it with file:///
-        const XMLCh FILE_SCHEME[] = {
-            chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon,
-            chForwardSlash, chForwardSlash, chForwardSlash, chNull};
-
-        toFill.set(FILE_SCHEME);
+        unsigned index = 0;
+        target[index++] = chLatin_f;
+        target[index++] = chLatin_i;
+        target[index++] = chLatin_l;
+        target[index++] = chLatin_e;
+        target[index++] = chColon;
+        target[index++] = chForwardSlash;
+        target[index++] = chForwardSlash;
+        target[index++] = chForwardSlash;
 
         // copy the string and fix any backward slash
         const XMLCh* inPtr = str;
@@ -1783,14 +1788,18 @@ void XMLString::fixURI(const XMLCh* const str, XMLBuffer& toFill)
             if (*inPtr == chYenSign ||
                 *inPtr == chWonSign ||
                 *inPtr == chBackSlash)
-                toFill.append(chForwardSlash);
+                target[index++] = chForwardSlash;
             else
-                toFill.append(*inPtr);
+                target[index++] = *inPtr;
             inPtr++;
         }
 
         // cap it with null
-        toFill.append(chNull);
+        target[index] = chNull;
+    }
+    else {
+        // not specific case, so just copy the string over
+        copyString(target, str);
     }
 }
 
