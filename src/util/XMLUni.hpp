@@ -155,11 +155,7 @@ public :
     static const XMLCh fgValidityDomain[];
     static const XMLCh fgWin1252EncodingString[];
     static const XMLCh fgXMLChEncodingString[];
-    static const XMLCh fgXMLDeclString[];
     static const XMLCh fgXMLString[];
-    static const XMLCh fgXMLStringSpace[];
-    static const XMLCh fgXMLStringSpaceU[];
-    static const XMLCh fgXMLDeclStringSpace[];
     static const XMLCh fgXMLNSString[];
     static const XMLCh fgXMLNSColonString[];
     static const XMLCh fgXMLNSURIName[];

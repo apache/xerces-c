@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/06/22 12:42:33  tng
+ * [Bug 2257] 1.5 thinks a <?xml-stylesheet ...> tag is a <?xml ...> tag
+ *
  * Revision 1.9  2001/06/21 14:25:53  knoaman
  * Fix for bug 1946
  *
@@ -2148,7 +2151,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         }
 
         // If it starts with the XML string, then parse a text decl
-        if (fReaderMgr->skippedString(XMLUni::fgXMLDeclString))
+        if (fScanner->checkXMLDecl(true))
             scanTextDecl();
     }
      else
@@ -2568,7 +2571,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
     {
         if (fReaderMgr->skippedSpace())
         {
-            if (fReaderMgr->skippedString(XMLUni::fgXMLDeclStringSpace))
+            if (fScanner->checkXMLDecl(true))
             {
                 scanTextDecl();
                 bAcceptDecl = false;
@@ -3160,36 +3163,11 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
      else if (nextCh == chQuestion)
     {
         // It could be a PI or the XML declaration. Check for Decl
-        bool gotDecl = fReaderMgr->skippedString(XMLUni::fgXMLString);
-
-        //
-        //  Just in case, check for upper case. If found, issue
-        //  an error, but keep going.
-        //
-        if (!gotDecl)
-        {
-            gotDecl = fReaderMgr->skippedString(XMLUni::fgXMLStringSpaceU);
-            if (gotDecl)
-                fScanner->emitError(XMLErrs::XMLDeclMustBeLowerCase);
-        }
-
-        if (gotDecl)
+        if (fScanner->checkXMLDecl(false))
         {
             // If we are not accepting text decls, its an error
             if (parseTextDecl)
             {
-                // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>' 
-                // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
-                //
-                // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+ 
-                //
-                // There shall be at lease --ONE-- space in between 
-                // the tag '<?xml' and the VersionInfo. 
-                //
-                if (!fReaderMgr->lookingAtSpace())
-                {               
-                    fScanner->emitError(XMLErrs::XMLDeclMustBeFirst);
-                }
                 scanTextDecl();
             }
              else

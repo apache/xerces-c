@@ -995,7 +995,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
 {
     //	Bump the error count
     incrementErrorCount();
-    
+
     if (fErrorReporter)
     {
         //
@@ -1759,7 +1759,7 @@ void XMLScanner::scanMiscellaneous()
 
             if (nextCh == chOpenAngle)
             {
-                if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpace))
+                if (checkXMLDecl(true))
                 {
                     // Can't have an XML decl here
                     emitError(XMLErrs::NotValidAfterContent);
@@ -1962,7 +1962,6 @@ void XMLScanner::scanProlog()
     //  Note that we use a double loop here to avoid the overhead of the
     //  setup/teardown of the exception handler on each loop.
     //
-    bool  acceptXMLDecl = true;
     while (true)
     {
     try
@@ -1981,29 +1980,18 @@ void XMLScanner::scanProlog()
                 //  Ok, it could be the xml decl, a comment, the doc type line,
                 //  or the start of the root element.
                 //
-                if (fReaderMgr.skippedString(XMLUni::fgXMLDeclString))
+                if (checkXMLDecl(true))
                 {
+                    // There shall be at lease --ONE-- space in between
+                    // the tag '<?xml' and the VersionInfo.
+                    //
                     //
                     //  If we are not at line 1, col 6, then the decl was not
                     //  the first text, so its invalid.
                     //
                     const XMLReader* curReader = fReaderMgr.getCurrentReader();
                     if ((curReader->getLineNumber() != 1)
-                    ||  (curReader->getColumnNumber() != 6))
-                    {
-                        emitError(XMLErrs::XMLDeclMustBeFirst);
-                    }
-
-                    //
-                    // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
-                    // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
-                    //
-                    // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+
-                    //
-                    // There shall be at lease --ONE-- space in between
-                    // the tag '<?xml' and the VersionInfo.
-                    //
-                    if (!fReaderMgr.lookingAtSpace())
+                    ||  (curReader->getColumnNumber() != 7))
                     {
                         emitError(XMLErrs::XMLDeclMustBeFirst);
                     }
@@ -2074,11 +2062,6 @@ void XMLScanner::scanProlog()
                 fReaderMgr.skipPastChar(chCloseAngle);
             }
 
-            //
-            //  Once we make it around once, then we cannot accept the XML
-            //  decl now, since it must be first if present.
-            //
-            acceptXMLDecl = false;
         }
     }
 
@@ -3430,4 +3413,143 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
     }
     return uriId;
 }
+
+bool XMLScanner::checkXMLDecl(bool startWithAngle) {
+    //
+    // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
+    // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+    //
+    // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+
+    //
+
+    //xml{S}
+    const XMLCh XMLStringSpace[] =
+    {
+        chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
+    };
+
+    const XMLCh XMLStringHTab[] =
+    {
+        chLatin_x, chLatin_m, chLatin_l, chHTab, chNull
+    };
+
+    const XMLCh XMLStringCR[] =
+    {
+        chLatin_x, chLatin_m, chLatin_l, chCR, chNull
+    };
+
+    const XMLCh XMLStringLF[] =
+    {
+        chLatin_x, chLatin_m, chLatin_l, chLF, chNull
+    };
+
+    //XML{S}
+    const XMLCh XMLStringSpaceU[] =
+    {
+        chLatin_X, chLatin_M, chLatin_L, chSpace, chNull
+    };
+
+    const XMLCh XMLStringHTabU[] =
+    {
+        chLatin_X, chLatin_M, chLatin_L, chHTab, chNull
+    };
+
+    const XMLCh XMLStringCRU[] =
+    {
+        chLatin_X, chLatin_M, chLatin_L, chCR, chNull
+    };
+
+    const XMLCh XMLStringLFU[] =
+    {
+        chLatin_X, chLatin_M, chLatin_L, chLF, chNull
+    };
+
+    //<?xml{S}
+    const XMLCh XMLDeclStringSpace[] =
+    {
+        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
+    };
+
+    const XMLCh XMLDeclStringHTab[] =
+    {
+        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chHTab, chNull
+    };
+
+    const XMLCh XMLDeclStringLF[] =
+    {
+        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chLF, chNull
+    };
+
+    const XMLCh XMLDeclStringCR[] =
+    {
+        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chCR, chNull
+    };
+
+    //<?XML{S}
+    const XMLCh XMLDeclStringSpaceU[] =
+    {
+        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chSpace, chNull
+    };
+
+    const XMLCh XMLDeclStringHTabU[] =
+    {
+        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chHTab, chNull
+    };
+
+    const XMLCh XMLDeclStringLFU[] =
+    {
+        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chLF, chNull
+    };
+
+    const XMLCh XMLDeclStringCRU[] =
+    {
+        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chCR, chNull
+    };
+
+    if (startWithAngle) {
+        if (fReaderMgr.skippedString(XMLDeclStringSpace)
+           || fReaderMgr.skippedString(XMLDeclStringHTab)
+           || fReaderMgr.skippedString(XMLDeclStringLF)
+           || fReaderMgr.skippedString(XMLDeclStringCR))
+        {
+            return true;
+        }
+        else if (fReaderMgr.skippedString(XMLDeclStringSpaceU)
+           || fReaderMgr.skippedString(XMLDeclStringHTabU)
+           || fReaderMgr.skippedString(XMLDeclStringLFU)
+           || fReaderMgr.skippedString(XMLDeclStringCRU))
+        {
+            //
+            //  Just in case, check for upper case. If found, issue
+            //  an error, but keep going.
+            //
+            emitError(XMLErrs::XMLDeclMustBeLowerCase);
+            return true;
+        }
+    }
+    else {
+        if (fReaderMgr.skippedString(XMLStringSpace)
+           || fReaderMgr.skippedString(XMLStringHTab)
+           || fReaderMgr.skippedString(XMLStringLF)
+           || fReaderMgr.skippedString(XMLStringCR))
+        {
+            return true;
+        }
+        else if (fReaderMgr.skippedString(XMLStringSpaceU)
+           || fReaderMgr.skippedString(XMLStringHTabU)
+           || fReaderMgr.skippedString(XMLStringLFU)
+           || fReaderMgr.skippedString(XMLStringCRU))
+        {
+            //
+            //  Just in case, check for upper case. If found, issue
+            //  an error, but keep going.
+            //
+            emitError(XMLErrs::XMLDeclMustBeLowerCase);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 

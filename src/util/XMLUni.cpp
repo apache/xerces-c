@@ -466,25 +466,6 @@ const XMLCh XMLUni::fgXMLString[] =
     chLatin_x, chLatin_m, chLatin_l, chNull
 };
 
-const XMLCh XMLUni::fgXMLStringSpace[] =
-{
-    chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
-};
-
-const XMLCh XMLUni::fgXMLStringSpaceU[] =
-{
-    chLatin_X, chLatin_M, chLatin_L, chSpace, chNull
-};
-
-const XMLCh XMLUni::fgXMLDeclString[] =
-{
-    chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chNull
-};
-
-const XMLCh XMLUni::fgXMLDeclStringSpace[] =
-{
-    chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
-};
 
 const XMLCh XMLUni::fgXMLNSString[] =
 {

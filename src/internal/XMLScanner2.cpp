@@ -1842,11 +1842,11 @@ void XMLScanner::scanCDSection()
 
         // Add it to the buffer
         bbCData.append(nextCh);
-    }    
+    }
 
     // See if the text contains whitespace
     if (fValidate)
-    {        
+    {
         const XMLCh* rawBuf = bbCData.getRawBuffer();
         const unsigned int len = bbCData.getLen();
         const bool isSpaces = XMLReader::containsWhiteSpace(rawBuf, len);
@@ -2484,7 +2484,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
             fDocHandler->startEntityReference(*decl);
 
         // If it starts with the XML string, then parse a text decl
-        if (fReaderMgr.skippedString(XMLUni::fgXMLDeclString))
+        if (checkXMLDecl(true))
             scanXMLDecl(Decl_Text);
     }
      else

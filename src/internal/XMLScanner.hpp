@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/06/22 12:42:33  tng
+ * [Bug 2257] 1.5 thinks a <?xml-stylesheet ...> tag is a <?xml ...> tag
+ *
  * Revision 1.21  2001/06/04 20:59:29  jberry
  * Add method incrementErrorCount for use by validator. Make sure to reset error count in _both_ the scanReset methods.
  *
@@ -469,6 +472,7 @@ public :
 
     void scanReset(XMLPScanToken& toFill);
 
+    bool checkXMLDecl(bool startWithAngle);
 
 private :
     // -----------------------------------------------------------------------
