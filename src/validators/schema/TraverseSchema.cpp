@@ -1366,7 +1366,7 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& elem) {
             checkParticleDerivationOk(groupInfo->getContentSpec(), groupInfo->getScope(),
                                       baseGroupInfo->getContentSpec(), baseGroupInfo->getScope());
         }
-        catch (const RuntimeException& excep) {
+        catch (const XMLException& excep) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
         }
     }
@@ -7622,7 +7622,7 @@ void TraverseSchema::checkParticleDerivation() {
                                           baseTypeInfo->getContentSpec(),
                                           baseTypeInfo->getScopeDefined(), baseTypeInfo);
             }
-            catch (const RuntimeException& excep) {
+            catch (const XMLException& excep) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
             }
         }
@@ -8167,7 +8167,7 @@ TraverseSchema::checkRecurse(const ContentSpecNode* const derivedSpecNode,
                 checkParticleDerivationOk(derivedNode, derivedScope, baseNode, baseScope, baseInfo);
                 matched = true;
             }
-            catch(const RuntimeException&) {
+            catch(const XMLException&) {
                 if (!toLax && !emptiableParticle(baseNode)) {
                     ThrowXML(RuntimeException, XMLExcepts::PD_Recurse2);
                 }
@@ -8308,7 +8308,7 @@ TraverseSchema::checkRecurseUnordered(const ContentSpecNode* const derivedSpecNo
                 foundIt[j] = true;
                 matched = true;
             }
-            catch (const RuntimeException&) {
+            catch (const XMLException&) {
             }
         }
 
@@ -8363,7 +8363,7 @@ TraverseSchema::checkMapAndSum(const ContentSpecNode* const derivedSpecNode,
                 checkParticleDerivationOk(derivedNode, derivedScope, baseNodes->elementAt(j), baseScope, baseInfo);
                 matched = true;
             }
-            catch (const RuntimeException&) {
+            catch (const XMLException&) {
             }
         }
 
