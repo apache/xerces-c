@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2003/02/06 16:11:30  peiyongz
+ * Bug#16826: RefVectorOf.c has errors in strict ANSI mode,  patch from
+ * David Bertoni (David_N_Bertoni@lotus.com )
+ *
  * Revision 1.6  2002/12/17 21:06:02  gareth
  * Removed defaulting from parameters in c files as windows and gcc 3.2 say this is wrong.
  *
@@ -117,12 +121,12 @@ template <class TElem> RefVectorOf<TElem>::RefVectorOf(const unsigned int maxEle
 
 template <class TElem> RefVectorOf<TElem>::~RefVectorOf()
 {
-    if (fAdoptedElems)
+    if (this->fAdoptedElems)
     {
-       for (unsigned int index = 0; index < fCurCount; index++)
-        delete fElemList[index];
+       for (unsigned int index = 0; index < this->fCurCount; index++)
+        delete this->fElemList[index];
     }
-    delete [] fElemList;
+    delete [] this->fElemList;
 }
 
 
