@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/10/10 23:52:11  andyh
+ * From Janitor, remove the addition that is having compile problems in MSVC.
+ *
  * Revision 1.5  2000/10/09 18:32:31  jberry
  * Add some auto_ptr functionality to allow modification of monitored
  * pointer value. This eases use of Janitor in some situations.
@@ -143,7 +146,7 @@ public  :
 
 	//	small amount of auto_ptr compatibility
 	T&	operator[](int index) const;
-	T*	operator->() const;
+	// T*	operator->() const;
 	T*	get() const;
 	T*	release();
 	void reset(T* p = 0);

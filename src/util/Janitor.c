@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/10/10 23:52:10  andyh
+ * From Janitor, remove the addition that is having compile problems in MSVC.
+ *
  * Revision 1.4  2000/10/09 18:32:31  jberry
  * Add some auto_ptr functionality to allow modification of monitored
  * pointer value. This eases use of Janitor in some situations.
@@ -182,12 +185,13 @@ ArrayJanitor<T>::operator[](int index) const
 }
 
 
+#if (0)
 template <class T> T*
 ArrayJanitor<T>::operator->() const
 {
 	return fData;
 }
-
+#endif
 
 template <class T> T*
 ArrayJanitor<T>::get() const
