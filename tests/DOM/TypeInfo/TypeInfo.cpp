@@ -329,10 +329,10 @@ bool TypeInfo::testInBuiltTypesOnAttributes(bool DTDPresent) {
 
     //ns attr
     testAttr = testEle->getAttributeNodeNS(X("http://www.w3.org/2000/xmlns/"), X("prefix"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X(""), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.w3.org/2001/XMLSchema-instance"), X("noNamespaceSchemaLocation"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X(""), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     return passed;
 }

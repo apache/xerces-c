@@ -769,6 +769,12 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
     chLatin_x, chLatin_s, chLatin_i, chNull
     };
 
+    //get the list for use in the loop
+    XMLAttDefList* defAttrs = 0;
+    if(elemDecl.hasAttDefs()) {
+        defAttrs = &elemDecl.getAttDefList();
+    }
+
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
 
        XMLBufBid bbURI(&fBufMgr);
@@ -790,12 +796,6 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
         elem = createElementNSNode(namespaceURI, elemQName.getRawBuffer());
         elemImpl = (DOMElementImpl *) elem;
-
-        //get the list for use in the loop
-        XMLAttDefList* defAttrs = 0;
-        if(elemDecl.hasAttDefs()) {
-            defAttrs = &elemDecl.getAttDefList();
-        }
 
         for (unsigned int index = 0; index < attrCount; ++index) {
             const XMLAttr* oneAttrib = attrList.elementAt(index);
@@ -831,12 +831,14 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             }
 
             attr->setSpecified(oneAttrib->getSpecified());
-            if(defAttrs != 0) {
-                XMLAttDef *attDef = defAttrs->findAttDef(attrURIId, oneAttrib->getQName());
-                if(attDef != 0) {
-                    attr->setTypeInfo(attDef->getDOMTypeInfoName(), attDef->getDOMTypeInfoUri());
-                    attDef->reset();
-                }
+
+            XMLAttDef *attDef = 0;
+            if(defAttrs != 0)
+                attDef = defAttrs->findAttDef(attrURIId, oneAttrib->getQName());
+
+            if(attDef != 0) {
+                attr->setTypeInfo(attDef->getDOMTypeInfoName(), attDef->getDOMTypeInfoUri());
+                attDef->reset();
             }
             else {
                 const XMLCh *name = oneAttrib->getName();
@@ -882,13 +884,22 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                 fDocument->fNodeIDMap->add(attr);
                 attr->fNode.isIdAttr(true);
             }
+
+            XMLAttDef *attDef = 0;
+            if(defAttrs != 0)
+                attDef = defAttrs->findAttDef(oneAttrib -> getURIId(), oneAttrib->getQName());
+
+            if(attDef != 0) {
+                attr->setTypeInfo(attDef->getDOMTypeInfoName(), attDef->getDOMTypeInfoUri());
+                attDef->reset();
+            }
+
         }
     }
 
     // set up the default attributes
-	if (elemDecl.hasAttDefs())
+	if (defAttrs != 0)
 	{		
-        XMLAttDefList* defAttrs = &elemDecl.getAttDefList();
         XMLAttDef* attr = 0;
 
         DOMAttrImpl * insertAttr = 0;
@@ -903,71 +914,58 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             {
 
                 if (fScanner->getDoNamespaces())
+                {
+                    // DOM Level 2 wants all namespace declaration attributes
+                    // to be bound to "http://www.w3.org/2000/xmlns/"
+                    // So as long as the XML parser doesn't do it, it needs to
+                    // done here.
+                    const XMLCh* qualifiedName = attr->getFullName();
+                    XMLBufBid bbPrefixQName(&fBufMgr);
+                    XMLBuffer& prefixBuf = bbPrefixQName.getBuffer();
+                    int colonPos = -1;
+                    unsigned int uriId = fScanner->resolveQName(qualifiedName, prefixBuf, ElemStack::Mode_Attribute, colonPos);
+
+                    const XMLCh* namespaceURI = 0;
+                    if (XMLString::equals(qualifiedName, XMLNS))    //for xmlns=...
+                        uriId = fScanner->getXMLNSNamespaceId();
+                    if (uriId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
+                        namespaceURI = fScanner->getURIText(uriId);
+                    }
+
+                    insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(
+                                                                              namespaceURI,     // NameSpaceURI
+                                                                              qualifiedName);   // qualified name
+
+                    DOMAttr* remAttr = elemImpl->setDefaultAttributeNodeNS(insertAttr);
+                    if (remAttr)
+                        remAttr->release();
+
+                    if (attr->getValue() != 0)
                     {
-                        // DOM Level 2 wants all namespace declaration attributes
-                        // to be bound to "http://www.w3.org/2000/xmlns/"
-                        // So as long as the XML parser doesn't do it, it needs to
-                        // done here.
-                        const XMLCh* qualifiedName = attr->getFullName();
-                        XMLBufBid bbPrefixQName(&fBufMgr);
-                        XMLBuffer& prefixBuf = bbPrefixQName.getBuffer();
-                        int colonPos = -1;
-                        unsigned int uriId = fScanner->resolveQName(qualifiedName, prefixBuf, ElemStack::Mode_Attribute, colonPos);
-
-                        const XMLCh* namespaceURI = 0;
-                        if (XMLString::equals(qualifiedName, XMLNS))    //for xmlns=...
-                            uriId = fScanner->getXMLNSNamespaceId();
-                        if (uriId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
-                            namespaceURI = fScanner->getURIText(uriId);
-                        }
-
-                        insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(
-                                                                                  namespaceURI,     // NameSpaceURI
-                                                                                  qualifiedName);   // qualified name
-
-                        DOMAttr* remAttr = elemImpl->setDefaultAttributeNodeNS(insertAttr);
-                        if (remAttr)
-                            remAttr->release();
-
-                        if (attr->getValue() != 0)
-                            {
-                                insertAttr->setValue(attr->getValue());
-                                insertAttr->setSpecified(false);
-                            }
-
-                    }
-                else
-                    {
-                        // Namespaces is turned off...
-                        insertAttr = (DOMAttrImpl *) fDocument->createAttribute(attr->getFullName());
-
-                        DOMNode* remAttr = elemImpl->setDefaultAttributeNode(insertAttr);
-                        if (remAttr)
-                            remAttr->release();
-
-                        //need to do this before the get as otherwise we overwrite any value in the attr
-                        if (attr->getValue() != 0)
-                            {
-                                insertAttr->setValue(attr->getValue());
-                                insertAttr->setSpecified(false);
-                            }
-
-                        if(insertAttr) {
-                            insertAttr = (DOMAttrImpl *)(elemImpl->getAttributeNode(attr->getFullName()));
-                            insertAttr->setTypeInfo(attr->getDOMTypeInfoName(), attr->getDOMTypeInfoUri());
-                        }
+                        insertAttr->setValue(attr->getValue());
+                        insertAttr->setSpecified(false);
                     }
 
-            }
-            else {
-                //we deal with the non namespace attrs down here as we are iterating over the XMLAttDefs anyway
-                if(!fScanner->getDoNamespaces()) {
-                    if(insertAttr == 0) {
-                        insertAttr = (DOMAttrImpl *)(elemImpl->getAttributeNode(attr->getFullName()));
-                    }
-                    if(insertAttr)
-                        insertAttr->setTypeInfo(attr->getDOMTypeInfoName(), attr->getDOMTypeInfoUri());
                 }
+                else
+                {
+                    // Namespaces is turned off...
+                    insertAttr = (DOMAttrImpl *) fDocument->createAttribute(attr->getFullName());
+
+                    DOMNode* remAttr = elemImpl->setDefaultAttributeNode(insertAttr);
+                    if (remAttr)
+                        remAttr->release();
+
+                    //need to do this before the get as otherwise we overwrite any value in the attr
+                    if (attr->getValue() != 0)
+                    {
+                        insertAttr->setValue(attr->getValue());
+                        insertAttr->setSpecified(false);
+                    }
+                }
+
+                insertAttr->setTypeInfo(attr->getDOMTypeInfoName(), attr->getDOMTypeInfoUri());
+
             }
 
             insertAttr = 0;
