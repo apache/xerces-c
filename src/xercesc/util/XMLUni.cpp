@@ -965,3 +965,93 @@ const XMLCh XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[] =
     ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+const XMLCh XMLUni::fgDOMCanonicalForm[] =
+{
+        chLatin_c, chLatin_a, chLatin_n, chLatin_o, chLatin_n, chLatin_i, chLatin_c
+    ,   chLatin_a, chLatin_l, chDash, chLatin_f, chLatin_o, chLatin_r, chLatin_m, chNull
+};
+
+const XMLCh XMLUni::fgDOMCDATASections[] =
+{
+        chLatin_c, chLatin_d, chLatin_a, chLatin_t, chLatin_a, chDash, chLatin_s
+    ,   chLatin_e, chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chLatin_s, chNull
+};
+
+const XMLCh XMLUni::fgDOMComments[] = 
+{
+        chLatin_c, chLatin_o, chLatin_m, chLatin_m, chLatin_e, chLatin_n, chLatin_t
+    ,   chLatin_s, chNull
+};
+
+const XMLCh XMLUni::fgDOMCharsetOverridesXMLEncoding[] =
+{
+        chLatin_c, chLatin_h, chLatin_a, chLatin_r, chLatin_s, chLatin_e, chLatin_t
+    ,   chDash, chLatin_o, chLatin_v, chLatin_e, chLatin_r, chLatin_r, chLatin_i
+    ,   chLatin_d, chLatin_e, chLatin_s, chDash, chLatin_x, chLatin_m, chLatin_l
+    ,   chDash, chLatin_e, chLatin_n, chLatin_c, chLatin_o, chLatin_d, chLatin_i
+    ,   chLatin_n, chLatin_g, chNull
+};
+
+const XMLCh XMLUni::fgDOMDatatypeNormalization[] =
+{
+        chLatin_d, chLatin_a, chLatin_t, chLatin_a, chLatin_t, chLatin_y, chLatin_p
+    ,   chLatin_e, chDash, chLatin_n, chLatin_o, chLatin_r, chLatin_m, chLatin_a
+    ,   chLatin_l, chLatin_i, chLatin_z, chLatin_a, chLatin_t, chLatin_i, chLatin_o
+    ,   chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgDOMEntities[] =
+{
+        chLatin_e, chLatin_n, chLatin_t, chLatin_i, chLatin_t, chLatin_i, chLatin_e
+    ,   chLatin_s, chNull
+};
+
+const XMLCh XMLUni::fgDOMInfoset[] =
+{
+        chLatin_i, chLatin_n, chLatin_f, chLatin_o, chLatin_s, chLatin_e, chLatin_t, chNull
+};
+
+const XMLCh XMLUni::fgDOMNamespaces[] =
+{
+        chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a
+    ,   chLatin_c, chLatin_e, chLatin_s, chNull
+};
+
+const XMLCh XMLUni::fgDOMNamespaceDeclarations[] =
+{
+        chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a
+    ,   chLatin_c, chLatin_e, chDash, chLatin_d, chLatin_e, chLatin_c, chLatin_l
+    ,   chLatin_a, chLatin_r, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n
+    ,   chLatin_s, chNull
+};
+
+const XMLCh XMLUni::fgDOMSupportedMediatypesOnly[] =
+{
+        chLatin_s, chLatin_u, chLatin_p, chLatin_p, chLatin_o, chLatin_r, chLatin_t
+    ,   chLatin_e, chLatin_d, chDash, chLatin_m, chLatin_e, chLatin_d, chLatin_i
+    ,   chLatin_a, chLatin_t, chLatin_y, chLatin_p, chLatin_e, chLatin_s, chDash
+    ,   chLatin_o, chLatin_n, chLatin_l, chLatin_y, chNull
+};
+
+const XMLCh XMLUni::fgDOMValidateIfSchema[] =
+{
+        chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d, chLatin_a, chLatin_t
+    ,   chLatin_e, chDash, chLatin_i, chLatin_f, chDash, chLatin_s, chLatin_c
+    ,   chLatin_h, chLatin_e, chLatin_m, chLatin_a, chNull
+};
+
+const XMLCh XMLUni::fgDOMValidation[] =
+{
+        chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d, chLatin_a, chLatin_t
+    ,   chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgDOMWhitespaceInElementContent[] =
+{
+        chLatin_w, chLatin_h, chLatin_i, chLatin_t, chLatin_e, chLatin_s, chLatin_p
+    ,   chLatin_a, chLatin_c, chLatin_e, chDash, chLatin_i, chLatin_n, chDash
+    ,   chLatin_e, chLatin_l, chLatin_e, chLatin_m, chLatin_e, chLatin_n, chLatin_t
+    ,   chDash, chLatin_c, chLatin_o, chLatin_n, chLatin_t, chLatin_e, chLatin_n
+    ,   chLatin_t, chNull
+};
+

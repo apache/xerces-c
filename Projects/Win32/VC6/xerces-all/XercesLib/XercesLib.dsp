@@ -1172,6 +1172,14 @@ SOURCE=..\..\..\..\..\src\xercesc\parsers\AbstractDOMParser.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp
 # End Source File
 # Begin Source File
@@ -2708,6 +2716,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMAttr.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMBuilder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMBuilderFilter.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMCDATASection.hpp
 # End Source File
 # Begin Source File
@@ -2752,6 +2768,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMEntityReference.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMEntityResolver.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMError.hpp
 # End Source File
 # Begin Source File
@@ -2769,6 +2789,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementationLS.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMInputSource.hpp
 # End Source File
 # Begin Source File
 

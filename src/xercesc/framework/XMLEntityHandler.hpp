@@ -56,8 +56,11 @@
 
  /*
   * $Log$
-  * Revision 1.1  2002/02/01 22:21:51  peiyongz
-  * Initial revision
+  * Revision 1.2  2002/05/29 21:47:08  knoaman
+  * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
+  *
+  * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
+  * sane_include
   *
   * Revision 1.7  2000/03/02 19:54:25  roddey
   * This checkin includes many changes done while waiting for the
@@ -177,6 +180,7 @@ public:
     (
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
+        , const XMLCh* const    baseURI = 0
     ) = 0;
 
     /**

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2002/05/29 21:47:08  knoaman
+# DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
+#
 # Revision 1.5  2002/05/24 16:42:20  knoaman
 # Performance fixes: eliminate mulitple calls to addRange and sort.
 #
@@ -348,6 +351,7 @@ UTIL_CPP_PUBHEADERS = \
     BitOps.hpp \
     BitSet.hpp \
     CountedPointer.hpp \
+    DOMInputSourceWrapper.hpp \
     EmptyStackException.hpp \
     FlagJanitor.hpp \
     HashBase.hpp \
@@ -449,6 +453,7 @@ UTIL_CPP_OBJECTS = \
     BinInputStream.$(TO) \
     BinMemInputStream.$(TO) \
     BitSet.$(TO) \
+    DOMInputSourceWrapper.$(TO) \
     HashXMLCh.$(TO) \
     HashPtr.$(TO) \
     HeaderDummy.$(TO) \

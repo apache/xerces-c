@@ -228,6 +228,21 @@ public :
     static const XMLCh fgSAX2XercesSchemaExternalSchemaLocation[];
     static const XMLCh fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[];
 
+    // DOMBuilder features
+    static const XMLCh fgDOMCanonicalForm[];
+    static const XMLCh fgDOMCDATASections[];
+    static const XMLCh fgDOMComments[];
+    static const XMLCh fgDOMCharsetOverridesXMLEncoding[];
+    static const XMLCh fgDOMDatatypeNormalization[];
+    static const XMLCh fgDOMEntities[];
+    static const XMLCh fgDOMInfoset[];
+    static const XMLCh fgDOMNamespaces[];
+    static const XMLCh fgDOMNamespaceDeclarations[];
+    static const XMLCh fgDOMSupportedMediatypesOnly[];
+    static const XMLCh fgDOMValidateIfSchema[];
+    static const XMLCh fgDOMValidation[];
+    static const XMLCh fgDOMWhitespaceInElementContent[];
+
 };
 
 #endif
