@@ -1,15 +1,15 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Migration Archive">
-    <s2 title="Migrating from &XercesCName; &XercesCVersion152; to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; &XercesCVersion152; to &XercesCName; &XercesCVersion160;">
       <p>The following section is a discussion of the technical differences between
-      &XercesCName; &XercesCVersion152; code base and the &XercesCName; &XercesCVersion; code base.</p>
+      &XercesCName; &XercesCVersion152; code base and the &XercesCName; &XercesCVersion160; code base.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
-        <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion160;</link></li>
+        <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion160;</link></li>
         <ul>
             <li><link anchor="NewAPI">New Public API</link></li>
             <li><link anchor="ModifiedAPI">Modified Public API</link></li>
@@ -19,7 +19,7 @@
     </s2>
 
     <anchor name="NewFeatures"/>
-    <s2 title="New features in &XercesCName; &XercesCVersion;">
+    <s2 title="New features in &XercesCName; &XercesCVersion160;">
       <ul>
         <li>Full Schema support is available in this release.
             See <jump href="schema.html">the Schema page</jump> for details.</li>
@@ -28,10 +28,10 @@
     </s2>
 
     <anchor name="API"/>
-    <s2 title="Public API Changes in &XercesCName; &XercesCVersion;">
+    <s2 title="Public API Changes in &XercesCName; &XercesCVersion160;">
 
         <p>The following lists the public API changes between the &XercesCName;
-           &XercesCVersion152; and the &XercesCName; &XercesCVersion; releases
+           &XercesCVersion152; and the &XercesCName; &XercesCVersion160; releases
            of the parser. </p>
 
         <anchor name="NewAPI"/>

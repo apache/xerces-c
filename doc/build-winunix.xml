@@ -1,10 +1,9 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<faqs title="Building on Windows and UNIX">
-    <faq title="Building &XercesCName; on Windows NT/98">
-    <q>Building &XercesCName; on Windows NT/98</q>
-    <a>
+<s1 title="Building on Windows and UNIX">
+    <anchor name="WinNT"/>
+    <s2 title="Building &XercesCName; on Windows NT/2000">
         <p>&XercesCName; comes with Microsoft Visual C++ projects and workspaces to
         help you build &XercesCName;. The following describes the steps you need
         to build &XercesCName;.</p>
@@ -42,12 +41,10 @@
               on the selection. Then choose "Build (selection only)" to build all the
               samples in one shot.</p>
         </s3>
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Building &XercesCName; on Windows using Visual Age C++">
-    <q>Building &XercesCName; on Windows using Visual Age C++</q>
-    <a>
+    <anchor name="WinVisualAge"/>
+    <s2 title="Building &XercesCName; on Windows using Visual Age C++">
         <p>A few unsupported projects are also packaged with &XercesCName;. Due to
         origins of &XercesCName; inside IBM labs, we do have projects for IBM's
         <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump> on Windows.
@@ -88,12 +85,10 @@
             <note>These instructions assume that you install in drive d:\.
             Replace d with the appropriate drive letter.</note>
         </s3>
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Building &XercesCName; on Windows using Borland C++Builder">
-    <q>Building &XercesCName; on Windows using Borland C++Builder</q>
-    <a>
+    <anchor name="WinBorland"/>
+    <s2 title="Building &XercesCName; on Windows using Borland C++Builder">
         <p>&XercesCName; comes with Borland C++Builder projects to help you
 		build &XercesCName;. The following describes the steps you need to build
 		&XercesCName;.</p>
@@ -124,12 +119,10 @@
            </p>
 
         </s3>
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Building &XercesCName; on UNIX platforms">
-    <q>Building &XercesCName; on UNIX platforms</q>
-    <a>
+    <anchor name="UNIX"/>
+    <s2 title="Building &XercesCName; on UNIX platforms">
         <p>&XercesCName; uses
         <jump href="http://www.gnu.org">GNU</jump> tools like
         <jump href="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</jump> and
@@ -410,12 +403,10 @@ Usage: runConfigure "options"
          <p>To delete all the generated object files and executables, type:</p>
 <source>gmake clean</source>
         </s3>
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Building &XercesCName; as a single-threaded library on Unix platforms">
-    <q>Building &XercesCName; as a single-threaded library on Unix platforms</q>
-    <a>
+    <anchor name="UNIX_SingleThread"/>
+    <s2 title="Building &XercesCName; as a single-threaded library on Unix platforms">
          <p>To build a single-threaded library on Unix platforms you have to update
          one or more of the following files <code>Makefile.incl, Makefile.in, runConfigure</code>.
          The following steps guide you to create a single-threaded library for each platform:</p>
@@ -458,7 +449,6 @@ Usage: runConfigure "options"
      <li>Remove threading defines like <code>-D_PTHREADS_DRAFT4 ,
         -DXML_USE_DCE</code></li>
     </ul>
-   </a>
-   </faq>
+   </s2>
 
-</faqs>
+</s1>

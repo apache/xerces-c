@@ -1,10 +1,9 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<faqs title="Building on Other Platforms">
-    <faq title="Building &XercesCName; on iSeries (AS/400)">
-    <q>Building &XercesCName; on iSeries (AS/400)</q>
-    <a>
+<s1 title="Building on Other Platforms">
+    <anchor name="iSeries"/>
+    <s2 title="Building &XercesCName; on iSeries (AS/400)">
             <p>The following addresses the requirements and build of
            &XercesCName; natively on the iSeries.
             </p>
@@ -296,12 +295,10 @@ runConfigure -p os400 -x icc -c icc
 gmake </source>
 
         </s3>
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Building &XercesCName; on OS/2 using Visual Age C++">
-    <q>Building &XercesCName; on OS/2 using Visual Age C++</q>
-    <a>
+    <anchor name="OS2VisualAge"/>
+    <s2 title="Building &XercesCName; on OS/2 using Visual Age C++">
           <p>OS/2 is a favourite IBM PC platforms. The only
           option in this platform is to use
           <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump>.
@@ -457,12 +454,10 @@ gmake </source>
         </ul>
         </s3>
 
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Building &XercesCName; on Macintosh">
-    <q>Building &XercesCName; on Macintosh</q>
-    <a>
+    <anchor name="Mac"/>
+    <s2 title="Building &XercesCName; on Macintosh">
 		<p>The &XercesCName; Mac port has the key following attributes:
 		</p>
 		
@@ -689,6 +684,5 @@ make</source>
 				</li>
 			</ul>	
 		</s3>
-    </a>
-    </faq>
-</faqs>
+    </s2>
+</s1>

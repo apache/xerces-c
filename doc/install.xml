@@ -1,10 +1,10 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Installation">
 
 
-    <s2 title="Window NT/98">
+    <s2 title="Windows NT/2000">
         <p>Install the binary &XercesCName; release by using <code>unzip</code>
 		on the <ref>file</ref>-win32.zip archive in the Windows environment. You can
 		use WinZip, or any other UnZip utility.</p>
@@ -20,7 +20,7 @@
 		double click on System and select the &apos;Environment&apos; tab.
 		Locate the PATH variable under system variables
         and add &lt;full_path_to_&XercesCInstallDir;>\bin to the PATH variable.
-		To do this under Windows 95/98 add this line to your AUTOEXEC.BAT file:</p>
+		To do this under Windows 2000 add this line to your AUTOEXEC.BAT file:</p>
 <source>SET PATH=&lt;full_path_to_&XercesCInstallDir;>\bin;%PATH%</source>
 		<p>or run the <code>SET PATH</code> command in your shell window.</p>
     </s2>
@@ -67,8 +67,8 @@ setenv LD_LIBRARY_PATH "$XERCESCROOT/lib:$LD_LIBRARY_PATH" (on Solaris, Linux)
 setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)</source>
 
         <note>If you need to build the samples after installation,
-        make sure you read and follow the build instructions given in the
-		<jump href="build.html">FAQ</jump>.</note>
+        make sure you read and follow the <jump href="build.html">
+        Build Instructions</jump>.</note>
 
    </s2>
 </s1>

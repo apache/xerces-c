@@ -1,71 +1,69 @@
 <?xml version="1.0"?>
-<!DOCTYPE book SYSTEM "./dtd/book.dtd">
+<!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
 
 <book title="&XercesCName; Documentation" copyright="2001 The Apache Software Foundation">
   <external href="../index.html"  label="Home"/>
 
   <separator/>
 
-  <document  id="index"       label="Readme"             source="readme.xml"/>
-  <external href="http://&XercesDistDir;/"                        label="Download"/>
-  <document  id="install"     label="Installation"       source="install.xml"/>
-  <group id="build"           title="Build Instructions" label="Build Instructions">
-     <entry id="build-winunix" source="build-winunix.xml"/>
-     <entry id="build-other" source="build-other.xml"/>
-     <entry id="build-misc"   source="build-misc.xml"/>
-  </group>
+  <document id="index"       label="Readme"             source="readme.xml"/>
+  <external href="http://&XercesDistDir;/"              label="Download"/>
+  <document id="install"     label="Installation"       source="install.xml"/>
+  <document id="build"       label="Build Instructions" source="build.xml"/>
+  <hidden   id="build-winunix" source="build-winunix.xml"/>
+  <hidden   id="build-other" source="build-other.xml"/>
+  <hidden   id="build-misc"  source="build-misc.xml"/>
 
   <separator/>
 
   <document id="api"         label="API Docs"     source="apidocs.xml"/>
 
-  <container id="samples"    label="Samples"      source="samples.xml">
-     <entry id="saxcount"    source="saxcount.xml"/>
-     <entry id="saxprint"    source="saxprint.xml"/>
-     <entry id="domcount"    source="domcount.xml"/>
-     <entry id="domprint"    source="domprint.xml"/>
-     <entry id="memparse"    source="memparse.xml"/>
-     <entry id="redirect"    source="redirect.xml"/>
-     <entry id="pparse"      source="pparse.xml"/>
-     <entry id="stdinparse"  source="stdinparse.xml"/>
-     <entry id="enumval"     source="enumval.xml"/>
-     <entry id="createdoc"   source="createdoc.xml"/>
-     <entry id="sax2count"   source="sax2count.xml"/>
-     <entry id="sax2print"   source="sax2print.xml"/>
-     <entry id="idomcount"   source="idomcount.xml"/>
-     <entry id="idomprint"   source="idomprint.xml"/>
-     <entry id="senumval"    source="senumval.xml"/>
-  </container>
+  <document id="samples"     label="Samples"      source="samples.xml"/>
+  <hidden   id="saxcount"    source="saxcount.xml"/>
+  <hidden   id="saxprint"    source="saxprint.xml"/>
+  <hidden   id="domcount"    source="domcount.xml"/>
+  <hidden   id="domprint"    source="domprint.xml"/>
+  <hidden   id="memparse"    source="memparse.xml"/>
+  <hidden   id="redirect"    source="redirect.xml"/>
+  <hidden   id="pparse"      source="pparse.xml"/>
+  <hidden   id="stdinparse"  source="stdinparse.xml"/>
+  <hidden   id="enumval"     source="enumval.xml"/>
+  <hidden   id="createdoc"   source="createdoc.xml"/>
+  <hidden   id="sax2count"   source="sax2count.xml"/>
+  <hidden   id="sax2print"   source="sax2print.xml"/>
+  <hidden   id="idomcount"   source="idomcount.xml"/>
+  <hidden   id="idomprint"   source="idomprint.xml"/>
+  <hidden   id="senumval"    source="senumval.xml"/>
 
   <document id="schema"      label="Schema"       source="schema.xml"/>
   <separator/>
 
-  <group    id="faqs"        title="Frequently Asked Questions" label="FAQs">
+  <group    id="faqs"        label="FAQs">
      <entry id="faq-distrib" source="faq-distrib.xml"/>
      <entry id="faq-build"   source="faq-build.xml"/>
      <entry id="faq-parse"   source="faq-parse.xml"/>
      <entry id="faq-other"   source="faq-other.xml"/>
   </group>
 
-  <container id="program"     label="Programming"  source="program.xml">
-     <entry id="program-sax"  source="program-sax.xml"/>
-     <entry id="program-sax2" source="program-sax2.xml"/>
-     <entry id="program-dom"  source="program-dom.xml"/>
-     <entry id="program-idom" source="program-idom.xml"/>
-  </container>
+  <document id="program"     label="Programming"  source="program.xml"/>
+  <hidden   id="program-sax" source="program-sax.xml"/>
+  <hidden   id="program-sax2" source="program-sax2.xml"/>
+  <hidden   id="program-dom" source="program-dom.xml"/>
+  <hidden   id="program-idom" source="program-idom.xml"/>
 
   <document id="migrate"     label="Migration"    source="migration.xml"/>
-  <hidden id="migrate_archive"                    source="migration_archive.xml"/>
+  <hidden   id="migrate_archive" source="migration_archive.xml"/>
 
   <separator/>
 
   <document id="releases"    label="Releases"     source="releases.xml"/>
   <hidden id="releases_archive"                   source="releases_archive.xml"/>
-  <document id="bug-report"    label="Bug-Reporting"     source="bug-report.xml"/>
+
+  <document id="bug-report"  label="Bug-Reporting" source="bug-report.xml"/>
   <document id="feedback"    label="Feedback"     source="feedback.xml"/>
 
   <separator/>
-  <document id="y2k"         label="Y2K Compliance"  source="y2k.xml"/>
+  <document id="y2k"         label="Y2K Compliance" source="y2k.xml"/>
   <document id="pdf"         label="PDF Document" source="pdf-c.xml"/>
 
   <separator/>

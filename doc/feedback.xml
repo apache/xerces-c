@@ -1,5 +1,5 @@
 <?xml version="1.0"  encoding="iso-8859-1" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Feedback Procedures">
     <s2 title="Questions or Comments">

@@ -1,10 +1,9 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<faqs title="Other Build Instructions">
-    <faq title="Building &XercesCName; with ICU using bundled Perl scripts on Windows">
-    <q>Building &XercesCName; with ICU using bundled Perl scripts on Windows</q>
-    <a>
+<s1 title="Other Build Instructions">
+    <anchor name="ICUPerl"/>
+    <s2 title="Building &XercesCName; with ICU using bundled Perl scripts on Windows">
         <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
         native encoding support and also using ICU where you get support over 180
         different encodings. ICU stands for International Components for Unicode and is an
@@ -67,12 +66,10 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
 
         <p>For a description of options available, you can enter:</p>
 <source>perl packageBinaries.pl</source>
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Building &XercesCName; COM Wrapper on Windows">
-    <q>Building &XercesCName; COM Wrapper on Windows</q>
-    <a>
+    <anchor name="WinCOM"/>
+    <s2 title="Building &XercesCName; COM Wrapper on Windows">
         <p>To build the COM module for use with XML on Windows platforms, you
         must first set up your machine appropriately with necessary tools and
         software modules and then try to compile it. The end result is an additional
@@ -126,13 +123,11 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         You will have to modify the documents in the NIST suite to load the
         Xerces COM object instead of the MSIE COM object.</p>
         </s3>
-    </a>
-    </faq>
+    </s2>
 
 
-    <faq title="Building User Documentation">
-    <q>Building User Documentation</q>
-    <a>
+    <anchor name="UserDoc"/>
+    <s2 title="Building User Documentation">
         <p>The user documentation (this very page that you are reading
         on the browser right now), was generated using an XML
         application called StyleBook. This application makes use of
@@ -167,13 +162,11 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
 
         <p>This should generate the .html files in the 'doc/html'
         directory.</p>
-    </a>
-    </faq>
+    </s2>
 
 
-    <faq title="I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?">
-    <q>I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</q>
-    <a>
+    <anchor name="PortInfo"/>
+    <s2 title="I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?">
       <p>All platform dependent code in &XercesCProjectName; has been
       isolated to a couple of files, which should ease the porting
       effort.  Here are the basic steps that should be followed to
@@ -261,13 +254,11 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
       </ul>
 
       <p>That is the work required in a nutshell!</p>
-    </a>
-    </faq>
+    </s2>
 
 
-    <faq title="What should I define XMLCh to be?">
-    <q>What should I define XMLCh to be?</q>
-    <a>
+    <anchor name="XMLChInfo"/>
+    <s2 title="What should I define XMLCh to be?">
         <p>XMLCh should be defined to be a type suitable for holding a
            utf-16 encoded (16 bit) value, usually an <code>unsigned short</code>. </p>
 
@@ -311,21 +302,18 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
                   are illegal in ucs-4 encoded wchar_t strings.
                </li>
            </ul>
-    </a>
-    </faq>
+    </s2>
 
-    <faq title="Where can I look for more help?">
-    <q>Where can I look for more help?</q>
-    <a>
+    <anchor name="HelpInfo"/>
+    <s2 title="Where can I look for more help?">
         <p>If you have read this page, followed the instructions, and
         still cannot resolve your problem(s), there is more help. You
         can find out if others have
         solved this same problem before you, by checking the Apache XML
-        mailing list archives at <jump href="http://archive.covalent.net ">
-        http://archive.covalent.net</jump> and the
+        mailing list archives at <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">
+        http://marc.theaimsgroup.com/?l=xerces-c-dev</jump> and the
 		<jump href="http://nagoya.apache.org/bugzilla/">Bugzilla</jump>
 		Apache bug database.</p>
-    </a>
-    </faq>
+    </s2>
 
-</faqs>
+</s1>

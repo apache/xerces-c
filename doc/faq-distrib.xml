@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
 
 <faqs title="Distributing &XercesCName;">
 
@@ -18,7 +18,7 @@
           <td><em>Compiler</em></td>
         </tr>
         <tr>
-          <td>Windows NT 4.0 SP5/98</td>
+          <td>Windows NT 4.0 SP5/2000</td>
           <td>MSVC 6.0 SP3</td>
         </tr>
         <tr>
@@ -91,7 +91,7 @@
             site</jump> site, then you only need to distribute
             <em>one</em> file:<br></br>
 
-            &XercesCWindowsDLL;.dll for Windows NT/95/98, or<br/>
+            &XercesCWindowsDLL;.dll for Windows NT/2000, or<br/>
             &XercesCUnixLib;.a for AIX, or<br/>
             &XercesCUnixLib;.so for Solaris/Linux, or<br/>
             &XercesCUnixLib;.sl for HP-UX.</p>
@@ -102,13 +102,13 @@
 
             <ol>
                 <li><em>ICU shared library file</em>:<br></br>
-                    icuuc.dll for Windows NT/95/98, or<br></br>
+                    icuuc.dll for Windows NT/2000, or<br></br>
                     libicuuc.a for AIX, or<br></br>
                     libicuuc.so for Solaris/Linux, or<br></br>
                     libicuuc.sl for HP-UX.</li>
 
                 <li><em>ICU converter data shared library file:</em><br></br>
-                    icudata.dll for Windows NT/95/98, or<br></br>
+                    icudata.dll for Windows NT/2000, or<br></br>
                     libicudata.a for AIX, or<br></br>
                     libicudata.so for Solaris/Linux, or<br></br>
                     libicudata.sl for HP-UX.</li>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
-<!DOCTYPE faqs SYSTEM "dtd/faqs.dtd">
+<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
 <faqs title="Other &XercesCName; Questions">
 
   <faq title="How do I determine the version of &XercesCName; I am using?">
@@ -11,7 +11,7 @@
            something similar). This is the version of &XercesCName; you are using.</p>
 
            <p>If you don't have the header files, you have to find the version
-           information from the shared library name. On Windows NT/95/98 right click on
+           information from the shared library name. On Windows right click on
            the DLL name &XercesCWindowsDLL;.dll in the bin directory and look up
            properties. The version information may be found on the Version tab.</p>
 
@@ -69,7 +69,8 @@
         <jump
          href="http://xml.apache.org/mail.html">http://xml.apache.org/mail.html</jump>.
         Archives of the lists are available from
-        <jump href="http://archive.covalent.net">http://archive.covalent.net</jump>
+        <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">
+        http://marc.theaimsgroup.com/?l=xerces-c-dev</jump>
         </p>
 
     </a>

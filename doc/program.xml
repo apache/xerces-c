@@ -1,23 +1,31 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Programming Guide">
 
-  <p>The Programming Guide has the following topics:</p>
-  <ul>
-    <li><jump href="program-sax.html">SAX Programming Guide</jump></li>
+  <s2 title="SAX Programming Guide">
+    <p>Read the <jump href="program-sax.html">SAX Programming Guide</jump> document
+      or jump directly to:</p>
     <ul>
       <li><jump href="program-sax.html#ConstructParser">Constructing a parser</jump></li>
       <li><jump href="program-sax.html#UsingSAX1API">Using the SAX API</jump></li>
     </ul>
-    <li><jump href="program-sax2.html">SAX2 Programming Guide</jump></li>
+  </s2>
+
+  <s2 title="SAX2 Programming Guide">
+    <p>Read the <jump href="program-sax2.html">SAX2 Programming Guide</jump> document
+      or jump directly to:</p>
     <ul>
       <li><jump href="program-sax2.html#ConstructParser2">Constructing an XML Reader</jump></li>
       <li><jump href="program-sax2.html#UsingSAX2API">Using the SAX2 API</jump></li>
       <li><jump href="program-sax2.html#SAX2Features">Supported Features</jump></li>
       <li><jump href="program-sax2.html#SAX2Properties">Supported Properties</jump></li>
     </ul>
-    <li><jump href="program-dom.html">DOM Programming Guide</jump></li>
+  </s2>
+
+  <s2 title="DOM Programming Guide">
+    <p>Read the <jump href="program-dom.html">DOM Programming Guide</jump> document
+      or jump directly to:</p>
     <ul>
       <li><jump href="program-dom.html#JAVAandCPP">Comparision of Java and C++ DOM's</jump></li>
       <ul>
@@ -32,7 +40,11 @@
       <li><jump href="program-dom.html#Downcasting">Downcasting</jump></li>
       <li><jump href="program-dom.html#Subclassing">Subclassing</jump></li>
     </ul>
-    <li><jump href="program-idom.html">Experimental IDOM Programming Guide</jump></li>
+  </s2>
+
+  <s2 title="Experimental IDOM Programming Guide">
+    <p>Read the <jump href="program-idom.html">Experimental IDOM Programming Guide</jump> document
+      or jump directly to:</p>
     <ul>
       <li><jump href="program-idom.html#ConstructIDOMParser">Constructing a parser</jump></li>
       <li><jump href="program-idom.html#DOMandIDOM">Comparision of C++ DOM and IDOM</jump></li>
@@ -48,7 +60,5 @@
         <li><jump href="program-idom.html#DOMStringXMCh">DOMString vs. XMLCh</jump></li>
       </ul>
     </ul>
-  </ul>
-
-
+  </s2>
 </s1>

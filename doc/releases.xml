@@ -1,14 +1,63 @@
 <?xml version="1.0"  encoding="iso-8859-1" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Releases">
 
-<s2 title="&XercesCName; Latest Changes in CVS since December 6, 2001">
+<s2 title="&XercesCName; Version 1.7.0: March 5, 2002">
 <table>
     <tr>
         <td>Date</td>
         <td>Contributor</td>
         <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2002-02-13</td>
+        <td>Khaled Noaman</td>
+        <td>Update samples to use SAX2 features/properties constants from XMLUni.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-11</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 6330] Base64::encode does not work.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-11</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2715] Build recursion suppresses make failures.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-11</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2496] libxerces-c1_5_0 fails to build correctly on Solaris.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-06</td>
+        <td>Khaled Noaman</td>
+        <td>Added a new flag '-p' to SAX2 samples to set the 'namespace-prefixes' feature.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-06</td>
+        <td>Khaled Noaman</td>
+        <td>Use IDOM for schema processing.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-05</td>
+        <td>Tinny Ng</td>
+        <td>Remove 3rd party jar style-apachexmljar, expand into physical files.
+        </td>
     </tr>
 
     <tr>
