@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/04/06 19:42:51  rahulj
+ * Clarified how big the target buffer should be in the API
+ * documentation.
+ *
  * Revision 1.11  2000/03/23 01:02:38  roddey
  * Updates to the XMLURL class to correct a lot of parsing problems
  * and to add support for the port number. Updated the URL tests
@@ -131,7 +135,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -147,7 +152,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -163,7 +169,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -179,7 +186,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -195,7 +203,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -211,7 +220,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -227,7 +237,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -243,7 +254,8 @@ public:
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of charcters to convert
       * @param radix The radix of the input data, based on which the conversion
       * will be done
@@ -509,7 +521,8 @@ public:
       * The behavior of <code>copyNString</code> is undefined if the source and
       * destination strings overlap.
       *
-      * @param target Destination string
+      * @param target Destination string. The size of the buffer should
+      *        atleast be 'maxChars + 1'.
       * @param src Null-terminated source string
       * @param maxChars The maximum number of characters to copy
       */
@@ -791,7 +804,8 @@ public:
 
     /** Transcodes a string to native code-page
       * @param toTranscode The string tobe transcoded
-      * @param toFill The buffer that is filled with the transcoded value
+      * @param toFill The buffer that is filled with the transcoded value.
+      *        The size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of characters to transcode
       * @return Returns true if successful, false if there was an error
       */
@@ -813,7 +827,8 @@ public:
 
     /** Transcodes a string to native code-page
       * @param toTranscode The string tobe transcoded
-      * @param toFill The buffer that is filled with the transcoded value
+      * @param toFill The buffer that is filled with the transcoded value.
+      *        The size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of characters to transcode
       * @return Returns true if successful, false if there was an error
       */
@@ -856,9 +871,11 @@ public:
     /**
       * Internal function to perform token replacement for strings.
       *
-      * @param errText The text where the replacement is to be done
-      * @param maxChars The maximum number of characters to consider for
-      * replacement
+      * @param errText The text (NULL terminated) where the replacement
+      *        is to be done. The size of this buffer should be
+      *        'maxChars + 1' to account for the final NULL.
+      * @param maxChars The maximum length that 'errText' can have after
+      *        token replacement.
       * @param text1 Replacement text-one
       * @param text2 Replacement text-two
       * @param text3 Replacement text-three
