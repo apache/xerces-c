@@ -515,27 +515,36 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 
     switch (source->getNodeType())
     {
-    case DOM_Node::ELEMENT_NODE :
+        case DOM_Node::ELEMENT_NODE :
         {
             ElementImpl *newelement;
-	    if (source->getLocalName() == null)
-		newelement = createElement(source->getNodeName());
-	    else
-		newelement = createElementNS(source->getNamespaceURI(),
+            if (source->getLocalName() == null)
+                newelement = createElement(source->getNodeName());
+            else
+                newelement = createElementNS(source->getNamespaceURI(),
                                              source->getNodeName());
             NamedNodeMapImpl *srcattr=source->getAttributes();
-            if(srcattr!=null)
+            if (srcattr!=null)
                 for(unsigned int i=0;i<srcattr->getLength();++i)
-		{
-		    AttrImpl *attr = (AttrImpl *) srcattr->item(i);
-		    if (attr -> getSpecified())	{ // not a default attribute
+                {
+                    AttrImpl *attr = (AttrImpl *) srcattr->item(i);
+                    AttrImpl * pOldAttr = null;
+                    if (attr -> getSpecified())	
+                    { // not a default attribute
                         AttrImpl *nattr = (AttrImpl *) importNode(attr, true);
-			if (attr -> getLocalName() == null)
-			    newelement->setAttributeNode(nattr);
-			else
-			    newelement->setAttributeNodeNS(nattr);
+                        if (attr -> getLocalName() == null)
+                            pOldAttr = newelement->setAttributeNode(nattr);
+                        else
+                            pOldAttr = newelement->setAttributeNodeNS(nattr);
+
+                        if (pOldAttr)
+                        {
+                            if (pOldAttr->nodeRefCount == 0)
+                                NodeImpl::deleteIf(pOldAttr);
+                        }
                     }
-		}
+                }
+
             newnode=newelement;
         }
         break;
