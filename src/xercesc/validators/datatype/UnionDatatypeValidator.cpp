@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.27  2004/03/19 01:17:22  peiyongz
+ * enumeration is ALWAYS owned, datatype validator not.
+ *
  * Revision 1.26  2004/01/29 11:51:22  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -591,11 +594,8 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
          * Deserialize RefArrayVectorOf<XMLCh>
          * Deserialize RefVectorOf<DatatypeValidator>
          ***/
-        bool owned = fEnumerationInherited ? true : false;
-        XTemplateSerializer::loadObject(&fEnumeration, 8, owned, serEng);
-
-        owned = fMemberTypesInherited ? true : false;
-        XTemplateSerializer::loadObject(&fMemberTypeValidators, 4, owned, serEng);
+        XTemplateSerializer::loadObject(&fEnumeration, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fMemberTypeValidators, 4, false, serEng);
 
         fValidatedDatatype = DatatypeValidator::loadDV(serEng);
 
