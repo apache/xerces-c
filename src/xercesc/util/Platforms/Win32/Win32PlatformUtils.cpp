@@ -794,7 +794,7 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
     //  otherwise we are back to using assembler.
     //  (But only if building with compilers that support inline assembler.)
     //
-    #if defined(_MSC_VER) || defined(__BCPLUSPLUS__)
+    #if (defined(_MSC_VER) || defined(__BCPLUSPLUS__)) && !defined(XERCES_NO_ASM)
 
     void*   result;
     __asm
