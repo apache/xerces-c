@@ -987,7 +987,7 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     fBuffer.append(chComma);
     fBuffer.append(name);
 
-    int    fullTypeNameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
+    unsigned int fullTypeNameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
     const XMLCh* fullName = fStringPool->getValueForId(fullTypeNameId);
 
     //check if we have already traversed the same simpleType decl
