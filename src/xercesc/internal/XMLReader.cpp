@@ -597,6 +597,9 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
     if (!token)
     {
         if (fXMLVersion == XMLV1_1 && ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))) {
+           // make sure one more char is in the buffer, the transcoder
+           // should put only a complete surrogate pair into the buffer
+           assert(fCharIndex+1 < fCharsAvail);
            if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
                return false;
 
@@ -626,8 +629,11 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
             //  Check the current char and take it if its a name char. Else
             //  break out.
             if (fXMLVersion == XMLV1_1 && ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))) {
-               if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
-                   return !toFill.isEmpty();
+                // make sure one more char is in the buffer, the transcoder
+                // should put only a complete surrogate pair into the buffer
+                assert(fCharIndex+1 < fCharsAvail);
+                if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
+                    return !toFill.isEmpty();
 
                 toFill.append(fCharBuf[fCharIndex++]);
                 fCurCol++;
