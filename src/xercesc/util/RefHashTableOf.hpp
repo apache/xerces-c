@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/20 11:45:06  gareth
+ * Made enumerators inherit from XMemory.
+ *
  * Revision 1.10  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -283,7 +286,7 @@ private:
 //  An enumerator for a value array. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TVal> class RefHashTableOfEnumerator : public XMLEnumerator<TVal>
+template <class TVal> class RefHashTableOfEnumerator : public XMLEnumerator<TVal>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -343,3 +346,4 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 #endif
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/20 11:45:06  gareth
+ * Made enumerators inherit from XMemory.
+ *
  * Revision 1.6  2003/10/17 21:10:40  peiyongz
  * nextElementKey() added
  *
@@ -239,7 +242,7 @@ private:
 //  An enumerator for a value array. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TVal> class RefHash2KeysTableOfEnumerator : public XMLEnumerator<TVal>
+template <class TVal> class RefHash2KeysTableOfEnumerator : public XMLEnumerator<TVal>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
