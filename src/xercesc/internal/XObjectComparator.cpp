@@ -57,6 +57,9 @@
 /*
  *
  * $Log$
+ * Revision 1.3  2003/11/12 20:29:05  peiyongz
+ * removal of fIDRefList
+ *
  * Revision 1.2  2003/10/31 22:15:42  peiyongz
  * dumpContent
  *
@@ -194,8 +197,10 @@ bool XObjectComparator::isEquivalent(SchemaGrammar* const lValue
                                             , rValue->fComplexTypeRegistry)        &&
             XTemplateComparator::isEquivalent(lValue->fGroupInfoRegistry
                                             , rValue->fGroupInfoRegistry)          &&
+/***
             XTemplateComparator::isEquivalent(lValue->fIDRefList
                                             , rValue->fIDRefList)                  &&
+***/
             XTemplateComparator::isEquivalent(lValue->fValidSubstitutionGroups
                                             , rValue->fValidSubstitutionGroups)
           );
@@ -219,8 +224,11 @@ bool XObjectComparator::isEquivalent(SchemaGrammar* const lValue
                                               , rValue->fComplexTypeRegistry);
     bool v11 = XTemplateComparator::isEquivalent(lValue->fGroupInfoRegistry
                                               , rValue->fGroupInfoRegistry);
+/***
     bool v12 = XTemplateComparator::isEquivalent(lValue->fIDRefList
                                               , rValue->fIDRefList);
+***/
+    bool v12 = true;
     bool v13 = XTemplateComparator::isEquivalent(lValue->fValidSubstitutionGroups
                                                , rValue->fValidSubstitutionGroups);
 
