@@ -23,6 +23,10 @@
 
     <anchor name="Release210"/>
     <s2 title="Release Information of &XercesCName; 2.1.0: August 26, 2002">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=07%2F25%2F02&amp;chfieldto=08%2F27%2F02&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.1.0.
+</p>
     <table>
         <tr>
             <td>Date</td>
@@ -444,6 +448,10 @@
 
     <anchor name="Release200"/>
     <s2 title="Release Information of &XercesCName; 2.0.0: July 23, 2002">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=03%2F09%2F02&amp;chfieldto=07%2F24%2F02&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.0.0.
+</p>
     <table>
         <tr>
             <td>Date</td>
@@ -1373,6 +1381,10 @@
 
     <anchor name="Release170"/>
     <s2 title="Release Information of &XercesCName; 1.7.0: March 8, 2002">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=12%2F08%2F01&amp;chfieldto=03%2F08%2F02&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.7.0.
+</p>
     <table>
         <tr>
             <td>Date</td>
@@ -2083,6 +2095,10 @@
 
     <anchor name="Release160"/>
     <s2 title="Release Information of &XercesCName; 1.6.0: December 6, 2001">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=10%2F27%2F01&amp;chfieldto=12%2F07%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.6.0.
+</p>
     <table>
         <tr>
             <td>Date</td>
@@ -2571,6 +2587,10 @@
 
     <anchor name="Release152"/>
     <s2 title="Release Information of &XercesCName; 1.5.2: October 26, 2001">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=07%2F19%2F01&amp;chfieldto=10%2F26%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.5.2.
+</p>
     <table>
         <tr>
             <td>Date</td>
@@ -3161,6 +3181,10 @@
 
     <anchor name="Release151"/>
     <s2 title="Release Information of &XercesCName; 1.5.1: July 18, 2001">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=06%2F16%2F01&amp;chfieldto=07%2F18%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.5.1.
+</p>
     <table>
         <tr>
             <td>Date</td>
@@ -3563,6 +3587,10 @@
 
     <anchor name="Release150"/>
     <s2 title="Release Information of &XercesCName; 1.5.0: June 15, 2001">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=01%2F31%2F01&amp;chfieldto=06%2F15%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0.
+</p>
 
     <table>
         <tr>
