@@ -34,8 +34,8 @@
         <li>More DOM L3 Core Support:</li>
         <ul>
             <li>DOMNode: baseURI</li>
-            <li>DOMAttr: isId</li>
-            <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode</li>
+            <li>DOMAttr: isId, getTypeInfo</li>
+            <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode, getTypeInfo</li>
         </ul>
         <li>DOM Message: make use of the non-standard extension DOMImplementation::loadDOMExceptionMsg
         to load the default error text message for the correspond Exception Code.</li>
@@ -80,9 +80,11 @@
             <ul>
               <li>To support additional DOM L3 functions, the following are added:</li>
               <ul>
-                  <li>DOMAttr: isId</li>
-                  <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode</li>
+                  <li>DOMAttr: isId, getTypeInfo</li>
+                  <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode, getTypeInfo</li>
               </ul>
+              <li>Added DOMTypeInfo class for getTypeInfo calss in DOMElement and DOMAttr</li>
+              <li>Added getDOMTypeInfoUri, getDOMTypeInfoName to XMLAttDef and XMLElementDecl for use in building DOMTypeInfo</li>
               <li>Added a non-standard extension DOMImplementation::loadDOMExceptionMsg to load the
               default error message for the corresponding DOMException code.</li>
               <li>XMLAttr: Added a constructor and a set method to allow creating/setting of

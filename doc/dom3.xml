@@ -50,10 +50,10 @@
         <code>DOMText</code>: getIsWhitespaceInElementContent
     </li>
     <li>
-        <code>DOMAttr</code>: isID
+        <code>DOMAttr</code>: isID, getTypeInfo
     </li>
     <li>
-        <code>DOMElement</code>: setIdAttributeNode, setIdAttributeNS, setIdAttribute
+        <code>DOMElement</code>: setIdAttributeNode, setIdAttributeNS, setIdAttribute, getTypeInfo
     </li>
     <li>
         <code>DOMUserDataHandler</code>

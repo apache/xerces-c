@@ -108,6 +108,7 @@ are owned by implementation</li>
 <tr ALIGN=LEFT VALIGN=TOP>
 <td>Xerces-C++ 2.2: February 6, 2003</td>
 <td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- add DOMElement::getTypeInfo and DOMAttr::getTypeInfo and DOMTypeInfo.hpp
 <br>- add const modifier to DOMNode::compareTreePosition, and add DOMTreePosition
 <br>- add const modifier to DOMNode::isSameNode
 <br>- add const modifier to DOMNode::isEqualNode
@@ -2150,6 +2151,16 @@ value) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const DOMTypeInfo*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getTypeInfo() = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
 <td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
 
 <td></td>
@@ -2409,6 +2420,16 @@ namespaceURI, const XMLCh* localName) = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>setIdAttributeNode(DOMAttr
 *newAttr) = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const DOMTypeInfo*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getTypeInfo() = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3444,8 +3465,58 @@ data) = 0;</font></font></td>
 
 <td></td>
 </tr>
+
 </table>
 </div>
+
+<h3>
+<font color="#000000">DOMTypeInfo.hpp:</font></h3>
+
+<div id="DOMEntityReference"><font face="Courier New,Courier"><font size=-1>class
+DOMTypeInfo </font></font>
+<table>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getName() = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getNamespace() = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+</div>
+
 
 <hr WIDTH="100%">
 <h2>
@@ -3560,6 +3631,7 @@ short mode, const XMLCh* const schemaType) = 0;</font></font></td>
 
 <td></td>
 </tr>
+
 </table>
 </div>
 
