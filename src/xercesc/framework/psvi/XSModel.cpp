@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/05/04 19:12:42  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.21  2004/05/04 19:02:40  cargilld
  * Enable IDs to work on all kinds of schema components
  *
@@ -661,7 +664,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     {
         fXSAnnotationList->addElement(annot);
         namespaceItem->fXSAnnotationList->addElement(annot);
-        addComponentToIdVector(annot, XSConstants::ANNOTATION);
+        addComponentToIdVector(annot, XSConstants::ANNOTATION -1);
         annot = annot->getNext();
     } // end of annotation loop
 }
