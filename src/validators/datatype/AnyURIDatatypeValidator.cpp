@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/10/10 14:18:26  peiyongz
+ * no message
+ *
  * Revision 1.9  2001/10/09 20:53:58  peiyongz
  * init(): take 1 arg.
  *
@@ -190,8 +193,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
         //
         if (XMLString::stringLen(content)) 
         {
-            XMLUri  *newURI = new XMLUri(fTempURI, content );   
-            delete newURI;
+            XMLUri  newURI(fTempURI, content );   
         }
     } 
     catch (...) 
