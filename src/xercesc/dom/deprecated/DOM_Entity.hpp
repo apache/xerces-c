@@ -86,7 +86,7 @@ class EntityImpl;
  *    nodes when reading an XML document.  Entities may be
  *    programatically created using DOM_Document::createEntity().
  */
-class CDOM_EXPORT DOM_Entity: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_Entity: public DOM_Node {
 public:
     /** @name Constructors and assignment operator */
     //@{

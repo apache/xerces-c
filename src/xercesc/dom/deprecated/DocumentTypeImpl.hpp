@@ -80,7 +80,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class NamedNodeMapImpl;
 
-class CDOM_EXPORT DocumentTypeImpl: public ParentNode {
+class DEPRECATED_DOM_EXPORT DocumentTypeImpl: public ParentNode {
 private:
     DOMString			name;
     NamedNodeMapImpl	*entities;

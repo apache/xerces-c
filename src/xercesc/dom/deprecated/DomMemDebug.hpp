@@ -79,7 +79,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //      DomMemDebug  exitState;     //   Captures post-test state.
 //      ExitState.printDifference(initialState);  // Display leaks.
 //
-class CDOM_EXPORT DomMemDebug
+class DEPRECATED_DOM_EXPORT DomMemDebug
 {
 public:
     int         liveStringHandles;

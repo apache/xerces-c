@@ -80,7 +80,7 @@ class EntityReferenceImpl;
  *
 */
 
-class CDOM_EXPORT DOM_EntityReference: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_EntityReference: public DOM_Node {
 public:
     /** @name Constructors and assignment operator */
     //@{

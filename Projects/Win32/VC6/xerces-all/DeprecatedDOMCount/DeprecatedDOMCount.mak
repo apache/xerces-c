@@ -41,12 +41,12 @@ ALL : "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Release" "$(OUTDIR)\DeprecatedDOMCount.exe"
+ALL : "XercesDeprecatedDOMLib - Win32 Release" "XercesLib - Win32 Release" "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 ReleaseCLEAN" 
+CLEAN :"XercesLib - Win32 ReleaseCLEAN" "XercesDeprecatedDOMLib - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -102,7 +102,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:no /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /machine:I386 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(OUTDIR)\xerces-c_2.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOM.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -123,12 +124,12 @@ ALL : "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\DeprecatedDOMCount.exe"
+ALL : "XercesDeprecatedDOMLib - Win32 Debug" "XercesLib - Win32 Debug" "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 DebugCLEAN" 
+CLEAN :"XercesLib - Win32 DebugCLEAN" "XercesDeprecatedDOMLib - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -187,7 +188,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /debug /machine:I386 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_2D.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -208,12 +210,12 @@ ALL : "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\DeprecatedDOMCount.exe"
+ALL : "XercesDeprecatedDOMLib - Win64 Debug" "XercesLib - Win64 Debug" "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 DebugCLEAN" 
+CLEAN :"XercesLib - Win64 DebugCLEAN" "XercesDeprecatedDOMLib - Win64 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -272,7 +274,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_2D.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -293,12 +296,12 @@ ALL : "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Release" "$(OUTDIR)\DeprecatedDOMCount.exe"
+ALL : "XercesDeprecatedDOMLib - Win64 Release" "XercesLib - Win64 Release" "$(OUTDIR)\DeprecatedDOMCount.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 ReleaseCLEAN" 
+CLEAN :"XercesLib - Win64 ReleaseCLEAN" "XercesDeprecatedDOMLib - Win64 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -355,7 +358,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /machine:IX86 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(OUTDIR)\xerces-c_2.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOM.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -427,6 +431,56 @@ SOURCE=..\..\..\..\..\tests\DOM\DeprecatedDOMCount\DeprecatedDOMCount.cpp
 "XercesLib - Win64 ReleaseCLEAN" : 
    cd "..\XercesLib"
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Release" RECURSE=1 CLEAN 
+   cd "..\DeprecatedDOMCount"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "DeprecatedDOMCount - Win32 Release"
+
+"XercesDeprecatedDOMLib - Win32 Release" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Release" 
+   cd "..\DeprecatedDOMCount"
+
+"XercesDeprecatedDOMLib - Win32 ReleaseCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\DeprecatedDOMCount"
+
+!ELSEIF  "$(CFG)" == "DeprecatedDOMCount - Win32 Debug"
+
+"XercesDeprecatedDOMLib - Win32 Debug" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Debug" 
+   cd "..\DeprecatedDOMCount"
+
+"XercesDeprecatedDOMLib - Win32 DebugCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\DeprecatedDOMCount"
+
+!ELSEIF  "$(CFG)" == "DeprecatedDOMCount - Win64 Debug"
+
+"XercesDeprecatedDOMLib - Win64 Debug" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Debug" 
+   cd "..\DeprecatedDOMCount"
+
+"XercesDeprecatedDOMLib - Win64 DebugCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Debug" RECURSE=1 CLEAN 
+   cd "..\DeprecatedDOMCount"
+
+!ELSEIF  "$(CFG)" == "DeprecatedDOMCount - Win64 Release"
+
+"XercesDeprecatedDOMLib - Win64 Release" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Release" 
+   cd "..\DeprecatedDOMCount"
+
+"XercesDeprecatedDOMLib - Win64 ReleaseCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Release" RECURSE=1 CLEAN 
    cd "..\DeprecatedDOMCount"
 
 !ENDIF 

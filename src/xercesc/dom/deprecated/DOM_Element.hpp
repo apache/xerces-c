@@ -96,7 +96,7 @@ class ElementImpl;
  * safely be used as a convenience.
  */
 
-class CDOM_EXPORT DOM_Element: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_Element: public DOM_Node {
 private:
 
 public:

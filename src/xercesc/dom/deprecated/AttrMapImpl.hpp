@@ -80,7 +80,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class NamedNodeMapImpl;
 
-class CDOM_EXPORT AttrMapImpl : public NamedNodeMapImpl
+class DEPRECATED_DOM_EXPORT AttrMapImpl : public NamedNodeMapImpl
 {
 private:
 	bool attrDefaults;

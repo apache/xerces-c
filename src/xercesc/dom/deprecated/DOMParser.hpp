@@ -95,7 +95,7 @@ class PSVIHandler;
   * <p>It can be used to instantiate a validating or non-validating
   * parser, by setting a member flag.</p>
   */
-class PARSERS_EXPORT DOMParser :
+class DEPRECATED_DOM_EXPORT DOMParser :
 
     public XMLDocumentHandler
     , public XMLErrorReporter

@@ -78,7 +78,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT CommentImpl: public CharacterDataImpl {
+class DEPRECATED_DOM_EXPORT CommentImpl: public CharacterDataImpl {
 public:
         CommentImpl(DocumentImpl *, const DOMString &);
         CommentImpl(const CommentImpl &other, bool deep);

@@ -82,7 +82,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 typedef RefVectorOf<RangeImpl> Ranges;
 
-class CDOM_EXPORT RangeImpl : public RefCountedImpl {
+class DEPRECATED_DOM_EXPORT RangeImpl : public RefCountedImpl {
 public:
     //c'tor
     RangeImpl(DOM_Document doc);

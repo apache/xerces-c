@@ -79,7 +79,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class    DocumentImpl;
 
 
-class CDOM_EXPORT ProcessingInstructionImpl: public ChildNode {
+class DEPRECATED_DOM_EXPORT ProcessingInstructionImpl: public ChildNode {
 protected:
     DOMString target;
     DOMString data;

@@ -75,7 +75,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT DocumentFragmentImpl: public ParentNode {
+class DEPRECATED_DOM_EXPORT DocumentFragmentImpl: public ParentNode {
 protected:
     DocumentFragmentImpl(DocumentImpl *);
 

@@ -73,7 +73,7 @@ class RangeImpl;
 
 //class RangeImpl;
 
-class CDOM_EXPORT DOM_Range {
+class DEPRECATED_DOM_EXPORT DOM_Range {
 public:
 
     enum CompareHow {

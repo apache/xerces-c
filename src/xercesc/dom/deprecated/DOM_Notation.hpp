@@ -80,7 +80,7 @@ class NotationImpl;
  * they are therefore readonly.
  * <p>A <code>Notation</code> node does not have any parent.
  */
-class CDOM_EXPORT DOM_Notation: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_Notation: public DOM_Node {
 public:
     /** @name Constructors and assignment operator */
     //@{

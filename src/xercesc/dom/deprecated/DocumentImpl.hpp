@@ -109,7 +109,7 @@ typedef RefVectorOf<TreeWalkerImpl> TreeWalkers;
 typedef RefVectorOf<RangeImpl> RangeImpls;
 
 
-class CDOM_EXPORT DocumentImpl: public ParentNode {
+class DEPRECATED_DOM_EXPORT DocumentImpl: public ParentNode {
 private:
     // -----------------------------------------------------------------------
     //  Private data types

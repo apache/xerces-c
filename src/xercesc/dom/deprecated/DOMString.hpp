@@ -81,7 +81,7 @@ class DOM_NullPtr;
  * strings, it is not meant to be a comphrehensive string class.
  */
 
-class CDOM_EXPORT DOMString : public XMemory{
+class DEPRECATED_DOM_EXPORT DOMString : public XMemory{
 public:
     /** @name Constructors and assignment operator */
     //@{
@@ -458,7 +458,7 @@ private:
   * @param rhs the second string
   * @return The concatenated object
   */
-DOMString CDOM_EXPORT operator + (const DOMString &lhs, const DOMString &rhs);
+DOMString DEPRECATED_DOM_EXPORT operator + (const DOMString &lhs, const DOMString &rhs);
 
 /**
   * Concatenate a null terminated Unicode string to a DOMString.
@@ -467,7 +467,7 @@ DOMString CDOM_EXPORT operator + (const DOMString &lhs, const DOMString &rhs);
   * @param rhs the XMLCh * string
   * @return The concatenated object
   */
-DOMString CDOM_EXPORT operator + (const DOMString &lhs, const XMLCh* rhs);
+DOMString DEPRECATED_DOM_EXPORT operator + (const DOMString &lhs, const XMLCh* rhs);
 
 
 /**
@@ -477,7 +477,7 @@ DOMString CDOM_EXPORT operator + (const DOMString &lhs, const XMLCh* rhs);
   * @param rhs the DOMString
   * @return The concatenated object
   */
-DOMString CDOM_EXPORT operator + (const XMLCh* lhs, const DOMString &rhs);
+DOMString DEPRECATED_DOM_EXPORT operator + (const XMLCh* lhs, const DOMString &rhs);
 
 
 /**
@@ -487,7 +487,7 @@ DOMString CDOM_EXPORT operator + (const XMLCh* lhs, const DOMString &rhs);
   * @param rhs the character
   * @return The concatenated object
   */
-DOMString CDOM_EXPORT operator + (const DOMString &lhs, XMLCh rhs);
+DOMString DEPRECATED_DOM_EXPORT operator + (const DOMString &lhs, XMLCh rhs);
 
 
 /**
@@ -497,7 +497,7 @@ DOMString CDOM_EXPORT operator + (const DOMString &lhs, XMLCh rhs);
   * @param rhs the DOMString
   * @return The concatenated object
   */
-DOMString CDOM_EXPORT operator + (XMLCh lhs, const DOMString &rhs);
+DOMString DEPRECATED_DOM_EXPORT operator + (XMLCh lhs, const DOMString &rhs);
 
 XERCES_CPP_NAMESPACE_END
 

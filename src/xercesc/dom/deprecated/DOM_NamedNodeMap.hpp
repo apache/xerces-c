@@ -81,7 +81,7 @@ class NamedNodeMapImpl;
 * convenient enumeration of the contents, and
 * does not imply that the DOM specifies an order to these Nodes.
 */
-class CDOM_EXPORT DOM_NamedNodeMap {
+class DEPRECATED_DOM_EXPORT DOM_NamedNodeMap {
 private:
     void     *fImpl;
 	short    flagElem;

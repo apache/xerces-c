@@ -93,7 +93,7 @@ class AttrImpl;
 * also are quite distinct.
 *
 */
-class CDOM_EXPORT DOM_Attr: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_Attr: public DOM_Node {
 
 public:
   /** @name Constructors and assignment operators */

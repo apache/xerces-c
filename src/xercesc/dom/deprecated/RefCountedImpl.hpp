@@ -76,7 +76,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT RefCountedImpl : public XMemory
+class DEPRECATED_DOM_EXPORT RefCountedImpl : public XMemory
 {
 public:
     int			    nodeRefCount;

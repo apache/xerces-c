@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.42  2004/02/24 22:57:27  peiyongz
+# XercesDeprecatedDOMLib
+#
 # Revision 1.41  2003/12/01 22:16:56  neilg
 # change spaces to tabs, as suggested in bug 25084
 #
@@ -641,6 +644,7 @@ UTIL_CPP_OBJECTS = \
 	XMLIBM1140Transcoder.$(TO) \
 	XMLMsgLoader.$(TO) \
 	XMLNumber.$(TO) \
+	XMLRegisterCleanup.$(TO) \
 	XMLString.$(TO) \
 	XMLStringTokenizer.$(TO) \
 	XMLUCSTranscoder.$(TO) \

@@ -86,7 +86,7 @@ class TreeWalkerImpl;
  * deeply nested the structure of the original document.
  *
  */
-class CDOM_EXPORT DOM_TreeWalker {
+class DEPRECATED_DOM_EXPORT DOM_TreeWalker {
     public:
         /** @name Constructors and assignment operator */
         //@{

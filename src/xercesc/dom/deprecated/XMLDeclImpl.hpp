@@ -78,7 +78,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMString;
 
-class CDOM_EXPORT XMLDeclImpl: public ChildNode {
+class DEPRECATED_DOM_EXPORT XMLDeclImpl: public ChildNode {
 
 private:
     // -----------------------------------------------------------------------

@@ -79,7 +79,7 @@ class CharacterDataImpl;
  * the interface from it. All <code>offset</code>s in this interface start
  * from 0, and index in terms of Unicode 16 bit storage units.
  */
-class CDOM_EXPORT DOM_CharacterData: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_CharacterData: public DOM_Node {
 
 private:
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2004/02/24 22:57:28  peiyongz
+ * XercesDeprecatedDOMLib
+ *
  * Revision 1.3  2004/01/29 11:48:47  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -82,15 +85,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// This is a mutex for exclusive use by this class
-extern XMLMutex* gXMLCleanupListMutex;
-
-// This is the head of a list of XMLRegisterCleanup objects that
-// is used during XMLPlatformUtils::Terminate() to find objects to
-// clean up
-class XMLRegisterCleanup;
-extern XMLRegisterCleanup* gXMLCleanupList;
-
 //
 //  For internal use only.
 //
@@ -104,83 +98,29 @@ extern XMLRegisterCleanup* gXMLCleanupList;
 //  N.B. These objects need to be statically allocated.  I couldn't think
 //  of a neat way of ensuring this - can anyone else?
 
-class XMLRegisterCleanup
+class XMLUTIL_EXPORT XMLRegisterCleanup
 {
 public :
 	// The cleanup function to be called on XMLPlatformUtils::Terminate()
 	typedef void (*XMLCleanupFn)();
 	
-	void doCleanup() {
-		// When performing cleanup, we only do this once, but we can
-		// cope if somehow we have been called twice.
-		if (m_cleanupFn)
-            m_cleanupFn();
-
-        // We need to remove "this" from the list
-        // irregardless of the cleanup Function
-        unregisterCleanup();
-	}
+	void doCleanup(); 
 
 	// This function is called during initialisation of static data to
 	// register a function to be called on XMLPlatformUtils::Terminate.
 	// It gives an object that uses static data an opportunity to reset
 	// such data.
-	void registerCleanup(XMLCleanupFn cleanupFn) {
-		// Store the cleanup function
-		m_cleanupFn = cleanupFn;
-		
-		// Add this object to the list head, if it is not already
-		// present - which it shouldn't be.
-		// This is done under a mutex to ensure thread safety.
-		gXMLCleanupListMutex->lock();
-		if (!m_nextCleanup && !m_prevCleanup) {
-			m_nextCleanup = gXMLCleanupList;
-			gXMLCleanupList = this;
-
-			if (m_nextCleanup)
-				m_nextCleanup->m_prevCleanup = this;
-		}
-		gXMLCleanupListMutex->unlock();
-	}
+	void registerCleanup(XMLCleanupFn cleanupFn);
 
 	// This function can be called either from XMLPlatformUtils::Terminate
 	// to state that the cleanup has been performed and should not be
 	// performed again, or from code that you have written that determines
 	// that cleanup is no longer necessary.
-	void unregisterCleanup() {
-		gXMLCleanupListMutex->lock();
-
-        //
-        // To protect against some compiler's (eg hp11) optimization
-        // to change "this" as they update gXMLCleanupList
-        //
-        // refer to
-        // void XMLPlatformUtils::Terminate()
-        //       ...
-        //       while (gXMLCleanupList)
-		//            gXMLCleanupList->doCleanup();
-        //
-
-        XMLRegisterCleanup *tmpThis = (XMLRegisterCleanup*) this;
-
-        // Unlink this object from the cleanup list
-		if (m_nextCleanup) m_nextCleanup->m_prevCleanup = m_prevCleanup;
-		
-		if (!m_prevCleanup) gXMLCleanupList = m_nextCleanup;
-		else m_prevCleanup->m_nextCleanup = m_nextCleanup;
-
-		gXMLCleanupListMutex->unlock();
-		
-		// Reset the object to the default state
-		tmpThis->resetCleanup();
-	}
+	void unregisterCleanup();
 
 	// The default constructor sets a state that ensures that this object
 	// will do nothing
-	XMLRegisterCleanup()
-	{
-		resetCleanup();
-	}
+	XMLRegisterCleanup();
 
 private:
     // -----------------------------------------------------------------------
@@ -196,11 +136,7 @@ private:
 	XMLRegisterCleanup *m_nextCleanup, *m_prevCleanup;
 
 	// This function reinitialises the object to the default state
-	void resetCleanup() {
-		m_nextCleanup = 0;
-		m_prevCleanup = 0;
-		m_cleanupFn = 0;
-	}
+	void resetCleanup();
 };
 
 XERCES_CPP_NAMESPACE_END

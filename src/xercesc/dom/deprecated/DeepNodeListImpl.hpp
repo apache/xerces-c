@@ -82,7 +82,7 @@ class NodeImpl;
 class NodeVector;
 
 
-class CDOM_EXPORT DeepNodeListImpl: public NodeListImpl {
+class DEPRECATED_DOM_EXPORT DeepNodeListImpl: public NodeListImpl {
 private:
     NodeImpl            *rootNode;
     DOMString           tagName;

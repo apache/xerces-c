@@ -90,7 +90,7 @@ class TextImpl;
  * particular document structure, such as navigation with
  * <code>XPointers.</code>
  */
-class CDOM_EXPORT DOM_Text: public DOM_CharacterData {
+class DEPRECATED_DOM_EXPORT DOM_Text: public DOM_CharacterData {
 
     public:
     /** @name Constructors and assignment operator */

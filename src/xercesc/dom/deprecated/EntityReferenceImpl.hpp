@@ -76,7 +76,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT EntityReferenceImpl: public ParentNode
+class DEPRECATED_DOM_EXPORT EntityReferenceImpl: public ParentNode
 {
 private:
     DOMString name;

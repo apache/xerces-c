@@ -76,7 +76,7 @@ class DOM_DocumentType;
  */
 
 
-class CDOM_EXPORT DOM_DOMImplementation {
+class DEPRECATED_DOM_EXPORT DOM_DOMImplementation {
  private:
     DOM_DOMImplementation(const DOM_DOMImplementation &other);
 

@@ -94,7 +94,7 @@ class DOM_NullPtr;  // A dummy class, with no implementation, that is
  * Note that the  specialized interfaces may contain additional and more
  * convenient mechanisms to get and set the relevant information.
  */
-class  CDOM_EXPORT DOM_Node {
+class  DEPRECATED_DOM_EXPORT DOM_Node {
 
     public:
     /** @name Constructors and assignment operators */

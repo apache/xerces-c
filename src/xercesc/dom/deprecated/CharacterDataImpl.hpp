@@ -77,7 +77,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT CharacterDataImpl: public ChildNode
+class DEPRECATED_DOM_EXPORT CharacterDataImpl: public ChildNode
 {
 protected:
     DOMString data;

@@ -74,7 +74,7 @@ class ProcessingInstructionImpl;
  * instruction", used in XML as a way to keep processor-specific information
  * in the text of the document.
  */
-class  CDOM_EXPORT DOM_ProcessingInstruction: public DOM_Node {
+class  DEPRECATED_DOM_EXPORT DOM_ProcessingInstruction: public DOM_Node {
 public:
     /** @name Constructors and assignment operator */
     //@{

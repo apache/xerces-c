@@ -81,7 +81,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DeepNodeListImpl;
 
-class CDOM_EXPORT ElementImpl: public ParentNode {
+class DEPRECATED_DOM_EXPORT ElementImpl: public ParentNode {
 protected:
     DOMString name;
     AttrMapImpl *attributes;

@@ -77,7 +77,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class  NodeImpl;
 
 
-class CDOM_EXPORT NodeListImpl : public RefCountedImpl
+class DEPRECATED_DOM_EXPORT NodeListImpl : public RefCountedImpl
 {
 protected:
     NodeListImpl();

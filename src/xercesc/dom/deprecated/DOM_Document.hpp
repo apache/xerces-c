@@ -100,7 +100,7 @@ class NodeIteratorImpl;
 * <code>ownerDocument</code> attribute which associates them with the
 * <code>Document</code> within whose  context they were created.
 */
-class CDOM_EXPORT DOM_Document: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_Document: public DOM_Node {
 
 public:
     /** @name Constructors and assignment operators */

@@ -80,7 +80,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT ChildNode: public NodeImpl {
+class DEPRECATED_DOM_EXPORT ChildNode: public NodeImpl {
 public:
     ChildNode                *previousSibling;
     ChildNode                *nextSibling;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/02/24 22:57:28  peiyongz
+ * XercesDeprecatedDOMLib
+ *
  * Revision 1.17  2004/02/17 15:56:50  neilg
  * fix for bug 25035; much thanks to Abe Backus
  *
@@ -511,6 +514,12 @@ typedef XMLUInt32           UCS4Ch;
 #define CDOM_EXPORT PLATFORM_EXPORT
 #else
 #define CDOM_EXPORT PLATFORM_IMPORT
+#endif
+
+#if defined(PROJ_DEPRECATED_DOM)
+#define DEPRECATED_DOM_EXPORT PLATFORM_EXPORT
+#else
+#define DEPRECATED_DOM_EXPORT PLATFORM_IMPORT
 #endif
 
 #if defined(PROJ_PARSERS)

@@ -77,7 +77,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 
-class CDOM_EXPORT AttrNSImpl: public AttrImpl {
+class DEPRECATED_DOM_EXPORT AttrNSImpl: public AttrImpl {
 protected:
     //Introduced in DOM Level 2
     DOMString namespaceURI;     //namespace URI of this node

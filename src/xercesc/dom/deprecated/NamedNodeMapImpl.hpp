@@ -80,7 +80,7 @@ class NodeVector;
 class DocumentImpl;
 class NodeImpl;
 
-class CDOM_EXPORT NamedNodeMapImpl: public XMemory {
+class DEPRECATED_DOM_EXPORT NamedNodeMapImpl: public XMemory {
 protected:
     NodeVector       *nodes;
     NodeImpl         *ownerNode;    // the node this map belongs to

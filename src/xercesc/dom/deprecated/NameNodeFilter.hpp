@@ -79,7 +79,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT NameNodeFilter : public NodeFilterImpl
+class DEPRECATED_DOM_EXPORT NameNodeFilter : public NodeFilterImpl
 {
 	public:
 		NameNodeFilter();

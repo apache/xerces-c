@@ -111,7 +111,7 @@ const int null = 0;
 #endif
 
 
-class CDOM_EXPORT NodeImpl: public NodeListImpl {
+class DEPRECATED_DOM_EXPORT NodeImpl: public NodeListImpl {
 public:
     NodeImpl                *ownerNode; // typically the parent but not always!
 

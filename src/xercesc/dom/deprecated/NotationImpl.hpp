@@ -77,7 +77,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DocumentImpl;
 
-class CDOM_EXPORT NotationImpl: public NodeImpl {
+class DEPRECATED_DOM_EXPORT NotationImpl: public NodeImpl {
 private:
     DOMString name;
     DOMString publicId;

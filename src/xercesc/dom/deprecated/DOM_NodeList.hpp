@@ -81,7 +81,7 @@ class NodeListImpl;
  * reflected in any NodeLists that may have been created for that tree.
  */
 
-class  CDOM_EXPORT DOM_NodeList {
+class  DEPRECATED_DOM_EXPORT DOM_NodeList {
 private:
     NodeListImpl *fImpl;
 

@@ -76,7 +76,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT CDATASectionImpl: public TextImpl {
+class DEPRECATED_DOM_EXPORT CDATASectionImpl: public TextImpl {
 public:
     CDATASectionImpl(DocumentImpl *ownerDoc, const DOMString & data);
     CDATASectionImpl(const CDATASectionImpl &other, bool deep = false);

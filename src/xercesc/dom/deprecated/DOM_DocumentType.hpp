@@ -78,7 +78,7 @@ class DocumentTypeImpl;
  *  to the list of entities and notations that are defined for the document.
  * <p>The DOM Level 1 doesn't support editing <code>DocumentType</code> nodes.
  */
-class CDOM_EXPORT DOM_DocumentType: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_DocumentType: public DOM_Node {
 
 public:
     /** @name Constructors and assignment operator */

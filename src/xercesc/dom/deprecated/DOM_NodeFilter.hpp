@@ -92,7 +92,7 @@ class NodeFilterImpl;
  *  code reuse.
  *
  */
-class CDOM_EXPORT DOM_NodeFilter
+class DEPRECATED_DOM_EXPORT DOM_NodeFilter
 {
     public:
 	/** @name Enumerators for Node Filter */

@@ -76,7 +76,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT ElementNSImpl: public ElementImpl {
+class DEPRECATED_DOM_EXPORT ElementNSImpl: public ElementImpl {
 protected:
     //Introduced in DOM Level 2
     DOMString namespaceURI;     //namespace URI of this node

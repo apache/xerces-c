@@ -82,7 +82,7 @@ class CDATASectionImpl;
  * interface. Adjacent CDATASection nodes are not merged by use
  * of the Element.normalize() method.
  */
-class CDOM_EXPORT DOM_CDATASection: public DOM_Text {
+class DEPRECATED_DOM_EXPORT DOM_CDATASection: public DOM_Text {
 public:
   /** @name Constructors and assignment operators */
   //@{

@@ -80,7 +80,7 @@ class NodeIteratorImpl;
  * <code>DocumentTraversal.createNodeIterator()</code>.
  *
  */
-class CDOM_EXPORT DOM_NodeIterator
+class DEPRECATED_DOM_EXPORT DOM_NodeIterator
 {
     public:
         /** @name Constructors and assignment operator */

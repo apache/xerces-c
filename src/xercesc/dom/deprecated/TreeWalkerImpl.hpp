@@ -76,7 +76,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
+class DEPRECATED_DOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
 
 	public:
     // Implementation Note: No state is kept except the data above

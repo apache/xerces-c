@@ -76,7 +76,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT ElementDefinitionImpl: public NodeImpl {
+class DEPRECATED_DOM_EXPORT ElementDefinitionImpl: public NodeImpl {
 private:
     DOMString name;
     NamedNodeMapImpl *attributes;

@@ -41,12 +41,12 @@ ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Release" "$(OUTDIR)\MemHandlerTest.exe"
+ALL : "XercesDeprecatedDOMLib - Win32 Release" "XercesLib - Win32 Release" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 ReleaseCLEAN" 
+CLEAN :"XercesLib - Win32 ReleaseCLEAN" "XercesDeprecatedDOMLib - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -104,7 +104,8 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:cons
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(OUTDIR)\xerces-c_2.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOM.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -125,12 +126,12 @@ ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\MemHandlerTest.exe"
+ALL : "XercesDeprecatedDOMLib - Win32 Debug" "XercesLib - Win32 Debug" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 DebugCLEAN" 
+CLEAN :"XercesLib - Win32 DebugCLEAN" "XercesDeprecatedDOMLib - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -191,7 +192,8 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /increme
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_2D.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -212,12 +214,12 @@ ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\MemHandlerTest.exe"
+ALL : "XercesDeprecatedDOMLib - Win64 Debug" "XercesLib - Win64 Debug" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 DebugCLEAN" 
+CLEAN :"XercesLib - Win64 DebugCLEAN" "XercesDeprecatedDOMLib - Win64 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -278,7 +280,8 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /increme
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_2D.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -299,12 +302,12 @@ ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Release" "$(OUTDIR)\MemHandlerTest.exe"
+ALL : "XercesDeprecatedDOMLib - Win64 Release" "XercesLib - Win64 Release" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 ReleaseCLEAN" 
+CLEAN :"XercesLib - Win64 ReleaseCLEAN" "XercesDeprecatedDOMLib - Win64 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -363,7 +366,8 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:cons
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(OUTDIR)\xerces-c_2.lib" \
+	"$(OUTDIR)\xercesDeprecatedDOM.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -387,6 +391,7 @@ SOURCE=..\..\..\..\..\tests\MemHandlerTest\MemoryMonitor.cpp
 
 "$(INTDIR)\MemoryMonitor.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
+
 
 SOURCE=..\..\..\..\..\tests\MemHandlerTest\SimpleHashPtr.cpp
 
@@ -440,6 +445,56 @@ SOURCE=..\..\..\..\..\tests\MemHandlerTest\SimpleHashPtr.cpp
 "XercesLib - Win64 ReleaseCLEAN" : 
    cd "..\XercesLib"
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Release" RECURSE=1 CLEAN 
+   cd "..\MemHandlerTest"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "MemHandlerTest - Win32 Release"
+
+"XercesDeprecatedDOMLib - Win32 Release" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Release" 
+   cd "..\MemHandlerTest"
+
+"XercesDeprecatedDOMLib - Win32 ReleaseCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\MemHandlerTest"
+
+!ELSEIF  "$(CFG)" == "MemHandlerTest - Win32 Debug"
+
+"XercesDeprecatedDOMLib - Win32 Debug" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Debug" 
+   cd "..\MemHandlerTest"
+
+"XercesDeprecatedDOMLib - Win32 DebugCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\MemHandlerTest"
+
+!ELSEIF  "$(CFG)" == "MemHandlerTest - Win64 Debug"
+
+"XercesDeprecatedDOMLib - Win64 Debug" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Debug" 
+   cd "..\MemHandlerTest"
+
+"XercesDeprecatedDOMLib - Win64 DebugCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Debug" RECURSE=1 CLEAN 
+   cd "..\MemHandlerTest"
+
+!ELSEIF  "$(CFG)" == "MemHandlerTest - Win64 Release"
+
+"XercesDeprecatedDOMLib - Win64 Release" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Release" 
+   cd "..\MemHandlerTest"
+
+"XercesDeprecatedDOMLib - Win64 ReleaseCLEAN" : 
+   cd "..\XercesLib"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Release" RECURSE=1 CLEAN 
    cd "..\MemHandlerTest"
 
 !ENDIF 

@@ -78,7 +78,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT TextImpl: public CharacterDataImpl {
+class DEPRECATED_DOM_EXPORT TextImpl: public CharacterDataImpl {
 public:
     TextImpl(DocumentImpl *ownerDoc, const DOMString &data);
     TextImpl(const TextImpl &other, bool deep=false);

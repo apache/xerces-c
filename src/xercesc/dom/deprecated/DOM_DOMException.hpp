@@ -85,7 +85,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   * arranging for its disposal.
   *
   */
-class CDOM_EXPORT DOM_DOMException  {
+class DEPRECATED_DOM_EXPORT DOM_DOMException  {
 public:
     /** @name Enumerators for DOM Exceptions */
     //@{

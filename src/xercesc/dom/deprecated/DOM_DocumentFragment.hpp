@@ -107,7 +107,7 @@ class DocumentFragmentImpl;
  * such as <code>insertBefore()</code> and  <code>appendChild()</code>.
  */
 
-class CDOM_EXPORT DOM_DocumentFragment: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_DocumentFragment: public DOM_Node {
 
 public:
     /** @name Constructors and assignment operators */

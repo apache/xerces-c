@@ -75,7 +75,7 @@ class CommentImpl;
  * <P>The string value contains all of the characters between
  * the starting '<code>&lt;!--</code>' and ending '<code>--&gt;</code>'.
  */
-class CDOM_EXPORT DOM_Comment: public DOM_CharacterData {
+class DEPRECATED_DOM_EXPORT DOM_Comment: public DOM_CharacterData {
 
 public:
   /** @name Constructors and assignment operators */

@@ -73,7 +73,7 @@ class XMLDeclImpl;
 * Class to refer to XML Declaration nodes in the DOM.
 *
 */
-class CDOM_EXPORT DOM_XMLDecl: public DOM_Node {
+class DEPRECATED_DOM_EXPORT DOM_XMLDecl: public DOM_Node {
 
 public:
     /** @name Constructors and assignment operators */
