@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/10/01 21:03:55  peiyongz
+ * DTV Reorganization:derived from AbstractNumericValidator
+ *
  * Revision 1.3  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -74,11 +77,11 @@
 #if !defined(FLOAT_DATATYPEVALIDATOR_HPP)
 #define FLOAT_DATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
+#include <validators/datatype/AbstractNumericValidator.hpp>
 #include <util/RefVectorOf.hpp>
 #include <util/XMLFloat.hpp>
 
-class VALIDATORS_EXPORT FloatDatatypeValidator : public DatatypeValidator
+class VALIDATORS_EXPORT FloatDatatypeValidator : public AbstractNumericValidator
 {
 public:
 
@@ -91,31 +94,13 @@ public:
     FloatDatatypeValidator();
 
     FloatDatatypeValidator(DatatypeValidator*            const baseValidator
-                           , RefHashTableOf<KVStringPair>* const facets
-                           , RefVectorOf<XMLCh>*           const enums
-                           , const int                           finalSet);
+                         , RefHashTableOf<KVStringPair>* const facets
+                         , RefVectorOf<XMLCh>*           const enums
+                         , const int                           finalSet);
 
     virtual ~FloatDatatypeValidator();
 
 	//@}
-
-    // -----------------------------------------------------------------------
-    // Validation methods
-    // -----------------------------------------------------------------------
-    /** @name Validation Function */
-    //@{
-
-    /**
-     * validate that a string matches the boolean datatype
-     * @param content A string containing the content to be validated
-     *
-     * @exception throws InvalidDatatypeException if the content is
-     * is not valid.
-     */
-
-	void validate(const XMLCh* const content);
-
-    //@}
 
     // -----------------------------------------------------------------------
     // Compare methods
@@ -130,7 +115,7 @@ public:
      * @param content2
      * @return
      */
-    int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const);
 
     //@}
 
@@ -138,157 +123,59 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
-private:
-
-    void checkContent( const XMLCh* const content, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    void cleanUp();
+protected:
 
 // -----------------------------------------------------------------------
-// Getter methods
+// ctor provided to be used by derived classes
 // -----------------------------------------------------------------------
+    FloatDatatypeValidator(DatatypeValidator*            const baseValidator
+                         , RefHashTableOf<KVStringPair>* const facets
+                         , const int                           finalSet
+                         , const ValidatorType                 type);
 
-    XMLFloat* const            getMaxInclusive() const;
-
-    XMLFloat* const            getMaxExclusive() const;
-
-    XMLFloat* const            getMinInclusive() const;
-
-    XMLFloat* const            getMinExclusive() const;
-
-    RefVectorOf<XMLFloat>*     getEnumeration() const;
+    inline void init(RefVectorOf<XMLCh>*           const enums);
 
 // -----------------------------------------------------------------------
-// Setter methods
+// Abstract interface from AbstractNumericFacetValidator
+// -----------------------------------------------------------------------
+    
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
+
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacetConstraintsBase() const;
+
+    virtual int  compareValues(const XMLNumber* const lValue
+                             , const XMLNumber* const rValue);
+
+    virtual void  setMaxInclusive(const XMLCh* const);
+
+    virtual void  setMaxExclusive(const XMLCh* const);
+
+    virtual void  setMinInclusive(const XMLCh* const);
+
+    virtual void  setMinExclusive(const XMLCh* const);
+
+    virtual void  setEnumeration();
+
+// -----------------------------------------------------------------------
+// Abstract interface from AbstractNumericValidator
 // -----------------------------------------------------------------------
 
-    void  setMaxInclusive(XMLFloat* const);
-
-    void  setMaxExclusive(XMLFloat* const);
-
-    void  setMinInclusive(XMLFloat* const);
-
-    void  setMinExclusive(XMLFloat* const);
-
-    void  setEnumeration(RefVectorOf<XMLFloat>* );
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    // -----------------------------------------------------------------------
-     bool                 fEnumerationInherited;
-
-     XMLFloat*       fMaxInclusive;
-     XMLFloat*       fMaxExclusive;
-     XMLFloat*       fMinInclusive;
-     XMLFloat*       fMinExclusive;
-
-     RefVectorOf<XMLFloat>*  fEnumeration;    // save the actual value
+    virtual void checkContent( const XMLCh* const content, bool asBase);
 
 };
 
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-inline int FloatDatatypeValidator::compare(const XMLCh* const lValue
-                                           , const XMLCh* const rValue)
+void FloatDatatypeValidator::init(RefVectorOf<XMLCh>*   const enums)
 {
-    return XMLFloat::compareValues(new XMLFloat(lValue)
-                                      , new XMLFloat(rValue));
-}
-
-inline DatatypeValidator* FloatDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new FloatDatatypeValidator(this, facets, enums, finalSet);
-}
-
-inline void FloatDatatypeValidator::validate( const XMLCh* const content)
-{
-    checkContent(content, false);
-}
-
-inline void FloatDatatypeValidator::cleanUp()
-{
-    delete fMaxInclusive;
-    delete fMaxExclusive;
-    delete fMinInclusive;
-    delete fMinExclusive;
-
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-inline XMLFloat* const FloatDatatypeValidator::getMaxInclusive() const
-{
-    return fMaxInclusive;
-}
-
-inline XMLFloat* const FloatDatatypeValidator::getMaxExclusive() const
-{
-    return fMaxExclusive;
-}
-
-inline XMLFloat* const FloatDatatypeValidator::getMinInclusive() const
-{
-    return fMinInclusive;
-}
-
-inline XMLFloat* const FloatDatatypeValidator::getMinExclusive() const
-{
-    return fMinExclusive;
-}
-
-inline RefVectorOf<XMLFloat>* FloatDatatypeValidator::getEnumeration() const
-{
-    return fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-inline void  FloatDatatypeValidator::setMaxInclusive(XMLFloat* const newMaxInclusive)
-{
-    if (fMaxInclusive) delete fMaxInclusive;
-    fMaxInclusive = newMaxInclusive;
-}
-
-inline void  FloatDatatypeValidator::setMaxExclusive(XMLFloat* const newMaxExclusive)
-{
-    if (fMaxExclusive) delete fMaxExclusive;
-    fMaxExclusive = newMaxExclusive;
-}
-
-inline void  FloatDatatypeValidator::setMinInclusive(XMLFloat* const newMinInclusive)
-{
-    if (fMinInclusive) delete fMinInclusive;
-    fMinInclusive = newMinInclusive;
-}
-
-inline void  FloatDatatypeValidator::setMinExclusive(XMLFloat* const newMinExclusive)
-{
-    if (fMinExclusive) delete fMinExclusive;
-    fMinExclusive = newMinExclusive;
-}
-
-inline void  FloatDatatypeValidator::setEnumeration(RefVectorOf<XMLFloat>* newEnum)
-{
-    if (fEnumeration) delete fEnumeration;
-    fEnumeration = newEnum;
+    AbstractNumericValidator::init(enums);
 }
 
 /**

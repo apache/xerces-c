@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/10/01 21:03:55  peiyongz
+ * DTV Reorganization:derived from AbstractNumericValidator
+ *
  * Revision 1.3  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -73,11 +76,11 @@
 #if !defined(DOUBLE_DATATYPEVALIDATOR_HPP)
 #define DOUBLE_DATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
+#include <validators/datatype/AbstractNumericValidator.hpp>
 #include <util/RefVectorOf.hpp>
 #include <util/XMLDouble.hpp>
 
-class VALIDATORS_EXPORT DoubleDatatypeValidator : public DatatypeValidator
+class VALIDATORS_EXPORT DoubleDatatypeValidator : public AbstractNumericValidator
 {
 public:
 
@@ -90,31 +93,13 @@ public:
     DoubleDatatypeValidator();
 
     DoubleDatatypeValidator(DatatypeValidator*            const baseValidator
-                           , RefHashTableOf<KVStringPair>* const facets
-                           , RefVectorOf<XMLCh>*           const enums
-                           , const int                           finalSet);
+                          , RefHashTableOf<KVStringPair>* const facets
+                          , RefVectorOf<XMLCh>*           const enums
+                          , const int                           finalSet);
 
     virtual ~DoubleDatatypeValidator();
 
 	//@}
-
-    // -----------------------------------------------------------------------
-    // Validation methods
-    // -----------------------------------------------------------------------
-    /** @name Validation Function */
-    //@{
-
-    /**
-     * validate that a string matches the boolean datatype
-     * @param content A string containing the content to be validated
-     *
-     * @exception throws InvalidDatatypeException if the content is
-     * is not valid.
-     */
-
-	void validate(const XMLCh* const content);
-
-    //@}
 
     // -----------------------------------------------------------------------
     // Compare methods
@@ -129,7 +114,7 @@ public:
      * @param content2
      * @return
      */
-    int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const);
 
     //@}
 
@@ -137,157 +122,59 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
-private:
-
-    void checkContent( const XMLCh* const content, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    void cleanUp();
+protected:
 
 // -----------------------------------------------------------------------
-// Getter methods
+// ctor provided to be used by derived classes
 // -----------------------------------------------------------------------
+    DoubleDatatypeValidator(DatatypeValidator*            const baseValidator
+                          , RefHashTableOf<KVStringPair>* const facets
+                          , const int                           finalSet
+                          , const ValidatorType                 type);
 
-    XMLDouble* const            getMaxInclusive() const;
-
-    XMLDouble* const            getMaxExclusive() const;
-
-    XMLDouble* const            getMinInclusive() const;
-
-    XMLDouble* const            getMinExclusive() const;
-
-    RefVectorOf<XMLDouble>*     getEnumeration() const;
+    inline void init(RefVectorOf<XMLCh>*           const enums);
 
 // -----------------------------------------------------------------------
-// Setter methods
+// Abstract interface from AbstractNumericFacetValidator
+// -----------------------------------------------------------------------
+    
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
+
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacetConstraintsBase() const;
+
+    virtual int  compareValues(const XMLNumber* const lValue
+                             , const XMLNumber* const rValue);
+
+    virtual void  setMaxInclusive(const XMLCh* const);
+
+    virtual void  setMaxExclusive(const XMLCh* const);
+
+    virtual void  setMinInclusive(const XMLCh* const);
+
+    virtual void  setMinExclusive(const XMLCh* const);
+
+    virtual void  setEnumeration();
+
+// -----------------------------------------------------------------------
+// Abstract interface from AbstractNumericValidator
 // -----------------------------------------------------------------------
 
-    void  setMaxInclusive(XMLDouble* const);
-
-    void  setMaxExclusive(XMLDouble* const);
-
-    void  setMinInclusive(XMLDouble* const);
-
-    void  setMinExclusive(XMLDouble* const);
-
-    void  setEnumeration(RefVectorOf<XMLDouble>* );
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    // -----------------------------------------------------------------------
-     bool                 fEnumerationInherited;
-
-     XMLDouble*       fMaxInclusive;
-     XMLDouble*       fMaxExclusive;
-     XMLDouble*       fMinInclusive;
-     XMLDouble*       fMinExclusive;
-
-     RefVectorOf<XMLDouble>*  fEnumeration;    // save the actual value
+    virtual void checkContent( const XMLCh* const content, bool asBase);
 
 };
 
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-inline int DoubleDatatypeValidator::compare(const XMLCh* const lValue
-                                           , const XMLCh* const rValue)
+void DoubleDatatypeValidator::init(RefVectorOf<XMLCh>*   const enums)
 {
-    return XMLDouble::compareValues(new XMLDouble(lValue)
-                                      , new XMLDouble(rValue));
-}
-
-inline DatatypeValidator* DoubleDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new DoubleDatatypeValidator(this, facets, enums, finalSet);
-}
-
-inline void DoubleDatatypeValidator::validate( const XMLCh* const content)
-{
-    checkContent(content, false);
-}
-
-inline void DoubleDatatypeValidator::cleanUp()
-{
-    delete fMaxInclusive;
-    delete fMaxExclusive;
-    delete fMinInclusive;
-    delete fMinExclusive;
-
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-inline XMLDouble* const DoubleDatatypeValidator::getMaxInclusive() const
-{
-    return fMaxInclusive;
-}
-
-inline XMLDouble* const DoubleDatatypeValidator::getMaxExclusive() const
-{
-    return fMaxExclusive;
-}
-
-inline XMLDouble* const DoubleDatatypeValidator::getMinInclusive() const
-{
-    return fMinInclusive;
-}
-
-inline XMLDouble* const DoubleDatatypeValidator::getMinExclusive() const
-{
-    return fMinExclusive;
-}
-
-inline RefVectorOf<XMLDouble>* DoubleDatatypeValidator::getEnumeration() const
-{
-    return fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-inline void  DoubleDatatypeValidator::setMaxInclusive(XMLDouble* const newMaxInclusive)
-{
-    if (fMaxInclusive) delete fMaxInclusive;
-    fMaxInclusive = newMaxInclusive;
-}
-
-inline void  DoubleDatatypeValidator::setMaxExclusive(XMLDouble* const newMaxExclusive)
-{
-    if (fMaxExclusive) delete fMaxExclusive;
-    fMaxExclusive = newMaxExclusive;
-}
-
-inline void  DoubleDatatypeValidator::setMinInclusive(XMLDouble* const newMinInclusive)
-{
-    if (fMinInclusive) delete fMinInclusive;
-    fMinInclusive = newMinInclusive;
-}
-
-inline void  DoubleDatatypeValidator::setMinExclusive(XMLDouble* const newMinExclusive)
-{
-    if (fMinExclusive) delete fMinExclusive;
-    fMinExclusive = newMinExclusive;
-}
-
-inline void  DoubleDatatypeValidator::setEnumeration(RefVectorOf<XMLDouble>* newEnum)
-{
-    if (fEnumeration) delete fEnumeration;
-    fEnumeration = newEnum;
+    AbstractNumericValidator::init(enums);
 }
 
 /**
