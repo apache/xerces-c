@@ -95,7 +95,7 @@ void DOMTreeErrorReporter::fatalError(const SAXParseException& toCatch)
 
 void DOMTreeErrorReporter::resetErrors()
 {
-    // No-op in this case
+    fSawErrors = false;
 }
 
 
