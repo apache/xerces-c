@@ -198,8 +198,8 @@ else
     ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
 endif
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
-MAKE_SHARED = makeC++SharedLib_r -p 5000 ${LDFLAGS}
-MAKE_SHARED_C = makeC++SharedLib_r -p 5000 ${LDFLAGS}
+MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
+MAKE_SHARED_C = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
 SHLIBSUFFIX=.a
 endif
 
