@@ -61,7 +61,7 @@
 
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <SimpleHashPtr.hpp>
+#include "SimpleHashPtr.hpp"
 #include <xercesc/dom/DOMBuilder.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMError.hpp>

@@ -54,7 +54,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <SimpleHashPtr.hpp>
+#include "SimpleHashPtr.hpp"
 
 // this is just a copy of HashPtr which is careful to rely on global new.
 

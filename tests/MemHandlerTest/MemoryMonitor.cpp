@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/06/03 14:00:34  neilg
+ * attempt to make VC6 happy.
+ *
  * Revision 1.2  2003/06/03 13:50:44  neilg
  * make Forte compiler happy
  *
@@ -68,7 +71,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <MemoryMonitor.hpp>
+#include "MemoryMonitor.hpp"
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
 #include <fstream>

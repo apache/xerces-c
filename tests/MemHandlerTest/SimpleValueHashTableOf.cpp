@@ -56,13 +56,16 @@
 
 /**
  * $Log$
+ * Revision 1.2  2003/06/03 14:00:34  neilg
+ * attempt to make VC6 happy.
+ *
  * Revision 1.1  2003/06/02 22:22:26  neilg
  * new test for the pluggable memory management mechanism.  This tests all 4 common Xerces parsers (SAX, SAX2, DOMBuilder and DeprecatedDOM) and ensures all allocated memory is dallocated, and that the manager which created the memory is called to deallocate it.
  *
  */
 
 #if defined(XERCES_TMPLSINC)
-#include <SimpleValueHashTableOf.hpp>
+#include "SimpleValueHashTableOf.hpp"
 #endif
 
 // ---------------------------------------------------------------------------

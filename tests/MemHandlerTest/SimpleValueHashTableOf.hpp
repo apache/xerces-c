@@ -61,7 +61,7 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <SimpleHashPtr.hpp>
+#include "SimpleHashPtr.hpp"
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
@@ -226,5 +226,5 @@ private :
 };
 
 #if !defined(XERCES_TMPLSINC)
-#include <SimpleValueHashTableOf.cpp>
+#include "SimpleValueHashTableOf.cpp"
 #endif
