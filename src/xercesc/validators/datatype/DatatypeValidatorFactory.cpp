@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/11/13 23:02:09  peiyongz
+ * using default memory manager and specify derivated from list, not user defined
+ *
  * Revision 1.21  2003/11/12 20:30:58  peiyongz
  * movd ID/IDREF/IDREFS/ENTITY/ENTITIES dv to BuiltInRegistry
  *
@@ -759,15 +762,15 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                           facets, 0, false, 0, false);
 
             // Create 'ID', 'IDREF' and 'ENTITY' datatype validator
-            dv = new (fMemoryManager) IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
+            dv = new IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
             dv->setTypeName(XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
             fBuiltInRegistry->put((void*) XMLUni::fgIDString, dv);
 
-            dv = new (fMemoryManager) IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
+            dv = new IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
             dv->setTypeName(XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
             fBuiltInRegistry->put((void*) XMLUni::fgIDRefString, dv);
 
-            dv = new (fMemoryManager) ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
+            dv = new ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
             dv->setTypeName(XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
             fBuiltInRegistry->put((void*) XMLUni::fgEntityString, dv);
 
@@ -778,8 +781,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
               , getDatatypeValidator(XMLUni::fgIDRefString)
               , 0
               , 0
-              , false
+              , true
               , 0
+              , false
             );
 
            // Create 'ENTITIES' datatype validator
@@ -789,8 +793,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
              , getDatatypeValidator(XMLUni::fgEntityString)
              , 0
              , 0
-             , false
+             , true
              , 0
+             , false
            );
 
             // register cleanup method
