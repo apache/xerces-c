@@ -156,6 +156,9 @@ public :
     );
     ~Iconv400Transcoder();
 
+    // -----------------------------------------------------------------------
+    //  Implementation of the virtual transcoder interface
+    // -----------------------------------------------------------------------
     virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
@@ -168,39 +171,18 @@ public :
 
     virtual unsigned int transcodeTo
     (
-        const   XMLCh* const    srcData
-        , const unsigned int    srcCount
-        ,       XMLByte* const  toFill
-        , const unsigned int    maxBytes
-        ,       unsigned int&   charsEaten
-        , const UnRepOpts       options
+        const   XMLCh* const	srcData
+        , const unsigned int	srcCount
+        ,       XMLByte* const	toFill
+        , const unsigned int	maxBytes
+        ,       unsigned int&	charsEaten
+        , const UnRepOpts	options
     );
 
     virtual bool canTranscodeTo
     (
-        const   unsigned int    toCheck
+        const   unsigned int	toCheck
     )   const;
-
-    // -----------------------------------------------------------------------
-    //  Implementation of the virtual transcoder interface
-    // -----------------------------------------------------------------------
-
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
-    (
-        const   XMLByte* const          srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
-        ,       unsigned char* const    charSizes
-    );
 
 
 

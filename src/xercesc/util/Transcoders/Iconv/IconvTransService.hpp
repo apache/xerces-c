@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/06 21:48:05  tng
+ * Remove obsolete old functions transcodeXML and transcodeOne
+ *
  * Revision 1.3  2002/11/04 15:14:33  tng
  * C++ Namespace Support.
  *
@@ -161,49 +164,6 @@ private :
     IconvTransService(const IconvTransService&);
     void operator=(const IconvTransService&);
 };
-
-
-
-
-class XMLUTIL_EXPORT IconvTranscoder : public XMLTranscoder
-{
-public :
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-	IconvTranscoder(const XMLCh* const encodingName, const unsigned int blockSize);
-    ~IconvTranscoder();
-
-
-    // -----------------------------------------------------------------------
-    //  Implementation of the virtual transcoder interface
-    // -----------------------------------------------------------------------
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const     srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
-    (
-        const   XMLByte* const             srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
-		,       unsigned char* const    charSizes
-    );
-
-
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    IconvTranscoder(const IconvTranscoder&);
-    void operator=(const IconvTranscoder&);
-};
-
 
 
 class XMLUTIL_EXPORT IconvLCPTranscoder : public XMLLCPTranscoder
