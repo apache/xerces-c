@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/10/13 17:55:40  cargilld
+ * Serialization fix, fPVSIScope not serialized.  Problem reported by David Bertoni.
+ *
  * Revision 1.20  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -413,7 +416,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<(int)fModelType;
-
+        serEng<<(int)fPSVIScope;
         DatatypeValidator::storeDV(serEng, fDatatypeValidator);
 
         serEng<<fEnclosingScope;
@@ -454,7 +457,8 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         int i;
         serEng>>i;
         fModelType = (ModelTypes)i;
-
+        serEng>>i;
+        fPSVIScope = (PSVIDefs::PSVIScope)i;
         fDatatypeValidator = DatatypeValidator::loadDV(serEng);
 
         serEng>>fEnclosingScope;

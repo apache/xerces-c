@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/10/13 17:55:40  cargilld
+ * Serialization fix, fPVSIScope not serialized.  Problem reported by David Bertoni.
+ *
  * Revision 1.14  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -223,6 +226,7 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 
         serEng<<(int)fValidity;
         serEng<<(int)fValidation;
+        serEng<<(int)fPSVIScope;
         serEng<<fBaseAttDecl;
     }
     else
@@ -245,7 +249,10 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 
         serEng>>i;
         fValidation = (PSVIDefs::Validation)i;
-
+        
+        serEng>>i;
+        fPSVIScope = (PSVIDefs::PSVIScope)i;
+        
         serEng>>fBaseAttDecl;
     }
 }
