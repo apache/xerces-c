@@ -490,6 +490,9 @@
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XercesDefs.hpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XercesVersion.hpp">
+			</File>
 			<Filter
 				Name="Win32"
 				Filter=".cpp,.hpp">

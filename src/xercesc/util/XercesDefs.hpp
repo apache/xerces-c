@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/07/10 12:56:45  tng
+ * [Bug 9154] Requesting Xerces Version Macro.
+ *
  * Revision 1.5  2002/05/21 19:35:08  tng
  * Update from 1.7 to 2.0
  *
@@ -185,16 +188,10 @@
 #define XERCESDEFS_HPP
 
 // ---------------------------------------------------------------------------
-//  These are the various representations of the current version of Xerces.
-//  These are updated for every build. They must be at the top because they
-//  can be used by various per-compiler headers below.
+//  Include the Xerces version information; this is kept in a separate file to
+//  make modification simple and obvious. Updates to the version header file
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "2_0_0"
-const char* const    gXercesVersionStr = "2_0";
-const char* const    gXercesFullVersionStr = "2_0_0";
-const unsigned int   gXercesMajVersion = 2;
-const unsigned int   gXercesMinVersion = 0;
-const unsigned int   gXercesRevision   = 0;
+#include    <xercesc/util/XercesVersion.hpp>
 
 
 // ---------------------------------------------------------------------------

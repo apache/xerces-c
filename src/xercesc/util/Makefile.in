@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2002/07/10 12:56:45  tng
+# [Bug 9154] Requesting Xerces Version Macro.
+#
 # Revision 1.8  2002/06/18 19:59:12  knoaman
 # Remove DOMInputSourceWrapper.
 #
@@ -401,6 +404,7 @@ UTIL_CPP_PUBHEADERS = \
     ValueStackOf.hpp \
     ValueVectorOf.hpp \
     XercesDefs.hpp \
+    XercesVersion.hpp \
     XML256TableTranscoder.hpp \
     XML88591Transcoder.hpp \
     XMLASCIITranscoder.hpp \
