@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.20  2001/11/13 13:22:35  tng
+* SAXCount fix: restore previous feature to accept multiple input files.
+*
 * Revision 1.19  2001/10/29 17:02:57  tng
 * Fix typo in samples.
 *
@@ -256,7 +259,7 @@ int main(int argC, char* argV[])
     //  There should at least one parameter left, and that
     //  should be the file name(s).
     //
-    if (argInd != argC - 1)
+    if (argInd == argC)
     {
         usage();
         XMLPlatformUtils::Terminate();
