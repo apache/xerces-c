@@ -54,73 +54,61 @@
  * <http://www.apache.org/>.
  */
 
-/**
- * $Log$
- * Revision 1.1  1999/11/09 01:08:18  twl
- * Initial revision
- *
- * Revision 1.2  1999/11/08 20:44:44  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
- */
+
+// ---------------------------------------------------------------------------
+//  Includes
+// ---------------------------------------------------------------------------
+#include <util/BinFileInputStream.hpp>
+#include <util/PlatformUtils.hpp>
+#include <framework/LocalFileInputSource.hpp>
 
 
-
-#if !defined(URLINPUTSOURCE_HPP)
-#define URLINPUTSOURCE_HPP
-
-#include <sax/InputSource.hpp>
-
-
-class XMLPARSER_EXPORT URLInputSource : public InputSource
+// ---------------------------------------------------------------------------
+//  LocalFileInputSource: Constructors and Destructor
+// ---------------------------------------------------------------------------
+LocalFileInputSource::LocalFileInputSource( const   XMLCh* const basePath
+                                            , const XMLCh* const relativePath)
 {
-public :
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-    URLInputSource(const XMLCh* const systemId);
-    URLInputSource
-    (
-        const   XMLCh* const    systemId
-        , const XMLCh* const    publicId
-    );
-    URLInputSource(const char* const systemId);
-    URLInputSource
-    (
-        const   char* const    systemId
-        , const char* const    publicId
-    );
-    ~URLInputSource();
+    //
+    //  Weave the two paths together in order to base the relative one
+    //  off of the base one. Assume that the base path is a full path to
+    //  a real file, so we throw off the name right off the bat.
+    //
+    XMLCh* tmpBuf = XMLPlatformUtils::weavePaths(basePath, relativePath);
+    setSystemId(tmpBuf);
+    delete [] tmpBuf;
+}
 
+LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath)
+{
+    // Complete the path before storing it
+    if (XMLPlatformUtils::isRelative(filePath))
+    {
+        XMLCh* tmpBuf = XMLPlatformUtils::getFullPath(filePath);
+        setSystemId(tmpBuf);
+        delete [] tmpBuf;
+    }
+     else
+    {
+        setSystemId(filePath);
+    }
+}
 
-    // -----------------------------------------------------------------------
-    //  Virtual input source interface
-    // -----------------------------------------------------------------------
-    BinInputStream* makeStream() const;
-};
-
-inline URLInputSource::URLInputSource(const XMLCh* const systemId) :
-
-    InputSource(systemId)
+LocalFileInputSource::~LocalFileInputSource()
 {
 }
 
-inline URLInputSource::URLInputSource(  const   XMLCh* const systemId
-                                        , const XMLCh* const publicId) :
-    InputSource(systemId, publicId)
+
+// ---------------------------------------------------------------------------
+//  LocalFileInputSource: InputSource interface implementation
+// ---------------------------------------------------------------------------
+BinInputStream* LocalFileInputSource::makeStream() const
 {
+    BinFileInputStream* retStrm = new BinFileInputStream(getSystemId());
+    if (!retStrm->getIsOpen())
+    {
+        delete retStrm;
+        return 0;
+    }
+    return retStrm;
 }
-
-inline URLInputSource::URLInputSource(const char* const systemId) :
-
-    InputSource(systemId)
-{
-}
-
-inline URLInputSource::URLInputSource(  const   char* const    systemId
-                                        , const char* const    publicId) :
-    InputSource(systemId, publicId)
-{
-}
-
-#endif

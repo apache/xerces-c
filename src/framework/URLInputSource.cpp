@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:18  twl
- * Initial revision
+ * Revision 1.1  2000/01/12 00:13:26  roddey
+ * These were moved from internal/ to framework/, which was something that should have
+ * happened long ago. They are really framework type of classes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:18  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:44  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -69,13 +73,55 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/BinFileInputStream.hpp>
+#include <util/Janitor.hpp>
 #include <util/URL.hpp>
-#include <internal/URLInputSource.hpp>
+#include <util/XMLString.hpp>
+#include <framework/URLInputSource.hpp>
 
 
 // ---------------------------------------------------------------------------
 //  URLInputSource: Constructors and Destructor
 // ---------------------------------------------------------------------------
+URLInputSource::URLInputSource(const URL& urlId) :
+
+    fURL(urlId)
+{
+    setSystemId(fURL.getURLText());
+}
+
+URLInputSource::URLInputSource( const   XMLCh* const    baseId
+                                , const XMLCh* const    systemId) :
+    fURL(baseId, systemId)                                    
+{
+    // Create a URL that will build up the full URL and store as the system id
+    setSystemId(fURL.getURLText());
+}
+
+URLInputSource::URLInputSource( const   XMLCh* const    baseId
+                                , const XMLCh* const    systemId
+                                , const XMLCh* const    publicId) :
+    InputSource(0, publicId)
+    , fURL(systemId, publicId)
+{
+    setSystemId(fURL.getURLText());
+}
+
+URLInputSource::URLInputSource( const   XMLCh* const    baseId
+                                , const char* const     systemId) :
+    fURL(baseId, systemId)
+{
+    setSystemId(fURL.getURLText());
+}
+
+URLInputSource::URLInputSource( const   XMLCh* const   baseId
+                                , const char* const    systemId
+                                , const char* const    publicId) :
+    InputSource(0, publicId)
+    , fURL(baseId, systemId)
+{
+    setSystemId(fURL.getURLText());
+}
+
 URLInputSource::~URLInputSource()
 {
 }
@@ -86,25 +132,6 @@ URLInputSource::~URLInputSource()
 // ---------------------------------------------------------------------------
 BinInputStream* URLInputSource::makeStream() const
 {
-    // Create a URL for the system id of this input source
-    URL tmpURL;
-    try
-    {
-        tmpURL.setURL(getSystemId());
-    }
-
-    catch(const MalformedURLException&)
-    {
-        // Its not a URL so try a file
-        BinFileInputStream* retStrm = new BinFileInputStream(getSystemId());
-        if (!retStrm->getIsOpen())
-        {
-            delete retStrm;
-            return 0;
-        }
-        return retStrm;
-    }
-
     // Ask the URL to create us an appropriate input stream
-    return tmpURL.makeNewStream();
+    return fURL.makeNewStream();
 }

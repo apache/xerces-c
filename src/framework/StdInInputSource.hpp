@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:17  twl
- * Initial revision
+ * Revision 1.1  2000/01/12 00:13:26  roddey
+ * These were moved from internal/ to framework/, which was something that should have
+ * happened long ago. They are really framework type of classes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:17  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:44  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -71,6 +75,7 @@
 
 #include <sax/InputSource.hpp>
 
+class BinInputStream;
 
 class XMLPARSER_EXPORT StdInInputSource : public InputSource
 {
