@@ -493,19 +493,29 @@ DOMNode *DOMDocumentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
 
 
 DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
+    DOMDocumentType* tempDocType = fDocType;
+    DOMElement* tempDocElement = fDocElement;
+
     if(oldChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)
         fDocType=0;
     else if(oldChild->getNodeType() == DOMNode::ELEMENT_NODE)
         fDocElement=0;
 
-    insertBefore(newChild, oldChild);
-    // changed() already done.
+    try {
+        insertBefore(newChild, oldChild);
+        // changed() already done.
 
-    if((oldChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)
-    || (oldChild->getNodeType() == DOMNode::ELEMENT_NODE))
-        return fParent.removeChild(oldChild);
-    else
-        return removeChild(oldChild);
+        if((oldChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)
+        || (oldChild->getNodeType() == DOMNode::ELEMENT_NODE))
+            return fParent.removeChild(oldChild);
+        else
+            return removeChild(oldChild);
+    }
+    catch(...) {
+        fDocType = tempDocType;
+        fDocElement = tempDocElement;
+        throw;
+    }
 }
 
 bool DOMDocumentImpl::isXMLName(const XMLCh *s)
