@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/12 23:52:45  roddey
+ * These are trivial changes required to get the C++ and Java versions
+ * of error messages more into sync. Mostly it was where the Java version
+ * was passing out one or more parameter than the C++ version was. In
+ * some cases the change just required an extra parameter to get the
+ * needed info to the place where the error was issued.
+ *
  * Revision 1.3  1999/12/18 00:20:00  roddey
  * More changes to support the new, completely orthagonal, support for
  * intrinsic encodings.
@@ -524,7 +531,17 @@ XMLCh XMLReader::getCharData(   XMLBuffer&      toFill
 
                         // Check for valid characters here
                         if (!XMLReader::isXMLChar(nextCh))
-                            owningScanner.emitError(XML4CErrs::InvalidCharacter);
+                        {
+                            XMLCh tmpBuf[9];
+                            XMLString::binToText
+                            (
+                                nextCh
+                                , tmpBuf
+                                , 8
+                                , 16
+                            );
+                            owningScanner.emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+                        }
                     }
                     gotLeadingSurrogate = false;
                 }

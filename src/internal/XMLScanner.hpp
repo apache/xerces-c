@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 23:52:46  roddey
+ * These are trivial changes required to get the C++ and Java versions
+ * of error messages more into sync. Mostly it was where the Java version
+ * was passing out one or more parameter than the C++ version was. In
+ * some cases the change just required an extra parameter to get the
+ * needed info to the place where the error was issued.
+ *
  * Revision 1.2  2000/01/12 00:15:04  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -318,7 +325,8 @@ private :
     bool isLegalToken(const XMLPScanToken& toCheck);
     bool normalizeAttValue
     (
-        const   XMLCh* const        value
+        const   XMLCh* const        attrName
+        , const XMLCh* const        value
         , const XMLAttDef::AttTypes type
         ,       XMLBuffer&          toFill
     );
@@ -362,14 +370,24 @@ private :
     // -----------------------------------------------------------------------
     //  Private scanning methods
     // -----------------------------------------------------------------------
-    bool basicAttrValueScan(XMLBuffer& toFill);
+    bool basicAttrValueScan
+    (
+        const   XMLCh* const    attrName
+        ,       XMLBuffer&      toFill
+    );
     bool getQuotedString(XMLBuffer& toFill);
     unsigned int rawAttrScan
     (
-        RefVectorOf<KVStringPair>&  toFill
-        , bool&                     isEmpty
+        const   XMLCh* const                elemName
+        ,       RefVectorOf<KVStringPair>&  toFill
+        ,       bool&                       isEmpty
     );
-    bool scanAttValue(XMLBuffer& toFill, const XMLAttDef::AttTypes type);
+    bool scanAttValue
+    (
+        const   XMLCh* const        attrName
+        ,       XMLBuffer&          toFill
+        , const XMLAttDef::AttTypes type
+    );
     void scanCDSection();
     void scanCharData(XMLBuffer& toToUse);
     bool scanCharRef(XMLCh& toFill, XMLCh& second);

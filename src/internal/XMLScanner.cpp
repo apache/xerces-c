@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/12 23:52:46  roddey
+ * These are trivial changes required to get the C++ and Java versions
+ * of error messages more into sync. Mostly it was where the Java version
+ * was passing out one or more parameter than the C++ version was. In
+ * some cases the change just required an extra parameter to get the
+ * needed info to the place where the error was issued.
+ *
  * Revision 1.5  2000/01/12 00:15:04  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -987,7 +994,9 @@ void XMLScanner::setValidator(XMLValidator* const validator)
 //  key/value pairs for each attribute. No processing is done on them at all.
 //
 unsigned int
-XMLScanner::rawAttrScan(RefVectorOf<KVStringPair>& toFill, bool& isEmpty)
+XMLScanner::rawAttrScan(const   XMLCh* const                elemName
+                        ,       RefVectorOf<KVStringPair>&  toFill
+                        ,       bool&                       isEmpty)
 {
     //
     //  Keep up with how many attributes we've seen so far, and how many
@@ -1085,7 +1094,7 @@ XMLScanner::rawAttrScan(RefVectorOf<KVStringPair>& toFill, bool& isEmpty)
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag);
+                    emitError(XML4CErrs::UnterminatedStartTag, elemName);
                     return attCount;
                 }
                  else
@@ -1100,7 +1109,7 @@ XMLScanner::rawAttrScan(RefVectorOf<KVStringPair>& toFill, bool& isEmpty)
             //  and stupid scan of this value. The only thing we do here
             //  is to expand entity references.
             //
-            if (!basicAttrValueScan(fAttValueBuf))
+            if (!basicAttrValueScan(fAttNameBuf.getRawBuffer(), fAttValueBuf))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -1128,7 +1137,7 @@ XMLScanner::rawAttrScan(RefVectorOf<KVStringPair>& toFill, bool& isEmpty)
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag);
+                    emitError(XML4CErrs::UnterminatedStartTag, elemName);
                     return attCount;
                 }
                  else
@@ -1219,7 +1228,7 @@ XMLScanner::rawAttrScan(RefVectorOf<KVStringPair>& toFill, bool& isEmpty)
             //  next open bracket, which is what we would have seeked to (and
             //  skipped this whole tag.)
             //
-            emitError(XML4CErrs::UnterminatedStartTag);
+            emitError(XML4CErrs::UnterminatedStartTag, elemName);
             break;
         }
          else if ((nextCh == chSingleQuote) || (nextCh == chDoubleQuote))
@@ -1470,7 +1479,13 @@ void XMLScanner::scanEndTag(bool& gotData)
 
     // Make sure we find the closing bracket
     if (!fReaderMgr.skippedChar(chCloseAngle))
-        emitError(XML4CErrs::UnterminatedEndTag);
+    {
+        emitError
+        (
+            XML4CErrs::UnterminatedEndTag
+            , topElem->fThisElement->getFullName()
+        );
+    }
 
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
@@ -1694,7 +1709,17 @@ void XMLScanner::scanPI()
 
             // Watch for invalid chars but try to keep going
             if (!XMLReader::isXMLChar(nextCh))
-                emitError(XML4CErrs::InvalidCharacter);
+            {
+                XMLCh tmpBuf[9];
+                XMLString::binToText
+                (
+                    nextCh
+                    , tmpBuf
+                    , 8
+                    , 16
+                );
+                emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+            }
 
             bbTarget.append(nextCh);
         }
@@ -2064,7 +2089,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag);
+                    emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
                     return false;
                 }
                  else
@@ -2130,7 +2155,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  char refs expanded.
             //
             fReaderMgr.skipPastSpaces();
-            if (!scanAttValue(fAttValueBuf, attDef->getType()))
+            if (!scanAttValue(attDef->getFullName(), fAttValueBuf, attDef->getType()))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -2158,7 +2183,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag);
+                    emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
                     return false;
                 }
                  else
@@ -2234,7 +2259,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             fReaderMgr.getNextChar();
             isEmpty = true;
             if (!fReaderMgr.skippedChar(chCloseAngle))
-                emitError(XML4CErrs::UnterminatedStartTag);
+                emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
             break;
         }
          else if (nextCh == chCloseAngle)
@@ -2250,7 +2275,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  next open bracket, which is what we would have seeked to (and
             //  skipped this whole tag.)
             //
-            emitError(XML4CErrs::UnterminatedStartTag);
+            emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
             break;
         }
          else if ((nextCh == chSingleQuote) || (nextCh == chDoubleQuote))
@@ -2262,7 +2287,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  top again.
             //
             emitError(XML4CErrs::ExpectedAttrName);
-            scanAttValue(fAttValueBuf, XMLAttDef::CData);
+            scanAttValue(XMLUni::fgZeroLenString, fAttValueBuf, XMLAttDef::CData);
             fReaderMgr.skipPastSpaces();
             continue;
         }
@@ -2428,7 +2453,17 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  we are looking at a valid XML char.
     //
     if (!XMLReader::isXMLChar(fReaderMgr.peekNextChar()))
-        emitError(XML4CErrs::InvalidCharacter);
+    {
+        XMLCh tmpBuf[9];
+        XMLString::binToText
+        (
+            fReaderMgr.getNextChar()
+            , tmpBuf
+            , 8
+            , 16
+        );
+        emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+    }
 
     // See if its the root element
     const bool isRoot = fElemStack.isEmpty();
@@ -2442,7 +2477,12 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  might be (since we need the element decl in order to do that.)
     //
     bool isEmpty;
-    unsigned int attCount = rawAttrScan(*fRawAttrList, isEmpty);
+    unsigned int attCount = rawAttrScan
+    (
+        fQNameBuf.getRawBuffer()
+        , *fRawAttrList
+        , isEmpty
+    );
     const bool gotAttrs = (attCount != 0);
 
     //
@@ -2756,12 +2796,12 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         if (curString == VersionString)
         {
             if (XMLString::compareString(rawValue, XMLUni::fgSupportedVersion))
-                emitError(XML4CErrs::UnsupportedXMLVersion);
+                emitError(XML4CErrs::UnsupportedXMLVersion, rawValue);
         }
          else if (curString == EncodingString)
         {
             if (!XMLString::stringLen(rawValue))
-                emitError(XML4CErrs::BadXMLEncoding);
+                emitError(XML4CErrs::BadXMLEncoding, rawValue);
         }
          else if (curString == StandaloneString)
         {

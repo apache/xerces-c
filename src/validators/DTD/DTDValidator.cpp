@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 23:52:48  roddey
+ * These are trivial changes required to get the C++ and Java versions
+ * of error messages more into sync. Mostly it was where the Java version
+ * was passing out one or more parameter than the C++ version was. In
+ * some cases the change just required an extra parameter to get the
+ * needed info to the place where the error was issued.
+ *
  * Revision 1.2  1999/11/30 20:24:45  roddey
  * Fixes for incorrect deletion of temporary decl objects, which would cause
  * a double delete when the parser is deleted.
@@ -571,7 +578,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
     if (defType == XMLAttDef::Fixed)
     {
         if (XMLString::compareString(attrValue, valueText))
-            emitError(XML4CValid::NotSameAsFixedValue, fullName);
+            emitError(XML4CValid::NotSameAsFixedValue, fullName, attrValue, valueText);
     }
 
     //

@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/12 23:52:49  roddey
+ * These are trivial changes required to get the C++ and Java versions
+ * of error messages more into sync. Mostly it was where the Java version
+ * was passing out one or more parameter than the C++ version was. In
+ * some cases the change just required an extra parameter to get the
+ * needed info to the place where the error was issued.
+ *
  * Revision 1.4  2000/01/12 00:17:07  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -209,7 +216,7 @@ bool DTDValidator::expandPERef( const   bool    scanExternal
 
     // If no terminating semicolon, emit an error but try to keep going
     if (!getReaderMgr()->skippedChar(chSemiColon))
-        getScanner()->emitError(XML4CErrs::UnterminatedEntityRef);
+        getScanner()->emitError(XML4CErrs::UnterminatedEntityRef, bbName.getRawBuffer());
 
     //
     //  Look it up in the PE decl pool and see if it exists. If not, just
@@ -392,7 +399,12 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
     if (decl)
     {
         // It already exists, so put out a warning
-        getScanner()->emitError(XML4CErrs::AttListAlreadyExists, bufToUse.getRawBuffer());
+        getScanner()->emitError
+        (
+            XML4CErrs::AttListAlreadyExists
+            , bufToUse.getRawBuffer()
+            , parentElem.getFullName()
+        );
 
         // Use the dummy decl to parse into and set its name to the name we got
         if (!fDumAttDef)
@@ -450,7 +462,12 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
         }
          else
         {
-            getScanner()->emitError(XML4CErrs::ExpectedAttributeType);
+            getScanner()->emitError
+            (
+                XML4CErrs::ExpectedAttributeType
+                , decl->getFullName()
+                , parentElem.getFullName()
+            );
             return 0;
         }
     }
@@ -468,7 +485,7 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
             getScanner()->emitError(XML4CErrs::ExpectedWhitespace);
 
         decl->setType(XMLAttDef::Notation);
-        if (!scanEnumeration(bufToUse, true))
+        if (!scanEnumeration(*decl, bufToUse, true))
             return 0;
 
         // Set the value as the enumeration for this decl
@@ -477,7 +494,7 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
      else if (getReaderMgr()->skippedChar(chOpenParen))
     {
         decl->setType(XMLAttDef::Enumeration);
-        if (!scanEnumeration(bufToUse, false))
+        if (!scanEnumeration(*decl, bufToUse, false))
             return 0;
 
         // Set the value as the enumeration for this decl
@@ -485,7 +502,12 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
     }
      else
     {
-        getScanner()->emitError(XML4CErrs::ExpectedAttributeType);
+        getScanner()->emitError
+        (
+            XML4CErrs::ExpectedAttributeType
+            , decl->getFullName()
+            , parentElem.getFullName()
+        );
         return 0;
     }
 
@@ -655,7 +677,8 @@ void DTDValidator::scanAttListDecl()
 //  subsequent entities, that will cause errors back in the calling code,
 //  but there's little we can do about it here.
 //
-bool DTDValidator::scanAttValue(        XMLBuffer&          toFill
+bool DTDValidator::scanAttValue(const   XMLCh* const        attrName
+                                ,       XMLBuffer&          toFill
                                 , const XMLAttDef::AttTypes type)
 {
     enum States
@@ -757,7 +780,22 @@ bool DTDValidator::scanAttValue(        XMLBuffer&          toFill
 
                 // Its got to at least be a valid XML character
                 if (!XMLReader::isXMLChar(nextCh))
-                    getScanner()->emitError(XML4CErrs::InvalidCharacter);
+                {
+                    XMLCh tmpBuf[9];
+                    XMLString::binToText
+                    (
+                        nextCh
+                        , tmpBuf
+                        , 8
+                        , 16
+                    );
+                    getScanner()->emitError
+                    (
+                        XML4CErrs::InvalidCharacter
+                        , attrName
+                        , tmpBuf
+                    );
+                }
             }
 
             //
@@ -765,7 +803,7 @@ bool DTDValidator::scanAttValue(        XMLBuffer&          toFill
             //  is not allowed in attribute values.
             //
             if (!escaped && (nextCh == chOpenAngle))
-                getScanner()->emitError(XML4CErrs::BracketInAttrValue);
+                getScanner()->emitError(XML4CErrs::BracketInAttrValue, attrName);
 
             //
             //  If the attribute is a CDATA type we do simple replacement of
@@ -929,7 +967,8 @@ bool DTDValidator::scanCharRef(XMLCh& first, XMLCh& second)
 }
 
 
-ContentSpecNode* DTDValidator::scanChildren(XMLBuffer& bufToUse)
+ContentSpecNode*
+DTDValidator::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
 {
     // Check for a PE ref here, but don't require spaces
     checkForPERef(false, false, true);
@@ -951,7 +990,7 @@ ContentSpecNode* DTDValidator::scanChildren(XMLBuffer& bufToUse)
         curReader = getReaderMgr()->getCurrentReaderNum();
 
         // Lets call ourself and get back the resulting node
-        curNode = scanChildren(bufToUse);
+        curNode = scanChildren(elemDecl, bufToUse);
 
         // If that failed, no need to go further, return failure
         if (!curNode)
@@ -1095,7 +1134,7 @@ ContentSpecNode* DTDValidator::scanChildren(XMLBuffer& bufToUse)
                     curReader = getReaderMgr()->getCurrentReaderNum();
 
                     // Recurse to handle this new guy
-                    ContentSpecNode* subNode = scanChildren(bufToUse);
+                    ContentSpecNode* subNode = scanChildren(elemDecl, bufToUse);
 
                     // If it failed, we are done, clean up here and return failure
                     if (!subNode)
@@ -1174,9 +1213,17 @@ ContentSpecNode* DTDValidator::scanChildren(XMLBuffer& bufToUse)
             {
                 // Cannot be valid
                 if (opCh == chComma)
+                {
                     getScanner()->emitError(XML4CErrs::ExpectedChoiceOrCloseParen);
-                else
-                    getScanner()->emitError(XML4CErrs::ExpectedSeqOrCloseParen);
+                }
+                 else
+                {
+                    getScanner()->emitError
+                    (
+                        XML4CErrs::ExpectedSeqOrCloseParen
+                        , elemDecl.getFullName()
+                    );
+                }
                 delete headNode;
                 return 0;
             }
@@ -1236,7 +1283,17 @@ void DTDValidator::scanComment()
 
         // Make sure its a valid XML character
         if (!XMLReader::isXMLChar(nextCh))
-            getScanner()->emitError(XML4CErrs::InvalidCharacter);
+        {
+            XMLCh tmpBuf[9];
+            XMLString::binToText
+            (
+                nextCh
+                , tmpBuf
+                , 8
+                , 16
+            );
+            getScanner()->emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+        }
 
         if (curState == InText)
         {
@@ -1305,7 +1362,11 @@ bool DTDValidator::scanContentSpec(DTDElementDecl& toFill)
     // Its got to be a parenthesized regular expression
     if (!getReaderMgr()->skippedChar(chOpenParen))
     {
-        getScanner()->emitError(XML4CErrs::ExpectedContentSpecExpr);
+        getScanner()->emitError
+        (
+            XML4CErrs::ExpectedContentSpecExpr
+            , toFill.getFullName()
+        );
         return false;
     }
 
@@ -1346,7 +1407,7 @@ bool DTDValidator::scanContentSpec(DTDElementDecl& toFill)
         //
         toFill.setModelType(DTDElementDecl::Children);
         XMLBufBid bbTmp(getBufMgr());
-        ContentSpecNode* resNode = scanChildren(bbTmp.getBuffer());
+        ContentSpecNode* resNode = scanChildren(toFill, bbTmp.getBuffer());
         status = (resNode != 0);
         if (status)
             toFill.setContentSpec(resNode);
@@ -1397,7 +1458,7 @@ void DTDValidator::scanDefaultDecl(DTDAttDef& toFill)
     //  an empty string and try to keep going.
     //
     XMLBufBid bbValue(getBufMgr());
-    if (!scanAttValue(bbValue.getBuffer(), toFill.getType()))
+    if (!scanAttValue(toFill.getFullName(), bbValue.getBuffer(), toFill.getType()))
         getScanner()->emitError(XML4CErrs::ExpectedDefAttrDecl);
 
     toFill.setValue(bbValue.getRawBuffer());
@@ -1824,7 +1885,7 @@ void DTDValidator::scanEntityDecl()
     // And then we have to have the closing angle bracket
     if (!getReaderMgr()->skippedChar(chCloseAngle))
     {
-        getScanner()->emitError(XML4CErrs::UnterminatedEntityDecl);
+        getScanner()->emitError(XML4CErrs::UnterminatedEntityDecl, entityDecl->getName());
         getReaderMgr()->skipPastChar(chCloseAngle);
     }
 
@@ -1897,7 +1958,7 @@ DTDValidator::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
     //  an error and try to continue.
     //
     if (!getReaderMgr()->skippedChar(chSemiColon))
-        getScanner()->emitError(XML4CErrs::UnterminatedEntityRef);
+        getScanner()->emitError(XML4CErrs::UnterminatedEntityRef, bbName.getRawBuffer());
 
     // Make sure it was all in one entity reader
     if (curReader != getReaderMgr()->getCurrentReaderNum())
@@ -2135,7 +2196,13 @@ bool DTDValidator::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
 
                     // Make sure we skipped a trailing semicolon
                     if (!getReaderMgr()->skippedChar(chSemiColon))
-                        getScanner()->emitError(XML4CErrs::UnterminatedEntityRef);
+                    {
+                        getScanner()->emitError
+                        (
+                            XML4CErrs::UnterminatedEntityRef
+                            , nameBuf.getRawBuffer()
+                        );
+                    }
 
                     // And make the new character the semicolon
                     nextCh = chSemiColon;
@@ -2162,7 +2229,15 @@ bool DTDValidator::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
             }
              else if (!XMLReader::isXMLChar(nextCh))
             {
-                getScanner()->emitError(XML4CErrs::InvalidCharacter);
+                XMLCh tmpBuf[9];
+                XMLString::binToText
+                (
+                    nextCh
+                    , tmpBuf
+                    , 8
+                    , 16
+                );
+                getScanner()->emitError(XML4CErrs::InvalidCharacter, tmpBuf);
                 getReaderMgr()->skipPastChar(quoteCh);
                 return false;
             }
@@ -2279,7 +2354,9 @@ bool DTDValidator::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
 //
 //  The terminating close paren ends this scan.
 //
-bool DTDValidator::scanEnumeration(XMLBuffer& toFill, const bool notation)
+bool DTDValidator::scanEnumeration( const   DTDAttDef&  attDef
+                                    ,       XMLBuffer&  toFill
+                                    , const bool        notation)
 {
     // Reset the passed buffer
     toFill.reset();
@@ -2311,7 +2388,11 @@ bool DTDValidator::scanEnumeration(XMLBuffer& toFill, const bool notation)
 
         if (!success)
         {
-            getScanner()->emitError(XML4CErrs::ExpectedEnumValue);
+            getScanner()->emitError
+            (
+                XML4CErrs::ExpectedEnumValue
+                , attDef.getFullName()
+            );
             return false;
         }
 
@@ -2496,9 +2577,21 @@ void DTDValidator::scanExtSubsetDecl(const bool inIncludeSect)
             {
                 getReaderMgr()->getNextChar();
                 if (!XMLReader::isXMLChar(nextCh))
-                    getScanner()->emitError(XML4CErrs::InvalidCharacter);
-                else
+                {
+                    XMLCh tmpBuf[9];
+                    XMLString::binToText
+                    (
+                        nextCh
+                        , tmpBuf
+                        , 8
+                        , 16
+                    );
+                    getScanner()->emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+                }
+                 else
+                {
                     getScanner()->emitError(XML4CErrs::InvalidDocumentStructure);
+                }
 
                 // Try to get realigned
                 static const XMLCh toSkip[] =
@@ -2720,7 +2813,15 @@ void DTDValidator::scanIgnoredSection()
         }
          else if (!XMLReader::isXMLChar(nextCh))
         {
-            getScanner()->emitError(XML4CErrs::InvalidCharacter);
+            XMLCh tmpBuf[9];
+            XMLString::binToText
+            (
+                nextCh
+                , tmpBuf
+                , 8
+                , 16
+            );
+            getScanner()->emitError(XML4CErrs::InvalidCharacter, tmpBuf);
         }
     }
 }
@@ -2809,10 +2910,20 @@ bool DTDValidator::scanInternalSubset()
         }
          else
         {
-            getReaderMgr()->getNextChar();
-
             // Not valid, so emit an error
-            getScanner()->emitError(XML4CErrs::InvalidCharacterInIntSubset);
+            XMLCh tmpBuf[9];
+            XMLString::binToText
+            (
+                getReaderMgr()->getNextChar()
+                , tmpBuf
+                , 8
+                , 16
+            );
+            getScanner()->emitError
+            (
+                XML4CErrs::InvalidCharacterInIntSubset
+                , tmpBuf
+            );
 
             //
             //  If an '>', then probably an abnormally terminated
@@ -3320,8 +3431,17 @@ void DTDValidator::scanPI()
 
             // Watch for invalid chars but try to keep going
             if (!XMLReader::isXMLChar(nextCh))
-                getScanner()->emitError(XML4CErrs::InvalidCharacter);
-
+            {
+                XMLCh tmpBuf[9];
+                XMLString::binToText
+                (
+                    nextCh
+                    , tmpBuf
+                    , 8
+                    , 16
+                );
+                getScanner()->emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+            }
             bbTarget.append(nextCh);
         }
     }
@@ -3390,7 +3510,17 @@ bool DTDValidator::scanPublicLiteral(XMLBuffer& toFill)
         //  since that's the best recovery scheme.
         //
         if (!XMLReader::isPublicIdChar(nextCh))
-            getScanner()->emitError(XML4CErrs::InvalidPublicIdChar);
+        {
+            XMLCh tmpBuf[9];
+            XMLString::binToText
+            (
+                nextCh
+                , tmpBuf
+                , 8
+                , 16
+            );
+            getScanner()->emitError(XML4CErrs::InvalidPublicIdChar, tmpBuf);
+        }
 
         toFill.append(nextCh);
     }
@@ -3489,7 +3619,7 @@ void DTDValidator::scanTextDecl()
         getQuotedString(bbEncoding.getBuffer());
         if (bbEncoding.isEmpty())
         {
-            getScanner()->emitError(XML4CErrs::BadXMLEncoding);
+            getScanner()->emitError(XML4CErrs::BadXMLEncoding, bbEncoding.getRawBuffer());
             getReaderMgr()->skipPastChar(chCloseAngle);
             return;
         }

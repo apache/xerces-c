@@ -1,7 +1,7 @@
 $quote "
 $set 1
   2  Notation '{0}' has already been declared
-  3  Attribute '{0}' has already been declared
+  3  Attribute '{0}' has already been declared declared for element '{1}'
   4  Encoding ({0}, from XMLDecl or manually set) contradicts the auto-sensed encoding, ignoring it
   5  Element '{0}' was referenced in a content model but never declared
   6  Element '{0}' was referenced in an attlist but never declared
@@ -10,30 +10,30 @@ $set 1
  11  Expected a notation name
  12  Repetition of individual elements is not legal for mixed content models
  13  Bad default attribute declaration
- 14  Expected default attribute declaration, assuming #IMPLIED  
+ 14  Expected default attribute declaration, assuming #IMPLIED 
  15  Attribute list syntax error
  16  Expected equal sign
  17  Duplication attribute name
- 18  Bad ID for xml:lang attribute
+ 18  Bad ID, '{0}', for xml:lang attribute
  19  Expected an element name
  20  Must start with an XMLDecl
  21  Comments must start with <!--
  22  Invalid document structure
  23  Expected a 'version=', 'encoding=', or 'standalone='
  24  Bad XML version string
- 25  Unsupported XML version
+ 25  Unsupported XML version, '{0}'
  26  Unterminated XML decl
- 27  Bad XML encoding declaration
+ 27  Bad XML encoding declaration, '{0}'
  28  Bad standalone declaration
  29  Unterminated comment
  30  Processing instruction name expected
  31  Unterminated processing instruction
- 32  Invalid character
+ 32  Invalid character (Unicode: 0x{0})
  33  Unexpected text before root element
- 34  Unterminated start tag
+ 34  Unterminated start tag, '{0}'
  35  Expected an attribute value
  36  Unterminated end tag
- 37  Expected attribute type (CDATA, ID, NMTOKEN, ..),
+ 37  Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'
  38  Expected end of tag '{0}'
  39  Expected tag name, comment, PI, or other markup
  40  Not valid after content
@@ -43,29 +43,29 @@ $set 1
  44  No root element in DOCTYPE
  45  Expected quoted string
  46  Expected public id
- 47  Invalid character in public id
+ 47  Invalid character in public id (Unicode: 0x{0})
  48  Unterminated DOCTYPE declaration
- 49  Invalid character in internal subset
+ 49  Invalid character in internal subset (Unicode: 0x{0})
  50  Expected CDATA section
  51  Invalid initial name character
  52  Invalid name character
  53  Unexpected whitespace
- 54  Invalid character in attribute value
+ 54  Invalid character in attribute value (Unicode: 0x{0})
  55  Expected a markup declaration
  56  Text declaration not legal here
  57  Conditional section in internal subset
  58  Expected parameter entity name
- 59  Unterminated entity declaration
+ 59  Unterminated entity declaration, '{0}'
  60  Invalid character reference
  61  Unterminated character reference
  62  Expected entity name for reference
  63  Entity '{0}' was not found
- 64  Unparsed entitty references not valid here
+ 64  Unparsed entitty references, '{0}', not valid here
  65  Unterminated entity reference
  66  Recursive entity expansion
  67  Partial markup in entity value
- 68  Unterminated element declaration
- 69  Expected content specification expression
+ 68  Unterminated element declaration, '{0}'
+ 69  Expected content specification expression for element '{0}'
  70  Expected asterisk
  71  Unterminated Content model
  72  Expected system id
@@ -73,15 +73,15 @@ $set 1
  74  Unterminated notation declaration
  75  Expected ',', '|', or ')' characters
  76  Expected '|' or ')' characters
- 77  Expected ',' or ')' characters or close parenthesis
- 78  Expected enumeration value
+ 77  Expected ',' or ')' characters or close parenthesis in content model of element '{0}'
+ 78  Expected enumeration value for attribute '{0}'
  79  Expected | enumeration separator, or closing paren
  80  Unterminated entity literal
  81  There are more end tags than start tags
  82  Reference to external declaration in standalone document. Entity={0}
  83  Expected an open parenthesis
  84  The attribute '{0}' is already used in element '{1}'
- 85  A '<' character cannot be used in an attribute value, except through <
+ 85  A '<' character cannot be used in attribute '{0}', except through &lt;
  86  A leading surrogate character was not followed by a legal second character
  87  Expected ']]>' to end a conditional section
  88  Expected INCLUDE or IGNORE here
@@ -152,12 +152,12 @@ $set 2
  22  Attribute '{0}' does not match its defined enumeration or notation list
  23  The values for attribute '{0}' must be names or name tokens
  24  Attribute '{0}' does not support multiple values
- 25  Attribute '{0}' has a value that does not match its #FIXED value
+ 25  Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'
  26  Element types cannot be duplicated in Mixed content models
 
 
 $set 3
-  2  The index is beyond the array bounds  
+  2  The index is beyond the array bounds 
   3  The new size is less than the old one
   4  The index given was beyond the max attribute index
   5  The passed AttTypes value is not known

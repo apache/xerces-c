@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/12 23:52:46  roddey
+ * These are trivial changes required to get the C++ and Java versions
+ * of error messages more into sync. Mostly it was where the Java version
+ * was passing out one or more parameter than the C++ version was. In
+ * some cases the change just required an extra parameter to get the
+ * needed info to the place where the error was issued.
+ *
  * Revision 1.4  2000/01/12 00:15:04  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -262,7 +269,13 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  don't care about the return status here. If it failed, an error
             //  was issued, which is all we care about.
             //
-            normalizeAttValue(curPair->getValue(), attDef->getType(), normBuf);
+            normalizeAttValue
+            (
+                curPair->getKey()
+                , curPair->getValue()
+                , attDef->getType()
+                , normBuf
+            );
 
             //
             //  If we found an attdef for this one, then lets validate it.
@@ -301,7 +314,13 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         {
             // Just normalize as CDATA
             attType = XMLAttDef::CData;
-            normalizeAttValue(curPair->getValue(), XMLAttDef::CData, normBuf);
+            normalizeAttValue
+            (
+                curPair->getKey()
+                , curPair->getValue()
+                , XMLAttDef::CData
+                , normBuf
+            );
         }
 
         //
@@ -458,7 +477,8 @@ bool XMLScanner::isLegalToken(const XMLPScanToken& toCheck)
 //  are legal if escaped only. And some escape chars are not subject to
 //  normalization rules.
 //
-bool XMLScanner::normalizeAttValue( const   XMLCh* const        value
+bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
+                                    , const XMLCh* const        value
                                     , const XMLAttDef::AttTypes type
                                     ,       XMLBuffer&          toFill)
 {
@@ -500,7 +520,7 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        value
         //
         if (!escaped && (*srcPtr == chOpenAngle))
         {
-            emitError(XML4CErrs::BracketInAttrValue);
+            emitError(XML4CErrs::BracketInAttrValue, attrName);
             retVal = false;
         }
 
@@ -961,7 +981,7 @@ void XMLScanner::updateNSMap(const  XMLCh* const    attrName
     //  care about the return value. An error was issued for the error, which
     //  is all we care about here.
     //
-    normalizeAttValue(attrValue, XMLAttDef::CData, normalBuf);
+    normalizeAttValue(attrName, attrValue, XMLAttDef::CData, normalBuf);
 
     //
     //  Ok, we have to get the unique id for the attribute value, which is the
@@ -1038,7 +1058,7 @@ bool XMLScanner::getQuotedString(XMLBuffer& toFill)
 //  subsequent entities, that will cause errors back in the calling code,
 //  but there's little we can do about it here.
 //
-bool XMLScanner::basicAttrValueScan(XMLBuffer& toFill)
+bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFill)
 {
     // Reset the target buffer
     toFill.reset();
@@ -1131,7 +1151,17 @@ bool XMLScanner::basicAttrValueScan(XMLBuffer& toFill)
                     {
                         // Its got to at least be a valid XML character
                         if (!XMLReader::isXMLChar(nextCh))
-                            emitError(XML4CErrs::InvalidCharacter);
+                        {
+                            XMLCh tmpBuf[9];
+                            XMLString::binToText
+                            (
+                                nextCh
+                                , tmpBuf
+                                , 8
+                                , 16
+                            );
+                            emitError(XML4CErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                        }
                         gotLeadingSurrogate = true;
                     }
                 }
@@ -1185,7 +1215,8 @@ bool XMLScanner::basicAttrValueScan(XMLBuffer& toFill)
 }
 
 
-bool XMLScanner::scanAttValue(          XMLBuffer&          toFill
+bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
+                                ,       XMLBuffer&          toFill
                                 , const XMLAttDef::AttTypes type)
 {
     enum States
@@ -1242,7 +1273,17 @@ bool XMLScanner::scanAttValue(          XMLBuffer&          toFill
 
             // Its got to at least be a valid XML character
             if (!XMLReader::isXMLChar(nextCh))
-                emitError(XML4CErrs::InvalidCharacter);
+            {
+                XMLCh tmpBuf[9];
+                XMLString::binToText
+                (
+                    nextCh
+                    , tmpBuf
+                    , 8
+                    , 16
+                );
+                emitError(XML4CErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+            }
 
             // Check for our ending quote in the same entity
             if (nextCh == quoteCh)
@@ -1316,7 +1357,7 @@ bool XMLScanner::scanAttValue(          XMLBuffer&          toFill
             //  is not allowed in attribute values.
             //
             if (!escaped && (nextCh == chOpenAngle))
-                emitError(XML4CErrs::BracketInAttrValue);
+                emitError(XML4CErrs::BracketInAttrValue, attrName);
 
             //
             //  If the attribute is a CDATA type we do simple replacement of
@@ -1497,7 +1538,15 @@ void XMLScanner::scanCDSection()
         {
             if (!XMLReader::isXMLChar(nextCh))
             {
-                emitError(XML4CErrs::InvalidCharacter);
+                XMLCh tmpBuf[9];
+                XMLString::binToText
+                (
+                    nextCh
+                    , tmpBuf
+                    , 8
+                    , 16
+                );
+                emitError(XML4CErrs::InvalidCharacter, tmpBuf);
                 emittedError = true;
             }
         }
@@ -1669,7 +1718,17 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
 
                     // Make sure the returned char is a valid XML char
                     if (!XMLReader::isXMLChar(nextCh))
-                        emitError(XML4CErrs::InvalidCharacter);
+                    {
+                        XMLCh tmpBuf[9];
+                        XMLString::binToText
+                        (
+                            nextCh
+                            , tmpBuf
+                            , 8
+                            , 16
+                        );
+                        emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+                    }
                 }
                 gotLeadingSurrogate = false;
             }
@@ -1848,7 +1907,17 @@ void XMLScanner::scanComment()
 
         // Make sure its a valid XML character
         if (!XMLReader::isXMLChar(nextCh))
-            emitError(XML4CErrs::InvalidCharacter);
+        {
+            XMLCh tmpBuf[9];
+            XMLString::binToText
+            (
+                nextCh
+                , tmpBuf
+                , 8
+                , 16
+            );
+            emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+        }
 
         if (curState == InText)
         {
@@ -1976,7 +2045,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
     //  an error and try to continue.
     //
     if (!fReaderMgr.skippedChar(chSemiColon))
-        emitError(XML4CErrs::UnterminatedEntityRef);
+        emitError(XML4CErrs::UnterminatedEntityRef, bbName.getRawBuffer());
 
     // Make sure we ended up on the same entity reader as the & char
     if (curReader != fReaderMgr.getCurrentReaderNum())
@@ -2250,7 +2319,17 @@ bool XMLScanner::scanPublicLiteral(XMLBuffer& toFill)
         //  since that's the best recovery scheme.
         //
         if (!XMLReader::isPublicIdChar(nextCh))
-            emitError(XML4CErrs::InvalidPublicIdChar);
+        {
+            XMLCh tmpBuf[9];
+            XMLString::binToText
+            (
+                nextCh
+                , tmpBuf
+                , 8
+                , 16
+            );
+            emitError(XML4CErrs::InvalidPublicIdChar, tmpBuf);
+        }
 
         toFill.append(nextCh);
     }

@@ -9,7 +9,7 @@
     <MsgDomain Domain="http://apache.org/xml/messages/XMLErrors">
         <Warning>
             <Message Id="NotationAlreadyExists" Text="Notation '{0}' has already been declared"/>
-            <Message Id="AttListAlreadyExists" Text="Attribute '{0}' has already been declared"/>
+            <Message Id="AttListAlreadyExists" Text="Attribute '{0}' has already been declared declared for element '{1}'"/>
             <Message Id="ContradictoryEncoding" Text="Encoding ({0}, from XMLDecl or manually set) contradicts the auto-sensed encoding, ignoring it"/>
             <Message Id="UndeclaredElemInCM" Text="Element '{0}' was referenced in a content model but never declared"/>
             <Message Id="UndeclaredElemInAttList" Text="Element '{0}' was referenced in an attlist but never declared"/>
@@ -20,30 +20,30 @@
             <Message Id="ExpectedNotationName" Text="Expected a notation name"/>
             <Message Id="NoRepInMixed" Text="Repetition of individual elements is not legal for mixed content models"/>
             <Message Id="BadDefAttrDecl" Text="Bad default attribute declaration"/>
-            <Message Id="ExpectedDefAttrDecl" Text="Expected default attribute declaration, assuming #IMPLIED  "/>
+            <Message Id="ExpectedDefAttrDecl" Text="Expected default attribute declaration, assuming #IMPLIED "/>
             <Message Id="AttListSyntaxError" Text="Attribute list syntax error"/>
             <Message Id="ExpectedEqSign" Text="Expected equal sign"/>
             <Message Id="DupAttrName" Text="Duplication attribute name"/>
-            <Message Id="BadIdForXMLLangAttr" Text="Bad ID for xml:lang attribute"/>
+            <Message Id="BadIdForXMLLangAttr" Text="Bad ID, '{0}', for xml:lang attribute"/>
             <Message Id="ExpectedElementName" Text="Expected an element name"/>
             <Message Id="MustStartWithXMLDecl" Text="Must start with an XMLDecl"/>
             <Message Id="CommentsMustStartWith" Text="Comments must start with &lt;!--"/>
             <Message Id="InvalidDocumentStructure" Text="Invalid document structure"/>
             <Message Id="ExpectedDeclString" Text="Expected a 'version=', 'encoding=', or 'standalone='"/>
             <Message Id="BadXMLVersion" Text="Bad XML version string"/>
-            <Message Id="UnsupportedXMLVersion" Text="Unsupported XML version"/>
+            <Message Id="UnsupportedXMLVersion" Text="Unsupported XML version, '{0}'"/>
             <Message Id="UnterminatedXMLDecl" Text="Unterminated XML decl"/>
-            <Message Id="BadXMLEncoding" Text="Bad XML encoding declaration"/>
+            <Message Id="BadXMLEncoding" Text="Bad XML encoding declaration, '{0}'"/>
             <Message Id="BadStandalone" Text="Bad standalone declaration"/>
             <Message Id="UnterminatedComment" Text="Unterminated comment"/>
             <Message Id="PINameExpected" Text="Processing instruction name expected"/>
             <Message Id="UnterminatedPI" Text="Unterminated processing instruction"/>
-            <Message Id="InvalidCharacter" Text="Invalid character"/>
+            <Message Id="InvalidCharacter" Text="Invalid character (Unicode: 0x{0})"/>
             <Message Id="UnexpectedTextBeforeRoot" Text="Unexpected text before root element"/>
-            <Message Id="UnterminatedStartTag" Text="Unterminated start tag"/>
+            <Message Id="UnterminatedStartTag" Text="Unterminated start tag, '{0}'"/>
             <Message Id="ExpectedAttrValue" Text="Expected an attribute value"/>
             <Message Id="UnterminatedEndTag" Text="Unterminated end tag"/>
-            <Message Id="ExpectedAttributeType" Text="Expected attribute type (CDATA, ID, NMTOKEN, ..),"/>
+            <Message Id="ExpectedAttributeType" Text="Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'"/>
             <Message Id="ExpectedEndOfTagX" Text="Expected end of tag '{0}'"/>
             <Message Id="ExpectedMarkup" Text="Expected tag name, comment, PI, or other markup"/>
             <Message Id="NotValidAfterContent" Text="Not valid after content"/>
@@ -53,29 +53,29 @@
             <Message Id="NoRootElemInDOCTYPE" Text="No root element in DOCTYPE"/>
             <Message Id="ExpectedQuotedString" Text="Expected quoted string"/>
             <Message Id="ExpectedPublicId" Text="Expected public id"/>
-            <Message Id="InvalidPublicIdChar" Text="Invalid character in public id"/>
+            <Message Id="InvalidPublicIdChar" Text="Invalid character in public id (Unicode: 0x{0})"/>
             <Message Id="UnterminatedDOCTYPE" Text="Unterminated DOCTYPE declaration"/>
-            <Message Id="InvalidCharacterInIntSubset" Text="Invalid character in internal subset"/>
+            <Message Id="InvalidCharacterInIntSubset" Text="Invalid character in internal subset (Unicode: 0x{0})"/>
             <Message Id="ExpectedCDATA" Text="Expected CDATA section"/>
             <Message Id="InvalidInitialNameChar" Text="Invalid initial name character"/>
             <Message Id="InvalidNameChar" Text="Invalid name character"/>
             <Message Id="UnexpectedWhitespace" Text="Unexpected whitespace"/>
-            <Message Id="InvalidCharacterInAttrValue" Text="Invalid character in attribute value"/>
+            <Message Id="InvalidCharacterInAttrValue" Text="Invalid character in attribute value (Unicode: 0x{0})"/>
             <Message Id="ExpectedMarkupDecl" Text="Expected a markup declaration"/>
             <Message Id="TextDeclNotLegalHere" Text="Text declaration not legal here"/>
             <Message Id="ConditionalSectInIntSubset" Text="Conditional section in internal subset"/>
             <Message Id="ExpectedPEName" Text="Expected parameter entity name"/>
-            <Message Id="UnterminatedEntityDecl" Text="Unterminated entity declaration"/>
+            <Message Id="UnterminatedEntityDecl" Text="Unterminated entity declaration, '{0}'"/>
             <Message Id="InvalidCharacterRef" Text="Invalid character reference"/>
             <Message Id="UnterminatedCharRef" Text="Unterminated character reference"/>
             <Message Id="ExpectedEntityRefName" Text="Expected entity name for reference"/>
             <Message Id="EntityNotFound" Text="Entity '{0}' was not found"/>
-            <Message Id="NoUnparsedEntityRefs" Text="Unparsed entitty references not valid here"/>
+            <Message Id="NoUnparsedEntityRefs" Text="Unparsed entitty references, '{0}', not valid here"/>
             <Message Id="UnterminatedEntityRef" Text="Unterminated entity reference"/>
             <Message Id="RecursiveEntity" Text="Recursive entity expansion"/>
             <Message Id="PartialMarkupInEntity" Text="Partial markup in entity value"/>
-            <Message Id="UnterminatedElementDecl" Text="Unterminated element declaration"/>
-            <Message Id="ExpectedContentSpecExpr" Text="Expected content specification expression"/>
+            <Message Id="UnterminatedElementDecl" Text="Unterminated element declaration, '{0}'"/>
+            <Message Id="ExpectedContentSpecExpr" Text="Expected content specification expression for element '{0}'"/>
             <Message Id="ExpectedAsterisk" Text="Expected asterisk"/>
             <Message Id="UnterminatedContentModel" Text="Unterminated Content model"/>
             <Message Id="ExpectedSystemId" Text="Expected system id"/>
@@ -83,15 +83,15 @@
             <Message Id="UnterminatedNotationDecl" Text="Unterminated notation declaration"/>
             <Message Id="ExpectedSeqChoiceLeaf" Text="Expected ',', '|', or ')' characters"/>
             <Message Id="ExpectedChoiceOrCloseParen" Text="Expected '|' or ')' characters"/>
-            <Message Id="ExpectedSeqOrCloseParen" Text="Expected ',' or ')' characters or close parenthesis"/>
-            <Message Id="ExpectedEnumValue" Text="Expected enumeration value"/>
+            <Message Id="ExpectedSeqOrCloseParen" Text="Expected ',' or ')' characters or close parenthesis in content model of element '{0}'"/>
+            <Message Id="ExpectedEnumValue" Text="Expected enumeration value for attribute '{0}'"/>
             <Message Id="ExpectedEnumSepOrParen" Text="Expected | enumeration separator, or closing paren"/>
             <Message Id="UnterminatedEntityLiteral" Text="Unterminated entity literal"/>
             <Message Id="MoreEndThanStartTags" Text="There are more end tags than start tags"/>
             <Message Id="IllegalRefInStandalone" Text="Reference to external declaration in standalone document. Entity={0}"/>
             <Message Id="ExpectedOpenParen" Text="Expected an open parenthesis"/>
             <Message Id="AttrAlreadyUsedInSTag" Text="The attribute '{0}' is already used in element '{1}'"/>
-            <Message Id="BracketInAttrValue" Text="A '&lt;' character cannot be used in an attribute value, except through &lt;"/>
+            <Message Id="BracketInAttrValue" Text="A '&lt;' character cannot be used in attribute '{0}', except through &amp;lt;"/>
             <Message Id="Expected2ndSurrogateChar" Text="A leading surrogate character was not followed by a legal second character"/>
             <Message Id="ExpectedEndOfConditional" Text="Expected ']]>' to end a conditional section"/>
             <Message Id="ExpectedIncOrIgn" Text="Expected INCLUDE or IGNORE here"/>
@@ -163,13 +163,13 @@
             <Message Id="DoesNotMatchEnumList" Text="Attribute '{0}' does not match its defined enumeration or notation list"/>
             <Message Id="AttrValNotName" Text="The values for attribute '{0}' must be names or name tokens"/>
             <Message Id="NoMultipleValues" Text="Attribute '{0}' does not support multiple values"/>
-            <Message Id="NotSameAsFixedValue" Text="Attribute '{0}' has a value that does not match its #FIXED value"/>
+            <Message Id="NotSameAsFixedValue" Text="Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'"/>
             <Message Id="RepElemInMixed" Text="Element types cannot be duplicated in Mixed content models"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
         <Error>
-            <Message Id="Array_BadIndex" Text="The index is beyond the array bounds  "/>
+            <Message Id="Array_BadIndex" Text="The index is beyond the array bounds "/>
             <Message Id="Array_BadNewSize" Text="The new size is less than the old one"/>
             <Message Id="AttrList_BadIndex" Text="The index given was beyond the max attribute index"/>
             <Message Id="AttDef_BadAttType" Text="The passed AttTypes value is not known"/>
@@ -260,23 +260,23 @@
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
         <Error>
             <Message Id="BadMajorCode" Text="The majorCode parameter to createMessage was out of bounds"/>
-            <Message Id="MessageFormatFailure" Text="An internal error occurred while formatting the following message: "/>
-            <Message Id="UnterminatedPEReference" Text="The parameter entity reference must end with the ';' delimiter. "/>
-            <Message Id="ExternalIDRequired" Text="The external entity declaration must begin with either SYSTEM or PUBLIC "/>
-            <Message Id="RecursiveReference" Text="Recursive reference {0} (Reference path: '{1}') "/>
+            <Message Id="MessageFormatFailure" Text="An internal error occurred while formatting the following message:"/>
+            <Message Id="UnterminatedPEReference" Text="The parameter entity reference must end with the ';' delimiter."/>
+            <Message Id="ExternalIDRequired" Text="The external entity declaration must begin with either SYSTEM or PUBLIC"/>
+            <Message Id="RecursiveReference" Text="Recursive reference {0} (Reference path: '{1}')"/>
             <Message Id="ImproperDeclarationNesting" Text="The replacement text of parameter entity `(0)'' must be properly nested"/>
-            <Message Id="ErrorMessageAvailable" Text="There is a message available for this error. "/>
-            <Message Id="IncompleteContent" Text="The content is not complete. "/>
-            <Message Id="UnterminatedSystemID" Text="Expected a termination character for the system id. "/>
-            <Message Id="UnterminatedPublicID" Text="Expected a termination character for the public id. "/>
-            <Message Id="UnterminatedEnumeration" Text="Expected a termination character for the enumeration. "/>
-            <Message Id="CDEndInContent" Text="Expected a CD end in the content section. "/>
-            <Message Id="TwoColonsInQName" Text="Expected two colons, '::', in the Q Name. "/>
-            <Message Id="MarkupNotRecognized" Text="Markup tags are not recognised. "/>
-            <Message Id="URIFragmentInSystemId" Text="URI Fragment found in System Id "/>
-            <Message Id="ElementTypeReqInElementDecl" Text="Expected a element type in the element declaration. "/>
-            <Message Id="UnterminatedAttributeValue" Text="Expected a termination character for the attribute value. "/>
-            <Message Id="MaximumCodeReached" Text="The maximum size for code has been reached. "/>
+            <Message Id="ErrorMessageAvailable" Text="There is a message available for this error."/>
+            <Message Id="IncompleteContent" Text="The content is not complete for element '{0}'"/>
+            <Message Id="UnterminatedSystemID" Text="Expected a termination character for the system id."/>
+            <Message Id="UnterminatedPublicID" Text="Expected a termination character for the public id."/>
+            <Message Id="UnterminatedEnumeration" Text="Expected a termination character for the enumeration."/>
+            <Message Id="CDEndInContent" Text="Expected a CD end in the content section."/>
+            <Message Id="TwoColonsInQName" Text="Expected two colons, '::', in the Q Name."/>
+            <Message Id="MarkupNotRecognized" Text="Markup tags are not recognised."/>
+            <Message Id="URIFragmentInSystemId" Text="URI Fragment found in System Id"/>
+            <Message Id="ElementTypeReqInElementDecl" Text="Expected a element type in the element declaration."/>
+            <Message Id="UnterminatedAttributeValue" Text="Expected a termination character for the attribute value."/>
+            <Message Id="MaximumCodeReached" Text="The maximum size for code has been reached."/>
         </Error>
     </MsgDomain>
 </MsgFile>

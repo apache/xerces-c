@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:03:36  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 23:52:48  roddey
+ * These are trivial changes required to get the C++ and Java versions
+ * of error messages more into sync. Mostly it was where the Java version
+ * was passing out one or more parameter than the C++ version was. In
+ * some cases the change just required an extra parameter to get the
+ * needed info to the place where the error was issued.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:03:36  twl
+ * Initial checkin
  *
  * Revision 1.5  1999/11/08 20:45:41  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -308,9 +315,18 @@ private:
     );
     bool getQuotedString(XMLBuffer& toFill);
     XMLAttDef* scanAttDef(DTDElementDecl& elemDecl, XMLBuffer& bufToUse);
-    bool scanAttValue(XMLBuffer& toFill, const XMLAttDef::AttTypes type);
+    bool scanAttValue
+    (
+        const   XMLCh* const        attrName
+        ,       XMLBuffer&          toFill
+        , const XMLAttDef::AttTypes type
+    );
     void scanAttListDecl();
-    ContentSpecNode* scanChildren(XMLBuffer& bufToUse);
+    ContentSpecNode* scanChildren
+    (
+        const   DTDElementDecl&     elemDecl
+        ,       XMLBuffer&          bufToUse
+    );
     bool scanCharRef(XMLCh& toFill, XMLCh& second);
     void scanComment();
     bool scanContentSpec(DTDElementDecl& toFill);
@@ -322,7 +338,12 @@ private:
     bool scanEntityLiteral(XMLBuffer& toFill, const bool isPE);
     bool scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl);
     EntityExpRes scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped);
-    bool scanEnumeration(XMLBuffer& toFill, const bool notation);
+    bool scanEnumeration
+    (
+        const   DTDAttDef&  attDef
+        ,       XMLBuffer&  toFill
+        , const bool        notation
+    );
     bool scanEq();
     void scanExtSubsetDecl(const bool inIncludeSect);
     bool scanId

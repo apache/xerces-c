@@ -15,4 +15,3 @@
 <!ATTLIST link
   manager IDREF #IMPLIED
   subordinates IDREFS #IMPLIED>
-<!ENTITY BadTest SYSTEM "Stupid.Ent">
