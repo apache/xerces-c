@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/09/18 21:16:42  peiyongz
+ * DTV reorganization: temp vars to replace repeated invocation of getFacetsDefined()
+ *
  * Revision 1.1  2001/09/18 14:45:04  peiyongz
  * DTV reorganization
  *
@@ -99,7 +102,7 @@ AbstractStringValidator::AbstractStringValidator(
     {
         init(baseValidator, facets, enums);
     }
-    catch (XMLException&)
+    catch (...)
     {
         cleanUp();
         throw;
@@ -231,6 +234,9 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
             //
             // else if (XMLString::compareString(key, SchemaSymbols::fgELT_SPECIAL_TOKEN)==0)
             // TODO
+            //
+            // Note: whitespace is taken care of by TraverseSchema.
+            //
             else
             {
                 assignAdditionalFacet(key, value);
@@ -242,17 +248,19 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
            Schema constraint: Part I -- self checking
         ***/
 
+        int thisFacetsDefined = getFacetsDefined();
+
         // check 4.3.1.c1 error: length & (maxLength | minLength)
-        if ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0)
+        if ((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0)
         {
-            if ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) != 0)
+            if ((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0)
                  ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-            else if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) != 0))
+            else if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0))
                  ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
         }
 
         // check 4.3.2.c1 must: minLength <= maxLength
-        if ((getFacetsDefined() & (DatatypeValidator::FACET_MINLENGTH
+        if ((thisFacetsDefined & (DatatypeValidator::FACET_MINLENGTH
                                   |DatatypeValidator::FACET_MAXLENGTH)) != 0)
         {
             if ( getMinLength() > getMaxLength() )
@@ -278,33 +286,33 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
                       and apply that to every individual facet.
             ***/
             AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) baseValidator;
-
+            int baseFacetsDefined = pBaseValidator->getFacetsDefined();
             /***
                 Non coexistence of derived' length and base'    (minLength | maxLength)
                                    base'    length and derived' (minLength | maxLength)
             ***/
 
             // check 4.3.1.c1 error: length & (base.maxLength | base.minLength)
-            if ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0)
+            if ((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0)
             {
-                if ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0)
+                if ((baseFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0)
                      ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-                else if ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0)
+                else if ((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0)
                      ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
             }
 
             // check 4.3.1.c1 error: base.length & (maxLength | minLength)
-            if ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0)
+            if ((baseFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0)
             {
-                if ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0)
+                if ((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0)
                      ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-                else if ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0)
+                else if ((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0)
                      ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
             }
 
             // check 4.3.1.c2 error: length != base.length
-            if (((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0))
+            if (((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0) &&
+                ((baseFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0))
             {
                 if ( getLength() != pBaseValidator->getLength() )
                 {
@@ -325,8 +333,8 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
             ***/
 
             // check 4.3.2.c1 must: minLength <= base.maxLength
-            if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH ) != 0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH ) != 0))
+            if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH ) != 0) &&
+                ((baseFacetsDefined & DatatypeValidator::FACET_MAXLENGTH ) != 0))
             {
                 if ( getMinLength() > pBaseValidator->getMaxLength() )
                 {
@@ -341,8 +349,8 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
             }
 
             // check 4.3.2.c2 error: minLength < base.minLength
-            if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) != 0))
+            if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
+                ((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0))
             {
                 if ((pBaseValidator->getFixed() & DatatypeValidator::FACET_MINLENGTH) !=0)
                 {
@@ -373,8 +381,8 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
             }
 
             // check 4.3.2.c1 must: base.minLength <= maxLength
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0))
+            if (((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
+                ((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0))
             {
                 if ( pBaseValidator->getMinLength() > getMaxLength() )
                 {
@@ -389,8 +397,8 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
             }
 
             // check 4.3.3.c1 error: maxLength > base.maxLength
-            if (((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0))
+            if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
+                ((baseFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0))
             {
                 if ((pBaseValidator->getFixed() & DatatypeValidator::FACET_MAXLENGTH) !=0)
                 {
@@ -421,7 +429,7 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
             }
 
             // check 4.3.5.c0 must: enumeration values from the value space of base
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0) &&
+            if ( ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0) &&
                  (getEnumeration() !=0))
             {
                 int i = 0;
@@ -462,34 +470,36 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
     if (baseValidator)
     {
         AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) baseValidator;
+        int thisFacetsDefined = getFacetsDefined();
+        int baseFacetsDefined = pBaseValidator->getFacetsDefined();
 
         // inherit length
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) == 0))
+        if (((baseFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0) &&
+            ((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) == 0))
         {
             setLength(pBaseValidator->getLength());
             setFacetsDefined(DatatypeValidator::FACET_LENGTH);
         }
 
         // inherit minLength
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) == 0))
+        if (((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
+            ((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) == 0))
         {
             setMinLength(pBaseValidator->getMinLength());
             setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
         }
 
         // inherit maxLength
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) == 0))
+        if (((baseFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
+            ((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) == 0))
         {
             setMaxLength(pBaseValidator->getMaxLength());
             setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
         }
 
         // inherit enumeration
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
+        if (((baseFacetsDefined & DatatypeValidator::FACET_ENUMERATION) !=0) &&
+            ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) == 0))
         {
             setEnumeration(pBaseValidator->getEnumeration(), true);
         }
@@ -513,8 +523,10 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
     if (pBaseValidator)
         pBaseValidator->checkContent(content, true);
 
+    int thisFacetsDefined = getFacetsDefined();
+
     // we check pattern first
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
+    if ( (thisFacetsDefined & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
         if (getRegex() ==0) {
@@ -545,7 +557,7 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
 
     checkValueSpace(content);
 
-    if (((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (strLen > getMaxLength()))
     {
         XMLString::binToText(strLen, value1, BUF_LEN, 10);
@@ -558,7 +570,7 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
                 , value2);
     }
 
-    if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0) &&
         (strLen < getMinLength()))
     {
         XMLString::binToText(strLen, value1, BUF_LEN, 10);
@@ -571,7 +583,7 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
                 , value2);
     }
 
-    if (((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0) &&
         (strLen != getLength()))
     {
         XMLString::binToText(strLen, value1, BUF_LEN, 10);
@@ -584,7 +596,7 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
                 , value2);
     }
 
-    if ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0 &&
+    if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
         (getEnumeration() != 0))
     {
         int i=0;
