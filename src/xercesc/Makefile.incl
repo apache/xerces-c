@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -517,8 +517,6 @@ endif
 ifeq (${PLATFORM}, OS390)
 PLATFORM_CPP_COMPILER = _CXX_CXXSUFFIX="cpp" c++
 PLATFORM_C_COMPILER = _CXX_CXXSUFFIX="cpp" cc
-##PLATFORM_CPP_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++
-##PLATFORM_C_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" cc
 PLATFORM_LIBRARIES=
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -739,7 +737,7 @@ LINKLIB = $(XML_LIB_DIR)
 
 ######################### SUFFIX RULES ############################
 .SUFFIXES:
-.SUFFIXES: .cpp .c .$(TO)
+.SUFFIXES: .cpp .c .$(TO) .s
 
 # Tell make where the object files are for proper resolution of suffix rules
 vpath %.$(TO) $(XML_OBJ_DIR)
@@ -752,3 +750,6 @@ vpath %.$(TO) $(XML_OBJ_DIR)
 
 .C.$(TO):
 	$(JUST_CC) -c $(XML_INCL) $(XML_BUILD_OPTIONS) $(XML_DEF) $(EXTRA_COMPILE_OPTIONS) -o $(XML_OBJ_DIR)/$(@) $(<)
+
+.s.$(TO):
+	$(JUST_CC) -c -o $(XML_OBJ_DIR)/$(@) $(<)

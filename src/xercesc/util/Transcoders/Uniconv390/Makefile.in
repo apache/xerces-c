@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 2002 The Apache Software Foundation.  All rights
+# Copyright (c) 2002-2004 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.2  2004/02/06 15:02:41  cargilld
+# Intrinsic transcoding support for 390.
+#
 # Revision 1.1  2002/11/22 14:57:05  tng
 # 390: Uniconv390 support.  Patch by Chris Larsson and Stephen Dulin.
 #
@@ -80,8 +83,26 @@ SUBMODULE = Transcoders/Uniconv390
 
 include ../../../Makefile.incl
 
-CPP_PUBHEADERS = Uniconv390TransService.hpp uniconv.h
+CPP_PUBHEADERS = Uniconv390TransService.hpp uniconv.h \
+        XML256TableTranscoder390.hpp \
+        XML88591Transcoder390.hpp \
+        XMLASCIITranscoder390.hpp \
+        XMLEBCDICTranscoder390.hpp \
+        XMLIBM1047Transcoder390.hpp \
+        XMLIBM1140Transcoder390.hpp \
+        XMLUTF8Transcoder390.hpp \
+        XMLWin1252Transcoder390.hpp
 
-CPP_OBJECTS = Uniconv390TransService.$(TO) uniconv.$(TO)
+CPP_OBJECTS = Uniconv390TransService.$(TO) uniconv.$(TO) \
+        XML256TableTranscoder390.$(TO) \
+        XML88591Transcoder390.$(TO) \
+        XMLASCIITranscoder390.$(TO) \
+        XMLEBCDICTranscoder390.$(TO) \
+        XMLIBM1047Transcoder390.$(TO) \
+        XMLIBM1140Transcoder390.$(TO) \
+        XMLUTF8Transcoder390.$(TO) \
+        XMLWin1252Transcoder390.$(TO) \
+        trot.$(TO) \
+        ascii.$(TO)
 
 include ../../Makefile.util.submodule
