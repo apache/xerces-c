@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/06/04 13:25:50  tng
+ * the start tag "<?xml" could be followed by (#x20 | #x9 | #xD | #xA)+.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.7  2001/05/28 20:54:06  tng
  * Schema: allocate a fDTDValidator, fSchemaValidator explicitly to avoid wrong cast
  *
@@ -3146,7 +3149,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
      else if (nextCh == chQuestion)
     {
         // It could be a PI or the XML declaration. Check for Decl
-        bool gotDecl = fReaderMgr->skippedString(XMLUni::fgXMLStringSpace);
+        bool gotDecl = fReaderMgr->skippedString(XMLUni::fgXMLString);
 
         //
         //  Just in case, check for upper case. If found, issue
@@ -3164,6 +3167,18 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
             // If we are not accepting text decls, its an error
             if (parseTextDecl)
             {
+                // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>' 
+                // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+                //
+                // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+ 
+                //
+                // There shall be at lease --ONE-- space in between 
+                // the tag '<?xml' and the VersionInfo. 
+                //
+                if (!fReaderMgr->lookingAtSpace())
+                {               
+                    fScanner->emitError(XMLErrs::XMLDeclMustBeFirst);
+                }
                 scanTextDecl();
             }
              else

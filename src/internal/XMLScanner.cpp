@@ -811,7 +811,7 @@ void XMLScanner::scanReset(XMLPScanToken& token)
 
     // And invalidate any tokens by bumping our sequence number
     fSequenceId++;
-    
+
     // Reset our error count
     fErrorCount = 0;
 }
@@ -949,7 +949,7 @@ void XMLScanner::emitError(const XMLErrs::Codes toEmit)
 {
     //	Bump the error count
     ++fErrorCount;
-    
+
     if (fErrorReporter)
     {
         // Load the message into a local for display
@@ -1000,7 +1000,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
 {
     //	Bump the error count
     ++fErrorCount;
-    
+
     if (fErrorReporter)
     {
         //
@@ -1054,7 +1054,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
 {
     //	Bump the error count
     ++fErrorCount;
-    
+
     if (fErrorReporter)
     {
         //
@@ -1986,18 +1986,33 @@ void XMLScanner::scanProlog()
                 //  Ok, it could be the xml decl, a comment, the doc type line,
                 //  or the start of the root element.
                 //
-                if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpace))
+                if (fReaderMgr.skippedString(XMLUni::fgXMLDeclString))
                 {
                     //
-                    //  If we are not at line 1, col 7, then the decl was not
+                    //  If we are not at line 1, col 6, then the decl was not
                     //  the first text, so its invalid.
                     //
                     const XMLReader* curReader = fReaderMgr.getCurrentReader();
                     if ((curReader->getLineNumber() != 1)
-                    ||  (curReader->getColumnNumber() != 7))
+                    ||  (curReader->getColumnNumber() != 6))
                     {
                         emitError(XMLErrs::XMLDeclMustBeFirst);
                     }
+
+                    //
+                    // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
+                    // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+                    //
+                    // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+
+                    //
+                    // There shall be at lease --ONE-- space in between
+                    // the tag '<?xml' and the VersionInfo.
+                    //
+                    if (!fReaderMgr.lookingAtSpace())
+                    {
+                        emitError(XMLErrs::XMLDeclMustBeFirst);
+                    }
+
                     scanXMLDecl(Decl_XML);
                 }
                  else if (fReaderMgr.skippedString(XMLUni::fgPIString))
