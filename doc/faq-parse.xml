@@ -73,7 +73,8 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
     <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
     <a>
-      <p>Yes.  The code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
+      <p>Yes.  Since &XercesCName; &XercesCVersion152;, the code has been enhanced so that
+         calling XMLPlatformUtils::Initialize/Terminate pair of routines
          multiple times in one process is now allowed.
       </p>
 
@@ -102,8 +103,9 @@ catch (const XMLException&amp; toCatch) {
     // Initialize the parser
     XMLPlatformUtils::Initialize();
 
-    SAXParser parser;
-    parser.parse(xmlFile);
+    SAXParser* parser = new SAXParser;
+    parser->parse(xmlFile);
+    delete parser;
 
     // Free all memory that was being held by the parser
     XMLPlatformUtils::Terminate();
@@ -111,8 +113,9 @@ catch (const XMLException&amp; toCatch) {
     // Initialize the parser
     XMLPlatformUtils::Initialize();
 
-    SAXParser parser;
-    parser.parse(xmlFile);
+    parser = new SAXParser;
+    parser->parse(xmlFile);
+    delete parser;
 
     // Free all memory that was being held by the parser
     XMLPlatformUtils::Terminate();
@@ -130,8 +133,9 @@ catch (const XMLException&amp; toCatch) {
     XMLPlatformUtils::Initialize();
     XMLPlatformUtils::Initialize();
 
-    SAXParser parser;
-    parser.parse(xmlFile);
+    SAXParser* parser = new SAXParser;
+    parser->parse(xmlFile);
+    delete parser;
 
     // The first two XMLPlatformUtils::Terminate() calls are no-op
     XMLPlatformUtils::Terminate();
@@ -155,10 +159,10 @@ catch (const XMLException&amp; toCatch) {
 
     <a>
 
-      <p>Please make sure you are using the latest &XercesCName;.
+      <p>Please make sure you are using the &XercesCName; &XercesCVersion152; or up.
       </p>
 
-      <p>Earlier &XercesCName; does not allow XMLPlatformUtils::Initialize()/Terminate()
+      <p>Earlier version of &XercesCName; does not allow XMLPlatformUtils::Initialize()/Terminate()
          pair to be called more than once or has a problem.
       </p>
 
