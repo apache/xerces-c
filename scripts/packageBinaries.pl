@@ -99,29 +99,29 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     }
     
     # Make the target directory and its main subdirectories
-    mkdir ($targetdir, "0644");
-    mkdir ($targetdir . "/bin", "0644");
-    mkdir ($targetdir . "/lib", "0644");
-    mkdir ($targetdir . "/include", "0644");
-    mkdir ($targetdir . "/samples", "0644");
-    mkdir ($targetdir . "/samples/Projects", "0644");
-    mkdir ($targetdir . "/samples/Projects/Win32", "0644");
-    mkdir ($targetdir . "/samples/data", "0644");
-    mkdir ($targetdir . "/samples/SAXCount", "0644");
-    mkdir ($targetdir . "/samples/SAX2Count", "0644");
-    mkdir ($targetdir . "/samples/SAXPrint", "0644");
-	mkdir ($targetdir . "/samples/SAX2Print", "0644");
-    mkdir ($targetdir . "/samples/DOMCount", "0644");
-    mkdir ($targetdir . "/samples/DOMPrint", "0644");
-    mkdir ($targetdir . "/samples/Redirect", "0644");
-    mkdir ($targetdir . "/samples/MemParse", "0644");
-    mkdir ($targetdir . "/samples/PParse", "0644");
-    mkdir ($targetdir . "/samples/StdInParse", "0644");
-    mkdir ($targetdir . "/samples/EnumVal", "0644");
-    mkdir ($targetdir . "/samples/CreateDOMDocument", "0644");
-    mkdir ($targetdir . "/doc", "0644");
-    mkdir ($targetdir . "/doc/html", "0644");
-    mkdir ($targetdir . "/doc/html/apiDocs", "0644");
+    psystem ("mkdir $targetdir");
+    psystem ("mkdir $targetdir/bin");
+    psystem ("mkdir $targetdir/lib");
+    psystem ("mkdir $targetdir/include");
+    psystem ("mkdir $targetdir/samples");
+    psystem ("mkdir $targetdir/samples/Projects");
+    psystem ("mkdir $targetdir/samples/Projects/Win32");
+    psystem ("mkdir $targetdir/samples/data");
+    psystem ("mkdir $targetdir/samples/SAXCount");
+    psystem ("mkdir $targetdir/samples/SAX2Count");
+    psystem ("mkdir $targetdir/samples/SAXPrint");
+    psystem ("mkdir $targetdir/samples/SAX2Print");
+    psystem ("mkdir $targetdir/samples/DOMCount");
+    psystem ("mkdir $targetdir/samples/DOMPrint");
+    psystem ("mkdir $targetdir/samples/Redirect");
+    psystem ("mkdir $targetdir/samples/MemParse");
+    psystem ("mkdir $targetdir/samples/PParse");
+    psystem ("mkdir $targetdir/samples/StdInParse");
+    psystem ("mkdir $targetdir/samples/EnumVal");
+    psystem ("mkdir $targetdir/samples/CreateDOMDocument");
+    psystem ("mkdir $targetdir/doc");
+    psystem ("mkdir $targetdir/doc/html");
+    psystem ("mkdir $targetdir/doc/html/apiDocs");
     
     # If 'FileOnly' NetAccessor has been specified, then the project files have to be
     # changed.
@@ -137,16 +137,17 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         print ("Building ICU from $ICUROOT ...\n");
         
         #Clean up all the dependency files, causes problems for nmake
-        chdir ("$ICUROOT");
-        system ("del /s /f *.dep *.ncb *.plg *.opt");
+        pchdir ("$ICUROOT");
+        psystem ("del /s /f *.dep *.ncb *.plg *.opt");
         
         # Make the icu dlls
-        chdir ("$ICUROOT/source/allinone");
+        pchdir ("$ICUROOT/source/allinone");
         if ($opt_j eq "") {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
-	    print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
 	    #For nt we ship both debug and release dlls
-	    system("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD");
-	    system("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD");
+	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");
+	    psystem("cat buildlog.txt");
+	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");
+	    psystem("cat buildlog.txt");
         }
         
         change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
@@ -155,25 +156,23 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     # Clean up all the dependency files, causes problems for nmake
     # Also clean up all MSVC-generated project files that just cache the IDE state
-    chdir ("$XERCESCROOT");
-    system ("del /s /f *.dep *.ncb *.plg *.opt");
+    pchdir ("$XERCESCROOT");
+    psystem ("del /s /f *.dep *.ncb *.plg *.opt");
     
     # Make all files in the Xerces-C system including libraries, samples and tests
-    chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
-    $cmd = "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD";
-    print "$cmd\n";
-    system($cmd);
+    pchdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
+    psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD /OUT buildlog.txt");
+    system("cat buildlog.txt");
     
     # Build the debug xerces dll.  Both debug and release DLLs
     #   are in the standard binary distribution of Xerces.
     if ($buildmode ne "Debug") {
-        $cmd = "msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /REBUILD";
-        print "$cmd\n";
-        system($cmd);
+        psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /REBUILD /OUT buildlog.txt");
+        system("cat buildlog.txt");
     }
     
     # Decide where you want the build copied from
-    chdir ($targetdir);
+    pchdir ($targetdir);
     $BUILDDIR = $XERCESCROOT . "/Build/Win32/VC6/" . $buildmode;
     print "\nBuild is being copied from \'" . $BUILDDIR . "\'";
     
@@ -215,7 +214,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     foreach $dir (@headerDirectories) {
         $inclDir = "include/$dir";
         if (! (-e $inclDir)) {
-            mkdir($inclDir, "0644");
+            psystem("mkdir $inclDir");
         }
         $srcDir = "$XERCESCROOT/src/$dir";
         
@@ -227,9 +226,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         foreach $fileKind ("hpp", "c") {
             $matches = grep(/\.$fileKind$/, @allfiles);
             if ($matches > 0) {
-                $cmd = "cp -f $srcDir/*.$fileKind  $targetdir/$inclDir";  
-                print ($cmd . "\n");  
-                system($cmd);  
+                psystem("cp -f $srcDir/*.$fileKind  $inclDir/");  
             }
         }
     }
@@ -238,92 +235,91 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     #
     #  Remove internal implementation headers from the DOM include directory.
     #
-    system ("rm  $targetdir/include/dom/*Impl.hpp");
-    system ("rm  $targetdir/include/dom/DS*.hpp");    
+    psystem ("rm  $targetdir/include/dom/*Impl.hpp");
+    psystem ("rm  $targetdir/include/dom/DS*.hpp");    
     
     
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
-        system("cp -Rfv $ICUROOT/include/* $targetdir/include");
+        psystem("cp -Rfv $ICUROOT/include/* $targetdir/include");
     }
     
     #
     # Populate the binary output directory
     #
     print ("\n\nCopying binary outputs ...\n");
-    system("cp -fv $BUILDDIR/*.dll $targetdir/bin");
-    system("cp -fv $BUILDDIR/*.exe $targetdir/bin");
+    psystem("cp -fv $BUILDDIR/*.dll $targetdir/bin");
+    psystem("cp -fv $BUILDDIR/*.exe $targetdir/bin");
     
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         # Copy the ICU dlls
-        system("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
-        system("cp -fv $ICUROOT/bin/$buildmode/icudata.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/$buildmode/icudata.dll $targetdir/bin");
         # Copy the ICU libs
-        system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
-        # system("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
+        psystem("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
+        psystem("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
     }
-    system("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
+    psystem("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
         $DEBUGBUILDDIR = "$XERCESCROOT/Build/Win32/VC6/Debug";
-        system("cp -fv $DEBUGBUILDDIR/xerces-c_*D.lib $targetdir/lib");
-        system("cp -fv $DEBUGBUILDDIR/xerces*D.dll $targetdir/bin");
+        psystem("cp -fv $DEBUGBUILDDIR/xerces-c_*D.lib $targetdir/lib");
+        psystem("cp -fv $DEBUGBUILDDIR/xerces*D.dll $targetdir/bin");
     }
     
     
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
-    system("cp $XERCESCROOT/version.incl $targetdir");
-    system("cp -Rfv $XERCESCROOT/samples/Projects/* $targetdir/samples/Projects");
+    psystem("cp $XERCESCROOT/version.incl $targetdir");
+    psystem("cp -Rfv $XERCESCROOT/samples/Projects/* $targetdir/samples/Projects");
     
-    system("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
-    system("rm -f $targetdir/samples/SAXCount/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
-    system("rm -f $targetdir/samples/SAX2Count/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
-    system("rm -f $targetdir/samples/SAXPrint/Makefile");
-	system("cp -Rfv $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
-    system("rm -f $targetdir/samples/SAX2Print/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
-    system("rm -f $targetdir/samples/DOMCount/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
-    system("rm -f $targetdir/samples/DOMPrint/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
-    system("rm -f $targetdir/samples/Redirect/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
-    system("rm -f $targetdir/samples/MemParse/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
-    system("rm -f $targetdir/samples/PParse/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
-    system("rm -f $targetdir/samples/StdInParse/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
-    system("rm -f $targetdir/samples/EnumVal/Makefile");
-    system("cp -Rfv $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
-    system("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+    psystem("rm -f $targetdir/samples/SAXCount/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
+    psystem("rm -f $targetdir/samples/SAX2Count/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+    psystem("rm -f $targetdir/samples/SAXPrint/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
+    psystem("rm -f $targetdir/samples/SAX2Print/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+    psystem("rm -f $targetdir/samples/DOMCount/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+    psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+    psystem("rm -f $targetdir/samples/Redirect/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+    psystem("rm -f $targetdir/samples/MemParse/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+    psystem("rm -f $targetdir/samples/PParse/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+    psystem("rm -f $targetdir/samples/StdInParse/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
+    psystem("rm -f $targetdir/samples/EnumVal/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
+    psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
     
-    system("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
+    psystem("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
     
     # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
-    system("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
-    system("cp $XERCESCROOT/Readme.html $targetdir");
-    system("cp $XERCESCROOT/credits.txt $targetdir");   
-    system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+    psystem("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
+    psystem("cp $XERCESCROOT/Readme.html $targetdir");
+    psystem("cp $XERCESCROOT/credits.txt $targetdir");   
+    psystem("cp $XERCESCROOT/LICENSE.txt $targetdir");
 
     if (length($ICUROOT) > 0) {
-        system("cp $XERCESCROOT/license.html $targetdir");
-        system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        psystem("cp $XERCESCROOT/license.html $targetdir");
+        psystem("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
     }
-    system("rm -f $targetdir/doc/Doxyfile");
-    system("rm -rf $targetdir/doc/dtd");
-    system("rm -f $targetdir/doc/*.xml");
-    system("rm -f $targetdir/doc/*.ent");
-    system("rm -f $targetdir/doc/*.gif");
+    psystem("rm -f $targetdir/doc/Doxyfile");
+    psystem("rm -rf $targetdir/doc/dtd");
+    psystem("rm -f $targetdir/doc/*.xml");
+    psystem("rm -f $targetdir/doc/*.ent");
+    psystem("rm -f $targetdir/doc/*.gif");
     
     # Now package it all up using ZIP
-    chdir ("$targetdir/..");
+    pchdir ("$targetdir/..");
     print ("\n\nZIPping up all files ...\n");
     $zipname = $targetdir . ".zip";
-    print ("zip -r $zipname $zipfiles");
-    system ("zip -r $zipname $zipfiles");
+    psystem ("zip -r $zipname $zipfiles");
 }
 #
 #     End of Windows Builds.
@@ -440,72 +436,72 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     
     
     # Make the target directory and its main subdirectories
-    system ("mkdir $targetdir");
-    system ("mkdir $targetdir/bin");
-    system ("mkdir $targetdir/lib");
-    system ("mkdir $targetdir/include");
+    psystem ("mkdir $targetdir");
+    psystem ("mkdir $targetdir/bin");
+    psystem ("mkdir $targetdir/lib");
+    psystem ("mkdir $targetdir/include");
     if (length($ICUROOT) > 0) {
-        system ("mkdir $targetdir/include/unicode");
+        psystem ("mkdir $targetdir/include/unicode");
     }
-    system ("mkdir $targetdir/include/sax");
-	system ("mkdir $targetdir/include/sax2");
-    system ("mkdir $targetdir/include/framework");
-    system ("mkdir $targetdir/include/internal");
-    system ("mkdir $targetdir/include/parsers");
-    system ("mkdir $targetdir/include/util");
-    system ("mkdir $targetdir/include/util/Compilers");
-    system ("mkdir $targetdir/include/util/MsgLoaders");
-    system ("mkdir $targetdir/include/util/MsgLoaders/ICU");
-    system ("mkdir $targetdir/include/util/MsgLoaders/InMemory");
-    system ("mkdir $targetdir/include/util/MsgLoaders/MsgCatalog");
-    system ("mkdir $targetdir/include/util/MsgLoaders/Win32");
-    system ("mkdir $targetdir/include/util/Platforms");
-    system ("mkdir $targetdir/include/util/Platforms/AIX");
-    system ("mkdir $targetdir/include/util/Platforms/HPUX");
-    system ("mkdir $targetdir/include/util/Platforms/Linux");
-    system ("mkdir $targetdir/include/util/Platforms/MacOS");
-    system ("mkdir $targetdir/include/util/Platforms/OS2");
-    system ("mkdir $targetdir/include/util/Platforms/OS390");
-    system ("mkdir $targetdir/include/util/Platforms/PTX");
-    system ("mkdir $targetdir/include/util/Platforms/Solaris");
-    system ("mkdir $targetdir/include/util/Platforms/Tandem");
-    system ("mkdir $targetdir/include/util/Platforms/Win32");
-    system ("mkdir $targetdir/include/util/Transcoders");
-    system ("mkdir $targetdir/include/util/Transcoders/ICU");
-    system ("mkdir $targetdir/include/util/Transcoders/Iconv");
-    system ("mkdir $targetdir/include/util/Transcoders/Win32");
-    system ("mkdir $targetdir/include/dom");
-    system ("mkdir $targetdir/include/validators");
-    system ("mkdir $targetdir/include/validators/DTD");
-    system ("mkdir $targetdir/samples");
-    system ("mkdir $targetdir/samples/data");
-    system ("mkdir $targetdir/samples/SAXCount");
-    system ("mkdir $targetdir/samples/SAX2Count");
-    system ("mkdir $targetdir/samples/SAXPrint");
-	system ("mkdir $targetdir/samples/SAX2Print");
-    system ("mkdir $targetdir/samples/DOMCount");
-    system ("mkdir $targetdir/samples/DOMPrint");
-    system ("mkdir $targetdir/samples/Redirect");
-    system ("mkdir $targetdir/samples/MemParse");
-    system ("mkdir $targetdir/samples/PParse");
-    system ("mkdir $targetdir/samples/StdInParse");
-    system ("mkdir $targetdir/samples/EnumVal");
-    system ("mkdir $targetdir/samples/CreateDOMDocument");
-    system ("mkdir $targetdir/doc");
-    system ("mkdir $targetdir/doc/html");
-    system ("mkdir $targetdir/doc/html/apiDocs");
+    psystem ("mkdir $targetdir/include/sax");
+	psystem ("mkdir $targetdir/include/sax2");
+    psystem ("mkdir $targetdir/include/framework");
+    psystem ("mkdir $targetdir/include/internal");
+    psystem ("mkdir $targetdir/include/parsers");
+    psystem ("mkdir $targetdir/include/util");
+    psystem ("mkdir $targetdir/include/util/Compilers");
+    psystem ("mkdir $targetdir/include/util/MsgLoaders");
+    psystem ("mkdir $targetdir/include/util/MsgLoaders/ICU");
+    psystem ("mkdir $targetdir/include/util/MsgLoaders/InMemory");
+    psystem ("mkdir $targetdir/include/util/MsgLoaders/MsgCatalog");
+    psystem ("mkdir $targetdir/include/util/MsgLoaders/Win32");
+    psystem ("mkdir $targetdir/include/util/Platforms");
+    psystem ("mkdir $targetdir/include/util/Platforms/AIX");
+    psystem ("mkdir $targetdir/include/util/Platforms/HPUX");
+    psystem ("mkdir $targetdir/include/util/Platforms/Linux");
+    psystem ("mkdir $targetdir/include/util/Platforms/MacOS");
+    psystem ("mkdir $targetdir/include/util/Platforms/OS2");
+    psystem ("mkdir $targetdir/include/util/Platforms/OS390");
+    psystem ("mkdir $targetdir/include/util/Platforms/PTX");
+    psystem ("mkdir $targetdir/include/util/Platforms/Solaris");
+    psystem ("mkdir $targetdir/include/util/Platforms/Tandem");
+    psystem ("mkdir $targetdir/include/util/Platforms/Win32");
+    psystem ("mkdir $targetdir/include/util/Transcoders");
+    psystem ("mkdir $targetdir/include/util/Transcoders/ICU");
+    psystem ("mkdir $targetdir/include/util/Transcoders/Iconv");
+    psystem ("mkdir $targetdir/include/util/Transcoders/Win32");
+    psystem ("mkdir $targetdir/include/dom");
+    psystem ("mkdir $targetdir/include/validators");
+    psystem ("mkdir $targetdir/include/validators/DTD");
+    psystem ("mkdir $targetdir/samples");
+    psystem ("mkdir $targetdir/samples/data");
+    psystem ("mkdir $targetdir/samples/SAXCount");
+    psystem ("mkdir $targetdir/samples/SAX2Count");
+    psystem ("mkdir $targetdir/samples/SAXPrint");
+	psystem ("mkdir $targetdir/samples/SAX2Print");
+    psystem ("mkdir $targetdir/samples/DOMCount");
+    psystem ("mkdir $targetdir/samples/DOMPrint");
+    psystem ("mkdir $targetdir/samples/Redirect");
+    psystem ("mkdir $targetdir/samples/MemParse");
+    psystem ("mkdir $targetdir/samples/PParse");
+    psystem ("mkdir $targetdir/samples/StdInParse");
+    psystem ("mkdir $targetdir/samples/EnumVal");
+    psystem ("mkdir $targetdir/samples/CreateDOMDocument");
+    psystem ("mkdir $targetdir/doc");
+    psystem ("mkdir $targetdir/doc/html");
+    psystem ("mkdir $targetdir/doc/html/apiDocs");
     
     # Build ICU if needed
     if (length(($ICUROOT) > 0) && ($opt_j eq "")) {
         print("\n\nBuild ICU ...\n");
         # First make the ICU files executable
-        chdir ("$ICUROOT/source");
+        pchdir ("$ICUROOT/source");
         psystem ("chmod +x configure config.*");
         psystem ("chmod +x install-sh");
         $ENV{'ICU_DATA'} = "$ICUROOT/data";
         if ($platform =~ m/ptx/i) {
-            system ("chmod +x runConfigureICU");
-            system ("runConfigureICU PTX");
+            psystem ("chmod +x runConfigureICU");
+            psystem ("runConfigureICU PTX");
         } else {
             psystem ("$icuCompileFlags configure --prefix=$ICUROOT");
         }
@@ -530,7 +526,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     
     # make the source files
     print("\n\nBuild the xerces-c library ...\n");
-    chdir ("$XERCESCROOT/src");
+    pchdir ("$XERCESCROOT/src");
     
     
     psystem ("chmod +x run* con* install-sh");
@@ -546,61 +542,61 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     
     # Now build the samples
     print("\n\nBuild the samples ...\n");
-    chdir ("$XERCESCROOT/samples");
-    psystem ("chmod +x run* con* install-sh");
-    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x");
-    psystem ("gmake clean");     # May want to comment this line out to speed up
-    system ("gmake");
-    
-    # Next build the tests
-    print("\n\nBuild the tests ...\n");
-    chdir ("$XERCESCROOT/tests");
+    pchdir ("$XERCESCROOT/samples");
     psystem ("chmod +x run* con* install-sh");
     psystem ("runConfigure -p$platform -c$opt_c -x$opt_x");
     psystem ("gmake clean");     # May want to comment this line out to speed up
     psystem ("gmake");
     
-    chdir ($targetdir);
+    # Next build the tests
+    print("\n\nBuild the tests ...\n");
+    pchdir ("$XERCESCROOT/tests");
+    psystem ("chmod +x run* con* install-sh");
+    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x");
+    psystem ("gmake clean");     # May want to comment this line out to speed up
+    psystem ("gmake");
+    
+    pchdir ($targetdir);
     
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
-    system("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
-	system("cp -Rf $XERCESCROOT/src/sax2/*.hpp $targetdir/include/sax2");
-    system("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
-    system("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
+    psystem("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
+	psystem("cp -Rf $XERCESCROOT/src/sax2/*.hpp $targetdir/include/sax2");
+    psystem("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
+    psystem("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
     
-    system("cp -Rf $XERCESCROOT/version.incl $targetdir");
+    psystem("cp -Rf $XERCESCROOT/version.incl $targetdir");
     
-    system("rm -f $targetdir/include/dom/*Impl.hpp");
-    system("rm -f $targetdir/include/dom/DS*.hpp");
-    system("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
-    system("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
-    system("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
-    system("cp -Rf $XERCESCROOT/src/parsers/*.c $targetdir/include/parsers");
-    system("cp -Rf $XERCESCROOT/src/util/*.hpp $targetdir/include/util");
-    system("cp -Rf $XERCESCROOT/src/util/*.c $targetdir/include/util");
-    system("cp -Rf $XERCESCROOT/src/util/Compilers/*.hpp $targetdir/include/util/Compilers");
-    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/*.hpp $targetdir/include/util/MsgLoaders");
-    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/ICU/*.hpp $targetdir/include/util/MsgLoaders/ICU");
-    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/InMemory/*.hpp $targetdir/include/util/MsgLoaders/InMemory");
-    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/MsgCatalog/*.hpp $targetdir/include/util/MsgLoaders/MsgCatalog");
-    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/Win32/*.hpp $targetdir/include/util/MsgLoaders/Win32");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/*.hpp $targetdir/include/util/Platforms");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/AIX/*.hpp $targetdir/include/util/Platforms/AIX");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/HPUX/*.hpp $targetdir/include/util/Platforms/HPUX");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/Linux/*.hpp $targetdir/include/util/Platforms/Linux");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/MacOS/*.hpp $targetdir/include/util/Platforms/MacOS");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/OS2/*.hpp $targetdir/include/util/Platforms/OS2");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/OS390/*.hpp $targetdir/include/util/Platforms/OS390");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/PTX/*.hpp $targetdir/include/util/Platforms/PTX");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
-    system("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");
-    system("cp -Rf $XERCESCROOT/src/util/Transcoders/*.hpp $targetdir/include/util/Transcoders");
-    system("cp -Rf $XERCESCROOT/src/util/Transcoders/ICU/*.hpp $targetdir/include/util/Transcoders/ICU");
-    system("cp -Rf $XERCESCROOT/src/util/Transcoders/Iconv/*.hpp $targetdir/include/util/Transcoders/Iconv");
-    system("cp -Rf $XERCESCROOT/src/util/Transcoders/Win32/*.hpp $targetdir/include/util/Transcoders/Win32");
-    system("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
+    psystem("rm -f $targetdir/include/dom/*Impl.hpp");
+    psystem("rm -f $targetdir/include/dom/DS*.hpp");
+    psystem("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
+    psystem("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
+    psystem("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
+    psystem("cp -Rf $XERCESCROOT/src/parsers/*.c $targetdir/include/parsers");
+    psystem("cp -Rf $XERCESCROOT/src/util/*.hpp $targetdir/include/util");
+    psystem("cp -Rf $XERCESCROOT/src/util/*.c $targetdir/include/util");
+    psystem("cp -Rf $XERCESCROOT/src/util/Compilers/*.hpp $targetdir/include/util/Compilers");
+    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/*.hpp $targetdir/include/util/MsgLoaders");
+    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/ICU/*.hpp $targetdir/include/util/MsgLoaders/ICU");
+    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/InMemory/*.hpp $targetdir/include/util/MsgLoaders/InMemory");
+    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/MsgCatalog/*.hpp $targetdir/include/util/MsgLoaders/MsgCatalog");
+    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/Win32/*.hpp $targetdir/include/util/MsgLoaders/Win32");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/*.hpp $targetdir/include/util/Platforms");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/AIX/*.hpp $targetdir/include/util/Platforms/AIX");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/HPUX/*.hpp $targetdir/include/util/Platforms/HPUX");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Linux/*.hpp $targetdir/include/util/Platforms/Linux");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/MacOS/*.hpp $targetdir/include/util/Platforms/MacOS");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/OS2/*.hpp $targetdir/include/util/Platforms/OS2");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/OS390/*.hpp $targetdir/include/util/Platforms/OS390");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/PTX/*.hpp $targetdir/include/util/Platforms/PTX");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
+    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");
+    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/*.hpp $targetdir/include/util/Transcoders");
+    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/ICU/*.hpp $targetdir/include/util/Transcoders/ICU");
+    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/Iconv/*.hpp $targetdir/include/util/Transcoders/Iconv");
+    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/Win32/*.hpp $targetdir/include/util/Transcoders/Win32");
+    psystem("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
     
     if (length($ICUROOT) > 0) {
         print "\nICU files are being copied from \'$ICUROOT\'";
@@ -609,66 +605,66 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     
     # Populate the binary output directory
     print ("\n\nCopying binary outputs ...\n");
-    system("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
+    psystem("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
     if (length($ICUROOT) > 0) {
-        system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
-        system("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
+        psystem("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
+        psystem("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
     }
-    system("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
-    system("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
-    system("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
+    psystem("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
+    psystem("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
+    psystem("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
     
-    system("rm -rf $targetdir/bin/obj");
+    psystem("rm -rf $targetdir/bin/obj");
     
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
     foreach $iii ('config.guess', 'config.h.in', 'config.sub', 'configure', 'configure.in',
                   'install-sh', 'runConfigure', 'Makefile.in', 'Makefile.incl', 'Makefile') {
-        system("cp -f $XERCESCROOT/samples/$iii $targetdir/samples");
+        psystem("cp -f $XERCESCROOT/samples/$iii $targetdir/samples");
     }
     
-    system("cp -Rf $XERCESCROOT/samples/data/* $targetdir/samples/data");
-    system("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
-    system("rm -f $targetdir/samples/SAXCount/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
-    system("rm -f $targetdir/samples/SAX2Count/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
-    system("rm -f $targetdir/samples/SAXPrint/Makefile");
-	system("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
-    system("rm -f $targetdir/samples/SAX2Print/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
-    system("rm -f $targetdir/samples/DOMCount/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
-    system("rm -f $targetdir/samples/DOMPrint/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
-    system("rm -f $targetdir/samples/Redirect/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
-    system("rm -f $targetdir/samples/MemParse/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
-    system("rm -f $targetdir/samples/PParse/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
-    system("rm -f $targetdir/samples/StdInParse/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
-    system("rm -f $targetdir/samples/EnumVal/Makefile");
-    system("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
-    system("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
-    system("rm -f $targetdir/samples/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/data/* $targetdir/samples/data");
+    psystem("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+    psystem("rm -f $targetdir/samples/SAXCount/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
+    psystem("rm -f $targetdir/samples/SAX2Count/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+    psystem("rm -f $targetdir/samples/SAXPrint/Makefile");
+	psystem("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
+    psystem("rm -f $targetdir/samples/SAX2Print/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+    psystem("rm -f $targetdir/samples/DOMCount/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+    psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+    psystem("rm -f $targetdir/samples/Redirect/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+    psystem("rm -f $targetdir/samples/MemParse/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+    psystem("rm -f $targetdir/samples/PParse/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+    psystem("rm -f $targetdir/samples/StdInParse/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
+    psystem("rm -f $targetdir/samples/EnumVal/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
+    psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
+    psystem("rm -f $targetdir/samples/Makefile");
     
     # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
-    system("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
-    system("cp $XERCESCROOT/Readme.html $targetdir");
-    system("cp $XERCESCROOT/credits.txt $targetdir");   
-    system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+    psystem("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
+    psystem("cp $XERCESCROOT/Readme.html $targetdir");
+    psystem("cp $XERCESCROOT/credits.txt $targetdir");   
+    psystem("cp $XERCESCROOT/LICENSE.txt $targetdir");
     if (length($ICUROOT) > 0) {
-        system("cp $XERCESCROOT/license.html $targetdir");
-        system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        psystem("cp $XERCESCROOT/license.html $targetdir");
+        psystem("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
     }
-    system("rm -f $targetdir/doc/Doxyfile");
-    system("rm -rf $targetdir/doc/dtd");
-    system("rm -f $targetdir/doc/*.xml");
-    system("rm -f $targetdir/doc/*.ent");
-    system("rm -f $targetdir/doc/*.gif");
+    psystem("rm -f $targetdir/doc/Doxyfile");
+    psystem("rm -rf $targetdir/doc/dtd");
+    psystem("rm -f $targetdir/doc/*.xml");
+    psystem("rm -f $targetdir/doc/*.ent");
+    psystem("rm -f $targetdir/doc/*.gif");
     
     # Change the directory permissions
     psystem ("chmod 644 `find $targetdir -type f`");
@@ -679,7 +675,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     
     # Now package it all up using tar
     print ("\n\nTARing up all files ...\n");
-    chdir ("$targetdir/..");
+    pchdir ("$targetdir/..");
     $zipname = $targetdir . ".tar";
     $platformzipname = $zipname;
     
@@ -691,11 +687,20 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 }
   
 #
-#  This subroutine both prints and executes a system command.
+#  psystem subroutine both prints and executes a system command.
 #
 sub psystem() {
     print("$_[0]\n");
     system($_[0]);
+    }
+    
+    
+#
+#  chdir subroutine both prints and executes a chdir
+#
+sub pchdir() {
+    print("chdir $_[0]\n");
+    chdir $_[0];
     }
     
     
