@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/25 18:11:54  knoaman
+ * Make XSObjectFactory inherit from XMemory. Thanks to David Cargill.
+ *
  * Revision 1.3  2003/11/24 15:45:36  knoaman
  * PSVI: finish construction of XSSimpleTypeDefinition
  *
@@ -104,7 +107,7 @@ class XMLNotationDecl;
  * Factory class to create various XSObject(s)
  * Used by XSModel
  */
-class XMLPARSER_EXPORT XSObjectFactory
+class XMLPARSER_EXPORT XSObjectFactory : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
