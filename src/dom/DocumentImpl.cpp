@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/09 00:11:19  andyh
+ * Fix reference counting problem when creating new Documents
+ * with a DocType.
+ *
  * Revision 1.8  2000/02/06 07:47:32  rahulj
  * Year 2K copyright swat.
  *
@@ -138,16 +142,22 @@ DocumentImpl::DocumentImpl(): NodeImpl(null,
 
 //DOM Level 2
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
-	const DOMString &qualifiedName, DocumentTypeImpl *doctype)
-: NodeImpl(null, null, DStringPool::getStaticString("#document", &nam), DOM_Node::DOCUMENT_NODE, false, null)
+                           const DOMString &qualifiedName, DocumentTypeImpl *doctype)
+                           : NodeImpl(null, DStringPool::getStaticString("#document", &nam), DOM_Node::DOCUMENT_NODE, false, null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
-	    DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+        DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     docType=null;
     if (doctype != null) {
-	doctype -> setOwnerDocument(this);
-	appendChild(doctype);
+        doctype -> setOwnerDocument(this);
+        appendChild(doctype);
+        doctype -> referenced();         // Warning, tricky!  An external (DOM_Node) reference
+                                         //  to a node normally bumps the reference count to its
+                                         //  document also.  But this could not happen when the
+                                         //  user created the DOM_DocumentType because there was
+                                         //  no document yet.  Now we have the document, and
+                                         //  the docs ref count must be got back in sync.
     }
     docElement=null;
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
