@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/16 22:54:56  abagchi
+ * Switched the order of CDOM_EXPORT DomString for operators, to make OS/390 happy
+ *
  * Revision 1.8  2000/02/06 07:47:27  rahulj
  * Year 2K copyright swat.
  *
@@ -475,7 +478,7 @@ private:
   * @param rhs the second string
   * @return The concatenated object
   */
-CDOM_EXPORT DOMString operator + (const DOMString &lhs, const DOMString &rhs);
+DOMString CDOM_EXPORT operator + (const DOMString &lhs, const DOMString &rhs);
 
 /**
   * Concatenate a null terminated Unicode string to a DOMString.
@@ -484,7 +487,7 @@ CDOM_EXPORT DOMString operator + (const DOMString &lhs, const DOMString &rhs);
   * @param rhs the XMLCh * string
   * @return The concatenated object
   */
-CDOM_EXPORT DOMString operator + (const DOMString &lhs, const XMLCh* rhs);
+DOMString CDOM_EXPORT operator + (const DOMString &lhs, const XMLCh* rhs);
 
 
 /**
@@ -494,7 +497,7 @@ CDOM_EXPORT DOMString operator + (const DOMString &lhs, const XMLCh* rhs);
   * @param rhs the DOMString
   * @return The concatenated object
   */
-CDOM_EXPORT DOMString operator + (const XMLCh* lhs, const DOMString &rhs);
+DOMString CDOM_EXPORT operator + (const XMLCh* lhs, const DOMString &rhs);
 
 
 /**
@@ -504,7 +507,7 @@ CDOM_EXPORT DOMString operator + (const XMLCh* lhs, const DOMString &rhs);
   * @param rhs the character
   * @return The concatenated object
   */
-CDOM_EXPORT DOMString operator + (const DOMString &lhs, XMLCh rhs);
+DOMString CDOM_EXPORT operator + (const DOMString &lhs, XMLCh rhs);
 
 
 /**
@@ -514,9 +517,6 @@ CDOM_EXPORT DOMString operator + (const DOMString &lhs, XMLCh rhs);
   * @param rhs the DOMString
   * @return The concatenated object
   */
-CDOM_EXPORT DOMString operator + (XMLCh lhs, const DOMString &rhs);
-
-
-
+DOMString CDOM_EXPORT operator + (XMLCh lhs, const DOMString &rhs);
 
 #endif
