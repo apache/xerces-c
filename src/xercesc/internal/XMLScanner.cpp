@@ -1217,7 +1217,12 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
                     fReaderMgr.setXMLVersion(XMLReader::XMLV1_1);
                 }
             }
-            else if (!XMLString::equals(rawValue, XMLUni::fgVersion1_0))
+            else if (XMLString::equals(rawValue, XMLUni::fgVersion1_0)) {
+                if (type == Decl_XML) {
+                    fReaderMgr.setXMLVersion(XMLReader::XMLV1_0);
+                }
+            }
+            else
                 emitError(XMLErrs::UnsupportedXMLVersion, rawValue);
         }
          else if (curString == EncodingString)
