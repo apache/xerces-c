@@ -245,6 +245,11 @@ void Iconv400TransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
+void Iconv400TransService::lowerCase(XMLCh* const toLowerCase) const
+{
+    //TO DO
+}
+
 // ---------------------------------------------------------------------------
 //  Iconv400TransService: The virtual transcoding service API
 // ---------------------------------------------------------------------------

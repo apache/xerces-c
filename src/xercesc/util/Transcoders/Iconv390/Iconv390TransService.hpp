@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:36  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/09 15:44:00  knoaman
+ * Add lower case string support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/03/02 19:55:36  roddey
  * This checkin includes many changes done while waiting for the
@@ -125,6 +128,7 @@ public :
     virtual bool supportsSrcOfs() const;
 
     virtual void upperCase(XMLCh* const toUpperCase) const;
+    virtual void lowerCase(XMLCh* const toLowerCase) const;
 
 protected :
     // -----------------------------------------------------------------------

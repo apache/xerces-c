@@ -1459,7 +1459,7 @@ void XMLString::upperCase(XMLCh* const toUpperCase)
 void XMLString::lowerCase(XMLCh* const toLowerCase)
 {
     // Refer this one to the transcoding service
-    //XMLPlatformUtils::fgTransService->lowerCase(toLowerCase);
+    XMLPlatformUtils::fgTransService->lowerCase(toLowerCase);
 }
 
 

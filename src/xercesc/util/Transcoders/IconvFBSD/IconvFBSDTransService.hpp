@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:36  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/09 15:44:00  knoaman
+ * Add lower case string support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
+ * sane_include
  *
  * Revision 1.3  2002/01/14 19:45:15  tng
  * Support IconvFBSD in multi-threading environment with all the possible combinations of threading and transcoding options.  By Max Gotlib.
@@ -237,6 +240,7 @@ public :
     virtual bool supportsSrcOfs() const;
 
     virtual void upperCase(XMLCh* const toUpperCase) const;
+    virtual void lowerCase(XMLCh* const toUpperCase) const;
 
 protected :
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/04/09 15:44:00  knoaman
+ * Add lower case string support.
+ *
  * Revision 1.2  2002/03/18 13:39:11  tng
  * [Bug 7162 ] IconvFreeBSDTransService.cpp needs an #include statement fixed to use xercesc.
  *
@@ -830,6 +833,10 @@ void IconvFBSDTransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
+void IconvFBSDTransService::lowerCase(XMLCh* const toLowerCase) const
+{
+    //TO DO
+}
 
 // ---------------------------------------------------------------------------
 //  IconvFBSDLCPTranscoder: The virtual transcoder API

@@ -492,6 +492,36 @@ void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
 #endif
 }
 
+void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase) const
+{
+	//	еее TODO: Support CFString for this conversion
+#if defined(XML_METROWERKS)
+	// Use this if there's a reasonable c library available.
+	// Metrowerks does this reasonably
+	wchar_t * p = (wchar_t*) toLowerCase;
+	wchar_t c;
+	
+	while ((c = *p) != 0)
+		*p++ = std::towlower(c);
+#elif defined(XML_MACOSX) || true
+	// This might work, assuming we're on an ascii compiler.
+	// We'll use this under ProjectBuilder for now.
+	// Note that this only handles the ascii portion of the
+	// string, leaving all other characters in original case.
+	wchar_t * p = (wchar_t*)toLowerCase;
+	wchar_t c;
+	
+	while ((c = *p) != 0)
+	{
+		if (c >= 'A' && c <= 'Z')
+			c += 'a' - 'A';
+		*p++ = c;
+	}
+#else
+	#error Sorry, no support for lowerCase
+#endif
+}
+
 
 void
 MacOSUnicodeConverter::ConvertWideToNarrow(const XMLCh* wide, char* narrow, std::size_t maxChars)

@@ -489,6 +489,10 @@ void Win32TransService::upperCase(XMLCh* const toUpperCase) const
     _wcsupr(toUpperCase);
 }
 
+void Win32TransService::lowerCase(XMLCh* const toLowerCase) const
+{
+    _wcslwr(toLowerCase);
+}
 
 bool Win32TransService::isAlias(const   HKEY            encodingKey
                     ,       char* const     aliasBuf 

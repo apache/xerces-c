@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:13  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/09 15:44:00  knoaman
+ * Add lower case string support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:13  peiyongz
+ * sane_include
  *
  * Revision 1.14  2001/11/01 23:37:07  jasons
  * 2001-11-01  Jason E. Stewart  <jason@openinformatics.com>
@@ -211,6 +214,7 @@ public :
     virtual bool supportsSrcOfs() const = 0;
 
     virtual void upperCase(XMLCh* const toUpperCase) const = 0;
+    virtual void lowerCase(XMLCh* const toLowerCase) const = 0;
 
 	// -----------------------------------------------------------------------
     //	Allow users to add their own encodings to the intrinsinc mapping

@@ -301,6 +301,16 @@ void ICUTransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
+void ICUTransService::lowerCase(XMLCh* const toLowerCase) const
+{
+    XMLCh* outPtr = toLowerCase;
+    while (*outPtr)
+    {
+        *outPtr = XMLCh(Unicode::toLowerCase(UChar(*outPtr)));
+        outPtr++;
+    }
+}
+
 
 
 // ---------------------------------------------------------------------------

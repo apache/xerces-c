@@ -227,6 +227,15 @@ void IconvTransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
+void IconvTransService::lowerCase(XMLCh* const toLowerCase) const
+{
+    XMLCh* outPtr = toLowerCase;
+    while (*outPtr)
+    {
+        *outPtr = towlower(*outPtr);
+        outPtr++;
+    }
+}
 
 
 // ---------------------------------------------------------------------------

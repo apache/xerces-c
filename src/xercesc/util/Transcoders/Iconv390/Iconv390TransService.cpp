@@ -334,6 +334,16 @@ void Iconv390TransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
+void Iconv390TransService::lowerCase(XMLCh* const toLowerCase) const
+{
+    XMLCh* outPtr = toLowerCase;
+    while (*outPtr != 0) {
+	if ((*outPtr >= 0x41) && (*outPtr <= 0x5A))
+	    *outPtr = *outPtr + 0x20;
+	outPtr++;
+    }
+}
+
 // ---------------------------------------------------------------------------
 unsigned int Iconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
 {
