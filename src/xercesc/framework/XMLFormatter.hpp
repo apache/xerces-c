@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/03/17 03:19:52  peiyongz
+ * Bug#18051 memory leakage in XMLFormatter
+ *
  * Revision 1.11  2003/03/16 06:00:43  peiyongz
  * Bug#17983 Formatter does not escape control characters
  *
@@ -413,7 +416,7 @@ private :
     //  Private helper methods
     // -----------------------------------------------------------------------
     const XMLByte* getCharRef(unsigned int & count, 
-                              XMLByte *      ref, 
+                              XMLByte*      &ref, 
                               const XMLCh *  stdRef);  
  
     const void writeCharRef(const XMLCh &toWrite);

@@ -507,7 +507,7 @@ const void XMLFormatter::writeCharRef(const XMLCh &toWrite)
 }
 
 const XMLByte* XMLFormatter::getCharRef(unsigned int & count, 
-                                        XMLByte *      ref, 
+                                        XMLByte*       &ref, 
                                         const XMLCh *  stdRef) 
 {
    if (!ref) { 
