@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.16  2000/02/17 21:56:02  andyh
+ * Update to match W3C Dom Level 2 spec changes
+ *
  * Revision 1.15  2000/02/15 23:15:28  andyh
  * Add additional tests to DOMMemTest
  *
@@ -185,7 +188,6 @@ int  main()
         delete [] pMessage;
         return -1;
     }
-
 
     //
     //  Test 1.  Basic operations on a simple string.
@@ -1146,6 +1148,8 @@ int  main()
         {
             TASSERT(false);  // Wrong exception thrown.
         }
+
+        // Namespace tests of createDocument are covered by createElementNS below
     }
     TESTEPILOG;
     
@@ -1209,10 +1213,10 @@ int  main()
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
         DOMString xmlURI = "http://www.w3.org/XML/1998/namespace";
-        EXCEPTION_TEST(doc.createElementNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);     
         TASSERT(doc.createElementNS(xmlURI, "xml:a").getNamespaceURI().equals(xmlURI));
-        TASSERT(doc.createElementNS("", "xml:a").getNamespaceURI().equals(xmlURI));
-        TASSERT(doc.createElementNS(0,  "xml:a").getNamespaceURI().equals(xmlURI));
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createElementNS("", "xml:a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createElementNS(0,  "xml:a"), DOM_DOMException::NAMESPACE_ERR);
 
         //unlike Attribute, xmlns (no different from foo) can have any namespaceURI for Element
         TASSERT(doc.createElementNS("http://nsa", "xmlns").getNamespaceURI().equals("http://nsa"));
@@ -1221,10 +1225,16 @@ int  main()
         TASSERT(doc.createElementNS(0,  "xmlns").getNamespaceURI().equals(""));
 
         //unlike Attribute, xmlns:a (no different from foo:a) can have any namespaceURI for Element
+        //except "" and null
         TASSERT(doc.createElementNS("http://nsa", "xmlns:a").getNamespaceURI().equals("http://nsa"));
         TASSERT(doc.createElementNS(xmlURI, "xmlns:a").getNamespaceURI().equals(xmlURI));
-        TASSERT(doc.createElementNS("", "xmlns:a").getNamespaceURI().equals(""));
-        TASSERT(doc.createElementNS(0,  "xmlns:a").getNamespaceURI().equals(""));
+        EXCEPTION_TEST(doc.createElementNS("", "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createElementNS(0,  "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
+
+        //In fact, any prefix != null should have a namespaceURI != 0 or != ""
+        TASSERT(doc.createElementNS("http://nsa", "foo:a").getNamespaceURI().equals("http://nsa"));
+        EXCEPTION_TEST(doc.createElementNS("", "foo:a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createElementNS(0,  "foo:a"), DOM_DOMException::NAMESPACE_ERR);
 
         //Change prefix
         DOM_Element elem = doc.createElementNS("http://nsa", "foo:a");
@@ -1246,23 +1256,16 @@ int  main()
         //Special case for xml:a where namespaceURI must be xmlURI
         elem = doc.createElementNS(xmlURI, "foo:a");
         elem.setPrefix("xml");
-        elem = doc.createElementNS(0, "foo:a");
-        EXCEPTION_TEST(elem.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);     
-        elem = doc.createElementNS("", "foo:a");
-        EXCEPTION_TEST(elem.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);     
         elem = doc.createElementNS("http://nsa", "foo:a");
         EXCEPTION_TEST(elem.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);     
-        //Special case for xmlns:a where namespaceURI must be xmlnsURI
-        DOMString xmlnsURI = "http://www.w3.org/2000/xmlns/";
-        elem = doc.createElementNS(xmlnsURI, "foo:a");
+        //However, there is no restriction on prefix xmlns
         elem.setPrefix("xmlns");
-        elem = doc.createElementNS(0, "foo:a");
-        EXCEPTION_TEST(elem.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);     
-        elem = doc.createElementNS("", "foo:a");
-        EXCEPTION_TEST(elem.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);     
-        elem = doc.createElementNS("http://nsa", "foo:a");
-        EXCEPTION_TEST(elem.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);     
-        
+        //Also an element can not have a prefix with namespaceURI == null or ""
+        elem = doc.createElementNS(0, "a");
+        EXCEPTION_TEST(elem.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
+        elem = doc.createElementNS("", "a");
+        EXCEPTION_TEST(elem.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
+
         //Only prefix of Element and Attribute can be changed
         EXCEPTION_TEST(doc.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
 
@@ -1329,25 +1332,30 @@ int  main()
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
         DOMString xmlURI = "http://www.w3.org/XML/1998/namespace";
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);     
         TASSERT(doc.createAttributeNS(xmlURI, "xml:a").getNamespaceURI().equals(xmlURI));
-        TASSERT(doc.createAttributeNS("", "xml:a").getNamespaceURI().equals(xmlURI));
-        TASSERT(doc.createAttributeNS(0,  "xml:a").getNamespaceURI().equals(xmlURI));
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createAttributeNS("", "xml:a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS(0,  "xml:a"), DOM_DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns must have namespaceURI == "http://www.w3.org/2000/xmlns/"
         DOMString xmlnsURI = "http://www.w3.org/2000/xmlns/";
+        TASSERT(doc.createAttributeNS(xmlnsURI, "xmlns").getNamespaceURI().equals(xmlnsURI));
         EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xmlns"), DOM_DOMException::NAMESPACE_ERR);     
         EXCEPTION_TEST(doc.createAttributeNS(xmlURI, "xmlns"), DOM_DOMException::NAMESPACE_ERR);     
-        TASSERT(doc.createAttributeNS(xmlnsURI, "xmlns").getNamespaceURI().equals(xmlnsURI));
-        TASSERT(doc.createAttributeNS("", "xmlns").getNamespaceURI().equals(xmlnsURI));
-        TASSERT(doc.createAttributeNS(0,  "xmlns").getNamespaceURI().equals(xmlnsURI));
+        EXCEPTION_TEST(doc.createAttributeNS("", "xmlns"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS(0,  "xmlns"), DOM_DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns:a must have namespaceURI == "http://www.w3.org/2000/xmlns/"
+        TASSERT(doc.createAttributeNS(xmlnsURI, "xmlns:a").getNamespaceURI().equals(xmlnsURI));
         EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);     
         EXCEPTION_TEST(doc.createAttributeNS(xmlURI, "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);     
-        TASSERT(doc.createAttributeNS(xmlnsURI, "xmlns:a").getNamespaceURI().equals(xmlnsURI));
-        TASSERT(doc.createAttributeNS("", "xmlns:a").getNamespaceURI().equals(xmlnsURI));
-        TASSERT(doc.createAttributeNS(0,  "xmlns:a").getNamespaceURI().equals(xmlnsURI));
+        EXCEPTION_TEST(doc.createAttributeNS("", "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS(0,  "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
+
+        //In fact, any prefix != null should have a namespaceURI != 0 or != ""
+        TASSERT(doc.createAttributeNS("http://nsa", "foo:a").getNamespaceURI().equals("http://nsa"));
+        EXCEPTION_TEST(doc.createAttributeNS("", "foo:a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS(0,  "foo:a"), DOM_DOMException::NAMESPACE_ERR);
 
         //Change prefix
         DOM_Attr attr = doc.createAttributeNS("http://nsa", "foo:a");
@@ -1369,21 +1377,22 @@ int  main()
         //Special case for xml:a where namespaceURI must be xmlURI
         attr = doc.createAttributeNS(xmlURI, "foo:a");
         attr.setPrefix("xml");
-        attr = doc.createAttributeNS(0, "foo:a");
-        EXCEPTION_TEST(attr.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);     
-        attr = doc.createAttributeNS("", "foo:a");
-        EXCEPTION_TEST(attr.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);     
         attr = doc.createAttributeNS("http://nsa", "foo:a");
-        EXCEPTION_TEST(attr.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);     
-        //Special case for xmlns:a where namespaceURI must be xmlnsURI
+        EXCEPTION_TEST(attr.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);
+        //Special case for xmlns:a where namespaceURI must be xmlURI
         attr = doc.createAttributeNS(xmlnsURI, "foo:a");
         attr.setPrefix("xmlns");
-        attr = doc.createAttributeNS(0, "foo:a");
-        EXCEPTION_TEST(attr.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);     
-        attr = doc.createAttributeNS("", "foo:a");
-        EXCEPTION_TEST(attr.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);     
         attr = doc.createAttributeNS("http://nsa", "foo:a");
-        EXCEPTION_TEST(attr.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(attr.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);
+        //Special case for xmlns where no prefix can be set
+        attr = doc.createAttributeNS(xmlnsURI, "xmlns");
+        EXCEPTION_TEST(attr.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);
+        //Also an attribute can not have a prefix with namespaceURI == null or ""
+        attr = doc.createAttributeNS(0, "a");
+        EXCEPTION_TEST(attr.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
+        attr = doc.createAttributeNS("", "a");
+        EXCEPTION_TEST(attr.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
         
         //Only prefix of Element and Attribute can be changed
         EXCEPTION_TEST(doc.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
