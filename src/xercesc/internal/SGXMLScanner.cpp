@@ -88,6 +88,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+static XMLAttDefList& getAttDefList(ComplexTypeInfo* currType, XMLElementDecl* elemDecl);
+
 // ---------------------------------------------------------------------------
 //  SGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -2404,9 +2406,9 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // Check after all specified attrs are scanned
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
         // (2) add default attrs if missing (FIXED and NOT_FIXED)
-        XMLAttDefList& attDefList = (currType)
-                ? currType->getAttDefList()
-                : elemDecl->getAttDefList();
+
+        XMLAttDefList& attDefList = getAttDefList(currType, elemDecl);
+
         while (attDefList.hasMoreElements())
         {
             // Get the current att def, for convenience and its def type
@@ -4300,5 +4302,12 @@ void SGXMLScanner::normalizeURI(const XMLCh* const systemURI,
     }
 }
 
+inline XMLAttDefList& getAttDefList(ComplexTypeInfo* currType, XMLElementDecl* elemDecl)
+{
+    if (currType)
+        return currType->getAttDefList();
+    else
+        return elemDecl->getAttDefList();
+}
 
 XERCES_CPP_NAMESPACE_END

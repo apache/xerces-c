@@ -94,6 +94,10 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+static XMLAttDefList& getAttDefList(bool              isSchemaGrammar
+                                  , ComplexTypeInfo*  currType
+                                  , XMLElementDecl*   elemDecl);
+
 // ---------------------------------------------------------------------------
 //  IGXMLScanner: Private helper methods
 // ---------------------------------------------------------------------------
@@ -534,9 +538,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // Check after all specified attrs are scanned
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
         // (2) add default attrs if missing (FIXED and NOT_FIXED)
-        XMLAttDefList &attDefList = (fGrammarType == Grammar::SchemaGrammarType && currType)
-                ? (currType->getAttDefList())
-                : (elemDecl->getAttDefList());
+
+
+        XMLAttDefList &attDefList = getAttDefList(fGrammarType == Grammar::SchemaGrammarType, currType, elemDecl);
+
         while (attDefList.hasMoreElements())
         {
             // Get the current att def, for convenience and its def type
@@ -2900,6 +2905,16 @@ void IGXMLScanner::normalizeURI(const XMLCh* const systemURI,
             pszSrc++;
         }
     }
+}
+
+inline XMLAttDefList& getAttDefList(bool              isSchemaGrammar
+                                  , ComplexTypeInfo*  currType
+                                  , XMLElementDecl*   elemDecl)
+{
+    if (isSchemaGrammar && currType)
+        return currType->getAttDefList();
+    else
+        return elemDecl->getAttDefList();
 }
 
 XERCES_CPP_NAMESPACE_END
