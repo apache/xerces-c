@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/03/19 21:22:39  knoaman
+ * Fix for declarations referenced from a different NS in the case of a circular import.
+ *
  * Revision 1.3  2002/03/19 15:57:12  knoaman
  * Fix for bug 7074.
  *
@@ -100,7 +103,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const int blockDefault,
                        const int finalDefault,
                        const int targetNSURI,
-                       const int currentScope,
                        const int scopeCount,
                        const unsigned int namespaceScopeLevel,
                        XMLCh* const schemaURL,
@@ -112,7 +114,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fBlockDefault(blockDefault)
     , fFinalDefault(finalDefault)
     , fTargetNSURI(targetNSURI)
-    , fCurrentScope(currentScope)
     , fScopeCount(scopeCount)
     , fNamespaceScopeLevel(namespaceScopeLevel)
     , fCurrentSchemaURL(schemaURL)

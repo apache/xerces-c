@@ -389,9 +389,9 @@ void TraverseSchema::preprocessSchema(IDOM_Element* const schemaRoot,
 
     // Save current schema info
     SchemaInfo* currInfo = new SchemaInfo(fElemAttrDefaultQualified, fBlockDefault,
-                                          fFinalDefault, fTargetNSURI, fCurrentScope,
+                                          fFinalDefault, fTargetNSURI,
                                           fScopeCount, namespaceDepth,
-										  XMLString::replicate(schemaURL),
+                                          XMLString::replicate(schemaURL),
                                           fTargetNSURIString, fStringPool, schemaRoot);
 
     if (fSchemaInfo) {
@@ -586,7 +586,7 @@ void TraverseSchema::preprocessInclude(const IDOM_Element* const elem) {
 
             // and now we'd better save this stuff!
             fSchemaInfo = new SchemaInfo(fElemAttrDefaultQualified, fBlockDefault,
-                                         fFinalDefault, fTargetNSURI, fCurrentScope,
+                                         fFinalDefault, fTargetNSURI,
                                          fScopeCount, namespaceDepth,
                                          XMLString::replicate(includeURL),
                                          fTargetNSURIString, fStringPool, root);
@@ -1392,7 +1392,7 @@ TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem) {
     fCurrentGroupStack->addElement(nameIndex);
     fCurrentGroupInfo = groupInfo;
 
-    if (!saveGroupInfo && !fCurrentComplexType) {
+    if (fCurrentScope == Grammar::TOP_LEVEL_SCOPE) {
         fCurrentScope = fScopeCount++;
     }
 
@@ -4765,6 +4765,7 @@ TraverseSchema::getElementTypeValidator(const XMLCh* const typeStr,
     DatatypeValidator* dv = 0;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     SchemaInfo*          saveInfo = fSchemaInfo;
+    int                  saveScope = fCurrentScope;
 
     if (otherSchemaURI != 0) {
 
@@ -4818,7 +4819,7 @@ TraverseSchema::getElementTypeValidator(const XMLCh* const typeStr,
 
         // restore schema information, if necessary
         if (saveInfo != fSchemaInfo) {
-            restoreSchemaInfo(saveInfo, infoType);
+            restoreSchemaInfo(saveInfo, infoType, saveScope);
         }
 
         if (!dv) {
@@ -4842,7 +4843,8 @@ TraverseSchema::getElementComplexTypeInfo(const XMLCh* const typeStr,
     const XMLCh*         typeURI = (otherSchemaURI) ? otherSchemaURI : resolvePrefixToURI(prefix);
     ComplexTypeInfo*     typeInfo = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
-	SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    int                  saveScope = fCurrentScope; 
 
     fBuffer.set(typeURI);
     fBuffer.append(chComma);
@@ -4899,7 +4901,7 @@ TraverseSchema::getElementComplexTypeInfo(const XMLCh* const typeStr,
     }
 
     // restore schema information
-    restoreSchemaInfo(saveInfo, infoType);
+    restoreSchemaInfo(saveInfo, infoType, saveScope);
 
     return typeInfo;
 }
@@ -4914,6 +4916,7 @@ TraverseSchema::getSubstituteGroupElemDecl(const XMLCh* const name,
     SchemaElementDecl*   elemDecl = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    int                  saveScope = fCurrentScope;
 
     if (XMLString::compareString(nameURI, fTargetNSURIString) != 0) {
 
@@ -4987,7 +4990,7 @@ TraverseSchema::getSubstituteGroupElemDecl(const XMLCh* const name,
 
     // restore schema information, if necessary
     if (saveInfo != fSchemaInfo) {
-        restoreSchemaInfo(saveInfo, infoType);
+        restoreSchemaInfo(saveInfo, infoType, saveScope);
     }
 
     return elemDecl;
@@ -5194,6 +5197,7 @@ void TraverseSchema::processAttributeDeclRef(const IDOM_Element* const elem,
     SchemaInfo* saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     SchemaAttDef* refAttDef = 0;
+    int saveScope = fCurrentScope;
 
     if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
 
@@ -5252,7 +5256,7 @@ void TraverseSchema::processAttributeDeclRef(const IDOM_Element* const elem,
 
     // restore schema information, if necessary
     if (fSchemaInfo != saveInfo) {
-        restoreSchemaInfo(saveInfo, infoType);
+        restoreSchemaInfo(saveInfo, infoType, saveScope);
     }
 
     if (!refAttDef) {
@@ -5736,6 +5740,7 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
     ComplexTypeInfo*     baseComplexTypeInfo = 0;
     DatatypeValidator*   baseDTValidator = 0;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    int                  saveScope = fCurrentScope;
 
     // -------------------------------------------------------------
     // check if the base type is from another schema
@@ -5827,7 +5832,7 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
 
                         // restore schema information, if necessary
                         if (saveInfo != fSchemaInfo) {
-                            restoreSchemaInfo(saveInfo, infoType);
+                            restoreSchemaInfo(saveInfo, infoType, saveScope);
                         }
 
                         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, uriStr, localPart, uriStr);
@@ -5838,7 +5843,7 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
 
                     // restore schema information, if necessary
                     if (saveInfo != fSchemaInfo) {
-                        restoreSchemaInfo(saveInfo, infoType);
+                        restoreSchemaInfo(saveInfo, infoType, saveScope);
                     }
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
                     throw TraverseSchema::InvalidComplexTypeInfo;
@@ -5849,7 +5854,7 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
 
     // restore schema information, if necessary
     if (saveInfo != fSchemaInfo) {
-        restoreSchemaInfo(saveInfo, infoType);
+        restoreSchemaInfo(saveInfo, infoType, saveScope);
     }
 
     typeInfo->setBaseComplexTypeInfo(baseComplexTypeInfo);
@@ -6171,12 +6176,12 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
 
 
 void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
-                                       SchemaInfo::ListType const aListType) {
+                                       SchemaInfo::ListType const aListType,
+                                       const int saveScope) {
 
 
     if (aListType == SchemaInfo::IMPORT) { // restore grammar info
 
-        fSchemaInfo->setCurrentScope(fCurrentScope);
         fSchemaInfo->setScopeCount(fScopeCount);
 
         int targetNSURI = toRestore->getTargetNSURI();
@@ -6189,7 +6194,7 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         }
 
         fTargetNSURI = targetNSURI;
-        fCurrentScope = toRestore->getCurrentScope();
+        fCurrentScope = saveScope;
         fScopeCount = toRestore->getScopeCount();
         fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
         fGroupRegistry = fSchemaGrammar->getGroupInfoRegistry();
@@ -6557,7 +6562,8 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
 
     XercesGroupInfo*     groupInfo = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
-	SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    int                  saveScope = fCurrentScope;
 
     //if from another target namespace
     if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
@@ -6610,13 +6616,13 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
 
             groupInfo = traverseGroupDecl(groupElem);
 
-            if (groupInfo && fCurrentGroupInfo
-                && groupInfo->getScope() == fCurrentGroupInfo->getScope()) {
-                copyGroupElements(groupInfo, fCurrentGroupInfo, 0);
-            }
-
             // restore schema information
-            restoreSchemaInfo(saveInfo, infoType);
+            restoreSchemaInfo(saveInfo, infoType, saveScope);
+
+            if (groupInfo && (fCurrentGroupInfo || infoType == SchemaInfo::IMPORT)) {
+                copyGroupElements(groupInfo, fCurrentGroupInfo,
+                                  (infoType == SchemaInfo::IMPORT) ? fCurrentComplexType : 0);
+            }
 
             return groupInfo;
         }
@@ -6624,15 +6630,14 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DeclarationNotFound,
                               SchemaSymbols::fgELT_GROUP, uriStr, localPart);
         }
-    }
 
-    if (groupInfo) {
+        // restore schema information, if necessary
+        if (saveInfo != fSchemaInfo) {
+            restoreSchemaInfo(saveInfo, infoType, saveScope);
+        }
+    }
+    else {
         copyGroupElements(groupInfo, fCurrentGroupInfo, fCurrentComplexType);
-    }
-
-    // restore schema information, if necessary
-    if (saveInfo != fSchemaInfo) {
-        restoreSchemaInfo(saveInfo, infoType);
     }
 
     return groupInfo;
@@ -6654,6 +6659,7 @@ TraverseSchema::processAttributeGroupRef(const IDOM_Element* const elem,
     XercesAttGroupInfo*  attGroupInfo = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    int                  saveScope = fCurrentScope;
 
     if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
 
@@ -6715,7 +6721,7 @@ TraverseSchema::processAttributeGroupRef(const IDOM_Element* const elem,
 
             // restore schema information, if necessary
             if (saveInfo != fSchemaInfo) {
-                restoreSchemaInfo(saveInfo, infoType);
+                restoreSchemaInfo(saveInfo, infoType, saveScope);
             }
 
             return attGroupInfo;
@@ -6732,7 +6738,7 @@ TraverseSchema::processAttributeGroupRef(const IDOM_Element* const elem,
 
     // restore schema information, if necessary
     if (saveInfo != fSchemaInfo) {
-        restoreSchemaInfo(saveInfo, infoType);
+        restoreSchemaInfo(saveInfo, infoType, saveScope);
     }
 
     return attGroupInfo;
@@ -7485,7 +7491,7 @@ bool TraverseSchema::openRedefinedSchema(const IDOM_Element* const redefineElem)
         // and now we'd better save this stuff!
         redefSchemaInfo = fSchemaInfo;
         fSchemaInfo = new SchemaInfo(fElemAttrDefaultQualified, fBlockDefault,
-                                     fFinalDefault, fTargetNSURI, fCurrentScope,
+                                     fFinalDefault, fTargetNSURI,
                                      fScopeCount, namespaceDepth,
                                      XMLString::replicate(includeURL),
                                      fTargetNSURIString, fStringPool, root);

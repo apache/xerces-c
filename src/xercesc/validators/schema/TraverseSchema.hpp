@@ -499,7 +499,8 @@ private:
     InputSource* resolveSchemaLocation(const XMLCh* const loc);
 
     void restoreSchemaInfo(SchemaInfo* const toRestore,
-                           SchemaInfo::ListType const aListType = SchemaInfo::INCLUDE);
+                           SchemaInfo::ListType const aListType = SchemaInfo::INCLUDE,
+                           const int saveScope = Grammar::TOP_LEVEL_SCOPE);
     int  resetCurrentTypeNameStack(const int);
 
     /**

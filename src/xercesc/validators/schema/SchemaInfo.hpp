@@ -99,7 +99,6 @@ public:
                const int blockDefault,
                const int finalDefault,
                const int targetNSURI,
-               const int currentScope,
                const int scopeCount,
                const unsigned int namespaceScopeLevel,
                XMLCh* const schemaURL,
@@ -118,7 +117,6 @@ public:
     int                      getBlockDefault() const;
     int                      getFinalDefault() const;
     int                      getTargetNSURI() const;
-    int                      getCurrentScope() const;
     int                      getScopeCount() const;
     unsigned int             getNamespaceScopeLevel() const;
     unsigned short           getElemAttrDefaultQualified() const;
@@ -129,7 +127,6 @@ public:
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setCurrentScope(const int aValue);
     void setScopeCount(const int aValue);
     
 	// -----------------------------------------------------------------------
@@ -160,7 +157,6 @@ private:
     int                                 fBlockDefault;
     int                                 fFinalDefault;
     int                                 fTargetNSURI;
-    int                                 fCurrentScope;
     int                                 fScopeCount;
     unsigned int                        fNamespaceScopeLevel;
     XMLCh*                              fCurrentSchemaURL;
@@ -218,11 +214,6 @@ inline int SchemaInfo::getTargetNSURI() const {
     return fTargetNSURI;
 }
 
-inline int SchemaInfo::getCurrentScope() const {
-
-    return fCurrentScope;
-}
-
 inline int SchemaInfo::getScopeCount() const {
 
     return fScopeCount;
@@ -250,11 +241,6 @@ SchemaInfo::getRecursingTypeNames() const {
 // ---------------------------------------------------------------------------
 //  Setter methods
 // ---------------------------------------------------------------------------
-inline void SchemaInfo::setCurrentScope(const int aValue) {
-
-    fCurrentScope = aValue;
-}
-
 inline void SchemaInfo::setScopeCount(const int aValue) {
 
     fScopeCount = aValue;
