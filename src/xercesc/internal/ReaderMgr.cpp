@@ -528,8 +528,10 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
     srcToFill = 0;
     if (fEntityHandler)
     {
+        LastExtEntityInfo lastInfo;
+        getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId);
+                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId, lastInfo.systemId);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 

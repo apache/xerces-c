@@ -1586,8 +1586,10 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
     InputSource* srcToUse = 0;
 
     if (fEntityHandler){
+        ReaderMgr::LastExtEntityInfo lastInfo;
+        fReaderMgr.getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            systemId);
+                            systemId, 0, XMLUni::fgZeroLenString, lastInfo.systemId);
         srcToUse = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 

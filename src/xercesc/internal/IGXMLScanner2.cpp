@@ -1392,8 +1392,10 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
                 expSysId.set(normalizedURI);
 
+            ReaderMgr::LastExtEntityInfo lastInfo;
+            fReaderMgr.getLastExtEntityInfo(lastInfo);
             XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::SchemaGrammar,
-                            expSysId.getRawBuffer(), uri);
+                            expSysId.getRawBuffer(), uri, XMLUni::fgZeroLenString, lastInfo.systemId);
             srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
         }
         else
@@ -1568,8 +1570,10 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
         if (!fEntityHandler->expandSystemId(sysId, expSysId))
             expSysId.set(sysId);
 
+        ReaderMgr::LastExtEntityInfo lastInfo;
+        fReaderMgr.getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer());
+                            expSysId.getRawBuffer(), 0, XMLUni::fgZeroLenString, lastInfo.systemId);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
     else
