@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/10/09 18:32:31  jberry
+ * Add some auto_ptr functionality to allow modification of monitored
+ * pointer value. This eases use of Janitor in some situations.
+ *
  * Revision 1.4  2000/03/02 19:54:40  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -91,20 +95,24 @@ public  :
     Janitor(T* const toDelete);
     ~Janitor();
 
-
     // -----------------------------------------------------------------------
     //  Public, non-virtual methods
     // -----------------------------------------------------------------------
     void orphan();
 
+	//	small amount of auto_ptr compatibility
+	T&	operator*() const;
+	T*	operator->() const;
+	T*	get() const;
+	T*	release();
+	void reset(T* p = 0);
 
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    Janitor();
+	Janitor();
     Janitor(const Janitor<T>&);
-
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -133,14 +141,19 @@ public  :
     // -----------------------------------------------------------------------
     void orphan();
 
+	//	small amount of auto_ptr compatibility
+	T&	operator[](int index) const;
+	T*	operator->() const;
+	T*	get() const;
+	T*	release();
+	void reset(T* p = 0);
 
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    ArrayJanitor();
-    ArrayJanitor(const ArrayJanitor<T>&);
-
+	ArrayJanitor();
+    ArrayJanitor(const ArrayJanitor<T>& copy);
 
     // -----------------------------------------------------------------------
     //  Private data members

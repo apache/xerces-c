@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/10/09 18:32:31  jberry
+ * Add some auto_ptr functionality to allow modification of monitored
+ * pointer value. This eases use of Janitor in some situations.
+ *
  * Revision 1.3  2000/03/02 19:54:40  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -86,46 +90,126 @@
 //  Janitor: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class T> Janitor<T>::Janitor(T* const toDelete) :
-
     fData(toDelete)
 {
 }
 
+
 template <class T> Janitor<T>::~Janitor()
 {
-    delete fData;
+    reset();
 }
 
 
 // ---------------------------------------------------------------------------
 //  Janitor: Public, non-virtual methods
 // ---------------------------------------------------------------------------
-template <class T> void Janitor<T>::orphan()
+template <class T> void
+Janitor<T>::orphan()
 {
-    fData = 0;
+   release();
 }
 
+
+template <class T> T&
+Janitor<T>::operator*() const
+{
+	return *fData;
+}
+
+
+template <class T> T*
+Janitor<T>::operator->() const
+{
+	return fData;
+}
+
+
+template <class T> T*
+Janitor<T>::get() const
+{
+	return fData;
+}
+
+
+template <class T> T*
+Janitor<T>::release()
+{
+	T* p = fData;
+	fData = 0;
+	return p;
+}
+
+
+template <class T> void Janitor<T>::reset(T* p)
+{
+	delete fData;
+	fData = p;
+}
 
 
 // -----------------------------------------------------------------------
 //  ArrayJanitor: Constructors and Destructor
 // -----------------------------------------------------------------------
 template <class T> ArrayJanitor<T>::ArrayJanitor(T* const toDelete) :
-
     fData(toDelete)
 {
 }
 
+
 template <class T> ArrayJanitor<T>::~ArrayJanitor()
 {
-    delete [] fData;
+	reset();
 }
 
 
 // -----------------------------------------------------------------------
 //  ArrayJanitor: Public, non-virtual methods
 // -----------------------------------------------------------------------
-template <class T> void ArrayJanitor<T>::orphan()
+template <class T> void
+ArrayJanitor<T>::orphan()
 {
-    fData = 0;
+   release();
 }
+
+
+//	Look, Ma! No hands! Don't call this with null data!
+template <class T> T&
+ArrayJanitor<T>::operator[](int index) const
+{
+	//	TODO: Add appropriate exception
+	return fData[index];
+}
+
+
+template <class T> T*
+ArrayJanitor<T>::operator->() const
+{
+	return fData;
+}
+
+
+template <class T> T*
+ArrayJanitor<T>::get() const
+{
+	return fData;
+}
+
+
+template <class T> T*
+ArrayJanitor<T>::release()
+{
+	T* p = fData;
+	fData = 0;
+	return p;
+}
+
+
+template <class T> void
+ArrayJanitor<T>::reset(T* p)
+{
+	delete [] fData;
+	fData = p;
+}
+
+
