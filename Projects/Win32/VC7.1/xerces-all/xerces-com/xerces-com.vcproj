@@ -443,6 +443,24 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
 							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Release|Win32">
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Debug|Win32">
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\com\xml4com.rc">
