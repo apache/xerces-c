@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/12/03 16:25:00  tng
+ * [Bug 5237] PATH_MAX undefined during build without threading support.
+ *
  * Revision 1.2  2001/12/03 14:45:11  tng
  * FreeBSD native transcoder (IconvFBSD) added by Max Gotlib.
  *
@@ -84,6 +87,7 @@
 // #include    <libgen.h>
 #include    <sys/time.h>
 #include    <string.h>
+#include    <limits.h>
 #include    <util/PlatformUtils.hpp>
 #include    <util/RuntimeException.hpp>
 #include    <util/Janitor.hpp>
