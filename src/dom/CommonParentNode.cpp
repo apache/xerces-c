@@ -253,6 +253,8 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         newInternal->previousSibling=prev;
         if (refInternal == firstChild) {
             firstChild = newInternal;
+            if (refInternal != null)
+                 refInternal->firstChild(false);
             newInternal->firstChild(true);
         } else {
             prev->nextSibling = newInternal;
@@ -265,7 +267,6 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
             firstChild->previousSibling = newInternal;
         } else {
             refInternal->previousSibling = newInternal;
-            refInternal->firstChild(true);
         }
     }
     changed();
