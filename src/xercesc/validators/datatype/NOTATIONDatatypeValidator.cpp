@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2004/08/11 16:52:20  peiyongz
+ * using XMLString::isValidNOTATION()
+ *
  * Revision 1.8  2003/12/17 00:18:39  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -161,58 +164,8 @@ DatatypeValidator* NOTATIONDatatypeValidator::newInstance
 void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content
                                                 , MemoryManager* const manager)
 {
-    //
-    //  NOTATATION: <URI>:<localPart>
-    //  where URI is optional
-    //        ':' and localPart must be present
-    //
-    int contentLength = XMLString::stringLen(content);
-    int colonPosition = XMLString::lastIndexOf(content, chColon);
 
-    if ((colonPosition == -1)                ||  // no ':'
-        (colonPosition == contentLength - 1)  )  // <URI>':'
-        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
-                , XMLExcepts::VALUE_NOTATION_Invalid
-                , content
-                , manager);
-
-    if (colonPosition > 0)
-    {
-        // Extract URI
-        XMLCh* uriPart = (XMLCh*) manager->allocate
-        (
-            (colonPosition + 1) * sizeof(XMLCh)
-        );//new XMLCh[colonPosition + 1];
-        ArrayJanitor<XMLCh> jan1(uriPart, manager);
-        XMLString::subString(uriPart, content, 0, colonPosition, manager);
-
-        try
-        {
-            // no relative uri support here
-            XMLUri  newURI(uriPart, manager);
-        }
-        catch(const OutOfMemoryException&)
-        {
-            throw;
-        }
-        catch (...)
-        {
-            ThrowXMLwithMemMgr1(InvalidDatatypeValueException
-                    , XMLExcepts::VALUE_NOTATION_Invalid
-                    , content
-                    , manager);
-        }
-    }
-
-    // Extract localpart
-    XMLCh* localPart = (XMLCh*) manager->allocate
-    (
-        (contentLength - colonPosition) * sizeof(XMLCh)
-    );//new XMLCh[contentLength - colonPosition];
-    ArrayJanitor<XMLCh> jan2(localPart, manager);
-    XMLString::subString(localPart, content, colonPosition + 1, contentLength, manager);
-
-    if ( !XMLString::isValidNCName(localPart))
+    if (!XMLString::isValidNOTATION(content, manager))
     {
         ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NOTATION_Invalid
