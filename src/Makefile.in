@@ -101,11 +101,11 @@ PRODUCTNAME=xerces
 PRODUCTVERSION=${VER}
 BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
 
-all:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators ${THISLIB}${VER}${SHLIBSUFFIX}
+all:: lib
 
 compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators
 
-lib:: compile ${THISLIB}${VER}${SHLIBSUFFIX}
+lib:: ${THISLIB}${VER}${SHLIBSUFFIX}
 
 Prepare::
 	@echo Preparing the directory structure for a build ...
@@ -153,7 +153,7 @@ Validators::
 	@echo Building "validators"
 	${CD} $(VALIDATORS_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-${THISLIB}${VER}${SHLIBSUFFIX}::
+${THISLIB}${VER}${SHLIBSUFFIX}:: compile
 	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
 	${CD} $(XML_OBJ_DIR)/.. ; $(MAKE) -k $(MAKE_FLAGS) ; ${CD} ..
 
