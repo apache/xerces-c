@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/09/22 19:47:14  neilg
+ * change Grammar::putElemDecl(XMLElementDecl, bool) so that it does not require the Grammar object to be const.  Also, mark findOrAddGrammar as being dangerous in multithreaded situations
+ *
  * Revision 1.6  2003/07/31 17:07:33  peiyongz
  * Grammar embed grammar description
  *
@@ -152,6 +155,10 @@ public:
     virtual bool getValidated() const = 0;
 
     // Element Decl
+
+    // this method should only be used while the grammar is being
+    // constructed, not while it is being used
+    // in a validation episode!
     virtual XMLElementDecl* findOrAddElemDecl
     (
         const   unsigned int    uriId
@@ -224,7 +231,7 @@ public:
     (
         XMLElementDecl* const elemDecl
         , const bool          notDeclared = false
-    )   const = 0;
+    )   = 0;
 
     virtual unsigned int putNotationDecl
     (
