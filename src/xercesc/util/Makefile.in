@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.17  2002/11/07 22:37:14  peiyongz
+# build -miconv on hpux and linux
+#
 # Revision 1.16  2002/11/04 22:28:05  peiyongz
 # Locale setting for message loader
 #
@@ -561,10 +564,22 @@ ifeq (${PLATFORM},SOLARIS)
 	mkdir -p ${MSG_DIR}
 	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
 endif
+
 ifeq (${PLATFORM},AIX)
 	mkdir -p ${MSG_DIR}
 	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
 endif
+
+ifeq (${PLATFORM},HPUX)
+	mkdir -p ${MSG_DIR}
+	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
+endif
+
+ifeq (${PLATFORM},LINUX)
+	mkdir -p ${MSG_DIR}
+	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
+endif
+
 endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/11/07 22:37:51  peiyongz
+ * build -miconv on hpux and linux
+ *
  * Revision 1.7  2002/11/04 15:13:00  tng
  * C++ Namespace Support.
  *
@@ -183,7 +186,8 @@
 
 #if defined(XML_USE_ICU_MESSAGELOADER)
     #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
-
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+    #include <xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp>
 #else
     // Same as -DXML_USE_INMEM_MESSAGELOADER
     #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
@@ -238,6 +242,8 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     {
 #if defined (XML_USE_ICU_MESSAGELOADER)
         retVal = new ICUMsgLoader(msgDomain);
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+        retVal = new MsgCatalogLoader(msgDomain);
 #else
         // same as -DXML_USE_INMEM_MESSAGELOADER
         retVal = new InMemMsgLoader(msgDomain);
