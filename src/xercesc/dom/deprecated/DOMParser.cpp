@@ -244,6 +244,11 @@ bool DOMParser::getValidationSchemaFullChecking() const
     return fScanner->getValidationSchemaFullChecking();
 }
 
+bool DOMParser::getIdentityConstraintChecking() const
+{
+    return fScanner->getIdentityConstraintChecking();
+}
+
 int DOMParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
@@ -383,6 +388,11 @@ void DOMParser::setDoSchema(const bool newState)
 void DOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
+}
+
+void DOMParser::setIdentityConstraintChecking(const bool identityConstraintChecking)
+{
+    fScanner->setIdentityConstraintChecking(identityConstraintChecking);
 }
 
 void DOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)

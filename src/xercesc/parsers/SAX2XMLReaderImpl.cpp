@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2004/04/13 16:53:26  peiyongz
+ * get/setIdentityConstraintChecking
+ *
  * Revision 1.33  2004/01/29 11:46:32  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -1555,6 +1558,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setValidationSchemaFullChecking(value);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    {
+        fScanner->setIdentityConstraintChecking(value);
+    }
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
     {
         fScanner->setLoadExternalDTD(value);
@@ -1605,6 +1612,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return getDoSchema();
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
         return fScanner->getValidationSchemaFullChecking();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+        return fScanner->getIdentityConstraintChecking();
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
         return fScanner->getLoadExternalDTD();
     else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)

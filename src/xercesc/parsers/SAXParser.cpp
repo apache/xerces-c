@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2004/04/13 16:53:26  peiyongz
+ * get/setIdentityConstraintChecking
+ *
  * Revision 1.31  2004/01/29 11:46:32  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -514,6 +517,11 @@ bool SAXParser::getValidationSchemaFullChecking() const
     return fScanner->getValidationSchemaFullChecking();
 }
 
+bool SAXParser::getIdentityConstraintChecking() const
+{
+    return fScanner->getIdentityConstraintChecking();
+}
+
 int SAXParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
@@ -618,6 +626,11 @@ void SAXParser::setDoSchema(const bool newState)
 void SAXParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
+}
+
+void SAXParser::setIdentityConstraintChecking(const bool identityConstraintChecking)
+{
+    fScanner->setIdentityConstraintChecking(identityConstraintChecking);
 }
 
 void SAXParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)

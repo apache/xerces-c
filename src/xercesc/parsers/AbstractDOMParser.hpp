@@ -225,6 +225,18 @@ public :
       */
     bool getValidationSchemaFullChecking() const;
 
+    /** Get the identity constraint checking' flag
+      *
+      * This method returns the state of the parser's identity constraint
+      * checking flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         have identity constraint checking, false otherwise.
+      *
+      * @see setIdentityConstraintChecking
+      */
+    bool getIdentityConstraintChecking() const;
+
     /** Get error count from the last parse operation.
       *
       * This method returns the error count from the last parse
@@ -582,6 +594,21 @@ public :
       * @see #getValidationSchemaFullChecking
       */
     void setValidationSchemaFullChecking(const bool schemaFullChecking);
+
+    /**
+      * This method allows users to enable or disable the parser's identity
+      * constraint checks.
+      *
+      * <p>By default, the parser does not to any identity constraint checks. 
+      *    The default value is false.</p>
+      *
+      * @param newState The value specifying whether the parser should
+      *                 do identity constraint checks or not in the
+      *                 input XML document.
+      *
+      * @see #getIdentityConstraintChecking
+      */
+    void setIdentityConstraintChecking(const bool newState);
 
     /**
       * This method allows the user to specify a list of schemas to use.

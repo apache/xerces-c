@@ -297,6 +297,11 @@ bool AbstractDOMParser::getValidationSchemaFullChecking() const
     return fScanner->getValidationSchemaFullChecking();
 }
 
+bool AbstractDOMParser::getIdentityConstraintChecking() const
+{
+    return fScanner->getIdentityConstraintChecking();
+}
+
 int AbstractDOMParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
@@ -381,6 +386,11 @@ void AbstractDOMParser::setDoSchema(const bool newState)
 void AbstractDOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
+}
+
+void AbstractDOMParser::setIdentityConstraintChecking(const bool identityConstraintChecking)
+{
+    fScanner->setIdentityConstraintChecking(identityConstraintChecking);
 }
 
 void AbstractDOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)

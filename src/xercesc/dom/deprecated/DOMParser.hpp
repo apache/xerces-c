@@ -293,6 +293,8 @@ public :
       */
     bool getValidationSchemaFullChecking() const;
 
+    bool getIdentityConstraintChecking() const;
+
     /** Get error count from the last parse operation.
       *
       * This method returns the error count from the last parse
@@ -725,6 +727,8 @@ public :
       * @see #getValidationSchemaFullChecking
       */
     void setValidationSchemaFullChecking(const bool schemaFullChecking);
+
+    void setIdentityConstraintChecking(const bool identityConstraintChecking);
 
     /**
       * This method allows users to set the toCreateXMLDeclTypeNode flag

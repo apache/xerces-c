@@ -317,6 +317,11 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
         return getValidationSchemaFullChecking();
     }
 
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    {
+        return getIdentityConstraintChecking();
+    }
+
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
     {
         return getLoadExternalDTD();

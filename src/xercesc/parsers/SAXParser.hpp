@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2004/04/13 16:53:26  peiyongz
+ * get/setIdentityConstraintChecking
+ *
  * Revision 1.28  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -461,6 +464,18 @@ public :
       */
     bool getValidationSchemaFullChecking() const;
 
+    /** Get the 'identity constraint checking' flag
+      *
+      * This method returns the state of the parser's identity constraint
+      * checking flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         have identity constraint checking, false otherwise.
+      *
+      * @see #setIdentityConstraintChecking
+      */
+    bool getIdentityConstraintChecking() const;
+
     /** Get error count from the last parse operation.
       *
       * This method returns the error count from the last parse
@@ -734,6 +749,19 @@ public :
       * @see #getValidationSchemaFullChecking
       */
     void setValidationSchemaFullChecking(const bool schemaFullChecking);
+
+    /**
+      * This method allows the user to turn identity constraint checking on/off.
+      * Only takes effect if Schema validation is enabled.
+      * If turned off, identity constraint checking is not done.
+      *
+      * The parser's default state is: false.
+      *
+      * @param identityConstraintChecking True to turn on identity constraint checking.
+      *
+      * @see #getIdentityConstraintChecking
+      */
+    void setIdentityConstraintChecking(const bool identityConstraintChecking);
 
     /**
       * This method allows users to set the parser's behaviour when it
