@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/12 14:35:37  knoaman
+ * Add an error message and use it in the scanner.
+ *
  * Revision 1.2  2002/07/11 18:17:43  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -203,7 +206,7 @@ void GrammarResolver::cacheGrammars()
         XMLCh* grammarKey = (XMLCh*) grammarEnum.nextElementKey();
 
         if (fCachedGrammarRegistry && fCachedGrammarRegistry->containsKey(grammarKey)) {
-            ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported); //Revisit - add proper exception
+            ThrowXML(RuntimeException, XMLExcepts::GC_ExistingGrammar);
         }
 
         keys.addElement(grammarKey);

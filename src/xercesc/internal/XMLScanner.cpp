@@ -55,7 +55,7 @@
  */
 
 /*
- * $Id$
+  * $Id$
  */
 
 
@@ -4393,8 +4393,7 @@ Grammar* XMLScanner::loadGrammar(const   InputSource& src
             if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
                 emitError
                 (
-                    XMLErrs::XMLException_Warning
-                    , excToCatch.getType()
+                    XMLErrs::DisplayErrorMessage
                     , excToCatch.getMessage()
                 );
             else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)

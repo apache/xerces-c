@@ -409,6 +409,7 @@
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
         <Warning>
             <Message Id="Scan_CouldNotOpenSource_Warning" Text="Warning: The primary document entity could not be opened. Id={0}"/>
+            <Message Id="GC_ExistingGrammar" Text="Warning: No caching of grammar set, a grammar with same key found in the cache pool."/>
         </Warning>
         <FatalError>
             <Message Id="Array_BadIndex" Text="The index is beyond the array bounds "/>
