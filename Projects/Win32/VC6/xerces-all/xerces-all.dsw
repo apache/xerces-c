@@ -168,6 +168,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "ThreadTest"=".\ThreadTest\ThreadTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "XercesLib"=".\XercesLib\XercesLib.dsp" - Package Owner=<4>
 
 Package=<5>
