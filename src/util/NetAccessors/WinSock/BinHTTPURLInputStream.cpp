@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/09/04 17:52:57  peiyongz
+ * Bugzilla# 3170: patch from Kevin Philips to handle Query in XMLURL.
+ *
  * Revision 1.6  2001/01/22 16:43:38  tng
  * Loads winsock dynamically.  Fixed by Curt Arnold.
  * Winsock2 is not initialized unless an http URL is used.    If an http
@@ -104,6 +107,7 @@
 #include <util/XMLString.hpp>
 #include <util/XMLExceptMsgs.hpp>
 #include <util/Janitor.hpp>
+#include <util/XMLUniDefs.hpp>
 
 
 HMODULE gWinsockLib = NULL;
@@ -277,6 +281,12 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         fragmentAsCharStar = XMLString::transcode(fragment);
     ArrayJanitor<char>  janBuf3(fragmentAsCharStar);
 
+    const XMLCh*        query = urlSource.getQuery();
+    char*               queryAsCharStar = 0;
+    if (query)
+        queryAsCharStar = XMLString::transcode(query);
+    ArrayJanitor<char>  janBuf4(queryAsCharStar);		
+
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
 
     //
@@ -332,6 +342,12 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     //         is weak.
     strcpy(fBuffer, "GET ");
     strcat(fBuffer, pathAsCharStar);
+
+    if (queryAsCharStar != 0)
+    {		
+	fBuffer[strlen(fBuffer)] = chQuestion;
+        strcat(fBuffer, queryAsCharStar);
+    }
 
     if (fragmentAsCharStar != 0)
     {

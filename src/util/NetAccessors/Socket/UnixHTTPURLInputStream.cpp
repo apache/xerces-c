@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/09/04 17:53:09  peiyongz
+ * Bugzilla# 3170: patch from Kevin Philips to handle Query in XMLURL.
+ *
  * Revision 1.6  2001/06/25 16:27:04  tng
  * AS400 changes by Linda Swan.
  *
@@ -104,7 +107,7 @@
 #include <util/XMLString.hpp>
 #include <util/XMLExceptMsgs.hpp>
 #include <util/Janitor.hpp>
-
+#include <util/XMLUniDefs.hpp>
 
 
 
@@ -130,6 +133,12 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     if (fragment)
         fragmentAsCharStar = XMLString::transcode(fragment);
     ArrayJanitor<char>  janBuf3(fragmentAsCharStar);
+
+    const XMLCh*        query = urlSource.getQuery();
+    char*               queryAsCharStar = 0;
+    if (query)
+        queryAsCharStar = XMLString::transcode(query);
+    ArrayJanitor<char>  janBuf4(queryAsCharStar);		
 
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
 
@@ -181,6 +190,12 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     //         is weak.
     strcpy(fBuffer, "GET ");
     strcat(fBuffer, pathAsCharStar);
+
+    if (queryAsCharStar != 0)
+    {		
+	fBuffer[strlen(fBuffer)] = chQuestion;
+        strcat(fBuffer, queryAsCharStar);
+    }
 
     if (fragmentAsCharStar != 0)
     {
