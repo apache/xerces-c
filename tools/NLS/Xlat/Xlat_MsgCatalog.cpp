@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/08 17:06:15  peiyongz
+ * to build -miconv on hpux
+ *
  * Revision 1.6  2002/11/04 15:24:50  tng
  * C++ Namespace Support.
  *
@@ -160,7 +163,11 @@ MsgCatFormatter::nextMessage(const  XMLCh* const            msgText
     //  bother checking, just do it simple and stupid.
     //
     char* outData = fTranscoder->transcode(msgText);
-    fwprintf(fOutFl, L"%3d  %S\n", curId, outData);
+    //
+    // on hp, it is required that message line shall start with number
+    //        w/o leading space.
+    //
+    fwprintf(fOutFl, L"%d  %S\n", curId, outData);
     delete [] outData;
 }
 
