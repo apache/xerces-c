@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2001/07/26 20:40:56  peiyongz
+# FloatDatatypeValidator
+#
 # Revision 1.15  2001/07/24 13:59:03  peiyongz
 # DoubleDTV
 #
@@ -141,6 +144,7 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	ListDatatypeValidator.hpp \
 	UnionDatatypeValidator.hpp \
 	DoubleDatatypeValidator.hpp \
+	FloatDatatypeValidator.hpp \
 	IDREFDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
@@ -162,6 +166,7 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	ListDatatypeValidator.$(TO) \
 	UnionDatatypeValidator.$(TO) \
 	DoubleDatatypeValidator.$(TO) \
+	FloatDatatypeValidator.$(TO) \
 	IDREFDatatypeValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
