@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2002/01/02 15:20:22  tng
+ * Schema Fix: should not store a temp value as the key in the element pool and the attribute pool.
+ *
  * Revision 1.17  2001/11/02 14:13:45  knoaman
  * Add support for identity constraints.
  *
@@ -229,7 +232,7 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
                 // And add a default attribute for this name
                 retVal = new SchemaAttDef(prefix, baseName, uriId);
                 retVal->setElemId(getId());
-                fAttDefs->put((void*)baseName, uriId, retVal);
+                fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 
                 wasAdded = true;
             }

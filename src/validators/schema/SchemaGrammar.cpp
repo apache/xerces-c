@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/01/02 15:20:22  tng
+ * Schema Fix: should not store a temp value as the key in the element pool and the attribute pool.
+ *
  * Revision 1.10  2001/11/19 18:26:31  knoaman
  * no message
  *
@@ -175,7 +178,7 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
     if (!retVal)
     {
         retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
-        const unsigned int elemId = fElemDeclPool->put((void*)baseName, uriId, scope, retVal);
+        const unsigned int elemId = fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
         retVal->setId(elemId);
         wasAdded = true;
     }
@@ -193,7 +196,7 @@ XMLElementDecl* SchemaGrammar::putElemDecl (const   unsigned int    uriId
         , unsigned int          scope)
 {
     SchemaElementDecl* retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
-    const unsigned int elemId = fElemDeclPool->put((void*)baseName, uriId, scope, retVal);
+    const unsigned int elemId = fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
     retVal->setId(elemId);
     return retVal;
 }

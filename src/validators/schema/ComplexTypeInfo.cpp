@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2002/01/02 15:20:22  tng
+ * Schema Fix: should not store a temp value as the key in the element pool and the attribute pool.
+ *
  * Revision 1.25  2001/12/17 21:38:59  tng
  * Fix dangling pointer.
  *
@@ -285,7 +288,7 @@ XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const qName
         // And add a default attribute for this name
         retVal = new SchemaAttDef(prefix, baseName, uriId);
         retVal->setElemId(getElementId());
-        fAttDefs->put((void*)baseName, uriId, retVal);
+        fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 
         wasAdded = true;
     }
