@@ -18,7 +18,9 @@ MAKEN = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f
 PROJECTNAMES = XercesLib DOMCount DOMPrint SAXCount SAXPrint SAX2Count SAX2Print \
   DOMTest DOMMemTest DOMRangeTest DOMTraversal EncodingTest InitTermTest \
   ThreadTest
-XERCESVER=2_2_0
+
+!include ..\..\..\..\version.incl
+XERCESVER=$(VER)
 
 buildall: clearall $(PROJECTNAMES)
 all: $(PROJECTNAMES)

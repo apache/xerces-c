@@ -328,7 +328,7 @@ int main(int argC, char* argV[])
         //reset error count first
         errorHandler.resetErrors();
 
-        DOMDocument *doc = 0;
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc = 0;
 
         try
         {
