@@ -105,6 +105,12 @@
 #endif
 
 
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
+#include <util/NetAccessors/libWWW/LibWWWNetAccessor.hpp>
+#elif defined (XML_USE_NETACCESSOR_SOCKET)
+#include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
+#endif
+
 // ---------------------------------------------------------------------------
 //  Local Methods
 // ---------------------------------------------------------------------------
@@ -140,9 +146,19 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
 }
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
 {
-  return 0;
+    return new LibWWWNetAccessor();
 }
+#elif defined (XML_USE_NETACCESSOR_SOCKET)
+{
+    return new SocketNetAccessor();
+}
+#else
+{
+    return 0;
+}
+#endif
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
