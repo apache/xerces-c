@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.45  2001/08/17 14:06:59  peiyongz
+# Typo: XMLHashCMStateSet.hpp -> HashCMStateSet.hpp
+#
 # Revision 1.44  2001/08/16 21:54:16  peiyongz
 # new class creation
 #
@@ -306,6 +309,7 @@ UTIL_CPP_PUBHEADERS = \
     EmptyStackException.hpp \
     FlagJanitor.hpp \
     HashBase.hpp \
+    HashCMStateSet.hpp \
     HashXMLCh.hpp \
     HashPtr.hpp \
     HexBin.hpp \
@@ -351,7 +355,6 @@ UTIL_CPP_PUBHEADERS = \
     XMLDouble.hpp \
     XMLChTranscoder.hpp \
     XMLInteger.hpp \
-    XMLHashCMStateSet.hpp \
     XMLIBM1140Transcoder.hpp \
     XMLDeleterFor.hpp \
     XMLEBCDICTranscoder.hpp \
