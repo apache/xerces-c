@@ -930,7 +930,7 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
 	char* p = utf8Buf;
 	p[pathLen++] = '\0';
 	
-	//	If it's a relative path, pre-pend the path the current directory
+	//	If it's a relative path, pre-pend the current directory to the path.
 	//	FSPathMakeRef doesn't deal with relativity on the front of the path
 	if (*p == '.')
 	{
@@ -946,13 +946,9 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
 		
 		//	Get pathname to the current directory
 		if (err == noErr)
-			err = FSRefMakePath(&ref, reinterpret_cast<UInt8*>(p), kMaxStaticPathChars - pathLen);
+			err = FSRefMakePath(&ref, reinterpret_cast<UInt8*>(p), kMaxStaticPathChars - pathLen - 1);	// leave room for one '/'
 		std::size_t prefixLen = std::strlen(p);
 			
-		//	Ensure we'll have enough room to add a separator '/'
-		if (err == noErr && prefixLen + pathLen >= kMaxStaticPathChars)
-			err = errFSNameTooLong;
-		
 		//	Now munge the two paths back together
 		if (err == noErr)
 		{
@@ -1591,7 +1587,7 @@ TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t
 #endif
 	}
 	
-    //	Return number of chas in dst
+    //	Return number of chars in dst
 	return result;
 }
 

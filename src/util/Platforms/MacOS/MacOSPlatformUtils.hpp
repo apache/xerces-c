@@ -70,6 +70,7 @@
 #endif
 
 
+//	Abstract class for files. This could be used to allow multiple file paradigms.
 class XMLMacAbstractFile
 {
     public:
@@ -85,6 +86,7 @@ class XMLMacAbstractFile
 };
 
 
+//	Concrete file class implemented using raw Carbon file system calls.
 class XMLMacFile : public XMLMacAbstractFile
 {
     public:
@@ -101,7 +103,6 @@ class XMLMacFile : public XMLMacAbstractFile
     protected:
         short	mFileRefNum;
         bool	mFileValid;
-        unsigned char pStr[300];
 };
 
 
@@ -111,14 +112,14 @@ XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef);
 XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec);
 
 //	Convert from path to FSRef/FSSpec
+//	You retain ownership of the pathName.
 bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref);
 bool	XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec);
 
 //	These routines copy characters between their representation in the Unicode Converter
-//	and the representation used in the C library for the compiler. These representations
-//	are the same for Metrowerks and different for Project Builder.
-//	Each of these routines is safe to call for the case where the src and dst buffers are
-//	in the same location (a conversion in place). Other overlapping ranges are probably
-//	not safe.
+//	and the representation used by XMLCh. Until a recent change in Xerces, these were
+//	sometimes different on the Macintosh (with GCC), but XMLCh is now fixed at 16 bits.
+//	Code utilitizing these routines may be phased out in time, as a conversion is no
+//	longer necessary.
 XMLCh*		CopyUniCharsToXMLChs(const UniChar* src, XMLCh* dst, std::size_t charCount, std::size_t maxChars);
 UniChar*	CopyXMLChsToUniChars(const XMLCh* src, UniChar* dst, std::size_t charCount, std::size_t maxChars);
