@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/07 20:30:28  neilg
+ * fix compilation errors on AIX and HPUX; thanks to David Cargill
+ *
  * Revision 1.11  2003/11/06 21:53:52  neilg
  * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
  *
@@ -110,6 +113,10 @@
 #include <xercesc/util/SynchronizedStringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+void updatePSVIvectorElemIds(ValueVectorOf<SchemaElementDecl*>* vectorElemDecls, 
+                             SchemaGrammar* const grammar);
+
 
 // ---------------------------------------------------------------------------
 //  XMLGrammarPoolImpl: constructor and destructor

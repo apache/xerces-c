@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/11/07 20:30:28  neilg
+ * fix compilation errors on AIX and HPUX; thanks to David Cargill
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -106,7 +109,7 @@ template <class TVal> XSNamedMap<TVal>::~XSNamedMap()
  * <code>mapLength-1</code> inclusive. 
  */
 template <class TVal> 
-unsigned int getLength()
+unsigned int XSNamedMap<TVal>::getLength()
 {
     return fVector->size();
 }
@@ -121,7 +124,7 @@ unsigned int getLength()
  *   that is not a valid index. 
  */
 template <class TVal> 
-TVal *item(unsigned int index)
+TVal* XSNamedMap<TVal>::item(unsigned int index)
 {
     if (index >= fVector->size()) 
     {
