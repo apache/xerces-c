@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/09 19:11:53  peiyongz
+ * Fix to linkage error on Solaris
+ *
  * Revision 1.4  2003/10/07 19:38:31  peiyongz
  * API for Template_Class Object Serialization/Deserialization
  *
@@ -373,7 +376,7 @@ public:
       *                   false : otherwise
       *
       ***/
-           bool           needToWriteTemplateObject(void*       objectToWrite);
+           bool           needToWriteTemplateObject(void* const templateObjectToWrite);
 
     /***
       *
@@ -386,7 +389,7 @@ public:
       *                   false : otherwise
       *
       ***/
-           bool           needToReadTemplateObject(void**       objectToRead);
+           bool           needToReadTemplateObject(void**       templateObjectToRead);
 
     /***
       *
@@ -400,7 +403,7 @@ public:
       *  Return:  
       *
       ***/
-           void           registerTemplateObject(void*          const objectToRegister);
+           void           registerTemplateObject(void* const templateObjectToRegister);
 
     static const bool toReadBufferLen;
 
