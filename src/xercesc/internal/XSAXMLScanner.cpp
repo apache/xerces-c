@@ -158,6 +158,11 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
     {
+        int prefixColonPos = XMLString::indexOf(elemName, chColon);
+        if (prefixColonPos == -1)
+            fPrefixBuf.reset();
+        else
+            fPrefixBuf.set(elemName, prefixColonPos);
         fDocHandler->endElement
         (
             *topElem->fThisElement, uriId, isRoot, fPrefixBuf.getRawBuffer()
