@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/04/02 16:51:05  peiyongz
+ * Better error report support
+ *
  * Revision 1.8  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -185,6 +188,20 @@ public:
     XSAnnotation*   getNext();
     //@}
 
+    //-----------------------------
+    /** Getter */
+    //@{
+    inline void           getLineCol(int& line, int& col)  const;
+    inline const XMLCh*   getSystemId()                    const;    
+    //@}
+
+    //-----------------------------
+    /** Setter */
+    //@{
+    inline void           setLineCol(int line, int col);
+           void           setSystemId(const XMLCh* const systemId);    
+    //@}
+
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -206,6 +223,13 @@ protected:
     // -----------------------------------------------------------------------
     XMLCh*        fContents;
     XSAnnotation* fNext;
+
+private:
+
+    XMLCh*        fSystemId;
+    int           fLine;
+    int           fCol;
+
 };
 
 inline const XMLCh *XSAnnotation::getAnnotationString() const
@@ -216,6 +240,23 @@ inline const XMLCh *XSAnnotation::getAnnotationString() const
 inline XMLCh *XSAnnotation::getAnnotationString()
 {
     return fContents;
+}
+
+inline void XSAnnotation::getLineCol(int& line, int& col) const
+{
+    line = fLine;
+    col  = fCol;
+}
+
+inline const XMLCh* XSAnnotation::getSystemId() const
+{
+    return fSystemId;
+}
+
+inline void XSAnnotation::setLineCol(int line, int col)
+{
+    fLine = line;
+    fCol  = col;
 }
 
 XERCES_CPP_NAMESPACE_END

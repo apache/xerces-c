@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/04/02 16:51:05  peiyongz
+ * Better error report support
+ *
  * Revision 1.8  2003/12/19 07:18:56  neilg
  * remove a throw clause inserted during debugging (but should we really swallow this exception?)
  *
@@ -97,18 +100,24 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAnnotation::XSAnnotation(const XMLCh* const content,
-                           MemoryManager * const manager):
-    XSObject(XSConstants::ANNOTATION, 0, manager)
-    , fContents(XMLString::replicate(content, manager))
-    , fNext(0)
+XSAnnotation::XSAnnotation(const XMLCh*          const content,
+                                 MemoryManager * const manager)
+:XSObject(XSConstants::ANNOTATION, 0, manager)
+,fContents(XMLString::replicate(content, manager))
+,fNext(0)
+,fSystemId(0)
+,fLine(0)
+,fCol(0)
 {
 }
 
-XSAnnotation::XSAnnotation(MemoryManager * const manager):
-    XSObject(XSConstants::ANNOTATION, 0, manager)
-    , fContents(0)
-    , fNext(0)
+XSAnnotation::XSAnnotation(MemoryManager * const manager)
+:XSObject(XSConstants::ANNOTATION, 0, manager)
+,fContents(0)
+,fNext(0)
+,fSystemId(0)
+,fLine(0)
+,fCol(0)
 {
 }
 
@@ -118,6 +127,8 @@ XSAnnotation::~XSAnnotation()
 
     if (fNext)
         delete fNext;
+
+    fMemoryManager->deallocate(fSystemId);
 }
 
 // XSAnnotation methods
@@ -201,6 +212,19 @@ XSAnnotation* XSAnnotation::getNext()
     return fNext;
 }
 
+void XSAnnotation::setSystemId(const XMLCh* const systemId)
+{
+    if (fSystemId)
+    {
+        fMemoryManager->deallocate(fSystemId);
+        fSystemId = 0;
+    }
+
+    if (systemId)
+        fSystemId = XMLString::replicate(systemId, fMemoryManager);
+    
+}
+
 /***
  * Support for Serialization/De-serialization
  ***/
@@ -209,25 +233,22 @@ IMPL_XSERIALIZABLE_TOCREATE(XSAnnotation)
 
 void XSAnnotation::serialize(XSerializeEngine& serEng)
 {
-    /***
-     * Since we are pretty sure that fIdMap and fHashTable is 
-     * not shared by any other object, therefore there is no owned/referenced
-     * issue. Thus we can serialize the raw data only, rather than serializing 
-     * both fIdMap and fHashTable.
-     *
-     * And we can rebuild the fIdMap and fHashTable out of the raw data during
-     * deserialization.
-     *
-    ***/
+
     if (serEng.isStoring())
     {
         serEng.writeString(fContents);
         serEng<<fNext;
+        serEng.writeString(fSystemId);
+        serEng<<fLine;
+        serEng<<fCol;
     }
     else
     {
         serEng.readString(fContents);
         serEng>>fNext;
+        serEng.readString(fSystemId);
+        serEng>>fLine;
+        serEng>>fCol;
     }
 }
 
