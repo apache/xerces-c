@@ -42,6 +42,7 @@ MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 THREADS = @threads@
 
+include ../../../../../../version.incl
 include ../../../../Makefile.incl
 
 ####################################################################
@@ -78,6 +79,7 @@ CHECK_VARS=
 
 # target file for resource bundle - this must be set, or 'make all' won't
 # build any resources.
+RESLIBNAME=lib$(RESNAME)
 RESTARGET=lib$(RESNAME)$(SHLIBSUFFIX)
 
 # Resource files.  Add new ones for additional locales here.
@@ -96,8 +98,14 @@ $(TARGET): $(OBJECTS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@ $(XTRALIBS)
 
 $(RESTARGET): $(RESFILES)
+	@echo building ${FQ_RESLIB_REAL_NAME}
 	$(PKGDATA) --name $(RESNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST)
-	cp $(RESTARGET) $(XERCESCROOT)/lib
+	mv $(RESTARGET) ${FQ_RESLIB_REAL_NAME}
+	@echo symlink ${FQ_RESLIB_SO_NAME}
+	ln -s ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_SO_NAME}
+	@echo symlink ${FQ_RESLIB_LINK_NAME}
+	ln -s ${FQ_RESLIB_SO_NAME} ${FQ_RESLIB_LINK_NAME}	
+
 	
 res-install: $(RESTARGET)
 	$(PKGDATA) --name $(RESNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST) --install $(shell icu-config --libdir)
@@ -121,6 +129,3 @@ $(RESNAME)_%.res: %.txt
 # for installing the library
 install: res-install
 
-$(RESNAME)_es.res: es.txt
-	@echo "generating $@"
-	$(GENRB) $(GENRBOPT) -e latin-1 $^

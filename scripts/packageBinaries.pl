@@ -1324,20 +1324,18 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
-
-            # to be removed once the versioned shared library build is done.
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages*.* $targetdir/lib");
-            
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages23.0.so $targetdir/lib");
+            print ("\n\nCopying ICU message bundles ...\n");        	
+            psystem("cp -f $XERCESCROOT/msg/XercesMessages*.res $targetdir/msg");
+           
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages23.0.so .");
             psystem("find . -name 'libXercesMessages23.0.so' -exec ln -s {} libXercesMessages23.so \\;");
-            psystem("find . -name 'libXercesMessages23.so    -exec ln -s {} libXercesMessages.so \\;");
+            psystem("find . -name 'libXercesMessages23.so'   -exec ln -s {} libXercesMessages.so \\;");
                     
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages.so.23.0 $targetdir/lib");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.23.0 .");
             psystem("find . -name 'libXercesMessages.so.23.0' -exec ln -s {} libXercesMessages.so.23 \\;");
             psystem("find . -name 'libXercesMessages.so.23'   -exec ln -s {} libXercesMessages.so \\;");
             
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages.sl.23.0 $targetdir/lib");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.23.0 .");
             psystem("find . -name 'libXercesMessages.sl.23.0' -exec ln -s {} libXercesMessages.sl.23 \\;");
             psystem("find . -name 'libXercesMessages.sl.23'   -exec ln -s {} libXercesMessages.sl \\;");            
         }        	

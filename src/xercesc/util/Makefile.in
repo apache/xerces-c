@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.30  2003/03/18 21:06:38  peiyongz
+# Build versioned shared library, libXercesMessages on UNIX
+#
 # Revision 1.29  2003/03/09 21:49:07  peiyongz
 # Makefile:559: *** missing separator.
 #
@@ -626,8 +629,8 @@ endif
 ifeq (${MESSAGELOADER},ICU)
 	mkdir -p ${MSG_DIR}
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)/resources
-	$(CP) MsgLoaders/$(MESSAGELOADERMODULE)/resources/*.res ${MSG_DIR}
-	$(CP) MsgLoaders/$(MESSAGELOADERMODULE)/resources/libXercesMessages.* ${XERCESCROOT}/lib
+	$(CP) MsgLoaders/$(MESSAGELOADERMODULE)/resources/*.res ${MSG_DIR}	
+
 endif
 
 compilers::
