@@ -157,9 +157,9 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
         return UCS_4B;
     else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE) && (rawBuffer[2] == 0x00) && (rawBuffer[3] == 0x00))
         return UCS_4L;
-    else if ((rawBuffer[0] == 0xFE) && (rawBuffer[1] == 0xFF) && (rawBuffer[2] == 0x00) && (rawBuffer[3] != 0x00))
+    else if ((rawBuffer[0] == 0xFE) && (rawBuffer[1] == 0xFF))
         return UTF_16B;
-    else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE) && (rawBuffer[2] != 0x00) && (rawBuffer[3] == 0x00))
+    else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE))
         return UTF_16L;
 
     //
