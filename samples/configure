@@ -1303,10 +1303,21 @@ echo "$ac_t""$host" 1>&6
 
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
+        *-*-sysv5*)     platform=UNIXWARE ;;
+        *-*-UnixWare*)  platform=UNIXWARE ;;
+        *-*-unixware*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
+        *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
-        *-*-hp*)        platform=HPUX ;;
+        *-*-hp*)        platform=HPUX ;
+                        case "${host}" in
+                            *-*-hpux11*)  osver=HPUX11;;
+                            *-*-hpux10*)  osver=HPUX10;;
+                            *)            osver=HPUX11;;
+                        esac;;
         *-*-mvs*)       platform=OS390 ;;
+        *-*-os400*)     platform=OS400 ;;
+        *-*-OS400*)     platform=OS400 ;;
         *)              platform=UNKNOWN ;;
 esac
 
