@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/20 13:11:41  knoaman
+ * Regx  + misc. fixes
+ *
  * Revision 1.8  2001/09/14 13:57:59  peiyongz
  * exponent is a must if 'E' or 'e' is present.
  *
@@ -203,7 +206,7 @@ XMLFloat::XMLFloat(const XMLCh* const strValue)
     {
         init(strValue);
     }
-    catch (XMLException&)
+    catch (...)
     {
         cleanUp();
         throw;

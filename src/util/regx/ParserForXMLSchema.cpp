@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/09/20 13:11:42  knoaman
+ * Regx  + misc. fixes
+ *
  * Revision 1.5  2001/06/01 14:15:37  knoaman
  * Add a return value to satisfy compilers that complain about
  * no return value, although that code will not be executed.
@@ -311,6 +314,13 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                     }
 
                     processNext();
+
+                    if (ch > rangeEnd) {
+                        XMLCh rangeEndStr[] = { rangeEnd, chNull };
+                        XMLCh chStr[] = { ch, chNull };
+                        ThrowXML2(ParseException,XMLExcepts::Parser_Ope3, rangeEndStr, chStr);
+                    }
+
                     tok->addRange(ch, rangeEnd);
                 }
             }
@@ -513,16 +523,27 @@ XMLInt32 ParserForXMLSchema::decodeEscaped() {
     case chLatin_t:
         ch = chHTab;
         break;
-    case chLatin_e:
-    case chLatin_f:
-    case chLatin_x:
-    case chLatin_u:
-    case chLatin_v:
-        ThrowXML(ParseException,XMLExcepts::Parser_Process1);
-    case chLatin_A:
-    case chLatin_Z:
-    case chLatin_z:
-        ThrowXML(ParseException,XMLExcepts::Parser_Descape5);
+    case chBackSlash:
+    case chPipe:
+    case chPeriod:
+    case chCaret:
+    case chDash:
+    case chQuestion:
+    case chAsterisk:
+    case chPlus:
+    case chOpenCurly:
+    case chCloseCurly:
+    case chOpenParen:
+    case chCloseParen:
+    case chOpenSquare:
+    case chCloseSquare:
+        break;
+    default:
+		{        
+        XMLCh chString[] = {chBackSlash, ch, chNull};
+        chString[1] = ch;
+        ThrowXML1(ParseException,XMLExcepts::Parser_Process2, chString);
+        }
     }
 
     return ch;

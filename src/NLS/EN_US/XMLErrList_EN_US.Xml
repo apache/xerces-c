@@ -504,12 +504,14 @@
             <Message Id="Parser_CC7" Text="']' is invalid in a characer class.  Write '\]'"/>
             <Message Id="Parser_Ope1" Text="='[' is expected"/>
             <Message Id="Parser_Ope2" Text="')' or '-[' or '+[' or '&amp;[' is expected"/>
+            <Message Id="Parser_Ope3" Text="The range end code point '{0}' is less than the start code point '{1}'"/>
             <Message Id="Parser_Descape1" Text="Invalid Unicode hex notation"/>
             <Message Id="Parser_Descape2" Text="Overflow in a hex notation"/>
             <Message Id="Parser_Descape3" Text="'\x{' must be closed by '}'"/>
             <Message Id="Parser_Descape4" Text="Invalid Unicode code point"/>
             <Message Id="Parser_Descape5" Text="An anchor must not be here"/>
             <Message Id="Parser_Process1" Text="This expression is not supported in the current option setting"/>
+            <Message Id="Parser_Process2" Text="Regular expression: unrecognized character '{0}' in charRange"/>
             <Message Id="Gen_NoSchemaValidator" Text="A schema was seen but the installed validator does not understand schema"/>
             <Message Id="XUTIL_UnCopyableNodeType" Text="The {0} node type is not valid for copy"/>
             <Message Id="SubGrpComparator_NGR" Text="SubstitutionGroupComparator has no grammar resolver"/>

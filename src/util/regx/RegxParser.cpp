@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/09/20 13:11:42  knoaman
+ * Regx  + misc. fixes
+ *
  * Revision 1.7  2001/08/31 16:53:41  knoaman
  * Misc. fixes.
  *
@@ -1316,7 +1319,7 @@ RangeToken* RegxParser::parseSetOperations() {
                 tok->intersectRanges(tok2);
             }
             else {
-                throw; // ThrowXML(RuntimeException, "ASSERT")
+                throw 0; // ThrowXML(RuntimeException, "ASSERT")
             }
         }
         else {

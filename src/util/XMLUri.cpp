@@ -611,7 +611,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
             {
                 port = XMLString::parseInt(portStr);
             }
-            catch (NumberFormatException) 
+            catch (...) 
             {
                 throw;
             }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/20 13:11:42  knoaman
+ * Regx  + misc. fixes
+ *
  * Revision 1.4  2001/08/29 19:03:40  peiyongz
  * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
  *
@@ -129,7 +132,7 @@ ListDatatypeValidator::ListDatatypeValidator(
     {
         init(baseValidator, facets, enums);
     }
-    catch (XMLException&)
+    catch (...)
     {
         cleanUp();
         throw;
@@ -472,7 +475,7 @@ void ListDatatypeValidator::init(DatatypeValidator*            const baseValidat
                             for ( int j = 0; j < tokenNumber; j++)
                                 baseValidator->validate(tempList->elementAt(j));
                         }
-                        catch ( XMLException& )
+                        catch (...)
                         {
                             delete tempList;
                             throw;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/09/20 13:11:42  knoaman
+ * Regx  + misc. fixes
+ *
  * Revision 1.14  2001/08/22 18:28:01  peiyongz
  * Memory leak: delete the bufffer allocated by ::toString()
  *
@@ -152,7 +155,7 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
         init(baseValidator, facets, enums);
     }
 
-    catch (XMLException&)
+    catch (...)
     {
         cleanUp();
         throw;

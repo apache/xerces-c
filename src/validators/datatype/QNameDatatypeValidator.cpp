@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/20 13:11:42  knoaman
+ * Regx  + misc. fixes
+ *
  * Revision 1.4  2001/09/06 21:34:48  peiyongz
  * Fix:improper loop in enumeration checking
  *
@@ -118,7 +121,7 @@ QNameDatatypeValidator::QNameDatatypeValidator(
     {
         init(baseValidator, facets, enums);
     }
-    catch (XMLException&)
+    catch (...)
     {
         cleanUp();
         throw;

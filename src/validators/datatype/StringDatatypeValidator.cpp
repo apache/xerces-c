@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/09/20 13:11:42  knoaman
+ * Regx  + misc. fixes
+ *
  * Revision 1.12  2001/08/21 18:42:53  peiyongz
  * Bugzilla# 2816: cleanUp() declared with external linkage and called
  *                          before defined as inline
@@ -142,7 +145,7 @@ StringDatatypeValidator::StringDatatypeValidator(
     {
         init(baseValidator, facets, enums);
     }
-    catch (XMLException&)
+    catch (...)
     {
         cleanUp();
         throw;
