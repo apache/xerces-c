@@ -18,7 +18,7 @@
 
         <p>To make your multi-threaded application run on AIX, you
           MUST ensure that you do not have a 'system library path' in
-          your LIBPATH environment variable when you run the
+          your <code>LIBPATH</code> environment variable when you run the
           application. The appropriate libraries (threaded or
           non-threaded) are automatically picked up at runtime. An
           application usually crashes when you build your application

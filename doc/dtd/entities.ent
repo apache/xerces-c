@@ -4,8 +4,8 @@
 <!ENTITY XercesCName          "Xerces-C">                     <!-- productname -->
 <!ENTITY XercesCVersion       "1.3.0">                        <!-- versionnumber -->
 <!ENTITY XercesCProjectName   "Xerces">                       <!-- projectname -->
-<!ENTITY XercesCInstallDir    "xerces-c-1_3_0">               <!-- installdirname -->
-<!ENTITY XercesCSrcInstallDir "xerces-c-src-1_3_0">           <!-- sourcedirectory -->
+<!ENTITY XercesCInstallDir    "xerces-c1_3_0">                <!-- installdirname -->
+<!ENTITY XercesCSrcInstallDir "xerces-c-src1_3_0">            <!-- sourcedirectory -->
 <!ENTITY XercesCWindowsLib    "xerces-c_1">                   <!-- windowslibname -->
 <!ENTITY XercesCUnixLib       "libxerces-c1_3">               <!-- unixlibname -->
 <!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->

@@ -8,7 +8,7 @@
         the common questions have been answered in the FAQ's. Specifically, do
         read the answer to "<jump href="faq-other.html/#faq-4">I have a question
         not covered here - who may I contact?</jump>". Browsing this
-        documentation, may be the quickest way to get an answer. Ofcourse, if
+        documentation, may be the quickest way to get an answer. Of course, if
         all else fails, as mentioned in the link above, you can post a question
         to the <jump href="mailto:xerces-c-dev@xml.apache.org">Xerces-C-dev
         mailing list</jump>.</p>
@@ -31,8 +31,9 @@
     <s2 title="Acknowledgements">
 
         <p>Ever since this source code base was initially created, many people
-        have helped to port the code to different platforms and provide
-        constructive feedback to fix bugs and enhance features.</p>
+           have helped to port the code to different platforms, and provided
+           patches for both new features and bug fixes.
+        </p>
 
         <p>Listed below are some names (in alphabetical order) of people to whom
         we would like to give special thanks. </p>
