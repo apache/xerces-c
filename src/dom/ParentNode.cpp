@@ -342,8 +342,9 @@ NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 };
 
 
-NodeImpl *ParentNode::item(unsigned int index) {
+NodeImpl *ParentNode::item(unsigned int uindex) {
     // short way
+    int index = uindex;
     if (fCachedChildIndex != -1 && fCachedChild != null) {
         if (fCachedChildIndex < index) {
             while (fCachedChildIndex < index && fCachedChild != null) {
