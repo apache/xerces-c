@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/07/07 22:23:38  jpolast
+ * remove useless getKey() functions.
+ *
  * Revision 1.5  2000/02/24 20:00:22  abagchi
  * Swat for removing Log from API docs
  *
@@ -260,18 +263,6 @@ public:
       */
     unsigned int getId() const;
 
-    /** Support keyed collections for attribute types
-      *
-      * This method allows this class to meet the standard semantics for some
-      * commnly used internal hashed or keyed collection classes. What it
-      * returns depends upon the derived class because it is just an inline
-      * passthrough to getFullName().
-      *
-      * @return A const pointer to the string that makes up the collection
-      *         key for instances of this object.
-      */
-    const XMLCh* getKey() const;
-
     /** Query whether the attribute was explicitly provided.
       *
       * When the scanner scans a start tag, it will ask the element decl
@@ -452,18 +443,6 @@ private :
     XMLCh*          fValue;
 };
 
-
-// ---------------------------------------------------------------------------
-//  Support named pool element semantics
-// ---------------------------------------------------------------------------
-inline const XMLCh* XMLAttDef::getKey() const
-{
-    //
-    //  Just call the virtual methods since only the validator specific
-    //  derived class knows what the full name is.
-    //
-    return getFullName();
-}
 
 
 // ---------------------------------------------------------------------------

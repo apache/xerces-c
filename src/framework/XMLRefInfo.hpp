@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/07/07 22:23:38  jpolast
+ * remove useless getKey() functions.
+ *
  * Revision 1.4  2000/02/24 20:00:23  abagchi
  * Swat for removing Log from API docs
  *
@@ -128,13 +131,6 @@ public :
     // -----------------------------------------------------------------------
     void setDeclared(const bool newValue);
     void setUsed(const bool newValue);
-
-
-    // -----------------------------------------------------------------------
-    //  Support hash table semantics
-    // -----------------------------------------------------------------------
-    XMLCh* getKey() const;
-
 
 private :
     // -----------------------------------------------------------------------
@@ -217,13 +213,5 @@ inline void XMLRefInfo::setUsed(const bool newValue)
     fUsed = newValue;
 }
 
-
-// ---------------------------------------------------------------------------
-//  XMLRefInfo: Support hash table semantics
-// ---------------------------------------------------------------------------
-inline XMLCh* XMLRefInfo::getKey() const
-{
-    return fRefName;
-}
 
 #endif
