@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2004/01/06 18:13:59  peiyongz
+ * using the no-exception-thrown ctor
+ *
  * Revision 1.11  2004/01/03 00:04:36  peiyongz
  * using ctor/parseContent to avoid exception thrown from ctor
  *
@@ -288,7 +291,9 @@ void DoubleDatatypeValidator::checkContent(const XMLCh*             const conten
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
+                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
+                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
+                setRegex(regEx);
             }
             catch (XMLException &e)
             {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/01/06 18:13:59  peiyongz
+ * using the no-exception-thrown ctor
+ *
  * Revision 1.23  2004/01/06 04:42:53  neilg
  * On some platforms, it is problematic to throw a different exception from inside the catch block of another exception
  *
@@ -565,7 +568,9 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         if (getRegex() ==0) {
             try {
                 // REVISIT: cargillmem fMemoryManager vs manager
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
+                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
+                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
+                setRegex(regEx);
             }
             catch (XMLException &e)
             {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/01/06 18:13:59  peiyongz
+ * using the no-exception-thrown ctor
+ *
  * Revision 1.13  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -208,7 +211,9 @@ void BooleanDatatypeValidator::checkContent( const XMLCh*             const cont
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
+                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
+                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
+                setRegex(regEx);
             }
             catch (XMLException &e)
             {

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2004/01/06 18:13:59  peiyongz
+ * using the no-exception-thrown ctor
+ *
  * Revision 1.13  2003/12/19 23:02:25  cargilld
  * More memory management updates.
  *
@@ -198,7 +201,9 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
+                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
+                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
+                setRegex(regEx);
             }
             catch (XMLException &e)
             {

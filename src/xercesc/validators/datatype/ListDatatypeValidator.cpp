@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2004/01/06 18:13:59  peiyongz
+ * using the no-exception-thrown ctor
+ *
  * Revision 1.18  2003/12/31 02:34:41  neilg
  * fix one more buffer overrun, affecting boolean lists
  *
@@ -279,7 +282,9 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
         if (getRegex() == 0)
         {
             try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
+                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
+                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
+                setRegex(regEx);
             }
             catch (XMLException &e)
             {
