@@ -254,6 +254,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
+    system("cp $XERCESCROOT/version.incl $targetdir");
     system("cp -Rfv $XERCESCROOT/samples/Projects/* $targetdir/samples/Projects");
     
     system("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
@@ -282,14 +283,16 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
     system("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
-    # system("cp -Rfv $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
     system("cp $XERCESCROOT/Readme.html $targetdir");
     system("cp $XERCESCROOT/credits.txt $targetdir");   
     system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+
     if (length($ICUROOT) > 0) {
         system("cp $XERCESCROOT/license.html $targetdir");
         system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
     }
+    system("rm -f $targetdir/doc/Doxyfile");
+    system("rm -rf $targetdir/doc/dtd");
     system("rm -f $targetdir/doc/*.xml");
     system("rm -f $targetdir/doc/*.ent");
     system("rm -f $targetdir/doc/*.gif");
@@ -505,7 +508,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
     system("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
     
-    system("cp -Rf $XERCESCROOT/*.incl $targetdir");
+    system("cp -Rf $XERCESCROOT/version.incl $targetdir");
     
     system("rm -f $targetdir/include/dom/*Impl.hpp");
     system("rm -f $targetdir/include/dom/DS*.hpp");
@@ -583,7 +586,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
     system("rm -f $targetdir/samples/EnumVal/Makefile");
     if ($platform = "solaris") {
-    	system("rm -Rf $targetdir/samples/EnumVal/Templates.DB");
+        system("rm -Rf $targetdir/samples/EnumVal/Templates.DB");
     }
     system("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
     system("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
@@ -592,7 +595,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
     system("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
-    # system("cp -Rf $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
     system("cp $XERCESCROOT/Readme.html $targetdir");
     system("cp $XERCESCROOT/credits.txt $targetdir");   
     system("cp $XERCESCROOT/LICENSE.txt $targetdir");
@@ -600,6 +602,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         system("cp $XERCESCROOT/license.html $targetdir");
         system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
     }
+    system("rm -f $targetdir/doc/Doxyfile");
+    system("rm -rf $targetdir/doc/dtd");
     system("rm -f $targetdir/doc/*.xml");
     system("rm -f $targetdir/doc/*.ent");
     system("rm -f $targetdir/doc/*.gif");
