@@ -949,7 +949,7 @@ void    IDDocumentImpl::deleteHeap()
 IDOM_NodeList *IDDocumentImpl::getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName)
 {
     if(!fNodeListPool) {
-        fNodeListPool = new IDDeepNodeListPool<IDDeepNodeListImpl>(109, false);
+        fNodeListPool = new (this) IDDeepNodeListPool<IDDeepNodeListImpl>(109, false);
     }
 
     IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, tagName, 0);
