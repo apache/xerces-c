@@ -91,7 +91,7 @@ else
 LIBNAME=libxercesc
 endif
 
-ALL_OBJECTS=$(wildcard $(XML_OBJ_DIR)/*.o)
+ALL_OBJECTS=$(wildcard $(PLATFORM)/*.o)
 
 #######################################################
 #  HP-UX with CC compiler is awkward since it does    #
