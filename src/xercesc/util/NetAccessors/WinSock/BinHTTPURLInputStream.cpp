@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2005/02/02 10:29:52  amassari
+ * Mark global variables for this module as static (jira# 1331)
+ *
  * Revision 1.10  2005/01/06 21:39:44  amassari
  * Removed warnings
  *
@@ -117,18 +120,18 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-HMODULE gWinsockLib = NULL;
-LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;
-LPFN_INET_ADDR gWSinet_addr = NULL;
-LPFN_GETHOSTBYADDR gWSgethostbyaddr = NULL;
-LPFN_HTONS gWShtons = NULL;
-LPFN_SOCKET gWSsocket = NULL;
-LPFN_CONNECT gWSconnect = NULL;
-LPFN_SEND gWSsend = NULL;
-LPFN_RECV gWSrecv = NULL;
-LPFN_SHUTDOWN gWSshutdown = NULL;
-LPFN_CLOSESOCKET gWSclosesocket = NULL;
-LPFN_WSACLEANUP gWSACleanup = NULL;
+static HMODULE gWinsockLib = NULL;
+static LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;
+static LPFN_INET_ADDR gWSinet_addr = NULL;
+static LPFN_GETHOSTBYADDR gWSgethostbyaddr = NULL;
+static LPFN_HTONS gWShtons = NULL;
+static LPFN_SOCKET gWSsocket = NULL;
+static LPFN_CONNECT gWSconnect = NULL;
+static LPFN_SEND gWSsend = NULL;
+static LPFN_RECV gWSrecv = NULL;
+static LPFN_SHUTDOWN gWSshutdown = NULL;
+static LPFN_CLOSESOCKET gWSclosesocket = NULL;
+static LPFN_WSACLEANUP gWSACleanup = NULL;
 
 bool BinHTTPURLInputStream::fInitialized = false;
 XMLMutex* BinHTTPURLInputStream::fInitMutex = 0;
@@ -207,9 +210,9 @@ void BinHTTPURLInputStream::Cleanup() {
 		gWSshutdown = NULL;
 		gWSclosesocket = NULL;
 
-      fInitialized = false;
-      delete fInitMutex;
-      fInitMutex = 0;
+        fInitialized = false;
+        delete fInitMutex;
+        fInitMutex = 0;
 	}
 }
 
