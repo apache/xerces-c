@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2000/04/04 21:34:50  abagchi
+# Added PTX support
+#
 # Revision 1.10  2000/04/03 19:27:38  abagchi
 # Included changes for SGI IRIX 6.5
 #
@@ -139,7 +142,8 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'os400' 'irix')"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris',
+'hp-10', 'hp-11', 'os400', 'irix', 'ptx')"
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
@@ -251,7 +255,12 @@ case $cppcompiler in
 
    g++ | c++)
        LDFLAGS="-lc"; export LDFLAGS
-       LIBS="-L/usr/local/lib"; export LIBS ;;
+if test $platform = "ptx"; then
+       LIBS="-L$XMLINSTALL";
+else
+       LIBS="-L/usr/local/lib";
+fi
+	export LIBS ;;
 
    cc | CC)
        LDFLAGS="-lC"; export LDFLAGS
@@ -282,6 +291,8 @@ rm -f config.log
 rm -f config.status
 if test $platform = "os400"; then
 ./configure --host AS400-OS400
+elif test $platform = "ptx"; then
+./configure --prefix=$XMLINSTALL
 else
 ./configure
 fi

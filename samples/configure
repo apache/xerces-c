@@ -1309,6 +1309,7 @@ case "${host}" in
         *-*-linux*)     platform=LINUX ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
+        *-sequent-*)    platform=PTX ;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in
                             *-*-hpux11*)  osver=HPUX11;;

@@ -19,7 +19,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
 	print ("          options are:  -s <source_directory>\n");
 	print ("                        -o <target_directory>\n");
         print ("                        -c <C compiler name> (e.g. gcc, cc or xlc_r)\n");
-        print ("                        -x <C++ compiler name> (e.g. g++, CC, aCC or xlC_r)\n");
+        print ("                        -x <C++ compiler name> (e.g. g++, CC, aCC, c++ or xlC_r)\n");
         print ("                        -m <message loader> can be 'inmem', 'icu' or 'iconv'\n");
         print ("                        -n <net accessor> can be 'fileonly' or 'libwww'\n");
         print ("                        -t <transcoder> can be 'icu' or 'native'\n");
@@ -219,18 +219,18 @@ if ($platform =~ m/Windows/) {
 
 
 if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
-     ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) ) {
+     ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ) {
 
         # Decide on the platform specific stuff first
         if ($platform =~ m/AIX/i) {
-           $icuCompileFlags = 'CXX="xlC_r -L/usr/lpp/xlC/lib" CC="xlc_r -L/usr/lpp/xlC/lib" C_FLAGS="-w -O" CXX_FLAGS="-w -O"'; 
+           $icuCompileFlags = 'CXX="xlC_r -L/usr/lpp/xlC/lib" CC="xlc_r -L/usr/lpp/xlC/lib" C_FLAGS="-w -O" CXX_FLAGS="-w -O"';
         }
         if ($platform eq 'HP-UX') {
             if ($opt_x eq 'CC') {
-                $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"'; 
+                $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"';
             }
             else {
-                $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="+DAportable -w -O" CFLAGS="+DAportable -w -O"'; 
+                $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="+DAportable -w -O" CFLAGS="+DAportable -w -O"';
             }
 	    # Find out the operating system version from 'uname -r'
 	    open(OSVERSION, "uname -r|");
@@ -243,11 +243,36 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
         }
         if ($platform =~ m/Linux/i) {
-           $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"'; 
+           $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
 	   $platform =~ tr/A-Z/a-z/;
         }
         if ($platform =~ m/SunOS/i) {
-           $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="-w -O" CFLAGS="-w -O"'; 
+           $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        }
+        if ($platform =~ m/ptx/i) {
+            # Check if the patches have been applied or not
+            if (!(-d "$XERCESCROOT/src/util/Platforms/PTX")) {
+                    print ("Error: Could not locate PTX-specific XML4C directory.\n");
+                    print ("    The PTX-specific patches must be applied to both XML4C and ICU before a build can succeed.\n");
+                    exit(-1);
+            }
+            # Generally speaking, ICU must be built, before XML4C can be built, for ptx.
+            # If this case causes problems, we can revisit it in the future. Right now,
+            # we fail only if ICUROOT is defined but mh-ptx is not present.
+            if (length($ICUROOT)) {
+                if (!(-e "$ICUROOT/source/config/mh-ptx")) {
+                        print ("Error: Could not locate PTX-specific ICU files.\n");
+                        print ("    The PTX-specific patches must be applied to both XML4C and ICU before a build can succeed.\n");
+                        exit(-1);
+                }
+            }
+           $icuCompileFlags = 'CC=cc CXX=c++ CXXFLAGS="-w -0" CFLAGS="-w -0"';
+           # XMLINSTALL is a ptx-port-specific variable used for manipulating where the files are installed.
+           if (!length($ENV{'XMLINSTALL'})) {
+                print ("XMLINSTALL has not been explicitly defined. Setting it to \'$targetdir\'.\n");
+                $ENV{'XMLINSTALL'} = $targetdir;
+           }
+           $XMLINSTALL = $ENV{'XMLINSTALL'};
         }
 
         # Check if the target directories already exist or not
@@ -291,6 +316,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 	system ("mkdir $targetdir/include/util/Platforms/MacOS");
 	system ("mkdir $targetdir/include/util/Platforms/OS2");
 	system ("mkdir $targetdir/include/util/Platforms/OS390");
+	system ("mkdir $targetdir/include/util/Platforms/PTX");
 	system ("mkdir $targetdir/include/util/Platforms/Solaris");
 	system ("mkdir $targetdir/include/util/Platforms/Tandem");
 	system ("mkdir $targetdir/include/util/Platforms/Win32");
@@ -339,11 +365,17 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 		# }
 	}
 
+        # For ptx, ICUROOT must now be set to XMLINSTALL for further work.
+        if ($platform =~ m/ptx/i) {
+		    $ENV{'ICUROOT'} = $ENV{'XMLINSTALL'};
+        }
+
         # make the source files
         chdir ("$XERCESCROOT/src");
 
 	if ( $platform =~ m/sunos/i ) { $platform = "solaris"; }
 	if ( $platform =~ m/AIX/i ) { $platform = "aix"; }
+        if ( $platform =~ m/ptx/i ) { $platform = "ptx"; }
 
 	if (!length($opt_r)) {
         	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
@@ -391,6 +423,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 	system("cp -Rf $XERCESCROOT/src/util/Platforms/MacOS/*.hpp $targetdir/include/util/Platforms/MacOS");
 	system("cp -Rf $XERCESCROOT/src/util/Platforms/OS2/*.hpp $targetdir/include/util/Platforms/OS2");
 	system("cp -Rf $XERCESCROOT/src/util/Platforms/OS390/*.hpp $targetdir/include/util/Platforms/OS390");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/PTX/*.hpp $targetdir/include/util/Platforms/PTX");
 	system("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
 	system("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
 	system("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.15  2000/04/04 21:34:50  abagchi
+# Added PTX support
+#
 # Revision 1.14  2000/04/03 19:27:38  abagchi
 # Included changes for SGI IRIX 6.5
 #
@@ -153,6 +156,23 @@ ifeq (${PLATFORM}, SOLARIS)
 	EXTRA_LINK_OPTIONS=-lc -lgen -zmuldefs
   endif
   SHLIBSUFFIX=.so
+endif
+
+#================= PTX SPECIFIC OPTIONS ===========================
+ifeq (${PLATFORM}, PTX)
+COMPILESWITCH= -KPIC -Kthread -DPTX -w -O
+CMP = -c ${COMPILESWITCH}
+CC= c++
+LINK =  ${CC} -DPTX -Kthread
+PLATFORM_CPP_COMPILER = c++
+PLATFORM_C_COMPILER = cc
+PLATFORM_LIBRARIES =
+PLATFORM_COMPILE_OPTIONS = -KPIC -Kthread -DPTX
+MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -DPTX -G
+MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -DPTX  -G
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib -L${XMLINSTALL}/lib
+EXTRA_LINK_OPTIONS=-lm -lgen -lustdio -licu-uc -licu-i18n -licu-toolutil
+SHLIBSUFFIX=.so
 endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
