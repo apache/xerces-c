@@ -2299,7 +2299,9 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem, bool& toDele
                                 subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
 
                                 if (subsElements) {
+
                                     subsElements = new ValueVectorOf<SchemaElementDecl*>(*subsElements);
+                                    fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
                                 }
                                 else if (fSchemaInfo->circularImportExist(subsElemURI)) {
                                     aGrammar->getValidSubstitutionGroups()->put(
