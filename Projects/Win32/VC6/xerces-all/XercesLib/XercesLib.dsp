@@ -2126,6 +2126,14 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\UnionDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\YearDatatypeValidator.cpp
 # End Source File
 # Begin Source File
