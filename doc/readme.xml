@@ -27,9 +27,6 @@
         no RTTI, no C++ namespaces, limited use of exceptions and minimal
         use of #ifdefs.</p>
         
-        <p>&XercesCName; is fully compliant with 
-        <jump href="http://www.unicode.org/unicode/standard/versions/Unicode3.0.html">Unicode 3.0</jump> 
-        specification, making it the first Unicode 3.0 compliant application.</p>
     </s2>
 
     <s2 title="Applications of the &XercesCProjectName; Parser">
@@ -68,20 +65,19 @@
             <li>Win32 using MSVC 6.0 SP3</li>
             <li>Linux (RedHat 6.1) using egcs-2.91.66 and glibc-2.1.2-11</li>
             <li>Solaris 2.6 using Sun Workshop 4.2 <em>XML4C only</em></li>
-            <li>AIX 4.3.3 using xlC 3.6.c <em>XML4C only</em></li>
+            <li>AIX 4.2.1 using xlC 3.6.4 <em>XML4C only</em></li>
             <li>HP-UX 10.2 using CC A.10.36 <em>XML4C only</em></li>
             <li>HP-UX 11 using aCC A.03.13 with pthreads <em>XML4C only</em></li>
         </ul>
     </s2>
 
-    <s2 title="Platforms Coming Soon">
+    <s2 title="Other ports...">
         <ul>
-            <li>FreeBSD</li>
-            <li>SGI IRIX</li>
-            <li>Unixware</li>
             <li>OS/390</li>
-            <li>OS/2</li>
             <li>AS/400</li>
+            <li>SGI IRIX</li>
+            <li>FreeBSD</li>
+            <li>Unixware</li>
             <li>and more!</li>
         </ul>
     </s2>
