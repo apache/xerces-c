@@ -206,7 +206,7 @@
             <Message Id="UnexpectedTextBeforeRoot" Text="Unexpected text before root element"/>
             <Message Id="UnterminatedStartTag" Text="Unterminated start tag, '{0}'"/>
             <Message Id="ExpectedAttrValue" Text="Expected an attribute value"/>
-            <Message Id="UnterminatedEndTag" Text="Unterminated end tag"/>
+            <Message Id="UnterminatedEndTag" Text="Unterminated end tag, '{0}'"/>
             <Message Id="ExpectedAttributeType" Text="Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'"/>
             <Message Id="ExpectedEndOfTagX" Text="Expected end of tag '{0}'"/>
             <Message Id="ExpectedMarkup" Text="Expected tag name, comment, PI, or other markup"/>
@@ -235,8 +235,8 @@
             <Message Id="ExpectedEntityRefName" Text="Expected entity name for reference"/>
             <Message Id="EntityNotFound" Text="Entity '{0}' was not found"/>
             <Message Id="NoUnparsedEntityRefs" Text="Unparsed entity references, '{0}', not valid here"/>
-            <Message Id="UnterminatedEntityRef" Text="Unterminated entity reference"/>
-            <Message Id="RecursiveEntity" Text="Recursive entity expansion"/>
+            <Message Id="UnterminatedEntityRef" Text="Unterminated entity reference, '{0}'"/>
+            <Message Id="RecursiveEntity" Text="Recursive entity expansion, '{0}'"/>
             <Message Id="PartialMarkupInEntity" Text="Partial markup in entity value"/>
             <Message Id="UnterminatedElementDecl" Text="Unterminated element declaration, '{0}'"/>
             <Message Id="ExpectedContentSpecExpr" Text="Expected content specification expression for element '{0}'"/>

@@ -194,7 +194,7 @@ $set 1
 197  Unexpected text before root element
 198  Unterminated start tag, '{0}'
 199  Expected an attribute value
-200  Unterminated end tag
+200  Unterminated end tag, '{0}'
 201  Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'
 202  Expected end of tag '{0}'
 203  Expected tag name, comment, PI, or other markup
@@ -223,8 +223,8 @@ $set 1
 226  Expected entity name for reference
 227  Entity '{0}' was not found
 228  Unparsed entity references, '{0}', not valid here
-229  Unterminated entity reference
-230  Recursive entity expansion
+229  Unterminated entity reference, '{0}'
+230  Recursive entity expansion, '{0}'
 231  Partial markup in entity value
 232  Unterminated element declaration, '{0}'
 233  Expected content specification expression for element '{0}'
