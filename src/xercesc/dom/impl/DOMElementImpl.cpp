@@ -258,10 +258,8 @@ DOMAttr * DOMElementImpl::setAttributeNode(DOMAttr *newAttr)
         throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
         // revisit.  Exception doesn't match test.
 
-    DOMAttr *oldAttr =
-      (DOMAttr *) fAttributes->getNamedItem(newAttr->getName());
     // This will throw INUSE if necessary
-    fAttributes->setNamedItem(newAttr);
+    DOMAttr *oldAttr = (DOMAttr *) fAttributes->setNamedItem(newAttr);
 
     return oldAttr;
 };
@@ -298,12 +296,15 @@ void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    DOMAttr *newAttr =
-        this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
+    DOMAttr* newAttr = getAttributeNodeNS(fNamespaceURI, qualifiedName);
+
+    if (!newAttr)
+    {
+        newAttr = this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
+        fAttributes->setNamedItemNS(newAttr);
+    }
+
     newAttr->setNodeValue(fValue);
-    DOMNode* rem = fAttributes->setNamedItemNS(newAttr);
-    if (rem)
-        rem->release();
 }
 
 
@@ -339,10 +340,8 @@ DOMAttr *DOMElementImpl::setAttributeNodeNS(DOMAttr *newAttr)
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
         throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
 
-    DOMAttr *oldAttr = (DOMAttr *) fAttributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
-
     // This will throw INUSE if necessary
-    fAttributes->setNamedItemNS(newAttr);
+    DOMAttr *oldAttr = (DOMAttr *) fAttributes->setNamedItemNS(newAttr);
 
     return oldAttr;
 }

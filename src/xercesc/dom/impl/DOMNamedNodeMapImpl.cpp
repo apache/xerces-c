@@ -313,22 +313,14 @@ int DOMNamedNodeMapImpl::findNamePoint(const XMLCh *namespaceURI,
     int i, len = fNodes -> size();
     for (i = 0; i < len; ++i) {
         DOMNode *node = fNodes -> elementAt(i);
-        //	if (! node -> getNamespaceURI().equals(namespaceURI))	//URI not match
-        if (XMLString::compareString(node -> getNamespaceURI(), namespaceURI))	//URI not match
-            continue;
         const XMLCh * nNamespaceURI = node->getNamespaceURI();
         const XMLCh * nLocalName = node->getLocalName();
-        if (namespaceURI == 0) {
-            if (nNamespaceURI == 0
-                &&
-                (XMLString::compareString(localName, nLocalName) == 0
+        if (XMLString::compareString(nNamespaceURI, namespaceURI))    //URI not match
+            continue;
+        else {
+            if (XMLString::compareString(localName, nLocalName) == 0
                 ||
-                (nLocalName == 0 && XMLString::compareString(localName, node->getNodeName()) == 0)))
-                return i;
-        } else {
-            if (XMLString::compareString(namespaceURI, nNamespaceURI) == 0
-                &&
-                XMLString::compareString(localName, nLocalName) == 0)
+                (nLocalName == 0 && (XMLString::compareString(localName, node->getNodeName()) == 0)))
                 return i;
         }
     }
