@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/08/24 12:48:48  tng
+ * Schema: AllContentModel
+ *
  * Revision 1.22  2001/08/22 16:58:55  tng
  * typo: should issue the name of second element.
  *
@@ -1173,7 +1176,11 @@ void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pG
                           ( fElemMap[k]->getURI() == XMLElementDecl::fgPCDataElemId)))
                         continue;
 
-                    if (XercesElementWildcard::conflict(fElemMapType[j], fElemMap[j], fElemMapType[k], fElemMap[k], &comparator)) {
+                    if (XercesElementWildcard::conflict(fElemMapType[j],
+                                                        fElemMap[j],
+                                                        fElemMapType[k],
+                                                        fElemMap[k],
+                                                        &comparator)) {
                        fConflictTable[j][k] = 1;
 
                        XMLBuffer buf1;
@@ -1194,7 +1201,9 @@ void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pG
                        else
                            buf2.set(fElemMap[k]->getRawName());
 
-                       pValidator->emitError(XMLValid::UniqueParticleAttributionFail,  buf1.getRawBuffer(), buf2.getRawBuffer());
+                       pValidator->emitError(XMLValid::UniqueParticleAttributionFail,
+                                             buf1.getRawBuffer(),
+                                             buf2.getRawBuffer());
                     }
                     else
                        fConflictTable[j][k] = 0;

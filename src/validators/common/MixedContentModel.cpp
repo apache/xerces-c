@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/08/24 12:48:48  tng
+ * Schema: AllContentModel
+ *
  * Revision 1.12  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -334,52 +337,6 @@ MixedContentModel::validateContent( QName** const         children
 }
 
 
-// ---------------------------------------------------------------------------
-//  MixedContentModel: Private helper methods
-// ---------------------------------------------------------------------------
-void
-MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
-                                  , ValueVectorOf<QName*>&       toFill
-                                  , ValueVectorOf<ContentSpecNode::NodeTypes>& toType)
-{
-    // Get the type of spec node our current node is
-    const ContentSpecNode::NodeTypes curType = curNode->getType();
-
-    // If its a leaf, then store its id in the target list
-    if ((curType == ContentSpecNode::Leaf)      ||
-        (curType == ContentSpecNode::Any)       ||
-        (curType == ContentSpecNode::Any_Other) ||
-        (curType == ContentSpecNode::Any_NS)   )
-    {
-        toFill.addElement(curNode->getElement());
-        toType.addElement(curType);
-        return;
-    }
-
-    // Get both the child node pointers
-    ContentSpecNode* leftNode = curNode->getFirst();
-    ContentSpecNode* rightNode = curNode->getSecond();
-
-    // And recurse according to the type of node
-    if ((curType == ContentSpecNode::Choice)
-    ||  (curType == ContentSpecNode::Sequence))
-    {
-        // Recurse on the left and right nodes
-        buildChildList(leftNode, toFill, toType);
-
-        // The last node of a choice or sequence has a null right
-        if (rightNode)
-            buildChildList(rightNode, toFill, toType);
-    }
-    else if ((curType == ContentSpecNode::OneOrMore)
-         ||  (curType == ContentSpecNode::ZeroOrOne)
-         ||  (curType == ContentSpecNode::ZeroOrMore))
-    {
-        // Just do the left node on this one
-        buildChildList(leftNode, toFill, toType);
-    }
-}
-
 int MixedContentModel::validateContentSpecial(QName** const           children
                                             , const unsigned int      childCount
                                             , const unsigned int      emptyNamespaceId
@@ -471,5 +428,51 @@ int MixedContentModel::validateContentSpecial(QName** const           children
     // Everything seems to be in order, so return success
     // success
     return -1;
+}
+
+// ---------------------------------------------------------------------------
+//  MixedContentModel: Private helper methods
+// ---------------------------------------------------------------------------
+void
+MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
+                                  , ValueVectorOf<QName*>&       toFill
+                                  , ValueVectorOf<ContentSpecNode::NodeTypes>& toType)
+{
+    // Get the type of spec node our current node is
+    const ContentSpecNode::NodeTypes curType = curNode->getType();
+
+    // If its a leaf, then store its id in the target list
+    if ((curType == ContentSpecNode::Leaf)      ||
+        (curType == ContentSpecNode::Any)       ||
+        (curType == ContentSpecNode::Any_Other) ||
+        (curType == ContentSpecNode::Any_NS)   )
+    {
+        toFill.addElement(curNode->getElement());
+        toType.addElement(curType);
+        return;
+    }
+
+    // Get both the child node pointers
+    ContentSpecNode* leftNode = curNode->getFirst();
+    ContentSpecNode* rightNode = curNode->getSecond();
+
+    // And recurse according to the type of node
+    if ((curType == ContentSpecNode::Choice)
+    ||  (curType == ContentSpecNode::Sequence))
+    {
+        // Recurse on the left and right nodes
+        buildChildList(leftNode, toFill, toType);
+
+        // The last node of a choice or sequence has a null right
+        if (rightNode)
+            buildChildList(rightNode, toFill, toType);
+    }
+    else if ((curType == ContentSpecNode::OneOrMore)
+         ||  (curType == ContentSpecNode::ZeroOrOne)
+         ||  (curType == ContentSpecNode::ZeroOrMore))
+    {
+        // Just do the left node on this one
+        buildChildList(leftNode, toFill, toType);
+    }
 }
 

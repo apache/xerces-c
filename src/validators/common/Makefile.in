@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.7  2001/08/24 12:48:48  tng
+# Schema: AllContentModel
+#
 # Revision 1.6  2001/07/06 17:12:10  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
 #
@@ -96,6 +99,7 @@ MODULE = validators
 SUBMODULE = common
 
 VALIDATORS_COMMON_CPP_PUBHEADERS = \
+	AllContentModel.hpp \
 	CMAny.hpp \
 	CMBinaryOp.hpp \
 	CMLeaf.hpp \
@@ -115,6 +119,7 @@ VALIDATORS_COMMON_CPP_PRIVHEADERS =
 VALIDATORS_COMMON_C_FILES =
 
 VALIDATORS_COMMON_CPP_OBJECTS = \
+	AllContentModel.$(TO) \
 	CMAny.$(TO) \
 	CMBinaryOp.$(TO) \
 	CMUnaryOp.$(TO) \

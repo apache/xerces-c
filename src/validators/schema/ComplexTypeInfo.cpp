@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/24 12:48:48  tng
+ * Schema: AllContentModel
+ *
  * Revision 1.11  2001/08/23 11:54:26  tng
  * Add newline at the end and various typo fixes.
  *
@@ -97,6 +100,7 @@
 #include <framework/XMLBuffer.hpp>
 #include <validators/schema/ComplexTypeInfo.hpp>
 #include <validators/schema/SchemaAttDefList.hpp>
+#include <validators/common/AllContentModel.hpp>
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/common/DFAContentModel.hpp>
 #include <validators/common/MixedContentModel.hpp>
@@ -389,6 +393,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     if(!specNode)
         ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
 
+    ContentSpecNode::NodeTypes specType = specNode->getType();
     //
     //  Do a sanity check that the node is does not have a PCDATA id. Since,
     //  if it was, it should have already gotten taken by the Mixed model.
@@ -400,16 +405,28 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     //  According to the type of node, we will create the correct type of
     //  content model.
     //
-    if (((specNode->getType() & 0x0f) == ContentSpecNode::Any) ||
-       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Other) ||
-       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_NS)) {
+    if (((specType & 0x0f) == ContentSpecNode::Any) ||
+       ((specType & 0x0f) == ContentSpecNode::Any_Other) ||
+       ((specType & 0x0f) == ContentSpecNode::Any_NS)) {
        // let fall through to build a DFAContentModel
     }
     else if (isMixed)
     {
-        //REVISIT once we introduce ALL content model
+        if ((specType & 0x0f) == ContentSpecNode::All) {
+            // All the nodes under an ALL must be additional ALL nodes and
+            // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
+            // We collapse the ELEMENTs into a single vector.
+            return new AllContentModel(specNode, true);
+        }
+        else if ((specType & 0x0f) == ContentSpecNode::ZeroOrOne) {
+            // An ALL node can appear under a ZERO_OR_ONE node.
+            if ((specNode->getFirst()->getType() & 0x0f) == ContentSpecNode::All) {
+                return new AllContentModel(specNode->getFirst(), true);
+            }
+        }
+        // otherwise, let fall through to build a DFAContentModel
     }
-     else if (specNode->getType() == ContentSpecNode::Leaf)
+     else if (specType == ContentSpecNode::Leaf)
     {
         // Create a simple content model
         return new SimpleContentModel
@@ -420,8 +437,8 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
             , ContentSpecNode::Leaf
         );
     }
-     else if ((specNode->getType() == ContentSpecNode::Choice)
-          ||  (specNode->getType() == ContentSpecNode::Sequence))
+     else if ((specType == ContentSpecNode::Choice)
+          ||  (specType == ContentSpecNode::Sequence))
     {
         //
         //  Lets see if both of the children are leafs. If so, then it has to
@@ -435,13 +452,13 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
                 false
                 , specNode->getFirst()->getElement()
                 , specNode->getSecond()->getElement()
-                , specNode->getType()
+                , specType
             );
         }
     }
-     else if ((specNode->getType() == ContentSpecNode::OneOrMore)
-          ||  (specNode->getType() == ContentSpecNode::ZeroOrMore)
-          ||  (specNode->getType() == ContentSpecNode::ZeroOrOne))
+     else if ((specType == ContentSpecNode::OneOrMore)
+          ||  (specType == ContentSpecNode::ZeroOrMore)
+          ||  (specType == ContentSpecNode::ZeroOrOne))
     {
         //
         //  Its a repetition, so see if its one child is a leaf. If so its a
@@ -455,11 +472,17 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
                 false
                 , specNode->getFirst()->getElement()
                 , 0
-                , specNode->getType()
+                , specType
             );
         }
+        else if (specNode->getFirst()->getType() == ContentSpecNode::All)
+            return new AllContentModel(specNode->getFirst(), false);
+
     }
-     else
+    else if (specType == ContentSpecNode::All)
+        return new AllContentModel(specNode, false);
+
+    else
     {
         ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
     }

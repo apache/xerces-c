@@ -1,4 +1,5 @@
 group xerces_validators =
+    BASE_DIR "\\src\\validators\\common\\AllContentModel.cpp",
     BASE_DIR "\\src\\validators\\common\\CMAnyOp.cpp",
     BASE_DIR "\\src\\validators\\common\\CMBinaryOp.cpp",
     BASE_DIR "\\src\\validators\\common\\CMUnaryOp.cpp",

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/24 12:48:48  tng
+ * Schema: AllContentModel
+ *
  * Revision 1.11  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -121,7 +124,6 @@ class ContentSpecNode;
 class CMLeaf;
 class CMNode;
 class CMStateSet;
-class XMLElementDecl;
 
 //
 //  DFAContentModel is the heavy weight derivative of ContentModel that does

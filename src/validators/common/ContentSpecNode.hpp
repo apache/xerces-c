@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/08/24 12:48:48  tng
+ * Schema: AllContentModel
+ *
  * Revision 1.14  2001/08/23 11:54:26  tng
  * Add newline at the end and various typo fixes.
  *
@@ -233,7 +236,7 @@ private :
     //
     //          Leaf = Neither valid
     //          ZeroOrOne, ZeroOrMore = First
-    //          Choice, Sequence = First and Second
+    //          Choice, Sequence, All = First and Second
     //          Any* = Neither valid
     //
     //  fType
