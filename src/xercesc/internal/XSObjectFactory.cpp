@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/23 16:49:26  knoaman
+ * PSVI: create local elements of groups
+ *
  * Revision 1.3  2003/11/23 16:21:40  knoaman
  * PSVI: create local elements of complex types
  *
@@ -614,6 +617,17 @@ XSObjectFactory::createXSModelGroupDefinition(XercesGroupInfo* const groupInfo,
         , xsModel
         , fMemoryManager
     );
+    fDeleteVector->addElement(xsObj);
+
+    // process local elements
+    unsigned int elemCount = groupInfo->elementCount();
+    for (unsigned int j=0; j<elemCount; j++)
+    {
+        SchemaElementDecl* elemDecl = groupInfo->elementAt(j);
+
+        if (elemDecl->getEnclosingScope() == groupInfo->getScope())
+            addOrFind(elemDecl, xsModel);
+    }
 
     return xsObj;
 }
@@ -653,6 +667,7 @@ XSObjectFactory::createXSAttGroupDefinition(XercesAttGroupInfo* const attGroupIn
         , xsModel
         , fMemoryManager
     );
+    fDeleteVector->addElement(xsObj);
 
     return xsObj;
 }
