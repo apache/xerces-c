@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/24 21:39:29  peiyongz
+ * DTV Reorganization: checkValueSpace()
+ *
  * Revision 1.3  2001/08/14 22:11:56  peiyongz
  * new exception message added
  *
@@ -72,13 +75,22 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/ENTITYDatatypeValidator.hpp>
-#include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 #include <framework/XMLEntityDecl.hpp>
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
+ENTITYDatatypeValidator::ENTITYDatatypeValidator()
+:StringDatatypeValidator()
+,fEntityDeclPool(0)
+{
+    DatatypeValidator::setType(DatatypeValidator::ENTITY);
+}
+
+ENTITYDatatypeValidator::~ENTITYDatatypeValidator()
+{}
+
 ENTITYDatatypeValidator::ENTITYDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
@@ -102,17 +114,29 @@ ENTITYDatatypeValidator::ENTITYDatatypeValidator(
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
-            if ( !XMLString::isValidNCName(enums->elementAt(i)))
-            {
-                ThrowXML1(InvalidDatatypeFacetException
-                        , XMLExcepts::VALUE_Invalid_NCName
-                        , enums->elementAt(i));
-            }
+            checkValueSpace(enums->elementAt(i));
         }
     }
 
     DatatypeValidator::setType(DatatypeValidator::ENTITY);
 
+}
+
+// -----------------------------------------------------------------------
+// Compare methods
+// -----------------------------------------------------------------------
+int ENTITYDatatypeValidator::compare(const XMLCh* const lValue
+                                   , const XMLCh* const rValue)
+{
+    return ( XMLString::compareString(lValue, rValue)==0 ? 0 : -1);
+}
+
+DatatypeValidator* ENTITYDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new ENTITYDatatypeValidator(this, facets, enums, finalSet);
 }
 
 void ENTITYDatatypeValidator::validate(const XMLCh* const content)
@@ -123,15 +147,7 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
     //
     StringDatatypeValidator::validate(content);
 
-    //
-    // 3.3.11 check must: "NCName"
-    //
-    if ( !XMLString::isValidNCName(content))
-    {
-        ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::VALUE_Invalid_NCName
-                , content);
-    }
+    checkValueSpace(content);
 
     //
     // parse the entity iff an EntityDeclPool is provided
@@ -143,7 +159,7 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
         if (!decl                ||
             (decl->isUnparsed())  )
         {
-            ThrowXML1(InvalidDatatypeFacetException
+            ThrowXML1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_ENTITY_Invalid
                     , content);
         }
@@ -151,6 +167,20 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
     }
 
     return;
+}
+
+void ENTITYDatatypeValidator::checkValueSpace(const XMLCh* const content)
+{
+    //
+    // 3.3.11 check must: "NCName"
+    //
+    if ( !XMLString::isValidNCName(content))
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_Invalid_NCName
+                , content);
+    }
+
 }
 
  /**

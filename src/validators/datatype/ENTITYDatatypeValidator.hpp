@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/24 21:39:29  peiyongz
+ * DTV Reorganization: checkValueSpace()
+ *
  * Revision 1.3  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -110,7 +113,7 @@ public:
      * is not valid.
      */
 
-	void validate(const XMLCh* const content);
+	virtual void validate(const XMLCh* const content);
 
     //@}
 
@@ -127,7 +130,7 @@ public:
      * @param content2
      * @return
      */
-    int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const);
 
     //@}
 
@@ -135,9 +138,9 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
 // -----------------------------------------------------------------------
 // Setter methods
@@ -148,6 +151,10 @@ public:
     void    setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool);
 
     //@}
+
+protected:
+
+    virtual void checkValueSpace(const XMLCh* const content);
 
 private:
 
@@ -161,37 +168,6 @@ private:
 
     NameIdPool<DTDEntityDecl>*     fEntityDeclPool;
 };
-
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline ENTITYDatatypeValidator::ENTITYDatatypeValidator()
-:StringDatatypeValidator()
-,fEntityDeclPool(0)
-{
-    DatatypeValidator::setType(DatatypeValidator::ENTITY);
-}
-
-inline ENTITYDatatypeValidator::~ENTITYDatatypeValidator()
-{
-}
-
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-inline int ENTITYDatatypeValidator::compare(const XMLCh* const lValue
-                                          , const XMLCh* const rValue)
-{
-    return ( XMLString::compareString(lValue, rValue)==0 ? 0 : -1);
-}
-
-inline DatatypeValidator* ENTITYDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new ENTITYDatatypeValidator(this, facets, enums, finalSet);
-}
 
 // -----------------------------------------------------------------------
 // Setter methods
