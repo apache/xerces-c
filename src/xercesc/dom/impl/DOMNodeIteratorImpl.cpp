@@ -250,7 +250,8 @@ DOMNode* DOMNodeIteratorImpl::nextNode (DOMNode* node, bool visitChildren) {
     // only check children if we visit children.
     if (visitChildren) {
         //if hasChildren, return 1st child.
-        if (node->hasChildNodes()) {
+        if ((fExpandEntityReferences || node->getNodeType()!=DOMNode::ENTITY_REFERENCE_NODE) && 
+            node->hasChildNodes()) {
             result = node->getFirstChild();
             return result;
         }
@@ -303,7 +304,8 @@ DOMNode* DOMNodeIteratorImpl::previousNode (DOMNode* node) {
 
     // if sibling has children, keep getting last child of child.
     if (result->hasChildNodes()) {
-        while (result->hasChildNodes()) {
+        while ((fExpandEntityReferences || result->getNodeType()!=DOMNode::ENTITY_REFERENCE_NODE) && 
+               result->hasChildNodes()) {
             result = result->getLastChild();
         }
     }
