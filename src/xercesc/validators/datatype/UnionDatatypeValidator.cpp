@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/12/06 16:45:54  tng
+ * header include cleanup.
+ *
  * Revision 1.4  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -93,7 +96,6 @@
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
-#include <xercesc/util/NumberFormatException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

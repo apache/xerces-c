@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/12/06 16:45:54  tng
+ * header include cleanup.
+ *
  * Revision 1.4  2002/11/20 19:57:44  peiyongz
  * validate content as a whole against pattern.
  *
@@ -104,7 +107,6 @@
 #include <xercesc/validators/datatype/ListDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
-#include <xercesc/util/NumberFormatException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
