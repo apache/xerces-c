@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/02/05 18:09:53  cargilld
+ * Fix a seg fault with PSVI and set basetype of anysimpletype to be anytype.
+ *
  * Revision 1.19  2004/01/07 02:33:56  knoaman
  * PSVI: inherit facets from base type
  *
@@ -396,7 +399,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
     XSSimpleTypeDefinition* xsObj = (XSSimpleTypeDefinition*) xsModel->getXSObject(validator);
     if (!xsObj)
     {
-        XSSimpleTypeDefinition* baseType = 0;
+        XSTypeDefinition* baseType = 0;
         XSSimpleTypeDefinitionList* memberTypes = 0;
         XSSimpleTypeDefinition* primitiveOrItemType = 0;
         XSSimpleTypeDefinition::VARIETY typeVariety = XSSimpleTypeDefinition::VARIETY_ATOMIC;
@@ -438,7 +441,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
             if (baseDV->getType() == DatatypeValidator::List)
             {
                 baseType = addOrFind(baseDV, xsModel);
-                primitiveOrItemType = baseType->getItemType();
+                primitiveOrItemType = ((XSSimpleTypeDefinition*) baseType)->getItemType();
             }
             else
             {
@@ -455,7 +458,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
             if (baseDV)
             {
                 baseType = addOrFind(baseDV, xsModel);
-                primitiveOrItemType = baseType->getPrimitiveType();
+                primitiveOrItemType = ((XSSimpleTypeDefinition*) baseType)->getPrimitiveType();
             }
             else // built-in
             {
@@ -466,6 +469,10 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
                 );
                 primitiveTypeSelf = true;
             }
+        }
+        else
+        {
+            baseType = xsModel->getTypeDefinition(SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);            
         }
 
         xsObj = new (fMemoryManager) XSSimpleTypeDefinition
@@ -1061,7 +1068,8 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
     }
 
     // inherit facets from base
-    if (xsST->getBaseType())
+
+    if (xsST->getBaseType() && xsST->getBaseType()->getTypeCategory() == XSTypeDefinition::SIMPLE_TYPE)
     {
         XSSimpleTypeDefinition* baseST = (XSSimpleTypeDefinition*) xsST->getBaseType();
         XSFacetList* baseFacets = baseST->getFacets();

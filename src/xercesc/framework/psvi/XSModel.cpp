@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/02/05 18:09:53  cargilld
+ * Fix a seg fault with PSVI and set basetype of anysimpletype to be anytype.
+ *
  * Revision 1.19  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -244,11 +247,11 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
     dvFactory.expandRegistryToFullSchemaSet();
     addS4SToXSModel
     (
-        getNamespaceItem(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        namespaceItem
         , dvFactory.getBuiltInRegistry()
     );
-
-    unsigned int numberOfNamespaces = fXSNamespaceItemList->size();
+    // don't include  S4S (thus the -1)
+    unsigned int numberOfNamespaces = fXSNamespaceItemList->size() -1;
     for (unsigned int j = 0; j < numberOfNamespaces; j++)
         addGrammarToXSModel(fXSNamespaceItemList->elementAt(j));
 }
@@ -416,7 +419,7 @@ XSModel::XSModel( XSModel *baseModel
         fDeleteNamespace->addElement(namespaceItem);
         addS4SToXSModel
         (
-            getNamespaceItem(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+            namespaceItem
             , dvFactory.getBuiltInRegistry()
         );
     }
