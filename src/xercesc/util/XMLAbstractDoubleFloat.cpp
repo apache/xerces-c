@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.30  2004/10/28 20:14:58  peiyongz
+ * store/load fDataOverflowed
+ *
  * Revision 1.29  2004/09/09 20:09:30  peiyongz
  * getDataOverflowed()
  *
@@ -628,6 +631,7 @@ void XMLAbstractDoubleFloat::serialize(XSerializeEngine& serEng)
         serEng << fValue;
         serEng << fType;
         serEng << fDataConverted;
+        serEng << fDataOverflowed;
         serEng << fSign;
 
         serEng.writeString(fRawData);
@@ -644,6 +648,7 @@ void XMLAbstractDoubleFloat::serialize(XSerializeEngine& serEng)
         fType = (LiteralType) type;
 
         serEng >> fDataConverted;
+        serEng >> fDataOverflowed;
         serEng >> fSign;
 
         serEng.readString(fRawData);
