@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/12 20:44:50  roddey
+ * Ooops, I checked in the URL.cpp file with a L"localhost" style string in it. This is not legal for
+ * some of our compilers, so a new string was added XMLUni and used in its place.
+ *
  * Revision 1.3  1999/12/18 00:18:10  roddey
  * More changes to support the new, completely orthagonal support for
  * intrinsic encodings.
@@ -242,6 +246,7 @@ public :
     static const XMLCh fgISO88591EncodingString6[];
     static const XMLCh fgISO88591EncodingString7[];
     static const XMLCh fgISO88591EncodingString8[];
+    static const XMLCh fgLocalHostString[];
     static const XMLCh fgNoString[];
     static const XMLCh fgNotationString[];
     static const XMLCh fgNDATAString[];

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 20:44:49  roddey
+ * Ooops, I checked in the URL.cpp file with a L"localhost" style string in it. This is not legal for
+ * some of our compilers, so a new string was added XMLUni and used in its place.
+ *
  * Revision 1.2  2000/01/12 00:16:22  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -475,7 +479,7 @@ BinInputStream* URL::makeNewStream() const
     //
     if (fProtocol == URL::File)
     {
-        if (!fHost || !XMLString::compareIString(fHost, L"localhost"))
+        if (!fHost || !XMLString::compareIString(fHost, XMLUni::fgLocalHostString))
         {
             //
             //  We have to play a little trick here. If its really a Windows

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/12 20:44:49  roddey
+ * Ooops, I checked in the URL.cpp file with a L"localhost" style string in it. This is not legal for
+ * some of our compilers, so a new string was added XMLUni and used in its place.
+ *
  * Revision 1.3  1999/12/18 00:18:10  roddey
  * More changes to support the new, completely orthagonal support for
  * intrinsic encodings.
@@ -263,6 +267,11 @@ const XMLCh XMLUni::fgISO88591EncodingString7[] =
 const XMLCh XMLUni::fgISO88591EncodingString8[] =
 {
     chLatin_L, chLatin_A, chLatin_T, chLatin_I, chLatin_N, chUnderscore, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgLocalHostString[] =
+{
+    chLatin_l, chLatin_o, chLatin_c, chLatin_a, chLatin_l, chLatin_h, chLatin_o, chLatin_s, chLatin_t, chNull
 };
 
 const XMLCh XMLUni::fgNoString[] =
