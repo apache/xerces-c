@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/06/07 22:49:40  andyh
+ * Memory usage reduction:  DOM NamedNodeMaps for attributes are allocated
+ * only for elements that actually have attributes.  By Joe Polastre.
+ *
  * Revision 1.5  2000/03/02 19:53:56  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -239,7 +243,7 @@ void          *DOM_Node::getUserData() const
   
 DOM_NamedNodeMap DOM_Node::getAttributes() const
 {
-    return DOM_NamedNodeMap(fImpl->getAttributes());
+    return (fImpl->getAttributes() == null) ? DOM_NamedNodeMap(fImpl) : DOM_NamedNodeMap(fImpl->getAttributes());
 };
 
   

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/06/07 22:49:40  andyh
+ * Memory usage reduction:  DOM NamedNodeMaps for attributes are allocated
+ * only for elements that actually have attributes.  By Joe Polastre.
+ *
  * Revision 1.7  2000/03/11 03:19:12  chchou
  * Fix bug # 19, add const keyword to API
  *
@@ -87,32 +91,49 @@
 #include "DOM_Node.hpp"
 #include "DOM_NamedNodeMap.hpp"
 #include "NamedNodeMapImpl.hpp"
+#include "ElementImpl.hpp"
+
+
+const unsigned short DOM_NamedNodeMap::NNM_ELEMENT  = 0;
+const unsigned short DOM_NamedNodeMap::NNM_OTHER    = 1;
 
 
 DOM_NamedNodeMap::DOM_NamedNodeMap()
 {
-    fImpl = null;
+    fImpl = 0;
+	flagElem = NNM_OTHER;
 };
 
 
 DOM_NamedNodeMap::DOM_NamedNodeMap(const DOM_NamedNodeMap & other)
 {
     this->fImpl = other.fImpl;
-    NamedNodeMapImpl::addRef(fImpl);
+	this->flagElem = other.flagElem;
+	(other.flagElem == NNM_ELEMENT) ? NodeImpl::addRef((NodeImpl *)fImpl) :	
+	                                  NamedNodeMapImpl::addRef((NamedNodeMapImpl *)fImpl);
 };
 
 
 DOM_NamedNodeMap::DOM_NamedNodeMap(NamedNodeMapImpl *impl)
 {
-    fImpl = impl;
-    NamedNodeMapImpl::addRef(fImpl);
+	fImpl = impl;
+	flagElem = NNM_OTHER;
+	if (impl != null)
+		NamedNodeMapImpl::addRef((NamedNodeMapImpl *)fImpl);
 };
 
+DOM_NamedNodeMap::DOM_NamedNodeMap(NodeImpl *impl)
+{
+	fImpl = impl;
+	flagElem = NNM_ELEMENT;
+	NodeImpl::addRef((NodeImpl *)fImpl);
+}
 
 
 DOM_NamedNodeMap::~DOM_NamedNodeMap() 
 {
-    NamedNodeMapImpl::removeRef(fImpl);
+	(flagElem == NNM_OTHER) ? NamedNodeMapImpl::removeRef((NamedNodeMapImpl *)fImpl) : 
+	                          NodeImpl::removeRef((NodeImpl *)fImpl);
 };
 
 bool DOM_NamedNodeMap::operator == (const DOM_NamedNodeMap &other) const
@@ -143,9 +164,13 @@ DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NamedNodeMap & other)
 {
     if (this->fImpl != other.fImpl) 
     {
-        NamedNodeMapImpl::removeRef(fImpl);
+		// update reference counts and change pointers
+        (flagElem == NNM_OTHER) ? NamedNodeMapImpl::removeRef((NamedNodeMapImpl *)fImpl) : NodeImpl::removeRef((NodeImpl *)fImpl);
+
         this->fImpl = other.fImpl;
-        NamedNodeMapImpl::addRef(fImpl);
+		this->flagElem = other.flagElem;
+
+        (flagElem == NNM_OTHER) ? NamedNodeMapImpl::addRef((NamedNodeMapImpl *)fImpl) : NodeImpl::addRef((NodeImpl *)fImpl);
     }
     return *this;
 };
@@ -153,39 +178,46 @@ DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NamedNodeMap & other)
 
 DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NullPtr *other)
 {
-    NamedNodeMapImpl::removeRef(fImpl);
+    
+    (flagElem == NNM_OTHER) ? NamedNodeMapImpl::removeRef((NamedNodeMapImpl *)fImpl) : NodeImpl::removeRef((NodeImpl *)fImpl);
     this->fImpl = 0;
+	this->flagElem = NNM_OTHER;
     return *this;
 };
 
 
 DOM_Node DOM_NamedNodeMap::getNamedItem(const DOMString &name) const
 {
-    return DOM_Node(fImpl->getNamedItem(name));
+	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->getNamedItem(name)) : 
+	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_getNamedItem(name));
 };
 
 
 DOM_Node DOM_NamedNodeMap::setNamedItem(DOM_Node arg)
 {
-    return DOM_Node(fImpl->setNamedItem(arg.fImpl));
+	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->setNamedItem(arg.fImpl)) : 
+	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_setNamedItem(arg.fImpl));
 };
 
 
 DOM_Node DOM_NamedNodeMap::removeNamedItem(const DOMString &name)
 {
-    return DOM_Node(fImpl->removeNamedItem(name));
+	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->removeNamedItem(name)) : 
+	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_removeNamedItem(name));
 };
 
 
 DOM_Node DOM_NamedNodeMap::item(unsigned int index) const
 {
-    return DOM_Node(fImpl->item(index));
+	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->item(index)) : 
+	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_item(index));
 };
 
 
 unsigned int DOM_NamedNodeMap::getLength() const
 {
-    return fImpl->getLength();
+	return (flagElem == NNM_OTHER) ? ((NamedNodeMapImpl *)fImpl)->getLength() : 
+	                                 ((ElementImpl *)fImpl)->NNM_getLength();
 };
 
 
@@ -194,16 +226,19 @@ unsigned int DOM_NamedNodeMap::getLength() const
 DOM_Node DOM_NamedNodeMap::getNamedItemNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    return DOM_Node(fImpl->getNamedItemNS(namespaceURI, localName));
+	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->getNamedItemNS(namespaceURI, localName)) :
+									 DOM_Node(((ElementImpl *)fImpl)->NNM_getNamedItemNS(namespaceURI, localName));
 }
 
 DOM_Node DOM_NamedNodeMap::setNamedItemNS(DOM_Node arg)
 {
-    return DOM_Node(fImpl->setNamedItemNS(arg.fImpl));
+    return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->setNamedItemNS(arg.fImpl)) :
+	                                 DOM_Node(((ElementImpl *)fImpl)->NNM_setNamedItemNS(arg.fImpl));
 }
 
 DOM_Node DOM_NamedNodeMap::removeNamedItemNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    return DOM_Node(fImpl->removeNamedItemNS(namespaceURI, localName));
+	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->removeNamedItemNS(namespaceURI, localName)) :
+                                     DOM_Node(((ElementImpl *)fImpl)->NNM_removeNamedItemNS(namespaceURI, localName));
 }

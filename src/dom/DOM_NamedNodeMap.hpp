@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/06/07 22:49:40  andyh
+ * Memory usage reduction:  DOM NamedNodeMaps for attributes are allocated
+ * only for elements that actually have attributes.  By Joe Polastre.
+ *
  * Revision 1.12  2000/03/11 03:19:13  chchou
  * Fix bug # 19, add const keyword to API
  *
@@ -124,7 +128,11 @@ class NamedNodeMapImpl;
 */
 class CDOM_EXPORT DOM_NamedNodeMap {
 private:
-    NamedNodeMapImpl        *fImpl;
+    void     *fImpl;
+	short    flagElem;
+
+	static const unsigned short NNM_ELEMENT;
+	static const unsigned short NNM_OTHER;	
     
 public:
     /** @name Constructors and assignment operator */
@@ -384,6 +392,7 @@ public:
  protected:
 
     DOM_NamedNodeMap(NamedNodeMapImpl *impl);
+	DOM_NamedNodeMap(NodeImpl *impl);
 
     friend class DOM_DocumentType;
     friend class DOM_Node;

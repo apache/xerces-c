@@ -73,7 +73,7 @@ ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
     : ChildAndParentNode(ownerDoc)
 {
     name = eName.clone();
-    attributes = new NamedNodeMapImpl(this);
+    attributes = null;
 };
 
 
@@ -81,9 +81,11 @@ ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
     : ChildAndParentNode(other)
 {
     name = other.name.clone();
+	attributes = null;
     if (deep)
         cloneChildren(other);
-    attributes = other.attributes->cloneMap(this);
+	if (other.attributes != null)
+		attributes = other.attributes->cloneMap(this);
 };
 
 
@@ -109,7 +111,8 @@ NodeImpl *ElementImpl::cloneNode(bool deep)
  */
 void ElementImpl::setOwnerDocument(DocumentImpl *doc) {
     ChildAndParentNode::setOwnerDocument(doc);
-    attributes->setOwnerDocument(doc);
+	if (attributes != null)
+		attributes->setOwnerDocument(doc);
 }
 
 
@@ -134,7 +137,7 @@ DOMString ElementImpl::getAttribute(const DOMString &nam)
 
 AttrImpl *ElementImpl::getAttributeNode(const DOMString &nam)
 {
-    return (AttrImpl *)(attributes->getNamedItem(nam));
+    return (attributes == null) ? null : (AttrImpl *)(attributes->getNamedItem(nam));
 };
 
 
@@ -212,6 +215,8 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
     AttrImpl* newAttr = (AttrImpl*)getAttributeNode(nam);
     if (!newAttr)
     {
+		if (attributes == null)
+			attributes = new NamedNodeMapImpl(this);
         newAttr = (AttrImpl*)ownerDocument->createAttribute(nam);
         attributes->setNamedItem(newAttr);
     }
@@ -232,6 +237,8 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
     
     if (!(newAttr->isAttrImpl()))
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+	if (attributes == null)
+		attributes = new NamedNodeMapImpl(this);
     AttrImpl *oldAttr =
       (AttrImpl *) attributes->getNamedItem(newAttr->getName());
     // This will throw INUSE if necessary
@@ -285,6 +292,8 @@ AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
       (AttrImpl *) ownerDocument->createAttributeNS(fNamespaceURI,
                                                     qualifiedName);
     newAttr->setNodeValue(fValue);
+	if (attributes == null)
+		attributes = new NamedNodeMapImpl(this);
     AttrImpl *oldAttr = (AttrImpl *)attributes->setNamedItem(newAttr);
 
     if (oldAttr) {
@@ -328,8 +337,9 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
     
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-    AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(
-	newAttr->getNamespaceURI(), newAttr->getLocalName());
+	if (attributes == null)
+		attributes = new NamedNodeMapImpl(this);
+    AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
     
     // This will throw INUSE if necessary
     attributes->setNamedItemNS(newAttr);
@@ -353,3 +363,88 @@ DeepNodeListImpl *ElementImpl::getElementsByTagNameNS(const DOMString &fNamespac
     return new DeepNodeListImpl(this,fNamespaceURI, fLocalName);
 }
 
+// DOM_NamedNodeMap UTILITIES
+NamedNodeMapImpl *ElementImpl::NNM_cloneMap(NodeImpl *ownerNode) 
+{
+	return (getAttributes() == null) ? null : ownerNode->getAttributes()->cloneMap(ownerNode);
+}
+
+int ElementImpl::NNM_findNamePoint(const DOMString &name)
+{
+	return (getAttributes() == null) ? -1 : getAttributes()->findNamePoint(name);
+}
+
+unsigned int ElementImpl::NNM_getLength()
+{
+	return (getAttributes() == null) ? 0 : getAttributes()->getLength();
+}
+
+NodeImpl *ElementImpl::NNM_getNamedItem(const DOMString &name)
+{
+	return (getAttributes() == null) ? null : getAttributes()->getNamedItem(name);
+}
+
+NodeImpl *ElementImpl::NNM_item(unsigned int index)
+{
+	return (getAttributes() == null) ? null : getAttributes()->item(index);
+}
+
+void ElementImpl::NNM_removeAll() 
+{
+	if (getAttributes() != null)
+		getAttributes()->removeAll();
+}
+
+NodeImpl *ElementImpl::NNM_removeNamedItem(const DOMString &name)
+{
+	if (getAttributes() == null)
+		throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+	else
+		return getAttributes()->removeNamedItem(name);
+	return null;
+}
+
+NodeImpl *ElementImpl::NNM_setNamedItem(NodeImpl *arg)
+{
+	if (getAttributes() == null)
+		attributes = new NamedNodeMapImpl(this);
+	return attributes->setNamedItem(arg);
+}
+
+void ElementImpl::NNM_setReadOnly(bool readOnly, bool deep)
+{
+	if (getAttributes() != null)
+		getAttributes()->setReadOnly(readOnly, deep);
+}
+
+int ElementImpl::NNM_findNamePoint(const DOMString &namespaceURI, const DOMString &localName)
+{
+	return (getAttributes() == null) ? -1 : getAttributes()->findNamePoint(namespaceURI, localName);
+}
+
+NodeImpl *ElementImpl::NNM_getNamedItemNS(const DOMString &namespaceURI, const DOMString &localName)
+{
+	return (getAttributes() == null) ? null : getAttributes()->getNamedItemNS(namespaceURI, localName);
+}
+
+NodeImpl *ElementImpl::NNM_setNamedItemNS(NodeImpl *arg)
+{
+	if (getAttributes() == null)
+		attributes = new NamedNodeMapImpl(this);
+	return getAttributes()->setNamedItemNS(arg);
+}
+
+NodeImpl *ElementImpl::NNM_removeNamedItemNS(const DOMString &namespaceURI, const DOMString &localName)
+{
+	if (getAttributes() == null)
+        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+	else
+		return getAttributes()->removeNamedItemNS(namespaceURI, localName);
+	return null;
+}
+
+void ElementImpl::NNM_setOwnerDocument(DocumentImpl *doc)
+{
+	if (getAttributes() != null)
+		getAttributes()->setOwnerDocument(doc);
+}
