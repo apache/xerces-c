@@ -1064,10 +1064,10 @@ Options:
 
   * = Default if not provided explicitly.
 
-personal.xml: {timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
-personal.xml: {timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
-personal-schema.xml: {timing removed}(37 elems, 28 attrs, 0 spaces, 268 chars)
-personal-schema.xml: {timing removed}(37 elems, 28 attrs, 140 spaces, 128 chars)
+personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+personal-schema.xml:{timing removed}(37 elems, 28 attrs, 0 spaces, 268 chars)
+personal-schema.xml:{timing removed}(37 elems, 28 attrs, 140 spaces, 128 chars)
 
 Usage:
     InitTermTest [options] <XML file>
