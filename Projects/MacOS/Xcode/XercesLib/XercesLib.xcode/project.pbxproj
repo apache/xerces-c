@@ -479,8 +479,6 @@
 				02058DA6FF8AF8CD7F000001,
 				F5F38FB5039FA5DB01A80066,
 				F5F38FB6039FA5DB01A80066,
-				900A9B7C055B0570002E6943,
-				900A9B7D055B0570002E6943,
 				90E140620541861300C60A69,
 				90E140630541861300C60A69,
 				90ECBAE6070A5EDB002249D6,
@@ -491,8 +489,6 @@
 				90E140670541861300C60A69,
 				9092296C0573B03C00C9F477,
 				9092296D0573B03C00C9F477,
-				900A9B7E055B0570002E6943,
-				900A9B7F055B0570002E6943,
 				900A9B80055B0570002E6943,
 				900A9B81055B0570002E6943,
 			);
@@ -3344,38 +3340,6 @@
 			settings = {
 			};
 		};
-		900A9B7C055B0570002E6943 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = XObjectComparator.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		900A9B7D055B0570002E6943 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = XObjectComparator.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		900A9B7E055B0570002E6943 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = XTemplateComparator.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		900A9B7F055B0570002E6943 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = XTemplateComparator.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		900A9B80055B0570002E6943 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3391,30 +3355,6 @@
 			path = XTemplateSerializer.hpp;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		900A9B82055B0570002E6943 = {
-			fileRef = 900A9B7C055B0570002E6943;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		900A9B83055B0570002E6943 = {
-			fileRef = 900A9B7D055B0570002E6943;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		900A9B84055B0570002E6943 = {
-			fileRef = 900A9B7E055B0570002E6943;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		900A9B85055B0570002E6943 = {
-			fileRef = 900A9B7F055B0570002E6943;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		900A9B86055B0570002E6943 = {
 			fileRef = 900A9B80055B0570002E6943;
@@ -4052,8 +3992,6 @@
 				900A9B71055B053D002E6943,
 				900A9B73055B053D002E6943,
 				900A9B75055B053D002E6943,
-				900A9B83055B0570002E6943,
-				900A9B85055B0570002E6943,
 				900A9B87055B0570002E6943,
 				9092296F0573B03C00C9F477,
 				909229710573B03C00C9F477,
@@ -7271,8 +7209,6 @@
 				900A9B70055B053D002E6943,
 				900A9B72055B053D002E6943,
 				900A9B74055B053D002E6943,
-				900A9B82055B0570002E6943,
-				900A9B84055B0570002E6943,
 				900A9B86055B0570002E6943,
 				9092296E0573B03C00C9F477,
 				909229700573B03C00C9F477,
