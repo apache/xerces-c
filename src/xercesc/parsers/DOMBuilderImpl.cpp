@@ -77,7 +77,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
-#include <xercesc/util/DOMInputSourceWrapper.hpp>
+#include <xercesc/framework/Wrapper4DOMInputSource.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -365,7 +365,7 @@ void* DOMBuilderImpl::getProperty(const XMLCh* const name) const
 // ---------------------------------------------------------------------------
 DOMDocument* DOMBuilderImpl::parse(const DOMInputSource& source)
 {
-    DOMInputSourceWrapper isWrapper((DOMInputSource*) &source);
+    Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source);
 
     isWrapper.setAdoptInputSource(false);
     AbstractDOMParser::parse(isWrapper, fReuseGrammar);
@@ -442,7 +442,7 @@ DOMBuilderImpl::resolveEntity(const XMLCh* const publicId,
         DOMInputSource* is = fEntityResolver->resolveEntity(publicId, systemId, baseURI);
 
         if (is)
-            return new DOMInputSourceWrapper(is);
+            return new Wrapper4DOMInputSource(is);
     }
 
     return 0;
