@@ -70,22 +70,22 @@ class XMLUTIL_EXPORT XMLBigInteger
 {
 public:
 
-	/**
-	 * Constructs a newly allocated <code>XMLBigInteger</code> object that
-	 * represents the value represented by the string. The string is
-	 * converted to an int value as if by the <code>valueOf</code> method.
-	 *
-	 * @param      strValue   the <code>String</code> to be converted to an
-	 *                       <code>XMLBigInteger</code>.
-	 * @exception  NumberFormatException  if the <code>String</code> does not
-	 *               contain a parsable XMLBigInteger.
-	 */
+    /**
+     * Constructs a newly allocated <code>XMLBigInteger</code> object that
+     * represents the value represented by the string. The string is
+     * converted to an int value as if by the <code>valueOf</code> method.
+     *
+     * @param      strValue   the <code>String</code> to be converted to an
+     *                       <code>XMLBigInteger</code>.
+     * @exception  NumberFormatException  if the <code>String</code> does not
+     *               contain a parsable XMLBigInteger.
+     */
 
-	XMLBigInteger(const XMLCh* const strValue);
+    XMLBigInteger(const XMLCh* const strValue);
 
-	~XMLBigInteger();
+    ~XMLBigInteger();
 
-	XMLBigInteger(const XMLBigInteger& toCopy);
+    XMLBigInteger(const XMLBigInteger& toCopy);
 
     static void parseBigInteger(const XMLCh* const toConvert
                               , XMLCh* const       retBuffer
@@ -101,66 +101,73 @@ public:
 
     int         getTotalDigit() const;
 
-	/**
-	 *  Return a copy of the fMagnitue.
+    /**
+     *  Return a copy of the fMagnitue.
      *  A leading sign is ALWAYS in place and the caller of this method
      *  is responsible for the de-allocation of the memory.
-	 */
+     */
     inline XMLCh*      toString() const;
+    
+    /**
+     *  Return a copy of the fMagnitue.
+     *  This is similar to toString, except the internal buffer is returned directly
+     *  Caller is not required to delet the returned memory.
+     */
+    inline XMLCh*      getRawData() const;
 
-	/**
-	 * Compares this object to the specified object.
-	 * The result is <code>true</code> if and only if the argument is not
-	 * <code>null</code> and is an <code>XMLBigInteger</code> object that contains
-	 * the same <code>int</code> value as this object.
-	 *
-	 * @param   toCompare   the object to compare with.
-	 * @return  <code>true</code> if the objects are the same;
-	 *          <code>false</code> otherwise.
-	 */
-	bool operator==(const XMLBigInteger& toCompare) const;
+    /**
+     * Compares this object to the specified object.
+     * The result is <code>true</code> if and only if the argument is not
+     * <code>null</code> and is an <code>XMLBigInteger</code> object that contains
+     * the same <code>int</code> value as this object.
+     *
+     * @param   toCompare   the object to compare with.
+     * @return  <code>true</code> if the objects are the same;
+     *          <code>false</code> otherwise.
+     */
+    bool operator==(const XMLBigInteger& toCompare) const;
 
-	/**
-	 * Returns the signum function of this number (i.e., -1, 0 or 1 as
-	 * the value of this number is negative, zero or positive).
-	 */
-	int getSign() const;
+    /**
+     * Returns the signum function of this number (i.e., -1, 0 or 1 as
+     * the value of this number is negative, zero or positive).
+     */
+    int getSign() const;
 
     int intValue() const;
 
 private:
 
-	void setSign(int);
+    void setSign(int);
 
-	/*
-	 * The number is internally stored in "minimal" sign-fMagnitude format
-	 * (i.e., no BigIntegers have a leading zero byte in their magnitudes).
-	 * Zero is represented with a signum of 0 (and a zero-length fMagnitude).
-	 * Thus, there is exactly one representation for each value.
-	 */
+    /*
+     * The number is internally stored in "minimal" sign-fMagnitude format
+     * (i.e., no BigIntegers have a leading zero byte in their magnitudes).
+     * Zero is represented with a signum of 0 (and a zero-length fMagnitude).
+     * Thus, there is exactly one representation for each value.
+     */
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fSign
     //     to represent the sign of the number.
     //
-	//  fMagnitude
+    //  fMagnitude
     //     the buffer holding the number.
     //
-	//  fRawData
-	//     to preserve the original string used to construct this object,
-	//     needed for pattern matching.
-	//
+    //  fRawData
+    //     to preserve the original string used to construct this object,
+    //     needed for pattern matching.
+    //
     // -----------------------------------------------------------------------
 
     int         fSign;
-	XMLCh*      fMagnitude;  //null terminated
-	XMLCh*      fRawData;
+    XMLCh*      fMagnitude;  //null terminated
+    XMLCh*      fRawData;
 
 };
 
 inline int XMLBigInteger::getSign() const
-{	
+{    
     return fSign;
 }
 
@@ -177,6 +184,11 @@ inline bool XMLBigInteger::operator==(const XMLBigInteger& toCompare) const
 inline void XMLBigInteger::setSign(int newSign)
 {
     fSign = newSign;
+}
+
+inline XMLCh*  XMLBigInteger::getRawData() const
+{
+    return fRawData;
 }
 
 //

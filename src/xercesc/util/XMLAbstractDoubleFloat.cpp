@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/01/30 21:55:22  tng
+ * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
+ *
  * Revision 1.7  2002/12/11 00:20:02  peiyongz
  * Doing businesss in value space. Converting out-of-bound value into special values.
  *
@@ -179,6 +182,10 @@ XMLCh*  XMLAbstractDoubleFloat::toString() const
     return XMLString::replicate(fRawData);
 }
 
+XMLCh*  XMLAbstractDoubleFloat::getRawData() const
+{
+    return fRawData;
+}
 int XMLAbstractDoubleFloat::getSign() const
 {
     return fSign;

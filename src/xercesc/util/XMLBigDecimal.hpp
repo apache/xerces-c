@@ -105,6 +105,8 @@ public:
 
 
     virtual XMLCh*        toString() const;
+    
+    virtual XMLCh*        getRawData() const;
 
     virtual int           getSign() const;
 

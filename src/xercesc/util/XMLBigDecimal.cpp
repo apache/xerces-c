@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/30 21:55:22  tng
+ * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
+ *
  * Revision 1.3  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -354,6 +357,11 @@ void XMLBigDecimal::reScale(unsigned int newScale)
 	}
 
     return;
+}
+
+XMLCh*  XMLBigDecimal::getRawData() const
+{
+    return fRawData;
 }
 
 //

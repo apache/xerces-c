@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/01/30 21:55:22  tng
+ * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -91,6 +94,15 @@ public:
      *  de-allocation of the memory.
 	 */
     virtual XMLCh*     toString() const = 0;
+    
+	/**
+	 *  Return string representation of the decimal value.
+     *  A decimal point will be included as necessary.
+     *  Similar to toString above, but the internal buffer is
+     *  returned directly, user is not required to delete
+     *  the returned buffer
+	 */
+    virtual XMLCh*     getRawData() const = 0;    
 
 	/**
 	 * Returns the sign of this number

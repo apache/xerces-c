@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/01/30 21:55:22  tng
+ * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
+ *
  * Revision 1.4  2002/11/28 20:39:27  peiyongz
  * Schema Errata: E2-23 seconds part shall have at least one digit after the dot
  *                           if it appears.
@@ -502,6 +505,15 @@ XMLCh*  XMLDateTime::toString() const
 
     XMLCh* retBuf = XMLString::replicate(fBuffer);
     return retBuf;
+}
+
+//
+// We may simply return the handle to fBuffer
+//
+XMLCh*  XMLDateTime::getRawData() const
+{
+    assertBuffer();    
+    return fBuffer;
 }
 
 int XMLDateTime::getSign() const
