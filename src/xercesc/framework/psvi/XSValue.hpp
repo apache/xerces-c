@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/11/24 10:18:59  cargilld
+ * Fix compilation error on HP for yesterday's commit.
+ *
  * Revision 1.16  2004/11/24 02:34:08  cargilld
  * Various bug fixes and code cleanup for XSValue.
  *
@@ -320,7 +323,7 @@ private:
     //@{
 
     static const XSValue::DataGroup inGroup[];
-    static const bool XSValue::numericSign[];
+    static const bool numericSign[];
 
     //@}
 
