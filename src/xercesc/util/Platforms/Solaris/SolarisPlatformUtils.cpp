@@ -311,11 +311,11 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
         return;
 
     const XMLByte* tmpFlush = (const XMLByte*) toFlush;
-    unsigned long  bytesWritten = 0;
+    size_t bytesWritten = 0;
 
     while (true)
     {
-        fwrite(theFile, tmpFlush, toWrite, &bytesWritten, 0);
+        bytesWritten=fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
 
         if(ferror((FILE*)theFile))
         {
@@ -323,7 +323,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
           //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
         }
 
-        if (bytesWritten < (unsigned long) toWrite) //incomplete write
+        if (bytesWritten < toWrite) //incomplete write
         {
             tmpFlush+=bytesWritten;
             toWrite-=bytesWritten;
