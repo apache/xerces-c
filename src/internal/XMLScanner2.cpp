@@ -1797,6 +1797,15 @@ void XMLScanner::scanCDSection()
             ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
         }
 
+        if (fValidate && fStandalone && (XMLReader::isWhitespace(nextCh)))
+        {
+            //
+            // This document is standalone; this ignorable CDATA whitespace is forbidden.
+            // XML 1.0, Section 2.9
+            //
+            emitError(XMLErrs::BadStandalone);
+        }
+
         //
         //  If this is a close square bracket it could be our closing
         //  sequence.
@@ -1842,25 +1851,6 @@ void XMLScanner::scanCDSection()
 
         // Add it to the buffer
         bbCData.append(nextCh);
-    }
-
-    // See if the text contains whitespace
-    if (fValidate)
-    {
-        const XMLCh* rawBuf = bbCData.getRawBuffer();
-        const unsigned int len = bbCData.getLen();
-        const bool isSpaces = XMLReader::containsWhiteSpace(rawBuf, len);
-        const ElemStack::StackElem* topElem = fElemStack.topElement();
-
-        if (topElem) {
-
-            if ((fStandalone) && (topElem->fThisElement->isExternal())) {
-
-                // Error - standalone should have a value of "no" as whitespace detected in an
-                // element type with element content whose element declaration was external
-                emitError(XMLErrs::BadStandalone);
-            }
-        }
     }
 }
 
