@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2002/06/18 15:35:25  peiyongz
+ * Bug#9950: Compilation error on MSVC5, patch from PeterV@ti.com.od.ua (Peter A. Volchek)
+ *
  * Revision 1.9  2002/06/17 19:45:58  peiyongz
  * optimization on fFeatures and featureId introduced
  *
@@ -1055,8 +1058,8 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     {
         if (toThrow)
             throw DOMException(DOMException::NOT_FOUND_ERR, 0);
-        else
-            return false;
+
+        return false;
     }
 
     featureId = INVALID_FEATURE_ID;
@@ -1083,11 +1086,11 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     {
         if (toThrow)
             throw DOMException(DOMException::NOT_FOUND_ERR, featName);			
-        else
-            return false;
+
+        return false;
     }
-    else
-        return true;
+
+    return true;
 }
 
 inline bool DOMWriterImpl::canSetFeature(const int featureId
