@@ -1304,15 +1304,25 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     }
 
     //  If we have a document handler then call the XML Decl callback.
-    if (fDocHandler)
+    if (type == Decl_XML)
     {
-        fDocHandler->XMLDecl
-        (
-            bbVersion.getRawBuffer()
-            , bbEncoding.getRawBuffer()
-            , bbStand.getRawBuffer()
-            , actualEnc
-        );
+        if (fDocHandler)
+            fDocHandler->XMLDecl
+            (
+                bbVersion.getRawBuffer()
+                , bbEncoding.getRawBuffer()
+                , bbStand.getRawBuffer()
+                , actualEnc
+            );
+    }
+    else if (type == Decl_Text)
+    {
+        if (fDocTypeHandler)
+            fDocTypeHandler->TextDecl
+            (
+                bbVersion.getRawBuffer()
+                , bbEncoding.getRawBuffer()
+            );
     }
 }
 
