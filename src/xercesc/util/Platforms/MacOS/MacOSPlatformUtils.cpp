@@ -334,11 +334,18 @@ XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 XMLCh* XMLPlatformUtils::getCurrentDirectory()
 {
-	//	Return a newly allocated path to the current directory
+	//	Get a newly allocated path to the current directory
 	FSSpec spec;
-	return (noErr == FSMakeFSSpec(0, 0, NULL, &spec))
-		? XMLCreateFullPathFromFSSpec(spec)
-		: NULL;
+	XMLCh* path =
+		(noErr == FSMakeFSSpec(0, 0, NULL, &spec))
+			? XMLCreateFullPathFromFSSpec(spec)
+			: NULL;
+			
+    if (!path)
+		 ThrowXML(XMLPlatformUtilsException,
+	           XMLExcepts::File_CouldNotGetBasePathName);
+	           
+	return path;
 }
 
 
