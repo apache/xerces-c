@@ -66,7 +66,6 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLEBCDICTranscoder.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -1499,103 +1498,6 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
     fRawBufIndex += bytesEaten;
 
     return charsDone;
-}
-
-/***
- *
- * XML1.1
- *
- * 2.11 End-of-Line Handling
- *
- *    XML parsed entities are often stored in computer files which, for editing 
- *    convenience, are organized into lines. These lines are typically separated 
- *    by some combination of the characters CARRIAGE RETURN (#xD) and LINE FEED (#xA).
- *
- *    To simplify the tasks of applications, the XML processor MUST behave as if 
- *    it normalized all line breaks in external parsed entities (including the document 
- *    entity) on input, before parsing, by translating all of the following to a single 
- *    #xA character:
- *
- *  1. the two-character sequence #xD #xA
- *  2. the two-character sequence #xD #x85
- *  3. the single character #x85
- *  4. the single character #x2028
- *  5. any #xD character that is not immediately followed by #xA or #x85.
- *
- *
- ***/
-inline void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
-{
-    // 1. the two-character sequence #xD #xA
-    // 2. the two-character sequence #xD #x85
-    // 5. any #xD character that is not immediately followed by #xA or #x85.
-    if (curCh == chCR)
-    {
-        fCurCol = 1;
-        fCurLine++;
-
-        //
-        //  If not already internalized, then convert it to an
-        //  LF and eat any following LF.
-        //
-        if (fSource == Source_External)
-        {
-            if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-            {
-                if ( fCharBuf[fCharIndex] == chLF              || 
-                    ((fCharBuf[fCharIndex] == chNEL) && fNEL)  )
-                {
-                    fCharIndex++;
-                }
-            }
-            curCh = chLF;
-        }
-    }
-    else if (curCh == chLF)                   
-    {
-        fCurCol = 1;
-        fCurLine++;
-    }
-    // 3. the single character #x85
-    // 4. the single character #x2028
-    else if (curCh == chNEL || curCh == chLineSeparator)
-    {
-        if (inDecl && fXMLVersion == XMLV1_1)
-        {
-
-        /***
-         * XML1.1
-         *
-         * 2.11 End-of-Line Handling
-         *  ...
-         *   The characters #x85 and #x2028 cannot be reliably recognized and translated 
-         *   until an entity's encoding declaration (if present) has been read. 
-         *   Therefore, it is a fatal error to use them within the XML declaration or 
-         *   text declaration. 
-         *
-         ***/
-            ThrowXMLwithMemMgr1
-                (
-                TranscodingException
-                , XMLExcepts::Reader_NelLsepinDecl
-                , fSystemId
-                , fMemoryManager
-                );
-        }
-
-        if (fNEL && fSource == Source_External)
-        {
-            fCurCol = 1;
-            fCurLine++;
-            curCh = chLF;
-        }
-    }
-    else
-    {
-        fCurCol++;
-    }
-
-    return;
 }
 
 XERCES_CPP_NAMESPACE_END
