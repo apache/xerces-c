@@ -1616,3 +1616,7 @@ rm -fr confdefs* $ac_clean_files
 test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 
 
+echo
+echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
+echo Also look at http://xml.apache.org/xerces-c/samples.html
+
