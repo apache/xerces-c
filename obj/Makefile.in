@@ -164,7 +164,7 @@ endif
 clean:
 	@echo "Making clean in obj ..."
 	-rm -f $(ALL_OBJECTS) ${THISLIB}${VER}${SHLIBSUFFIX}
-ifneq ($strip $(TEMPLATESREPOSITORY)),)
+ifneq ($(strip $(TEMPLATESREPOSITORY)),)
 	-rm -f $(TEMPLATESREPOSITORY)/*.o
 	-rm -f $(TEMPLATESREPOSITORY)/*.c
 	-rm -f $(TEMPLATESREPOSITORY)/*.cs
@@ -175,7 +175,7 @@ endif
 distclean:	clean
 	-rm -f Makefile
 	-rm -rf $(XML_OBJ_DIR)
-ifneq ($strip $(TEMPLATESREPOSITORY)),)
+ifneq ($(strip $(TEMPLATESREPOSITORY)),)
 	-rm -rf $(TEMPLATESREPOSITORY)
 endif
 
