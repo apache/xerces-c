@@ -157,7 +157,7 @@ public:
     (
          const XMLSize_t modulus
        , const bool adoptElems
-       , HashBase* hash
+       , HashBase* hashBase
        , const XMLSize_t initSize = 128
     );
 

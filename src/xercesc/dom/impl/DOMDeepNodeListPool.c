@@ -110,7 +110,7 @@ DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
 template <class TVal>
 DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
                                               , const bool adoptElems
-                                              , HashBase* hash
+                                              , HashBase* hashBase
                                               , const XMLSize_t initSize) :
 	 fAdoptedElems(adoptElems)
     , fBucketList(0)
@@ -123,7 +123,7 @@ DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
 {
     initialize(modulus);
     // set hasher
-    fHash = hash;
+    fHash = hashBase;
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
