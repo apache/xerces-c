@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/08/19 14:01:41  neilg
+ * fix for bug 22537
+ *
  * Revision 1.9  2003/05/17 16:32:18  knoaman
  * Memory manager implementation : transcoder update.
  *
@@ -1051,7 +1054,7 @@ XMLCh* IconvGNULCPTranscoder::transcode(const char* const toTranscode,
     if (*toTranscode) {
         const unsigned int wLent = calcRequiredSize(toTranscode);
         if (wLent == 0) {
-            retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));/new XMLCh[1];
+            retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
             retVal[0] = 0;
             return retVal;
         }
@@ -1186,7 +1189,7 @@ IconvGNUTranscoder::IconvGNUTranscoder (const    XMLCh* const    encodingName
                       ,    iconv_t        cd_to
                       ,    size_t        uchsize
                       ,    unsigned int    ubo
-                      , MemoryManger* const manager
+                      , MemoryManager* const manager
     )
     : XMLTranscoder(encodingName, blockSize, manager)
     , IconvGNUWrapper (cd_from, cd_to, uchsize, ubo)
