@@ -486,7 +486,9 @@ void DOMBuilderImpl::error( const   unsigned int                code
         DOMLocatorImpl location((int)lineNum, (int) colNum, getCurrentNode(), systemId);
         DOMErrorImpl domError(severity, errorText, &location);
 
-        fErrorHandler->handleError(domError);
+        // if user return false, we should stop the process, so throw an error
+        if (!fErrorHandler->handleError(domError) && !getScanner()->getInException())
+            throw (XMLErrs::Codes) code;
     }
 }
 

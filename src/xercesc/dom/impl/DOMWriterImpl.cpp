@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.26  2003/01/09 19:53:45  tng
+ * [Bug 15372] DOMBuilder::parseFromURI ignores result of handleErrors.
+ *
  * Revision 1.25  2002/12/10 21:01:32  tng
  * NLS: DOMWriter should use message loader to load message instead of using hardcoded static stirng
  *
@@ -385,7 +388,7 @@ catch(TranscodingException const &e)                                 \
                     , DOMError::DOM_SEVERITY_FATAL_ERROR             \
                     , e.getMessage())                       ||       \
           forceToRethrow)                                            \
-        throw;                                                       \
+        throw e;                                                       \
 }
 
 DOMWriterImpl::~DOMWriterImpl()
@@ -1249,7 +1252,7 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
 
     fErrorCount++;
 
-    if (errorType == DOMError::DOM_SEVERITY_FATAL_ERROR)
+    if (errorType == DOMError::DOM_SEVERITY_FATAL_ERROR || !toContinueProcess)
         throw toEmit;
 
     return toContinueProcess;
