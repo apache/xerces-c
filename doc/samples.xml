@@ -3,7 +3,7 @@
 
 <s1 title="&XercesCName; Samples">
 
-    <p>&XercesCName; comes packaged with 14 sample applications that
+    <p>&XercesCName; comes packaged with 15 sample applications that
     demonstrate salient features of the parser using simple
     applications written on top of the SAX and DOM APIs provided by
     the parser.  Sample XML data files are provided in the samples/data directory.</p>
