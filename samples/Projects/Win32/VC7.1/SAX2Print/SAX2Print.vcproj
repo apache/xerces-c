@@ -86,6 +86,9 @@
 			<File
 				RelativePath="..\..\..\..\SAX2Print\SAX2PrintHandlers.cpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\SAX2Print\SAX2FilterHandlers.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -96,6 +99,9 @@
 			<File
 				RelativePath="..\..\..\..\SAX2Print\SAX2PrintHandlers.hpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\SAX2Print\SAX2FilterHandlers.hpp">
+			</File>			
 		</Filter>
 		<Filter
 			Name="Resource Files"

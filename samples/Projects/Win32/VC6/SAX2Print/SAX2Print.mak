@@ -37,6 +37,7 @@ ALL : "$(OUTDIR)\SAX2Print.exe"
 
 
 CLEAN :
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -93,7 +94,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /debug /machine:I386 /out:"$(OUTDIR)\SAX2Print.exe" /pdbtype:sept /libpath:"..\..\..\..\..\lib" 
 LINK32_OBJS= \
 	"$(INTDIR)\SAX2Print.obj" \
-	"$(INTDIR)\SAX2PrintHandlers.obj"
+	"$(INTDIR)\SAX2PrintHandlers.obj" \
+	"$(INTDIR)\SAX2FilterHandlers.obj"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -112,6 +114,7 @@ ALL : "$(OUTDIR)\SAX2Print.exe"
 
 
 CLEAN :
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -168,7 +171,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\SAX2Print.exe" /pdbtype:sept /libpath:"..\..\..\..\..\lib" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\SAX2Print.obj" \
-	"$(INTDIR)\SAX2PrintHandlers.obj"
+	"$(INTDIR)\SAX2PrintHandlers.obj" \
+	"$(INTDIR)\SAX2FilterHandlers.obj"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -188,6 +192,12 @@ LINK32_OBJS= \
 
 
 !IF "$(CFG)" == "SAX2Print - Win32 Debug" || "$(CFG)" == "SAX2Print - Win64 Debug"
+SOURCE=..\..\..\..\SAX2Print\SAX2FilterHandlers.cpp
+
+"$(INTDIR)\SAX2FilterHandlers.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\SAX2Print\SAX2Print.cpp
 
 "$(INTDIR)\SAX2Print.obj" : $(SOURCE) "$(INTDIR)"
