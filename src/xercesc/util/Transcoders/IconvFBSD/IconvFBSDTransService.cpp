@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/04/11 15:38:05  knoaman
+ * String lower case support for FreeBSD by Max Gotlib
+ *
  * Revision 1.3  2002/04/09 15:44:00  knoaman
  * Add lower case string support.
  *
@@ -103,6 +106,8 @@ typedef struct __IconvFBSDEncoding {
 static const IconvFBSDEncoding	gIconvFBSDEncodings[] = {
     { "ucs-2-internal",		2,	LITTLE_ENDIAN },
     { "ucs-4-internal",		4,	LITTLE_ENDIAN },
+    { "UNICODELITTLE",		2,	LITTLE_ENDIAN },
+    { "UNICODEBIG",		2,	BIG_ENDIAN },
     { "iso-10646-ucs-2",	4,	BIG_ENDIAN },
     { "iso-10646-ucs-4",	4,	BIG_ENDIAN },
     { "iso-10646-utf-16",	2,	BIG_ENDIAN },
@@ -277,10 +282,20 @@ static wint_t fbsd_towupper(wint_t ch)
 {
     if (ch <= 0x7F)
 	return toupper(ch);
-    char	buf[16];
+    unsigned char	buf[16];
     wchar_t	wc = wchar_t(ch);
-    wcstombs(buf, &wc, 16);
+    wcstombs((char*)buf, &wc, 16);
     return toupper(*buf);
+}
+
+static wint_t fbsd_towlower(wint_t ch)
+{
+    if (ch <= 0x7F)
+	return tolower(ch);
+    unsigned char	buf[16];
+    wchar_t	wc = wchar_t(ch);
+    wcstombs((char *)buf, &wc, 16);
+    return tolower(*buf);
 }
 
 #else /* XML_USE_LIBICONV */
@@ -386,7 +401,39 @@ XMLCh	IconvFBSDCD::toUpper (const XMLCh ch) const
     if (::iconv (fCDTo, (const char**) &ptr, &len,
 		 &pTmpArr, &bLen) == (size_t) -1)
 	return 0;
-    tmpArr[1] = toupper (*tmpArr);
+    tmpArr[1] = toupper (*((unsigned char *)tmpArr));
+    *tmpArr = tmpArr[1];
+    len = 1;
+    pTmpArr = wcbuf;
+    bLen = fUChSize;
+    ptr = tmpArr;
+    if (::iconv (fCDFrom, (const char **)&ptr, &len,
+		 &pTmpArr, &bLen) == (size_t) -1)
+	return 0;
+    mbcToXMLCh (wcbuf, (XMLCh*) &ch);
+    return ch;
+}
+
+// Return lowercase equivalent for XMLCh
+XMLCh	IconvFBSDCD::toLower (const XMLCh ch) const
+{
+    if (ch <= 0x7F)
+	return tolower(ch);
+
+    char	wcbuf[fUChSize * 2];
+    xmlChToMbc (ch, wcbuf);
+
+    char	tmpArr[4];
+    char*	ptr = wcbuf;
+    size_t	len = fUChSize;
+    char	*pTmpArr = tmpArr;
+    size_t	bLen = 2;
+
+    ICONV_LOCK;
+    if (::iconv (fCDTo, (const char**) &ptr, &len,
+		 &pTmpArr, &bLen) == (size_t) -1)
+	return 0;
+    tmpArr[1] = tolower (*((unsigned char*)tmpArr));
     *tmpArr = tmpArr[1];
     len = 1;
     pTmpArr = wcbuf;
@@ -835,7 +882,16 @@ void IconvFBSDTransService::upperCase(XMLCh* const toUpperCase) const
 
 void IconvFBSDTransService::lowerCase(XMLCh* const toLowerCase) const
 {
-    //TO DO
+    XMLCh* outPtr = toLowerCase;
+    while (*outPtr)
+    {
+#ifndef XML_USE_LIBICONV
+        *outPtr = fbsd_towlower(*outPtr);
+#else /* XML_USE_LIBICONV */
+	*outPtr = toLower(*outPtr);
+#endif /* !XML_USE_LIBICONV */
+        outPtr++;
+    }
 }
 
 // ---------------------------------------------------------------------------

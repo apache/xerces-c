@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/04/11 15:38:05  knoaman
+ * String lower case support for FreeBSD by Max Gotlib
+ *
  * Revision 1.2  2002/04/09 15:44:00  knoaman
  * Add lower case string support.
  *
@@ -110,6 +113,9 @@ public:
 
     // Return uppercase equivalent for XMLCh
     XMLCh 	toUpper (const XMLCh ch) const;
+
+    // Return uppercase equivalent for XMLCh
+    XMLCh 	toLower (const XMLCh ch) const;
 
     // Check if passed characters belongs to the :space: class
     virtual bool isSpace(const XMLCh toCheck) const;    
