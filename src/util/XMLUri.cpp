@@ -446,6 +446,8 @@ void XMLUri::initialize(const XMLUri* const baseURI
         int bufLen = trimedUriSpecLen+XMLString::stringLen(fPath)+XMLString::stringLen(basePath)+1;
         XMLCh* path = new XMLCh[bufLen];
         ArrayJanitor<XMLCh> pathName(path);
+        path[0] = 0;
+
         XMLCh* tmp1 = new XMLCh[bufLen];
         ArrayJanitor<XMLCh> tmp1Name(tmp1);
         XMLCh* tmp2 = new XMLCh[bufLen];
