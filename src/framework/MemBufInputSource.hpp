@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -79,12 +82,44 @@
 
 class BinInputStream;
 
+
+/**
+ *  This class is a derivative of the standard InputSource class. It provides
+ *  for the parser access to data stored in a memory buffer. The type of
+ *  buffer and its host specific attributes are of little concern here. The
+ *  only real requirement is that the memory be readable by the current
+ *  process.
+ *
+ *  Note that the memory buffer size is expressed in <b>bytes</b>, not in
+ *  characters. If you pass it text data, you must account for the bytes
+ *  per character when indicating the buffer size.
+ *
+ *  As with all InputSource derivatives. The primary objective of an input
+ *  source is to create an input stream via which the parser can spool in
+ *  data from the referenced source. In this case, there are two options
+ *  available.
+ *
+ *  The passed buffer can be adopted or merely referenced. If it is adopted,
+ *  then it must be dynamically allocated and will be destroyed when the
+ *  input source is destroyed (no reference counting!.) If not adopted, the
+ *  caller must insure that it remains valid until the input source object
+ *  is destroyed.
+ *
+ *  The other option indicates whether each stream created for this input
+ *  source should get its own copy of the data, or whether it should just
+ *  stream the data directly from this object's copy of the data. The same
+ *  rules apply here, in that the buffer must either be copied by the
+ *  stream or it must remain valid until the stream is destroyed.
+ */
 class XMLPARSER_EXPORT MemBufInputSource : public InputSource
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructors */
+    //@{
     MemBufInputSource
     (
         const   XMLByte* const  srcDocBytes
@@ -100,8 +135,12 @@ public :
         , const char* const     bufId
         , const bool            adoptBuffer = false
     );
+    //@}
 
+    /** @name Destructor */
+    //@{
     ~MemBufInputSource();
+    //@}
 
 
     // -----------------------------------------------------------------------

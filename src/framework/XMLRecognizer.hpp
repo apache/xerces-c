@@ -56,6 +56,9 @@
 
 /**
  *  $Log$
+ *  Revision 1.5  2000/02/15 01:21:31  roddey
+ *  Some initial documentation improvements. More to come...
+ *
  *  Revision 1.4  2000/02/06 07:47:48  rahulj
  *  Year 2K copyright swat.
  *
@@ -77,14 +80,14 @@
 #if !defined(XMLRECOGNIZER_HPP)
 #define XMLRECOGNIZER_HPP
 
-//
-//  This class provides some simple code to recognize the encodings of
-//  XML files. This recognition only does very basic sensing of the encoding
-//  in a broad sense. Basically its just enough to let us get started and
-//  read the XMLDecl line. The scanner, once it reads the XMLDecl, will
-//  tell the reader any actual encoding string it found and the reader can
-//  update itself to be more specific at that point.
-//
+/**
+ *  This class provides some simple code to recognize the encodings of
+ *  XML files. This recognition only does very basic sensing of the encoding
+ *  in a broad sense. Basically its just enough to let us get started and
+ *  read the XMLDecl line. The scanner, once it reads the XMLDecl, will
+ *  tell the reader any actual encoding string it found and the reader can
+ *  update itself to be more specific at that point.
+ */
 class XMLPARSER_EXPORT XMLRecognizer
 {
 public :

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:31  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:49  rahulj
  * Year 2K copyright swat.
  *
@@ -72,30 +75,41 @@
 #define XMLIDREFINFO_HPP
 
 
-//
-//  This class provides a simples means to track ID Ref usage. Since id/idref
-//  semamatics are part of XML 1.0, any validator will likely to be able to
-//  track them. Instances of this class represent a reference and two markers,
-//  one for its being declared and another for its being used. When the
-//  document is done, one can look at each instance and, if used but not
-//  declared, its an error.
-//
-//  The getKey() method allows it to support keyed collection semantics. It
-//  returns the QName of the referenced name.
-//
+/**
+ *  This class provides a simple means to track ID Ref usage. Since id/idref
+ *  semamatics are part of XML 1.0, any validator will likely to be able to
+ *  track them. Instances of this class represent a reference and two markers,
+ *  one for its being declared and another for its being used. When the
+ *  document is done, one can look at each instance and, if used but not
+ *  declared, its an error.
+ *
+ *  The getKey() method allows it to support keyed collection semantics. It
+ *  returns the referenced name, so these objects will be stored via the hash
+ *  of the name. This name will either be a standard QName if namespaces are
+ *  not enabled/supported by the validator, or it will be in the form
+ *  {url}name if namespace processing is enabled.
+ */
 class XMLPARSER_EXPORT XMLRefInfo
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructor */
+    //@{
     XMLRefInfo
     (
         const   XMLCh* const    refName
         , const bool            fDeclared = false
         , const bool            fUsed = false
     );
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~XMLRefInfo();
+    //@}
 
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -80,14 +83,33 @@
 
 class BinInputStream;
 
+
+/**
+ *  This class is a derivative of the standard InputSource class. It provides
+ *  for the parser access to data via the standard input. This input source
+ *  is not commonly used, but can be useful when implementing such things
+ *  as pipe based tools which exchange XML data.
+ *
+ *  As with all InputSource derivatives. The primary objective of an input
+ *  source is to create an input stream via which the parser can spool in
+ *  data from the referenced source.
+ */
 class XMLPARSER_EXPORT StdInInputSource : public InputSource
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructor */
+    //@{
     StdInInputSource();
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~StdInInputSource();
+    //@}
 
 
     // -----------------------------------------------------------------------

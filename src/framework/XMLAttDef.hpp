@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -74,16 +77,18 @@
 
 class XMLAttr;
 
-//
-//  This class defines the basic characteristics of an attribute, no matter
-//  what type of validator is used. If a particular schema associates more
-//  information with an attribute it will create a derivative of this class.
-//  So this class provides an abstract way to get basic information on
-//  attributes from any type of validator.
-//
-//  This class supports keyed collection semantics on the fully qualified
-//  attribute name, by providing a getKey() method to extract the key string.
-//
+/**
+ *  This class defines the basic characteristics of an attribute, no matter
+ *  what type of validator is used. If a particular schema associates more
+ *  information with an attribute it will create a derivative of this class.
+ *  So this class provides an abstract way to get basic information on
+ *  attributes from any type of validator.
+ *
+ *  This class supports keyed collection semantics on the fully qualified
+ *  attribute name, by providing a getKey() method to extract the key string.
+ *  getKey(), in this case, just calls the virtual method getFullName() to
+ *  get the fully qualified name, as defined by the derived class.
+ */
 class XMLPARSER_EXPORT XMLAttDef
 {
 public:
@@ -147,7 +152,11 @@ public:
     // -----------------------------------------------------------------------
     //  Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Destructor */
+    //@{
     virtual ~XMLAttDef();
+    //@}
 
 
     // -----------------------------------------------------------------------

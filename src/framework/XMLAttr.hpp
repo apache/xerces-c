@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:47  rahulj
  * Year 2K copyright swat.
  *
@@ -74,29 +77,64 @@
 #include <framework/XMLAttDef.hpp>
 
 
-//
-//  This class defines the information about an attribute that will come out
-//  of the scanner during parsing. This information does not depend upon the
-//  type of validator because it is not tied to any scheme/DTD type info. Its
-//  just the raw XML 1.0 information that will be reported about an attribute
-//  in the startElement() callback method of the XMLDocumentHandler class.
-//  Hence it is not intended to be extended or derived from. Its designed to
-//  be used as is.
-//
-//  The 'specified' field of this class indicates whether the attribute was
-//  actually present or whether it was faulted in because it had a fixed or
-//  default value.
-//
-//  The code receiving this information can ask its validator for more info
-//  about the attribute, i.e. get its declaration from the DTD/Schema info.
-//
+/**
+ *  This class defines the information about an attribute that will come out
+ *  of the scanner during parsing. This information does not depend upon the
+ *  type of validator because it is not tied to any scheme/DTD type info. Its
+ *  just the raw XML 1.0 information that will be reported about an attribute
+ *  in the startElement() callback method of the XMLDocumentHandler class.
+ *  Hence it is not intended to be extended or derived from. Its designed to
+ *  be used as is.
+ *
+ *  The 'specified' field of this class indicates whether the attribute was
+ *  actually present or whether it was faulted in because it had a fixed or
+ *  default value.
+ *
+ *  The code receiving this information can ask its validator for more info
+ *  about the attribute, i.e. get its declaration from the DTD/Schema info.
+ */
 class XMLPARSER_EXPORT XMLAttr
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+    /** @name Constructors */
+    //@{
+
+    /**
+      * The default constructor just setsup an empty attribute to be filled
+      * in the later. Though the initial state is a reasonable one, it is
+      * not documented because it should not be depended on.
+      */
     XMLAttr();
+
+    /**
+      * This is the primary constructor which takes all of the information
+      * required to construct a complete attribute object.
+      *
+      * @param  uriId       The id into the validator's URI pool of the URI
+      *                     that the prefix mapped to. Only used if namespaces
+      *                     are enabled/supported.
+      *
+      * @param  attrName    The base name of the attribute, i.e. the part
+      *                     after any prefix.
+      *
+      * @param  attrPrefix  The prefix, if any, of this attribute's name. If
+      *                     this is empty, then uriID is meaningless as well.
+      *
+      * @param  attrValue   The value string of the attribute, which should
+      *                     be fully normalized by XML rules!
+      *
+      * @param  type        The type of the attribute. This will indicate
+      *                     the type of normalization done and constrains
+      *                     the value content. Make sure that the value
+      *                     set meets the constraints!
+      *
+      * @param  specified   Indicates whether the attribute was explicitly
+      *                     specified or not. If not, then it was faulted
+      *                     in from a FIXED or DEFAULT value.
+      */
     XMLAttr
     (
         const   unsigned int        uriId
@@ -106,24 +144,102 @@ public:
         , const XMLAttDef::AttTypes type = XMLAttDef::CData
         , const bool                specified = true
     );
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~XMLAttr();
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+
+    /** @name Getter methods */
+    //@{
+
+    /**
+      * This method gets a const pointer tot he name of the attribute. The
+      * form of this name is defined by the validator in use.
+      */
     const XMLCh* getName() const;
+
+    /**
+      * This method will get a const pointer to the prefix string of this
+      * attribute. Since prefixes are optional, it may be zero.
+      */
     const XMLCh* getPrefix() const;
+
+    /**
+      * This method will get the QName of this attribute, which will be the
+      * prefix if any, then a colon, then the base name. If there was no
+      * prefix, its the same as the getName() method.
+      */
     const XMLCh* getQName() const;
+
+    /**
+      * This method will get the specified flag, which indicates whether
+      * the attribute was explicitly specified or just faulted in.
+      */
     bool getSpecified() const;
+
+    /**
+      * This method will get the type of the attribute. The available types
+      * are defined by the XML specification.
+      */
     XMLAttDef::AttTypes getType() const;
+
+    /**
+      * This method will get the value of the attribute. The value can be
+      * be an empty string, but never null if the object is correctly
+      * set up.
+      */
     const XMLCh* getValue() const;
+
+    /**
+      * This method will get the id of the URI that this attribute's prefix
+      * mapped to. If namespaces are not on, then its value is meaningless.
+      */
     unsigned int getURIId() const;
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+
+    /** @name Setter methods */
+    //@{
+
+    /**
+      * This method is called to set up a default constructed object after
+      * the fact, or to reuse a previously used object.
+      *
+      * @param  uriId       The id into the validator's URI pool of the URI
+      *                     that the prefix mapped to. Only used if namespaces
+      *                     are enabled/supported.
+      *
+      * @param  attrName    The base name of the attribute, i.e. the part
+      *                     after any prefix.
+      *
+      * @param  attrPrefix  The prefix, if any, of this attribute's name. If
+      *                     this is empty, then uriID is meaningless as well.
+      *
+      * @param  attrValue   The value string of the attribute, which should
+      *                     be fully normalized by XML rules according to the
+      *                     attribute type.
+      *
+      * @param  type        The type of the attribute. This will indicate
+      *                     the type of normalization done and constrains
+      *                     the value content. Make sure that the value
+      *                     set meets the constraints!
+      *
+      * @param  specified   Indicates whether the attribute was explicitly
+      *                     specified or not. If not, then it was faulted
+      *                     in from a FIXED or DEFAULT value.
+      */
     void set
     (
         const   unsigned int        uriId
@@ -132,16 +248,65 @@ public:
         , const XMLCh* const        attrValue
         , const XMLAttDef::AttTypes type = XMLAttDef::CData
     );
+
+    /**
+      * This method will update just the name related fields of the
+      * attribute object. The other fields are left as is.
+      *
+      * @param  uriId       The id into the validator's URI pool of the URI
+      *                     that the prefix mapped to. Only used if namespaces
+      *                     are enabled/supported.
+      *
+      * @param  attrName    The base name of the attribute, i.e. the part
+      *                     after any prefix.
+      *
+      * @param  attrPrefix  The prefix, if any, of this attribute's name. If
+      *                     this is empty, then uriID is meaningless as well.
+      */
     void setName
     (
         const   unsigned int        uriId
         , const XMLCh* const        attrName
         , const XMLCh* const        attrPrefix
     );
+
+    /**
+      * This method will update the specified state of the object.
+      *
+      * @param  specified   Indicates whether the attribute was explicitly
+      *                     specified or not. If not, then it was faulted
+      *                     in from a FIXED or DEFAULT value.
+      */
     void setSpecified(const bool newValue);
-    void setType(const XMLAttDef::AttTypes newValue);
-    void setURIId(const unsigned int uriId);
+
+    /**
+      * This method will update the attribute type of the object.
+      *
+      * @param  newType     The type of the attribute. This will indicate
+      *                     the type of normalization done and constrains
+      *                     the value content. Make sure that the value
+      *                     set meets the constraints!
+      */
+    void setType(const XMLAttDef::AttTypes newType);
+
+    /**
+      * This method will update the value field of the attribute.
+      *
+      * @param  attrValue   The value string of the attribute, which should
+      *                     be fully normalized by XML rules according to the
+      *                     attribute type.
+      */
     void setValue(const XMLCh* const newValue);
+
+    /**
+      * This method will set the URI id field of this attribute. This is
+      * generally only ever called internally by the parser itself during
+      * the parsing process.
+      */
+    void setURIId(const unsigned int uriId);
+
+    //@}
+
 
 
 private :

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:48  rahulj
  * Year 2K copyright swat.
  *
@@ -74,24 +77,27 @@
 #include <util/XML4CDefs.hpp>
 #include <util/RefVectorOf.hpp>
 
-//
-//  This class defines the abstract interface for all content models. All
-//  elements have a content model against which (if validating) its content
-//  is checked. Each type of validator (DTD, Schema, etc...) can have 
-//  different types of content models, and even with each type of validator
-//  there can be specialized content models. So this simple class provides
-//  the abstract API via which all the types of contents models are dealt
-//  with generically. Its pretty simple.
-//
+/**
+ *  This class defines the abstract interface for all content models. All
+ *  elements have a content model against which (if validating) its content
+ *  is checked. Each type of validator (DTD, Schema, etc...) can have 
+ *  different types of content models, and even with each type of validator
+ *  there can be specialized content models. So this simple class provides
+ *  the abstract API via which all the types of contents models are dealt
+ *  with generically. Its pretty simple.
+ */
 class XMLPARSER_EXPORT XMLContentModel
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors are hidden, only the virtual Destructor is exposed
     // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
     virtual ~XMLContentModel()
     {
     }
+    //@}
 
 
     // -----------------------------------------------------------------------

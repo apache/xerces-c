@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -82,12 +85,31 @@
 
 class BinInputStream;
 
+/**
+ *  This class is a derivative of the standard InputSource class. It provides
+ *  for the parser access to data which is referenced via a local file path,
+ *  as apposed to remote file or URL. This is the most efficacious mechanism
+ *  by which local files can be parsed, since the parse knows that it refers
+ *  to a local file and will make no other attempts to interpret the passed
+ *  path.
+ *
+ *  The path provided can either be a fully qualified path or a relative path.
+ *  If relative, it will be completed either relative to a passed base path
+ *  or relative to the current working directory of the process.
+ *
+ *  As with all InputSource derivatives. The primary objective of an input
+ *  source is to create an input stream via which the parser can spool in
+ *  data from the referenced source.
+ */
 class XMLPARSER_EXPORT LocalFileInputSource : public InputSource
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructors */
+    //@{
     LocalFileInputSource
     (
         const   XMLCh* const    basePath
@@ -98,8 +120,12 @@ public :
     (
         const   XMLCh* const    filePath
     );
+    //@}
 
+    /** @name Destructor */
+    //@{
     ~LocalFileInputSource();
+    //@}
 
 
     // -----------------------------------------------------------------------

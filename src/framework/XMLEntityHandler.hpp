@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.4  2000/02/15 01:21:31  roddey
+  * Some initial documentation improvements. More to come...
+  *
   * Revision 1.3  2000/02/06 07:47:48  rahulj
   * Year 2K copyright swat.
   *
@@ -81,20 +84,29 @@ class InputSource;
 class XMLBuffer;
 
 
-//
-//  This abstract class is a callback mechanism for the scanner. By creating
-//  a derivative of this class and plugging into the scanner, the scanner
-//  will call back on the object's methods to entity events.
-//
+/**
+ *  This abstract class is a callback mechanism for the scanner. By creating
+ *  a derivative of this class and plugging into the scanner, the scanner
+ *  will call back on the object's methods to entity events.
+ *
+ *  This class is primarily for use by those writing their own parser classes.
+ *  If you use the standard parser classes, DOMParser and SAXParser, you won't
+ *  use this API. You will instead use a similar mechanism defined by the SAX
+ *  API, called EntityResolver.
+ */
 class XMLPARSER_EXPORT XMLEntityHandler
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors are hidden, only the virtual destructor is exposed
     // -----------------------------------------------------------------------
+
+    /** @name Destructor */
+    //@{
     virtual ~XMLEntityHandler()
     {
     }
+    //@}
 
 
     // -----------------------------------------------------------------------
@@ -130,7 +142,8 @@ public:
 
     /**
       * This method allows the entity handler to reset itself, so that
-      * it can be used again.
+      * it can be used again. It is called prior to a new document parse
+      * operation.
       */
     virtual void resetEntities() = 0;
 

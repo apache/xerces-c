@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:31  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:48  rahulj
  * Year 2K copyright swat.
  *
@@ -73,18 +76,24 @@
 #include <util/XML4CDefs.hpp>
 #include <util/XMLString.hpp>
 
-//
-//  This class represents the core information about a notation declaration
-//  that all validators must at least support. Each validator will create a
-//  derivative of this class which adds any information it requires for its
-//  own extra needs.
-//
+/**
+ *  This class represents the core information about a notation declaration
+ *  that all validators must at least support. Each validator will create a
+ *  derivative of this class which adds any information it requires for its
+ *  own extra needs.
+ *
+ *  At this common level, the information supported is the notation name
+ *  and the public and sysetm ids indicated in the notation declaration.
+ */
 class XMLPARSER_EXPORT XMLNotationDecl
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructors */
+    //@{
     XMLNotationDecl();
     XMLNotationDecl
     (
@@ -92,7 +101,12 @@ public:
         , const XMLCh* const    pubId
         , const XMLCh* const    sysId
     );
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~XMLNotationDecl();
+    //@}
 
 
     // -----------------------------------------------------------------------

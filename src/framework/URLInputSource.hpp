@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.4  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -88,13 +91,28 @@
 #include <util/XMLURL.hpp>
 #include <sax/InputSource.hpp>
 
+class BinInputStream;
 
+/**
+ *  This class is a derivative of the standard InputSource class. It provides
+ *  for the parser access to data which is referenced via a URL, as apposed to
+ *  a local file name. The URL can be provided via an XMLURL class, as a fully
+ *  qualified system id, or a base system id and a system id which may be
+ *  fully qualified or may be relative to the base.
+ *
+ *  As with all InputSource derivatives. The primary objective of an input
+ *  source is to create an input stream via which the parser can spool in
+ *  data from the referenced source.
+ */
 class XMLPARSER_EXPORT URLInputSource : public InputSource
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructors */
+    //@{
     URLInputSource(const XMLURL& urlId);
     URLInputSource
     (
@@ -118,7 +136,12 @@ public :
         , const char* const     systemId
         , const char* const     publicId
     );
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~URLInputSource();
+    //@}
 
 
     // -----------------------------------------------------------------------

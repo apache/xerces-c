@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -75,29 +78,33 @@
 #include <framework/XMLAttDef.hpp>
 
 
-//
-//  This class defines an abstract interface that all validators must support.
-//  When the scanner scans the attributes in a start tag, it must have a list
-//  of the defined attributes for that element. This is used to fault in
-//  defaulted and fixed attributes, know which ones are required, and know
-//  the their types in order to do the correct normalization.
-//
-//  Since each validator will have its own derivatives of XMLAttDef and will
-//  have its own specialized storage mechanisms for elements and the att
-//  defs that they own, there must be an abstracted way for the scanner to
-//  deal with this list.
-//
-//  It does not derive from the generic Enumerator template class, because
-//  there are portability issues with deriving from a template class in a
-//  DLL. It does though provide a similar enumerator interface.
-//
+/**
+ *  This class defines an abstract interface that all validators must support.
+ *  When the scanner scans the attributes in a start tag, it must have a list
+ *  of the defined attributes for that element. This is used to fault in
+ *  defaulted and fixed attributes, to know which ones are required, and to
+ *  know the their types in order to do the correct normalization.
+ *
+ *  Since each validator will have its own derivatives of XMLAttDef and will
+ *  have its own specialized storage mechanisms for elements and the att
+ *  defs that they own, there must be an abstracted way for the scanner to
+ *  deal with this list.
+ *
+ *  It does not derive from the generic Enumerator template class, because
+ *  there are portability issues with deriving from a template class in a
+ *  DLL. It does though provide a similar enumerator interface.
+ */
 class XMLPARSER_EXPORT XMLAttDefList
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Destructor */
+    //@{
     virtual ~XMLAttDefList();
+    //@}
 
 
     // -----------------------------------------------------------------------

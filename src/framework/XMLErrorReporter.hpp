@@ -56,6 +56,9 @@
 
  /**
   * $Log$
+  * Revision 1.3  2000/02/15 01:21:31  roddey
+  * Some initial documentation improvements. More to come...
+  *
   * Revision 1.2  2000/02/06 07:47:48  rahulj
   * Year 2K copyright swat.
   *
@@ -75,12 +78,17 @@
 #include <util/XMLMsgLoader.hpp>
 
 
-//
-//  This abstract class defines a callback mechanism for the scanner. By
-//  creating a derivate of this class and plugging an instance of that class
-//  into the scanner, the scanner will call back on the object's methods
-//  to report error events.
-//
+/**
+ *  This abstract class defines a callback mechanism for the scanner. By
+ *  creating a derivate of this class and plugging an instance of that class
+ *  into the scanner, the scanner will call back on the object's methods
+ *  to report error events.
+ *
+ *  This class is primarily for use by those writing their own parser classes.
+ *  If you use the standard parser classes, DOMParser and SAXParser, you won't
+ *  use this API. You will instead use a similar mechanism defined by the SAX
+ *  API, called ErrorHandler.
+ */
 class XMLPARSER_EXPORT XMLErrorReporter
 {
 public:
@@ -100,9 +108,13 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors are hidden, only the virtual destructor is exposed
     // -----------------------------------------------------------------------
+
+    /** @name Destructor */
+    //@{
     virtual ~XMLErrorReporter()
     {
     }
+    //@}
 
 
     // -----------------------------------------------------------------------

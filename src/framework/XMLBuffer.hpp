@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:47  rahulj
  * Year 2K copyright swat.
  *
@@ -73,17 +76,25 @@
 
 #include <util/XML4CDefs.hpp>
 
-//
-//  XMLBuffer is a lightweight, expandable Unicode text buffer. Since XML is
-//  inherently theoretically unbounded in terms of the sizes of things, we
-//  very often need to have expandable buffers.
-//
+/**
+ *  XMLBuffer is a lightweight, expandable Unicode text buffer. Since XML is
+ *  inherently theoretically unbounded in terms of the sizes of things, we
+ *  very often need to have expandable buffers. The primary concern here is
+ *  that appends of characters and other buffers or strings be very fast, so
+ *  it always maintains the current buffer size.
+ *
+ *  The buffer is not nul terminated until some asks to see the raw buffer
+ *  contents. This also avoids overhead during append operations.
+ */
 class XMLPARSER_EXPORT XMLBuffer
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructor */
+    //@{
     XMLBuffer() :
 
         fBuffer(0)
@@ -97,12 +108,15 @@ public :
         // Keep it null terminated
         fBuffer[0] = XMLCh(0);
     }
+    //@}
 
+    /** @name Destructor */
+    //@{
     ~XMLBuffer()
     {
         delete [] fBuffer;
     }
-
+    //@}
 
     // -----------------------------------------------------------------------
     //  Buffer Management

@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.3  2000/02/15 01:21:31  roddey
+  * Some initial documentation improvements. More to come...
+  *
   * Revision 1.2  2000/02/06 07:47:49  rahulj
   * Year 2K copyright swat.
   *
@@ -90,22 +93,21 @@ class XMLMsgLoader;
 class XMLScanner;
 
 
-//
-//  This abstract class provides the interface for all validators. This is
-//  the simple amount of API that all validators must honor, in order for
-//  the scanner to use them to do validation. All validators will actually
-//  contain much more functionality than is accessible via this common API,
-//  but that functionality requires that you know what type of validator you
-//  are dealing with.
-//
-//  Basically, at this level, the primary concern is to be able to query
-//  core information about elements and attributes. Adding decls to the
-//  validator requires that you go through the derived interface because they
-//  all have their own decl types. At this level, we can return information
-//  via the base decl classes, from which each validator derives its own
-//  decl classes.
-//
-
+/**
+ *  This abstract class provides the interface for all validators. This is
+ *  the simple amount of API that all validators must honor, in order for
+ *  the scanner to use them to do validation. All validators will actually
+ *  contain much more functionality than is accessible via this common API,
+ *  but that functionality requires that you know what type of validator you
+ *  are dealing with.
+ *
+ *  Basically, at this level, the primary concern is to be able to query
+ *  core information about elements and attributes. Adding decls to the
+ *  validator requires that you go through the derived interface because they
+ *  all have their own decl types. At this level, we can return information
+ *  via the base decl classes, from which each validator derives its own
+ *  decl classes.
+ */
 class XMLPARSER_EXPORT XMLValidator
 {
 public:
@@ -130,9 +132,13 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors are hidden, just the virtual destructor is exposed
     // -----------------------------------------------------------------------
+
+    /** @name Destructor */
+    //@{
     virtual ~XMLValidator()
     {
     }
+    //@}
 
 
     // -----------------------------------------------------------------------

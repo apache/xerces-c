@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:31  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:48  rahulj
  * Year 2K copyright swat.
  *
@@ -73,21 +76,32 @@
 
 class XMLScanner;
 
-//
-//  This simple class is used as a sanity check when the scanner is used to
-//  do progressive parsing. It insures that things are not done out of
-//  sequence and that sequences of scan calls are made correctly to the
-//  right scanner instances.
-//
+/**
+ *  This simple class is used as a sanity check when the scanner is used to
+ *  do progressive parsing. It insures that things are not done out of
+ *  sequence and that sequences of scan calls are made correctly to the
+ *  right scanner instances.
+ *
+ *  To client code, it is just a magic cookie which is obtained when a
+ *  progressive parse is begun, and which is passed back in on each subsequent
+ *  call of the progressive parse.
+ */
 class XMLPARSER_EXPORT XMLPScanToken
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+    /** @name Constructor */
+    //@{
     XMLPScanToken();
     XMLPScanToken(const XMLPScanToken& toCopy);
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~XMLPScanToken();
+    //@}
 
 
     // -----------------------------------------------------------------------
@@ -179,6 +193,5 @@ inline void XMLPScanToken::set( const   XMLUInt32   scannerId
     fScannerId = scannerId;
     fSequenceId = sequenceId;
 }
-
 
 #endif

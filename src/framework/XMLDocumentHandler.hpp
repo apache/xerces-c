@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.4  2000/02/15 01:21:30  roddey
+  * Some initial documentation improvements. More to come...
+  *
   * Revision 1.3  2000/02/09 19:47:27  abagchi
   * Added docs for startElement
   *
@@ -82,7 +85,6 @@ class XMLElementDecl;
 class XMLEntityDecl;
 
 /**
-  *
   * This abstract class provides the interface for the scanner to return
   * XML document information up to the parser as it scans through the
   * document. The interface is very similar to org.sax.DocumentHandler, but
@@ -93,7 +95,6 @@ class XMLEntityDecl;
   * scanner. This scheme is used to avoid overhead when these more advanced
   * events are not needed, such as in a SAX parser.</p>
   */
-
 class XMLPARSER_EXPORT XMLDocumentHandler
 {
 public:

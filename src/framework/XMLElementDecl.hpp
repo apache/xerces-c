@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:48  rahulj
  * Year 2K copyright swat.
  *
@@ -77,28 +80,28 @@
 
 class XMLValidator;
 
-//
-//  This class defines the core information of an element declaration. Each
-//  validator (DTD, Schema, etc...) will have its own information that it
-//  associations with the declaration of an element, but they must all share
-//  at least this core information, i.e. they must all derive from this
-//  class. The set of info enforced at this level is driven by the needs of
-//  XML 1.0 spec validation and well formedness checks.
-//
-//  This class supports keyed collection semantics by providing the getKey()
-//  method, which extracts the key field. getKey() just calls getFullName()
-//  which is virtual so that each type of validator can have its own version
-//  of what a full name is. For the DTD validator, its element decl
-//  derivatives will return QNames in form pre:name. A Schema validator
-//  would return expanded names in the form {uri}name.
-//
-//  This class defines some special element id values for invalid elements
-//  and PCDATA elements, as well as a string for the special PCDATA element
-//  name. All validators must honor these special values in order to allow
-//  content models to work generically (i.e. to let code know when its dealing
-//  with invalid or PCDATA element ids without having to know what type of
-//  validator its messing with.)
-//
+/**
+ *  This class defines the core information of an element declaration. Each
+ *  validator (DTD, Schema, etc...) will have its own information that it
+ *  associations with the declaration of an element, but they must all share
+ *  at least this core information, i.e. they must all derive from this
+ *  class. The set of info enforced at this level is driven by the needs of
+ *  XML 1.0 spec validation and well formedness checks.
+ *
+ *  This class supports keyed collection semantics by providing the getKey()
+ *  method, which extracts the key field. getKey() just calls getFullName()
+ *  which is virtual so that each type of validator can have its own version
+ *  of what a full name is. For the DTD validator, its element decl
+ *  derivatives will return QNames in form pre:name. A Schema validator
+ *  would return expanded names in the form {uri}name.
+ *
+ *  This class defines some special element id values for invalid elements
+ *  and PCDATA elements, as well as a string for the special PCDATA element
+ *  name. All validators must honor these special values in order to allow
+ *  content models to work generically (i.e. to let code know when its dealing
+ *  with invalid or PCDATA element ids without having to know what type of
+ *  validator its messing with.)
+ */
 class XMLPARSER_EXPORT XMLElementDecl
 {
  public:
@@ -163,7 +166,10 @@ class XMLPARSER_EXPORT XMLElementDecl
     // -----------------------------------------------------------------------
     //  Destructor
     // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
     virtual ~XMLElementDecl();
+    //@}
 
 
     // -----------------------------------------------------------------------

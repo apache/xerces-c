@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 01:21:30  roddey
+ * Some initial documentation improvements. More to come...
+ *
  * Revision 1.2  2000/02/06 07:47:47  rahulj
  * Year 2K copyright swat.
  *
@@ -76,23 +79,30 @@
 
 class XMLBufBid;
 
-
-//
-//  There are many places where XMLBuffer objects are needed. In order to
-//  avoid either constantly creating and destroying them or maintaining a
-//  fixed set and worry about accidental reuse, a buffer manager can provide
-//  a pool of them which can be temporarily used and then put back into the
-//  pool. This provides a good compromise between performance and easier
-//  maintenance.
-//
+/**
+ *  There are many places where XMLBuffer objects are needed. In order to
+ *  avoid either constantly creating and destroying them or maintaining a
+ *  fixed set and worrying about accidental reuse, a buffer manager can
+ *  provide a pool of buffers which can be temporarily used and then put
+ *  back into the pool. This provides a good compromise between performance
+ *  and easier maintenance.
+ */
 class XMLPARSER_EXPORT XMLBufferMgr
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructor */
+    //@{
     XMLBufferMgr();
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~XMLBufferMgr();
+    //@}
 
 
     // -----------------------------------------------------------------------
@@ -118,11 +128,11 @@ private :
 };
 
 
-//
-//  XMLBufBid is a scoped based janitor that allows the scanner code to ask
-//  for a buffer on a scoped basis and then insure that it gets freed back
-//  into the pool no matter how the scope is exited (exception or normal exit.)
-//
+/**
+ *  XMLBufBid is a scoped based janitor that allows the scanner code to ask
+ *  for a buffer on a scoped basis and then insure that it gets freed back
+ *  into the pool no matter how the scope is exited (exception or normal exit.)
+ */
 class XMLBufBid
 {
 public :
