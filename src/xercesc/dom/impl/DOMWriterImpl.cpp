@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.40  2003/08/12 12:46:57  gareth
+ * Added serialization for attribute nodes. Patch by Caroline Rioux.
+ *
  * Revision 1.39  2003/05/18 14:02:03  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -1131,7 +1134,35 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
             break;
         }
+    case DOMNode::ATTRIBUTE_NODE:
+        {
+            if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
+                break;
 
+            const XMLCh* localName = nodeToWrite->getLocalName();
+
+            // check if this is a DOM Level 1 Node
+            if(localName == 0) {
+                *fFormatter  << XMLFormatter::NoEscapes
+                             << nodeToWrite->getNodeName()
+                             << chEqual << chDoubleQuote
+                             << XMLFormatter::AttrEscapes
+                             << nodeToWrite->getNodeValue()
+                             << XMLFormatter::NoEscapes
+                             << chDoubleQuote;
+            } else {
+                *fFormatter  << XMLFormatter::NoEscapes
+                             << chOpenCurly << nodeToWrite->getNamespaceURI() 
+                             << chCloseCurly << localName
+                             << chEqual << chDoubleQuote
+                             << XMLFormatter::AttrEscapes
+                             << nodeToWrite->getNodeValue()
+                             << XMLFormatter::NoEscapes
+                             << chDoubleQuote;
+            }
+
+            break;
+        }
     case DOMNode::ENTITY_REFERENCE_NODE:
         {
             //"entities"
