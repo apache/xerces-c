@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/07/21 14:54:04  peiyongz
+ * using the supplied memory manager
+ *
  * Revision 1.17  2004/03/03 23:03:28  peiyongz
  * Using serialize() to save/load object created in ctor
  *
@@ -301,7 +304,7 @@ void DTDGrammar::resetEntityDeclPool() {
             // If we got here first, then register it and set the registered flag
             if (!sEntityPoolMutexRegistered)
             {
-                fDefaultEntities = new NameIdPool<DTDEntityDecl>(11, 12);
+                fDefaultEntities = new (fMemoryManager) NameIdPool<DTDEntityDecl>(11, 12);
 
                 //
                 // Add the default entity entries for the character refs that must
@@ -313,11 +316,11 @@ void DTDGrammar::resetEntityDeclPool() {
                 // to be used in places whether other non-numeric general entities
                 // cannot.
                 //
-                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
-                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
-                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
-                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
-                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
+                fDefaultEntities->put(new (fMemoryManager) DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
+                fDefaultEntities->put(new (fMemoryManager) DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
+                fDefaultEntities->put(new (fMemoryManager) DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
+                fDefaultEntities->put(new (fMemoryManager) DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
+                fDefaultEntities->put(new (fMemoryManager) DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
 
                 // register cleanup method
                 entityPoolRegistryCleanup.registerCleanup(DTDGrammar::reinitDfltEntities);
