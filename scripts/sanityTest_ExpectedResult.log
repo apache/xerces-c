@@ -780,7 +780,7 @@ Attributes:
 	Base Datatype:		Decimal
 Facets:		
 	fractionDigits=0
-
+	pattern=[+-]?[0-9]+
 	Name:			id
 	Type:			ID
 	Default Type:	#REQUIRED
