@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/11 14:08:01  tng
+ * Fix: UConverter should be declared outside xerces-c++ namespace
+ *
  * Revision 1.3  2002/11/04 15:14:33  tng
  * C++ Namespace Support.
  *
@@ -111,9 +114,9 @@
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/TransService.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
-
 struct UConverter;
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ICUTransService : public XMLTransService
 {
