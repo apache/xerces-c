@@ -158,6 +158,7 @@ clean::
 	cd $(PParse_DIR) && $(MAKE) $@ && cd ..
 	cd $(StdInParse_DIR) && $(MAKE) $@ && cd ..
 	cd $(EnumVal_DIR) && $(MAKE) $@ && cd ..
+	cd $(SEnumVal_DIR) && $(MAKE) $@ && cd ..
 	cd $(CreateDOMDocument_DIR) && $(MAKE) $@ && cd ..
 
 distclean::
@@ -174,6 +175,7 @@ distclean::
 	cd $(PParse_DIR) && $(MAKE) $@ && cd ..
 	cd $(StdInParse_DIR) && $(MAKE) $@ && cd ..
 	cd $(EnumVal_DIR) && $(MAKE) $@ && cd ..
+	cd $(SEnumVal_DIR) && $(MAKE) $@ && cd ..
 	cd $(CreateDOMDocument_DIR) && $(MAKE) $@ && cd ..
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
