@@ -147,9 +147,6 @@
 //      The encoding we are to output in. If not set on the command line,
 //      then it is defaults to the encoding of the input XML file.
 //
-//  gMyEOLSequence
-//      The end of line sequence we are to output.
-//
 //  gSplitCdataSections
 //      Indicates whether split-cdata-sections is to be enabled or not.
 //
@@ -173,7 +170,6 @@ static bool                     gDoCreate              = false;
 static char*                    goutputfile            = 0;
 // options for DOMWriter's features
 static const XMLCh*             gOutputEncoding        = 0;
-static const XMLCh*             gMyEOLSequence         = 0;
 
 static bool                     gSplitCdataSections    = true;
 static bool                     gDiscardDefaultContent = true;
@@ -203,7 +199,6 @@ void usage()
             "    -wenc=XXX   Use a particular encoding for output. Default is\n"
             "                the same encoding as the input XML file. UTF-8 if\n"
             "                input XML file has not XML declaration.\n"
-            "    -weol=xxx   Set the end of line sequence. Default set by DOMWriter\n"
             "    -wfile=xxx  Write to a file instead of stdout.\n"
             "    -wscs=xxx   Enable/Disable split-cdata-sections.      Default on\n"
             "    -wddc=xxx   Enable/Disable discard-default-content.   Default on\n"
@@ -311,11 +306,6 @@ int main(int argC, char* argV[])
         {
              goutputfile =  &(argV[parmInd][7]);
         }
-         else if (!strncmp(argV[parmInd], "-weol=", 6))
-        {
-             // Get out the end of line
-             gMyEOLSequence = XMLString::transcode( &(argV[parmInd][6]) );
-        }			
          else if (!strncmp(argV[parmInd], "-wddc=", 6))
         {
             const char* const parm = &argV[parmInd][6];
@@ -476,8 +466,7 @@ int main(int argC, char* argV[])
             DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
             DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
 
-            // set user specified end of line sequence and output encoding
-            theSerializer->setNewLine(gMyEOLSequence);
+            // set user specified output encoding
             theSerializer->setEncoding(gOutputEncoding);
 
             // plug in user's own filter
@@ -576,7 +565,6 @@ int main(int argC, char* argV[])
     XMLPlatformUtils::Terminate();
 
     delete (void *)gOutputEncoding;        // const problems.
-    delete (void *)gMyEOLSequence;         // const problems.
 
     return retval;
 }
