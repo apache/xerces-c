@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/22 00:01:08  roddey
+ * Simple change to get rid of two hard coded 'x' type characters, which won't
+ * work on EBCDIC systems.
+ *
  * Revision 1.3  1999/12/18 00:20:00  roddey
  * More changes to support the new, completely orthagonal, support for
  * intrinsic encodings.
@@ -483,19 +487,6 @@ private:
 inline bool XMLReader::isBaseChar(const XMLCh toCheck)
 {
     return (fgCharCharsTable[toCheck] & gBaseCharMask) != 0;
-}
-
-inline bool XMLReader::isFirstNameChar(const XMLCh toCheck)
-{
-    static const XMLByte ourMask = gBaseCharMask | gLetterCharMask;
-    if ((fgCharCharsTable[toCheck] & ourMask) != 0)
-        return true;
-
-    // Check the two special case name start chars
-    if ((toCheck == '_') || (toCheck == ':'))
-        return true;
-
-    return false;
 }
 
 inline bool XMLReader::isNameChar(const XMLCh toCheck)

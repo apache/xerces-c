@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/22 00:01:07  roddey
+ * Simple change to get rid of two hard coded 'x' type characters, which won't
+ * work on EBCDIC systems.
+ *
  * Revision 1.4  2000/01/12 23:52:45  roddey
  * These are trivial changes required to get the C++ and Java versions
  * of error messages more into sync. Mostly it was where the Java version
@@ -106,6 +110,20 @@
 // ---------------------------------------------------------------------------
 //  XMLReader: Public, static methods
 // ---------------------------------------------------------------------------
+
+bool XMLReader::isFirstNameChar(const XMLCh toCheck)
+{
+    static const XMLByte ourMask = gBaseCharMask | gLetterCharMask;
+    if ((fgCharCharsTable[toCheck] & ourMask) != 0)
+        return true;
+
+    // Check the two special case name start chars
+    if ((toCheck == chUnderscore) || (toCheck == chColon))
+        return true;
+
+    return false;
+}
+
 
 //
 //  Checks whether all of the chars in the passed buffer are whitespace or
