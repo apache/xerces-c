@@ -7,7 +7,6 @@ $|=1;   # Force a flush after every print
 
 # Set up the environment variables for XERCES-C and ICU
 $XERCESCROOT = $ENV{'XERCESCROOT'};
-$ICUROOT = $ENV{'ICUROOT'};
 
 # Check for the environment variables and exit if error
 if (!length($XERCESCROOT)) {
@@ -26,15 +25,8 @@ if (!length($XERCESCROOT) || !length($OUTPUTDIR)) {
         exit(-1);
 }
 
-# We need ICUROOT only if we intend to use ICU for transcoding or message loading
-# As of Version 3, this is not mandatory any more.
-if (length($ICUROOT) > 0) {
-       print "Using $ICUROOT as the ICU root directory.\n";
-}
-
 #Fix the backslashes on the Windows platform
 $XERCESCROOT =~ s/\\/\//g;
-$ICUROOT =~ s/\\/\//g;
 
 # Read the target version from the file $XERCESCROOT/src/util/XercesDefs.hpp
 $versionfile = "$XERCESCROOT/src/xercesc/util/XercesDefs.hpp";
@@ -86,13 +78,6 @@ sub package_sources {
    system ("mkdir $srctargetdir");
    print ("Targetdir is : " . $srctargetdir . "\n");
    system("cp -Rf $XERCESCROOT/* $srctargetdir");
-
-   # Select APache style or IBM Alphaworks style docs
-   if (length($ICUROOT) > 0) {
-   	change_documentation_entities("$srctargetdir/doc/dtd/entities.ent");
-   	change_doxygen("$srctargetdir/doc/Doxyfile");
-   	change_createdocs_bat("$srctargetdir/createdocs.bat");
-   }
 
    # Now create the API documentation from the XML sources
    chdir ("$srctargetdir/doc");
@@ -272,68 +257,3 @@ sub deleteCVSdirs {
 		}
 	}
 }
-
-sub change_documentation_entities()
-{
-        my ($thefile) = @_;
-        print "\nConverting documentation entities ($thefile) for ICU usage...";
-        my $thefiledotbak = $thefile . ".bak";
-        rename ($thefile, $thefiledotbak);
-
-        open (FIZZLE, $thefiledotbak);
-        open (FIZZLEOUT, ">$thefile");
-        while ($line = <FIZZLE>) {
-                $line =~ s/"Xerces C\+\+ Parser"/"XML for C\+\+ Parser"/g;
-                $line =~ s/"Xerces-C\+\+"/"XML4C"/g;
-                $line =~ s/"2\.0\.0"/"5\.0\.0"/g;
-                $line =~ s/"1\.5\.2"/"3\.5\.2"/g;
-                $line =~ s/"Xerces"/"XML4C"/g;
-                $line =~ s/"xerces-c2_0_0"/"xml4c-5_0_0"/g;
-                $line =~ s/"xerces-c-src2_0_0"/"xml4c-src-5_0_0"/g;
-                $line =~ s/xerces-c-dev\@xml\.apache\.org/xml4c\@us\.ibm\.com/g;
-                $line =~ s/xml\.apache\.org\/dist\/xerces-c/www\.alphaworks\.ibm\.com\/tech\/xml4c/g;
-                print FIZZLEOUT $line;
-        }
-        close (FIZZLEOUT);
-        close (FIZZLE);
-        unlink ($thefiledotbak);
-}
-
-sub change_doxygen()
-{
-        my ($thefile) = @_;
-        print "\nConverting Doxygen ($thefile) for ICU usage...";
-        my $thefiledotbak = $thefile . ".bak";
-        rename ($thefile, $thefiledotbak);
-
-        open (FIZZLE, $thefiledotbak);
-        open (FIZZLEOUT, ">$thefile");
-        while ($line = <FIZZLE>) {
-                $line =~ s/Xerces-C\+\+/XML4C/g;
-                $line =~ s/1\.6\.0/4\.0\.0/g;
-                $line =~ s/header.html/header_ibm.html/g;
-                print FIZZLEOUT $line;
-        }
-        close (FIZZLEOUT);
-        close (FIZZLE);
-        unlink ($thefiledotbak);
-}
-
-sub change_createdocs_bat()
-{
-        my ($thefile) = @_;
-        print "\nConverting createdocs.bat ($thefile) for ICU usage...";
-        my $thefiledotbak = $thefile . ".bak";
-        rename ($thefile, $thefiledotbak);
-
-        open (FIZZLE, $thefiledotbak);
-        open (FIZZLEOUT, ">$thefile");
-        while ($line = <FIZZLE>) {
-                $line =~ s/doc\/style/tools\/jars\/style-ibm.zip/g;
-                print FIZZLEOUT $line;
-        }
-        close (FIZZLEOUT);
-        close (FIZZLE);
-        unlink ($thefiledotbak);
-}
-
