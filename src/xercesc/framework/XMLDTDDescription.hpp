@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/09/29 21:23:02  peiyongz
+ * default implementation provided
+ *
  * Revision 1.4  2004/09/08 13:55:58  peiyongz
  * Apache License Version 2.0
  *
@@ -76,14 +79,14 @@ public :
       *
       */
     virtual const XMLCh*          getRootName() const = 0;
-    virtual const XMLCh*          getSystemId() const = 0;
+    virtual const XMLCh*          getSystemId() const {return 0;};
 
     /**
       * Setter
       *
       */
     virtual void                  setRootName(const XMLCh* const) = 0;
-    virtual void                  setSystemId(const XMLCh* const) = 0;
+    virtual void                  setSystemId(const XMLCh* const) {};
     //@}
     
     /***

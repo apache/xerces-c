@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.42  2004/09/29 21:23:34  peiyongz
+ * default implementation provided
+ *
  * Revision 1.41  2004/09/29 19:00:02  peiyongz
  * [jira1207] --patch from Dan Rosen
  *
@@ -722,7 +725,7 @@ protected:
     virtual void sendCharData(XMLBuffer& toSend) = 0;
 
     //return owned by the caller
-    virtual InputSource* resolveSystemId(const XMLCh* const sysId) = 0;
+    virtual InputSource* resolveSystemId(const XMLCh* const sysId) {return 0;};
 
     // -----------------------------------------------------------------------
     //  Protected scanning methods
