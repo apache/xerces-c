@@ -153,6 +153,14 @@ LINK32=link.exe
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNormalizer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNormalizer.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h
 # End Source File
 # Begin Source File
