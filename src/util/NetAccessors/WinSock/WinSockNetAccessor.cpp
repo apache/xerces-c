@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/03/22 00:21:10  rahulj
+ * Now we throw exceptions when errors occur.
+ * Simplified the code, based on the assumption that
+ * the calling function will make sure that the buffer into
+ * which the data has to be read is large enough.
+ *
  * Revision 1.1  2000/03/17 02:37:54  rahulj
  * First cut at adding HTTP capability via native sockets.
  * Still need to add:
@@ -101,8 +107,8 @@ WinSockNetAccessor::WinSockNetAccessor()
     int err = WSAStartup(wVersionRequested, &wsaData);
     if (err != 0)
     {
-        // Throw could not initialize WinSocket library exception.
-        // call WSAGetLastError() to get the last error.
+        // Call WSAGetLastError() to get the last error.
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
     }
 }
 

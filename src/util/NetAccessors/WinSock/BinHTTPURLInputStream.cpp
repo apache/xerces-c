@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/03/22 00:21:10  rahulj
+ * Now we throw exceptions when errors occur.
+ * Simplified the code, based on the assumption that
+ * the calling function will make sure that the buffer into
+ * which the data has to be read is large enough.
+ *
  * Revision 1.1  2000/03/17 02:37:54  rahulj
  * First cut at adding HTTP capability via native sockets.
  * Still need to add:
@@ -117,10 +123,7 @@ static char* localTranscode(const XMLCh* latinStrInUnicode)
 
 
 BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
-      : fBuffer(0)
-      , fBufferSize(0)
-      , fBufferIndex(0)
-      , fSocketHandle(0)
+      : fSocketHandle(0)
       , fBytesProcessed(0)
 {
     const XMLCh*        uri = urlSource.getURLText();
@@ -139,15 +142,17 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         unsigned long  numAddress = inet_addr(hostNameAsCharStar);
         if (numAddress == INADDR_NONE)
         {
-            // Throw cannot connect exception here.
-            // call WSAGetLastError() to get the error number.
+            // Call WSAGetLastError() to get the error number.
+            ThrowXML(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution);
         }
         if ((hostEntPtr = 
                 gethostbyaddr((const char *) &numAddress, 
                               sizeof(unsigned long), AF_INET)) == NULL)
         {
-            // Throw cannot connect exception here.
-            // call WSAGetLastError() to get the error number.
+            // Call WSAGetLastError() to get the error number.
+            ThrowXML(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution);
         }
     }
 
@@ -159,14 +164,16 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     SOCKET s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
     if (s == INVALID_SOCKET)
     {
-        // Throw could not create socket exception.
-        // call WSAGetLastError() to get the error number.
+        // Call WSAGetLastError() to get the error number.
+        ThrowXML(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket);
     }
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
     {
-        // Throw could not connect the socket exception.
-        // call WSAGetLastError() to get the error number.
+        // Call WSAGetLastError() to get the error number.
+        ThrowXML(NetAccessorException,
+                 XMLExcepts::NetAcc_ConnSocket);
     }
     
     // Now you can simply read and write from/to the socket.
@@ -176,14 +183,12 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     int  aLent = 0;
     if ((aLent = send(s, (const char *) obuf, lent, 0)) != lent)
     {
-        // Throw could not write URL to the socket exception.
-        // call WSAGetLastError() to get the error number.
-        // wrote only 'aLent' bytes.
+        // Call WSAGetLastError() to get the error number.
+        ThrowXML(NetAccessorException,
+                 XMLExcepts::NetAcc_WriteSocket);
     }
 
     fSocketHandle = (unsigned int) s;
-
-    fBuffer = new XMLByte[URLISBUFMAXSIZE];
 
 }
 
@@ -193,107 +198,31 @@ BinHTTPURLInputStream::~BinHTTPURLInputStream()
 {
     shutdown(fSocketHandle, SD_BOTH);
     closesocket(fSocketHandle);
-    delete [] fBuffer;
-    fBuffer = 0;
 }
 
 
-unsigned int BinHTTPURLInputStream::curPos() const
-{
-    return fBytesProcessed;
-}
-
+//
+// Here we will not maintain any local buffer. We will read directly
+// into the buffer that is passed as the parameter. The scanner always
+// requests for more input in chunks of size 32Kbytes.
+//
 
 unsigned int BinHTTPURLInputStream::readBytes(XMLByte* const    toFill
                                     , const unsigned int    maxToRead)
 {
     unsigned int  retval = 0;
-    unsigned int  bytesAsked = maxToRead;
-    unsigned int  bytesForCopy = 0;
 
-    // Wipe out the old stuff from the destination buffer to fill.
+    int lent = recv((SOCKET) fSocketHandle, (char *) toFill, maxToRead, 0);
 
-    memset((void*)toFill, 0x00, sizeof(XMLByte) * maxToRead);
-    
-    if (fBufferSize > 0)
-        bytesForCopy = fBufferSize - fBufferIndex;
-
-    if (bytesAsked <= bytesForCopy)
+    if (lent == SOCKET_ERROR)
     {
-        // ...then you can satisfy this request completely from fBuffer.
-        // Simply copy over the bytes to the destination array.
-        memcpy((void*) toFill, (void*) (fBuffer + fBufferIndex), bytesAsked);
-        fBufferIndex += bytesAsked;
-        if (fBufferIndex >= fBufferSize)
-        {
-            fBufferSize = 0;
-            fBufferIndex = 0;
-        }
-        fBytesProcessed += bytesAsked;
-        retval = bytesAsked;
+        // Call WSAGetLastError() to get the error number.
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
     }
-
     else
     {
-        // ...will need to read some more bytes out of the stream.
-        unsigned int    bufToFillIndex = 0;
-
-        // First copy over what is left in fBuffer, before reading another
-        // chunk out of the stream.
-
-        if (bytesForCopy != 0)
-        {
-            memcpy((void*) toFill, (void*) (fBuffer + fBufferSize), bytesForCopy);
-            fBufferSize = 0;
-            fBufferIndex = 0;
-            fBytesProcessed += bytesForCopy;
-            bufToFillIndex = bytesForCopy;
-            retval = bytesForCopy;
-        }
-
-        unsigned int    bytesRemainingToFill = bytesAsked - bytesForCopy;
-
-        // Now blow away the internal buffer and read next 'chunk' into it
-        // from the stream.
-
-        memset((void*) fBuffer, 0x00, URLISBUFMAXSIZE);
-        int lent = recv((SOCKET) fSocketHandle,
-                        (char *) fBuffer,
-                        URLISBUFMAXSIZE - 1, 0);
-
-        if (lent == SOCKET_ERROR)
-        {
-            // Throw socket error exception.
-            // call WSAGetLastError() to get the error number.
-        }
-        else if (lent == 0)
-        {
-            // No more data is available.
-            fBufferSize = 0;
-            fBufferIndex = 0;
-        }
-        else
-        {
-            fBufferIndex = 0;
-            fBufferSize = lent;
-
-            // Now fill the destination buffer with the new data just read.
-
-            if (bytesRemainingToFill > fBufferSize)
-            {
-                bytesRemainingToFill = fBufferSize;
-            }
-            memcpy((void*) (toFill + bufToFillIndex),
-                   (void*) fBuffer,
-                   bytesRemainingToFill);
-
-            // Update counters.
-            retval += bytesRemainingToFill;
-            fBufferIndex += bytesRemainingToFill;
-            fBytesProcessed += bytesRemainingToFill;
-
-        }
-
+        retval = lent;
+        fBytesProcessed += retval;
     }
 
     return retval;

@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/03/22 00:21:10  rahulj
+ * Now we throw exceptions when errors occur.
+ * Simplified the code, based on the assumption that
+ * the calling function will make sure that the buffer into
+ * which the data has to be read is large enough.
+ *
  * Revision 1.1  2000/03/17 02:37:54  rahulj
  * First cut at adding HTTP capability via native sockets.
  * Still need to add:
@@ -103,30 +109,21 @@ private :
     //      The socket representing the connection to the remote file.
     //      We deliberately did not define the type to be SOCKET, so as to
     //      avoid bringing in any Windows header into this file.
-    //  fBuffer
-    //      This is the array in which the data is stored after reading it
-    //      of the network. The maximum size of this array is decided in the
-    //      constructor via a file specific #define.
-    //  fBufferIndex
-    //      Its the index into fBuffer and points to the next unprocessed
-    //      character. When the parser asks for more data to be read of the
-    //      stream, then fBuffer[fBufferIndex] is the first byte returned,
-    //      unless fBufferIndex equals fBufferSize indicating that all
-    //      data in the fBuffer has been processed.
-    //  fBufferSize
-    //      This represents the extent of valid data in the fBuffer array.
     //  fBytesProcessed
     //      Its a rolling count of the number of bytes processed off this
-    //      input stream. Its only reset back to zero, if the stream is
-    //      reset. The maximum value this can have is fRemoteFileSize.
+    //      input stream.
     // -----------------------------------------------------------------------
 
     unsigned int        fSocketHandle;
-    XMLByte*            fBuffer;
-    unsigned int        fBufferIndex;
-    unsigned int        fBufferSize;
     unsigned int        fBytesProcessed;
 };
+
+
+inline unsigned int BinHTTPURLInputStream::curPos() const
+{
+    return fBytesProcessed;
+}
+
 
 
 #endif // BINHTTPURLINPUTSTREAM_HPP
