@@ -4,25 +4,25 @@
 <s1 title="API Documentation">
     <s2 title="API Docs for SAX and DOM">
 
-	    <p>&XercesCName; is packaged with the API documentation for SAX and DOM, the two 
-		most common programming interfaces for XML. The most common 
+	    <p>&XercesCName; is packaged with the API documentation for SAX and DOM, the two
+		most common programming interfaces for XML. The most common
 		framework classes have also been documented.</p>
-		
-	    <p>&XercesCName; DOM is an implementation of the 
-		<jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">Document Object 
-		Model (Core) Level 1</jump> as defined in the W3C Recommendation of 1 October, 1998. 
-		For a complete understanding of how the &XercesCName; APIs work, 
+
+	    <p>&XercesCName; DOM is an implementation of the
+		<jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">Document Object
+		Model (Core) Level 1</jump> as defined in the W3C Recommendation of 1 October, 1998.
+		For a complete understanding of how the &XercesCName; APIs work,
 		we recommend you to read the DOM Level 1 specification.</p>
-		
-	    <p>&XercesCName; SAX is an implementation of the 
-		<jump href="http://www.megginson.com/SAX/index.html">SAX 1.0</jump> specification. 
-		You are encouraged to read this document for a better 
+
+	    <p>&XercesCName; SAX is an implementation of the
+		<jump href="http://www.megginson.com/SAX/index.html">SAX 1.0</jump> specification.
+		You are encouraged to read this document for a better
 		understanding of the SAX API in &XercesCName;.</p>
-		
+
 	    <p><em><jump href="apiDocs/index.html">Click here for the &XercesCName; API documentation.</jump></em></p>
-		
-	    <note>The API documentation is automatically generated using 
-		<jump href="http://www.zib.de/Visual/software/doc++/index.html">DOC++</jump>.</note>
+
+	    <note>The API documentation is automatically generated using
+		<jump href="http://www.stack.nl/~dimitri/doxygen/">doxygen</jump>.</note>
 
     </s2>
 </s1>
