@@ -2354,6 +2354,12 @@
 			</Filter>
 		</Filter>
 		<File
+			RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.hpp">
+		</File>
+		<File
 			RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc">
 			<FileConfiguration
 				Name="Release|Win32">

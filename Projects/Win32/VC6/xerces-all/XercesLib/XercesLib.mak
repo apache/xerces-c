@@ -151,6 +151,7 @@ CLEAN :
 	-@erase "$(INTDIR)\IC_Unique.obj"
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
+	-@erase "$(INTDIR)\IdentityConstraintHandler.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IGXMLScanner.obj"
 	-@erase "$(INTDIR)\IGXMLScanner2.obj"
@@ -605,6 +606,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IC_Selector.obj" \
 	"$(INTDIR)\IC_Unique.obj" \
 	"$(INTDIR)\IdentityConstraint.obj" \
+	"$(INTDIR)\IdentityConstraintHandler.obj" \
 	"$(INTDIR)\ValueStore.obj" \
 	"$(INTDIR)\ValueStoreCache.obj" \
 	"$(INTDIR)\XercesXPath.obj" \
@@ -803,6 +805,7 @@ CLEAN :
 	-@erase "$(INTDIR)\IC_Unique.obj"
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
+	-@erase "$(INTDIR)\IdentityConstraintHandler.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IGXMLScanner.obj"
 	-@erase "$(INTDIR)\IGXMLScanner2.obj"
@@ -1259,6 +1262,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IC_Selector.obj" \
 	"$(INTDIR)\IC_Unique.obj" \
 	"$(INTDIR)\IdentityConstraint.obj" \
+	"$(INTDIR)\IdentityConstraintHandler.obj" \
 	"$(INTDIR)\ValueStore.obj" \
 	"$(INTDIR)\ValueStoreCache.obj" \
 	"$(INTDIR)\XercesXPath.obj" \
@@ -1457,6 +1461,7 @@ CLEAN :
 	-@erase "$(INTDIR)\IC_Unique.obj"
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
+	-@erase "$(INTDIR)\IdentityConstraintHandler.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IGXMLScanner.obj"
 	-@erase "$(INTDIR)\IGXMLScanner2.obj"
@@ -1913,6 +1918,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IC_Selector.obj" \
 	"$(INTDIR)\IC_Unique.obj" \
 	"$(INTDIR)\IdentityConstraint.obj" \
+	"$(INTDIR)\IdentityConstraintHandler.obj" \
 	"$(INTDIR)\ValueStore.obj" \
 	"$(INTDIR)\ValueStoreCache.obj" \
 	"$(INTDIR)\XercesXPath.obj" \
@@ -2111,6 +2117,7 @@ CLEAN :
 	-@erase "$(INTDIR)\IC_Unique.obj"
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
+	-@erase "$(INTDIR)\IdentityConstraintHandler.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IGXMLScanner.obj"
 	-@erase "$(INTDIR)\IGXMLScanner2.obj"
@@ -2566,6 +2573,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IC_Selector.obj" \
 	"$(INTDIR)\IC_Unique.obj" \
 	"$(INTDIR)\IdentityConstraint.obj" \
+	"$(INTDIR)\IdentityConstraintHandler.obj" \
 	"$(INTDIR)\ValueStore.obj" \
 	"$(INTDIR)\ValueStoreCache.obj" \
 	"$(INTDIR)\XercesXPath.obj" \
@@ -4168,7 +4176,11 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraint.
 "$(INTDIR)\IdentityConstraint.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp
 
+"$(INTDIR)\IdentityConstraintHandler.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+	
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStore.cpp
 
 "$(INTDIR)\ValueStore.obj" : $(SOURCE) "$(INTDIR)"
