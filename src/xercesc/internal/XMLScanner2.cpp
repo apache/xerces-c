@@ -516,7 +516,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     //  and fault in any fixed ones and defaulted ones that are not provided
     //  literally.
     //
-    if (hasDefs && fValidate)
+    if (hasDefs)
     {
         //
         // Check after all specified attrs are scanned
