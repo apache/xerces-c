@@ -1457,7 +1457,6 @@ void XMLScanner::scanCDSection()
     //  characters specially here.
     //
     bool            emittedError = false;
-    unsigned int    nestCount = 0;
     while (true)
     {
         const XMLCh nextCh = fReaderMgr.getNextChar();
@@ -1480,57 +1479,28 @@ void XMLScanner::scanCDSection()
 
         //
         //  If this is a close square bracket it could be our closing
-        //  sequence. Be sure though to handle nested CDATA sections. They
-        //  are illegal, but we've already issued the error and just need to
-        //  be sure not to fall out early.
+        //  sequence. 
         //
-        if (nextCh == chCloseSquare)
+        if (nextCh == chCloseSquare && fReaderMgr.skippedString(CDataClose))
         {
-            if (fReaderMgr.skippedString(CDataClose))
+            // If we have a doc handler, call it
+            if (fDocHandler)
             {
-                if (nestCount)
-                {
-                    // We are nested, so just bump down the counter
-                    nestCount--;
-                }
-                 else
-                {
-                    // If we have a doc handler, call it
-                    if (fDocHandler)
-                    {
-                        fDocHandler->docCharacters
-                        (
-                            bbCData.getRawBuffer()
-                            , bbCData.getLen()
-                            , true
-                        );
-                    }
-
-                    // And we are done
-                    break;
-                }
+                fDocHandler->docCharacters
+                    (
+                    bbCData.getRawBuffer()
+                    , bbCData.getLen()
+                    , true
+                    );
             }
+            
+            // And we are done
+            break;
         }
-         else if (nextCh == chOpenAngle)
-        {
-            //
-            //  Watch for nested CDATA sections. We got the '<' character,
-            //  so now we check for the remainder of the ![CDATA[ sequence.
-            //  If its there, we bump a counter and issue an error.
-            //
-            if (fReaderMgr.skippedString(CDataPrefix))
-            {
-                // Bump up the nesting count
-                nestCount++;
-
-                // And issue the nested CDATA error
-                emitError(XMLErrs::NestedCDATA);
-            }
-        }
-
+        
         //
         //  Make sure its a valid character. But if we've emitted an error
-        //  already, don't both with the overhead since we've already told
+        //  already, don't bother with the overhead since we've already told
         //  them about it.
         //
         if (!emittedError)
