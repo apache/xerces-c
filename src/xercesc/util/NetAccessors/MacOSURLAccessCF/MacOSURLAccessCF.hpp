@@ -73,9 +73,9 @@
 
 
 //
-// This class is the wrapper for the Mac OS URLAccess code
-// which provides access to network resources. 
-// It's being used here to add the ability to
+// This class is the wrapper for the Mac OS CFURLAccess code
+// (in CoreServices.framework) which provides access to network
+// resources.  It's being used here to add the ability to
 // use HTTP URL's as the system id's in the XML decl clauses.
 //
 
