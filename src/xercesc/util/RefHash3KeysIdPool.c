@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2003/11/03 22:00:31  peiyongz
+ * RefHashTable-like enumeration accessing added
+ *
  * Revision 1.7  2003/10/29 16:18:05  peiyongz
  * size() added and Reset() bug fixed
  *
@@ -447,6 +450,7 @@ RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum, const bool 
         ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
 
     Reset();
+    resetKey();
 }
 
 template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::~RefHash3KeysIdPoolEnumerator()
@@ -492,6 +496,80 @@ template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::Reset()
 template <class TVal> int RefHash3KeysIdPoolEnumerator<TVal>::size() const
 {
     return fToEnum->fIdCounter;
+}
+
+template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::resetKey()
+{
+    fCurHash = (unsigned int)-1;
+    fCurElem = 0;
+    findNext();
+}
+
+template <class TVal> bool RefHash3KeysIdPoolEnumerator<TVal>::hasMoreKeys() const
+{
+    //
+    //  If our current has is at the max and there are no more elements
+    //  in the current bucket, then no more elements.
+    //
+    if (!fCurElem && (fCurHash == fToEnum->fHashModulus))
+        return false;
+
+    return true;
+}
+
+template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::nextElementKey(void*& retKey1, int& retKey2, int& retKey3)
+{
+    // Make sure we have an element to return
+    if (!hasMoreKeys())
+        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+
+    //
+    //  Save the current element, then move up to the next one for the
+    //  next time around.
+    //
+    RefHash3KeysTableBucketElem<TVal>* saveElem = fCurElem;
+    findNext();
+
+    retKey1 = saveElem->fKey1;
+    retKey2 = saveElem->fKey2;
+    retKey3 = saveElem->fKey3;
+
+    return;
+}
+
+template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::findNext()
+{
+    //
+    //  If there is a current element, move to its next element. If this
+    //  hits the end of the bucket, the next block will handle the rest.
+    //
+    if (fCurElem)
+        fCurElem = fCurElem->fNext;
+
+    //
+    //  If the current element is null, then we have to move up to the
+    //  next hash value. If that is the hash modulus, then we cannot
+    //  go further.
+    //
+    if (!fCurElem)
+    {
+        fCurHash++;
+        if (fCurHash == fToEnum->fHashModulus)
+            return;
+
+        // Else find the next non-empty bucket
+        while (true)
+        {
+            if (fToEnum->fBucketList[fCurHash])
+                break;
+
+            // Bump to the next hash value. If we max out return
+            fCurHash++;
+            if (fCurHash == fToEnum->fHashModulus)
+                return;
+        }
+        fCurElem = fToEnum->fBucketList[fCurHash];
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

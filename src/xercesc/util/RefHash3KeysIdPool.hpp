@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/03 22:00:31  peiyongz
+ * RefHashTable-like enumeration accessing added
+ *
  * Revision 1.6  2003/10/29 16:17:48  peiyongz
  * size() added
  *
@@ -290,7 +293,20 @@ public :
     void Reset();
     int  size() const;
 
+    // -----------------------------------------------------------------------
+    //  New interface 
+    // -----------------------------------------------------------------------
+    void resetKey();
+    void nextElementKey(void*&, int&, int&);
+    bool hasMoreKeys()   const;
+
 private :
+
+    // -----------------------------------------------------------------------
+    //  Private methods
+    // -----------------------------------------------------------------------
+    void findNext();
+
     // -----------------------------------------------------------------------
     //  Data Members
     //  fAdoptedElems
@@ -308,6 +324,9 @@ private :
     bool                       fAdoptedElems;
     unsigned int               fCurIndex;
     RefHash3KeysIdPool<TVal>*  fToEnum;
+
+    RefHash3KeysTableBucketElem<TVal>*   fCurElem;
+    unsigned int                         fCurHash;
 };
 
 XERCES_CPP_NAMESPACE_END
