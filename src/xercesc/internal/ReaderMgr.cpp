@@ -712,7 +712,7 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
         sysId
         , 0
         , newStream
-        , XMLUni::fgXMLChEncodingString
+        , XMLRecognizer::XERCES_XMLCH
         , refFrom
         , type
         , XMLReader::Source_Internal

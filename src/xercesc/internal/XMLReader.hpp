@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/25 21:31:08  tng
+ * Performance:
+ * 1. use XMLRecognizer::Encodings enum to make new transcode, faster than comparing the encoding string every time.
+ * 2. Pre uppercase the encodingString before calling encodingForName to avoid calling compareIString
+ *
  * Revision 1.4  2002/11/04 14:58:19  tng
  * C++ Namespace Support.
  *
@@ -256,6 +261,18 @@ public:
         , const XMLCh* const                sysId
         ,       BinInputStream* const       streamToAdopt
         , const XMLCh* const                encodingStr
+        , const RefFrom                     from
+        , const Types                       type
+        , const Sources                     source
+        , const bool                        throwAtEnd = false
+    );
+
+    XMLReader
+    (
+        const   XMLCh* const                pubId
+        , const XMLCh* const                sysId
+        ,       BinInputStream* const       streamToAdopt
+        , XMLRecognizer::Encodings          encodingEnum
         , const RefFrom                     from
         , const Types                       type
         , const Sources                     source

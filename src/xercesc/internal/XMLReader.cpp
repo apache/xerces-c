@@ -274,6 +274,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
 
     // Copy the encoding string to our member
     fEncodingStr = XMLString::replicate(encodingStr);
+    XMLString::upperCase(fEncodingStr);
 
     // Ask the transcoding service if it supports src offset info
     fSrcOfsSupported = XMLPlatformUtils::fgTransService->supportsSrcOfs();
@@ -293,9 +294,116 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     //  forced, this will be the one we will use, period.
     //
     XMLTransService::Codes failReason;
+    if (fEncoding == XMLRecognizer::OtherEncoding)
+    {
+        //
+        //  fEncodingStr not  pre-recognized, use it
+        //  directly for transcoder
+        //
+        fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+        (
+            fEncodingStr
+            , failReason
+            , kCharBufSize
+        );
+    }
+     else
+    {
+        //
+        //  Use the recognized fEncoding to create the transcoder
+        //
+        fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+        (
+            fEncoding
+            , failReason
+            , kCharBufSize
+        );
+
+    }
+
+    if (!fTranscoder)
+    {
+        ThrowXML1
+        (
+            TranscodingException
+            , XMLExcepts::Trans_CantCreateCvtrFor
+            , fEncodingStr
+        );
+    }
+
+    //
+    //  Note that, unlike above, we do not do an initial decode of the
+    //  first line. We take the caller's word that the encoding is correct
+    //  and just assume that the first bulk decode (kicked off by the first
+    //  get of a character) will work.
+    //
+    //  So we do here the slipping in of the leading space if required.
+    //
+    if ((fType == Type_PE) && (fRefFrom == RefFrom_NonLiteral))
+    {
+        // This represents no data from the source
+        fCharSizeBuf[fCharsAvail] = 0;
+        fCharBuf[fCharsAvail++] = chSpace;
+    }
+}
+
+
+XMLReader::XMLReader(const  XMLCh* const            pubId
+                    , const XMLCh* const            sysId
+                    ,       BinInputStream* const   streamToAdopt
+                    , XMLRecognizer::Encodings      encodingEnum
+                    , const RefFrom                 from
+                    , const Types                   type
+                    , const Sources                 source
+                    , const bool                    throwAtEnd) :
+    fCharIndex(0)
+    , fCharsAvail(0)
+    , fCurCol(1)
+    , fCurLine(1)
+    , fEncoding(XMLRecognizer::UTF_8)
+    , fEncodingStr(0)
+    , fForcedEncoding(true)
+    , fNoMore(false)
+    , fPublicId(XMLString::replicate(pubId))
+    , fRawBufIndex(0)
+    , fRawBytesAvail(0)
+    , fReaderNum(0xFFFFFFFF)
+    , fRefFrom(from)
+    , fSentTrailingSpace(false)
+    , fSource(source)
+    , fSpareCh(0)
+    , fSrcOfsBase(0)
+    , fSrcOfsSupported(false)
+    , fStream(streamToAdopt)
+    , fSystemId(XMLString::replicate(sysId))
+    , fSwapped(false)
+    , fThrowAtEnd(throwAtEnd)
+    , fTranscoder(0)
+    , fType(type)
+{
+    // Do an initial load of raw bytes
+    refreshRawBuffer();
+
+    // Ask the transcoding service if it supports src offset info
+    fSrcOfsSupported = XMLPlatformUtils::fgTransService->supportsSrcOfs();
+
+    //
+    //  Use the passed encoding code
+    //
+    fEncoding = encodingEnum;
+    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding));
+
+    // Check whether the fSwapped flag should be set or not
+    checkForSwapped();
+
+    //
+    //  Create a transcoder for the encoding. Since the encoding has been
+    //  forced, this will be the one we will use, period.
+    //
+    XMLTransService::Codes failReason;
     fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
     (
-        fEncodingStr
+        fEncoding
         , failReason
         , kCharBufSize
     );
@@ -1136,13 +1244,11 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     if (fForcedEncoding)
         return true;
 
-    // Clean up the old encoding string
-	// Do not delete until we know we have a good encoding
-//	if (fEncodingStr)
-//	{
-//		delete [] fEncodingStr;
-//		fEncodingStr = 0;
-//	}
+    //
+    // upperCase the newEncoding first for better performance
+    //
+    XMLCh* inputEncoding = XMLString::replicate(newEncoding);
+    XMLString::upperCase(inputEncoding);
 
     //
     //  Try to map the string to one of our standard encodings. If its not
@@ -1152,7 +1258,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     //
     XMLRecognizer::Encodings newBaseEncoding = XMLRecognizer::encodingForName
     (
-        newEncoding
+        inputEncoding
     );
 
     //
@@ -1166,12 +1272,14 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         //  are already in one of the endian versions of those encodings,
         //  then just keep it and go on. Otherwise, its not valid.
         //
-        if (!XMLString::compareIString(newEncoding, XMLUni::fgUTF16EncodingString)
-        ||  !XMLString::compareIString(newEncoding, XMLUni::fgUTF16EncodingString2)
-        ||  !XMLString::compareIString(newEncoding, XMLUni::fgUTF16EncodingString3)
-        ||  !XMLString::compareIString(newEncoding, XMLUni::fgUTF16EncodingString4)
-        ||  !XMLString::compareIString(newEncoding, XMLUni::fgUTF16EncodingString5))
+        if (!XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString)
+        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString2)
+        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString3)
+        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString4)
+        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5))
         {
+            delete [] inputEncoding;
+
             if ((fEncoding != XMLRecognizer::UTF_16L)
             &&  (fEncoding != XMLRecognizer::UTF_16B))
             {
@@ -1182,20 +1290,20 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             newBaseEncoding = fEncoding;
 
             if (fEncoding == XMLRecognizer::UTF_16L) {
-
-				delete [] fEncodingStr;
+                delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString);
-			}
+            }
             else {
-
-				delete [] fEncodingStr;
+                delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString);
-			}
+            }
         }
-         else if (!XMLString::compareIString(newEncoding, XMLUni::fgUCS4EncodingString)
-              ||  !XMLString::compareIString(newEncoding, XMLUni::fgUCS4EncodingString2)
-              ||  !XMLString::compareIString(newEncoding, XMLUni::fgUCS4EncodingString3))
+        else if (!XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString)
+             ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString2)
+             ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3))
         {
+            delete [] inputEncoding;
+
             if ((fEncoding != XMLRecognizer::UCS_4L)
             &&  (fEncoding != XMLRecognizer::UCS_4B))
             {
@@ -1209,42 +1317,55 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
 
                 delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString);
-			}
+            }
             else {
 
                 delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString);
-			}
+            }
         }
          else
         {
+            //
             // None of those special cases, so just replicate the new name
+            // and use it directly to create the transcoder
+            //
             delete [] fEncodingStr;
-            fEncodingStr = XMLString::replicate(newEncoding);
+            fEncodingStr = inputEncoding;
+
+            XMLTransService::Codes failReason;
+            fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+            (
+                fEncodingStr
+                , failReason
+                , kCharBufSize
+            );
         }
     }
      else
     {
         // Store the new encoding string since it is just an intrinsic
         delete [] fEncodingStr;
-        fEncodingStr = XMLString::replicate(newEncoding);
+        fEncodingStr = inputEncoding;
     }
 
-    //
-    //  Now we can create a transcoder using the transcoding service. We
-    //  might get back a transcoder for an intrinsically supported encoding,
-    //  or we might get one from the underlying transcoding service.
-    //
-    XMLTransService::Codes failReason;
-    fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
-    (
-        fEncodingStr
-        , failReason
-        , kCharBufSize
-    );
+    if (!fTranscoder) {
+        //
+        //  Now we can create a transcoder using the recognized fEncoding.  We
+        //  might get back a transcoder for an intrinsically supported encoding,
+        //  or we might get one from the underlying transcoding service.
+        //
+        XMLTransService::Codes failReason;
+        fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+        (
+            newBaseEncoding
+            , failReason
+            , kCharBufSize
+        );
 
-    if (!fTranscoder)
-        ThrowXML1(TranscodingException, XMLExcepts::Trans_CantCreateCvtrFor, fEncodingStr);
+        if (!fTranscoder)
+            ThrowXML1(TranscodingException, XMLExcepts::Trans_CantCreateCvtrFor, fEncodingStr);
+    }
 
     // Update the base encoding member with the new base encoding found
     fEncoding = newBaseEncoding;
