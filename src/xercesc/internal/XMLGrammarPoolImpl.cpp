@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/01/13 16:34:20  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.16  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -425,9 +428,9 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
             (Revision != gXercesRevision)   ||
             (SerializationLevel != (unsigned int) XERCES_GRAMMAR_SERIALIZATION_LEVEL))
         {
-            XMLCh     MajVerChar[4];
-            XMLCh     MinVerChar[4];
-            XMLCh     RevisionChar[4];
+            XMLCh     MajVerChar[5];
+            XMLCh     MinVerChar[5];
+            XMLCh     RevisionChar[5];
             XMLString::binToText(MajVer,   MajVerChar,   4, 10, memMgr);
             XMLString::binToText(MinVer,   MinVerChar,   4, 10, memMgr);
             XMLString::binToText(Revision, RevisionChar, 4, 10, memMgr);

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2004/01/13 16:34:20  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.3  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -114,8 +117,8 @@ void XProtoType::load(XSerializeEngine& serEng
 
 	if (classNameLen != inNameLen)
     {
-        XMLCh value1[16];
-        XMLCh value2[16];
+        XMLCh value1[17];
+        XMLCh value2[17];
         XMLString::binToText(inNameLen,    value1, 16, 10, manager);
         XMLString::binToText(classNameLen, value2, 16, 10, manager);
 

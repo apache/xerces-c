@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/13 16:34:22  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.10  2003/12/24 15:24:15  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -831,8 +834,8 @@ CygwinTranscoder::transcodeFrom(  const XMLByte* const      srcData
         {
             if (toEat == 1)
             {
-                XMLCh tmpBuf[16];
-                XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16);
+                XMLCh tmpBuf[17];
+                XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16, getMemoryManager());
                 ThrowXMLwithMemMgr2
                 (
                     TranscodingException
@@ -913,8 +916,8 @@ CygwinTranscoder::transcodeTo(const  XMLCh* const   srcData
         //
         if (usedDef && (options == UnRep_Throw))
         {
-            XMLCh tmpBuf[16];
-            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
+            XMLCh tmpBuf[17];
+            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
             ThrowXMLwithMemMgr2
             (
                 TranscodingException

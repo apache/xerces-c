@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -883,7 +883,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     pathobj.setPath(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-    char *absPath = (char*) manager->allocate((_POSIX_PATH_MAX) * sizeof(char));//new char[_POSIX_PATH_MAX];
+    char *absPath = (char*) manager->allocate((_POSIX_PATH_MAX+1) * sizeof(char));//new char[_POSIX_PATH_MAX];
     ArrayJanitor<char> janText2(absPath, manager);
 
     if ( (pathobj.getPathType() == PATH390_HFS) || (pathobj.getPathType() == PATH390_OTHER) ) {

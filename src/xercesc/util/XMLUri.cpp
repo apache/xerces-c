@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -2030,7 +2030,7 @@ void XMLUri::buildFullText()
             {
                 *outPtr++ = chColon;
 
-                XMLCh tmpBuf[16];
+                XMLCh tmpBuf[17];
                 XMLString::binToText(fPort, tmpBuf, 16, 10, fMemoryManager);
                 XMLString::copyString(outPtr, tmpBuf);
                 outPtr += XMLString::stringLen(tmpBuf);

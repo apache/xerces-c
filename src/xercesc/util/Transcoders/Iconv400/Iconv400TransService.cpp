@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -428,8 +428,8 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
 
         if (fFixed)
         {
-            XMLCh tmpBuf[16];
-            XMLString::binToText((unsigned int)(*startTarget), tmpBuf, 16, 16);
+            XMLCh tmpBuf[17];
+            XMLString::binToText((unsigned int)(*startTarget), tmpBuf, 16, 16, getMemoryManager());
             ThrowXMLwithMemMgr2
             (
                 TranscodingException
@@ -566,8 +566,8 @@ Iconv400Transcoder::transcodeTo( const   XMLCh* const    srcData
 
     if (err)   /*@01A*/
     {
-        XMLCh tmpBuf[16];
-        XMLString::binToText((unsigned int)*startSrc, tmpBuf, 16, 16);
+        XMLCh tmpBuf[17];
+        XMLString::binToText((unsigned int)*startSrc, tmpBuf, 16, 16, getMemoryManager());
         ThrowXMLwithMemMgr2
         (
             TranscodingException

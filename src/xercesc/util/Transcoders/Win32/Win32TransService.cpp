@@ -668,7 +668,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         {
             if (toEat == 1)
             {
-                XMLCh tmpBuf[16];
+                XMLCh tmpBuf[17];
                 XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16, getMemoryManager());
                 ThrowXMLwithMemMgr2
                 (
@@ -750,7 +750,7 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         //
         if (usedDef && (options == UnRep_Throw))
         {
-            XMLCh tmpBuf[16];
+            XMLCh tmpBuf[17];
             XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
             ThrowXMLwithMemMgr2
             (

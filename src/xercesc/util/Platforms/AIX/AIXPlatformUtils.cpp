@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -369,7 +369,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
 
 XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
-    char  dirBuf[PATH_MAX + 1];
+    char  dirBuf[PATH_MAX + 2];
     char  *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
 
     if (!curDir)

@@ -769,7 +769,7 @@ void XMLURL::buildFullText()
         {
             *outPtr++ = chColon;
 
-            XMLCh tmpBuf[16];
+            XMLCh tmpBuf[17];
             XMLString::binToText(fPortNum, tmpBuf, 16, 10, fMemoryManager);
             XMLString::copyString(outPtr, tmpBuf);
             outPtr += XMLString::stringLen(tmpBuf);

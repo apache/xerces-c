@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/01/13 16:34:21  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.18  2004/01/06 17:31:20  neilg
  * fix static initialization problems, bug 28517; thanks to Reid Spencer
  *
@@ -503,7 +506,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
 
 XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
-    char  dirBuf[PATH_MAX + 1];
+    char  dirBuf[PATH_MAX + 2];
     char  *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
 
     if (!curDir)

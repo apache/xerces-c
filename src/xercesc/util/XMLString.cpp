@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -136,8 +136,18 @@ void XMLString::binToText(  const   unsigned long   toFormat
     //  having to check for overflow in the inner loops, and we have to flip
     //  the resulting XMLString anyway.
     //
-    char tmpBuf[128];
-
+    char   tmpBuffer[128];
+    char*  tmpBuf;
+    char*  bigBuf = 0;
+    if (maxChars < 128)
+    {
+        tmpBuf = tmpBuffer;
+    }
+    else
+    {
+        bigBuf = (char*) manager->allocate((maxChars+1)* sizeof(char));
+        tmpBuf = bigBuf;
+    } 
     //
     //  For each radix, do the optimal thing. For bin and hex, we can special
     //  case them and do shift and mask oriented stuff. For oct and decimal
@@ -172,14 +182,20 @@ void XMLString::binToText(  const   unsigned long   toFormat
             tmpVal /= radix;
         }
     }
-     else
+    else
     {
+        if (bigBuf)
+            manager->deallocate(bigBuf);
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Str_UnknownRadix, manager);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
+    {
+        if (bigBuf)
+            manager->deallocate(bigBuf);
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall, manager);
+    }
 
     // Reverse the tmp buffer into the caller's buffer
     unsigned int outIndex = 0;
@@ -188,6 +204,8 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
     // And cap off the caller's buffer
     toFill[outIndex] = char(0);
+    if (bigBuf)
+        manager->deallocate(bigBuf);
 }
 
 void XMLString::binToText(  const   unsigned int    toFormat
@@ -799,7 +817,18 @@ void XMLString::binToText(  const   unsigned long   toFormat
     //  having to check for overflow in the inner loops, and we have to flip
     //  the resulting sring anyway.
     //
-    XMLCh tmpBuf[128];
+    XMLCh   tmpBuffer[128];
+    XMLCh*  tmpBuf;
+    XMLCh*  bigBuf = 0;
+    if (maxChars < 128)
+    {
+        tmpBuf = tmpBuffer;
+    }
+    else
+    {
+        bigBuf = (XMLCh*) manager->allocate((maxChars+1)* sizeof(XMLCh));
+        tmpBuf = bigBuf;
+    }
 
     //
     //  For each radix, do the optimal thing. For bin and hex, we can special
@@ -837,12 +866,18 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
      else
     {
+        if (bigBuf)
+            manager->deallocate(bigBuf);
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Str_UnknownRadix, manager);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
+    {
+        if (bigBuf)
+            manager->deallocate(bigBuf);    
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall, manager);
+    }
 
     // Reverse the tmp buffer into the caller's buffer
     unsigned int outIndex = 0;
@@ -851,6 +886,9 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
     // And cap off the caller's buffer
     toFill[outIndex] = chNull;
+
+    if (bigBuf)
+        manager->deallocate(bigBuf);
 }
 
 void XMLString::binToText(  const   unsigned int    toFormat

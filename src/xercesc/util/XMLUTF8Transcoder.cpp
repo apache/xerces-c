@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -381,7 +381,7 @@ XMLUTF8Transcoder::transcodeTo( const   XMLCh* const    srcData
             // If the options say to throw, then throw
             if (options == UnRep_Throw)
             {
-                XMLCh tmpBuf[16];
+                XMLCh tmpBuf[17];
                 XMLString::binToText(curVal, tmpBuf, 16, 16, getMemoryManager());
                 ThrowXMLwithMemMgr2
                 (

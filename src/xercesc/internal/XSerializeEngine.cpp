@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2004/01/13 16:34:20  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.11  2004/01/12 16:27:41  neilg
  * remove use of static buffers
  *
@@ -119,7 +122,7 @@ static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFF
 #define TEST_THROW_ARG1(condition, data, err_msg) \
 if (condition) \
 { \
-    XMLCh value1[16]; \
+    XMLCh value1[17]; \
     XMLString::binToText(data, value1, 16, 10, fMemoryManager); \
     ThrowXMLwithMemMgr1(XSerializationException \
             , err_msg  \
@@ -130,8 +133,8 @@ if (condition) \
 #define TEST_THROW_ARG2(condition, data1, data2, err_msg) \
 if (condition) \
 { \
-    XMLCh value1[16]; \
-    XMLCh value2[16]; \
+    XMLCh value1[17]; \
+    XMLCh value2[17]; \
     XMLString::binToText(data1, value1, 16, 10, fMemoryManager); \
     XMLString::binToText(data2, value2, 16, 10, fMemoryManager); \
     ThrowXMLwithMemMgr2(XSerializationException \

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.48  2004/01/13 16:34:20  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.47  2003/12/17 00:18:33  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -540,8 +543,22 @@ void DOMWriterImpl::setFeature(const XMLCh* const featName
     if (!canSetFeature(featureId, state))
     {
         XMLCh  tmpbuf[256];
+        unsigned int strLen = XMLString::stringLen(gFeature) +
+                              XMLString::stringLen(featName) +
+                              XMLString::stringLen(gCantSet) +
+                              XMLString::stringLen(gFalse);
+
         XMLString::copyString(tmpbuf, gFeature);
-        XMLString::catString(tmpbuf, featName);
+        if (strLen < 256)
+        {
+            XMLString::catString(tmpbuf, featName);
+        }
+        else
+        {
+            // truncate the featurename to fit into the 256 buffer
+            XMLString::copyNString(tmpbuf+XMLString::stringLen(gFeature),
+                                   featName, 200);
+        }
         XMLString::catString(tmpbuf, gCantSet);
         XMLString::catString(tmpbuf, state? gTrue : gFalse);
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, tmpbuf);

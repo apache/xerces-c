@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/01/13 16:34:21  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.13  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -283,7 +286,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     //  Convert port number integer to unicode so we can transcode it to ASCII
     //
 
-    XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10);
+    XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10, fMemoryManager);
     transSize = XMLString::stringLen(portBuffer)+1;
     char*               portAsASCII = (char*) fMemoryManager->allocate
     (

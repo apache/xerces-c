@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2004/01/13 16:34:20  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.21  2004/01/03 00:03:18  peiyongz
  * parseContent
  *
@@ -140,6 +143,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <stdlib.h>
+#include <assert.h>
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
@@ -1624,7 +1628,8 @@ XMLCh* XMLDateTime::getTimeCanonicalRepresentation(MemoryManager* const memMgr) 
 void XMLDateTime::fillString(XMLCh*& ptr, valueIndex ind, int expLen) const
 {
     XMLCh strBuffer[16];
-    XMLString::binToText(fValue[ind], strBuffer, expLen, 10);
+    assert(expLen < 16);
+    XMLString::binToText(fValue[ind], strBuffer, expLen, 10, fMemoryManager);
     int   actualLen = XMLString::stringLen(strBuffer);
     int   i;
     //append leading zeros
@@ -1644,7 +1649,7 @@ int XMLDateTime::fillYearString(XMLCh*& ptr, valueIndex ind) const
 {
     XMLCh strBuffer[16];
     // let's hope we get no years of 15 digits...
-    XMLString::binToText(fValue[ind], strBuffer, 15, 10);
+    XMLString::binToText(fValue[ind], strBuffer, 15, 10, fMemoryManager);
     int   actualLen = XMLString::stringLen(strBuffer);
     // don't forget that years can be negative...
     int negativeYear = 0;

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/01/13 16:34:22  cargilld
+ * Misc memory management changes.
+ *
  * Revision 1.20  2004/01/06 18:12:31  peiyongz
  * using ctor/setPattern to avoid exception thrown from ctor
  *
@@ -1441,7 +1444,7 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
 	case Token::T_BACKREFERENCE:
 	case Token::T_EMPTY:
 		ret = compileSingle(token, next, tokenType);
-		break;
+                break;
 	case Token::T_CONCAT:
 		ret = compileConcat(token, next, reverse);
 		break;
