@@ -19,7 +19,7 @@
             <li><link anchor="Reorganization">Validator directory Reorganization</link></li>
             <li><link anchor="DTDValidator">DTDValidator</link></li>
         </ul>
-        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>     
+        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
         <ul>
             <li><link anchor="Schema">Schema Subset Support</link></li>
             <li><link anchor="IDOM">Experiemental IDOM</link></li>
@@ -38,7 +38,7 @@
         <s3 title="Compliance">
             <p>Except for a couple of the very obscure (mostly related to
             the 'standalone' mode), this version should be quite compliant
-			to <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump>. It also 
+			to <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump>. It also
 			tracks the latest changes to DOM, SAX and Namespace Specification.
             We have more than a thousand tests, some collected from various
             public sources and some IBM generated, which are used to do
@@ -67,15 +67,15 @@
     <anchor name="Changes"/>
     <s2 title="Changes required to migrate to &XercesCName; &XercesCVersion;">
 
-        <p>There are some architectural changes between the &XercesCName; 
+        <p>There are some architectural changes between the &XercesCName;
 		&XercesCVersion140; and the &XercesCName; &XercesCVersion; releases
-        of the parser, and as a result, some code has undergone restructuring 
+        of the parser, and as a result, some code has undergone restructuring
 		as shown below. </p>
 
         <anchor name="Reorganization"/>
         <s3 title="Validator directory Reorganization">
             <ul>
-              <li>common content model files such as DFAContentModel ... 
+              <li>common content model files such as DFAContentModel ...
 			      are moved to a new directory called src/validators/common</li>
               <li>DTD related files are moved to a new directory called src/validators/DTD</li>
               <li>new directory src/validators/Datatype is created to store all datatype validators</li>
@@ -99,12 +99,12 @@
 
     <anchor name="NewFeatures"/>
     <s2 title="New features in &XercesCName; &XercesCVersion;">
-        <p> Schema subset support is provided in this release. See 
-		   <jump href="http://xml.apache.org/xerces-c/schema.html#supportedFeature">
+        <p> Schema subset support is provided in this release. See
+		   <jump href="schema.html#supportedFeature">
             supported schema features in &XercesCName; &XercesCVersion;.</jump>. An
 			experiemental IDOM is also available as well.
 		</p>
-            
+
         <anchor name="Schema"/>
         <s3 title="Schema Subset Support">
             <ul>
@@ -119,7 +119,7 @@
               <li>New command line option "-s" for samples.</li>
 			</ul>
 			<p>
-			See <jump href="http://xml.apache.org/xerces-c/schema.html#usage">
+			See <jump href="schema.html#usage">
 			Schema Usage</jump>
 			</p>
         </s3>
@@ -128,7 +128,7 @@
         <s3 title="Experiemental IDOM">
            <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
               to migrate from DOM to the experimental IDOM, please refer to
-              <jump href="http://xml.apache.org/xerces-c/program.html#IDOMProgGuide">
+              <jump href="program.html#IDOMProgGuide">
               IDOM programming guide.</jump> Please note that this experimental IDOM API is only
               a prototype and is subject to change.
            </p>
@@ -138,7 +138,7 @@
 
     <s2 title="Migration Archive">
 
-       <p> For migration information from XML4C 2.x to &XercesCName; &XercesCVersion140;, 
+       <p> For migration information from XML4C 2.x to &XercesCName; &XercesCVersion140;,
 	   please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>
