@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/10/09 20:46:19  peiyongz
+ * NOTATION: checkContent(): <URI>:<localPart>
+ *
  * Revision 1.7  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
  *
@@ -82,6 +85,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/NOTATIONDatatypeValidator.hpp>
+#include <util/XMLUri.hpp>
 #include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 
@@ -102,7 +106,7 @@ NOTATIONDatatypeValidator::NOTATIONDatatypeValidator(
                         , const int                           finalSet)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::NOTATION)
 {
-    init(baseValidator, facets, enums);
+    init(enums);
 }
 
 DatatypeValidator* NOTATIONDatatypeValidator::newInstance(
@@ -136,9 +140,43 @@ void NOTATIONDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
 void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
 {
     //
-    // check 3.2.19: QName
+    //  NOTATATION: <URI>:<localPart>
+    //  both URI and localPart must be present
     //
-    if ( !XMLString::isValidQName(content))
+    int contentLength = XMLString::stringLen(content);
+    int colonPosition = XMLString::lastIndexOf(content, chColon);
+
+    if ((colonPosition == -1)                ||  // no ':'
+        (colonPosition == 0 )                ||  // ':'<localPart>
+        (colonPosition == contentLength - 1)  )  // <URI>':'
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_NOTATION_Invalid
+                , content);
+
+    // Extract URI
+    XMLCh* uriPart = new XMLCh[colonPosition + 1];
+    ArrayJanitor<XMLCh> jan1(uriPart);
+    XMLString::subString(uriPart, content, 0, colonPosition - 1);
+
+    try 
+    {
+        // no relative uri support here
+        XMLUri  *newURI = new XMLUri(uriPart);   
+        delete newURI;
+    }
+    catch (...) 
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_NOTATION_Invalid
+                , content);
+    }
+
+    // Extract localpart
+    XMLCh* localPart = new XMLCh[contentLength - colonPosition];
+    ArrayJanitor<XMLCh> jan2(localPart);
+    XMLString::subString(localPart, content, colonPosition + 1, contentLength - 1);
+
+    if ( !XMLString::isValidNCName(localPart))
     {
         ThrowXML1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NOTATION_Invalid
