@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/02 16:38:00  knoaman
+ * Some cleanup.
+ *
  * Revision 1.3  2002/12/04 02:23:50  knoaman
  * Scanner re-organization.
  *
@@ -234,18 +237,14 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     }
 
     // Set up the new top row
-    fStack[fStackTop]->fThisElement = 0;
-    fStack[fStackTop]->fReaderNum = 0xFFFFFFFF;
+    fStack[fStackTop]->fThisElement = toSet;
+    fStack[fStackTop]->fReaderNum = readerNum;
     fStack[fStackTop]->fChildCount = 0;
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
     fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fStack[fStackTop]->fCurrentGrammar = 0;
-
-    // And store the new stuff
-    fStack[fStackTop]->fThisElement = toSet;
-    fStack[fStackTop]->fReaderNum = readerNum;
 
     // Bump the top of stack
     fStackTop++;
@@ -459,14 +458,16 @@ void ElemStack::reset(  const   unsigned int    emptyId
                         , const unsigned int    xmlId
                         , const unsigned int    xmlNSId)
 {
-    // Flush the prefix pool and put back in the standard prefixes
-    fPrefixPool.flushAll();
-    fGlobalPoolId = fPrefixPool.addOrFind(XMLUni::fgZeroLenString);
-    fXMLPoolId = fPrefixPool.addOrFind(XMLUni::fgXMLString);
-    fXMLNSPoolId = fPrefixPool.addOrFind(XMLUni::fgXMLNSString);
-
     // Reset the stack top to clear the stack
     fStackTop = 0;
+
+    // if first time, put in the standard prefixes
+    if (fXMLPoolId == 0) {
+
+        fGlobalPoolId = fPrefixPool.addOrFind(XMLUni::fgZeroLenString);
+        fXMLPoolId = fPrefixPool.addOrFind(XMLUni::fgXMLString);
+        fXMLNSPoolId = fPrefixPool.addOrFind(XMLUni::fgXMLNSString);
+    }
 
     // And store the new special URI ids
     fEmptyNamespaceId = emptyId;
