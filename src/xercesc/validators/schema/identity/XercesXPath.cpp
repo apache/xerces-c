@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/12/04 18:21:23  knoaman
+ * Identity constraint fix.
+ *
  * Revision 1.3  2002/11/04 14:47:42  tng
  * C++ Namespace Support.
  *
@@ -750,13 +753,27 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
                 addToken(tokens, XercesXPath::EXPRTOKEN_PERIOD);
                 starIsMultiplyOperator = true;
                 currentOffset++;
-            } else {                    // '.'
+            } else if (ch == chPipe) { // '|'
+                addToken(tokens, XercesXPath::EXPRTOKEN_PERIOD);
+                starIsMultiplyOperator = true;
+                currentOffset++;
+            } else if (XMLReader::isWhitespace(ch)) {
+                do {
+                    if (++currentOffset == endOffset)
+                        break;
+
+                    ch = data[currentOffset];
+                } while (XMLReader::isWhitespace(ch));
+
+                if (currentOffset == endOffset || ch == chPipe) {
+				    addToken(tokens, XercesXPath::EXPRTOKEN_PERIOD);
+                    starIsMultiplyOperator = true;
+                    break;
+                }
+            } else {
                 ThrowXML(XPathException, XMLExcepts::XPath_InvalidChar);
             }
 
-            if (currentOffset == endOffset) {
-                break;
-            }
             break;
         case CHARTYPE_ATSIGN:           // '@'
             addToken(tokens, XercesXPath::EXPRTOKEN_ATSIGN);
