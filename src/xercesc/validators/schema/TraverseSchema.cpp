@@ -8880,6 +8880,7 @@ void TraverseSchema::validateAnnotations() {
     MemoryManager  *memMgr = fMemoryManager;
     RefHashTableOfEnumerator<XSAnnotation> xsAnnotationEnum = RefHashTableOfEnumerator<XSAnnotation> (fSchemaGrammar->getAnnotations(), false, memMgr);    
     XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();
+    XSAnnotation* nextAnnot;
 
     // create schema grammar
     SchemaGrammar  *grammar = new (memMgr) SchemaGrammar(memMgr);
@@ -9001,11 +9002,21 @@ void TraverseSchema::validateAnnotations() {
 
     scanner->scanDocument(*memBufIS);
 
-    while (xsAnnotationEnum.hasMoreElements())
+    nextAnnot = xsAnnot.getNext();
+
+    while (nextAnnot || xsAnnotationEnum.hasMoreElements())
     {
-        XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();
-        memBufIS->resetMemBufInputSource((const XMLByte*)xsAnnot.getAnnotationString()
+        if (nextAnnot) {            
+            memBufIS->resetMemBufInputSource((const XMLByte*)nextAnnot->getAnnotationString()
+                                        , XMLString::stringLen(nextAnnot->getAnnotationString())*sizeof(XMLCh));
+            nextAnnot = nextAnnot->getNext();
+        }
+        else {
+            XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();        
+            memBufIS->resetMemBufInputSource((const XMLByte*)xsAnnot.getAnnotationString()
                                         , XMLString::stringLen(xsAnnot.getAnnotationString())*sizeof(XMLCh));
+            nextAnnot = xsAnnot.getNext();
+        }
         scanner->scanDocument(*memBufIS);
     }
     
