@@ -39,7 +39,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release/ThreadTest.exe"
+				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/ThreadTest.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/ThreadTest.pdb"

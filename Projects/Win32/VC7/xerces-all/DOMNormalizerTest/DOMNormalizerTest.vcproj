@@ -129,7 +129,7 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\..\..\..\..\tests\DOM\Normalizer\Normalizer.h">
+				RelativePath="..\..\..\..\..\tests\DOM\Normalizer\Normalizer.hpp">
 			</File>
 		</Filter>
 		<Filter

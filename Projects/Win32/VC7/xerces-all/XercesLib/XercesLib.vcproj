@@ -40,6 +40,7 @@
 				AdditionalDependencies="ws2_32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_3_0.dll"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
+				LinkIncremental="1"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2_3_0.pdb"
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xerces-c_2_3_0.map"
@@ -95,6 +96,7 @@
 				AdditionalDependencies="ws2_32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_3_0D.dll"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
+				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_3_0D.pdb"
 				SubSystem="2"
@@ -137,6 +139,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\Base64.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\BinFileInputStream.cpp">
@@ -257,7 +262,7 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\PanicHandler.hpp">
-			</File>			
+			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\PlatformUtils.cpp">
 			</File>
@@ -274,6 +279,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\RefArrayOf.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.hpp">
 			</File>
 			<File
@@ -287,12 +295,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\RefVectorOf.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\RuntimeException.hpp">
@@ -337,12 +339,6 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\ValueVectorOf.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMemory.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMemory.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XML256TableTranscoder.cpp">
 			</File>
 			<File
@@ -379,16 +375,19 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLBigInteger.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChTranscoder.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChTranscoder.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChar.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChar.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChTranscoder.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChTranscoder.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDateTime.cpp">
@@ -514,6 +513,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMemory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMemory.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XercesDefs.hpp">
 			</File>
 			<File
@@ -551,9 +556,6 @@
 				Name="MsgLoaders"
 				Filter=".cpp,.hpp">
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp">
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp">
 					<FileConfiguration
 						Name="Release|Win32">
@@ -570,6 +572,9 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp">
 				</File>
 			</Filter>
 			<Filter
