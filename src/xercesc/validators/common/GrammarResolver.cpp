@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2004/09/02 14:13:13  amassari
+ * If getXSModel was invoked when schema caching was off and nothing had changed, a new (empty) model was created even if a non-empty one was already available
+ *
  * Revision 1.26  2004/05/21 15:19:16  peiyongz
  * [jira1216]  GrammarResolver never clears internal cache of
  * Grammar instances -- patch from David Bertoni
@@ -567,8 +570,9 @@ XSModel *GrammarResolver::getXSModel()
         fGrammarsToAddToXSModel->removeAllElements();
         fXSModel = xsModel;             
     }
-    else
+    else if (!fXSModel)
     {
+        // create a new model only if we didn't have one already
         fXSModel = new (fMemoryManager) XSModel(0, this, fMemoryManager);
     }
     return fXSModel; 
