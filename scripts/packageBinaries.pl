@@ -1165,6 +1165,11 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         psystem("find . -name 'libicuuc.sl.22.0' -exec ln -s {} libicuuc.sl \\;");
         psystem("find . -name 'libicuuc.sl.22.0' -exec ln -s {} libicuuc.sl.22 \\;");
 
+        # Copy the Resouce Bundle for ICUMsgLoader
+        if ( $opt_m =~ m/icu/i) {
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/lib");
+        }        	
+        
     }
 
     # Populate the etc output directory like config.status and the map file
