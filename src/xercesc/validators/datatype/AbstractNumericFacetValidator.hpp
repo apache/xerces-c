@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/10/18 16:52:14  peiyongz
+ * Patch to Bug#13640: Getter methods not public in
+ *                                    DecimalDatatypeValidator
+ *
  * Revision 1.2  2002/02/14 15:17:31  peiyongz
  * getEnumString()
  *
@@ -140,6 +144,7 @@ protected:
 
     static const int INDETERMINATE;
 
+public:
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
@@ -154,6 +159,7 @@ protected:
 
     inline RefVectorOf<XMLNumber>*     getEnumeration() const;
 
+protected:
     // -----------------------------------------------------------------------
     //  Protected data members
     //
