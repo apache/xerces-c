@@ -27,6 +27,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=$(CPP)
+
 !IF  "$(CFG)" == "PSVIWriter - Win32 Release"
 
 OUTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release
@@ -63,40 +65,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\PSVIWriter.bsc" 
 BSC32_SBRS= \
@@ -152,40 +121,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\PSVIWriter.bsc" 
 BSC32_SBRS= \
@@ -241,40 +177,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\PSVIWriter.bsc" 
 BSC32_SBRS= \
@@ -302,11 +205,11 @@ OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\PSVIWriter.exe" "$(OUTDIR)\PSVIWriter.bsc"
+ALL : "$(OUTDIR)\PSVIWriter.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Release" "$(OUTDIR)\PSVIWriter.exe" "$(OUTDIR)\PSVIWriter.bsc"
+ALL : "XercesLib - Win64 Release" "$(OUTDIR)\PSVIWriter.exe"
 
 !ENDIF 
 
@@ -316,13 +219,9 @@ CLEAN :"XercesLib - Win64 ReleaseCLEAN"
 CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\PSVIUni.obj"
-	-@erase "$(INTDIR)\PSVIUni.sbr"
 	-@erase "$(INTDIR)\PSVIWriter.obj"
-	-@erase "$(INTDIR)\PSVIWriter.sbr"
 	-@erase "$(INTDIR)\PSVIWriterHandlers.obj"
-	-@erase "$(INTDIR)\PSVIWriterHandlers.sbr"
 	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(OUTDIR)\PSVIWriter.bsc"
 	-@erase "$(OUTDIR)\PSVIWriter.exe"
 	-@erase "$(OUTDIR)\PSVIWriter.ilk"
 
@@ -332,8 +231,25 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FR"$(INTDIR)\\" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+BSC32=bscmake.exe
+BSC32_FLAGS=/o"$(OUTDIR)\PSVIWriter.bsc" 
+BSC32_SBRS= \
+	
+LINK32=link.exe
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\PSVIWriter.pdb" /machine:IX86 /out:"$(OUTDIR)\PSVIWriter.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_OBJS= \
+	"$(INTDIR)\PSVIUni.obj" \
+	"$(INTDIR)\PSVIWriter.obj" \
+	"$(INTDIR)\PSVIWriterHandlers.obj" \
+	"$(OUTDIR)\xerces-c_2.lib"
+
+"$(OUTDIR)\PSVIWriter.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
+!ENDIF 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -364,34 +280,6 @@ CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D 
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
-
-RSC=rc.exe
-BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\PSVIWriter.bsc" 
-BSC32_SBRS= \
-	"$(INTDIR)\PSVIUni.sbr" \
-	"$(INTDIR)\PSVIWriter.sbr" \
-	"$(INTDIR)\PSVIWriterHandlers.sbr"
-
-"$(OUTDIR)\PSVIWriter.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
-    $(BSC32) @<<
-  $(BSC32_FLAGS) $(BSC32_SBRS)
-<<
-
-LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\PSVIWriter.pdb" /machine:IX86 /out:"$(OUTDIR)\PSVIWriter.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
-LINK32_OBJS= \
-	"$(INTDIR)\PSVIUni.obj" \
-	"$(INTDIR)\PSVIWriter.obj" \
-	"$(INTDIR)\PSVIWriterHandlers.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
-
-"$(OUTDIR)\PSVIWriter.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
-    $(LINK32) @<<
-  $(LINK32_FLAGS) $(LINK32_OBJS)
-<<
-
-!ENDIF 
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -457,99 +345,21 @@ LINK32_OBJS= \
 
 SOURCE=..\..\..\..\..\samples\PSVIWriter\PSVIUni.cpp
 
-!IF  "$(CFG)" == "PSVIWriter - Win32 Release"
-
-
 "$(INTDIR)\PSVIUni.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win32 Debug"
-
-
-"$(INTDIR)\PSVIUni.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win64 Debug"
-
-
-"$(INTDIR)\PSVIUni.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win64 Release"
-
-
-"$(INTDIR)\PSVIUni.obj"	"$(INTDIR)\PSVIUni.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\..\..\..\samples\PSVIWriter\PSVIWriter.cpp
 
-!IF  "$(CFG)" == "PSVIWriter - Win32 Release"
-
-
 "$(INTDIR)\PSVIWriter.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win32 Debug"
-
-
-"$(INTDIR)\PSVIWriter.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win64 Debug"
-
-
-"$(INTDIR)\PSVIWriter.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win64 Release"
-
-
-"$(INTDIR)\PSVIWriter.obj"	"$(INTDIR)\PSVIWriter.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\..\..\..\samples\PSVIWriter\PSVIWriterHandlers.cpp
 
-!IF  "$(CFG)" == "PSVIWriter - Win32 Release"
-
-
 "$(INTDIR)\PSVIWriterHandlers.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win32 Debug"
-
-
-"$(INTDIR)\PSVIWriterHandlers.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win64 Debug"
-
-
-"$(INTDIR)\PSVIWriterHandlers.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "PSVIWriter - Win64 Release"
-
-
-"$(INTDIR)\PSVIWriterHandlers.obj"	"$(INTDIR)\PSVIWriterHandlers.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 
 !ENDIF 
