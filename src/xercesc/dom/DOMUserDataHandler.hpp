@@ -70,6 +70,9 @@
  * object is associated to is being cloned or imported. This can be used by
  * the application to implement various behaviors regarding the data it
  * associates to the DOM nodes. This interface defines that handler.
+ *
+ * <p><b>"Experimental - subject to change"</b></p>
+ *
  * <p>See also the <a href='http://www.w3.org/2001/07/WD-DOM-Level-3-Core-20010726'>Document Object Model (DOM) Level 3 Core Specification</a>.
  * @since DOM Level 3
  */
@@ -118,6 +121,9 @@ public:
      *
      * <p><code>NODE_RENAMED</code>
      * The node is renamed.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @since DOM Level 3
      */
     enum DOMOperationType {
@@ -137,6 +143,9 @@ public:
     /**
      * This method is called whenever the node for which this handler is
      * registered is imported or cloned.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param operation Specifies the type of operation that is being
      *   performed on the node.
      * @param key Specifies the key for which this handler is being called.
