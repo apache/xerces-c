@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/11/25 14:36:40  knoaman
+ * Fix problem with an All content model with minOccurs of 0.
+ *
  * Revision 1.8  2004/09/16 13:32:03  amassari
  * Updated error message for UPA to also state the complex type that is failing the test
  *
@@ -163,7 +166,7 @@ private :
     bool*           fChildOptional;
     unsigned int    fNumRequired;
     bool            fIsMixed;
-
+    bool            fHasOptionalContent;
 };
 
 inline ContentLeafNameTypeVector* AllContentModel::getContentLeafNameTypeVector() const

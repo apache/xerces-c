@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/11/25 14:36:40  knoaman
+ * Fix problem with an All content model with minOccurs of 0.
+ *
  * Revision 1.10  2004/09/16 13:32:03  amassari
  * Updated error message for UPA to also state the complex type that is failing the test
  *
@@ -84,6 +87,7 @@ AllContentModel::AllContentModel( ContentSpecNode* const parentContentSpec
  , fChildOptional(0)
  , fNumRequired(0)
  , fIsMixed(isMixed)
+ , fHasOptionalContent(false)
 {
     //
     //  Create a vector of unsigned ints that will be filled in with the
@@ -105,6 +109,10 @@ AllContentModel::AllContentModel( ContentSpecNode* const parentContentSpec
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_NoParentCSN, fMemoryManager);
 
     // And now call the private recursive method that iterates the tree
+    if (curNode->getType() == ContentSpecNode::All
+        && curNode->getMinOccurs() == 0) {
+        fHasOptionalContent = true;
+    }
     buildChildList(curNode, children, childOptional);
 
     //
@@ -144,7 +152,7 @@ AllContentModel::validateContent( QName** const         children
 {
     // If <all> had minOccurs of zero and there are
     // no children to validate, trivially validate
-    if (!fNumRequired && !childCount)
+    if (childCount == 0 && (fHasOptionalContent || !fNumRequired))
         return -1;
 
     // Check for duplicate element
@@ -221,7 +229,7 @@ int AllContentModel::validateContentSpecial(QName** const           children
 
     // If <all> had minOccurs of zero and there are
     // no children to validate, trivially validate
-    if (!fNumRequired && !childCount)
+    if (childCount == 0 && (fHasOptionalContent || !fNumRequired))
         return -1;
 
     // Check for duplicate element
