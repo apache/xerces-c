@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/01/09 18:58:29  tng
+ * [Bug 15427] DOMWriter dose not flush the output stream.
+ *
  * Revision 1.4  2002/11/22 14:25:59  tng
  * Got a number of compilation erros for those non-ANSI C++ compliant compiler like xlC v3.
  * Since the previous fix is just for fixing a "warning", I think it doesn't worth to break users who
@@ -94,6 +97,7 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
         // Quite annoying, considering every other platform printed
         // the string with the explicit cast to char* below.
     cout.write((char *) toWrite, (int) count);
+    cout.flush();
 
 }
 
