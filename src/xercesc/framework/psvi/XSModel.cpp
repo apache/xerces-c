@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/01/06 19:07:16  knoaman
+ * Fix segfault when adding S4S
+ *
  * Revision 1.17  2003/12/30 21:35:46  neilg
  * even if there are no grammars to add to an XSModel, the S4S grammar must be included
  *
@@ -233,11 +236,13 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
         (void*) SchemaSymbols::fgURI_SCHEMAFORSCHEMA
         , namespaceItem
     );
-    fDeleteNamespace->addElement(namespaceItem);
+
+    DatatypeValidatorFactory dvFactory(manager);
+    dvFactory.expandRegistryToFullSchemaSet();
     addS4SToXSModel
     (
         getNamespaceItem(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-        , namespaceItem->fGrammar->getDatatypeRegistry()->getBuiltInRegistry()
+        , dvFactory.getBuiltInRegistry()
     );
 
     unsigned int numberOfNamespaces = fXSNamespaceItemList->size();
@@ -388,6 +393,9 @@ XSModel::XSModel( XSModel *baseModel
     // Add S4S namespace if needed
     if (!fAddedS4SGrammar)
     {
+        DatatypeValidatorFactory dvFactory(manager);
+        dvFactory.expandRegistryToFullSchemaSet();
+
         XSNamespaceItem* namespaceItem = new (manager) XSNamespaceItem
         (
             this, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, manager
@@ -406,7 +414,7 @@ XSModel::XSModel( XSModel *baseModel
         addS4SToXSModel
         (
             getNamespaceItem(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-            , namespaceItem->fGrammar->getDatatypeRegistry()->getBuiltInRegistry()
+            , dvFactory.getBuiltInRegistry()
         );
     }
 
