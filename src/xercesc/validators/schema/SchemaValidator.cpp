@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2002/11/27 22:15:42  peiyongz
+ * Schema Errat E2-24 Duration 'T': allow to catch SchemaDateTimeException
+ *
  * Revision 1.20  2002/11/27 21:27:14  peiyongz
  * Schema Errat E2-24 Duration 'T': allow to catch SchemaDateTimeException
  *
@@ -210,9 +213,6 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
-#include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
-#include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
-#include <xercesc/util/SchemaDateTimeException.hpp>
 #include <xercesc/validators/datatype/ListDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/ENTITYDatatypeValidator.hpp>
@@ -671,11 +671,9 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 attDefDV->validate(attrValue);
             }
 
-        } catch (InvalidDatatypeValueException& idve) {
-            emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
-        }
-        catch (InvalidDatatypeFacetException& idve) {
-            emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+        } 
+        catch (XMLException& idve) {
+                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());       
         }
         catch (...) {
             emitError(XMLValid::GenericError);
