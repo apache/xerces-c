@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/10/20 15:57:22  knoaman
+ * Fix multithreading problem.
+ *
  * Revision 1.14  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -200,6 +203,14 @@ const XMLCh fgGlobal[] =
 
 
 // ---------------------------------------------------------------------------
+//  Static local data
+// ---------------------------------------------------------------------------
+static bool sGeneralAttCheckMutexRegistered = false;
+static XMLMutex* sGeneralAttCheckMutex = 0;
+static XMLRegisterCleanup sGeneralAttCheckCleanup;
+
+
+// ---------------------------------------------------------------------------
 //  Static member data initialization
 // ---------------------------------------------------------------------------
 ValueHashTableOf<unsigned short>* GeneralAttributeCheck::fAttMap = 0;
@@ -207,12 +218,6 @@ ValueHashTableOf<unsigned short>* GeneralAttributeCheck::fFacetsMap = 0;
 DatatypeValidator*                GeneralAttributeCheck::fNonNegIntDV = 0;
 DatatypeValidator*                GeneralAttributeCheck::fBooleanDV = 0;
 DatatypeValidator*                GeneralAttributeCheck::fAnyURIDV = 0;
-
-// ---------------------------------------------------------------------------
-//  Static local data
-// ---------------------------------------------------------------------------
-static XMLMutex* sGeneralAttCheckMutex = 0;
-static XMLRegisterCleanup GeneralAttCheckCleanup;
 
 
 // ---------------------------------------------------------------------------
@@ -246,9 +251,9 @@ void GeneralAttributeCheck::setUpValidators() {
     // TO DO - add remaining valdiators
 }
 
-void GeneralAttributeCheck::mapElements() {
-
-    if (!sGeneralAttCheckMutex)
+void GeneralAttributeCheck::mapElements()
+{
+    if (!sGeneralAttCheckMutexRegistered)
     {
         XMLMutex* tmpMutex = new XMLMutex;
         if (XMLPlatformUtils::compareAndSwap((void**)&sGeneralAttCheckMutex, tmpMutex, 0))
@@ -256,17 +261,20 @@ void GeneralAttributeCheck::mapElements() {
             // Some other thread beat us to it, so let's clean up ours.
             delete tmpMutex;
         }
-        else
+
+        // Now lock it and try to register it
+        XMLMutexLock lock(sGeneralAttCheckMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!sGeneralAttCheckMutexRegistered)
         {
-            //
-            // the thread who creates the mutex succesfully, to
-            // initialize the followings
-            //
+            // initialize
             setUpValidators();
             mapAttributes();
 
-            // This is the real mutex.  Register it for cleanup at Termination.
-            GeneralAttCheckCleanup.registerCleanup(reinitGeneralAttCheck);
+            // register for cleanup at Termination.
+            sGeneralAttCheckCleanup.registerCleanup(reinitGeneralAttCheck);
+            sGeneralAttCheckMutexRegistered = true;
         }
     }
 }
@@ -334,6 +342,7 @@ GeneralAttributeCheck::reinitGeneralAttCheck() {
 
     delete sGeneralAttCheckMutex;
     sGeneralAttCheckMutex = 0;
+    sGeneralAttCheckMutexRegistered = false;
 
     delete fAttMap;
     delete fFacetsMap;

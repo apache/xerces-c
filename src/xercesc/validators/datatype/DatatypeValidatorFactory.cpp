@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/10/20 15:56:48  knoaman
+ * Fix multithreading problem.
+ *
  * Revision 1.17  2003/10/17 21:13:05  peiyongz
  * Implement Serialization/Deserialization
  *
@@ -390,6 +393,14 @@ const XMLCh fgP1M[] =
 
 
 // ---------------------------------------------------------------------------
+//  Local static data
+// ---------------------------------------------------------------------------
+static bool               sBuiltInRegistryMutexRegistered = false;
+static XMLMutex*          sBuiltInRegistryMutex = 0;
+static XMLRegisterCleanup builtInRegistryCleanup;
+
+
+// ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Static member data
 // ---------------------------------------------------------------------------
 RefHashTableOf<DatatypeValidator>* DatatypeValidatorFactory::fBuiltInRegistry = 0;
@@ -425,8 +436,14 @@ void DatatypeValidatorFactory::resetRegistry() {
 //  Notification that lazy data has been deleted
 // -----------------------------------------------------------------------
 void DatatypeValidatorFactory::reinitRegistry() {
-	delete fBuiltInRegistry;
-	fBuiltInRegistry = 0;
+
+    delete fBuiltInRegistry;
+    fBuiltInRegistry = 0;
+
+    // delete local static data
+    delete sBuiltInRegistryMutex;
+    sBuiltInRegistryMutex = 0;
+    sBuiltInRegistryMutexRegistered = false;
 }
 
 // ---------------------------------------------------------------------------
@@ -434,17 +451,23 @@ void DatatypeValidatorFactory::reinitRegistry() {
 // ---------------------------------------------------------------------------
 void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 {
-    static XMLRegisterCleanup builtInRegistryCleanup;
-    // Initialize common Schema/DTD Datatype validator set if not initialized
-    if (fBuiltInRegistry == 0) {
-        RefHashTableOf<DatatypeValidator>* t = new RefHashTableOf<DatatypeValidator>(29);
-        if (XMLPlatformUtils::compareAndSwap((void **)&fBuiltInRegistry, t, 0) != 0)
+    if (!sBuiltInRegistryMutexRegistered)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&sBuiltInRegistryMutex, tmpMutex, 0))
         {
-            delete t;
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
         }
-        else
+
+        // Now lock it and try to register it
+        XMLMutexLock lock(sBuiltInRegistryMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!sBuiltInRegistryMutexRegistered)
         {
-            builtInRegistryCleanup.registerCleanup(reinitRegistry);
+            //Initialize common Schema/DTD Datatype validator set
+            fBuiltInRegistry = new RefHashTableOf<DatatypeValidator>(29);
 
             DatatypeValidator *dv = new StringDatatypeValidator(); 
             dv->setTypeName(SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
@@ -725,6 +748,10 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
             createDatatypeValidator(SchemaSymbols::fgDT_POSITIVEINTEGER,
                           getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER),
                           facets, 0, false, 0, false);
+
+            // register cleanup method
+            builtInRegistryCleanup.registerCleanup(reinitRegistry);
+            sBuiltInRegistryMutexRegistered = true;
         }
     }
 
