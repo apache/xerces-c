@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:35  twl
- * Initial revision
+ * Revision 1.2  1999/11/11 22:33:42  abagchi
+ * Changed the library name from 'XML4C' to 'xerces-c'
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:35  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:24  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -102,7 +105,7 @@ typedef unsigned short XMLCh;
 //  versioning string. This is defined in XML4CDefs.hpp which is what this
 //  file is included into.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "VAOXML4C" XML4C_DLLVersionStr;
+const char* const XML4C_DLLName = "VAOXERCESC" XML4C_DLLVersionStr;
 
 
 // ---------------------------------------------------------------------------

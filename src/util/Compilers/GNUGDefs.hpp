@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:33  twl
- * Initial revision
+ * Revision 1.2  1999/11/11 22:33:41  abagchi
+ * Changed the library name from 'XML4C' to 'xerces-c'
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:33  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:23  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -106,4 +109,4 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the GNUG version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libIXXML4C";
+const char* const XML4C_DLLName = "libxerces-c";
