@@ -952,23 +952,21 @@ void XMLScanner::scanReset(const InputSource& src)
             resetURIStringPool();
 
         // create a default grammar first
+        fGrammar = new DTDGrammar();
+
+        //
         if (fValidatorFromUser) {
-            if (fValidator->handlesDTD()) {
-                fGrammar = new DTDGrammar();
-            }
-            else {
-                fGrammar = new SchemaGrammar();
-            }
+            if (fValidator->handlesDTD())
+                fValidator->setGrammar(fGrammar);
         }
         else {
             // set fValidator as fDTDValidator
             fValidator = fDTDValidator;
-            fGrammar = new DTDGrammar();
+            fValidator->setGrammar(fGrammar);
         }
 
         fGrammarType = fGrammar->getGrammarType();
         fGrammarResolver->putGrammar(XMLUni::fgZeroLenString, fGrammar);
-        fValidator->setGrammar(fGrammar);
 
         if (fValScheme == Val_Auto) {
             fValidate = false;
