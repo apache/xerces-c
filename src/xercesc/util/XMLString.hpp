@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/11/05 17:42:39  peiyongz
+ * equals( const char* const, const char* const)
+ *
  * Revision 1.7  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -613,8 +616,14 @@ public:
       */
     static bool equals
     (
-        const   XMLCh* const    str1
+          const XMLCh* const    str1
         , const XMLCh* const    str2
+    );
+
+    static bool equals
+    (
+          const char* const    str1
+        , const char* const    str2
     );
 
 	/** Lexicographically compares <code>str1</code> and <code>str2</code>
@@ -1460,11 +1469,37 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 	return true;
 }
 
-inline bool XMLString::equals(   const   XMLCh* const    str1
+inline bool XMLString::equals(   const XMLCh* const    str1
                                , const XMLCh* const    str2)
 {
     const XMLCh* psz1 = str1;
     const XMLCh* psz2 = str2;
+
+    if (psz1 == 0 || psz2 == 0) {
+        if ((psz1 != 0 && *psz1) || (psz2 != 0 && *psz2))
+            return false;
+        else
+            return true;
+    }
+
+    while (*psz1 == *psz2)
+    {
+        // If either has ended, then they both ended, so equal
+        if (!*psz1)
+            return true;
+
+        // Move upwards for the next round
+        psz1++;
+        psz2++;
+    }
+    return false;
+}
+
+inline bool XMLString::equals(   const char* const    str1
+                               , const char* const    str2)
+{
+    const char* psz1 = str1;
+    const char* psz2 = str2;
 
     if (psz1 == 0 || psz2 == 0) {
         if ((psz1 != 0 && *psz1) || (psz2 != 0 && *psz2))
