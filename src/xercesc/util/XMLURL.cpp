@@ -135,6 +135,12 @@ static ProtoEntry gProtoList[XMLURL::Protocols_Count] =
 // !!! Keep these up to date with list above!
 static const unsigned int gMaxProtoLen = 4;
 
+static const XMLCh gListOne[]    = { chColon, chForwardSlash, chNull };
+static const XMLCh gListTwo[]    = { chAt, chNull };
+static const XMLCh gListThree[]  = { chColon, chNull };
+static const XMLCh gListFour[]   = { chForwardSlash, chNull };
+static const XMLCh gListFive[]   = { chPound, chQuestion, chNull };
+static const XMLCh gListSix[]    = { chPound, chNull };
 
 // ---------------------------------------------------------------------------
 //  Local methods
@@ -926,13 +932,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     //  If the : is first, we assume we have a protocol. If the / is first,
     //  then we skip to the host processing.
     //
-    static const XMLCh listOne[]    = { chColon, chForwardSlash, chNull };
-    static const XMLCh listTwo[]    = { chAt, chNull };
-    static const XMLCh listThree[]  = { chColon, chNull };
-    static const XMLCh listFour[]   = { chForwardSlash, chNull };
-    static const XMLCh listFive[]   = { chPound, chQuestion, chNull };
-    static const XMLCh listSix[]    = { chPound, chNull };
-    XMLCh* ptr1 = XMLString::findAny(srcPtr, listOne);
+    XMLCh* ptr1 = XMLString::findAny(srcPtr, gListOne);
     XMLCh* ptr2;
 
     // If we found a protocol, then deal with it
@@ -978,7 +978,7 @@ void XMLURL::parse(const XMLCh* const urlText)
         if (*srcPtr)
         {
             // Search from here for a / character
-            ptr1 = XMLString::findAny(srcPtr, listFour);
+            ptr1 = XMLString::findAny(srcPtr, gListFour);
 
             //
             //  If we found something, then the host is between where
@@ -1036,7 +1036,7 @@ void XMLURL::parse(const XMLCh* const urlText)
         //  find one, then everything between the start of the host data
         //  and the character is the user name.
         //
-        ptr1 = XMLString::findAny(fHost, listTwo);
+        ptr1 = XMLString::findAny(fHost, gListTwo);
         if (ptr1)
         {
             // Get this info out as the user name
@@ -1049,7 +1049,7 @@ void XMLURL::parse(const XMLCh* const urlText)
             XMLString::cut(fHost, ptr1 - fHost);
 
             // Is there a password inside the user string?
-            ptr2 = XMLString::findAny(fUser, listThree);
+            ptr2 = XMLString::findAny(fUser, gListThree);
             if (ptr2)
             {
                 // Remove it from the user name string
@@ -1067,7 +1067,7 @@ void XMLURL::parse(const XMLCh* const urlText)
         //  not at the end of the host data, then lets see if we have a
         //  port trailing the
         //
-        ptr1 = XMLString::findAny(fHost, listThree);
+        ptr1 = XMLString::findAny(fHost, gListThree);
         if (ptr1)
         {
             // Remove it from the host name
@@ -1082,7 +1082,7 @@ void XMLURL::parse(const XMLCh* const urlText)
         // If the host ended up empty, then toss is
         if (!*fHost)
         {
-            delete[] fHost;
+            fMemoryManager->deallocate(fHost);//delete[] fHost;
             fHost = 0;
         }
     }
@@ -1098,7 +1098,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     //  forward slash character, or relative. Its basically everything up
     //  to the end of the string or to any trailing query or fragment.
     //
-    ptr1 = XMLString::findAny(srcPtr, listFive);
+    ptr1 = XMLString::findAny(srcPtr, gListFive);
     if (!ptr1)
     {
         fMemoryManager->deallocate(fPath);//delete [] fPath;
@@ -1137,7 +1137,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     //  separator.
     //
     srcPtr++;
-    ptr1 = XMLString::findAny(srcPtr, listSix);
+    ptr1 = XMLString::findAny(srcPtr, gListSix);
     fMemoryManager->deallocate(fQuery);//delete [] fQuery;
     if (!ptr1)
     {
@@ -1165,6 +1165,276 @@ void XMLURL::parse(const XMLCh* const urlText)
     }
 }
 
+bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
+{
+    // Simplify things by checking for the psycho scenarios first
+    if (!*urlText)
+        return false;
+
+    // Before we start, check if this urlText contains valid uri characters
+    if (!XMLUri::isURIString(urlText))
+        xmlURL.fHasInvalidChar = true;
+    else
+        xmlURL.fHasInvalidChar = false;
+
+    //
+    //  The first thing we will do is to check for a file name, so that
+    //  we don't waste time thinking its a URL. If its in the form x:\
+    //  or x:/ and x is an ASCII letter, then assume that's the deal.
+    //
+    if (((*urlText >= chLatin_A) && (*urlText <= chLatin_Z))
+    ||  ((*urlText >= chLatin_a) && (*urlText <= chLatin_z)))
+    {
+        if (*(urlText + 1) == chColon)
+        {
+            if ((*(urlText + 2) == chForwardSlash)
+            ||  (*(urlText + 2) == chBackSlash))
+            {
+                return false;
+            }
+        }
+    }
+
+    // Get a copy of the URL that we can modify
+    XMLCh* srcCpy = XMLString::replicate(urlText, xmlURL.fMemoryManager);
+    ArrayJanitor<XMLCh> janSrcCopy(srcCpy, xmlURL.fMemoryManager);
+
+    //
+    //  Get a pointer now that we can run up thrown the source as we parse
+    //  bits and pieces out of it.
+    //
+    XMLCh* srcPtr = srcCpy;
+
+    // Run up past any spaces
+    while (*srcPtr)
+    {
+        if (!XMLPlatformUtils::fgTransService->isSpace(*srcPtr))
+            break;
+        srcPtr++;
+    }
+
+    // Make sure it wasn't all space
+    if (!*srcPtr)
+        return false;
+
+    //
+    //  Ok, the next thing we have to do is to find either a / or : character.
+    //  If the : is first, we assume we have a protocol. If the / is first,
+    //  then we skip to the host processing.
+    //
+    XMLCh* ptr1 = XMLString::findAny(srcPtr, gListOne);
+    XMLCh* ptr2;
+
+    // If we found a protocol, then deal with it
+    if (ptr1)
+    {
+        if (*ptr1 == chColon)
+        {
+            // Cap the string at the colon
+            *ptr1 = 0;
+
+            // And try to find it in our list of protocols
+            xmlURL.fProtocol = lookupByName(srcPtr);
+
+            if (xmlURL.fProtocol == Unknown)
+                return false;
+
+            // And move our source pointer up past what we've processed
+            srcPtr = (ptr1 + 1);
+        }
+    }
+
+    //
+    //  Ok, next we need to see if we have any host part. If the next
+    //  two characters are //, then we need to check, else move on.
+    //
+    if ((*srcPtr == chForwardSlash) && (*(srcPtr + 1) == chForwardSlash))
+    {
+        // Move up past the slashes
+        srcPtr += 2;
+
+        //
+        //  If we aren't at the end of the string, then there has to be a
+        //  host part at this point. we will just look for the next / char
+        //  or end of string and make all of that the host for now.
+        //
+        if (*srcPtr)
+        {
+            // Search from here for a / character
+            ptr1 = XMLString::findAny(srcPtr, gListFour);
+
+            //
+            //  If we found something, then the host is between where
+            //  we are and what we found. Else the host is the rest of
+            //  the content and we are done. If its empty, leave it null.
+            //
+            if (ptr1)
+            {
+                if (ptr1 != srcPtr)
+                {
+                    xmlURL.fHost = (XMLCh*) xmlURL.fMemoryManager->allocate
+                    (
+                        (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+                    );//new XMLCh[(ptr1 - srcPtr) + 1];
+                    ptr2 = xmlURL.fHost;
+                    while (srcPtr < ptr1)
+                        *ptr2++ = *srcPtr++;
+                    *ptr2 = 0;
+                }
+            }
+             else
+            {
+                xmlURL.fHost = XMLString::replicate(srcPtr, xmlURL.fMemoryManager);
+
+                // Update source pointer to the end
+                srcPtr += XMLString::stringLen(xmlURL.fHost);
+            }
+        }
+    }
+    else
+    {
+        //
+        // http protocol requires two forward slashes
+        // we didn't get them, so throw an exception
+        //
+        if (xmlURL.fProtocol == HTTP)
+            return false;
+    }
+
+    //
+    //  If there was a host part, then we have to grovel through it for
+    //  all the bits and pieces it can hold.
+    //
+    if (xmlURL.fHost)
+    {
+        //
+        //  Look for a '@' character, which indicates a user name. If we
+        //  find one, then everything between the start of the host data
+        //  and the character is the user name.
+        //
+        ptr1 = XMLString::findAny(xmlURL.fHost, gListTwo);
+        if (ptr1)
+        {
+            // Get this info out as the user name
+            *ptr1 = 0;
+            xmlURL.fUser = XMLString::replicate(xmlURL.fHost, xmlURL.fMemoryManager);
+            ptr1++;
+
+            // And now cut these chars from the host string
+            XMLString::cut(xmlURL.fHost, ptr1 - xmlURL.fHost);
+
+            // Is there a password inside the user string?
+            ptr2 = XMLString::findAny(xmlURL.fUser, gListThree);
+            if (ptr2)
+            {
+                // Remove it from the user name string
+                *ptr2 = 0;
+
+                // And copy out the remainder to the password field
+                ptr2++;
+                xmlURL.fPassword = XMLString::replicate(ptr2, xmlURL.fMemoryManager);
+            }
+        }
+
+        //
+        //  Ok, so now we are at the actual host name, if any. If we are
+        //  not at the end of the host data, then lets see if we have a
+        //  port trailing the
+        //
+        ptr1 = XMLString::findAny(xmlURL.fHost, gListThree);
+        if (ptr1)
+        {
+            // Remove it from the host name
+            *ptr1 = 0;
+
+            // Try to convert it to a numeric port value and store it
+            ptr1++;
+            if (!XMLString::textToBin(ptr1, xmlURL.fPortNum))
+                return false;
+        }
+
+        // If the host ended up empty, then toss is
+        if (!*(xmlURL.fHost))
+        {
+            xmlURL.fMemoryManager->deallocate(xmlURL.fHost);//delete[] fHost;
+            xmlURL.fHost = 0;
+        }
+    }
+
+    // If we are at the end, then we are done now
+    if (!*srcPtr)
+	{
+        return true;
+	}
+
+    //
+    //  Next is the path part. It can be absolute, i.e. starting with a
+    //  forward slash character, or relative. Its basically everything up
+    //  to the end of the string or to any trailing query or fragment.
+    //
+    ptr1 = XMLString::findAny(srcPtr, gListFive);
+    if (!ptr1)
+    {
+        xmlURL.fPath = XMLString::replicate(srcPtr, xmlURL.fMemoryManager);
+        return true;
+    }
+
+    // Everything from where we are to what we found is the path
+    if (ptr1 > srcPtr)
+    {
+        xmlURL.fPath = (XMLCh*) xmlURL.fMemoryManager->allocate
+        (
+            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+        );//new XMLCh[(ptr1 - srcPtr) + 1];
+        ptr2 = xmlURL.fPath;
+        while (srcPtr < ptr1)
+            *ptr2++ = *srcPtr++;
+        *ptr2 = 0;
+    }
+
+    //
+    //  If we found a fragment, then it is the rest of the string and we
+    //  are done.
+    //
+    if (*srcPtr == chPound)
+    {
+        srcPtr++;
+        xmlURL.fFragment = XMLString::replicate(srcPtr, xmlURL.fMemoryManager);
+        return true;
+    }
+
+    //
+    //  The query is either the rest of the string, or up to the fragment
+    //  separator.
+    //
+    srcPtr++;
+    ptr1 = XMLString::findAny(srcPtr, gListSix);
+    if (!ptr1)
+    {
+        xmlURL.fQuery = XMLString::replicate(srcPtr, xmlURL.fMemoryManager);
+        return true;
+    }
+     else
+    {
+        xmlURL.fQuery = (XMLCh*) xmlURL.fMemoryManager->allocate
+        (
+            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+        );//new XMLCh[(ptr1 - srcPtr) + 1];
+        ptr2 = xmlURL.fQuery;
+        while (srcPtr < ptr1)
+            *ptr2++ = *srcPtr++;
+        *ptr2 = 0;
+    }
+
+    // If we are not at the end now, then everything else is the fragment
+    if (*srcPtr == chPound)
+    {
+        srcPtr++;
+        xmlURL.fFragment = XMLString::replicate(srcPtr, xmlURL.fMemoryManager);
+    }
+
+    return true;
+}
 
 XERCES_CPP_NAMESPACE_END
 

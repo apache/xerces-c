@@ -518,6 +518,9 @@ void IGXMLScanner::commonInit()
     fValueStoreCache = new (fMemoryManager) ValueStoreCache(fMemoryManager);
     fFieldActivator = new (fMemoryManager) FieldActivator(fValueStoreCache, fMatcherStack, fMemoryManager);
     fValueStoreCache->setScanner(this);
+
+    // Create schemaLocation pair info
+    fLocationPairs = new (fMemoryManager) ValueVectorOf<XMLCh*>(8, fMemoryManager);
 }
 
 void IGXMLScanner::cleanUp()
@@ -529,6 +532,7 @@ void IGXMLScanner::cleanUp()
     delete fFieldActivator;
     delete fMatcherStack;
     delete fValueStoreCache;
+    delete fLocationPairs;
 }
 
 // ---------------------------------------------------------------------------
@@ -2851,8 +2855,16 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         }
     }
 
-    fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
-    fGrammarResolver->putGrammar(fDTDGrammar);
+    fDTDGrammar = (DTDGrammar*) fGrammarResolver->getGrammar(XMLUni::fgDTDEntityString);
+
+    if (fDTDGrammar) {
+        fDTDGrammar->reset();
+    }
+    else {
+        fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
+        fGrammarResolver->putGrammar(fDTDGrammar);
+    }
+
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
     fValidator->setGrammar(fGrammar);
@@ -2956,5 +2968,34 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     return fDTDGrammar;
 }
 
+// ---------------------------------------------------------------------------
+//  IGXMLScanner: Helper methods
+// ---------------------------------------------------------------------------
+void IGXMLScanner::processSchemaLocation(XMLCh* const schemaLoc)
+{
+    XMLCh* locStr = schemaLoc;
+    XMLReader* curReader = fReaderMgr.getCurrentReader();
+
+    fLocationPairs->removeAllElements();
+    while (*locStr)
+    {
+        do {
+            if (!curReader->isWhitespace(*locStr))
+               break;
+
+            *locStr = chNull;
+        } while (*++locStr);
+
+        if (*locStr) {
+            
+            fLocationPairs->addElement(locStr);
+
+            while (*++locStr) {
+                if (curReader->isWhitespace(*locStr))
+                    break;
+            }
+        }
+    }
+}
 
 XERCES_CPP_NAMESPACE_END

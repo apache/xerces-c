@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/08/14 02:57:27  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.13  2003/05/25 21:42:41  knoaman
  * Allocate/Deallocate Context::xxx only when necessary.
  *
@@ -171,6 +174,7 @@ RegularExpression::Context::Context(MemoryManager* const manager) :
 	, fLimit(0)
 	, fLength(0)
 	, fSize(0)
+    , fStringMaxLen(0)
 	, fOffsets(0)
 	, fMatch(0)
 	, fString(0)
@@ -193,13 +197,24 @@ RegularExpression::Context::~Context()
 //  RegularExpression::Context: Public methods
 // ---------------------------------------------------------------------------
 void RegularExpression::Context::reset(const XMLCh* const string
-                                       , const int start, const int limit
+                                       , const int stringLen
+                                       , const int start
+                                       , const int limit
                                        , const int noClosures)
 {
-    if (fString)
-        fMemoryManager->deallocate(fString);//delete [] fString;
+    if (stringLen > fStringMaxLen || !fString) {
 
-    fString = XMLString::replicate(string, fMemoryManager);
+        fStringMaxLen = stringLen;
+
+        if (fString)
+            fMemoryManager->deallocate(fString);
+
+        fString = XMLString::replicate(string, fMemoryManager);
+    }
+    else {
+        memcpy(fString, string, (stringLen + 1) * sizeof(XMLCh));
+    }
+
 	fStart = start;
 	fLimit = limit;
 	fLength = fLimit - fStart;
@@ -207,7 +222,6 @@ void RegularExpression::Context::reset(const XMLCh* const string
 	if (fAdoptMatch)
 		delete fMatch;
 	fMatch = 0;
-
 
 	if (fSize != noClosures) {
 
@@ -490,7 +504,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 			context = fContext;
 		}
 
-		context->reset(expression, start, end, fNoClosures);
+		context->reset(expression, strLength, start, end, fNoClosures);
 	}
 
 	Janitor<Context> janContext(tmpContext);
@@ -728,7 +742,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
  	     context = fContext;
  	   }
 
- 	   context->reset(expression, start, end, fNoClosures);
+ 	   context->reset(expression, strLength, start, end, fNoClosures);
   }
 
   Janitor<Context> janContext(tmpContext);

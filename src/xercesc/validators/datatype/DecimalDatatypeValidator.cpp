@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/08/14 03:00:11  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.11  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -169,6 +172,7 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(MemoryManager* const manager)
 :AbstractNumericValidator(0, 0, 0, DatatypeValidator::Decimal, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
+, fCompareData(0)
 {}
 
 DecimalDatatypeValidator::DecimalDatatypeValidator(
@@ -180,12 +184,16 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
 :AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Decimal, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
+, fCompareData(0)
 {
     init(enums);
 }
 
 DecimalDatatypeValidator::~DecimalDatatypeValidator()
-{}
+{
+    if (fCompareData)
+        delete fCompareData;
+}
 
 // -----------------------------------------------------------------------
 // Compare methods
@@ -521,8 +529,10 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
         return;
 
     try {
-        XMLBigDecimal theValue(content, fMemoryManager);
-        XMLBigDecimal *theData = &theValue;
+        if (fCompareData)
+            fCompareData->setDecimalValue(content);
+        else
+            fCompareData = new (fMemoryManager) XMLBigDecimal(content, fMemoryManager);
 
         if (getEnumeration())
         {
@@ -530,7 +540,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             int enumLength = getEnumeration()->size();
             for ( ; i < enumLength; i++)
             {
-                if (compareValues(theData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )
+                if (compareValues(fCompareData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )
                     break;
             }
 
@@ -538,17 +548,17 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
                 ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
         }
 
-        boundsCheck(theData);
+        boundsCheck(fCompareData);
 
         if ( (thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
         {
-            if ( theData->getScale() > fFractionDigits )
+            if ( fCompareData->getScale() > fFractionDigits )
             {                
-                XMLString::binToText(theData->getScale(), value1, BUF_LEN, 10);
+                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10);
                 XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10);
                 ThrowXML3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_fractDigit
-                                 , theData->getRawData()
+                                 , fCompareData->getRawData()
                                  , value1
                                  , value2);
             }
@@ -556,13 +566,13 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
 
         if ( (thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
         {
-            if ( theData->getTotalDigit() > fTotalDigits )
+            if ( fCompareData->getTotalDigit() > fTotalDigits )
             {                
-                XMLString::binToText(theData->getTotalDigit(), value1, BUF_LEN, 10);
+                XMLString::binToText(fCompareData->getTotalDigit(), value1, BUF_LEN, 10);
                 XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10);
                 ThrowXML3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_totalDigit
-                                 , theData->getRawData()
+                                 , fCompareData->getRawData()
                                  , value1
                                  , value2);
             }
@@ -574,13 +584,13 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
              where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits.
             ***/
 
-            if ( theData->getScale() > fTotalDigits )  
+            if ( fCompareData->getScale() > fTotalDigits )  
             {                
-                XMLString::binToText(theData->getScale(), value1, BUF_LEN, 10);
+                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10);
                 XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10);
                 ThrowXML3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_totalDigit
-                                 , theData->getRawData()
+                                 , fCompareData->getRawData()
                                  , value1
                                  , value2);
             }

@@ -331,27 +331,51 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
         //  Create a temporary URL. Since this is the primary document,
         //  it has to be fully qualified. If not, then assume we are just
         //  mistaking a file for a URL.
-        XMLURL tmpURL(systemId, fMemoryManager);
-        if (tmpURL.isRelative()) {
+        XMLURL tmpURL(fMemoryManager);
+
+        if (XMLURL::parse(systemId, tmpURL)) {
+
+            if (tmpURL.isRelative()) {
+                if (!fStandardUriConformant)
+                    srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
+                else {
+                    // since this is the top of the try/catch, cannot call ThrowXML
+                    // emit the error directly
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
+                    fInException = true;
+                    emitError
+                    (
+                        XMLErrs::XMLException_Fatal
+                        , e.getType()
+                        , e.getMessage()
+                    );
+                    return;
+                }
+            }
+            else
+            {
+                if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                    fInException = true;
+                    emitError
+                    (
+                        XMLErrs::XMLException_Fatal
+                        , e.getType()
+                        , e.getMessage()
+                    );
+                    return;
+                }
+                srcToUse = new (fMemoryManager) URLInputSource(tmpURL, fMemoryManager);
+            }
+        }
+        else {
+
             if (!fStandardUriConformant)
                 srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
             else {
                 // since this is the top of the try/catch, cannot call ThrowXML
                 // emit the error directly
-                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
-                fInException = true;
-                emitError
-                (
-                    XMLErrs::XMLException_Fatal
-                    , e.getType()
-                    , e.getMessage()
-                );
-                return;
-            }
-        }
-        else
-        {
-            if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
+                // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
                 MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
                 fInException = true;
                 emitError
@@ -362,29 +386,8 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
                 );
                 return;
             }
-            srcToUse = new (fMemoryManager) URLInputSource(tmpURL, fMemoryManager);
-        }
-
-    }
-    catch(const MalformedURLException& e)
-    {
-        if (!fStandardUriConformant)
-            srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
-        else {
-            // since this is the top of the try/catch, cannot call ThrowXML
-            // emit the error directly
-            // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
-            fInException = true;
-            emitError
-            (
-                XMLErrs::XMLException_Fatal
-                , e.getType()
-                , e.getMessage()
-            );
-            return;
         }
     }
-
     catch(const XMLException& excToCatch)
     {
         //  For any other XMLException,

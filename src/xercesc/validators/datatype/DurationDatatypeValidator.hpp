@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/08/14 03:00:11  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.4  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -125,7 +128,7 @@ protected:
     //  implementation of (DateTimeValidator's) virtual interface
     // -----------------------------------------------------------------------
     virtual XMLDateTime*          parse(const XMLCh* const);
-
+    virtual void                  parse(XMLDateTime* const);
     virtual int                   compareDates(const XMLDateTime* const
                                              , const XMLDateTime* const
                                              , bool                   );

@@ -886,8 +886,16 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
-    fGrammarResolver->putGrammar(fDTDGrammar);
+    fDTDGrammar = (DTDGrammar*) fGrammarResolver->getGrammar(XMLUni::fgDTDEntityString);
+	
+    if (!fDTDGrammar) {
+
+        fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
+        fGrammarResolver->putGrammar(fDTDGrammar);
+    }
+    else
+        fDTDGrammar->reset();
+
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
     fRootGrammar = 0;
@@ -1011,8 +1019,8 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
     if (fValidate)
     {
         // Get the raw data we need for the callback
-        const XMLCh* const rawBuf = toSend.getRawBuffer();
-        const unsigned int len = toSend.getLen();
+        XMLCh* rawBuf = toSend.getRawBuffer();
+        unsigned int len = toSend.getLen();
 
         // And see if the current element is a 'Children' style content model
         const ElemStack::StackElem* topElem = fElemStack.topElement();
@@ -1045,31 +1053,26 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
                 else
                 {
-                    // The normalized data can only be as large as the
-                    // original size, so this will avoid allocating way
-                    // too much or too little memory.
-                    XMLBuffer toFill(len+1, fMemoryManager);
-                    toFill.set(rawBuf);
-
                     if (fNormalizeData) {
                         // normalize the character according to schema whitespace facet
                         XMLBufBid bbtemp(&fBufMgr);
                         XMLBuffer& tempBuf = bbtemp.getBuffer();
 
                         DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
-                        toFill.set(tempBuf.getRawBuffer());
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf,  tempBuf);
+                        rawBuf = tempBuf.getRawBuffer();
+                        len = tempBuf.getLen();
                     }
 
                     // tell the schema validation about the character data for checkContent later
-                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
+                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(rawBuf);
 
                     // call all active identity constraints
                     if (fMatcherStack->getMatcherCount())
-                        fContent.append(toFill.getRawBuffer(), toFill.getLen());
+                        fContent.append(rawBuf, len);
 
                     if (fDocHandler)
-                        fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
+                        fDocHandler->docCharacters(rawBuf, len, false);
                 }
             }
         }
@@ -1087,31 +1090,26 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
                 else
                 {
-                    // The normalized data can only be as large as the
-                    // original size, so this will avoid allocating way
-                    // too much or too little memory.
-                    XMLBuffer toFill(len+1, fMemoryManager);
-                    toFill.set(rawBuf);
-
                     if (fNormalizeData) {
                         // normalize the character according to schema whitespace facet
                         XMLBufBid bbtemp(&fBufMgr);
                         XMLBuffer& tempBuf = bbtemp.getBuffer();
 
                         DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
-                        toFill.set(tempBuf.getRawBuffer());
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf,  tempBuf);
+                        rawBuf = tempBuf.getRawBuffer();
+                        len = tempBuf.getLen();
                     }
 
                     // tell the schema validation about the character data for checkContent later
-                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
+                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(rawBuf);
 
                     // call all active identity constraints
                     if (fMatcherStack->getMatcherCount())
-                        fContent.append(toFill.getRawBuffer(), toFill.getLen());
+                        fContent.append(rawBuf, len);
 
                     if (fDocHandler)
-                        fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
+                        fDocHandler->docCharacters(rawBuf, len, false);
                 }
             }
             else
@@ -1247,23 +1245,26 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>*
         XMLBufBid bbXsi(&fBufMgr);
         XMLBuffer& fXsiType = bbXsi.getBuffer();
 
-        QName attName(fMemoryManager);
-
         for (index = 0; index < attCount; index++)
         {
             // each attribute has the prefix:suffix="value"
             const KVStringPair* curPair = fRawAttrList->elementAt(index);
             const XMLCh* rawPtr = curPair->getKey();
+            const XMLCh* prefPtr = XMLUni::fgZeroLenString;
+            int   colonInd = XMLString::indexOf(rawPtr, chColon);
 
-            attName.setName(rawPtr, fEmptyNamespaceId);
-            const XMLCh* prefPtr = attName.getPrefix();
+            if (colonInd != -1) {
+
+                fURIBuf.set(rawPtr, colonInd);
+                prefPtr = fURIBuf.getRawBuffer();
+            }
 
             // if schema URI has been seen, scan for the schema location and uri
             // and resolve the schema grammar; or scan for schema type
             if (resolvePrefix(prefPtr, ElemStack::Mode_Attribute) == fSchemaNamespaceId) {
 
                 const XMLCh* valuePtr = curPair->getValue();
-                const XMLCh* suffPtr = attName.getLocalPart();
+                const XMLCh* suffPtr = &rawPtr[colonInd + 1];
 
                 if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
                     parseSchemaLocation(valuePtr);
@@ -1298,17 +1299,19 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>*
 
 void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 {
-    BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr);
-    unsigned int size = schemaLocation->size();
+    XMLCh* locStr = XMLString::replicate(schemaLocationStr, fMemoryManager);
+    ArrayJanitor<XMLCh> janLoc(locStr, fMemoryManager);
+
+    processSchemaLocation(locStr);
+    unsigned int size = fLocationPairs->size();
+
     if (size % 2 != 0 ) {
         emitError(XMLErrs::BadSchemaLocation);
     } else {
         for(unsigned int i=0; i<size; i=i+2) {
-            resolveSchemaGrammar(schemaLocation->elementAt(i+1), schemaLocation->elementAt(i));
+            resolveSchemaGrammar(fLocationPairs->elementAt(i+1), fLocationPairs->elementAt(i));
         }
     }
-
-    delete schemaLocation;
 }
 
 void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {

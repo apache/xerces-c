@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/08/14 02:57:27  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.8  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -313,6 +316,7 @@ private:
     int          fTimeZone[TIMEZONE_ARRAYSIZE];
     int          fStart;
     int          fEnd;
+    int          fBufferMaxLen;
     XMLCh*       fBuffer;
     MemoryManager* fMemoryManager;
 };
@@ -320,8 +324,19 @@ private:
 inline void XMLDateTime::setBuffer(const XMLCh* const aString)
 {
     reset();
-    fBuffer = XMLString::replicate(aString, fMemoryManager);
-    fEnd    = XMLString::stringLen(fBuffer);
+
+    fEnd = XMLString::stringLen(aString);
+    if (fEnd > 0) {
+    
+        if (fEnd > fBufferMaxLen)
+        {
+            fMemoryManager->deallocate(fBuffer);
+            fBufferMaxLen = fEnd + 8;
+            fBuffer = (XMLCh*) fMemoryManager->allocate((fBufferMaxLen+1) * sizeof(XMLCh));
+        }
+
+        memcpy(fBuffer, aString, (fEnd+1) * sizeof(XMLCh));
+    }
 }
 
 inline void XMLDateTime::reset()
@@ -333,11 +348,7 @@ inline void XMLDateTime::reset()
     fStart = fEnd = 0;
 
     if (fBuffer)
-    {
-        fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
-        fBuffer = 0;
-    }
-
+        *fBuffer = 0;
 }
 
 inline void XMLDateTime::copy(const XMLDateTime& rhs)
@@ -350,14 +361,17 @@ inline void XMLDateTime::copy(const XMLDateTime& rhs)
     fStart = rhs.fStart;
     fEnd   = rhs.fEnd;
 
-    if (fBuffer)
+    if (fEnd > 0)
     {
-        fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
-        fBuffer = 0;
-    }
+        if (fEnd > fBufferMaxLen)
+        {
+            fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
+            fBufferMaxLen = rhs.fBufferMaxLen;
+            fBuffer = (XMLCh*) fMemoryManager->allocate((fBufferMaxLen+1) * sizeof(XMLCh));
+        }
 
-    if (rhs.fBuffer)
-        fBuffer = XMLString::replicate(rhs.fBuffer, fMemoryManager);
+        memcpy(fBuffer, rhs.fBuffer, (fEnd+1) * sizeof(XMLCh));
+    }
 }
 
 inline void XMLDateTime::assertBuffer() const

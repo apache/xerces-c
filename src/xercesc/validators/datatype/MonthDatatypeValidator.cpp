@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/08/14 03:00:11  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.5  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -140,6 +143,11 @@ XMLDateTime* MonthDatatypeValidator::parse(const XMLCh* const content)
     }
 
     return pRetDate;
+}
+
+void MonthDatatypeValidator::parse(XMLDateTime* const pDate)
+{
+    pDate->parseMonth();
 }
 
 XERCES_CPP_NAMESPACE_END

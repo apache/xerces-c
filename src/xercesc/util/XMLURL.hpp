@@ -95,7 +95,7 @@ public:
     //  Public static methods
     // -----------------------------------------------------------------------
     static Protocols lookupByName(const XMLCh* const protoName);
-
+    static bool parse(const XMLCh* urlText, XMLURL& xmlURL);
 
     // -----------------------------------------------------------------------
     //  Constructors and Destructor

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/08/14 02:56:41  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.9  2003/05/16 21:36:57  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -385,6 +388,16 @@ private :
 inline unsigned int ReaderMgr::getCurrentReaderNum() const
 {
     return fCurReader->getReaderNum();
+}
+
+inline const XMLReader* ReaderMgr::getCurrentReader() const
+{
+    return fCurReader;
+}
+
+inline XMLReader* ReaderMgr::getCurrentReader()
+{
+    return fCurReader;
 }
 
 inline bool ReaderMgr::getName(XMLBuffer& toFill)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2003/08/14 03:01:04  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.35  2003/07/31 17:14:27  peiyongz
  * Grammar embed grammar description
  *
@@ -286,6 +289,7 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
     , fSeenId(false)
     , fXsiType(0)
     , fXsiTypeValidator(0)
+    , fNotationBuf(0)
     , fDatatypeBuffer(1023, manager)
     , fNil(false)
     , fTypeStack(0)
@@ -297,6 +301,9 @@ SchemaValidator::~SchemaValidator()
 {
     delete fXsiType;
     delete fTypeStack;
+
+    if (fNotationBuf)
+        delete fNotationBuf;
 }
 
 // ---------------------------------------------------------------------------
@@ -406,12 +413,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
 
                     DatatypeValidator::ValidatorType eleDefDVType = fCurrentDV->getType();
 
-                    // if notation, need to bind URI to notation first
-                    XMLBuffer notationBuf(1023, fMemoryManager);
-
                     // set up the entitydeclpool in ENTITYDatatypeValidator
                     // and the idreflist in ID/IDREFDatatypeValidator
-
                     if (eleDefDVType == DatatypeValidator::List) {
                         DatatypeValidator* itemDTV = ((ListDatatypeValidator*)fCurrentDV)->getItemTypeDTV();
                         DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
@@ -473,20 +476,22 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     }
                     else if (eleDefDVType == DatatypeValidator::NOTATION)
                     {
-                        //
+                        // if notation, need to bind URI to notation first
+                        if (!fNotationBuf)
+                            fNotationBuf = new (fMemoryManager) XMLBuffer(1023, fMemoryManager);
+
                         //  Make sure that this value maps to one of the
                         //  notation values in the enumList parameter. We don't have to
                         //  look it up in the notation pool (if a notation) because we
                         //  will look up the enumerated values themselves. If they are in
                         //  the notation pool (after the Grammar is parsed), then obviously
                         //  this value will be legal since it matches one of them.
-                        //
                         int colonPos = -1;
-                        unsigned int uriId = getScanner()->resolveQName(value, notationBuf, ElemStack::Mode_Element, colonPos);
-                        notationBuf.set(getScanner()->getURIText(uriId));
-                        notationBuf.append(chColon);
-                        notationBuf.append(&value[colonPos + 1]);
-                        value = notationBuf.getRawBuffer();
+                        unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);
+                        fNotationBuf->set(getScanner()->getURIText(uriId));
+                        fNotationBuf->append(chColon);
+                        fNotationBuf->append(&value[colonPos + 1]);
+                        value = fNotationBuf->getRawBuffer();
                     }
 
                     if (elemDefaultValue) {
@@ -1229,6 +1234,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     bool firstNonWS = false;
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
+    XMLReader* fCurReader = getReaderMgr()->getCurrentReader();
 
     if ((fWhiteSpace==DatatypeValidator::COLLAPSE) && fTrailing)
         toFill.append(chSpace);
@@ -1243,14 +1249,14 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         }
         else if (fWhiteSpace == DatatypeValidator::REPLACE)
         {
-            if (getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
+            if (fCurReader->isWhitespace(nextCh))
                 nextCh = chSpace;
         }
         else // COLLAPSE case
         {
             if (curState == InWhitespace)
             {
-                if (!getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
+                if (!fCurReader->isWhitespace(nextCh))
                 {
                     if (firstNonWS)
                         toFill.append(chSpace);
@@ -1265,7 +1271,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
             }
              else if (curState == InContent)
             {
-                if (getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
+                if (fCurReader->isWhitespace(nextCh))
                 {
                     curState = InWhitespace;
                     srcPtr++;
@@ -1281,10 +1287,8 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         srcPtr++;
     }
     srcPtr--;
-    nextCh = *srcPtr;
-    if (getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
+    if (fCurReader->isWhitespace(*srcPtr))
         fTrailing = true;
-
 }
 
 

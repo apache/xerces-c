@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/08/14 03:00:11  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.3  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -151,12 +154,15 @@ protected:
     //  helper interface: to be implemented/overwritten by derived class
     // -----------------------------------------------------------------------
     virtual XMLDateTime*   parse(const XMLCh* const) = 0;
+    virtual void parse(XMLDateTime* const) = 0;
 
     // to be overwritten by duration
     virtual int            compareDates(const XMLDateTime* const lValue
                                       , const XMLDateTime* const rValue
                                       , bool                     strict);
 
+private:
+    XMLDateTime* fDateTime;
 };
 
 XERCES_CPP_NAMESPACE_END

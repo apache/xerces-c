@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/08/14 03:01:04  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.17  2003/05/18 14:02:08  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -390,6 +393,7 @@ private:
     QName*                          fXsiType;
     bool                            fNil;
     DatatypeValidator*              fXsiTypeValidator;
+    XMLBuffer*                      fNotationBuf;
     XMLBuffer                       fDatatypeBuffer;
     bool                            fTrailing;
     bool                            fSeenId;

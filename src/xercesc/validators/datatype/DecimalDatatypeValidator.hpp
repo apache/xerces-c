@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/08/14 03:00:11  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.6  2003/05/22 02:10:52  knoaman
  * Default the memory manager.
  *
@@ -96,6 +99,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XMLBigDecimal;
 
 class VALIDATORS_EXPORT DecimalDatatypeValidator : public AbstractNumericValidator
 {
@@ -221,9 +226,9 @@ private:
     //  Private data members
     //
     // -----------------------------------------------------------------------
-	 unsigned int         fTotalDigits;
-	 unsigned int         fFractionDigits;
-
+    unsigned int         fTotalDigits;
+    unsigned int         fFractionDigits;
+    XMLBigDecimal*       fCompareData;
 };
 
 // -----------------------------------------------------------------------

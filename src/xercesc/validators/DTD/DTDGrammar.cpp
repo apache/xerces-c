@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/08/14 03:00:46  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.7  2003/07/31 17:09:59  peiyongz
  * Grammar embed grammar description
  *
@@ -97,10 +100,16 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+// ---------------------------------------------------------------------------
+//  DTDGrammar: Static member data
+// ---------------------------------------------------------------------------
+NameIdPool<DTDEntityDecl>* DTDGrammar::fDefaultEntities = 0;
 
 //---------------------------------------------------------------------------
 //  DTDGrammar: Constructors and Destructor
@@ -128,12 +137,8 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     //REVISIT: use grammarPool to create
     fGramDesc = new (fMemoryManager) XMLDTDDescriptionImpl(XMLUni::fgDTDEntityString, fMemoryManager);
 
-    //
-    //  Call our own reset method. This lets us have the pool setup stuff
-    //  done in just one place (because this stame setup stuff has to be
-    //  done every time we are reset.)
-    //
-    reset();
+    // Create default entities
+    resetEntityDeclPool();
 }
 
 DTDGrammar::~DTDGrammar()
@@ -143,6 +148,14 @@ DTDGrammar::~DTDGrammar()
     delete fEntityDeclPool;
     delete fNotationDeclPool;
     delete fGramDesc;
+}
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void DTDGrammar::reinitDfltEntities() {
+	delete fDefaultEntities;
+	fDefaultEntities = 0;
 }
 
 // -----------------------------------------------------------------------
@@ -207,27 +220,44 @@ void DTDGrammar::reset()
     fElemDeclPool->removeAll();
     fElemNonDeclPool->removeAll();
     fNotationDeclPool->removeAll();
-    resetEntityDeclPool();
+    fEntityDeclPool->removeAll();
     fValidated = false;
 }
 
 void DTDGrammar::resetEntityDeclPool() {
 
-    fEntityDeclPool->removeAll();
-    //
-    //  Add the default entity entries for the character refs that must always
-    //  be present. We indicate that they are from the internal subset. They
-    //  aren't really, but they have to look that way so that they are still
-    //  valid for use within a standalone document.
-    //
-    //  We also mark them as special char entities, which allows them to be
-    //  used in places whether other non-numeric general entities cannot.
-    //
-    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
+    static XMLRegisterCleanup builtInRegistryCleanup;
+
+    // Initialize default entities if not initialized
+    if (fDefaultEntities == 0) {
+
+        NameIdPool<DTDEntityDecl>* t = new NameIdPool<DTDEntityDecl>(11, 12);
+
+        if (XMLPlatformUtils::compareAndSwap((void **)&fDefaultEntities, t, 0) != 0)
+        {
+            delete t;
+        }
+        else
+        {
+            builtInRegistryCleanup.registerCleanup(reinitDfltEntities);
+
+            //
+            // Add the default entity entries for the character refs that must
+            // always be present. We indicate that they are from the internal
+            // subset. They aren't really, but they have to look that way so
+            // that they are still valid for use within a standalone document.
+            //
+            // We also mark them as special char entities, which allows them
+            // to be used in places whether other non-numeric general entities
+            // cannot.
+            //
+            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
+            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
+            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
+            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
+            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
+        }
+    }
 }
 
 void DTDGrammar::setGrammarDescription( XMLGrammarDescription* gramDesc)

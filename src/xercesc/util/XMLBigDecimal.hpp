@@ -121,8 +121,16 @@ public:
      */
      int toCompare(const XMLBigDecimal& other) const;
 
+    /*
+     * Sets the value to be converted
+     *
+     * @param   strValue the value to convert
+     */
+    void setDecimalValue(const XMLCh* const strValue);
+
 private:
-    void  parseBigDecimal(const XMLCh* const strValue);
+    void  parseBigDecimal( const XMLCh* const strValue
+                         , unsigned int       strValueLen);
     void  cleanUp();
     
     // -----------------------------------------------------------------------
@@ -157,8 +165,9 @@ private:
     int            fSign;
     unsigned int   fTotalDigits;
     unsigned int   fScale;
-    XMLCh*         fIntVal;    
+    unsigned int   fRawDataLen;
     XMLCh*         fRawData;
+    XMLCh*         fIntVal;
     MemoryManager* fMemoryManager;
 };
 

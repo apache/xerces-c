@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/08/14 02:57:27  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.12  2003/05/22 02:10:52  knoaman
  * Default the memory manager.
  *
@@ -480,7 +483,10 @@ XMLDateTime::~XMLDateTime()
 }
 
 XMLDateTime::XMLDateTime(MemoryManager* const manager)
-: fBuffer(0)
+: fStart(0)
+, fEnd(0)
+, fBufferMaxLen(0)
+, fBuffer(0)
 , fMemoryManager(manager)
 {
     reset();
@@ -488,7 +494,10 @@ XMLDateTime::XMLDateTime(MemoryManager* const manager)
 
 XMLDateTime::XMLDateTime(const XMLCh* const aString,
                          MemoryManager* const manager)
-: fBuffer(0)
+: fStart(0)
+, fEnd(0)
+, fBufferMaxLen(0)
+, fBuffer(0)
 , fMemoryManager(manager)
 {
     setBuffer(aString);
@@ -499,7 +508,8 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString,
 // -----------------------------------------------------------------------
 
 XMLDateTime::XMLDateTime(const XMLDateTime &toCopy)
-: fBuffer(0)
+: fBufferMaxLen(0)
+, fBuffer(0)
 , fMemoryManager(toCopy.fMemoryManager)
 {
     copy(toCopy);
@@ -1374,18 +1384,16 @@ int XMLDateTime::findUTCSign (const int start)
 //
 int XMLDateTime::parseInt(const int start, const int end) const
 {
+    unsigned int retVal = 0;
+    for (int i=start; i < end; i++) {
 
-    XMLCh* strToScan = (XMLCh*) fMemoryManager->allocate
-    (
-        (end - start + 1) * sizeof(XMLCh)
-    );//new XMLCh[end - start + 1];
-    ArrayJanitor<XMLCh>  jname(strToScan, fMemoryManager);
-    XMLString::subString(strToScan, fBuffer, start, end);
+        if (fBuffer[i] < chDigit_0 || fBuffer[i] > chDigit_9)
+            break;
 
-    unsigned int retVal;
-    XMLString::textToBin(strToScan, retVal);
+        retVal = (retVal * 10) + (unsigned int) (fBuffer[i] - chDigit_0);
+    }
 
-    return (int) retVal;
+    return (int) retVal;;
 }
 
 //

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/08/14 03:00:11  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.7  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -114,7 +117,10 @@ static XMLCh value2[BUF_LEN+1];
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 DateTimeValidator::~DateTimeValidator()
-{}
+{
+    if (fDateTime)
+        delete fDateTime;
+}
 
 DateTimeValidator::DateTimeValidator(
                           DatatypeValidator*            const baseValidator
@@ -123,6 +129,7 @@ DateTimeValidator::DateTimeValidator(
                         , const ValidatorType                 type
                         , MemoryManager* const                manager)
 :AbstractNumericFacetValidator(baseValidator, facets, finalSet, type, manager)
+, fDateTime(0)
 {
     //do not invoke init() here !!!
 }
@@ -207,78 +214,75 @@ void DateTimeValidator::checkContent(const XMLCh* const content
     if (asBase)
         return;
 
+    // the derived classes' parse() method constructs an
+    // XMLDateTime object anc invokes appropriate XMLDateTime's
+    // parser to parse the content.
+    if (fDateTime)
+        fDateTime->setBuffer(content);
+    else
+        fDateTime = new (fMemoryManager) XMLDateTime(content, fMemoryManager);
 
+    parse(fDateTime);
+
+    // must be < MaxExclusive
+    if ((thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0)
     {
-        // the derived classes' parse() method constructs an
-        // XMLDateTime object anc invokes appropriate XMLDateTime's
-        // parser to parse the content.
-        XMLDateTime *theDate = parse(content);
-        Janitor<XMLDateTime> jname(theDate);
-        int result;
-
-        // must be < MaxExclusive
-        if ( (thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0 )
+        if (compareValues(fDateTime, getMaxExclusive()) != XMLDateTime::LESS_THAN)
         {
-            result = compareValues(theDate, getMaxExclusive());
-            if ( result != XMLDateTime::LESS_THAN )
-            {
-                REPORT_VALUE_ERROR(theDate
-                    , getMaxExclusive()
-                    , XMLExcepts::VALUE_exceed_maxExcl)
-            }
-        } 	
+            REPORT_VALUE_ERROR( fDateTime
+                              , getMaxExclusive()
+                              , XMLExcepts::VALUE_exceed_maxExcl)
+        }
+    } 	
 
-        // must be <= MaxInclusive
-        if ( (thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0 )
+    // must be <= MaxInclusive
+    if ((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
+    {
+        int result = compareValues(fDateTime, getMaxInclusive());
+        if ( result == XMLDateTime::GREATER_THAN || result == XMLDateTime::INDETERMINATE )
         {
-            result = compareValues(theDate, getMaxInclusive());
-            if ( result == XMLDateTime::GREATER_THAN || result == XMLDateTime::INDETERMINATE )
-            {
-                REPORT_VALUE_ERROR(theDate
-                    , getMaxInclusive()
-                    , XMLExcepts::VALUE_exceed_maxIncl)
-            }
+            REPORT_VALUE_ERROR( fDateTime
+                              , getMaxInclusive()
+                              , XMLExcepts::VALUE_exceed_maxIncl)
+        }
+    }
+
+    // must be >= MinInclusive
+    if ((thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
+    {
+        int result = compareValues(fDateTime, getMinInclusive());
+        if (result == XMLDateTime::LESS_THAN || result == XMLDateTime::INDETERMINATE)
+        {
+            REPORT_VALUE_ERROR( fDateTime
+                              , getMinInclusive()
+                              , XMLExcepts::VALUE_exceed_minIncl)
+        }
+    }
+
+    // must be > MinExclusive
+    if ( (thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0 )
+    {
+        if (compareValues(fDateTime, getMinExclusive()) != XMLDateTime::GREATER_THAN)
+        {
+            REPORT_VALUE_ERROR( fDateTime
+                              , getMinExclusive()
+                              , XMLExcepts::VALUE_exceed_minExcl)
+        }
+    }
+
+    if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
+        (getEnumeration() != 0))
+    {
+        int i=0;
+        int enumLength = getEnumeration()->size();
+        for ( ; i < enumLength; i++)
+        {
+            if (compareValues(fDateTime, getEnumeration()->elementAt(i)) == XMLDateTime::EQUAL)
+                break;
         }
 
-        // must be >= MinInclusive
-        if ( (thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0 )
-        {
-            result = compareValues(theDate, getMinInclusive());
-            if (result == XMLDateTime::LESS_THAN || result == XMLDateTime::INDETERMINATE )
-            {
-                REPORT_VALUE_ERROR(theDate
-                    , getMinInclusive()
-                    , XMLExcepts::VALUE_exceed_minIncl)
-            }
-        }
-
-        // must be > MinExclusive
-        if ( (thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0 )
-        {
-            result = compareValues(theDate, getMinExclusive());
-            if (result != XMLDateTime::GREATER_THAN)
-            {
-                REPORT_VALUE_ERROR(theDate
-                    , getMinExclusive()
-                    , XMLExcepts::VALUE_exceed_minExcl)
-            }
-        }
-
-        if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
-            (getEnumeration() != 0))
-        {
-            int i=0;
-            int enumLength = getEnumeration()->size();
-            for ( ; i < enumLength; i++)
-            {
-                if (compareValues(theDate, getEnumeration()->elementAt(i)) == XMLDateTime::EQUAL)
-                    break;
-            }
-
-            if (i == enumLength)
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
-        }
-
+        if (i == enumLength)
+            ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
     }
 }
 

@@ -789,17 +789,6 @@ XMLEntityDecl* ReaderMgr::getCurrentEntity()
 }
 
 
-const XMLReader* ReaderMgr::getCurrentReader() const
-{
-    return fCurReader;
-}
-
-
-XMLReader* ReaderMgr::getCurrentReader()
-{
-    return fCurReader;
-}
-
 unsigned int ReaderMgr::getReaderDepth() const
 {
     // If the stack doesn't exist, its obviously zero

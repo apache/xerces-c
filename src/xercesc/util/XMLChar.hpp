@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/08/14 02:57:27  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.1  2002/12/20 22:10:21  tng
  * XML 1.1
  *
@@ -130,7 +133,8 @@ public:
     static bool isPlainContentChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
     static bool isSpecialStartTagChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
     static bool isXMLChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
-    static bool isWhitespace(const XMLCh toCheck, const XMLCh toCheck2 = 0);
+    static bool isWhitespace(const XMLCh toCheck);
+    static bool isWhitespace(const XMLCh toCheck, const XMLCh toCheck2);
     static bool isControlChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
 
     static bool isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
@@ -222,6 +226,11 @@ inline bool XMLChar1_0::isXMLChar(const XMLCh toCheck, const XMLCh toCheck2)
                return true;
     }
     return false;
+}
+
+inline bool XMLChar1_0::isWhitespace(const XMLCh toCheck)
+{
+    return ((fgCharCharsTable1_0[toCheck] & gWhitespaceCharMask) != 0);
 }
 
 inline bool XMLChar1_0::isWhitespace(const XMLCh toCheck, const XMLCh toCheck2)

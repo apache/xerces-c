@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/08/14 03:00:46  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.8  2003/07/31 17:09:59  peiyongz
  * Grammar embed grammar description
  *
@@ -243,6 +246,12 @@ public:
     // -----------------------------------------------------------------------
     unsigned int putEntityDecl(DTDEntityDecl* const entityDecl) const;
 
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+    static void reinitDfltEntities();
+
 private:
     // -----------------------------------------------------------------------
     //  Private helper methods
@@ -284,14 +293,15 @@ private:
     //  fGramDesc: adopted
     //
     // -----------------------------------------------------------------------
-    MemoryManager*               fMemoryManager;
-    NameIdPool<DTDElementDecl>*  fElemDeclPool;
-    NameIdPool<DTDElementDecl>*  fElemNonDeclPool;
-    NameIdPool<DTDEntityDecl>*   fEntityDeclPool;
-    NameIdPool<XMLNotationDecl>* fNotationDeclPool;
-    unsigned int                 fRootElemId;
-    bool                         fValidated;
-    XMLDTDDescription*           fGramDesc;
+    static NameIdPool<DTDEntityDecl>* fDefaultEntities;
+    MemoryManager*                    fMemoryManager;
+    NameIdPool<DTDElementDecl>*       fElemDeclPool;
+    NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
+    NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
+    NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
+    unsigned int                      fRootElemId;
+    bool                              fValidated;
+    XMLDTDDescription*                fGramDesc;
 };
 
 
@@ -327,12 +337,22 @@ DTDGrammar::getNotationEnumerator() const
 inline const DTDEntityDecl*
 DTDGrammar::getEntityDecl(const XMLCh* const entName) const
 {
-    return fEntityDeclPool->getByKey(entName);
+    DTDEntityDecl* decl = fDefaultEntities->getByKey(entName);
+
+    if (!decl)
+        return fEntityDeclPool->getByKey(entName);
+
+    return decl;
 }
 
 inline DTDEntityDecl* DTDGrammar::getEntityDecl(const XMLCh* const entName)
 {
-    return fEntityDeclPool->getByKey(entName);
+    DTDEntityDecl* decl = fDefaultEntities->getByKey(entName);
+
+    if (!decl)
+        return fEntityDeclPool->getByKey(entName);
+
+    return decl;
 }
 
 

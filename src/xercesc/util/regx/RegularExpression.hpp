@@ -190,16 +190,17 @@ private:
             ~Context();
 
             inline const XMLCh* getString() const { return fString; }
-            void reset(const XMLCh* const string, const int start,
-                       const int limit, const int noClosures);
+            void reset(const XMLCh* const string, const int stringLen,
+                       const int start, const int limit, const int noClosures);
             bool nextCh(XMLInt32& ch, int& offset, const short direction);
 
             bool      fInUse;
             bool      fAdoptMatch;
             int       fStart;
             int       fLimit;
-            int       fLength;
+            int       fLength;    // fLimit - fStart
             int       fSize;
+            int       fStringMaxLen;
             int*      fOffsets;
             Match*    fMatch;
             XMLCh*    fString;

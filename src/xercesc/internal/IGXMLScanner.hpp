@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/08/14 02:56:41  knoaman
+ * Code refactoring to improve performance of validation.
+ *
  * Revision 1.8  2003/07/10 19:47:23  peiyongz
  * Stateless Grammar: Initialize scanner with grammarResolver,
  *                                creating grammar through grammarPool
@@ -239,6 +242,7 @@ private :
                                 bool& skipThisOne,
                                 bool& laxThisOne);
     void resizeElemState();
+    void processSchemaLocation(XMLCh* const schemaLoc);
 
     // -----------------------------------------------------------------------
     //  Private scanning methods
@@ -327,6 +331,7 @@ private :
     XPathMatcherStack*          fMatcherStack;
     ValueStoreCache*            fValueStoreCache;
     FieldActivator*             fFieldActivator;
+    ValueVectorOf<XMLCh*>*      fLocationPairs;
 };
 
 inline const XMLCh* IGXMLScanner::getName() const
