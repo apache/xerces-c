@@ -236,9 +236,9 @@ parser->parse(xmlFile2);
         message loading services can be derived. Your platform driver
         file can create whichever type of message loader it wants to
         use on that platform.  &XercesCName; currently has versions for the in
-        memory format, the Win32 resource format, and the message
-        catalog format. An ICU one is present but not implemented
-        yet. Some of the platforms can support multiple message
+        memory format, the Win32 resource format, the message
+        catalog format, and ICU message loader. 
+        Some of the platforms can support multiple message
         loaders, in which case a #define token is used to control
         which one is used. You can set this in your build projects to
         control the message loader type used.</p>
@@ -445,4 +445,34 @@ public:
         </source>
     </s2>
 
+
+    <anchor name="SpecifyLocaleForMessageLoader"/>
+    <s2 title="Specify locale for message loader">
+
+        <p>The &XercesCName; has implemented mechanism to support NLS, though
+        the current drop has only English version message file, it is capable 
+        to support other languages once the translated version of the target
+        language is available.</p>
+        
+        <p>Application can specify the locale for the message loader in their
+        very first invocation to XMLPlatformUtils::Initialize() by supplying
+        a parameter for the target locale intended. The defaul locale is "en_US".          
+        </p>
+    </s2>        
+
+<source>
+
+...
+    // Initialize the XML4C system
+    try
+    {
+         XMLPlatformUtils::Initialize("fr_FR");
+    }
+
+    catch ()
+    {
+    }
+..
+</source>
+    
 </s1>

@@ -290,4 +290,15 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
+  <faq title="Cannot load message domain, Xerces Panic Error">
+    <q>"Cannot load message domain, Xerces Panic Error"?</q>
+    <a>
+      <p>
+            When the library is built with icu message loader, or message catalog loader,
+            you need an environment variable, XERCESC_NLS_HOME to point to
+            the directory, $XERCESCROOT/lib.
+      </p>
+    </a>
+  </faq>
+  
 </faqs>

@@ -67,7 +67,9 @@
         <anchor name="ModifiedAPI220"/>
         <s4 title="Modified Public API">
             <ul>
-              <li>.</li>
+              <li> XMLPlatformUtils::Initialize() takes a parameter specifying locale
+              for message loader, with default value "en_US".
+              .</li>
             </ul>
         </s4>
 

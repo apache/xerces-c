@@ -32,7 +32,17 @@
 		<p>To set you LIBPATH (on AIX for example), you would type:</p>
 <source>export LIBPATH=&XercesCInstallDir;/lib:$LIBPATH</source>
 
-               <p>Once you have set up your PATH variable, you can run the
+               <p>On both Windows and UNIX platforms, you may need to set another environment
+               variable, XERCESC_NLS_HOME.              
+               </p>
+<source>
+set XERCESC_NLS_HOME=$XERCESCROOT\lib
+or
+export XERCESC_NLS_HOME=$XERCESCROOT/lib
+setenv XERCESC_NLS_HOME=$XERCESCROOT/lib
+</source>
+               
+               <p>Once you have set up the environment variables, you can run the
                samples by opening a command window (or your shell prompt for
                UNIX environments).</p>
 

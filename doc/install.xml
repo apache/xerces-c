@@ -39,6 +39,9 @@
 <source>SET PATH=&lt;full_path_to_&XercesCInstallDir;>\bin;%PATH%</source>
 		<p>or run the <code>SET PATH</code> command in your shell window.</p>
 
+        <p>Besides, you need to create a new environment variable, XERCESC_NLS_HOME.</p>           
+<source>SET XERCESC_NLS_HOME=&lt;full_path_to_&XercesCInstallDir;>\lib</source>
+           
         <p>The binary distribution has the built parser library and some samples executables.
            Please refer to the <jump href="samples.html">Samples</jump> for how to run the samples.</p>
 
@@ -104,6 +107,13 @@ export SHLIB_PATH=$XERCESCROOT/lib:$SHLIB_PATH (on HP-UX)</source>
 setenv LIBPATH "$XERCESCROOT/lib:$LIBPATH" (on AIX)
 setenv LD_LIBRARY_PATH "$XERCESCROOT/lib:$LD_LIBRARY_PATH" (on Solaris, Linux)
 setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)</source>
+
+        <p>Besides, you need to create a new environment variable, XERCESC_NLS_HOME.</p>           
+<source>
+export XERCESC_NLS_HOME=$XERCESCROOT/lib
+or
+setenv XERCESC_NLS_HOME=$XERCESCROOT/lib
+</source>        
 
         <p>The binary distribution has the built parser library and some samples executables.
            Please refer to the <jump href="samples.html">Samples</jump> for how to run the samples.</p>
