@@ -80,6 +80,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+//Though DOMNodeImpl does not derivate from DOMNode, it shares
+//the same GetDOMNodeMemoryManager
 
 const unsigned short DOMNodeImpl::READONLY     = 0x1<<0;
 const unsigned short DOMNodeImpl::SYNCDATA     = 0x1<<1;
@@ -142,7 +144,7 @@ DOMNode * DOMNodeImpl::appendChild(DOMNode *)
 {
     // Only node types that don't allow children will use this default function.
     //   Others will go to DOMParentNode::appendChild.
-    throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+    throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMNodeMemoryManager);
     return 0;
     //  return insertBefore(newChild, 0);
 }
@@ -266,21 +268,21 @@ bool DOMNodeImpl::hasChildNodes() const
 
 
 DOMNode *DOMNodeImpl::insertBefore(DOMNode *, DOMNode *) {
-    throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0);
+    throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
 
 DOMNode *DOMNodeImpl::removeChild(DOMNode *)
 {
-    throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+    throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
 
 DOMNode *DOMNodeImpl::replaceChild(DOMNode *, DOMNode *)
 {
-    throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+    throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMNodeMemoryManager);
     return 0;
 }
 
@@ -353,7 +355,7 @@ const XMLCh *DOMNodeImpl::getLocalName() const
 
 void DOMNodeImpl::setPrefix(const XMLCh *)
 {
-    throw DOMException(DOMException::NAMESPACE_ERR, 0);
+    throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 }
 
 
@@ -389,12 +391,18 @@ const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
         if (XMLString::equals(namespaceURI, XMLUni::fgXMLURIName))
             return XMLUni::fgXMLURIName;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        //pending: if default value is 0
+        //throw DOMException(DOMException::NAMESPACE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     } else if (nType == DOMNode::ATTRIBUTE_NODE && XMLString::equals(prefix, XMLUni::fgXMLNSString)) {
         if (XMLString::equals(namespaceURI, XMLUni::fgXMLNSURIName))
             return XMLUni::fgXMLNSURIName;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        //pending: if default value is 0
+        //throw DOMException(DOMException::NAMESPACE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     } else if (namespaceURI == 0 || *namespaceURI == 0) {
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        //pending: if default value is 0
+        //throw DOMException(DOMException::NAMESPACE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     } else
         return namespaceURI;
     return namespaceURI;
@@ -1039,7 +1047,7 @@ void DOMNodeImpl::setTextContent(const XMLCh* textContent){
         case DOMNode::DOCUMENT_FRAGMENT_NODE:
             {
                 if (isReadOnly())
-                  throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+                  throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
                 // Remove all childs
                 DOMNode* current = thisNode->getFirstChild();
@@ -1063,7 +1071,7 @@ void DOMNodeImpl::setTextContent(const XMLCh* textContent){
         case DOMNode::COMMENT_NODE:
         case DOMNode::PROCESSING_INSTRUCTION_NODE:
             if (isReadOnly())
-                throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+                throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
             thisNode->setNodeValue(textContent);
             break;
@@ -1074,7 +1082,7 @@ void DOMNodeImpl::setTextContent(const XMLCh* textContent){
             break;
 
         default:
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     }
 }
 
@@ -1135,7 +1143,7 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
 }
 
 DOMNode*         DOMNodeImpl::getInterface(const XMLCh*)      {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
@@ -1144,7 +1152,7 @@ DOMNode*         DOMNodeImpl::getInterface(const XMLCh*)      {
 void DOMNodeImpl::release()
 {
     // shouldn't reach here
-    throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

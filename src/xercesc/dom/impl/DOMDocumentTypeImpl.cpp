@@ -162,7 +162,7 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
 {
     int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
     if (index < 0)
-        throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
     else if (index > 0)
     {
         // we have to make sure the qualifiedName has correct prefix and localName
@@ -183,12 +183,12 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         // Before we carry on, we should check if the prefix or localName are valid XMLName
         if (ownerDoc) {
             if (!((DOMDocumentImpl*)ownerDoc)->isXMLName(newName) || !((DOMDocumentImpl*)ownerDoc)->isXMLName(qualifiedName+index+1))
-                throw DOMException(DOMException::NAMESPACE_ERR, 0);
+                throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
         }
         else {
             // document is not there yet, so assume XML 1.0
             if (!XMLChar1_0::isValidName(newName, index) || !XMLChar1_0::isValidName(qualifiedName+index+1, XMLString::stringLen(qualifiedName)-index-1))
-                throw DOMException(DOMException::NAMESPACE_ERR, 0);
+                throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
         }
 
         if (index >= 3999)
@@ -417,7 +417,7 @@ void DOMDocumentTypeImpl::release()
             }
         }
         else
-            throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+            throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
     else {
         if (fIsCreatedFromHeap) {
@@ -433,7 +433,7 @@ void DOMDocumentTypeImpl::release()
             }
             else {
                 // shouldn't reach here
-                throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+                throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
             }
         }
     }

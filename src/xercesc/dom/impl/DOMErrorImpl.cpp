@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/04/01 22:05:32  peiyongz
+ * invoke DOMException with Memory Manager
+ *
  * Revision 1.8  2004/01/29 11:44:26  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -148,6 +151,8 @@ void DOMErrorImpl::setLocation(DOMLocator* const location)
 void DOMErrorImpl::setRelatedException(void*) const
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    //pending: if default value is 0
+    //throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, XMLPlatformUtils::fgMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

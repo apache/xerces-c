@@ -168,7 +168,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
         if (qualifiedName)
             appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
         else if (fNamespaceURI)
-            throw DOMException(DOMException::NAMESPACE_ERR, 0);
+            throw DOMException(DOMException::NAMESPACE_ERR, 0, getMemoryManager());
     }
     catch(const OutOfMemoryException&)
     {
@@ -190,7 +190,7 @@ void DOMDocumentImpl::setDocumentType(DOMDocumentType *doctype)
     //   ownerDocument will be set, but the DocType won't yet be a child of the document.
     if (doctype->getOwnerDocument() != 0 && doctype->getOwnerDocument() != this)
         throw DOMException(    //one doctype can belong to only one DOMDocumentImpl
-        DOMException::WRONG_DOCUMENT_ERR, 0);
+        DOMException::WRONG_DOCUMENT_ERR, 0, getMemoryManager());
 
     DOMDocumentTypeImpl* doctypeImpl = (DOMDocumentTypeImpl*) doctype;
     doctypeImpl->setOwnerDocument(this);
@@ -278,7 +278,7 @@ DOMDocument * DOMDocumentImpl::getOwnerDocument() const {
 DOMAttr *DOMDocumentImpl::createAttribute(const XMLCh *nam)
 {
     if(!nam || !isXMLName(nam))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
     return new (this, DOMDocumentImpl::ATTR_OBJECT) DOMAttrImpl(this,nam);
 }
 
@@ -308,7 +308,7 @@ DOMDocumentType *DOMDocumentImpl::createDocumentType(const XMLCh *nam)
 {
     if (!nam || !isXMLName(nam))
         throw DOMException(
-        DOMException::INVALID_CHARACTER_ERR, 0);
+        DOMException::INVALID_CHARACTER_ERR, 0, getMemoryManager());
 
     return new (this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(this, nam, false);
 }
@@ -322,7 +322,7 @@ DOMDocumentType *
 {
     if (!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(
-        DOMException::INVALID_CHARACTER_ERR, 0);
+        DOMException::INVALID_CHARACTER_ERR, 0, getMemoryManager());
 
     return new (this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(this, qualifiedName, publicId, systemId, false);
 }
@@ -332,7 +332,7 @@ DOMDocumentType *
 DOMElement *DOMDocumentImpl::createElement(const XMLCh *tagName)
 {
     if(!tagName || !isXMLName(tagName))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
 
     return new (this, DOMDocumentImpl::ELEMENT_OBJECT) DOMElementImpl(this,tagName);
 }
@@ -350,7 +350,7 @@ DOMEntity *DOMDocumentImpl::createEntity(const XMLCh *nam)
 {
     if (!nam || !isXMLName(nam))
         throw DOMException(
-        DOMException::INVALID_CHARACTER_ERR, 0);
+        DOMException::INVALID_CHARACTER_ERR, 0, getMemoryManager());
 
     return new (this, DOMDocumentImpl::ENTITY_OBJECT) DOMEntityImpl(this, nam);
 }
@@ -361,7 +361,7 @@ DOMEntityReference *DOMDocumentImpl::createEntityReference(const XMLCh *nam)
 {
     if (!nam || !isXMLName(nam))
         throw DOMException(
-        DOMException::INVALID_CHARACTER_ERR, 0);
+        DOMException::INVALID_CHARACTER_ERR, 0, getMemoryManager());
 
     return new (this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(this, nam);
 }
@@ -370,7 +370,7 @@ DOMEntityReference *DOMDocumentImpl::createEntityReferenceByParser(const XMLCh *
 {
     if (!nam || !isXMLName(nam))
         throw DOMException(
-        DOMException::INVALID_CHARACTER_ERR, 0);
+        DOMException::INVALID_CHARACTER_ERR, 0, getMemoryManager());
 
     return new (this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(this, nam, false);
 }
@@ -379,7 +379,7 @@ DOMNotation *DOMDocumentImpl::createNotation(const XMLCh *nam)
 {
     if (!nam || !isXMLName(nam))
         throw DOMException(
-        DOMException::INVALID_CHARACTER_ERR, 0);
+        DOMException::INVALID_CHARACTER_ERR, 0, getMemoryManager());
 
     return new (this, DOMDocumentImpl::NOTATION_OBJECT) DOMNotationImpl(this, nam);
 }
@@ -390,7 +390,7 @@ DOMProcessingInstruction *DOMDocumentImpl::createProcessingInstruction(
                                           const XMLCh *target, const XMLCh *data)
 {
     if(!target || !isXMLName(target))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
     return new (this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT) DOMProcessingInstructionImpl(this,target,data);
 }
 
@@ -407,7 +407,7 @@ DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
           DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
     if (!root) {
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
         return 0;
     }
 
@@ -446,21 +446,21 @@ void DOMDocumentImpl::removeNodeIterator(DOMNodeIteratorImpl* nodeIterator)
 
 const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh *, const DOMXPathNSResolver *)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     return 0;
 }
 
 const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(DOMNode *)
 
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     return 0;
 }
 
 void* DOMDocumentImpl::evaluate(const XMLCh *, DOMNode *, const DOMXPathNSResolver *, 
                            unsigned short, void* ) 
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     return 0;
 }
 
@@ -469,7 +469,7 @@ void* DOMDocumentImpl::evaluate(const XMLCh *, DOMNode *, const DOMXPathNSResolv
 DOMTreeWalker* DOMDocumentImpl::createTreeWalker (DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
     if (!root) {
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
         return 0;
     }
 
@@ -513,7 +513,7 @@ DOMNode *DOMDocumentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
         ||
         (newChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE  && fDocType!=0)
         )
-        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, getMemoryManager());
 
     // if the newChild is a documenttype node created from domimplementation, set the ownerDoc first
     if ((newChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE) && !newChild->getOwnerDocument())
@@ -604,7 +604,7 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
     const XMLCh *qualifiedName)
 {
     if(!qualifiedName || !isXMLName(qualifiedName))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
     //XMLCh * pooledTagName = this->fNamePool->getPooledString(qualifiedName);
     return new (this, DOMDocumentImpl::ELEMENT_NS_OBJECT) DOMElementNSImpl(this, fNamespaceURI, qualifiedName);
 }
@@ -615,7 +615,7 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
                                               const XMLSSize_t columnNo)
 {
     if(!qualifiedName || !isXMLName(qualifiedName))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
 
     return new (this) XSDElementNSImpl(this, fNamespaceURI, qualifiedName, lineNo, columnNo);
 }
@@ -625,7 +625,7 @@ DOMAttr *DOMDocumentImpl::createAttributeNS(const XMLCh *fNamespaceURI,
     const XMLCh *qualifiedName)
 {
     if(!qualifiedName || !isXMLName(qualifiedName))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
     return new (this, DOMDocumentImpl::ATTR_NS_OBJECT) DOMAttrNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
@@ -981,7 +981,7 @@ void DOMDocumentImpl::setVersion(const XMLCh* version){
     if ((version && *version) &&
         !XMLString::equals(version, XMLUni::fgVersion1_0) &&
         !XMLString::equals(version, XMLUni::fgVersion1_1))
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 
     fVersion = cloneString(version);
 }
@@ -1010,7 +1010,7 @@ void DOMDocumentImpl::setStrictErrorChecking(bool strictErrorChecking) {
 }
 
 DOMNode* DOMDocumentImpl::adoptNode(DOMNode*) {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     return 0;
 }
 
@@ -1122,7 +1122,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
             // unless this is used as part of cloning a Document
             // forbid it for the sake of being compliant to the DOM spec
             if (!cloningDoc)
-                throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+                throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 
             DOMDocumentType *srcdoctype = (DOMDocumentType *)source;
             DOMDocumentType *newdoctype = (DOMDocumentType *)
@@ -1170,7 +1170,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
 
     case DOMNode::DOCUMENT_NODE : // Document can't be child of Document
     default:                       // Unknown node type
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
 
     // If deep, replicate and attach the kids.
@@ -1309,9 +1309,9 @@ DOMNode* DOMDocumentImpl::renameNode(DOMNode* n, const XMLCh* namespaceURI, cons
 {
     if (n->getOwnerDocument() != this)
         if (n->getNodeType() == DOCUMENT_NODE)
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
         else
-            throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+            throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, getMemoryManager());
 
     switch (n->getNodeType()) {
         case ELEMENT_NODE:
@@ -1319,7 +1319,7 @@ DOMNode* DOMDocumentImpl::renameNode(DOMNode* n, const XMLCh* namespaceURI, cons
         case ATTRIBUTE_NODE:
             return ((DOMAttrImpl*)n)->rename(namespaceURI, name);
         default:
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
 
     return 0;

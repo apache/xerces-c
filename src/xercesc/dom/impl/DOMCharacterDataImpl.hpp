@@ -118,6 +118,8 @@ private:
     DOMCharacterDataImpl & operator = (const DOMCharacterDataImpl &);   
 };
 
+#define GetDOMCharacterDataImplMemoryManager GET_DIRECT_MM(fDoc)
+
 XERCES_CPP_NAMESPACE_END
 
 

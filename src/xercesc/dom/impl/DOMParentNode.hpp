@@ -144,6 +144,8 @@ private:
     DOMParentNode& operator= (const DOMParentNode& other);
 };
 
+#define GetDOMParentNodeMemoryManager GET_DIRECT_MM(fOwnerDocument)
+
 XERCES_CPP_NAMESPACE_END
 
 #endif

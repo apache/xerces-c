@@ -69,7 +69,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
                                          const XMLCh *entityName)
     : fNode(ownerDoc), fParent(ownerDoc), fBaseURI(0)
@@ -184,7 +183,7 @@ void DOMEntityReferenceImpl::setNodeValue(const XMLCh *x)
 void DOMEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 {
     if(((DOMDocumentImpl *)getOwnerDocument())->getErrorChecking() && readOnl==false)
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     fNode.setReadOnly(readOnl,deep);
 }
 
@@ -192,7 +191,7 @@ void DOMEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 void DOMEntityReferenceImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -202,7 +201,7 @@ void DOMEntityReferenceImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 

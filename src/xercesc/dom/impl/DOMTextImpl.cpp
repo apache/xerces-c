@@ -76,7 +76,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 class DOMDocument;
 
 DOMTextImpl::DOMTextImpl(DOMDocument *ownerDoc, const XMLCh *dat)
@@ -119,11 +118,11 @@ DOMText *DOMTextImpl::splitText(XMLSize_t offset)
     if (fNode.isReadOnly())
     {
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
     XMLSize_t len = fCharacterData.fDataBuf->getLen();
     if (offset > len || offset < 0)
-        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMText *newText =
                 getOwnerDocument()->createTextNode(
@@ -170,12 +169,12 @@ bool DOMTextImpl::getIsWhitespaceInElementContent() const
 }
 
 const XMLCh* DOMTextImpl::getWholeText() {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
 DOMText* DOMTextImpl::replaceWholeText(const XMLCh*){
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
@@ -183,7 +182,7 @@ DOMText* DOMTextImpl::replaceWholeText(const XMLCh*){
 void DOMTextImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -193,7 +192,7 @@ void DOMTextImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 

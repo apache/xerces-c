@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.52  2004/04/01 22:05:32  peiyongz
+ * invoke DOMException with Memory Manager
+ *
  * Revision 1.51  2004/01/29 11:44:27  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -558,7 +561,7 @@ void DOMWriterImpl::setFeature(const XMLCh* const featName
         }
         XMLString::catString(tmpbuf, gCantSet);
         XMLString::catString(tmpbuf, state? gTrue : gFalse);
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, tmpbuf);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, tmpbuf, fMemoryManager);
     }
     else
         setFeature(featureId, state);
@@ -1506,7 +1509,7 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     if (!featName || !*featName)
     {
         if (toThrow)
-            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0, fMemoryManager);
 
         return false;
     }
@@ -1539,7 +1542,7 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     if (featureId == INVALID_FEATURE_ID)
     {
         if (toThrow)
-            throw DOMException(DOMException::NOT_FOUND_ERR, featName);
+            throw DOMException(DOMException::NOT_FOUND_ERR, featName, fMemoryManager);
 
         return false;
     }

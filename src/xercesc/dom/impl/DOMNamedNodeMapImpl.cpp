@@ -72,7 +72,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMNamedNodeMapImpl::DOMNamedNodeMapImpl(DOMNode *ownerNod)
 {
     fOwnerNode=ownerNod;
@@ -162,11 +161,11 @@ DOMNode * DOMNamedNodeMapImpl::removeNamedItem(const XMLCh *name)
 {
     if (this->readOnly())
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     
     unsigned int hash=XMLString::hash(name,MAP_SIZE);
     if(fBuckets[hash]==0)
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     int i = 0;
     int size = fBuckets[hash]->size();
@@ -180,7 +179,7 @@ DOMNode * DOMNamedNodeMapImpl::removeNamedItem(const XMLCh *name)
         }
     }
 
-    throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+    throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     return 0;
 }
 
@@ -200,11 +199,11 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItem(DOMNode * arg)
     DOMDocument *doc = fOwnerNode->getOwnerDocument();
     DOMNodeImpl *argImpl = castToNodeImpl(arg);
     if(argImpl->getOwnerDocument() != doc)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR,0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR,0, GetDOMNamedNodeMapMemoryManager);
     if (this->readOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     if ((arg->getNodeType() == DOMNode::ATTRIBUTE_NODE) && argImpl->isOwned() && (argImpl->fOwnerNode != fOwnerNode))
-        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0);
+        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0, GetDOMNamedNodeMapMemoryManager);
 
     argImpl->fOwnerNode = fOwnerNode;
     argImpl->isOwned(true);
@@ -289,11 +288,11 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItemNS(DOMNode *arg)
     DOMDocument *doc = fOwnerNode->getOwnerDocument();
     DOMNodeImpl *argImpl = castToNodeImpl(arg);
     if (argImpl->getOwnerDocument() != doc)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR,0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR,0, GetDOMNamedNodeMapMemoryManager);
     if (this->readOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     if (argImpl->isOwned())
-        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0);
+        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0, GetDOMNamedNodeMapMemoryManager);
 
     argImpl->fOwnerNode = fOwnerNode;
     argImpl->isOwned(true);
@@ -341,7 +340,7 @@ DOMNode *DOMNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
 {
     if (this->readOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     // the map is indexed using the full name of nodes; to search given a namespace and a local name
     // we have to do a linear search
@@ -369,7 +368,7 @@ DOMNode *DOMNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
             }
         }
     }
-    throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+    throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     return 0;
 }
 

@@ -67,7 +67,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMDocumentFragmentImpl::DOMDocumentFragmentImpl(DOMDocument *masterDoc)
     : fNode(masterDoc), fParent(masterDoc)
 {
@@ -119,7 +118,7 @@ void DOMDocumentFragmentImpl::setNodeValue(const XMLCh *x)
 void DOMDocumentFragmentImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -129,7 +128,7 @@ void DOMDocumentFragmentImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 

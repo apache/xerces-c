@@ -199,16 +199,16 @@ DOMNode * DOMAttrMapImpl::getNamedItem(const XMLCh *name) const
 DOMNode *DOMAttrMapImpl::setNamedItem(DOMNode *arg)
 {
     if (arg->getNodeType() != DOMNode::ATTRIBUTE_NODE)
-        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0);
+        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     DOMDocument *doc = fOwnerNode->getOwnerDocument();
     DOMNodeImpl *argImpl = castToNodeImpl(arg);
     if(argImpl->getOwnerDocument() != doc)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR,0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     if (this->readOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     if ((arg->getNodeType() == DOMNode::ATTRIBUTE_NODE) && argImpl->isOwned() && (argImpl->fOwnerNode != fOwnerNode))
-        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0);
+        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0, GetDOMNamedNodeMapMemoryManager);
 
     argImpl->fOwnerNode = fOwnerNode;
     argImpl->isOwned(true);
@@ -277,16 +277,16 @@ DOMNode *DOMAttrMapImpl::getNamedItemNS(const XMLCh *namespaceURI,
 DOMNode *DOMAttrMapImpl::setNamedItemNS(DOMNode* arg)
 {
     if (arg->getNodeType() != DOMNode::ATTRIBUTE_NODE)
-        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0);
+        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     DOMDocument *doc = fOwnerNode->getOwnerDocument();
     DOMNodeImpl *argImpl = castToNodeImpl(arg);
     if (argImpl->getOwnerDocument() != doc)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR,0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR,0, GetDOMNamedNodeMapMemoryManager);
     if (this->readOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     if (argImpl->isOwned())
-        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0);
+        throw DOMException(DOMException::INUSE_ATTRIBUTE_ERR,0, GetDOMNamedNodeMapMemoryManager);
 
     argImpl->fOwnerNode = fOwnerNode;
     argImpl->isOwned(true);
@@ -315,12 +315,12 @@ DOMNode *DOMAttrMapImpl::removeNamedItem(const XMLCh *name)
 {
     if (this->readOnly())
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     int i=findNamePoint(name);
     DOMNode *removed = 0;
 
     if(i<0)
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     removed = fNodes->elementAt(i);
     fNodes->removeElementAt(i);
@@ -347,10 +347,10 @@ DOMNode *DOMAttrMapImpl::removeNamedItemNS(const XMLCh *namespaceURI, const XMLC
 {
     if (this->readOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
     int i = findNamePoint(namespaceURI, localName);
     if (i < 0)
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     DOMNode * removed = fNodes -> elementAt(i);
     fNodes -> removeElementAt(i);	//remove n from nodes
@@ -380,11 +380,11 @@ DOMNode * DOMAttrMapImpl::removeNamedItemAt(XMLSize_t index)
 {
     if (this->readOnly())
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     DOMNode *removed = item(index);
     if(!removed)
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
     fNodes->removeElementAt(index);
     castToNodeImpl(removed)->fOwnerNode = fOwnerNode->getOwnerDocument();

@@ -123,7 +123,7 @@ DOMNode* DOMRangeImpl::getStartContainer() const
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     return fStartContainer;
@@ -134,7 +134,7 @@ XMLSize_t DOMRangeImpl::getStartOffset() const
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     return fStartOffset;
@@ -145,7 +145,7 @@ DOMNode* DOMRangeImpl::getEndContainer() const
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     return fEndContainer;
@@ -156,7 +156,7 @@ XMLSize_t DOMRangeImpl::getEndOffset() const
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     return fEndOffset;
@@ -169,7 +169,7 @@ bool DOMRangeImpl::getCollapsed() const
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     return ((fStartContainer == fEndContainer)
@@ -185,7 +185,7 @@ void DOMRangeImpl::setStartContainer(const DOMNode* node)
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     fStartContainer = (DOMNode*) node;
@@ -196,7 +196,7 @@ void DOMRangeImpl::setStartOffset(XMLSize_t offset)
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     fStartOffset = offset;
@@ -207,7 +207,7 @@ void DOMRangeImpl::setEndContainer(const DOMNode* node)
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     fEndContainer = (DOMNode*) node;
@@ -219,7 +219,7 @@ void DOMRangeImpl::setEndOffset(XMLSize_t offset)
     if (fDetached)
     {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     fEndOffset = offset;
@@ -236,7 +236,7 @@ void DOMRangeImpl::setStart(const DOMNode* refNode, XMLSize_t offset)
             collapse(true); //collapse the range positions to start
             fCollapsed = true;
             throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
+                DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
         }
     }
 
@@ -267,7 +267,7 @@ void DOMRangeImpl::setEnd(const DOMNode* refNode, XMLSize_t offset)
             collapse(false); //collapse the range positions to end
             fCollapsed = true;
             throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
+                DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
         }
     }
 
@@ -291,11 +291,11 @@ void DOMRangeImpl::setStartBefore(const DOMNode* refNode)
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
     if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
         throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+            DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
 
     // error if not the same owner document
@@ -304,7 +304,7 @@ void DOMRangeImpl::setStartBefore(const DOMNode* refNode)
             collapse(true); //collapse the range positions to start
             fCollapsed = true;
             throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
+                DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
         }
     }
 
@@ -335,11 +335,11 @@ void DOMRangeImpl::setStartAfter(const DOMNode* refNode)
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
     if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
         throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+            DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
 
     // error if not the same owner document
@@ -348,7 +348,7 @@ void DOMRangeImpl::setStartAfter(const DOMNode* refNode)
             collapse(true); //collapse the range positions to start
             fCollapsed = true;
             throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
+                DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
         }
     }
 
@@ -377,11 +377,11 @@ void DOMRangeImpl::setEndBefore(const DOMNode* refNode)
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
     if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
         throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+            DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
 
     // error if not the same owner document
@@ -390,7 +390,7 @@ void DOMRangeImpl::setEndBefore(const DOMNode* refNode)
             collapse(false); //collapse the range positions to end
             fCollapsed = true;
             throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
+                DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
         }
     }
 
@@ -420,11 +420,11 @@ void DOMRangeImpl::setEndAfter(const DOMNode* refNode)
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
     if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
         throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+            DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
 
     // error if not the same owner document
@@ -433,7 +433,7 @@ void DOMRangeImpl::setEndAfter(const DOMNode* refNode)
             collapse(false); //collapse the range positions to end
             fCollapsed = true;
             throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
+                DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
         }
     }
 
@@ -465,7 +465,7 @@ void DOMRangeImpl::detach()
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     ((DOMDocumentImpl *)fDocument)->removeRange(this);
@@ -486,7 +486,7 @@ void DOMRangeImpl::collapse(bool toStart)
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     if (toStart) {
@@ -504,7 +504,7 @@ void DOMRangeImpl::selectNode(const DOMNode* refNode)
     validateNode(refNode);
     if ( !isLegalContainedNode(refNode)) {
         throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+            DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
     //First check for the text type node
     short type = refNode->getNodeType();
@@ -583,12 +583,12 @@ void DOMRangeImpl::surroundContents(DOMNode* newParent)
     //check for elimination criteria
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     if (newParent->getOwnerDocument() !=fDocument) {
         throw DOMException(
-            DOMException::WRONG_DOCUMENT_ERR, 0);
+            DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
     }
 
     int type = newParent->getNodeType();
@@ -596,7 +596,7 @@ void DOMRangeImpl::surroundContents(DOMNode* newParent)
         || type == DOMNode::DOCUMENT_TYPE_NODE)
     {
         throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+            DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
 
     DOMNode* realStart = fStartContainer;
@@ -619,7 +619,7 @@ void DOMRangeImpl::surroundContents(DOMNode* newParent)
 
     if (realStart != realEnd) {
         throw DOMRangeException(
-            DOMRangeException::BAD_BOUNDARYPOINTS_ERR, 0);
+            DOMRangeException::BAD_BOUNDARYPOINTS_ERR, 0, fMemoryManager);
     }
 
     DOMDocumentFragment* frag = (DOMDocumentFragment*) extractContents();
@@ -633,11 +633,11 @@ short DOMRangeImpl::compareBoundaryPoints(DOMRange::CompareHow how, const DOMRan
 {
     if (fDocument != ((DOMRangeImpl*)srcRange)->fDocument) {
         throw DOMException(
-            DOMException::WRONG_DOCUMENT_ERR, 0);
+            DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
     }
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     DOMNode* pointA;
@@ -757,7 +757,7 @@ void DOMRangeImpl::insertNode(DOMNode* newNode)
 
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     int type = newNode->getNodeType();
@@ -767,26 +767,26 @@ void DOMRangeImpl::insertNode(DOMNode* newNode)
         || type == DOMNode::DOCUMENT_NODE)
     {
         throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+            DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
 
     // Prevent cycles in the tree.
     //isKidOK() is not checked here as its taken care by insertBefore() function
     if (isAncestorOf( newNode, fStartContainer)) {
         throw DOMException(
-            DOMException::HIERARCHY_REQUEST_ERR, 0);
+            DOMException::HIERARCHY_REQUEST_ERR, 0, fMemoryManager);
     }
 
     for (DOMNode* aNode = fStartContainer; aNode!=0; aNode = aNode->getParentNode()) {
         if (castToNodeImpl(newNode)->isReadOnly()) {
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, fMemoryManager);
     }
     }
 
     if (fDocument != newNode->getOwnerDocument()) {
         throw DOMException(
-            DOMException::WRONG_DOCUMENT_ERR, 0);
+            DOMException::WRONG_DOCUMENT_ERR, 0, fMemoryManager);
     }
 
 
@@ -840,7 +840,7 @@ DOMRange* DOMRangeImpl::cloneRange() const
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     DOMRange* range = fDocument->createRange();
@@ -854,7 +854,7 @@ const XMLCh* DOMRangeImpl::toString() const
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     if ((fStartContainer == fEndContainer) && (fEndOffset == fStartOffset))
@@ -1069,12 +1069,11 @@ void DOMRangeImpl::validateNode(const DOMNode* node) const
 {
     if( fDetached) {
         throw DOMException(
-            DOMException::INVALID_STATE_ERR, 0);
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     if ( !isValidAncestorType(node)) {
-        throw DOMRangeException(
-            DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+        throw DOMRangeException(DOMRangeException::INVALID_NODE_TYPE_ERR, 0, fMemoryManager);
     }
 }
 
@@ -1082,7 +1081,7 @@ void DOMRangeImpl::validateNode(const DOMNode* node) const
 const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNode* pointB) const
 {
     if (fDetached)
-            throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
 
     //if the containers are same then it itself is its common ancestor.
     if (pointA == pointB)
@@ -1122,7 +1121,7 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
 void DOMRangeImpl::checkIndex(const DOMNode* node, XMLSize_t offset) const
 {
     if (offset < 0) {
-        throw DOMException( DOMException::INDEX_SIZE_ERR, 0 );
+        throw DOMException( DOMException::INDEX_SIZE_ERR, 0, fMemoryManager);
     }
 
     short type = node->getNodeType();
@@ -1132,7 +1131,7 @@ void DOMRangeImpl::checkIndex(const DOMNode* node, XMLSize_t offset) const
         || type == DOMNode::COMMENT_NODE
         || type == DOMNode::PROCESSING_INSTRUCTION_NODE)) {
         if (offset > XMLString::stringLen(node->getNodeValue()))
-            throw DOMException( DOMException::INDEX_SIZE_ERR, 0 );
+            throw DOMException( DOMException::INDEX_SIZE_ERR, 0, fMemoryManager );
         else  return;
     }
 
@@ -1142,7 +1141,7 @@ void DOMRangeImpl::checkIndex(const DOMNode* node, XMLSize_t offset) const
         child = child->getNextSibling();
     }
     if (i < offset) {
-        throw DOMException( DOMException::INDEX_SIZE_ERR, 0 );
+        throw DOMException( DOMException::INDEX_SIZE_ERR, 0, fMemoryManager );
     }
 
 }
@@ -1193,7 +1192,7 @@ DOMNode* DOMRangeImpl::nextNode(const DOMNode* node, bool visitChildren) const
 DOMDocumentFragment* DOMRangeImpl::traverseContents(TraversalType how)
 {
     if (fDetached)
-            throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+            throw DOMException(DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
 
     if (fStartContainer == 0 || fEndContainer == 0) {
         return 0; // REVIST: Throw exception?
@@ -1871,7 +1870,7 @@ void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
     if ( type == DOMNode::DOCUMENT_TYPE_NODE )
     {
         throw DOMException(
-            DOMException::HIERARCHY_REQUEST_ERR, 0);
+            DOMException::HIERARCHY_REQUEST_ERR, 0, fMemoryManager);
     }
 
     if((type == DOMNode::TEXT_NODE
@@ -1881,7 +1880,7 @@ void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
     {
         if (castToNodeImpl(start)->isReadOnly()) {
             throw DOMException(
-                DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+                DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, fMemoryManager);
         }
         //if both start and end are text check and return
         if (start == end)
@@ -1900,7 +1899,7 @@ void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
     if ( type == DOMNode::DOCUMENT_TYPE_NODE )
     {
         throw DOMException(
-            DOMException::HIERARCHY_REQUEST_ERR, 0);
+            DOMException::HIERARCHY_REQUEST_ERR, 0, fMemoryManager);
     }
 
     if((type == DOMNode::TEXT_NODE
@@ -1928,12 +1927,12 @@ void DOMRangeImpl::recurseTreeAndCheck(DOMNode* start, DOMNode* end)
         if ( node->getNodeType()== DOMNode::DOCUMENT_TYPE_NODE )
         {
             throw DOMException(
-                DOMException::HIERARCHY_REQUEST_ERR, 0);
+                DOMException::HIERARCHY_REQUEST_ERR, 0, fMemoryManager);
         }
 
         if (castToNodeImpl(node)->isReadOnly()) {
             throw DOMException(
-                DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+                DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, fMemoryManager);
         }
 
         if (node->hasChildNodes()) {

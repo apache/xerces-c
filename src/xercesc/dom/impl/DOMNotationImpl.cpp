@@ -65,7 +65,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
     : fNode(ownerDoc), fName(0), fPublicId(0), fSystemId(0), fBaseURI(0)
 {
@@ -127,7 +126,7 @@ void DOMNotationImpl::setPublicId(const XMLCh *arg)
 {
     if(fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR,0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR,0, GetDOMNodeMemoryManager);
 
     fPublicId = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(arg);
 }
@@ -137,7 +136,7 @@ void DOMNotationImpl::setSystemId(const XMLCh *arg)
 {
     if(fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR,0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR,0, GetDOMNodeMemoryManager);
 
     fSystemId = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(arg);
 }
@@ -145,7 +144,7 @@ void DOMNotationImpl::setSystemId(const XMLCh *arg)
 void DOMNotationImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -154,7 +153,7 @@ void DOMNotationImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 

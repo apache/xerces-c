@@ -67,7 +67,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
     DOMElementImpl(ownerDoc, nam)
 {
@@ -154,13 +153,12 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
     const XMLCh * xmlURI   = DOMNodeImpl::getXmlURIString();
 
     if (fNode.isReadOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     if(prefix != 0 && !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, GetDOMNodeMemoryManager);
 
     if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull)
-        throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
     if (prefix == 0 || *prefix == 0) {
         fName = fLocalName;
@@ -169,11 +167,11 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
 
     if (XMLString::equals(prefix, xml) &&
         !XMLString::equals(fNamespaceURI, xmlURI))
-        throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
 
     if (XMLString::indexOf(prefix, chColon) != -1) {
-        throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
     }
 
     this-> fPrefix = ((DOMDocumentImpl *)this->getOwnerDocument())->getPooledString(prefix);
@@ -207,7 +205,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
 void DOMElementNSImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -217,7 +215,7 @@ void DOMElementNSImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 
@@ -236,7 +234,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
 
     int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
     if (index < 0)
-        throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
     if (index == 0) {	//qualifiedName contains no ':'
         this -> fPrefix = 0;
@@ -262,7 +260,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
         if (!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fPrefix) || !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fLocalName))
-            throw DOMException(DOMException::NAMESPACE_ERR, 0);
+            throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
     }
 
     // DOM Level 3: namespace URI is never empty string.

@@ -70,7 +70,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMCommentImpl::DOMCommentImpl(DOMDocument *ownerDoc, const XMLCh *dat)
     : fNode(ownerDoc),  fCharacterData(ownerDoc, dat)
 {
@@ -114,7 +113,7 @@ short DOMCommentImpl::getNodeType() const {
 void DOMCommentImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -124,7 +123,7 @@ void DOMCommentImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 
@@ -135,11 +134,11 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
     if (fNode.isReadOnly())
     {
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
     XMLSize_t len = fCharacterData.fDataBuf->getLen();
     if (offset > len || offset < 0)
-        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMComment *newText =
                 getOwnerDocument()->createComment(

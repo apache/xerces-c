@@ -71,7 +71,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMParentNode::DOMParentNode(DOMDocument *ownerDoc)
     : fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(castToNode(this))
 {    
@@ -182,10 +181,10 @@ bool DOMParentNode::hasChildNodes() const
 DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     DOMNodeImpl *thisNodeImpl = castToNodeImpl(this);
     if (thisNodeImpl->isReadOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMParentNodeMemoryManager);
 
     if (newChild->getOwnerDocument() != fOwnerDocument)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMParentNodeMemoryManager);
 
     // Prevent cycles in the tree
     //only need to do this if the node has children
@@ -196,12 +195,12 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
             a=a->getParentNode())
             treeSafe=(newChild!=a);
         if(!treeSafe)
-            throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+            throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
     }
 
     // refChild must in fact be a child of this node (or 0)
     if (refChild!=0 && refChild->getParentNode() != castToNode(this))
-        throw DOMException(DOMException::NOT_FOUND_ERR,0);
+        throw DOMException(DOMException::NOT_FOUND_ERR,0, GetDOMParentNodeMemoryManager);
 
     // if the new node has to be placed before itself, we don't have to do anything 
     // (even worse, we would crash if we continue, as we assume they are two distinct nodes)
@@ -232,14 +231,14 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
               kid=kid->getNextSibling())
         {
             if (!DOMDocumentImpl::isKidOK(castToNode(this), kid))
-              throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+              throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
         }
         while(newChild->hasChildNodes())     // Move
             insertBefore(newChild->getFirstChild(),refChild);
     }
 
     else if (!DOMDocumentImpl::isKidOK(castToNode(this), newChild))
-        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
 
     else
     {
@@ -312,10 +311,10 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
 {
     if (castToNodeImpl(this)->isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMParentNodeMemoryManager);
 
     if (oldChild == 0 || oldChild->getParentNode() != castToNode(this))
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMParentNodeMemoryManager);
 
     if (this->getOwnerDocument() !=  0  ) {
         //notify iterators

@@ -137,7 +137,7 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
     XMLString::lowerCase(lowerCaseName);
 
     if(!canSetParameter(lowerCaseName, value)) {
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, fMemoryManager);
     }
 
     bool isBooleanParameter = true;
@@ -163,7 +163,7 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
         } else if (XMLString::equals(lowerCaseName, fgSCHEMA_LOCATION)) {
             fSchemaLocation = (XMLCh*)value;
         } else {  // canSetParameter above should take care of this case
-            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0, fMemoryManager);
         }
     }
 
@@ -203,7 +203,7 @@ const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
         } else if (XMLString::equals(lowerCaseName, fgSCHEMA_LOCATION)) {
             return fSchemaLocation;
         } else {
-            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0, fMemoryManager);
         }
     }
 
@@ -338,7 +338,7 @@ DOMConfigurationImpl::DOMConfigurationFeature DOMConfigurationImpl::getFeatureFl
     } else if (XMLString::equals(lowerCaseName, fgWHITESPACE_IN_ELEMENT_CONTENT)) {
         return FEATURE_WHITESPACE_IN_ELEMENT_CONTENT;
     } else {
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, fMemoryManager);
     }
         
 }

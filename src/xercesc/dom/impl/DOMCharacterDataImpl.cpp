@@ -69,7 +69,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
  : fDataBuf(0)
  , fDoc(0)
@@ -113,8 +112,7 @@ const XMLCh * DOMCharacterDataImpl::getNodeValue() const
 void DOMCharacterDataImpl::setNodeValue(const DOMNode *node, const XMLCh *value)
 {
     if (castToNodeImpl(node)->isReadOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
     fDataBuf->set(value);
 
     if (node->getOwnerDocument() != 0) {
@@ -135,7 +133,7 @@ void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
 {
     if(castToNodeImpl(node)->isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
     fDataBuf->append(dat);
 }
@@ -144,7 +142,7 @@ void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
 void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XMLSize_t count)
 {
     if (castToNodeImpl(node)->isReadOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
     // Note: the C++ XMLCh * operation throws the correct DOMExceptions
     //       when parameter values are bad.
@@ -152,7 +150,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
 
     XMLSize_t len = this->fDataBuf->getLen();
     if (offset > len || offset < 0 || count < 0)
-        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
 
 
@@ -225,7 +223,7 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
 {
     if (castToNodeImpl(node)->isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
     // Note: the C++ XMLCh * operation throws the correct DOMExceptions
     //       when parameter values are bad.
@@ -233,7 +231,7 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
 
     XMLSize_t len = fDataBuf->getLen();
     if (offset > len || offset < 0)
-        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
     XMLSize_t datLen = XMLString::stringLen(dat);
 
@@ -278,7 +276,7 @@ void DOMCharacterDataImpl::replaceData(const DOMNode *node, XMLSize_t offset, XM
 {
     if (castToNodeImpl(node)->isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
     deleteData(node, offset, count);
     insertData(node, offset, dat);
@@ -308,7 +306,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     XMLSize_t len = fDataBuf->getLen();
 
     if (offset > len || offset < 0 || count < 0)
-        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
 
     XMLCh* newString;

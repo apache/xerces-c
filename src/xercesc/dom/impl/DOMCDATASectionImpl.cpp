@@ -69,7 +69,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc,
                                    const XMLCh *dat)
     : fNode(ownerDoc), fParent(ownerDoc), fCharacterData(ownerDoc, dat)
@@ -126,12 +125,11 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 {
     if (fNode.isReadOnly())
     {
-        throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
     XMLSize_t len = fCharacterData.fDataBuf->getLen();
     if (offset > len || offset < 0)
-        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMText *newText =
                 getOwnerDocument()->createCDATASection(
@@ -165,12 +163,12 @@ bool DOMCDATASectionImpl::getIsWhitespaceInElementContent() const
 }
 
 const XMLCh* DOMCDATASectionImpl::getWholeText() {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
 DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh*){
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
@@ -178,7 +176,7 @@ DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh*){
 void DOMCDATASectionImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
 
@@ -190,7 +188,7 @@ void DOMCDATASectionImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 

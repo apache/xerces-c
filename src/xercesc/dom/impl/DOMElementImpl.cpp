@@ -81,7 +81,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 class DOMAttr;
 
 DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
@@ -207,7 +206,7 @@ void DOMElementImpl::removeAttribute(const XMLCh *nam)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     XMLSSize_t i = fAttributes->findNamePoint(nam);
     if (i >= 0)
@@ -224,7 +223,7 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMNode* found = 0;
 
@@ -244,11 +243,11 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
             ((DOMAttrImpl *)oldAttr)->removeAttrFromIDNodeMap();
         }
         else
-            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
     }
     else
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
    return (DOMAttr *)found;
 }
@@ -259,7 +258,7 @@ void DOMElementImpl::setAttribute(const XMLCh *nam, const XMLCh *val)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMAttr* newAttr = getAttributeNode(nam);
     if (!newAttr)
@@ -275,12 +274,12 @@ void DOMElementImpl::setIdAttribute(const XMLCh* name)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMAttr *attr = getAttributeNode(name);
 
     if (!attr) 
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
     ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
 }
@@ -289,12 +288,12 @@ void DOMElementImpl::setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* lo
 
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMAttr *attr = getAttributeNodeNS(namespaceURI, localName);
 
     if (!attr) 
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
     ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
 
@@ -305,7 +304,7 @@ void DOMElementImpl::setIdAttributeNode(const DOMAttr *idAttr) {
 
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMAttr *attr;
     const XMLCh* localName = idAttr->getLocalName();
@@ -315,7 +314,7 @@ void DOMElementImpl::setIdAttributeNode(const DOMAttr *idAttr) {
         attr = getAttributeNode(idAttr->getName());
     
     if(!attr) 
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
     ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
 }
@@ -325,10 +324,10 @@ DOMAttr * DOMElementImpl::setAttributeNode(DOMAttr *newAttr)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     if (newAttr->getNodeType() != DOMNode::ATTRIBUTE_NODE)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMNodeMemoryManager);
         // revisit.  Exception doesn't match test.
 
     // This will throw INUSE if necessary
@@ -367,7 +366,7 @@ void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
 {
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMAttr* newAttr = getAttributeNodeNS(fNamespaceURI, qualifiedName);
 
@@ -386,7 +385,7 @@ void DOMElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
 {
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     XMLSSize_t i = fAttributes->findNamePoint(fNamespaceURI, fLocalName);
     if (i >= 0)
@@ -408,10 +407,10 @@ DOMAttr *DOMElementImpl::setAttributeNodeNS(DOMAttr *newAttr)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMNodeMemoryManager);
 
     // This will throw INUSE if necessary
     DOMAttr *oldAttr = (DOMAttr *) fAttributes->setNamedItemNS(newAttr);
@@ -471,10 +470,10 @@ DOMAttr * DOMElementImpl::setDefaultAttributeNode(DOMAttr *newAttr)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     if (newAttr->getNodeType() != DOMNode::ATTRIBUTE_NODE)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMNodeMemoryManager);
         // revisit.  Exception doesn't match test.
 
     // This will throw INUSE if necessary
@@ -489,10 +488,10 @@ DOMAttr *DOMElementImpl::setDefaultAttributeNodeNS(DOMAttr *newAttr)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMNodeMemoryManager);
 
     // This will throw INUSE if necessary
     DOMAttr *oldAttr = (DOMAttr *) fDefaultAttributes->setNamedItemNS(newAttr);
@@ -504,7 +503,7 @@ DOMAttr *DOMElementImpl::setDefaultAttributeNodeNS(DOMAttr *newAttr)
 void DOMElementImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -514,7 +513,7 @@ void DOMElementImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 

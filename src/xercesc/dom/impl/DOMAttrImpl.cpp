@@ -200,8 +200,7 @@ void DOMAttrImpl::setValue(const XMLCh *val)
 {
     if (fNode.isReadOnly())
     {
-        throw DOMException (
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
 
     //  If this attribute was of type ID and in the map, take it out,
@@ -257,7 +256,7 @@ void DOMAttrImpl::setOwnerElement(DOMElement *ownerElem)
 void DOMAttrImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -267,7 +266,7 @@ void DOMAttrImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 

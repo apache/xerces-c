@@ -66,7 +66,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 /** constructor */
 DOMTreeWalkerImpl::DOMTreeWalkerImpl (
                                 DOMNode* root,
@@ -142,7 +141,7 @@ DOMNode* DOMTreeWalkerImpl::getCurrentNode () {
 void DOMTreeWalkerImpl::setCurrentNode (DOMNode* node) {
 
     if (!node)
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMTreeWalkerMemoryManager);
 
     fCurrentNode = node;
 }

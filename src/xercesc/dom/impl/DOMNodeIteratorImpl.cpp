@@ -70,7 +70,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -166,7 +165,7 @@ bool DOMNodeIteratorImpl::getExpandEntityReferences()
 
 DOMNode* DOMNodeIteratorImpl::nextNode () {
 	if (fDetached)
-		throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+		throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeIteratorMemoryManager);
 
     // if root is 0 there is no next node->
     if (!fRoot)
@@ -211,7 +210,7 @@ DOMNode* DOMNodeIteratorImpl::nextNode () {
 
 DOMNode* DOMNodeIteratorImpl::previousNode () {
 	if (fDetached)
-		throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+		throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeIteratorMemoryManager);
 		
     // if the root is 0, or the current node is 0, return 0.
     if (!fRoot || !fCurrentNode) return 0;
@@ -252,7 +251,7 @@ DOMNode* DOMNodeIteratorImpl::previousNode () {
 /** The node is accepted if it passes the whatToShow and the filter. */
 bool DOMNodeIteratorImpl::acceptNode (DOMNode* node) {
 	if (fDetached)
-		throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+		throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeIteratorMemoryManager);
 
     if (fNodeFilter == 0) {
         return ((fWhatToShow & (1 << (node->getNodeType() - 1))) != 0);
@@ -283,7 +282,7 @@ DOMNode* DOMNodeIteratorImpl::matchNodeOrParent (DOMNode* node) {
 
 DOMNode* DOMNodeIteratorImpl::nextNode (DOMNode* node, bool visitChildren) {
 	if (fDetached)
-		throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+		throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeIteratorMemoryManager);
 
     if (!node) return fRoot;
 
@@ -326,7 +325,7 @@ DOMNode* DOMNodeIteratorImpl::nextNode (DOMNode* node, bool visitChildren) {
 
 DOMNode* DOMNodeIteratorImpl::previousNode (DOMNode* node) {
 	if (fDetached)
-		throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+		throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeIteratorMemoryManager);
 
     DOMNode* result = 0;
 
@@ -359,7 +358,7 @@ DOMNode* DOMNodeIteratorImpl::previousNode (DOMNode* node) {
 
 void DOMNodeIteratorImpl::removeNode (DOMNode* node) {
 	if (fDetached)
-		throw DOMException(DOMException::INVALID_STATE_ERR, 0);
+		throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeIteratorMemoryManager);
 
     // Implementation note: Fix-up means setting the current node properly
     // after a remove.

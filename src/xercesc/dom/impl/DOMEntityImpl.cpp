@@ -66,7 +66,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
 DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
    : fNode(ownerDoc),
      fParent(ownerDoc),
@@ -251,7 +250,7 @@ bool DOMEntityImpl::hasChildNodes() const
 void DOMEntityImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
@@ -261,7 +260,7 @@ void DOMEntityImpl::release()
     }
     else {
         // shouldn't reach here
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
     }
 }
 
