@@ -1,14 +1,14 @@
 $quote "
 $set 1
   2  Notation '{0}' has already been declared
-  3  Attribute '{0}' has already been declared declared for element '{1}'
+  3  Attribute '{0}' has already been declared for element '{1}'
   4  Encoding ({0}, from XMLDecl or manually set) contradicts the auto-sensed encoding, ignoring it
   5  Element '{0}' was referenced in a content model but never declared
   6  Element '{0}' was referenced in an attlist but never declared
-  7  An exception occured! Type:{0}, Message:{1}
+  7  An exception occurred! Type:{0}, Message:{1}
  10  {0} is unsupported
  11  Error: Top level complexType has no name - declaration ignored
- 12  Globally-declared attribute must have a name - attribute decaration ignored
+ 12  Globally-declared attribute must have a name - attribute declaration ignored
  13  Attribute must have a name or a ref - attribute declaration ignored
  14  Globally-declared element must have a name - element declaration ignored
  15  Element must have a name or a ref attribute - element ignored
@@ -54,7 +54,7 @@ $set 1
  55  SimpleType ({0}:{1}) for attribute: {2} not found
  56  An element cannot have both 'fixed' and 'default' present at the same time
  57  {0}:'{1}' has also a ref defined - name ignored
- 58  ref cannot appear with any of type, abstract, block, final, nullable, default or fixed
+ 58  ref cannot appear with any of type, abstract, block, final, nillable, default or fixed
  59  Invalid {0} name:'{1}' - declaration ignored
  60  Globally-declared element {0} cannot have a ref attribute - ref ignored
  61  Element '{0}' cannot have both a type attribute and a simpleType/complexType type child
@@ -107,7 +107,7 @@ $set 1
 108  The content of complexType is EMPTY, but base is not empty or does not have emptiable particle.
 109  The content type of the base type:'{0}' and derived type:'{1}' must both be mixed or element-only.
 110  The content type is not a valid restriction of the content type of the base.
-111  Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema
+111  Derivation by extension or restriction is forbidden by either the base type '{0}' or the schema
 112  The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)
 113  The {member type definitions} must all have {variety} of atomic or list
 114  The group:'0' must contain (all | choice | sequence)
@@ -116,7 +116,7 @@ $set 1
 117  The {0} -'{1}:{2}'- not found in the schema
 118  A group whose content is 'all' must only appear as the content type of a complex type definition.
 119  When a model group has {compositor} 'all' which constitutes the {content type} of a complex type, minOccurs=maxOccurs=1
-120  In an 'all' schema component, the value of minCoccurs/maxOccurs of an element must be '0' or '1'.
+120  In an 'all' schema component, the value of minOccurs/maxOccurs of an element must be '0' or '1'.
 121  Circular attributeGroup reference -{0}- is disallowed outside <redefine>
 122  Attribute '{0}' already defined in base and should not appear in derivation by extension.
 123  The intensional intersection of {attributes wildcard}s must be expressible
@@ -127,7 +127,7 @@ $set 1
 128  Attribute '{0}' has invalid target namespace with respect to a base wildcard constraint or, base has no wildcard
 129  An attribute wildcard is present in the derived type, but not in the base
 130  The attribute wildcard in the derived type is not a valid subset of that in the base
-131  Attribute '{0}' cannot modify the 'use' attribute in a derived type, if base attribute use is prohbited
+131  Attribute '{0}' cannot modify the 'use' attribute in a derived type, if base attribute use is prohibited
 132  Content of <all> is restricted to elements only. '{0}' encountered and ignored.
 133  Redefined schema '{0}' has a different targetNameSpace '{1}'.
 134  A simpleType child of a <redefine> must have a restriction element as a child
@@ -146,13 +146,13 @@ $set 1
 147  Cardinality of fields for keyref '{0}' and key '{1}' must match.
 148  Xpath expression is either missing or empty
 149  The complexType has content, while base is empty
-150  The {value constraint} of an attribue ref is not fixed or different from the fixed {value constraint} of '{0}'
+150  The {value constraint} of an attribute ref is not fixed or different from the fixed {value constraint} of '{0}'
 151  The {type definition} for attribute '{0}={1}' is or is derived from ID, and must not have {value constraint}
 152  More than one attribute derived from type ID cannot appear in the same complex type - '{0}' ignored
 153  More than one attribute derived from type ID cannot appear in the same attribute group - '{0}' ignored
 154  '' is not a legal value for the targetNamespace attribute; the attribute must be absent or contain a nonempty value
 155  {0}
-156  An exception occured! Type:{0}, Message:{1}
+156  An exception occurred! Type:{0}, Message:{1}
 159  Expected comment or CDATA
 160  Expected an attribute name
 161  Expected a notation name
@@ -208,7 +208,7 @@ $set 1
 211  Unterminated character reference
 212  Expected entity name for reference
 213  Entity '{0}' was not found
-214  Unparsed entitty references, '{0}', not valid here
+214  Unparsed entity references, '{0}', not valid here
 215  Unterminated entity reference
 216  Recursive entity expansion
 217  Partial markup in entity value
@@ -236,10 +236,10 @@ $set 1
 239  Expected a TextDecl here: <?xml ....
 240  Expected a XMLDecl here: <?xml ....
 241  Unexpected end of entity {0}
-242  A PE propogated out of the int/ext subset, discarding extra text
+242  A PE propagated out of the int/ext subset, discarding extra text
 243  An extra ] character was found an ignored
 244  PE refs are not allowed inside markup in the internal subset
-245  An entity propogated out of the content section into Miscellaneous
+245  An entity propagated out of the content section into Miscellaneous
 246  Expected &# to be followed by a numeric character value
 247  Expected an open bracket ('[') here
 248  The sequence ']]>' is not allowed in character data
@@ -271,8 +271,8 @@ $set 1
 274  When namespaces are enabled, a name can have only one colon character
 275  When namespaces are enabled, the colon cannot be the first or last character
 276  Colons are not allowed in this name when namespaces are enabled
-277  A system exception occured during processing
-278  An exception occured! Type:{0}, Message:{1}
+277  A system exception occurred during processing
+278  An exception occurred! Type:{0}, Message:{1}
 279  Unexpected end of file exception. Message: {0}
 280  UnexpectedError
 281  The schemaLocation attribute does not contain pairs of values.
@@ -344,18 +344,18 @@ $set 2
  62  Illegal Facet for Real type.
  63  Scale Facet must be less than or equal to Precision Facet
  64  {0} has exceeded the precision Facet {1}
- 65  {0} has execeed the scale Facet {1}
+ 65  {0} has exceeded the scale Facet {1}
  66  {0} is not a float.
  67  Can't get back Schema document's root element {0}.
  68  Schema in {0} has a different target namespace from the one specified in the instance document {1}.
  69  In element {0}: Can not have element children within a simple type content.
- 70  This element {0} has a simpletype but no datatypevalidator was found.
+ 70  This element {0} has a simpletype but no datatype validator was found.
  71  There is no Grammar for uri: {0}.
  72  {0}
  73  xsi:nil must not be specified for the element {0} with nillable equals false
  74  Element {0} with attribute xsi:nil=true must be empty
  75  Content of element '{0}' is different from the fixed attribute value in the element's schema declaration.
- 76  No datatypevalidator was found for this attribute {0}.
+ 76  No datatype validator was found for this attribute {0}.
  77  Schema error during parsing
  78  Element '{0}' should be qualified
  79  Element '{0}' should be un-qualified
@@ -412,7 +412,7 @@ $set 3
  24  The creation reason enum has an unknown value
  25  The element stack is empty
  26  The element stack index given was beyond the stack top
- 27  The element stack was already empty when a pop request occured
+ 27  The element stack was already empty when a pop request occurred
  28  A parent operation was requested, but only one element is on the stack
  29  The enumerator contains no more elements
  30  Could not open file: {0}
@@ -423,7 +423,7 @@ $set 3
  35  Could not duplicate the handle
  36  Could not read data from file
  37  Could not reset file to beginning
- 38  Could not acertain the file size
+ 38  Could not ascertain the file size
  39  Could not determine base pathname of the file
  40  The base path had too few levels to weave in relative part
  41  Parse may not be called while parsing
@@ -505,7 +505,7 @@ $set 3
 117  ':' is expected
 118  Unexpected end of the pattern in a conditional group
 119  A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern
-120  There are more than three choises in a conditional group
+120  There are more than three choices in a conditional group
 121  A character in U+0040-U+005f must follow \c
 122  A Category character or '{' is required
 123  A property name is not closed by '}'
@@ -516,8 +516,8 @@ $set 3
 128  Unknown name for a POSIX character class
 129  '-' is invalid here
 130  ']' is expected
-131  '[' is invalid in a characer class.  Write '\['
-132  ']' is invalid in a characer class.  Write '\]'
+131  '[' is invalid in a character class.  Write '\['
+132  ']' is invalid in a character class.  Write '\]'
 133  ='[' is expected
 134  ')' or '-[' or '+[' or '&[' is expected
 135  The range end code point '{0}' is less than the start code point '{1}'
@@ -539,7 +539,7 @@ $set 3
 151  minLength Value '{0}' must be a nonNegativeInteger
 152  It is an error for both length and maxLength to be members of facets
 153  It is an error for both length and minLength to be members of facets
-154  Value of maxLenght '{0}' must be greater than the value of minLength '{1}'
+154  Value of maxLength '{0}' must be greater than the value of minLength '{1}'
 155  Only constraining facet in boolean datatype is PATTERN
 156  Invalid Facet Tag '{0}'
 157  Value of Length '{0}' must be equal to the base Length '{1}'
@@ -637,7 +637,7 @@ $set 3
 249   '{0}' contains invalid escape sequence '{1}'
 250   '{0}' contains invalid char '{1}'
 251   '{0}' can not be set to null 
-252   '{0}' is NOT conformant '{1}' 
+252   '{0}' is NOT conformance '{1}' 
 253   No scheme found in URI
 254   '{0}', '{1}' may not be specified if host is not specified 
 255   '{0}', '{1}' may not be specified if path is not specified 
@@ -671,7 +671,7 @@ $set 3
 283  Not allowed to have '|' at the beginning of an xpath value
 284  Not allowed to have '||' in an xpath value
 285  Missing attribute name in xpath
-286  Expected xpah token 'NAMETEST_QNAME' or 'NAMETEST_ANY' or 'NAMETEST_NAMESPACE'
+286  Expected xpath token 'NAMETEST_QNAME' or 'NAMETEST_ANY' or 'NAMETEST_NAMESPACE'
 287  Prefix '{0}' not bound to namespace URI in an xpath value
 288  Not allowed to have double colon in the xpath expression
 289  Expected step following token 'AXISNAME_CHILD::'
@@ -697,12 +697,12 @@ $set 3
 309  Duration has invalid stuff before 'T'! '{0}' 
 310  Duration has no time elements after 'T'! '{0}' 
 311  Duration shall have at least element ! '{0}' 
-312  Imcomplete Date ! '{0}' 
+312  Incomplete Date ! '{0}' 
 313  Invalid Date ! '{0}' 
-314  Imcomplete Time ! '{0}' 
+314  Incomplete Time ! '{0}' 
 315  Invalid Time ! '{0}' 
 316  ms shall be present once '.' is present ! '{0}' 
-317  Imcomplete YearMonth! '{0}' 
+317  Incomplete YearMonth! '{0}' 
 318  Year separator is missing or misplaced ! '{0}' 
 319  Year must have 'CCYY' format ! '{0}' 
 320  Invalid leading zero in year! '{0}' 
@@ -722,12 +722,12 @@ $set 3
 334  NameAndTypeOK: The Element name/uri in restriction does not match that of corresponding base element
 335  NameAndTypeOK: Element '{0}' is nillable in the restriction, while it's not in the base
 336  NameAndTypeOK: Element '{0}' is either not fixed, or is not fixed with the same value as in the base
-337  NameAndTypeOK: The disallowed subsitutions, for element '{0}', are not a superset of those of the base element
+337  NameAndTypeOK: The disallowed substitutions, for element '{0}', are not a superset of those of the base element
 338  NameAndTypeOK: Element '{0}' has a type that does not derive from that of the base
 339  NameAndTypeOK: Derived element '{0}' has fewer Identity Constraints than base element '{1}'
-340  NameAndTypeOK: Derived element '{0}' has has an Identity Constraint that does not appear on base element '{1}'
+340  NameAndTypeOK: Derived element '{0}' has an Identity Constraint that does not appear on base element '{1}'
 341  RecurseAsIfGroup: Element '{0}' belongs to a group of a variety different from that of the base
-342  Occurrence range of group is not a valid restriction of occurence range of base group
+342  Occurrence range of group is not a valid restriction of occurrence range of base group
 343  Recurse: There is not a complete functional mapping between the particles
 344  Forbidden restriction of 'any': Choice,Seq,All,Elt
 345  Forbidden restriction of 'all': Choice,Seq,Elt
