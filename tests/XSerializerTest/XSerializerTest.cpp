@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.5  2003/12/16 22:59:39  peiyongz
+* compilation error fix
+*
 * Revision 1.4  2003/12/16 21:21:20  peiyongz
 * fix compilation error
 *
@@ -193,7 +196,7 @@ static BinInputStream* getInputStream()
 {
     if (!myOut)
     {
-        cerr << "DEserialization has to be done after serialization\n";
+        XERCES_STD_QUALIFIER cerr << "DEserialization has to be done after serialization\n";
         exit(-1);
     }
 
