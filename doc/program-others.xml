@@ -511,7 +511,7 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
 
 
     <anchor name="SpecifyLocaleForMessageLoader"/>
-    <s2 title="Specify locale for message loader">
+    <s2 title="Specify Locale for Message Loader">
 
         <p>The &XercesCName; has implemented mechanism to support NLS, though
         the current drop has only English version message file, it is capable
@@ -541,7 +541,7 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
 
 
     <anchor name="SpecifyLocationForMessageLoader"/>
-    <s2 title="Specify location for message loader">
+    <s2 title="Specify Location for Message Loader">
 
         <p>The &XercesCName; searches for message files at the default message directory, $XERCESCROOT/msg.
         </p>
@@ -559,6 +559,43 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
     try
     {
          XMLPlatformUtils::Initialize("en_US", "/usr/application_root/msg_home");
+    }
+
+    catch ()
+    {
+    }
+..
+</source>
+
+    <anchor name="PluggablePanicHandler"/>
+    <s2 title="Pluggable Panic Handler">
+
+        <p>The &XercesCName; reports, through the method panic(), any panic encountered,
+           to the panic handler installed, which in turn takes whatever action appropriate,
+           to handle the panic.                    
+        </p>
+        <p>The &XercesCName; allows application plugging a customized panic handler 
+           (class implementing the interface PanicHandler), in its very first invocation to 
+           XMLPlatformUtils::Initialize() by supplying a parameter for the panic handler 
+           intended.
+        </p>
+        <p>In the absence of such a plugged panic handler, &XercesCName; default
+           panic handler is installed and used, which aborts program whenever a panic
+           is seen.
+        </p>
+    </s2>
+
+<source>
+
+...
+    // Initialize the parser system
+    try
+    {
+         PanicHandler* ph = new MyPanicHandler();
+
+         XMLPlatformUtils::Initialize("en_US"
+                                    , "/usr/application_root/msg_home"
+                                    , ph);
     }
 
     catch ()

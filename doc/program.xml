@@ -81,8 +81,10 @@
       <li><jump href="program-others.html#PluggableTranscoders">Pluggable Transcoders</jump></li>
       <li><jump href="program-others.html#PortingGuidelines">Porting Guidelines</jump></li>
       <li><jump href="program-others.html#CPPNamespace">Using C++ Namespace</jump></li>
-      <li><jump href="program-others.html#SpecifylocaleforMessageLoader">Specify locale for Message Loader</jump></li>
+      <li><jump href="program-others.html#SpecifylocaleforMessageLoader">Specify Locale for Message Loader</jump></li>
+      <li><jump href="program-others.html#SpecifylocationforMessageLoader">Specify Location for Message Loader</jump></li>
       <li><jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump></li>
+      <li><jump href="program-others.html#PluggablePanicHandler">Pluggable Panic Handler</jump></li>      
     </ul>
   </s2>
 
