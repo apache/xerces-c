@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding = "iso-8859-1" standalone="no"?>
 <!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
-<faqs title="Parsing with &XercesCName;">
+<faqs title="Programming/Parsing with &XercesCName;">
 
   <faq title="Does &XercesCName; support Schema?">
 
@@ -45,75 +45,9 @@
     </a>
   </faq>
 
-  <faq title="Why does my application crash on AIX when I run it under a
-         multi-threaded environment?">
+  <faq title="Why does my application crash when instantiating the parser?">
 
-    <q>Why does my application crash on AIX when I run it under a
-      multi-threaded environment?</q>
-
-    <a>
-
-      <p>AIX maintains two kinds of libraries on the system, thread-safe and
-        non-thread safe. Multi-threaded libraries on AIX follow a different naming
-        convention, Usually the multi-threaded library names are followed with "_r".
-        For example, libc.a is single threaded whereas libc_r.a is multi-threaded.</p>
-
-      <p>To make your multi-threaded application run on AIX, you <em>must</em>
-        ensure that you do not have a "system library path" in your <code>LIBPATH</code>
-        environment variable when you run the application. The appropriate
-        libraries (threaded or non-threaded) are automatically picked up at runtime. An
-        application usually crashes when you build your application for multi-threaded
-        operation but don't point to the thread-safe version of the system libraries.
-        For example, LIBPATH can be simply set as:</p>
-
-<source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
-
-      <p>Where &lt;&XercesCProjectName;&gt; points to the directory where the
-        &XercesCProjectName; application resides.</p>
-
-      <p>If, for any reason unrelated to &XercesCProjectName;, you need to keep a
-        "system library path" in your LIBPATH environment variable, you must make sure
-        that you have placed the thread-safe path before you specify the normal system
-        path. For example, you must place <ref>/lib/threads</ref> before
-        <ref>/lib</ref> in your LIBPATH variable. That is to say your LIBPATH may look
-        like this:</p>
-
-<source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
-
-      <p>Where /usr/lib is where your system libraries are.</p>
-
-    </a>
-  </faq>
-
-  <faq title="I cannot run the sample applications. What is wrong?">
-
-    <q>I cannot run the sample applications. What is wrong?</q>
-
-    <a>
-
-      <p>In order to run an application built using &XercesCProjectName; you must
-        set up your path and library search path properly. In the stand-alone version
-        from Apache, you must have the &XercesCName; runtime library available from
-        your path settings. On Windows this library is called <code>&XercesCWindowsDLL;.dll</code> which must be available from your <code>PATH</code> settings. (Note that now there are separate debug and release dlls for
-        Windows. If the release dll is named <code>&XercesCWindowsDLL;.dll</code> then the debug dll is named <code>&XercesCWindowsDLL;d.dll)</code>. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code> (or <code>.a</code> or <code>.sl</code>) which must be available from your <code>LD_LIBRARY_PATH</code> (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
-
-      <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>, you need to point your library path to that directory.</p>
-
-<source>export LIBPATH=$LIBPATH:$HOME/fastxmlparser/lib # (AIX)
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/fastxmlparser/lib # (Solaris, Linux)
-export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
-
-      <p>If you are using the enhanced version of this parser from IBM, you will
-        need to put in two additional DLLs. In the Windows build these are <code>icuuc.dll</code> and <code>icudata.dll</code> which must be available from your PATH settings. On UNIX, these
-        libraries are called <code>libicuuc.so</code> and <code>libicudata.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
-
-    </a>
-  </faq>
-
-  <faq title="I just built my own application using the &XercesCName; parser. Why does it crash?">
-
-    <q>I just built my own application using the &XercesCName; parser. Why does
-      it crash?</q>
+    <q>Why does my application crash when instantiating the parser?</q>
 
     <a>
 
@@ -133,6 +67,136 @@ catch (const XMLException&amp; toCatch) {
       <p>This initializes the &XercesCProjectName; system and sets its internal
         variables. Note that you must the include <code>util/PlatformUtils.hpp</code> file for this to work.</p>
 
+    </a>
+  </faq>
+
+  <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
+    <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
+    <a>
+      <p>Yes.  Since &XercesCName; Version 1.5.2., the code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
+         multiple times in one process is now allowed.
+      </p>
+
+      <p>But the application needs to guarantee that only one thread has entered either the
+        method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
+        one time.</p>
+
+      <p>If you are calling XMLPlatformUtils::Initialize() a number of times, and then follow with
+         XMLPlatformUtils::Terminate() the same number of times, only the first XMLPlatformUtils::Initialize()
+         will do the initialization, and only the last XMLPlatformUtils::Terminate() will clean up
+         the memory.  The other calls are ignored.
+      </p>
+
+      <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
+         should match the number of XMLPlatformUtils::Initialize() calls.
+      </p>
+
+      <p>
+         Consider the following code snippets (for illustration simplicity the following
+         sample code is not coded in try/catch clause):
+      </p>
+
+<source>
+// The XMLPlatformUtils::Initialize/Terminate calls are paired.
+{
+    // Initialize the parser
+    XMLPlatformUtils::Initialize();
+
+    SAXParser parser;
+    parser.parse(xmlFile);
+
+    // Free all memory that was being held by the parser
+    XMLPlatformUtils::Terminate();
+
+    // Initialize the parser
+    XMLPlatformUtils::Initialize();
+
+    SAXParser parser;
+    parser.parse(xmlFile);
+
+    // Free all memory that was being held by the parser
+    XMLPlatformUtils::Terminate();
+}
+</source>
+
+<source>
+// calls XMLPlatformUtils::Initialize() three times
+// then calls XMLPlatformUtils::Terminate() numerous times
+{
+    // Initialize the parser
+    XMLPlatformUtils::Initialize();
+
+    // The next two calls are no-op
+    XMLPlatformUtils::Initialize();
+    XMLPlatformUtils::Initialize();
+
+    SAXParser parser;
+    parser.parse(xmlFile);
+
+    // The first two XMLPlatformUtils::Terminate() calls are no-op
+    XMLPlatformUtils::Terminate();
+    XMLPlatformUtils::Terminate();
+
+    // This third XMLPlatformUtils::Terminate() will free all memory that was being held by the parser
+    XMLPlatformUtils::Terminate();
+
+    // This extra fourth XMLPlatformUtils::Terminate() call is no-op.
+    // However calling XMLPlatformUtils::Terminate() without a matching XMLPlatformUtils::Initialize()
+    // is dangerous and should be avoided.
+    XMLPlatformUtils::Terminate();
+}
+</source>
+    </a>
+  </faq>
+
+  <faq title="Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair is called more than once.">
+
+    <q>Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair more than once</q>
+
+    <a>
+
+      <p>Please make sure you are using &XercesCName; Version 1.5.2 or up.
+      </p>
+
+      <p>Please make sure the XMLPlatformUtils::Terminate() is the last &XercesCName; function to be called
+         in your program.  NO explicit nor implicit &XercesCName; destructor (those local data that are
+         destructed when going out of scope) should be called after XMLPlatformUtils::Terminate().
+      </p>
+      <p>
+         Consider the following code snippets which is incorrect (for illustration simplicity the
+         following sample code is not coded in try/catch clause):
+      </p>
+
+<source>
+1: {
+2:    XMLPlatformUtils::Initialize();
+3:    DOMString c("hello");
+4:    XMLPlatformUtils::Terminate();
+5: }
+</source>
+
+      <p>The DOMString object "c" is destructed when going out of scope at line 5 before the closing
+         brace.  As a result, DOMString destructor is called at line 5 after
+         XMLPlatformUtils::Terminate() which is wrong.  Correct code should be:
+      </p>
+
+<source>
+1: {
+2:    XMLPlatformUtils::Initialize();
+2a:    {
+3:           DOMString c("hello");
+3a:    }
+4:    XMLPlatformUtils::Terminate();
+5: }
+</source>
+
+      <p>The extra pair of braces (line 2a and 3a) ensures that all implicit destructors are called
+         before terminating &XercesCName;.</p>
+
+      <p>In addition the application also needs to guarantee that only one thread has entered either the
+        method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
+        one time.
+      </p>
     </a>
   </faq>
 
@@ -172,53 +236,6 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Can't debug into the &XercesCName; DLL with the MSVC debugger">
-
-    <q> The libs/dll's I downloaded keep me from using the debugger in VC6.0. I
-      am using the 'D', debug versions of them. "no symbolic information found" is
-      what it says. Do I have to compile everything from source to make it work?</q>
-
-    <a>
-
-      <p>Unless you have the .pdb files, all you are getting with the debug
-        library is that it uses the debug heap manager, so that you can compile your
-        stuff in debug mode and not be dangerous. If you want full symbolic info for
-        the &XercesCName; library, you'll need the .pdb files, and to get those, you'll
-        need to rebuild the &XercesCName; library.</p>
-
-    </a>
-  </faq>
-
-  <faq title="First-chance exception in Microsoft debugger">
-
-    <q>"First-chance exception in DOMPrint.exe (KERNEL32.DLL): 0xE06D7363:
-      Microsoft C++ Exception." I am always getting this message when I am using the
-      parser. My programs are terminating abnormally. Even the samples are giving
-      this exception. I am using Visual C++ 6.0 with latest service pack
-      installed.</q>
-
-    <a>
-
-      <p>&XercesCName; uses C++ exceptions internally, as part of its normal
-        operation. By default, the MSVC debugger will stop on each of these with the
-        "First-chance exception ..." message.</p>
-
-      <p>To stop this from happening do this:</p>
-
-      <ul>
-        <li>start debugging (so the debug menu appears)</li>
-        <li>from the debug menu select "Exceptions"</li>
-        <li>from the box that opens select "Microsoft C++ Exception" and set it
-          to "Stop if not handled" instead of "stop always".</li>
-      </ul>
-
-      <p>You'll still land in the debugger if your program is terminating
-        abnormally, but it will be at your problem, not from the internal &XercesCName;
-        exceptions.</p>
-
-    </a>
-  </faq>
-
   <faq title="I am seeing memory leaks in &XercesCName;. Are they real?">
 
     <q>I am seeing memory leaks in &XercesCName;. Are they real?</q>
@@ -241,18 +258,24 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Can I validate the data contained in a DOM tree?">
+  <faq title="I find memory leaks in &XercesCName;. How do I eliminate it?">
 
-    <q>Is there a facility in &XercesCName; to validate the data contained in a
-      DOM tree? That is, without saving and re-parsing the source document?</q>
+    <q>I find memory leaks in &XercesCName;. How do I eliminate it?</q>
 
     <a>
 
-      <p>No. This is a frequently requested feature, but at this time it is not
-        possible to feed XML data from the DOM directly back to the DTD validator. The
-        best option for now is to generate XML source from the DOM and feed that back
-        into the parser.</p>
+      <p>The "leaks" that are reported through a leak-detector or heap-analysis
+        tools aren't really leaks in most application, in that the memory usage does
+        not grow over time as the XML parser is used and re-used.</p>
 
+      <p>What you are seeing as leaks are actually lazily evaluated data
+        allocated into static variables. This data gets released when the application
+        ends. You can make a call to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated variables before you exit your
+        program.</p>
+
+      <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
+         should match the number of XMLPlatformUtils::Initialize() calls.
+      </p>
     </a>
   </faq>
 
@@ -275,52 +298,70 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Why does my multi-threaded application crash on Solaris?">
+  <faq title="Can I validate the data contained in a DOM tree?">
 
-    <q>Why does my multi-threaded application crash on Solaris?</q>
+    <q>Is there a facility in &XercesCName; to validate the data contained in a
+      DOM tree? That is, without saving and re-parsing the source document?</q>
 
     <a>
 
-      <p>The problem appears because the throw call on Solaris 2.6 is not
-        multi-thread safe. Sun Microsystems provides a patch to solve this problem. To
-        get the latest patch for solving this problem, go to
-        <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump> and get the
-        appropriate patch for your operating system. For Intel machines running
-        Solaris, you need to get Patch ID 104678. For SPARC machines you need to get
-        Patch ID #105591.</p>
+      <p>No. This is a frequently requested feature, but at this time it is not
+        possible to feed XML data from the DOM directly back to the DTD validator. The
+        best option for now is to generate XML source from the DOM and feed that back
+        into the parser.</p>
 
     </a>
   </faq>
 
-  <faq title="Why does my application gives unresolved linking errors on Solaris?">
-
-    <q>Why does my application gives unresolved linking errors on Solaris?</q>
-
-    <a>
-
-      <p>On Solaris there are a few things that need to be done before you
-        execute your application using &XercesCName;. In case you're using the
-        binary build of &XercesCName; make sure that the OS and compiler are
-        the same version as the ones used to build the binary. Different OS and
-        compiler versions might cause unresolved linking problems or compilation
-        errors. If the versions are different, rebuild the &XercesCName; library on
-        your system before building your application. If you're using ICU (which is
-        packaged with XML4C) you need to rebuild the compatible version of ICU
-        first.</p>
-
-      <p>Also check that the library path is set properly and that the correct
-        versions of <code>gmake</code> and <code>autoconf</code> are on your system.</p>
-
+  <faq title="How to write out a DOM tree into an XML file?">
+     <q>How to write out a DOM tree into an XML file?</q>
+     <a>
+      <p>This feature is not yet availabe in the parser. Take a look at the DOMPrint sample
+         for an example on parsing  XML file, then writing it out back to the screen. You
+         can use that code.</p>
     </a>
   </faq>
 
-  <faq title="Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?">
-    <q>Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?</q>
+  <faq title="Why DOM_Node::cloneNode() does not clone the pointer assigned to a DOM_Node via DOM_Node::setUserData()?">
+    <q>Why DOM_Node::cloneNode() does not clone the pointer assigned to a DOM_Node via DOM_Node::setUserData()?</q>
     <a>
-      <p>This is a compiler problem.  Try turning off optimization to bypass the problem.</p>
+      <p>There are several possible options for how cloneNode should handle userData:
+      </p>
+      <ul>
+      <li>
+          1) Copy the pointer. May be a Very Bad Idea if you really wanted the data
+           associated with a particular node object.
+      </li>
+      <li>
+          2) Clone the object being pointed at. Maybe a Very Bad Idea if that object,
+          in turn, wasn't designed to be cloned at this time.
+      </li>
+      <li>
+          3) A complex call-back API has been proposed which would allow the userData
+          object to tell the DOM which of these three options should be taken, but
+          that would require that only objects implementing that API be registered as
+          userData. That doesn't seem to be a good option.
+      </li>
+      <li>
+          4) Do nothing. This is by far the lowest-overhead and safest choice. And
+          since cloneNode is a DOM operation, and userData is _not_ defined by the
+          standard DOM API, one can make a very strong case for this being the "most
+          correct" option.
+      </li>
+      </ul>
+      <p>
+          We chose (4), very deliberately. If you want one of the others, you can
+          implement it by creating your own wrapper operation for cloneNode() and
+          calling that.
+      </p>
+      <p>
+          NOTE that userData should be considered a nonportable, experimental feature
+          of the Xerces DOM. It may evaporate entirely in favor of a scheme based on
+          the DOM Level 3 "node key" mechanism, when that becomes officially
+          available.
+      </p>
     </a>
   </faq>
-
 
   <faq title="How are entity reference nodes handled in DOM?">
 
@@ -434,83 +475,13 @@ catch (const XMLException&amp; toCatch) {
         encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can
         parse input XML files in these above mentioned encodings.</p>
 
-      <p>XML4C -- the version of Xerces-C available from IBM -- extends this
-        set to include the encodings listed in the table below.</p>
-
-      <table>
-        <tr>
-          <td><em>Common Name</em></td>
-          <td><em>Use this name in XML</em></td>
-        </tr>
-        <tr>
-          <td>8 bit Unicode</td>
-          <td>UTF-8</td>
-        </tr>
-        <tr>
-          <td>ISO Latin 1</td>
-          <td>ISO-8859-1</td>
-        </tr>
-        <tr>
-          <td>ISO Latin 2</td>
-          <td>ISO-8859-2</td>
-        </tr>
-        <tr>
-          <td>ISO Latin 3</td>
-          <td>ISO-8859-3</td>
-        </tr>
-        <tr>
-          <td>ISO Latin 4</td>
-          <td>ISO-8859-4</td>
-        </tr>
-        <tr>
-          <td>ISO Latin Cyrillic</td>
-          <td>ISO-8859-5</td>
-        </tr>
-        <tr>
-          <td>ISO Latin Arabic</td>
-          <td>ISO-8859-6</td>
-        </tr>
-        <tr>
-          <td>ISO Latin Greek</td>
-          <td>ISO-8859-7</td>
-        </tr>
-        <tr>
-          <td>ISO Latin Hebrew</td>
-          <td>ISO-8859-8</td>
-        </tr>
-        <tr>
-          <td>ISO Latin 5</td>
-          <td>ISO-8859-9</td>
-        </tr>
-        <tr>
-          <td>EBCDIC US</td>
-          <td>ebcdic-cp-us</td>
-        </tr>
-        <tr>
-          <td>EBCDIC with Euro symbol</td>
-          <td>ibm1140</td>
-        </tr>
-        <tr>
-          <td>Chinese, PRC</td>
-          <td>gb2312</td>
-        </tr>
-        <tr>
-          <td>Chinese, Big5</td>
-          <td>Big5</td>
-        </tr>
-        <tr>
-          <td>Cyrillic</td>
-          <td>koi8-r</td>
-        </tr>
-        <tr>
-          <td>Japanese, Shift JIS</td>
-          <td>Shift_JIS</td>
-        </tr>
-        <tr>
-          <td>Korean, Extended UNIX code</td>
-          <td>euc-kr</td>
-        </tr>
-      </table>
+      <p>XML4C -- the version of Xerces-C available from IBM -- combines Xerces-C
+         and <jump href="http://oss.software.ibm.com/icu/">
+         International Components for Unicode (ICU)</jump> and
+         extends the encoding support to over 100 different encodings that are allowed
+         by ICU.  In particular, all the encodings registered with the
+         <jump href="http://www.iana.org/assignments/character-sets">
+         Internet Assigned Numbers Authority (IANA) </jump> are suppored in XML4C.</p>
 
       <p>Some implementations or ports of Xerces-C provide support for
         additional encodings. The exact set will depend on the supplier of the parser
@@ -519,8 +490,7 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq
-  title="What character encoding should I use when creating XML documents?">
+  <faq   title="What character encoding should I use when creating XML documents?">
 
     <q>What character encoding should I use when creating XML documents?</q>
 
@@ -568,28 +538,6 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq
-  title="I find memory leaks in &XercesCName;. How do I eliminate it?">
-
-    <q>I find memory leaks in &XercesCName;. How do I eliminate it?</q>
-
-    <a>
-
-      <p>The "leaks" that are reported through a leak-detector or heap-analysis
-        tools aren't really leaks in most application, in that the memory usage does
-        not grow over time as the XML parser is used and re-used.</p>
-
-      <p>What you are seeing as leaks are actually lazily evaluated data
-        allocated into static variables. This data gets released when the application
-        ends. You can make a call to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated variables before you exit your
-        program.</p>
-
-      <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
-         should match the number of XMLPlatformUtils::Initialize() calls.
-      </p>
-    </a>
-  </faq>
-
   <faq title="Is EBCDIC supported?">
 
     <q>Is EBCDIC supported?</q>
@@ -615,94 +563,6 @@ catch (const XMLException&amp; toCatch) {
         exact set supported will be platform dependent, and these encodings are not
         recommended for portable XML data.</p>
 
-    </a>
-  </faq>
-
-  <faq title="How to write out a DOM tree into an XML file?">
-     <q>How to write out a DOM tree into an XML file?</q>
-     <a>
-      <p>This feature is not yet availabe in the parser. Take a look at the DOMPrint sample
-         for an example on parsing  XML file, then writing it out back to the screen. You
-         can use that code.</p>
-    </a>
-  </faq>
-
-  <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
-    <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
-    <a>
-      <p>Yes.  Since &XercesCName; Version 1.5.2., the code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
-         multiple times in one process is now allowed.
-      </p>
-
-      <p>But the application needs to guarantee that only one thread has entered either the
-        method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
-        one time.</p>
-
-      <p>If you are calling XMLPlatformUtils::Initialize() a number of times, and then follow with
-         XMLPlatformUtils::Terminate() the same number of times, only the first XMLPlatformUtils::Initialize()
-         will do the initialization, and only the last XMLPlatformUtils::Terminate() will clean up
-         the memory.  The other calls are ignored.
-      </p>
-
-      <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
-         should match the number of XMLPlatformUtils::Initialize() calls.
-      </p>
-
-      <p>
-         Consider the following code snippets (for illustration simplicity the following
-         sample code is not coded in try/catch clause):
-      </p>
-
-<source>
-// The XMLPlatformUtils::Initialize/Terminate calls are paired.
-{
-    // Initialize the parser
-    XMLPlatformUtils::Initialize();
-
-    SAXParser parser;
-    parser.parse(xmlFile);
-
-    // Free all memory that was being held by the parser
-    XMLPlatformUtils::Terminate();
-
-    // Initialize the parser
-    XMLPlatformUtils::Initialize();
-
-    SAXParser parser;
-    parser.parse(xmlFile);
-
-    // Free all memory that was being held by the parser
-    XMLPlatformUtils::Terminate();
-}
-</source>
-
-<source>
-// calls XMLPlatformUtils::Initialize() three times
-// then calls XMLPlatformUtils::Terminate() numerous times
-{
-    // Initialize the parser
-    XMLPlatformUtils::Initialize();
-
-    // The next two calls are no-op
-    XMLPlatformUtils::Initialize();
-    XMLPlatformUtils::Initialize();
-
-    SAXParser parser;
-    parser.parse(xmlFile);
-
-    // The first two XMLPlatformUtils::Terminate() calls are no-op
-    XMLPlatformUtils::Terminate();
-    XMLPlatformUtils::Terminate();
-
-    // This third XMLPlatformUtils::Terminate() will free all memory that was being held by the parser
-    XMLPlatformUtils::Terminate();
-
-    // This extra fourth XMLPlatformUtils::Terminate() call is no-op.
-    // However calling XMLPlatformUtils::Terminate() without a matching XMLPlatformUtils::Initialize()
-    // is dangerous and should be avoided.
-    XMLPlatformUtils::Terminate();
-}
-</source>
     </a>
   </faq>
 
@@ -787,98 +647,6 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Why DOM_Node::cloneNode() does not clone the pointer assigned to a DOM_Node via DOM_Node::setUserData()?">
-    <q>Why DOM_Node::cloneNode() does not clone the pointer assigned to a DOM_Node via DOM_Node::setUserData()?</q>
-    <a>
-      <p>There are several possible options for how cloneNode should handle userData:
-      </p>
-      <ul>
-      <li>
-          1) Copy the pointer. May be a Very Bad Idea if you really wanted the data
-           associated with a particular node object.
-      </li>
-      <li>
-          2) Clone the object being pointed at. Maybe a Very Bad Idea if that object,
-          in turn, wasn't designed to be cloned at this time.
-      </li>
-      <li>
-          3) A complex call-back API has been proposed which would allow the userData
-          object to tell the DOM which of these three options should be taken, but
-          that would require that only objects implementing that API be registered as
-          userData. That doesn't seem to be a good option.
-      </li>
-      <li>
-          4) Do nothing. This is by far the lowest-overhead and safest choice. And
-          since cloneNode is a DOM operation, and userData is _not_ defined by the
-          standard DOM API, one can make a very strong case for this being the "most
-          correct" option.
-      </li>
-      </ul>
-      <p>
-          We chose (4), very deliberately. If you want one of the others, you can
-          implement it by creating your own wrapper operation for cloneNode() and
-          calling that.
-      </p>
-      <p>
-          NOTE that userData should be considered a nonportable, experimental feature
-          of the Xerces DOM. It may evaporate entirely in favor of a scheme based on
-          the DOM Level 3 "node key" mechanism, when that becomes officially
-          available.
-      </p>
-    </a>
-  </faq>
-
-  <faq title="Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair is called more than once.">
-
-    <q>Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair more than once</q>
-
-    <a>
-
-      <p>Please make sure you are using &XercesCName; Version 1.5.2 or up.
-      </p>
-
-      <p>Please make sure the XMLPlatformUtils::Terminate() is the last &XercesCName; function to be called
-         in your program.  NO explicit nor implicit &XercesCName; destructor (those local data that are
-         destructed when going out of scope) should be called after XMLPlatformUtils::Terminate().
-      </p>
-      <p>
-         Consider the following code snippets which is incorrect (for illustration simplicity the
-         following sample code is not coded in try/catch clause):
-      </p>
-
-<source>
-1: {
-2:    XMLPlatformUtils::Initialize();
-3:    DOMString c("hello");
-4:    XMLPlatformUtils::Terminate();
-5: }
-</source>
-
-      <p>The DOMString object "c" is destructed when going out of scope at line 5 before the closing
-         brace.  As a result, DOMString destructor is called at line 5 after
-         XMLPlatformUtils::Terminate() which is wrong.  Correct code should be:
-      </p>
-
-<source>
-1: {
-2:    XMLPlatformUtils::Initialize();
-2a:    {
-3:           DOMString c("hello");
-3a:    }
-4:    XMLPlatformUtils::Terminate();
-5: }
-</source>
-
-      <p>The extra pair of braces (line 2a and 3a) ensures that all implicit destructors are called
-         before terminating &XercesCName;.</p>
-
-      <p>In addition the application also needs to guarantee that only one thread has entered either the
-        method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
-        one time.
-      </p>
-    </a>
-  </faq>
-
   <faq title="Why does SAX2XMLReader::setProperty not work?">
 
     <q>Why does SAX2XMLReader::setProperty not work?</q>
@@ -887,7 +655,7 @@ catch (const XMLException&amp; toCatch) {
 
       <p>The function <code>SAX2XMLReader::setProperty(const XMLCh* const name, void* value)</code>
          takes a void pointer for the property value.  Application is required to initialize this void pointer
-         to a correct type.  See <jump href="program.html#SAX2Properties">SAX2 Programming Guide</jump>
+         to a correct type.  See <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump>
          to learn exactly what type of property value that each property expects for processing.
          Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
       </p>
@@ -903,7 +671,7 @@ catch (const XMLException&amp; toCatch) {
 
       <p>The function <code>void* SAX2XMLReader::getProperty(const XMLCh* const name)</code>
          returns a void pointer for the property value.  See
-         <jump href="program.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
+         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
          exactly what type of object each property returns.
       </p>
       <p>The parser owns the returned pointer.  The memory allocated for
@@ -912,55 +680,9 @@ catch (const XMLException&amp; toCatch) {
          is deleted, callers need to copy and store the returned information
          somewhere else; otherwise you may get unexpected result.  Since the returned
          pointer is a generic void pointer, see
-         <jump href="program.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
+         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
          exactly what type of property value each property returns for replication.
       </p>
-
-    </a>
-  </faq>
-
-  <faq title="Why do I get compilation error when compiling &XercesCName; on FreeBSD with native transcoder?">
-
-    <q>Why do I get compilation error when compiling &XercesCName; on FreeBSD with native transcoder?</q>
-
-    <a>
-       <p>Please make sure you configure with "-t IconvFBSD" to use FreeBSD specific native transcoder.
-       </p>
-
-       <p>Or you can use ICU transcoder (configure with -t icu) instead of the native transcoder.
-       </p>
-
-    </a>
-  </faq>
-
-  <faq title="Why do I get link error saying icudata library not found when building with ICU?">
-
-    <q>Why do I get link error saying icudata library not found when building with ICU?</q>
-
-    <a>
-       <p>There is a bug in the Makefile of ICU 1.7, 1.8 and 1.8.1.  The link created during
-          ICU installation in $ICUROOT is, for example,
-       </p>
-
-       <p>icudata.so@ -> icudt17l.so
-       </p>
-
-       <p>instead of
-       </p>
-
-       <p>libicudata.so@ -> libicudt17l.so <br/>
-       </p>
-
-       <p>Therefore the -licudata doesn't work.  To bypass the problem, please manually create the
-          following link:
-       </p>
-
-       <p>libicudata.so@ -> libicudt17l.so
-       </p>
-
-       <p>This problem has been fixed in ICU 2.0.
-       </p>
-
 
     </a>
   </faq>

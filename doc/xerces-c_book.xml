@@ -42,11 +42,18 @@
 
   <group    id="faqs"        title="Frequently Asked Questions" label="FAQs">
      <entry id="faq-distrib" source="faq-distrib.xml"/>
+     <entry id="faq-build"   source="faq-build.xml"/>
      <entry id="faq-parse"   source="faq-parse.xml"/>
      <entry id="faq-other"   source="faq-other.xml"/>
   </group>
 
-  <document id="program"     label="Programming"  source="program.xml"/>
+  <container id="program"     label="Programming"  source="program.xml">
+     <entry id="program-sax"  source="program-sax.xml"/>
+     <entry id="program-sax2" source="program-sax2.xml"/>
+     <entry id="program-dom"  source="program-dom.xml"/>
+     <entry id="program-idom" source="program-idom.xml"/>
+  </container>
+
   <document id="migrate"     label="Migration"    source="migration.xml"/>
   <hidden id="migrate_archive"                    source="migration_archive.xml"/>
 
