@@ -57,6 +57,13 @@
     <tr>
         <td>2001-12-05</td>
         <td>Khaled Noaman</td>
+        <td>[Bug 1236] Incorrect NMTOKENS attribute normalization.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-05</td>
+        <td>Khaled Noaman</td>
         <td>[Bug 2752] Surrogate support incomplete.
         </td>
     </tr>
