@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/24 20:02:43  roddey
+ * A few more tweaks to the base/relative URL conglomeration code.
+ *
  * Revision 1.11  2000/03/24 00:29:36  rahulj
  * While composing the full path, also consider the port number
  * of the base URL.
@@ -739,7 +742,17 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
     &&  !fPath
     &&  fFragment)
     {
+        // Just in case, make sure we don't leak the user or password values
+        delete [] fUser;
+        fUser = 0;
+        delete [] fPassword;
+        fPassword = 0;
+
+        // Copy over the protocol and port number as is
         fProtocol = baseURL.fProtocol;
+        fPortNum = baseURL.fPortNum;
+
+        // Replicate the base fields that are provided
         fHost = XMLString::replicate(baseURL.fHost);
         fUser = XMLString::replicate(baseURL.fUser);
         fPassword = XMLString::replicate(baseURL.fPassword);
@@ -769,11 +782,16 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
     // Replicate all of the hosty stuff if the base has one
     if (baseURL.fHost)
     {
+        // Just in case, make sure we don't leak a user or password field
+        delete [] fUser;
+        fUser = 0;
+        delete [] fPassword;
+        fPassword = 0;
+
         fHost = XMLString::replicate(baseURL.fHost);
-        if (baseURL.fUser)
-            fUser = XMLString::replicate(baseURL.fUser);
-        if (baseURL.fPassword)
-            fPassword = XMLString::replicate(baseURL.fPassword);
+        fUser = XMLString::replicate(baseURL.fUser);
+        fPassword = XMLString::replicate(baseURL.fPassword);
+
         fPortNum = baseURL.fPortNum;
     }
 
@@ -793,6 +811,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
     if (hadPath)
         return;
 
+    // We had no original path, so go on to deal with the query/fragment parts
     if (fQuery || !baseURL.fQuery)
         return;
     fQuery = XMLString::replicate(baseURL.fQuery);
