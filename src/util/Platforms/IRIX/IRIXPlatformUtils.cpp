@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/01/26 15:42:00  tng
+ * Undefined symbol error when building a single threaded version of the xerces lib on irix.  Fixed by Walker.
+ *
  * Revision 1.10  2000/07/25 22:29:45  aruna1
  * Char definitions in XMLUni moved to XMLUniDefs
  *
@@ -185,23 +188,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
     return 0;
 #endif
 }
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform init method
-// ---------------------------------------------------------------------------
-
-static XMLMutex atomicOpsMutex;
-
-void XMLPlatformUtils::platformInit()
-{
-    //
-    // The atomicOps mutex needs to be created early.
-    // Normally, mutexes are created on first use, but there is a
-    // circular dependency between compareAndExchange() and
-    // mutex creation that must be broken.
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
-}
-
 
 XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
                                     , const XMLCh* const    relativePath)
@@ -550,6 +536,23 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 // -----------------------------------------------------------------------
 
 #if !defined(APP_NO_THREADS)
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Platform init method
+// ---------------------------------------------------------------------------
+
+static XMLMutex atomicOpsMutex;
+
+void XMLPlatformUtils::platformInit()
+{
+    //
+    // The atomicOps mutex needs to be created early.
+    // Normally, mutexes are created on first use, but there is a
+    // circular dependency between compareAndExchange() and
+    // mutex creation that must be broken.
+    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+}
+
 
 void* XMLPlatformUtils::makeMutex()
 {
