@@ -109,6 +109,7 @@ DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
       fVersion(0),
       fDocumentURI(0),
       fDOMConfiguration(0),
+      fUserDataTableKeys(17, manager),
       fUserDataTable(0),
       fCurrentBlock(0),      
       fFreePtr(0),
@@ -144,6 +145,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fVersion(0),
       fDocumentURI(0),
       fDOMConfiguration(0),
+      fUserDataTableKeys(17, manager),
       fUserDataTable(0),
       fCurrentBlock(0),      
       fFreePtr(0),
@@ -1203,48 +1205,37 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
 void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data, DOMUserDataHandler* handler)
 {
     void* oldData = 0;
-    DOMNodeUserDataTable* node_userDataTable = 0;
+    unsigned int keyId=fUserDataTableKeys.addOrFind(key);
 
     if (!fUserDataTable) {
         // create the table on heap so that it can be cleaned in destructor
-        //fUserDataTable = new (this) RefHashTableOf<DOMNodeUserDataTable>(29, true, new HashPtr());
-        fUserDataTable = new (fMemoryManager) RefHashTableOf<DOMNodeUserDataTable>
+        fUserDataTable = new (fMemoryManager) RefHash2KeysTableOf<DOMUserDataRecord>
         (
-            29
+            109
             , true
             , new (fMemoryManager) HashPtr()
             , fMemoryManager
         );
     }
     else {
-        node_userDataTable = fUserDataTable->get((void*)n);
-        DOMUserDataRecord* oldDataRecord = 0;
+        DOMUserDataRecord* oldDataRecord = fUserDataTable->get((void*)n, keyId);
 
-        if (node_userDataTable) {
-            oldDataRecord = node_userDataTable->get((void*)key);
-
-            if (oldDataRecord) {
-                oldData = oldDataRecord->getKey();
-                node_userDataTable->removeKey((void*)key);
-            }
+        if (oldDataRecord) {
+            oldData = oldDataRecord->getKey();
+            fUserDataTable->removeKey((void*)n, keyId);
         }
     }
 
     if (data) {
 
-        // create the DOMNodeUserDataTable if not exists
-        // create on the heap and adopted by the hashtable which will delete it upon removal.
-        if (!node_userDataTable) {
-            node_userDataTable  = new (fMemoryManager) RefHashTableOf<DOMUserDataRecord>(29, true, fMemoryManager);
-            fUserDataTable->put(n, node_userDataTable);
-        }
-
         // clone the key first, and create the DOMUserDataRecord
         // create on the heap and adopted by the hashtable which will delete it upon removal.
-        node_userDataTable->put((void*)getPooledString(key), new (fMemoryManager) DOMUserDataRecord(data, handler));
+        fUserDataTable->put((void*)n, keyId, new (fMemoryManager) DOMUserDataRecord(data, handler));
     }
     else {
-        if (node_userDataTable->isEmpty())
+        RefHash2KeysTableOfEnumerator<DOMUserDataRecord> enumKeys(fUserDataTable, false, fMemoryManager);
+        enumKeys.setPrimaryKey(n);
+        if (!enumKeys.hasMoreElements())
             n->hasUserData(false);
     }
 
@@ -1254,10 +1245,9 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
 void* DOMDocumentImpl::getUserData(const DOMNodeImpl* n, const XMLCh* key) const
 {
     if (fUserDataTable) {
-        DOMNodeUserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
-
-        if (node_userDataTable) {
-            DOMUserDataRecord* dataRecord = node_userDataTable->get((void*)key);
+        unsigned int keyId=fUserDataTableKeys.getId(key);
+        if(keyId!=0) {
+            DOMUserDataRecord* dataRecord = fUserDataTable->get((void*)n, keyId);
             if (dataRecord)
                 return dataRecord->getKey();
         }
@@ -1269,32 +1259,30 @@ void* DOMDocumentImpl::getUserData(const DOMNodeImpl* n, const XMLCh* key) const
 void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHandler::DOMOperationType operation, const DOMNode* src, const DOMNode* dst) const
 {
     if (fUserDataTable) {
-        DOMNodeUserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
+        RefHash2KeysTableOfEnumerator<DOMUserDataRecord> userDataEnum(fUserDataTable, false, fMemoryManager);
+        userDataEnum.setPrimaryKey(n);
+        while (userDataEnum.hasMoreElements()) {
+            // get the key
+            void* key;
+            int key2;
+            userDataEnum.nextElementKey(key,key2);
 
-        if (node_userDataTable) {
-            RefHashTableOfEnumerator<DOMUserDataRecord> userDataEnum(node_userDataTable, false, fMemoryManager);
+            // get the DOMUserDataRecord
+            DOMUserDataRecord* userDataRecord = fUserDataTable->get((void*)n,key2);
 
-            // walk through the entire node_userDataTable table
-            while (userDataEnum.hasMoreElements()) {
-                // get the key
-                XMLCh* key = (XMLCh*) userDataEnum.nextElementKey();
+            // get the handler
+            DOMUserDataHandler* handler = userDataRecord->getValue();
 
-                // get the DOMUserDataRecord
-                DOMUserDataRecord* userDataRecord = node_userDataTable->get((void*)key);
-
-                // get the handler
-                DOMUserDataHandler* handler = userDataRecord->getValue();
-
-                if (handler) {
-                    // get the data
-                    void* data = userDataRecord->getKey();
-                    handler->handle(operation, key, data, src, dst);
-                }
-
-                // if the operation is deleted, we in fact should remove the data from the table
-                if (operation == DOMUserDataHandler::NODE_DELETED)
-                    node_userDataTable->removeKey((void*)key);
+            if (handler) {
+                // get the data
+                void* data = userDataRecord->getKey();
+                const XMLCh* userKey = fUserDataTableKeys.getValueForId(key2);
+                handler->handle(operation, userKey, data, src, dst);
             }
+
+            // if the operation is deleted, we in fact should remove the data from the table
+            if (operation == DOMUserDataHandler::NODE_DELETED)
+                fUserDataTable->removeKey((void*)n,key2);
         }
     }
 }

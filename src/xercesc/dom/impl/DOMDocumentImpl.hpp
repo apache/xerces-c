@@ -72,7 +72,8 @@
 
 #include <xercesc/util/RefArrayOf.hpp>
 #include <xercesc/util/RefStackOf.hpp>
-#include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/RefHash2KeysTableOf.hpp>
+#include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/KeyRefPair.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
@@ -113,7 +114,6 @@ class XPathExpression;
 typedef RefVectorOf<DOMRangeImpl>        Ranges;
 typedef RefVectorOf<DOMNodeIteratorImpl>     NodeIterators;
 typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
-typedef RefHashTableOf<DOMUserDataRecord> DOMNodeUserDataTable;
 typedef RefStackOf<DOMNode>               DOMNodePtr;
 
 class CDOM_EXPORT DOMDocumentImpl: public XMemory, public DOMDocument {
@@ -345,7 +345,8 @@ private:
     const XMLCh*          fDocumentURI;
     DOMConfiguration*     fDOMConfiguration;
     
-    RefHashTableOf<DOMNodeUserDataTable>* fUserDataTable;
+    XMLStringPool         fUserDataTableKeys;
+    RefHash2KeysTableOf<DOMUserDataRecord>* fUserDataTable;
 
 
     // Per-Document heap Variables.
