@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/21 03:34:52  jberry
+ * Cast away CodeWarrior complaint of casting away const if we're holding a const obj
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -228,7 +231,7 @@ ArrayJanitor<T>::reset(T* p)
 	if (fData) {
 
 		if (fMemoryManager)
-            fMemoryManager->deallocate(fData);
+            fMemoryManager->deallocate((void*)fData);
         else
             delete [] fData;
     }
@@ -243,7 +246,7 @@ ArrayJanitor<T>::reset(T* p, MemoryManager* manager)
 	if (fData) {
 
 		if (fMemoryManager)
-            fMemoryManager->deallocate(fData);
+            fMemoryManager->deallocate((void*)fData);
         else
             delete [] fData;
     }
