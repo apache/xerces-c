@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2000/06/03 01:13:51  aruna1
+# Version number consolidated into single file for unix
+#
 # Revision 1.6  2000/06/02 01:04:32  aruna1
 # Modifed version no. to  1_2
 #
@@ -86,7 +89,6 @@ INCLUDES= -I. -I${XERCESCROOT}/include
 LIB_DIR=${XERCESCROOT}/lib
 LIBNAME=xerces-c
 THISLIB=${LIB_DIR}/${LIBNAME}
-VER=1_2
 
 LIBRARY_NAMES=-l${LIBNAME}${VER}
 LIBRARY_SEARCH_PATHS=-L${LIB_DIR}

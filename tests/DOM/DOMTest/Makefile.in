@@ -77,6 +77,7 @@ OSVER = @osver@
 LIBS = @libs@
 CC = @compiler@
 
+include ../../../obj/version.incl
 include ../../Makefile.incl
 
 APP_NAME=DTest

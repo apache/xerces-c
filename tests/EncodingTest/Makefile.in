@@ -54,20 +54,7 @@
 # <http://www.apache.org/>.
 # 
 #
-# $Log$
-# Revision 1.3  2000/02/26 07:20:20  rahulj
-#  - The threading tests now work on HPUX.
-#  - Under HPUX 10.20 we do no build DOMMemTest and DOMTest.
-#    It crashes the compiler.
-#  - One could not write more worse makefiles than what exists for the
-#    tests. Hopefully, I will get bugged enough to fix them oneday.
-#
-# Revision 1.2  2000/02/18 22:56:31  abagchi
-# Changed target directory
-#
-# Revision 1.1  2000/02/17 20:21:31  abagchi
-# Initial checkin
-#
+# $Id$
 #
 
 ###################################################################
@@ -89,6 +76,7 @@ OSVER = @osver@
 LIBS = @libs@
 CC = @compiler@
 
+include ../../obj/version.incl
 include ../Makefile.incl
 
 APP_NAME=EncodingTest

@@ -74,6 +74,7 @@ CD=cd
 RM=rm
 CHMODE=chmod
 
+include ../obj/version.incl
 include Makefile.incl
 
 UTIL_DIR = util
@@ -86,7 +87,6 @@ VALIDATORS_DTD_DIR = validators/DTD
 
 LIBNAME = libxerces-c
 THISLIB = ${XML_LIB_DIR}/${LIBNAME}
-VER = 1_2
 
 #all these setting come from the arguments passed in to runConfigure.
 PLATFORM = @platform@
