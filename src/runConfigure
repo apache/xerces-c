@@ -56,6 +56,9 @@
 #
 #
 # $Log$
+# Revision 1.27  2000/04/12 20:33:18  abagchi
+# Included some more PTX changes
+#
 # Revision 1.26  2000/04/04 20:09:56  abagchi
 # Added PTX support
 #
@@ -312,7 +315,7 @@ echo "Thread option: $thread"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | irix | unixware | os400)
+   aix | linux | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx)
        # platform has been recognized
        ;;
    *)

@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2000/04/12 20:32:54  abagchi
+# Included some more PTX changes
+#
 # Revision 1.11  2000/04/04 21:34:50  abagchi
 # Added PTX support
 #
@@ -236,7 +239,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | os400 | irix)
+   aix | linux | solaris | hp-10 | hp-11 | os400 | irix | ptx)
        # platform has been recognized
        ;;
    *)
@@ -256,7 +259,10 @@ case $cppcompiler in
    g++ | c++)
        LDFLAGS="-lc"; export LDFLAGS
 if test $platform = "ptx"; then
-       LIBS="-L$XMLINSTALL";
+	if test -z $XMLINSTALL; then
+		XMLINSTALL=$ICUROOT
+	fi
+       LIBS="-L$XMLINSTALL/lib";
 else
        LIBS="-L/usr/local/lib";
 fi

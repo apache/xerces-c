@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2000/04/12 20:33:08  abagchi
+# Included some more PTX changes
+#
 # Revision 1.5  2000/04/04 20:10:16  abagchi
 # Added PTX support
 #
@@ -190,6 +193,9 @@ case $cppcompiler in
 
    g++ | c++)
 if test $platform = "ptx"; then
+	if test -z $XMLINSTALL; then
+		XMLINSTALL=$ICUROOT
+	fi	
        standardLibFlags="-L${XMLINSTALL}/lib -lc";
 else
        standardLibFlags="-L/usr/local/lib -lc";

@@ -349,8 +349,13 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 		chdir ("$ICUROOT/source");
 		system ("chmod 777 configure");
 		system ("chmod 777 install-sh");
-		print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
-		system ("$icuCompileFlags configure --prefix=$ICUROOT");
+		if ($platform =~ m/ptx/i) {
+			system ("chmod 777 runConfigureICU");
+			system ("runConfigureICU PTX");
+		} else {
+			print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
+			system ("$icuCompileFlags configure --prefix=$ICUROOT");
+		}
 		system ("gmake clean");	# Clean up the build, may want to comment this line out!
         	system ("rm -f $ICUROOT/data/*.o"); # gmake clean is not enough
         	system ("rm -f $ICUROOT/data/*.c"); # same for .c files
@@ -377,6 +382,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 	if ( $platform =~ m/AIX/i ) { $platform = "aix"; }
         if ( $platform =~ m/ptx/i ) { $platform = "ptx"; }
 
+	system ("chmod +x runConfigure configure install-sh");
+
 	if (length($opt_r) > 0) {
         	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
 	} else {
@@ -387,12 +394,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
         # Now build the samples
         chdir ("$XERCESCROOT/samples");
+	system ("chmod +x runConfigure configure install-sh");
         system ("runConfigure -p$platform -c$opt_c -x$opt_x");
         system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");
 
         # Next build the tests
         chdir ("$XERCESCROOT/tests");
+	system ("chmod +x runConfigure configure install-sh");
         system ("runConfigure -p$platform -c$opt_c -x$opt_x");
         system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");
