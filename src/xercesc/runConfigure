@@ -394,7 +394,7 @@ if test $bitsToBuild = 64; then
               bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
               bitstobuildLink=" -xarch=v9 " ;;
            aix)
-              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
               bitstobuildLink=" -X64 " ;;
            hp-11)
               bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
