@@ -570,6 +570,8 @@ private:
       */
     void checkAttDerivationOK(const ComplexTypeInfo* const baseTypeInfo,
                               const ComplexTypeInfo* const childTypeInfo);
+    void checkAttDerivationOK(const XercesAttGroupInfo* const baseAttGrpInfo,
+                              const XercesAttGroupInfo* const childAttGrpInfo);
 
     /**
       * Check whether a namespace value is valid with respect to wildcard

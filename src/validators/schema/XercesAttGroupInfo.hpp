@@ -96,6 +96,8 @@ public:
     SchemaAttDef*       anyAttributeAt(const unsigned int index);
     const SchemaAttDef* anyAttributeAt(const unsigned int index) const;
     SchemaAttDef*       getCompleteWildCard() const;
+    const SchemaAttDef* getAttDef(const XMLCh* const baseName,
+                                  const int uriId) const;
     
 	// -----------------------------------------------------------------------
     //  Setter methods

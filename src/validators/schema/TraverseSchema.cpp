@@ -1474,6 +1474,26 @@ TraverseSchema::traverseAttributeGroupDecl(const DOM_Element& elem,
     // ------------------------------------------------------------------
     fCurrentAttGroupInfo = saveAttGroupInfo;
 
+    // ------------------------------------------------------------------
+    // Check Attribute Derivation Restriction OK
+    // ------------------------------------------------------------------
+    fBuffer.set(fTargetNSURIString);
+    fBuffer.append(chComma);
+    fBuffer.append(name);
+
+    unsigned int nameIndex = fStringPool->addOrFind(fBuffer.getRawBuffer());
+
+    if (fRedefineComponents && fRedefineComponents->get(SchemaSymbols::fgELT_ATTRIBUTEGROUP, nameIndex)) {
+
+        fBuffer.set(name);
+        fBuffer.append(SchemaSymbols::fgRedefIdentifier);
+        XercesAttGroupInfo* baseAttGroupInfo = fAttGroupRegistry->get(fBuffer.getRawBuffer());
+
+        if (baseAttGroupInfo) {
+            checkAttDerivationOK(baseAttGroupInfo, attGroupInfo);
+        }
+    }
+
     return attGroupInfo;
 }
 
@@ -6901,6 +6921,78 @@ void TraverseSchema::checkAttDerivationOK(const ComplexTypeInfo* const baseTypeI
 
     // Constraint 4
     const SchemaAttDef* childAttWildCard = childTypeInfo->getAttWildCard();
+
+    if (childAttWildCard) {
+
+        if (!baseAttWildCard) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_6);
+        }
+        else if (!isWildCardSubset(baseAttWildCard, childAttWildCard)) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_7);
+        }        
+    }
+}
+
+void TraverseSchema::checkAttDerivationOK(const XercesAttGroupInfo* const baseAttGrpInfo,
+                                          const XercesAttGroupInfo* const childAttGrpInfo) {
+
+    unsigned int baseAttCount = baseAttGrpInfo->attributeCount();
+    unsigned int baseAnyAttCount = baseAttGrpInfo->anyAttributeCount();
+    unsigned int childAttCount = childAttGrpInfo->attributeCount();
+    unsigned int childAnyAttCount = childAttGrpInfo->anyAttributeCount();
+
+    if ((childAttCount || childAnyAttCount) && (!baseAttCount && !baseAnyAttCount)) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_1);
+    }
+
+    const SchemaAttDef* baseAttWildCard = (baseAnyAttCount) ? baseAttGrpInfo->anyAttributeAt(0) : 0;
+
+    for (unsigned int i=0; i<childAttCount; i++) {
+
+        const SchemaAttDef* childAttDef = childAttGrpInfo->attributeAt(i);
+        QName* childAttName = childAttDef->getAttName();
+        const XMLCh* childLocalPart = childAttName->getLocalPart();
+        const SchemaAttDef* baseAttDef = baseAttGrpInfo->getAttDef(childLocalPart, childAttName->getURI());
+
+        if (baseAttDef) {
+
+            XMLAttDef::DefAttTypes baseAttDefType = baseAttDef->getDefaultType();
+            XMLAttDef::DefAttTypes childAttDefType = childAttDef->getDefaultType();
+
+            // Constraint 2.1.1 & 3 + check for prohibited base attribute
+            if (baseAttDefType == XMLAttDef::Prohibited
+                && childAttDefType != XMLAttDef::Prohibited) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_8, childLocalPart);
+            }
+
+            if ((baseAttDefType & XMLAttDef::Required)
+                && !(childAttDefType & XMLAttDef::Required)) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_2, childLocalPart);
+            }
+
+            // Constraint 2.1.2
+            DatatypeValidator* baseDV = baseAttDef->getDatatypeValidator();
+            DatatypeValidator* childDV = childAttDef->getDatatypeValidator();
+            if (!baseDV || !baseDV->isSubstitutableBy(childDV)) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_3, childLocalPart);
+            }
+
+            // Constraint 2.1.3
+            if ((baseAttDefType & XMLAttDef::Fixed) && 
+                (!(childAttDefType & XMLAttDef::Fixed) ||
+                 XMLString::compareString(baseAttDef->getValue(), childAttDef->getValue()))) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_4, childLocalPart);
+            }
+        }
+        // Constraint 2.2
+        else if (!baseAttWildCard ||
+                 !wildcardAllowsNamespace(baseAttWildCard, childAttName->getURI())) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_5, childLocalPart);
+        }
+    }
+
+    // Constraint 4
+    const SchemaAttDef* childAttWildCard = (childAnyAttCount) ? childAttGrpInfo->anyAttributeAt(0) : 0;
 
     if (childAttWildCard) {
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/11/20 20:21:49  knoaman
+ * Add check for attribute derviation ok when redefining attribute group by restriction.
+ *
  * Revision 1.3  2001/11/20 15:57:04  knoaman
  * Add check for multiple attributes with type derived from ID.
  *
@@ -115,6 +118,33 @@ bool XercesAttGroupInfo::containsAttribute(const XMLCh* const name,
     }
 
     return false;
+}
+
+// ---------------------------------------------------------------------------
+//  XercesAttGroupInfo: Getter methods
+// ---------------------------------------------------------------------------
+const SchemaAttDef* XercesAttGroupInfo::getAttDef(const XMLCh* const baseName,
+                                                  const int uriId) const {
+
+    // If no list, then return a null
+    if (!fAttributes)
+        return 0;
+
+    unsigned int attSize = fAttributes->size();
+
+    for (unsigned int i=0; i<attSize; i++) {
+
+        const SchemaAttDef* attDef = fAttributes->elementAt(i);
+        QName* attName = attDef->getAttName();
+
+        if (uriId == (int) attName->getURI() &&
+			!XMLString::compareString(baseName, attName->getLocalPart())) {
+
+            return attDef;
+        }
+    }
+
+    return 0;
 }
 
 /**
