@@ -2379,110 +2379,96 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
         if (subsGroupName && *subsGroupName) {
 
-            if (elemDecl->getMiscFlags() & SchemaSymbols::XSD_ABSTRACT )
-            {
-                reportSchemaError
-                (
-                    elem
-                    , XMLUni::fgXMLErrDomain
-                    , XMLErrs::SubsGroupMemberAbstract
-                    , name
-                    , subsGroupName
-                );
-            }
-            else {
+            SchemaElementDecl* subsElemDecl = getSubstituteGroupElemDecl
+            (
+                elem
+                , subsGroupName
+                , noErrorFound
+            );
 
-                SchemaElementDecl* subsElemDecl = getSubstituteGroupElemDecl
-                (
-                    elem
-                    , subsGroupName
-                    , noErrorFound
-                );
+            if (subsElemDecl && (subsElemDecl != elemDecl)) {
 
-                if (subsElemDecl && (subsElemDecl != elemDecl)) {
+                if (isSubstitutionGroupCircular(elemDecl, subsElemDecl)) {
+                    reportSchemaError
+                    (
+                        elem
+                        , XMLUni::fgXMLErrDomain
+                        , XMLErrs::CircularSubsGroup
+                        , name
+                    );
+                }
+                else {
 
-                    if (isSubstitutionGroupCircular(elemDecl, subsElemDecl)) {
-                        reportSchemaError
-                        (
-                            elem
-                            , XMLUni::fgXMLErrDomain
-                            , XMLErrs::CircularSubsGroup
-                            , name
-                        );
-                    }
-                    else {
+                    // Check for substitution validity constraint
+                    // Substitution allowed (block and blockDefault) && same type
+                    if (isSubstitutionGroupValid(elem, subsElemDecl,typeInfo,validator,name)) {
 
-                        // Check for substitution validity constraint
-                        // Substitution allowed (block and blockDefault) && same type
-                        if (isSubstitutionGroupValid(elem, subsElemDecl,typeInfo,validator,name)) {
+                        if (typeInfo == 0 && validator == 0 && noErrorFound) {
 
-                            if (typeInfo == 0 && validator == 0 && noErrorFound) {
+                            typeInfo = subsElemDecl->getComplexTypeInfo();
+                            validator = subsElemDecl->getDatatypeValidator();
+                        }
 
-                                typeInfo = subsElemDecl->getComplexTypeInfo();
-                                validator = subsElemDecl->getDatatypeValidator();
-                            }
+                        if (!isDuplicate) {
 
-                            if (!isDuplicate) {
+                            XMLCh* elemBaseName = elemDecl->getBaseName();
+                            XMLCh* subsElemBaseName = subsElemDecl->getBaseName();
+                            int    elemURI = elemDecl->getURI();
+                            int    subsElemURI = subsElemDecl->getURI();
 
-                                XMLCh* elemBaseName = elemDecl->getBaseName();
-                                XMLCh* subsElemBaseName = subsElemDecl->getBaseName();
-                                int    elemURI = elemDecl->getURI();
-                                int    subsElemURI = subsElemDecl->getURI();
+                            elemDecl->setSubstitutionGroupElem(subsElemDecl);
+                            ValueVectorOf<SchemaElementDecl*>* subsElements =
+                                fValidSubstitutionGroups->get(subsElemBaseName, subsElemURI);
 
-                                elemDecl->setSubstitutionGroupElem(subsElemDecl);
-                                ValueVectorOf<SchemaElementDecl*>* subsElements =
-                                    fValidSubstitutionGroups->get(subsElemBaseName, subsElemURI);
+                            if (!subsElements && fTargetNSURI != subsElemURI) {
 
-                                if (!subsElements && fTargetNSURI != subsElemURI) {
+                                SchemaGrammar* aGrammar = (SchemaGrammar*)
+                                   fGrammarResolver->getGrammar(fURIStringPool->getValueForId(subsElemURI));
 
-                                    SchemaGrammar* aGrammar = (SchemaGrammar*)
-                                       fGrammarResolver->getGrammar(fURIStringPool->getValueForId(subsElemURI));
+                                if (aGrammar) {
+                                    subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
 
-                                    if (aGrammar) {
-                                        subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
+                                    if (subsElements) {
+                                        subsElements = new ValueVectorOf<SchemaElementDecl*>(*subsElements);
+                                        fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
+                                    }
+                                    else if (fSchemaInfo->circularImportExist(subsElemURI)) {
 
-                                        if (subsElements) {
-                                            subsElements = new ValueVectorOf<SchemaElementDecl*>(*subsElements);
-                                            fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
-                                        }
-                                        else if (fSchemaInfo->circularImportExist(subsElemURI)) {
-
-                                            aGrammar->getValidSubstitutionGroups()->put(
-                                            subsElemBaseName, subsElemURI, new ValueVectorOf<SchemaElementDecl*>(8));
-                                        }
+                                        aGrammar->getValidSubstitutionGroups()->put(
+                                        subsElemBaseName, subsElemURI, new ValueVectorOf<SchemaElementDecl*>(8));
                                     }
                                 }
-
-                                if (!subsElements) {
-
-                                    subsElements = new ValueVectorOf<SchemaElementDecl*>(8);
-                                    fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
-                                }
-
-                                subsElements->addElement(elemDecl);
-
-                                // update related subs. info in case of circular import
-                                BaseRefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
-
-                                while (importingEnum.hasMoreElements()) {
-
-                                    const SchemaInfo& curRef = importingEnum.nextElement();
-                                    SchemaGrammar* aGrammar = (SchemaGrammar*)
-                                        fGrammarResolver->getGrammar(curRef.getTargetNSURIString());
-                                    ValueVectorOf<SchemaElementDecl*>* subsElemList =
-                                        aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
-
-                                    if (subsElemList && !subsElemList->containsElement(elemDecl))
-                                        subsElemList->addElement(elemDecl);
-                                }
-
-                                buildValidSubstitutionListB(elem, elemDecl, subsElemDecl);
-                                buildValidSubstitutionListF(elem, elemDecl, subsElemDecl);
                             }
+
+                            if (!subsElements) {
+
+                                subsElements = new ValueVectorOf<SchemaElementDecl*>(8);
+                                fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
+                            }
+
+                            subsElements->addElement(elemDecl);
+
+                            // update related subs. info in case of circular import
+                            BaseRefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
+
+                            while (importingEnum.hasMoreElements()) {
+
+                                const SchemaInfo& curRef = importingEnum.nextElement();
+                                SchemaGrammar* aGrammar = (SchemaGrammar*)
+                                    fGrammarResolver->getGrammar(curRef.getTargetNSURIString());
+                                ValueVectorOf<SchemaElementDecl*>* subsElemList =
+                                    aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
+
+                                if (subsElemList && !subsElemList->containsElement(elemDecl))
+                                    subsElemList->addElement(elemDecl);
+                            }
+
+                            buildValidSubstitutionListB(elem, elemDecl, subsElemDecl);
+                            buildValidSubstitutionListF(elem, elemDecl, subsElemDecl);
                         }
-                        else {
-                            noErrorFound = false;
-                        }
+                    }
+                    else {
+                        noErrorFound = false;
                     }
                 }
             }
