@@ -60,8 +60,10 @@
 
 #include "DOMCommentImpl.hpp"
 #include "DOMCharacterDataImpl.hpp"
+#include "DOMStringPool.hpp"
 #include "DOMCasts.hpp"
 #include "DOMDocumentImpl.hpp"
+#include "DOMRangeImpl.hpp"
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -125,6 +127,44 @@ void DOMCommentImpl::release()
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
     }
 }
+
+
+// Non standard extension for the range to work
+DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
+{
+    if (fNode.isReadOnly())
+    {
+        throw DOMException(
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    }
+    XMLSize_t len = fCharacterData.fDataBuf->getLen();
+    if (offset > len || offset < 0)
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+
+    DOMComment *newText =
+                getOwnerDocument()->createComment(
+                        this->substringData(offset, len - offset));
+
+    DOMNode *parent = getParentNode();
+    if (parent != 0)
+        parent->insertBefore(newText, getNextSibling());
+
+    fCharacterData.fDataBuf->chop(offset);
+
+    if (this->getOwnerDocument() != 0) {
+        Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
+        if (ranges != 0) {
+            XMLSize_t sz = ranges->size();
+            if (sz != 0) {
+                for (XMLSize_t i =0; i<sz; i++) {
+                    ranges->elementAt(i)->updateSplitInfo( this, newText, offset);
+                }
+            }
+        }
+    }
+
+    return newText;
+};
 
 
            DOMNode*         DOMCommentImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };

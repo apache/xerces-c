@@ -251,6 +251,18 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
 
     if (newLen >= 3999)
         delete[] newString;
+
+    if (node->getOwnerDocument() != 0) {
+        Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
+        if (ranges != 0) {
+            XMLSize_t sz = ranges->size();
+            if (sz != 0) {
+                for (XMLSize_t i =0; i<sz; i++) {
+                    ranges->elementAt(i)->updateRangeForInsertedText( (DOMNode*)node, offset, datLen);
+                }
+            }
+        }
+    }
 }
 
 
@@ -271,9 +283,7 @@ void DOMCharacterDataImpl::replaceData(const DOMNode *node, XMLSize_t offset, XM
 
 void DOMCharacterDataImpl::setData(const DOMNode *node, const XMLCh *arg)
 {
-    if (castToNodeImpl(node)->isReadOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    fDataBuf->set(arg);
+    setNodeValue(node, arg);
 };
 
 

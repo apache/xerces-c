@@ -61,6 +61,8 @@
 #include "DOMProcessingInstructionImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMNodeImpl.hpp"
+#include "DOMStringPool.hpp"
+#include "DOMRangeImpl.hpp"
 
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMNode.hpp>
@@ -71,22 +73,20 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(DOMDocument *ownerDoc,
                                                      const XMLCh *targt,
                                                      const XMLCh *dat)
-    : fNode(ownerDoc), fBaseURI(0)
+    : fNode(ownerDoc), fBaseURI(0),  fCharacterData(ownerDoc, dat)
 {
     fNode.setIsLeafNode(true);
     this->fTarget = ((DOMDocumentImpl *)ownerDoc)->cloneString(targt);
-    this->fData =   ((DOMDocumentImpl *)ownerDoc)->cloneString(dat);
 };
 
 
 DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(
                                         const DOMProcessingInstructionImpl &other,
                                         bool deep)
-    : fNode(other.fNode), fChild(other.fChild)
+    : fNode(other.fNode), fChild(other.fChild), fCharacterData(other.fCharacterData)
 {
     fNode.setIsLeafNode(true);
     fTarget = other.fTarget;
-    fData = other.fData;
     fBaseURI = other.fBaseURI;
 };
 
@@ -115,26 +115,6 @@ short DOMProcessingInstructionImpl::getNodeType() const {
 };
 
 
-const XMLCh * DOMProcessingInstructionImpl::getNodeValue() const
-{
-    return fData;
-};
-
-
-void DOMProcessingInstructionImpl::setNodeValue(const XMLCh *value)
-{
-    if (fNode.isReadOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    fData = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(value);
-};
-
-
-const XMLCh * DOMProcessingInstructionImpl::getData() const
-{
-    return fData;
-};
-
-
 /** A PI's "target" states what processor channel the PI's data
 should be directed to. It is defined differently in HTML and XML.
 
@@ -151,20 +131,6 @@ const XMLCh * DOMProcessingInstructionImpl::getTarget() const
 };
 
 
-/**
-* Change the data content of this PI.
-* Note that setNodeValue is aliased to setData
-* @see getData().
-* @throws DOMException(NO_MODIFICATION_ALLOWED_ERR) if node is read-only.
-*/
-void DOMProcessingInstructionImpl::setData(const XMLCh *arg)
-{
-    if (fNode.isReadOnly())
-        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               0);
-    fData = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(arg);
-};
-
 void DOMProcessingInstructionImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
@@ -173,6 +139,7 @@ void DOMProcessingInstructionImpl::release()
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
+        fCharacterData.releaseBuffer();
         doc->release(this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT);
     }
     else {
@@ -190,6 +157,43 @@ const XMLCh* DOMProcessingInstructionImpl::getBaseURI() const
     return fBaseURI? fBaseURI : fNode.fOwnerNode->getBaseURI();
 }
 
+// Non standard extension for the range to work
+DOMProcessingInstruction *DOMProcessingInstructionImpl::splitText(XMLSize_t offset)
+{
+    if (fNode.isReadOnly())
+    {
+        throw DOMException(
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    }
+    XMLSize_t len = fCharacterData.fDataBuf->getLen();
+    if (offset > len || offset < 0)
+        throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
+
+    DOMProcessingInstruction *newText =
+                getOwnerDocument()->createProcessingInstruction(fTarget,
+                        this->substringData(offset, len - offset));
+
+    DOMNode *parent = getParentNode();
+    if (parent != 0)
+        parent->insertBefore(newText, getNextSibling());
+
+    fCharacterData.fDataBuf->chop(offset);
+
+    if (this->getOwnerDocument() != 0) {
+        Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
+        if (ranges != 0) {
+            XMLSize_t sz = ranges->size();
+            if (sz != 0) {
+                for (XMLSize_t i =0; i<sz; i++) {
+                    ranges->elementAt(i)->updateSplitInfo( this, newText, offset);
+                }
+            }
+        }
+    }
+
+    return newText;
+};
+
 //
 //    Delegation stubs for inherited functions
 //
@@ -201,6 +205,7 @@ const XMLCh* DOMProcessingInstructionImpl::getBaseURI() const
      const XMLCh*           DOMProcessingInstructionImpl::getLocalName() const                    {return fNode.getLocalName (); };
      const XMLCh*           DOMProcessingInstructionImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
            DOMNode*         DOMProcessingInstructionImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
+     const XMLCh*           DOMProcessingInstructionImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); };
            DOMDocument*     DOMProcessingInstructionImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
      const XMLCh*           DOMProcessingInstructionImpl::getPrefix() const                       {return fNode.getPrefix (); };
            DOMNode*         DOMProcessingInstructionImpl::getParentNode() const                   {return fChild.getParentNode (this); };
@@ -228,6 +233,20 @@ const XMLCh* DOMProcessingInstructionImpl::getBaseURI() const
            bool             DOMProcessingInstructionImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
            const XMLCh*     DOMProcessingInstructionImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMProcessingInstructionImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
+//
+//   Delegation of CharacerData functions.
+//
+
+
+           const XMLCh*     DOMProcessingInstructionImpl::getData() const                         {return fCharacterData.getData();};
+           void             DOMProcessingInstructionImpl::deleteData(XMLSize_t offset, XMLSize_t count)
+                                                                                    {fCharacterData.deleteData(this, offset, count);};
+           const XMLCh*     DOMProcessingInstructionImpl::substringData(XMLSize_t offset, XMLSize_t count) const
+                                                                                    {return fCharacterData.substringData(this, offset, count);};
+           void             DOMProcessingInstructionImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);};
+           void             DOMProcessingInstructionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
+
 
 XERCES_CPP_NAMESPACE_END
 

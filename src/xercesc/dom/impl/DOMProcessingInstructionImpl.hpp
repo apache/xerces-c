@@ -72,6 +72,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMProcessingInstruction.hpp>
+#include "DOMCharacterDataImpl.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
 
@@ -85,9 +86,10 @@ class CDOM_EXPORT DOMProcessingInstructionImpl: public DOMProcessingInstruction 
 private:
     DOMNodeImpl   fNode;
     DOMChildNode  fChild;
+    // use fCharacterData to store its data so that those character utitlites can be used
+    DOMCharacterDataImpl   fCharacterData;
 
     XMLCh       *fTarget;
-    XMLCh       *fData;
     const XMLCh *fBaseURI;
 
 public:
@@ -107,6 +109,11 @@ public:
 
     // NON-DOM: set base uri
     virtual void setBaseURI(const XMLCh* baseURI);
+
+    // Non standard extension for the range to work
+    void         deleteData(XMLSize_t offset, XMLSize_t count);
+    const XMLCh* substringData(XMLSize_t offset, XMLSize_t count) const;
+    DOMProcessingInstruction* splitText(XMLSize_t offset);
 };
 
 XERCES_CPP_NAMESPACE_END

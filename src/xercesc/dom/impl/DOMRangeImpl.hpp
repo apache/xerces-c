@@ -156,10 +156,11 @@ public:
     DOMDocument*         getDocument();
 
     // functions to inform all existing valid ranges about a change
-    void updateSplitInfo(DOMText* oldNode, DOMText* startNode, XMLSize_t offset);
+    void updateSplitInfo(DOMNode* oldNode, DOMNode* startNode, XMLSize_t offset);
     void updateRangeForInsertedNode(DOMNode* node);
     void receiveReplacedText(DOMNode* node);
     void updateRangeForDeletedText(DOMNode* node, XMLSize_t offset, int count);
+    void updateRangeForInsertedText(DOMNode* node, XMLSize_t offset, int count);
     void updateRangeForDeletedNode(DOMNode* node);
 
 private:

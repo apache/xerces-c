@@ -107,6 +107,9 @@ public:
     virtual void          setData(const XMLCh * arg);
     virtual const XMLCh * substringData(XMLSize_t offset, XMLSize_t count) const;
 
+    // Non standard extension for the range to work
+    DOMComment* splitText(XMLSize_t offset);
+
 };
 
 XERCES_CPP_NAMESPACE_END

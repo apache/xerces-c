@@ -61,14 +61,18 @@
 #include "DOMRangeImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMDocumentFragmentImpl.hpp"
+#include "DOMCommentImpl.hpp"
+#include "DOMProcessingInstructionImpl.hpp"
 #include "DOMCasts.hpp"
 
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMRangeException.hpp>
 #include <xercesc/dom/DOMText.hpp>
+#include <xercesc/dom/DOMProcessingInstruction.hpp>
 
 #include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -114,21 +118,45 @@ DOMRangeImpl::~DOMRangeImpl()
 
 DOMNode* DOMRangeImpl::getStartContainer() const
 {
+    if (fDetached)
+    {
+        throw DOMException(
+            DOMException::INVALID_STATE_ERR, 0);
+    }
+
     return fStartContainer;
 }
 
 XMLSize_t DOMRangeImpl::getStartOffset() const
 {
+    if (fDetached)
+    {
+        throw DOMException(
+            DOMException::INVALID_STATE_ERR, 0);
+    }
+
     return fStartOffset;
 }
 
 DOMNode* DOMRangeImpl::getEndContainer() const
 {
+    if (fDetached)
+    {
+        throw DOMException(
+            DOMException::INVALID_STATE_ERR, 0);
+    }
+
     return fEndContainer;
 }
 
 XMLSize_t DOMRangeImpl::getEndOffset() const
 {
+    if (fDetached)
+    {
+        throw DOMException(
+            DOMException::INVALID_STATE_ERR, 0);
+    }
+
     return fEndOffset;
 }
 
@@ -147,7 +175,7 @@ bool DOMRangeImpl::getCollapsed() const
 }
 
 //-------------------------------
-// Public getter functions
+// Public setter functions
 //-------------------------------
 
 void DOMRangeImpl::setStartContainer(const DOMNode* node)
@@ -203,12 +231,17 @@ void DOMRangeImpl::setStart(const DOMNode* refNode, XMLSize_t offset)
     fStartContainer = (DOMNode*) refNode;
     fStartOffset    = offset;
 
-    if ((fDocument != refNode->getOwnerDocument() )
-        && (refNode->getOwnerDocument() != 0) )
-    {
-        fDocument = refNode->getOwnerDocument();
-        collapse(true);
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument )
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
     }
+
+    // they may be of same document, but not same root container
+    // collapse if not the same root container
+    if (!commonAncestorOf(refNode, fEndContainer))
+        collapse(true);
 
     //compare the start and end boundary point
     //collapse if start point is after the end point
@@ -226,12 +259,17 @@ void DOMRangeImpl::setEnd(const DOMNode* refNode, XMLSize_t offset)
     fEndContainer   = (DOMNode*) refNode;
     fEndOffset      = offset;
 
-    if ((fDocument != refNode->getOwnerDocument() )
-        && (refNode->getOwnerDocument() != 0) )
-    {
-        fDocument = refNode->getOwnerDocument();
-        collapse(false);
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument )
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
     }
+
+    // they may be of same document, but not same root container
+    // collapse if not the same root container
+    if (!commonAncestorOf(refNode, fStartContainer))
+        collapse(false);
 
     //compare the start and end boundary point
     //collapse if start point is after the end point
@@ -262,12 +300,17 @@ void DOMRangeImpl::setStartBefore(const DOMNode* refNode)
     else
         fStartOffset = i-1;
 
-    if ((fDocument != refNode->getOwnerDocument())
-        && (refNode->getOwnerDocument() != 0) )
-    {
-        fDocument = refNode->getOwnerDocument();
-        collapse(true);
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument )
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
     }
+
+    // they may be of same document, but not same root container
+    // collapse if not the same root container
+    if (!commonAncestorOf(refNode, fEndContainer))
+        collapse(true);
 
     //compare the start and end boundary point
     //collapse if start point is after the end point
@@ -296,12 +339,17 @@ void DOMRangeImpl::setStartAfter(const DOMNode* refNode)
 
     fStartOffset = i;
 
-    if ((fDocument != refNode->getOwnerDocument() )
-        && (refNode->getOwnerDocument() != 0) )
-    {
-        fDocument = refNode->getOwnerDocument();
-        collapse(true);
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument )
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
     }
+
+    // they may be of same document, but not same root container
+    // collapse if not the same root container
+    if (!commonAncestorOf(refNode, fEndContainer))
+        collapse(true);
 
     //compare the start and end boundary point
     //collapse if start point is after the end point
@@ -331,12 +379,17 @@ void DOMRangeImpl::setEndBefore(const DOMNode* refNode)
     else
         fEndOffset = i-1;
 
-    if ((fDocument != refNode->getOwnerDocument() )
-        && (refNode->getOwnerDocument() != 0) )
-    {
-        fDocument = refNode->getOwnerDocument();
-        collapse(true);
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument )
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
     }
+
+    // they may be of same document, but not same root container
+    // collapse if not the same root container
+    if (!commonAncestorOf(refNode, fStartContainer))
+        collapse(false);
 
     //compare the start and end boundary point
     //collapse if start point is after the end point
@@ -366,12 +419,17 @@ void DOMRangeImpl::setEndAfter(const DOMNode* refNode)
     else
         fEndOffset = i;
 
-    if ((fDocument != refNode->getOwnerDocument() )
-        && (refNode->getOwnerDocument() != 0) )
-    {
-        fDocument = refNode->getOwnerDocument();
-        collapse(true);
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument )
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
     }
+
+    // they may be of same document, but not same root container
+    // collapse if not the same root container
+    if (!commonAncestorOf(refNode, fStartContainer))
+        collapse(false);
 
     //compare the start and end boundary point
     //collapse if start point is after the end point
@@ -429,7 +487,11 @@ void DOMRangeImpl::selectNode(const DOMNode* refNode)
             DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
     }
     //First check for the text type node
-    if (refNode->getNodeType() ==  DOMNode::TEXT_NODE)
+    short type = refNode->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
     {
         //The node itself is the container.
         fStartContainer = (DOMNode*) refNode;
@@ -437,7 +499,10 @@ void DOMRangeImpl::selectNode(const DOMNode* refNode)
 
         //Select all the contents of the node
         fStartOffset = 0;
-        fEndOffset = ((DOMText *)refNode)->getLength();
+        if (type == DOMNode::PROCESSING_INSTRUCTION_NODE)
+            fEndOffset = XMLString::stringLen(((DOMProcessingInstruction*)refNode)->getData());
+        else
+            fEndOffset = ((DOMText *)refNode)->getLength();
         return;
     }
 
@@ -465,8 +530,17 @@ void DOMRangeImpl::selectNodeContents(const DOMNode* node)
     fEndContainer = (DOMNode*) node;
 
     fStartOffset = 0;
-    if (node->getNodeType() == DOMNode::TEXT_NODE ) {
+    short type = node->getNodeType();
+
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE)) {
+
         fEndOffset = ((DOMText *)node)->getLength();
+        return;
+    }
+    if (type == DOMNode::PROCESSING_INSTRUCTION_NODE) {
+        fEndOffset = XMLString::stringLen(((DOMProcessingInstruction*)node)->getData());
         return;
     }
 
@@ -510,10 +584,18 @@ void DOMRangeImpl::surroundContents(DOMNode* newParent)
     DOMNode* realStart = fStartContainer;
     DOMNode* realEnd = fEndContainer;
 
-    if (fStartContainer->getNodeType() == DOMNode::TEXT_NODE) {
+    type = fStartContainer->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE)) {
         realStart = fStartContainer->getParentNode();
     }
-    if (fEndContainer->getNodeType() == DOMNode::TEXT_NODE) {
+    type = fEndContainer->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE)) {
         realEnd = fEndContainer->getParentNode();
     }
 
@@ -595,16 +677,25 @@ short DOMRangeImpl::compareBoundaryPoints(DOMRange::CompareHow how, const DOMRan
         }
     }
 
-    // case 4: preorder traversal of context tree.
     DOMNode* ancestor = (DOMNode*) commonAncestorOf(pointA, pointB);
-    DOMNode* current = ancestor;
 
-    do {
-        if (current == pointA) return -1;
-        if (current == pointB) return 1;
-        current = nextNode(current, true);
+    // case 4: preorder traversal of context tree.
+    if (ancestor) {
+        DOMNode* current = ancestor;
+
+        do {
+            if (current == pointA) return -1;
+            if (current == pointB) return 1;
+            current = nextNode(current, true);
+        }
+        while (current!=0 && current!=ancestor);
     }
-    while (current!=0 && current!=ancestor);
+    else {
+        // case 5: there is no common ancestor of these two points
+        // it means the two Ranges are not in the same "root container"
+        throw DOMException(
+            DOMException::WRONG_DOCUMENT_ERR, 0);
+    }
 
     return -2; // this should never happen
 }
@@ -670,14 +761,24 @@ void DOMRangeImpl::insertNode(DOMNode* newNode)
     DOMNode* parent;
     DOMNode* next;
 
-    if (fStartContainer->getNodeType() == DOMNode::TEXT_NODE) {
+    type = fStartContainer->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE)) {
 
         //set 'parent' and 'next' here
         parent = fStartContainer->getParentNode();
 
         //split the text nodes
-       if (fStartOffset > 0)
-            ((DOMText*)fStartContainer)->splitText(fStartOffset);
+       if (fStartOffset > 0) {
+           if (type == DOMNode::COMMENT_NODE)
+               ((DOMCommentImpl*)fStartContainer)->splitText(fStartOffset);
+           else if (type == DOMNode::PROCESSING_INSTRUCTION_NODE)
+               ((DOMProcessingInstructionImpl*)fStartContainer)->splitText(fStartOffset);
+           else
+               ((DOMText*)fStartContainer)->splitText(fStartOffset);
+       }
 
         //update the new start information later. After inserting the first newNode
         if (fStartOffset == 0)
@@ -724,34 +825,33 @@ const XMLCh* DOMRangeImpl::toString() const
             DOMException::INVALID_STATE_ERR, 0);
     }
 
+    if ((fStartContainer == fEndContainer) && (fEndOffset == fStartOffset))
+        return XMLUni::fgZeroLenString;
+
     DOMNode* node = fStartContainer;
     DOMNode* stopNode = fEndContainer;
 
     XMLBuffer retStringBuf;
-    if ( (fStartContainer->getNodeType() == DOMNode::TEXT_NODE)
-        || (fStartContainer->getNodeType() == DOMNode::CDATA_SECTION_NODE) ) {
+    short type = fStartContainer->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE)) {
         if (fStartContainer == fEndContainer) {
-            if (fEndOffset == fStartOffset) {
-                return XMLUni::fgZeroLenString;
-            }
-            else {
+            XMLCh* tempString;
+            XMLCh temp[4000];
+            if ((fEndOffset-fStartOffset) >= 3999)
+                tempString = new XMLCh[fEndOffset-fStartOffset+1];
+            else
+                tempString = temp;
 
-                XMLCh* tempString;
-                XMLCh temp[4000];
-                if ((fEndOffset-fStartOffset) >= 3999)
-                    tempString = new XMLCh[fEndOffset-fStartOffset+1];
-                else
-                    tempString = temp;
+            XMLString::subString(tempString, fStartContainer->getNodeValue(), fStartOffset, fEndOffset);
+            const XMLCh* retString = ((DOMDocumentImpl *)fDocument)->getPooledString(tempString);
 
-                XMLString::subString(tempString, fStartContainer->getNodeValue(), fStartOffset, fEndOffset);
-                const XMLCh* retString = ((DOMDocumentImpl *)fDocument)->getPooledString(tempString);
+            if ((fEndOffset-fStartOffset) >= 3999)
+                delete[] tempString;
 
-                if ((fEndOffset-fStartOffset) >= 3999)
-                    delete[] tempString;
-
-                return retString;
-            }
-
+            return retString;
         } else {
             XMLSize_t length = XMLString::stringLen(fStartContainer->getNodeValue());
             if (length != fStartOffset) {
@@ -786,8 +886,11 @@ const XMLCh* DOMRangeImpl::toString() const
         }
     }
 
-    if ( fEndContainer->getNodeType()!= DOMNode::TEXT_NODE &&
-        fEndContainer->getNodeType()!= DOMNode::CDATA_SECTION_NODE ){
+    type = fEndContainer->getNodeType();
+    if((type != DOMNode::TEXT_NODE
+        && type != DOMNode::CDATA_SECTION_NODE
+        && type != DOMNode::COMMENT_NODE
+        && type != DOMNode::PROCESSING_INSTRUCTION_NODE)) {
         int i=fEndOffset;
         stopNode = fEndContainer->getFirstChild();
         while( i>0 && stopNode!=0 ){
@@ -800,15 +903,22 @@ const XMLCh* DOMRangeImpl::toString() const
 
     while (node != stopNode) {  //look into all kids of the Range
         if (node == 0) break;
-        if (node->getNodeType() == DOMNode::TEXT_NODE
-            ||  node->getNodeType() == DOMNode::CDATA_SECTION_NODE) {
+        type = node->getNodeType();
+
+        if((type == DOMNode::TEXT_NODE
+            || type == DOMNode::CDATA_SECTION_NODE
+            || type == DOMNode::COMMENT_NODE
+            || type == DOMNode::PROCESSING_INSTRUCTION_NODE)) {
             retStringBuf.append(node->getNodeValue());
         }
         node = nextNode(node, true);
     }
 
-    if (fEndContainer->getNodeType() == DOMNode::TEXT_NODE
-        || fEndContainer->getNodeType() == DOMNode::CDATA_SECTION_NODE) {
+    type = fEndContainer->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE)) {
 
         if (fEndOffset != 0) {
 
@@ -931,9 +1041,6 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
     if (fDetached)
             throw DOMException(DOMException::INVALID_STATE_ERR, 0);
 
-    if (pointA->getOwnerDocument() != pointB->getOwnerDocument())
-        throw DOMException( DOMException::WRONG_DOCUMENT_ERR, 0 );
-
     //if the containers are same then it itself is its common ancestor.
     if (pointA == pointB)
         return pointA;
@@ -942,12 +1049,12 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
     VectorNodes startV(1, false);
     DOMNode* node;
 
-    for (node=fStartContainer; node != 0; node=node->getParentNode())
+    for (node=(DOMNode*)pointA; node != 0; node=node->getParentNode())
     {
         startV.addElement(node);
     }
     VectorNodes endV(1, false);
-    for (node=fEndContainer; node != 0; node=node->getParentNode())
+    for (node=(DOMNode*)pointB; node != 0; node=node->getParentNode())
     {
         endV.addElement(node);
     }
@@ -955,7 +1062,7 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
     int s = startV.size()-1;
     int e = endV.size()-1;
 
-    DOMNode* commonAncestor;
+    DOMNode* commonAncestor = 0;
 
     while (s>=0 && e>=0) {
         if (startV.elementAt(s) == endV.elementAt(e)) {
@@ -1061,22 +1168,55 @@ DOMDocumentFragment* DOMRangeImpl::traverseContents(TraversalType how)
         return traverseSameContainer( how );
 
     // case 2: Child C of start container is ancestor of end container
-    for (DOMNode* node = fStartContainer->getFirstChild(); node != 0; node=node->getNextSibling()) {
-        if (isAncestorOf(node, fEndContainer))
-            return traverseCommonStartContainer( node, how );
-    }
-
-    // case 3: Child C of end container  is ancestor of start container
-    for (DOMNode* nd = fEndContainer->getFirstChild(); nd != 0; nd=nd->getNextSibling()) {
-        if (isAncestorOf(nd, fStartContainer))
-             return traverseCommonEndContainer( nd, how );
+    // This can be quickly tested by walking the parent chain of
+    // end container
+    int endContainerDepth = 0;
+    for ( DOMNode* c = fEndContainer, *p = c->getParentNode();
+             p != 0;
+             c = p, p = p->getParentNode())
+        {
+            if (p == fStartContainer)
+                return traverseCommonStartContainer( c, how );
+            ++endContainerDepth;
         }
 
-    // case 4: preorder traversal of context tree.
-    // There is a common ancestor container.  Find the
+    // case 3: Child C of end container  is ancestor of start container
+    // This can be quickly tested by walking the parent chain of A
+    int startContainerDepth = 0;
+    for ( DOMNode* c2 = fStartContainer, *p2 = c2->getParentNode();
+         p2 != 0;
+         c2 = p2, p2 = p2->getParentNode())
+    {
+        if (p2 == fEndContainer)
+            return traverseCommonEndContainer( c2, how );
+        ++startContainerDepth;
+    }
+
+    // case 4: There is a common ancestor container.  Find the
     // ancestor siblings that are children of that container.
-    DOMNode* ancestor = (DOMNode*)commonAncestorOf(fStartContainer, fEndContainer);
-    return traverseCommonAncestors( ancestor, ancestor, how );
+    int depthDiff = startContainerDepth - endContainerDepth;
+
+    DOMNode* startNode = fStartContainer;
+    while (depthDiff > 0) {
+        startNode = startNode->getParentNode();
+        depthDiff--;
+    }
+
+    DOMNode* endNode = fEndContainer;
+    while (depthDiff < 0) {
+        endNode = endNode->getParentNode();
+        depthDiff++;
+    }
+
+    // ascend the ancestor hierarchy until we have a common parent.
+    for( DOMNode* sp = startNode->getParentNode(), *ep = endNode->getParentNode();
+         sp!=ep;
+         sp = sp->getParentNode(), ep = ep->getParentNode() )
+    {
+        startNode = sp;
+        endNode = ep;
+    }
+    return traverseCommonAncestors( startNode, endNode, how );
     }
 
 /**
@@ -1098,7 +1238,11 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
     DOMNode* cloneCurrent = 0;
 
     // Text node needs special case handling
-    if ( fStartContainer->getNodeType()== DOMNode::TEXT_NODE )
+    short type = fStartContainer->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
     {
         cloneCurrent = fStartContainer->cloneNode(false);
         if (fEndOffset == fStartOffset) {
@@ -1120,8 +1264,13 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
         }
 
         // set the original text node to its new value
-        if ( how != CLONE_CONTENTS )
-            ((DOMText*)fStartContainer)->deleteData(fStartOffset, fEndOffset-fStartOffset);
+        if ( how != CLONE_CONTENTS ) {
+            if(type == DOMNode::PROCESSING_INSTRUCTION_NODE) {
+                ((DOMProcessingInstructionImpl*)fStartContainer)->deleteData(fStartOffset, fEndOffset-fStartOffset);
+            }
+            else
+                ((DOMCharacterData*)fStartContainer)->deleteData(fStartOffset, fEndOffset-fStartOffset);
+        }
         if ( how != DELETE_CONTENTS)
             frag->appendChild(cloneCurrent);
     }
@@ -1129,7 +1278,7 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
         // Copy nodes between the start/end offsets.
         DOMNode* n = getSelectedNode( fStartContainer, fStartOffset );
         int cnt = fEndOffset - fStartOffset;
-        while( cnt > 0 )
+        while( cnt > 0 && n)
         {
             DOMNode* sibling = n->getNextSibling();
             DOMNode* xferNode = traverseFullySelected( n, how );
@@ -1137,7 +1286,7 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
                 frag->appendChild( xferNode );
             --cnt;
             n = sibling;
-            }
+        }
     }
 
     // Nothing is partially selected, so collapse to start point
@@ -1443,8 +1592,15 @@ DOMNode* DOMRangeImpl::traverseNode( DOMNode* n, bool isFullySelected, bool isLe
 {
     if ( isFullySelected )
         return traverseFullySelected( n, how );
-    if ( n->getNodeType()== DOMNode::TEXT_NODE )
+
+    short type = n->getNodeType();
+
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
         return traverseTextNode( n, isLeft, how );
+
     return traversePartiallySelected( n, how );
 }
 
@@ -1461,11 +1617,6 @@ DOMNode* DOMRangeImpl::traverseFullySelected( DOMNode* n, int how )
     case CLONE_CONTENTS:
         return n->cloneNode( true );
     case EXTRACT_CONTENTS:
-        if ( n->getNodeType()== DOMNode::DOCUMENT_TYPE_NODE )
-        {
-            throw DOMException(
-                DOMException::HIERARCHY_REQUEST_ERR, 0);
-        }
         return n;
     case DELETE_CONTENTS:
         // revisit:
@@ -1505,7 +1656,8 @@ DOMNode* DOMRangeImpl::traversePartiallySelected( DOMNode*n, int how )
  */
 DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
 {
-    const XMLCh* txtValue = n->getNodeValue();
+    XMLCh* txtValue = XMLString::replicate(n->getNodeValue());
+    ArrayJanitor<XMLCh> janValue(txtValue);
 
     if ( isLeft )
     {
@@ -1629,7 +1781,11 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
  */
 DOMNode* DOMRangeImpl::getSelectedNode( DOMNode*container, int offset )
 {
-    if ( container->getNodeType() == DOMNode::TEXT_NODE )
+    short type = container->getNodeType();
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
         return container;
 
     // This case is an important convenience for
@@ -1652,22 +1808,49 @@ void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
                               XMLSize_t startOffset, XMLSize_t endOffset)
 {
     if ((start == 0) || (end == 0) ) return;
-    //if both start and end are text check and return
-    if (start->getNodeType() == DOMNode::TEXT_NODE) {
+    DOMNode*sNode = 0;
+
+    short type = start->getNodeType();
+    if ( type == DOMNode::DOCUMENT_TYPE_NODE )
+    {
+        throw DOMException(
+            DOMException::HIERARCHY_REQUEST_ERR, 0);
+    }
+
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
         if (castToNodeImpl(start)->isReadOnly()) {
             throw DOMException(
                 DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
         }
+        //if both start and end are text check and return
         if (start == end)
             return;
+
+        sNode = start;
+    } else {
+        //set the start and end nodes to check
+        sNode = start->getFirstChild();
+        for(XMLSize_t i = 0; i<startOffset; i++)
+            sNode = sNode->getNextSibling();
     }
-    //set the start and end nodes to check
-    DOMNode*sNode = start->getFirstChild();
-    for(XMLSize_t i = 0; i<startOffset; i++)
-        sNode = sNode->getNextSibling();
 
     DOMNode* eNode;
-    if (end->getNodeType() == DOMNode::TEXT_NODE) {
+    type = end->getNodeType();
+    if ( type == DOMNode::DOCUMENT_TYPE_NODE )
+    {
+        throw DOMException(
+            DOMException::HIERARCHY_REQUEST_ERR, 0);
+    }
+
+    if((type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
         eNode = end; //need to check only till this node
     }
     else { //need to check all the kids that fall before the end offset value
@@ -1685,6 +1868,12 @@ void DOMRangeImpl::recurseTreeAndCheck(DOMNode* start, DOMNode* end)
 {
     for(DOMNode* node=start; node != 0 && node !=end; node=node->getNextSibling())
     {
+        if ( node->getNodeType()== DOMNode::DOCUMENT_TYPE_NODE )
+        {
+            throw DOMException(
+                DOMException::HIERARCHY_REQUEST_ERR, 0);
+        }
+
         if (castToNodeImpl(node)->isReadOnly()) {
             throw DOMException(
                 DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
@@ -1713,46 +1902,100 @@ DOMNode* DOMRangeImpl::removeChild(DOMNode* parent, DOMNode* child)
 
 
 /* This function is called from DOM.
-*  The  text has already beeen replaced.
+*  The  text has already been replaced.
 *  Fix-up any offsets.
 */
 void DOMRangeImpl::receiveReplacedText(DOMNode* node)
 {
     if (node == 0) return;
 
+    short type = fStartContainer->getNodeType();
     if (node == fStartContainer
-        && fStartContainer->getNodeType() == DOMNode::TEXT_NODE) {
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
         fStartOffset = 0;
     }
+    type = fEndContainer->getNodeType();
     if (node == fEndContainer
-        && fEndContainer->getNodeType() == DOMNode::TEXT_NODE) {
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
         fEndOffset = 0;
     }
 }
 
 
 /** This function is called from DOM.
-*  The  text has already beeen inserted.
+*  The  text has already been deleted.
 *  Fix-up any offsets.
 */
 void DOMRangeImpl::updateRangeForDeletedText(DOMNode* node, XMLSize_t offset, int count)
 {
     if (node == 0) return;
 
+    short type = fStartContainer->getNodeType();
     if (node == fStartContainer
-        && fStartContainer->getNodeType() == DOMNode::TEXT_NODE) {
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
         if (fStartOffset > offset+count) {
             fStartOffset = fStartOffset-count;
         } else if (fStartOffset > offset) {
             fStartOffset = offset;
         }
     }
+    type = fEndContainer->getNodeType();
     if (node == fEndContainer
-        && fEndContainer->getNodeType() == DOMNode::TEXT_NODE) {
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
         if (fEndOffset > offset+count) {
             fEndOffset = fEndOffset-count;
         } else if (fEndOffset > offset) {
             fEndOffset = offset;
+        }
+    }
+}
+
+
+
+/** This function is called from DOM.
+*  The  text has already beeen inserted.
+*  Fix-up any offsets.
+*/
+void DOMRangeImpl::updateRangeForInsertedText(DOMNode* node, XMLSize_t offset, int count)
+{
+    if (node == 0) return;
+
+    short type = fStartContainer->getNodeType();
+    if (node == fStartContainer
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
+        if (fStartOffset > offset) {
+            fStartOffset = offset;
+        }
+    }
+    type = fEndContainer->getNodeType();
+    if (node == fEndContainer
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
+        if (fEndOffset > offset) {
+            fEndOffset = fEndOffset+count;
         }
     }
 }
@@ -1818,18 +2061,34 @@ void DOMRangeImpl::updateRangeForInsertedNode(DOMNode* node) {
 }
 
 
-void DOMRangeImpl::updateSplitInfo(DOMText* oldNode, DOMText* startNode, XMLSize_t offset)
+void DOMRangeImpl::updateSplitInfo(DOMNode* oldNode, DOMNode* startNode, XMLSize_t offset)
 {
     if (startNode == 0) return;
 
-    if (fStartContainer == oldNode && fStartOffset > offset) {
-          fStartOffset = fStartOffset - offset;
-        fStartContainer = startNode;
+    short type = fStartContainer->getNodeType();
+    if (oldNode == fStartContainer
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
+        if (fStartOffset > offset) {
+            fStartOffset = fStartOffset - offset;
+            fStartContainer = startNode;
+        }
     }
 
-    if (fEndContainer == oldNode && fEndOffset > offset) {
+    type = fEndContainer->getNodeType();
+    if (oldNode == fEndContainer
+        && (type == DOMNode::TEXT_NODE
+        || type == DOMNode::CDATA_SECTION_NODE
+        || type == DOMNode::COMMENT_NODE
+        || type == DOMNode::PROCESSING_INSTRUCTION_NODE))
+    {
+        if (fEndOffset > offset) {
             fEndContainer = startNode;
-       fEndOffset = fEndOffset - offset;
+           fEndOffset = fEndOffset - offset;
+        }
     }
 }
 
