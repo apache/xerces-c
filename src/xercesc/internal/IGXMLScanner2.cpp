@@ -1283,7 +1283,13 @@ void IGXMLScanner::scanReset(const InputSource& src)
         fPSVIElement = new (fMemoryManager) PSVIElement(fMemoryManager);
 
     if (!fErrorStack)
+    {
         fErrorStack = new (fMemoryManager) ValueStackOf<bool>(8, fMemoryManager);
+    }
+    else
+    {
+        fErrorStack->removeAllElements();
+    }
 
     resetPSVIElemContext();
 
