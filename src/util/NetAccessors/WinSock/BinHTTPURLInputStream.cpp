@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/10/25 16:10:46  tng
+ * [Bug 4121] BinHTTPUrlInputStream needds to read entire HTTP header. By John Clayton.
+ *
  * Revision 1.9  2001/10/24 20:17:54  tng
  * [Bug 3813] BinHTTPURLInputStream has weak HTTP request capabilities.  By Kevin Philips.
  *
@@ -343,10 +346,16 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     }
 
 
+    // Set a flag so we know that the headers have not been read yet.
+    bool fHeaderRead = false;
+
     // The port is open and ready to go.
     // Build up the http GET command to send to the server.
     // To do:  We should really support http 1.1.  This implementation
     //         is weak.
+
+    memset(fBuffer, 0, sizeof(fBuffer));
+
     strcpy(fBuffer, "GET ");
     strcat(fBuffer, pathAsCharStar);
 
@@ -368,6 +377,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     strcat(fBuffer, hostNameAsCharStar);
     if (portNumber != 80)
     {
+        strcat(fBuffer, ":");
         int i = strlen(fBuffer);
         _itoa(portNumber, fBuffer+i, 10);
     }
@@ -387,6 +397,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     //
     // get the response, check the http header for errors from the server.
     //
+    memset(fBuffer, 0, sizeof(fBuffer));
     aLent = recv(s, fBuffer, sizeof(fBuffer)-1, 0);
     if (aLent == SOCKET_ERROR || aLent == 0)
     {
@@ -397,27 +408,42 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     fBufferEnd = fBuffer+aLent;
     *fBufferEnd = 0;
 
-    // Find the break between the returned http header and any data.
-    //  (Delimited by a blank line)
-    // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
-    //
-    fBufferPos = strstr(fBuffer, "\r\n\r\n");
-    if (fBufferPos != 0)
-    {
-        fBufferPos += 4;
-        *(fBufferPos-2) = 0;
-    }
-    else
-    {
-        fBufferPos = strstr(fBuffer, "\n\n");
+    do {
+        // Find the break between the returned http header and any data.
+        //  (Delimited by a blank line)
+        // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
+        //
+        fBufferPos = strstr(fBuffer, "\r\n\r\n");
         if (fBufferPos != 0)
         {
-            fBufferPos += 2;
-            *(fBufferPos-1) = 0;
+            fBufferPos += 4;
+            *(fBufferPos-2) = 0;
+            fHeaderRead = true;
         }
         else
-            fBufferPos = fBufferEnd;
-    }
+        {
+            fBufferPos = strstr(fBuffer, "\n\n");
+            if (fBufferPos != 0)
+            {
+                fBufferPos += 2;
+                *(fBufferPos-1) = 0;
+                fHeaderRead = true;
+            }
+            else
+            {
+                //
+                // Header is not yet read, do another recv() to get more data...
+                aLent = recv(s, fBufferEnd, (sizeof(fBuffer) - 1) - (fBufferEnd - fBuffer), 0);
+                if (aLent == SOCKET_ERROR || aLent == 0)
+                {
+                    // Call WSAGetLastError() to get the error number.
+                    ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+                }
+                fBufferEnd = fBufferEnd + aLent;
+                *fBufferEnd = 0;
+            }
+        }
+    } while(fHeaderRead == false);
 
     // Make sure the header includes an HTTP 200 OK response.
     //
