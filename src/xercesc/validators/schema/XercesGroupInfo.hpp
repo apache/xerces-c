@@ -94,6 +94,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    bool                     getCheckElementConsistency() const;
     int                      getScope() const;
     unsigned int             elementCount() const;
     ContentSpecNode*         getContentSpec() const;
@@ -110,6 +111,7 @@ public:
     void addElement(SchemaElementDecl* const toAdd);
     void setLocator(XSDLocator* const aLocator);
     void setBaseGroup(XercesGroupInfo* const baseGroup);
+    void setCheckElementConsistency(const bool aValue);
 
 private:
     // -----------------------------------------------------------------------
@@ -121,6 +123,7 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
+    bool                            fCheckElementConsistency;
     int                             fScope;
     ContentSpecNode*                fContentSpec;
     RefVectorOf<SchemaElementDecl>* fElements;
@@ -168,6 +171,11 @@ inline XercesGroupInfo* XercesGroupInfo::getBaseGroup() const {
     return fBaseGroup;
 }
 
+inline bool XercesGroupInfo::getCheckElementConsistency() const {
+
+    return fCheckElementConsistency;
+}
+
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Setter methods
 // ---------------------------------------------------------------------------}
@@ -190,6 +198,11 @@ inline void XercesGroupInfo::addElement(SchemaElementDecl* const elem) {
 inline void XercesGroupInfo::setBaseGroup(XercesGroupInfo* const baseGroup) {
 
     fBaseGroup = baseGroup;
+}
+
+inline void XercesGroupInfo::setCheckElementConsistency(const bool aValue) {
+
+    fCheckElementConsistency = aValue;
 }
 
 #endif

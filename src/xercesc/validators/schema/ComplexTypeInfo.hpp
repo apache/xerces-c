@@ -464,6 +464,9 @@ inline void ComplexTypeInfo::addElement(SchemaElementDecl* const elem) {
     if (!fElements) {
         fElements = new RefVectorOf<SchemaElementDecl>(8, false);
     }
+    else if (fElements->containsElement(elem)) {
+        return;
+    }
 
     fElements->addElement(elem);
 }

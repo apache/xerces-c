@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/04/01 15:47:06  knoaman
+ * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
+ *
  * Revision 1.6  2002/03/25 20:25:32  knoaman
  * Move particle derivation checking from TraverseSchema to SchemaValidator.
  *
@@ -833,6 +836,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar)
                 ComplexTypeInfo& curTypeInfo = complexTypeEnum.nextElement();
                 curTypeInfo.checkUniqueParticleAttribution(&sGrammar, fGrammarResolver, getScanner()->getURIStringPool(), this);
                 checkParticleDerivation(&sGrammar, &curTypeInfo);
+                checkRefElementConsistency(&sGrammar, &curTypeInfo);
             }
 
             RefHashTableOf<XercesGroupInfo>* groupInfoRegistry = sGrammar.getGroupInfoRegistry();
@@ -852,6 +856,9 @@ void SchemaValidator::preContentValidation(bool reuseGrammar)
                         fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curGroup.getLocator(), excep.getMessage());
 					}
                 }
+
+                if (curGroup.getCheckElementConsistency())
+                    checkRefElementConsistency(&sGrammar, 0, &curGroup);
             }
         }
     }
@@ -961,6 +968,62 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     fDatatypeBuffer.append(toFill.getRawBuffer());
 }
 
+
+// ---------------------------------------------------------------------------
+//  SchemaValidator: Particle Derivation Checking
+// ---------------------------------------------------------------------------
+void SchemaValidator::checkRefElementConsistency(SchemaGrammar* const currentGrammar,
+                                                 const ComplexTypeInfo* const curTypeInfo,
+                                                 const XercesGroupInfo* const curGroup) {
+
+    unsigned int elemCount = (curTypeInfo) ? curTypeInfo->elementCount() : curGroup->elementCount();
+    int elemScope = (curTypeInfo) ? curTypeInfo->getScopeDefined() : curGroup->getScope();
+    XSDLocator* typeInfoLocator = (curTypeInfo) ? curTypeInfo->getLocator() : curGroup->getLocator();
+
+    for (unsigned int i=0; i < elemCount; i++) {
+
+        const SchemaElementDecl* elemDecl = (curTypeInfo) ? curTypeInfo->elementAt(i) : curGroup->elementAt(i);
+
+        if (elemDecl->isGlobalDecl()) {
+
+            unsigned int elemURI = elemDecl->getURI();
+            const XMLCh* elemName = elemDecl->getBaseName();
+            const SchemaElementDecl* other = (SchemaElementDecl*)
+                currentGrammar->getElemDecl(elemURI, elemName, 0, elemScope);
+
+            if (other
+                && (elemDecl->getComplexTypeInfo() != other->getComplexTypeInfo() ||
+                    elemDecl->getDatatypeValidator() != other->getDatatypeValidator())) {
+                fSchemaErrorReporter.emitError(XMLErrs::DuplicateElementDeclaration,
+                                               XMLUni::fgXMLErrDomain, typeInfoLocator, elemName);
+                continue;
+            }
+
+            RefHash2KeysTableOf<ElemVector>* validSubsGroups = currentGrammar->getValidSubstitutionGroups();
+            ValueVectorOf<SchemaElementDecl*>* subsElements = validSubsGroups->get(elemName, elemURI);
+
+            if (subsElements) {
+
+                unsigned subsElemSize = subsElements->size();
+
+                for (unsigned int j=0; j < subsElemSize; j++) {
+
+                    SchemaElementDecl* subsElem = subsElements->elementAt(j);
+                    const XMLCh* subsElemName = subsElem->getBaseName();
+                    other = (SchemaElementDecl*)
+                        currentGrammar->getElemDecl(subsElem->getURI(), subsElemName, 0, elemScope);
+
+                    if (other
+                        && (subsElem->getComplexTypeInfo() != other->getComplexTypeInfo()
+                            || subsElem->getDatatypeValidator() != other->getDatatypeValidator())) {
+                        fSchemaErrorReporter.emitError(XMLErrs::DuplicateElementDeclaration,
+                                                       XMLUni::fgXMLErrDomain, typeInfoLocator, elemName);
+                    }
+                }
+            }
+        }
+    }
+}
 
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Particle Derivation Checking

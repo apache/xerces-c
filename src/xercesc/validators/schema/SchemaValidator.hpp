@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/04/01 15:47:06  knoaman
+ * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
+ *
  * Revision 1.2  2002/03/25 20:25:32  knoaman
  * Move particle derivation checking from TraverseSchema to SchemaValidator.
  *
@@ -128,6 +131,8 @@ public:
        , const unsigned int        uriId);
 
     void setNillable(bool isNil);
+    void setErrorHandler(ErrorHandler* const handler);
+    void setExitOnFirstFatal(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Implementation of the XMLValidator interface
@@ -181,6 +186,15 @@ public:
     //  Schema Validator methods
     // -----------------------------------------------------------------------
     void normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill);
+
+
+private:
+    // -----------------------------------------------------------------------
+    //  Element Consitency Checking methods
+    // -----------------------------------------------------------------------
+    void checkRefElementConsistency(SchemaGrammar* const currentGrammar,
+                                    const ComplexTypeInfo* const curTypeInfo,
+                                    const XercesGroupInfo* const curGroup = 0);
 
     // -----------------------------------------------------------------------
     //  Particle Derivation Checking methods
@@ -264,10 +278,6 @@ public:
                         const int baseScope,
                         const ComplexTypeInfo* const baseInfo);
 
-    void setErrorHandler(ErrorHandler* const handler);
-    void setExitOnFirstFatal(const bool newValue);
-
-private:
     // -----------------------------------------------------------------------
     //  Private data members
     //

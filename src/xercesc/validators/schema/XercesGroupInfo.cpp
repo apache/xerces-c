@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/04/01 15:47:06  knoaman
+ * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
+ *
  * Revision 1.2  2002/03/25 20:25:32  knoaman
  * Move particle derivation checking from TraverseSchema to SchemaValidator.
  *
@@ -81,7 +84,8 @@
 //  XercesGroupInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XercesGroupInfo::XercesGroupInfo()
-    : fScope(-1)
+    : fCheckElementConsistency(true)
+    , fScope(-1)
     , fContentSpec(0)
     , fElements(0)
     , fBaseGroup(0)

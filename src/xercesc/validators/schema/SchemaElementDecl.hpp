@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/04/01 15:47:06  knoaman
+ * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
+ *
  * Revision 1.4  2002/03/21 16:31:43  knoaman
  * Remove data/methods from SchemaElementDecl that are not used.
  *
@@ -223,6 +226,7 @@ public :
     XMLCh* getDefaultValue() const;
     XMLCh* getSubstitutionGroupName() const;
     ComplexTypeInfo* getComplexTypeInfo() const;
+    virtual bool isGlobalDecl() const;
 
 
     // -----------------------------------------------------------------------
@@ -459,6 +463,11 @@ inline SchemaAttDef* SchemaElementDecl::getAttWildCard() {
     }
 
     return fAttWildCard;
+}
+
+inline bool SchemaElementDecl::isGlobalDecl() const {
+
+    return (fEnclosingScope == Grammar::TOP_LEVEL_SCOPE);
 }
 
 // ---------------------------------------------------------------------------

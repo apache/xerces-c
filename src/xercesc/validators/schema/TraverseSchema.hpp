@@ -204,7 +204,7 @@ private:
                                         const int typeNameIndex,
                                         const int finalSet,
                                         int baseRefContext);
-    QName*              traverseElementDecl(const IDOM_Element* const childElem, bool& toDelete,
+    QName*              traverseElementDecl(const IDOM_Element* const childElem,
                                             const bool topLevel = false);
     const XMLCh*        traverseNotationDecl(const IDOM_Element* const childElem);
     const XMLCh*        traverseNotationDecl(const IDOM_Element* const childElem,
@@ -356,8 +356,7 @@ private:
       * Process a 'ref' of an Element declaration
       */
     QName* processElementDeclRef(const IDOM_Element* const elem,
-                                 const XMLCh* const refName,
-                                 bool& toDelete);
+                                 const XMLCh* const refName);
 
     /**
       * Process a 'ref' of an Attribute declaration
@@ -541,7 +540,6 @@ private:
 
     void checkFixedFacet(const IDOM_Element* const, const XMLCh* const,
                          const DatatypeValidator* const, unsigned int&);
-    void checkRefElementConsistency();
     void buildValidSubstitutionListF(const IDOM_Element* const elem,
                                      SchemaElementDecl* const,
                                      SchemaElementDecl* const);
@@ -770,8 +768,6 @@ private:
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
     RefHash2KeysTableOf<SchemaElementDecl>*        fSubstitutionGroups;
     RefHash2KeysTableOf<ElemVector>*               fValidSubstitutionGroups;
-    RefVectorOf<QName>*                            fRefElements;
-    ValueVectorOf<int>*                            fRefElemScope;
     RefHashTableOf<ValueVectorOf<IDOM_Element*> >* fIC_NodeListNS;
     RefHashTableOf<ElemVector>*                    fIC_ElementsNS;
     RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
@@ -779,7 +775,6 @@ private:
     RefHashTableOf<SchemaInfo>*                    fPreprocessedNodes;
     XSDErrorReporter                               fErrorReporter;
     XSDLocator*                                    fLocator;
-    RefVectorOf<XSDLocator>*                       fRefElemLocators;
 
     friend class GeneralAttributeCheck;
 };
