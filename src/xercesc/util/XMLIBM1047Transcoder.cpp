@@ -59,7 +59,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLIBM1047Transcoder.hpp>
-#include <iostream.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
