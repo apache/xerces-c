@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/05/30 09:36:35  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.13  2002/02/01 22:37:14  peiyongz
  * sane_include
  *
@@ -178,7 +181,7 @@ static const char*  gMemBufId = "prodInfo";
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    MemParse [options]\n\n"
             "This program uses the SAX Parser to parse a memory buffer\n"
             "containing XML statements, and reports the number of\n"
@@ -190,7 +193,7 @@ void usage()
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
 		      "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -206,8 +209,8 @@ int main(int argC, char* argV[])
     }
     catch (const XMLException& toCatch)
     {
-         cerr << "Error during initialization! Message:\n"
-              << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
+              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          return 1;
     }
 
@@ -247,7 +250,7 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 return 2;
             }
         }
@@ -268,8 +271,8 @@ int main(int argC, char* argV[])
         }
          else
         {
-            cerr << "Unknown option '" << argV[argInd]
-                 << "', ignoring it\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
+                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -325,15 +328,15 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& e)
     {
-        cerr << "\nError during parsing memory stream:\n"
+        XERCES_STD_QUALIFIER cerr << "\nError during parsing memory stream:\n"
              << "Exception message is:  \n"
-             << StrX(e.getMessage()) << "\n" << endl;
+             << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
         return 4;
     }
 
     // Print out the stats that we collected and time taken.
     if (!errorCount) {
-        cout << "\nFinished parsing the memory buffer containing the following "
+        XERCES_STD_QUALIFIER cout << "\nFinished parsing the memory buffer containing the following "
              << "XML statements:\n\n"
              << gXMLInMemBuf
              << "\n\n\n"
@@ -341,7 +344,7 @@ int main(int argC, char* argV[])
              << handler.getElementCount() << " elements, "
              << handler.getAttrCount() << " attributes, "
              << handler.getSpaceCount() << " spaces, "
-             << handler.getCharacterCount() << " characters).\n" << endl;
+             << handler.getCharacterCount() << " characters).\n" << XERCES_STD_QUALIFIER endl;
     }
 
     //

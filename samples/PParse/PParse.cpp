@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/05/30 09:36:35  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.14  2002/04/17 20:18:08  tng
  * [Bug 7493] The word "occured" is misspelled and it is a global error.
  *
@@ -174,7 +177,7 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    PParse [options] <XML file>\n\n"
             "This program demonstrates the progressive parse capabilities of\n"
 	         "the parser system. It allows you to do a scanFirst() call followed by\n"
@@ -189,7 +192,7 @@ static void usage()
             "      -f            - Enable full schema constraint checking [default is off].\n"
             "      -?            - Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         <<  endl;
+         <<  XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -207,8 +210,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          return 1;
     }
 
@@ -248,7 +251,7 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -270,8 +273,8 @@ int main(int argC, char* argV[])
         }
         else
         {
-            cerr << "Unknown option '" << argV[parmInd]
-                << "', ignoring it\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
+                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -315,7 +318,7 @@ int main(int argC, char* argV[])
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
         if (!parser->parseFirst(xmlFile, token))
         {
-            cerr << "scanFirst() failed\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "scanFirst() failed\n" << XERCES_STD_QUALIFIER endl;
             XMLPlatformUtils::Terminate();
             return 1;
         }
@@ -344,21 +347,21 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        cerr << "\nAn error occurred: '" << xmlFile << "'\n"
+        XERCES_STD_QUALIFIER cerr << "\nAn error occurred: '" << xmlFile << "'\n"
              << "Exception message is: \n"
              << StrX(toCatch.getMessage())
-             << "\n" << endl;
+             << "\n" << XERCES_STD_QUALIFIER endl;
         XMLPlatformUtils::Terminate();
         return 4;
     }
 
 
     if (!errorCount) {
-        cout << xmlFile << ": " << duration << " ms ("
+        XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
             << handler.getElementCount() << " elems, "
             << handler.getAttrCount() << " attrs, "
             << handler.getSpaceCount() << " spaces, "
-            << handler.getCharacterCount() << " chars)" << endl;
+            << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
     }
 
     //

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/05/30 09:36:35  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.19  2003/02/05 18:53:23  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -126,7 +129,11 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -181,7 +188,7 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;
@@ -193,13 +200,13 @@ inline ostream& operator<<(ostream& target, const StrX& toDump)
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    EnumVal <XML file>\n\n"
             "This program parses the specified XML file, then shows how to\n"
             "enumerate the contents of the DTD Grammar. Essentially,\n"
             "shows how one can access the DTD information stored in internal\n"
             "data structures.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -216,8 +223,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         cerr   << "Error during initialization! Message:\n"
-                << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr   << "Error during initialization! Message:\n"
+                << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          XMLPlatformUtils::Terminate();
          return 1;
     }
@@ -264,9 +271,9 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& e)
     {
-        cerr << "\nError during parsing: '" << xmlFile << "'\n"
+        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
              << "Exception message is:  \n"
-             << StrX(e.getMessage()) << "\n" << endl;
+             << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
         XMLPlatformUtils::Terminate();
         return 4;
     }
@@ -281,25 +288,25 @@ int main(int argC, char* argV[])
         NameIdPoolEnumerator<DTDElementDecl> elemEnum = grammar->getElemEnumerator();
         if (elemEnum.hasMoreElements())
         {
-            cout << "\nELEMENTS:\n----------------------------\n";
+            XERCES_STD_QUALIFIER cout << "\nELEMENTS:\n----------------------------\n";
             while(elemEnum.hasMoreElements())
             {
                 const DTDElementDecl& curElem = elemEnum.nextElement();
-                cout << "  Name: " << StrX(curElem.getFullName()) << "\n";
+                XERCES_STD_QUALIFIER cout << "  Name: " << StrX(curElem.getFullName()) << "\n";
 
-                cout << "  Content Model: "
+                XERCES_STD_QUALIFIER cout << "  Content Model: "
                      << StrX(curElem.getFormattedContentModel())
                      << "\n";
 
                 // Get an enumerator for this guy's attributes if any
                 if (curElem.hasAttDefs())
                 {
-                    cout << "  Attributes:\n";
+                    XERCES_STD_QUALIFIER cout << "  Attributes:\n";
                     XMLAttDefList& attList = curElem.getAttDefList();
                     while (attList.hasMoreElements())
                     {
                         const XMLAttDef& curAttDef = attList.nextElement();
-                        cout << "    Name:" << StrX(curAttDef.getFullName())
+                        XERCES_STD_QUALIFIER cout << "    Name:" << StrX(curAttDef.getFullName())
                              << ", Type: ";
 
                         // Get the type and display it
@@ -307,50 +314,50 @@ int main(int argC, char* argV[])
                         switch(type)
                         {
                             case XMLAttDef::CData :
-                                cout << "CDATA";
+                                XERCES_STD_QUALIFIER cout << "CDATA";
                                 break;
 
                             case XMLAttDef::ID :
-                                cout << "ID";
+                                XERCES_STD_QUALIFIER cout << "ID";
                                 break;
 
                             case XMLAttDef::IDRef :
                             case XMLAttDef::IDRefs :
-                                cout << "IDREF(S)";
+                                XERCES_STD_QUALIFIER cout << "IDREF(S)";
                                 break;
 
                             case XMLAttDef::Entity :
                             case XMLAttDef::Entities :
-                                cout << "ENTITY(IES)";
+                                XERCES_STD_QUALIFIER cout << "ENTITY(IES)";
                                 break;
 
                             case XMLAttDef::NmToken :
                             case XMLAttDef::NmTokens :
-                                cout << "NMTOKEN(S)";
+                                XERCES_STD_QUALIFIER cout << "NMTOKEN(S)";
                                 break;
 
                             case XMLAttDef::Notation :
-                                cout << "NOTATION";
+                                XERCES_STD_QUALIFIER cout << "NOTATION";
                                 break;
 
                             case XMLAttDef::Enumeration :
-                                cout << "ENUMERATION";
+                                XERCES_STD_QUALIFIER cout << "ENUMERATION";
                                 break;
                         }
 
-                        cout << "\n";
+                        XERCES_STD_QUALIFIER cout << "\n";
                     }
                 }
-                cout << endl;
+                XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
             }
         }
          else
         {
-            cout << "The validator has no elements to display\n" << endl;
+            XERCES_STD_QUALIFIER cout << "The validator has no elements to display\n" << XERCES_STD_QUALIFIER endl;
         }
     }
     else
-        cout << "\nErrors occurred, no output available\n" << endl;
+        XERCES_STD_QUALIFIER cout << "\nErrors occurred, no output available\n" << XERCES_STD_QUALIFIER endl;
 
     //
     //  Delete the parser itself.  Must be done prior to calling Terminate, below.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.8  2003/03/17 21:03:52  peiyongz
  * Bug#17983
  *
@@ -170,8 +173,8 @@ void SAX2PrintHandlers::writeChars(const XMLByte* const toWrite,
     // Without the cast, it was printing the pointer value in hex.
     // Quite annoying, considering every other platform printed
     // the string with the explicit cast to char* below.
-  cout.write((char *) toWrite, (int) count);
-	cout.flush();
+  XERCES_STD_QUALIFIER cout.write((char *) toWrite, (int) count);
+	XERCES_STD_QUALIFIER cout.flush();
 }
 
 
@@ -180,26 +183,26 @@ void SAX2PrintHandlers::writeChars(const XMLByte* const toWrite,
 // ---------------------------------------------------------------------------
 void SAX2PrintHandlers::error(const SAXParseException& e)
 {
-    cerr << "\nError at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void SAX2PrintHandlers::fatalError(const SAXParseException& e)
 {
-    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void SAX2PrintHandlers::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 

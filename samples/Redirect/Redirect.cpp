@@ -75,6 +75,9 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.8  2003/05/30 09:36:35  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.7  2002/02/01 22:38:26  peiyongz
  * sane_include
  *
@@ -115,14 +118,14 @@
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    Redirect <XML file>\n\n"
             "This program installs an entity resolver, traps the call to\n"
             "the external DTD file and redirects it to another application\n"
             "specific file which contains the actual dtd.\n\n"
             "The program then counts and reports the number of elements and\n"
             "attributes in the given XML file.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -138,8 +141,8 @@ int main(int argc, char* args[])
     }
     catch (const XMLException& toCatch)
     {
-        cerr << "Error during initialization! Message:\n"
-             << StrX(toCatch.getMessage()) << endl;
+        XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
+             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -186,20 +189,20 @@ int main(int argc, char* args[])
 
     catch (const XMLException& e)
     {
-        cerr << "\nError during parsing: '" << xmlFile << "'\n"
+        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
-                << StrX(e.getMessage()) << "\n" << endl;
+                << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
         XMLPlatformUtils::Terminate();
         return 4;
     }
 
     // Print out the stats that we collected and time taken.
     if (!errorCount) {
-        cout << xmlFile << ": " << duration << " ms ("
+        XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
              << handler.getElementCount() << " elems, "
              << handler.getAttrCount() << " attrs, "
              << handler.getSpaceCount() << " spaces, "
-             << handler.getCharacterCount() << " chars)" << endl;
+             << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
     }
 
     //

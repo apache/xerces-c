@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/30 09:36:35  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.9  2003/02/05 18:53:22  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -95,7 +98,11 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/util/XMLString.hpp>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -185,7 +192,7 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.4  2003/02/05 18:53:23  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -75,10 +78,15 @@
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
+
+#include <xercesc/util/PlatformUtils.hpp>
 #include <stdlib.h>
 #include <string.h>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
-#include <xercesc/util/PlatformUtils.hpp>
+#endif
 #include "SAX2CountHandlers.hpp"
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
@@ -123,7 +131,7 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

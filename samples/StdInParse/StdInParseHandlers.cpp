@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.4  2002/02/01 22:41:37  peiyongz
  * sane_include
  *
@@ -145,24 +148,24 @@ void StdInParseHandlers::resetDocument()
 // ---------------------------------------------------------------------------
 void StdInParseHandlers::error(const SAXParseException& e)
 {
-    cerr << "\nError at (file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nError at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void StdInParseHandlers::fatalError(const SAXParseException& e)
 {
-    cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void StdInParseHandlers::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at (file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nWarning at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }

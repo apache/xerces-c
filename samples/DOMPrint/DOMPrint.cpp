@@ -191,7 +191,7 @@ void usage();
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    DOMPrint [options] <XML file>\n\n"
             "This program invokes the DOM parser, and builds the DOM tree.\n"
             "It then asks the DOMWriter to serialize the DOM tree.\n"
@@ -215,7 +215,7 @@ void usage()
             "The parser has intrinsic support for the following encodings:\n"
             "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
             "    WINDOWS-1252, IBM1140, IBM037.\n"
-          <<  endl;
+          <<  XERCES_STD_QUALIFIER endl;
 }
 
 // ---------------------------------------------------------------------------
@@ -235,9 +235,9 @@ int main(int argC, char* argV[])
 
     catch(const XMLException &toCatch)
     {
-        cerr << "Error during Xerces-c Initialization.\n"
+        XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
-             << StrX(toCatch.getMessage()) << endl;
+             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -277,7 +277,7 @@ int main(int argC, char* argV[])
                 gValScheme = XercesDOMParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -321,7 +321,7 @@ int main(int argC, char* argV[])
 				gDiscardDefaultContent = false;
             else
             {
-                cerr << "Unknown -wddc= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -wddc= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -337,7 +337,7 @@ int main(int argC, char* argV[])
 				gSplitCdataSections = false;
             else
             {
-                cerr << "Unknown -wscs= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -wscs= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -352,7 +352,7 @@ int main(int argC, char* argV[])
 				gUseFilter = false;
             else
             {
-                cerr << "Unknown -wflt= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -wflt= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -367,7 +367,7 @@ int main(int argC, char* argV[])
 				gFormatPrettyPrint = false;
             else
             {
-                cerr << "Unknown -wfpp= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -wfpp= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -382,15 +382,15 @@ int main(int argC, char* argV[])
                 gWriteBOM = false;
             else
             {
-                cerr << "Unknown -wbom= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -wbom= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
          else
         {
-            cerr << "Unknown option '" << argV[parmInd]
-                 << "', ignoring it.\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it.\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -433,8 +433,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& e)
     {
-        cerr << "An error occurred during parsing\n   Message: "
-             << StrX(e.getMessage()) << endl;
+        XERCES_STD_QUALIFIER cerr << "An error occurred during parsing\n   Message: "
+             << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
         errorsOccured = true;
     }
 
@@ -443,18 +443,18 @@ int main(int argC, char* argV[])
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        cerr << "\nDOM Error during parsing: '" << gXmlFile << "'\n"
-             << "DOMException code is:  " << e.code << endl;
+        XERCES_STD_QUALIFIER cerr << "\nDOM Error during parsing: '" << gXmlFile << "'\n"
+             << "DOMException code is:  " << e.code << XERCES_STD_QUALIFIER endl;
 
         if (DOMImplementation::loadDOMExceptionMsg(e.code, errText, maxChars))
-             cerr << "Message is: " << StrX(errText) << endl;
+             XERCES_STD_QUALIFIER cerr << "Message is: " << StrX(errText) << XERCES_STD_QUALIFIER endl;
 
         errorsOccured = true;
     }
 
     catch (...)
     {
-        cerr << "An error occurred during parsing\n " << endl;
+        XERCES_STD_QUALIFIER cerr << "An error occurred during parsing\n " << XERCES_STD_QUALIFIER endl;
         errorsOccured = true;
     }
 
@@ -544,9 +544,9 @@ int main(int argC, char* argV[])
         }
         catch (XMLException& e)
         {
-            cerr << "An error occurred during creation of output transcoder. Msg is:"
-                << endl
-                << StrX(e.getMessage()) << endl;
+            XERCES_STD_QUALIFIER cerr << "An error occurred during creation of output transcoder. Msg is:"
+                << XERCES_STD_QUALIFIER endl
+                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
             retval = 4;
         }
 

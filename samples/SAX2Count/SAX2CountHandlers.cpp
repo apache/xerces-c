@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.4  2002/02/01 22:38:52  peiyongz
  * sane_include
  *
@@ -137,27 +140,27 @@ void SAX2CountHandlers::resetDocument()
 void SAX2CountHandlers::error(const SAXParseException& e)
 {
     fSawErrors = true;
-    cerr << "\nError at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void SAX2CountHandlers::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
-    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void SAX2CountHandlers::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void SAX2CountHandlers::resetErrors()

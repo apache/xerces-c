@@ -150,26 +150,26 @@ void RedirectHandlers::resetDocument()
 // ---------------------------------------------------------------------------
 void RedirectHandlers::error(const SAXParseException& e)
 {
-    cerr << "\nError at (file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nError at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void RedirectHandlers::fatalError(const SAXParseException& e)
 {
-    cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void RedirectHandlers::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at (file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nWarning at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.15  2003/02/05 18:53:24  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -110,7 +113,11 @@
 #include <xercesc/validators/schema/SchemaValidator.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -169,7 +176,7 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;
@@ -180,12 +187,12 @@ inline ostream& operator<<(ostream& target, const StrX& toDump)
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    SEnumVal <XML file>\n\n"
             "This program parses a file, then shows how to enumerate the\n"
             "contents of the Schema Grammar. Essentially, shows how one can\n"
             "access the Schema information stored in internal data structures.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 // ---------------------------------------------------------------------------
@@ -201,8 +208,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         cerr   << "Error during initialization! Message:\n"
-                << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr   << "Error during initialization! Message:\n"
+                << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          XMLPlatformUtils::Terminate();
          return 1;
     }
@@ -223,9 +230,9 @@ int main(int argC, char* argV[])
     }
     catch (const XMLException& e)
     {
-        cerr << "\nError during parsing: '" << argV[1] << "'\n"
+        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << argV[1] << "'\n"
              << "Exception message is:  \n"
-             << StrX(e.getMessage()) << "\n" << endl;
+             << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
         XMLPlatformUtils::Terminate();
         return 3;
     }
@@ -252,20 +259,20 @@ void process(char* const xmlFile)
 
     if (parser.getErrorCount())
 	{
-        cout << "\nErrors occurred, no output available\n" << endl;
+        XERCES_STD_QUALIFIER cout << "\nErrors occurred, no output available\n" << XERCES_STD_QUALIFIER endl;
 		return;
 	}
 
 	if (!parser.getValidator().handlesSchema())
 	{
-		cout << "\n Non schema document, no output available\n" << endl;
+		XERCES_STD_QUALIFIER cout << "\n Non schema document, no output available\n" << XERCES_STD_QUALIFIER endl;
 		return;
 	}
 
 	Grammar* rootGrammar = parser.getRootGrammar();
 	if (!rootGrammar || rootGrammar->getGrammarType() != Grammar::SchemaGrammarType)
 	{
-		cout << "\n Non schema grammar, no output available\n" << endl;
+		XERCES_STD_QUALIFIER cout << "\n Non schema grammar, no output available\n" << XERCES_STD_QUALIFIER endl;
 		return;
 	}
 
@@ -280,7 +287,7 @@ void process(char* const xmlFile)
 
 	if (!elemEnum.hasMoreElements())
 	{
-		cout << "\nThe validator has no elements to display\n" << endl;
+		XERCES_STD_QUALIFIER cout << "\nThe validator has no elements to display\n" << XERCES_STD_QUALIFIER endl;
 		return;
 	}
 
@@ -289,39 +296,39 @@ void process(char* const xmlFile)
 		const SchemaElementDecl& curElem = elemEnum.nextElement();
 
 		// Name
-		cout << "Name:\t\t\t" << StrX(curElem.getFullName()) << "\n";
+		XERCES_STD_QUALIFIER cout << "Name:\t\t\t" << StrX(curElem.getFullName()) << "\n";
 
 		// Model Type
-		cout << "Model Type:\t\t";
+		XERCES_STD_QUALIFIER cout << "Model Type:\t\t";
 		switch( curElem.getModelType() )
 		{
-		case SchemaElementDecl::Empty:          cout << "Empty";         break;
-		case SchemaElementDecl::Any:            cout << "Any";           break;
-		case SchemaElementDecl::Mixed_Simple:   cout << "Mixed_Simple";  break;
-		case SchemaElementDecl::Mixed_Complex:  cout << "Mixed_Complex"; break;
-		case SchemaElementDecl::Children:       cout << "Children";      break;
-		case SchemaElementDecl::Simple:         cout << "Simple";        break;
+		case SchemaElementDecl::Empty:          XERCES_STD_QUALIFIER cout << "Empty";         break;
+		case SchemaElementDecl::Any:            XERCES_STD_QUALIFIER cout << "Any";           break;
+		case SchemaElementDecl::Mixed_Simple:   XERCES_STD_QUALIFIER cout << "Mixed_Simple";  break;
+		case SchemaElementDecl::Mixed_Complex:  XERCES_STD_QUALIFIER cout << "Mixed_Complex"; break;
+		case SchemaElementDecl::Children:       XERCES_STD_QUALIFIER cout << "Children";      break;
+		case SchemaElementDecl::Simple:         XERCES_STD_QUALIFIER cout << "Simple";        break;
 
-		default:                                cout << "Unknown";       break;
+		default:                                XERCES_STD_QUALIFIER cout << "Unknown";       break;
 		}
 
-		cout << "\n";
+		XERCES_STD_QUALIFIER cout << "\n";
 
 		// Create Reason
-		cout << "Create Reason:\t";
+		XERCES_STD_QUALIFIER cout << "Create Reason:\t";
 		switch( curElem.getCreateReason() )
 		{
-		case XMLElementDecl::NoReason:          cout << "Empty";            break;
-		case XMLElementDecl::Declared:          cout << "Declared";         break;
-		case XMLElementDecl::AttList:           cout << "AttList";          break;
-		case XMLElementDecl::InContentModel:    cout << "InContentModel";   break;
-		case XMLElementDecl::AsRootElem:        cout << "AsRootElem";       break;
-		case XMLElementDecl::JustFaultIn:       cout << "JustFaultIn";      break;
+		case XMLElementDecl::NoReason:          XERCES_STD_QUALIFIER cout << "Empty";            break;
+		case XMLElementDecl::Declared:          XERCES_STD_QUALIFIER cout << "Declared";         break;
+		case XMLElementDecl::AttList:           XERCES_STD_QUALIFIER cout << "AttList";          break;
+		case XMLElementDecl::InContentModel:    XERCES_STD_QUALIFIER cout << "InContentModel";   break;
+		case XMLElementDecl::AsRootElem:        XERCES_STD_QUALIFIER cout << "AsRootElem";       break;
+		case XMLElementDecl::JustFaultIn:       XERCES_STD_QUALIFIER cout << "JustFaultIn";      break;
 
-		default:                            cout << "Unknown";  break;
+		default:                            XERCES_STD_QUALIFIER cout << "Unknown";  break;
 		}
 
-		cout << "\n";
+		XERCES_STD_QUALIFIER cout << "\n";
 
 		// Content Spec Node
 		processContentSpecNode( curElem.getContentSpec() );
@@ -330,21 +337,21 @@ void process(char* const xmlFile)
 		int mflags = curElem.getMiscFlags();
 		if( mflags !=0 )
 		{
-			cout << "Misc. Flags:\t";
+			XERCES_STD_QUALIFIER cout << "Misc. Flags:\t";
 		}
 
         if ( mflags & SchemaSymbols::XSD_NILLABLE )
-			cout << "Nillable ";
+			XERCES_STD_QUALIFIER cout << "Nillable ";
 
 		if ( mflags & SchemaSymbols::XSD_ABSTRACT )
-			cout << "Abstract ";
+			XERCES_STD_QUALIFIER cout << "Abstract ";
 
 		if ( mflags & SchemaSymbols::XSD_FIXED )
-			cout << "Fixed ";
+			XERCES_STD_QUALIFIER cout << "Fixed ";
 
 		if( mflags !=0 )
 		{
-			cout << "\n";
+			XERCES_STD_QUALIFIER cout << "\n";
 		}
 
 		// Substitution Name
@@ -352,7 +359,7 @@ void process(char* const xmlFile)
 		if( subsGroup )
 		{
 			const XMLCh* uriText = parser.getURIText(subsGroup->getURI());
-			cout << "Substitution Name:\t" << StrX(uriText)
+			XERCES_STD_QUALIFIER cout << "Substitution Name:\t" << StrX(uriText)
 			     << "," << StrX(subsGroup->getBaseName()) << "\n";
 		}
 
@@ -360,14 +367,14 @@ void process(char* const xmlFile)
 		const XMLCh* fmtCntModel = curElem.getFormattedContentModel();
 		if( fmtCntModel != NULL )
 		{
-			cout << "Content Model:\t" << StrX(fmtCntModel) << "\n";
+			XERCES_STD_QUALIFIER cout << "Content Model:\t" << StrX(fmtCntModel) << "\n";
 		}
 
 		const ComplexTypeInfo* ctype = curElem.getComplexTypeInfo();
 		if( ctype != NULL)
 		{
-			cout << "ComplexType:\n";
-			cout << "\tTypeName:\t" << StrX(ctype->getTypeName()) << "\n";
+			XERCES_STD_QUALIFIER cout << "ComplexType:\n";
+			XERCES_STD_QUALIFIER cout << "\tTypeName:\t" << StrX(ctype->getTypeName()) << "\n";
 
 			ContentSpecNode* cSpecNode = ctype->getContentSpec();
 			processContentSpecNode(cSpecNode, true );
@@ -383,8 +390,8 @@ void process(char* const xmlFile)
 			processAttributes( curElem.getAttDefList() );
 		}
 
-		cout << "--------------------------------------------";
-		cout << endl;
+		XERCES_STD_QUALIFIER cout << "--------------------------------------------";
+		XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
 
     }
 
@@ -404,46 +411,46 @@ void processAttributes( XMLAttDefList& attList, bool margin )
 
     if ( margin )
     {
-        cout << "\t";
+        XERCES_STD_QUALIFIER cout << "\t";
     }
 
-    cout << "Attributes:\n";
+    XERCES_STD_QUALIFIER cout << "Attributes:\n";
     while( attList.hasMoreElements() )
     {
         // Name
         SchemaAttDef& curAttDef = (SchemaAttDef&)attList.nextElement();
-        cout << "\tName:\t\t\t" << StrX(curAttDef.getFullName()) << "\n";
+        XERCES_STD_QUALIFIER cout << "\tName:\t\t\t" << StrX(curAttDef.getFullName()) << "\n";
 
         // Type
-        cout << "\tType:\t\t\t";
-		cout << StrX(XMLAttDef::getAttTypeString(curAttDef.getType()));
-        cout << "\n";
+        XERCES_STD_QUALIFIER cout << "\tType:\t\t\t";
+		XERCES_STD_QUALIFIER cout << StrX(XMLAttDef::getAttTypeString(curAttDef.getType()));
+        XERCES_STD_QUALIFIER cout << "\n";
 
         // Default Type
-        cout << "\tDefault Type:\t";
-		cout << StrX(XMLAttDef::getDefAttTypeString(curAttDef.getDefaultType()));
-        cout << "\n";
+        XERCES_STD_QUALIFIER cout << "\tDefault Type:\t";
+		XERCES_STD_QUALIFIER cout << StrX(XMLAttDef::getDefAttTypeString(curAttDef.getDefaultType()));
+        XERCES_STD_QUALIFIER cout << "\n";
 
         // Value
         if( curAttDef.getValue() )
         {
-            cout << "\tValue:\t\t\t";
-            cout << StrX(curAttDef.getValue());
-            cout << "\n";
+            XERCES_STD_QUALIFIER cout << "\tValue:\t\t\t";
+            XERCES_STD_QUALIFIER cout << StrX(curAttDef.getValue());
+            XERCES_STD_QUALIFIER cout << "\n";
         }
 
         // Enum. values
         if( curAttDef.getEnumeration() )
         {
-            cout << "\tEnumeration:\t";
-            cout << StrX(curAttDef.getEnumeration());
-            cout << "\n";
+            XERCES_STD_QUALIFIER cout << "\tEnumeration:\t";
+            XERCES_STD_QUALIFIER cout << StrX(curAttDef.getEnumeration());
+            XERCES_STD_QUALIFIER cout << "\n";
         }
 
          const DatatypeValidator* dv = curAttDef.getDatatypeValidator();
          processDatatypeValidator( dv, true );
 
-        cout << "\n";
+        XERCES_STD_QUALIFIER cout << "\n";
     }
 }
 
@@ -456,42 +463,42 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
 
     if( margin )
     {
-        cout << "\t";
+        XERCES_STD_QUALIFIER cout << "\t";
     }
 
-    cout << "Base Datatype:\t\t";
+    XERCES_STD_QUALIFIER cout << "Base Datatype:\t\t";
     switch( dtValidator->getType() )
     {
-    case DatatypeValidator::String:         cout << "string";      break;
-    case DatatypeValidator::AnyURI:         cout << "AnyURI";      break;
-    case DatatypeValidator::QName:          cout << "QName";       break;
-	case DatatypeValidator::Name:           cout << "Name";        break;
-	case DatatypeValidator::NCName:         cout << "NCName";      break;
-    case DatatypeValidator::Boolean:        cout << "Boolean";     break;
-    case DatatypeValidator::Float:          cout << "Float";       break;
-    case DatatypeValidator::Double:         cout << "Double";      break;
-    case DatatypeValidator::Decimal:        cout << "Decimal";     break;
-    case DatatypeValidator::HexBinary:      cout << "HexBinary";   break;
-    case DatatypeValidator::Base64Binary:   cout << "Base64Binary";break;
-    case DatatypeValidator::Duration:       cout << "Duration";    break;
-    case DatatypeValidator::DateTime:       cout << "DateTime";    break;
-    case DatatypeValidator::Date:           cout << "Date";        break;
-    case DatatypeValidator::Time:           cout << "Time";        break;
-    case DatatypeValidator::MonthDay:       cout << "MonthDay";    break;
-    case DatatypeValidator::YearMonth:      cout << "YearMonth";   break;
-    case DatatypeValidator::Year:           cout << "Year";        break;
-    case DatatypeValidator::Month:          cout << "Month";       break;
-    case DatatypeValidator::Day:            cout << "Day";         break;
-    case DatatypeValidator::ID:             cout << "ID";          break;
-    case DatatypeValidator::IDREF:          cout << "IDREF";       break;
-    case DatatypeValidator::ENTITY:         cout << "ENTITY";      break;
-    case DatatypeValidator::NOTATION:       cout << "NOTATION";    break;
-    case DatatypeValidator::List:           cout << "List";        break;
-    case DatatypeValidator::Union:          cout << "Union";       break;
-    case DatatypeValidator::AnySimpleType:  cout << "AnySimpleType"; break;
+    case DatatypeValidator::String:         XERCES_STD_QUALIFIER cout << "string";      break;
+    case DatatypeValidator::AnyURI:         XERCES_STD_QUALIFIER cout << "AnyURI";      break;
+    case DatatypeValidator::QName:          XERCES_STD_QUALIFIER cout << "QName";       break;
+	case DatatypeValidator::Name:           XERCES_STD_QUALIFIER cout << "Name";        break;
+	case DatatypeValidator::NCName:         XERCES_STD_QUALIFIER cout << "NCName";      break;
+    case DatatypeValidator::Boolean:        XERCES_STD_QUALIFIER cout << "Boolean";     break;
+    case DatatypeValidator::Float:          XERCES_STD_QUALIFIER cout << "Float";       break;
+    case DatatypeValidator::Double:         XERCES_STD_QUALIFIER cout << "Double";      break;
+    case DatatypeValidator::Decimal:        XERCES_STD_QUALIFIER cout << "Decimal";     break;
+    case DatatypeValidator::HexBinary:      XERCES_STD_QUALIFIER cout << "HexBinary";   break;
+    case DatatypeValidator::Base64Binary:   XERCES_STD_QUALIFIER cout << "Base64Binary";break;
+    case DatatypeValidator::Duration:       XERCES_STD_QUALIFIER cout << "Duration";    break;
+    case DatatypeValidator::DateTime:       XERCES_STD_QUALIFIER cout << "DateTime";    break;
+    case DatatypeValidator::Date:           XERCES_STD_QUALIFIER cout << "Date";        break;
+    case DatatypeValidator::Time:           XERCES_STD_QUALIFIER cout << "Time";        break;
+    case DatatypeValidator::MonthDay:       XERCES_STD_QUALIFIER cout << "MonthDay";    break;
+    case DatatypeValidator::YearMonth:      XERCES_STD_QUALIFIER cout << "YearMonth";   break;
+    case DatatypeValidator::Year:           XERCES_STD_QUALIFIER cout << "Year";        break;
+    case DatatypeValidator::Month:          XERCES_STD_QUALIFIER cout << "Month";       break;
+    case DatatypeValidator::Day:            XERCES_STD_QUALIFIER cout << "Day";         break;
+    case DatatypeValidator::ID:             XERCES_STD_QUALIFIER cout << "ID";          break;
+    case DatatypeValidator::IDREF:          XERCES_STD_QUALIFIER cout << "IDREF";       break;
+    case DatatypeValidator::ENTITY:         XERCES_STD_QUALIFIER cout << "ENTITY";      break;
+    case DatatypeValidator::NOTATION:       XERCES_STD_QUALIFIER cout << "NOTATION";    break;
+    case DatatypeValidator::List:           XERCES_STD_QUALIFIER cout << "List";        break;
+    case DatatypeValidator::Union:          XERCES_STD_QUALIFIER cout << "Union";       break;
+    case DatatypeValidator::AnySimpleType:  XERCES_STD_QUALIFIER cout << "AnySimpleType"; break;
     }
 
-    cout << "\n";
+    XERCES_STD_QUALIFIER cout << "\n";
 
     // Facets
 	RefHashTableOf<KVStringPair>* facets = dtValidator->getFacets();
@@ -500,14 +507,14 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
         RefHashTableOfEnumerator<KVStringPair> enumFacets(facets);
         if( enumFacets.hasMoreElements() )
         {
-            cout << "Facets:\t\t\n";
+            XERCES_STD_QUALIFIER cout << "Facets:\t\t\n";
         }
 
         while(enumFacets.hasMoreElements())
         {
             // Element's properties
             const KVStringPair& curPair = enumFacets.nextElement();
-            cout << "\t" << StrX( curPair.getKey() )    << "="
+            XERCES_STD_QUALIFIER cout << "\t" << StrX( curPair.getKey() )    << "="
                          << StrX( curPair.getValue() )  << "\n";
         }
     }
@@ -516,12 +523,12 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
 	RefVectorOf<XMLCh>* enums = (RefVectorOf<XMLCh>*) dtValidator->getEnumString();
 	if (enums)
 	{
-		cout << "Enumeration:\t\t\n";
+		XERCES_STD_QUALIFIER cout << "Enumeration:\t\t\n";
 
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
-            cout << "\t" << StrX( enums->elementAt(i)) << "\n";
+            XERCES_STD_QUALIFIER cout << "\t" << StrX( enums->elementAt(i)) << "\n";
         }
 
 	}
@@ -536,30 +543,30 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
 
     if( margin )
     {
-        cout << "\t";
+        XERCES_STD_QUALIFIER cout << "\t";
     }
 
-    cout << "ContentType:\t";
+    XERCES_STD_QUALIFIER cout << "ContentType:\t";
     switch( cSpecNode->getType() )
     {
-        case ContentSpecNode::Leaf:             cout << "Leaf";           break;
-        case ContentSpecNode::ZeroOrOne:        cout << "ZeroOrOne";      break;
-        case ContentSpecNode::ZeroOrMore:       cout << "ZeroOrMore";     break;
-        case ContentSpecNode::OneOrMore:        cout << "OneOrMore";      break;
-        case ContentSpecNode::Choice:           cout << "Choice";         break;
-        case ContentSpecNode::Sequence:         cout << "Sequence";       break;
-		case ContentSpecNode::All:              cout << "All";            break;
-        case ContentSpecNode::Any:              cout << "Any";            break;
-        case ContentSpecNode::Any_Other:        cout << "Any_Other";      break;
-        case ContentSpecNode::Any_NS:           cout << "Any_NS";         break;
-        case ContentSpecNode::Any_Lax:          cout << "Any_Lax";        break;
-        case ContentSpecNode::Any_Other_Lax:    cout << "Any_Other_Lax";  break;
-        case ContentSpecNode::Any_NS_Lax:       cout << "Any_NS_Lax";     break;
-        case ContentSpecNode::Any_Skip:         cout << "Any_Skip";       break;
-        case ContentSpecNode::Any_Other_Skip:   cout << "Any_Other_Skip"; break;
-        case ContentSpecNode::Any_NS_Skip:      cout << "Any_NS_Skip";    break;
-        case ContentSpecNode::UnknownType:      cout << "UnknownType";    break;
+        case ContentSpecNode::Leaf:             XERCES_STD_QUALIFIER cout << "Leaf";           break;
+        case ContentSpecNode::ZeroOrOne:        XERCES_STD_QUALIFIER cout << "ZeroOrOne";      break;
+        case ContentSpecNode::ZeroOrMore:       XERCES_STD_QUALIFIER cout << "ZeroOrMore";     break;
+        case ContentSpecNode::OneOrMore:        XERCES_STD_QUALIFIER cout << "OneOrMore";      break;
+        case ContentSpecNode::Choice:           XERCES_STD_QUALIFIER cout << "Choice";         break;
+        case ContentSpecNode::Sequence:         XERCES_STD_QUALIFIER cout << "Sequence";       break;
+		case ContentSpecNode::All:              XERCES_STD_QUALIFIER cout << "All";            break;
+        case ContentSpecNode::Any:              XERCES_STD_QUALIFIER cout << "Any";            break;
+        case ContentSpecNode::Any_Other:        XERCES_STD_QUALIFIER cout << "Any_Other";      break;
+        case ContentSpecNode::Any_NS:           XERCES_STD_QUALIFIER cout << "Any_NS";         break;
+        case ContentSpecNode::Any_Lax:          XERCES_STD_QUALIFIER cout << "Any_Lax";        break;
+        case ContentSpecNode::Any_Other_Lax:    XERCES_STD_QUALIFIER cout << "Any_Other_Lax";  break;
+        case ContentSpecNode::Any_NS_Lax:       XERCES_STD_QUALIFIER cout << "Any_NS_Lax";     break;
+        case ContentSpecNode::Any_Skip:         XERCES_STD_QUALIFIER cout << "Any_Skip";       break;
+        case ContentSpecNode::Any_Other_Skip:   XERCES_STD_QUALIFIER cout << "Any_Other_Skip"; break;
+        case ContentSpecNode::Any_NS_Skip:      XERCES_STD_QUALIFIER cout << "Any_NS_Skip";    break;
+        case ContentSpecNode::UnknownType:      XERCES_STD_QUALIFIER cout << "UnknownType";    break;
     }
-    cout << "\n";
+    XERCES_STD_QUALIFIER cout << "\n";
 }
 

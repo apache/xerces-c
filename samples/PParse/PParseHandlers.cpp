@@ -122,25 +122,25 @@ void PParseHandlers::resetDocument()
 // ---------------------------------------------------------------------------
 void PParseHandlers::error(const SAXParseException& e)
 {
-    cerr << "\nError at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void PParseHandlers::fatalError(const SAXParseException& e)
 {
-    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void PParseHandlers::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 

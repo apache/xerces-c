@@ -63,7 +63,11 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/sax/SAXParseException.hpp>
 #include "DOMTreeErrorReporter.hpp"
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -78,19 +82,19 @@ void DOMTreeErrorReporter::warning(const SAXParseException&)
 void DOMTreeErrorReporter::error(const SAXParseException& toCatch)
 {
     fSawErrors = true;
-    cerr << "Error at file \"" << StrX(toCatch.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "Error at file \"" << StrX(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << StrX(toCatch.getMessage()) << endl;
+         << "\n   Message: " << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void DOMTreeErrorReporter::fatalError(const SAXParseException& toCatch)
 {
     fSawErrors = true;
-    cerr << "Fatal Error at file \"" << StrX(toCatch.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "Fatal Error at file \"" << StrX(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << StrX(toCatch.getMessage()) << endl;
+         << "\n   Message: " << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void DOMTreeErrorReporter::resetErrors()

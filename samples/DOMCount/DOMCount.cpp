@@ -77,7 +77,12 @@
 #include "DOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
+
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <fstream>
+#else
 #include <fstream.h>
+#endif
 
 
 // ---------------------------------------------------------------------------
@@ -87,7 +92,7 @@
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    DOMCount [options] <XML file | List file>\n\n"
             "This program invokes the DOMBuilder, builds the DOM tree,\n"
             "and then prints the number of elements found in each XML file.\n\n"
@@ -102,7 +107,7 @@ static void usage()
             "    -p          Print out names of elements and attributes encountered.\n"
 		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -122,8 +127,8 @@ static int countChildElements(DOMNode *n, bool printOutEncounteredEles)
 		{
             if(printOutEncounteredEles) {
                 char *name = XMLString::transcode(n->getNodeName());
-                cout <<"----------------------------------------------------------"<<endl;
-                cout <<"Encountered Element : "<< name << endl;
+                XERCES_STD_QUALIFIER cout <<"----------------------------------------------------------"<<XERCES_STD_QUALIFIER endl;
+                XERCES_STD_QUALIFIER cout <<"Encountered Element : "<< name << XERCES_STD_QUALIFIER endl;
                 
                 XMLString::release(&name);
 			
@@ -131,19 +136,19 @@ static int countChildElements(DOMNode *n, bool printOutEncounteredEles)
                     // get all the attributes of the node
                     DOMNamedNodeMap *pAttributes = n->getAttributes();
                     int nSize = pAttributes->getLength();
-                    cout <<"\tAttributes" << endl;
-                    cout <<"\t----------" << endl;
+                    XERCES_STD_QUALIFIER cout <<"\tAttributes" << XERCES_STD_QUALIFIER endl;
+                    XERCES_STD_QUALIFIER cout <<"\t----------" << XERCES_STD_QUALIFIER endl;
                     for(int i=0;i<nSize;++i) {
                         DOMAttr *pAttributeNode = (DOMAttr*) pAttributes->item(i);
                         // get attribute name
                         char *name = XMLString::transcode(pAttributeNode->getName());
                         
-                        cout << "\t" << name << "=";
+                        XERCES_STD_QUALIFIER cout << "\t" << name << "=";
                         XMLString::release(&name);
                         
                         // get attribute type
                         name = XMLString::transcode(pAttributeNode->getValue());
-                        cout << name << endl;
+                        XERCES_STD_QUALIFIER cout << name << XERCES_STD_QUALIFIER endl;
                         XMLString::release(&name);
                     }
                 }
@@ -209,7 +214,7 @@ int main(int argC, char* argV[])
                 valScheme = AbstractDOMParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 return 2;
             }
         }
@@ -254,8 +259,8 @@ int main(int argC, char* argV[])
         }			
          else
         {
-            cerr << "Unknown option '" << argV[argInd]
-                 << "', ignoring it\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
+                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -289,8 +294,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          return 1;
     }
 
@@ -330,14 +335,14 @@ int main(int argC, char* argV[])
     unsigned long duration;
 
     bool more = true;
-    ifstream fin;
+    XERCES_STD_QUALIFIER ifstream fin;
 
     // the input is a list file
     if (doList)
         fin.open(argV[argInd]);
 
     if (fin.fail()) {
-        cerr <<"Cannot open the list file: " << argV[argInd] << endl;
+        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
         return 2;
     }
 
@@ -354,7 +359,7 @@ int main(int argC, char* argV[])
                     continue;
                 else {
                     xmlFile = fURI;
-                    cerr << "==Parsing== " << xmlFile << endl;
+                    XERCES_STD_QUALIFIER cerr << "==Parsing== " << xmlFile << XERCES_STD_QUALIFIER endl;
                 }
             }
             else
@@ -383,9 +388,9 @@ int main(int argC, char* argV[])
 
         catch (const XMLException& toCatch)
         {
-            cerr << "\nError during parsing: '" << xmlFile << "'\n"
+            XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
                  << "Exception message is:  \n"
-                 << StrX(toCatch.getMessage()) << "\n" << endl;
+                 << StrX(toCatch.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
             errorOccurred = true;
             continue;
         }
@@ -394,18 +399,18 @@ int main(int argC, char* argV[])
             const unsigned int maxChars = 2047;
             XMLCh errText[maxChars + 1];
 
-            cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
-                 << "DOMException code is:  " << toCatch.code << endl;
+            XERCES_STD_QUALIFIER cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
+                 << "DOMException code is:  " << toCatch.code << XERCES_STD_QUALIFIER endl;
 
             if (DOMImplementation::loadDOMExceptionMsg(toCatch.code, errText, maxChars))
-                 cerr << "Message is: " << StrX(errText) << endl;
+                 XERCES_STD_QUALIFIER cerr << "Message is: " << StrX(errText) << XERCES_STD_QUALIFIER endl;
 
             errorOccurred = true;
             continue;
         }
         catch (...)
         {
-            cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+            XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
             errorOccurred = true;
             continue;
         }
@@ -416,7 +421,7 @@ int main(int argC, char* argV[])
         //
         if (errorHandler.getSawErrors())
         {
-            cout << "\nErrors occurred, no output available\n" << endl;
+            XERCES_STD_QUALIFIER cout << "\nErrors occurred, no output available\n" << XERCES_STD_QUALIFIER endl;
             errorOccurred = true;
         }
          else
@@ -427,14 +432,14 @@ int main(int argC, char* argV[])
                 // test getElementsByTagName and getLength
                 XMLCh xa[] = {chAsterisk, chNull};
                 if (elementCount != doc->getElementsByTagName(xa)->getLength()) {
-                    cout << "\nErrors occurred, element count is wrong\n" << endl;
+                    XERCES_STD_QUALIFIER cout << "\nErrors occurred, element count is wrong\n" << XERCES_STD_QUALIFIER endl;
                     errorOccurred = true;
                 }
             }
 
             // Print out the stats that we collected and time taken.
-            cout << xmlFile << ": " << duration << " ms ("
-                 << elementCount << " elems)." << endl;
+            XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
+                 << elementCount << " elems)." << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -477,16 +482,16 @@ bool DOMCountErrorHandler::handleError(const DOMError& domError)
 {
     fSawErrors = true;
     if (domError.getSeverity() == DOMError::DOM_SEVERITY_WARNING)
-        cerr << "\nWarning at file ";
+        XERCES_STD_QUALIFIER cerr << "\nWarning at file ";
     else if (domError.getSeverity() == DOMError::DOM_SEVERITY_ERROR)
-        cerr << "\nError at file ";
+        XERCES_STD_QUALIFIER cerr << "\nError at file ";
     else
-        cerr << "\nFatal Error at file ";
+        XERCES_STD_QUALIFIER cerr << "\nFatal Error at file ";
 
-    cerr << StrX(domError.getLocation()->getURI())
+    XERCES_STD_QUALIFIER cerr << StrX(domError.getLocation()->getURI())
          << ", line " << domError.getLocation()->getLineNumber()
          << ", char " << domError.getLocation()->getColumnNumber()
-         << "\n  Message: " << StrX(domError.getMessage()) << endl;
+         << "\n  Message: " << StrX(domError.getMessage()) << XERCES_STD_QUALIFIER endl;
 
     return true;
 }

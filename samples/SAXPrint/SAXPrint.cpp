@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.20  2002/04/17 20:18:08  tng
  * [Bug 7493] The word "occured" is misspelled and it is a global error.
  *
@@ -182,7 +185,7 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    SAXPrint [options] <XML file>\n\n"
             "This program invokes the SAX Parser, and then prints the\n"
             "data returned by the various SAX handlers for the specified\n"
@@ -199,7 +202,7 @@ static void usage()
              "The parser has intrinsic support for the following encodings:\n"
              "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
              "    WINDOWS-1252, IBM1140, IBM037.\n"
-         <<  endl;
+         <<  XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -217,8 +220,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          return 1;
     }
 
@@ -257,7 +260,7 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -296,15 +299,15 @@ int main(int argC, char* argV[])
                 unRepFlags = XMLFormatter::UnRep_CharRef;
             else
             {
-                cerr << "Unknown -u= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -u= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
          else
         {
-            cerr << "Unknown option '" << argV[parmInd]
-                 << "', ignoring it\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -347,9 +350,9 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        cerr << "\nAn error occurred\n  Error: "
+        XERCES_STD_QUALIFIER cerr << "\nAn error occurred\n  Error: "
              << StrX(toCatch.getMessage())
-             << "\n" << endl;
+             << "\n" << XERCES_STD_QUALIFIER endl;
         XMLPlatformUtils::Terminate();
         return -1;
     }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.6  2003/02/05 18:53:25  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -90,7 +93,11 @@
 // ---------------------------------------------------------------------------
 #include <string.h>
 #include <stdlib.h>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 #include <xercesc/util/PlatformUtils.hpp>
 #include "StdInParseHandlers.hpp"
 
@@ -134,7 +141,7 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.28  2003/05/30 09:36:36  gareth
+* Use new macros for iostream.h and std:: issues.
+*
 * Revision 1.27  2002/12/10 13:34:42  tng
 * Samples minor update in usage information.
 *
@@ -157,14 +160,20 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "SAXCount.hpp"
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <fstream>
+#else
 #include <fstream.h>
+#endif
+
+
 
 // ---------------------------------------------------------------------------
 //  Local helper methods
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    SAXCount [options] <XML file | List file>\n\n"
             "This program invokes the SAX Parser, and then prints the\n"
             "number of elements, attributes, spaces and characters found\n"
@@ -179,7 +188,7 @@ void usage()
             "    -locale=ll_CC specify the locale, default: en_US.\n"
 		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -233,7 +242,7 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 return 2;
             }
         }
@@ -272,8 +281,8 @@ int main(int argC, char* argV[])
         }			
         else
         {
-            cerr << "Unknown option '" << argV[argInd]
-                << "', ignoring it\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
+                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -307,8 +316,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        cerr << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << endl;
+        XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
+            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -338,14 +347,14 @@ int main(int argC, char* argV[])
     //
     unsigned long duration;
 
-    ifstream fin;
+    XERCES_STD_QUALIFIER ifstream fin;
 
     // the input is a list file
     if (doList)
         fin.open(argV[argInd]);
 
     if (fin.fail()) {
-        cerr <<"Cannot open the list file: " << argV[argInd] << endl;
+        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
         return 2;
     }
 
@@ -362,7 +371,7 @@ int main(int argC, char* argV[])
                     continue;
                 else {
                     xmlFile = fURI;
-                    cerr << "==Parsing== " << xmlFile << endl;
+                    XERCES_STD_QUALIFIER cerr << "==Parsing== " << xmlFile << XERCES_STD_QUALIFIER endl;
                 }
             }
             else
@@ -391,16 +400,16 @@ int main(int argC, char* argV[])
 
         catch (const XMLException& e)
         {
-            cerr << "\nError during parsing: '" << xmlFile << "'\n"
+            XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
-                << StrX(e.getMessage()) << "\n" << endl;
+                << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
             errorOccurred = true;
             continue;
         }
 
         catch (...)
         {
-            cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+            XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
             errorOccurred = true;
             continue;
         }
@@ -409,11 +418,11 @@ int main(int argC, char* argV[])
         // Print out the stats that we collected and time taken
         if (!handler.getSawErrors())
         {
-            cout << xmlFile << ": " << duration << " ms ("
+            XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
                 << handler.getElementCount() << " elems, "
                 << handler.getAttrCount() << " attrs, "
                 << handler.getSpaceCount() << " spaces, "
-                << handler.getCharacterCount() << " chars)" << endl;
+                << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
         }
         else
             errorOccurred = true;

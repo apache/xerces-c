@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/05/30 09:36:36  gareth
+ * Use new macros for iostream.h and std:: issues.
+ *
  * Revision 1.14  2003/05/16 15:32:12  knoaman
  * Change scope of 'src' so that it's deallocated properly.
  *
@@ -146,7 +149,7 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    StdInParse [options] < <XML file>\n\n"
             "This program demonstrates streaming XML data from standard\n"
             "input.  It then uses the SAX Parser, and prints the\n"
@@ -159,7 +162,7 @@ void usage()
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
 		      "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -176,8 +179,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         cerr << "Error during initialization! Message:\n"
-              << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
+              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          return 1;
     }
 
@@ -208,7 +211,7 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -230,8 +233,8 @@ int main(int argC, char* argV[])
         }
          else
         {
-            cerr << "Unknown option '" << argV[parmInd]
-                 << "', ignoring it\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -276,20 +279,20 @@ int main(int argC, char* argV[])
         }
         catch (const XMLException& e)
         {
-            cerr << "\nError during parsing: \n"
+            XERCES_STD_QUALIFIER cerr << "\nError during parsing: \n"
                  << StrX(e.getMessage())
-                 << "\n" << endl;
+                 << "\n" << XERCES_STD_QUALIFIER endl;
             errorCount = 1;
             return 4;
         }
 
         // Print out the stats that we collected and time taken
         if (!errorCount) {
-            cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
+            XERCES_STD_QUALIFIER cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
                  << handler.getElementCount() << " elems, "
                  << handler.getAttrCount() << " attrs, "
                  << handler.getSpaceCount() << " spaces, "
-                 << handler.getCharacterCount() << " chars)" << endl;
+                 << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
         }
     }
 

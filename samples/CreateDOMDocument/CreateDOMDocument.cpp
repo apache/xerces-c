@@ -70,7 +70,11 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOM.hpp>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -132,7 +136,7 @@ int main(int argC, char* argV[])
     catch(const XMLException& toCatch)
     {
         char *pMsg = XMLString::transcode(toCatch.getMessage());
-        cerr << "Error during Xerces-c Initialization.\n"
+        XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
              << pMsg;
         XMLString::release(&pMsg);
@@ -142,11 +146,11 @@ int main(int argC, char* argV[])
     // Watch for special case help request
     if (argC > 1)
     {
-        cout << "\nUsage:\n"
+        XERCES_STD_QUALIFIER cout << "\nUsage:\n"
                 "    CreateDOMDocument\n\n"
                 "This program creates a new DOM document from scratch in memory.\n"
                 "It then prints the count of elements in the tree.\n"
-             <<  endl;
+             <<  XERCES_STD_QUALIFIER endl;
         XMLPlatformUtils::Terminate();
         return 1;
     }
@@ -196,8 +200,8 @@ int main(int argC, char* argV[])
         //
 
         unsigned int elementCount = doc->getElementsByTagName(X("*"))->getLength();
-        cout << "The tree just created contains: " << elementCount
-             << " elements." << endl;
+        XERCES_STD_QUALIFIER cout << "The tree just created contains: " << elementCount
+             << " elements." << XERCES_STD_QUALIFIER endl;
 
         doc->release();
 
