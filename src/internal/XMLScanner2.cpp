@@ -1421,7 +1421,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
             }
         }
 
-        if (fValidator) {
+        if (fValidator && fValidator->handlesSchema()) {
             if (!fXsiType.isEmpty()) {
                 unsigned int uriId = resolveQName (
                       fXsiType.getRawBuffer()
