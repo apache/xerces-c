@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.1  2001/08/24 12:48:48  tng
  * Schema: AllContentModel
  *
@@ -120,7 +123,8 @@ public :
 
     virtual void checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI

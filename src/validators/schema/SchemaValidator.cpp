@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.24  2001/11/20 20:32:52  knoaman
  * Bypass validating element's simple content if it's empty and element is nillable.
  *
@@ -771,7 +774,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar)
             while (complexTypeEnum.hasMoreElements())
             {
                 ComplexTypeInfo& curTypeInfo = complexTypeEnum.nextElement();
-                curTypeInfo.checkUniqueParticleAttribution(fGrammarResolver, getScanner()->getURIStringPool(), this);
+                curTypeInfo.checkUniqueParticleAttribution(&sGrammar, fGrammarResolver, getScanner()->getURIStringPool(), this);
             }
         }
     }

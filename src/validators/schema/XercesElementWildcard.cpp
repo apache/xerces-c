@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.2  2001/08/22 16:58:27  tng
  * typo: the type should be t1/t2, not w1/w2.
  *
@@ -81,7 +84,8 @@
 /**
  * Check whether two element declarations conflict
  */
-bool XercesElementWildcard::conflict(ContentSpecNode::NodeTypes   type1,
+bool XercesElementWildcard::conflict(SchemaGrammar* const pGrammar,
+                                     ContentSpecNode::NodeTypes   type1,
                                      QName*                       q1,
                                      ContentSpecNode::NodeTypes   type2,
                                      QName*                       q2,
@@ -93,10 +97,10 @@ bool XercesElementWildcard::conflict(ContentSpecNode::NodeTypes   type1,
             return true;
     }
     else if (type1 == ContentSpecNode::Leaf) {
-        return uriInWildcard(q1, q2->getURI(), type2, comparator);
+        return uriInWildcard(pGrammar, q1, q2->getURI(), type2, comparator);
     }
     else if (type2 == ContentSpecNode::Leaf) {
-        return uriInWildcard(q2, q1->getURI(), type1, comparator);
+        return uriInWildcard(pGrammar, q2, q1->getURI(), type1, comparator);
     }
     else {
         return wildcardIntersect(type1, q1->getURI(), type2, q2->getURI());
@@ -104,7 +108,8 @@ bool XercesElementWildcard::conflict(ContentSpecNode::NodeTypes   type1,
     return false;
 }
 
-bool XercesElementWildcard::uriInWildcard(QName*                       qname,
+bool XercesElementWildcard::uriInWildcard(SchemaGrammar* const         pGrammar,
+                                          QName*                       qname,
                                           unsigned int                 wildcard,
                                           ContentSpecNode::NodeTypes   wtype,
                                           SubstitutionGroupComparator* comparator)
@@ -114,11 +119,11 @@ bool XercesElementWildcard::uriInWildcard(QName*                       qname,
     }
     else if ((wtype & 0x0f)== ContentSpecNode::Any_NS) {
         // substitution of "uri" satisfies "wtype:wildcard"
-        return comparator->isAllowedByWildcard(qname, wildcard, false);
+        return comparator->isAllowedByWildcard(pGrammar, qname, wildcard, false);
     }
     else if ((wtype & 0x0f)== ContentSpecNode::Any_Other) {
         // substitution of "uri" satisfies "wtype:wildcard"
-        return comparator->isAllowedByWildcard(qname, wildcard, true);
+        return comparator->isAllowedByWildcard(pGrammar, qname, wildcard, true);
     }
 
     return false;

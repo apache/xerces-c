@@ -65,6 +65,8 @@
 #include <util/QName.hpp>
 #include <validators/common/GrammarResolver.hpp>
 
+class SchemaGrammar;
+
 class VALIDATORS_EXPORT SubstitutionGroupComparator
 {
 public:
@@ -112,13 +114,14 @@ public:
      * check whether one element or any element in its substitution group
      * is allowed by a given wildcard uri
      *
+     * @param pGrammar the grammar where the wildcard is declared
      * @param element  the QName of a given element
      * @param wuri     the uri of the wildcard
      * @param wother   whether the uri is from ##other, so wuri is excluded
      *
      * @return whether the element is allowed by the wildcard
      */
-    bool isAllowedByWildcard(QName* const element, unsigned int wuri, bool wother);
+    bool isAllowedByWildcard(SchemaGrammar* const pGrammar, QName* const element, unsigned int wuri, bool wother);
 
 protected:
 

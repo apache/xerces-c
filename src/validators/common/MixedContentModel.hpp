@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.10  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -171,7 +174,8 @@ public :
 
     virtual void checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI
@@ -239,7 +243,8 @@ MixedContentModel::getNextState(const unsigned int currentState,
 
 inline void MixedContentModel::checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI

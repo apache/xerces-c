@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.9  2001/11/07 21:50:28  tng
  * Fix comment log that lead to error.
  *
@@ -225,7 +228,9 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
 }
 
 
-bool SubstitutionGroupComparator::isAllowedByWildcard(QName* const element, unsigned int wuri, bool wother)
+bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGrammar,
+                                                      QName* const element,
+                                                      unsigned int wuri, bool wother)
 {
     // whether the uri is allowed directly by the wildcard
     unsigned int uriId = element->getURI();
@@ -236,23 +241,8 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(QName* const element, unsi
         return true;
     }
 
-    if (fGrammarResolver == 0 || fStringPool == 0)
-         ThrowXML(RuntimeException, XMLExcepts::SubGrpComparator_NGR);
-
-    // get the corresponding grammar
-    const XMLCh* uri = fStringPool->getValueForId(uriId);
-    if(uri == 0)
-        return false;
-
-    SchemaGrammar *sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
-    if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
-        return false;
-
-    if(sGrammar == 0)
-        return false;
-
     // get all elements that can substitute the current element
-    RefHash2KeysTableOf<ElemVector>* theValidSubstitutionGroups = sGrammar->getValidSubstitutionGroups();
+    RefHash2KeysTableOf<ElemVector>* theValidSubstitutionGroups = pGrammar->getValidSubstitutionGroups();
 
     if (!theValidSubstitutionGroups)
         return false;

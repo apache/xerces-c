@@ -168,7 +168,8 @@ public:
     bool resetDefs();
     void checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
     ) ;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.23  2001/11/15 17:10:19  knoaman
  * Particle derivation checking support.
  *
@@ -309,7 +312,8 @@ bool ComplexTypeInfo::resetDefs() {
 }
 
 
-void ComplexTypeInfo::checkUniqueParticleAttribution (GrammarResolver*  const pGrammarResolver,
+void ComplexTypeInfo::checkUniqueParticleAttribution (SchemaGrammar*    const pGrammar,
+                                                      GrammarResolver*  const pGrammarResolver,
                                                       XMLStringPool*    const pStringPool,
                                                       XMLValidator*     const pValidator)
 {
@@ -318,7 +322,7 @@ void ComplexTypeInfo::checkUniqueParticleAttribution (GrammarResolver*  const pG
         XMLContentModel* cm = makeContentModel(true, specNode);
 
         if (cm) {
-            cm->checkUniqueParticleAttribution(pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
+            cm->checkUniqueParticleAttribution(pGrammar, pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
             delete cm;
         }
 

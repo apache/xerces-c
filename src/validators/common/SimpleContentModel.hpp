@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.11  2001/10/03 15:08:45  tng
  * typo fix: remove the extra space which may confuse some compilers while constructing the qname.
  *
@@ -179,7 +182,8 @@ public :
 
     virtual void checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.9  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -479,7 +482,8 @@ ContentLeafNameTypeVector* SimpleContentModel::getContentLeafNameTypeVector() co
 
 void SimpleContentModel::checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI
@@ -499,7 +503,8 @@ void SimpleContentModel::checkUniqueParticleAttribution
 
         SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
 
-        if (XercesElementWildcard::conflict(ContentSpecNode::Leaf,
+        if (XercesElementWildcard::conflict(pGrammar,
+                                            ContentSpecNode::Leaf,
                                             fFirstChild,
                                             ContentSpecNode::Leaf,
                                             fSecondChild,

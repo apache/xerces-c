@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.26  2001/11/07 21:10:46  tng
  * Performance: move getRawName() to outer loop so that it is called only once per outer loop.
  *
@@ -1155,7 +1158,8 @@ ContentLeafNameTypeVector* DFAContentModel::getContentLeafNameTypeVector() const
 	return fLeafNameTypeVector;
 };
 
-void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pGrammarResolver,
+void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pGrammar,
+                                                      GrammarResolver*  const pGrammarResolver,
                                                       XMLStringPool*    const pStringPool,
                                                       XMLValidator*     const pValidator,
                                                       unsigned int*     const pContentSpecOrgURI)
@@ -1201,7 +1205,8 @@ void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pG
                           ( fElemMap[k]->getURI() == XMLElementDecl::fgPCDataElemId)))
                         continue;
 
-                    if (XercesElementWildcard::conflict(fElemMapType[j],
+                    if (XercesElementWildcard::conflict(pGrammar,
+                                                        fElemMapType[j],
                                                         fElemMap[j],
                                                         fElemMapType[k],
                                                         fElemMap[k],

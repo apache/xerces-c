@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.1  2001/08/21 15:58:42  tng
  * Schema: New files XercesElementWildCard.
  *
@@ -70,6 +73,12 @@
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/schema/SubstitutionGroupComparator.hpp>
 
+// ---------------------------------------------------------------------------
+//  Forward declarations
+// ---------------------------------------------------------------------------
+class SchemaGrammar;
+
+
 class VALIDATORS_EXPORT XercesElementWildcard
 {
 
@@ -81,7 +90,8 @@ public :
     /*
      * check whether two elements are in conflict
      */
-    static bool conflict(ContentSpecNode::NodeTypes   type1,
+    static bool conflict(SchemaGrammar* const         pGrammar,
+                         ContentSpecNode::NodeTypes   type1,
                          QName*                       q1,
                          ContentSpecNode::NodeTypes   type2,
                          QName*                       q2,
@@ -92,7 +102,8 @@ private:
     // -----------------------------------------------------------------------
     //  private helper methods
     // -----------------------------------------------------------------------
-    static bool uriInWildcard(QName*                       qname,
+    static bool uriInWildcard(SchemaGrammar* const         pGrammar,
+                              QName*                       qname,
                               unsigned int                 wildcard,
                               ContentSpecNode::NodeTypes   wtype,
                               SubstitutionGroupComparator* comparator);

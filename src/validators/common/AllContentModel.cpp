@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.2  2001/08/27 12:19:00  tng
  * Schema: AllContentModel UPA Check typo fix
  *
@@ -288,7 +291,8 @@ int AllContentModel::validateContentSpecial(QName** const           children
 
 void AllContentModel::checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI
@@ -313,7 +317,8 @@ void AllContentModel::checkUniqueParticleAttribution
                   ( fChildren[j]->getURI() == XMLElementDecl::fgPCDataElemId)))
                 continue;
 
-            if (XercesElementWildcard::conflict(ContentSpecNode::Leaf,
+            if (XercesElementWildcard::conflict(pGrammar,
+                                                ContentSpecNode::Leaf,
                                                 fChildren[i],
                                                 ContentSpecNode::Leaf,
                                                 fChildren[j],

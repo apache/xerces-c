@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/11/21 14:30:13  knoaman
+ * Fix for UPA checking.
+ *
  * Revision 1.13  2001/08/21 16:06:10  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -114,6 +117,7 @@ class ContentLeafNameTypeVector;
 class GrammarResolver;
 class XMLStringPool;
 class XMLValidator;
+class SchemaGrammar;
 
 /**
  *  This class defines the abstract interface for all content models. All
@@ -178,7 +182,8 @@ public:
 
 	virtual void checkUniqueParticleAttribution
     (
-        GrammarResolver*  const pGrammarResolver
+        SchemaGrammar*    const pGrammar
+      , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI
