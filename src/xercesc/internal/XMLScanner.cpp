@@ -2128,11 +2128,4 @@ XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
     return toFill.getLen();
 }
 
-inline void XMLScanner::resetValidationContext()
-{
-    fValidationContext->clearIdRefList();
-    fValidationContext->setEntityDeclPool(0);
-    fEntityDeclPoolRetrieved = false;
-}
-
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2003/11/13 15:00:44  peiyongz
+ * Solve Compilation/Linkage error on AIX/Solaris/HP/Linux
+ *
  * Revision 1.26  2003/11/12 20:29:47  peiyongz
  * Stateless Grammar: ValidationContext
  *
@@ -1433,6 +1436,13 @@ inline void XMLScanner::setDoValidation(const bool validate)
         fValScheme = Val_Always;
     else
         fValScheme = Val_Never;
+}
+
+inline void XMLScanner::resetValidationContext()
+{
+    fValidationContext->clearIdRefList();
+    fValidationContext->setEntityDeclPool(0);
+    fEntityDeclPoolRetrieved = false;
 }
 
 XERCES_CPP_NAMESPACE_END
