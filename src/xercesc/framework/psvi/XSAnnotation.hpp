@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/27 21:29:05  neilg
+ * implement writeAnnotation; thanks to Dave Cargill
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -91,6 +94,9 @@ XERCES_CPP_NAMESPACE_BEGIN
  * it is obtained.  
  */
 
+// forward declarations
+class DOMNode;
+class ContentHandler;
 
 class XMLPARSER_EXPORT XSAnnotation : public XSerializable, public XSObject
 {
@@ -106,10 +112,6 @@ public:
 	     * The object type is <code>org.w3c.dom.Document</code>.
 	     */
 	    W3C_DOM_DOCUMENT          = 2,
-	    /**
-	     * The object type is <code>org.xml.sax.ContentHandler</code>.
-	     */
-	    SAX_CONTENTHANDLER        = 3
     };
 
     //  Constructors and Destructor
@@ -141,21 +143,25 @@ public:
     //@{
 
     /**
-     *  Write contents of the annotation to the specified object. If the 
-     * specified <code>target</code> object is a DOM in-scope namespace 
-     * declarations for <code>annotation</code> element are added as 
-     * attribute nodes of the serialized <code>annotation</code>, otherwise 
-     * the corresponding events for all in-scope namespace declaration are 
+     * Write contents of the annotation to the specified DOM object. In-scope 
+     * namespace declarations for <code>annotation</code> element are added as 
+     * attribute nodes of the serialized <code>annotation</code>. 
+     * @param target  A target pointer to the annotation target object, i.e.
+     * either <code>DOMDocument</code> or <code>DOMElement</code> cast as 
+     * <code>DOMNode</code). 
+     * @param targetType  A target type.    
+     */
+ 
+    void writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType);  
+
+    /**
+     * Write contents of the annotation to the specified object. 
+     * The corresponding events for all in-scope namespace declarations are 
      * sent via the specified document handler. 
      * @param target  A target pointer to the annotation target object, i.e. 
-     *   <code>DOMDocument</code>, 
-     *   <code>DOMElement</code>, 
      *   <code>ContentHandler</code>.
-     * @param targetType  A target type. 
-     * @return If the <code>target</code> is a recognized type that is supported by 
-     *   this implementation, and the operation succeeds, return true; otherwise return false. 
-     */
-    bool writeAnnotation(void *target, ANNOTATION_TARGET targetType);
+     */    
+    void writeAnnotation(ContentHandler* handler);
 
     /**
      * A text representation of annotation.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/27 21:29:05  neilg
+ * implement writeAnnotation; thanks to Dave Cargill
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -78,6 +81,13 @@
 
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/util/XMLString.hpp>
+
+#include <xercesc/framework/MemBufInputSource.hpp>
+
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -105,28 +115,69 @@ XSAnnotation::~XSAnnotation()
 }
 
 // XSAnnotation methods
-
-/**
- *  Write contents of the annotation to the specified object. If the 
- * specified <code>target</code> object is a DOM in-scope namespace 
- * declarations for <code>annotation</code> element are added as 
- * attribute nodes of the serialized <code>annotation</code>, otherwise 
- * the corresponding events for all in-scope namespace declaration are 
- * sent via the specified document handler. 
- * @param target  A target pointer to the annotation target object, i.e. 
- *   <code>DOMDocument</code>, 
- *   <code>DOMElement</code>, 
- *   <code>ContentHandler</code>. 
- * @param targetType  A target type. 
- * @return If the <code>target</code> is a recognized type that is supported by 
- *   this implementation, and the operation succeeds, return true; otherwise return false. 
- */
-bool XSAnnotation::writeAnnotation(void *target, 
-                               ANNOTATION_TARGET targetType)
+void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
 {
-    // REVISIT
-    return false;
+    XercesDOMParser *parser = new (fMemoryManager) XercesDOMParser(0, fMemoryManager);
+    parser->setDoNamespaces(true);
+    parser->setValidationScheme(XercesDOMParser::Val_Never);
+    
+    DOMDocument* futureOwner = (targetType == W3C_DOM_ELEMENT) ?
+        ((DOMElement*)node)->getOwnerDocument() :
+        (DOMDocument*)node;
+
+    MemBufInputSource* memBufIS = new (fMemoryManager) MemBufInputSource
+    (
+        (const XMLByte*)fContents
+        , XMLString::stringLen(fContents)*sizeof(XMLCh)
+        , ""
+        , false
+        , fMemoryManager
+    );
+
+    try
+    {        
+        parser->parse(*memBufIS);
+    }
+    catch (const XMLException&)
+    {
+    }
+
+    DOMNode* newElem = futureOwner->importNode((parser->getDocument())->getDocumentElement(), true);
+    node->insertBefore(newElem, node->getFirstChild());
+
+    delete parser;
+    delete memBufIS;
 }
+
+
+void XSAnnotation::writeAnnotation(ContentHandler* handler)
+{   
+    SAX2XMLReader* parser = XMLReaderFactory::createXMLReader(fMemoryManager);
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
+    parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
+    parser->setContentHandler(handler);
+    
+    MemBufInputSource* memBufIS = new (fMemoryManager) MemBufInputSource
+    (
+        (const XMLByte*)fContents
+        , XMLString::stringLen(fContents)*sizeof(XMLCh)
+        , ""
+        , false
+        , fMemoryManager
+    );
+
+    try
+    {        
+        parser->parse(*memBufIS);
+    }
+    catch (const XMLException&)
+    {
+    }
+
+    delete parser;
+    delete memBufIS;
+}
+
 
 void XSAnnotation::setNext(XSAnnotation* const nextAnnotation)
 {
