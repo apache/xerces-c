@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/24 05:13:41  neilg
+ * update method documentation
+ *
  * Revision 1.8  2003/11/21 22:34:46  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -178,6 +181,7 @@ public :
      * 1.1 If it was valid as defined by Attribute Locally Valid (3.2.4), then valid;
      * 1.2 otherwise invalid.
      * 2 otherwise notKnown.
+     * @deprecated
      */
     PSVIDefs::Validity getValidity() const;
 
@@ -185,26 +189,31 @@ public :
      * The appropriate case among the following:
      * 1 If it was strictly assessed, then full;
      * 2 otherwise none.
+     * @deprecated
      */
     PSVIDefs::Validation getValidationAttempted() const;
 
     /**
      * @return the complexity. Always simple for attrs
+     * @deprecated
      */
     PSVIDefs::Complexity getTypeType() const;
 
     /**
      * The target namespace of the type definition.
+     * @deprecated
      */
     const XMLCh* getTypeUri() const;
 
     /**
      * The {name} of the type definition, if it is not absent. 
+     * @deprecated
      */
     const XMLCh* getTypeName() const;
 
     /**
      * true if the {name} of the type definition is absent, otherwise false.
+     * @deprecated
      */
     bool getTypeAnonymous() const;
 
@@ -212,25 +221,35 @@ public :
      * If this method returns true and validity is VALID then the next three 
      * produce accurate results
      * @return true if the element is validated using a union type
+     * @deprecated
      */
     bool isTypeDefinitionUnion() const;
 
     /**
      * The {target namespace} of the actual member type definition.
+     * @deprecated
      */
     const XMLCh* getMemberTypeUri() const;
 
     /**
      * @return true if the {name} of the actual member type definition is absent, otherwise false.
+     * @deprecated
      */
     bool getMemberTypeAnonymous() const;
 
     /**
      * @return the {name} of the actual member type definition, if it is not absent. 
+     * @deprecated
      */
     const XMLCh* getMemberTypeName() const;
 
+    /*
+     * @deprecated
+     */
     virtual const XMLCh* getDOMTypeInfoUri() const;
+    /*
+     * @deprecated
+     */
     virtual const XMLCh* getDOMTypeInfoName() const;
     
     
@@ -256,10 +275,19 @@ public :
     );
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setAnyDatatypeValidator(DatatypeValidator* newDatatypeValidator);
+    /*
+     * @deprecated
+     */
     void setMembertypeValidator(const DatatypeValidator* newDatatypeValidator);
     void setNamespaceList(const ValueVectorOf<unsigned int>* const toSet);
     void resetNamespaceList();
+    /*
+     * @deprecated
+     */
     void setValidity(PSVIDefs::Validity valid);
+    /*
+     * @deprecated
+     */
     void setValidationAttempted(PSVIDefs::Validation validation);
     void setEnclosingCT(ComplexTypeInfo* complexTypeInfo);
     /***
