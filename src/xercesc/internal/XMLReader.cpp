@@ -207,7 +207,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 
     // Copy the encoding string to our member
     fEncodingStr = XMLString::replicate(encodingStr, fMemoryManager);
-    XMLString::upperCase(fEncodingStr);
+    XMLString::upperCaseASCII(fEncodingStr);
 
     // Ask the transcoding service if it supports src offset info
     fSrcOfsSupported = XMLPlatformUtils::fgTransService->supportsSrcOfs();
@@ -1003,7 +1003,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     // upperCase the newEncoding first for better performance
     //
     XMLCh* inputEncoding = XMLString::replicate(newEncoding, fMemoryManager);
-    XMLString::upperCase(inputEncoding);
+    XMLString::upperCaseASCII(inputEncoding);
 
     //
     //  Try to map the string to one of our standard encodings. If its not

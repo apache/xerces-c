@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.57  2005/03/20 19:02:45  cargilld
+ * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
+ *
  * Revision 1.56  2005/03/08 09:33:32  amassari
  * Redeclare a namespace binding if the prefix is already bound to a different namespace (jira# 1371)
  *
@@ -1807,21 +1810,21 @@ void DOMWriterImpl::processBOM()
     if (!getFeature(BYTE_ORDER_MARK_ID))
         return;
 
-    if ((XMLString::compareIString(fEncoding, XMLUni::fgUTF16LEncodingString)  == 0) ||
-        (XMLString::compareIString(fEncoding, XMLUni::fgUTF16LEncodingString2) == 0)  )
+    if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16LEncodingString)  == 0) ||
+        (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16LEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_utf16le, 2);
     }
-    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUTF16BEncodingString)  == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16BEncodingString2) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16BEncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16BEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_utf16be, 2);
     }
-    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString)  == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString2) == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString3) == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString4) == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString5) == 0)  ) 
+    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString2) == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString3) == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString4) == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString5) == 0)  ) 
     {
 #if defined(ENDIANMODE_LITTLE)
             fFormatter->writeBOM(BOM_utf16le, 2);
@@ -1829,19 +1832,19 @@ void DOMWriterImpl::processBOM()
             fFormatter->writeBOM(BOM_utf16be, 2);
 #endif
     }
-    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUCS4LEncodingString)  == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4LEncodingString2) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4LEncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4LEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_ucs4le, 4);
     }
-    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUCS4BEncodingString)  == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4BEncodingString2) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4BEncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4BEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_ucs4be, 4);
     }
-    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUCS4EncodingString)  == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4EncodingString2) == 0) ||
-             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4EncodingString3) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString2) == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString3) == 0)  )
     {
 #if defined(ENDIANMODE_LITTLE)
         fFormatter->writeBOM(BOM_ucs4le, 4);

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.38  2005/03/20 19:02:45  cargilld
+ * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
+ *
  * Revision 1.37  2005/01/07 15:28:49  amassari
  * Removed warnings
  *
@@ -3724,7 +3727,11 @@ void DTDScanner::scanPI()
     namePtr = bbName.getRawBuffer();
 
     // See if it issome form of 'xml' and emit a warning
-    if (!XMLString::compareIString(namePtr, XMLUni::fgXMLString))
+    //if (!XMLString::compareIString(namePtr, XMLUni::fgXMLString))
+    if (bbName.getLen() == 3 &&
+        (((namePtr[0] == chLatin_x) || (namePtr[0] == chLatin_X)) &&
+         ((namePtr[1] == chLatin_m) || (namePtr[1] == chLatin_M)) &&
+         ((namePtr[2] == chLatin_l) || (namePtr[2] == chLatin_L))))       
         fScanner->emitError(XMLErrs::NoPIStartsWithXML);
 
     // If namespaces are enabled, then no colons allowed

@@ -137,7 +137,7 @@ XMLURL::Protocols XMLURL::lookupByName(const XMLCh* const protoName)
 {
     for (unsigned int index = 0; index < XMLURL::Protocols_Count; index++)
     {
-        if (!XMLString::compareIString(gProtoList[index].prefix, protoName))
+        if (!XMLString::compareIStringASCII(protoName, gProtoList[index].prefix))
             return gProtoList[index].protocol;
     }
     return XMLURL::Unknown;
@@ -580,7 +580,7 @@ BinInputStream* XMLURL::makeNewStream() const
     //
     if (fProtocol == XMLURL::File)
     {
-        if (!fHost || !XMLString::compareIString(fHost, XMLUni::fgLocalHostString))
+        if (!fHost || !XMLString::compareIStringASCII(fHost, XMLUni::fgLocalHostString))
         {
 
             XMLCh* realPath = XMLString::replicate(fPath, fMemoryManager);

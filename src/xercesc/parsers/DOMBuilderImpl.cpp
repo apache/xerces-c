@@ -125,22 +125,22 @@ void DOMBuilderImpl::setFilter(DOMBuilderFilter* const)
 // ---------------------------------------------------------------------------
 void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
 {
-    if (XMLString::compareIString(name, XMLUni::fgDOMEntities) == 0) {
+    if (XMLString::compareIStringASCII(name, XMLUni::fgDOMEntities) == 0) {
         setCreateEntityReferenceNodes(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMComments) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMComments) == 0) {
         setCreateCommentNodes(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMDatatypeNormalization) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMDatatypeNormalization) == 0) {
         getScanner()->setNormalizeData(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaces) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaces) == 0) {
         setDoNamespaces(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) {
         setIncludeIgnorableWhitespace(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMValidation) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidation) == 0) {
 
         fValidation = state;
 
@@ -152,7 +152,7 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
             setValidationScheme(AbstractDOMParser::Val_Never);
         }
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMValidateIfSchema) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0) {
 
         fAutoValidation = state;
 
@@ -163,30 +163,30 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
             setValidationScheme(AbstractDOMParser::Val_Never);
         }
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) {
         // in fact, setting this has no effect to the parser
         fCharsetOverridesXMLEncoding = state;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMInfoset) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCanonicalForm) == 0 ) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMInfoset) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ) {
         if (state)
             throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ) {
         if (!state)
             throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0)
     {
         setDoSchema(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0)
     {
         setValidationSchemaFullChecking(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0)
     {
         if(state)
             fUserAdoptsDocument = true;
@@ -194,56 +194,56 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
             fUserAdoptsDocument = false;
     }
 
-    else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0)
     {
         setLoadExternalDTD(state);
     }
 
-    else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
         setExitOnFirstFatalError(!state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
     {
         setValidationConstraintFatal(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
     {
         getScanner()->cacheGrammarFromParse(state);
 
         if (state)
             getScanner()->useCachedGrammarInParse(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
     {
         if (state || !getScanner()->isCachingGrammarFromParse())
             getScanner()->useCachedGrammarInParse(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
     {
         getScanner()->setCalculateSrcOfs(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesStandardUriConformant) == 0)
     {
         getScanner()->setStandardUriConformant(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0)
     {
         setCreateSchemaInfo(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
     {
         getScanner()->setGenerateSyntheticAnnotations(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0)
     {
         getScanner()->setValidateAnnotations(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
     {
         getScanner()->setIdentityConstraintChecking(state);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
     {
         getScanner()->setIgnoredCachedDTD(state);
     }
@@ -254,98 +254,98 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
 
 bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
 {
-    if (XMLString::compareIString(name, XMLUni::fgDOMEntities) == 0) {
+    if (XMLString::compareIStringASCII(name, XMLUni::fgDOMEntities) == 0) {
         return getCreateEntityReferenceNodes();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMComments) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMComments) == 0) {
         return getCreateCommentNodes();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMDatatypeNormalization) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMDatatypeNormalization) == 0) {
         return getScanner()->getNormalizeData();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaces) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaces) == 0) {
         return getDoNamespaces();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) {
         return getIncludeIgnorableWhitespace();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMValidation) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidation) == 0) {
         return fValidation;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMValidateIfSchema) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0) {
         return fAutoValidation;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) {
         return fCharsetOverridesXMLEncoding;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMInfoset) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCanonicalForm) == 0 ) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMInfoset) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ) {
         return false;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ) {
         return true;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0)
     {
         return getDoSchema();
     }
 
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0)
     {
         return getValidationSchemaFullChecking();
     }
 
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
     {
         return getIdentityConstraintChecking();
     }
 
-    else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0)
     {
         return getLoadExternalDTD();
     }
 
-    else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
         return !getExitOnFirstFatalError();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
     {
         return getValidationConstraintFatal();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
     {
         return getScanner()->isCachingGrammarFromParse();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
     {
         return getScanner()->isUsingCachedGrammarInParse();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
     {
         return getScanner()->getCalculateSrcOfs();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesStandardUriConformant) == 0)
     {
         return getScanner()->getStandardUriConformant();
     }
-    else if(XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) {
+    else if(XMLString::compareIStringASCII(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) {
         return fUserAdoptsDocument;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) {
         return getCreateSchemaInfo();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
     {
         return getScanner()->getGenerateSyntheticAnnotations();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0)
     {
         return getScanner()->getValidateAnnotations();
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
     {
         return getScanner()->getIgnoreCachedDTD();
     }
@@ -358,44 +358,44 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
 
 bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) const
 {
-    if ((XMLString::compareIString(name, XMLUni::fgDOMEntities) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMComments) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMDatatypeNormalization) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMNamespaces) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMValidation) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMValidateIfSchema) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    if ((XMLString::compareIStringASCII(name, XMLUni::fgDOMEntities) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgDOMComments) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgDOMDatatypeNormalization) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaces) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidation) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesCalculateSrcOfs) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesStandardUriConformant) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
        ) {
         return true;
     }
 
-    else if (XMLString::compareIString(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMInfoset) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCanonicalForm) == 0 ) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMInfoset) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ) {
         if (!state)
             return true;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ) {
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
+             XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ) {
         if (state)
             return true;
     }
-    else if ((XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)) {
+    else if ((XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0) ||
+             (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0) ||
+             (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0) ||
+             (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0) ||
+             (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0) ||
+             (XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0) ||
+             (XMLString::compareIStringASCII(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)) {
         return true;
     }
     return false;
@@ -407,16 +407,16 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
 // ---------------------------------------------------------------------------
 void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
 {
-	if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
+	if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
 	{
 		setExternalSchemaLocation((XMLCh*)value);
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
 	{
 		setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
 	{
 		setSecurityManager((SecurityManager*)value);
 	}
@@ -436,11 +436,11 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
 
 void* DOMBuilderImpl::getProperty(const XMLCh* const name) const
 {
-    if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
+    if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
         return (void*)getExternalSchemaLocation();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)getExternalNoNamespaceSchemaLocation();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
         return (void*)getSecurityManager();
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());

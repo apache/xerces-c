@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.44  2005/03/20 19:02:45  cargilld
+ * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
+ *
  * Revision 1.43  2005/02/25 11:31:07  amassari
  * Performance improvements by David Bertoni (jira# 1343)
  *
@@ -1487,11 +1490,11 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     if (fParseInProgress)
         throw SAXNotSupportedException("Feature modification is not supported during parse.", fMemoryManager);
 	
-    if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
+    if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
     {
         setDoNamespaces(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreValidation) == 0)
     {
         fValidation = value;
         if (fValidation)
@@ -1502,11 +1505,11 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
         else
             setValidationScheme(Val_Never);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
     {
         fNamespacePrefix = value;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDynamic) == 0)
     {
         fAutoValidation = value;
         // for auto validation, the sax2 core validation feature must also be enabled.
@@ -1518,59 +1521,59 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
         else
             setValidationScheme(Val_Never);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0)
     {
         setDoSchema(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0)
     {
         fScanner->setValidationSchemaFullChecking(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
     {
         fScanner->setIdentityConstraintChecking(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0)
     {
         fScanner->setLoadExternalDTD(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
         fScanner->setExitOnFirstFatal(!value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
     {
         fScanner->setValidationConstraintFatal(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
     {
         fScanner->cacheGrammarFromParse(value);
 
         if (value)
             fScanner->useCachedGrammarInParse(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
     {
         if (value || !fScanner->isCachingGrammarFromParse())
             fScanner->useCachedGrammarInParse(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
     {
         fScanner->setCalculateSrcOfs(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesStandardUriConformant) == 0)
     {
         fScanner->setStandardUriConformant(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
     {
         fScanner->setGenerateSyntheticAnnotations(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0)
     {
         fScanner->setValidateAnnotations(value);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
     {
         fScanner->setIgnoredCachedDTD(value);
     }
@@ -1580,39 +1583,39 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 
 bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 {
-    if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
+    if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
         return getDoNamespaces();
-    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreValidation) == 0)
         return fValidation;
-    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
         return fNamespacePrefix;
-    else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDynamic) == 0)
         return fAutoValidation;
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0)
         return getDoSchema();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0)
         return fScanner->getValidationSchemaFullChecking();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
         return fScanner->getIdentityConstraintChecking();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0)
         return fScanner->getLoadExternalDTD();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
         return !fScanner->getExitOnFirstFatal();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
         return fScanner->getValidationConstraintFatal();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
         return fScanner->isCachingGrammarFromParse();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
         return fScanner->isUsingCachedGrammarInParse();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
         return fScanner->getCalculateSrcOfs();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesStandardUriConformant) == 0)
         return fScanner->getStandardUriConformant();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
         return fScanner->getGenerateSyntheticAnnotations();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0)
         return fScanner->getValidateAnnotations();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
         return fScanner->getIgnoreCachedDTD();
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
@@ -1625,15 +1628,15 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 	if (fParseInProgress)
 		throw SAXNotSupportedException("Property modification is not supported during parse.", fMemoryManager);
 
-	if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
+	if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
 	{
 		fScanner->setExternalSchemaLocation((XMLCh*)value);
 	}
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
 	{
 		fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
 	{
 		fScanner->setSecurityManager((SecurityManager*)value);
 	}
@@ -1662,11 +1665,11 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 
 void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
 {
-    if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
+    if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
         return (void*)fScanner->getExternalSchemaLocation();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)fScanner->getExternalNoNamespaceSchemaLocation();
-    else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
         return (void*)fScanner->getSecurityManager();
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
         return (void*)fScanner->getName();

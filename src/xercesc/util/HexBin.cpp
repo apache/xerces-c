@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2005/03/20 19:02:45  cargilld
+ * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
+ *
  * Revision 1.7  2005/01/07 15:12:10  amassari
  * Removed warnings
  *
@@ -98,7 +101,7 @@ XMLCh* HexBin::getCanonicalRepresentation(const XMLCh*          const hexData
         return 0;
 
     XMLCh* retStr = XMLString::replicate(hexData, manager);
-    XMLString::upperCase(retStr);
+    XMLString::upperCaseASCII(retStr);
 
     return retStr;
 }

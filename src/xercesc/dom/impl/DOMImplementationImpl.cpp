@@ -186,23 +186,23 @@ bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * 
     bool version3_0 = XMLString::equals(version, g3_0);
 
     // Currently, we support only XML Level 1 version 1.0
-    if (XMLString::compareIString(feature, XMLUni::fgXMLString) == 0
+    if (XMLString::compareIStringASCII(feature, XMLUni::fgXMLString) == 0
         && (anyVersion || version1_0 || version2_0))
         return true;
 
-    if (XMLString::compareIString(feature, gCore) == 0
+    if (XMLString::compareIStringASCII(feature, gCore) == 0
         && (anyVersion || version1_0 || version2_0 || version3_0))
         return true;
 
-    if (XMLString::compareIString(feature, gTrav) == 0
+    if (XMLString::compareIStringASCII(feature, gTrav) == 0
         && (anyVersion || version2_0))
         return true;
 
-    if (XMLString::compareIString(feature, gRange) == 0
+    if (XMLString::compareIStringASCII(feature, gRange) == 0
         && (anyVersion || version2_0))
         return true;
 
-    if (XMLString::compareIString(feature, gLS) == 0
+    if (XMLString::compareIStringASCII(feature, gLS) == 0
         && (anyVersion || version3_0))
         return true;
 

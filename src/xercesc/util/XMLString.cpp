@@ -952,6 +952,49 @@ int XMLString::compareIString(  const   XMLCh* const    str1
     return XMLPlatformUtils::fgTransService->compareIString(str1, str2);
 }
 
+int XMLString::compareIStringASCII(  const   XMLCh* const    str1
+                                     , const XMLCh* const    str2)
+{
+    const XMLCh* psz1 = str1;
+    const XMLCh* psz2 = str2;
+
+    if (psz1 == 0 || psz2 == 0) {
+
+        if (psz1 == 0) {
+            return 0 - XMLString::stringLen(psz2);
+        }
+		else if (psz2 == 0) {
+            return XMLString::stringLen(psz1);
+        }
+    }
+
+    XMLCh ch1;
+    XMLCh ch2;
+
+    while (true) {
+        if (*psz1 >= chLatin_A && *psz1 <= chLatin_Z)
+            ch1 = *psz1 - chLatin_A + chLatin_a;
+        else
+            ch1 = *psz1;
+        if (*psz2 >= chLatin_A && *psz2 <= chLatin_Z)
+            ch2 = *psz2 - chLatin_A + chLatin_a;
+        else
+            ch2 = *psz2;
+
+        // If an inequality, then return difference
+        if (ch1 != ch2)
+            return int(ch1) - int(ch2);
+
+        // If either ended, then both ended, so equal
+        if (!ch1)
+            break;
+
+        // Move upwards to next chars
+        psz1++;
+        psz2++;
+    }
+    return 0;
+}    
 
 int XMLString::compareNString(  const   XMLCh* const    str1
                                 , const XMLCh* const    str2
@@ -1405,6 +1448,21 @@ void XMLString::upperCase(XMLCh* const toUpperCase)
 {
     // Refer this one to the transcoding service
     XMLPlatformUtils::fgTransService->upperCase(toUpperCase);
+}
+
+void XMLString::upperCaseASCII(XMLCh* const toUpperCase)
+{
+    XMLCh* psz1 = toUpperCase;
+
+    if (!psz1)
+        return;
+
+    while (*psz1) {
+        if (*psz1 >= chLatin_a && *psz1 <= chLatin_z)
+            *psz1 = *psz1 - chLatin_a + chLatin_A;
+
+        psz1++;        
+    }    
 }
 
 

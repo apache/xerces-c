@@ -1059,7 +1059,11 @@ void XMLScanner::scanPI()
     namePtr = bbName.getRawBuffer();
 
     // See if it is some form of 'xml' and emit a warning
-    if (!XMLString::compareIString(namePtr, XMLUni::fgXMLString))
+    //if (!XMLString::compareIString(namePtr, XMLUni::fgXMLString))
+    if (bbName.getLen() == 3 &&
+        (((namePtr[0] == chLatin_x) || (namePtr[0] == chLatin_X)) &&
+         ((namePtr[1] == chLatin_m) || (namePtr[1] == chLatin_M)) &&
+         ((namePtr[2] == chLatin_l) || (namePtr[2] == chLatin_L))))   
         emitError(XMLErrs::NoPIStartsWithXML);
 
     // If namespaces are enabled, then no colons allowed
@@ -1418,9 +1422,17 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
             else
             {
                 emitError(XMLErrs::BadStandalone);
-                if (!XMLString::compareIString(rawValue, XMLUni::fgYesString))
+                //if (!XMLString::compareIString(rawValue, XMLUni::fgYesString))
+                //else if (!XMLString::compareIString(rawValue, XMLUni::fgNoString))
+                if (buffers[curString]->getLen() == 3 &&
+                    (((rawValue[0] == chLatin_y) || (rawValue[0] == chLatin_Y)) &&
+                     ((rawValue[1] == chLatin_e) || (rawValue[1] == chLatin_E)) &&
+                     ((rawValue[2] == chLatin_s) || (rawValue[2] == chLatin_S))))   
+                    fStandalone = true;                
+                else if (buffers[curString]->getLen() == 2 &&
+                    (((rawValue[0] == chLatin_n) || (rawValue[0] == chLatin_N)) &&
+                     ((rawValue[1] == chLatin_o) || (rawValue[1] == chLatin_O))))   
                     fStandalone = true;
-                else if (!XMLString::compareIString(rawValue, XMLUni::fgNoString))
                     fStandalone = false;
             }
         }

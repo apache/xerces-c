@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2005/03/20 19:02:45  cargilld
+ * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
+ *
  * Revision 1.32  2005/03/08 09:04:09  amassari
  * Improve performances of XMLString::tokenizeString (jira# 1363) - patch by Christian Will
  *
@@ -341,6 +344,24 @@ public:
         const   XMLCh* const    str1
         , const XMLCh* const    str2
     );
+
+    /** Lexicographically compares lowercase versions of <code>str1</code> and
+      * <code>str2</code> and returns a value indicating their relationship.
+      * The routine only lowercases A to Z.
+      * @param str1 Null-terminated ASCII string to compare
+      * @param str2 Null-terminated ASCII string to compare
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
+      */
+    static int compareIStringASCII
+    (
+        const   XMLCh* const    str1
+        , const XMLCh* const    str2
+    );
+
 
 
     /** Lexicographically compares, at most, the first count characters in
@@ -1491,6 +1512,13 @@ public:
       *        On return, this buffer also holds the converted uppercase string
       */
     static void upperCase(XMLCh* const toUpperCase);
+
+    /** Converts a string to uppercase
+      * The routine only uppercases A to Z.
+      * @param toUpperCase The string which needs to be converted to uppercase.
+      *        On return, this buffer also holds the converted uppercase string
+      */
+    static void upperCaseASCII(XMLCh* const toUpperCase);
 
 	/** Converts a string to lowercase
       * @param toLowerCase The string which needs to be converted to lowercase.

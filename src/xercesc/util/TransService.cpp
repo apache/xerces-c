@@ -159,7 +159,7 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
         resValue = XMLTransService::InternalFailure;
         return 0;
     }
-    XMLString::upperCase(upBuf);
+    XMLString::upperCaseASCII(upBuf);
     ENameMap* ourMapping = gMappings->get(upBuf);
 
     // If we found it, then call the factory method for it
