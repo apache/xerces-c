@@ -1,3 +1,10 @@
+Sep 30, 2004 - Xerces C and Borland C++ Compiler v 5.6.2 (CBuilderX 1.0 Update 1)
+========================================================
+
+The Update 1 for CBuilderX 1.0 renames the make.exe found in the bin directory 
+to bmake.exe, and adds make.exe (from GNU). To be able to compile Xerces 
+rename bmake.exe back to make.exe
+
 Feb 27, 2003 - Xerces C and Borland C++ Compiler v 5.5.1
 ========================================================
 
@@ -19,11 +26,4 @@ How to build dll (with deprecated DOM API, approx. 300k larger) and tests:
 	make -f Xerces-all.mak -DWITHDEPRDOM=Y
 
 Vitaly Prapirny (marl@mebius.net)
-
-Sep 30, 2004 - Xerces C and Borland C++ Compiler v 5.6.2 (CBuilderX 1.0 Update 1)
-========================================================
-
-The Update 1 for CBuilderX 1.0 renames the make.exe found in the bin directory 
-to bmake.exe, and adds make.exe (from GNU). To be able to compile Xerces 
-rename bmake.exe back to make.exe
 
