@@ -5657,6 +5657,12 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
             }
             else if (baseSpecNode != 0) {
 
+                if (hasAllContent(specNode) || hasAllContent(baseSpecNode)) {
+
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NotAllContent);
+                    throw TraverseSchema::InvalidComplexTypeInfo; // REVISIT - should we continue
+                }
+
                 typeInfo->setAdoptContentSpec(false);
                 typeInfo->setContentSpec(
                     new ContentSpecNode(ContentSpecNode::Sequence,

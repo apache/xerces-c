@@ -165,6 +165,7 @@
             <Message Id="XMLException_Error" Text="An exception occurred! Type:{0}, Message:{1}"/>
             <Message Id="InvalidRedefine" Text="Invalid Redefine: '{0}' has already been included or redefined"/>
             <Message Id="InvalidNSReference" Text="Schema Representation Constraint: Namespace '{0}' is referenced without &lt;import&gt; declaration"/>
+            <Message Id="NotAllContent" Text="An 'all' model group that's part of a complex type definition must constitute the entire content type of the definition"/>
         </Error>
         <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
