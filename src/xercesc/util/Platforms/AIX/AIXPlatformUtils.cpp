@@ -221,7 +221,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
 
     if (retVal == NULL)
