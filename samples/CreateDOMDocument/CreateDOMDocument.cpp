@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -151,7 +151,7 @@ int main(int argC, char* argV[])
                 "    CreateDOMDocument\n\n"
                 "This program creates a new DOM document from scratch in memory.\n"
                 "It then prints the count of elements in the tree.\n"
-             <<  XERCES_STD_QUALIFIER endl;
+             << XERCES_STD_QUALIFIER endl;
         errorCode = 1;
     }
     if(errorCode) {
@@ -159,59 +159,80 @@ int main(int argC, char* argV[])
         return errorCode;
     }
 
-    {
-        //  Nest entire test in an inner block.
-        //  The tree we create below is the same that the XercesDOMParser would
-        //  have created, except that no whitespace text nodes would be created.
+   {
+       //  Nest entire test in an inner block.
+       //  The tree we create below is the same that the XercesDOMParser would
+       //  have created, except that no whitespace text nodes would be created.
 
-        // <company>
-        //     <product>Xerces-C</product>
-        //     <category idea='great'>XML Parsing Tools</category>
-        //     <developedBy>Apache Software Foundation</developedBy>
-        // </company>
+       // <company>
+       //     <product>Xerces-C</product>
+       //     <category idea='great'>XML Parsing Tools</category>
+       //     <developedBy>Apache Software Foundation</developedBy>
+       // </company>
 
-        DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(X("Core"));
+       DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
-        DOMDocument* doc = impl->createDocument(
-                    0,                    // root element namespace URI.
-                    X("company"),         // root element name
-                    0);                   // document type object (DTD).
+       if (impl != NULL)
+       {
+           try
+           {
+               DOMDocument* doc = impl->createDocument(
+                           0,                    // root element namespace URI.
+                           X("company"),         // root element name
+                           0);                   // document type object (DTD).
 
-        DOMElement* rootElem = doc->getDocumentElement();
+               DOMElement* rootElem = doc->getDocumentElement();
 
-        DOMElement*  prodElem = doc->createElement(X("product"));
-        rootElem->appendChild(prodElem);
+               DOMElement*  prodElem = doc->createElement(X("product"));
+               rootElem->appendChild(prodElem);
 
-        DOMText*    prodDataVal = doc->createTextNode(X("Xerces-C"));
-        prodElem->appendChild(prodDataVal);
+               DOMText*    prodDataVal = doc->createTextNode(X("Xerces-C"));
+               prodElem->appendChild(prodDataVal);
 
-        DOMElement*  catElem = doc->createElement(X("category"));
-        rootElem->appendChild(catElem);
+               DOMElement*  catElem = doc->createElement(X("category"));
+               rootElem->appendChild(catElem);
 
-        catElem->setAttribute(X("idea"), X("great"));
+               catElem->setAttribute(X("idea"), X("great"));
 
-        DOMText*    catDataVal = doc->createTextNode(X("XML Parsing Tools"));
-        catElem->appendChild(catDataVal);
+               DOMText*    catDataVal = doc->createTextNode(X("XML Parsing Tools"));
+               catElem->appendChild(catDataVal);
 
-        DOMElement*  devByElem = doc->createElement(X("developedBy"));
-        rootElem->appendChild(devByElem);
+               DOMElement*  devByElem = doc->createElement(X("developedBy"));
+               rootElem->appendChild(devByElem);
 
-        DOMText*    devByDataVal = doc->createTextNode(X("Apache Software Foundation"));
-        devByElem->appendChild(devByDataVal);
+               DOMText*    devByDataVal = doc->createTextNode(X("Apache Software Foundation"));
+               devByElem->appendChild(devByDataVal);
 
-        //
-        // Now count the number of elements in the above DOM tree.
-        //
+               //
+               // Now count the number of elements in the above DOM tree.
+               //
 
-        unsigned int elementCount = doc->getElementsByTagName(X("*"))->getLength();
-        XERCES_STD_QUALIFIER cout << "The tree just created contains: " << elementCount
-             << " elements." << XERCES_STD_QUALIFIER endl;
+               unsigned int elementCount = doc->getElementsByTagName(X("*"))->getLength();
+               XERCES_STD_QUALIFIER cout << "The tree just created contains: " << elementCount
+                    << " elements." << XERCES_STD_QUALIFIER endl;
 
-        doc->release();
+               doc->release();
+           }
 
+           catch (const DOMException& e)
+           {
+               XERCES_STD_QUALIFIER cerr << "DOMException code is:  " << e.code << XERCES_STD_QUALIFIER endl;
+               errorCode = 2;
+           }
+           catch (...)
+           {
+               XERCES_STD_QUALIFIER cerr << "An error occurred creating the document" << XERCES_STD_QUALIFIER endl;
+               errorCode = 3;
+           }
+       }  // (inpl != NULL)
+       else
+       {
+           XERCES_STD_QUALIFIER cerr << "Requested implementation is not supported" << XERCES_STD_QUALIFIER endl;
+           errorCode = 4;
+       }
    }
 
-    XMLPlatformUtils::Terminate();
-    return 0;
+   XMLPlatformUtils::Terminate();
+   return errorCode;
 }
 
