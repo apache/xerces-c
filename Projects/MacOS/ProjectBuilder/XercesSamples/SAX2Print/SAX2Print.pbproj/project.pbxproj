@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 32;
+	objectVersion = 34;
 	objects = {
 		014CEA460018CE2711CA2923 = {
 			buildRules = (
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
 			};
 			isa = PBXBuildStyle;
 			name = Development;
@@ -110,11 +111,10 @@
 				08FB77A5FE84155DC02AAC07,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/obj";
+				FRAMEWORK_SEARCH_PATHS = ../../../../../lib/;
 				HEADER_SEARCH_PATHS = ../../../../../src/;
 				INSTALL_PATH = "$(HOME)/bin";
 				LIBRARY_SEARCH_PATHS = "";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";

@@ -3,12 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 32;
+	objectVersion = 34;
 	objects = {
 		00C89B0EFFA938BB7F000001 = {
 			isa = PBXFrameworkReference;
-			path = Xerces.framework;
-			refType = 3;
+			name = Xerces.framework;
+			path = ../../lib/Xerces.framework;
+			refType = 4;
 		};
 		00C89B0FFFA938BB7F000001 = {
 			fileRef = 00C89B0EFFA938BB7F000001;
@@ -142,10 +143,9 @@
 			);
 			buildSettings = {
 				BUILD_SETTING = "";
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = ../../../../../lib/;
 				HEADER_SEARCH_PATHS = ../../../../../src/;
 				LIBRARY_SEARCH_PATHS = "";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -228,6 +228,7 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
 			};
 			isa = PBXBuildStyle;
 			name = Development;
