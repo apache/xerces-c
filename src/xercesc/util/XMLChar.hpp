@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/08/11 16:08:04  peiyongz
+ * isValidNmToken
+ *
  * Revision 1.3  2004/01/29 11:48:47  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -106,6 +109,12 @@ public:
     (
         const   XMLCh* const    toCheck
         , const unsigned int    count
+    );
+
+    static bool isValidNmtoken
+    (
+        const   XMLCh*        const    toCheck
+      , const   unsigned int           count
     );
 
     static bool isValidName
@@ -280,6 +289,12 @@ public:
     (
         const   XMLCh* const    toCheck
         , const unsigned int    count
+    );
+
+    static bool isValidNmtoken
+    (
+        const   XMLCh*        const    toCheck
+      , const   unsigned int           count
     );
 
     static bool isValidName

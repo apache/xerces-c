@@ -126,6 +126,20 @@ bool XMLChar1_0::isValidNCName(const   XMLCh* const    toCheck
     return true;
 }
 
+bool XMLChar1_0::isValidNmtoken(const   XMLCh*       const    toCheck
+                              , const   unsigned int          count)
+{
+    const XMLCh* curCh = toCheck;
+    const XMLCh* endPtr = toCheck + count;
+
+    while (curCh < endPtr)
+    {
+        if (!(fgCharCharsTable1_0[*curCh++] & gNameCharMask))
+            return false;
+    }
+    return true;
+}
+
 bool XMLChar1_0::isValidName(const   XMLCh* const    toCheck
                             , const unsigned int    count)
 {
@@ -4436,7 +4450,60 @@ bool XMLChar1_1::isValidNCName(const   XMLCh* const    toCheck
     return true;
 }
 
+bool XMLChar1_1::isValidNmtoken(const   XMLCh*        const    toCheck
+                              , const   unsigned int           count)
+{
+    const XMLCh* curCh = toCheck;
+    const XMLCh* endPtr = toCheck + count;
+    XMLCh nextCh;
 
+    bool    gotLeadingSurrogate = false;
+    while (curCh < endPtr)
+    {
+        nextCh = *curCh++;
+
+        // Deal with surrogate pairs
+        if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
+        {
+            //  Its a leading surrogate. If we already got one, then
+            //  issue an error, else set leading flag to make sure that
+            //  we look for a trailing next time.
+            if (nextCh > 0xDB7F || gotLeadingSurrogate)
+            {
+                return false;
+            }
+            else
+                gotLeadingSurrogate = true;
+        }
+        else
+        {
+            //  If its a trailing surrogate, make sure that we are
+            //  prepared for that. Else, its just a regular char so make
+            //  sure that we were not expected a trailing surrogate.
+            if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+            {
+                // Its trailing, so make sure we were expecting it
+                if (!gotLeadingSurrogate)
+                    return false;
+            }
+            else
+            {
+                //  Its just a char, so make sure we were not expecting a
+                //  trailing surrogate.
+                if (gotLeadingSurrogate) {
+                    return false;
+                }
+                // Its got to at least be a valid XML character
+                else if (!(fgCharCharsTable1_1[nextCh] & gNameCharMask))
+                {
+                    return false;
+                }
+            }
+            gotLeadingSurrogate = false;
+        }
+    }
+    return true;
+}
 
 bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck
                             , const unsigned int    count)
