@@ -12,12 +12,12 @@
 
 <s2 title="Releases Archive">
 
-    <p> For release information about &XercesCName; 1.7.0 or earlier,
+    <p> For release information about &XercesCName; 2.0.0 or earlier,
         please refer to <jump href="releases_archive.html">Releases Archive</jump>.
     </p>
 </s2>
 
-<s2 title="Release Information of &XercesCName; &XercesCVersion;: July 23, 2002">
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: August 23, 2002">
 <table>
     <tr>
         <td>Date</td>
@@ -26,919 +26,193 @@
     </tr>
 
     <tr>
-        <td>2002-07-19</td>
+        <td>2002-08-08</td>
+        <td>Stephen Dulin</td>
+        <td>DOMWriter support on z/OS.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-08</td>
         <td>Tinny Ng</td>
-        <td>[Bug 10968] Default attributes from Schema not restored by removeAttribute.
+        <td>DOM Fix: Recycle node value buffer to avoid memory growth.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-18</td>
-        <td>Khaled Noaman</td>
-        <td>Feature to control strict IANA encoding name.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-18</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 9707] config.guess out of date.   From AutoConf dated July 18, 2002, CVS Tag  AUTOCONF-2_53b.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-17</td>
+        <td>2002-08-07</td>
         <td>PeiYong Zhang</td>
-        <td>Add Win64 to Windows VC6 Project files
+        <td>[Bug 11534] Wrong CDATA Terminator in DOMWriterImpl.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-16</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 6070] warning unused variable in HandlerBase.hpp.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-16</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 6576] Exception on processing UTF-16 InputSource buffer with set encoding.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-16</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 6590] Improper Internal subset filling.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-16</td>
-        <td>Alberto Massari</td>
-        <td>[Bug 7458] Schema validator does not automatically associate the xml prefix
-            to the "http://www.w3.org/XML/1998/namespace" URI.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-16</td>
-        <td>Case Larsen</td>
-        <td>[Bug 9502] purify UMR in DocumentImpl::DocumentImpl.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-16</td>
-        <td>Case Larsen</td>
-        <td>[Bug 9553] purify UMR in XMLRecognizer::basicEncodingProbe.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-16</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 10651] CMStateSet.hpp includes both memory.h and string.h.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-16</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 10648] DOMDocumentImpl misaligned allocations on machines with a 64 bits 'long' type.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-15</td>
-        <td>Tinny Ng</td>
-        <td>DOM Level 3 C++ Binding.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-15</td>
-        <td>Tinny Ng</td>
-        <td>DOM L3: DOMText::getIsWhitespaceInElementContent, DOMDocument::set/getStrictErrorChecking.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-15</td>
-        <td>Robert Buck</td>
-        <td>[Bug 10834] Update version header to handle two digit revision and patch levels.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-12</td>
+        <td>2002-08-07</td>
         <td>Khaled Noaman</td>
-        <td>Grammar caching/preparsing.
+        <td>Pass proper value of actual encoding to XMLDecl callback.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-12</td>
+        <td>2002-08-01</td>
         <td>Khaled Noaman</td>
-        <td>Add getRootGrammar and modify SEnumVal.
+        <td>If the NamespaceURI, qualifiedName, and doctype are null, the returned
+            Document is empty with no document element.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-12</td>
-        <td>James Berry</td>
-        <td>Add some support for testing of Mac OS X builds with GCC3 compiler.
+        <td>2002-08-01</td>
+        <td>Khaled Noaman</td>
+        <td>Ensure that we add only DOM Attr nodes to the attributes NamedNodeMap.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-12</td>
-        <td>James Berry</td>
-        <td>[Bug 10649] XercesDefs.hpp and AutoSense.hpp assume CodeWarrior is MacOS.
+        <td>2002-08-01</td>
+        <td>Khaled Noaman</td>
+        <td>DOM L2 does not support editing DocumentType nodes.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-10</td>
+        <td>2002-07-31</td>
         <td>Tinny Ng</td>
-        <td>Enable embedded path link option in HP.
+        <td>[Bug 11338] missing const keyword for DOMNodeList methods.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-10</td>
-        <td>Robert Buck</td>
-        <td>[Bug 9154] Requesting Xerces Version Macro.
+        <td>2002-07-31</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 6227] Make method getLastExtLocation() constant.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-08</td>
+        <td>2002-07-31</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3788] very long lines in CppErrMsgs_EN_US.hpp causes problems for OS390 compiler.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-07-31</td>
+        <td>Eric Zurcher</td>
+        <td>[Bug 11099]  BCB6 project for Xerceslib 2.0 has wrong files.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-07-31</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 6321] gmake error in regx/Makefile.in.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-07-30</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 8550] No explanation of XMLFormatter escape options.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-07-30</td>
+        <td>Khaled Noaman</td>
+        <td>Create default attributes with the namespace URI mapped to the attributes' prefixes.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-07-29</td>
         <td>PeiYong Zhang</td>
-        <td>[Bug 10525] runConfigure fails to recognize '-d' flag.
+        <td>Build Xerces with ICU -- Itanium/WinXP/IntelC++Compiler.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-05</td>
-        <td>Max Gotlib</td>
-        <td>[Bug 10250]: Implementation of new platform methods in FreeBSD.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-05</td>
+        <td>2002-07-29</td>
         <td>Tinny Ng</td>
-        <td>[Bug 9788] VecAttrListImpl::getValue skips prefix if SAX namespace validation is on.
+        <td>[Bug 9084] scripts/packageBinaries -j option not well documented.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-05</td>
-        <td>Robert Buck</td>
-        <td>[Bug 10065] xml4com bugs found when porting to Visual Studio .NET project files.
+        <td>2002-07-29</td>
+        <td>Tom Keane</td>
+        <td>[Bug 9533] Win32TransService does not recognize aliases for encodings.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-05</td>
+        <td>2002-07-26</td>
         <td>Tinny Ng</td>
-        <td>[Bug 10105] Exception in parse() despite setErrorHandler().
+        <td>Memory Leak in DOMDocumentTypeImpl.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-05</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 10119] Grammar::getGrammarType need a const modifier.
+        <td>2002-07-26</td>
+        <td>Joé St-Germain</td>
+        <td>[Bug 10337] XMLString::patternMatch doesn't find pattern in particular context.
         </td>
     </tr>
 
     <tr>
-        <td>2002-07-05</td>
-        <td>Max Gotlib</td>
-        <td>[Bug 10252] Modify FreeBSD build environment for the samples.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-04</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 10482] XMLUri crashes with empty fragment.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-04</td>
-        <td>Max Gotlib</td>
-        <td>[Bug 10253] Bugfix for the IconvFBSD transcoder.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-04</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 10336] Error in Error Message (set 3, #56, English).
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-07-04</td>
-        <td>Tinny Ng</td>
-        <td>DOM L3: Add DOMDocument::renameNode.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-27</td>
-        <td>Tinny Ng</td>
-        <td>DOM L3: Add DOMNode::isSameNode and DOMNode::isEqualNode.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-25</td>
-        <td>Tinny Ng</td>
-        <td>Add "adoptDocument" to XercesDOMParser so that document can optionally live outside the parser.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-25</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 7675] IDOM memory management problem.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-25</td>
-        <td>Tinny Ng</td>
-        <td>DOM C++ Binding: add function release().
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-24</td>
-        <td>James Berry</td>
-        <td>Support CodeWarrior 8.
-            (Important Note: Since Codewarrior 8 at long last supports HFS+ long file
-             names, these projects now directly reference the src/xercesc files instead of
-             the previously shortened file names in the MacSrc directory. With CodeWarrior
-             8 and these projects it is no longer necessary to run the perl script
-             ShortenNames.pl to generate that MacSrc directory.)
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-24</td>
-        <td>Robert Buck</td>
-        <td>[Bug 10067] SEnumVal bugs found when porting to Visual Studio .NET.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-24</td>
-        <td>Robert Buck</td>
-        <td>[Bug 10180] New Visual Studio .NET Project Files.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-18</td>
-        <td>Khaled Noaman</td>
-        <td>DOM L3: Add Wrapper4DOMInputSource and Wrapper4InputSource.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-18</td>
-        <td>Khaled Noaman</td>
-        <td>DOM L3: Modify DOMCount to modify DOMBuilder.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-18</td>
-        <td>Peter A. Volchek</td>
-        <td>Bug#9950: Compilation error on MSVC5.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-17</td>
-        <td>Tinny Ng</td>
-        <td>Add feature "http://apache.org/xml/features/validation-error-as-fatal", and users should
-            use setFeature instead of setValidationConstraintFatal in SAX2XMLReader.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-17</td>
-        <td>Tinny Ng</td>
-        <td>Add feature "http://apache.org/xml/features/continue-after-fatal-error", and users should
-            use setFeature instead of setExitOnFirstFatalError in SAX2XMLReader.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-17</td>
-        <td>Tinny Ng</td>
-        <td>Name Xerces features as XMLUni::fgXercesXXXX instead of XMLUni::fgSAX2XercesXXXX
-            so that they can be shared with DOM parser.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-14</td>
-        <td>PeiYong Zhang</td>
-        <td>Build 64bit production on Itaniums platform (Windows and Linux) using Intel Compiler.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-12</td>
-        <td>Tinny Ng</td>
-        <td>DOM L3: Add DOMUserDataHandler, DOMNode::set/getUserData.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-12</td>
-        <td>Tinny Ng</td>
-        <td>Fix: Thread-safety in DOMString.  The reference or update to DOMString::gLiveStringHandleCount should be synchronized (locked).
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-07</td>
-        <td>Tinny Ng</td>
-        <td>DOM L3: Add Entity::get/setActualEncoding, get/setEncoding, get/setVersion.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-07</td>
-        <td>Tinny Ng</td>
-        <td>DOM L3: Add Document::get/setActualEncoding, get/setEncoding, get/setVersion, get/setStandalone, get/setDocumentURI.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-06-03</td>
-        <td>Tinny Ng</td>
-        <td>DOM L3: Add DOMImplementationRegistry and DOMImplementationSource.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-30</td>
-        <td>Tinny Ng</td>
-        <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
-            optionally ignore external DTD.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-29</td>
-        <td>Khaled Noaman</td>
-        <td>DOM L3: Add DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-29</td>
-        <td>Gereon Steffens</td>
-        <td>[Bug 9489] Malformed HTTP GET Requests in UnixHTTPUrlInputStream.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-28</td>
-        <td>PeiYong Zhang</td>
-        <td>DOM L3: Modify DOMPrint to use DOMWriter.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-28</td>
-        <td>PeiYong Zhang</td>
-        <td>DOM L3: Add DOMWriter, DOMWriterFilter, LocalFileFormatTarget, StdOutFormatTarget, and MemBufFormatTarget.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-28</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 9104] prefixes dissapearing when schema validation turned on.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-27</td>
-        <td>Tinny Ng</td>
-        <td>Add DOMDocumentRange and DOMDocumentTraversal.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-27</td>
-        <td>Khaled Noaman</td>
-        <td>Performance: Lazily store top-level components to eliminate unnecessary traversal
-            of DOM tree when looking up for a top level component.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-27</td>
-        <td>Khaled Noaman</td>
-        <td>Performance: Use pre-built element-attribute map table.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-27</td>
-        <td>Tinny Ng</td>
-        <td>To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-27</td>
-        <td>Tinny Ng</td>
-        <td>Define XMLSize, XMLSSize_t and their associate MAX.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-24</td>
-        <td>Khaled Noaman</td>
-        <td>Performance: Eliminate mulitple calls to addRange and sort in regx.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-23</td>
-        <td>Khaled Noaman</td>
-        <td>Performance: Use XMLBufferMgr instead of local creation of XMLBuffer(s).
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-22</td>
-        <td>Khaled Noaman</td>
-        <td>DOM L3: Add AbstractDOMParser, DOMError, DOMErrorHandler, and DOMLocator.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-21</td>
-        <td>Tinny Ng</td>
-        <td>DOM Reorganization (rename IDOM and deprecate old DOM) and other documentation update.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-19</td>
-        <td>James Berry</td>
-        <td>[Bug 9237] Encoding spec in lower case (DTD/XML) not recognized.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-10</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 8967] Default element behaviour is incorrect (schema only).
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-08</td>
-        <td>Martin Kalen</td>
-        <td>[Bug 7701] NameIdPoolEnumerator copy constructor should call base class.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-08</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 8899] Missing implementation of Op::Op(const Op&amp;) causes Intel C++ Win32 link to fail.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-08</td>
-        <td>Khaled Noaman</td>
-        <td>[Bug 8301] INFINITY used as enum member.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-08</td>
+        <td>2002-07-26</td>
         <td>David Bertoni</td>
-        <td>[Bug 8381] XMLScanner performance fixes.
+        <td>[Bug 11189] Tru64 utilities missing implementation of new functions.
         </td>
     </tr>
 
     <tr>
-        <td>2002-05-08</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 8898] SchemaElementDecl doesn't compile with Intel C++ for IA32.
+        <td>2002-07-26</td>
+        <td>Jonathan Lennox</td>
+        <td>[Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.
         </td>
     </tr>
 
     <tr>
-        <td>2002-05-07</td>
-        <td>Tinny Ng</td>
-        <td>Schema Fix: re-add the ID, IDREF ... datatype validators only if they were not there.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-07</td>
+        <td>2002-07-26</td>
         <td>Khaled Noaman</td>
-        <td>Update SAX2 documentation to tell users it is necessary to delete
-            the parser returned by XMLReaderFactory::createXMLReader.
+        <td>For a given DOM Element and DOM DocumentType node, explicitly cast to
+            the implementation of that DOM node when calling setReadOnly.
         </td>
     </tr>
 
     <tr>
-        <td>2002-05-07</td>
-        <td>David Bertoni</td>
-        <td>[Bug 8852] UnixHTTPURLInputStream.cpp includes unneeded file.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-06</td>
-        <td>David Bertoni</td>
-        <td>[Bug 8492] Incorrect HP link options.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-03</td>
-        <td>Martin Kalen</td>
-        <td>[Bug 7341] Missing newline at end of util and DOM source files.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-03</td>
-        <td>Martin Kalen</td>
-        <td>[Bug 7261] Remove obsolete define in UnixWareDefs.hpp.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-03</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 8769] UMR (uninitialized memory read) detected by memory tool.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-05-01</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 7265] UnixWare port broken in platformTerm().
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-24</td>
-        <td>Jason Stewart</td>
-        <td>[Bug 8495] URLInputSource constructor initializes fURL member incorrectly.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-22</td>
-        <td>PeiYong Zhang</td>
-        <td>Build AIX 64 bit binary.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-19</td>
+        <td>2002-07-26</td>
         <td>Khaled Noaman</td>
-        <td>[Bug 8236] Problem with recursive and derived elements.
+        <td>Public/System id for notations should be stored as NULL if missing.
         </td>
     </tr>
 
     <tr>
-        <td>2002-04-18</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 7301] Redundant range-check in HexBin.cpp.
+        <td>2002-07-25</td>
+        <td>Robert Buck</td>
+        <td>[Bug 11141] Fix To Broken VC7 Builds.
         </td>
     </tr>
 
     <tr>
-        <td>2002-04-17</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 7583] Build warnings with MS Visual Studio .NET.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-17</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 7493] The word "occured" is misspelled and it is a global error.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-17</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 8195] Invalid path to build 'samples' target.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-16</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 8156] Bad path name breaks build.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-16</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 8168] Error when attempting to build NetAccessors.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-09</td>
+        <td>2002-07-25</td>
         <td>Khaled Noaman</td>
-        <td>[Bug 7706] XMLString::lowerCase() does not work.
+        <td>[Bug 11153] getOwnerDocument() on PI that's child of Document returns NULL.
         </td>
     </tr>
 
     <tr>
-        <td>2002-04-09</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 6095] Modify .so name to have version number.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-08</td>
-        <td>Tinny Ng</td>
-        <td>ICU 2.0.2 Update.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-04</td>
+        <td>2002-07-24</td>
         <td>Khaled Noaman</td>
-        <td>Change min/maxOccurs from unsigned int to int.
+        <td>Remove check for disallowed encodings - not needed anymore.
         </td>
     </tr>
 
     <tr>
-        <td>2002-04-03</td>
-        <td>Khaled Noaman</td>
-        <td>[Bug 7565] Attributes in different namespaces produce a Fatal Exception.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-03</td>
+        <td>2002/07/23</td>
         <td>Tinny Ng</td>
-        <td>check null string first in isWSCollapsed and fix [Bug 6902] Typo in XMLString.cpp.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-02</td>
-        <td>Martin Kalen</td>
-        <td>[Bug 7555] Enable AIX build with newer xlC versions.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-02</td>
-        <td>Khaled Noaman</td>
-        <td>Modiy QName comparison (operator==).
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-01</td>
-        <td>Tinny Ng</td>
-        <td>According to DOM spec, setNodeValue by default is no-op.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-01</td>
-        <td>Tinny Ng</td>
-        <td>Do not issue DOM_DOMException::INUSE_ATTRIBUTE_ERR if the owner is the same.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-01</td>
-        <td>Tinny Ng</td>
-        <td>DOMString problem with Asian codepages.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-01</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 7551] Exceptions are caught by value, rather than by reference.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-01</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 7585] xml4com.dsp - Cannot open source file.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-01</td>
-        <td>Khaled Noaman</td>
-        <td>[Bug 7297] Validation of schema included in document fails with improper error.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-04-01</td>
-        <td>Khaled Noaman</td>
-        <td>Move Element Consistency checking (ref to global declarations) to SchemaValidator.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-27</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 1173] DOMParser entity resolution property is messed about.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-27</td>
-        <td>Tinny Ng</td>
-        <td>Fix: not all the children of EntityReference Node is set to readOnly.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-27</td>
-        <td>Tinny Ng</td>
-        <td>Should call setReadOnly instead of isReadOnly to populate the flag.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-27</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 3010] DocumentImpl::importNode - Missed Readonly Flag Restore.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-27</td>
-        <td>Tinny Ng</td>
-        <td>Correct count element routine in IDOMCount.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-26</td>
-        <td>Khaled Noaman</td>
-        <td>[Bug 7471] Failed to validate correctly when schema has &lt;xsd:extension&gt; and the base has an attribute.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-25</td>
-        <td>Khaled Noaman</td>
-        <td>Move particle derivation checking from TraverseSchema to SchemaValidator.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-22</td>
-        <td>Khaled Noaman</td>
-        <td>[Bug 7358] About TraverseSchema::traverseSimpleTypeDecl member function.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-21</td>
-        <td>Khaled Noaman</td>
-        <td>Add support for reporting line/column numbers of schema errors.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-19</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 7164] DOMParser with a DTD leak!
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-19</td>
-        <td>Khaled Noaman</td>
-        <td>Fix for declarations referenced from a different NS in the case of a circular import.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-19</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 7243] Base64 encoding is not working.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-19</td>
-        <td>Khaled Noaman</td>
-        <td>[Bug 7074] Unwarranted error regarding "no circular definitions allowed".
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-18</td>
-        <td>Khaled Noaman</td>
-        <td>[Regx Fix] Change constant names to eliminate possible conflict with user defined ones.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-18</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 7162] IconvFreeBSDTransService.cpp needs an #include statement fixed to use xercesc.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-15</td>
-        <td>Tinny Ng</td>
-        <td>[Bug 6888] NodeIterator.  Retrofit this typo that was applied to Xerces-J, although this
-            function "matchNodeOrParent" is not used in Xerces-C++.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-15</td>
-        <td>Tinny Ng</td>
-        <td>DOMString Thread safe Fix: should lock the entire deleter function where freeListPtr and
-            blockListPtr are modified.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-15</td>
-        <td>Tinny Ng</td>
-        <td>Issue DOMException::INDEX_SIZE_ERR if count is greater than length, equal to length is ok.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-14</td>
-        <td>Tinny Ng</td>
-        <td>IDOM Fix: Issue IDOM_DOMException::INDEX_SIZE_ERR if count or offset is negative.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-14</td>
-        <td>Tinny Ng</td>
-        <td>IDOM Fix: Initialize fPublic/fSystemId to zero in IDNotationImpl.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-14</td>
-        <td>Tinny Ng</td>
-        <td>Certain IDOM Node should call fParent.normalize().
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-14</td>
-        <td>Tinny Ng</td>
-        <td>Run methods test[NodeType] in the IDOMTest and other fixes.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-03-12</td>
-        <td>Mark Russell</td>
-        <td>[Bug 1687] resValue not always updated when making a transcoder.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002/03/11</td>
-        <td>PeiYong Zhang</td>
-        <td>[Bug 7000] The URL is corrupted in UnixHTTPURLInputStream.cpp.
+        <td>Build with ICU 2.2.
         </td>
     </tr>
 

@@ -4,324 +4,59 @@
 <s1 title="Migration">
     <s2 title="Migration Archive">
 
-       <p>For migration information to &XercesCName; 1.7.0 or earlier,
+       <p>For migration information to &XercesCName; 2.0.0 or earlier,
           please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>
 
-    <s2 title="Migrating from &XercesCName; 1.7.0 to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; 2.0.0 to &XercesCName; &XercesCVersion;">
       <p>This document is a discussion of the technical differences between
-      &XercesCName; 1.7.0 code base and the &XercesCName; &XercesCVersion;.</p>
+      &XercesCName; 2.0.0 code base and the &XercesCName; &XercesCVersion;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
-        <li><link anchor="LibraryChange">Unix Library Name change</link></li>
-        <li><link anchor="DirChange">DOM Reorganization</link></li>
-        <li><link anchor="Reuse">Reuse Grammar becomes Grammar Caching</link></li>
-        <li><link anchor="API">Public API Changes</link></li>
+        <li><link anchor="NewFeatures210">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="API210">Public API Changes</link></li>
         <ul>
-            <li><link anchor="NewAPI">New Public API</link></li>
-            <li><link anchor="ModifiedAPI">Modified Public API</link></li>
-            <li><link anchor="DeprecatedAPI">Deprecated/Removed Public API</link></li>
+            <li><link anchor="NewAPI210">New Public API</link></li>
+            <li><link anchor="ModifiedAPI210">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI210">Deprecated/Removed Public API</link></li>
         </ul>
       </ul>
 
-    <anchor name="NewFeatures"/>
+    <anchor name="NewFeatures210"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
         <li>64 bit binaries distribution</li>
-        <li>Follow Unix Shared Library Naming Convention</li>
-        <li>Apache Recommended DOM C++ Binding</li>
-        <li>Experimental DOM Level 3 subset support, including DOMWriter and DOMBuilder</li>
-        <li>Grammar preparsing and Grammar caching</li>
-        <li>Optionally ignore loading of external DTD</li>
-        <li>Project files for Microsoft Visual C++ .Net</li>
-        <li>Codewarrior 8 support</li>
-        <li>Option to enable/disable strict IANA encoding name checking</li>
         <li>plus many more bug fixes and performance enhancement</li>
       </ul>
     </s3>
 
-    <anchor name="LibraryChange"/>
-    <s3 title="Unix Library Name Change">
-      <p>The &XercesCName; UNIX Library now follows the Unix Shared Library Naming Convention (libname.so.soname).
-         It is now called:</p>
-         <ul>
-            <li>AIX</li>
-            <ul>
-              <li>&XercesCUnixLib;&XercesCUnixSoName;.so</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;&XercesCUnixVersion;.so</li>
-              <li>symbolic link: &XercesCUnixLib;&XercesCUnixVersion;.so  ----&gt; &XercesCUnixLib;&XercesCUnixSoName;.so</li>
-            </ul>
-            <li>Solaris / Linux</li>
-            <ul>
-              <li>&XercesCUnixLib;.so.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;.so.&XercesCUnixVersion;</li>
-              <li>symbolic link: &XercesCUnixLib;.so.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.so.&XercesCUnixSoName;</li>
-            </ul>
-            <li>HP-UX</li>
-            <ul>
-              <li>&XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.sl                      ----&gt; &XercesCUnixLib;.sl.&XercesCUnixVersion;</li>
-              <li>symbolic link: &XercesCUnixLib;.sl.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
-            </ul>
-         </ul>
-    </s3>
-
-    <anchor name="DirChange"/>
-    <s3 title="DOM Reorganization">
-        <p>1. The old Java-like DOM is now deprecated, and all the associated files, including the headers
-              and DOMParser files are moved to <code>src/xercesc/dom/deprecated</code>.  Users of the old
-              Java-like DOM are required to change all their #include lines to pick up the headers.
-              For example</p>
-<source>
-//old code
-#include &lt;xercesc/dom/DOM.hpp&gt;
-#include &lt;xercesc/dom/DOM_Document.hpp&gt;
-#include &lt;xercesc/parsers/DOMParser.hpp&gt;
-
-void test(char* xmlFile) {
-    DOMParser parser;
-    parser.parse(xmlFile);
-    DOM_Document doc = parser.getDocument();
-    :
-    return;
-}
-</source>
-              <p> should now change to </p>
-<source>
-//new code
-#include &lt;xercesc/dom/deprecated/DOM.hpp&gt;          //&lt;==== change this include line
-#include &lt;xercesc/dom/deprecated/DOM_Document.hpp&gt; //&lt;==== change this include line
-#include &lt;xercesc/dom/deprecated/DOMParser.hpp&gt;    //&lt;==== change this include line
-
-// the rest is the same
-void test(char* xmlFile) {
-    DOMParser parser;
-    parser.parse(xmlFile);
-    DOM_Document doc = parser.getDocument();
-    :
-    return;
-}
-</source>
-        <p>2. The Experimental IDOM is now renamed, and becomes the Apache Recommended DOM C++ Binding.
-              The following changes are made: </p>
-              <ul>
-                 <li>class names are renamed from IDOM_XXXX to DOMXXXX, e.g. IDOM_Document to DOMDocument</li>
-                 <li>and thus header files are renamed from IDOM_XXXX.hpp to DOMXXXX.hpp and are moved
-                     to <code>src/xercesc/dom</code></li>
-                 <li>the IDOMParser is renamed to XercesDOMParser.  And thus the header
-                     file is renamed as well</li>
-                 <li>the rest is the same, see
-                     <jump href="ApacheDOMC++Binding.html">Apache Recommended DOM C++ binding</jump>
-                     and <jump href="program-dom.html">DOM Programming Guide</jump> for more programming
-                     information</li>
-              </ul>
-              <p>Users of IDOM are required to change all their #include lines and do a global rename of
-                 IDOMParser to XercesDOMParesr, and IDOM_XXXX to DOMXXXX.  For example</p>
-<source>
-//old code
-#include &lt;xercesc/idom/IDOM.hpp&gt;
-#include &lt;xercesc/idom/IDOM_Document.hpp&gt;
-#include &lt;xercesc/parsers/IDOMParser.hpp&gt;
-
-void test(char* xmlFile) {
-    IDOMParser parser;
-    parser.parse(xmlFile);
-    IDOM_Document* doc = parser.getDocument();
-    :
-    return;
-}
-</source>
-              <p> should now change to </p>
-<source>
-//new code
-#include &lt;xercesc/dom/DOM.hpp&gt;                  //&lt;==== change this include line
-#include &lt;xercesc/dom/DOMDocument.hpp&gt;          //&lt;==== change this include line
-#include &lt;xercesc/parsers/XercesDOMParser.hpp&gt;  //&lt;==== change this include line
-
-void test(char* xmlFile) {
-    XercesDOMParser parser;                           //&lt;==== rename the IDOMParser
-    parser.parse(xmlFile);
-    DOMDocument* doc = parser.getDocument();          //&lt;==== rename the IDOM_XXXX
-    :
-    return;
-}
-</source>
-    </s3>
-
-    <anchor name="Reuse"/>
-    <s3 title="Reuse Grammar becomes Grammar Caching">
-        <p>The &XercesCName; &XercesCVersion; extends the "Reuse Grammar" support by replacing it with
-           a new feature called "Grammar Caching" which provides more flexibility in reusing grammars.
-           Users who used to do the following:</p>
-<source>
-
-      XercesDOMParser parser;
-
-      // this is the first parse, just usual code as you do normal parse
-      // "firstXmlFile" has a grammar (schema or DTD) specified.
-      parser.parse(firstXmlFile);
-
-      // this is the second parse, by setting second parameter to true,
-      // the parser will reuse the grammar in the last parse
-      // (i.e. the one in  "firstXmlFile")
-      // to validate the second "anotherXmlFile".  Any grammar that is
-      // specified in anotherXmlFile is IGNORED.
-      //
-      // Note: The anotherXmlFile cannot have any DTD internal subset.
-      parser.parse(anotherXmlFile, true);
-
-</source>
-        <p>should now use the features cacheGrammarFromParse and useCachedGrammarFromParse:</p>
-<source>
-      XercesDOMParser parser;
-
-      // By setting cacheGrammarFromParse to true,
-      // the parser will cache any grammars encountered in the
-      // follow-on xml files, if not cached already
-      parser.cacheGrammarFromParse(true);
-
-      parser.parse(firstXmlFile);
-
-      // By setting useCachedGrammarFromParse to true,
-      // the parser will use all the previous cached grammars
-      // to validate the follow-on xml files if the cached
-      // grammar matches the one specified in anotherXmlFile.
-      //
-      // Note: The follow-on xml files cannot have any DTD internal subset.
-      parser.useCachedGrammarFromParse(true);
-
-      parser.parse(anotherXmlFile);
-
-      // This will flush the cached grammar pool
-      parser.resetCachedGrammarPool();
-</source>
-
-        <p>Note there are a number of differences between "Reuse Grammar" and "Grammar Caching" </p>
-           <ol>
-              <li>"Reuse Grammar" ignores any grammar that is specified in anotherXmlFile and simply
-                  reuse whatever stored in previous parse; while "Grammar Caching" will use the
-                  cached grammar only if it matches the one specified in the anotherXmlFile.
-                  If not match, then the new grammar is parsed.</li>
-              <li>"Reuse Grammar" can only reuse the grammar from previous parse; while "Grammar Caching"
-                  can selectively cache many grammars from different parses and collect them all in a pool indexed
-                  by targetNamespace (for Schema) or system id (for DTD).</li>
-              <li>Plus "Grammar Caching" has much more functionalities other than above
-                  (like "Pre-parsing Grammar").  Please refer to
-                  <jump href="program-others.html#GrammarCache">Preparsing Grammar and Grammar Caching
-                  </jump> for more programming details.</li>
-           </ol>
-    </s3>
-
-    <anchor name="API"/>
+    <anchor name="API210"/>
     <s3 title="Public API Changes">
 
         <p>The following lists the public API changes between the &XercesCName;
-           1.7.0; and the &XercesCName; &XercesCVersion; releases
+           2.0.0; and the &XercesCName; &XercesCVersion; releases
            of the parser. </p>
 
-        <anchor name="NewAPI"/>
+        <anchor name="NewAPI210"/>
         <s4 title="New Public API">
             <ul>
-              <li>To support DOM Level 3, the following are added (see
-                  <jump href="api.html">the API documentation page</jump> for details).</li>
-                <ul>
-                  <li>DOMNode functions set/getUserData, isSameNode isEqualNode.</li>
-                  <li>DOMDocument functions renameNode, get/setActualEncoding, get/setEncoding, get/setVersion, get/setStandalone, get/setDocumentURI.</li>
-                  <li>DOMEntity functions get/setActualEncoding, get/setEncoding, get/setVersion.</li>
-                  <li>classes AbstractDOMParser, DOMError, DOMErrorHandler, and DOMLocator.</li>
-                  <li>classes DOMUserDataHandler, DOMImplementationRegistry and DOMImplementationSource.</li>
-                  <li>classes DOMBuilder, DOMEntityResolver, DOMImplementationLS, DOMInputSource,
-                      Wrapper4DOMInputSource and Wrapper4InputSource.</li>
-                  <li>classes DOMWriter, DOMWriterFilter, LocalFileFormatTarget, StdOutFormatTarget,
-                      and MemBufFormatTarget</li>
-                </ul>
-              <li>To support DOMWriter, the following PlatformUtils functions are added</li>
-                <ul>
-                   <li>openFileToWrite, writeBufferToFile</li>
-                </ul>
-              <li>To have Apache Recommended DOM C++ Binding, the following are added (see
-                  <jump href="ApacheDOMC++Binding.html">Apache Recommended DOM C++ binding).</jump></li>
-                <ul>
-                  <li>function release() to fix Memory Management problem</li>
-                  <li>classes DOMDocumentRange and DOMDocumentTraversal</li>
-                  <li>XMLSize_t is used to represent unsigned integral type in DOM</li>
-                  <li>IDOM_XXXX classes are renamed to DOMXXXX, and IDOMParser is renamed to XercesDOMParser
-                      as described in <link anchor="DirChange">DOM Reorganization</link></li>
-                  <li>XercesDOMParser::adoptDocument is added so that document can optionally live
-                  outside the parser.</li>
-                </ul>
-              <li>To support optionally load external DTD, the following are added:</li>
-                <ul>
-                  <li>XercesDOMParser::set/getLoadExternalDTD</li>
-                  <li>DOMParser::set/getLoadExternalDTD</li>
-                  <li>SAXParser::set/getLoadExternalDTD</li>
-                  <li>and SAX2XMLReader will recognize the feature
-                      http://apache.org/xml/features/nonvalidating/load-external-dtd</li>
-                </ul>
-              <li>To support Preparsing Grammar and Grammar Caching, the following are added:</li>
-                <ul>
-                   <li>XercesDOMParser/DOMParser/SAXParser functions loadGrammar, resetCachedGrammarPool,
-                       cacheGrammarFromParse, isCachingGrammarFromParse, useCachedGrammarInParse,
-                       isUsingCachedGrammarInParse.</li>
-                   <li>SAX2XMLReader functions loadGrammar, resetCachedGrammarPool, and will recognize the features
-                       http://apache.org/xml/features/validation/cache-grammarFromParse and
-                       http://apache.org/xml/features/validation/use-cachedGrammarInParse.</li>
-                </ul>
-              <li>To support access to Grammar info, the following are added:</li>
-                <ul>
-                   <li>XercesDOMParser/DOMParser/SAXParser/SAX2XMLReader functions getRootGrammar, getGrammar, getURIText.</li>
-                </ul>
-              <li>To support strict IANA encoding name checking, the following are added:</li>
-                <ul>
-                   <li>class EncodingValidator.</li>
-                   <li>PlatformUtils functions strictIANAEncoding, isStrictIANAEncoding.</li>
-                   <li>XMLTransService functions strictIANAEncoding, isStrictIANAEncoding.</li>
-                </ul>
+              <li>No new public API is introduced in this release.</li>
             </ul>
         </s4>
 
-        <anchor name="ModifiedAPI"/>
+        <anchor name="ModifiedAPI210"/>
         <s4 title="Modified Public API">
             <ul>
-              <li>SAXParser::getScanner() is moved from public to protected.</li>
-              <li>Grammar::getGrammarType has been added a const modifier.</li>
-              <li>Xerces features are renamed from XMLUni::fgSAX2XercesXXXX to XMLUni::fgXercesXXXX
-                  so that they can be shared with DOM parser.</li>
-              <li>With the new Grammar Caching introduced, the the last parameter "reuseGrammar" in
-                  the following API is dropped.
-                   Users should now use the "Grammar Caching" feature as described in
-                   <link anchor="Reuse">Reuse Grammar becomes Grammar Caching</link>.</li>
-                <ul>
-                   <li>(in Parser, SAXParser, DOMParser, and XercesDOMParser) </li>
-                   <li>parse(const InputSource&amp; source, const bool reuseGrammar = false);</li>
-                   <li>parse(const XMLCh* const systemId, const bool reuseGrammar = false);</li>
-                   <li>parse(const char* const systemId, const bool reuseGrammar = false);</li>
-                   <li>(in SAXParser, DOMParser, and XercesDOMParser) </li>
-                   <li>parseFirst(const InputSource&amp; source, XMLPScanToken&amp;  toFill, const bool reuseGrammar = false);</li>
-                   <li>parseFirst(const XMLCh* const systemId, XMLPScanToken&amp;  toFill, const bool reuseGrammar = false);</li>
-                   <li>parseFirst(const char* const systemId, XMLPScanToken&amp;  toFill, const bool reuseGrammar = false);</li>
-                </ul>
+              <li>DOMNodeList::item, and DOMNodeList::getLength have been added a const modifier.</li>
             </ul>
         </s4>
 
-        <anchor name="DeprecatedAPI"/>
+        <anchor name="DeprecatedAPI210"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
-              <li>The old Java-like DOM is now deprecated as described in
-                  <link anchor="DirChange">DOM Reorganization</link></li>
-              <li>SAX2XMLReader::setValidationConstraint.   For consistency, SAX2XMLReader users should
-                  set the feature http://apache.org/xml/features/validation-error-as-fatal" instead.</li>
-              <li>SAX2XMLReader::setExitOnFirstFatalError.  For consistency, SAX2XMLReader users should
-                  set the feature "http://apache.org/xml/features/continue-after-fatal-error" instead.</li>
-              <li>With the new Grammar Caching introduced, the following features will not be
-                  recognized by the SAX2XMLReader:</li>
-                <ul>
-                   <li>http://apache.org/xml/features/validation/reuse-grammar</li>
-                   <li>http://apache.org/xml/features/validation/reuse-validator</li>
-                </ul>
+              <li>No Deprecated Public API in this release.</li>
             </ul>
         </s4>
 

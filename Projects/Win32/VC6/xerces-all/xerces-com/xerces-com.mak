@@ -2,28 +2,28 @@
 !IF "$(CFG)" == ""
 CFG=xml4com - Win32 Debug
 !MESSAGE No configuration specified. Defaulting to xml4com - Win32 Debug.
-!ENDIF 
+!ENDIF
 
 !IF "$(CFG)" != "xml4com - Win32 Debug" && "$(CFG)" != "xml4com - Win32 Release MinDependency"
 !MESSAGE Invalid configuration "$(CFG)" specified.
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "xerces-com.mak" CFG="xml4com - Win32 Debug"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "xml4com - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "xml4com - Win32 Release MinDependency" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE 
+!MESSAGE
 !ERROR An invalid configuration is specified.
-!ENDIF 
+!ENDIF
 
 !IF "$(OS)" == "Windows_NT"
 NULL=
-!ELSE 
+!ELSE
 NULL=nul
-!ENDIF 
+!ENDIF
 
 !IF  "$(CFG)" == "xml4com - Win32 Debug"
 
@@ -33,21 +33,21 @@ INTDIR=.\..\..\..\..\..\Build\Win32\xml4com\Debug
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
+!IF "$(RECURSE)" == "0"
 
 ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\Debug\regsvr32.trg"
 
-!ELSE 
+!ELSE
 
 ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\Debug\regsvr32.trg"
 
-!ENDIF 
+!ENDIF
 
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 DebugCLEAN" 
-!ELSE 
+!IF "$(RECURSE)" == "1"
+CLEAN :"XercesLib - Win32 DebugCLEAN"
+!ELSE
 CLEAN :
-!ENDIF 
+!ENDIF
 	-@erase "$(INTDIR)\BindStatusCallback.obj"
 	-@erase "$(INTDIR)\StdAfx.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -83,48 +83,48 @@ CLEAN :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yu"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yu"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cpp{$(INTDIR)}.obj::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cxx{$(INTDIR)}.obj::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .c{$(INTDIR)}.sbr::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cpp{$(INTDIR)}.sbr::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cxx{$(INTDIR)}.sbr::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 MTL=midl.exe
 MTL_PROJ=
 RSC=rc.exe
-RSC_PROJ=/l 0x409 /fo"$(INTDIR)\xml4com.res" /d "_DEBUG" 
+RSC_PROJ=/l 0x409 /fo"$(INTDIR)\xml4com.res" /d "_DEBUG"
 BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\xerces-com.bsc" 
+BSC32_FLAGS=/o"$(OUTDIR)\xerces-com.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2D.lib /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-com.pdb" /debug /machine:I386 /def:"..\..\..\..\..\src\xercesc\com\xml4com.def" /out:"$(OUTDIR)\xerces-com.dll" /implib:"$(OUTDIR)\xerces-com.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2D.lib /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-com.pdb" /debug /machine:I386 /def:"..\..\..\..\..\src\xercesc\com\xml4com.def" /out:"$(OUTDIR)\xerces-com.dll" /implib:"$(OUTDIR)\xerces-com.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 DEF_FILE= \
 	"..\..\..\..\..\src\xercesc\com\xml4com.def"
 LINK32_OBJS= \
@@ -160,13 +160,13 @@ InputPath=\Xerces-Testing\Build\Win32\xml4com\Debug\xerces-com.dll
 SOURCE="$(InputPath)"
 
 "$(OUTDIR)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	<<tempfile.bat 
-	@echo off 
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_0_0D.dll "$(TargetDir)" 
-	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_0_0D.dll "$(TargetDir)" 
-	regsvr32 /s /c "$(TargetPath)" 
+	<<tempfile.bat
+	@echo off
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_1_0D.dll "$(TargetDir)"
+	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_1_0D.dll "$(TargetDir)"
+	regsvr32 /s /c "$(TargetPath)"
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg"
-<< 
+<<
 	
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinDependency"
@@ -177,21 +177,21 @@ INTDIR=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
+!IF "$(RECURSE)" == "0"
 
-ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_0_0.dll"
+ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_1_0.dll"
 
-!ELSE 
+!ELSE
 
-ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_0_0.dll"
+ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_1_0.dll"
 
-!ENDIF 
+!ENDIF
 
-!IF "$(RECURSE)" == "1" 
+!IF "$(RECURSE)" == "1"
 CLEAN :
-!ELSE 
+!ELSE
 CLEAN :
-!ENDIF 
+!ENDIF
 	-@erase "$(INTDIR)\BindStatusCallback.obj"
 	-@erase "$(INTDIR)\StdAfx.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -219,54 +219,54 @@ CLEAN :
 	-@erase "..\..\..\..\..\src\xercesc\com\xml4com.h"
 	-@erase "..\..\..\..\..\src\xercesc\com\xml4com_i.c"
 	-@erase ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg"
-	-@erase "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_0_0.dll"
+	-@erase "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_1_0.dll"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yu"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yu"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cpp{$(INTDIR)}.obj::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cxx{$(INTDIR)}.obj::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .c{$(INTDIR)}.sbr::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cpp{$(INTDIR)}.sbr::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 .cxx{$(INTDIR)}.sbr::
    $(CPP) @<<
-   $(CPP_PROJ) $< 
+   $(CPP_PROJ) $<
 <<
 
 MTL=midl.exe
 MTL_PROJ=
 RSC=rc.exe
-RSC_PROJ=/l 0x409 /fo"$(INTDIR)\xml4com.res" /d "NDEBUG" 
+RSC_PROJ=/l 0x409 /fo"$(INTDIR)\xml4com.res" /d "NDEBUG"
 BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\xerces-com.bsc" 
+BSC32_FLAGS=/o"$(OUTDIR)\xerces-com.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2.lib /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-com.pdb" /machine:I386 /def:"..\..\..\..\..\src\xercesc\com\xml4com.def" /out:"$(OUTDIR)\xerces-com.dll" /implib:"$(OUTDIR)\xerces-com.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2.lib /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-com.pdb" /machine:I386 /def:"..\..\..\..\..\src\xercesc\com\xml4com.def" /out:"$(OUTDIR)\xerces-com.dll" /implib:"$(OUTDIR)\xerces-com.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 DEF_FILE= \
 	"..\..\..\..\..\src\xercesc\com\xml4com.def"
 LINK32_OBJS= \
@@ -300,26 +300,26 @@ TargetPath=\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.d
 InputPath=\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
 SOURCE="$(InputPath)"
 
-"$(OUTDIR)\xerces-c_2_0_0.dll"	"$(OUTDIR)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	<<tempfile.bat 
-	@echo off 
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_0_0.dll $(TargetDir) 
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_0_0.dll $(TargetDir) 
-	regsvr32 /s /c "$(TargetPath)" 
+"$(OUTDIR)\xerces-c_2_1_0.dll"	"$(OUTDIR)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	<<tempfile.bat
+	@echo off
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_1_0.dll $(TargetDir)
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_1_0.dll $(TargetDir)
+	regsvr32 /s /c "$(TargetPath)"
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg"
-<< 
+<<
 	
 
-!ENDIF 
+!ENDIF
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
 !IF EXISTS("xerces-com.dep")
 !INCLUDE "xerces-com.dep"
-!ELSE 
+!ELSE
 !MESSAGE Warning: cannot find "xerces-com.dep"
-!ENDIF 
-!ENDIF 
+!ENDIF
+!ENDIF
 
 
 !IF "$(CFG)" == "xml4com - Win32 Debug" || "$(CFG)" == "xml4com - Win32 Release MinDependency"
@@ -333,7 +333,7 @@ SOURCE=..\..\..\..\..\src\xercesc\com\StdAfx.cpp
 
 !IF  "$(CFG)" == "xml4com - Win32 Debug"
 
-CPP_SWITCHES=/MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yc"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_SWITCHES=/MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yc"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c
 
 "$(INTDIR)\StdAfx.obj"	"$(INTDIR)\xerces-com.pch" : $(SOURCE) "$(INTDIR)"
 	$(CPP) @<<
@@ -343,7 +343,7 @@ CPP_SWITCHES=/MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinDependency"
 
-CPP_SWITCHES=/MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yc"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_SWITCHES=/MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Fp"$(INTDIR)\xerces-com.pch" /Yc"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c
 
 "$(INTDIR)\StdAfx.obj"	"$(INTDIR)\xerces-com.pch" : $(SOURCE) "$(INTDIR)"
 	$(CPP) @<<
@@ -351,7 +351,7 @@ CPP_SWITCHES=/MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xerc
 <<
 
 
-!ENDIF 
+!ENDIF
 
 SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.cpp
 
@@ -363,7 +363,7 @@ SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.idl
 
 !IF  "$(CFG)" == "xml4com - Win32 Debug"
 
-MTL_SWITCHES=/I "..\..\..\..\..\src\xercesc\com" /tlb "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" /h "..\..\..\..\..\src\xercesc\com\xml4com.h" /iid "..\..\..\..\..\src\xercesc\com\xml4com_i.c" 
+MTL_SWITCHES=/I "..\..\..\..\..\src\xercesc\com" /tlb "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" /h "..\..\..\..\..\src\xercesc\com\xml4com.h" /iid "..\..\..\..\..\src\xercesc\com\xml4com_i.c"
 
 "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"	"..\..\..\..\..\src\xercesc\com\xml4com.h"	"..\..\..\..\..\src\xercesc\com\xml4com_i.c" : $(SOURCE) "$(INTDIR)"
 	$(MTL) @<<
@@ -373,7 +373,7 @@ MTL_SWITCHES=/I "..\..\..\..\..\src\xercesc\com" /tlb "..\..\..\..\..\Build\Win3
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinDependency"
 
-MTL_SWITCHES=/I "..\..\..\..\..\src\xercesc\com" /tlb "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" /h "..\..\..\..\..\src\xercesc\com\xml4com.h" /iid "..\..\..\..\..\src\xercesc\com\xml4com_i.c" 
+MTL_SWITCHES=/I "..\..\..\..\..\src\xercesc\com" /tlb "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" /h "..\..\..\..\..\src\xercesc\com\xml4com.h" /iid "..\..\..\..\..\src\xercesc\com\xml4com_i.c"
 
 "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"	"..\..\..\..\..\src\xercesc\com\xml4com.h"	"..\..\..\..\..\src\xercesc\com\xml4com_i.c" : $(SOURCE) "$(INTDIR)"
 	$(MTL) @<<
@@ -381,7 +381,7 @@ MTL_SWITCHES=/I "..\..\..\..\..\src\xercesc\com" /tlb "..\..\..\..\..\Build\Win3
 <<
 
 
-!ENDIF 
+!ENDIF
 
 SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.rc
 
@@ -399,7 +399,7 @@ SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.rc
 	$(RSC) /l 0x409 /fo"$(INTDIR)\xml4com.res" /i "\Xerces-Testing\src\xercesc\com" /d "NDEBUG" $(SOURCE)
 
 
-!ENDIF 
+!ENDIF
 
 SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMAttribute.cpp
 
@@ -487,20 +487,20 @@ SOURCE=..\..\..\..\..\src\xercesc\com\XMLHTTPRequest.cpp
 
 !IF  "$(CFG)" == "xml4com - Win32 Debug"
 
-"XercesLib - Win32 Debug" : 
+"XercesLib - Win32 Debug" :
    cd "..\XercesLib"
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug" 
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug"
    cd "..\xerces-com"
 
-"XercesLib - Win32 DebugCLEAN" : 
+"XercesLib - Win32 DebugCLEAN" :
    cd "..\XercesLib"
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug" RECURSE=1 CLEAN 
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug" RECURSE=1 CLEAN
    cd "..\xerces-com"
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinDependency"
 
-!ENDIF 
+!ENDIF
 
 
-!ENDIF 
+!ENDIF
 
