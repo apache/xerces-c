@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/11/11 04:16:03  peiyongz
+ * Build with ICU3.2
+ *
  * Revision 1.25  2004/11/08 03:10:40  peiyongz
  * Using different package name for windows/Unix
  *
@@ -133,6 +136,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include "ICUMsgLoader.hpp"
+#include "unicode/putil.h"
 #include "unicode/uloc.h"
 #include "unicode/udata.h" 
 
