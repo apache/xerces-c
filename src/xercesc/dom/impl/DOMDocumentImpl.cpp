@@ -998,7 +998,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* source) {
 void DOMDocumentImpl::normalizeDocument() {
 
     if(!fNormalizer) 
-        fNormalizer = new (fMemoryManager) DOMNormalizer();
+        fNormalizer = new (fMemoryManager) DOMNormalizer(fMemoryManager);
 
     fNormalizer->normalizeDocument(this);
 }

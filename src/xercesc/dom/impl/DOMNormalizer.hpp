@@ -85,12 +85,13 @@ class DOMNamedNodeMap;
 class DOMNormalizer : public XMemory {
 
     //the following are the data structures maintain the stack of namespace information 
-    class InScopeNamespaces {
-        class Scope {
+    class InScopeNamespaces : public XMemory {
+        class Scope : public XMemory {
         public:
             Scope(Scope *baseScopeWithBindings);
             ~Scope();
-            void addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri);
+            void addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri,
+                                    MemoryManager* const manager);
             const XMLCh* getUri(const XMLCh *prefix) const;
             const XMLCh* getPrefix(const XMLCh* uri) const;
             Scope *fBaseScopeWithBindings;
@@ -101,10 +102,11 @@ class DOMNormalizer : public XMemory {
         };
 
     public:    
-        InScopeNamespaces();
+        InScopeNamespaces(MemoryManager* const manager);
         ~InScopeNamespaces();
-        void addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri);
-        void addScope();
+        void addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri,
+                                MemoryManager* const manager);
+        void addScope(MemoryManager* const manager);
         void removeScope();
         bool isValidBinding(const XMLCh* prefix, const XMLCh* uri) const;
         const XMLCh* getOrDeclarePrefix(const XMLCh* uri);
@@ -118,7 +120,7 @@ class DOMNormalizer : public XMemory {
     };
 
 public:
-    DOMNormalizer();
+    DOMNormalizer(MemoryManager* const manager);
     ~DOMNormalizer();
 
     /**

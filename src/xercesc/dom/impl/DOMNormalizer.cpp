@@ -160,12 +160,15 @@ static XMLMsgLoader& gNormalizerMsgLoader()
 }
 
 
-DOMNormalizer::DOMNormalizer() 
+DOMNormalizer::DOMNormalizer(MemoryManager* const manager) 
     : fDocument(0)
+    , fConfiguration(0)
+    , fErrorHandler(0)
+    , fNSScope(0)
     , fNewNamespaceCount(1)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
-    fNSScope = new InScopeNamespaces();
+    fNSScope = new (fMemoryManager) InScopeNamespaces(fMemoryManager);
 };
 
 DOMNormalizer::~DOMNormalizer() {
@@ -198,7 +201,7 @@ void DOMNormalizer::normalizeDocument(DOMDocumentImpl *doc) {
 DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
     switch(node->getNodeType()) {
     case DOMNode::ELEMENT_NODE: {
-        fNSScope->addScope();
+        fNSScope->addScope(fMemoryManager);
         DOMNamedNodeMap *attrMap = node->getAttributes();
 
         if(fConfiguration->featureValues & DOMConfigurationImpl::FEATURE_NAMESPACES) {
@@ -297,10 +300,10 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
                 const XMLCh *prefix = at->getPrefix();
                 
                 if(XMLString::equals(prefix, XMLUni::fgXMLNSString)) {
-                    fNSScope->addOrChangeBinding(at->getLocalName(), value);
+                    fNSScope->addOrChangeBinding(at->getLocalName(), value, fMemoryManager);
                 }
                 else {
-                    fNSScope->addOrChangeBinding(XMLUni::fgZeroLenString, value);
+                    fNSScope->addOrChangeBinding(XMLUni::fgZeroLenString, value, fMemoryManager);
                 }
             }
         }
@@ -314,7 +317,7 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
     if(!XMLString::equals(uri, XMLUni::fgZeroLenString)) {
         if(!fNSScope->isValidBinding(prefix, uri)) {
             addOrChangeNamespaceDecl(prefix, uri, ele);
-            fNSScope->addOrChangeBinding(prefix, uri);
+            fNSScope->addOrChangeBinding(prefix, uri, fMemoryManager);
         }
     }
     else {
@@ -323,7 +326,7 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
         }
         else if(!fNSScope->isValidBinding(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString)) {
             addOrChangeNamespaceDecl(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, ele);
-            fNSScope->addOrChangeBinding(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString);
+            fNSScope->addOrChangeBinding(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, fMemoryManager);
         }
     }
 
@@ -348,12 +351,12 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
                     }
                     else {
                         if(prefix != 0 && !fNSScope->getUri(prefix)) {
-                            fNSScope->addOrChangeBinding(prefix, uri);
+                            fNSScope->addOrChangeBinding(prefix, uri, fMemoryManager);
                             addOrChangeNamespaceDecl(prefix, uri, ele);
                         }
                         else {
                             newPrefix = addCustomNamespaceDecl(uri, ele);
-                            fNSScope->addOrChangeBinding(newPrefix, uri);
+                            fNSScope->addOrChangeBinding(newPrefix, uri, fMemoryManager);
                             at->setPrefix(newPrefix);
                         }
                     }
@@ -369,7 +372,7 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
 
 
 const XMLCh * DOMNormalizer::integerToXMLCh(unsigned int i) const {
-    XMLCh *buf = new XMLCh[15];
+    XMLCh *buf = (XMLCh*) fMemoryManager->allocate(15 * sizeof(XMLCh));//new XMLCh[15];
 	XMLCh *pos = buf + sizeof(buf) - sizeof(XMLCh);
 	*pos = chNull;
 
@@ -391,7 +394,7 @@ const XMLCh * DOMNormalizer::integerToXMLCh(unsigned int i) const {
 	} while (i);
 
     const XMLCh *copy = fDocument->getPooledString(pos);
-    delete[] buf;
+    fMemoryManager->deallocate(buf);//delete[] buf;
 	return copy;
 }
 
@@ -440,28 +443,31 @@ int DOMNormalizer::InScopeNamespaces::size() {
     return fScopes->size();
 }
 
-DOMNormalizer::InScopeNamespaces::InScopeNamespaces() : lastScopeWithBindings(0) {
-    fScopes = new RefVectorOf<Scope>(10);
+DOMNormalizer::InScopeNamespaces::InScopeNamespaces(MemoryManager* const manager)
+: lastScopeWithBindings(0)
+{
+    fScopes = new (manager) RefVectorOf<Scope>(10, true, manager);
 }
 
 DOMNormalizer::InScopeNamespaces::~InScopeNamespaces() {
     delete fScopes;
 }
 
-void DOMNormalizer::InScopeNamespaces::addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri) {
+void DOMNormalizer::InScopeNamespaces::addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri,
+                                                          MemoryManager* const manager) {
     unsigned int s = fScopes->size();
 
     if(!s)
-        addScope();
+        addScope(manager);
     
     Scope *curScope = fScopes->elementAt(s - 1);
-    curScope->addOrChangeBinding(prefix, uri);
+    curScope->addOrChangeBinding(prefix, uri, manager);
 
     lastScopeWithBindings = curScope;
 }
 
-void DOMNormalizer::InScopeNamespaces::addScope() {
-    Scope *s = new Scope(lastScopeWithBindings);
+void DOMNormalizer::InScopeNamespaces::addScope(MemoryManager* const manager) {
+    Scope *s = new (manager) Scope(lastScopeWithBindings);
     fScopes->addElement(s);
 }
 
@@ -497,11 +503,12 @@ DOMNormalizer::InScopeNamespaces::Scope::~Scope() {
     delete fUriHash;
 }
 
-void DOMNormalizer::InScopeNamespaces::Scope::addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri) {
+void DOMNormalizer::InScopeNamespaces::Scope::addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri,
+                                                                 MemoryManager* const manager) {
     //initialize and copy forward now we need to
     if(!fUriHash) {
-        fPrefixHash = new RefHashTableOf<XMLCh>(10, (bool) false);
-        fUriHash = new RefHashTableOf<XMLCh>(10, (bool) false);
+        fPrefixHash = new (manager) RefHashTableOf<XMLCh>(10, (bool) false, manager);
+        fUriHash = new (manager) RefHashTableOf<XMLCh>(10, (bool) false, manager);
         
         if(fBaseScopeWithBindings) {
             RefHashTableOfEnumerator<XMLCh> preEnumer(fBaseScopeWithBindings->fPrefixHash);
