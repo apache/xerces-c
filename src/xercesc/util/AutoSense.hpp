@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/08/23 20:56:00  tng
+ * [Bug 11981] inproper "AND" operator in AutoSense.hpp.
+ *
  * Revision 1.5  2002/08/19 18:35:56  tng
  * [Bug 6467] Installing Xerces C++ on cygwin environment.
  *
@@ -245,9 +248,9 @@
 #elif defined(__xlC__)
     #define XML_CSET
 #elif defined(XML_SOLARIS)
-    #if defined(__SUNPRO_CC) & __SUNPRO_CC >=0x500
+    #if defined(__SUNPRO_CC) && (__SUNPRO_CC >=0x500)
         #define XML_SUNCC5
-	#elif defined(__SUNPRO_CC) & __SUNPRO_CC <0x500
+	#elif defined(__SUNPRO_CC) && (__SUNPRO_CC <0x500)
         #define XML_SUNCC
     #elif defined(_EDG_RUNTIME_USES_NAMESPACES)
         #define XML_SOLARIS_KAICC
