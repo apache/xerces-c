@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/01/18 23:57:35  rahulj
+ * Now exploting C++ features to compact the sample code.
+ *
  * Revision 1.1  2000/01/18 23:22:18  rahulj
  * Added new sample to illustrate how to create a DOM tree in
  * memory.
@@ -130,31 +133,23 @@ int main(int argC, char* argV[])
 
     DOM_Element rootElem = doc.getDocumentElement();
 
-    DOMString   prodElemName("product");
-    DOM_Element  prodElem = doc.createElement(prodElemName);
+    DOM_Element  prodElem = doc.createElement("product");
     rootElem.appendChild(prodElem);
 
-    DOMString   prodDataValStr("Xerces-C");
-    DOM_Text    prodDataVal = doc.createTextNode(prodDataValStr);
+    DOM_Text    prodDataVal = doc.createTextNode("Xerces-C");
     prodElem.appendChild(prodDataVal);
 
-    DOMString   catElemName("category");
-    DOM_Element  catElem = doc.createElement(catElemName);
+    DOM_Element  catElem = doc.createElement("category");
     rootElem.appendChild(catElem);
-    DOMString   ideaAttrName("idea");
-    DOMString   ideaAttrValue("great");
-    catElem.setAttribute(ideaAttrName, ideaAttrValue);
+    catElem.setAttribute("idea", "great");
 
-    DOMString   catDataValStr("XML Parsing Tools");
-    DOM_Text    catDataVal = doc.createTextNode(catDataValStr);
+    DOM_Text    catDataVal = doc.createTextNode("XML Parsing Tools");
     catElem.appendChild(catDataVal);
 
-    DOMString   devByElemName("developedBy");
-    DOM_Element  devByElem = doc.createElement(devByElemName);
+    DOM_Element  devByElem = doc.createElement("developedBy");
     rootElem.appendChild(devByElem);
     
-    DOMString   devByDataValStr("Apache Software Foundation");
-    DOM_Text    devByDataVal = doc.createTextNode(devByDataValStr);
+    DOM_Text    devByDataVal = doc.createTextNode("Apache Software Foundation");
     devByElem.appendChild(devByDataVal);
 
     unsigned int elementCount = doc.getElementsByTagName("*").getLength();
