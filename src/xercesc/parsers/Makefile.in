@@ -77,8 +77,7 @@ include ../Makefile.incl
 MODULE = parsers
 
 PARSERS_CPP_PUBHEADERS = \
-	DOMParser.hpp \
-	IDOMParser.hpp \
+	XercesDOMParser.hpp \
 	SAXParser.hpp \
 	SAX2XMLReaderImpl.hpp
 
@@ -87,8 +86,7 @@ PARSERS_CPP_PRIVHEADERS =
 PARSERS_C_FILES =
 
 PARSERS_CPP_OBJECTS = \
-	DOMParser.$(TO) \
-	IDOMParser.$(TO) \
+	XercesDOMParser.$(TO) \
 	SAXParser.$(TO) \
 	SAX2XMLReaderImpl.$(TO)
 
