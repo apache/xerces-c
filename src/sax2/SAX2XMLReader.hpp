@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/01/02 15:36:54  tng
+ * Some documentation update.
+ *
  * Revision 1.14  2001/11/20 18:51:44  tng
  * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
  *
@@ -222,15 +225,15 @@ public:
 	/**
      * Query the current value of a property in a SAX2 XMLReader.
      *
-     * The parser owns the returned pointer, and the memory allocated for
+     * The parser owns the returned pointer.  The memory allocated for
      * the returned pointer will be destroyed when the parser is deleted.
      *
      * To ensure assessiblity of the returned information after the parser
      * is deleted, callers need to copy and store the returned information
-     * somewhere else; other you may get unexpected result.  Since the returned
+     * somewhere else; otherwise you may get unexpected result.  Since the returned
      * pointer is a generic void pointer, see
      * http://xml.apache.org/xerces-c/program.html#SAX2Properties to learn
-     * exactly what type of object each property returns for replication.
+     * exactly what type of property value each property returns for replication.
      *
      * @param name The unique identifier (URI) of the property being set.
      * @return     The current value of the property.  The pointer spans the same
