@@ -182,6 +182,7 @@ public :
     static const XMLCh fgXMLURIName[];
     static const XMLCh fgYesString[];
     static const XMLCh fgZeroLenString[];
+    static const XMLCh fgDTDEntityString[];
 
 
     // Exception Name
@@ -219,8 +220,6 @@ public :
 
     // Xerces features/properties names
     static const XMLCh fgXercesDynamic[];
-    static const XMLCh fgXercesReuseValidator[];
-    static const XMLCh fgXercesReuseGrammar[];
     static const XMLCh fgXercesSchema[];
     static const XMLCh fgXercesSchemaFullChecking[];
     static const XMLCh fgXercesSchemaExternalSchemaLocation[];
@@ -229,6 +228,8 @@ public :
     static const XMLCh fgXercesContinueAfterFatalError[];
     static const XMLCh fgXercesValidationErrorAsFatal[];
     static const XMLCh fgXercesUserAdoptsDOMDocument[];
+    static const XMLCh fgXercesCacheGrammarFromParse[];
+    static const XMLCh fgXercesUseCachedGrammarInParse[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];

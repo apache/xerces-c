@@ -608,6 +608,11 @@ const XMLCh XMLUni::fgYesString[] =
 
 const XMLCh XMLUni::fgZeroLenString[] = { chNull };
 
+const XMLCh XMLUni::fgDTDEntityString[] =
+{
+    chOpenSquare, chLatin_d, chLatin_t, chLatin_d, chCloseSquare, chNull
+};
+
 //Exception strings
 const XMLCh XMLUni::fgArrayIndexOutOfBoundsException_Name[] =
 {
@@ -872,20 +877,6 @@ const XMLCh XMLUni::fgXercesDynamic[] =
     ,   chLatin_d, chLatin_y, chLatin_n, chLatin_a, chLatin_m, chLatin_i, chLatin_c, chNull
 };
 
-//Xerces: http://apache.org/xml/features/validation/reuse-grammar
-const XMLCh XMLUni::fgXercesReuseGrammar[] =
-{
-        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
-    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
-    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
-    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
-    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
-    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
-    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
-    ,   chLatin_r, chLatin_e, chLatin_u, chLatin_s, chLatin_e, chDash, chLatin_g
-    ,   chLatin_r, chLatin_a,	chLatin_m, chLatin_m, chLatin_a, chLatin_r, chNull
-};
-
 //Xerces: http://apache.org/xml/features/validation/schema
 const XMLCh XMLUni::fgXercesSchema[] =
 {
@@ -958,22 +949,6 @@ const XMLCh XMLUni::fgXercesValidationErrorAsFatal[] =
     ,   chLatin_f, chLatin_a, chLatin_t, chLatin_a, chLatin_l, chNull
 };
 
-//deprecated
-//Xerces: http://apache.org/xml/features/validation/reuse-validator
-const XMLCh XMLUni::fgXercesReuseValidator[] =
-{
-        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
-    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
-    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
-    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
-    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
-    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
-    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
-    ,   chLatin_r, chLatin_e, chLatin_u, chLatin_s, chLatin_e, chDash, chLatin_v
-    ,   chLatin_a, chLatin_l, chLatin_i, chLatin_d, chLatin_a, chLatin_t
-    ,   chLatin_o, chLatin_r, chNull
-};
-
 
 //Property
 //Xerces: http://apache.org/xml/properties/schema/external-schemaLocation
@@ -1021,8 +996,41 @@ const XMLCh XMLUni::fgXercesUserAdoptsDOMDocument[] =
     ,   chLatin_u, chLatin_s, chLatin_e, chLatin_r, chDash
     ,   chLatin_a, chLatin_d, chLatin_o, chLatin_p, chLatin_t, chLatin_s, chDash
     ,   chLatin_D, chLatin_O, chLatin_M
-    ,   chLatin_d, chLatin_o, chLatin_c, chLatin_u, chLatin_m, chLatin_e, chLatin_n, chLatin_t, chNull
+    ,   chLatin_D, chLatin_o, chLatin_c, chLatin_u, chLatin_m, chLatin_e, chLatin_n, chLatin_t, chNull
 };
+
+//Xerces: http://apache.org/xml/features/validation/cache-grammarFromParse
+const XMLCh XMLUni::fgXercesCacheGrammarFromParse[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_c, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chDash, chLatin_g
+    ,   chLatin_r, chLatin_a, chLatin_m, chLatin_m, chLatin_a, chLatin_r
+    ,   chLatin_F, chLatin_r, chLatin_o, chLatin_m, chLatin_P, chLatin_a, chLatin_r
+    ,   chLatin_s, chLatin_e, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/use-cachedGrammarInParse
+const XMLCh XMLUni::fgXercesUseCachedGrammarInParse[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_u, chLatin_s, chLatin_e, chDash, chLatin_c, chLatin_a, chLatin_c
+    ,   chLatin_h, chLatin_e, chLatin_d, chLatin_G, chLatin_r, chLatin_a, chLatin_m
+    ,   chLatin_m, chLatin_a, chLatin_r, chLatin_I, chLatin_n, chLatin_P, chLatin_r
+    ,   chLatin_s, chLatin_e, chNull
+};
+
 
 //Introduced in DOM Level 3
 const XMLCh XMLUni::fgDOMCanonicalForm[] =
