@@ -194,6 +194,15 @@ public:
      *
      * The above are since DOM Level 2
      * @since DOM Level 2
+     *
+     * <p><code>VALIDATION_ERR:</code>
+     * If a call to a method such as <code>insertBefore</code> or
+     * <code>removeChild</code> would make the <code>Node</code> invalid
+     * with respect to "partial validity", this exception would be raised
+     * and the operation would not be done.
+     *
+     * The above is since DOM Level 2
+     * @since DOM Level 3
      */
     enum ExceptionCode {
          INDEX_SIZE_ERR       = 1,
@@ -210,7 +219,8 @@ public:
          SYNTAX_ERR     = 12,
          INVALID_MODIFICATION_ERR    = 13,
          NAMESPACE_ERR     = 14,
-         INVALID_ACCESS_ERR   = 15
+         INVALID_ACCESS_ERR   = 15,
+         VALIDATION_ERR       = 16
         };
     //@}
 
