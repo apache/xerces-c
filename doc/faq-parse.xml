@@ -272,6 +272,11 @@ catch (const XMLException&amp; toCatch) {
       <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
          should match the number of XMLPlatformUtils::Initialize() calls.
       </p>
+
+      <p>If you are using XML4C where ICU is used, you may call ICU function u_cleanup() to clean up
+         ICU static data.  Please see <jump href="http://oss.software.ibm.com/icu/">ICU documentation</jump>
+         for details.
+      </p>
     </a>
   </faq>
 
@@ -292,6 +297,11 @@ catch (const XMLException&amp; toCatch) {
 
       <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
          should match the number of XMLPlatformUtils::Initialize() calls.
+      </p>
+
+      <p>If you are using XML4C where ICU is used, you may call ICU function u_cleanup() to clean up
+         ICU static data.  Please see <jump href="http://oss.software.ibm.com/icu/">ICU documentation</jump>
+         for details.
       </p>
     </a>
   </faq>
