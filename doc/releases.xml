@@ -1,0 +1,46 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="Releases">
+
+<s2 title="&XercesCFullName; Version 1.1.0: January 28, 2000">
+        <ul>
+        <li>Simplified platform support (removed need to support local standard output streams or to find the location of the parser DLL/SharedLib.)</li>
+				<li>Added support for the NetAccessor plug in abstraction, which allows the parser to support HTTP/FTP based data sources</li>
+				<li>Added EBCDIC-US and ISO-8859-1 as intrinsic encodings</li>
+				<li>Added more DOM Level II features</li>
+				<li>Support for ICU 1.4, which makes &XercesCName; Unicode 3.0 compliant when using ICU</li>
+				<li>New samples and tests (DOM test, programmatic DOM sample, thread test)</li>
+				<li>Added support for multiply nested entities using relative paths or URLs</li>
+				<li>Significant internal architecture improvements in the handling of encodings and transcoding services.</li>
+        </ul>
+    </s2>
+    <s2 title="&XercesCFullName; Version 1.0.1: December 15, 1999">
+        <ul>
+            <li>Port to Solaris.</li>
+            <li>Improved error recovery and clarified error messages.</li>
+            <li>Added DOMTest program.</li>
+        </ul>
+    </s2>
+
+    <s2 title="&XercesCFullName; Version 1.0.0: December 7, 1999">
+        <ul>
+            <li>Released &XercesCName; after incorporating ICU as a value-added plug-in.</li>
+            <li>Has bug fixes, better conformance, better speed and cleaner internal internal architecture</li>
+            <li>Three additional samples added: PParse, StdInParse and EnumVal</li>
+            <li>Experimental DOM Level 2 support</li>
+            <li>Support for namespaces</li>
+            <li>Loadable message text enabling future translations to be easily plugged-in</li>
+            <li>Pluggable validators</li>
+            <li>Pluggable transcoders</li>
+            <li>Reorganized the util directory to better manage different platforms and compilers</li>
+        </ul>
+    </s2>
+
+    <s2 title="&XercesCFullName; November 5, 1999">
+        <ul>
+            <li>Created initial code base derived from IBM's XML4C Version 2.0</li>
+            <li>Modified documentation to reflect new name (Xerces-C)</li>
+        </ul>
+    </s2>
+</s1>

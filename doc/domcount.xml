@@ -1,0 +1,48 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 3">
+
+    <s2 title="DOMCount">
+        <p>DOMCount uses the provided DOM API to parse an XML file, 
+		constructs the DOM tree and walks through the tree counting 
+		the elements (using just one API call).</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked DOMCount.</p>
+        </s3>
+		
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd DOMCount
+gmake</source>
+        <p>This will create the object files in the current directory 
+		and the executable named DOMCount in ' &XercesCInstallDir;-linux/bin' 
+		directory.</p>
+
+        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running DOMCount">
+
+          <p>The DOMCount sample parses an XML file and prints out a count of the number of
+          elements in the file. To run DOMCount, enter the following </p>
+<source>DOMCount &lt;XML file&gt;</source>
+          <p>To use the validating parser, use </p>
+<source>DOMCount -v &lt;XML file&gt;</source>
+          <p>Here is a sample output from DOMCount</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+DOMCount -v personal.xml
+personal.xml: 20 ms (37 elems)</source>
+
+          <p>The output of both versions should be same.</p>
+
+          <note>The time reported by the system may be different, depending on your
+          processor type.</note>
+        </s3>
+    </s2>
+</s1>

@@ -1,0 +1,89 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCFullName;">
+
+    <s2 title="&XercesCName;++ Version &XercesCVersion;">
+
+		<p>&XercesCName; is a validating XML parser written in a portable subset of C++.
+		&XercesCName; makes it easy to give your application the ability to read and write 
+		<jump href="http://www.w3.org/XML/">XML</jump> data. 
+		A shared library is	provided for parsing, generating, manipulating, and validating XML
+		documents. &XercesCName; is faithful to the 
+		<jump href="http://www.w3.org/TR/1998/REC-xml-19980210">XML 1.0</jump> recommendation
+		and associated standards (
+		<jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM 1.0</jump>, 
+		<jump href="http://www.megginson.com/SAX/index.html">SAX 1.0</jump>, 
+		<jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>). It also provides
+		early implementations of 
+		<jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2 version 1.0</jump> 
+		and soon it will support
+		<jump href="http://www.w3.org/XML/Group/Schemas.html">XMLSchema</jump>, both the 
+		<jump href="http://www.w3.org/TR/xmlschema-1/structures.html">Structures</jump> and the 
+		<jump href="http://www.w3.org/TR/xmlschema-2/datatypes.html">Datatypes</jump>. 
+		The parser provides high performance, modularity, and scalability.
+		Source code, samples and API documentation are provided with the parser. For
+		portability, care has been taken to make minimal use of templates,
+		no RTTI, no C++ namespaces, limited use of exceptions and minimal
+		use of #ifdefs.</p>
+		
+		<p>&XercesCName; is fully compliant with 
+		<jump href="http://www.unicode.org/unicode/standard/versions/Unicode3.0.html">Unicode 3.0</jump> 
+		specification, making it the first Unicode 3.0 compliant application.</p>
+	</s2>
+
+	<s2 title="Applications of the &XercesCProjectName; Parser">
+
+		<p>&XercesCProjectName; has rich generating and validating capabilities. The parser is used for:</p>
+		
+		<ul>
+		    <li>Building XML-savvy Web servers</li>
+		    <li>Building next generation of vertical applications that use XML as
+		      their data format</li>
+		    <li>On-the-fly validation for creating XML editors</li>
+		    <li>Ensuring the integrity of e-business data expressed in XML</li>
+		    <li>Building truly internationalized XML applications</li>
+		</ul>
+	</s2>
+		
+	<s2 title="Features">
+		<ul>
+			<li>Conforms to <jump href="http://www.w3.org/TR/1998/REC-xml-19980210">XML Spec 1.0</jump></li>
+			<li>Tracking of latest 
+			<jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM (Level 1.0)</jump>, 
+			<jump href="http://www.megginson.com/SAX/index.html">SAX</jump> and 
+			<jump href="http://www.w3.org/TR/REC-xml-names/">Namespace</jump> specifications.</li>
+			<li>Experimental 
+			<jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2.0</jump> implementation</li>
+			<li>Source code, samples, and documentation is provided.</li>
+			<li>Programmatic generation and validation of XML</li>
+			<li>Pluggable catalogs, validators and encodings</li>
+			<li>High performance</li>
+			<li>Customizable error handling</li>
+		</ul>
+    </s2>
+
+    <s2 title="Platforms with Binaries">
+	    <ul>
+	        <li>Win32 (MSVC 6.0 compiler)</li>
+	        <li>Linux (RedHat 6.0)</li>
+	        <li>Solaris 2.6</li>
+	        <li>AIX 4.1.5 and higher</li>
+	        <li>HP-UX 10.2 (aCC and CC)</li>
+	        <li>HP-UX 11 (aCC and CC)</li>
+	    </ul>
+    </s2>
+
+    <s2 title="Platforms Coming Soon">
+	    <ul>
+	        <li>FreeBSD</li>
+	        <li>SGI IRIX</li>
+	        <li>Unixware</li>
+	        <li>OS/390</li>
+	        <li>OS/2</li>
+	        <li>AS/400</li>
+	        <li>and more!</li>
+	    </ul>
+    </s2>
+
+</s1>

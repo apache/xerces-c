@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="Caveats and Limitations">
+	<s2 title="Miscellaneous">
+	    <ul>
+	        <li>SAXPrint does not output the &lt;?XML ... ?&gt; prologue 
+				line (this means that it cannot process its own 
+				output). This is because the SAX API doesn't provide 
+				a callback handler for the prologue.</li>
+	        <li>Only URL's of the form 'file://' are currently supported. 
+				Others will be supported in future versions (we're adding 
+				code to call libwww for this support).</li>
+	    </ul>
+	</s2>
+</s1>

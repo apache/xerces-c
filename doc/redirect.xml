@@ -1,0 +1,65 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 6">
+
+    <s2 title="Redirect">
+        <p>Redirect uses the SAX EntityResolver handler to redirect the 
+		input stream for external entities. It installs an entity 
+		resolver, traps the call to the external DTD file and redirects 
+		it to another specific file which contains the actual DTD.</p>
+
+        <s3 title="Building on Windows">
+        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+        build the project marked Redirect.
+        </p>
+        </s3>
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd Redirect
+gmake</source>
+        <p>
+        This will create the object files in the current directory and the executable named
+        Redirect in '&XercesCInstallDir;-linux/bin' directory.</p>
+
+        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running Redirect">
+
+          <p>This program illustrates how a XML application can use the SAX EntityResolver
+                   handler to redirect the input stream for external entities. It installs an entity
+                   resolver, traps the call to the external DTD file and redirects it to another specific
+                   file which contains the actual DTD.</p>
+
+                    <p>The program then counts and reports the number of elements and attributes in
+                   the given XML file.</p>
+<source>Redirect [-v] &lt;XML file&gt;</source>
+          <p>The -v option is used to invoke the Validating SAX Parser instead.</p>
+
+                   <p>When invoked as follows:</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+Redirect -v personal.xml</source>
+          <p>The output is the following:</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+Redirect -v personal.xml
+personal.xml: 30 ms (37 elems, 12 attrs, 134 spaces, 134 chars)</source>
+
+          <p>External files required to run this sample are 'personal.xml', 'personal.dtd' and
+             'redirect.dtd', which are all present in the 'samples/data' directory. Make sure
+             that you run redirect in the samples/data directory.</p>
+
+             <p>The 'resolveEntity' callback in this sample looks for an external entity with
+             system id as 'personal.dtd'. When it is asked to resolve this particular external
+             entity, it creates and returns a new InputSource for the file 'redirect.dtd'.</p>
+
+             <p>A real-world XML application can similarly do application specific processing
+             when encountering external entities. For example, an application might want to
+             redirect all references to entities outside of its domain to local cached copies.</p>
+
+        </s3>
+    </s2>
+</s1>

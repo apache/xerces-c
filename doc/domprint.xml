@@ -1,0 +1,92 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 4">
+
+    <s2 title="DOMPrint">
+        <p>DOMPrint parses an XML file, constructs the DOM tree, and walks 
+		through the tree printing each element. It thus dumps the XML back 
+		(output same as SAXPrint).</p>
+
+        <s3 title="Building on Windows">
+        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+        build the project marked DOMPrint.
+        </p>
+        </s3>
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd DOMPrint
+gmake</source>
+        <p>
+        This will create the object files in the current directory and the executable named
+        DOMPrint in '&XercesCInstallDir;-linux/bin' directory.</p>
+
+        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running DOMPrint">
+
+          <p>The DOMPrint sample parses an XML file, using either a validating 
+		  or non-validating DOM parser configuration, builds a DOM tree, 
+		  and then walks the tree and outputs the contents of the nodes 
+		  in a 'canonical' format. To run DOMPrint, enter the following:</p>
+<source>DOMPrint [-v] &lt;XML file&gt;</source>
+          <p>The -v option is used when you wish to use a validating parser. Here is a
+                   sample output for DOMPrint when the validating parser is used: </p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+DOMPrint -v personal.xml</source>
+          <p>Here is a sample output from DOMPrint</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+DOMPrint -v personal.xml
+
+&lt;?xml version='1.0' encoding='utf-8?&gt;
+&lt;!-- Revision: 63 1.7 samples/data/personal.xml --&gt;
+&lt;personnel&gt;
+
+&lt;person id="Big.Boss"&gt;
+  &lt;name&gt;&lt;family&gt;Boss&lt;/family&gt; &lt;given&gt;Big&lt;/given&gt;&lt;/name&gt;
+  &lt;email&gt;chief@foo.com&lt;/email&gt;
+  &lt;link subordinates="one.worker two.worker three.worker 
+                         four.worker five.worker"&gt;&lt;/link&gt;
+&lt;/person&gt;
+
+&lt;person id="one.worker"&gt;
+  &lt;name&gt;&lt;family>Worker&lt;/family&gt; &lt;given&gt;One&lt;/given&gt;&lt;/name&gt;
+  &lt;email&gt;one@foo.com&lt;/email&gt;
+  &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+&lt;/person&gt;
+
+&lt;person id="two.worker"&gt;
+  &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;Two&lt;/given&gt;&lt;/name&gt;
+  &lt;email&gt;two@foo.com&lt;/email&gt;
+  &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+&lt;/person&gt;
+
+&lt;person id="three.worker"&gt;
+  &lt;name&gt;&lt;family>Worker&lt;/family&gt; &lt;given&gt;Three&lt;/given&gt;&lt;/name&gt;
+  &lt;email&gt;three@foo.com&lt;/email&gt;
+  &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+&lt;/person&gt;
+
+&lt;person id="four.worker"&gt;
+  &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;Four&lt;/given&gt;&lt;/name&gt;
+  &lt;email&gt;four@foo.com&lt;/email&gt;
+  &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+&lt;/person&gt;
+
+&lt;person id="five.worker"&gt;
+  &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;Five&lt;/given&gt;&lt;/name&gt;
+  &lt;email&gt;five@foo.com&lt;/email&gt;
+  &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+&lt;/person&gt;
+
+&lt;/personnel&gt;</source>
+          <p>Note that DOMPrint does not reproduce the original XML file. Also DOMPrint and
+           SAXPrint produce different results because of the way the two APIs store data
+           and capture events.</p>
+        </s3>
+    </s2>
+</s1>

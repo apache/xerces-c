@@ -1,0 +1,674 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
+
+<faqs title="Parsing with &XercesCName;">
+    <faq title="Why does my application crash on AIX when I run it under a
+         multi-threaded environment?">
+
+      <q>Why does my application crash on AIX when I run it under a
+        multi-threaded environment?</q>
+
+      <a>
+        <p>AIX maintains two kinds of libraries on the system,
+          thread-safe and non-thread safe. Multi-threaded libraries on
+          AIX follow a different naming convention, Usually the
+          multi-threaded library names are followed with "_r". For
+          example, libc.a is single threaded whereas libc_r.a is
+          multi-threaded.</p>
+
+        <p>To make your multi-threaded application run on AIX, you
+          MUST ensure that you do not have a 'system library path' in
+          your LIBPATH environment variable when you run the
+          application. The appropriate libraries (threaded or
+          non-threaded) are automatically picked up at runtime. An
+          application usually crashes when you build your application
+          for multi-threaded operation but don't point to the
+          thread-safe version of the system libraries. For example,
+          LIBPATH can be simply set as:</p>
+
+<source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
+
+        <p>Where &lt;&XercesCProjectName;&gt; points to the directory where
+          &XercesCProjectName; application resides.</p>
+
+        <p>If for any reason, unrelated to &XercesCProjectName;, you need to
+          keep a 'system library path' in your LIBPATH environment
+          variable, you must make sure that you have placed the
+          thread-safe path before you specify the normal system
+          path. For example, you must place <ref>/lib/threads</ref> before
+          <ref>/lib</ref> in your LIBPATH variable. That is to say your
+          LIBPATH may look like this:</p>
+
+<source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
+
+        <p>Where /usr/lib is where your system libraries are.</p>
+      </a>
+  </faq>
+
+  <faq title="What compilers are being used on the supported platforms?">
+
+    <q>What compilers are being used on the supported platforms?</q>
+
+    <a>
+      <p>&XercesCProjectName; has been built on the following platforms with these
+        compilers</p>
+
+      <table>
+        <tr><td><em>Operating System</em></td><td><em>Compiler</em></td></tr>
+        <tr><td>Windows NT SP5/98</td><td>MSVC 6.0</td></tr>
+        <tr><td>Redhat Linux 6.0</td><td>gcc</td></tr>
+        <tr><td>AIX 4.1.4  and higher</td><td>xlC 3.1</td></tr>
+        <tr><td>Solaris 2.6</td><td>CC version 4.2</td></tr>
+        <tr><td>HP-UX B10.2</td><td>aCC and CC</td></tr>
+        <tr><td>HP-UX B11</td><td>aCC and CC</td></tr>
+      </table>
+    </a>
+  </faq>
+
+  <faq title="I cannot run my sample applications. What is wrong?">
+
+    <q>I cannot run my sample applications. What is wrong?</q>
+    <a>
+      <p>There are two major installation issues which must be dealt
+        with in order to use &XercesCProjectName; from your applications. The
+        DLL or shared library must be locatable via the system's
+        environment. And, the converter files used by &XercesCProjectName; for
+        its transcoding must be locatable.
+      </p>
+      <p>On UNIX platforms you need to ensure that your library search
+        environment variable includes the directory which has the
+        &XercesCProjectName; shared library (On AIX, this is LIBPATH, on
+        Solaris and Linux it is LD_LIBRARY_PATH while on HP-UX it is
+        SHLIB_PATH). Thus, if you installed your binaries under
+        <code>$HOME/fastxmlparser</code>, you need to point your
+        library path to that directory.
+      </p>
+
+<source>export LIBPATH=$LIBPATH:$HOME/fastxmlparser/lib # (AIX)
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/fastxmlparser/lib # (Solaris, Linux)
+
+export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
+
+      <p>On Win32, you would ensure that the &XercesCProjectName; DLLs are in
+        the PATH environment.</p>
+
+      <p>For the transcoding files <code>(*.cnv)</code>, the
+        easiest mechanism (which is used in the binary release) is to
+        place them relative to the shared library or DLL. The
+        transcoding converter files should be in the
+        <code>icu/data</code> directory relative to the shared library
+        or DLL. This will allow them to be located automatically.</p>
+
+      <p>However, if you redistribute &XercesCProjectName; within some other
+        product, and cannot maintain this relationship, or if your
+        build scenario does not allow you to maintain this
+        relationship during debugging for instance, you can use the
+        ICU_DATA environment variable to point to these converter
+        files (make sure the variable ends with a backslash '\' on Windows platforms).
+    This variable may be set system wide, within a
+        particular command window, or just within the client
+        application or higher level libraries, as is deemed
+        necessary. It must be set before the XML system is initialized
+        (see below.)
+      </p>
+    </a>
+  </faq>
+
+  <faq title="I just built my own application using the &XercesCProjectName; parser. Why does it
+       crash?">
+
+    <q>I just built my own application using the &XercesCProjectName; parser. Why does it
+      crash?</q>
+    <a>
+      <p>In order to work with the &XercesCProjectName; parser, you have to
+        first initialize the XML subsystem. The most common mistake is
+        to forget this initialization. Before you make any calls to
+        &XercesCProjectName; APIs, you must call</p>
+
+<source>XMLPlatformUtils::Initialize():
+try {
+   XMLPlatformUtils::Initialize();
+}
+catch (const XMLException&amp; toCatch) {
+   // Do your failure processing here
+}</source>
+
+      <p>This initializes the &XercesCProjectName; system and sets its
+        internal variables.  Note that you must the include
+        <code>util/PlatformUtils.hpp</code> file for this to work.</p>
+
+      <p>The second common problem is the absence of the transcoding
+        converter files <code>(*.cnv)</code>. This problem has a
+        simple fix, if you understand how the transcoding converter
+        files are searched.</p>
+
+      <p>&XercesCProjectName; first looks for the environment variable
+        ICU_DATA. If it finds this variable in your environment
+        settings, then it assumes that the transcoding converter files
+        are kept in that directory.  Thus, for example, if you had set
+        your environment variable to (say):</p>
+
+<source>set ICU_DATA=d:\my&XercesCProjectName;\icu\data\</source>
+
+      <p>The transcoding converter files (all files having extension
+        .cnv and convrtrs.txt) will be searched under
+        <code>d:\my&XercesCProjectName;\icu\data</code></p>
+
+      <p>If you have not set your environment variable, then the
+        search for the transcoding converters is done relative to the
+        location of the shared library &XercesCWindowsLib;.dll (or
+        &XercesCUnixLib;.a on AIX and &XercesCUnixLib;.so on Solaris and
+        Linux, &XercesCUnixLib;.sl on HP-UX). Thus if your shared library
+        is in <code>d:\fastxmlparser\lib</code>, then your transcoding
+        converter files should be in
+        <code>d:\fastxmlparser\lib\icu\data.</code></p>
+
+      <p>Before you run your application, make sure that you have
+        covered the two possibilities mentioned above.</p>
+
+    </a>
+  </faq>
+
+
+
+  <faq title="Is &XercesCProjectName; thread-safe?">
+
+    <q>Is &XercesCProjectName; thread-safe?</q>
+
+    <a>
+      <p>This is not a question that has a simple yes/no answer. Here are
+        the rules for using &XercesCProjectName; in a multi-threaded environment:</p>
+
+      <p>Within an address space, an instance of the parser may be used
+        without restriction from a single thread, or an instance of the
+        parser can be accessed from multiple threads, provided the
+        application guarantees that only one thread has entered a method
+        of the parser at any one time.</p>
+
+      <p>When two or more parser instances exist in a process, the
+        instances can be used concurrently, and without external
+        synchronization.  That is, in an application containing two
+        parsers and two threads, one pareser can be running within the
+        first thread concurrently with the second parser running
+        within the second thread.</p>
+
+      <p>The same rules apply to &XercesCProjectName; DOM documents -
+        multiple document instances may be concurrently accessed from
+        different threads, but any given document instance can only be
+        accessed by one thread at a time.</p>
+
+      <p>DOMStrings allow multiple concurrent readers.  All DOMString
+        const methods are thread safe, and can be concurrently entered
+        by multiple threads.  Non-const DOMString methods, such as
+        appendData(), are not thread safe and the application must
+        guarantee that no other methods (including const methods) are
+        executed concurrently with them.</p>
+    </a>
+  </faq>
+
+	<faq title="Why does my multi-threaded application crash on Solaris?">
+		<q>Why does my multi-threaded application crash on Solaris?</q>
+		<a>
+			<p>The problem appears because the throw call on Solaris 2.6 
+			is not multi-thread safe. Sun Microsystems provides a patch to 
+			solve this problem. To get the latest patch for solving this 
+			problem, go to <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump> 
+			and get the appropriate patch for your operating system. 
+			For Intel machines running Solaris, you need to get Patch ID 104678. 
+			For SPARC machines you need to get Patch ID #105591.</p>
+		</a>
+	</faq>	
+	
+	<faq title="How do I find out what version of &XercesCProjectName; I am using?">
+		<q>How do I find out what version of &XercesCProjectName; I am using?</q>
+		<a>
+      <p>The version string for &XercesCProjectName; happens to be in one of
+        the source files. Look inside the file
+        <code>src/util/XML4CDefs.hpp</code> and find out what the
+        static variable <code>gXML4CFullVersionStr</code> is defined
+        to be. (It is usually of type 3.0.0 or something
+        similar). This is the version of XML you are using.</p>
+
+      <p>If you don't have the source code, you have to find the version
+        information from the shared library name. On Windows NT/95/98
+        right click on the DLL name &XercesCWindowsLib;.dll in the bin directory
+        and look up properties. The version information may be found on
+        the Version tab.</p>
+
+      <p>On AIX, just look for the library name &XercesCUnixLib;.a (or
+        &XercesCUnixLib;.so on Solaris/Linux and &XercesCUnixLib;.sl on
+        HP-UX).  The version number is coded in the name of the
+        library.</p>
+    </a>
+  </faq>
+
+  <faq title="How do I uninstall &XercesCProjectName;?">
+    <q>How do I uninstall &XercesCProjectName;?</q>
+    <a>
+      <p>&XercesCProjectName; only installs itself in a single directory and
+        does not set any registry entries. Thus, to un-install, you
+        only need to remove the directory where you installed it, and
+        all &XercesCProjectName; related files will be removed.</p>
+    </a>
+  </faq>
+
+  <faq title="How do I add an additional transcoding file in the existing set?">
+    <q>How do I add an additional transcoding file in the existing set?</q>
+    <a>
+      <p>Transcoding files shipped with binary drops of &XercesCProjectName;
+        exist in the <code>bin/icu/data</code> directory on Win32 and
+        in the <code>lib/icu/data</code> directory under various
+        unix's.  All transcoding files have the extension .cnv and are
+        platform specific binary files. The ICU drop provides the
+        utility 'makeconv' to generate these binary files. To add an
+        additional transcoding file, you need to first define your new
+        code-set in ASCII format (which has the extension .ucm). The
+        coding format for an encoding may be obtained from one of the
+        existing files in icu/data (in the source drop). After you
+        create the .ucm file for your new language, you need to
+        convert it to a binary form using makeconv.</p>
+
+      <p>Thus, if your new code-set is defined in file
+        mynewcodeset.ucm , you would type:</p>
+
+<source>makeconv mynewcodeset.ucm</source>
+
+      <p>...to create the binary transcoding file mynewcodeset.cnv. Make
+        sure that this .cnv file is packaged in the same place as the
+        others, i.e. in a directory <code>icu/data</code> relative to
+        where your shared library is.</p>
+
+      <p>You can also add aliases for this encoding in the file
+        'convrtrs.txt', also present in the same directory as the
+        converter files.</p>
+    </a>
+  </faq>
+
+  <faq title="How are entity reference nodes handled in DOM?">
+    <q>How are entity reference nodes handled in DOM?</q>
+    <a>
+      <p>If you are using the native DOM classes, the function
+        <code>setExpandEntityReferences</code> controls how entities appear in the
+        DOM tree. When setExpandEntityReferences is set to false (the
+        default), an occurance of an entity reference in the XML
+        document will be represented by a subtree with an
+        EntityReference node at the root whose children represent the
+        entity expansion. Entity expansion will be a DOM tree
+        representing the structure of the entity expansion, not a text
+        node containing the entity expansion as text.</p>
+
+      <p>If setExpandEntityReferences is true, an entity reference in the
+        XML document is represented by only the nodes that represent the
+        entity expansion. The DOM tree will not contain any
+        entityReference nodes.</p>
+    </a>
+  </faq>
+
+  <faq title="What kinds of URLs are currently supported in &XercesCProjectName;?">
+    <q>What kinds of URLs are currently supported in &XercesCProjectName;?</q>
+    <a>
+      <p>We now have a spec. compliant, but limited, implementation of
+        the class URL.</p>
+      <ul>
+        <li>The only protocol currently supported is the "file://"
+          which is used to refer to files locally.</li>
+
+        <li>Only the 'localhost' string is supported in the host
+          placeholder in the URL syntax.</li>
+      </ul>
+
+      <p>This should work for command line arguments to samples as well as
+        any usage in the XML file when referring to an external file.</p>
+
+      <p>Examples of what this implementation will allow you to do are:</p>
+
+<source>e:\&gt;domcount file:///e:/&XercesCProjectName;/build/win32/vc6/debug/abc.xml
+
+or
+
+e:\&gt;domcount file::///&XercesCProjectName;/build/win32/vc6/debug/abc.xml
+e:\&gt;domcount file::///d:/abc.xml
+
+or
+
+e:\>domcount file:://localhost/d:/abc.xml</source>
+
+      <p>Example of what you cannot do is:</p>
+
+      <p>Refer to files using the 'file://' syntax and giving a
+        relative path to the file.</p>
+
+      <p>This implies that if you are using the 'file://' syntax to
+        refer to external files, you have to give the complete path to
+        files even in the current directory.</p>
+
+      <p>You always have the option of not using the 'file://' syntax
+        and referring to files by just giving the filename or a
+        relative path to it as in:</p>
+
+<source>domcount abc.xml</source>
+    </a>
+  </faq>
+
+  <faq title="Can I use &XercesCProjectName; to parse HTML?">
+    <q>Can I use &XercesCProjectName; to parse HTML?</q>
+    <a>
+      <p>Yes, if it follows the XML spec rules. Most HTML, however,
+        does not follow the XML rules, and will therefore generate XML
+        well-formedness errors.</p>
+    </a>
+  </faq>
+
+  <faq title="I keep getting an error: &quot;invalid UTF-8 character&quot;. What's wrong?">
+    <q>I keep getting an error: "invalid UTF-8 character". What's wrong?</q>
+    <a>
+      <p>There are many Unicode characters that are not allowed in
+        your XML document, according to the XML spec. Typical
+        disallowed characters are control characters, even if you
+        escape them using the Character Reference form: See the XML
+        spec, sections 2.2 and 4.1 for details. If the parser is
+        generating this error, it is very likely that there's a
+        character in there that you can't see.  You can generally use
+        a UNIX command like "od -hc" to find it.</p>
+
+      <p>Another reason for this error is that your file is in some
+        non UTF/ASCII encoding but you gave no encoding="" string in
+        your file to tell the parser what its real encoding is.</p>
+    </a>
+  </faq>
+
+  <faq title="What encodings are supported by &XercesCProjectName;?">
+    <q>What encodings are supported by &XercesCProjectName;?</q>
+    <a>
+      <p>&XercesCProjectName; uses a subset of IBM's International Classes for 
+	  Unicode (ICU) for encoding &amp; Unicode support. &XercesCFullName; is 
+	  Unicode 3.0 compliant. Please note that <em>these encodings are supported 
+	  only if you build &XercesCName; with ICU library</em>, not as a 
+	  standalone library using native encoding support.</p>
+
+      <p>Besides ASCII, the following encodings are currrently supported:</p>
+
+      <table>
+        <tr><td><em>Common Name</em></td><td><em>Use this MIME/IANA name in XML</em></td></tr>
+        <tr><td>8 bit Unicode</td><td>UTF-8</td></tr>
+        <tr><td>ISO Latin 1</td><td>ISO-8859-1</td></tr>
+        <tr><td>ISO Latin 2</td><td>ISO-8859-2</td></tr>
+        <tr><td>ISO Latin 3</td><td>ISO-8859-3</td></tr>
+        <tr><td>ISO Latin 4</td><td>ISO-8859-4</td></tr>
+        <tr><td>ISO Latin Cyrillic</td><td>ISO-8859-5</td></tr>
+        <tr><td>ISO Latin Arabic</td><td>ISO-8859-6</td></tr>
+        <tr><td>ISO Latin Greek</td><td>ISO-8859-7</td></tr>
+        <tr><td>ISO Latin Hebrew</td><td>ISO-8859-8</td></tr>
+        <tr><td>ISO Latin 5</td><td>ISO-8859-9</td></tr>
+        <tr><td>EBCDIC: US</td><td>ebcdic-cp-us</td></tr>
+        <tr><td>EBCDIC: Canada</td><td>ebcdic-cp-ca</td></tr>
+        <tr><td>EBCDIC: Netherlands</td><td>ebcdic-cp-nl</td></tr>
+        <tr><td>EBCDIC: Denmark</td><td>ebcdic-cp-dk</td></tr>
+        <tr><td>EBCDIC: Norway</td><td>ebcdic-cp-no</td></tr>
+        <tr><td>EBCDIC: Finland</td><td>ebcdic-cp-fi</td></tr>
+        <tr><td>EBCDIC: Sweden</td><td>ebcdic-cp-se</td></tr>
+        <tr><td>EBCDIC: Italy</td><td>ebcdic-cp-it</td></tr>
+        <tr><td>EBCDIC: Spain, Latin America</td><td>ebcdic-cp-es</td></tr>
+        <tr><td>EBCDIC: Great Britain</td><td>ebcdic-cp-gb</td></tr>
+        <tr><td>EBCDIC: France</td><td>ebcdic-cp-fr</td></tr>
+        <tr><td>EBCDIC: Arabic</td><td>ebcdic-cp-ar1</td></tr>
+        <tr><td>EBCDIC: Hebrew</td><td>ebcdic-cp-he</td></tr>
+        <tr><td>EBCDIC: Switzerland</td><td>ebcdic-cp-ch</td></tr>
+        <tr><td>EBCDIC: Roece</td><td>ebcdic-cp-roece</td></tr>
+        <tr><td>EBCDIC: Yogoslavia</td><td>ebcdic-cp-yu</td></tr>
+        <tr><td>EBCDIC: Iceland</td><td>ebcdic-cp-is</td></tr>
+        <tr><td>EBCDIC: Urdu</td><td>ebcdic-cp-ar2</td></tr>
+        <tr><td>Chinese for PRC, mixed 1/2 byte</td><td>gb2312</td></tr>
+        <tr><td>Extended UNIX code, packed for Japanese</td><td>euc-jp</td></tr>
+        <tr><td>Japanese: iso-2022-jp</td><td>iso-2022-jp</td></tr>
+        <tr><td>Japanese: Shift JIS</td><td>Shift_JIS</td></tr>
+        <tr><td>Chinese: Big5</td><td>Big5</td></tr>
+        <tr><td>Extended UNIX code, packed for Korean</td><td>euc-kr</td></tr>
+        <tr><td>Korean: iso-2022-kr</td><td>iso-2022-kr</td></tr>
+        <tr><td>Cyrillic</td><td>koi8-r</td></tr>
+      </table>
+			
+	<!-- <ul>
+        <li>UTF-8</li>
+        <li>UTF-16 Big Endian, UTF-16 Little Endian</li>
+        <li>IBM-1208</li>
+        <li>ISO Latin-1 (ISO-8859-1)</li>
+        <li>ISO Latin-2 (ISO-8859-2) [Bosnian, Croatian, Czech,
+          Hungarian, Polish, Romanian, Serbian (in Latin
+          transcription), Serbocroation, Slovak, Slovenian, Upper
+          Sorbian and Lower Sorbian]</li>
+        <li>ISO Latin-3 (ISO-8859-3) [Maltese, Esperanto]</li>
+        <li>ISO Latin-4 (ISO-8859-4)</li>
+        <li>ISO Latin Cyrillic (ISO-8859-5)</li>
+        <li>ISO Latin Arabic (ISO-8859-6) [Arabic]</li>
+        <li>ISO Latin Greek (ISO-8859-7)</li>
+        <li>ISO Latin Hebrew (ISO-8859-8) [Hebrew]</li>
+        <li>ISO Latin-5 (ISO-8859-9) [Turkish]</li>
+        <li>Extended Unix Code, packed for Japanese (euc-jp, eucjis)</li>
+        <li>Japanese Shift JIS (shift-jis)</li>
+        <li>Chinese (big5)</li>
+        <li>Extended Unix Code, packed for Korean (euc-kr)</li>
+        <li>Russian Unix, Cyrillic (koi8-r)</li>
+        <li>Windows Thai (cp874)</li>
+        <li>Latin 1 Windows (cp1252)</li>
+        <li>cp858</li>
+        <li>EBCDIC encodings:</li></ul><ul>
+        <li>EBCDIC US (ebcdic-cp-us)</li>
+        <li>EBCDIC Canada (ebcdic-cp-ca)</li>
+        <li>EBCDIC Netherland (ebcdic-cp-nl)</li>
+        <li>EBCDIC Denmark (ebcdic-cp-dk)</li>
+        <li>EBCDIC Norway (ebcdic-cp-no)</li>
+        <li>EBCDIC Finland (ebcdic-cp-fi)</li>
+        <li>EBCDIC Sweden (ebcdic-cp-se)</li>
+        <li>EBCDIC Italy (ebcdic-cp-it)</li>
+        <li>EBCDIC Spain &amp; Latin America (ebcdic-cp-es)</li>
+        <li>EBCDIC Great Britain (ebcdic-cp-gb)</li>
+        <li>EBCDIC France (ebcdic-cp-fr)</li>
+        <li>EBCDIC Hebrew (ebcdic-cp-he)</li>
+        <li>EBCDIC Switzerland (ebcdic-cp-ch)</li>
+        <li>EBCDIC Roece (ebcdic-cp-roece)</li>
+        <li>EBCDIC Yugoslavia (ebcdic-cp-yu)</li>
+        <li>EBCDIC Iceland (ebcdic-cp-is)</li>
+        <li>EBCDIC Urdu (ebcdic-cp-ar2)</li>
+        <li>Latin 0 EBCDIC</li></ul>
+
+      <p>Additional encodings to be available later:</p>
+
+      <ul>
+        <li>EBCDIC Arabic (ebcdic-cp-ar1)</li>
+        <li>Chinese for PRC (mixed 1/2 byte) (gb2312)</li>
+        <li>Japanese ISO-2022-JP (iso-2022-jp)</li>
+        <li>Cyrllic (koi8-r)</li>
+      </ul>
+
+      <p>The ICU uses IBM's UPMAP format as source files for data-based
+        conversion. All codepages represented in that format are supported
+        (i.e: SBCS, DBCS, MBCS and EBCDIC_STATEFUL), with the exception of
+        codepages with a maximum character length strictly greater than
+        two bytes (e.g. this excludes 1350 and 964).</p>
+
+      <p>The following is a non-exhaustive list of codepages that are
+        supported by the international library packaged with the product.</p>
+
+  <p>
+    ibm-1004,
+    ibm-1006,
+    ibm-1008,
+    ibm-1038,
+    ibm-1041,
+    ibm-1043,
+    ibm-1047,
+    ibm-1051,
+    ibm-1088,
+    ibm-1089,
+    ibm-1098,
+    ibm-1112,
+    ibm-1114,
+    ibm-1115,
+    ibm-1116,
+    ibm-1117,
+    ibm-1118,
+    ibm-1119,
+    ibm-1123,
+    ibm-1140,
+    ibm-1141,
+    ibm-1142,
+    ibm-1143,
+    ibm-1144,
+    ibm-1145,
+    ibm-1146,
+    ibm-1147,
+    ibm-1148,
+    ibm-1149,
+    ibm-1153,
+    ibm-1154,
+    ibm-1155,
+    ibm-1156,
+    ibm-1157,
+    ibm-1158,
+    ibm-1159,
+    ibm-1160,
+    ibm-1164,
+    ibm-1250,
+    ibm-1251,
+    ibm-1252,
+    ibm-1253,
+    ibm-1254,
+    ibm-1255,
+    ibm-1256,
+    ibm-1257,
+    ibm-1258,
+    ibm-12712,
+    ibm-1275,
+    ibm-1276,
+    ibm-1277,
+    ibm-1280,
+    ibm-1281,
+    ibm-1282,
+    ibm-1283,
+    ibm-1361,
+    ibm-1362,
+    ibm-1363,
+    ibm-1364,
+    ibm-1370,
+    ibm-1371,
+    ibm-1383,
+    ibm-1386,
+    ibm-1390,
+    ibm-1399,
+    ibm-16684,
+    ibm-16804,
+    ibm-17248,
+    ibm-21427,
+    ibm-273,
+    ibm-277,
+    ibm-278,
+    ibm-280,
+    ibm-284,
+    ibm-285,
+    ibm-290,
+    ibm-297,
+    ibm-37,
+    ibm-420,
+    ibm-424,
+    ibm-437,
+    ibm-4899,
+    ibm-4909,
+    ibm-4930,
+    ibm-4971,
+    ibm-500,
+    ibm-5104,
+    ibm-5123,
+    ibm-5210,
+    ibm-5346,
+    ibm-5347,
+    ibm-5349,
+    ibm-5350,
+    ibm-5351,
+    ibm-5352,
+    ibm-5353,
+    ibm-5354,
+    ibm-803,
+    ibm-808,
+    ibm-813,
+    ibm-833,
+    ibm-834,
+    ibm-835,
+    ibm-837,
+    ibm-848,
+    ibm-8482,
+    ibm-849,
+    ibm-850,
+    ibm-852,
+    ibm-855,
+    ibm-856,
+    ibm-857,
+    ibm-858,
+    ibm-859,
+    ibm-860,
+    ibm-861,
+    ibm-862,
+    ibm-863,
+    ibm-864,
+    ibm-865,
+    ibm-866,
+    ibm-867,
+    ibm-868,
+    ibm-869,
+    ibm-871,
+    ibm-872,
+    ibm-874,
+    ibm-878,
+    ibm-891,
+    ibm-897,
+    ibm-901,
+    ibm-902,
+    ibm-9027,
+    ibm-903,
+    ibm-904,
+    ibm-9044,
+    ibm-9049,
+    ibm-9061,
+    ibm-907,
+    ibm-909,
+    ibm-910,
+    ibm-912,
+    ibm-913,
+    ibm-914,
+    ibm-915,
+    ibm-916,
+    ibm-920,
+    ibm-921,
+    ibm-922,
+    ibm-923,
+    ibm-9238,
+    ibm-924,
+    ibm-930,
+    ibm-933,
+    ibm-935,
+    ibm-937,
+    ibm-939,
+    ibm-941,
+    ibm-942,
+    ibm-943,
+    ibm-944,
+    ibm-946,
+    ibm-947,
+    ibm-948,
+    ibm-949,
+    ibm-950,
+    ibm-953,
+    ibm-955,
+    ibm-961,
+    ibm-964,
+    and ibm-970
+
+  </p>
+	-->
+
+</a>
+</faq>
+
+</faqs>
+

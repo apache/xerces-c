@@ -1,0 +1,89 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 2">
+		
+    <s2 title="SAXPrint">
+        <p>SAXPrint uses the SAX APIs to parse an XML file and print it back. 
+		Notice that the output of this file is not exactly the same as 
+		the input (in terms of whitespaces), but the output has the same 
+		information content as the input.</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked SAXPrint.
+	        </p>
+        </s3>
+		
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd SAXPrint
+gmake</source>
+        <p>This will create the object files in the current directory and 
+		the executable named SAXPrint in '&XercesCInstallDir;-linux/bin' 
+		directory.</p>
+
+        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running SAXPrint">
+
+          <p>The SAXPrint sample parses an XML file and prints out a count of the number of
+          elements in the file. To run SAXPrint, enter the following </p>
+<source>SAXPrint &lt;XML file&gt;</source>
+          <p>To use the validating parser, use </p>
+<source>SAXPrint -v &lt;XML file&gt;</source>
+          <p>Here is a sample output from SAXPrint</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+SAXPrint -v personal.xml
+
+&lt;personnel&gt;
+
+  &lt;person id="Big.Boss"&gt;
+    &lt;name&gt;&lt;family&gt;Boss&lt;/family&gt; &lt;given&gt;Big&lt;/given&gt;&lt;/name&gt;
+    &lt;email&gt;chief@foo.com&lt;/email&gt;
+    &lt;link subordinates="one.worker two.worker three.worker 
+	                       four.worker five.worker"&gt;&lt;/link&gt;
+  &lt;/person&gt;
+
+  &lt;person id="one.worker"&gt;
+    &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;One&lt;/given&gt;&lt;/name&gt;
+    &lt;email&gt;one@foo.com&lt;/email&gt;
+    &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+  &lt;/person&gt;
+
+  &lt;person id="two.worker"&gt;
+    &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;Two&lt;/given&gt;&lt;/name&gt;
+    &lt;email&gt;two@foo.com&lt;/email&gt;
+    &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+  &lt;/person&gt;
+
+  &lt;person id="three.worker"&gt;
+    &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;Three&lt;/given&gt;&lt;/name&gt;
+    &lt;email&gt;three@foo.com&lt;/email&gt;
+    &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+  &lt;/person&gt;
+
+  &lt;person id="four.worker"&gt;
+    &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;Four&lt;/given&gt;&lt;/name&gt;
+    &lt;email&gt;four@foo.com&lt;/email&gt;
+    &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+  &lt;/person&gt;
+
+  &lt;person id="five.worker"&gt;
+    &lt;name&gt;&lt;family&gt;Worker&lt;/family&gt; &lt;given&gt;Five&lt;/given&gt;&lt;/name&gt;
+    &lt;email&gt;five@foo.com&lt;/email&gt;
+    &lt;link manager="Big.Boss"&gt;&lt;/link&gt;
+  &lt;/person&gt;
+
+&lt;/personnel&gt;</source>
+          <note>SAXPrint does not reproduce the original XML file. 
+		  Also SAXPrint and DOMPrint produce different results because of 
+		  the way the two APIs store data and capture events.</note>
+        </s3>
+
+    </s2>
+</s1>

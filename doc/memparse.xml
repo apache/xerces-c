@@ -1,0 +1,67 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 5">
+
+    <s2 title="MemParse">
+        <p>MemParse uses the Validating SAX Parser to parse a memory buffer containing
+                  XML statements, and reports the number of elements and attributes found.</p>
+
+        <s3 title="Building on Windows">
+        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+        build the project marked MemParse.
+        </p>
+        </s3>
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd MemParse
+gmake</source>
+        <p>
+        This will create the object files in the current directory and the executable named
+        MemParse in ' &XercesCInstallDir;-linux/bin' directory.</p>
+
+        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running MemParse">
+
+          <p>This program uses the SAX Parser to parse a memory buffer
+             containing XML statements, and reports the number of elements and attributes
+             found. </p>
+<source>MemParse [-v]</source>
+          <p>The -v option is used to invoke the Validating SAX Parser instead.
+
+          When invoked with a validating parser: </p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+MemParse -v</source>
+          <p>The output is the following:</p>
+<source>Finished parsing the memory buffer containing the following XML statements:
+
+&lt;?xml version='1.0' encoding='ascii'?&gt;
+&lt;!DOCTYPE company [
+&lt;!ELEMENT company     (product,category,developedAt)&gt;
+&lt;!ELEMENT product     (#PCDATA)&gt;
+&lt;!ELEMENT category    (#PCDATA)&gt;
+&lt;!ATTLIST category idea CDATA #IMPLIED&gt;
+&lt;!ELEMENT developedAt (#PCDATA)&gt;
+]&gt;
+
+&lt;company&gt;
+  &lt;product&gt;&XercesCName;&lt;/product&gt;
+  &lt;category idea='great'&gt;XML Parsing Tools&lt;/category&gt;
+  &lt;developedAt&gt;
+    IBM Center for Java Technology, Silicon Valley, Cupertino, CA
+  &lt;/developedAt&gt;
+&lt;/company&gt;
+
+Parsing took 0 ms (4 elements, 1 attributes, 16 spaces, 95 characters).</source>
+
+        </s3>
+    </s2>
+
+
+
+</s1>

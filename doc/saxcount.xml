@@ -1,0 +1,51 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 1">
+		
+    <s2 title="SAXCount">
+        <p>SAXCount is the simplest application that counts the elements and characters of
+        a given XML file using the (event based) SAX API.</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked SAXCount.</p>
+        </s3>
+		
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd SAXCount
+gmake</source>
+	        <p>This will create the object files in the current directory 
+			and the executable named
+	        SAXCount in '&XercesCInstallDir;-linux/bin' directory.</p>
+	
+	        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running SAXCount">
+
+          <p>The SAXCount sample parses an XML file and prints out a count of the number of
+          elements in the file. To run SAXCount, enter the following </p>
+<source>SAXCount &lt;XML File&gt;</source>
+          <p>To use the validating parser, use </p>
+<source>SAXCount -v &lt;XML file&gt;</source>
+          <p>Here is a sample output from SAXCount</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+SAXCount -v personal.xml
+personal.xml: 60 ms (37 elems, 12 attrs, 134 spaces, 134 chars)</source>
+          <p>Running SAXCount with the validating parser gives a different result because
+          ignorable white-space is counted separately from regular characters.</p>
+<source>SAXCount personal.xml
+personal.xml: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+          <p>Note that the sum of spaces and chracters in both versions is the same.</p>
+
+          <note>The time reported by the program may be different depending on your
+          machine processor.</note>
+        </s3>
+
+    </s2>
+</s1>

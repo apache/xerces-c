@@ -1,0 +1,229 @@
+<?xml version="1.0" ?>
+<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
+
+<faqs title="Distributing &XercesCName;">
+
+	<faq title="Which DLL's do I need to distribute with my application?">
+		<q>Which DLL's do I need to distribute with my application?</q>
+		<a>
+			<p>There are currently two configurations in which Xerces-C binaries
+			are published. One is from the Apache site, while the other is
+			from the IBM Alphaworks Site.</p>
+			
+			<p>The <jump href="http://xml.apache.org/dist">Apache download
+			site</jump> binary drops only contain support for ASCII, UTF-8, UTF-16
+			and UCS4 encodings. The parser intrinsically supports transcoding
+			input files in these encodings to Unicode (all internal processing in
+			the parser happens in Unicode).  If you are using these Xerces-C
+			binaries in your application, then you only need to distribute
+			<em>one</em> file:<br></br>
+			&XercesCWindowsLib;.dll for Windows NT/95/98, or<br/>
+			&XercesCUnixLib;.a for AIX, or<br/>
+			&XercesCUnixLib;.so for Solaris/Linux, or<br/>
+			&XercesCUnixLib;.sl for HP-UX.</p>
+			
+			<p>However, if your application needs to support more international
+			encodings, other than the one's mentioned above, then you may use the
+			XML4C binaries published by IBM at their 
+			<jump href="http://www.alphaworks.ibm.com/tech/xml4c">AlphaWorks</jump>
+			site.  XML4C binaries use and include 
+			<jump href="http://www10.software.ibm.com/developerworks/opensource/icu/index.html">IBM
+			Classes for Unicode</jump> (ICU) (also an open source project but under 
+			<jump href="http://www10.software.ibm.com/developerworks/opensource/license10.html">IBM
+			Public License</jump>) for transcoding and as a result can parse input
+			files in over 100 different encodings. If you are using XML4C binaries
+			in your application, then in <em>addition</em> to the &XercesCName; library
+			file mentioned above, you also need to ship:</p>
+	
+			<ol>
+				<li><em>ICU shared library file</em>:<br></br>
+					icuuc.dll for Windows NT/95/98, or<br></br>
+					libicu-uc.a for AIX, or<br></br>
+					libicu-uc.so for Solaris/Linux, or<br></br>
+					libicu-uc.sl for HP-UX.</li>
+				<li><em>ICU converter files</em>: *.cnv.<br></br>
+					These are platform specific binary files which contain the tables used
+					to transcode characters from the respective encoding to Unicode. These
+					files may be found in the 'lib/icu/data' directory of the XML4C binary
+					archives.</li>
+			</ol>
+		</a>
+	</faq>
+
+	<faq title="How do I package the sources to create a binary drop?">
+	
+		<q>How do I package the sources to create a binary drop?</q>
+		
+		<a>
+			<p>You have to first compile the sources inside your IDE to
+			create the required DLLs and EXEs. Then you need to copy
+			over the binaries to another directory for the binary
+			drop. A perl script has been provided to give you a jump
+			start. You need to install perl on your machine for the script to work.
+			The file may not work if you have changed your
+			source tree. You have to modify the script to suit
+			your current state of the source tree. To invoke the
+			script, go to the \&lt;&XercesCProjectName;&gt;\scripts directory, and type:</p>
+<source>perl packageBinaries.pl</source>
+
+			<p>You will get a message that looks like: </p>
+
+<source>Usage is: packageBinaries &lt;options&gt;
+options are:  -s &lt;source_directory&gt;
+              -o &lt;target_directory&gt;
+              -c &lt;C compiler name&gt; (e.g. gcc or xlc)
+              -x &lt;C++ compiler name&gt; (e.g. g++ or xlC)
+              -m &lt;message loader&gt; can be 'inmem', 'icu' or 'iconv'
+              -n &lt;net accessor&gt; can be 'fileonly' or 'libwww'
+              -t &lt;transcoder&gt; can be 'icu' or 'native'
+              -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
+              -h to get help on these commands
+Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0 
+                                 -o$HOME/xerces-c_1_0_0 
+								 -cgcc -xg++ -minmem 
+								 -nfileonly -tnative</source>
+
+			<p>Make sure that your compiler can be invoked from the command line and
+			follow the instructions to produce a binary drop.</p>
+		</a>
+	</faq>
+	
+	<faq title="When will a port to my platform be available?">
+	
+		<q>When will a port to my platform be available?</q>
+		
+		<a>
+			<p>Ports to other platforms are planned, but dates are not
+			fixed yet. In the meantime, look below to see a
+			description of the steps you need to follow to port it to
+			another platform.</p>
+			
+			<p>We strongly encourage you to submit the changes that were
+			required to make it work on another platform. We will
+			incorporate these changes in the source code base and make
+			them available in the future releases.</p>
+			
+			<p>All such changes may be sent to: &lt;
+			<jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt;.</p>
+		</a>
+	</faq>
+
+	<faq title="How can I port &XercesCProjectName; to my favourite platform?">
+		<q>How can I port &XercesCProjectName; to my favourite platform?</q>
+		<a>
+			<p>All platform dependent code in &XercesCProjectName; has been isolated to
+			a couple of files, which should ease the porting effort.
+			Here are the basic steps that should be followed to port
+			&XercesCProjectName;.</p>
+			
+			<ol>
+				<li>The directory 'src/util/Platforms' contains the
+					platform sensitive files while 'src/util/Compilers' contains all
+					development environment sensitive files. Each
+					operating system has a file of its own and each
+					development environment has another one of its own too.
+					<br/>As an example, the Win32 platform as a Win32Defs.hpp file
+					and the Visual C++ environment has a <code>VCPPDefs.hpp</code> file.
+					These files set up certain define tokens, typedefs,
+					constants, etc... that will drive the rest of the code to
+					do the right thing for that platform and development
+					environment. AIX/CSet have their own <code>AIXDefs.hpp</code> and
+					<code>CSetDefs.hpp</code> files, and so on. You should create new
+					versions of these files for your platform and environment
+					and follow the comments in them to set up your own.
+					Probably the comments in the Win32 and Visual C++ will be
+					the best to follow, since that is where the main
+					development is done.</li>
+				
+				<li>Next, edit the file XML4CDefs.hpp , which is where all
+					of the fundamental stuff comes into the system. You will
+					see conditional sections in there where the above
+					per-platform and per-environment headers are brought in.
+					Add the new ones for your platform under the appropriate
+					conditionals.</li>
+			
+				<li>Now edit 'AutoSense.hpp'. Here we set canonical &XercesCProjectName;
+					internal #define tokens which indicate the platform and
+					compiler. These definitions are based on known platform
+					and compiler defines.
+					<br/>
+					AutoSense.hpp is included in XML4CDefs.hpp and the
+					canonical platform and compiler settings thus defined will
+					make the particular platform and compiler headers to be
+					the included at compilation.
+					<br/>
+					It might be a little tricky to decipher this file so be
+					careful. If you are using say another compiler on Win32,
+					probably it will use similar tokens so that the platform
+					will get picked up already using what is already there.</li>
+				
+				<li>Once this is done, you will then need to implement a
+					version of the 'platform utilities' for your platform.
+					Each operating system has a file which implements some
+					methods of the XMLPlatformUtils class, specific to that
+					operating system. These are not terribly complex, so it
+					should not be a lot of work. The Win32 verions is called
+					Win32PlatformUtils.cpp, the AIX version is
+					AIXPlatformUtils.cpp and so on. Create one for your
+					platform, with the correct name, and empty out all of the
+					implementation so that just the empty shells of the
+					methods are there (with dummy returns where needed to make
+					the compiler happy.) Once you've done that, you can start
+					to get it to build without any real implementation.</li>
+				
+				<li>Once you have the system building, then start
+					implementing your own platform utilties methods. Follow
+					the comments in the Win32 version as to what they do, the
+					comments will be improved in subsequent versions, but they
+					should be fairly obvious now. Once you have these
+					implementations done, you should be able to start
+					debugging the system using the demo programs.</li>
+			</ol>
+			<p>That is the work required in a nutshell!</p>
+		</a>
+	</faq>
+	
+	<faq title="What application did you used to create the documentation?">
+		<q>What application did you used to create the documentation?</q>
+		<a>
+			<p>We have used an internal XML based application to create the
+			documentation. The documentation files are all written in XML and the
+			application, internally codenamed StyleBook, makes use of XSL to transform
+			it into an HTML document that you are seeing right now.
+			It is currently available on the 
+			<jump href="http://xml.apache.org/">Apache</jump> open source website as 
+			<jump href="http://xml.apache.org/cocoon/index.html">Cocoon</jump>.</p>
+			
+			<p>The API documentation is created using 
+			<jump href="http://www.zib.de/Visual/software/doc++/index.html">DOC++</jump>.</p>	
+		</a>
+	</faq>
+
+	<faq title="Source code for the C++ Builder TreeViewer?">
+		<q>Can I get the source code for the C++ Builder TreeViewer application?</q>
+		<a>
+			<p>In view of the numerous requests that we have received for
+			the TreeViewer sample application (written using C++
+			Builder), we have decided to make it available as an
+			independent download from the IBM
+			<jump href="http://www.alphaworks.ibm.com">AlphaWorks</jump> portal. Please
+			note, this is provided on a "as-is, no support" basis.</p>
+			
+			<p>TreeViewer parses the XML file, using &XercesCProjectName;,
+			and displays the data as a tree.</p>
+					
+			<p>We welcome your additional feedback at: &lt;
+			<jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt;</p>
+		</a>
+	
+	</faq>
+	<faq title="Can I use &XercesCProjectName; in my product?">
+		<q>Can I use &XercesCProjectName; in my product?</q>
+		<a>
+			<p>Yes! Read the license agreement first and contact us at
+			&lt;<jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt; 
+			if you need assistance.</p>
+		</a>
+</faq>
+</faqs>
+

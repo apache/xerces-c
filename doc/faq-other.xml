@@ -1,0 +1,42 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
+
+<faqs title="Other &XercesCName; Questions">
+
+	<faq title="I can't use C++. Do you have a Java version?">
+		<q>I can't use C++. Do you have a Java version?</q>
+		<a>
+			<p>Yes. The &XercesCProjectName; family of products also has a Java version.</p>
+		</a>
+	</faq>
+	
+	<faq title="I found a bug - what do I do?">
+		<q>I found a bug - what do I do?</q>
+		<a>
+			<p>Send the bug report to &lt;<jump href="mailto:&XercesCEmailAddress;">
+			&XercesCEmailAddress;</jump>&gt; with the version number,
+			the exact OS release number, the compiler version number, and a
+			copy of the XML document that generates the error. The more
+			information you can provide, the faster we can get a fix into the
+			build!</p>
+		</a>
+	</faq>
+	
+	<faq title="I have a question not covered -- who
+	do I contact?">
+		<q>I have a question not covered here, or in the documentation -- who do I contact?</q>
+		<a>
+			<p>First post your question on the 
+			<jump href="http://www.alphaworks.ibm.com/aw.nsf/discussion?ReadForm&amp;/forum/xml4c.nsf/discussion?createdocument">XML4C
+			discussion group on Alphaworks</jump>, and someone from the 
+			&XercesCProjectName; development team will answer that question. The list is 
+			monitored very closely and the response is usually within 24 hours. 
+			If you need to ask a special question privately, send email to 
+			&lt;<jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt; 
+			and give us as much information as you can. We will get back to 
+			you as soon as possible.</p>
+		</a>
+	</faq>
+
+</faqs>
+

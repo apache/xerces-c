@@ -1,0 +1,44 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 8">
+
+    <s2 title="StdInParse">
+        <p>StdInParse demonstrates streaming XML data from standard input.</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked StdInParse.</p>
+        </s3>
+		
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd StdInParse
+gmake</source>
+        <p>This will create the object files in the current directory 
+			and the executable named
+	        StdInParse in ' &XercesCInstallDir;-linux/bin' directory.</p>
+	
+	        <p>To delete all the generated object files and executables, type</p>
+ <source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running StdInParse">
+          <p>The StdInParse sample parses an XML file and prints out a 
+		  count of the number of
+          elements in the file. To run StdInParse, enter the following: </p>
+<source>StdInParse &lt; &lt;XML file&gt;</source>
+          <p>Here is a sample output from StdInParse</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+StdInParse &lt; personal.xml
+personal.xml: 60 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+
+          <note>The time reported by the program may be different depending on your
+          machine processor.</note>
+        </s3>
+    </s2>
+
+
+</s1>

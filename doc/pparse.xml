@@ -1,0 +1,47 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 7">
+
+    <s2 title="PParse">
+        <p>PParse demonstrates progressive parsing.</p>
+        <p>In this example, the programmer doesn't have to depend upon throwing
+            an exception to terminate the parsing operation. Calling parseFirst() will
+            cause the DTD to be parsed (both internal and external subsets) and any
+            pre-content, i.e. everything up to but not including the root element.
+            Subsequent calls to parseNext() will cause one more piece of markup to
+            be parsed, and spit out from the core scanning code to the parser. You
+            can quit the parse any time by just not calling parseNext() anymore
+            and breaking out of the loop. When you call parseNext() and the end
+            of the root element is the next piece of markup, the parser will
+            continue on to the end of the file and return false, to let you 
+			know that the parse is done.</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked PParse.</p>
+        </s3>
+		
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd PParse
+gmake</source>
+	        <p>This will create the object files in the current directory 
+			and the executable named PParse in ' &XercesCInstallDir;-linux/bin' 
+			directory.</p>
+	
+	        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running PParse">
+        	<p>The program looks for the first 16 elements of the XML file, 
+			and reports if successful.</p>
+<source>PParse [-v] &lt;XML file&gt;</source>
+          	<p>The output is the following:</p>
+<source>Got the required 16 elements.</source>
+        </s3>
+    </s2>
+</s1>

@@ -1,0 +1,69 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 9">
+
+    <s2 title="EnumVal">
+        <p>EnumVal shows how to enumerate the markup decls in a DTD Validator.</p>
+
+        <s3 title="Building on Windows">
+	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
+	        build the project marked EnumVal.</p>
+        </s3>
+		
+        <s3 title="Building on UNIX">
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
+cd EnumVal
+gmake</source>
+        <p>This will create the object files in the current directory and the executable named
+        EnumVal in ' &XercesCInstallDir;-linux/bin' directory.</p>
+
+        <p>To delete all the generated object files and executables, type</p>
+<source>gmake clean</source>
+        </s3>
+
+        <s3 title="Running EnumVal">
+          <p>This program parses a file, then shows how to enumerate the contents of the validator pools.
+          To run EnumVal, enter the following </p>
+<source>EnumVal &lt;XML file&gt;</source>
+          <p>Here is a sample output from EnumVal</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+EnumVal personal.xml
+
+ELEMENTS:
+----------------------------
+  Name: personnel
+  Content Model: (person)+
+
+  Name: person
+  Content Model: (name,email*,url*,link?)
+  Attributes:
+    Name:id, Type: ID
+
+  Name: name
+  Content Model: (#PCDATA|family|given)*
+
+  Name: email
+  Content Model: (#PCDATA)*
+
+  Name: url
+  Content Model: EMPTY
+  Attributes:
+    Name:href, Type: CDATA
+
+  Name: link
+  Content Model: EMPTY
+  Attributes:
+    Name:subordinates, Type: IDREF(S)
+    Name:manager, Type: IDREF(S)
+
+  Name: family
+  Content Model: (#PCDATA)*
+
+  Name: given
+  Content Model: (#PCDATA)*</source>
+        </s3>
+    </s2>
+</s1>
