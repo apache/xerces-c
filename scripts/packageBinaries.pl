@@ -67,8 +67,10 @@ if (-e $targetdir) {
 }
 
 # Find out the platform from 'uname -a'
-$platform = "";
-$platform = `uname -s`;
+open(PLATFORM, "uname -s|");
+$platform = <PLATFORM>;
+chomp($platform);
+close (PLATFORM);
 
 #Fix the backslashes on the Windows platform
 if ($platform ne "")
