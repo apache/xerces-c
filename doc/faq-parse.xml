@@ -149,14 +149,23 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair is called more than once.">
+  <faq title="Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair is called more than once?">
 
-    <q>Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair more than once</q>
+    <q>Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair more than once?</q>
 
     <a>
 
       <p>Please make sure you are using &XercesCName; Version 1.5.2 or up.
       </p>
+
+    </a>
+  </faq>
+
+  <faq title="Why does my application crash after calling XMLPlatformUtils::Terminate()?">
+
+    <q>Why does my application crash after calling XMLPlatformUtils::Terminate()?></q>
+
+    <a>
 
       <p>Please make sure the XMLPlatformUtils::Terminate() is the last &XercesCName; function to be called
          in your program.  NO explicit nor implicit &XercesCName; destructor (those local data that are
