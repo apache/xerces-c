@@ -36,6 +36,8 @@ dnl Platform-specific Makefile setup
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
         *-*-linux*)     platform=LINUX ;;
+        *-*-*unixware*)     platform=UNIXWARE ;;
+        *-*-sysv5uw7*)     platform=UNIXWARE ;;
         *-*-aix*)       platform=AIX ;;
         *-sequent-*)    platform=PTX ;;
         *-*-hp*)        platform=HPUX ;

@@ -33,7 +33,8 @@ case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
         *-*-sysv5*)     platform=UNIXWARE ;;
         *-*-UnixWare*)  platform=UNIXWARE ;;
-        *-*-unixware*)  platform=UNIXWARE ;;
+        *-*-*unixware*)  platform=UNIXWARE ;;
+        *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;

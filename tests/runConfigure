@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2001/02/13 13:10:50  tng
+# Update samples/tests files for on UnixWare 7.1.1 with gcc 2.95.  Add UNIXWARE platform defines to Makefile.incl, add recognition of sysv5uw7 to configure.in, and add unixware as recognized platform to runConfigure.  Updated by Hiram Clawson.
+#
 # Revision 1.7  2000/05/10 01:13:52  abagchi
 # Now detects AIX version and introduces -lpthreads_compat accordingly
 #
@@ -93,7 +96,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'ptx')"
+    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'solaris', 'hp-10', 'hp-11', 'ptx')"
     echo "       -c <C compiler name> (e.g. gcc or xlc_r)"
     echo "       -x <C++ compiler name> (e.g. g++ or xlC_r)"
     echo "       -d (specifies that you want to build debug version)"
@@ -180,7 +183,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | ptx)
+   aix | unixware | linux | solaris | hp-10 | hp-11 | ptx)
        # platform has been recognized
        ;;
    *)
@@ -257,6 +260,9 @@ elif test $platform = "ptx"; then
 elif test $platform = "hp-10"; then
     threadingLibs="-lcma"
     threadingDefines="-DXML_USE_DCE"
+elif test $platform = "unixware"; then
+    threadingLibs="-pthread"
+    threadingDefines="-pthread"
 fi
 
 #

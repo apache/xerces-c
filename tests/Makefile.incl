@@ -98,6 +98,16 @@ EXTRA_LINK_OPTIONS=-lC
 SHLIBSUFFIX=.a
 endif
 
+#=============== UNIXWARE SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, UNIXWARE)
+CMP= -O2 -c ${CXXFLAGS} -pthread
+CC= g++ -O2 -c -D${PLATFORM} -D_REENTRANT -fpic
+LINK =  g++ -O2 -D${PLATFORM} -fpic  -pthread
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+EXTRA_LINK_OPTIONS=-lc -lsocket
+SHLIBSUFFIX=.so
+endif
+
 #================= PTX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, PTX)
 COMPILESWITCH= -KPIC -Kthread -DPTX -w -O
