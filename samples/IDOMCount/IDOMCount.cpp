@@ -82,7 +82,7 @@
 static void usage()
 {
     cout << "\nUsage:\n"
-            "    DOMCount [-v -n] {XML file}\n\n"
+            "    IDOMCount [-v -n] {XML file}\n\n"
             "This program invokes the XML4C DOM parser, builds\n"
             "the DOM tree, and then prints the number of elements\n"
             "found in the input XML file.\n\n"
