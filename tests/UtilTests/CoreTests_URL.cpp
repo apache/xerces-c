@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/17 18:51:10  roddey
+ * Added a new test for pruning leading whitespace
+ *
  * Revision 1.5  2000/02/06 07:48:39  rahulj
  * Year 2K copyright swat.
  *
@@ -194,6 +197,17 @@ static bool basicURLTest()
         }
       , {
             L"file://host@user/path1/path2/file.txt#fragment"
+            , L"file://host@user/path1/path2/file.txt#fragment"
+            , XMLURL::File
+            , L"fragment"
+            , L"host"
+            , L"/path1/path2/file.txt"
+            , 0
+            , 0
+            , L"user"
+        }
+      , {
+            L"     file://host@user/path1/path2/file.txt#fragment"
             , L"file://host@user/path1/path2/file.txt#fragment"
             , XMLURL::File
             , L"fragment"
