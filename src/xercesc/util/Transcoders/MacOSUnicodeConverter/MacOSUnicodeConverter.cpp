@@ -75,13 +75,13 @@ typedef XMLCh	TempXMLBuf[kTempBufCount];
 // ---------------------------------------------------------------------------
 //  Local, const data
 // ---------------------------------------------------------------------------
-static const XMLCh MacOSUnicodeConverter::fgMyServiceId[] =
+const XMLCh MacOSUnicodeConverter::fgMyServiceId[] =
 {
     chLatin_M, chLatin_a, chLatin_c, chLatin_O, chLatin_S, chNull
 };
 
 
-static const XMLCh MacOSUnicodeConverter::fgMacLCPEncodingName[] =
+const XMLCh MacOSUnicodeConverter::fgMacLCPEncodingName[] =
 {
         chLatin_M, chLatin_a, chLatin_c, chLatin_O, chLatin_S, chLatin_L
     ,   chLatin_C, chLatin_P, chLatin_E, chLatin_c, chLatin_o, chLatin_d
