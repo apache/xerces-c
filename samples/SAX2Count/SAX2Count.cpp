@@ -16,6 +16,9 @@
 
 /*
 * $Log$
+* Revision 1.30  2005/03/16 15:08:33  gareth
+* Fix possible overflow problem. Patch by Matthew Hall.
+*
 * Revision 1.29  2004/09/08 13:55:33  peiyongz
 * Apache License Version 2.0
 *
@@ -248,7 +251,7 @@ int main(int argC, char* argV[])
          else if (!strncmp(argV[argInd], "-locale=", 8))
         {
              // Get out the end of line
-             strcpy(localeStr, &(argV[argInd][8]));
+             strncpy(localeStr, &(argV[argInd][8]), sizeof localeStr);
         }			
         else
         {
