@@ -535,7 +535,11 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     //
     UErrorCode  err = U_ZERO_ERROR;
     UConverterFromUCallback oldCB = NULL;
+    #if (U_ICU_VERSION_MAJOR_NUM < 2)
     void* orgContent;
+    #else
+    const void* orgContent;
+    #endif
     ucnv_setFromUCallBack
     (
         fConverter
@@ -622,7 +626,11 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
     //
      UErrorCode  err = U_ZERO_ERROR;
      UConverterFromUCallback oldCB = NULL;
+     #if (U_ICU_VERSION_MAJOR_NUM < 2)
      void* orgContent;
+     #else
+     const void* orgContent;
+     #endif
 
      ucnv_setFromUCallBack
          (
