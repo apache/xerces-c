@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.11  2000/01/18 00:01:02  aruna1
+# Changed version number
+#
 # Revision 1.10  2000/01/12 20:31:31  aruna1
 # Msg Catalog support for AIX
 #
@@ -130,7 +133,7 @@ LIB_DIR = ${XERCESCROOT}/lib
 LIB = ${XERCESCROOT}/lib
 LIBNAME = libxerces-c
 THISLIB = ${LIB}/${LIBNAME}
-VER = 1_0
+VER = 1_1
 
 ALL_OBJECTS = $(wildcard ${ALL_OBJECTS_DIR}/*.o)
 

@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.8  2000/01/18 00:01:15  aruna1
+# Changed version number
+#
 # Revision 1.7  1999/12/20 23:04:51  aruna1
 # "transcoder information transferred"
 #
@@ -119,7 +122,7 @@ BATCH_TARGET = "//'${LOADMOD}(XML4C30)'"
 endif
 LIBNAME=libxerces-c
 THISLIB=${LIB}/${LIBNAME}
-VER=1_0
+VER=1_1
 
 ALL_OBJECTS_DIR=${XERCESCROOT}/obj
 ALL_OBJECTS=$(wildcard $(ALL_OBJECTS_DIR)/*.o)

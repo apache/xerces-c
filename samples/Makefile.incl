@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.7  2000/01/18 00:01:42  aruna1
+# Changed version number
+#
 # Revision 1.6  1999/12/21 00:16:12  aruna1
 # ICUROOT reference removed from samples
 #
@@ -81,7 +84,7 @@ INCLUDES= -I. -I${XERCESCROOT}/include
 LIB_DIR=${XERCESCROOT}/lib
 LIBNAME=xerces-c
 THISLIB=${LIB_DIR}/${LIBNAME}
-VER=1_0
+VER=1_1
 
 LIBRARY_NAMES=-l${LIBNAME}${VER}
 LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
