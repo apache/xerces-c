@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/01/20 19:37:36  aruna1
+ * fgLibLocation and writeTo functions eliminated
+ *
  * Revision 1.8  2000/01/19 18:16:12  abagchi
  * Removed the streaming classes and fgLibLocation
  *
@@ -178,47 +181,6 @@ void XMLPlatformUtils::platformInit()
 XMLTransService* XMLPlatformUtils::makeTransService()
 #if defined (XML_USE_ICU_TRANSCODER)
 {
-    //
-    //  We need to figure out the path to the Intl classes. They will be
-    //  in the .\Intl subdirectory under this DLL.
-    //
-
-    static const char * xml4cIntlDirEnvVar	= "ICU_DATA";
-    char * 				intlPath 			= 0;
-
-    char* envVal = getenv(xml4cIntlDirEnvVar);
-    //check if environment variable is set
-    if (envVal != NULL)
-    {
-        // Store this string in the static member
-        unsigned int pathLen = strlen(envVal);
-        intlPath = new char[pathLen + 2];
-
-        strcpy((char *) intlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) intlPath, "/");
-        }
-		ICUTransService::setICUPath(intlPath);
-        delete intlPath;
-
-        return new ICUTransService;
-    }
-
- 	//
-    //  If the environment variable ICU_DATA is not set, assume that the
-    //  converter files are stored relative to the Xerces-C library.
-    //
-
-    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
-                         strlen("/icu/data/") + 1;
-    intlPath = new char[lent];
-    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
-    strcat(intlPath, "/icu/data/");
-
-	ICUTransService::setICUPath(intlPath);
-    delete intlPath;
-
     return new ICUTransService;
 }
 #else
@@ -671,86 +633,10 @@ FileHandle XMLPlatformUtils::openStdInHandle()
 // ======================================================================
 /**************** Beginning of code attic *******************************
 
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
- 
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
-{
-    WriteCharStr(stderr, toWrite);
-}
-
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    WriteUStrStdErr(toWrite);
-}
-
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    WriteUStrStdOut(toWrite);
-}
-
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    WriteCharStr(stdout, toWrite);
-}
 
 
 void XMLPlatformUtils::platformInit()
 {
-    // Here you would also set the fgLibLocation global variable
-    // XMLPlatformUtils::fgLibLocation is the variable to be set
-
-    char * libraryPath = 0;
-
-    char libName[256];
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".a");
-
-    const int bufLen = 4096;   // arbitrary value big enough to hold path name
-    char buf[bufLen];		   // it's in the stack anyway
-
-    if (load(libName, L_LIBPATH_EXEC, ".") == NULL) {
-		panic( XMLPlatformUtils::Panic_CantFindLib );
-    }
-
-    int retval = loadquery(L_GETINFO, buf, bufLen);
-    if (retval == -1) {
-		panic( XMLPlatformUtils::Panic_CantFindLib );
-    }
-
-    struct ld_info* oneBufPtr = (struct ld_info*)buf;
-
-    while (oneBufPtr)
-    {
-        if (oneBufPtr != (struct ld_info*) buf)
-        {
-            char* fileName = oneBufPtr->ldinfo_filename;
-			if (strstr(fileName, libName) != NULL) {
-				char* copyTo = strrchr(fileName, '/');
-				size_t chars_to_extract = copyTo - fileName;
-				char *libPathName = new char[chars_to_extract + 1];
-				strncpy(libPathName, fileName, chars_to_extract);
-				libPathName[chars_to_extract] = 0;
-				libraryPath = new char[strlen(libPathName)+1];
-				strcpy((char *) libraryPath, libPathName);
-				delete libPathName;
-				break;
-			}
-        }
-        if (oneBufPtr->ldinfo_next == 0)
-            oneBufPtr = NULL;
-        else
-            oneBufPtr = (struct ld_info*) ((char*) oneBufPtr + oneBufPtr->ldinfo_next);
-    }
-
-    XMLPlatformUtils::fgLibLocation = libraryPath;
-
-    if (XMLPlatformUtils::fgLibLocation == NULL)
-    {
-        panic( XMLPlatformUtils::Panic_CantFindLib );
-    }
 }
 
 
