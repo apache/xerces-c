@@ -320,13 +320,13 @@ $set 2
 15  Element '{0}' was used in the DOCTYPE but never declared
 16  Empty content not valid for content model: '{0}'
 17  Attribute '{0}' is not declared for element '{1}'
-18  Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity
+18  The value '{0}' for attribute '{1}' of type ENTITY/ENTITIES must refer to an external, unparsed entity
 19  Attribute '{0}' refers to an unknown entity '{1}'
 20  If namespaces are enabled, it's invalid for an attribute of type ID/IDREF/IDREFS/ENTITY/ENTITIES/NOTATION to contain a colon.
 21  Not enough elements to match content model : '{0}'
 22  No character data is allowed by content model
-23  Attribute '{0}' does not match its defined enumeration or notation list
-24  The values for attribute '{0}' must be names or name tokens
+23  The value '{0}' for attribute '{1}' does not match its defined enumeration or notation list
+24  The value '{0}' for attribute '{1}' must be Name or Nmtoken
 25  Attribute '{0}' does not support multiple values
 26  Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'
 27  Element types cannot be duplicated in Mixed content models

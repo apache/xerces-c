@@ -333,13 +333,13 @@
             <Message Id="UndeclaredElemInDocType" Text="Element '{0}' was used in the DOCTYPE but never declared"/>
             <Message Id="EmptyNotValidForContent" Text="Empty content not valid for content model: '{0}'"/>
             <Message Id="AttNotDefinedForElement" Text="Attribute '{0}' is not declared for element '{1}'"/>
-            <Message Id="BadEntityRefAttr" Text="Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity"/>
+            <Message Id="BadEntityRefAttr" Text="The value '{0}' for attribute '{1}' of type ENTITY/ENTITIES must refer to an external, unparsed entity"/>
             <Message Id="UnknownEntityRefAttr" Text="Attribute '{0}' refers to an unknown entity '{1}'"/>
             <Message Id="ColonNotValidWithNS" Text="If namespaces are enabled, it's invalid for an attribute of type ID/IDREF/IDREFS/ENTITY/ENTITIES/NOTATION to contain a colon."/>
             <Message Id="NotEnoughElemsForCM" Text="Not enough elements to match content model : '{0}'"/>
             <Message Id="NoCharDataInCM" Text="No character data is allowed by content model"/>
-            <Message Id="DoesNotMatchEnumList" Text="Attribute '{0}' does not match its defined enumeration or notation list"/>
-            <Message Id="AttrValNotName" Text="The values for attribute '{0}' must be names or name tokens"/>
+            <Message Id="DoesNotMatchEnumList" Text="The value '{0}' for attribute '{1}' does not match its defined enumeration or notation list"/>
+            <Message Id="AttrValNotName" Text="The value '{0}' for attribute '{1}' must be Name or Nmtoken"/>
             <Message Id="NoMultipleValues" Text="Attribute '{0}' does not support multiple values"/>
             <Message Id="NotSameAsFixedValue" Text="Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'"/>
             <Message Id="RepElemInMixed" Text="Element types cannot be duplicated in Mixed content models"/>
