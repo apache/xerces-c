@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.17  2000/02/18 20:17:15  abagchi
+# Added XMLWin1252Transcoder
+#
 # Revision 1.16  2000/02/17 00:58:07  abagchi
 # Replaced IBM1047 with IBM1140
 #
@@ -215,7 +218,8 @@ UTIL_CPP_PUBHEADERS = \
 	XMLURL.hpp \
 	XMLUTF16Transcoder.hpp \
 	XMLUTF8Transcoder.hpp \
-	XMLUni.hpp
+	XMLUni.hpp \
+	XMLWin1252Transcoder.hpp
 
 UTIL_CPP_PRIVHEADERS =
 
@@ -256,7 +260,8 @@ UTIL_CPP_OBJECTS = \
 	XMLUCSTranscoder.$(TO) \
 	XMLUTF16Transcoder.$(TO) \
 	XMLUTF8Transcoder.$(TO) \
-	XMLUni.$(TO)
+	XMLUni.$(TO) \
+	XMLWin1252Transcoder.$(TO)
 
 all::	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers publish
 
