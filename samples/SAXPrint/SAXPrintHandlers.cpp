@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/11 03:05:35  abagchi
+ * Removed second parameter from call to StrX constructor
+ *
  * Revision 1.2  2000/02/06 07:47:24  rahulj
  * Year 2K copyright swat.
  *
@@ -146,8 +149,8 @@ void SAXPrintHandlers::characters(const     XMLCh* const    chars
                                   , const   unsigned int    length)
 {
     // Transcode to UTF-8 for portable display
-    StrX tmpXCode(chars, length);
-	const char* tmpText = tmpXCode.localForm();
+    StrX tmpXCode(chars);
+    const char* tmpText = tmpXCode.localForm();
 
     //
     //  If we were asked to escape special chars, then do that. Else just
@@ -200,7 +203,7 @@ void SAXPrintHandlers::endElement(const XMLCh* const name)
 void SAXPrintHandlers::ignorableWhitespace( const   XMLCh* const chars
                                             ,const  unsigned int length)
 {
-    cout << StrX(chars, length);
+    cout << StrX(chars);
 }
 
 void SAXPrintHandlers::processingInstruction(const  XMLCh* const target
