@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/01/24 20:20:22  tng
  * Add method flush to XMLFormatTarget
  *
@@ -76,7 +79,7 @@
  */
 
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/IOException.hpp>
 #include <string.h>
 
@@ -87,6 +90,7 @@ LocalFileFormatTarget::LocalFileFormatTarget(const XMLCh* const fileName)
 , fDataBuf(0)
 , fIndex(0)
 , fCapacity(1023)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
 
@@ -94,7 +98,10 @@ LocalFileFormatTarget::LocalFileFormatTarget(const XMLCh* const fileName)
         ThrowXML1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     // Buffer is one larger than capacity, to allow for zero term
-    fDataBuf = new XMLByte[fCapacity+4];
+    fDataBuf = (XMLByte*) fMemoryManager->allocate
+    (
+        (fCapacity+4) * sizeof(XMLByte)
+    );//new XMLByte[fCapacity+4];
 
     // Keep it null terminated
     fDataBuf[0] = XMLByte(0);
@@ -106,6 +113,7 @@ LocalFileFormatTarget::LocalFileFormatTarget(const char* const fileName)
 , fDataBuf(0)
 , fIndex(0)
 , fCapacity(1023)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
 
@@ -113,7 +121,10 @@ LocalFileFormatTarget::LocalFileFormatTarget(const char* const fileName)
         ThrowXML1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     // Buffer is one larger than capacity, to allow for zero term
-    fDataBuf = new XMLByte[fCapacity+4];
+    fDataBuf = (XMLByte*) fMemoryManager->allocate
+    (
+        (fCapacity+4) * sizeof(XMLByte)
+    );//new XMLByte[fCapacity+4];
 
     // Keep it null terminated
     fDataBuf[0] = XMLByte(0);
@@ -127,7 +138,7 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
     if (fSource)
         XMLPlatformUtils::closeFile(fSource);
 
-    delete [] fDataBuf;
+    fMemoryManager->deallocate(fDataBuf);//delete [] fDataBuf;
 }
 
 void LocalFileFormatTarget::flush()
@@ -169,13 +180,16 @@ void LocalFileFormatTarget::insureCapacity(const unsigned int extraNeeded)
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
     const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
-    XMLByte* newBuf = new XMLByte[newCap+4];
+    XMLByte* newBuf = (XMLByte*) fMemoryManager->allocate
+    (
+        (newCap+4) * sizeof(XMLByte)
+    );//new XMLByte[newCap+4];
 
     // Copy over the old stuff
     memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);
 
     // Clean up old buffer and store new stuff
-    delete [] fDataBuf;
+    fMemoryManager->deallocate(fDataBuf); //delete [] fDataBuf;
     fDataBuf = newBuf;
     fCapacity = newCap;
 

@@ -84,7 +84,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ReaderMgr: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ReaderMgr::ReaderMgr() :
+ReaderMgr::ReaderMgr(MemoryManager* const manager) :
 
     fCurEntity(0)
     , fCurReader(0)
@@ -95,6 +95,7 @@ ReaderMgr::ReaderMgr() :
     , fThrowEOE(false)
     , fXMLVersion(XMLReader::XMLV1_0)
     , fStandardUriConformant(false)
+    , fMemoryManager(manager)
 {
 }
 
@@ -441,7 +442,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
     try {
         if (src.getEncoding())
         {
-            retVal = new XMLReader
+            retVal = new (fMemoryManager) XMLReader
                 (
                 src.getPublicId()
                 , src.getSystemId()
@@ -457,7 +458,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
         }
         else
         {
-            retVal = new XMLReader
+            retVal = new (fMemoryManager) XMLReader
                 (
                 src.getPublicId()
                 , src.getSystemId()
@@ -550,7 +551,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
             }
         }
 
@@ -558,7 +559,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         {
             // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
             if (!fStandardUriConformant)
-                srcToFill = new LocalFileInputSource
+                srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
@@ -660,7 +661,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
             }
         }
 
@@ -668,7 +669,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
         {
             // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
             if (!fStandardUriConformant)
-                srcToFill = new LocalFileInputSource
+                srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
@@ -725,7 +726,7 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
     //  as a 'do nothing' transcoder for the already internalized XMLCh
     //  data that makes up an internal entity.
     //
-    BinMemInputStream* newStream = new BinMemInputStream
+    BinMemInputStream* newStream = new (fMemoryManager) BinMemInputStream
                                    (
                                      (const XMLByte*)dataBuf
                                      , dataLen * sizeof(XMLCh)
@@ -735,7 +736,7 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
     if (!newStream)
         return 0;
 
-    XMLReader* retVal = new XMLReader
+    XMLReader* retVal = new (fMemoryManager) XMLReader
     (
         sysId
         , 0
@@ -893,11 +894,11 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
     //  tell it it does own its elements.
     //
     if (!fReaderStack)
-        fReaderStack = new RefStackOf<XMLReader>(16, true);
+        fReaderStack = new (fMemoryManager) RefStackOf<XMLReader>(16, true);
 
     // And the entity stack, which does not own its elements
     if (!fEntityStack)
-        fEntityStack = new RefStackOf<XMLEntityDecl>(16, false);
+        fEntityStack = new (fMemoryManager) RefStackOf<XMLEntityDecl>(16, false);
 
     //
     //  Push the current reader and entity onto their respective stacks.

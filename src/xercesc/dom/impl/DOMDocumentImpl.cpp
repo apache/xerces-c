@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,17 +57,6 @@
 /*
  * $Id$
  */
-
-#include <xercesc/util/XMLUniDefs.hpp>
-
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMConfiguration.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNode.hpp>
-
 #include "DOMDocumentImpl.hpp"
 #include "DOMCasts.hpp"
 #include "DOMConfigurationImpl.hpp"
@@ -87,15 +76,16 @@
 #include "DOMNotationImpl.hpp"
 #include "DOMProcessingInstructionImpl.hpp"
 #include "DOMTextImpl.hpp"
-
 #include "DOMStringPool.hpp"
 #include "DOMTreeWalkerImpl.hpp"
 #include "DOMNodeIteratorImpl.hpp"
 #include "DOMNodeIDMap.hpp"
 #include "DOMRangeImpl.hpp"
 
-#include <xercesc/internal/XMLReader.hpp>
-#include <xercesc/util/HashPtr.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/util/XMLChar.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -110,7 +100,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //                             fNode and fParent constructors used here can not
 //                             allocate.
 //
-DOMDocumentImpl::DOMDocumentImpl()
+DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
     : fNode(this),
       fParent(this),
       fCurrentBlock(0),
@@ -134,6 +124,7 @@ DOMDocumentImpl::DOMDocumentImpl()
       fUserDataTable(0),
       fRecycleNodePtr(0),
       fRecycleBufferPtr(0),
+      fMemoryManager(manager),
       errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
@@ -143,7 +134,8 @@ DOMDocumentImpl::DOMDocumentImpl()
 //DOM Level 2
 DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
                                const XMLCh *qualifiedName,
-                               DOMDocumentType *doctype)
+                               DOMDocumentType *doctype,
+                               MemoryManager* const manager)
     : fNode(this),
       fParent(this),
       fCurrentBlock(0),
@@ -167,6 +159,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fUserDataTable(0),
       fRecycleNodePtr(0),
       fRecycleBufferPtr(0),
+      fMemoryManager(manager),
       errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
@@ -214,13 +207,13 @@ DOMDocumentImpl::~DOMDocumentImpl()
         fNodeListPool->cleanup();
 
     if (fRanges)
-        fRanges->cleanup();
+        delete fRanges; //fRanges->cleanup();
 
     if (fNodeIterators)
-        fNodeIterators->cleanup();
+        delete fNodeIterators;//fNodeIterators->cleanup();
 
     if (fUserDataTable)
-        fUserDataTable->cleanup();
+        delete fUserDataTable;//fUserDataTable->cleanup();
 
     if (fRecycleNodePtr) {
         fRecycleNodePtr->deleteAllElements();
@@ -244,7 +237,7 @@ DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
     // Note:  the cloned document node goes on the system heap.  All other
     //   nodes added to the new document will go on that document's heap,
     //   but we need to construct the document first, before its heap exists.
-    DOMDocumentImpl *newdoc = new DOMDocumentImpl();
+    DOMDocumentImpl *newdoc = new DOMDocumentImpl(fMemoryManager);
 
     // then the children by _importing_ them
     if (deep)
@@ -415,7 +408,8 @@ DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
     DOMNodeIteratorImpl* nodeIterator = new (this) DOMNodeIteratorImpl(this, root, whatToShow, filter, entityReferenceExpansion);
 
     if (fNodeIterators == 0L) {
-        fNodeIterators = new (this) NodeIterators(1, false);
+        //fNodeIterators = new (this) NodeIterators(1, false);
+        fNodeIterators = new NodeIterators(1, false);
     }
     fNodeIterators->addElement(nodeIterator);
 
@@ -655,7 +649,8 @@ DOMRange* DOMDocumentImpl::createRange()
     DOMRangeImpl* range = new (this) DOMRangeImpl(this);
 
     if (fRanges == 0L) {
-        fRanges = new (this) Ranges(1, false);
+        //fRanges = new (this) Ranges(1, false);
+        fRanges = new (fMemoryManager) Ranges(1, false); // XMemory
     }
     fRanges->addElement(range);
     return range;
@@ -828,7 +823,7 @@ void *         DOMDocumentImpl::allocate(size_t amount)
     {
         void* newBlock = 0;
         try {
-            newBlock = new char[amount + sizeOfPointer];
+            newBlock = fMemoryManager->allocate(amount + sizeOfPointer); //new char[amount + sizeOfPointer];
         }
         catch (...) {
             ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
@@ -859,7 +854,7 @@ void *         DOMDocumentImpl::allocate(size_t amount)
         //   Get a new one from the system allocator.
         void* newBlock = 0;
         try {
-            newBlock = new char[kHeapAllocSize];
+            newBlock = fMemoryManager->allocate(kHeapAllocSize); //new char[kHeapAllocSize];
         }
         catch (...) {
             ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
@@ -886,7 +881,7 @@ void    DOMDocumentImpl::deleteHeap()
     while (fCurrentBlock != 0)
     {
         void *nextBlock = *(void **)fCurrentBlock;
-        delete [] (char*) fCurrentBlock;
+        fMemoryManager->deallocate(fCurrentBlock); //delete [] (char*) fCurrentBlock;
         fCurrentBlock = nextBlock;
     }
 
@@ -1181,7 +1176,8 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
 
     if (!fUserDataTable) {
         // create the table on heap so that it can be cleaned in destructor
-        fUserDataTable = new (this) RefHashTableOf<DOMNodeUserDataTable>(29, true, new HashPtr());
+        //fUserDataTable = new (this) RefHashTableOf<DOMNodeUserDataTable>(29, true, new HashPtr());
+        fUserDataTable = new (fMemoryManager) RefHashTableOf<DOMNodeUserDataTable>(29, true, new HashPtr());
     }
     else {
         node_userDataTable = fUserDataTable->get((void*)n);
@@ -1202,7 +1198,7 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
         // create the DOMNodeUserDataTable if not exists
         // create on the heap and adopted by the hashtable which will delete it upon removal.
         if (!node_userDataTable) {
-            node_userDataTable  = new RefHashTableOf<DOMUserDataRecord>(29, true);
+            node_userDataTable  = new (fMemoryManager) RefHashTableOf<DOMUserDataRecord>(29, true);
             fUserDataTable->put(n, node_userDataTable);
         }
 
@@ -1333,10 +1329,10 @@ void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
 void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
 {
     if (!fRecycleNodePtr)
-        fRecycleNodePtr = new RefArrayOf<DOMNodePtr> (15);
+        fRecycleNodePtr = new (fMemoryManager) RefArrayOf<DOMNodePtr> (15);
 
     if (!fRecycleNodePtr->operator[](type))
-        fRecycleNodePtr->operator[](type) = new RefStackOf<DOMNode> (15, false);
+        fRecycleNodePtr->operator[](type) = new (fMemoryManager) RefStackOf<DOMNode> (15, false);
 
     fRecycleNodePtr->operator[](type)->push(object);
 }
@@ -1344,7 +1340,7 @@ void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
 void DOMDocumentImpl::releaseBuffer(DOMBuffer* buffer)
 {
     if (!fRecycleBufferPtr)
-        fRecycleBufferPtr = new RefStackOf<DOMBuffer> (15, false);
+        fRecycleBufferPtr = new (fMemoryManager) RefStackOf<DOMBuffer> (15, false);
 
     fRecycleBufferPtr->push(buffer);
 }

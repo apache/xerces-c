@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -94,7 +97,9 @@
 #if !defined(XMLBUFFER_HPP)
 #define XMLBUFFER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -108,7 +113,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  The buffer is not nul terminated until some asks to see the raw buffer
  *  contents. This also avoids overhead during append operations.
  */
-class XMLPARSER_EXPORT XMLBuffer
+ class XMLPARSER_EXPORT XMLBuffer : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -117,15 +122,17 @@ public :
 
     /** @name Constructor */
     //@{
-    XMLBuffer(int capacity = 1023) :
+    XMLBuffer(int capacity = 1023,
+              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
-        fBuffer(0)
+        fUsed(false)
         , fIndex(0)
         , fCapacity(capacity)
-        , fUsed(false)
+        , fMemoryManager(manager)
+        , fBuffer(0)
     {
         // Buffer is one larger than capacity, to allow for zero term
-        fBuffer = new XMLCh[fCapacity+1];
+        fBuffer = (XMLCh*) manager->allocate((capacity+1) * sizeof(XMLCh)); //new XMLCh[fCapacity+1];
 
         // Keep it null terminated
         fBuffer[0] = XMLCh(0);
@@ -136,7 +143,7 @@ public :
     //@{
     ~XMLBuffer()
     {
-        delete [] fBuffer;
+        fMemoryManager->deallocate(fBuffer); //delete [] fBuffer;
     }
     //@}
 
@@ -243,10 +250,11 @@ private :
     //  fUsed
     //      Indicates whether this buffer is in use or not.
     // -----------------------------------------------------------------------
-    XMLCh*          fBuffer;
+    bool            fUsed;
     unsigned int    fIndex;
     unsigned int    fCapacity;
-    bool            fUsed;
+    MemoryManager*  fMemoryManager;
+    XMLCh*          fBuffer;
 };
 
 XERCES_CPP_NAMESPACE_END

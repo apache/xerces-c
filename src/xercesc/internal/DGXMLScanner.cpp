@@ -82,9 +82,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt) :
+DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt, MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt)
+    XMLScanner(valToAdopt, manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)
@@ -110,13 +110,14 @@ DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt) :
     }
 }
 
-DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const  docHandler
-                            , DocTypeHandler* const    docTypeHandler
-                            , XMLEntityHandler* const  entityHandler
-                            , XMLErrorReporter* const  errHandler
-                            , XMLValidator* const      valToAdopt) :
+DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
+                          , DocTypeHandler* const     docTypeHandler
+                          , XMLEntityHandler* const   entityHandler
+                          , XMLErrorReporter* const   errHandler
+                          , XMLValidator* const       valToAdopt
+                          , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)
@@ -764,7 +765,13 @@ void DGXMLScanner::scanDocTypeDecl()
     //
     //  Only do this if we are not reusing the validator! If we are reusing,
     //  then look it up instead. It has to exist!
-    DTDElementDecl* rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+    DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+    (
+        bbRootName.getRawBuffer()
+        , fEmptyNamespaceId
+        , DTDElementDecl::Any
+        , fMemoryManager
+    );
 
     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
     rootDecl->setExternalElemDeclaration(true);
@@ -794,7 +801,12 @@ void DGXMLScanner::scanDocTypeDecl()
     XMLCh*  sysId = 0;
     XMLCh*  pubId = 0;
 
-    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+    DTDScanner dtdScanner
+    (
+        (DTDGrammar*) fGrammar
+        , fDocTypeHandler
+        , fMemoryManager
+    );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
 
     //  If the next character is '[' then we have no external subset cause
@@ -824,8 +836,8 @@ void DGXMLScanner::scanDocTypeDecl()
         }
 
         // Get copies of the ids we got
-        pubId = XMLString::replicate(bbPubId.getRawBuffer());
-        sysId = XMLString::replicate(bbSysId.getRawBuffer());
+        pubId = XMLString::replicate(bbPubId.getRawBuffer(), fMemoryManager);
+        sysId = XMLString::replicate(bbSysId.getRawBuffer(), fMemoryManager);
 
         // Skip spaces and check again for the opening of an internal subset
         fReaderMgr.skipPastSpaces();
@@ -837,8 +849,8 @@ void DGXMLScanner::scanDocTypeDecl()
     }
 
     // Insure that the ids get cleaned up, if they got allocated
-    ArrayJanitor<XMLCh> janSysId(sysId);
-    ArrayJanitor<XMLCh> janPubId(pubId);
+    ArrayJanitor<XMLCh> janSysId(sysId, fMemoryManager);
+    ArrayJanitor<XMLCh> janPubId(pubId, fMemoryManager);
 
     //  If we have a doc type handler and advanced callbacks are enabled,
     //  call the doctype event.
@@ -915,7 +927,13 @@ void DGXMLScanner::scanDocTypeDecl()
                 if (rootDecl)
                     ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
                 else {
-                    rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+                    rootDecl = new (fMemoryManager) DTDElementDecl
+                    (
+                        bbRootName.getRawBuffer()
+                        , fEmptyNamespaceId
+                        , DTDElementDecl::Any
+                        , fMemoryManager
+                    );
                     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
                     rootDecl->setExternalElemDeclaration(true);
                     ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
@@ -963,7 +981,7 @@ void DGXMLScanner::scanDocTypeDecl()
             //  with an external entity. Put a janitor on it to insure it gets
             //  cleaned up. The reader manager does not adopt them.
             const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-            DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
+            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
             declDTD->setSystemId(sysId);
             Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -1311,18 +1329,19 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             if (attCount >= curAttListSize)
             {
                 if (fDoNamespaces) {
-                    curAtt = new XMLAttr
+                    curAtt = new (fMemoryManager) XMLAttr
                     (
                         fEmptyNamespaceId
                         , fAttNameBuf.getRawBuffer()
                         , fAttValueBuf.getRawBuffer()
                         , attDef->getType()
                         , true
+                        , fMemoryManager
                     );
                 }
                 else
                 {
-                    curAtt = new XMLAttr
+                    curAtt = new (fMemoryManager) XMLAttr
                     (
                         -1
                         , fAttNameBuf.getRawBuffer()
@@ -1330,6 +1349,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                         , fAttValueBuf.getRawBuffer()
                         , attDef->getType()
                         , true
+                        , fMemoryManager
                     );
                 }
                 fAttrList->addElement(curAtt);
@@ -1653,7 +1673,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fValidatorFromUser)
         fValidator->reset();
 
-    fDTDGrammar = new DTDGrammar();
+    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fValidator->setGrammar(fGrammar);
@@ -1703,7 +1723,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     //  with an external entity. Put a janitor on it to insure it gets
     //  cleaned up. The reader manager does not adopt them.
     const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-    DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
+    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
     declDTD->setSystemId(src.getSystemId());
     Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -1718,7 +1738,13 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fDocTypeHandler) {
 
         // Create a dummy root
-        DTDElementDecl* rootDecl = new DTDElementDecl(gDTDStr, fEmptyNamespaceId);
+        DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+        (
+            gDTDStr
+            , fEmptyNamespaceId
+            , DTDElementDecl::Any
+            , fMemoryManager
+        );
         rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
         rootDecl->setExternalElemDeclaration(true);
         Janitor<DTDElementDecl> janSrc(rootDecl);
@@ -1727,7 +1753,12 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     }
 
     // Create DTDScanner
-    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+    DTDScanner dtdScanner
+    (
+        (DTDGrammar*)fGrammar
+        , fDocTypeHandler
+        , fMemoryManager
+    );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
 
     // Tell it its not in an include section
@@ -1755,10 +1786,10 @@ void DGXMLScanner::commonInit()
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
-    fAttrNSList = new ValueVectorOf<XMLAttr*>(8);
+    fAttrNSList = new (fMemoryManager) ValueVectorOf<XMLAttr*>(8);
 
     //  Create the Validator and init them
-    fDTDValidator = new DTDValidator();
+    fDTDValidator = new (fMemoryManager) DTDValidator();
     initValidator(fDTDValidator);
 }
 
@@ -1858,7 +1889,7 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
                     {
                         if (fDoNamespaces)
                         {
-                            curAtt = new XMLAttr
+                            curAtt = new (fMemoryManager) XMLAttr
                             (
                                 -1
                                 , curDef.getFullName()
@@ -1866,11 +1897,12 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
                                 , curDef.getValue()
                                 , curDef.getType()
                                 , false
+                                , fMemoryManager
                             );
                         }
                         else
                         {
-                            curAtt = new XMLAttr
+                            curAtt = new (fMemoryManager) XMLAttr
                             (
                                 -1
                                 , curDef.getFullName()
@@ -1878,6 +1910,7 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
                                 , curDef.getValue()
                                 , curDef.getType()
                                 , false
+                                , fMemoryManager
                             );
                         }
 
@@ -1994,7 +2027,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    fDTDGrammar = new DTDGrammar();
+    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fRootGrammar = 0;
@@ -2016,7 +2049,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
     fIDRefList->removeAll();
 
     // Reset the Root Element Name
-    delete [] fRootElemName;
+    fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
     fRootElemName = 0;
 
     //  Reset the element stack, and give it the latest ids for the special
@@ -2283,14 +2316,14 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
             }
         }
         catch(const MalformedURLException& e)
         {
             // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
             if (!fStandardUriConformant)
-                srcToFill = new LocalFileInputSource
+                srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()

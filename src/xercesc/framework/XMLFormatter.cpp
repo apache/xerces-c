@@ -199,9 +199,10 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
     , fQuoteRef(0)
     , fQuoteLen(0) 
     , fIsXML11(false)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     // Transcode the encoding string
-    fOutEncoding = XMLString::transcode(outEncoding);
+    fOutEncoding = XMLString::transcode(outEncoding, fMemoryManager);
 
     // Try to create a transcoder for this encoding
     XMLTransService::Codes resCode;
@@ -210,12 +211,12 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
         fOutEncoding
         , resCode
         , kTmpBufSize
+        , fMemoryManager
     );
 
     if (!fXCoder)
     {
-        delete [] fOutEncoding;
-        fOutEncoding = 0;
+        fMemoryManager->deallocate(fOutEncoding); //delete [] fOutEncoding;
         ThrowXML1
         (
             TranscodingException
@@ -224,8 +225,8 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
         );
     }
 
-    XMLCh* const tmpDocVer = XMLString::transcode(docVersion);
-    ArrayJanitor<XMLCh> jname(tmpDocVer);
+    XMLCh* const tmpDocVer = XMLString::transcode(docVersion, fMemoryManager);
+    ArrayJanitor<XMLCh> jname(tmpDocVer, fMemoryManager);
     fIsXML11 = XMLString::equals(tmpDocVer, XMLUni::fgVersion1_1);
 }
 
@@ -251,23 +252,20 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
     , fQuoteRef(0)
     , fQuoteLen(0) 
     , fIsXML11(false)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    // Copy the encoding string
-    fOutEncoding = XMLString::replicate(outEncoding);
-
     // Try to create a transcoder for this encoding
     XMLTransService::Codes resCode;
     fXCoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
     (
-        fOutEncoding
+        outEncoding
         , resCode
         , kTmpBufSize
+        , fMemoryManager
     );
 
     if (!fXCoder)
     {
-        delete [] fOutEncoding;
-        fOutEncoding = 0;
         ThrowXML1
         (
             TranscodingException
@@ -276,18 +274,21 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
         );
     }
 
+    // Copy the encoding string
+    fOutEncoding = XMLString::replicate(outEncoding, fMemoryManager);
+
+
     fIsXML11 = XMLString::equals(docVersion, XMLUni::fgVersion1_1);
 }
 
 XMLFormatter::~XMLFormatter()
 {
-    delete [] fAposRef;
-    delete [] fAmpRef;
-    delete [] fGTRef;
-    delete [] fLTRef;
-    delete [] fQuoteRef;
-
-    delete [] fOutEncoding;
+    fMemoryManager->deallocate(fAposRef); //delete [] fAposRef;
+    fMemoryManager->deallocate(fAmpRef); //delete [] fAmpRef;
+    fMemoryManager->deallocate(fGTRef); //delete [] fGTRef;
+    fMemoryManager->deallocate(fLTRef); //delete [] fLTRef;
+    fMemoryManager->deallocate(fQuoteRef); //delete [] fQuoteRef;
+    fMemoryManager->deallocate(fOutEncoding); //delete [] fOutEncoding;
     delete fXCoder;
 
     // We DO NOT own the target object!
@@ -523,7 +524,10 @@ const XMLByte* XMLFormatter::getCharRef(unsigned int & count,
        fTmpBuf[outBytes + 2] = 0; 
        fTmpBuf[outBytes + 3] = 0;
 
-       ref = new XMLByte[outBytes + 4]; 
+       ref = (XMLByte*) fMemoryManager->allocate
+       (
+           (outBytes + 4) * sizeof(XMLByte)
+       );//new XMLByte[outBytes + 4]; 
        memcpy(ref, fTmpBuf, outBytes + 4); 
        count = outBytes; 
    }

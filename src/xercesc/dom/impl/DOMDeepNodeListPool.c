@@ -74,21 +74,23 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DOMDeepNodeListPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool(
-              const XMLSize_t modulus
-            , const bool adoptElems
-            , const XMLSize_t initSize) :
+template <class TVal>
+DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
+                                              , const bool adoptElems
+                                              , const XMLSize_t initSize) :
 	 fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
+    , fHash(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     initialize(modulus);
 
     // create default hasher
-    fHash = new HashPtr();
+    fHash = new (fMemoryManager) HashPtr();
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
@@ -97,21 +99,24 @@ template <class TVal> DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool(
     //
     if (!fIdPtrsCount)
         fIdPtrsCount = 256;
-    fIdPtrs = new TVal*[fIdPtrsCount];
+
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*));//new TVal*[fIdPtrsCount];
     fIdPtrs[0] = 0;
 }
 
-template <class TVal> DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool(
-              const XMLSize_t modulus
-            , const bool adoptElems
-            , HashBase* hash
-            , const XMLSize_t initSize) :
+template <class TVal>
+DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
+                                              , const bool adoptElems
+                                              , HashBase* hash
+                                              , const XMLSize_t initSize) :
 	 fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
+    , fHash(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     initialize(modulus);
     // set hasher
@@ -124,23 +129,27 @@ template <class TVal> DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool(
     //
     if (!fIdPtrsCount)
         fIdPtrsCount = 256;
-    fIdPtrs = new TVal*[fIdPtrsCount];
+
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*));//new TVal*[fIdPtrsCount];
     fIdPtrs[0] = 0;
 }
 
-template <class TVal> DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool(const XMLSize_t modulus
-            , const XMLSize_t initSize) :
+template <class TVal>
+DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
+                                              , const XMLSize_t initSize) :
 	 fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)
+    , fHash(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     initialize(modulus);
 
     // create default hasher
-    fHash = new HashPtr();
+    fHash = new (fMemoryManager) HashPtr();
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
@@ -149,17 +158,23 @@ template <class TVal> DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool(const XMLSi
     //
     if (!fIdPtrsCount)
         fIdPtrsCount = 256;
-    fIdPtrs = new TVal*[fIdPtrsCount];
+
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*));//new TVal*[fIdPtrsCount];
     fIdPtrs[0] = 0;
 }
 
-template <class TVal> void DOMDeepNodeListPool<TVal>::initialize(const XMLSize_t modulus)
+template <class TVal>
+void DOMDeepNodeListPool<TVal>::initialize(const XMLSize_t modulus)
 {
 	if (modulus == 0)
         ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
-    fBucketList = new DOMDeepNodeListPoolTableBucketElem<TVal>*[fHashModulus];
+    fBucketList = (DOMDeepNodeListPoolTableBucketElem<TVal>**)
+        fMemoryManager->allocate
+        (
+            fHashModulus * sizeof(DOMDeepNodeListPoolTableBucketElem<TVal>*)
+        );//new DOMDeepNodeListPoolTableBucketElem<TVal>*[fHashModulus];
     for (XMLSize_t index = 0; index < fHashModulus; index++)
         fBucketList[index] = 0;
 }
@@ -169,8 +184,8 @@ template <class TVal> DOMDeepNodeListPool<TVal>::~DOMDeepNodeListPool()
     removeAll();
 
     // Then delete the bucket list & hasher & id pointers list
-    delete [] fIdPtrs;
-    delete [] fBucketList;
+    fMemoryManager->deallocate(fIdPtrs);//delete [] fIdPtrs;
+    fMemoryManager->deallocate(fBucketList);//delete [] fBucketList;
     delete fHash;
 }
 
@@ -178,7 +193,8 @@ template <class TVal> DOMDeepNodeListPool<TVal>::~DOMDeepNodeListPool()
 // ---------------------------------------------------------------------------
 //  DOMDeepNodeListPool: Element management
 // ---------------------------------------------------------------------------
-template <class TVal> bool DOMDeepNodeListPool<TVal>::isEmpty() const
+template <class TVal>
+bool DOMDeepNodeListPool<TVal>::isEmpty() const
 {
     // Just check the bucket list for non-empty elements
     for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
@@ -189,15 +205,18 @@ template <class TVal> bool DOMDeepNodeListPool<TVal>::isEmpty() const
     return true;
 }
 
-template <class TVal> bool DOMDeepNodeListPool<TVal>::
-containsKey(const void* const key1, const XMLCh* const key2, const XMLCh* const key3) const
+template <class TVal>
+bool DOMDeepNodeListPool<TVal>::containsKey( const void* const key1
+                                           , const XMLCh* const key2
+                                           , const XMLCh* const key3) const
 {
     XMLSize_t hashVal;
     const DOMDeepNodeListPoolTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, key3, hashVal);
     return (findIt != 0);
 }
 
-template <class TVal> void DOMDeepNodeListPool<TVal>::removeAll()
+template <class TVal>
+void DOMDeepNodeListPool<TVal>::removeAll()
 {
     // Clean up the buckets first
     for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
@@ -218,8 +237,8 @@ template <class TVal> void DOMDeepNodeListPool<TVal>::removeAll()
                 delete curElem->fData;
 
             // Then delete the current element and move forward
-            delete [] curElem->fKey2;
-            delete [] curElem->fKey3;
+            fMemoryManager->deallocate(curElem->fKey2);//delete [] curElem->fKey2;
+            fMemoryManager->deallocate(curElem->fKey3);//delete [] curElem->fKey3;
 
             delete curElem;
             curElem = nextElem;
@@ -238,8 +257,8 @@ template <class TVal> void DOMDeepNodeListPool<TVal>::cleanup()
     removeAll();
 
     // Then delete the bucket list & hasher & id pointers list
-    delete [] fIdPtrs;
-    delete [] fBucketList;
+    fMemoryManager->deallocate(fIdPtrs);//delete [] fIdPtrs;
+    fMemoryManager->deallocate(fBucketList);//delete [] fBucketList;
     delete fHash;
 }
 
@@ -307,17 +326,25 @@ DOMDeepNodeListPool<TVal>::put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const
         if (fAdoptedElems)
             delete newBucket->fData;
 
-        delete[] newBucket->fKey2;
-        delete[] newBucket->fKey3;
+        fMemoryManager->deallocate(newBucket->fKey2);//delete[] newBucket->fKey2;
+        fMemoryManager->deallocate(newBucket->fKey3);//delete[] newBucket->fKey3;
 
         newBucket->fData = valueToAdopt;
         newBucket->fKey1 = key1;
-        newBucket->fKey2 = XMLString::replicate(key2);
-        newBucket->fKey3 = XMLString::replicate(key3);
+        newBucket->fKey2 = XMLString::replicate(key2, fMemoryManager);
+        newBucket->fKey3 = XMLString::replicate(key3, fMemoryManager);
     }
-     else
+    else
     {
-        newBucket = new DOMDeepNodeListPoolTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
+        newBucket = new (fMemoryManager) DOMDeepNodeListPoolTableBucketElem<TVal>
+        (
+            key1
+            , key2
+            , key3
+            , valueToAdopt
+            , fBucketList[hashVal]
+            , fMemoryManager
+        );
         fBucketList[hashVal] = newBucket;
     }
 
@@ -329,13 +356,16 @@ DOMDeepNodeListPool<TVal>::put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const
     {
         // Create a new count 1.5 times larger and allocate a new array
         XMLSize_t newCount = (XMLSize_t)(fIdPtrsCount * 1.5);
-        TVal** newArray = new TVal*[newCount];
+        TVal** newArray = (TVal**) fMemoryManager->allocate
+        (
+            newCount * sizeof(TVal*)
+        );//new TVal*[newCount];
 
         // Copy over the old contents to the new array
         memcpy(newArray, fIdPtrs, fIdPtrsCount * sizeof(TVal*));
 
         // Ok, toss the old array and store the new data
-        delete [] fIdPtrs;
+        fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
         fIdPtrs = newArray;
         fIdPtrsCount = newCount;
     }

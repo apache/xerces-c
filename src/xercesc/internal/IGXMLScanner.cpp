@@ -70,6 +70,8 @@
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
@@ -85,9 +87,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  IGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
-IGXMLScanner::IGXMLScanner(XMLValidator* const valToAdopt) :
+IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
+                          , MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt)
+    XMLScanner(valToAdopt, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -114,13 +117,14 @@ IGXMLScanner::IGXMLScanner(XMLValidator* const valToAdopt) :
     }
 }
 
-IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const  docHandler
-                            , DocTypeHandler* const    docTypeHandler
-                            , XMLEntityHandler* const  entityHandler
-                            , XMLErrorReporter* const  errHandler
-                            , XMLValidator* const      valToAdopt) :
+IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
+                          , DocTypeHandler* const     docTypeHandler
+                          , XMLEntityHandler* const   entityHandler
+                          , XMLErrorReporter* const   errHandler
+                          , XMLValidator* const       valToAdopt
+                          , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -486,28 +490,31 @@ void IGXMLScanner::commonInit()
 {
 
     //  Create the element state array
-    fElemState = new unsigned int[fElemStateSize];
+    fElemState = (unsigned int*) fMemoryManager->allocate
+    (
+        fElemStateSize * sizeof(unsigned int)
+    ); //new unsigned int[fElemStateSize];
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
-    fRawAttrList = new RefVectorOf<KVStringPair>(32);
+    fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32);
 
     //  Create the Validator and init them
-    fDTDValidator = new DTDValidator();
+    fDTDValidator = new (fMemoryManager) DTDValidator();
     initValidator(fDTDValidator);
-    fSchemaValidator = new SchemaValidator();
+    fSchemaValidator = new (fMemoryManager) SchemaValidator(0, fMemoryManager);
     initValidator(fSchemaValidator);
 
     // Create IdentityConstraint info
-    fMatcherStack = new XPathMatcherStack();
-    fValueStoreCache = new ValueStoreCache();
-    fFieldActivator = new FieldActivator(fValueStoreCache, fMatcherStack);
+    fMatcherStack = new (fMemoryManager) XPathMatcherStack(fMemoryManager);
+    fValueStoreCache = new (fMemoryManager) ValueStoreCache(fMemoryManager);
+    fFieldActivator = new (fMemoryManager) FieldActivator(fValueStoreCache, fMatcherStack, fMemoryManager);
     fValueStoreCache->setScanner(this);
 }
 
 void IGXMLScanner::cleanUp()
 {
-    delete [] fElemState;
+    fMemoryManager->deallocate(fElemState); //delete [] fElemState;
     delete fRawAttrList;
     delete fDTDValidator;
     delete fSchemaValidator;
@@ -687,7 +694,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             KVStringPair* curPair = 0;
             if (attCount >= curVecSize)
             {
-                curPair = new KVStringPair
+                curPair = new (fMemoryManager) KVStringPair
                 (
                     fAttNameBuf.getRawBuffer()
                     , fAttValueBuf.getRawBuffer()
@@ -1161,7 +1168,13 @@ void IGXMLScanner::scanDocTypeDecl()
     //
     //  Only do this if we are not reusing the validator! If we are reusing,
     //  then look it up instead. It has to exist!
-    DTDElementDecl* rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+    DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+    (
+        bbRootName.getRawBuffer()
+        , fEmptyNamespaceId
+        , DTDElementDecl::Any
+        , fMemoryManager
+    );
 
     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
     rootDecl->setExternalElemDeclaration(true);
@@ -1191,7 +1204,12 @@ void IGXMLScanner::scanDocTypeDecl()
     XMLCh*  sysId = 0;
     XMLCh*  pubId = 0;
 
-    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+    DTDScanner dtdScanner
+    (
+        (DTDGrammar*) fGrammar
+        , fDocTypeHandler
+        , fMemoryManager
+    );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
 
     //  If the next character is '[' then we have no external subset cause
@@ -1221,8 +1239,8 @@ void IGXMLScanner::scanDocTypeDecl()
         }
 
         // Get copies of the ids we got
-        pubId = XMLString::replicate(bbPubId.getRawBuffer());
-        sysId = XMLString::replicate(bbSysId.getRawBuffer());
+        pubId = XMLString::replicate(bbPubId.getRawBuffer(), fMemoryManager);
+        sysId = XMLString::replicate(bbSysId.getRawBuffer(), fMemoryManager);
 
         // Skip spaces and check again for the opening of an internal subset
         fReaderMgr.skipPastSpaces();
@@ -1234,8 +1252,8 @@ void IGXMLScanner::scanDocTypeDecl()
     }
 
     // Insure that the ids get cleaned up, if they got allocated
-    ArrayJanitor<XMLCh> janSysId(sysId);
-    ArrayJanitor<XMLCh> janPubId(pubId);
+    ArrayJanitor<XMLCh> janSysId(sysId, fMemoryManager);
+    ArrayJanitor<XMLCh> janPubId(pubId, fMemoryManager);
 
     //  If we have a doc type handler and advanced callbacks are enabled,
     //  call the doctype event.
@@ -1312,7 +1330,13 @@ void IGXMLScanner::scanDocTypeDecl()
                 if (rootDecl)
                     ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
                 else {
-                    rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+                    rootDecl = new (fMemoryManager) DTDElementDecl
+                    (
+                        bbRootName.getRawBuffer()
+                        , fEmptyNamespaceId
+                        , DTDElementDecl::Any
+                        , fMemoryManager
+                    );
                     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
                     rootDecl->setExternalElemDeclaration(true);
                     ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
@@ -1360,7 +1384,7 @@ void IGXMLScanner::scanDocTypeDecl()
             //  with an external entity. Put a janitor on it to insure it gets
             //  cleaned up. The reader manager does not adopt them.
             const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-            DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
+            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
             declDTD->setSystemId(sysId);
             Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -1699,7 +1723,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
             XMLAttr* curAtt;
             if (attCount >= curAttListSize)
             {
-                curAtt = new XMLAttr
+                curAtt = new (fMemoryManager) XMLAttr
                 (
                     -1
                     , fAttNameBuf.getRawBuffer()
@@ -1707,6 +1731,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                     , fAttValueBuf.getRawBuffer()
                     , attDef->getType()
                     , true
+                    , fMemoryManager
                 );
                 fAttrList->addElement(curAtt);
             }
@@ -1828,7 +1853,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                     XMLAttr* curAtt;
                     if (attCount >= curAttListSize)
                     {
-                        curAtt = new XMLAttr
+                        curAtt = new (fMemoryManager) XMLAttr
                         (
                             -1
                             , curDef.getFullName()
@@ -1836,6 +1861,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                             , curDef.getValue()
                             , curDef.getType()
                             , false
+                            , fMemoryManager
                         );
                         fAttrList->addElement(curAtt);
                         curAttListSize++;
@@ -2662,7 +2688,10 @@ IGXMLScanner::resolveQName(const   XMLCh* const qName
 void IGXMLScanner::resizeElemState() {
 
     unsigned int newSize = fElemStateSize * 2;
-    unsigned int* newElemState = new unsigned int[newSize];
+    unsigned int* newElemState = (unsigned int*) fMemoryManager->allocate
+    (
+        newSize * sizeof(unsigned int)
+    ); //new unsigned int[newSize];
 
     // Copy the existing values
     unsigned int index = 0;
@@ -2673,7 +2702,7 @@ void IGXMLScanner::resizeElemState() {
         newElemState[index] = 0;
 
     // Delete the old array and udpate our members
-    delete [] fElemState;
+    fMemoryManager->deallocate(fElemState); //delete [] fElemState;
     fElemState = newElemState;
     fElemStateSize = newSize;
 }
@@ -2688,7 +2717,7 @@ void IGXMLScanner::activateSelectorFor(IdentityConstraint* const ic, const int i
     if (!selector)
         return;
 
-    XPathMatcher* matcher = selector->createMatcher(fFieldActivator, initialDepth);
+    XPathMatcher* matcher = selector->createMatcher(fFieldActivator, initialDepth, fMemoryManager);
 
     fMatcherStack->addMatcher(matcher);
     matcher->startDocumentFragment();
@@ -2811,7 +2840,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         }
     }
 
-    fDTDGrammar = new DTDGrammar();
+    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
@@ -2862,7 +2891,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     //  with an external entity. Put a janitor on it to insure it gets
     //  cleaned up. The reader manager does not adopt them.
     const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-    DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
+    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
     declDTD->setSystemId(src.getSystemId());
     Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -2877,7 +2906,13 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fDocTypeHandler) {
 
         // Create a dummy root
-        DTDElementDecl* rootDecl = new DTDElementDecl(gDTDStr, fEmptyNamespaceId);
+        DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+        (
+            gDTDStr
+            , fEmptyNamespaceId
+            , DTDElementDecl::Any
+            , fMemoryManager
+        );
         rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
         rootDecl->setExternalElemDeclaration(true);
         Janitor<DTDElementDecl> janSrc(rootDecl);
@@ -2886,7 +2921,12 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     }
 
     // Create DTDScanner
-    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+    DTDScanner dtdScanner
+    (
+        (DTDGrammar*) fGrammar
+        , fDocTypeHandler
+        , fMemoryManager
+    );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
 
     // Tell it its not in an include section

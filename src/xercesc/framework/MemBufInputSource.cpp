@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -130,7 +133,7 @@ BinInputStream* MemBufInputSource::makeStream() const
     //  fCopyBufToStream flag, we either tell it to copy the buffer or to
     //  just reference it.
     //
-    return new BinMemInputStream
+    return new (getMemoryManager()) BinMemInputStream
     (
         fSrcBytes
         , fByteCount

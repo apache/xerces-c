@@ -102,7 +102,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
+AbstractDOMParser::AbstractDOMParser( XMLValidator* const valToAdopt
+                                    , MemoryManager* const manager) :
 
   fCreateEntityReferenceNodes(true)
 , fIncludeIgnorableWhitespace(true)
@@ -121,6 +122,8 @@ AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
 , fGrammarResolver(0)
 , fURIStringPool(0)
 , fValidator(valToAdopt)
+, fMemoryManager(manager)
+, fBufMgr(manager)
 , fInternalSubset(fBufMgr.bidOnBuffer())
 {
     try
@@ -146,18 +149,18 @@ AbstractDOMParser::~AbstractDOMParser()
 void AbstractDOMParser::initialize()
 {
     //  Create grammar resolver and string pool to pass to the scanner
-    fGrammarResolver = new GrammarResolver;
-    fURIStringPool = new XMLStringPool;
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fURIStringPool = new (fMemoryManager) XMLStringPool;
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
-    fScanner = XMLScannerResolver::getDefaultScanner(fValidator);
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator, fMemoryManager);
     fScanner->setDocHandler(this);
     fScanner->setDocTypeHandler(this);
     fScanner->setGrammarResolver(fGrammarResolver);
     fScanner->setURIStringPool(fURIStringPool);
 
-    fNodeStack = new ValueStackOf<DOMNode*>(64);
+    fNodeStack = new (fMemoryManager) ValueStackOf<DOMNode*>(64);
     this->reset();
 }
 
@@ -187,7 +190,7 @@ void AbstractDOMParser::reset()
     if (fDocument && !fDocumentAdoptedByUser) {
         if (!fDocumentVector) {
             // allocate the vector if not exists yet
-            fDocumentVector  = new RefVectorOf<DOMDocumentImpl>(10, true) ;
+            fDocumentVector  = new (fMemoryManager) RefVectorOf<DOMDocumentImpl>(10, true) ;
         }
         fDocumentVector->addElement(fDocument);
     }
@@ -402,7 +405,12 @@ void AbstractDOMParser::setStandardUriConformant(const bool newState)
 
 void AbstractDOMParser::useScanner(const XMLCh* const scannerName)
 {
-    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner(scannerName, fValidator);
+    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner
+    (
+        scannerName
+        , fValidator
+        , fMemoryManager
+    );
 
     if (tempScanner) {
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.20  2003/04/22 14:52:37  knoaman
  * Initialize security manager in constructor.
  *
@@ -270,6 +273,7 @@
 #include <xercesc/framework/XMLBufferMgr.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/SecurityManager.hpp>
@@ -290,12 +294,13 @@ class XMLStringPool;
 class Grammar;
 class GrammarResolver;
 class XMLValidator;
+class MemoryManager;
 
 
 //  This is the mondo scanner class, which does the vast majority of the
 //  work of parsing. It handles reading in input and spitting out events
 //  to installed handlers.
-class XMLPARSER_EXPORT XMLScanner
+class XMLPARSER_EXPORT XMLScanner : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -360,6 +365,7 @@ public :
     XMLScanner
     (
         XMLValidator* const valToAdopt
+        , MemoryManager* const manager// = XMLPlatformUtils::fgMemoryManager
     );
     XMLScanner
     (
@@ -368,6 +374,7 @@ public :
         , XMLEntityHandler* const  entityHandler
         , XMLErrorReporter* const  errReporter
         , XMLValidator* const      valToAdopt
+        , MemoryManager* const manager// = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~XMLScanner();
 
@@ -470,6 +477,7 @@ public :
     bool getCalculateSrcOfs() const;
     Grammar* getRootGrammar() const;
     XMLReader::XMLVersion getXMLVersion() const;
+    MemoryManager* getMemoryManager() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -844,11 +852,11 @@ protected:
     //  fSecurityManager
     //      The SecurityManager instance; as and when set by the application.
     //
-    // fEntityExpansionLimit
+    //  fEntityExpansionLimit
     //      The number of entity expansions to be permitted while processing this document
     //      Only meaningful when fSecurityManager != 0
     //
-    // fEntityExpansionCount
+    //  fEntityExpansionCount
     //      The number of general entities expanded so far in this document.
     //      Only meaningful when fSecurityManager != null
     //
@@ -868,6 +876,9 @@ protected:
     //
     //  fXMLVersion
     //      Enum to indicate if the main doc is XML 1.1 or XML 1.0 conformant    
+    //
+    //  fMemoryManager
+    //      Pluggable memory manager for dynamic allocation/deallocation.
     // -----------------------------------------------------------------------
     bool                        fStandardUriConformant;
     bool                        fCalculateSrcOfs;
@@ -886,8 +897,8 @@ protected:
     bool                        fLoadExternalDTD;
     bool                        fNormalizeData;
     int                         fErrorCount;
-    unsigned int fEntityExpansionLimit;
-    unsigned int fEntityExpansionCount;
+    unsigned int                fEntityExpansionLimit;
+    unsigned int                fEntityExpansionCount;
     unsigned int                fEmptyNamespaceId;
     unsigned int                fUnknownNamespaceId;
     unsigned int                fXMLNamespaceId;
@@ -896,7 +907,6 @@ protected:
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
     RefVectorOf<XMLAttr>*       fAttrList;
-    XMLBufferMgr                fBufMgr;
     XMLDocumentHandler*         fDocHandler;
     DocTypeHandler*             fDocTypeHandler;
     XMLEntityHandler*           fEntityHandler;
@@ -906,12 +916,6 @@ protected:
     ReaderMgr                   fReaderMgr;
     XMLValidator*               fValidator;
     ValSchemes                  fValScheme;
-    XMLBuffer                   fAttNameBuf;
-    XMLBuffer                   fAttValueBuf;
-    XMLBuffer                   fCDataBuf;
-    XMLBuffer                   fQNameBuf;
-    XMLBuffer                   fPrefixBuf;
-    XMLBuffer                   fURIBuf;
     GrammarResolver*            fGrammarResolver;
     Grammar*                    fGrammar;
     Grammar*                    fRootGrammar;
@@ -920,7 +924,15 @@ protected:
     XMLCh*                      fExternalSchemaLocation;
     XMLCh*                      fExternalNoNamespaceSchemaLocation;
     SecurityManager*            fSecurityManager;
-    XMLReader::XMLVersion       fXMLVersion;    
+    XMLReader::XMLVersion       fXMLVersion;
+    MemoryManager*              fMemoryManager;
+    XMLBufferMgr                fBufMgr;
+    XMLBuffer                   fAttNameBuf;
+    XMLBuffer                   fAttValueBuf;
+    XMLBuffer                   fCDataBuf;
+    XMLBuffer                   fQNameBuf;
+    XMLBuffer                   fPrefixBuf;
+    XMLBuffer                   fURIBuf;
 
 private :
     // -----------------------------------------------------------------------
@@ -1174,6 +1186,11 @@ inline XMLReader::XMLVersion XMLScanner::getXMLVersion() const
 	return fXMLVersion;
 }
 
+inline MemoryManager* XMLScanner::getMemoryManager() const
+{
+    return fMemoryManager;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1253,32 +1270,32 @@ inline void XMLScanner::setHasNoDTD(const bool hasNoDTD)
 
 inline void XMLScanner::setRootElemName(XMLCh* rootElemName)
 {
-    delete [] fRootElemName;
-    fRootElemName = XMLString::replicate(rootElemName);
+    fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
+    fRootElemName = XMLString::replicate(rootElemName, fMemoryManager);
 }
 
 inline void XMLScanner::setExternalSchemaLocation(const XMLCh* const schemaLocation)
 {
-    delete [] fExternalSchemaLocation;
-    fExternalSchemaLocation = XMLString::replicate(schemaLocation);
+    fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
+    fExternalSchemaLocation = XMLString::replicate(schemaLocation, fMemoryManager);
 }
 
 inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
 {
-    delete [] fExternalNoNamespaceSchemaLocation;
-    fExternalNoNamespaceSchemaLocation = XMLString::replicate(noNamespaceSchemaLocation);
+    fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
+    fExternalNoNamespaceSchemaLocation = XMLString::replicate(noNamespaceSchemaLocation, fMemoryManager);
 }
 
 inline void XMLScanner::setExternalSchemaLocation(const char* const schemaLocation)
 {
-    delete [] fExternalSchemaLocation;
-    fExternalSchemaLocation = XMLString::transcode(schemaLocation);
+    fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
+    fExternalSchemaLocation = XMLString::transcode(schemaLocation, fMemoryManager);
 }
 
 inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
 {
-    delete [] fExternalNoNamespaceSchemaLocation;
-    fExternalNoNamespaceSchemaLocation = XMLString::transcode(noNamespaceSchemaLocation);
+    fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
+    fExternalNoNamespaceSchemaLocation = XMLString::transcode(noNamespaceSchemaLocation, fMemoryManager);
 }
 
 inline void XMLScanner::setSecurityManager(SecurityManager* const securityManager)

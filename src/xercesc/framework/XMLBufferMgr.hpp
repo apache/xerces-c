@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/12/04 02:32:43  knoaman
  * #include cleanup.
  *
@@ -108,7 +111,7 @@ class XMLBufBid;
  *  back into the pool. This provides a good compromise between performance
  *  and easier maintenance.
  */
-class XMLPARSER_EXPORT XMLBufferMgr
+class XMLPARSER_EXPORT XMLBufferMgr : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -117,7 +120,7 @@ public :
 
     /** @name Constructor */
     //@{
-    XMLBufferMgr();
+    XMLBufferMgr(MemoryManager* const manager/* = XMLPlatformUtils::fgMemoryManager*/);
     //@}
 
     /** @name Destructor */
@@ -145,6 +148,7 @@ private :
     //      never be a lot of them, so a flat list is good enough.
     // -----------------------------------------------------------------------
     unsigned int    fBufCount;
+    MemoryManager*  fMemoryManager;
     XMLBuffer**     fBufList;
 };
 
@@ -154,7 +158,7 @@ private :
  *  for a buffer on a scoped basis and then insure that it gets freed back
  *  into the pool no matter how the scope is exited (exception or normal exit.)
  */
-class XMLBufBid
+class XMLBufBid : public XMemory
 {
 public :
     // -----------------------------------------------------------------------

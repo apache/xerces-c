@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:27:05  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/03/07 18:10:06  tng
  * Return a reference instead of void for operator=
  *
@@ -113,7 +116,7 @@
 #ifndef INPUTSOURCE_HPP
 #define INPUTSOURCE_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -150,7 +153,7 @@ class BinInputStream;
   * @see Parser#parse
   * @see EntityResolver#resolveEntity
   */
-class SAX_EXPORT InputSource
+class SAX_EXPORT InputSource : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -227,6 +230,8 @@ public:
     * @see #setIssueFatalErrorIfNotFound
     */
     virtual const bool getIssueFatalErrorIfNotFound() const;
+
+    MemoryManager* getMemoryManager() const;
 
     //@}
 
@@ -365,10 +370,11 @@ private:
     //
     //  fFatalErrorIfNotFound
     // -----------------------------------------------------------------------
-    XMLCh*  fEncoding;
-    XMLCh*  fPublicId;
-    XMLCh*  fSystemId;
-    bool    fFatalErrorIfNotFound;
+    MemoryManager* fMemoryManager;
+    XMLCh*         fEncoding;
+    XMLCh*         fPublicId;
+    XMLCh*         fSystemId;
+    bool           fFatalErrorIfNotFound;
 };
 
 
@@ -393,6 +399,11 @@ inline const XMLCh* InputSource::getSystemId() const
 inline const bool InputSource::getIssueFatalErrorIfNotFound() const
 {
     return fFatalErrorIfNotFound;
+}
+
+inline MemoryManager* InputSource::getMemoryManager() const
+{
+    return fMemoryManager;
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:27:05  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/06 13:17:29  tng
  * [Bug 9083] Make SAXNotSupportedException and SAXNotRecognizedException to be exportable
  *
@@ -104,6 +107,7 @@
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -127,7 +131,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   *
   * @see SAXParseException#SAXParseException
   */
-class SAX_EXPORT SAXException
+class SAX_EXPORT SAXException : public XMemory
 {
 public:
     /** @name Constructors and Destructor */

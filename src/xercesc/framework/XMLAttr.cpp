@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,24 +62,24 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLAttr: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLAttr::XMLAttr() :
-      fType(XMLAttDef::CData)
-    , fValue(0)
+XMLAttr::XMLAttr(MemoryManager* const manager) :
+
+      fSpecified(false)
+    , fType(XMLAttDef::CData)
     , fValueBufSz(0)
-    , fSpecified(false)
+    , fValue(0)
     , fAttName(0)
+    , fMemoryManager(manager)
 {
-    fAttName = new QName();
+    fAttName = new (fMemoryManager) QName();
 }
 
 XMLAttr::XMLAttr(   const   unsigned int        uriId
@@ -87,12 +87,15 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const XMLCh* const        attrPrefix
                     , const XMLCh* const        attrValue
                     , const XMLAttDef::AttTypes type
-                    , const bool                specified) :
+                    , const bool                specified
+                    , MemoryManager* const      manager) :
 
-      fType(type)
-    , fValue(0)
+      fSpecified(specified)
+    , fType(type)
     , fValueBufSz(0)
-    , fSpecified(specified)
+    , fValue(0)
+    , fAttName(0)
+    , fMemoryManager(manager)
 {
     try
     {
@@ -100,10 +103,9 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
         //  Just call the local setters to set up everything. Too much
         //  work is required to replicate that functionality here.
         //
-        fAttName = new QName(attrPrefix, attrName, uriId);
+        fAttName = new (fMemoryManager) QName(attrPrefix, attrName, uriId);
         setValue(attrValue);
     }
-
     catch(...)
     {
         cleanUp();
@@ -114,21 +116,23 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const XMLCh* const        rawName
                     , const XMLCh* const        attrValue
                     , const XMLAttDef::AttTypes type
-                    , const bool                specified) :
+                    , const bool                specified
+                    , MemoryManager* const      manager) :
 
-      fType(type)
-    , fValue(0)
+      fSpecified(specified)
+    , fType(type)
     , fValueBufSz(0)
-    , fSpecified(specified)
+    , fValue(0)
+    , fAttName(0)
+    , fMemoryManager(manager)
 {
     try
     {
         //  Just call the local setters to set up everything. Too much
         //  work is required to replicate that functionality here.
-        fAttName = new QName(rawName, uriId);
+        fAttName = new (fMemoryManager) QName(rawName, uriId);
         setValue(attrValue);
     }
-
     catch(...)
     {
         cleanUp();
@@ -167,9 +171,9 @@ void XMLAttr::setValue(const XMLCh* const newValue)
     const unsigned int newLen = XMLString::stringLen(newValue);
     if (!fValueBufSz || (newLen > fValueBufSz))
     {
-        delete [] fValue;
+        fMemoryManager->deallocate(fValue); //delete [] fValue;
         fValueBufSz = newLen + 8;
-        fValue = new XMLCh[fValueBufSz + 1];
+        fValue = (XMLCh*) fMemoryManager->allocate((fValueBufSz+1) * sizeof(XMLCh)); //new XMLCh[fValueBufSz + 1];
     }
     XMLString::moveChars(fValue, newValue, newLen + 1);
 }
@@ -181,7 +185,7 @@ void XMLAttr::setValue(const XMLCh* const newValue)
 void XMLAttr::cleanUp()
 {
     delete fAttName;
-    delete [] fValue;
+    fMemoryManager->deallocate(fValue); //delete [] fValue;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/05/15 18:26:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.17  2003/04/17 21:58:50  neilg
  * Adding a new property,
  * http://apache.org/xml/properties/security-manager, with
@@ -280,7 +283,7 @@ const XMLCh gDTDEntityStr[] =
     chOpenSquare, chLatin_d, chLatin_t, chLatin_d, chCloseSquare, chNull
 };
 
-SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
+SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const manager) :
 
     fNamespacePrefix(false)
     , fAutoValidation(false)
@@ -304,6 +307,8 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
     , fGrammarResolver(0)
     , fURIStringPool(0)
     , fValidator(0)
+    , fMemoryManager(manager)
+    , fStringBuffers(manager)
 {
     try
     {
@@ -327,17 +332,20 @@ SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
 void SAX2XMLReaderImpl::initialize()
 {
     // Create grammar resolver and string pool that we pass to the scanner
-    fGrammarResolver = new GrammarResolver();
-    fURIStringPool = new XMLStringPool();
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fURIStringPool = new (fMemoryManager) XMLStringPool();
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
-    fScanner = XMLScannerResolver::getDefaultScanner(0);
+    fScanner = XMLScannerResolver::getDefaultScanner(0, fMemoryManager);
     fScanner->setGrammarResolver(fGrammarResolver);
     fScanner->setURIStringPool(fURIStringPool);
 
     // Create the initial advanced handler list array and zero it out
-    fAdvDHList = new XMLDocumentHandler*[fAdvDHListSize];
+    fAdvDHList = (XMLDocumentHandler**) fMemoryManager->allocate
+    (
+        fAdvDHListSize * sizeof(XMLDocumentHandler*)
+    );//new XMLDocumentHandler*[fAdvDHListSize];
     memset(fAdvDHList, 0, sizeof(void*) * fAdvDHListSize);
 	
 	// SAX2 default is for namespaces (feature http://xml.org/sax/features/namespaces) to be on
@@ -346,15 +354,15 @@ void SAX2XMLReaderImpl::initialize()
 	// default: schema is on
 	setDoSchema(true);
 	
-	fPrefixes    = new RefStackOf<XMLBuffer> (10, false) ;
-	fTempAttrVec  = new RefVectorOf<XMLAttr>  (10, false) ;
-	fPrefixCounts = new ValueStackOf<unsigned int>(10) ;
+	fPrefixes    = new (fMemoryManager) RefStackOf<XMLBuffer> (10, false) ;
+	fTempAttrVec  = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false) ;
+	fPrefixCounts = new (fMemoryManager) ValueStackOf<unsigned int>(10) ;
 }
 
 
 void SAX2XMLReaderImpl::cleanUp()
 {
-    delete [] fAdvDHList;
+    fMemoryManager->deallocate(fAdvDHList);//delete [] fAdvDHList;
     delete fScanner;
     delete fPrefixes;
     delete fTempAttrVec;
@@ -373,7 +381,10 @@ void SAX2XMLReaderImpl::installAdvDocHandler(XMLDocumentHandler* const toInstall
     {
         // Calc a new size and allocate the new temp buffer
         const unsigned int newSize = (unsigned int)(fAdvDHListSize * 1.5);
-        XMLDocumentHandler** newList = new XMLDocumentHandler*[newSize];
+        XMLDocumentHandler** newList = (XMLDocumentHandler**) fMemoryManager->allocate
+        (
+            newSize * sizeof(XMLDocumentHandler*)
+        );//new XMLDocumentHandler*[newSize];
 
         // Copy over the old data to the new list and zero out the rest
         memcpy(newList, fAdvDHList, sizeof(void*) * fAdvDHListSize);
@@ -385,7 +396,7 @@ void SAX2XMLReaderImpl::installAdvDocHandler(XMLDocumentHandler* const toInstall
         );
 
         // And now clean up the old array and store the new stuff
-        delete [] fAdvDHList;
+        fMemoryManager->deallocate(fAdvDHList);//delete [] fAdvDHList;
         fAdvDHList = newList;
         fAdvDHListSize = newSize;
     }
@@ -1226,9 +1237,12 @@ void SAX2XMLReaderImpl::entityDecl( const   DTDEntityDecl&  entityDecl
             if (isPEDecl) {
 
                 unsigned int nameLen = XMLString::stringLen(entityName);
-                XMLCh* tmpName = new XMLCh[nameLen + 2];
+                XMLCh* tmpName = (XMLCh*) fMemoryManager->allocate
+                (
+                    (nameLen + 2) * sizeof(XMLCh)
+                );//new XMLCh[nameLen + 2];
 
-                tmpNameJan.reset(tmpName);
+                tmpNameJan.reset(tmpName, fMemoryManager);
                 tmpName[0] = chPercent;
                 XMLString::copyString(tmpName + 1, entityName);
                 entityName = tmpName;
@@ -1522,7 +1536,12 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 	}
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
     {
-        XMLScanner* tempScanner = XMLScannerResolver::resolveScanner((const XMLCh*) value, fValidator);
+        XMLScanner* tempScanner = XMLScannerResolver::resolveScanner
+        (
+            (const XMLCh*) value
+            , fValidator
+            , fMemoryManager
+        );
 
         if (tempScanner) {
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/05/15 18:26:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.16  2003/04/17 21:58:50  neilg
  * Adding a new property,
  * http://apache.org/xml/properties/security-manager, with
@@ -242,7 +245,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SAXParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SAXParser::SAXParser(XMLValidator* const valToAdopt) :
+SAXParser::SAXParser( XMLValidator* const  valToAdopt
+                    , MemoryManager* const manager) :
 
     fParseInProgress(false)
     , fElemDepth(0)
@@ -257,6 +261,7 @@ SAXParser::SAXParser(XMLValidator* const valToAdopt) :
     , fGrammarResolver(0)
     , fURIStringPool(0)
     , fValidator(valToAdopt)
+    , fMemoryManager(manager)
 {
     try
     {
@@ -281,22 +286,25 @@ SAXParser::~SAXParser()
 void SAXParser::initialize()
 {
     // Create grammar resolver and string pool to pass to scanner
-    fGrammarResolver = new GrammarResolver();
-    fURIStringPool = new XMLStringPool();
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fURIStringPool = new (fMemoryManager) XMLStringPool();
 
     // Create our scanner and tell it what validator to use
-    fScanner = XMLScannerResolver::getDefaultScanner(fValidator);
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator,fMemoryManager);
     fScanner->setGrammarResolver(fGrammarResolver);
     fScanner->setURIStringPool(fURIStringPool);
 
     // Create the initial advanced handler list array and zero it out
-    fAdvDHList = new XMLDocumentHandler*[fAdvDHListSize];
+    fAdvDHList = (XMLDocumentHandler**) fMemoryManager->allocate
+    (
+        fAdvDHListSize * sizeof(XMLDocumentHandler*)
+    );//new XMLDocumentHandler*[fAdvDHListSize];
     memset(fAdvDHList, 0, sizeof(void*) * fAdvDHListSize);
 }
 
 void SAXParser::cleanUp()
 {
-    delete [] fAdvDHList;
+    fMemoryManager->deallocate(fAdvDHList);//delete [] fAdvDHList;
     delete fScanner;
     delete fGrammarResolver;
     delete fURIStringPool;
@@ -316,7 +324,10 @@ void SAXParser::installAdvDocHandler(XMLDocumentHandler* const toInstall)
     {
         // Calc a new size and allocate the new temp buffer
         const unsigned int newSize = (unsigned int)(fAdvDHListSize * 1.5);
-        XMLDocumentHandler** newList = new XMLDocumentHandler*[newSize];
+        XMLDocumentHandler** newList = (XMLDocumentHandler**) fMemoryManager->allocate
+        (
+            newSize * sizeof(XMLDocumentHandler*)
+        );//new XMLDocumentHandler*[newSize];
 
         // Copy over the old data to the new list and zero out the rest
         memcpy(newList, fAdvDHList, sizeof(void*) * fAdvDHListSize);
@@ -328,7 +339,7 @@ void SAXParser::installAdvDocHandler(XMLDocumentHandler* const toInstall)
         );
 
         // And now clean up the old array and store the new stuff
-        delete [] fAdvDHList;
+        fMemoryManager->deallocate(fAdvDHList);//delete [] fAdvDHList;
         fAdvDHList = newList;
         fAdvDHListSize = newSize;
     }
@@ -608,7 +619,12 @@ void SAXParser::setStandardUriConformant(const bool newState)
 
 void SAXParser::useScanner(const XMLCh* const scannerName)
 {
-    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner(scannerName, fValidator);
+    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner
+    (
+        scannerName
+        , fValidator
+        , fMemoryManager
+    );
 
     if (tempScanner) {
 

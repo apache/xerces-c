@@ -241,8 +241,12 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
     AttrImpl* newAttr = (AttrImpl*)getAttributeNode(nam);
     if (!newAttr)
     {
-		if (attributes == 0)
-			attributes = new AttrMapImpl(this, null);
+		if (attributes == 0) {
+            if (getOwnerDocument())
+                attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
+			else
+                attributes = new AttrMapImpl(this, null);
+        }
         newAttr = (AttrImpl*)ownerDocument->createAttribute(nam);
         attributes->setNamedItem(newAttr);
     }
@@ -263,8 +267,12 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
     }
     if (!(newAttr->isAttrImpl()))
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-	if (attributes == 0)
-		attributes = new AttrMapImpl(this, null);
+	if (attributes == 0) {
+        if (getOwnerDocument())
+            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
+		else
+            attributes = new AttrMapImpl(this, null);
+    }
     AttrImpl *oldAttr =
       (AttrImpl *) attributes->getNamedItem(newAttr->getName());
     // This will throw INUSE if necessary
@@ -313,8 +321,12 @@ AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
       (AttrImpl *) ownerDocument->createAttributeNS(fNamespaceURI,
                                                     qualifiedName);
     newAttr->setNodeValue(fValue);
-	if (attributes == 0)
-		attributes = new AttrMapImpl(this, null);
+	if (attributes == 0) {
+        if (getOwnerDocument())
+		    attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
+        else
+            attributes = new AttrMapImpl(this, null);
+    }
     AttrImpl *oldAttr = (AttrImpl *)attributes->setNamedItem(newAttr);
 
     if (oldAttr) {
@@ -366,7 +378,10 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
         }
     }
     if (attributes == 0) {
-        attributes = new AttrMapImpl(this, null);
+        if (getOwnerDocument())
+            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
+        else
+            attributes = new AttrMapImpl(this, null);
     }
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
 
@@ -452,8 +467,12 @@ NodeImpl *ElementImpl::NNM_removeNamedItem(const DOMString &nnm_name)
 
 NodeImpl *ElementImpl::NNM_setNamedItem(NodeImpl *nnm_arg)
 {
-	if (getAttributes() == null)
-		attributes = new AttrMapImpl(this);
+	if (getAttributes() == null) {
+        if (getOwnerDocument())
+		    attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this);
+        else
+		    attributes = new AttrMapImpl(this);
+    }
 	return attributes->setNamedItem(nnm_arg);
 }
 
@@ -475,8 +494,12 @@ NodeImpl *ElementImpl::NNM_getNamedItemNS(const DOMString &nnm_namespaceURI, con
 
 NodeImpl *ElementImpl::NNM_setNamedItemNS(NodeImpl *nnm_arg)
 {
-	if (getAttributes() == null)
-		attributes = new AttrMapImpl(this);
+	if (getAttributes() == null) {
+        if (getOwnerDocument())
+            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this);
+		else
+            attributes = new AttrMapImpl(this);
+    }
 	return getAttributes()->setNamedItemNS(nnm_arg);
 }
 
@@ -521,8 +544,13 @@ void ElementImpl::setupDefaultAttributes()
 		delete attributes;
 	
 	AttrMapImpl* defAttrs = getDefaultAttributes();
-	if (defAttrs)
-		attributes = new AttrMapImpl(this, defAttrs);
+	if (defAttrs) {
+
+        if (getOwnerDocument())
+            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, defAttrs);
+        else
+            attributes = new AttrMapImpl(this, defAttrs);
+    }
 }
 
 // -----------------------------------------------------------------------

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.37  2003/05/15 18:25:54  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.36  2003/05/14 16:20:13  gareth
  * Fix to problem with multiple default namespace attributes being serialized. Patch by Alberto Massari.
  *
@@ -450,13 +453,13 @@ catch(TranscodingException const &e)                                 \
 
 DOMWriterImpl::~DOMWriterImpl()
 {
-    delete [] fEncoding;
-    delete [] fNewLine;
+    fMemoryManager->deallocate(fEncoding);//delete [] fEncoding;
+    fMemoryManager->deallocate(fNewLine);//delete [] fNewLine;
     delete fNamespaceStack;
     // we don't own/adopt error handler and filter
 }
 
-DOMWriterImpl::DOMWriterImpl()
+DOMWriterImpl::DOMWriterImpl(MemoryManager* const manager)
 :fFeatures(0)
 ,fEncoding(0)
 ,fNewLine(0)
@@ -469,8 +472,9 @@ DOMWriterImpl::DOMWriterImpl()
 ,fErrorCount(0)
 ,fCurrentLine(0)
 ,fNamespaceStack(0)
+,fMemoryManager(manager)
 {
-    fNamespaceStack=new RefVectorOf< RefHashTableOf<XMLCh> >(0,true);
+    fNamespaceStack=new (fMemoryManager) RefVectorOf< RefHashTableOf<XMLCh> >(0,true);
 
     //
     // set features to default setting
@@ -535,8 +539,8 @@ bool DOMWriterImpl::getFeature(const XMLCh* const featName) const
 // we don't check the validity of the encoding set
 void DOMWriterImpl::setEncoding(const XMLCh* const encoding)
 {
-    delete [] fEncoding;
-    fEncoding = XMLString::replicate(encoding);
+    fMemoryManager->deallocate(fEncoding);//delete [] fEncoding;
+    fEncoding = XMLString::replicate(encoding, fMemoryManager);
 }
 
 const XMLCh* DOMWriterImpl::getEncoding() const
@@ -546,8 +550,8 @@ const XMLCh* DOMWriterImpl::getEncoding() const
 
 void DOMWriterImpl::setNewLine(const XMLCh* const newLine)
 {
-    delete [] fNewLine;
-    fNewLine = XMLString::replicate(newLine);
+    fMemoryManager->deallocate(fNewLine);//delete [] fNewLine;
+    fNewLine = XMLString::replicate(newLine, fMemoryManager);
 }
 
 const XMLCh* DOMWriterImpl::getNewLine() const
@@ -586,7 +590,7 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
 
     try
     {
-        fFormatter = new XMLFormatter(fEncodingUsed
+        fFormatter = new (fMemoryManager) XMLFormatter(fEncodingUsed
                                      ,fDocumentVersion
                                      ,destination
                                      ,XMLFormatter::NoEscapes
@@ -909,9 +913,9 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             //track the line number the current node begins on
             int nodeLine = fCurrentLine;
 
-			// add an entry in the namespace stack
-			RefHashTableOf<XMLCh>* namespaceMap=new RefHashTableOf<XMLCh>(12,false);
-			fNamespaceStack->addElement(namespaceMap);
+            // add an entry in the namespace stack
+            RefHashTableOf<XMLCh>* namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12,false);
+            fNamespaceStack->addElement(namespaceMap);
 
             if ( filterAction == DOMNodeFilter::FILTER_ACCEPT)
             {
@@ -968,7 +972,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 bool discard = getFeature(DISCARD_DEFAULT_CONTENT_ID);
                 for (int i = 0; i < attrCount; i++)
                 {
-					DOMAttrSPtr  attribute = (DOMAttr*)attributes->item(i);
+                    DOMAttrSPtr  attribute = (DOMAttr*)attributes->item(i);
 
                     // Not to be shown to Filter
 
@@ -1459,10 +1463,13 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
      * Append a ']]>' at the end
      */
     int len = XMLString::stringLen(nodeValue);
-    XMLCh* repNodeValue = new XMLCh [len + offset + 1];
+    XMLCh* repNodeValue = (XMLCh*) fMemoryManager->allocate
+    (
+        (len + offset + 1) * sizeof(XMLCh)
+    );//new XMLCh [len + offset + 1];
     XMLString::copyString(repNodeValue, nodeValue);
     XMLString::catString(repNodeValue, gEndCDATA);
-    ArrayJanitor<XMLCh>  jName(repNodeValue);
+    ArrayJanitor<XMLCh>  jName(repNodeValue, fMemoryManager);
 
     XMLCh* curPtr  = (XMLCh*) repNodeValue;
     XMLCh* nextPtr = 0;

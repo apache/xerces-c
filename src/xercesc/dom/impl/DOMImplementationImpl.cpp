@@ -227,9 +227,10 @@ DOMDocumentType *DOMImplementationImpl::createDocumentType(const XMLCh *qualifie
 }
 
 DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
-	const XMLCh *qualifiedName, DOMDocumentType *doctype)
+	const XMLCh *qualifiedName, DOMDocumentType *doctype,
+    MemoryManager* const manager)
 {
-    return new DOMDocumentImpl(namespaceURI, qualifiedName, doctype);
+    return new (manager) DOMDocumentImpl(namespaceURI, qualifiedName, doctype, manager);
 }
 
 
@@ -240,9 +241,9 @@ DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh* feature){
 }
 
 // Non-standard extension
-DOMDocument *DOMImplementationImpl::createDocument()
+DOMDocument *DOMImplementationImpl::createDocument(MemoryManager* const manager)
 {
-        return new DOMDocumentImpl();
+        return new (manager) DOMDocumentImpl(manager);
 }
 
 //
@@ -281,18 +282,19 @@ bool DOMImplementation::loadDOMExceptionMsg
 // ------------------------------------------------------------
 //Introduced in DOM Level 3
 DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short mode,
-                                                    const XMLCh* const schemaType)
+                                                    const XMLCh* const schemaType,
+                                                    MemoryManager* const manager)
 {
     if (mode == DOMImplementationLS::MODE_ASYNCHRONOUS)
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 
-    return new DOMBuilderImpl();
+    return new DOMBuilderImpl(0, manager);
 }
 
 
-DOMWriter* DOMImplementationImpl::createDOMWriter()
+DOMWriter* DOMImplementationImpl::createDOMWriter(MemoryManager* const manager)
 {
-    return new DOMWriterImpl();
+    return new DOMWriterImpl(manager);
 }
 
 DOMInputSource* DOMImplementationImpl::createDOMInputSource()

@@ -166,6 +166,8 @@ private:
     /** Bypass error checking. */
     bool errorChecking;
 
+    MemoryManager               *fMemoryManager;
+
     friend class NodeIteratorImpl;
     friend class TreeWalkerImpl;
     friend class RangeImpl;
@@ -266,6 +268,10 @@ public:
      */
     inline bool getErrorChecking() {
         return errorChecking;
+    }
+
+    inline MemoryManager* getMemoryManager() const {
+        return fMemoryManager;
     }
 
     // -----------------------------------------------------------------------

@@ -74,44 +74,47 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XMLScannerResolver: Public static methods
 // ---------------------------------------------------------------------------
 XMLScanner*
-XMLScannerResolver::getDefaultScanner(XMLValidator* const valToAdopt)
+XMLScannerResolver::getDefaultScanner( XMLValidator* const  valToAdopt
+                                     , MemoryManager* const manager)
 {
-    return new IGXMLScanner(valToAdopt);
+    return new (manager) IGXMLScanner(valToAdopt, manager);
 }
 
 XMLScanner*
-XMLScannerResolver::resolveScanner(const XMLCh* const scannerName,
-                                   XMLValidator* const valToAdopt)
+XMLScannerResolver::resolveScanner( const XMLCh* const   scannerName
+                                  , XMLValidator* const  valToAdopt
+                                  , MemoryManager* const manager)
 {
     if (XMLString::equals(scannerName, XMLUni::fgWFXMLScanner))
-        return new WFXMLScanner(valToAdopt);
+        return new (manager) WFXMLScanner(valToAdopt, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgIGXMLScanner))
-        return new IGXMLScanner(valToAdopt);
+        return new (manager) IGXMLScanner(valToAdopt, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgSGXMLScanner))
-        return new SGXMLScanner(valToAdopt);
+        return new (manager) SGXMLScanner(valToAdopt, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgDGXMLScanner))
-        return new DGXMLScanner(valToAdopt);
+        return new (manager) DGXMLScanner(valToAdopt, manager);
 
     // REVISIT: throw an exception or return a default one?
     return 0;
 }
 
 XMLScanner*
-XMLScannerResolver::resolveScanner(const XMLCh* const scannerName,
-                                   XMLDocumentHandler* const docHandler,
-                                   DocTypeHandler* const docTypeHandler,
-                                   XMLEntityHandler* const entityHandler,
-                                   XMLErrorReporter* const errReporter,
-                                   XMLValidator* const valToAdopt)
+XMLScannerResolver::resolveScanner( const XMLCh* const        scannerName
+                                  , XMLDocumentHandler* const docHandler
+                                  , DocTypeHandler* const     docTypeHandler
+                                  , XMLEntityHandler* const   entityHandler
+                                  , XMLErrorReporter* const   errReporter
+                                  , XMLValidator* const       valToAdopt
+                                  , MemoryManager* const      manager)
 {
     if (XMLString::equals(scannerName, XMLUni::fgWFXMLScanner))
-        return new WFXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
+        return new (manager) WFXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgIGXMLScanner))
-        return new IGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
+        return new (manager) IGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgSGXMLScanner))
-        return new SGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
+        return new (manager) SGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgDGXMLScanner))
-        return new DGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
+        return new (manager) DGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
 
     // REVISIT: throw an exception or return a default one?
     return 0;

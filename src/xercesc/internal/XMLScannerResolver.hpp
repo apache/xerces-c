@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.1  2002/12/04 01:44:21  knoaman
  * Initial check-in.
  *
@@ -82,23 +85,26 @@ public:
     // -----------------------------------------------------------------------
     static XMLScanner* resolveScanner
     (
-        const XMLCh* const        scannerName
-        ,     XMLValidator* const valToAdopt
+          const XMLCh* const   scannerName
+        , XMLValidator* const  valToAdopt
+        , MemoryManager* const manager   
     );
 
     static XMLScanner* resolveScanner
     (
-        const XMLCh* const              scannerName
-        ,     XMLDocumentHandler* const docHandler
-        ,     DocTypeHandler* const     docTypeHandler
-        ,     XMLEntityHandler* const   entityHandler
-        ,     XMLErrorReporter* const   errReporter
-        ,     XMLValidator* const       valToAdopt
+          const XMLCh* const        scannerName
+        , XMLDocumentHandler* const docHandler
+        , DocTypeHandler* const     docTypeHandler
+        , XMLEntityHandler* const   entityHandler
+        , XMLErrorReporter* const   errReporter
+        , XMLValidator* const       valToAdopt
+        , MemoryManager* const      manager
     );
 
     static XMLScanner* getDefaultScanner
     (
-        XMLValidator* const valToAdopt
+          XMLValidator* const  valToAdopt
+        , MemoryManager* const manager
     );
 
 private :

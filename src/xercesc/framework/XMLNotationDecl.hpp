@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/04/21 20:46:01  knoaman
  * Use XMLString::release to prepare for configurable memory manager.
  *
@@ -96,6 +99,8 @@
 #if !defined(XMLNOTATIONDECL_HPP)
 #define XMLNOTATIONDECL_HPP
 
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -109,7 +114,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  At this common level, the information supported is the notation name
  *  and the public and sysetm ids indicated in the notation declaration.
  */
-class XMLPARSER_EXPORT XMLNotationDecl
+class XMLPARSER_EXPORT XMLNotationDecl : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -142,6 +147,7 @@ public:
     const XMLCh* getPublicId() const;
     const XMLCh* getSystemId() const;
     const XMLCh* getBaseURI() const;
+    MemoryManager* getMemoryManager() const;
 
 
     // -----------------------------------------------------------------------
@@ -201,6 +207,7 @@ private :
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
     XMLCh*          fBaseURI;
+    MemoryManager*  fMemoryManager;
 };
 
 
@@ -232,6 +239,10 @@ inline const XMLCh* XMLNotationDecl::getBaseURI() const
     return fBaseURI;
 }
 
+inline MemoryManager* XMLNotationDecl::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // -----------------------------------------------------------------------
 //  Setter methods
@@ -244,25 +255,25 @@ inline void XMLNotationDecl::setId(const unsigned int newId)
 inline void XMLNotationDecl::setPublicId(const XMLCh* const newId)
 {
     if (fPublicId)
-        XMLString::release(&fPublicId);
+        fMemoryManager->deallocate(fPublicId);
 
-    fPublicId = XMLString::replicate(newId);
+    fPublicId = XMLString::replicate(newId, fMemoryManager);
 }
 
 inline void XMLNotationDecl::setSystemId(const XMLCh* const newId)
 {
     if (fSystemId)
-        XMLString::release(&fSystemId);
+        fMemoryManager->deallocate(fSystemId);
 
-    fSystemId = XMLString::replicate(newId);
+    fSystemId = XMLString::replicate(newId, fMemoryManager);
 }
 
 inline void XMLNotationDecl::setBaseURI(const XMLCh* const newId)
 {
     if (fBaseURI)
-        XMLString::release(&fBaseURI);
+        fMemoryManager->deallocate(fBaseURI);
 
-    fBaseURI = XMLString::replicate(newId);
+    fBaseURI = XMLString::replicate(newId, fMemoryManager);
 }
 
 

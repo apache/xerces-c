@@ -71,7 +71,6 @@
 #ifndef DStringPool_HEADER_GUARD_
 #define DStringPool_HEADER_GUARD_
 
-#include <xercesc/util/XercesDefs.hpp>
 #include "DOMString.hpp"
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
@@ -88,7 +87,7 @@ struct DStringPoolEntry;
 //  if the name has been seen before, the already existing string
 //  will be reused.
 //
-class DStringPool
+class DStringPool : public XMemory
 {
 public:
     DStringPool(int  hashTableSize);

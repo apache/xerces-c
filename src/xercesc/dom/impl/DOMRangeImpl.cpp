@@ -873,7 +873,10 @@ const XMLCh* DOMRangeImpl::toString() const
             XMLCh* tempString;
             XMLCh temp[4000];
             if ((fEndOffset-fStartOffset) >= 3999)
-                tempString = new XMLCh[fEndOffset-fStartOffset+1];
+                tempString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (fEndOffset - fStartOffset + 1) * sizeof(XMLCh)
+                );//new XMLCh[fEndOffset-fStartOffset+1];
             else
                 tempString = temp;
 
@@ -881,7 +884,7 @@ const XMLCh* DOMRangeImpl::toString() const
             const XMLCh* retString = ((DOMDocumentImpl *)fDocument)->getPooledString(tempString);
 
             if ((fEndOffset-fStartOffset) >= 3999)
-                delete[] tempString;
+                XMLPlatformUtils::fgMemoryManager->deallocate(tempString);//delete[] tempString;
 
             return retString;
         } else {
@@ -891,7 +894,10 @@ const XMLCh* DOMRangeImpl::toString() const
                 XMLCh* tempString;
                 XMLCh temp[4000];
                 if ((length - fStartOffset) >= 3999)
-                    tempString = new XMLCh[length - fStartOffset+1];
+                    tempString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                    (
+                        (length - fStartOffset + 1) * sizeof(XMLCh)
+                    );//new XMLCh[length - fStartOffset+1];
                 else
                     tempString = temp;
 
@@ -899,7 +905,7 @@ const XMLCh* DOMRangeImpl::toString() const
                 retStringBuf.append(tempString);
 
                 if ((length - fStartOffset) >= 3999)
-                    delete[] tempString;
+                    XMLPlatformUtils::fgMemoryManager->deallocate(tempString);//delete[] tempString;
             }
 
             node = nextNode(node, true);
@@ -957,7 +963,10 @@ const XMLCh* DOMRangeImpl::toString() const
             XMLCh* tempString;
             XMLCh temp[4000];
             if (fEndOffset >= 3999)
-                tempString = new XMLCh[fEndOffset+1];
+                tempString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (fEndOffset+1) * sizeof(XMLCh)
+                );//new XMLCh[fEndOffset+1];
             else
                 tempString = temp;
 
@@ -965,7 +974,7 @@ const XMLCh* DOMRangeImpl::toString() const
             retStringBuf.append(tempString);
 
             if (fEndOffset >= 3999)
-                delete[] tempString;
+                XMLPlatformUtils::fgMemoryManager->deallocate(tempString);//delete[] tempString;
         }
     }
     return ((DOMDocumentImpl *)fDocument)->getPooledString(retStringBuf.getRawBuffer());
@@ -1284,7 +1293,10 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
             XMLCh* tempString;
             XMLCh temp[4000];
             if (fEndOffset >= 3999)
-                tempString = new XMLCh[fEndOffset+1];
+                tempString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (fEndOffset+1) * sizeof(XMLCh)
+                );//new XMLCh[fEndOffset+1];
             else
                 tempString = temp;
 
@@ -1292,7 +1304,7 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
             cloneCurrent->setNodeValue(((DOMDocumentImpl *)fDocument)->getPooledString(tempString));
 
             if (fEndOffset >= 3999)
-                delete[] tempString;
+                XMLPlatformUtils::fgMemoryManager->deallocate(tempString);//delete[] tempString;
         }
 
         // set the original text node to its new value
@@ -1705,7 +1717,10 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             XMLCh oldTemp[4000];
 
             if (offset >= 3999)  {
-                oldNodeValue = new XMLCh[offset+1];
+                oldNodeValue = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (offset+1) * sizeof(XMLCh)
+                );//new XMLCh[offset+1];
             }
             else {
                 oldNodeValue = oldTemp;
@@ -1716,7 +1731,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
                 n->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(oldNodeValue) );
 
             if (offset>= 3999)
-                delete[] oldNodeValue;
+                XMLPlatformUtils::fgMemoryManager->deallocate(oldNodeValue);//delete[] oldNodeValue;
         }
 
         if ( how==DELETE_CONTENTS )
@@ -1732,7 +1747,10 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             XMLCh newTemp[4000];
 
             if (offset >= 3999)  {
-                newNodeValue = new XMLCh[offset+1];
+                newNodeValue = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (offset+1) * sizeof(XMLCh)
+                );//new XMLCh[offset+1];
             }
             else {
                 newNodeValue = newTemp;
@@ -1741,7 +1759,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             newNode->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(newNodeValue) );
 
             if (offset>= 3999)
-                delete[] newNodeValue;
+                XMLPlatformUtils::fgMemoryManager->deallocate(newNodeValue);//delete[] newNodeValue;
 
         }
         return newNode;
@@ -1760,7 +1778,10 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             XMLCh oldTemp[4000];
 
             if (offset >= 3999)  {
-                oldNodeValue = new XMLCh[offset+1];
+                oldNodeValue = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (offset+1) * sizeof(XMLCh)
+                );//new XMLCh[offset+1];
             }
             else {
                 oldNodeValue = oldTemp;
@@ -1771,7 +1792,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
                 n->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(oldNodeValue) );
 
             if (offset>= 3999)
-                delete[] oldNodeValue;
+                XMLPlatformUtils::fgMemoryManager->deallocate(oldNodeValue);//delete[] oldNodeValue;
         }
 
         if ( how==DELETE_CONTENTS )
@@ -1787,7 +1808,10 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             XMLCh newTemp[4000];
 
             if (offset >= 3999)  {
-                newNodeValue = new XMLCh[offset+1];
+                newNodeValue = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (offset+1) * sizeof(XMLCh)
+                );//new XMLCh[offset+1];
             }
             else {
                 newNodeValue = newTemp;
@@ -1796,7 +1820,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             newNode->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(newNodeValue) );
 
             if (offset>= 3999)
-                delete[] newNodeValue;
+                XMLPlatformUtils::fgMemoryManager->deallocate(newNodeValue);//delete[] newNodeValue;
 
         }
         return newNode;

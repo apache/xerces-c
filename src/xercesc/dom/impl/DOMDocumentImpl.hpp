@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,14 +70,10 @@
 //  name is substituded for the *.
 //
 
-#include <string.h>
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefArrayOf.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefStackOf.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/KeyRefPair.hpp>
-
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
 #include "DOMNodeImpl.hpp"
@@ -97,7 +93,6 @@ class DOMDocumentTypeImpl;
 class DOMElementImpl;
 class DOMEntityImpl;
 class DOMEntityReferenceImpl;
-class DOMNodeImpl;
 class DOMNotationImpl;
 class DOMProcessingInstructionImpl;
 class DOMTextImpl;
@@ -109,9 +104,9 @@ class DOMNodeFilterImpl;
 class DOMImplementation;
 class DOMNodeIDMap;
 class DOMRangeImpl;
-class DOMParentNode;
 class DOMStringPool;
 class DOMBuffer;
+class MemoryManager;
 
 typedef RefVectorOf<DOMRangeImpl>        Ranges;
 typedef RefVectorOf<DOMNodeIteratorImpl>     NodeIterators;
@@ -119,7 +114,7 @@ typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
 typedef RefHashTableOf<DOMUserDataRecord> DOMNodeUserDataTable;
 typedef RefStackOf<DOMNode>               DOMNodePtr;
 
-class CDOM_EXPORT DOMDocumentImpl: public DOMDocument {
+class CDOM_EXPORT DOMDocumentImpl: public DOMDocument , public XMemory{
 public:
     // -----------------------------------------------------------------------
     //  data types
@@ -149,10 +144,11 @@ public:
     DOMNodeIDMap*         fNodeIDMap;     // for use by GetElementsById().
 
 public:
-    DOMDocumentImpl();
+    DOMDocumentImpl(MemoryManager* const manager);
     DOMDocumentImpl(const XMLCh*     namespaceURI,     //DOM Level 2
                     const XMLCh*     qualifiedName,
-                    DOMDocumentType* doctype);
+                    DOMDocumentType* doctype,
+                    MemoryManager* const manager);
     virtual ~DOMDocumentImpl();
 
     void                         setDocumentType(DOMDocumentType *doctype);
@@ -374,6 +370,7 @@ private:
     DOMNormalizer*        fNormalizer;
     Ranges*               fRanges;
     NodeIterators*        fNodeIterators;
+    MemoryManager*        fMemoryManager;   // configurable memory manager
 
     int                   fChanges;
     bool                  errorChecking;    // Bypass error checking.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 18:29:49  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/03/09 16:41:40  peiyongz
  * PanicHandler
  *
@@ -104,7 +107,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/BitOps.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
@@ -129,12 +131,12 @@ InMemMsgLoader::InMemMsgLoader(const XMLCh* const msgDomain)
         XMLPlatformUtils::panic(PanicHandler::Panic_UnknownMsgDomain);
     }
 
-    fMsgDomain = XMLString::replicate(msgDomain);
+    fMsgDomain = XMLString::replicate(msgDomain, XMLPlatformUtils::fgMemoryManager);
 }
 
 InMemMsgLoader::~InMemMsgLoader()
 {
-    delete [] fMsgDomain;
+    XMLPlatformUtils::fgMemoryManager->deallocate(fMsgDomain);//delete [] fMsgDomain;
 }
 
 
@@ -232,24 +234,24 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1);
+        tmp1 = XMLString::transcode(repText1, XMLPlatformUtils::fgMemoryManager);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2);
+        tmp2 = XMLString::transcode(repText2, XMLPlatformUtils::fgMemoryManager);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3);
+        tmp3 = XMLString::transcode(repText3, XMLPlatformUtils::fgMemoryManager);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4);
+        tmp4 = XMLString::transcode(repText4, XMLPlatformUtils::fgMemoryManager);
 
     bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
 
     if (tmp1)
-        delete [] tmp1;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        delete [] tmp2;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        delete [] tmp3;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        delete [] tmp4;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

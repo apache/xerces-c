@@ -70,7 +70,6 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLEBCDICTranscoder.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -158,6 +157,7 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
     , fType(type)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     setXMLVersion(version);
 
@@ -237,6 +237,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
     , fType(type)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     setXMLVersion(version);
 
@@ -276,6 +277,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
             fEncodingStr
             , failReason
             , kCharBufSize
+            , fMemoryManager
         );
     }
      else
@@ -288,6 +290,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
             fEncoding
             , failReason
             , kCharBufSize
+            , fMemoryManager
         );
 
     }
@@ -353,6 +356,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
     , fType(type)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     setXMLVersion(version);
 
@@ -381,6 +385,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
         fEncoding
         , failReason
         , kCharBufSize
+        , fMemoryManager
     );
 
     if (!fTranscoder)
@@ -476,6 +481,7 @@ bool XMLReader::refreshCharBuffer()
             fEncodingStr
             , failReason
             , kCharBufSize
+            , fMemoryManager
         );
 
         if (!fTranscoder)
@@ -1194,6 +1200,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
                 fEncodingStr
                 , failReason
                 , kCharBufSize
+                , fMemoryManager
             );
         }
     }
@@ -1216,6 +1223,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             newBaseEncoding
             , failReason
             , kCharBufSize
+            , fMemoryManager
         );
 
         if (!fTranscoder)

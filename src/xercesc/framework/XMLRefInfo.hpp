@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/04/21 20:46:01  knoaman
  * Use XMLString::release to prepare for configurable memory manager.
  *
@@ -95,6 +98,8 @@
 #if !defined(XMLIDREFINFO_HPP)
 #define XMLIDREFINFO_HPP
 
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -113,7 +118,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  not enabled/supported by the validator, or it will be in the form
  *  {url}name if namespace processing is enabled.
  */
-class XMLPARSER_EXPORT XMLRefInfo
+class XMLPARSER_EXPORT XMLRefInfo : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -178,6 +183,7 @@ private :
     bool        fDeclared;
     bool        fUsed;
     XMLCh*      fRefName;
+    MemoryManager* fMemoryManager;
 };
 
 
@@ -189,13 +195,15 @@ inline XMLRefInfo::XMLRefInfo(  const   XMLCh* const    refName
                                 , const bool            used) :
     fDeclared(declared)
     , fUsed(used)
-    , fRefName(XMLString::replicate(refName))
+    , fRefName(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
+    fRefName = XMLString::replicate(refName, fMemoryManager);
 }
 
 inline XMLRefInfo::~XMLRefInfo()
 {
-    XMLString::release(&fRefName);
+    fMemoryManager->deallocate(fRefName);
 }
 
 

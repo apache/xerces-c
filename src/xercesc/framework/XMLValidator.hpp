@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.9  2003/05/15 18:26:07  knoaman
+  * Partial implementation of the configurable memory manager.
+  *
   * Revision 1.8  2003/03/07 18:08:10  tng
   * Return a reference instead of void for operator=
   *
@@ -147,20 +150,14 @@
 #if !defined(XMLVALIDATOR_HPP)
 #define XMLVALIDATOR_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
-#include <xercesc/framework/XMLRefInfo.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class ReaderMgr;
-class XMLBuffer;
 class XMLBufferMgr;
 class XMLElementDecl;
-class XMLEntityHandler;
-class XMLErrorReporter;
-class XMLMsgLoader;
 class XMLScanner;
 class Grammar;
 
@@ -180,7 +177,7 @@ class Grammar;
  *  via the base decl classes, from which each validator derives its own
  *  decl classes.
  */
-class XMLPARSER_EXPORT XMLValidator
+class XMLPARSER_EXPORT XMLValidator : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -501,7 +498,6 @@ private :
     XMLErrorReporter*   fErrorReporter;
     ReaderMgr*          fReaderMgr;
     XMLScanner*         fScanner;
-
 };
 
 

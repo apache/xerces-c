@@ -100,17 +100,19 @@ static XMLRegisterCleanup namCleanup;
 
 DocumentImpl::DocumentImpl()
     : ParentNode(this)
+    , docType(0)
+    , docElement(0)
+    , namePool(0)
+    , fNodeIDMap(0)
+    , iterators(0)
+    , treeWalkers(0)
+    , userData(0)
+    , ranges(0)
+    , fChanges(0)
+    , errorChecking(true)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    docType     = null;
-    docElement  = null;
-    namePool    = new DStringPool(257);
-    iterators   = 0L;
-    treeWalkers = 0L;
-    fNodeIDMap  = 0;
-    userData    = 0;
-    ranges      = 0;
-    fChanges = 0;
-    errorChecking = true;
+    namePool    = new (fMemoryManager) DStringPool(257);
 };
 
 
@@ -119,20 +121,20 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            const DOMString &qualifiedName,
                            DocumentTypeImpl *doctype)
     : ParentNode(this)
+    , docType(0)
+    , docElement(0)
+    , namePool(0)
+    , fNodeIDMap(0)
+    , iterators(0)
+    , treeWalkers(0)
+    , userData(0)
+    , ranges(0)
+    , fChanges(0)
+    , errorChecking(true)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    docType=null;
-
 	setDocumentType(doctype);
-	
-    docElement=null;
-    namePool    = new DStringPool(257);
-    iterators   = 0;
-    treeWalkers = 0;
-    fNodeIDMap  = 0;
-    userData    = 0;
-    ranges      = 0;
-    fChanges = 0;
-    errorChecking = true;
+    namePool    = new (fMemoryManager) DStringPool(257);
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
 }
 
@@ -238,27 +240,27 @@ AttrImpl *DocumentImpl::createAttribute(const DOMString &nam)
     if (errorChecking && !isXMLName(nam)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     }
-    return new AttrImpl(this,nam);
+    return new (fMemoryManager) AttrImpl(this,nam);
 };
 
 
 
 CDATASectionImpl *DocumentImpl::createCDATASection(const DOMString &data) {
-    return new CDATASectionImpl(this,data);
+    return new (fMemoryManager) CDATASectionImpl(this,data);
 };
 
 
 
 CommentImpl *DocumentImpl::createComment(const DOMString &data)
 {
-    return new CommentImpl(this,data);
+    return new (fMemoryManager) CommentImpl(this,data);
 };
 
 
 
 DocumentFragmentImpl *DocumentImpl::createDocumentFragment()
 {
-    return new DocumentFragmentImpl(this);
+    return new (fMemoryManager) DocumentFragmentImpl(this);
 };
 
 
@@ -268,7 +270,7 @@ DocumentTypeImpl *DocumentImpl::createDocumentType(const DOMString &nam)
     if (errorChecking && !isXMLName(nam)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
     }
-    return new DocumentTypeImpl(this, nam);
+    return new (fMemoryManager) DocumentTypeImpl(this, nam);
 };
 
 
@@ -281,7 +283,7 @@ DocumentTypeImpl *
     if (errorChecking && !isXMLName(qualifiedName)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
     }
-    return new DocumentTypeImpl(this, qualifiedName, publicId, systemId);
+    return new (fMemoryManager) DocumentTypeImpl(this, qualifiedName, publicId, systemId);
 };
 
 
@@ -292,14 +294,14 @@ ElementImpl *DocumentImpl::createElement(const DOMString &tagName)
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     }
     DOMString pooledTagName = this->namePool->getPooledString(tagName);
-    return new ElementImpl(this,pooledTagName);
+    return new (fMemoryManager) ElementImpl(this,pooledTagName);
 };
 
 
 ElementImpl *DocumentImpl::createElement(const XMLCh *tagName)
 {
     DOMString pooledTagName = this->namePool->getPooledString(tagName);
-    return new ElementImpl(this,pooledTagName);
+    return new (fMemoryManager) ElementImpl(this,pooledTagName);
 };
 
 
@@ -310,7 +312,7 @@ EntityImpl *DocumentImpl::createEntity(const DOMString &nam)
     if (errorChecking && !isXMLName(nam)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
     }
-    return new EntityImpl(this, nam);
+    return new (fMemoryManager) EntityImpl(this, nam);
 };
 
 
@@ -320,7 +322,7 @@ EntityReferenceImpl *DocumentImpl::createEntityReference(const DOMString &nam)
     if (errorChecking && !isXMLName(nam)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
     }
-    return new EntityReferenceImpl(this, nam);
+    return new (fMemoryManager) EntityReferenceImpl(this, nam);
 };
 
 
@@ -330,7 +332,7 @@ NotationImpl *DocumentImpl::createNotation(const DOMString &nam)
     if (errorChecking && !isXMLName(nam)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
     }
-    return new NotationImpl(this, nam);
+    return new (fMemoryManager) NotationImpl(this, nam);
 };
 
 
@@ -341,7 +343,7 @@ ProcessingInstructionImpl *DocumentImpl::createProcessingInstruction(
     if (errorChecking && !isXMLName(target)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     }
-    return new ProcessingInstructionImpl(this,target,data);
+    return new (fMemoryManager) ProcessingInstructionImpl(this,target,data);
 };
 
 
@@ -349,7 +351,7 @@ ProcessingInstructionImpl *DocumentImpl::createProcessingInstruction(
 
 TextImpl *DocumentImpl::createTextNode(const DOMString &data)
 {
-    return new TextImpl(this,data);
+    return new (fMemoryManager) TextImpl(this,data);
 };
 
 
@@ -360,7 +362,7 @@ NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, unsigned long
 		//	The vector of iterators is kept in the "owner document" if there is one. If there isn't one, I assume that root is the
 		//	owner document.
 
-    NodeIteratorImpl* iter = new NodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
+    NodeIteratorImpl* iter = new (XMLPlatformUtils::fgMemoryManager) NodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
     DOM_Document doc = root.getOwnerDocument();
     DocumentImpl* impl;
 
@@ -371,7 +373,7 @@ NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, unsigned long
         impl = (DocumentImpl *) root.fImpl;
 
     if (impl->iterators == 0L) {
-        impl->iterators = new NodeIterators(1, false);
+        impl->iterators = new (XMLPlatformUtils::fgMemoryManager) NodeIterators(1, false);
         impl->iterators->addElement(iter);
     }
 
@@ -383,7 +385,7 @@ TreeWalkerImpl* DocumentImpl::createTreeWalker (DOM_Node root, unsigned long wha
 {
 		// See notes for createNodeIterator...
 
-    TreeWalkerImpl* twi = new TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
+    TreeWalkerImpl* twi = new (XMLPlatformUtils::fgMemoryManager) TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
     DOM_Document doc = root.getOwnerDocument();
     DocumentImpl* impl;
 
@@ -394,7 +396,7 @@ TreeWalkerImpl* DocumentImpl::createTreeWalker (DOM_Node root, unsigned long wha
         impl = (DocumentImpl *) root.fImpl;
 
     if (impl->treeWalkers == 0L) {
-        impl->treeWalkers = new TreeWalkers(1, false);
+        impl->treeWalkers = new (XMLPlatformUtils::fgMemoryManager) TreeWalkers(1, false);
         impl->treeWalkers->addElement(twi);
     }
 
@@ -669,7 +671,7 @@ ElementImpl *DocumentImpl::createElementNS(const DOMString &fNamespaceURI,
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     }
     //DOMString pooledTagName = this->namePool->getPooledString(qualifiedName);
-    return new ElementNSImpl(this, fNamespaceURI, qualifiedName);
+    return new (fMemoryManager) ElementNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
 
@@ -679,7 +681,7 @@ AttrImpl *DocumentImpl::createAttributeNS(const DOMString &fNamespaceURI,
     if (!isXMLName(qualifiedName)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     }
-    return new AttrNSImpl(this, fNamespaceURI, qualifiedName);
+    return new (fMemoryManager) AttrNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
 
@@ -724,16 +726,16 @@ int DocumentImpl::indexofQualifiedName(const DOMString & qName)
 
 XMLDeclImpl* DocumentImpl::createXMLDecl(const DOMString& version, const DOMString& encoding, const DOMString& standalone)
 {
-    return new XMLDeclImpl(this, version, encoding, standalone);
+    return new (fMemoryManager) XMLDeclImpl(this, version, encoding, standalone);
 }
 
 RangeImpl* DocumentImpl::createRange()
 {
 
-    RangeImpl* range = new RangeImpl(DOM_Document(this));
+    RangeImpl* range = new (fMemoryManager) RangeImpl(DOM_Document(this));
 
     if (ranges == 0L) {
-        ranges = new RangeImpls(1, false);
+        ranges = new (fMemoryManager) RangeImpls(1, false);
     }
     ranges->addElement(range);
     return range;
@@ -810,7 +812,7 @@ bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
 void DocumentImpl::setUserData(NodeImpl* n, void* data)
 {
 	if (!userData && data)
-		userData = new RefHashTableOf<void>(29, false, new HashPtr());
+		userData = new (fMemoryManager) RefHashTableOf<void>(29, false, new (fMemoryManager) HashPtr());
 	if (!data && userData)
 		userData->removeKey((void*)n);
 	else

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/05/15 18:29:48  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.16  2003/03/17 19:28:05  peiyongz
  * Build versioned XercesMessages on Windows
  *
@@ -226,8 +229,8 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 	Resolve domainName
     ***/
     int     index = XMLString::lastIndexOf(msgDomain, chForwardSlash);
-    char*   domainName = XMLString::transcode(&(msgDomain[index + 1]));
-    ArrayJanitor<char> jan1(domainName);
+    char*   domainName = XMLString::transcode(&(msgDomain[index + 1]), XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<char> jan1(domainName, XMLPlatformUtils::fgMemoryManager);
 
     /***
         Location resolution priority
@@ -406,24 +409,24 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1);
+        tmp1 = XMLString::transcode(repText1, XMLPlatformUtils::fgMemoryManager);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2);
+        tmp2 = XMLString::transcode(repText2, XMLPlatformUtils::fgMemoryManager);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3);
+        tmp3 = XMLString::transcode(repText3, XMLPlatformUtils::fgMemoryManager);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4);
+        tmp4 = XMLString::transcode(repText4, XMLPlatformUtils::fgMemoryManager);
 
     bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
 
     if (tmp1)
-        delete [] tmp1;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        delete [] tmp2;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        delete [] tmp3;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        delete [] tmp4;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/05/15 18:25:54  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.14  2003/05/12 16:08:11  gareth
  * fix to #18832. Corrected serilization with regards to namespace nodes. Patch by Alby Massari.
  *
@@ -343,7 +346,7 @@ public:
     /**
      * Constructor.
      */
-    DOMWriterImpl();
+    DOMWriterImpl(MemoryManager* const manager);
 
     /**
      * Destructor.
@@ -487,6 +490,7 @@ private:
     int                           fCurrentLine;
 
     RefVectorOf< RefHashTableOf<XMLCh> >* fNamespaceStack;
+    MemoryManager*               fMemoryManager;
 };
 
 inline void DOMWriterImpl::setFeature(const int featureId

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -175,6 +178,7 @@ private:
     //      larger, to leave room for the null terminator.
     //
     // -----------------------------------------------------------------------
+    MemoryManager*  fMemoryManager;
     XMLByte*        fDataBuf;
     unsigned int    fIndex;
     unsigned int    fCapacity;

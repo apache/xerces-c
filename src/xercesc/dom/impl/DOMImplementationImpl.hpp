@@ -100,13 +100,14 @@ public:
                                                    const XMLCh *systemId);
     virtual DOMDocument*        createDocument(const XMLCh *namespaceURI,
                                                const XMLCh *qualifiedName,
-                                               DOMDocumentType *doctype);
+                                               DOMDocumentType *doctype,
+                                               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // DOM Level 3
     virtual DOMImplementation*  getInterface(const XMLCh* feature);
 
     // Non-standard extension
-    virtual DOMDocument*        createDocument();
+    virtual DOMDocument*        createDocument(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // ------------------------------------------------------------
     // DOMImplementationLS Virtual interface
@@ -114,8 +115,9 @@ public:
     // Introduced in DOM Level 3
     // Experimental - subject to change
     virtual DOMBuilder*         createDOMBuilder(const short mode,
-                                                 const XMLCh* const schemaType);
-    virtual DOMWriter*          createDOMWriter();
+                                                 const XMLCh* const schemaType,
+                                                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    virtual DOMWriter*          createDOMWriter(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual DOMInputSource*     createDOMInputSource();
 
     // ------------------------------------------------------------

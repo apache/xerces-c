@@ -71,7 +71,6 @@
 #define DOMDeepNODELISTPOOL_HPP
 
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
@@ -79,7 +78,6 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
@@ -96,32 +94,36 @@ template <class TVal> struct DOMDeepNodeListPoolTableBucketElem;
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct DOMDeepNodeListPoolTableBucketElem
+template <class TVal>
+struct DOMDeepNodeListPoolTableBucketElem : public XMemory
 {
-    DOMDeepNodeListPoolTableBucketElem(
-              void* key1
-              , XMLCh* key2
-              , XMLCh* key3
-              , TVal* const value
-              , DOMDeepNodeListPoolTableBucketElem<TVal>* next) :
-		fData(value)
+    DOMDeepNodeListPoolTableBucketElem
+    (
+        void* key1
+        , XMLCh* key2
+        , XMLCh* key3
+        , TVal* const value
+        , DOMDeepNodeListPoolTableBucketElem<TVal>* next
+        , MemoryManager* const manager
+    ) :
+    fData(value)
     , fNext(next)
     , fKey1(key1)
     , fKey2(0)
     , fKey3(0)
     {
         if (key2)
-            fKey2 = XMLString::replicate(key2);
+            fKey2 = XMLString::replicate(key2, manager);
 
         if (key3)
-            fKey3 = XMLString::replicate(key3);
+            fKey3 = XMLString::replicate(key3, manager);
     }
 
-    TVal*  fData;
-    DOMDeepNodeListPoolTableBucketElem<TVal>*   fNext;
-    void*  fKey1;
-    XMLCh* fKey2;
-    XMLCh* fKey3;
+    TVal*                                     fData;
+    DOMDeepNodeListPoolTableBucketElem<TVal>* fNext;
+    void*                                     fKey1;
+    XMLCh*                                    fKey2;
+    XMLCh*                                    fKey3;
 };
 
 
@@ -152,7 +154,8 @@ public:
     DOMDeepNodeListPool
     (
          const XMLSize_t modulus
-       , const bool adoptElems, HashBase* hash
+       , const bool adoptElems
+       , HashBase* hash
        , const XMLSize_t initSize = 128
     );
 
@@ -224,13 +227,14 @@ private:
     //      element. So the first element is 1, the next is 2, etc... This
     //      means that this value is set to the top index of the fIdPtrs array.
     // -----------------------------------------------------------------------
-    bool                         fAdoptedElems;
+    bool                                       fAdoptedElems;
     DOMDeepNodeListPoolTableBucketElem<TVal>** fBucketList;
-    XMLSize_t                    fHashModulus;
-    HashBase*                    fHash;
-    TVal**                       fIdPtrs;
-    XMLSize_t                    fIdPtrsCount;
-    XMLSize_t                    fIdCounter;
+    XMLSize_t                                  fHashModulus;
+    HashBase*                                  fHash;
+    TVal**                                     fIdPtrs;
+    XMLSize_t                                  fIdPtrsCount;
+    XMLSize_t                                  fIdCounter;
+    MemoryManager*                             fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

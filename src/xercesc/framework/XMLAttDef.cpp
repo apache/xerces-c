@@ -162,6 +162,7 @@ XMLAttDef::XMLAttDef(const  XMLAttDef::AttTypes     type
     , fId(XMLAttDef::fgInvalidAttrId)
     , fValue(0)
     , fEnumeration(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 }
 
@@ -176,12 +177,14 @@ XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
     , fProvided(false)
     , fExternalAttribute(false)
     , fId(XMLAttDef::fgInvalidAttrId)
-    , fValue(XMLString::replicate(attrValue))
+    , fValue(0)
     , fEnumeration(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try
     {
-        fEnumeration = XMLString::replicate(enumValues);
+        fValue = XMLString::replicate(attrValue, fMemoryManager);
+        fEnumeration = XMLString::replicate(enumValues, fMemoryManager);
     }
     catch(...)
     {
@@ -196,10 +199,10 @@ XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
 void XMLAttDef::cleanUp()
 {
     if (fEnumeration)
-       XMLString::release(&fEnumeration);
+        fMemoryManager->deallocate(fEnumeration);
 
     if (fValue)
-        XMLString::release(&fValue);
+        fMemoryManager->deallocate(fValue);
 }
 
 XERCES_CPP_NAMESPACE_END

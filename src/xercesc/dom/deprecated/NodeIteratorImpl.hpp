@@ -70,7 +70,7 @@
 //  name is substituded for the *.
 //
 
-
+#include <xercesc/util/XMemory.hpp>
 #include "DOM_Node.hpp"
 #include "DOM_NodeIterator.hpp"
 #include "RefCountedImpl.hpp"

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:27:11  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:55:45  tng
  * C++ Namespace Support.
  *
@@ -87,6 +90,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class MemoryManager;
+
 /**
   * Creates a SAX2 parser (SAX2XMLReader).
   *
@@ -103,14 +108,14 @@ protected:                // really should be private, but that causes compiler 
 	~XMLReaderFactory() ;
 
 public:
-	static SAX2XMLReader * createXMLReader() ;
+	static SAX2XMLReader * createXMLReader(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) ;
 	static SAX2XMLReader * createXMLReader(const XMLCh* className)  ;
 };
 
 
-inline SAX2XMLReader * XMLReaderFactory::createXMLReader()
+inline SAX2XMLReader * XMLReaderFactory::createXMLReader(MemoryManager* const manager)
 {
-	return (SAX2XMLReader*)(new SAX2XMLReaderImpl());
+	return (SAX2XMLReader*)(new (manager) SAX2XMLReaderImpl(manager));
 }
 
 inline SAX2XMLReader * XMLReaderFactory::createXMLReader(const XMLCh * className)

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -85,23 +88,23 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
-#include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
+//#include <string.h>
 #include <xercesc/framework/XMLBufferMgr.hpp>
+#include <xercesc/util/RuntimeException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLBufferMgr::XMLBufferMgr() :
+XMLBufferMgr::XMLBufferMgr(MemoryManager* const manager) :
 
     fBufCount(32)
+    , fMemoryManager(manager)
     , fBufList(0)
 {
     // Allocate the buffer list and zero it out
-    fBufList = new XMLBuffer*[fBufCount];
+    fBufList = (XMLBuffer**) fMemoryManager->allocate(fBufCount * sizeof(XMLBuffer*)); // new XMLBuffer*[fBufCount];
     for (unsigned int index = 0; index < fBufCount; index++)
         fBufList[index] = 0;
 }
@@ -113,7 +116,7 @@ XMLBufferMgr::~XMLBufferMgr()
         delete fBufList[index];
 
     // And then the buffer list
-    delete [] fBufList;
+    fMemoryManager->deallocate(fBufList); //delete [] fBufList;
 }
 
 
@@ -131,7 +134,7 @@ XMLBuffer& XMLBufferMgr::bidOnBuffer()
         // No more buffers available, so create one and take it
         if (!fBufList[index])
         {
-            fBufList[index] = new XMLBuffer;
+            fBufList[index] = new (fMemoryManager) XMLBuffer(1023, fMemoryManager);
             fBufList[index]->setInUse(true);
             return *fBufList[index];
         }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:08:58  tng
  * Return a reference instead of void for operator=
  *
@@ -93,7 +96,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLPARSER_EXPORT VecAttrListImpl : public AttributeList
+class XMLPARSER_EXPORT VecAttrListImpl : public XMemory, public AttributeList
 {
 public :
     // -----------------------------------------------------------------------

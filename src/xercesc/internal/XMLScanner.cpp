@@ -65,12 +65,10 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/Mutexes.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/UnexpectedEOFException.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
@@ -165,7 +163,8 @@ static XMLMsgLoader& gScannerMsgLoader()
 // ---------------------------------------------------------------------------
 //  XMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
+XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
+                       MemoryManager* const manager) :
 
     fCalculateSrcOfs(false)
     , fDoNamespaces(false)
@@ -197,6 +196,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fErrorReporter(0)
     , fErrorHandler(0)
     , fIDRefList(0)
+    , fReaderMgr(manager)
     , fValidator(valToAdopt)
     , fValScheme(Val_Never)
     , fGrammarResolver(0)
@@ -209,6 +209,14 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fStandardUriConformant(false)
     , fSecurityManager(0)
     , fXMLVersion(XMLReader::XMLV1_0)
+    , fMemoryManager(manager)
+    , fBufMgr(manager)
+    , fAttNameBuf(1023, manager)
+    , fAttValueBuf(1023, manager)
+    , fCDataBuf(1023, manager)
+    , fQNameBuf(1023, manager)
+    , fPrefixBuf(1023, manager)
+    , fURIBuf(1023, manager)
 {
    commonInit();
 
@@ -222,7 +230,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
                           , DocTypeHandler* const    docTypeHandler
                           , XMLEntityHandler* const  entityHandler
                           , XMLErrorReporter* const  errHandler
-                          , XMLValidator* const      valToAdopt) :
+                          , XMLValidator* const      valToAdopt
+                          , MemoryManager* const     manager) :
 
     fCalculateSrcOfs(false)
     , fDoNamespaces(false)
@@ -254,6 +263,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fErrorReporter(errHandler)
     , fErrorHandler(0)
     , fIDRefList(0)
+    , fReaderMgr(manager)
     , fValidator(valToAdopt)
     , fValScheme(Val_Never)
     , fGrammarResolver(0)
@@ -266,6 +276,14 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fStandardUriConformant(false)
     , fSecurityManager(0)
     , fXMLVersion(XMLReader::XMLV1_0)
+    , fMemoryManager(manager)
+    , fBufMgr(manager)
+    , fAttNameBuf(1023, manager)
+    , fAttValueBuf(1023, manager)
+    , fCDataBuf(1023, manager)
+    , fQNameBuf(1023, manager)
+    , fPrefixBuf(1023, manager)
+    , fURIBuf(1023, manager)
 {
    commonInit();
 
@@ -279,9 +297,9 @@ XMLScanner::~XMLScanner()
 {
     delete fAttrList;
     delete fIDRefList;
-    delete [] fRootElemName;
-    delete [] fExternalSchemaLocation;
-    delete [] fExternalNoNamespaceSchemaLocation;
+    fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
+    fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
+    fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
 }
 
 
@@ -312,7 +330,7 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
         XMLURL tmpURL(systemId);
         if (tmpURL.isRelative()) {
             if (!fStandardUriConformant)
-                srcToUse = new LocalFileInputSource(systemId);
+                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
             else {
                 // since this is the top of the try/catch, cannot call ThrowXML
                 // emit the error directly
@@ -340,14 +358,14 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
                 );
                 return;
             }
-            srcToUse = new URLInputSource(tmpURL);
+            srcToUse = new (fMemoryManager) URLInputSource(tmpURL);
         }
 
     }
     catch(const MalformedURLException& e)
     {
         if (!fStandardUriConformant)
-            srcToUse = new LocalFileInputSource(systemId);
+            srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
         else {
             // since this is the top of the try/catch, cannot call ThrowXML
             // emit the error directly
@@ -404,8 +422,8 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
 void XMLScanner::scanDocument(  const   char* const systemId)
 {
     // We just delegate this to the XMLCh version after transcoding
-    XMLCh* tmpBuf = XMLString::transcode(systemId);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+    XMLCh* tmpBuf = XMLString::transcode(systemId, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
     scanDocument(tmpBuf);
 }
 
@@ -429,7 +447,7 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         XMLURL tmpURL(systemId);
         if (tmpURL.isRelative()) {
             if (!fStandardUriConformant)
-                srcToUse = new LocalFileInputSource(systemId);
+                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
             else {
                 // since this is the top of the try/catch, cannot call ThrowXML
                 // emit the error directly
@@ -457,13 +475,13 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
                 );
                 return false;
             }
-            srcToUse = new URLInputSource(tmpURL);
+            srcToUse = new (fMemoryManager) URLInputSource(tmpURL);
         }
     }
     catch(const MalformedURLException& e)
     {
         if (!fStandardUriConformant)
-            srcToUse = new LocalFileInputSource(systemId);
+            srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
         else {
             // since this is the top of the try/catch, cannot call ThrowXML
             // emit the error directly
@@ -520,8 +538,8 @@ bool XMLScanner::scanFirst( const   char* const     systemId
                             ,       XMLPScanToken&  toFill)
 {
     // We just delegate this to the XMLCh version after transcoding
-    XMLCh* tmpBuf = XMLString::transcode(systemId);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+    XMLCh* tmpBuf = XMLString::transcode(systemId, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
     return scanFirst(tmpBuf, toFill);
 }
 
@@ -684,11 +702,11 @@ void XMLScanner::commonInit()
     //  Create the attribute list, which is used to store attribute values
     //  during start tag processing. Give it a reasonable initial size that
     //  will serve for most folks, though it will grow as required.
-    fAttrList = new RefVectorOf<XMLAttr>(32);
+    fAttrList = new (fMemoryManager) RefVectorOf<XMLAttr>(32);
 
     //  Create the id ref list. This is used to enforce XML 1.0 ID ref
     //  semantics, i.e. all id refs must refer to elements that exist
-    fIDRefList = new RefHashTableOf<XMLRefInfo>(109);
+    fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(109);
 
     //  Create the GrammarResolver
     //fGrammarResolver = new GrammarResolver();
@@ -1557,7 +1575,7 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
             if (tmpURL.isRelative())
             {
                 if (!fStandardUriConformant)
-                    srcToUse = new LocalFileInputSource(systemId);
+                    srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
                 else {
                     // since this is the top of the try/catch, cannot call ThrowXML
                     // emit the error directly
@@ -1585,13 +1603,13 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                     );
                     return 0;
                 }
-                srcToUse = new URLInputSource(tmpURL);
+                srcToUse = new (fMemoryManager) URLInputSource(tmpURL);
             }
         }
         catch(const MalformedURLException& e)
         {
             if (!fStandardUriConformant)
-                srcToUse = new LocalFileInputSource(systemId);
+                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
             else {
                 // since this is the top of the try/catch, cannot call ThrowXML
                 // emit the error directly
@@ -1650,8 +1668,8 @@ Grammar* XMLScanner::loadGrammar(const   char* const systemId
                                  , const bool        toCache)
 {
     // We just delegate this to the XMLCh version after transcoding
-    XMLCh* tmpBuf = XMLString::transcode(systemId);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+    XMLCh* tmpBuf = XMLString::transcode(systemId, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
     return loadGrammar(tmpBuf, grammarType, toCache);
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/04/21 20:46:01  knoaman
  * Use XMLString::release to prepare for configurable memory manager.
  *
@@ -125,7 +128,9 @@
 #if !defined(ATTDEF_HPP)
 #define ATTDEF_HPP
 
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -149,7 +154,7 @@ class XMLAttr;
  *  enumerated or notation type, it will have an 'enumeration value' as well
  *  which is a space separated list of its possible vlaues.
  */
-class XMLPARSER_EXPORT XMLAttDef
+class XMLPARSER_EXPORT XMLAttDef : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -389,6 +394,15 @@ public:
       */
     bool isExternal() const;
 
+    /** Get the plugged-in memory manager
+      *
+      * This method returns the plugged-in memory manager user for dynamic
+      * memory allocation/deallocation.
+      *
+      * @return the plugged-in memory manager
+      */
+    MemoryManager* getMemoryManager() const;
+
 
     /**
      * @return the uri part of DOM Level 3 TypeInfo
@@ -567,6 +581,7 @@ private :
     unsigned int    fId;
     XMLCh*          fValue;
     XMLCh*          fEnumeration;
+    MemoryManager*  fMemoryManager;
 };
 
 
@@ -613,6 +628,10 @@ inline bool XMLAttDef::isExternal() const
     return fExternalAttribute;
 }
 
+inline MemoryManager* XMLAttDef::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLAttDef: Setter methods
@@ -625,9 +644,9 @@ inline void XMLAttDef::setDefaultType(const XMLAttDef::DefAttTypes newValue)
 inline void XMLAttDef::setEnumeration(const XMLCh* const newValue)
 {
     if (fEnumeration)
-        XMLString::release(&fEnumeration);
+        fMemoryManager->deallocate(fEnumeration);
 
-    fEnumeration = XMLString::replicate(newValue);
+    fEnumeration = XMLString::replicate(newValue, fMemoryManager);
 }
 
 inline void XMLAttDef::setId(const unsigned int newId)
@@ -648,9 +667,9 @@ inline void XMLAttDef::setType(const XMLAttDef::AttTypes newValue)
 inline void XMLAttDef::setValue(const XMLCh* const newValue)
 {
     if (fValue)
-       XMLString::release(&fValue);
+       fMemoryManager->deallocate(fValue);
 
-    fValue = XMLString::replicate(newValue);
+    fValue = XMLString::replicate(newValue, fMemoryManager);
 }
 
 inline void

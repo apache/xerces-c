@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -82,11 +85,11 @@
 #if !defined(XMLATTDEFLIST_HPP)
 #define XMLATTDEFLIST_HPP
 
-#include <xercesc/util/XMLEnumerator.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/framework/XMLAttDef.hpp>
+#include <xercesc/util/XercesDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XMLAttDef;
 
 /**
  *  This class defines an abstract interface that all validators must support.

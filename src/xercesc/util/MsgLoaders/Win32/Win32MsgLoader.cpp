@@ -131,7 +131,7 @@ Win32MsgLoader::Win32MsgLoader(const XMLCh* const msgDomain) :
     }
 
     // Store the domain name
-    fMsgDomain = XMLString::replicate(msgDomain);
+    fMsgDomain = XMLString::replicate(msgDomain, XMLPlatformUtils::fgMemoryManager);
 
     // And precalc the id offset we use for this domain
     if (XMLString::equals(fMsgDomain, XMLUni::fgXMLErrDomain))
@@ -148,7 +148,7 @@ Win32MsgLoader::Win32MsgLoader(const XMLCh* const msgDomain) :
 
 Win32MsgLoader::~Win32MsgLoader()
 {
-    delete [] fMsgDomain;
+    XMLPlatformUtils::fgMemoryManager->deallocate(fMsgDomain);//delete [] fMsgDomain;
 }
 
 
@@ -256,24 +256,24 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1);
+        tmp1 = XMLString::transcode(repText1, XMLPlatformUtils::fgMemoryManager);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2);
+        tmp2 = XMLString::transcode(repText2, XMLPlatformUtils::fgMemoryManager);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3);
+        tmp3 = XMLString::transcode(repText3, XMLPlatformUtils::fgMemoryManager);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4);
+        tmp4 = XMLString::transcode(repText4, XMLPlatformUtils::fgMemoryManager);
 
     bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
 
     if (tmp1)
-        delete [] tmp1;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        delete [] tmp2;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        delete [] tmp3;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        delete [] tmp4;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

@@ -88,7 +88,7 @@
  * ownerDocument.
  **/
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 #include "NodeListImpl.hpp"
 #include "DOMString.hpp"
 

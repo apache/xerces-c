@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -82,12 +85,16 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 MemBufFormatTarget::MemBufFormatTarget(int initCapacity)
-    : fDataBuf(0)
+    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fDataBuf(0)
     , fIndex(0)
     , fCapacity(initCapacity)
 {
     // Buffer is one larger than capacity, to allow for zero term
-    fDataBuf = new XMLByte[fCapacity+4];
+    fDataBuf = (XMLByte*) fMemoryManager->allocate
+    (
+        (fCapacity + 4) * sizeof(XMLByte)
+    );//new XMLByte[fCapacity+4];
 
     // Keep it null terminated
     fDataBuf[0] = XMLByte(0);
@@ -95,7 +102,7 @@ MemBufFormatTarget::MemBufFormatTarget(int initCapacity)
 
 MemBufFormatTarget::~MemBufFormatTarget()
 {
-    delete [] fDataBuf;
+    fMemoryManager->deallocate(fDataBuf);//delete [] fDataBuf;
 }
 
 void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
@@ -140,13 +147,16 @@ void MemBufFormatTarget::insureCapacity(const unsigned int extraNeeded)
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
     const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
-    XMLByte* newBuf = new XMLByte[newCap+4];
+    XMLByte* newBuf = (XMLByte*) fMemoryManager->allocate
+    (
+        (newCap+4) * sizeof(XMLByte)
+    );//new XMLByte[newCap+4];
 
     // Copy over the old stuff
     memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);
 
     // Clean up old buffer and store new stuff
-    delete [] fDataBuf;
+    fMemoryManager->deallocate(fDataBuf); //delete [] fDataBuf;
     fDataBuf = newBuf;
     fCapacity = newCap;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:08:58  tng
  * Return a reference instead of void for operator=
  *
@@ -111,7 +114,6 @@
 #if !defined(ELEMSTACK_HPP)
 #define ELEMSTACK_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/QName.hpp>
 
@@ -147,7 +149,7 @@ class Grammar;
 //  each level, the prefixes defined at that level (and the namespaces that
 //  they map to) are stored.
 //
-class XMLPARSER_EXPORT ElemStack
+class XMLPARSER_EXPORT ElemStack : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -179,13 +181,13 @@ public :
     //      affected by an sibling xmlns attributes, whereas elements are
     //      affected by its own xmlns attributes.
     // -----------------------------------------------------------------------
-    struct PrefMapElem
+    struct PrefMapElem : public XMemory
     {
         unsigned int        fPrefId;
         unsigned int        fURIId;
     };
 
-    struct StackElem
+    struct StackElem : public XMemory
     {
         XMLElementDecl*     fThisElement;
         unsigned int        fReaderNum;
@@ -339,10 +341,11 @@ private :
     unsigned int    fXMLPoolId;
     unsigned int    fXMLNSNamespaceId;
     unsigned int    fXMLNSPoolId;
+    MemoryManager*  fMemoryManager;
 };
 
 
-class XMLPARSER_EXPORT WFElemStack
+class XMLPARSER_EXPORT WFElemStack : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -374,13 +377,13 @@ public :
     //      affected by an sibling xmlns attributes, whereas elements are
     //      affected by its own xmlns attributes.
     // -----------------------------------------------------------------------
-    struct PrefMapElem
+    struct PrefMapElem : public XMemory
     {
         unsigned int        fPrefId;
         unsigned int        fURIId;
     };
 
-    struct StackElem
+    struct StackElem : public XMemory
     {
         int                 fTopPrefix;        
         unsigned int        fCurrentURI;
@@ -518,6 +521,7 @@ private :
     PrefMapElem*    fMap;
     StackElem**     fStack;
     XMLStringPool   fPrefixPool;
+    MemoryManager*  fMemoryManager;
 };
 
 

@@ -61,7 +61,7 @@
 #ifndef DOMString_HEADER_GUARD_
 #define DOMString_HEADER_GUARD_
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 #ifdef XML_DEBUG
 #include "DOMStringImpl.hpp"
@@ -81,7 +81,7 @@ class DOM_NullPtr;
  * strings, it is not meant to be a comphrehensive string class.
  */
 
-class CDOM_EXPORT DOMString {
+class CDOM_EXPORT DOMString : public XMemory{
 public:
     /** @name Constructors and assignment operator */
     //@{

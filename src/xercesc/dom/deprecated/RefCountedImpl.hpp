@@ -71,12 +71,12 @@
 
 
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT RefCountedImpl
+class CDOM_EXPORT RefCountedImpl : public XMemory
 {
 public:
     int			    nodeRefCount;

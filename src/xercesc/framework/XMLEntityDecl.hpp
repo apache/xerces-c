@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/04/21 20:46:01  knoaman
  * Use XMLString::release to prepare for configurable memory manager.
  *
@@ -97,6 +100,8 @@
 #if !defined(XMLENTITYDECL_HPP)
 #define XMLENTITYDECL_HPP
 
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -119,7 +124,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  or whatever, at which time they confirm the correctness of the data before
  *  creating the entity decl object.
  */
-class XMLPARSER_EXPORT XMLEntityDecl
+class XMLPARSER_EXPORT XMLEntityDecl : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -282,6 +287,15 @@ public:
       */
     bool isUnparsed() const;
 
+    /** Get the plugged-in memory manager
+      *
+      * This method returns the plugged-in memory manager user for dynamic
+      * memory allocation/deallocation.
+      *
+      * @return the plugged-in memory manager
+      */
+    MemoryManager* getMemoryManager() const;
+
     //@}
 
 
@@ -423,6 +437,7 @@ private :
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
     XMLCh*          fBaseURI;
+    MemoryManager*  fMemoryManager;
 };
 
 
@@ -481,6 +496,10 @@ inline bool XMLEntityDecl::isUnparsed() const
     return (fNotationName != 0);
 }
 
+inline MemoryManager* XMLEntityDecl::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLEntityDecl: Setter methods
@@ -493,41 +512,41 @@ inline void XMLEntityDecl::setId(const unsigned int newId)
 inline void XMLEntityDecl::setNotationName(const XMLCh* const newName)
 {
     if (fNotationName)
-        XMLString::release(&fNotationName);
+        fMemoryManager->deallocate(fNotationName);
 
-    fNotationName = XMLString::replicate(newName);
+    fNotationName = XMLString::replicate(newName, fMemoryManager);
 }
 
 inline void XMLEntityDecl::setPublicId(const XMLCh* const newId)
 {
     if (fPublicId)
-        XMLString::release(&fPublicId);
+        fMemoryManager->deallocate(fPublicId);
 
-    fPublicId = XMLString::replicate(newId);
+    fPublicId = XMLString::replicate(newId, fMemoryManager);
 }
 
 inline void XMLEntityDecl::setSystemId(const XMLCh* const newId)
 {
     if (fSystemId)
-        XMLString::release(&fSystemId);
+        fMemoryManager->deallocate(fSystemId);
 
-    fSystemId = XMLString::replicate(newId);
+    fSystemId = XMLString::replicate(newId, fMemoryManager);
 }
 
 inline void XMLEntityDecl::setBaseURI(const XMLCh* const newId)
 {
     if (fBaseURI)
-        XMLString::release(&fBaseURI);
+        fMemoryManager->deallocate(fBaseURI);
 
-    fBaseURI = XMLString::replicate(newId);
+    fBaseURI = XMLString::replicate(newId, fMemoryManager);
 }
 
 inline void XMLEntityDecl::setValue(const XMLCh* const newValue)
 {
     if (fValue)
-        XMLString::release(&fValue);
+        fMemoryManager->deallocate(fValue);
 
-    fValue = XMLString::replicate(newValue);
+    fValue = XMLString::replicate(newValue, fMemoryManager);
     fValueLen = XMLString::stringLen(newValue);
 }
 

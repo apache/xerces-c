@@ -99,7 +99,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DOMParser::DOMParser(XMLValidator* const valToAdopt) :
+DOMParser::DOMParser( XMLValidator* const  valToAdopt
+                    , MemoryManager* const manager) :
 
     fToCreateXMLDeclTypeNode(false)
     , fCreateEntityReferenceNodes(true)
@@ -114,6 +115,7 @@ DOMParser::DOMParser(XMLValidator* const valToAdopt) :
     , fGrammarResolver(0)
     , fURIStringPool(0)
     , fValidator(valToAdopt)
+    , fMemoryManager(manager)
 {
     try
     {
@@ -138,18 +140,18 @@ DOMParser::~DOMParser()
 void DOMParser::initialize()
 {
     // Create grammar resolver and URI string pool to pass to the scanner
-    fGrammarResolver = new GrammarResolver();
-    fURIStringPool = new XMLStringPool();
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fURIStringPool = new (fMemoryManager) XMLStringPool();
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
-    fScanner = XMLScannerResolver::getDefaultScanner(fValidator);
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator, fMemoryManager);
     fScanner->setDocHandler(this);
     fScanner->setDocTypeHandler(this);
     fScanner->setGrammarResolver(fGrammarResolver);
     fScanner->setURIStringPool(fURIStringPool);
 
-    fNodeStack = new ValueStackOf<DOM_Node>(64);
+    fNodeStack = new (fMemoryManager) ValueStackOf<DOM_Node>(64);
     this->reset();
 }
 
@@ -389,7 +391,12 @@ void DOMParser::setStandardUriConformant(const bool newState)
 
 void DOMParser::useScanner(const XMLCh* const scannerName)
 {
-    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner(scannerName, fValidator);
+    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner
+    (
+        scannerName
+        , fValidator
+        , fMemoryManager
+    );
 
     if (tempScanner) {
 

@@ -64,6 +64,7 @@
 #include <xercesc/dom/DOMImplementationLS.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMRangeException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -208,7 +209,8 @@ public:
 
     virtual DOMDocument *createDocument(const XMLCh *namespaceURI,
                                         const XMLCh *qualifiedName,
-                                        DOMDocumentType *doctype) = 0;
+                                        DOMDocumentType *doctype,
+                                        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
     //@}
     // -----------------------------------------------------------------------
@@ -248,7 +250,7 @@ public:
      *
      * Create a completely empty document that has neither a root element or a doctype node.
      */
-    virtual DOMDocument *createDocument() = 0;
+    virtual DOMDocument *createDocument(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
     /**
      * Non-standard extension

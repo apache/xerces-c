@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/03/07 18:08:10  tng
  * Return a reference instead of void for operator=
  *
@@ -136,9 +139,10 @@
 #if !defined(XMLELEMENTDECL_HPP)
 #define XMLELEMENTDECL_HPP
 
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLAttDefList.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -160,7 +164,7 @@ class XMLContentModel;
  *  with invalid or PCDATA element ids without having to know what type of
  *  validator its messing with.)
  */
-class XMLPARSER_EXPORT XMLElementDecl
+class XMLPARSER_EXPORT XMLElementDecl : public XMemory
 {
  public:
     // -----------------------------------------------------------------------
@@ -487,6 +491,15 @@ class XMLPARSER_EXPORT XMLElementDecl
 
     bool isExternal() const;
 
+    /** Get the memory manager
+      *
+      * This method returns the configurable memory manager used by the
+      * element declaration for dynamic allocation/deacllocation.
+      *
+      * @return the memory manager
+      */
+    MemoryManager* getMemoryManager() const;
+
     //@}
 
 
@@ -576,7 +589,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    XMLElementDecl();
+    XMLElementDecl(MemoryManager* const manager /*= XMLPlatformUtils::fgMemoryManager*/);
 
 private :
     // -----------------------------------------------------------------------
@@ -609,6 +622,7 @@ private :
     //  fExternalElement
     //      This flag indicates whether or the element was declared externally.
     // -----------------------------------------------------------------------
+    MemoryManager*      fMemoryManager;
     QName*              fElementName;
     CreateReasons       fCreateReason;
     unsigned int        fId;
@@ -668,6 +682,11 @@ inline bool XMLElementDecl::isDeclared() const
 inline bool XMLElementDecl::isExternal() const
 {
     return fExternalElement;
+}
+
+inline MemoryManager* XMLElementDecl::getMemoryManager() const
+{
+    return fMemoryManager;
 }
 
 

@@ -58,11 +58,11 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/util/BinFileInputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/framework/LocalFileInputSource.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -131,14 +131,14 @@ LocalFileInputSource::LocalFileInputSource( const XMLCh* const basePath
     {
         XMLCh* tmpBuf = XMLPlatformUtils::weavePaths(basePath, relativePath);
         setSystemId(tmpBuf);
-        delete [] tmpBuf;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmpBuf); //delete [] tmpBuf;
     }
     else
     {
-        XMLCh* tmpBuf = XMLString::replicate(relativePath);
+        XMLCh* tmpBuf = XMLString::replicate(relativePath, getMemoryManager());
         XMLPlatformUtils::removeDotSlash(tmpBuf);
         setSystemId(tmpBuf);
-        delete [] tmpBuf;
+        getMemoryManager()->deallocate(tmpBuf);//delete [] tmpBuf;
     }
 
 }
@@ -153,11 +153,14 @@ LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath)
     //
     if (XMLPlatformUtils::isRelative(filePath))
     {
-        XMLCh* curDir = XMLPlatformUtils::getCurrentDirectory();
+        XMLCh* curDir = XMLPlatformUtils::getCurrentDirectory(getMemoryManager());
 
         int    curDirLen = XMLString::stringLen(curDir);
         int    filePathLen = XMLString::stringLen(filePath);
-        XMLCh* fullDir = new XMLCh [ curDirLen + filePathLen + 2];
+        XMLCh* fullDir = (XMLCh*) getMemoryManager()->allocate
+        (
+            (curDirLen + filePathLen + 2) * sizeof(XMLCh)
+        );//new XMLCh [ curDirLen + filePathLen + 2];
 
         XMLString::copyString(fullDir, curDir);
         fullDir[curDirLen] = chForwardSlash;
@@ -168,15 +171,15 @@ LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath)
 
         setSystemId(fullDir);
 
-        delete [] curDir;
-        delete [] fullDir;
+        getMemoryManager()->deallocate(curDir);//delete [] curDir;
+        getMemoryManager()->deallocate(fullDir);//delete [] fullDir;
     }
      else
     {
-        XMLCh* tmpBuf = XMLString::replicate(filePath);
+        XMLCh* tmpBuf = XMLString::replicate(filePath, getMemoryManager());
         XMLPlatformUtils::removeDotSlash(tmpBuf);
         setSystemId(tmpBuf);
-        delete [] tmpBuf;
+        getMemoryManager()->deallocate(tmpBuf);//delete [] tmpBuf;
     }
 
 }
@@ -191,7 +194,7 @@ LocalFileInputSource::~LocalFileInputSource()
 // ---------------------------------------------------------------------------
 BinInputStream* LocalFileInputSource::makeStream() const
 {
-    BinFileInputStream* retStrm = new BinFileInputStream(getSystemId());
+    BinFileInputStream* retStrm = new (getMemoryManager()) BinFileInputStream(getSystemId());
     if (!retStrm->getIsOpen())
     {
         delete retStrm;

@@ -70,6 +70,7 @@
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
@@ -87,9 +88,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SGXMLScanner::SGXMLScanner(XMLValidator* const valToAdopt) :
+SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
+                          , MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt)
+    XMLScanner(valToAdopt, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -121,13 +123,14 @@ SGXMLScanner::SGXMLScanner(XMLValidator* const valToAdopt) :
     }
 }
 
-SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const  docHandler
-                            , DocTypeHandler* const    docTypeHandler
-                            , XMLEntityHandler* const  entityHandler
-                            , XMLErrorReporter* const  errHandler
-                            , XMLValidator* const      valToAdopt) :
+SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
+                          , DocTypeHandler* const     docTypeHandler
+                          , XMLEntityHandler* const   entityHandler
+                          , XMLErrorReporter* const   errHandler
+                          , XMLValidator* const       valToAdopt
+                          , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -653,7 +656,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             KVStringPair* curPair = 0;
             if (attCount >= curVecSize)
             {
-                curPair = new KVStringPair
+                curPair = new (fMemoryManager) KVStringPair
                 (
                     fAttNameBuf.getRawBuffer()
                     , fAttValueBuf.getRawBuffer()
@@ -1741,7 +1744,12 @@ void SGXMLScanner::activateSelectorFor(IdentityConstraint* const ic, const int i
     if (!selector)
         return;
 
-    XPathMatcher* matcher = selector->createMatcher(fFieldActivator, initialDepth);
+    XPathMatcher* matcher = selector->createMatcher
+    (
+        fFieldActivator
+        , initialDepth
+        , fMemoryManager
+    );
 
     fMatcherStack->addMatcher(matcher);
     matcher->startDocumentFragment();
@@ -1853,28 +1861,31 @@ Grammar* SGXMLScanner::loadGrammar(const   InputSource& src
 void SGXMLScanner::commonInit()
 {
     //  Create the element state array
-    fElemState = new unsigned int[fElemStateSize];
+    fElemState = (unsigned int*) fMemoryManager->allocate
+    (
+        fElemStateSize * sizeof(unsigned int)
+    ); //new unsigned int[fElemStateSize];
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
-    fRawAttrList = new RefVectorOf<KVStringPair>(32);
+    fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32);
 
     // Create dummy schema grammar
-    fSchemaGrammar = new SchemaGrammar();
+    fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
 
     //  Create the Validator and init them
-    fSchemaValidator = new SchemaValidator();
+    fSchemaValidator = new (fMemoryManager) SchemaValidator(0, fMemoryManager);
     initValidator(fSchemaValidator);
 
     // Create IdentityConstraint info
-    fMatcherStack = new XPathMatcherStack();
-    fValueStoreCache = new ValueStoreCache();
-    fFieldActivator = new FieldActivator(fValueStoreCache, fMatcherStack);
+    fMatcherStack = new (fMemoryManager) XPathMatcherStack(fMemoryManager);
+    fValueStoreCache = new (fMemoryManager) ValueStoreCache(fMemoryManager);
+    fFieldActivator = new (fMemoryManager) FieldActivator(fValueStoreCache, fMatcherStack, fMemoryManager);
     fValueStoreCache->setScanner(this);
 
     //  Add the default entity entries for the character refs that must always
     //  be present.
-    fEntityTable = new ValueHashTableOf<XMLCh>(11);
+    fEntityTable = new (fMemoryManager) ValueHashTableOf<XMLCh>(11);
     fEntityTable->put((void*) XMLUni::fgAmp, chAmpersand);
     fEntityTable->put((void*) XMLUni::fgLT, chOpenAngle);
     fEntityTable->put((void*) XMLUni::fgGT, chCloseAngle);
@@ -1884,7 +1895,7 @@ void SGXMLScanner::commonInit()
 
 void SGXMLScanner::cleanUp()
 {
-    delete [] fElemState;
+    fMemoryManager->deallocate(fElemState); //delete [] fElemState;
     delete fSchemaGrammar;
     delete fEntityTable;
     delete fRawAttrList;
@@ -1897,7 +1908,10 @@ void SGXMLScanner::cleanUp()
 void SGXMLScanner::resizeElemState() {
 
     unsigned int newSize = fElemStateSize * 2;
-    unsigned int* newElemState = new unsigned int[newSize];
+    unsigned int* newElemState = (unsigned int*) fMemoryManager->allocate
+    (
+        newSize * sizeof(unsigned int)
+    ); //new unsigned int[newSize];
 
     // Copy the existing values
     unsigned int index = 0;
@@ -1908,7 +1922,7 @@ void SGXMLScanner::resizeElemState() {
         newElemState[index] = 0;
 
     // Delete the old array and udpate our members
-    delete [] fElemState;
+    fMemoryManager->deallocate(fElemState); //delete [] fElemState;
     fElemState = newElemState;
     fElemStateSize = newSize;
 }
@@ -1977,7 +1991,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             }
             else
             {
-                janName.reset(XMLString::replicate(namePtr));
+                janName.reset(XMLString::replicate(namePtr, fMemoryManager), fMemoryManager);
                 janName[colonInd] = chNull;
                 prefPtr = janName.get();
             }
@@ -2259,7 +2273,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         XMLAttr* curAttr;
         if (retCount >= curAttListSize)
         {
-            curAttr = new XMLAttr
+            curAttr = new (fMemoryManager) XMLAttr
             (
                 uriId
                 , suffPtr
@@ -2267,6 +2281,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , normBuf.getRawBuffer()
                 , attType
                 , true
+                , fMemoryManager
             );
             toFill.addElement(curAttr);
         }
@@ -2358,7 +2373,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     XMLAttr* curAtt;
                     if (retCount >= curAttListSize)
                     {
-                        curAtt = new XMLAttr;
+                        curAtt = new (fMemoryManager) XMLAttr(fMemoryManager);
                         fValidator->faultInAttr(*curAtt, *curDef);
                         fAttrList->addElement(curAtt);
                     }
@@ -3041,7 +3056,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
     Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-        XSDDOMParser parser;
+        XSDDOMParser parser(0, fMemoryManager);
 
         parser.setValidationScheme(XercesDOMParser::Val_Never);
         parser.setDoNamespaces(true);
@@ -3093,7 +3108,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                 else {
                     if (fStandardUriConformant && urlTmp.hasInvalidChar())
                         ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                    srcToFill = new URLInputSource(urlTmp);
+                    srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
                 }
             }
 
@@ -3101,7 +3116,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             {
                 // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
                 if (!fStandardUriConformant)
-                    srcToFill = new LocalFileInputSource
+                    srcToFill = new (fMemoryManager) LocalFileInputSource
                     (
                         lastInfo.systemId
                         , expSysId.getRawBuffer()
@@ -3151,8 +3166,19 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         fElemStack.setValidationFlag(fValidate);
                     }
 
-                    grammar = new SchemaGrammar();
-                    TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, srcToFill->getSystemId(), fEntityHandler, fErrorReporter);
+                    grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+                    TraverseSchema traverseSchema
+                    (
+                        root
+                        , fURIStringPool
+                        , (SchemaGrammar*) grammar
+                        , fGrammarResolver
+                        , this
+                        , srcToFill->getSystemId()
+                        , fEntityHandler
+                        , fErrorReporter
+                        , fMemoryManager
+                    );
 
                     if (fGrammarType == Grammar::DTDGrammarType) {
                         fGrammar = grammar;
@@ -3229,14 +3255,14 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
             }
         }
         catch(const MalformedURLException& e)
         {
             // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
             if (!fStandardUriConformant)
-                srcToFill = new LocalFileInputSource
+                srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
@@ -3265,7 +3291,7 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
     if (fValidatorFromUser)
         fValidator->reset();
 
-    XSDDOMParser parser;
+    XSDDOMParser parser(0, fMemoryManager);
 
     parser.setValidationScheme(XercesDOMParser::Val_Never);
     parser.setDoNamespaces(true);
@@ -3291,8 +3317,19 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = new SchemaGrammar();
-            TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, src.getSystemId(), fEntityHandler, fErrorReporter);
+            SchemaGrammar* grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+            TraverseSchema traverseSchema
+            (
+                root
+                , fURIStringPool
+                , (SchemaGrammar*) grammar
+                , fGrammarResolver
+                , this
+                , src.getSystemId()
+                , fEntityHandler
+                , fErrorReporter
+                , fMemoryManager
+            );
 
             if (fValidate) {
                 //  validate the Schema scan so far

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:27:05  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:56:26  tng
  * C++ Namespace Support.
  *
@@ -89,7 +92,7 @@
 #ifndef SAXPARSEEXCEPTION_HPP
 #define SAXPARSEEXCEPTION_HPP
 
-#include    <xercesc/sax/SAXException.hpp>
+#include <xercesc/sax/SAXException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

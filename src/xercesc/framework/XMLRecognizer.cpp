@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,11 +62,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/framework/XMLRecognizer.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/framework/XMLRecognizer.hpp>
-#include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

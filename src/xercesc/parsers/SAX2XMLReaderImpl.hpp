@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/05/15 18:26:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.19  2003/04/17 21:58:50  neilg
  * Adding a new property,
  * http://apache.org/xml/properties/security-manager, with
@@ -253,7 +256,8 @@ class GrammarResolver;
   */
 
 class PARSERS_EXPORT SAX2XMLReaderImpl :
-	public SAX2XMLReader
+	public XMemory
+    , public SAX2XMLReader
     , public XMLDocumentHandler
     , public XMLErrorReporter
     , public XMLEntityHandler
@@ -266,7 +270,7 @@ public :
     /** @name Constructors and Destructor */
     //@{
     /** The default constructor */
-	SAX2XMLReaderImpl() ;
+	SAX2XMLReaderImpl(MemoryManager* const manager) ;
 
     /** The destructor */	
 	~SAX2XMLReaderImpl() ;
@@ -1783,7 +1787,6 @@ private :
     VecAttributesImpl		fAttrList ;
     ContentHandler*		fDocHandler ;
     RefVectorOf<XMLAttr>*       fTempAttrVec ;
-    XMLBufferMgr		fStringBuffers ;
     RefStackOf<XMLBuffer> *     fPrefixes ;
     ValueStackOf<unsigned int>* fPrefixCounts ;
     DTDHandler*                 fDTDHandler;
@@ -1796,6 +1799,8 @@ private :
     GrammarResolver*            fGrammarResolver;
     XMLStringPool*              fURIStringPool;
     XMLValidator*               fValidator;
+    MemoryManager*              fMemoryManager;
+    XMLBufferMgr		        fStringBuffers ;
 	
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser

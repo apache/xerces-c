@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -91,10 +94,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
-#include <string.h>
+#include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -131,13 +132,13 @@ void XMLBuffer::expand()
     unsigned int newCap = (unsigned int)(fCapacity * 1.5);
 
     // Allocate the new buffer
-    XMLCh* newBuf = new XMLCh[newCap + 1];
+    XMLCh* newBuf = (XMLCh*) fMemoryManager->allocate((newCap + 1) * sizeof(XMLCh)); //new XMLCh[newCap + 1];
 
     // Copy over the old stuff
     memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
 
     // Clean up old buffer and store new stuff
-    delete [] fBuffer;
+    fMemoryManager->deallocate(fBuffer); //delete [] fBuffer;
     fBuffer = newBuf;
     fCapacity = newCap;
 }
@@ -150,13 +151,13 @@ void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
     const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
-    XMLCh* newBuf = new XMLCh[newCap+1];
+    XMLCh* newBuf = (XMLCh*) fMemoryManager->allocate((newCap+1) * sizeof(XMLCh)); //new XMLCh[newCap+1];
 
     // Copy over the old stuff
     memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
 
     // Clean up old buffer and store new stuff
-    delete [] fBuffer;
+    fMemoryManager->deallocate(fBuffer); //delete [] fBuffer;
     fBuffer = newBuf;
     fCapacity = newCap;
 }

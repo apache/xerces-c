@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:08:58  tng
  * Return a reference instead of void for operator=
  *
@@ -95,15 +98,17 @@ public :
     // -----------------------------------------------------------------------
     DGXMLScanner
     (
-        XMLValidator* const valToAdopt
+          XMLValidator* const  valToAdopt
+        , MemoryManager* const manager
     );
     DGXMLScanner
     (
-        XMLDocumentHandler* const  docHandler
-        , DocTypeHandler* const    docTypeHandler
-        , XMLEntityHandler* const  entityHandler
-        , XMLErrorReporter* const  errReporter
-        , XMLValidator* const      valToAdopt
+          XMLDocumentHandler* const docHandler
+        , DocTypeHandler* const     docTypeHandler
+        , XMLEntityHandler* const   entityHandler
+        , XMLErrorReporter* const   errReporter
+        , XMLValidator* const       valToAdopt
+        , MemoryManager* const      manager
     );
     virtual ~DGXMLScanner();
 

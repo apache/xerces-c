@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.4  2003/05/15 18:26:07  knoaman
+  * Partial implementation of the configurable memory manager.
+  *
   * Revision 1.3  2003/03/09 16:38:04  peiyongz
   * PanicHandler
   *
@@ -122,14 +125,11 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/Janitor.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
-#include <xercesc/framework/XMLErrorReporter.hpp>
-#include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:27:05  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/04/21 21:07:38  knoaman
  * Use XMLString::release to prepare for configurable memory manager.
  *
@@ -92,8 +95,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/sax/InputSource.hpp>
+#include    <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -102,9 +105,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 InputSource::~InputSource()
 {
-    XMLString::release(&fEncoding);
-    XMLString::release(&fPublicId);
-    XMLString::release(&fSystemId);
+    fMemoryManager->deallocate(fEncoding);
+    fMemoryManager->deallocate(fPublicId);
+    fMemoryManager->deallocate(fSystemId);
 }
 
 
@@ -113,22 +116,22 @@ InputSource::~InputSource()
 // ---------------------------------------------------------------------------
 void InputSource::setEncoding(const XMLCh* const encodingStr)
 {
-    XMLString::release(&fEncoding);
-    fEncoding = XMLString::replicate(encodingStr);
+    fMemoryManager->deallocate(fEncoding);
+    fEncoding = XMLString::replicate(encodingStr, fMemoryManager);
 }
 
 
 void InputSource::setPublicId(const XMLCh* const publicId)
 {
-    XMLString::release(&fPublicId);
-    fPublicId = XMLString::replicate(publicId);
+    fMemoryManager->deallocate(fPublicId);
+    fPublicId = XMLString::replicate(publicId, fMemoryManager);
 }
 
 
 void InputSource::setSystemId(const XMLCh* const systemId)
 {
-    XMLString::release(&fSystemId);
-    fSystemId = XMLString::replicate(systemId);
+    fMemoryManager->deallocate(fSystemId);
+    fSystemId = XMLString::replicate(systemId, fMemoryManager);
 }
 
 
@@ -138,7 +141,8 @@ void InputSource::setSystemId(const XMLCh* const systemId)
 // ---------------------------------------------------------------------------
 InputSource::InputSource() :
 
-    fEncoding(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fEncoding(0)
     , fPublicId(0)
     , fSystemId(0)
     , fFatalErrorIfNotFound(true)
@@ -147,40 +151,50 @@ InputSource::InputSource() :
 
 InputSource::InputSource(const XMLCh* const systemId) :
 
-    fEncoding(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fEncoding(0)
     , fPublicId(0)
-    , fSystemId(XMLString::replicate(systemId))
+    , fSystemId(0)
     , fFatalErrorIfNotFound(true)
 {
+    fSystemId = XMLString::replicate(systemId, fMemoryManager);
 }
 
 InputSource::InputSource(const  XMLCh* const systemId
                         , const XMLCh* const publicId) :
 
-    fEncoding(0)
-    , fPublicId(XMLString::replicate(publicId))
-    , fSystemId(XMLString::replicate(systemId))
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fEncoding(0)
+    , fPublicId(0)
+    , fSystemId(0)
     , fFatalErrorIfNotFound(true)
 {
+    fPublicId = XMLString::replicate(publicId, fMemoryManager);
+    fSystemId = XMLString::replicate(systemId, fMemoryManager);
 }
 
 InputSource::InputSource(const char* const systemId) :
 
-    fEncoding(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fEncoding(0)
     , fPublicId(0)
-    , fSystemId(XMLString::transcode(systemId))
+    , fSystemId(0)
     , fFatalErrorIfNotFound(true)
 {
+    fSystemId = XMLString::transcode(systemId, fMemoryManager);
 }
 
 InputSource::InputSource(const  char* const systemId
                         , const char* const publicId) :
 
-    fEncoding(0)
-    , fPublicId(XMLString::transcode(publicId))
-    , fSystemId(XMLString::transcode(systemId))
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fEncoding(0)
+    , fPublicId(0)
+    , fSystemId(0)
     , fFatalErrorIfNotFound(true)
 {
+    fPublicId = XMLString::transcode(publicId, fMemoryManager);
+    fSystemId = XMLString::transcode(systemId, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

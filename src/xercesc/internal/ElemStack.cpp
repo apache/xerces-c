@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/01/02 16:38:00  knoaman
  * Some cleanup.
  *
@@ -155,9 +158,13 @@ ElemStack::ElemStack() :
     , fXMLPoolId(0)
     , fXMLNSNamespaceId(0)
     , fXMLNSPoolId(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     // Do an initial allocation of the stack and zero it out
-    fStack = new StackElem*[fStackCapacity];
+    fStack = (StackElem**) fMemoryManager->allocate
+    (
+        fStackCapacity * sizeof(StackElem*)
+    );//new StackElem*[fStackCapacity];
     memset(fStack, 0, fStackCapacity * sizeof(StackElem*));
 }
 
@@ -173,13 +180,13 @@ ElemStack::~ElemStack()
         if (!fStack[stackInd])
             break;
 
-        delete [] fStack[stackInd]->fChildren;
-        delete [] fStack[stackInd]->fMap;
+        fMemoryManager->deallocate(fStack[stackInd]->fChildren);//delete [] fStack[stackInd]->fChildren;
+        fMemoryManager->deallocate(fStack[stackInd]->fMap);//delete [] fStack[stackInd]->fMap;
         delete fStack[stackInd];
     }
 
     // Delete the stack array itself now
-    delete [] fStack;
+    fMemoryManager->deallocate(fStack);//delete [] fStack;
 }
 
 
@@ -195,7 +202,7 @@ unsigned int ElemStack::addLevel()
     // If this element has not been initialized yet, then initialize it
     if (!fStack[fStackTop])
     {
-        fStack[fStackTop] = new StackElem;
+        fStack[fStackTop] = new (fMemoryManager) StackElem;
         fStack[fStackTop]->fChildCapacity = 0;
         fStack[fStackTop]->fChildren = 0;
         fStack[fStackTop]->fMapCapacity = 0;
@@ -229,7 +236,7 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     // If this element has not been initialized yet, then initialize it
     if (!fStack[fStackTop])
     {
-        fStack[fStackTop] = new StackElem;
+        fStack[fStackTop] = new (fMemoryManager) StackElem;
         fStack[fStackTop]->fChildCapacity = 0;
         fStack[fStackTop]->fChildren = 0;
         fStack[fStackTop]->fMapCapacity = 0;
@@ -302,7 +309,10 @@ unsigned int ElemStack::addChild(QName* const child, const bool toParent)
         const unsigned int newCapacity = curRow->fChildCapacity ?
                                          (unsigned int)(curRow->fChildCapacity * 1.25) :
                                          32;
-        QName** newRow = new QName*[newCapacity];
+        QName** newRow = (QName**) fMemoryManager->allocate
+        (
+            newCapacity * sizeof(QName*)
+        );//new QName*[newCapacity];
 
         //
         //  Copy over the old contents. We don't have to initialize the new
@@ -321,7 +331,7 @@ unsigned int ElemStack::addChild(QName* const child, const bool toParent)
         }
 
         // Clean up the old children and store the new info
-        delete [] curRow->fChildren;
+        fMemoryManager->deallocate(curRow->fChildren);//delete [] curRow->fChildren;
         curRow->fChildren = newRow;
         curRow->fChildCapacity = newCapacity;
     }
@@ -491,7 +501,10 @@ void ElemStack::expandMap(StackElem* const toExpand)
     //
     const unsigned int newCapacity = oldCap ?
                                      (unsigned int)(oldCap * 1.25) : 16;
-    PrefMapElem* newMap = new PrefMapElem[newCapacity];
+    PrefMapElem* newMap = (PrefMapElem*) fMemoryManager->allocate
+    (
+        newCapacity * sizeof(PrefMapElem)
+    );//new PrefMapElem[newCapacity];
 
     //
     //  Copy over the old stuff. We DON'T have to zero out the new stuff
@@ -501,7 +514,7 @@ void ElemStack::expandMap(StackElem* const toExpand)
     memcpy(newMap, toExpand->fMap, oldCap * sizeof(PrefMapElem));
 
     // Delete the old map and store the new stuff
-    delete [] toExpand->fMap;
+    fMemoryManager->deallocate(toExpand->fMap);//delete [] toExpand->fMap;
     toExpand->fMap = newMap;
     toExpand->fMapCapacity = newCapacity;
 }
@@ -510,7 +523,10 @@ void ElemStack::expandStack()
 {
     // Expand the capacity by 25% and allocate a new buffer
     const unsigned int newCapacity = (unsigned int)(fStackCapacity * 1.25);
-    StackElem** newStack = new StackElem*[newCapacity];
+    StackElem** newStack = (StackElem**) fMemoryManager->allocate
+    (
+        newCapacity * sizeof(StackElem*)
+    );//new StackElem*[newCapacity];
 
     // Copy over the old stuff
     memcpy(newStack, fStack, fStackCapacity * sizeof(StackElem*));
@@ -528,7 +544,7 @@ void ElemStack::expandStack()
     );
 
     // Delete the old array and update our members
-    delete [] fStack;
+    fMemoryManager->deallocate(fStack);//delete [] fStack;
     fStack = newStack;
     fStackCapacity = newCapacity;
 }
@@ -552,9 +568,13 @@ WFElemStack::WFElemStack() :
     , fMapCapacity(0)
     , fMap(0)
     , fStack(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     // Do an initial allocation of the stack and zero it out
-    fStack = new StackElem*[fStackCapacity];
+    fStack = (StackElem**) fMemoryManager->allocate
+    (
+        fStackCapacity * sizeof(StackElem*)
+    );//new StackElem*[fStackCapacity];
     memset(fStack, 0, fStackCapacity * sizeof(StackElem*));
 }
 
@@ -570,15 +590,15 @@ WFElemStack::~WFElemStack()
         if (!fStack[stackInd])
             break;
 
-        delete [] fStack[stackInd]->fThisElement;
+        fMemoryManager->deallocate(fStack[stackInd]->fThisElement);//delete [] fStack[stackInd]->fThisElement;
         delete fStack[stackInd];
     }
 
     if (fMap)
-        delete [] fMap;
+        fMemoryManager->deallocate(fMap);//delete [] fMap;
 
     // Delete the stack array itself now
-    delete [] fStack;
+    fMemoryManager->deallocate(fStack);//delete [] fStack;
 }
 
 
@@ -595,7 +615,7 @@ unsigned int WFElemStack::addLevel()
     // If this element has not been initialized yet, then initialize it
     if (!fStack[fStackTop])
     {
-        fStack[fStackTop] = new StackElem;
+        fStack[fStackTop] = new (fMemoryManager) StackElem;
         fStack[fStackTop]->fThisElement = 0;
         fStack[fStackTop]->fElemMaxLength = 0;
     }
@@ -627,7 +647,7 @@ WFElemStack::addLevel(const XMLCh* const toSet,
     // If this element has not been initialized yet, then initialize it
     if (!fStack[fStackTop])
     {
-        fStack[fStackTop] = new StackElem;
+        fStack[fStackTop] = new (fMemoryManager) StackElem;
         fStack[fStackTop]->fThisElement = 0;
         fStack[fStackTop]->fElemMaxLength = 0;
     }
@@ -639,9 +659,12 @@ WFElemStack::addLevel(const XMLCh* const toSet,
     // And store the new stuff
     if (toSetLen > fStack[fStackTop]->fElemMaxLength) {
 
-        delete [] fStack[fStackTop]->fThisElement;
+        fMemoryManager->deallocate(fStack[fStackTop]->fThisElement);//delete [] fStack[fStackTop]->fThisElement;
         fStack[fStackTop]->fElemMaxLength = toSetLen;
-        fStack[fStackTop]->fThisElement = new XMLCh[toSetLen + 1];
+        fStack[fStackTop]->fThisElement = (XMLCh*) fMemoryManager->allocate
+        (
+            (toSetLen + 1) * sizeof(XMLCh)
+        );//new XMLCh[toSetLen + 1];
     }
 
     XMLString::moveChars(fStack[fStackTop]->fThisElement, toSet, toSetLen + 1);
@@ -679,9 +702,12 @@ WFElemStack::setElement(const XMLCh* const toSet,
 
     if (toSetLen > fStack[fStackTop - 1]->fElemMaxLength) {
 
-        delete [] fStack[fStackTop - 1]->fThisElement;
+        fMemoryManager->deallocate(fStack[fStackTop - 1]->fThisElement);//delete [] fStack[fStackTop - 1]->fThisElement;
         fStack[fStackTop - 1]->fElemMaxLength = toSetLen;
-        fStack[fStackTop - 1]->fThisElement = new XMLCh[toSetLen + 1];
+        fStack[fStackTop - 1]->fThisElement = (XMLCh*) fMemoryManager->allocate
+        (
+            (toSetLen + 1) * sizeof(XMLCh)
+        );//new XMLCh[toSetLen + 1];
     }
 
     XMLString::moveChars(fStack[fStackTop - 1]->fThisElement, toSet, toSetLen + 1);
@@ -837,7 +863,10 @@ void WFElemStack::expandMap()
     //
     const unsigned int newCapacity = fMapCapacity ?
                                      (unsigned int)(fMapCapacity * 1.25) : 16;
-    PrefMapElem* newMap = new PrefMapElem[newCapacity];
+    PrefMapElem* newMap = (PrefMapElem*) fMemoryManager->allocate
+    (
+        newCapacity * sizeof(PrefMapElem)
+    );//new PrefMapElem[newCapacity];
 
     //
     //  Copy over the old stuff. We DON'T have to zero out the new stuff
@@ -847,7 +876,7 @@ void WFElemStack::expandMap()
     if (fMapCapacity) {
 
         memcpy(newMap, fMap, fMapCapacity * sizeof(PrefMapElem));
-        delete [] fMap;
+        fMemoryManager->deallocate(fMap);//delete [] fMap;
     }
 
     fMap = newMap;
@@ -858,7 +887,10 @@ void WFElemStack::expandStack()
 {
     // Expand the capacity by 25% and allocate a new buffer
     const unsigned int newCapacity = (unsigned int)(fStackCapacity * 1.25);
-    StackElem** newStack = new StackElem*[newCapacity];
+    StackElem** newStack = (StackElem**) fMemoryManager->allocate
+    (
+        newCapacity * sizeof(StackElem*)
+    );//new StackElem*[newCapacity];
 
     // Copy over the old stuff
     memcpy(newStack, fStack, fStackCapacity * sizeof(StackElem*));
@@ -876,7 +908,7 @@ void WFElemStack::expandStack()
     );
 
     // Delete the old array and update our members
-    delete [] fStack;
+    fMemoryManager->deallocate(fStack);//delete [] fStack;
     fStack = newStack;
     fStackCapacity = newCapacity;
 }

@@ -159,7 +159,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             }
             else
             {
-                janName.reset(XMLString::replicate(namePtr));
+                janName.reset(XMLString::replicate(namePtr, fMemoryManager), fMemoryManager);
                 janName[colonInd] = chNull;
                 prefPtr = janName.get();
             }
@@ -454,7 +454,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         XMLAttr* curAttr;
         if (retCount >= curAttListSize)
         {
-            curAttr = new XMLAttr
+            curAttr = new (fMemoryManager) XMLAttr
             (
                 uriId
                 , suffPtr
@@ -462,6 +462,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , normBuf.getRawBuffer()
                 , attType
                 , true
+                , fMemoryManager
             );
             toFill.addElement(curAttr);
         }
@@ -556,7 +557,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     XMLAttr* curAtt;
                     if (retCount >= curAttListSize)
                     {
-                        curAtt = new XMLAttr;
+                        curAtt = new (fMemoryManager) XMLAttr(fMemoryManager);
                         fValidator->faultInAttr(*curAtt, *curDef);
                         fAttrList->addElement(curAtt);
                     }
@@ -863,7 +864,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    fDTDGrammar = new DTDGrammar();
+    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
@@ -901,7 +902,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fIDRefList->removeAll();
 
     // Reset the Root Element Name
-    delete [] fRootElemName;
+    fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
     fRootElemName = 0;
 
     // Reset IdentityConstraints
@@ -1293,7 +1294,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
     Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-        XSDDOMParser parser;
+        XSDDOMParser parser(0, fMemoryManager);
 
         parser.setValidationScheme(XercesDOMParser::Val_Never);
         parser.setDoNamespaces(true);
@@ -1345,7 +1346,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                 else {
                     if (fStandardUriConformant && urlTmp.hasInvalidChar())
                         ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                    srcToFill = new URLInputSource(urlTmp);
+                    srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
                 }
             }
 
@@ -1353,7 +1354,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             {
                 // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
                 if (!fStandardUriConformant)
-                    srcToFill = new LocalFileInputSource
+                    srcToFill = new (fMemoryManager) LocalFileInputSource
                     (
                         lastInfo.systemId
                         , expSysId.getRawBuffer()
@@ -1415,8 +1416,19 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         }
                     }
 
-                    grammar = new SchemaGrammar();
-                    TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, srcToFill->getSystemId(), fEntityHandler, fErrorReporter);
+                    grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+                    TraverseSchema traverseSchema
+                    (
+                        root
+                        , fURIStringPool
+                        , (SchemaGrammar*) grammar
+                        , fGrammarResolver
+                        , this
+                        , srcToFill->getSystemId()
+                        , fEntityHandler
+                        , fErrorReporter
+                        , fMemoryManager
+                    );
 
                     if (fGrammarType == Grammar::DTDGrammarType) {
                         fGrammar = grammar;
@@ -1504,14 +1516,14 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
             }
         }
         catch(const MalformedURLException& e)
         {
             // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
             if (!fStandardUriConformant)
-                srcToFill = new LocalFileInputSource
+                srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
@@ -1548,7 +1560,7 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         }
     }
 
-    XSDDOMParser parser;
+    XSDDOMParser parser(0, fMemoryManager);
 
     parser.setValidationScheme(XercesDOMParser::Val_Never);
     parser.setDoNamespaces(true);
@@ -1574,8 +1586,19 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = new SchemaGrammar();
-            TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, src.getSystemId(), fEntityHandler, fErrorReporter);
+            SchemaGrammar* grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+            TraverseSchema traverseSchema
+            (
+                root
+                , fURIStringPool
+                , (SchemaGrammar*) grammar
+                , fGrammarResolver
+                , this
+                , src.getSystemId()
+                , fEntityHandler
+                , fErrorReporter
+                , fMemoryManager
+            );
 
             if (fValidate) {
                 //  validate the Schema scan so far

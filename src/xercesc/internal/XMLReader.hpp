@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.12  2003/01/27 16:50:27  knoaman
  * some cleanup.
  *
@@ -165,7 +168,6 @@
 #if !defined(XMLREADER_HPP)
 #define XMLREADER_HPP
 
-#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/XMLRecognizer.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
@@ -175,7 +177,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 class InputSource;
 class BinInputStream;
 class ReaderMgr;
-class XMLBuffer;
 class XMLScanner;
 class XMLTranscoder;
 
@@ -194,7 +195,7 @@ class XMLTranscoder;
 //  This is NOT to be derived from.
 //
 // ---------------------------------------------------------------------------
-class XMLPARSER_EXPORT XMLReader
+class XMLPARSER_EXPORT XMLReader : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -577,6 +578,7 @@ private:
     XMLByte*                    fgCharCharsTable;
     bool                        fNEL;
     XMLVersion                  fXMLVersion;
+    MemoryManager*              fMemoryManager;
 };
 
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:08:10  tng
  * Return a reference instead of void for operator=
  *
@@ -118,8 +121,7 @@
 #if !defined(CONTENTMODEL_HPP)
 #define CONTENTMODEL_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/QName.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -139,7 +141,7 @@ class SchemaGrammar;
  *  the abstract API via which all the types of contents models are dealt
  *  with generically. Its pretty simple.
  */
-class XMLPARSER_EXPORT XMLContentModel
+class XMLPARSER_EXPORT XMLContentModel : public XMemory
 {
 public:
     // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/04/21 20:46:01  knoaman
  * Use XMLString::release to prepare for configurable memory manager.
  *
@@ -97,6 +100,7 @@ XMLNotationDecl::XMLNotationDecl() :
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 }
 
@@ -105,16 +109,18 @@ XMLNotationDecl::XMLNotationDecl(   const   XMLCh* const    notName
                                     , const XMLCh* const    sysId
                                     , const XMLCh* const    baseURI) :
     fId(0)
-    , fName(XMLString::replicate(notName))
+    , fName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try
     {
-        fPublicId = XMLString::replicate(pubId);
-        fSystemId = XMLString::replicate(sysId);
-        fBaseURI  = XMLString::replicate(baseURI);
+        fName = XMLString::replicate(notName, fMemoryManager);
+        fPublicId = XMLString::replicate(pubId, fMemoryManager);
+        fSystemId = XMLString::replicate(sysId, fMemoryManager);
+        fBaseURI  = XMLString::replicate(baseURI, fMemoryManager);
     }
     catch(...)
     {
@@ -135,9 +141,9 @@ void XMLNotationDecl::setName(const XMLCh* const notName)
 {
     // Clean up the current name stuff and replicate the passed name
     if (fName)
-        XMLString::release(&fName);
+        fMemoryManager->deallocate(fName);
 
-    fName = XMLString::replicate(notName);
+    fName = XMLString::replicate(notName, fMemoryManager);
 }
 
 
@@ -147,10 +153,10 @@ void XMLNotationDecl::setName(const XMLCh* const notName)
 // ---------------------------------------------------------------------------
 void XMLNotationDecl::cleanUp()
 {
-    XMLString::release(&fName);
-    XMLString::release(&fPublicId);
-    XMLString::release(&fSystemId);
-    XMLString::release(&fBaseURI);
+    fMemoryManager->deallocate(fName);
+    fMemoryManager->deallocate(fPublicId);
+    fMemoryManager->deallocate(fSystemId);
+    fMemoryManager->deallocate(fBaseURI);
 }
 
 XERCES_CPP_NAMESPACE_END

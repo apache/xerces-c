@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 14:58:18  tng
  * C++ Namespace Support.
  *
@@ -197,8 +200,8 @@ const XMLCh* VecAttrListImpl::getValue(const XMLCh* const name) const
 const XMLCh* VecAttrListImpl::getValue(const char* const name) const
 {
     // Temporarily transcode the name for lookup
-    XMLCh* wideName = XMLString::transcode(name);
-    ArrayJanitor<XMLCh> janName(wideName);
+    XMLCh* wideName = XMLString::transcode(name, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<XMLCh> janName(wideName, XMLPlatformUtils::fgMemoryManager);
 
     //
     //  Search the vector for the attribute with the given name and return

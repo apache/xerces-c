@@ -90,7 +90,8 @@ class GrammarResolver;
   */
 class PARSERS_EXPORT AbstractDOMParser :
 
-    public XMLDocumentHandler
+    public XMemory
+    , public XMLDocumentHandler
     , public XMLErrorReporter
     , public XMLEntityHandler
     , public DocTypeHandler
@@ -1307,7 +1308,11 @@ protected :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       */
-    AbstractDOMParser(XMLValidator* const valToAdopt = 0);
+    AbstractDOMParser
+    (
+          XMLValidator* const valToAdopt = 0
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@}
 
@@ -1468,7 +1473,6 @@ private :
     bool                          fParseInProgress;
     bool                          fCreateCommentNodes;
     bool                          fDocumentAdoptedByUser;
-    XMLBufferMgr                  fBufMgr;
     XMLScanner*                   fScanner;
     DOMNode*                      fCurrentParent;
     DOMNode*                      fCurrentNode;
@@ -1480,6 +1484,8 @@ private :
     GrammarResolver*              fGrammarResolver;
     XMLStringPool*                fURIStringPool;
     XMLValidator*                 fValidator;
+    MemoryManager*                fMemoryManager;
+    XMLBufferMgr                  fBufMgr;
     XMLBuffer&                    fInternalSubset;
 };
 

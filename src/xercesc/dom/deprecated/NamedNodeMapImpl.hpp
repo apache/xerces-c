@@ -70,7 +70,7 @@
 //  name is substituded for the *.
 //
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 #include "NodeImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -80,7 +80,7 @@ class NodeVector;
 class DocumentImpl;
 class NodeImpl;
 
-class CDOM_EXPORT NamedNodeMapImpl {
+class CDOM_EXPORT NamedNodeMapImpl: public XMemory {
 protected:
     NodeVector       *nodes;
     NodeImpl         *ownerNode;    // the node this map belongs to

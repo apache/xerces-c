@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 18:25:53  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/03/07 19:59:05  tng
  * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
  *
@@ -83,7 +86,7 @@
  */
 
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -91,7 +94,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMBuilder;
 class DOMWriter;
 class DOMInputSource;
-
+class MemoryManager;
 
 /**
   * <p><code>DOMImplementationLS</code> contains the factory methods for
@@ -195,7 +198,8 @@ public:
      * @since DOM Level 3
      */
     virtual DOMBuilder* createDOMBuilder(const short mode,
-                                         const XMLCh* const schemaType) = 0;
+                                         const XMLCh* const schemaType,
+                                         MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
 
     /**
@@ -209,7 +213,7 @@ public:
      * @see DOMWriter
      * @since DOM Level 3
      */
-    virtual DOMWriter* createDOMWriter() = 0;
+    virtual DOMWriter* createDOMWriter(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
     /**
      * Create a new "empty" DOMInputSource.

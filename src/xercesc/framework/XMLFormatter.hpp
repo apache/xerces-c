@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.12  2003/03/17 03:19:52  peiyongz
  * Bug#18051 memory leakage in XMLFormatter
  *
@@ -127,7 +130,7 @@
 #if !defined(XMLFORMATTER_HPP)
 #define XMLFORMATTER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -143,7 +146,7 @@ class XMLTranscoder;
  *  A number of flags are provided to control whether various optional
  *  formatting operations are performed.
  */
-class XMLPARSER_EXPORT XMLFormatter
+class XMLPARSER_EXPORT XMLFormatter : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -351,7 +354,8 @@ public:
      * @return return the transcoder used internally for transcoding the formatter conent
      */
     inline const XMLTranscoder*   getTranscoder() const;
-    //@}
+
+   //@}
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -484,7 +488,6 @@ private :
     UnRepFlags                  fUnRepFlags;
     XMLTranscoder*              fXCoder;
     XMLByte                     fTmpBuf[kTmpBufSize + 4];
-
     XMLByte*                    fAposRef;
     unsigned int                fAposLen;
     XMLByte*                    fAmpRef;
@@ -495,13 +498,12 @@ private :
     unsigned int                fLTLen;
     XMLByte*                    fQuoteRef;
     unsigned int                fQuoteLen;
-
     bool                        fIsXML11;
-
+    MemoryManager*              fMemoryManager;
 };
 
 
-class XMLPARSER_EXPORT XMLFormatTarget
+class XMLPARSER_EXPORT XMLFormatTarget : public XMemory
 {
 public:
     // -----------------------------------------------------------------------

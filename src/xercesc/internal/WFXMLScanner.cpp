@@ -79,9 +79,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  WFXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
-WFXMLScanner::WFXMLScanner(XMLValidator* const valToAdopt) :
+WFXMLScanner::WFXMLScanner( XMLValidator* const  valToAdopt
+                          , MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt)
+    XMLScanner(valToAdopt, manager)
     , fElementIndex(0)
     , fElements(0)
     , fEntityTable(0)
@@ -91,7 +92,7 @@ WFXMLScanner::WFXMLScanner(XMLValidator* const valToAdopt) :
 {
     try
     {
-         commonInit();
+        commonInit();
     }
     catch(...)
     {
@@ -100,13 +101,14 @@ WFXMLScanner::WFXMLScanner(XMLValidator* const valToAdopt) :
     }
 }
 
-WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const  docHandler
-                            , DocTypeHandler* const    docTypeHandler
-                            , XMLEntityHandler* const  entityHandler
-                            , XMLErrorReporter* const  errHandler
-                            , XMLValidator* const      valToAdopt) :
+WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const docHandler
+                          , DocTypeHandler* const     docTypeHandler
+                          , XMLEntityHandler* const   entityHandler
+                          , XMLErrorReporter* const   errHandler
+                          , XMLValidator* const       valToAdopt
+                          , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
     , fElementIndex(0)
     , fElements(0)
     , fEntityTable(0)
@@ -435,11 +437,11 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
 //  it redundantly in multiple constructors.
 void WFXMLScanner::commonInit()
 {
-    fEntityTable = new ValueHashTableOf<XMLCh>(11);
-    fAttrNameHashList = new ValueVectorOf<unsigned int>(16);
-    fAttrNSList = new ValueVectorOf<XMLAttr*>(8);
-    fElements = new RefVectorOf<XMLElementDecl>(32);
-    fElementLookup = new RefHashTableOf<XMLElementDecl>(109, false);
+    fEntityTable = new (fMemoryManager) ValueHashTableOf<XMLCh>(11);
+    fAttrNameHashList = new (fMemoryManager)ValueVectorOf<unsigned int>(16);
+    fAttrNSList = new (fMemoryManager) ValueVectorOf<XMLAttr*>(8);
+    fElements = new (fMemoryManager) RefVectorOf<XMLElementDecl>(32);
+    fElementLookup = new (fMemoryManager) RefHashTableOf<XMLElementDecl>(109, false);
 
     //  Add the default entity entries for the character refs that must always
     //  be present.
@@ -810,7 +812,10 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             elemDecl = fElements->elementAt(fElementIndex);
         }
         else {
-            elemDecl = new DTDElementDecl();
+            elemDecl = new (fMemoryManager) DTDElementDecl
+            (
+                fMemoryManager
+            );
             fElements->addElement(elemDecl);
         }
 
@@ -983,12 +988,15 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             XMLAttr* curAtt;
             if (attCount >= curAttListSize)
             {
-                curAtt = new XMLAttr
+                curAtt = new (fMemoryManager) XMLAttr
                 (
                     -1
                     , attNameRawBuf
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
+                    , XMLAttDef::CData
+                    , true
+                    , fMemoryManager
                 );
                 fAttrList->addElement(curAtt);
                 fAttrNameHashList->addElement(attNameHash);
@@ -1131,7 +1139,10 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             elemDecl = fElements->elementAt(fElementIndex);
         }
         else {
-            elemDecl = new DTDElementDecl();
+            elemDecl = new (fMemoryManager) DTDElementDecl
+            (
+                fMemoryManager
+            );
             fElements->addElement(elemDecl);
         }
 
@@ -1300,11 +1311,14 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             XMLAttr* curAtt = 0;
             if (attCount >= curAttListSize)
             {
-                curAtt = new XMLAttr
+                curAtt = new (fMemoryManager) XMLAttr
                 (
                     fEmptyNamespaceId
                     , attNameRawBuf
                     , attValueRawBuf
+                    , XMLAttDef::CData
+                    , true
+                    , fMemoryManager
                 );
                 fAttrList->addElement(curAtt);
                 fAttrNameHashList->addElement(attNameHash);

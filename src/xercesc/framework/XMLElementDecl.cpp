@@ -62,9 +62,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
-#include <xercesc/framework/XMLElementDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -100,7 +100,7 @@ XMLElementDecl::setElementName(const XMLCh* const       prefix
     if (fElementName)
         fElementName->setName(prefix, localPart, uriId);
     else
-        fElementName = new QName(prefix, localPart, uriId);
+        fElementName = new (fMemoryManager) QName(prefix, localPart, uriId);
 }
 
 void
@@ -110,7 +110,7 @@ XMLElementDecl::setElementName(const XMLCh* const       rawName
     if (fElementName)
         fElementName->setName(rawName, uriId);
     else
-        fElementName = new QName(rawName, uriId);
+        fElementName = new (fMemoryManager) QName(rawName, uriId);
 }
 
 void
@@ -119,18 +119,19 @@ XMLElementDecl::setElementName(const QName* const    elementName)
     if (fElementName)
         fElementName->setValues(*elementName);
     else
-        fElementName = new QName(*elementName);
+        fElementName = new (fMemoryManager) QName(*elementName);
 }
 
 // ---------------------------------------------------------------------------
 //  ElementDecl: Hidden constructors
 // ---------------------------------------------------------------------------
-XMLElementDecl::XMLElementDecl() :
+XMLElementDecl::XMLElementDecl(MemoryManager* const manager) :
 
-    fElementName(0)
+    fMemoryManager(manager)
+    , fElementName(0)
     , fCreateReason(XMLElementDecl::NoReason)
     , fId(XMLElementDecl::fgInvalidElemId)
-    , fExternalElement (false)
+    , fExternalElement(false)
 {
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 18:26:29  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/01/03 20:08:39  tng
  * New feature StandardUriConformant to force strict standard uri conformance.
  *
@@ -139,15 +142,14 @@
 #if !defined(READERMGR_HPP)
 #define READERMGR_HPP
 
+#include <xercesc/internal/XMLReader.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefStackOf.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/sax/Locator.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
-#include <xercesc/internal/XMLReader.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLBuffer;
 class XMLEntityDecl;
 class XMLEntityHandler;
 class XMLDocumentHandler;
@@ -163,7 +165,8 @@ class XMLScanner;
 //  talks to the reader manager, which handles the stack and popping off
 //  used up readers.
 // ---------------------------------------------------------------------------
-class XMLPARSER_EXPORT ReaderMgr : public Locator
+class XMLPARSER_EXPORT ReaderMgr :   public XMemory 
+                                   , public Locator
 {
 public :
     // -----------------------------------------------------------------------
@@ -181,7 +184,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ReaderMgr();
+    ReaderMgr(MemoryManager* const manager /*= XMLPlatformUtils::fgMemoryManager*/);
     ~ReaderMgr();
 
 
@@ -364,6 +367,7 @@ private :
     bool                        fThrowEOE;
     XMLReader::XMLVersion       fXMLVersion;
     bool                        fStandardUriConformant;
+    MemoryManager*              fMemoryManager;
 };
 
 

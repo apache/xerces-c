@@ -83,9 +83,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XercesDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XercesDOMParser::XercesDOMParser(XMLValidator* const valToAdopt) :
+XercesDOMParser::XercesDOMParser( XMLValidator* const  valToAdopt
+                                , MemoryManager* const manager) :
 
-AbstractDOMParser(valToAdopt)
+AbstractDOMParser(valToAdopt, manager)
 , fErrorHandler(0)
 , fEntityResolver(0)
 {

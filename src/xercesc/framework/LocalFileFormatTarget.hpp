@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/01/24 20:20:22  tng
  * Add method flush to XMLFormatTarget
  *
@@ -136,7 +139,7 @@ private:
     XMLByte*        fDataBuf;
     unsigned int    fIndex;
     unsigned int    fCapacity;
-
+    MemoryManager*  fMemoryManager;
 };
 
 

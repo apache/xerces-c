@@ -81,6 +81,7 @@ XMLEntityDecl::XMLEntityDecl() :
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 }
 
@@ -89,28 +90,32 @@ XMLEntityDecl::XMLEntityDecl(const XMLCh* const entName) :
     fId(0)
     , fValueLen(0)
     , fValue(0)
-    , fName(XMLString::replicate(entName))
+    , fName(0)
     , fNotationName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
+    fName = XMLString::replicate(entName, fMemoryManager);
 }
 
 XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
                             , const XMLCh* const    value) :
     fId(0)
     , fValueLen(XMLString::stringLen(value))
-    , fValue(XMLString::replicate(value))
+    , fValue(0)
     , fName(0)
     , fNotationName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try
     {
-        fName = XMLString::replicate(entName);
+        fValue = XMLString::replicate(value, fMemoryManager);
+        fName = XMLString::replicate(entName, fMemoryManager);
     }
     catch(...)
     {
@@ -123,17 +128,19 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
     fId(0)
     , fValueLen(1)
     , fValue(0)
-    , fName(XMLString::replicate(entName))
+    , fName(0)
     , fNotationName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try
     {
         XMLCh dummy[2] = { chNull, chNull };
         dummy[0] = value;
-        fValue = XMLString::replicate(dummy);
+        fValue = XMLString::replicate(dummy, fMemoryManager);
+        fName = XMLString::replicate(entName, fMemoryManager);
     }
     catch(...)
     {
@@ -154,9 +161,9 @@ void XMLEntityDecl::setName(const XMLCh* const entName)
 {
     // Clean up the current name stuff
     if (fName)
-       XMLString::release(&fName);
+       fMemoryManager->deallocate(fName);
 
-    fName = XMLString::replicate(entName);
+    fName = XMLString::replicate(entName, fMemoryManager);
 }
 
 
@@ -165,12 +172,12 @@ void XMLEntityDecl::setName(const XMLCh* const entName)
 // ---------------------------------------------------------------------------
 void XMLEntityDecl::cleanUp()
 {
-    XMLString::release(&fName);
-    XMLString::release(&fNotationName);
-    XMLString::release(&fValue);
-    XMLString::release(&fPublicId);
-    XMLString::release(&fSystemId);
-    XMLString::release(&fBaseURI);
+    fMemoryManager->deallocate(fName);
+    fMemoryManager->deallocate(fNotationName);
+    fMemoryManager->deallocate(fValue);
+    fMemoryManager->deallocate(fPublicId);
+    fMemoryManager->deallocate(fSystemId);
+    fMemoryManager->deallocate(fBaseURI);
 }
 
 XERCES_CPP_NAMESPACE_END

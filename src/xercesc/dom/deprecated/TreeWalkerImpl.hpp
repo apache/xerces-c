@@ -70,7 +70,7 @@
 #ifndef TreeWalkerImpl_HEADER_GUARD_
 #define TreeWalkerImpl_HEADER_GUARD_
 
-
+#include <xercesc/util/XMemory.hpp>
 #include "DOM_TreeWalker.hpp"
 #include "RefCountedImpl.hpp"
 

@@ -171,7 +171,10 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     XMLCh* newString;
     XMLCh temp[4000];
     if (newLen >= 3999)
-        newString = new XMLCh[newLen+1];
+        newString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            (newLen+1) * sizeof(XMLCh)
+        );//new XMLCh[newLen+1];
     else
         newString = temp;
 
@@ -181,7 +184,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     fDataBuf->set(newString);
 
     if (newLen >= 3999)
-        delete[] newString;
+        XMLPlatformUtils::fgMemoryManager->deallocate(newString);//delete[] newString;
 
     // We don't delete the old string (doesn't work), or alter
     //   the old string (may be shared)
@@ -239,7 +242,10 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     XMLCh* newString;
     XMLCh temp[4000];
     if (newLen >= 3999)
-        newString = new XMLCh[newLen+1];
+        newString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            (newLen + 1) * sizeof(XMLCh)
+        );//new XMLCh[newLen+1];
     else
         newString = temp;
 
@@ -250,7 +256,7 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     fDataBuf->set(newString);
 
     if (newLen >= 3999)
-        delete[] newString;
+        XMLPlatformUtils::fgMemoryManager->deallocate(newString);//delete[] newString;
 
     if (node->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
@@ -308,7 +314,10 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     XMLCh* newString;
     XMLCh temp[4000];
     if (len >= 3999)
-        newString = new XMLCh[len+1];
+        newString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            (len + 1) * sizeof(XMLCh)
+        );//new XMLCh[len+1];
     else
         newString = temp;
 
@@ -318,7 +327,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     const XMLCh* retString = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
 
     if (len >= 3999)
-        delete[] newString;
+        XMLPlatformUtils::fgMemoryManager->deallocate(newString);//delete[] newString;
 
     return retString;
 

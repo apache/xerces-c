@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/05/15 18:26:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.22  2003/04/17 21:58:50  neilg
  * Adding a new property,
  * http://apache.org/xml/properties/security-manager, with
@@ -260,11 +263,12 @@ class GrammarResolver;
 
 class PARSERS_EXPORT SAXParser :
 
-    public Parser
+    public XMemory
+    , public Parser
     , public XMLDocumentHandler
     , public XMLErrorReporter
     , public XMLEntityHandler
-    , public DocTypeHandler
+    , public DocTypeHandler    
 {
 public :
     // -----------------------------------------------------------------------
@@ -296,7 +300,11 @@ public :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       */
-    SAXParser(XMLValidator* const valToAdopt = 0);
+    SAXParser
+    (
+          XMLValidator* const  valToAdopt = 0
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     /**
       * Destructor
@@ -2017,6 +2025,7 @@ private:
     GrammarResolver*     fGrammarResolver;
     XMLStringPool*       fURIStringPool;
     XMLValidator*        fValidator;
+    MemoryManager*       fMemoryManager;
     XMLBuffer            fElemQNameBuf;
 };
 

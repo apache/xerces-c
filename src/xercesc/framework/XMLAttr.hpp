@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/11/28 20:12:45  knoaman
  * Allow creating/setting of XMLAttr using a rawname (i.e. 'prefix:localpart').
  *
@@ -106,7 +109,7 @@
 #if !defined(XMLATTR_HPP)
 #define XMLATTR_HPP
 
-#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/QName.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>
 
@@ -133,7 +136,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  string members unless it has to. It keeps up with how long each buffer
  *  is and only reallocates if the new value won't fit.
  */
-class XMLPARSER_EXPORT XMLAttr
+class XMLPARSER_EXPORT XMLAttr : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -146,8 +149,10 @@ public:
       * The default constructor just setsup an empty attribute to be filled
       * in the later. Though the initial state is a reasonable one, it is
       * not documented because it should not be depended on.
+      *
+      * @param  manager     The configurable memory manager
       */
-    XMLAttr();
+    XMLAttr(MemoryManager* const manager);
 
     /**
       * This is the primary constructor which takes all of the information
@@ -174,15 +179,18 @@ public:
       * @param  specified   Indicates whether the attribute was explicitly
       *                     specified or not. If not, then it was faulted
       *                     in from a FIXED or DEFAULT value.
+      *
+      * @param  manager     The configurable memory manager
       */
     XMLAttr
     (
-        const   unsigned int        uriId
+          const unsigned int        uriId
         , const XMLCh* const        attrName
         , const XMLCh* const        attrPrefix
         , const XMLCh* const        attrValue
-        , const XMLAttDef::AttTypes type = XMLAttDef::CData
-        , const bool                specified = true
+        , const XMLAttDef::AttTypes type// = XMLAttDef::CData
+        , const bool                specified// = true
+        , MemoryManager* const      manager //= XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -206,14 +214,17 @@ public:
       * @param  specified   Indicates whether the attribute was explicitly
       *                     specified or not. If not, then it was faulted
       *                     in from a FIXED or DEFAULT value.
+      *
+      * @param  manager     The configurable memory manager
       */
     XMLAttr
     (
         const unsigned int uriId
         , const XMLCh* const rawName
         , const XMLCh* const attrValue
-        , const XMLAttDef::AttTypes type = XMLAttDef::CData
-        , const bool specified = true
+        , const XMLAttDef::AttTypes type// = XMLAttDef::CData
+        , const bool specified// = true
+        , MemoryManager* const manager //= XMLPlatformUtils::fgMemoryManager
     );
 
     //@}
@@ -446,12 +457,16 @@ private :
     //      The attribute value that was given in the attribute instance, and
     //      its current buffer size (minus one, where the null is.)
     //
+    //  fMemoryManager
+    //      The memory manager used for dynamic memory allocation/deallocation
+    //
     // -----------------------------------------------------------------------
     bool                fSpecified;
     XMLAttDef::AttTypes fType;
-    XMLCh*              fValue;
     unsigned int        fValueBufSz;
+    XMLCh*              fValue;
     QName*              fAttName;
+    MemoryManager*      fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

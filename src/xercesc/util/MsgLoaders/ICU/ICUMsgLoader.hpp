@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:29:48  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/03/07 18:15:44  tng
  * Return a reference instead of void for operator=
  *
@@ -101,7 +104,6 @@
 #if !defined(ICUMSGLOADER_HPP)
 #define ICUMSGLOADER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include "unicode/ures.h"
 

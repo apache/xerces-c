@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:26:07  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -83,7 +86,7 @@
 #if !defined(XMLPSCANTOKEN_HPP)
 #define XMLPSCANTOKEN_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -99,7 +102,7 @@ class XMLScanner;
  *  progressive parse is begun, and which is passed back in on each subsequent
  *  call of the progressive parse.
  */
-class XMLPARSER_EXPORT XMLPScanToken
+class XMLPARSER_EXPORT XMLPScanToken : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
