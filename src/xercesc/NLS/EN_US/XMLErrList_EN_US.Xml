@@ -795,6 +795,25 @@
             <Message Id="PD_MapAndSum" Text="MapAndSum: There is not a complete functional mapping between the particles"/>
             <Message Id="PD_InvalidContentType" Text="Particle derivation: Invalid content spec node type"/>
             <Message Id="NodeIDMap_GrowErr" Text="NodeIDMap overflows and exceeds the largest available size"/>
+            <Message Id="XSer_ProtoType_Null_ClassName"  Text="ProtoType has null class name"/>
+            <Message Id="XSer_ProtoType_NameLen_Dif"     Text="ProtoType name length diff '{0}' vs '{1}'"/>
+            <Message Id="XSer_ProtoType_Name_Dif"        Text="ProtoType name diff '{0}' vs '{1}'"/>            
+            <Message Id="XSer_InStream_Read_LT_Req"      Text="InputStream read '{0}' less than required '{1}'"/>
+            <Message Id="XSer_InStream_Read_OverFlow"    Text="InputStream read '{0}' beyond buffer available '{1}'"/>
+            <Message Id="XSer_Storing_Violation"         Text="Storing violation"/>
+            <Message Id="XSer_StoreBuffer_Violation"     Text="Store buffer violation '{0}', '{1}'"/>
+            <Message Id="XSer_LoadPool_UppBnd_Exceed"    Text="Object Tag '{0}' exceed load pool uppper Boundary '{1}'"/>
+            <Message Id="XSer_LoadPool_NoTally_ObjCnt"   Text="Load pool size '{0}' not tally with object count '{1}'"/>
+            <Message Id="XSer_Loading_Violation"         Text="Loading violation"/>
+            <Message Id="XSer_LoadBuffer_Violation"      Text="Load buffer violation '{0}', '{1}'"/>
+            <Message Id="XSer_Inv_ClassIndex"            Text="Invalid class index '{0}', '{1}'"/>
+            <Message Id="XSer_Inv_FillBuffer_Size"       Text="Invalid fillBuffer size '{0}', '{1}'"/>
+            <Message Id="XSer_Inv_checkFillBuffer_Size"  Text="Invalid checkFillBuffer size '{0}'"/>
+            <Message Id="XSer_Inv_checkFlushBuffer_Size" Text="Invalid checkFlushBuffer size '{0}'"/>
+            <Message Id="XSer_Inv_Null_Pointer"          Text="Invalid null pointer encountered '{0}'"/>
+            <Message Id="XSer_Inv_Buffer_Len"            Text="Invalid buffer length '{0}'"/>
+            <Message Id="XSer_CreateObject_Fail"         Text="CreateObject fails "/>
+            <Message Id="XSer_ObjCount_UppBnd_Exceed"    Text="Object count '{0}' exceed upper boundary '{1}'"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLDOMMsg">
