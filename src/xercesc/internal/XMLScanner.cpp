@@ -365,6 +365,37 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId
         srcToUse = new LocalFileInputSource(systemId);
     }
 
+    catch(const XMLException& excToCatch)
+    {
+        //
+        //  For any other XMLException,
+        //  emit the error and catch any user exception thrown from here.
+        //
+        fInException = true;
+        if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
+            emitError
+            (
+                XMLErrs::XMLException_Warning
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
+            emitError
+            (
+                XMLErrs::XMLException_Fatal
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        else
+            emitError
+            (
+                XMLErrs::XMLException_Error
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        return;
+    }
+
     catch(...)
     {
         // Just rethrow this, since its not our problem
@@ -554,15 +585,51 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         //  it has to be fully qualified. If not, then assume we are just
         //  mistaking a file for a URL.
         //
+
         XMLURL tmpURL(systemId);
-        if (tmpURL.isRelative())
-            ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
-        srcToUse = new URLInputSource(tmpURL);
+        if (tmpURL.isRelative()) {
+            srcToUse = new LocalFileInputSource(systemId);
+        }
+        else
+        {
+            srcToUse = new URLInputSource(tmpURL);
+        }
     }
 
     catch(const MalformedURLException&)
     {
         srcToUse = new LocalFileInputSource(systemId);
+    }
+
+    catch(const XMLException& excToCatch)
+    {
+        //
+        //  For any other XMLException,
+        //  emit the error and catch any user exception thrown from here.
+        //
+        fInException = true;
+        if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
+            emitError
+            (
+                XMLErrs::XMLException_Warning
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
+            emitError
+            (
+                XMLErrs::XMLException_Fatal
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        else
+            emitError
+            (
+                XMLErrs::XMLException_Error
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        return false;
     }
 
     catch(...)
