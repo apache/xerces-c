@@ -340,7 +340,7 @@ void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
 AttrImpl *ElementImpl::getAttributeNodeNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    return (AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
+    return (attributes == 0) ? null : (AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
 }
 
 
