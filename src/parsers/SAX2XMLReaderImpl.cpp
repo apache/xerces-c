@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/08/09 23:39:58  jpolast
+ * should be namespace-prefixes; not namespaces-prefixes
+ *
  * Revision 1.3  2000/08/09 22:16:12  jpolast
  * many conformance & stability changes:
  *   - ContentHandler::resetDocument() removed
@@ -137,7 +140,7 @@ const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES[] = {
 		chLatin_e, chLatin_s, chForwardSlash,
 		chLatin_n, chLatin_a, chLatin_m,
 		chLatin_e, chLatin_s, chLatin_p, chLatin_a,
-		chLatin_c, chLatin_e, chLatin_s, 
+		chLatin_c, chLatin_e, 
 		chDash, chLatin_p, chLatin_r, chLatin_e,
 		chLatin_f, chLatin_i, chLatin_x,
 		chLatin_e, chLatin_s, chNull
