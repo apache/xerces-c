@@ -57,18 +57,15 @@
 # $Id$
 #
 
-DOMMemTest_DIR=DOM/DOMMemTest
-DeprecatedDOMCount_DIR=DOM/DeprecatedDOMCount
-DOMTest_DIR=DOM/DOMTest
-DOMTypeInfo_DIR=DOM/TypeInfo
-Traversal_DIR=DOM/Traversal
-ThreadTest_DIR=ThreadTest
-MemHandlerTest_DIR=MemHandlerTest
-EncodingTest_DIR=EncodingTest
-DOMRange_DIR=DOM/RangeTest
-InitTermTest_DIR=InitTermTest
-
-LIB_DIR=${XERCESCROOT}/lib
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# If you are going to do the OS390BATCH build, make sure you have #
+# the OS390BATCH environment variable set.                        #
+#                                                                 #
+#   export OS390BATCH=1                                           #
+#                                                                 #
+###################################################################
 
 PLATFORM = @platform@
 COMPILER = @compiler@
@@ -76,91 +73,48 @@ GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
+LDFLAGS = @ldflags@
 PREFIX = @prefix@
 THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
-BITSTOBUILD = @bitstobuild@
 
-ifeq (${PLATFORM},HPUX)
-  ifeq (${OSVER}, HPUX10)
-      all::	bindir threadtest memhandlertest encodingtest traversal
-  else
-      all::	bindir dommemtest deprecateddomcount domtest domtypeinfo threadtest encodingtest traversal rangetest inittermtest memhandlertest  
-  endif
+include ../../version.incl
+include ../Makefile.incl
+
+APP_NAME=MemoryMonitor
+APP_DIR=MemHandlerTest
+
+OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
+EXEC=	${XERCESCROOT}/bin
+OBJS=	${OUTDIR}/MemoryMonitor.o ${OUTDIR}/SimpleHashPtr.o 
+SRC=	${XERCESCROOT}/tests/${APP_DIR}
+HEADER_FILES=
+
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+BATCH_TARGET= "//'${LOADMOD}(THREDTST)'"
+all:: makedir ${BATCH_TARGET}
 else
-    all::	bindir dommemtest deprecateddomcount domtest domtypeinfo encodingtest traversal rangetest inittermtest memhandlertest 
-  ifneq (${THREADS},none)
-    all::	threadtest
-  endif
+all:: makedir ${EXEC}/${APP_NAME}
 endif
 
-bindir::
-	test -d ${XERCESCROOT}/bin || mkdir ${XERCESCROOT}/bin
+makedir::
+	-mkdir -p $(OUTDIR)
 
-dommemtest::
-	@echo Building "DOMMemTest"
-	${MAKE} -C $(DOMMemTest_DIR) $(MAKE_FLAGS)
+${EXEC}/${APP_NAME}:: ${OBJS}
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} ${LIBS}
 
-deprecateddomcount::
-	@echo Building "DeprecatedDOMConut"
-	${MAKE} -C $(DeprecatedDOMCount_DIR) $(MAKE_FLAGS)
+${BATCH_TARGET}:: ${OBJS}
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
-domtest::
-	@echo Building "DOMTest"
-	${MAKE} -C $(DOMTest_DIR) $(MAKE_FLAGS)
+$(OUTDIR)/SimpleHashPtr.o:: ${SRC}/SimpleHashPtr.cpp ${HEADER_FILES}
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SimpleHashPtr.o ${SRC}/SimpleHashPtr.cpp
 
-domtypeinfo::
-	@echo Building "DOMTypeInfo"
-	${MAKE} -C $(DOMTypeInfo_DIR) $(MAKE_FLAGS)
-
-threadtest::
-	@echo Building "ThreadTest"
-	${MAKE} -C $(ThreadTest_DIR) $(MAKE_FLAGS)
-
-memhandlertest::
-	@echo Building "MemHandlerTest"
-	${MAKE} -C $(MemHandlerTest_DIR) $(MAKE_FLAGS)
-
-
-encodingtest::
-	@echo Building "EncodingTest"
-	${MAKE} -C $(EncodingTest_DIR) $(MAKE_FLAGS)
-
-traversal::
-	@echo Building "Traversal"
-	${MAKE} -C $(Traversal_DIR) $(MAKE_FLAGS)
-
-rangetest::
-	@echo Building "Range"
-	${MAKE} -C $(DOMRange_DIR) $(MAKE_FLAGS)
-
-inittermtest::
-	@echo Building "InitTermTest"
-	${MAKE} -C $(InitTermTest_DIR) $(MAKE_FLAGS)
+$(OUTDIR)/MemoryMonitor.o:: ${SRC}/MemoryMonitor.cpp ${OUTDIR}/SimpleValueHashTableOf.cpp ${SRC}/SimpleHashPtr.cpp ${HEADER_FILES}
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/MemoryMonitor.o ${SRC}/MemoryMonitor.cpp
 
 clean::
-	${MAKE} -C $(DOMMemTest_DIR) $@
-	${MAKE} -C $(DeprecatedDOMCount_DIR) $@
-	${MAKE} -C $(DOMTest_DIR) $@
-	${MAKE} -C $(DOMTypeInfo_DIR) $@
-	${MAKE} -C $(ThreadTest_DIR) $@
-	${MAKE} -C $(MemHandlerTest_DIR) $@
-	${MAKE} -C $(EncodingTest_DIR) $@
-	${MAKE} -C $(Traversal_DIR) $@
-	${MAKE} -C $(DOMRange_DIR) $@
-	${MAKE} -C $(InitTermTest_DIR) $@
+	rm -f ${OBJS} ${EXEC}/${APP_NAME}
 
-distclean::
-	${MAKE} -C $(DOMMemTest_DIR) $@
-	${MAKE} -C $(DeprecatedDOMCount_DIR) $@
-	${MAKE} -C $(DOMTest_DIR) $@
-	${MAKE} -C $(DOMTypeInfo_DIR) $@
-	${MAKE} -C $(ThreadTest_DIR) $@
-	${MAKE} -C $(MemHandlerTest_DIR) $@
-	${MAKE} -C $(EncodingTest_DIR) $@
-	${MAKE} -C $(Traversal_DIR) $@
-	${MAKE} -C $(DOMRange_DIR) $@
-	${MAKE} -C $(InitTermTest_DIR) $@
-	rm -f Makefile config.cache config.log config.status
-	rm -f *~ core
-
+distclean::	clean
+	rm -f Makefile

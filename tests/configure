@@ -1531,7 +1531,8 @@ DOM/Normalizer/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
-ThreadTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+ThreadTest/Makefile \
+MemHandlerTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -1637,7 +1638,8 @@ DOM/Normalizer/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
-ThreadTest/Makefile"}
+ThreadTest/Makefile \
+MemHandlerTest/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then

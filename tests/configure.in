@@ -96,7 +96,8 @@ DOM/Normalizer/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
-ThreadTest/Makefile])
+ThreadTest/Makefile \
+MemHandlerTest/Makefile])
 
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
