@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.23  2000/05/02 19:22:55  aruna1
+# Unix related changes in.
+#
 # Revision 1.22  2000/03/20 23:48:50  rahulj
 # Added Socket based NetAccessor. This will enable one to
 # use HTTP URL's for system id's. Default build options do
@@ -221,7 +224,6 @@ UTIL_CPP_PUBHEADERS = \
     RefVectorOf.hpp \
     RuntimeException.hpp \
     StringPool.hpp \
-    TextOutputStream.hpp \
     TransENameMap.hpp \
     TransService.hpp \
     TranscodingException.hpp \
@@ -280,7 +282,6 @@ UTIL_CPP_OBJECTS = \
     Mutexes.$(TO) \
     PlatformUtils.$(TO) \
     StringPool.$(TO) \
-    TextOutputStream.$(TO) \
     XMLURL.$(TO) \
     TransService.$(TO) \
     XML256TableTranscoder.$(TO) \

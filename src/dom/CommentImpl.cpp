@@ -72,8 +72,8 @@
 #include "DocumentImpl.hpp"
 #include "DStringPool.hpp"
 
-CommentImpl::CommentImpl(DocumentImpl *ownerDoc, const DOMString &data)
-    : CharacterDataImpl(ownerDoc, data)
+CommentImpl::CommentImpl(DocumentImpl *ownerDoc, const DOMString &dat)
+    : CharacterDataImpl(ownerDoc, dat)
 {
 };
 

@@ -81,10 +81,10 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &qualifiedName,
-                                   const DOMString &publicId,
-                                   const DOMString &systemId)
+                                   const DOMString &pubId,
+                                   const DOMString &sysId)
 	: ChildAndParentNode(ownerDoc),
-    publicId(publicId), systemId(systemId), internalSubset(null)
+    publicId(pubId), systemId(sysId), internalSubset(null)
 	, intSubsetReading(false)
 {
     name = qualifiedName.clone();

@@ -55,11 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2000/04/25 20:32:19  aruna1
- * DOM_XMLDecl type node introduced to get the information of the
- * XML Declaration in a document and store it part of the tree
- *
+ * $Id$
  *
 */
 
@@ -67,9 +63,9 @@
 #define DOM_XMLDecl_HEADER_GUARD_
 
 #include <util/XercesDefs.hpp>
-#include "dom/XMLDeclImpl.hpp"
 #include "dom/DOM_Node.hpp"
 
+class XMLDeclImpl;
 /**
 * Class to refer to XML Declaration nodes in the DOM.
 *

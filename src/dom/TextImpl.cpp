@@ -68,8 +68,8 @@
 static DOMString *gText;   // will be lazily initialized to point to "#text"
 
 
-TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &data)
-    : CharacterDataImpl(ownerDoc, data)
+TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &dat)
+    : CharacterDataImpl(ownerDoc, dat)
 {
 };
 

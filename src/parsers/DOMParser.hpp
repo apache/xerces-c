@@ -55,47 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.10  2000/04/25 20:30:39  aruna1
- * DOM_XMLDecl type node introduced to get the information of the
- * XML Declaration in a document and store it part of the tree
- *
- * Revision 1.9  2000/04/19 02:26:30  aruna1
- * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
- *
- * Revision 1.8  2000/04/12 22:58:29  roddey
- * Added support for 'auto validate' mode.
- *
- * Revision 1.7  2000/03/24 01:31:12  chchou
- * Fix bug #8 to support ignorable whitespace text nodes
- *
- * Revision 1.6  2000/03/03 01:29:34  roddey
- * Added a scanReset()/parseReset() method to the scanner and
- * parsers, to allow for reset after early exit from a progressive parse.
- * Added calls to new Terminate() call to all of the samples. Improved
- * documentation in SAX and DOM parsers.
- *
- * Revision 1.5  2000/02/17 03:53:50  rahulj
- * Added some new getters to query the parser state and
- * Finished documenting the public and protected methods.
- *
- * Revision 1.4  2000/02/06 07:47:56  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/01/20 19:10:08  roddey
- * Added protected get/set methods for doc and cur node members. Some people
- * had been writing DOMParser derivatives and touching these directly, so when they
- * were made private this broke some people's code.
- *
- * Revision 1.2  1999/12/15 19:57:48  roddey
- * Got rid of redundant 'const' on boolean return value. Some compilers choke
- * on this and its useless.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:49  twl
- * Initial checkin
- *
- * Revision 1.5  1999/11/08 20:44:53  rahul
- * Swat for adding in Product name and CVS comment log variable.
+ * $Id$
  *
  */
 
@@ -463,7 +423,7 @@ public :
       * @param newState The new to create XMLDecl type node flag
       *
       */
-    void setToCreateXMLDeclTypeNode(bool set);
+    void setToCreateXMLDeclTypeNode(const bool create);
     
     //@}
 

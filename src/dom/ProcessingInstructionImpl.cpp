@@ -65,12 +65,12 @@
 #include "DOM_Node.hpp"
 
 ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *ownerDoc,
-                                                     const DOMString &target,
-                                                     const DOMString &data)
+                                                     const DOMString &targt,
+                                                     const DOMString &dat)
     : ChildNode(ownerDoc)
 {
-    this->target = target.clone();
-    this->data = data.clone();
+    this->target = targt.clone();
+    this->data = dat.clone();
 };
 
 

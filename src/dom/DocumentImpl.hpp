@@ -76,7 +76,7 @@
 #include "DOM_Element.hpp"
 #include "util/RefVectorOf.hpp"
 #include "util/RefHashTableOf.hpp"
-#include "dom/XMLDeclImpl.hpp"
+#include "XMLDeclImpl.hpp"
 
 class DocumentTypeImpl;
 class ElementImpl;

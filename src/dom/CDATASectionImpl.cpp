@@ -64,8 +64,8 @@
 #include "DStringPool.hpp"
 
 CDATASectionImpl::CDATASectionImpl(DocumentImpl *ownerDoc,
-                                   const DOMString &data)
-    : TextImpl(ownerDoc, data)
+                                   const DOMString &dat)
+    : TextImpl(ownerDoc, dat)
 {
 };
 

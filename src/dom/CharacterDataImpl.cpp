@@ -63,10 +63,10 @@
 
 
 CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc,
-                                     const DOMString &data)
+                                     const DOMString &dat)
     : ChildNode(ownerDoc)
 {
-    this->data = data.clone();
+    this->data = dat.clone();
 };
 
 CharacterDataImpl::CharacterDataImpl(const CharacterDataImpl &other, bool deep)
@@ -95,13 +95,13 @@ void CharacterDataImpl::setNodeValue(const DOMString &value)
 };
 
 
-void CharacterDataImpl::appendData(const DOMString &data)
+void CharacterDataImpl::appendData(const DOMString &dat)
 {
     if(readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    this->data.appendData(data);
+    this->data.appendData(dat);
 };
 
 
@@ -142,7 +142,7 @@ unsigned int CharacterDataImpl::getCharDataLength()
 
 
 
-void CharacterDataImpl::insertData(unsigned int offset, const DOMString &data) 
+void CharacterDataImpl::insertData(unsigned int offset, const DOMString &dat) 
 {
     
     if (readOnly())
@@ -152,19 +152,19 @@ void CharacterDataImpl::insertData(unsigned int offset, const DOMString &data)
     // Note: the C++ DOMString operation throws the correct DOMExceptions
     //       when parameter values are bad.
     //  
-    this->data.insertData(offset, data);
+    this->data.insertData(offset, dat);
 }
 
 
 
 void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count,
-                                    const DOMString &data)
+                                    const DOMString &dat)
 {
     if (readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     deleteData(offset, count);
-    insertData(offset, data);
+    insertData(offset, dat);
 };
 
 
