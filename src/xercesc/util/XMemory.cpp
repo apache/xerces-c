@@ -84,7 +84,7 @@ CalculateBlockHeaderSize()
 	#ifdef XML_NEW_BLOCK_ALIGNMENT
 		size_t alignment = XML_NEW_BLOCK_ALIGNMENT;
 	#else
-		size_t alignment = std::max(sizeof(void*), sizeof(double));
+        size_t alignment = sizeof(void*) > sizeof(double) ? sizeof(void*) : sizeof(double);
 	#endif
 	
 	size_t headerUsage = sizeof(MemoryManager*);
