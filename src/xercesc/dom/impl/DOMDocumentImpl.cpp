@@ -1144,6 +1144,11 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
                     tmap->setNamedItem(importNode(smap->item(i), true, false));
                 }
             }
+            const XMLCh* intSubset=srcdoctype->getInternalSubset();
+            if(intSubset != 0) {
+                ((DOMDocumentTypeImpl *)newdoctype)->setInternalSubset(intSubset);
+            }
+
             // NOTE: At this time, the DOM definition of DocumentType
             // doesn't cover Elements and their Attributes. domimpl's
             // extentions in that area will not be preserved, even if

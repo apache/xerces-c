@@ -89,8 +89,6 @@ private:
     DOMParentNode        fParent;
     DOMChildNode         fChild;
 
-
-
     const XMLCh *        fName;
     DOMNamedNodeMapImpl* fEntities;
     DOMNamedNodeMapImpl* fNotations;
@@ -108,6 +106,7 @@ private:
     bool                 isIntSubsetReading() const;
 
     friend class AbstractDOMParser;
+    friend class DOMDocumentImpl;
 
 public:
     DOMDocumentTypeImpl(DOMDocument *, const XMLCh *, bool);
