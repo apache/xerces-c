@@ -200,7 +200,11 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
 
     // If we found it, then call the factory method for it
     if (ourMapping)
-        return ourMapping->makeNew(blockSize);
+	{		
+       XMLTranscoder* temp = ourMapping->makeNew(blockSize);
+       resValue = temp ? XMLTransService::Ok : XMLTransService::InternalFailure;
+       return temp;
+     }
 
     //
     //  For now, we have a little list of encodings that we disallow
@@ -214,7 +218,10 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
         {
             // If its one of our guys, then pretend we don't understand it
             if (!XMLString::compareString(upBuf, gDisallowList[index]))
+			{
+                resValue = XMLTransService::UnsupportedEncoding;               
                 return 0;
+			}
         }
     }
 
