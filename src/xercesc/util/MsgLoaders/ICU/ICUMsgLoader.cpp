@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/12/04 18:11:23  peiyongz
+ * use $XERCESCROOT to search for icu resource bundle if XERCESC_NLS_HOME
+ * undefined
+ *
  * Revision 1.8  2002/11/20 20:28:17  peiyongz
  * fix to warning C4018: '>' : signed/unsigned mismatch
  *
@@ -169,13 +173,24 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     ***/
     char locationBuf[1024];
     memset(locationBuf, 0, sizeof locationBuf);
-	char *nlsHome = getenv("XERCESC_NLS_HOME");
+    char *nlsHome = getenv("XERCESC_NLS_HOME");
 
     if (nlsHome)
-	{
-		strcpy(locationBuf, nlsHome);
+    {
+    	strcpy(locationBuf, nlsHome);
         strcat(locationBuf, U_FILE_SEP_STRING);
-	}
+    }
+    else
+    {
+        char *altHome = getenv("XERCESCROOT");
+        if (altHome)
+        {
+            strcpy(locationBuf, altHome);
+            strcat(locationBuf, U_FILE_SEP_STRING);
+            strcat(locationBuf, "lib");
+            strcat(locationBuf, U_FILE_SEP_STRING);                    
+        }
+    }    
 
     strcat(locationBuf, "XercescErrMsg");
 
