@@ -145,6 +145,7 @@ PSVIWriterHandlers::PSVIWriterHandlers(XMLFormatter* outputFormatter, XMLFormatt
 	fNSAttributes = new ValueVectorOf<unsigned int>(15);
 	fElementChildren = new ValueStackOf<bool>(20);
 	
+
 	fAttributesInfo = new RefVectorOf<AttrInfo>(8, true);
 }
 
@@ -968,13 +969,13 @@ void PSVIWriterHandlers::processParticle(XSParticle* particle) {
 		}
 		sendIndentedElement(PSVIUni::fgTerm);
 		switch (particle->getTermType()) {
-			case particle->TERM_ELEMENT:
+                                                case XSParticle::TERM_ELEMENT:
 				processElementDeclarationOrRef(particle->getElementTerm());
 				break;
-			case particle->TERM_MODELGROUP:
+                                               case XSParticle::TERM_MODELGROUP:
 				processModelGroup(particle->getModelGroupTerm());
 				break;
-			case particle->TERM_WILDCARD:
+                                               case XSParticle::TERM_WILDCARD:
 				processWildcard(particle->getWildcardTerm());
 		}
 		sendUnindentedElement(PSVIUni::fgTerm);
@@ -1560,7 +1561,7 @@ XMLCh* PSVIWriterHandlers::createID(XSObject* obj) {
 
 const XMLCh* PSVIWriterHandlers::getIdName(XSObject* obj) {
 	XMLCh* objLoc = new XMLCh[9];
-	XMLString::binToText((unsigned int)obj, objLoc, 8, 16);
+	XMLString::binToText((unsigned long)obj, objLoc, 8, 16);
 	XMLCh* idName = fIdMap->get(objLoc);
 	if (!idName) {
 		idName = createID(obj);
