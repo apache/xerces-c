@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:49  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:57:48  roddey
+ * Got rid of redundant 'const' on boolean return value. Some compilers choke
+ * on this and its useless.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:49  twl
+ * Initial checkin
  *
  * Revision 1.5  1999/11/08 20:44:53  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -173,7 +177,7 @@ public :
     // -----------------------------------------------------------------------
     virtual void endInputSource(const InputSource& inputSource);
 
-    virtual const bool expandSystemId
+    virtual bool expandSystemId
     (
         const   XMLCh* const    systemId
         ,       XMLBuffer&      toFill
@@ -330,7 +334,7 @@ inline void DOMParser::endInputSource(const InputSource&)
     // The SAX entity resolver doesn't handle this
 }
 
-inline const bool DOMParser::expandSystemId(const XMLCh* const, XMLBuffer&)
+inline bool DOMParser::expandSystemId(const XMLCh* const, XMLBuffer&)
 {
     // The SAX entity resolver doesn't handle this
     return false;

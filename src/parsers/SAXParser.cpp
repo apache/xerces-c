@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:50  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:57:48  roddey
+ * Got rid of redundant 'const' on boolean return value. Some compilers choke
+ * on this and its useless.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:50  twl
+ * Initial checkin
  *
  * Revision 1.6  1999/11/08 20:44:53  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -806,7 +810,7 @@ void SAXParser::endInputSource(const InputSource&)
 {
 }
 
-const bool SAXParser::expandSystemId(const XMLCh* const, XMLBuffer&)
+bool SAXParser::expandSystemId(const XMLCh* const, XMLBuffer&)
 {
     return false;
 }
