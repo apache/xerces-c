@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2004/10/28 20:10:50  peiyongz
+ * Data member reshuffle and store/load fNameScopeId
+ *
  * Revision 1.11  2004/09/08 13:55:59  peiyongz
  * Apache License Version 2.0
  *
@@ -77,11 +80,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 XMLNotationDecl::XMLNotationDecl(MemoryManager* const manager) :
 
     fId(0)
+    , fNameSpaceId(0)
     , fName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fNameSpaceId(0)
     , fMemoryManager(manager)
 {
 }
@@ -92,11 +95,11 @@ XMLNotationDecl::XMLNotationDecl( const XMLCh* const   notName
                                 , const XMLCh* const   baseURI
                                 , MemoryManager* const manager) :
     fId(0)
+    , fNameSpaceId(0)
     , fName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fNameSpaceId(0)
     , fMemoryManager(manager)
 {
     try
@@ -158,6 +161,7 @@ void XMLNotationDecl::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fId;
+        serEng<<fNameSpaceId;
         serEng.writeString(fName);
         serEng.writeString(fPublicId);
         serEng.writeString(fSystemId);
@@ -166,6 +170,7 @@ void XMLNotationDecl::serialize(XSerializeEngine& serEng)
     else
     {
         serEng>>fId;
+        serEng>>fNameSpaceId;
         serEng.readString(fName);
         serEng.readString(fPublicId);
         serEng.readString(fSystemId);

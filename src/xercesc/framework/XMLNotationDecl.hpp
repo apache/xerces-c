@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/10/28 20:10:50  peiyongz
+ * Data member reshuffle and store/load fNameScopeId
+ *
  * Revision 1.13  2004/09/08 13:55:59  peiyongz
  * Apache License Version 2.0
  *
@@ -193,11 +196,11 @@ private :
     //      The text of the notation's base URI
     // -----------------------------------------------------------------------
     unsigned int    fId;
+    unsigned int    fNameSpaceId;
 	XMLCh*          fName;
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
     XMLCh*          fBaseURI;
-    unsigned int    fNameSpaceId;
     MemoryManager*  fMemoryManager;
 };
 
