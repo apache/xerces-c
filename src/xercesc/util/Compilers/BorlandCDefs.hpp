@@ -136,9 +136,9 @@ typedef int             XMLInt32;
 //  XMLSize_t is the unsigned integral type.
 // ---------------------------------------------------------------------------
 #if defined(_SIZE_T) && defined(SIZE_MAX) && defined(_SSIZE_T) && defined(SSIZE_MAX)
-    typedef size_t              XMLSize_t
+    typedef size_t              XMLSize_t;
     #define XML_SIZE_MAX        SIZE_MAX
-    typedef ssize_t             XMLSSize_t
+    typedef ssize_t             XMLSSize_t;
     #define XML_SSIZE_MAX       SSIZE_MAX
 #else
     typedef unsigned long       XMLSize_t;
