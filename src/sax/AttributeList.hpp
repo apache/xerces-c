@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:43  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:58:31  roddey
+ * Added new convenience version of getValue() that takes a short character
+ * string for the attribute name.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:43  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:54  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -117,8 +121,12 @@
   * implementation for use by parser or application writers.
   *
   * $Log$
-  * Revision 1.1  1999/11/09 01:07:43  twl
-  * Initial revision
+  * Revision 1.2  1999/12/15 19:58:31  roddey
+  * Added new convenience version of getValue() that takes a short character
+  * string for the attribute name.
+  *
+  * Revision 1.1.1.1  1999/11/09 01:07:43  twl
+  * Initial checkin
   *
   * Revision 1.2  1999/11/08 20:44:54  rahul
   * Swat for adding in Product name and CVS comment log variable.
@@ -159,6 +167,7 @@ public:
     * @return The number of attributes in the list.  
     */
     virtual unsigned int getLength() const = 0;
+
   /**
     * Return the name of an attribute in this list (by position).
     *
@@ -176,6 +185,7 @@ public:
     * @see #getLength 
     */
     virtual const XMLCh* getName(const unsigned int index) const = 0;
+
   /**
     * Return the type of an attribute in the list (by position).
     *
@@ -198,6 +208,7 @@ public:
     * @see #getType(String)
     */
     virtual const XMLCh* getType(const unsigned int index) const = 0;
+
   /**
     * Return the value of an attribute in the list (by position).
     *
@@ -212,6 +223,7 @@ public:
     * @see #getValue(String)
     */
     virtual const XMLCh* getValue(const unsigned int index) const = 0;
+
   /**
     * Return the type of an attribute in the list (by name).
     *
@@ -227,6 +239,7 @@ public:
     * @see #getType(int)
     */
     virtual const XMLCh* getType(const XMLCh* const name) const = 0;
+
   /**
     * Return the value of an attribute in the list (by name).
     *
@@ -242,6 +255,7 @@ public:
     * @see #getValue(int)
     */
     virtual const XMLCh* getValue(const XMLCh* const name) const = 0;
+    virtual const XMLCh* getValue(const char* const name) const = 0;
     //@}
 
 private :
