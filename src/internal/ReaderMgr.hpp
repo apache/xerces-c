@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/24 20:40:43  roddey
+ * Exposed the APIs to get to the byte offset in the source XML buffer. This stuff
+ * is not tested yet, but I wanted to get the API changes in now so that the API
+ * can be stablized.
+ *
  * Revision 1.3  2000/01/12 00:15:04  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -190,7 +195,6 @@ public :
         , const unsigned int        dataLen
         , const bool                copyBuf
     );
-    unsigned int getSrcOffset() const;
     bool isScanningPERefOutOfLiteral() const;
     bool pushReader
     (
@@ -210,6 +214,7 @@ public :
     XMLReader* getCurrentReader();
     unsigned int getCurrentReaderNum() const;
     void getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const;
+    unsigned int getSrcOffset() const;
     bool getThrowEOE() const;
 
 
@@ -288,11 +293,6 @@ inline unsigned int ReaderMgr::getCurrentReaderNum() const
     return fCurReader->getReaderNum();
 }
 
-inline unsigned int ReaderMgr::getSrcOffset() const
-{
-    return fCurReader->getSrcOffset();
-}
-
 inline bool ReaderMgr::getName(XMLBuffer& toFill)
 {
     toFill.reset();
@@ -308,6 +308,11 @@ inline bool ReaderMgr::getNameToken(XMLBuffer& toFill)
 inline bool ReaderMgr::getThrowEOE() const
 {
     return fThrowEOE;
+}
+
+inline unsigned int ReaderMgr::getSrcOffset() const
+{
+    return fCurReader->getSrcOffset();
 }
 
 inline bool ReaderMgr::lookingAtChar(const XMLCh chToCheck)

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/24 20:40:43  roddey
+ * Exposed the APIs to get to the byte offset in the source XML buffer. This stuff
+ * is not tested yet, but I wanted to get the API changes in now so that the API
+ * can be stablized.
+ *
  * Revision 1.3  2000/01/12 23:52:46  roddey
  * These are trivial changes required to get the C++ and Java versions
  * of error messages more into sync. Mostly it was where the Java version
@@ -215,6 +220,7 @@ public :
         ,       unsigned int&   lineToFill
         ,       unsigned int&   colToFill
     );
+    unsigned int getSrcOffset() const;
     bool getStandalone() const;
     const XMLValidator* getValidator() const;
     XMLValidator* getValidator();
@@ -627,6 +633,11 @@ inline bool XMLScanner::getInException() const
 inline const RefHashTableOf<XMLRefInfo>& XMLScanner::getIDRefList() const
 {
     return *fIDRefList;
+}
+
+inline unsigned int XMLScanner::getSrcOffset() const
+{
+    return fReaderMgr.getSrcOffset();
 }
 
 inline bool XMLScanner::getStandalone() const
