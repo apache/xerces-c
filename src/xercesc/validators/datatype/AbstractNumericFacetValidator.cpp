@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/01/30 21:56:22  tng
+ * Performance: call getRawData instead of toString
+ *
  * Revision 1.8  2003/01/25 16:33:25  peiyongz
  * wrong error code.
  *
@@ -115,30 +118,24 @@ XERCES_CPP_NAMESPACE_BEGIN
 const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 
 #define  REPORT_FACET_ERROR(val1, val2, except_code)    \
-  XMLCh* value1 = (val1)->toString();                   \
-  ArrayJanitor<XMLCh> jan1(value1);                     \
-  XMLCh* value2 = (val2)->toString();                   \
-  ArrayJanitor<XMLCh> jan2(value2);                     \
   ThrowXML2(InvalidDatatypeFacetException               \
           , except_code                                 \
-          , value2                                      \
-          , value1);
+          , val1->getRawData()                          \
+          , val2->getRawData());
 
 
 #define  FROM_BASE_VALUE_SPACE(val, facetFlag, except_code)   \
   if ((thisFacetsDefined & facetFlag) != 0)                   \
 {                                                             \
-    XMLCh* value1 = (val)->toString();                        \
-    ArrayJanitor<XMLCh> jan(value1);                          \
     try                                                       \
 {                                                             \
-        numBase->checkContent(value1, false);                 \
+        numBase->checkContent(val->getRawData(), false);      \
 }                                                             \
     catch ( XMLException& )                                   \
 {                                                             \
         ThrowXML1(InvalidDatatypeFacetException               \
                 , except_code                                 \
-                , value1);                                    \
+                , val->getRawData());                         \
 }                                                             \
 }
 
@@ -538,13 +535,13 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             }
 
             /**
-             * Schema Errata 
+             * Schema Errata
              * E2-16 maxExclusive
-             *             
+             *
              *   derived type's maxExclusive must either be
              *   1) equal to base' maxExclusive or
              *   2) from the base type value space
-             *  
+             *
              */
             if (result != 0)
             {
@@ -622,9 +619,9 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             }
 
             /**
-             * Schema Errata 
+             * Schema Errata
              * E2-16 maxExclusive
-             *             
+             *
              *   derived type's minExclusive must either be
              *   1) equal to base' minxExclusive or
              *   2) from the base type value space

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/01/30 21:56:22  tng
+ * Performance: call getRawData instead of toString
+ *
  * Revision 1.2  2002/11/04 14:53:27  tng
  * C++ Namespace Support.
  *
@@ -80,14 +83,10 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 #define  REPORT_VALUE_ERROR(val1, val2, except_code)    \
-  XMLCh* value1 = (val1)->toString();                   \
-  ArrayJanitor<XMLCh> jan1(value1);                     \
-  XMLCh* value2 = (val2)->toString();                   \
-  ArrayJanitor<XMLCh> jan2(value2);                     \
   ThrowXML2(InvalidDatatypeValueException               \
           , except_code                                 \
-          , value1                                      \
-          , value2);
+          , val1->getRawData()                          \
+          , val2->getRawData());
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/01/30 21:56:22  tng
+ * Performance: call getRawData instead of toString
+ *
  * Revision 1.5  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -521,14 +524,12 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
         if ( (thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
         {
             if ( theData->getScale() > fFractionDigits )
-            {
-                XMLCh* value = theData->toString();
-                ArrayJanitor<XMLCh> jan(value);
+            {                
                 XMLString::binToText(theData->getScale(), value1, BUF_LEN, 10);
                 XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10);
                 ThrowXML3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_fractDigit
-                                 , value
+                                 , theData->getRawData()
                                  , value1
                                  , value2);
             }
@@ -537,14 +538,12 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
         if ( (thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
         {
             if ( theData->getTotalDigit() > fTotalDigits )
-            {
-                XMLCh* value = theData->toString();
-                ArrayJanitor<XMLCh> jan(value);
+            {                
                 XMLString::binToText(theData->getTotalDigit(), value1, BUF_LEN, 10);
                 XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10);
                 ThrowXML3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_totalDigit
-                                 , value
+                                 , theData->getRawData()
                                  , value1
                                  , value2);
             }
