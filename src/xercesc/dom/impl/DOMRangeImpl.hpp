@@ -95,15 +95,15 @@ private:
 
     //private data
 
-    DOMNode       *fStartContainer;
-    DOMSize_t    fStartOffset;
-    DOMNode       *fEndContainer;
-    DOMSize_t    fEndOffset;
-    bool            fCollapsed;
-    DOMDocument   *fDocument;
-    bool            fDetached;
+    DOMNode*     fStartContainer;
+    XMLSize_t    fStartOffset;
+    DOMNode*     fEndContainer;
+    XMLSize_t    fEndOffset;
+    bool         fCollapsed;
+    DOMDocument* fDocument;
+    bool         fDetached;
 
-    DOMNode       *fRemoveChild;
+    DOMNode*     fRemoveChild;
 
 public:
     //c'tor
@@ -115,15 +115,15 @@ public:
 
     //getter functions
     virtual DOMNode* getStartContainer() const;
-    virtual DOMSize_t getStartOffset() const;
+    virtual XMLSize_t getStartOffset() const;
     virtual DOMNode* getEndContainer() const;
-    virtual DOMSize_t getEndOffset() const;
+    virtual XMLSize_t getEndOffset() const;
     virtual bool getCollapsed() const;
     virtual const DOMNode* getCommonAncestorContainer() const;
 
     //setter functions
-    virtual void setStart(const DOMNode *parent, DOMSize_t offset);
-    virtual void setEnd(const DOMNode *parent, DOMSize_t offset);
+    virtual void setStart(const DOMNode *parent, XMLSize_t offset);
+    virtual void setEnd(const DOMNode *parent, XMLSize_t offset);
 
     virtual void setStartBefore(const DOMNode *refNode);
     virtual void setStartAfter(const DOMNode *refNode);
@@ -152,34 +152,34 @@ public:
     DOMDocument*         getDocument();
 
     // functions to inform all existing valid ranges about a change
-    void updateSplitInfo(DOMText* oldNode, DOMText* startNode, DOMSize_t offset);
+    void updateSplitInfo(DOMText* oldNode, DOMText* startNode, XMLSize_t offset);
     void updateRangeForInsertedNode(DOMNode* node);
     void receiveReplacedText(DOMNode* node);
-    void updateRangeForDeletedText(DOMNode* node, DOMSize_t offset, int count);
+    void updateRangeForDeletedText(DOMNode* node, XMLSize_t offset, int count);
     void updateRangeForDeletedNode(DOMNode* node);
 
 private:
     //setter functions
     void        setStartContainer(const DOMNode* node);
-    void        setStartOffset(DOMSize_t offset) ;
+    void        setStartOffset(XMLSize_t offset) ;
     void        setEndContainer(const DOMNode* node);
-    void        setEndOffset(DOMSize_t offset) ;
+    void        setEndOffset(XMLSize_t offset) ;
 
     //misc functions
     void        validateNode(const DOMNode* node) const;
     bool        isValidAncestorType(const DOMNode* node) const;
     bool        hasLegalRootContainer(const DOMNode* node) const;
     bool        isLegalContainedNode(const DOMNode* node ) const;
-    void        checkIndex(const DOMNode* node, DOMSize_t offset) const;
+    void        checkIndex(const DOMNode* node, XMLSize_t offset) const;
     static bool isAncestorOf(const DOMNode* a, const DOMNode* b);
 
-    DOMSize_t        indexOf(const DOMNode* child, const DOMNode* parent) const;
+    XMLSize_t   indexOf(const DOMNode* child, const DOMNode* parent) const;
 
     const DOMNode*       commonAncestorOf(const DOMNode* pointA, const DOMNode* pointB) const;
     DOMNode*             nextNode(const DOMNode* node, bool visitChildren) const;
     DOMDocumentFragment* traverseContents(TraversalType type);
     void                  checkReadOnly(DOMNode* start, DOMNode* end,
-                                  DOMSize_t starOffset, DOMSize_t endOffset);
+                                  XMLSize_t starOffset, XMLSize_t endOffset);
     void                  recurseTreeAndCheck(DOMNode* start, DOMNode* end);
     DOMNode*             removeChild(DOMNode* parent, DOMNode* child);
 

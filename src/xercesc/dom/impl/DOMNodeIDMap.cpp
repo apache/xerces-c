@@ -88,11 +88,11 @@ DOMNodeIDMap::DOMNodeIDMap(int initialSize, DOMDocument *doc)
 
     fSize = gPrimes[fSizeIndex];
     fNumEntries = 0;
-    fMaxEntries = (DOMSize_t)(float(fSize) * gMaxFill);
+    fMaxEntries = (XMLSize_t)(float(fSize) * gMaxFill);
 
     //fTable = new (fDoc) DOMAttr*[fSize];
     fTable = (DOMAttr**) ((DOMDocumentImpl *)fDoc)->allocate(sizeof(DOMAttr*) * fSize);
-    DOMSize_t i;
+    XMLSize_t i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
 };
@@ -123,9 +123,9 @@ void DOMNodeIDMap::add(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    DOMSize_t initalHash = XMLString::hash(id, fSize-1);
+    XMLSize_t initalHash = XMLString::hash(id, fSize-1);
 	initalHash++;
-	DOMSize_t currentHash = initalHash;
+	XMLSize_t currentHash = initalHash;
 
 	//
 	// Loop looking for an empty slot for this ID.
@@ -160,9 +160,9 @@ void DOMNodeIDMap::remove(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    DOMSize_t initalHash = XMLString::hash(id, fSize-1);
+    XMLSize_t initalHash = XMLString::hash(id, fSize-1);
 	initalHash++;
-	DOMSize_t currentHash = initalHash;
+	XMLSize_t currentHash = initalHash;
 
 	//
 	// Loop looking for a slot pointing to an attr with this id.
@@ -199,9 +199,9 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
     //
     //  Get the hashcode for the supplied string.
     //
-	DOMSize_t initalHash = XMLString::hash(id, fSize-1);
+	XMLSize_t initalHash = XMLString::hash(id, fSize-1);
 	initalHash++;
-	DOMSize_t currentHash = initalHash;
+	XMLSize_t currentHash = initalHash;
 
 	//
 	// Loop looking for a slot pointing to an attr with this id.
@@ -235,7 +235,7 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
 void DOMNodeIDMap::growTable()
 {
     DOMAttr     **oldTable = fTable;
-    DOMSize_t oldSize  = fSize;
+    XMLSize_t oldSize  = fSize;
 
     //
     //  Figure the new table size.
@@ -258,11 +258,11 @@ void DOMNodeIDMap::growTable()
     //
     //fTable = new (fDoc) DOMAttr *[fSize];
     fTable = (DOMAttr**) ((DOMDocumentImpl *)fDoc)->allocate(sizeof(DOMAttr*) * fSize);
-    DOMSize_t i;
+    XMLSize_t i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
 
-    fMaxEntries = (DOMSize_t)(float(fSize) * gMaxFill);
+    fMaxEntries = (XMLSize_t)(float(fSize) * gMaxFill);
 
     //
     // Move entries over from the old table to the new one.

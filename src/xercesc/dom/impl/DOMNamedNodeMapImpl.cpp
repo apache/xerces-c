@@ -95,7 +95,7 @@ DOMNamedNodeMapImpl *DOMNamedNodeMapImpl::cloneMap(DOMNode *ownerNod)
     if (fNodes != 0)
     {
         newmap->fNodes = new (doc) DOMNodeVector(doc, fNodes->size());
-        for (DOMSize_t i = 0; i < fNodes->size(); ++i)
+        for (XMLSize_t i = 0; i < fNodes->size(); ++i)
         {
             DOMNode *n = fNodes->elementAt(i)->cloneNode(true);
 			castToNodeImpl(n)->isSpecified(castToNodeImpl(fNodes->elementAt(i))->isSpecified());
@@ -183,7 +183,7 @@ int DOMNamedNodeMapImpl::findNamePoint(const XMLCh *name) const
 
 
 
-DOMSize_t DOMNamedNodeMapImpl::getLength() const
+XMLSize_t DOMNamedNodeMapImpl::getLength() const
 {
     return (fNodes != 0) ? fNodes->size() : 0;
 };
@@ -198,7 +198,7 @@ DOMNode * DOMNamedNodeMapImpl::getNamedItem(const XMLCh *name) const
 
 
 
-DOMNode * DOMNamedNodeMapImpl::item(DOMSize_t index) const
+DOMNode * DOMNamedNodeMapImpl::item(XMLSize_t index) const
 {
     return (fNodes != 0 && index < fNodes->size()) ?
         fNodes->elementAt(index) : 0;
@@ -421,7 +421,7 @@ void DOMNamedNodeMapImpl::cloneContent(const DOMNamedNodeMapImpl *srcmap) {
             DOMDocument *doc = fOwnerNode->getOwnerDocument();
             fNodes = new (doc) DOMNodeVector(doc, srcmap->fNodes->size());
         }
-		for (DOMSize_t i = 0; i < srcmap->fNodes->size(); i++)
+		for (XMLSize_t i = 0; i < srcmap->fNodes->size(); i++)
 		{
 			DOMNode *n = srcmap->fNodes->elementAt(i);
  			DOMNode *clone = n->cloneNode(true);

@@ -286,9 +286,9 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     if (this->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if ( ranges != 0) {
-            DOMSize_t sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (DOMSize_t i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateRangeForInsertedNode(newChild);
                 }
             }
@@ -313,9 +313,9 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
     if (this->getOwnerDocument() !=  0  ) {
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            DOMSize_t sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (DOMSize_t i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     if (ranges->elementAt(i) != 0)
                         ranges->elementAt(i)->updateRangeForDeletedNode(oldChild);
                 }

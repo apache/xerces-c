@@ -79,8 +79,8 @@ DOMNodeListImpl:: ~DOMNodeListImpl()
 
 
 
-DOMSize_t DOMNodeListImpl::getLength(){
-    DOMSize_t count = 0;
+XMLSize_t DOMNodeListImpl::getLength(){
+    XMLSize_t count = 0;
     if (fNode) {
         DOMNode *node = castToParentImpl(fNode)->fFirstChild;
         while(node != 0){
@@ -94,10 +94,10 @@ DOMSize_t DOMNodeListImpl::getLength(){
 
 
 
-DOMNode *DOMNodeListImpl::item(DOMSize_t index){
+DOMNode *DOMNodeListImpl::item(XMLSize_t index){
     if (fNode) {
         DOMNode *node = castToParentImpl(fNode)->fFirstChild;
-        for(DOMSize_t i=0; i<index && node!=0; ++i)
+        for(XMLSize_t i=0; i<index && node!=0; ++i)
             node = castToChildImpl(node)->nextSibling;
         return node;
     }

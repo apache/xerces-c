@@ -98,8 +98,8 @@ private:
 public:
     DOMNodeListImpl(DOMNode *node);
     virtual             ~DOMNodeListImpl();
-    virtual DOMNode *  item(DOMSize_t index);
-    virtual DOMSize_t getLength();
+    virtual DOMNode *  item(XMLSize_t index);
+    virtual XMLSize_t getLength();
 };
 
 #endif

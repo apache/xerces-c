@@ -107,12 +107,12 @@ private:
 
 private:
     DOMAttr      **fTable;
-    DOMSize_t  fSizeIndex;              // Index of the current table size in the
+    XMLSize_t  fSizeIndex;              // Index of the current table size in the
                                            //   array of possible table sizes.
-	DOMSize_t  fSize;                   // The current size of the table array
+	XMLSize_t  fSize;                   // The current size of the table array
                                            //   (number of slots, not bytes.)
-    DOMSize_t  fNumEntries;             // The number of entries used.
-    DOMSize_t  fMaxEntries;             // The max number of entries to use before
+    XMLSize_t  fNumEntries;             // The number of entries used.
+    XMLSize_t  fMaxEntries;             // The max number of entries to use before
                                            //   growing the table.
     DOMDocument *fDoc;                    // The owning document.
 

@@ -108,16 +108,16 @@ public:
     int changes() const;
     void changed();
 
-    DOMNode     * appendChild(DOMNode *newChild);
-    DOMNodeList * getChildNodes() const;
-    DOMNode     * getFirstChild() const;
-    DOMNode     * getLastChild() const;
-    DOMSize_t    getLength() const;
-    bool            hasChildNodes() const;
-    DOMNode     * insertBefore(DOMNode *newChild, DOMNode *refChild);
-    DOMNode     * item(DOMSize_t index) const;
-    DOMNode     * removeChild(DOMNode *oldChild);
-    DOMNode     * replaceChild(DOMNode *newChild, DOMNode *oldChild);
+    DOMNode*     appendChild(DOMNode *newChild);
+    DOMNodeList* getChildNodes() const;
+    DOMNode*     getFirstChild() const;
+    DOMNode*     getLastChild() const;
+    XMLSize_t    getLength() const;
+    bool         hasChildNodes() const;
+    DOMNode*     insertBefore(DOMNode *newChild, DOMNode *refChild);
+    DOMNode*     item(XMLSize_t index) const;
+    DOMNode*     removeChild(DOMNode *oldChild);
+    DOMNode*     replaceChild(DOMNode *newChild, DOMNode *oldChild);
 
     //Introduced in DOM Level 2
     void	normalize();

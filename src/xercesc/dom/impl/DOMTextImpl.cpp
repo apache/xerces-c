@@ -108,14 +108,14 @@ short DOMTextImpl::getNodeType() const {
 };
 
 
-DOMText *DOMTextImpl::splitText(DOMSize_t offset)
+DOMText *DOMTextImpl::splitText(XMLSize_t offset)
 {
     if (fNode.isReadOnly())
     {
         throw DOMException(
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     }
-    DOMSize_t len = XMLString::stringLen(fCharacterData.fData);
+    XMLSize_t len = XMLString::stringLen(fCharacterData.fData);
     if (offset > len || offset < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
 
@@ -135,9 +135,9 @@ DOMText *DOMTextImpl::splitText(DOMSize_t offset)
     if (this->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            DOMSize_t sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (DOMSize_t i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateSplitInfo( this, newText, offset);
                 }
             }
@@ -196,15 +196,15 @@ void DOMTextImpl::setIgnorableWhitespace(bool ignorable)
 
 
      const XMLCh * DOMTextImpl::getData() const                  {return fCharacterData.getData();};
-     DOMSize_t  DOMTextImpl::getLength() const                {return fCharacterData.getLength();};
-     const XMLCh * DOMTextImpl::substringData(DOMSize_t offset, DOMSize_t count) const
+     XMLSize_t  DOMTextImpl::getLength() const                {return fCharacterData.getLength();};
+     const XMLCh * DOMTextImpl::substringData(XMLSize_t offset, XMLSize_t count) const
                                                                 {return fCharacterData.substringData(this, offset, count);};
      void          DOMTextImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
-     void          DOMTextImpl::insertData(DOMSize_t offset, const  XMLCh *arg)
+     void          DOMTextImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
                                                                 {fCharacterData.insertData(this, offset, arg);};
-     void          DOMTextImpl::deleteData(DOMSize_t offset, DOMSize_t count)
+     void          DOMTextImpl::deleteData(XMLSize_t offset, XMLSize_t count)
                                                                 {fCharacterData.deleteData(this, offset, count);};
-     void          DOMTextImpl::replaceData(DOMSize_t offset, DOMSize_t count, const XMLCh *arg)
+     void          DOMTextImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
                                                                 {fCharacterData.replaceData(this, offset, count, arg);};
      void          DOMTextImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
      void          DOMTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };

@@ -77,24 +77,24 @@ class DOMDocument;
 class  DOMNodeVector {
 private:
     DOMNode        **data;
-    DOMSize_t    allocatedSize;
-    DOMSize_t    nextFreeSlot;
-    void            init(DOMDocument *doc, DOMSize_t size);
-    void            checkSpace();
+    XMLSize_t      allocatedSize;
+    XMLSize_t      nextFreeSlot;
+    void           init(DOMDocument *doc, XMLSize_t size);
+    void           checkSpace();
 
 public:
     DOMNodeVector(DOMDocument *doc);
-    DOMNodeVector(DOMDocument *doc, DOMSize_t size);
+    DOMNodeVector(DOMDocument *doc, XMLSize_t size);
     ~DOMNodeVector();
 
-    DOMSize_t    size();
-    DOMNode        *elementAt(DOMSize_t index);
-    DOMNode        *lastElement();
-    void            addElement(DOMNode *);
-    void            insertElementAt(DOMNode *, DOMSize_t index);
-    void            setElementAt(DOMNode *val, DOMSize_t index);
-    void            removeElementAt(DOMSize_t index);
-    void            reset();
+    XMLSize_t      size();
+    DOMNode*       elementAt(XMLSize_t index);
+    DOMNode*       lastElement();
+    void           addElement(DOMNode *);
+    void           insertElementAt(DOMNode *, XMLSize_t index);
+    void           setElementAt(DOMNode *val, XMLSize_t index);
+    void           removeElementAt(XMLSize_t index);
+    void           reset();
 };
 
 #endif

@@ -114,7 +114,7 @@ DOMNode* DOMRangeImpl::getStartContainer() const
     return fStartContainer;
 }
 
-DOMSize_t DOMRangeImpl::getStartOffset() const
+XMLSize_t DOMRangeImpl::getStartOffset() const
 {
     return fStartOffset;
 }
@@ -124,7 +124,7 @@ DOMNode* DOMRangeImpl::getEndContainer() const
     return fEndContainer;
 }
 
-DOMSize_t DOMRangeImpl::getEndOffset() const
+XMLSize_t DOMRangeImpl::getEndOffset() const
 {
     return fEndOffset;
 }
@@ -158,7 +158,7 @@ void DOMRangeImpl::setStartContainer(const DOMNode* node)
     fStartContainer = (DOMNode*) node;
 }
 
-void DOMRangeImpl::setStartOffset(DOMSize_t offset)
+void DOMRangeImpl::setStartOffset(XMLSize_t offset)
 {
     if (fDetached)
     {
@@ -181,7 +181,7 @@ void DOMRangeImpl::setEndContainer(const DOMNode* node)
 
 }
 
-void DOMRangeImpl::setEndOffset(DOMSize_t offset)
+void DOMRangeImpl::setEndOffset(XMLSize_t offset)
 {
     if (fDetached)
     {
@@ -192,7 +192,7 @@ void DOMRangeImpl::setEndOffset(DOMSize_t offset)
     fEndOffset = offset;
 }
 
-void DOMRangeImpl::setStart(const DOMNode* refNode, DOMSize_t offset)
+void DOMRangeImpl::setStart(const DOMNode* refNode, XMLSize_t offset)
 {
     validateNode(refNode);
     checkIndex(refNode, offset);
@@ -215,7 +215,7 @@ void DOMRangeImpl::setStart(const DOMNode* refNode, DOMSize_t offset)
         fCollapsed = false;
 }
 
-void DOMRangeImpl::setEnd(const DOMNode* refNode, DOMSize_t offset)
+void DOMRangeImpl::setEnd(const DOMNode* refNode, XMLSize_t offset)
 {
     validateNode(refNode);
     checkIndex(refNode, offset);
@@ -250,7 +250,7 @@ void DOMRangeImpl::setStartBefore(const DOMNode* refNode)
     }
 
     fStartContainer = refNode->getParentNode();
-   DOMSize_t i = 0;
+   XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling()) {
         i++;
     }
@@ -286,7 +286,7 @@ void DOMRangeImpl::setStartAfter(const DOMNode* refNode)
     }
 
     fStartContainer = refNode->getParentNode();
-    DOMSize_t i = 0;
+    XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling()) {
         i++;
     }
@@ -320,7 +320,7 @@ void DOMRangeImpl::setEndBefore(const DOMNode* refNode)
     }
 
     fEndContainer = refNode->getParentNode();
-    DOMSize_t i = 0;
+    XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling(), i++) ;
 
     if (i< 1)
@@ -355,7 +355,7 @@ void DOMRangeImpl::setEndAfter(const DOMNode* refNode)
     }
 
     fEndContainer = refNode->getParentNode();
-    DOMSize_t i = 0;
+    XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling(), i++) ;
 
     if (i ==0)
@@ -442,7 +442,7 @@ void DOMRangeImpl::selectNode(const DOMNode* refNode)
         fStartContainer = parent;
         fEndContainer = parent;
 
-        DOMSize_t i = 0;
+        XMLSize_t i = 0;
         for (DOMNode* n = parent->getFirstChild(); n!=0, n!=refNode; n = n->getNextSibling()) {
             i++;
         }
@@ -470,7 +470,7 @@ void DOMRangeImpl::selectNodeContents(const DOMNode* node)
         fEndOffset = 0;
         return;
     }
-    DOMSize_t i = 0;
+    XMLSize_t i = 0;
     for (DOMNode* n = first; n!=0; n = n->getNextSibling()) {
         i++;
     }
@@ -685,7 +685,7 @@ void DOMRangeImpl::insertNode(DOMNode* newNode)
         parent = fStartContainer;
 
         next = fStartContainer->getFirstChild();
-        for(DOMSize_t i = 0; (i < fStartOffset) && (next != 0); i++) {
+        for(XMLSize_t i = 0; (i < fStartOffset) && (next != 0); i++) {
             next=next->getNextSibling();
         }
     }
@@ -748,7 +748,7 @@ const XMLCh* DOMRangeImpl::toString() const
             }
 
         } else {
-            DOMSize_t length = XMLString::stringLen(fStartContainer->getNodeValue());
+            XMLSize_t length = XMLString::stringLen(fStartContainer->getNodeValue());
             if (length != fStartOffset) {
 
                 XMLCh* tempString;
@@ -770,7 +770,7 @@ const XMLCh* DOMRangeImpl::toString() const
     }else { //fStartContainer is not a TextNode
         node=node->getFirstChild();
         if (fStartOffset>0) { //find a first node within a range, specified by fStartOffset
-            DOMSize_t counter = 0;
+            XMLSize_t counter = 0;
             while (counter<fStartOffset && node!=0) {
                 node=node->getNextSibling();
                 counter++;
@@ -890,10 +890,10 @@ bool DOMRangeImpl::isLegalContainedNode(const DOMNode* node ) const {
    return true;
 }
 
-DOMSize_t DOMRangeImpl::indexOf(const DOMNode* child, const DOMNode* parent) const
+XMLSize_t DOMRangeImpl::indexOf(const DOMNode* child, const DOMNode* parent) const
 {
-    DOMSize_t i = 0;
-    if (child->getParentNode() != parent) return (DOMSize_t)-1;
+    XMLSize_t i = 0;
+    if (child->getParentNode() != parent) return (XMLSize_t)-1;
     for(DOMNode* node = child->getPreviousSibling(); node!= 0; node=node->getPreviousSibling()) {
         i++;
     }
@@ -957,7 +957,7 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
     return commonAncestor;
 }
 
-void DOMRangeImpl::checkIndex(const DOMNode* node, DOMSize_t offset) const
+void DOMRangeImpl::checkIndex(const DOMNode* node, XMLSize_t offset) const
 {
     if (offset < 0) {
         throw DOMException( DOMException::INDEX_SIZE_ERR, 0 );
@@ -975,7 +975,7 @@ void DOMRangeImpl::checkIndex(const DOMNode* node, DOMSize_t offset) const
     }
 
     DOMNode* child = node->getFirstChild();
-    DOMSize_t i = 0;
+    XMLSize_t i = 0;
     for (; child != 0; i++) {
         child = child->getNextSibling();
     }
@@ -1636,7 +1636,7 @@ DOMNode*DOMRangeImpl::getSelectedNode( DOMNode*container, int offset )
 }
 
 void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
-                              DOMSize_t startOffset, DOMSize_t endOffset)
+                              XMLSize_t startOffset, XMLSize_t endOffset)
 {
     if ((start == 0) || (end == 0) ) return;
     //if both start and end are text check and return
@@ -1650,7 +1650,7 @@ void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
     }
     //set the start and end nodes to check
     DOMNode*sNode = start->getFirstChild();
-    for(DOMSize_t i = 0; i<startOffset; i++)
+    for(XMLSize_t i = 0; i<startOffset; i++)
         sNode = sNode->getNextSibling();
 
     DOMNode* eNode;
@@ -1659,7 +1659,7 @@ void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
     }
     else { //need to check all the kids that fall before the end offset value
         eNode = end->getFirstChild();
-        for (DOMSize_t i = 0; i<endOffset-1; i++)
+        for (XMLSize_t i = 0; i<endOffset-1; i++)
             eNode = eNode->getNextSibling();
     }
     //recursivly search if any node is readonly
@@ -1720,7 +1720,7 @@ void DOMRangeImpl::receiveReplacedText(DOMNode* node)
 *  The  text has already beeen inserted.
 *  Fix-up any offsets.
 */
-void DOMRangeImpl::updateRangeForDeletedText(DOMNode* node, DOMSize_t offset, int count)
+void DOMRangeImpl::updateRangeForDeletedText(DOMNode* node, XMLSize_t offset, int count)
 {
     if (node == 0) return;
 
@@ -1755,14 +1755,14 @@ void DOMRangeImpl::updateRangeForDeletedNode(DOMNode* node)
     if (fRemoveChild == node) return;
 
     if (node->getParentNode() == fStartContainer) {
-        DOMSize_t index = indexOf(node, fStartContainer);
+        XMLSize_t index = indexOf(node, fStartContainer);
         if ( fStartOffset > index) {
             fStartOffset--;
         }
     }
 
     if (node->getParentNode() == fEndContainer) {
-        DOMSize_t index = indexOf(node, fEndContainer);
+        XMLSize_t index = indexOf(node, fEndContainer);
         if ( fEndOffset > index) {
             fEndOffset--;
         }
@@ -1788,14 +1788,14 @@ void DOMRangeImpl::updateRangeForInsertedNode(DOMNode* node) {
     if (node == 0) return;
 
     if (node->getParentNode() == fStartContainer) {
-        DOMSize_t index = indexOf(node, fStartContainer);
+        XMLSize_t index = indexOf(node, fStartContainer);
         if (index < fStartOffset) {
             fStartOffset++;
         }
     }
 
     if (node->getParentNode() == fEndContainer) {
-        DOMSize_t index = indexOf(node, fEndContainer);
+        XMLSize_t index = indexOf(node, fEndContainer);
         if (index < fEndOffset) {
             fEndOffset++;
         }
@@ -1803,7 +1803,7 @@ void DOMRangeImpl::updateRangeForInsertedNode(DOMNode* node) {
 }
 
 
-void DOMRangeImpl::updateSplitInfo(DOMText* oldNode, DOMText* startNode, DOMSize_t offset)
+void DOMRangeImpl::updateSplitInfo(DOMText* oldNode, DOMText* startNode, XMLSize_t offset)
 {
     if (startNode == 0) return;
 

@@ -81,9 +81,9 @@ class       DOMDocument;
 
 class CDOM_EXPORT DOMNamedNodeMapImpl: public DOMNamedNodeMap {
 protected:
-    DOMNodeVector       *fNodes;
-    DOMNode          *fOwnerNode;       // the node this map belongs to
-    // bool                fReadOnly;     // revisit - flag on owner node instead?
+    DOMNodeVector*    fNodes;
+    DOMNode*          fOwnerNode;       // the node this map belongs to
+    //bool             fReadOnly;     // revisit - flag on owner node instead?
 
     friend class DOMDocumentImpl;
 
@@ -97,22 +97,22 @@ public:
     virtual                 ~DOMNamedNodeMapImpl();
     virtual DOMNamedNodeMapImpl *cloneMap(DOMNode *ownerNode);
     virtual int             findNamePoint(const XMLCh *name) const;
-    virtual DOMSize_t    getLength() const;
-    virtual DOMNode        *getNamedItem(const XMLCh *name) const;
-    virtual DOMNode        *item(DOMSize_t index) const;
-    virtual void              removeAll();
-    virtual DOMNode        *removeNamedItem(const XMLCh *name);
-    virtual DOMNode        *setNamedItem(DOMNode *arg);
-    virtual void              setReadOnly(bool readOnly, bool deep);
+    virtual XMLSize_t       getLength() const;
+    virtual DOMNode*        getNamedItem(const XMLCh *name) const;
+    virtual DOMNode*        item(XMLSize_t index) const;
+    virtual void            removeAll();
+    virtual DOMNode*        removeNamedItem(const XMLCh *name);
+    virtual DOMNode*        setNamedItem(DOMNode *arg);
+    virtual void            setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2
-    virtual int               findNamePoint(const XMLCh *namespaceURI,
+    virtual int             findNamePoint(const XMLCh *namespaceURI,
+	                                       const XMLCh *localName) const;
+    virtual DOMNode*        getNamedItemNS(const XMLCh *namespaceURI,
 	                                        const XMLCh *localName) const;
-    virtual DOMNode          *getNamedItemNS(const XMLCh *namespaceURI,
-	                                          const XMLCh *localName) const;
-    virtual DOMNode          *setNamedItemNS(DOMNode *arg);
-    virtual DOMNode          *removeNamedItemNS(const XMLCh *namespaceURI,
-	                                             const XMLCh *localName);
+    virtual DOMNode*        setNamedItemNS(DOMNode *arg);
+    virtual DOMNode*        removeNamedItemNS(const XMLCh *namespaceURI,
+	                                           const XMLCh *localName);
 
 };
 

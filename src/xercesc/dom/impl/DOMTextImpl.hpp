@@ -90,7 +90,7 @@ public:
     DOMTextImpl(const DOMTextImpl& other, bool deep=false);
 
     virtual                ~DOMTextImpl();
-    virtual DOMText*        splitText(DOMSize_t offset);
+    virtual DOMText*        splitText(XMLSize_t offset);
     virtual bool            isIgnorableWhitespace() const;
 
     // Declare the functions coming from DOMNode.
@@ -99,15 +99,15 @@ public:
 
     // All of the functions coming from DOMCharacterData
     virtual const XMLCh*    getData() const;
-    virtual DOMSize_t       getLength() const;
-    virtual const XMLCh*    substringData(DOMSize_t offset,
-                                          DOMSize_t count) const;
+    virtual XMLSize_t       getLength() const;
+    virtual const XMLCh*    substringData(XMLSize_t offset,
+                                          XMLSize_t count) const;
     virtual void            appendData(const XMLCh *arg);
-    virtual void            insertData(DOMSize_t offset, const  XMLCh *arg);
-    virtual void            deleteData(DOMSize_t offset,
-                                       DOMSize_t count);
-    virtual void            replaceData(DOMSize_t offset,
-                                        DOMSize_t count,
+    virtual void            insertData(XMLSize_t offset, const  XMLCh *arg);
+    virtual void            deleteData(XMLSize_t offset,
+                                       XMLSize_t count);
+    virtual void            replaceData(XMLSize_t offset,
+                                        XMLSize_t count,
                                         const XMLCh *arg);
     virtual void            setData(const XMLCh *data);
 
