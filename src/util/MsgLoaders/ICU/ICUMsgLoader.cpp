@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:23  twl
- * Initial revision
+ * Revision 1.2  1999/11/19 21:24:03  aruna1
+ * incorporated ICU 1.3.1 related changes int he file
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:23  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:45:26  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -117,9 +120,9 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  toLoad) :
     }
 
     // Ok, lets try to create the bundle now
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     fBundle = new ResourceBundle(tmpPath, err);
-    if (!SUCCESS(err))
+    if (!U_SUCCESS(err))
     {
         // <TBD> Need to panic again here?
     }
