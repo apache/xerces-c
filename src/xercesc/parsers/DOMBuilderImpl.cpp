@@ -286,7 +286,7 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name)
          return getValidationConstraintFatal();
     }
     else {
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
     }
 
     return false;
@@ -340,7 +340,7 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
 	}
 
    else
-      throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+      throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 }
 
 
@@ -351,7 +351,7 @@ void* DOMBuilderImpl::getProperty(const XMLCh* const name) const
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)getExternalNoNamespaceSchemaLocation();
     else
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
     return 0;
 }
 
