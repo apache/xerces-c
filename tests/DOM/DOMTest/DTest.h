@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/06/12 18:31:17  tng
+ * DOM L3: test the DOMUserDataHandler and set/getUserData
+ *
  * Revision 1.6  2002/05/21 18:50:16  tng
  * Test case update: modify to use the latest DOM interface
  *
@@ -149,3 +152,51 @@ bool testText(DOMDocument* document);
 bool treeCompare(DOMNode* node, DOMNode* node2);
 
 };
+
+class myUserDataHandler : public DOMUserDataHandler {
+private:
+    DOMOperationType currentType;
+    XMLCh* currentKey;
+    void* currentData;
+    DOMNode* currentSrc;
+    DOMNode* currentDst;
+
+public:
+    myUserDataHandler() :
+      currentKey(0),
+      currentData(0),
+      currentSrc(0),
+      currentDst(0) {};
+
+    virtual void handle(DOMOperationType operation,
+                const XMLCh* const key,
+                void* data,
+                const DOMNode* src,
+                const DOMNode* dst)
+    {
+        currentType = operation;
+        currentKey = (XMLCh*) key;
+        currentData = data;
+        currentSrc = (DOMNode*) src;
+        currentDst = (DOMNode*) dst;
+    };
+
+    DOMOperationType getCurrentType() {
+        return currentType;
+    };
+    XMLCh* getCurrentKey() const {
+        return currentKey;
+    };
+    void* getCurrentData() const {
+        return currentData;
+    };
+    DOMNode* getCurrentSrc() const {
+        return currentSrc;
+    };
+    DOMNode* getCurrentDst() const {
+        return currentDst;
+    };
+
+};
+
+

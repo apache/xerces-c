@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2002/06/12 18:31:17  tng
+ * DOM L3: test the DOMUserDataHandler and set/getUserData
+ *
  * Revision 1.20  2002/06/03 20:51:21  tng
  * DOM L3: Add DOMImplementationRegistry and DOMImplementationSource
  *
@@ -120,10 +123,36 @@
         }                                                           \
     }
 
+#define USERDATAHANDLERTEST(userhandler, uoperation, ukey, udata, usrc, udst, uline) \
+    if (userhandler.getCurrentType() != uoperation) {\
+        fprintf(stderr, "DOMUserDataHandler::handler's operationType does not work in line %i\n", uline); \
+        OK = false; \
+    } \
+    if (XMLString::compareString(userhandler.getCurrentKey(), ukey)) {\
+        fprintf(stderr, "DOMUserDataHandler::handler's key does not work in line %i\n", uline); \
+        OK = false; \
+    } \
+    if (userhandler.getCurrentData() != udata) {\
+        fprintf(stderr, "DOMUserDataHandler::handler's data does not work in line %i\n", uline); \
+        OK = false; \
+    } \
+    if (userhandler.getCurrentSrc() != usrc) {\
+        fprintf(stderr, "DOMUserDataHandler::handler's src does not work in line %i\n", uline); \
+        OK = false; \
+    } \
+    if (userhandler.getCurrentDst() != udst) {\
+        fprintf(stderr, "DOMUserDataHandler::handler's dst does not work in line %i\n", uline); \
+        OK = false; \
+    }
+
+
 //temp XMLCh String Buffer
 XMLCh tempStr[4000];
 XMLCh tempStr2[4000];
 XMLCh tempStr3[4000];
+
+//DOMUserDataHandler
+myUserDataHandler userhandler;
 
 DOMElement*                 DOMTest::testElementNode;
 DOMAttr*                    DOMTest::testAttributeNode;
@@ -791,10 +820,105 @@ bool DOMTest::testAttr(DOMDocument* document)
     //  DOMElement* element = (DOMElement*)doc->getLastChild()->getLastChild();
     //  element->setAttributeNode(testAttribute );// Tests setNamedItem which generates error through justSetNamedItem.
 
-// For debugging*****       printf("All DOMAttr* method calls worked correctly.\n");
+
+    // Test the user data
+    // Test simple set and get
+    DOMAttr* userTest = testAttribute;
+    DOMElement*  userFirst = el;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (! OK)
         printf("\n*****The DOMAttr* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 
 };
@@ -829,11 +953,105 @@ bool DOMTest::testCDATASection(DOMDocument* document)
     }
     // Deep clone test comparison is in testNode & testDocument
 
-// For debugging*****   printf("All DOMCDATASection* method calls worked correctly.\n");
+
+    // Test the user data
+    // Test simple set and get
+    DOMCDATASection* userTest = (DOMCDATASection*) node;
+    DOMCDATASection*  userFirst = (DOMCDATASection*) node2;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
     if (! OK)
         printf("\n*****The DOMCDATASection* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -968,11 +1186,105 @@ bool DOMTest::testCharacterData(DOMDocument* document)
  //   EXCEPTIONSTEST(charData->substringData(2, -1), DOMException::INDEX_SIZE_ERR, OK, 111 );
 
 
-// For debugging*****       printf("All DOMCharacterData method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMCharacterData* userTest = charData;
+    DOMDocument*  userFirst = document;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMCharacterData method calls listed above failed, all others worked correctly.*****\n");
     charData->setData(resetData); // reset node to original data
-//  printf(""\n);
     return OK;
 };
 
@@ -999,10 +1311,9 @@ bool DOMTest::testChildNodeList(DOMDocument* document)
     if (XMLString::compareString(tempStr, node2->getNodeName()))
         OK = false;
 
-// For debugging*****       printf("All ChildNodeList method calls worked correctly.\n");
+
     if (!OK)
         printf("\n*****The ChildNodeList method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -1033,11 +1344,105 @@ bool DOMTest::testComment(DOMDocument* document)
         OK = false;
     }
     // Deep clone test comparison is in testNode & testDocument
-    if (OK)
-// For debugging*****       printf("All DOMComment* method calls worked correctly.\n");
+
+    // Test the user data
+    // Test simple set and get
+    DOMComment* userTest = (DOMComment*) node;
+    DOMComment*  userFirst = (DOMComment*) node2;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMComment* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("\n");
     return OK;
 };
 
@@ -1081,11 +1486,8 @@ bool DOMTest::testDeepNodeList(DOMDocument* document)
             OK = false;
         }
 
-
-// For debugging*****       printf("All DeepNodeList method calls worked correctly.\n");
     if (!OK)
         printf("\n*****The DeepNodeList method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -1160,7 +1562,8 @@ bool DOMTest::testDocument(DOMDocument* document)
     for (i = 0; i < docSize; i++)
     {
         DOMNode*  n = (DOMNode*) docElements->item(i);
-        if (XMLString::compareString(XMLString::transcode(elementNames[i]), n->getNodeName()))
+        XMLString::transcode(elementNames[i], tempStr, 3999);
+        if (XMLString::compareString(tempStr, n->getNodeName()))
         {
             printf("Comparison of this document's elements failed at element number %d at line %i \n", i, __LINE__);
             OK = false;
@@ -1245,11 +1648,104 @@ bool DOMTest::testDocument(DOMDocument* document)
 
     // Deep clone test comparison is also in testNode
 
+    // Test the user data
+    // Test simple set and get
+    DOMDocumentFragment* userTest = docFragment;
+    DOMDocumentFragment*  userFirst = docFragment2;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
 
-// For debugging*****       printf("All DOMDocument* method calls worked correctly.\n");
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMDocument* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("\n");
     return OK;
 };
 
@@ -1327,11 +1823,103 @@ bool DOMTest::testDocumentType(DOMDocument* document)
     document->removeChild(document->getFirstChild()); //Removes newDocumentType for tree restoral
     document->insertBefore(holdDocType, document->getFirstChild()); //Reattaches removed branch to restore tree to the original
 
+    // Test the user data
+    // Test simple set and get
+    DOMDocumentType* userTest = docType;
+    DOMNamedNodeMap*  userFirst = docNotationMap;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
 
-// For debugging*****       printf("All DOMDocumentType* method calls worked correctly.\n");
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (node2->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // document type cannot be imported, so no test import, rather test the exception
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    EXCEPTIONSTEST(document->importNode(userTest,true), DOMException::NOT_SUPPORTED_ERR, OK, 203 );
+
     if (!OK)
         printf("\n*****The DOMDocumentType* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -1583,10 +2171,104 @@ bool DOMTest::testElement(DOMDocument* document)
 
     //  doc->getLastChild()->setNodeValue("This shouldn't work");//!! Throws a NO_MODIFICATION_ALLOWED_ERR***
 
-// For debugging*****       printf("All DOMElement* method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMElement* userTest = element;
+    DOMAttr*  userFirst = newAttributeNode;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMElement* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -1619,10 +2301,104 @@ bool DOMTest::testEntity(DOMDocument* document)
     }
     // Deep clone test comparison is in testNode & testDocument
 
-// For debugging*****       printf("All DOMEntity* method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMEntity* userTest = entity;
+    DOMNode*  userFirst = node;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMEntity* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -1655,10 +2431,104 @@ bool DOMTest::testEntityReference(DOMDocument* document)
 
     //  entityReference->setNodeValue("This shouldn't work");//!! Throws a NO_MODIFICATION_ALLOWED_ERR ********
 
-// For debugging*****       printf("All DOMEntityReference* method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMEntityReference* userTest = entityReference;
+    DOMNode*  userFirst = node;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (node2->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMEntityReference* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("\n");
     return OK;
 };
 
@@ -1706,10 +2576,104 @@ bool DOMTest::testNode(DOMDocument* document)
     }
     // Deep clone test also in testDocument
 
-// For debugging*****       printf("All DOMNode*  method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMNode* userTest = node;
+    DOMNode*  userFirst = node2;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMNode*  method calls listed above failed, all others worked correctly.*****\n");
-//  printf("\n");
     return OK;
 };
 
@@ -1744,10 +2708,104 @@ bool DOMTest::testNotation(DOMDocument* document)
 
     //  notation->setNodeValue("This shouldn't work");//!! Throws a NO_MODIFICATION_ALLOWED_ERR ********
 
-// For debugging*****       printf("All DOMNotation* method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMNotation* userTest = notation;
+    DOMNode*  userFirst = node2;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMNotation* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -1805,11 +2863,105 @@ bool DOMTest::testPI(DOMDocument* document)
     XMLString::transcode("This is #document's processing instruction", tempStr, 3999);
     pI->setData(tempStr);
 
-// For debugging*****       printf("All PI method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMProcessingInstruction* userTest = pI;
+    DOMNode*  userFirst = abc50;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (abc51->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset(reset)
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The PI method calls listed above failed, all others worked correctly.*****\n");
 
-//  printf("\n");
     return OK;
 };
 
@@ -1869,11 +3021,105 @@ bool DOMTest::testText(DOMDocument* document)
     //  text.splitText(-1);
     //  text.splitText(100);
 
-// For debugging*****       printf("All DOMText* method calls worked correctly.\n");
+    // Test the user data
+    // Test simple set and get
+    DOMText* userTest = text;
+    DOMNode*  userFirst = node2;
+    XMLCh* userSecond = tempStr2;
+    XMLString::transcode("first", tempStr, 3999);
+
+    XMLString::transcode("document", tempStr2, 3999);
+    userTest->setUserData(tempStr2, (void*) document, 0);
+    void* mydocument = userTest->getUserData(tempStr2);
+    if (document != mydocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    userTest->setUserData(tempStr, (void*) userFirst, 0);
+    void* myFirst = userTest->getUserData(tempStr);
+    if (userFirst != myFirst) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test overwrite
+    void* myFirst2 = userTest->setUserData(tempStr, (void*) userSecond, 0);
+    void* mySecond = userTest->getUserData(tempStr);
+    if (userSecond != mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst != myFirst2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userFirst == mySecond) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test null
+    // test non-exist key
+    XMLString::transcode("not-exist", tempStr3, 3999);
+    if (userTest->getUserData(tempStr3)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // use a node that does not have user data set before
+    if (userFirst->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test reset
+    void* mySecond2 = userTest->setUserData(tempStr, (void*) 0, 0);
+    void* myNull = userTest->getUserData(tempStr);
+    if (userSecond != mySecond2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    void* mydocument2 = userTest->setUserData(tempStr2, (void*) 0, 0);
+    void* myNull2 = userTest->getUserData(tempStr2);
+    if (mydocument != mydocument2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (myNull2) {
+        fprintf(stderr, "overwrite userdata with same key in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    //the userTest user data table should be null now
+    if (userTest->getUserData(tempStr)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->getUserData(tempStr2)) {
+        fprintf(stderr, "get non-exist user data in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+
+    // Test DOMUserDataHandler
+    // test clone
+    userTest->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* mycloned = userTest->cloneNode(true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_CLONED, tempStr2, document, userTest, mycloned, __LINE__);
+
+    // test import
+    document->setUserData(tempStr2, (void*) document, &userhandler);
+    DOMNode* myimport = document->importNode(userTest,true);
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
     if (!OK)
         printf("\n*****The DOMText* method calls listed above failed, all others worked correctly.*****\n");
 
-//  printf("\n");
     return OK;
 };
 
