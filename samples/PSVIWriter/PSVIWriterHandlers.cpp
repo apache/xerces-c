@@ -903,7 +903,7 @@ void PSVIWriterHandlers::processDOMAttributes(DOMNamedNodeMap* attrs) {
 			sendIndentedElement(PSVIUni::fgAttribute);
 			sendElementValue(PSVIUni::fgNamespaceName, XMLUni::fgXMLNSURIName);
 			sendElementValue(PSVIUni::fgLocalName, attr->getLocalName());
-			sendElementValue(PSVIUni::fgPrefix, XMLUni::fgXMLNSString);
+			sendElementValue(PSVIUni::fgPrefix, attr->getPrefix());
 			sendElementValue(PSVIUni::fgNormalizedValue, attr->getValue());
 			sendElementValue(PSVIUni::fgSpecified, translateBool(attr->getSpecified()));
 			sendElementValue(PSVIUni::fgAttributeType, attr->getTypeInfo()->getName());
