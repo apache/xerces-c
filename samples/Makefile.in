@@ -63,8 +63,6 @@ SAXCount_DIR=SAXCount
 SAX2Count_DIR=SAX2Count
 DOMPrint_DIR=DOMPrint
 DOMCount_DIR=DOMCount
-IDOMPrint_DIR=IDOMPrint
-IDOMCount_DIR=IDOMCount
 Redirect_DIR=Redirect
 MemParse_DIR=MemParse
 PParse_DIR=PParse
@@ -82,7 +80,7 @@ CFLAGS = @cflags@
 PREFIX = @prefix@
 BITSTOBUILD = @bitstobuild@
 
-all::	saxprint sax2print saxcount sax2count domprint domcount idomprint idomcount redirect memparse pparse stdinparse enumval senumval createdomdocument
+all::	saxprint sax2print saxcount sax2count domprint domcount redirect memparse pparse stdinparse enumval senumval createdomdocument
 
 saxprint::
 	@echo Building "SAXPrint"
@@ -107,14 +105,6 @@ domprint::
 domcount::
 	@echo Building "DOMCount"
 	$(MAKE) -C $(DOMCount_DIR) $(MAKE_FLAGS)
-
-idomprint::
-	@echo Building "IDOMPrint"
-	$(MAKE) -C $(IDOMPrint_DIR) $(MAKE_FLAGS)
-
-idomcount::
-	@echo Building "IDOMCount"
-	$(MAKE) -C $(IDOMCount_DIR) $(MAKE_FLAGS)
 
 memparse::
 	@echo Building "MemParse"
@@ -152,8 +142,6 @@ clean::
 	$(MAKE) -C $(SAX2Count_DIR) $@
 	$(MAKE) -C $(DOMPrint_DIR) $@
 	$(MAKE) -C $(DOMCount_DIR) $@
-	$(MAKE) -C $(IDOMPrint_DIR) $@
-	$(MAKE) -C $(IDOMCount_DIR) $@
 	$(MAKE) -C $(MemParse_DIR) $@
 	$(MAKE) -C $(Redirect_DIR) $@
 	$(MAKE) -C $(PParse_DIR) $@
@@ -169,8 +157,6 @@ distclean::
 	$(MAKE) -C $(SAX2Count_DIR) $@
 	$(MAKE) -C $(DOMPrint_DIR) $@
 	$(MAKE) -C $(DOMCount_DIR) $@
-	$(MAKE) -C $(IDOMPrint_DIR) $@
-	$(MAKE) -C $(IDOMCount_DIR) $@
 	$(MAKE) -C $(MemParse_DIR) $@
 	$(MAKE) -C $(Redirect_DIR) $@
 	$(MAKE) -C $(PParse_DIR) $@

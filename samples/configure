@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Guess values for system-dependent variables and create Makefiles.
-# Generated automatically using autoconf version 2.13 
+# Generated automatically using autoconf version 2.13
 # Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 #
 # This configure script is free software; the Free Software Foundation
@@ -1212,7 +1212,7 @@ if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
   cat >> confdefs.h <<EOF
 #define $ac_tr_hdr 1
 EOF
- 
+
 else
   echo "$ac_t""no" 1>&6
 fi
@@ -1413,11 +1413,9 @@ trap 'rm -fr `echo "Makefile \
 SAXCount/Makefile \
 SAX2Count/Makefile \
 DOMCount/Makefile \
-IDOMCount/Makefile \
 SAXPrint/Makefile \
 SAX2Print/Makefile \
 DOMPrint/Makefile \
-IDOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \
@@ -1520,11 +1518,9 @@ CONFIG_FILES=\${CONFIG_FILES-"Makefile \
 SAXCount/Makefile \
 SAX2Count/Makefile \
 DOMCount/Makefile \
-IDOMCount/Makefile \
 SAXPrint/Makefile \
 SAX2Print/Makefile \
 DOMPrint/Makefile \
-IDOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \
