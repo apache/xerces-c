@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 15:56:24  gareth
+ * Removed unnecessary include.
+ *
  * Revision 1.6  2003/05/14 18:06:53  gareth
  * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
  *
@@ -81,7 +84,6 @@
 #define DOMERRORIMPL_HPP
 
 #include <xercesc/dom/DOMError.hpp>
-#include <iostream.h>
 #include <xercesc/util/XMLString.hpp>
 XERCES_CPP_NAMESPACE_BEGIN
 
