@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/07/09 13:42:08  tng
+ * Partial Markup in Parameter Entity is validity constraint and thus should be just error, not fatal error.
+ *
  * Revision 1.23  2001/07/05 13:12:11  tng
  * Standalone checking is validity constraint and thus should be just error, not fatal error:
  *
@@ -326,6 +329,7 @@ public :
     NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
     const XMLStringPool* getURIStringPool() const;
     XMLStringPool* getURIStringPool();
+    bool getHasNoDTD() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -999,6 +1003,11 @@ inline const XMLStringPool* XMLScanner::getURIStringPool() const
 inline XMLStringPool* XMLScanner::getURIStringPool()
 {
     return fURIStringPool;
+}
+
+inline bool XMLScanner::getHasNoDTD() const
+{
+    return fHasNoDTD;
 }
 
 // ---------------------------------------------------------------------------

@@ -312,6 +312,7 @@ $set 2
  84  Attribute '{0}' must not be changed by normalization in a standalone document.
  85  White space must not occur between externally declared elements with element content in a standalone document.
  86  Entity '{0}' was not found
+ 87  Partial markup in parameter entity replacement text.
 
 
 $set 3

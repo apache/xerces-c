@@ -2849,7 +2849,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                            );
             }
 
-            if (elemDecl) {
+            if (elemDecl && fValidate) {
                 fValidator->emitError
                 (
                     XMLValid::ElementNotUnQualified
@@ -2896,7 +2896,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                            , currentScope
                        );
 
-            if (elemDecl) {
+            if (elemDecl && fValidate) {
                 fValidator->emitError
                 (
                     XMLValid::ElementNotQualified

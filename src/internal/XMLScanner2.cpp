@@ -488,7 +488,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 //attribute is provided
                 // (schema) report error for PROHIBITED attrs that are present (V_TAGc)
-                if (defType == XMLAttDef::Prohibited)
+                if (defType == XMLAttDef::Prohibited && fValidate)
                     fValidator->emitError
                     (
                         XMLValid::ProhibitedAttributePresent
@@ -520,7 +520,7 @@ void XMLScanner::checkIDRefs()
         const XMLRefInfo& curRef = refEnum.nextElement();
 
         // If its used but not declared, then its an error
-        if (!curRef.getDeclared() && curRef.getUsed())
+        if (!curRef.getDeclared() && curRef.getUsed() && fValidate)
             fValidator->emitError(XMLValid::IDNotDeclared, curRef.getRefName());
     }
 }

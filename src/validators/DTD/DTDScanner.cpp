@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/07/09 13:42:20  tng
+ * Partial Markup in Parameter Entity is validity constraint and thus should be just error, not fatal error.
+ *
  * Revision 1.13  2001/07/05 14:05:29  tng
  * Encoding String must present for external entity text decl.
  *
@@ -260,10 +263,19 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
     //  emit an error and continue.
     //
     XMLEntityDecl* decl = fPEntityDeclPool->getByKey(bbName.getRawBuffer());
-    if (!decl && fScanner->getDoValidation())
+    if (!decl)
     {
         // XML 1.0 Section 4.1
-        fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
+        if (fScanner->getStandalone()) {
+            // no need to check fScanner->fHasNoDTD which is for sure false
+            // since we are in expandPERef already
+            fScanner->emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
+        }
+        else {
+            if (fScanner->getDoValidation())
+                fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
+        }
+
         return false;
     }
 
@@ -1064,8 +1076,8 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         if (!curNode)
             return 0;
 
-        if (curReader != fReaderMgr->getCurrentReaderNum())
-            fScanner->emitError(XMLErrs::PartialMarkupInEntity);
+        if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getDoValidation())
+            fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
     }
      else
     {
@@ -1218,8 +1230,8 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         return 0;
                     }
 
-                    if (curReader != fReaderMgr->getCurrentReaderNum())
-                        fScanner->emitError(XMLErrs::PartialMarkupInEntity);
+                    if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getDoValidation())
+                        fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
                     // Else patch it in and make it the new current
                     ContentSpecNode* newCur = new ContentSpecNode
@@ -1490,8 +1502,8 @@ bool DTDScanner::scanContentSpec(DTDElementDecl& toFill)
     }
 
     // Make sure we are on the same reader as where we started
-    if (curReader != fReaderMgr->getCurrentReaderNum())
-        fScanner->emitError(XMLErrs::PartialMarkupInEntity);
+    if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getDoValidation())
+        fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
     return status;
 }
@@ -2103,10 +2115,17 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
     XMLEntityDecl* decl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
 
     // If it does not exist, then obviously an error
-    if (!decl && fScanner->getDoValidation())
+    if (!decl)
     {
         // XML 1.0 Section 4.1
-        fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
+        if (fScanner->getStandalone() || fScanner->getHasNoDTD()) {
+            fScanner->emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
+        }
+        else {
+            if (fScanner->getDoValidation())
+                fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
+        }
+
         return EntityExp_Failed;
     }
 
@@ -2132,13 +2151,15 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
     if (decl->isExternal())
     {
         // If its unparsed, then its not valid here
+        // XML 1.0 Section 4.4.4 the appearance of a reference to an unparsed entity is forbidden.
         if (decl->isUnparsed())
         {
             fScanner->emitError(XMLErrs::NoUnparsedEntityRefs, bbName.getRawBuffer());
             return EntityExp_Failed;
         }
 
-        // We are in an attribute value, so not valid. But keep going
+        // We are in an attribute value, so not valid.
+        // XML 1.0 Section 4.4.4 a reference to an external entity in an attribute value is forbidden.
         fScanner->emitError(XMLErrs::NoExtRefsInAttValue);
 
         // And now create a reader to read this entity
@@ -2382,8 +2403,8 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
     //  then we propogated some entity out of the literal, so issue an
     //  error, but don't fail.
     //
-    if (fReaderMgr->getCurrentReaderNum() != orgReader)
-        fScanner->emitError(XMLErrs::PartialMarkupInEntity);
+    if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+        fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
     return true;
 }
@@ -2641,8 +2662,9 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
                 //  And see if we got back to the same level. If not, then its
                 //  a partial markup error.
                 //
-                if (fReaderMgr->getCurrentReaderNum() != orgReader)
-                    fScanner->emitError(XMLErrs::PartialMarkupInEntity);
+                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+                    fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+
             }
              else if (XMLReader::isWhitespace(nextCh))
             {
@@ -3013,8 +3035,8 @@ bool DTDScanner::scanInternalSubset()
             scanMarkupDecl(false);
 
             // If we did not get back to entry level, then partial markup
-            if (fReaderMgr->getCurrentReaderNum() != orgReader)
-                fScanner->emitError(XMLErrs::PartialMarkupInEntity);
+            if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+                fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
         }
          else if (XMLReader::isWhitespace(nextCh))
         {
