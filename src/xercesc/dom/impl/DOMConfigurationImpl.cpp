@@ -131,7 +131,7 @@ const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
     XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
     ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
 
-    XMLString::lowerCase(lowerCaseName);
+    XMLString::lowerCaseASCII(lowerCaseName);
 
     DOMConfigurationFeature whichFlag;
     try {
