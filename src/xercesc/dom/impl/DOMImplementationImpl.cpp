@@ -145,6 +145,9 @@ DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl() {
 // ------------------------------------------------------------
 bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * version)
 {
+    if (!feature)
+        return false;
+
     bool anyVersion = (version == 0 || XMLString::stringLen(version) == 0);
     bool version1_0 = (XMLString::compareString(version, g1_0) == 0);
     bool version2_0 = (XMLString::compareString(version, g2_0) == 0);
