@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/27 20:31:31  roddey
+ * More recovery from the move away from the util/xx streams.
+ *
  * Revision 1.5  2000/01/26 19:35:57  roddey
  * When the /Debug output format is used, it will spit out source offset
  * data as well now.
@@ -80,7 +83,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <stdlib.h>
 #include <util/RefVectorOf.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
@@ -94,7 +96,10 @@
 #include <validators/DTD/DTDEntityDecl.hpp>
 #include "ParserTest.hpp"
 
-#include <util/BitOps.hpp>
+#include <stdlib.h>
+#include <ctype.h>
+
+
 
 // ---------------------------------------------------------------------------
 //  Local functions
@@ -531,14 +536,18 @@ void TestParser::attDef(const   DTDElementDecl& elemDecl
             if (attDef.getType() == XMLAttDef::Enumeration)
             {
                 cout << '(';
-                const XMLCh* curCh = attDef.getEnumeration();
+                StrX tmpStr(attDef.getEnumeration());
+                const char* curCh = tmpStr.localForm();
                 while (*curCh)
                 {
-                    while (!XMLReader::isWhitespace(*curCh))
+                    while (!isspace(*curCh) && *curCh)
                         cout << *curCh++;
-                    curCh++;
+
                     if (*curCh)
+                    {
                         cout << '|';
+                        curCh++;
+                    }
                 }
                 cout << ')';
             }
@@ -682,9 +691,9 @@ void TestParser::elementDecl(const  DTDElementDecl&     decl
 
         if (fIntDTDOutput)
         {
-            cout << "<!ELEMENT " << StrX(decl.getFullName()) << " ";
-            cout << decl.getFormattedContentModel(*fScanner->getValidator());
-            cout << ">";
+            cout << "<!ELEMENT " << StrX(decl.getFullName()) << " "
+                 << StrX(decl.getFormattedContentModel(*fScanner->getValidator()))
+                 << ">";
         }
     }
 }
@@ -1058,13 +1067,13 @@ TestParser::showIds(const XMLCh* const publicId, const XMLCh* const systemId)
     {
         if (!XMLString::stringLen(publicId))
         {
-            cout << " SYSTEM '" << systemId << "'";
+            cout << " SYSTEM '" << StrX(systemId) << "'";
         }
          else
         {
-            cout << " PUBLIC '" << publicId << "'";
+            cout << " PUBLIC '" << StrX(publicId) << "'";
             if (systemId)
-                cout << " '" << systemId << "'";
+                cout << " '" << StrX(systemId) << "'";
         }
     }
 }
