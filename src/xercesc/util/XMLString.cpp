@@ -1209,11 +1209,11 @@ int XMLString::indexOf( const   XMLCh* const    toSearch
     return -1;
 }
 
-
-int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)
+int XMLString::lastIndexOf(const XMLCh ch,
+                           const XMLCh* const toSearch,
+                           const unsigned int toSearchLen)
 {
-    const int len = stringLen(toSearch);
-    for (int i = len-1; i >= 0; i--)
+    for (unsigned int i = toSearchLen-1; i >= 0; i--)
     {
         if (toSearch[i] == ch)
             return i;

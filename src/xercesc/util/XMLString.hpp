@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/10/01 00:22:20  knoaman
+ * Add a lastIndexOf method that takes the string length as one of the params.
+ *
  * Revision 1.18  2003/08/25 20:39:47  neilg
  * fix XMLString::findAny(...) docs so that they match what the method actually does (and has done since time immemorial)
  *
@@ -720,6 +723,22 @@ public:
       * else returns -1.
       */
     static int lastIndexOf(const XMLCh* const toSearch, const XMLCh ch);
+
+    /**
+      * Provides the index of the last occurance of a character within a string
+      *
+      * @param ch The character to search within the string
+      * @param toSearch The string to search
+      * @param toSearchLen The length of the string to search
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
+      */
+    static int lastIndexOf
+    (
+        const XMLCh ch
+        , const XMLCh* const toSearch
+        , const unsigned int toSearchLen
+    );
 
     /**
       * Provides the index of the last occurance of a character within a string
@@ -1626,6 +1645,11 @@ inline bool XMLString::equals(   const char* const    str1
         psz2++;
     }
     return false;
+}
+
+inline int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)
+{
+    return XMLString::lastIndexOf(ch, toSearch, stringLen(toSearch));
 }
 
 XERCES_CPP_NAMESPACE_END
