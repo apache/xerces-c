@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/11/01 23:39:18  jasons
+ * 2001-11-01  Jason E. Stewart  <jason@openinformatics.com>
+ *
+ * 	* src/util/MsgLoaders/ICU/ICUMsgLoader.hpp (Repository):
+ * 	* src/util/MsgLoaders/ICU/ICUMsgLoader.cpp (Repository):
+ * 	Updated to compile with ICU-1.8.1
+ *
  * Revision 1.3  2000/03/02 19:55:14  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -102,14 +109,14 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int           maxChars
     );
 
     virtual bool loadMsg
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int           maxChars
         , const XMLCh* const            repText1
         , const XMLCh* const            repText2 = 0
         , const XMLCh* const            repText3 = 0
@@ -120,7 +127,7 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int           maxChars
         , const char* const             repText1
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0

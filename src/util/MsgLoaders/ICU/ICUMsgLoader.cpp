@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/11/01 23:39:18  jasons
+ * 2001-11-01  Jason E. Stewart  <jason@openinformatics.com>
+ *
+ * 	* src/util/MsgLoaders/ICU/ICUMsgLoader.hpp (Repository):
+ * 	* src/util/MsgLoaders/ICU/ICUMsgLoader.cpp (Repository):
+ * 	Updated to compile with ICU-1.8.1
+ *
  * Revision 1.5  2000/03/02 19:55:14  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -88,7 +95,7 @@
 #include <util/XMLString.hpp>
 #include "ICUMsgLoader.hpp"
 
-#include "resbund.h"
+#include "unicode/resbund.h"
 #include "string.h"
 
 
@@ -112,7 +119,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  toLoad) :
 {
     // Ok, lets try to create the bundle now
     UErrorCode err = U_ZERO_ERROR;
-    fBundle = new ResourceBundle(tmpPath, err);
+    fBundle = new ResourceBundle(0, err);
     if (!U_SUCCESS(err))
     {
         // <TBD> Need to panic again here?
@@ -130,7 +137,7 @@ ICUMsgLoader::~ICUMsgLoader()
 // ---------------------------------------------------------------------------
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars)
+                            , const unsigned int           maxChars)
 {
     //
     //  Map the passed id to the required message bundle key name. We use
@@ -144,15 +151,18 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
     // And now try to load that key's related message
     UErrorCode err;
-    UnicodeString keyVal(keyStr);
-    const UnicodeString* msgString = fBundle->getString(keyVal, err);
-    if (!msgString)
-        return false;
+//    UnicodeString keyVal(keyStr);
+//    const UnicodeString* msgString = fBundle->getStringEx(keyVal, err);
+//    if (!msgString)
+//        return false;
+
+    UnicodeString msgString = fBundle->getStringEx(XMLString::transcode(keyStr), err);
+
 
     // Extract out from the UnicodeString to the passed buffer
-    const unsigned int len = msgString->length();
+    const unsigned int len = msgString.length();
     const unsigned int lesserLen = (len < maxChars) ? len : maxChars;
-    msgString->extract
+    msgString.extract
     (
         0
         , lesserLen
@@ -167,7 +177,7 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int           maxChars
                             , const XMLCh* const            repText1
                             , const XMLCh* const            repText2
                             , const XMLCh* const            repText3
@@ -185,7 +195,7 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int           maxChars
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3
