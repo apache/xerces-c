@@ -1589,6 +1589,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.hpp
+# End Source File
 # End Group
 # Begin Group "sax"
 

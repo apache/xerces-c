@@ -101,8 +101,9 @@ INTERNAL_CPP_PUBHEADERS = \
 	XProtoType.hpp \
 	XSerializable.hpp \
 	XSerializationException.hpp \
-	XSerializeEngine.hpp
-			
+	XSerializeEngine.hpp \
+	XTemplateSerializer.hpp
+				
 INTERNAL_CPP_PRIVHEADERS =
 
 INTERNAL_C_FILES =
@@ -125,8 +126,9 @@ INTERNAL_CPP_OBJECTS = \
 	XMLScanner.$(TO) \
 	XMLScannerResolver.$(TO) \
 	XProtoType.$(TO) \
-	XSerializeEngine.$(TO)
-
+	XSerializeEngine.$(TO) \
+	XTemplateSerializer.$(TO)
+	
 all::	includes $(INTERNAL_CPP_OBJECTS)
 
 includes::	pubheaders $(INTERNAL_C_FILES)
