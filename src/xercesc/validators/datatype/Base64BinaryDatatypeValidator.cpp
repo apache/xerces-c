@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/01/27 19:24:17  peiyongz
+ * normalize Base64 data before checking against enumeration.
+ *
  * Revision 1.4  2003/01/24 23:18:34  peiyongz
  * normalizeEnumeration() added to remove optional ws in Base64 data.
  *
@@ -189,6 +192,11 @@ void Base64BinaryDatatypeValidator::normalizeEnumeration()
         XMLString::removeWS(getEnumeration()->elementAt(i));
     }
 
+}
+
+void Base64BinaryDatatypeValidator::normalizeContent(XMLCh* const content) const
+{
+    XMLString::removeWS(content);     
 }
 
 XERCES_CPP_NAMESPACE_END

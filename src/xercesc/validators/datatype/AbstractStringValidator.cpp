@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/01/27 19:24:17  peiyongz
+ * normalize Base64 data before checking against enumeration.
+ *
  * Revision 1.8  2003/01/24 23:18:34  peiyongz
  * normalizeEnumeration() added to remove optional ws in Base64 data.
  *
@@ -663,11 +666,15 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
     if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
         (getEnumeration() != 0))
     {
+        XMLCh* normContent = XMLString::replicate(content);
+        ArrayJanitor<XMLCh>  jan(normContent);
+        normalizeContent(normContent);
+
         int i=0;
         int enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
-            if (XMLString::equals(content, getEnumeration()->elementAt(i)))
+            if (XMLString::equals(normContent, getEnumeration()->elementAt(i)))
                 break;
         }
 
@@ -685,6 +692,12 @@ const RefArrayVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 }
 
 void AbstractStringValidator::normalizeEnumeration()
+{
+    // default implementation: do nothing
+    return;
+}
+
+void AbstractStringValidator::normalizeContent(XMLCh* const) const
 {
     // default implementation: do nothing
     return;

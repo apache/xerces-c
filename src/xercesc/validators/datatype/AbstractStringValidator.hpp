@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/01/27 19:24:17  peiyongz
+ * normalize Base64 data before checking against enumeration.
+ *
  * Revision 1.6  2003/01/24 23:18:34  peiyongz
  * normalizeEnumeration() added to remove optional ws in Base64 data.
  *
@@ -203,6 +206,8 @@ protected:
      **  Base64BinaryDatatypeValidator to overwrite
      */
     virtual void normalizeEnumeration();
+
+    virtual void normalizeContent(XMLCh* const) const;
 
 public:
 // -----------------------------------------------------------------------
