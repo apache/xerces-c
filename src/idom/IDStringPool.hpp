@@ -76,8 +76,8 @@ struct  IDStringPoolEntry;
 class   IDDocumentImpl;
 
 //
-// IDStringPool is a hash table of DOMStrings.
-//  Each DOM Document maintains a IDStringPool containing a DOMString
+// IDStringPool is a hash table of XMLCh* Strings.
+//  Each DOM Document maintains a IDStringPool containing a XMLCh* String
 //  for each Element tag name and Attribute Name that has been added
 //  to the document.  When creating additional elements or attributes,
 //  if the name has been seen before, the already existing string

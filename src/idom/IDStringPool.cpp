@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/06/04 20:44:15  tng
+ * IDOM: Comment should say XMLCh instead of DOMString
+ *
  * Revision 1.7  2001/05/31 16:09:35  tng
  * IDOM: Error checking if operator new fails
  *
@@ -92,7 +95,7 @@
 
 //
 //  DStringPoolEntry - one of these structs is allocated for each
-//                      DOMString in the pool.  Each slot in the
+//                      XMLCh String in the pool.  Each slot in the
 //                      hash table array itself is a pointer to the head
 //                      of a singly-linked list of these structs.
 //

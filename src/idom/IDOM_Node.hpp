@@ -156,10 +156,6 @@ class  CDOM_EXPORT IDOM_Node {
      *
      * @exception DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-     * @exception DOMException
-     *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
-     *   fit in a <code>DOMString</code> variable on the implementation
-     *   platform.
      */
     virtual const XMLCh *       getNodeValue() const = 0;
 

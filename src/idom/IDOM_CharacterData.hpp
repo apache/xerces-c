@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:44:14  tng
+ * IDOM: Comment should say XMLCh instead of DOMString
+ *
  * Revision 1.2  2001/05/11 13:25:49  tng
  * Copyright update.
  *
@@ -109,15 +112,11 @@ public:
    * The DOM implementation may not put arbitrary limits on the amount of data that
    * may be stored in a  <code>CharacterData</code> node. However,
    * implementation limits may  mean that the entirety of a node's data may
-   * not fit into a single <code>DOMString</code>. In such cases, the user
+   * not fit into a single <code>XMLCh* String</code>. In such cases, the user
    * may call <code>substringData</code> to retrieve the data in
    * appropriately sized pieces.
    * @exception DOMException
    *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-   * @exception DOMException
-   *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
-   *   fit in a <code>DOMString</code> variable on the implementation
-   *   platform.
    */
   virtual const XMLCh *     getData() const = 0;
   /**
@@ -140,8 +139,6 @@ public:
    *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
    *   than the number of characters in <code>data</code>, or if the
    *   specified <code>count</code> is negative.
-   *   <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not
-   *   fit into a <code>DOMString</code>.
    */
   virtual const XMLCh *     substringData(unsigned int offset,
                                    unsigned int count) const = 0;
@@ -152,8 +149,8 @@ public:
    * Append the string to the end of the character data of the node.
    *
    * Upon success, <code>data</code> provides access to the concatenation of
-   * <code>data</code> and the <code>DOMString</code> specified.
-   * @param arg The <code>DOMString</code> to append.
+   * <code>data</code> and the <code>XMLCh* String</code> specified.
+   * @param arg The <code>XMLCh* String</code> to append.
    * @exception DOMException
    *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
@@ -162,7 +159,7 @@ public:
    * Insert a string at the specified character offset.
    *
    * @param offset The character offset at which to insert.
-   * @param arg The <code>DOMString</code> to insert.
+   * @param arg The <code>XMLCh* String</code> to insert.
    * @exception DOMException
    *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
    *   than the number of characters in <code>data</code>.
@@ -197,7 +194,7 @@ public:
    *   , then all characters to the end of the data are replaced (i.e., the
    *   effect is the same as a <code>remove</code> method call with the same
    *   range, followed by an <code>append</code> method invocation).
-   * @param arg The <code>DOMString</code> with which the range must be
+   * @param arg The <code>XMLCh* String</code> with which the range must be
    *   replaced.
    * @exception DOMException
    *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
@@ -212,7 +209,7 @@ public:
   /**
    * Sets the character data of the node that implements this interface.
    *
-   * @param data The <code>DOMString</code> to set.
+   * @param data The <code>XMLCh* String</code> to set.
    */
   virtual void               setData(const XMLCh *data) = 0;
   //@}
