@@ -80,6 +80,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	CharTypeTables.hpp \
 	ElemStack.hpp \
 	EndOfEntityException.hpp \
+	IANAEncodings.hpp \
 	ReaderMgr.hpp \
 	VecAttrListImpl.hpp \
 	VecAttributesImpl.hpp \

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.10  2002/07/18 21:57:27  knoaman
+# Makefile update.
+#
 # Revision 1.9  2002/07/10 12:56:45  tng
 # [Bug 9154] Requesting Xerces Version Macro.
 #
@@ -361,6 +364,7 @@ UTIL_CPP_PUBHEADERS = \
     BitSet.hpp \
     CountedPointer.hpp \
     EmptyStackException.hpp \
+    EncodingValidator.hpp \
     FlagJanitor.hpp \
     HashBase.hpp \
     HashCMStateSet.hpp \
@@ -464,6 +468,7 @@ UTIL_CPP_OBJECTS = \
     BinInputStream.$(TO) \
     BinMemInputStream.$(TO) \
     BitSet.$(TO) \
+    EncodingValidator.$(TO) \
     HashXMLCh.$(TO) \
     HashPtr.$(TO) \
     HeaderDummy.$(TO) \
