@@ -68,7 +68,7 @@ setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)</source>
 
         <note>If you need to build the samples after installation,
         make sure you read and follow the build instructions given in the 
-		<jump href="faqs.html">FAQ</jump>.</note>
+		<jump href="build.html">FAQ</jump>.</note>
 
    </s2>
 </s1>
