@@ -142,33 +142,33 @@ public:
     //  Tokenize methods
     // -----------------------------------------------------------------------
     // Note: The caller owns the string vector that is returned, and is responsible
-    //       for deleting it. 
+    //       for deleting it.
     RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString);
     RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString, const int start,
                                       const int end);
 
     RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString);
-    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString, 
+    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString,
                                       const int start, const int end);
 
     // -----------------------------------------------------------------------
     //  Replace methods
     // -----------------------------------------------------------------------
-    // Note: The caller owns the XMLCh* that is returned, and is responsible for 
-    //       deleting it. 
+    // Note: The caller owns the XMLCh* that is returned, and is responsible for
+    //       deleting it.
     XMLCh *replace(const char* const matchString, const char* const replaceString);
     XMLCh *replace(const char* const matchString, const char* const replaceString,
                    const int start, const int end);
 
     XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString);
-    XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString, 
+    XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString,
                    const int start, const int end);
 
 private:
     // -----------------------------------------------------------------------
     //  Private data types
     // -----------------------------------------------------------------------
-    class Context
+    class XMLUTIL_EXPORT Context
     {
         public :
             Context();
@@ -254,16 +254,16 @@ private:
 
     /**
      *    Tokenize helper
-     * 
+     *
      *    This overloaded tokenize is for internal use only. It provides a way to
      *    keep track of the sub-expressions in each match of the pattern.
-     *    
+     *
      *    It is called by the other tokenize methods, and by the replace method.
-     *    The caller is responsible for the deletion of the returned 
+     *    The caller is responsible for the deletion of the returned
      *    RefArrayVectorOf<XMLCh*>
      */
-    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString, 
-                                      const int start, const int end, 
+    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString,
+                                      const int start, const int end,
                                       RefVectorOf<Match> *subEx);
     /**
      *    Replace helpers
@@ -271,7 +271,7 @@ private:
      *    Note: the caller owns the XMLCh* that is returned
      */
     const XMLCh *subInExp(const XMLCh* const repString,
-                          const XMLCh* const origString, 
+                          const XMLCh* const origString,
                           const Match* subEx);
     /**
      *    Converts a token tree into an operation tree
