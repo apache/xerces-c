@@ -66,18 +66,17 @@
 
 #include "assert.h"
 
-static const XMLCh kEmptyString[] = {0};
-
 IDAttrNSImpl::IDAttrNSImpl(IDOM_Document *ownerDoc, const XMLCh *nam) :
 IDAttrImpl(ownerDoc, nam)
 {
-    this->namespaceURI=0;	//DOM Level 2
-    this->localName=0;       //DOM Level 2
+    this->fNamespaceURI=0;	//DOM Level 2
+    this->fLocalName=0;       //DOM Level 2
+    this->fPrefix=0;
 }
 
 //Introduced in DOM Level 2
 IDAttrNSImpl::IDAttrNSImpl(IDOM_Document *ownerDoc,
-                           const XMLCh *fNamespaceURI,
+                           const XMLCh *namespaceURI,
                            const XMLCh *qualifiedName) :
 IDAttrImpl(ownerDoc, qualifiedName)
 {
@@ -86,39 +85,46 @@ IDAttrImpl(ownerDoc, qualifiedName)
     this->fName = ((IDDocumentImpl *)ownerDoc)->getPooledString(qualifiedName);
 
     int index = IDDocumentImpl::indexofQualifiedName(qualifiedName);
-    const XMLCh * prefix;
     if (index < 0)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
+
     bool xmlnsAlone = false;	//true if attribute name is "xmlns"
     if (index == 0) {	//qualifiedName contains no ':'
         if (XMLString::compareString(this->fName, xmlns) == 0) {
-            if (XMLString::compareString(fNamespaceURI, xmlnsURI) != 0)
+            if (XMLString::compareString(namespaceURI, xmlnsURI) != 0)
                 throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
             xmlnsAlone = true;
         }
-        prefix = 0;
-        this -> localName = this -> fName;
+        this -> fPrefix = 0;
+        this -> fLocalName = this -> fName;
     } else {	//0 < index < this->name.length()-1
+        XMLCh* newName;
         XMLCh temp[4000];
-        assert (index < 4000);   // idom_revisit.  Do a heap allocation if this fails.
-        XMLString::copyNString(temp, fName, index);
-        temp[index] = 0;
-        prefix = ((IDDocumentImpl *)ownerDoc)->getPooledString(temp);
-        //prefix = this->fName.substringData(0, index);
-        this -> localName = ((IDDocumentImpl *)ownerDoc)->getPooledString(fName+index+1);
-         //   this->fName.substringData(index+1, this->fName.length()-index-1);
+        if (index >= 3999)
+            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
+        else
+            newName = temp;
+
+        XMLString::copyNString(newName, fName, index);
+        newName[index] = chNull;
+        this-> fPrefix = ((IDDocumentImpl *)ownerDoc)->getPooledString(newName);
+        this -> fLocalName = ((IDDocumentImpl *)ownerDoc)->getPooledString(fName+index+1);
+
+        if (index >= 3999)
+            delete newName;
     }
 
     const XMLCh * URI = xmlnsAlone ?
-                xmlnsURI : IDNodeImpl::mapPrefix(prefix, fNamespaceURI, IDOM_Node::ATTRIBUTE_NODE);
-    this -> namespaceURI = URI == 0 ? kEmptyString : ((IDDocumentImpl *)ownerDoc)->getPooledString(URI);
+                xmlnsURI : IDNodeImpl::mapPrefix(fPrefix, namespaceURI, IDOM_Node::ATTRIBUTE_NODE);
+    this -> fNamespaceURI = URI == 0 ? XMLUni::fgZeroLenString : ((IDDocumentImpl *)ownerDoc)->getPooledString(URI);
 };
 
 IDAttrNSImpl::IDAttrNSImpl(const IDAttrNSImpl &other, bool deep) :
 IDAttrImpl(other, deep)
 {
-    this->namespaceURI = other.namespaceURI;	//DOM Level 2
-    this->localName = other.localName;          //DOM Level 2
+    this->fNamespaceURI = other.fNamespaceURI;	//DOM Level 2
+    this->fLocalName = other.fLocalName;          //DOM Level 2
+    this->fPrefix = other.fPrefix;
 };
 
 IDOM_Node * IDAttrNSImpl::cloneNode(bool deep) const
@@ -128,64 +134,72 @@ IDOM_Node * IDAttrNSImpl::cloneNode(bool deep) const
 
 const XMLCh * IDAttrNSImpl::getNamespaceURI() const
 {
-    return namespaceURI;
+    return fNamespaceURI;
 }
 
 const XMLCh * IDAttrNSImpl::getPrefix() const
 {
-    //  idom_revisit.  Get fPrefix set correctly at the start of time.
-    if (fPrefix)
-        return fPrefix;
-
-    int index = IDDocumentImpl::indexofQualifiedName(fName);
-    if (index == 0)
-        return 0;
-
-    IDAttrNSImpl *This = (IDAttrNSImpl *)this;   // cast off const.
-    This->fPrefix = new (getOwnerDocument()) XMLCh[index+1];
-    XMLString::copyNString(fPrefix, fName, index);
-    fPrefix[index] = 0;
     return fPrefix;
 }
 
 const XMLCh * IDAttrNSImpl::getLocalName() const
 {
-    return localName;
+    return fLocalName;
 }
 
 void IDAttrNSImpl::setPrefix(const XMLCh *prefix)
 {
-#ifdef idom_revist
-    const XMLCh * xml = IDOM_Node::getXmlString();
-    const XMLCh * xmlURI = IDOM_Node::getXmlURIString();
-    const XMLCh * xmlns = IDOM_Node::getXmlnsString();
-    const XMLCh * xmlnsURI = IDOM_Node::getXmlnsURIString();
+    const XMLCh * xml = IDNodeImpl::getXmlString();
+    const XMLCh * xmlURI = IDNodeImpl::getXmlURIString();
+    const XMLCh * xmlns = IDNodeImpl::getXmlnsString();
+    const XMLCh * xmlnsURI = IDNodeImpl::getXmlnsURIString();
 
     if (fNode.isReadOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
         0);
-    if (namespaceURI == 0 || localName.equals(xmlns))
+    if (fNamespaceURI == 0 || XMLString::compareString(fLocalName, xmlns) == 0)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
 
-    if (prefix != 0 && !DocumentImpl::isXMLName(prefix))
+    if (prefix != 0 && !IDDocumentImpl::isXMLName(prefix))
         throw IDOM_DOMException(IDOM_DOMException::INVALID_CHARACTER_ERR,0);
 
-    if (prefix == 0 || prefix.length() == 0) {
-        name = localName;
+    if (prefix == 0 || prefix[0] == chNull) {
+        fName = fLocalName;
+        fPrefix = 0;
         return;
     }
 
-    if (prefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
-        prefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
+    if (XMLString::compareString(prefix, xml) == 0 &&
+        XMLString::compareString(fNamespaceURI, xmlURI) != 0 ||
+        XMLString::compareString(prefix, xmlns) == 0 &&
+        XMLString::compareString(fNamespaceURI, xmlnsURI) != 0)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
 
-    const XMLCh *p = prefix.rawBuffer();
-    for (int i = prefix.length(); --i >= 0;) {
-        if (*p++ == chColon)	//prefix is malformed
-            throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
+    if (XMLString::indexOf(prefix, chColon) != -1) {
+        throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
     }
 
-    name = prefix + chColon + localName; //nodeName is changed too
-#endif
-    assert(false);  // idom_revisit   setPrefix not implemented yet.
+    this-> fPrefix = ((IDDocumentImpl *)this->getOwnerDocument())->getPooledString(prefix);
+
+    int prefixLen = XMLString::stringLen(prefix);
+    XMLCh *newName;
+    XMLCh temp[1000];
+    int newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
+
+    if (newQualifiedNameLen >= 999)
+        newName = new XMLCh[newQualifiedNameLen + 1];
+    else
+        newName = temp;
+
+    // newName = prefix + chColon + fLocalName;
+    XMLString::copyString(newName, prefix);
+    newName[prefixLen] = chColon;
+    XMLString::copyString(&newName[prefixLen+1], fLocalName);
+
+    fName = ((IDDocumentImpl *)this->getOwnerDocument())->
+                                           getPooledString(newName);
+
+    if (newQualifiedNameLen < 1000)
+        delete newName;
+
 }

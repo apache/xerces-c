@@ -68,6 +68,7 @@ IDElementNSImpl::IDElementNSImpl(IDOM_Document *ownerDoc, const XMLCh *nam) :
 {
     this->fNamespaceURI=0;	  //DOM Level 2
     this->fLocalName=0;       //DOM Level 2
+    this->fPrefix=0;
 }
 
 //Introduced in DOM Level 2
@@ -76,38 +77,34 @@ IDElementNSImpl::IDElementNSImpl(IDOM_Document *ownerDoc,
                              const XMLCh *qualifiedName) :
     IDElementImpl(ownerDoc, qualifiedName)
 {
-    const XMLCh * xmlns = IDNodeImpl::getXmlnsString();
-    const XMLCh * xmlnsURI = IDNodeImpl::getXmlnsURIString();
-
-    //  What the hell is this?  idom_revisit
-    // this->ownerDocument=ownerDoc;
-    // this->name = qualifiedName.clone();
+    this->fName = ((IDDocumentImpl *)ownerDoc)->getPooledString(qualifiedName);
 
     int index = IDDocumentImpl::indexofQualifiedName(qualifiedName);
-    const XMLCh * prefix;
     if (index < 0)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
+
     if (index == 0) {	//qualifiedName contains no ':'
-        prefix = 0;
+        this -> fPrefix = 0;
         this -> fLocalName = this -> fName;
     } else {	//0 < index < this->name.length()-1
-        XMLCh *nonConstfName = (XMLCh *)fName;
-        XMLCh t = fName[index];          // Temporarily put a null in the middle
-        nonConstfName[index] = 0;        //   of the source string, splitting it in two.
+        XMLCh* newName;
+        XMLCh temp[4000];
+        if (index >= 3999)
+            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
+        else
+            newName = temp;
 
-        prefix = ((IDDocumentImpl *)ownerDoc)->getPooledString(fName);
-        // prefix = this->name.substringData(0, index);
+        XMLString::copyNString(newName, fName, index);
+        newName[index] = chNull;
+        this-> fPrefix = ((IDDocumentImpl *)ownerDoc)->getPooledString(newName);
+        this -> fLocalName = ((IDDocumentImpl *)ownerDoc)->getPooledString(fName+index+1);
 
-        fLocalName = ((IDDocumentImpl *)ownerDoc)->getPooledString(&fName[index+1]);
-        //this -> localName =
-        //    this->name.substringData(index+1, this->name.length()-index-1);
-
-        nonConstfName[index] = t;  // put what is probably the ':' back into the
-                                   //   original name.
+        if (index >= 3999)
+            delete newName;
     }
 
-    const XMLCh *pooledURI = ((IDDocumentImpl *)ownerDoc)->getPooledString(namespaceURI);
-    fNamespaceURI = IDNodeImpl::mapPrefix(prefix, pooledURI, IDOM_Node::ELEMENT_NODE);
+    const XMLCh * URI = IDNodeImpl::mapPrefix(fPrefix, namespaceURI, IDOM_Node::ELEMENT_NODE);
+    this -> fNamespaceURI = URI == 0 ? XMLUni::fgZeroLenString : ((IDDocumentImpl *)ownerDoc)->getPooledString(URI);
 };
 
 IDElementNSImpl::IDElementNSImpl(const IDElementNSImpl &other, bool deep) :
@@ -115,6 +112,7 @@ IDElementNSImpl::IDElementNSImpl(const IDElementNSImpl &other, bool deep) :
 {
     this->fNamespaceURI = other.fNamespaceURI;	        //DOM Level 2
     this->fLocalName = other.fLocalName;                //DOM Level 2
+    this->fPrefix = other.fPrefix;
 };
 
 IDOM_Node * IDElementNSImpl::cloneNode(bool deep) const {
@@ -128,20 +126,7 @@ const XMLCh * IDElementNSImpl::getNamespaceURI() const
 
 const XMLCh * IDElementNSImpl::getPrefix() const
 {
-    int index = IDDocumentImpl::indexofQualifiedName(fName);
-    if (index == 0)
-        return 0;
-
-    // idom_revist.  We should probably add a prefix field to name space nodes.
-    //               But for now, extract off the prefix from the qname,
-    //               and then get from the name pool
-    XMLCh temp[1000];
-    if (index >= 999) index = 999;  //  idom_revisit.  This can't just fail like this.
-    XMLString::copyNString(temp, fName, index);
-    temp[index] = 0;
-    IDDocumentImpl *doc = (IDDocumentImpl *)this->getOwnerDocument();
-    const XMLCh *retPtr = doc->getPooledString(temp);
-    return retPtr;
+    return fPrefix;
 }
 
 
@@ -154,8 +139,6 @@ void IDElementNSImpl::setPrefix(const XMLCh *prefix)
 {
     const XMLCh * xml      = IDNodeImpl::getXmlString();
     const XMLCh * xmlURI   = IDNodeImpl::getXmlURIString();
-    const XMLCh * xmlns    = IDNodeImpl::getXmlnsString();
-    const XMLCh * xmlnsURI = IDNodeImpl::getXmlnsURIString();
 
     if (fNode.isReadOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
@@ -180,13 +163,26 @@ void IDElementNSImpl::setPrefix(const XMLCh *prefix)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
     }
 
-    // node name is changed too, to be  "newPrefix:localName"
-    // idom_revisit.  Add code for case when names are too long to be held
-    //                in the temp stack buffer.
-    XMLCh   temp[1000];
-    XMLString::copyString(temp, prefix);
-    temp[XMLString::stringLen(prefix)] = chColon;
-    XMLString::catString(temp, fLocalName);
-    IDDocumentImpl *doc = (IDDocumentImpl *)this->getOwnerDocument();
-    fName = doc->getPooledString(temp);
+    this-> fPrefix = ((IDDocumentImpl *)this->getOwnerDocument())->getPooledString(prefix);
+
+    int prefixLen = XMLString::stringLen(prefix);
+    XMLCh *newName;
+    XMLCh temp[1000];
+    int newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
+
+    if (newQualifiedNameLen >= 999)
+        newName = new XMLCh[newQualifiedNameLen + 1];
+    else
+        newName = temp;
+
+    // newName = prefix + chColon + fLocalName;
+    XMLString::copyString(newName, prefix);
+    newName[prefixLen] = chColon;
+    XMLString::copyString(&newName[prefixLen+1], fLocalName);
+
+    fName = ((IDDocumentImpl *)this->getOwnerDocument())->
+                                           getPooledString(newName);
+
+    if (newQualifiedNameLen < 1000)
+        delete newName;
 }

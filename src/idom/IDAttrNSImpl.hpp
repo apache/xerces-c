@@ -77,9 +77,9 @@
 class CDOM_EXPORT IDAttrNSImpl: public IDAttrImpl {
 protected:
     //Introduced in DOM Level 2
-    const XMLCh * namespaceURI;     //namespace URI of this node
-    const XMLCh * localName;        //local part of qualified name
-          XMLCh * fPrefix;           // prefix part of qualified name
+    const XMLCh * fNamespaceURI;     //namespace URI of this node
+    const XMLCh * fLocalName;        //local part of qualified name
+    const XMLCh * fPrefix;           // prefix part of qualified name
                            // idom_revisit - can return local part
                            //    by pointing into the qualified (L1) name.
 
@@ -91,7 +91,7 @@ public:
 
     virtual IDOM_Node * cloneNode(bool deep) const;
     //Introduced in DOM Level 2
-    virtual const XMLCh *	getNamespaceURI() const;
+    virtual const XMLCh *   getNamespaceURI() const;
     virtual const XMLCh *   getPrefix() const;
     virtual const XMLCh *   getLocalName() const;
     virtual void            setPrefix(const XMLCh *prefix);

@@ -79,6 +79,7 @@ protected:
     //Introduced in DOM Level 2
     const XMLCh * fNamespaceURI;     //namespace URI of this node
     const XMLCh * fLocalName;        //local part of qualified name
+    const XMLCh * fPrefix;
 
 
 public:
