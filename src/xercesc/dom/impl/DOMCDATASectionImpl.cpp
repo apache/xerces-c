@@ -204,7 +204,7 @@ void DOMCDATASectionImpl::release()
      const XMLCh*           DOMCDATASectionImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
            DOMNode*         DOMCDATASectionImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
      const XMLCh*           DOMCDATASectionImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); };
-           DOMDocument*     DOMCDATASectionImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+           DOMDocument*     DOMCDATASectionImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; };
      const XMLCh*           DOMCDATASectionImpl::getPrefix() const                       {return fNode.getPrefix (); };
            DOMNode*         DOMCDATASectionImpl::getParentNode() const                   {return fChild.getParentNode (this); };
            DOMNode*         DOMCDATASectionImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };

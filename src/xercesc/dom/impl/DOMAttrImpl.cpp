@@ -325,7 +325,7 @@ DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
      const XMLCh*           DOMAttrImpl::getLocalName() const                    {return fNode.getLocalName (); };
      const XMLCh*           DOMAttrImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
            DOMNode*         DOMAttrImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
-           DOMDocument*     DOMAttrImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+           DOMDocument*     DOMAttrImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; };
      const XMLCh*           DOMAttrImpl::getPrefix() const                       {return fNode.getPrefix (); };
            DOMNode*         DOMAttrImpl::getParentNode() const                   {return fNode.getParentNode (); };
            DOMNode*         DOMAttrImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };

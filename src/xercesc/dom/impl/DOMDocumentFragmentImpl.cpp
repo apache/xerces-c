@@ -145,7 +145,7 @@ void DOMDocumentFragmentImpl::release()
      const XMLCh*           DOMDocumentFragmentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
            DOMNode*         DOMDocumentFragmentImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
      const XMLCh*           DOMDocumentFragmentImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument*     DOMDocumentFragmentImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+           DOMDocument*     DOMDocumentFragmentImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; };
      const XMLCh*           DOMDocumentFragmentImpl::getPrefix() const                       {return fNode.getPrefix (); };
            DOMNode*         DOMDocumentFragmentImpl::getParentNode() const                   {return fNode.getParentNode (); };
            DOMNode*         DOMDocumentFragmentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
