@@ -140,12 +140,24 @@ SOURCE=..\..\..\..\..\src\util\TextOutputStream.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\TransService.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\URL.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32PlatformUtils.cpp
 # ADD CPP /Ze
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.cpp
 # End Source File
 # Begin Source File
 
@@ -157,7 +169,19 @@ SOURCE=..\..\..\..\..\src\util\XMLString.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLUCSTranscoder.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLUni.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -329,6 +353,14 @@ SOURCE=..\..\..\..\..\src\util\XML4CDefs.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.Hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLEnumerator.hpp
 # End Source File
 # Begin Source File
@@ -353,7 +385,19 @@ SOURCE=..\..\..\..\..\src\util\XMLString.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLUCS4Transcoder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLUni.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.Hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
