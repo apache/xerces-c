@@ -3078,8 +3078,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             fValidate = fElemStack.getValidationFlag();
         }
     }
-    else    // not empty
+    else if (fGrammarType == Grammar::SchemaGrammarType) 
+    {   
+        // not empty
         fErrorStack->push(fPSVIElemContext.fErrorOccurred);
+    }
 
     return true;
 }
