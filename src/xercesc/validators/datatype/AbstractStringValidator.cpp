@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/01/24 23:18:34  peiyongz
+ * normalizeEnumeration() added to remove optional ws in Base64 data.
+ *
  * Revision 1.7  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -175,7 +178,10 @@ void AbstractStringValidator::init(RefArrayVectorOf<XMLCh>*           const enum
 {
 
     if (enums)
+    {
         setEnumeration(enums, false);
+        normalizeEnumeration();
+    }
 
     assignFacet();
     inspectFacet();
@@ -676,6 +682,12 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
 const RefArrayVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 {
 	return getEnumeration();
+}
+
+void AbstractStringValidator::normalizeEnumeration()
+{
+    // default implementation: do nothing
+    return;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/01/24 23:18:34  peiyongz
+ * normalizeEnumeration() added to remove optional ws in Base64 data.
+ *
  * Revision 1.5  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -195,6 +198,11 @@ protected:
     virtual void inheritFacet();
 
     virtual void checkContent(const XMLCh* const content, bool asBase);
+
+    /*
+     **  Base64BinaryDatatypeValidator to overwrite
+     */
+    virtual void normalizeEnumeration();
 
 public:
 // -----------------------------------------------------------------------

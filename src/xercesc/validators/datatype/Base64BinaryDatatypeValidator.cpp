@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/24 23:18:34  peiyongz
+ * normalizeEnumeration() added to remove optional ws in Base64 data.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -175,6 +178,17 @@ void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content)
 int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content) const
 {
     return Base64::getDataLength(content);
+}
+
+void Base64BinaryDatatypeValidator::normalizeEnumeration()
+{
+
+    int enumLength = getEnumeration()->size();
+    for ( int i=0; i < enumLength; i++)
+    {
+        XMLString::removeWS(getEnumeration()->elementAt(i));
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END
