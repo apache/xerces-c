@@ -18,11 +18,10 @@ Binding for DOM Level 3]</a></font></div>
 
 <div id="java-binding-h1" class="adiv1">
 <hr WIDTH="100%"></div>
-
-<p><br>This document contains the complete Apache Recommended C++ Language
-binding for the
-<a href="http://www.w3.org/TR/DOM-Level-2-Core/">Document
-Object Model Level 2.0 Core</a>, and for the <a href="http://www.w3.org/TR/DOM-Level-2-Traversal-Range/">Document
+This document contains the complete Apache Recommended C++ Language binding
+for the
+<a href="http://www.w3.org/TR/DOM-Level-2-Core/">Document Object
+Model Level 2.0 Core</a>, and for the <a href="http://www.w3.org/TR/DOM-Level-2-Traversal-Range/">Document
 Object Model Level 2.0 Traversal and Range</a>.&nbsp; Both are W3C Recommendation
 of November 13, 2000.
 <p>The definitions are divided into <a href="#A: Document Object Mode: Core">Core</a>,
@@ -82,6 +81,33 @@ are owned by implementation</li>
 </ol>
 </ol>
 
+<hr WIDTH="100%">
+<h2>
+<font size=+1>Change History</font></h2>
+
+<table BORDER >
+<tr>
+<td><b>Date</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>Xerces-C++ 2.0: July 23, 2002</td>
+
+<td>Created</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>Xerces-C++ 2.1: August 26, 2002</td>
+
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- add const modifier to DOMNodeList::getLength
+<br>- add const modifier to DOMNodeList::item</td>
+</tr>
+</table>
+
+<p>
 <hr WIDTH="100%">
 <h2>
 <a NAME="A: Document Object Mode: Core"></a><u><font color="#000000"><a href="#C++ Language Binding for DOM Level 2">A:
@@ -1158,8 +1184,8 @@ DOMNodeList</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>item(XMLSize_t index) const
-= 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>item(XMLSize_t index)
+const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -1169,7 +1195,8 @@ DOMNodeList</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>getLength() const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>getLength() const =
+0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>

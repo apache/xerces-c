@@ -81,6 +81,34 @@ are owned by implementation</li>
 
 <hr WIDTH="100%">
 <h2>
+<font size=+1>Change History</font></h2>
+
+<table BORDER >
+<tr>
+<td><b>Date</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>Xerces-C++ 2.0: July 23, 2002</td>
+
+<td>Created</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>Xerces-C++ 2.1: August 26, 2002</td>
+
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- add const modifier to DOMNode::lookupNamespacePrefix
+<br>- add const modifier to DOMNode::lookupNamespaceURI
+<br>- add const modifier to DOMNode::isDefaultNamespace</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h2>
 <a NAME="A: Document Object Mode: Core"></a><u><font color="#000000"><a href="#C++ Language Binding for DOM Level 3">A:
 Document Object Mode: Core</a></font></u></h2>
 
@@ -1649,8 +1677,8 @@ DOMNodeList</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>item(XMLSize_t index) const
-= 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>item(XMLSize_t index)
+const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -1660,7 +1688,8 @@ DOMNodeList</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>getLength() const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>getLength() const =
+0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3833,9 +3862,8 @@ a released object will lead to unexpected result.</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; virtual void&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 release() = 0;</font></font>
-<br><font face="Courier New,Courier"><font size=-1>};</font></font>
-<br>&nbsp;
-</div>
+<br><font face="Courier New,Courier"><font size=-1>};</font></font></div>
+
 <h3>
 <font color="#000000">DOMWriter.hpp:</font></h3>
 
@@ -4091,6 +4119,7 @@ long toShow) = 0;</font></font></td>
 2001 The Apache Software Foundation. All Rights Reserved.</font></font></i></td>
 </tr>
 </table>
+</div>
 </div>
 
 </body>
