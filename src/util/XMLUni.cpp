@@ -466,6 +466,89 @@ const XMLCh XMLUni::fgXMLString[] =
     chLatin_x, chLatin_m, chLatin_l, chNull
 };
 
+//xml{S}
+const XMLCh XMLUni::fgXMLStringSpace[] =
+{
+    chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
+};
+
+const XMLCh XMLUni::fgXMLStringHTab[] =
+{
+    chLatin_x, chLatin_m, chLatin_l, chHTab, chNull
+};
+
+const XMLCh XMLUni::fgXMLStringCR[] =
+{
+    chLatin_x, chLatin_m, chLatin_l, chCR, chNull
+};
+
+const XMLCh XMLUni::fgXMLStringLF[] =
+{
+    chLatin_x, chLatin_m, chLatin_l, chLF, chNull
+};
+
+//XML{S}
+const XMLCh XMLUni::fgXMLStringSpaceU[] =
+{
+    chLatin_X, chLatin_M, chLatin_L, chSpace, chNull
+};
+
+const XMLCh XMLUni::fgXMLStringHTabU[] =
+{
+    chLatin_X, chLatin_M, chLatin_L, chHTab, chNull
+};
+
+const XMLCh XMLUni::fgXMLStringCRU[] =
+{
+    chLatin_X, chLatin_M, chLatin_L, chCR, chNull
+};
+
+const XMLCh XMLUni::fgXMLStringLFU[] =
+{
+    chLatin_X, chLatin_M, chLatin_L, chLF, chNull
+};
+
+//<?xml{S}
+const XMLCh XMLUni::fgXMLDeclStringSpace[] =
+{
+    chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
+};
+
+const XMLCh XMLUni::fgXMLDeclStringHTab[] =
+{
+    chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chHTab, chNull
+};
+
+const XMLCh XMLUni::fgXMLDeclStringLF[] =
+{
+    chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chLF, chNull
+};
+
+const XMLCh XMLUni::fgXMLDeclStringCR[] =
+{
+    chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chCR, chNull
+};
+
+//<?XML{S}
+const XMLCh XMLUni::fgXMLDeclStringSpaceU[] =
+{
+    chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chSpace, chNull
+};
+
+const XMLCh XMLUni::fgXMLDeclStringHTabU[] =
+{
+    chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chHTab, chNull
+};
+
+const XMLCh XMLUni::fgXMLDeclStringLFU[] =
+{
+    chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chLF, chNull
+};
+
+const XMLCh XMLUni::fgXMLDeclStringCRU[] =
+{
+    chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chCR, chNull
+};
 
 const XMLCh XMLUni::fgXMLNSString[] =
 {

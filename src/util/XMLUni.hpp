@@ -156,6 +156,23 @@ public :
     static const XMLCh fgWin1252EncodingString[];
     static const XMLCh fgXMLChEncodingString[];
     static const XMLCh fgXMLString[];
+    static const XMLCh fgXMLStringSpace[];
+    static const XMLCh fgXMLStringHTab[];
+    static const XMLCh fgXMLStringCR[];
+    static const XMLCh fgXMLStringLF[];
+    static const XMLCh fgXMLStringSpaceU[];
+    static const XMLCh fgXMLStringHTabU[];
+    static const XMLCh fgXMLStringCRU[];
+    static const XMLCh fgXMLStringLFU[];
+    static const XMLCh fgXMLDeclStringSpace[];
+    static const XMLCh fgXMLDeclStringHTab[];
+    static const XMLCh fgXMLDeclStringLF[];
+    static const XMLCh fgXMLDeclStringCR[];
+    static const XMLCh fgXMLDeclStringSpaceU[];
+    static const XMLCh fgXMLDeclStringHTabU[];
+    static const XMLCh fgXMLDeclStringLFU[];
+    static const XMLCh fgXMLDeclStringCRU[];
+
     static const XMLCh fgXMLNSString[];
     static const XMLCh fgXMLNSColonString[];
     static const XMLCh fgXMLNSURIName[];

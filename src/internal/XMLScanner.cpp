@@ -3422,102 +3422,18 @@ bool XMLScanner::checkXMLDecl(bool startWithAngle) {
     // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+
     //
 
-    //xml{S}
-    const XMLCh XMLStringSpace[] =
-    {
-        chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
-    };
-
-    const XMLCh XMLStringHTab[] =
-    {
-        chLatin_x, chLatin_m, chLatin_l, chHTab, chNull
-    };
-
-    const XMLCh XMLStringCR[] =
-    {
-        chLatin_x, chLatin_m, chLatin_l, chCR, chNull
-    };
-
-    const XMLCh XMLStringLF[] =
-    {
-        chLatin_x, chLatin_m, chLatin_l, chLF, chNull
-    };
-
-    //XML{S}
-    const XMLCh XMLStringSpaceU[] =
-    {
-        chLatin_X, chLatin_M, chLatin_L, chSpace, chNull
-    };
-
-    const XMLCh XMLStringHTabU[] =
-    {
-        chLatin_X, chLatin_M, chLatin_L, chHTab, chNull
-    };
-
-    const XMLCh XMLStringCRU[] =
-    {
-        chLatin_X, chLatin_M, chLatin_L, chCR, chNull
-    };
-
-    const XMLCh XMLStringLFU[] =
-    {
-        chLatin_X, chLatin_M, chLatin_L, chLF, chNull
-    };
-
-    //<?xml{S}
-    const XMLCh XMLDeclStringSpace[] =
-    {
-        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chSpace, chNull
-    };
-
-    const XMLCh XMLDeclStringHTab[] =
-    {
-        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chHTab, chNull
-    };
-
-    const XMLCh XMLDeclStringLF[] =
-    {
-        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chLF, chNull
-    };
-
-    const XMLCh XMLDeclStringCR[] =
-    {
-        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chCR, chNull
-    };
-
-    //<?XML{S}
-    const XMLCh XMLDeclStringSpaceU[] =
-    {
-        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chSpace, chNull
-    };
-
-    const XMLCh XMLDeclStringHTabU[] =
-    {
-        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chHTab, chNull
-    };
-
-    const XMLCh XMLDeclStringLFU[] =
-    {
-        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chLF, chNull
-    };
-
-    const XMLCh XMLDeclStringCRU[] =
-    {
-        chOpenAngle, chQuestion, chLatin_X, chLatin_M, chLatin_L, chCR, chNull
-    };
-
     if (startWithAngle) {
-        if (fReaderMgr.skippedString(XMLDeclStringSpace)
-           || fReaderMgr.skippedString(XMLDeclStringHTab)
-           || fReaderMgr.skippedString(XMLDeclStringLF)
-           || fReaderMgr.skippedString(XMLDeclStringCR))
+        if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpace)
+           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTab)
+           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLF)
+           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCR))
         {
             return true;
         }
-        else if (fReaderMgr.skippedString(XMLDeclStringSpaceU)
-           || fReaderMgr.skippedString(XMLDeclStringHTabU)
-           || fReaderMgr.skippedString(XMLDeclStringLFU)
-           || fReaderMgr.skippedString(XMLDeclStringCRU))
+        else if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpaceU)
+           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTabU)
+           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLFU)
+           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCRU))
         {
             //
             //  Just in case, check for upper case. If found, issue
@@ -3528,17 +3444,17 @@ bool XMLScanner::checkXMLDecl(bool startWithAngle) {
         }
     }
     else {
-        if (fReaderMgr.skippedString(XMLStringSpace)
-           || fReaderMgr.skippedString(XMLStringHTab)
-           || fReaderMgr.skippedString(XMLStringLF)
-           || fReaderMgr.skippedString(XMLStringCR))
+        if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpace)
+           || fReaderMgr.skippedString(XMLUni::fgXMLStringHTab)
+           || fReaderMgr.skippedString(XMLUni::fgXMLStringLF)
+           || fReaderMgr.skippedString(XMLUni::fgXMLStringCR))
         {
             return true;
         }
-        else if (fReaderMgr.skippedString(XMLStringSpaceU)
-           || fReaderMgr.skippedString(XMLStringHTabU)
-           || fReaderMgr.skippedString(XMLStringLFU)
-           || fReaderMgr.skippedString(XMLStringCRU))
+        else if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpaceU)
+           || fReaderMgr.skippedString(XMLUni::fgXMLStringHTabU)
+           || fReaderMgr.skippedString(XMLUni::fgXMLStringLFU)
+           || fReaderMgr.skippedString(XMLUni::fgXMLStringCRU))
         {
             //
             //  Just in case, check for upper case. If found, issue
