@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/15 19:44:02  roddey
+ * Now implements the new transcoding abstractions, with separate interface
+ * classes for XML transcoders and local code page transcoders.
+ *
  * Revision 1.2  1999/12/01 18:54:26  roddey
  * Small syntactical change to make it compile under Borland's compiler.
  * It does not make it worse under other compilers, so why not. Basically
@@ -111,26 +115,22 @@ bool Win32TransService::isSpace(const XMLCh toCheck) const
     return (iswspace(toCheck) != 0);
 }
 
-XMLTranscoder* Win32TransService::makeNewDefTranscoder()
+XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder()
 {
-    // Just allocate a new transcoder of our type
-    return new Win32Transcoder;
+    // Just allocate a new LCP transcoder of our type
+    return new Win32LCPTranscoder;
 }
 
 XMLTranscoder*
-Win32TransService::makeNewTranscoderFor(const   XMLCh* const            encodingName
+Win32TransService::makeNewTranscoderFor(const   XMLCh* const
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            )
+                                        , const unsigned int)
 {
     //
-    //  NOTE: We don't use the block size here
-    //
-
-    //
-    //  This is a minimalist transcoding service, that only supports a local
-    //  default transcoder. All named encodings return zero as a failure,
-    //  which means that only the intrinsic encodings supported by the parser
-    //  itself will work for XML data.
+    //  This is a minimalist transcoding service, that only supports LCP
+    //  type transcoders. No support for arbitrary encodings is supported,
+    //  so only those supported intrinsically in the parser are available
+    //  for internalizing XML source.
     //
     resValue = XMLTransService::UnsupportedEncoding;
     return 0;
@@ -138,11 +138,13 @@ Win32TransService::makeNewTranscoderFor(const   XMLCh* const            encoding
 
 
 
-
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-Win32Transcoder::Win32Transcoder()
+Win32Transcoder::Win32Transcoder(const  XMLCh* const encodingName
+                                , const unsigned int blockSize) :
+
+    XMLTranscoder(encodingName, blockSize)
 {
 }
 
@@ -154,7 +156,53 @@ Win32Transcoder::~Win32Transcoder()
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int Win32Transcoder::calcRequiredSize(const char* const srcText)
+
+// This will never get called because objects of this type are never created
+bool Win32Transcoder::supportsSrcOfs() const
+{
+    return false;
+}
+
+
+// This will never get called because objects of this type are never created
+XMLCh Win32Transcoder::transcodeOne(const   XMLByte* const
+                                    , const unsigned int
+                                    ,       unsigned int&)
+{
+    return 0;
+}
+
+
+// This will never get called because objects of this type are never created
+unsigned int
+Win32Transcoder::transcodeXML(  const   XMLByte* const
+                                , const unsigned int
+                                ,       XMLCh* const
+                                , const unsigned int
+                                ,       unsigned int&
+                                ,       unsigned char* const)
+{
+    return 0;
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  Win32LCPTranscoder: Constructors and Destructor
+// ---------------------------------------------------------------------------
+Win32LCPTranscoder::Win32LCPTranscoder()
+{
+}
+
+Win32LCPTranscoder::~Win32LCPTranscoder()
+{
+}
+
+
+// ---------------------------------------------------------------------------
+//  Win32LCPTranscoder: Implementation of the virtual transcoder interface
+// ---------------------------------------------------------------------------
+unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText)
 {
     if (!srcText)
         return 0;
@@ -166,7 +214,7 @@ unsigned int Win32Transcoder::calcRequiredSize(const char* const srcText)
 }
 
 
-unsigned int Win32Transcoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 {
     if (!srcText)
         return 0;
@@ -178,25 +226,7 @@ unsigned int Win32Transcoder::calcRequiredSize(const XMLCh* const srcText)
 }
 
 
-XMLCh Win32Transcoder::transcodeOne(const   char* const     srcData
-                                    , const unsigned int    srcBytes
-                                    ,       unsigned int&   bytesEaten)
-{
-    XMLCh toFill;
-    size_t eaten = ::mbtowc(&toFill, srcData, srcBytes);
-    if (eaten == size_t(-1))
-    {
-        bytesEaten = 0;
-        return 0;
-    }
-
-    // Return the bytes we ate and the resulting char
-    bytesEaten = eaten;
-    return toFill;
-}
-
-
-char* Win32Transcoder::transcode(const XMLCh* const toTranscode)
+char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
 {
     if (!toTranscode)
         return 0;
@@ -209,8 +239,12 @@ char* Win32Transcoder::transcode(const XMLCh* const toTranscode)
         if (neededLen == (unsigned int)-1)
             return 0;
 
+        // Allocate a buffer of that size plus one for the null and transcode
         retVal = new char[neededLen + 1];
         ::wcstombs(retVal, toTranscode, neededLen + 1);
+
+        // And cap it off anyway just to make sure
+        retVal[neededLen] = 0;
     }
      else
     {
@@ -221,34 +255,7 @@ char* Win32Transcoder::transcode(const XMLCh* const toTranscode)
 }
 
 
-bool Win32Transcoder::transcode(const   XMLCh* const    toTranscode
-                                ,       char* const     toFill
-                                , const unsigned int    maxBytes)
-{
-    // Watch for a couple of pyscho corner cases
-    if (!toTranscode || !maxBytes)
-    {
-        toFill[0] = 0;
-        return true;
-    }
-
-    if (!*toTranscode)
-    {
-        toFill[0] = 0;
-        return true;
-    }
-
-    // Ok, go ahead and try the transcoding. If it fails, then 
-    if (::wcstombs(toFill, toTranscode, maxBytes + 1) == size_t(-1))
-        return false;
-
-    // Cap it off just in case
-    toFill[maxBytes] = 0;
-    return true;
-}
-
-
-XMLCh* Win32Transcoder::transcode(const char* const toTranscode)
+XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
 {
     if (!toTranscode)
         return 0;
@@ -256,12 +263,17 @@ XMLCh* Win32Transcoder::transcode(const char* const toTranscode)
     XMLCh* retVal = 0;
     if (toTranscode)
     {
-        const unsigned int len = ::mbstowcs(0, toTranscode, 0);
-        if (len == (unsigned int)-1)
+        // Calculate the buffer size required
+        const unsigned int neededLen = ::mbstowcs(0, toTranscode, 0);
+        if (neededLen == (unsigned int)-1)
             return 0;
 
-        retVal = new XMLCh[len + 1];
-        ::mbstowcs(retVal, toTranscode, len + 1);
+        // Allocate a buffer of that size plus one for the null and transcode
+        retVal = new XMLCh[neededLen + 1];
+        ::mbstowcs(retVal, toTranscode, neededLen + 1);
+
+        // Cap it off just to make sure. We are so paranoid!
+        retVal[neededLen] = 0;
     }
      else
     {
@@ -272,9 +284,9 @@ XMLCh* Win32Transcoder::transcode(const char* const toTranscode)
 }
 
 
-bool Win32Transcoder::transcode(const   char* const     toTranscode
-                                ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars)
+bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
+                                    ,       XMLCh* const    toFill
+                                    , const unsigned int    maxChars)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -289,44 +301,35 @@ bool Win32Transcoder::transcode(const   char* const     toTranscode
         return true;
     }
 
-    // Looks ok so lets transcode it
+    // This one has a fixed size output, so try it and if it fails it fails
     if (::mbstowcs(toFill, toTranscode, maxChars + 1) == size_t(-1))
         return false;
     return true;
 }
 
 
-unsigned int
-Win32Transcoder::transcodeXML(  const   char* const             srcData
-                                , const unsigned int            srcCount
-                                ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten)
+bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
+                                    ,       char* const     toFill
+                                    , const unsigned int    maxBytes)
 {
-    //
-    //  For this one, because we have to maintain the offset table, we have
-    //  to do them one char at a time until we run out of source data.
-    //
-    unsigned int countIn = 0;
-    unsigned int countOut = 0;
-    while (countOut < maxChars)
+    // Watch for a couple of pyscho corner cases
+    if (!toTranscode || !maxBytes)
     {
-        const int bytesEaten = ::mbtowc
-        (
-            &toFill[countOut]
-            , &srcData[countIn]
-            , srcCount - countIn
-        );
-
-        // We are done, so break out
-        if (bytesEaten == -1)
-            break;
-
-        countIn += (unsigned int)bytesEaten;
-        countOut++;
+        toFill[0] = 0;
+        return true;
     }
 
-    // Give back the counts of eaten and transcoded
-    bytesEaten = countIn;
-    return countOut;
+    if (!*toTranscode)
+    {
+        toFill[0] = 0;
+        return true;
+    }
+
+    // This one has a fixed size output, so try it and if it fails it fails
+    if (::wcstombs(toFill, toTranscode, maxBytes + 1) == size_t(-1))
+        return false;
+
+    // Cap it off just in case
+    toFill[maxBytes] = 0;
+    return true;
 }

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  1999/12/15 19:43:45  roddey
+ * Now implements the new transcoding abstractions, with separate interface
+ * classes for XML transcoders and local code page transcoders.
+ *
  * Revision 1.4  1999/12/07 23:08:41  roddey
  * Add in code to test for some control characters and report them as whitespace.
  * ICU is not doing this currently, so we need to do it until they get that fixed.
@@ -190,7 +194,7 @@ bool ICUTransService::isSpace(const XMLCh toCheck) const
 }
 
 
-XMLTranscoder* ICUTransService::makeNewDefTranscoder()
+XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder()
 {
     //
     //  Try to create a default converter. If it fails, return a null pointer
@@ -202,8 +206,8 @@ XMLTranscoder* ICUTransService::makeNewDefTranscoder()
     if (!converter)
         return 0;
 
-    // That went ok, so create an ICU transcoder wrapper and return it
-    return new ICUTranscoder(converter, 0);
+    // That went ok, so create an ICU LCP transcoder wrapper and return it
+    return new ICULCPTranscoder(converter);
 }
 
 
@@ -219,7 +223,7 @@ ICUTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
         resValue = XMLTransService::UnsupportedEncoding;
         return 0;
     }
-    return new ICUTranscoder(converter, blockSize);
+    return new ICUTranscoder(encodingName, converter, blockSize);
 }
 
 
@@ -228,19 +232,26 @@ ICUTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
 // ---------------------------------------------------------------------------
 //  ICUTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ICUTranscoder::ICUTranscoder(       UConverter* const   toAdopt
+ICUTranscoder::ICUTranscoder(const  XMLCh* const        encodingName
+                            ,       UConverter* const   toAdopt
                             , const unsigned int        blockSize) :
-    fCharOfsBuf(0)
+
+    XMLTranscoder(encodingName, blockSize)
     , fConverter(toAdopt)
+    , fFixed(false)
+    , fSrcOffsets(0)
 {
-    // There won't be a block size if this is for a default transcoder
+    // If there is a block size, then allocate our source offset array
     if (blockSize)
-        fCharOfsBuf = new long[blockSize];
+        fSrcOffsets = new long[blockSize];
+
+    // Remember if its a fixed size encoding
+    fFixed = (ucnv_getMaxCharSize(fConverter) == ucnv_getMinCharSize(fConverter));
 }
 
 ICUTranscoder::~ICUTranscoder()
 {
-    delete [] fCharOfsBuf;
+    delete [] fSrcOffsets;
 
     // If there is a converter, ask ICU to clean it up
     if (fConverter)
@@ -255,56 +266,14 @@ ICUTranscoder::~ICUTranscoder()
 // ---------------------------------------------------------------------------
 //  ICUTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int ICUTranscoder::calcRequiredSize(const XMLCh* const srcText)
+bool ICUTranscoder::supportsSrcOfs() const
 {
-    if (!srcText)
-        return 0;
-
-    XMLMutexLock lockConverter(&fMutex);
-
-    UErrorCode err = U_ZERO_ERROR;
-    const int32_t targetCap = ucnv_fromUChars
-    (
-        fConverter
-        , 0
-        , 0
-        , srcText
-        , &err
-    );
-
-    if (err != U_BUFFER_OVERFLOW_ERROR)
-        return 0;
-
-    return (unsigned int)targetCap;
-}
-
-unsigned int ICUTranscoder::calcRequiredSize(const char* const srcText)
-{
-    if (!srcText)
-        return 0;
-
-    XMLMutexLock lockConverter(&fMutex);
-
-    UErrorCode err = U_ZERO_ERROR;
-    const int32_t targetCap = ucnv_toUChars
-    (
-        fConverter
-        , 0
-        , 0
-        , srcText
-        , strlen(srcText)
-        , &err
-    );
-
-    if (err != U_BUFFER_OVERFLOW_ERROR)
-        return 0;
-
-    // Subtract one since it includes the terminator space
-    return (unsigned int)(targetCap - 1);
+    // This implementation supports source offset information
+    return true;
 }
 
 
-XMLCh ICUTranscoder::transcodeOne(  const   char* const     srcData
+XMLCh ICUTranscoder::transcodeOne(  const   XMLByte* const  srcData
                                     , const unsigned int    srcBytes
                                     ,       unsigned int&   bytesEaten)
 {
@@ -312,15 +281,13 @@ XMLCh ICUTranscoder::transcodeOne(  const   char* const     srcData
     if (!srcBytes)
         return 0;
 
-    XMLMutexLock lockConverter(&fMutex);
-
     UErrorCode err = U_ZERO_ERROR;
-    const char* startSrc = srcData;
+    const XMLByte* startSrc = srcData;
     const XMLCh chRet = ucnv_getNextUChar
     (
         fConverter
-        , &startSrc
-        , (srcData + srcBytes) - 1
+        , (const char**)&startSrc
+        , (const char*)((srcData + srcBytes) - 1)
         , &err
     );
 
@@ -334,7 +301,174 @@ XMLCh ICUTranscoder::transcodeOne(  const   char* const     srcData
 }
 
 
-char* ICUTranscoder::transcode(const XMLCh* const toTranscode)
+unsigned int
+ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
+                            , const unsigned int            srcCount
+                            ,       XMLCh* const            toFill
+                            , const unsigned int            maxChars
+                            ,       unsigned int&           bytesEaten
+                            ,       unsigned char* const    charSizes)
+{
+    // If debugging, insure the block size is legal
+    #if defined(XML4C_DEBUG)
+    checkBlockSize(maxChars);
+    #endif
+
+    // Set up pointers to the source and destination buffers.
+    UChar*          startTarget = toFill;
+    const XMLByte*  startSrc = srcData;
+    const XMLByte*  endSrc = srcData + srcCount;
+
+    //
+    //  Transoode the buffer.  Buffer overflow errors are normal, occuring
+    //  when the raw input buffer holds more characters than will fit in
+    //  the Unicode output buffer.
+    //
+    UErrorCode  err = U_ZERO_ERROR;
+    ucnv_toUnicode
+    (
+        fConverter
+        , &startTarget
+        , toFill + maxChars
+        , (const char**)&startSrc
+        , (const char*)endSrc
+        , (fFixed ? 0 : fSrcOffsets)
+        , false
+        , &err
+    );
+
+    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
+        ThrowXML(TranscodingException, XML4CExcepts::Trans_CouldNotXCodeXMLData);
+
+    // Calculate the bytes eaten and store in caller's param
+    bytesEaten = startSrc - srcData;
+
+    // And the characters decoded
+    const unsigned int charsDecoded = startTarget - toFill;
+
+    //
+    //  Translate the array of char offsets into an array of character
+    //  sizes, which is what the transcoder interface semantics requires.
+    //  If its fixed, then we can optimize it.
+    //
+    if (fFixed)
+    {
+        const unsigned char fillSize = (unsigned char)ucnv_getMaxCharSize(fConverter);;
+        memset(charSizes, fillSize, maxChars);
+    }
+     else
+    {
+        //
+        //  We have to convert the series of offsets into a series of
+        //  sizes. If just one char was decoded, then its the total bytes
+        //  eaten. Otherwise, do a loop and subtract out each element from
+        //  its previous element.
+        //
+        if (charsDecoded == 1)
+        {
+            charSizes[0] = (unsigned char)bytesEaten;
+        }
+         else
+        {
+            // <TBD> Does ICU return an extra element to allow us to figure
+            //  out the last char size? It better!!
+            unsigned int index;
+            for (index = 0; index < charsDecoded; index++)
+            {
+                charSizes[index] = (unsigned char)(fSrcOffsets[index + 1]
+                                                    - fSrcOffsets[index]);
+            }
+        }
+    }
+
+    // Return the chars we put into the target buffer
+    return charsDecoded;
+}
+
+
+
+
+// ---------------------------------------------------------------------------
+//  ICULCPTranscoder: Constructors and Destructor
+// ---------------------------------------------------------------------------
+ICULCPTranscoder::ICULCPTranscoder(UConverter* const toAdopt) :
+
+    fConverter(toAdopt)
+{
+}
+
+ICULCPTranscoder::~ICULCPTranscoder()
+{
+    // If there is a converter, ask ICU to clean it up
+    if (fConverter)
+    {
+        // <TBD> Does this actually delete the structure???
+        ucnv_close(fConverter);
+        fConverter = 0;
+    }
+}
+
+
+// ---------------------------------------------------------------------------
+//  ICULCPTranscoder: Constructors and Destructor
+// ---------------------------------------------------------------------------
+unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+{
+    if (!srcText)
+        return 0;
+
+    // Lock and attempt the calculation
+    UErrorCode err = U_ZERO_ERROR;
+    int32_t targetCap;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , 0
+            , 0
+            , srcText
+            , &err
+        );
+    }
+
+    if (err != U_BUFFER_OVERFLOW_ERROR)
+        return 0;
+
+    return (unsigned int)targetCap;
+}
+
+unsigned int ICULCPTranscoder::calcRequiredSize(const char* const srcText)
+{
+    if (!srcText)
+        return 0;
+
+    int32_t targetCap;
+    UErrorCode err = U_ZERO_ERROR;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+
+        targetCap = ucnv_toUChars
+        (
+            fConverter
+            , 0
+            , 0
+            , srcText
+            , strlen(srcText)
+            , &err
+        );
+    }
+
+    if (err != U_BUFFER_OVERFLOW_ERROR)
+        return 0;
+
+    // Subtract one since it includes the terminator space
+    return (unsigned int)(targetCap - 1);
+}
+
+
+char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
 {
     char* retBuf = 0;
 
@@ -349,24 +483,28 @@ char* ICUTranscoder::transcode(const XMLCh* const toTranscode)
         return retBuf;
     }
 
-    XMLMutexLock lockConverter(&fMutex);
-
     // Caculate a return buffer size not too big, but less likely to overflow
     int32_t targetLen = (int32_t)(u_strlen(toTranscode) * 1.25);
 
     // Allocate the return buffer
     retBuf = new char[targetLen + 1];
 
-    //Convert the Unicode string to char* using Intl stuff
+    // Lock now while we call the converter.
     UErrorCode err = U_ZERO_ERROR;
-    int32_t targetCap = ucnv_fromUChars
-    (
-        fConverter
-        , retBuf
-        , targetLen + 1
-        , toTranscode
-        , &err
-    );
+    int32_t targetCap;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+
+        //Convert the Unicode string to char*
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , retBuf
+            , targetLen + 1
+            , toTranscode
+            , &err
+        );
+    }
 
     // If targetLen is not enough then buffer overflow might occur
     if (err == U_BUFFER_OVERFLOW_ERROR)
@@ -375,7 +513,17 @@ char* ICUTranscoder::transcode(const XMLCh* const toTranscode)
         err = U_ZERO_ERROR;
         delete [] retBuf;
         retBuf = new char[targetCap];
-        targetCap = ucnv_fromUChars(fConverter, retBuf, targetCap, toTranscode, &err);
+
+        // Lock again before we retry
+        XMLMutexLock lockConverter(&fMutex);
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , retBuf
+            , targetCap
+            , toTranscode
+            , &err
+        );
     }
 
     if (U_FAILURE(err))
@@ -389,38 +537,7 @@ char* ICUTranscoder::transcode(const XMLCh* const toTranscode)
     return retBuf;
 }
 
-
-bool ICUTranscoder::transcode(  const   XMLCh* const    toTranscode
-                                ,       char* const     toFill
-                                , const unsigned int    maxChars)
-{
-    // Watch for a few psycho corner cases
-    if (!toTranscode || !maxChars)
-    {
-        toFill[0] = 0;
-        return true;
-    }
-
-    if (!*toTranscode)
-    {
-        toFill[0] = 0;
-        return true;
-    }
-
-    XMLMutexLock lockConverter(&fMutex);
-
-    UErrorCode err = U_ZERO_ERROR;
-    int32_t targetCap;
-    targetCap = ucnv_fromUChars(fConverter, toFill, maxChars + 1, toTranscode, &err);
-
-    if (U_FAILURE(err))
-        return false;
-
-    return true;
-}
-
-
-XMLCh* ICUTranscoder::transcode(const char* const toTranscode)
+XMLCh* ICULCPTranscoder::transcode(const char* const toTranscode)
 {
     // Watch for a few pyscho corner cases
     if (!toTranscode)
@@ -434,8 +551,6 @@ XMLCh* ICUTranscoder::transcode(const char* const toTranscode)
         return retVal;
     }
 
-    XMLMutexLock lockConverter(&fMutex);
-
     //
     //  Get the length of the string to transcode. The Unicode string will
     //  almost always be no more chars than were in the source, so this is
@@ -443,46 +558,55 @@ XMLCh* ICUTranscoder::transcode(const char* const toTranscode)
     //
     const int32_t srcLen = (int32_t)strlen(toTranscode);
 
-    //
-    //  Here we don't know what the target length will be so use 0 and expect
-    //  an U_BUFFER_OVERFLOW_ERROR in which case it'd get resolved by the
-    //  correct capacity value.
-    //
+    // Now lock while we do these calculations
     UErrorCode err = U_ZERO_ERROR;
-    int32_t targetCap;
-    targetCap = ucnv_toUChars
-    (
-        fConverter
-        , 0
-        , 0
-        , toTranscode
-        , srcLen
-        , &err
-    );
+    {
+        XMLMutexLock lockConverter(&fMutex);
 
-    if (err != U_BUFFER_OVERFLOW_ERROR)
-        return 0;
+        //
+        //  Here we don't know what the target length will be so use 0 and
+        //  expect an U_BUFFER_OVERFLOW_ERROR in which case it'd get resolved
+        //  by the correct capacity value.
+        //
+        int32_t targetCap;
+        targetCap = ucnv_toUChars
+        (
+            fConverter
+            , 0
+            , 0
+            , toTranscode
+            , srcLen
+            , &err
+        );
 
-    err = U_ZERO_ERROR;
-    retVal = new XMLCh[targetCap];
-    ucnv_toUChars
-    (
-        fConverter
-        , retVal
-        , targetCap
-        , toTranscode
-        , srcLen
-        , &err
-    );
+        if (err != U_BUFFER_OVERFLOW_ERROR)
+            return 0;
+
+        err = U_ZERO_ERROR;
+        retVal = new XMLCh[targetCap];
+        ucnv_toUChars
+        (
+            fConverter
+            , retVal
+            , targetCap
+            , toTranscode
+            , srcLen
+            , &err
+        );
+    }
 
     if (U_FAILURE(err))
+    {
+        // Clean up if we got anything allocated
+        delete [] retVal;
         return 0;
+    }
 
     return retVal;
 }
 
 
-bool ICUTranscoder::transcode(  const   char* const     toTranscode
+bool ICULCPTranscoder::transcode(const  char* const     toTranscode
                                 ,       XMLCh* const    toFill
                                 , const unsigned int    maxChars)
 {
@@ -499,73 +623,64 @@ bool ICUTranscoder::transcode(  const   char* const     toTranscode
         return true;
     }
 
-    XMLMutexLock lockConverter(&fMutex);
-
+    // Lock and do the transcode operation
     UErrorCode err = U_ZERO_ERROR;
     const int32_t srcLen = (int32_t)strlen(toTranscode);
-
-    ucnv_toUChars
-    (
-        fConverter
-        , toFill
-        , maxChars + 1
-        , toTranscode
-        , srcLen
-        , &err
-    );
+    {
+        XMLMutexLock lockConverter(&fMutex);
+        ucnv_toUChars
+        (
+            fConverter
+            , toFill
+            , maxChars + 1
+            , toTranscode
+            , srcLen
+            , &err
+        );
+    }
 
     if (U_FAILURE(err))
         return false;
+
     return true;
 }
 
 
-unsigned int
-ICUTranscoder::transcodeXML(const   char* const             srcData
-                            , const unsigned int            srcCount
-                            ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars
-                            ,       unsigned int&           bytesEaten)
+bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
+                                    ,       char* const     toFill
+                                    , const unsigned int    maxChars)
 {
-    //
-    //  If the input encoding uses fixed size characters, we can use a
-    //  simpler, faster approach to computing the character sizes to be
-    //  returned in the charSizes array.
-    //
-    const int   maxCharSize = ucnv_getMaxCharSize(fConverter);
-    const int   minCharSize = ucnv_getMinCharSize(fConverter);
+    // Watch for a few psycho corner cases
+    if (!toTranscode || !maxChars)
+    {
+        toFill[0] = 0;
+        return true;
+    }
 
-    //
-    //  Set up pointers to the source and destination buffers.
-    //  
-    UChar*          startTarget = toFill;
-    const char*     startSrc = srcData;
-    const char*     endSrc = srcData + srcCount;
+    if (!*toTranscode)
+    {
+        toFill[0] = 0;
+        return true;
+    }
 
-    //
-    //  Transoode the buffer.  Buffer overflow errors are normal, occuring
-    //  when the raw input buffer holds more characters than will fit
-    //  in the Unicode output buffer.
-    //
-    UErrorCode  err = U_ZERO_ERROR;
-    ucnv_toUnicode
-    (
-        fConverter
-        , &startTarget
-        , toFill + maxChars
-        , &startSrc
-        , endSrc
-        , 0
-        , false
-        , &err
-    );
 
-    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
-        ThrowXML(TranscodingException, XML4CExcepts::Trans_CouldNotXCodeXMLData);
+    UErrorCode err = U_ZERO_ERROR;
+    int32_t targetCap;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , toFill
+            , maxChars + 1
+            , toTranscode
+            , &err
+        );
+    }
 
-    // Calculate the bytes eaten and store in caller's param
-    bytesEaten = startSrc - srcData;
+    if (U_FAILURE(err))
+        return false;
 
-    // Return the chars we put into the target buffer
-    return  startTarget - toFill;
+    toFill[targetCap] = 0;
+    return true;
 }

@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:06  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:44:02  roddey
+ * Now implements the new transcoding abstractions, with separate interface
+ * classes for XML transcoders and local code page transcoders.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:06  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:35  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -97,7 +101,7 @@ public :
 
     virtual bool isSpace(const XMLCh toCheck) const;
 
-    virtual XMLTranscoder* makeNewDefTranscoder();
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder();
 
     virtual XMLTranscoder* makeNewTranscoderFor
     (
@@ -117,15 +121,57 @@ private :
 
 
 
-
 class XMLUTIL_EXPORT Win32Transcoder : public XMLTranscoder
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    Win32Transcoder();
+    Win32Transcoder(const XMLCh* const encodingName, const unsigned int blockSize);
     ~Win32Transcoder();
+
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the virtual transcoder interface
+    // -----------------------------------------------------------------------
+    virtual bool supportsSrcOfs() const;
+
+    virtual XMLCh transcodeOne
+    (
+        const   XMLByte* const  srcData
+        , const unsigned int    srcBytes
+        ,       unsigned int&   bytesEaten
+    );
+
+    virtual unsigned int transcodeXML
+    (
+        const   XMLByte* const          srcData
+        , const unsigned int            srcCount
+        ,       XMLCh* const            toFill
+        , const unsigned int            maxChars
+        ,       unsigned int&           bytesEaten
+        ,       unsigned char* const    charSizes
+    );
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    Win32Transcoder(const Win32Transcoder&);
+    void operator=(const Win32Transcoder&);
+};
+
+
+
+class XMLUTIL_EXPORT Win32LCPTranscoder : public XMLLCPTranscoder
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    Win32LCPTranscoder();
+    ~Win32LCPTranscoder();
 
 
     // -----------------------------------------------------------------------
@@ -135,21 +181,7 @@ public :
 
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
 
-    virtual XMLCh transcodeOne
-    (
-        const   char* const     srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
     virtual char* transcode(const XMLCh* const toTranscode);
-
-    virtual bool transcode
-    (
-        const   XMLCh* const    toTranscode
-        ,       char* const     toFill
-        , const unsigned int    maxBytes
-    );
 
     virtual XMLCh* transcode(const char* const toTranscode);
 
@@ -160,13 +192,11 @@ public :
         , const unsigned int    maxChars
     );
 
-    virtual unsigned int transcodeXML
+    virtual bool transcode
     (
-        const   char* const             srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
+        const   XMLCh* const    toTranscode
+        ,       char* const     toFill
+        , const unsigned int    maxChars
     );
 
 
@@ -174,8 +204,8 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    Win32Transcoder(const Win32Transcoder&);
-    void operator=(const Win32Transcoder&);
+    Win32LCPTranscoder(const Win32LCPTranscoder&);
+    void operator=(const Win32LCPTranscoder&);
 };
 
 #endif

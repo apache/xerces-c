@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:08  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:43:45  roddey
+ * Now implements the new transcoding abstractions, with separate interface
+ * classes for XML transcoders and local code page transcoders.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:08  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:34  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -106,7 +110,7 @@ public :
 
     virtual bool isSpace(const XMLCh toCheck) const;
 
-    virtual XMLTranscoder* makeNewDefTranscoder();
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder();
 
     virtual XMLTranscoder* makeNewTranscoderFor
     (
@@ -132,49 +136,35 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ICUTranscoder(UConverter* const toAdopt, const unsigned int blockSize);
+    ICUTranscoder
+    (
+        const   XMLCh* const        encodingName
+        ,       UConverter* const   toAdopt
+        , const unsigned int        blockSize
+    );
     ~ICUTranscoder();
 
 
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
-    virtual unsigned int calcRequiredSize(const char* const srcText);
-
-    virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
+    virtual bool supportsSrcOfs() const;
 
     virtual XMLCh transcodeOne
     (
-        const   char* const     srcData
+        const   XMLByte* const  srcData
         , const unsigned int    srcBytes
         ,       unsigned int&   bytesEaten
     );
 
-    virtual char* transcode(const XMLCh* const toTranscode);
-
-    virtual bool transcode
-    (
-        const   XMLCh* const    toTranscode
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-    );
-
-    virtual XMLCh* transcode(const char* const toTranscode);
-
-    virtual bool transcode
-    (
-        const   char* const             toTranscode
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-    );
-
     virtual unsigned int transcodeXML
     (
-        const   char* const             srcData
+        const   XMLByte* const          srcData
         , const unsigned int            srcCount
         ,       XMLCh* const            toFill
         , const unsigned int            maxChars
         ,       unsigned int&           bytesEaten
+        ,       unsigned char* const    charSizes
     );
 
 
@@ -190,12 +180,74 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fCharOfsBuf
-    //      When we do the XML transcode call, the ICU stuff takes an array
-    //      of ints that it fills with the size of each MB char as it xlats
-    //      it. Its converted to another form for the caller, but this is used
-    //      to get it from ICU. We don't want allocate it over and over so its
-    //      done during ctor and left around.
+    //  fConverter
+    //      This is a pointer to the ICU converter that this transcoder
+    //      uses.
+    //
+    //  fFixed
+    //      This is set to true if the encoding is a fixed size one. This
+    //      can be used to optimize some operations.
+    //
+    //  fSrcOffsets
+    //      This is an array of longs, which are allocated to the size of
+    //      the trancoding block (if any) indicated in the ctor. It is used
+    //      to get the character offsets from ICU, which are then translated
+    //      into an array of char sizes for return.
+    // -----------------------------------------------------------------------
+    UConverter*     fConverter;
+    bool            fFixed;
+    long*           fSrcOffsets;
+};
+
+
+class XMLUTIL_EXPORT ICULCPTranscoder : public XMLLCPTranscoder
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    ICULCPTranscoder(UConverter* const toAdopt);
+    ~ICULCPTranscoder();
+
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the virtual transcoder interface
+    // -----------------------------------------------------------------------
+    virtual unsigned int calcRequiredSize(const char* const srcText);
+
+    virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
+
+    virtual char* transcode(const XMLCh* const toTranscode);
+
+    virtual XMLCh* transcode(const char* const toTranscode);
+
+    virtual bool transcode
+    (
+        const   char* const     toTranscode
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+    );
+
+    virtual bool transcode
+    (
+        const   XMLCh* const    toTranscode
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+    );
+
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    ICULCPTranscoder();
+    ICULCPTranscoder(const ICULCPTranscoder&);
+    void operator=(const ICULCPTranscoder&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private data members
     //
     //  fConverter
     //      This is a pointer to the ICU converter that this transcoder
@@ -204,7 +256,6 @@ private :
     //  fMutex
     //      We have to synchronize threaded calls to the converter.
     // -----------------------------------------------------------------------
-    long*           fCharOfsBuf;
     UConverter*     fConverter;
     XMLMutex        fMutex;
 };
