@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/19 15:09:47  knoaman
+ * PSVI: process 'final' information
+ *
  * Revision 1.9  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -134,6 +137,16 @@ XSComplexTypeDefinition::XSComplexTypeDefinition
 
         if (blockset & SchemaSymbols::XSD_RESTRICTION)
             fProhibitedSubstitution |= XSConstants::DERIVATION_RESTRICTION;
+    }
+
+    int finalSet = fComplexTypeInfo->getFinalSet();
+    if (finalSet)
+    {
+        if (finalSet & SchemaSymbols::XSD_EXTENSION)
+            fFinal |= XSConstants::DERIVATION_EXTENSION;
+
+        if (finalSet & SchemaSymbols::XSD_RESTRICTION)
+            fFinal |= XSConstants::DERIVATION_RESTRICTION;
     }
 
     if (headAnnot)
