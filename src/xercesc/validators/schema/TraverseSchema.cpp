@@ -5064,7 +5064,6 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     int                  saveScope = fCurrentScope;
     unsigned int         uriId = fURIStringPool->addOrFind(nameURI);
-    bool                 wasAdded = false;
 
     if (!XMLString::equals(nameURI, fTargetNSURIString)) {
 
@@ -5075,8 +5074,14 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
 
             noErrorDetected = false;
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, nameURI);
-            return (SchemaElementDecl*) fSchemaGrammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                     0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
+            SchemaElementDecl *retVal = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(uriId, localPart, 
+                                                     0, Grammar::TOP_LEVEL_SCOPE);
+            // in a manner of speaking, we're lying to the grammar here;
+            // the element really wasn't declared, but we need the decl to act
+            // as a placeholder, so, in a way, it is declared for us
+            return (retVal != 0?retVal:
+                ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                     0, Grammar::TOP_LEVEL_SCOPE)));
         }
 
         Grammar* grammar = fGrammarResolver->getGrammar(nameURI);
@@ -5089,8 +5094,14 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
 
             noErrorDetected = false;
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::GrammarNotFound, nameURI);
-            return (SchemaElementDecl*) fSchemaGrammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                     0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
+            SchemaElementDecl *retVal = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(uriId, localPart, 
+                                                     0, Grammar::TOP_LEVEL_SCOPE);
+            // in a manner of speaking, we're lying to the grammar here;
+            // the element really wasn't declared, but we need the decl to act
+            // as a placeholder, so, in a way, it is declared for us
+            return (retVal != 0?retVal:
+                ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                     0, Grammar::TOP_LEVEL_SCOPE)));
         }
 
         if (!elemDecl) {
@@ -5101,8 +5112,11 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
 
                 noErrorDetected = false;
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
-                return (SchemaElementDecl*) grammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                  0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
+                // in a manner of speaking, we're lying to the grammar here;
+                // the element really wasn't declared, but we need the decl to act
+                // as a placeholder, so, in a way, it is declared for us
+                return ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                     0, Grammar::TOP_LEVEL_SCOPE));
             }
 
             infoType = SchemaInfo::IMPORT;
@@ -5133,8 +5147,11 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
 
             noErrorDetected = false;
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
-            elemDecl = (SchemaElementDecl*) fSchemaGrammar->findOrAddElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                         0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
+            // in a manner of speaking, we're lying to the grammar here;
+            // the element really wasn't declared, but we need the decl to act
+            // as a placeholder, so, in a way, it is declared for us
+            elemDecl = ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
+                                                 0, Grammar::TOP_LEVEL_SCOPE));
         }
     }
 
