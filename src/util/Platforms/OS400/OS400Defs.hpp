@@ -56,13 +56,16 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/03/02 21:10:03  abagchi
+ * Replaced XML4CDefs with XercesDefs
+ *
  * Revision 1.1  2000/02/10 17:58:07  abagchi
  * Initial checkin
  *
  */
 
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 
 // ---------------------------------------------------------------------------
