@@ -74,9 +74,12 @@
       standalone version from Apache, you must have the &XercesCName; runtime library
       available from your path settings. On Windows this library is called
       <code>&XercesCWindowsLib;.dll</code> which must be available from your <code>PATH</code>
-      settings. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code>
+      settings. (Note that now there are separate debug and release dlls for Windows.
+      If the release dll is named <code>&XercesCWindowsLib;.dll</code> then the debug dll is named
+      <code>&XercesCWindowsLib;d.dll)</code>.
+      On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code>
       (or <code>.a</code> or <code>.sl</code>) which must be available from your
-      <code>LD_LIBRARY_PATH</code> (or <code>SHLIB_PATH</code> or <code>LIBPATH</code>)
+      <code>LD_LIBRARY_PATH</code> (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>)
       environment variable.</p>
 
       <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>,
@@ -187,6 +190,25 @@ catch (const XMLException&amp; toCatch) {
         </a>
     </faq>
 
+<faq title="Why does my application gives unresolved linking errors on Solaris?">
+    <q>Why does my application gives unresolved linking errors on Solaris?</q>
+
+    <a>
+      <p>On Solaris there are couple of things that needs to be taken care before
+      you proceed to execute your application using Xerces / XML4C. In case you're
+      using the binary build of Xerces / XML4C make sure that the your OS and the
+      compiler are of the same version as the one on which the binary was build.
+      This might cause unresolved linking problems or compilation errors.
+      In this case rebuild the source on your system before building your application
+      with it. If you're using ICU (which is packaged with XML4C) you need to
+      rebuild the compatible version of ICU first.</p>
+
+      <p>Also make sure the library path is set properly and you have the correct version of
+      <code>gmake</code> and <code>autoconf</code> in your system.</p>
+    </a>
+  </faq>
+
+
     <faq title="How do I find out what version of &XercesCProjectName; I am using?">
         <q>How do I find out what version of &XercesCProjectName; I am using?</q>
         <a>
@@ -259,8 +281,6 @@ catch (const XMLException&amp; toCatch) {
     <p>You may enable support for HTTP and FTP URLs by implementing and installing
     a NetAccessor object. When a NetAccessor object is installed, the URL class
     will use it to create input streams for the remote entities refered to by such URLs.</p>
-
-
     </a>
   </faq>
 
@@ -311,7 +331,6 @@ catch (const XMLException&amp; toCatch) {
         it is very likely that there's a
         character in there that you can't see.  You can generally use
         a UNIX command like "od -hc" to find it.</p>
-
     </a>
   </faq>
 
@@ -350,9 +369,7 @@ catch (const XMLException&amp; toCatch) {
 
     <p>Some implementations or ports of Xerces-C provide support for
     additional encodings.  The exact set will depend on the supplier
-    of the parser and on the character set transcoding services in use.
-    </p>
-
+    of the parser and on the character set transcoding services in use.</p>
     </a>
   </faq>
 
@@ -404,9 +421,24 @@ catch (const XMLException&amp; toCatch) {
       tools.  If you are using a Windows based editing tool to generate
       XML, check which character set it generates, and make sure that the
       resulting XML specifies the correct name in the encoding="..." declaration.</p>
-
         </a>
       </faq>
+
+<faq title="I find memory leaks in Xerces-C / XML4C. How do I eliminate it?">
+    <q>I find memory leaks in Xerces-C / XML4C. How do I eliminate it?</q>
+    <a>
+
+      <p>The "leaks" that are reported through a leak-detector or heap-analysis tools
+      aren't really leaks in most application, in that the memory usage does not grow over
+      time as the XML parser is used and re-used.</p>
+
+      <p>What you are seeing as leaks are infact lazily evaluated data allocated into
+      static variables. It gets relesed when the application ends. Now you can  make a call
+      to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated
+      variables before you exit your program.</p>
+    </a>
+  </faq>
+
 
   <faq title="Is EBCDIC supported?">
     <q>Is EBCDIC supported?</q>
@@ -430,7 +462,6 @@ catch (const XMLException&amp; toCatch) {
     those for the character sets of different countries.  The exact set supported
     will be platform dependent, and these encodings are not recommended for
     portable XML data.  </p>
-
     </a>
     </faq>
 
