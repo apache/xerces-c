@@ -381,20 +381,29 @@ void        DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
 
 void DOMDocumentTypeImpl::release()
 {
-    if (fNode.isOwned() && !fNode.isToBeReleased())
-        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
-
-    if (fIsCreatedFromHeap) {
-        DOMDocumentType* docType = this;
-        delete docType;
+    if (fNode.isOwned()) {
+        if (fNode.isToBeReleased()) {
+            if (fIsCreatedFromHeap) {
+                DOMDocumentType* docType = this;
+                delete docType;
+            }
+        }
+        else
+            throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
     }
     else {
-        DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
-        if (doc)
-            doc->release(this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT);
+        if (fIsCreatedFromHeap) {
+            DOMDocumentType* docType = this;
+            delete docType;
+        }
         else {
-            // shouldn't reach here
-            throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+            DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+            if (doc)
+                doc->release(this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT);
+            else {
+                // shouldn't reach here
+                throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+            }
         }
     }
 }

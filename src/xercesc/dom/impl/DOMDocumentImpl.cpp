@@ -371,15 +371,13 @@ DOMText *DOMDocumentImpl::createTextNode(const XMLCh *data)
 DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
           DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
-    // create in the heap
-    return new DOMNodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
+    return new (this) DOMNodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
 }
 
 
 DOMTreeWalker* DOMDocumentImpl::createTreeWalker (DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
-    // create in the heap
-    return new DOMTreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
+    return new (this) DOMTreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
 }
 
 
@@ -554,8 +552,7 @@ int DOMDocumentImpl::indexofQualifiedName(const XMLCh * qName)
 DOMRange* DOMDocumentImpl::createRange()
 {
 
-    // create in the heap
-    DOMRangeImpl* range = new DOMRangeImpl(this);
+    DOMRangeImpl* range = new (this) DOMRangeImpl(this);
 
     if (fRanges == 0L) {
         fRanges = new (this) Ranges(1, false);
@@ -1113,6 +1110,14 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
 void DOMDocumentImpl::release()
 {
     DOMDocument* doc = (DOMDocument*) this;
+
+    // release the docType as well
+    if (fDocType) {
+        castToNodeImpl(fDocType)->isToBeReleased(true);
+        fDocType->release();
+    }
+
+    // delete the document memory pool
     delete doc;
 };
 
