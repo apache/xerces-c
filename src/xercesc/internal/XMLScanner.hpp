@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/06/07 18:35:49  tng
+ * Add getReaderMgr in XMLScanner so that the parser can query encoding information.
+ *
  * Revision 1.5  2002/05/30 16:20:57  tng
  * Add feature to optionally ignore external DTD.
  *
@@ -377,6 +380,7 @@ public :
         ,       XMLSSize_t&     colToFill
     );
     const Locator* getLocator() const;
+    const ReaderMgr* getReaderMgr() const;
     unsigned int getSrcOffset() const;
     bool getStandalone() const;
     const XMLValidator* getValidator() const;
@@ -1052,6 +1056,11 @@ inline const RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList() const
 }
 
 inline const Locator* XMLScanner::getLocator() const
+{
+    return &fReaderMgr;
+}
+
+inline const ReaderMgr* XMLScanner::getReaderMgr() const
 {
     return &fReaderMgr;
 }
