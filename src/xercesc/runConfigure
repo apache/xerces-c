@@ -82,8 +82,8 @@ usage()
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
             'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
             'ptx', 'tru64', 'macosx')"
-    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc, ecc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++, ecc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or
             'iconv'"
@@ -564,7 +564,7 @@ export NETACCESSOR
 #
 
 case $cppcompiler in
-   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc)
       ;;
 
    *)

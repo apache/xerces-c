@@ -171,8 +171,8 @@ endif
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
 CMP= -c ${CXXFLAGS}
-CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
-LINK =  g++ -D${PLATFORM} -fpic ${LDFLAGS}
+CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
 SHLIBSUFFIX=.so

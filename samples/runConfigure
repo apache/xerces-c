@@ -71,8 +71,8 @@ usage()
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
             'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
             'ptx', 'tru64', 'macosx')"
-    echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
-    echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
+    echo "       -c <C compiler name> (e.g. gcc, xlc, icc or ecc)"
+    echo "       -x <C++ compiler name> (e.g. g++, xlC, icc or ecc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -l <extra linker options>"
@@ -213,7 +213,7 @@ fi
 # Set the C compiler and C++ compiler environment variables
 #
 case $cppcompiler in
-   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc)
       ;;
 
    *)

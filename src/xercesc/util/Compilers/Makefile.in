@@ -116,6 +116,9 @@ endif
 ifeq (${CXX},g++)
     CPP_OBJECTS = GCCDefs.$(TO)
 endif
+ifeq (${CXX},ecc)
+    CPP_OBJECTS = GCCDefs.$(TO)
+endif
 ifeq (${CXX},aCC)
     CPP_OBJECTS = HPCCDefs.$(TO)
 endif
