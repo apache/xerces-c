@@ -64,13 +64,17 @@
                    <li>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation</li>
                 </ul>
               </ul>
+              <li>To support identity constraints, the following new method is added:</li>
+              <ul>
+                <li>QName* XMLAttr::getAttName() const</li>
+              </ul>
             </ul>
         </s3>
 
         <anchor name="ModifiedAPI"/>
         <s3 title="Pulic API Modified">
             <ul>
-              <li>To support Identity Constraint, the enum constance values in XMLAttDef::DefAttTypes has been re-ordered.</li>
+              <li>To support attribute constraint checking, the constant values in XMLAttDef::DefAttTypes have been re-ordered.</li>
             </ul>
         </s3>
 
