@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/17 17:47:25  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.6  2000/02/15 23:17:37  andyh
  * Update Doc++ API comments
  * NameSpace bugfix and update to track W3C
@@ -305,9 +310,8 @@ void ElementImpl::setReadOnly(bool readOnl, bool deep)
 DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    static DOMString *emptyString = 0;
     AttrImpl * attr=(AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
-    return (attr==null) ? DStringPool::getStaticString("", &emptyString) : attr->getValue();
+    return (attr==null) ? null : attr->getValue();
 }
 
 

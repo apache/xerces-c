@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/17 17:47:24  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.3  2000/02/06 07:47:27  rahulj
  * Year 2K copyright swat.
  *
@@ -209,8 +214,11 @@ public:
     /** @name Functions introduced in DOM Level 2. */
     //@{
     /**
-     * The <code>Element</code> node this attribute is attached to or
+     * The <code>DOM_Element</code> node this attribute is attached to or
      * <code>null</code> if this attribute is not in use.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      */
     DOM_Element     getOwnerElement() const;
     //@}

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/17 17:47:24  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.4  2000/02/10 23:35:11  andyh
  * Update DOM_DOMImplementation::CreateDocumentType and
  * DOM_DocumentType to match latest from W3C
@@ -160,12 +165,20 @@ class CDOM_EXPORT DOM_DOMImplementation {
      * Entity reference expansions and default attribute additions
      * do not occur. It is expected that a future version of the DOM
      * will provide a way for populating a <code>DOM_DocumentType</code>.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param qualifiedName The <em>qualified name</em>
      * of the document type to be created.
      * @param publicId The external subset public identifier.
      * @param systemId The external subset system identifier.
-     * @return A new <code>DocumentType</code> node with
+     * @return A new <code>DOM_DocumentType</code> node with
      * <code>Node.ownerDocument</code> set to <code>null</code>.
+     * @exception DOMException
+     *   INVALID_CHARACTER_ERR: Raised if the specified qualified name
+     *      contains an illegal character.
+     * <br>
+     *   NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is malformed.
      */
     DOM_DocumentType createDocumentType(const DOMString &qualifiedName,
 	const DOMString &publicId, const DOMString &systemId);
@@ -173,6 +186,9 @@ class CDOM_EXPORT DOM_DOMImplementation {
     /**
      * Creates an XML <code>DOM_Document</code> object of the specified type
      * with its document element.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param namespaceURI The <em>namespace URI</em> of
      * the document element to create, or <code>null</code>.
      * @param qualifiedName The <em>qualified name</em>
@@ -181,8 +197,16 @@ class CDOM_EXPORT DOM_DOMImplementation {
      * <p>When <code>doctype</code> is not <code>null</code>, its
      * <code>Node.ownerDocument</code> attribute is set to the document
      * being created.
-     * @return A new <code>Document</code> object.
+     * @return A new <code>DOM_Document</code> object.
      * @exception DOMException
+     *   INVALID_CHARACTER_ERR: Raised if the specified qualified name
+     *      contains an illegal character.
+     * <br>
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
+     *      malformed, or if the <CODE>qualifiedName</CODE> has a prefix that is 
+     *      "xml" and the <CODE>namespaceURI</CODE> is different from 
+     *      "http://www.w3.org/XML/1998/namespace".
+     * <br>
      *   WRONG_DOCUMENT_ERR: Raised if <code>doctype</code> has already
      *   been used with a different document.
      */

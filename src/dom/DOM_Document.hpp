@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/17 17:47:24  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.7  2000/02/10 19:41:16  abagchi
  * Added docs for createNodeIterator and createTreeWalker
  *
@@ -371,6 +376,8 @@ public:
      * use the <code>whatToShow</code> flags to show the entity reference node and set
      * expandEntityReferences to false.
      *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param root The root node of the DOM tree
      * @param whatToShow This attribute determines which node types are presented via the iterator.
      * @param filter The filter used to screen nodes
@@ -404,6 +411,8 @@ public:
      * that has entity reference nodes but no entity expansion, use the
      * <code>whatToShow</code> flags to show the entity reference node and set
      * <code>expandEntityReferences</code> to false
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param root The root node of the DOM tree
      * @param whatToShow This attribute determines which node types are presented via the tree-walker.
@@ -474,12 +483,14 @@ public:
      * node's <CODE>nodeName</CODE> and <CODE>nodeType</CODE>, plus the 
      * attributes related to namespaces (prefix and namespaces URI).
      *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param importedNode The node to import.
      * @param deep If <CODE>true</CODE>, recursively import the subtree under the 
      *      specified node; if <CODE>false</CODE>, import only the node itself, 
-     *      as explained above. This does not apply to <CODE>Attr</CODE>, 
-     *      <CODE>EntityReference</CODE>, and <CODE>Notation</CODE> nodes.
-     * @return The imported node that belongs to this <CODE>Document</CODE>.
+     *      as explained above. This does not apply to <CODE>DOM_Attr</CODE>, 
+     *      <CODE>DOM_EntityReference</CODE>, and <CODE>DOM_Notation</CODE> nodes.
+     * @return The imported node that belongs to this <CODE>DOM_Document</CODE>.
      * @exception DOMException
      *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is 
      *                      not supported.
@@ -488,10 +499,10 @@ public:
 
     /**
      * Creates an element of the given qualified name and 
-     * namespace URI. If the given <CODE>namespaceURI</CODE> is <CODE>null</CODE> 
-     * or an empty string and the <CODE>qualifiedName</CODE> has a prefix that is 
-     * "xml", the created element is bound to the predefined namespace 
-     * "http://www.w3.org/XML/1998/namespace".
+     * namespace URI.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the element to create.
      * @param qualifiedName The <em>qualified name</em>
@@ -502,44 +513,42 @@ public:
      *                          an illegal character.
      * <br>
      *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
-     *       malformed, or if the <CODE>qualifiedName</CODE> has a prefix that is 
-     *       "xml" and the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> 
-     *       nor an empty string nor "http://www.w3.org/XML/1998/namespace".
+     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the 
+     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string, 
+     *      or if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and 
+     *      the <CODE>namespaceURI</CODE> is different from 
+     *      "http://www.w3.org/XML/1998/namespace".
      */
     DOM_Element         createElementNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName);
 
     /**
      * Creates an attribute of the given qualified name and namespace
-     * URI. If the given <code>namespaceURI</code> is <code>null</code> or
-     * an empty string and the <code>qualifiedName</code> has a prefix that is
-     * "xml", the created attribute is bound to the predefined namespace
-     * "http://www.w3.org/XML/1998/namespace". If
-     * the given <code>namespaceURI</code> is <code>null</code> or an empty
-     * string and the <code>qualifiedName</code> has a prefix that is "xmlns",
-     * the created attribute is bound to the predefined namespace
-     * "http://www.w3.org/2000/xmlns/".
+     * URI.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the attribute to create.
      * @param qualifiedName The <em>qualified name</em>
-     *   of the attribute type to instantiate.
+     *   of the attribute to instantiate.
      * @return A new <code>DOM_Attr</code> object.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
-     *   NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is
-     * malformed, if the <code>qualifiedName</code> has a prefix that is
-     * "xml" and the <code>namespaceURI</code> is neither
-     * <code>null</code> nor an empty string nor
-     * "http://www.w3.org/XML/1998/namespace", or if the
-     * <code>qualifiedName</code> has a prefix that is
-     * "xmlns" and the <code>namespaceURI</code> is neither
-     * <code>null</code> nor an empty string nor
-     * "http://www.w3.org/2000/xmlns/", or if the
-     * <code>qualifiedName</code> is "xmlns" but the
-     * <code>namespaceURI</code> is neither <code>null</code> nor an
-     * empty string.
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
+     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the 
+     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string, 
+     *      if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and the 
+     *      <CODE>namespaceURI</CODE> is different from 
+     *      "http://www.w3.org/XML/1998/namespace", if the 
+     *      <CODE>qualifiedName</CODE> has a prefix that is "xmlns" and the 
+     *      <CODE>namespaceURI</CODE> is different from 
+     *      "http://www.w3.org/2000/xmlns/", or if the 
+     *      <CODE>qualifiedName</CODE> is "xmlns" and the 
+     *      <CODE>namespaceURI</CODE> is different from 
+     *      "http://www.w3.org/2000/xmlns/".
      */
     DOM_Attr            createAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName);
@@ -548,14 +557,17 @@ public:
      * Returns a <code>DOM_NodeList</code> of all the <code>DOM_Element</code>s
      * with a given <em>local name</em> and
      * namespace URI in the order in which they would be encountered in a
-     * preorder traversal of the <code>Document</code> tree.
+     * preorder traversal of the <code>DOM_Document</code> tree.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the elements to match on. The special value "*" matches all
      *   namespaces.
      * @param localName The <em>local name</em> of the
      *   elements to match on. The special value "*" matches all local names.
      * @return A new <code>DOM_NodeList</code> object containing all the matched
-     *  <code>Element</code>s.
+     *  <code>DOM_Element</code>s.
      */
     DOM_NodeList        getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName) const;
@@ -569,6 +581,9 @@ public:
      * type ID unless so defined. Implementations that do not know whether 
      * attributes are of type ID or not are expected to return 
      * <CODE>null</CODE>.</P>
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param elementId The unique <code>id</code> value for an element.
      * @return The matching element.
      */

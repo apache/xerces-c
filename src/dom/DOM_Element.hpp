@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/17 17:47:24  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.4  2000/02/06 07:47:29  rahulj
  * Year 2K copyright swat.
  *
@@ -300,39 +305,38 @@ public:
   /**
    * Retrieves an attribute value by local name and namespace URI.
    *
+   * <p><b>"Experimental - subject to change"</b></p>
+   *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to retrieve.
    * @param localName The <em>local name</em> of the
    *    attribute to retrieve.
-   * @return The <code>DOM_Attr</code> value as a string, or an empty string if
+   * @return The <code>DOM_Attr</code> value as a string, or an <CODE>null</CODE> if
    *    that attribute does not have a specified or default value.
    */
   DOMString         getAttributeNS(const DOMString &namespaceURI,
 	const DOMString &localName) const;
 
   /**
-   * Adds a new attribute. If the given 
-   *   <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string and the 
-   *   <CODE>qualifiedName</CODE> has a prefix that is "xml", the new attribute 
-   *   is bound to the predefined namespace 
-   *   "http://www.w3.org/XML/1998/namespace". 
-   *   If an attribute with the same local name and namespace URI is already 
-   *   present on the element, its prefix is changed to be the prefix part of the 
-   *   <CODE>qualifiedName</CODE>, and its value is changed to be the 
-   *   <CODE>value</CODE> parameter. 
-   * This value is a simple string, it is
-   * not parsed as it is being set. So any markup (such as syntax to be
-   * recognized as an entity reference) is treated as literal text, and
-   * needs to be appropriately escaped by the implementation when it is
-   * written out. In order to assign an attribute value that contains entity
-   * references, the user must create a <code>DOM_Attr</code> node plus any
-   * <code>DOM_Text</code> and <code>DOM_EntityReference</code> nodes, build the
-   * appropriate subtree, and use <code>setAttributeNodeNS</code> or
-   * <code>setAttributeNode</code> to assign it as the value of an
-   * attribute.
+   * Adds a new attribute. If an attribute with the same 
+   * local name and namespace URI is already present on the element, its prefix 
+   * is changed to be the prefix part of the <CODE>qualifiedName</CODE>, and 
+   * its value is changed to be the <CODE>value</CODE> parameter. This value is 
+   * a simple string, it is not parsed as it is being set. So any markup (such 
+   * as syntax to be recognized as an entity reference) is treated as literal 
+   * text, and needs to be appropriately escaped by the implementation when it 
+   * is written out. In order to assign an attribute value that contains entity 
+   * references, the user must create an <CODE>DOM_Attr</CODE>
+   * node plus any <CODE>DOM_Text</CODE> and <CODE>DOM_EntityReference</CODE>
+   * nodes, build the appropriate subtree, and use 
+   * <CODE>setAttributeNodeNS</CODE> or <CODE>setAttributeNode</CODE> to assign 
+   * it as the value of an attribute.
+   *
+   * <p><b>"Experimental - subject to change"</b></p>
+   *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to create or alter.
-   * @param localName The <em>local name</em> of the
+   * @param qualifiedName The <em>qualified name</em> of the
    *    attribute to create or alter.
    * @param value The value to set in string form.
    * @exception DOMException
@@ -341,14 +345,17 @@ public:
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    * <br>
    *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
-   *         malformed, if the <CODE>qualifiedName</CODE> has a prefix that is 
-   *         "xml" and the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> 
-   *         nor an empty string nor "http://www.w3.org/XML/1998/namespace", or 
-   *         if the <CODE>qualifiedName</CODE> has a prefix that is "xmlns" but 
-   *         the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> nor an 
-   *         empty string, or if if the <CODE>qualifiedName</CODE> has a prefix 
-   *         different from "xml" and "xmlns" and the <CODE>namespaceURI</CODE> 
-   *         is <CODE>null</CODE> or an empty string.
+   *        malformed, if the <CODE>qualifiedName</CODE> has a prefix and the 
+   *        <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string, 
+   *        if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and the 
+   *        <CODE>namespaceURI</CODE> is different from 
+   *        "http://www.w3.org/XML/1998/namespace", if the 
+   *        <CODE>qualifiedName</CODE> has a prefix that is "xmlns" and the 
+   *        <CODE>namespaceURI</CODE> is different from 
+   *        "http://www.w3.org/2000/xmlns/", or if the 
+   *        <CODE>qualifiedName</CODE> is "xmlns" and the 
+   *        <CODE>namespaceURI</CODE> is different from 
+   *        "http://www.w3.org/2000/xmlns/".
    */
    void             setAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName, const DOMString &value);
@@ -357,8 +364,9 @@ public:
    * Removes an attribute by local name and namespace URI. If the
    * removed attribute has a default value it is immediately replaced.
    * The replacing attribute has the same namespace URI and local name, as well as 
-   * the original prefix.<BR>HTML-only DOM implementations do not need to 
-   * implement this method.
+   * the original prefix.
+   *
+   * <p><b>"Experimental - subject to change"</b></p>
    *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to remove.
@@ -372,6 +380,8 @@ public:
 
   /**
    * Retrieves an <code>DOM_Attr</code> node by local name and namespace URI.
+   *
+   * <p><b>"Experimental - subject to change"</b></p>
    *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to retrieve.
@@ -388,6 +398,9 @@ public:
     * 
     * If an attribute with that local name and namespace URI is already present 
     * in the element, it is replaced by the new one.
+    *
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * @param newAttr The <code>DOM_Attr</code> node to add to the attribute list.
     * @return If the <code>newAttr</code> attribute replaces an existing
     *    attribute with the same <em>local name</em> and <em>namespace URI</em>,
@@ -410,13 +423,15 @@ public:
    * would be encountered in a preorder traversal of the
    * <code>DOM_Document</code> tree, starting from this node.
    *
+   * <p><b>"Experimental - subject to change"</b></p>
+   *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the elements to match on. The special value "*" matches all
    *    namespaces.
    * @param localName The <em>local name</em> of the
    *    elements to match on. The special value "*" matches all local names.
    * @return A new <code>DOM_NodeList</code> object containing all the matched
-   *    <code>Element</code>s.
+   *    <code>DOM_Element</code>s.
    */
   DOM_NodeList    getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName) const;

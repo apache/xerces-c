@@ -56,6 +56,11 @@
 
 /**
 * $Log$
+* Revision 1.13  2000/02/17 17:47:25  andyh
+* Update Doc++ API comments
+* NameSpace update to track W3C
+* Changes were made by Chih Hsiang Chou
+*
 * Revision 1.12  2000/02/15 23:17:37  andyh
 * Update Doc++ API comments
 * NameSpace bugfix and update to track W3C
@@ -170,8 +175,7 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     bool xmlnsAlone = false;	//true if attribute name is "xmlns"
     if (index == 0) {	//qualifiedName contains no ':'
         if (nTyp == DOM_Node::ATTRIBUTE_NODE && this->name.equals(xmlns)) {
-	    if (fNamespaceURI != null && fNamespaceURI.length() != 0 &&
-		!fNamespaceURI.equals(xmlnsURI))
+	    if (!fNamespaceURI.equals(xmlnsURI))
 		throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 	    xmlnsAlone = true;
 	}
@@ -745,7 +749,8 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     if(fPrefix != null && !DocumentImpl::isXMLName(fPrefix))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-    if (localName == null)  //if not Element or Attr node
+    if (namespaceURI == null || localName == null ||  //if not Element or Attr node
+        nType == DOM_Node::ATTRIBUTE_NODE && name.equals(xmlns))
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     if (fPrefix == null || fPrefix.length() == 0) {
@@ -759,7 +764,7 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 	if (*p++ == chColon)	//prefix is malformed
 	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     if (fPrefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
-	fPrefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
+	nType == DOM_Node::ATTRIBUTE_NODE && fPrefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     name = this -> prefix = fPrefix;
@@ -769,10 +774,11 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 //Return a URI mapped from the given prefix and namespaceURI as below
 //	prefix	namespaceURI		output
 //---------------------------------------------------
-//	"xml"	null, "" or xmlURI	xmlURI
+//	"xml"	xmlURI	xmlURI
 //	"xml"	otherwise		NAMESPACE_ERR
-//	"xmlns"	null or "" or xmlnsURI	xmlnsURI (nType = ATTRIBUTE_NODE only)
+//	"xmlns"	xmlnsURI	        xmlnsURI (nType = ATTRIBUTE_NODE only)
 //	"xmlns"	otherwise		NAMESPACE_ERR (nType = ATTRIBUTE_NODE only)
+//      != null null or ""              NAMESPACE_ERR
 //	else	any			namesapceURI
 const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
 	const DOMString &namespaceURI, short nType)
@@ -785,12 +791,14 @@ const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
     if (prefix == null)
 	return namespaceURI;
     if (prefix.equals(xml)) {
-	if (namespaceURI == null || namespaceURI.length() == 0 || namespaceURI.equals(xmlURI))
+	if (namespaceURI.equals(xmlURI))
 	    return *s_xmlURI;
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else if (nType == DOM_Node::ATTRIBUTE_NODE && prefix.equals(xmlns)) {
-	if (namespaceURI == null || namespaceURI.length() == 0 || namespaceURI.equals(xmlnsURI))
+	if (namespaceURI.equals(xmlnsURI))
 	    return *s_xmlnsURI;
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+    } else if (namespaceURI == null || namespaceURI.length() == 0) {
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else
 	return namespaceURI;

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/17 17:47:24  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.4  2000/02/10 23:35:11  andyh
  * Update DOM_DOMImplementation::CreateDocumentType and
  * DOM_DocumentType to match latest from W3C
@@ -185,18 +190,27 @@ public:
     //@{
     /**
      * Get the public identifier of the external subset.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @return The public identifier of the external subset.
      */
     DOMString     getPublicId() const;
 
     /**
      * Get the system identifier of the external subset.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @return The system identifier of the external subset.
      */
     DOMString     getSystemId() const;
 
     /**
      * Get the internal subset as a string.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @return The internal subset as a string.
      */
     DOMString     getInternalSubset() const;

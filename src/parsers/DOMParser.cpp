@@ -60,6 +60,11 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.9  2000/02/17 17:47:26  andyh
+* Update Doc++ API comments
+* NameSpace update to track W3C
+* Changes were made by Chih Hsiang Chou
+*
 * Revision 1.8  2000/02/17 03:53:50  rahulj
 * Added some new getters to query the parser state and
 * Finished documenting the public and protected methods.
@@ -549,10 +554,15 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
         }
         elem = fDocument.createElementNS(namespaceURI, elemDecl.getFullName());
         for (unsigned int index = 0; index < attrCount; ++index) {
+            const static XMLCh XMLNS[] = {
+            chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
+            };
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
-            if (attrURIId != globalNSid) {  //TagName has a prefix
+            if (!XMLString::compareString(oneAttrib -> getName(), XMLNS))    //for xmlns=...
+                attrURIId = fValidator -> getXMLNSNamespaceId();
+            if (attrURIId != globalNSid) {	//TagName has a prefix
                 fValidator -> getURIText(attrURIId, buf);   //get namespaceURI
                 namespaceURI = DOMString(buf.getRawBuffer());
             }

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/17 17:47:24  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.8  2000/02/15 23:17:36  andyh
  * Update Doc++ API comments
  * NameSpace bugfix and update to track W3C
@@ -299,6 +304,8 @@ public:
     /**
      * Retrieves a node specified by local name and namespace URI.
      *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to retrieve.
      * @param localName The <em>local name</em> of the node to retrieve.
@@ -311,29 +318,34 @@ public:
 
     /**
      * Adds a node using its <CODE>namespaceURI</CODE> and <CODE>localName</CODE>.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param arg A node to store in a named node map. The node will later be 
      *       accessible using the value of the <CODE>namespaceURI</CODE> and 
      *       <CODE>localName</CODE> attribute of the node. If a node with those 
      *       namespace URI and local name is already present in the map, it is 
      *       replaced by the new one.
-     * @return If the new <code>Node</code> replaces an existing node the
-     *   replaced <code>Node</code> is returned, 
+     * @return If the new <code>DOM_Node</code> replaces an existing node the
+     *   replaced <code>DOM_Node</code> is returned, 
      *   otherwise <code>null</code> is returned.
      * @exception DOMException
      *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a 
      *   different document than the one that created the 
-     *   <code>NamedNodeMap</code>.
+     *   <code>DOM_NamedNodeMap</code>.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this 
-     *   <code>NamedNodeMap</code> is readonly.
+     *   <code>vNamedNodeMap</code> is readonly.
      *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>arg</code> is an 
-     *   <code>Attr</code> that is already an attribute of another 
-     *   <code>Element</code> object. The DOM user must explicitly clone 
-     *   <code>Attr</code> nodes to re-use them in other elements.
+     *   <code>DOM_Attr</code> that is already an attribute of another 
+     *   <code>DOM_Element</code> object. The DOM user must explicitly clone 
+     *   <code>DOM_Attr</code> nodes to re-use them in other elements.
      */
     DOM_Node               setNamedItemNS(DOM_Node arg);
 
     /**
      * Removes a node specified by local name and namespace URI.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to remove.
@@ -350,7 +362,7 @@ public:
      *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in 
      *   the map.
      * <br>
-     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>NamedNodeMap</code>
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>DOM_NamedNodeMap</code>
      *   is readonly.
      */
     DOM_Node               removeNamedItemNS(const DOMString &namespaceURI,

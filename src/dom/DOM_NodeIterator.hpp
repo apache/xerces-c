@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/02/17 17:47:25  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.8  2000/02/16 19:39:38  aruna1
  * API Doc++ changes in
  *
@@ -104,6 +109,9 @@ class NodeIteratorImpl;
  * implementation for document-order traversal of a document
  * subtree. Instances of these iterators are created by calling
  * <code>DocumentTraversal.createNodeIterator()</code>.
+ *
+ * <p><b>"Experimental - subject to change"</b></p>
+ *
  */
 class CDOM_EXPORT DOM_NodeIterator
 {
@@ -181,11 +189,17 @@ class CDOM_EXPORT DOM_NodeIterator
         /**
           * Return which node types are presented via the iterator.
           * The available set of constants is defined in the DOM_NodeFilter interface.
+          *
+          * <p><b>"Experimental - subject to change"</b></p>
+          *
           */
         unsigned long       getWhatToShow();
 
         /**
           * Return The filter used to screen nodes.
+          *
+          * <p><b>"Experimental - subject to change"</b></p>
+          *
           */
         DOM_NodeFilter*     getFilter();
 
@@ -193,6 +207,9 @@ class CDOM_EXPORT DOM_NodeIterator
           * Return the expandEntityReferences flag.
           * The value of this flag determines whether the children of entity reference
           * nodes are visible to the DOM_NodeFilter. If false, they will be skipped over.
+          *
+          * <p><b>"Experimental - subject to change"</b></p>
+          *
           */
         bool getExpandEntityReferences();
 
@@ -200,6 +217,8 @@ class CDOM_EXPORT DOM_NodeIterator
           * Returns the next node in the set and advances the position of the iterator
           * in the set. After a DOM_NodeIterator is created, the first call to nextNode()
           * returns the first node in the set.
+          *
+          * <p><b>"Experimental - subject to change"</b></p>
           *
           * @exception DOMException
           *   INVALID_STATE_ERR: Raised if this method is called after the
@@ -210,6 +229,8 @@ class CDOM_EXPORT DOM_NodeIterator
         /**
           * Returns the previous node in the set and moves the position of the iterator
           * backwards in the set.
+          *
+          * <p><b>"Experimental - subject to change"</b></p>
           *
           * @exception DOMException
           *   INVALID_STATE_ERR: Raised if this method is called after the
@@ -225,6 +246,9 @@ class CDOM_EXPORT DOM_NodeIterator
           * computational resources and placing the iterator in the INVALID state. After
           * <code>detach</code> has been invoked, calls to <code>nextNode</code> or
           * <code>previousNode</code> will raise the exception INVALID_STATE_ERR.
+          *
+          * <p><b>"Experimental - subject to change"</b></p>
+          *
           */
 	void				detach();
         //@}

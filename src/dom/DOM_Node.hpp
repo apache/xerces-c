@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/17 17:47:25  andyh
+ * Update Doc++ API comments
+ * NameSpace update to track W3C
+ * Changes were made by Chih Hsiang Chou
+ *
  * Revision 1.3  2000/02/06 07:47:30  rahulj
  * Year 2K copyright swat.
  *
@@ -303,6 +308,9 @@ class  CDOM_EXPORT DOM_Node {
      * node is a <code>DOM_Document</code> or a <code>DOM_DocumentType</code>
      * which is not used with any <code>DOM_Document</code> yet, this is
      * <code>null</code>.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      */
     DOM_Document      getOwnerDocument() const;
 
@@ -504,12 +512,13 @@ class  CDOM_EXPORT DOM_Node {
     //@{
 
     /**
-     * Puts all <CODE>DOM_Text</CODE>
+     * Puts all <CODE>DOM_Text</CODE> 
      * nodes in the full depth of the sub-tree underneath this <CODE>DOM_Node</CODE>, 
      * including attribute nodes, into a "normal" form where only markup (e.g., 
      * tags, comments, processing instructions, CDATA sections, and entity 
      * references) separates <CODE>DOM_Text</CODE>
-     * nodes, i.e., there are no adjacent <CODE>DOM_Text</CODE>
+     * nodes, i.e., there are neither adjacent <CODE>DOM_Text</CODE>
+     * nodes nor empty <CODE>DOM_Text</CODE>
      * nodes. This can be used to ensure that the DOM view of a document is the 
      * same as if it were saved and re-loaded, and is useful when operations 
      * (such as XPointer lookups) that depend on a particular document tree 
@@ -517,16 +526,23 @@ class  CDOM_EXPORT DOM_Node {
      * <P><B>Note:</B> In cases where the document contains <CODE>DOM_CDATASections</CODE>, 
      * the normalize operation alone may not be sufficient, since XPointers do 
      * not differentiate between <CODE>DOM_Text</CODE>
-     * nodes and <CODE>DOM_CDATASection</CODE> nodes.</P>
+     * nodes and <CODE>DOM_CDATASection</CODE>
+     * nodes.</P>
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      */
     void              normalize();
 
     /**
      * Tests whether the DOM implementation implements a specific
      * feature and that feature is supported by this node.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param feature The string of the feature to test. This is the same
      * name as what can be passed to the method <code>hasFeature</code> on
-     * <code>DOMImplementation</code>.
+     * <code>DOM_DOMImplementation</code>.
      * @param version This is the version number of the feature to test. In
      * Level 2, version 1, this is the string "2.0". If the version is not
      * specified, supporting any version of the feature will cause the
@@ -547,14 +563,20 @@ class  CDOM_EXPORT DOM_Node {
      * <p>
      * For nodes of any type other than <CODE>ELEMENT_NODE</CODE> and 
      * <CODE>ATTRIBUTE_NODE</CODE> and nodes created with a DOM Level 1 method, 
-     * such as <CODE>createElement</CODE> from the <CODE>Document</CODE>
+     * such as <CODE>createElement</CODE> from the <CODE>DOM_Document</CODE>
      * interface, this is always <CODE>null</CODE>.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      */
     DOMString         getNamespaceURI() const;
 
     /**
      * Get the <em>namespace prefix</em>
      * of this node, or <code>null</code> if it is unspecified.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      */
     DOMString         getPrefix() const;
 
@@ -564,6 +586,9 @@ class  CDOM_EXPORT DOM_Node {
      * For nodes created with a DOM Level 1 method, such as
      * <code>createElement</code> from the <code>DOM_Document</code> interface,
      * it is null.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      */
     DOMString         getLocalName() const;
 
@@ -581,6 +606,8 @@ class  CDOM_EXPORT DOM_Node {
      * attribute with the default value and the original prefix appear, since the 
      * <CODE>namespaceURI</CODE> and <CODE>localName</CODE> do not change.
      *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param prefix The prefix of this node.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified prefix contains
@@ -589,12 +616,14 @@ class  CDOM_EXPORT DOM_Node {
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      * <br>
      *   NAMESPACE_ERR: Raised if the specified <CODE>prefix</CODE> is 
-     *       malformed, if the specified prefix is "xml" and the 
-     *       <CODE>namespaceURI</CODE> of this node is different from 
-     *       "http://www.w3.org/XML/1998/namespace", if specified prefix is 
-     *       "xmlns" and the <CODE>namespaceURI</CODE> is neither 
-     *       <CODE>null</CODE> nor an empty string, or if the 
-     *       <CODE>localName</CODE> is <CODE>null</CODE>.
+     *      malformed, if the <CODE>namespaceURI</CODE> of this node is 
+     *      <CODE>null</CODE>, if the specified prefix is "xml" and the 
+     *      <CODE>namespaceURI</CODE> of this node is different from 
+     *      "http://www.w3.org/XML/1998/namespace", if this node is an attribute 
+     *      and the specified prefix is "xmlns" and the 
+     *      <CODE>namespaceURI</CODE> of this node is different from 
+     *      "http://www.w3.org/2000/xmlns/", or if this node is an attribute and 
+     *      the <CODE>qualifiedName</CODE> of this node is "xmlns".
      */
     void              setPrefix(const DOMString &prefix);
 
