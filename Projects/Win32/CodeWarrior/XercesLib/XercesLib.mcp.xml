@@ -7514,6 +7514,105 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom</ACCESSPATH>
+                    <PATH>DOMConfiguration.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\framework</ACCESSPATH>
+                    <PATH>MemoryManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>SecurityManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -12519,6 +12618,83 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
                     <PATH>PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom</ACCESSPATH>
+                    <PATH>DOMConfiguration.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\framework</ACCESSPATH>
+                    <PATH>MemoryManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>SecurityManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.cpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -19991,6 +20167,105 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom</ACCESSPATH>
+                    <PATH>DOMConfiguration.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\framework</ACCESSPATH>
+                    <PATH>MemoryManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>SecurityManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -25005,6 +25280,83 @@
                     <PATH>PSVIDefs.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom</ACCESSPATH>
+                    <PATH>DOMConfiguration.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                    <PATH>DOMConfigurationImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\framework</ACCESSPATH>
+                    <PATH>MemoryManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>SecurityManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
     </TARGETLIST>
@@ -26307,6 +26659,14 @@
                     <PATH>DOMWriterFilter.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\dom</ACCESSPATH>
+                    <PATH>DOMConfiguration.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
                 <GROUP><NAME>impl</NAME>
                     <FILEREF>
                         <TARGETNAME>Xerces DLL Debug</TARGETNAME>
@@ -26876,6 +27236,22 @@
                         <PATH>XSDElementNSImpl.hpp</PATH>
                         <PATHFORMAT>Windows</PATHFORMAT>
                     </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                        <PATH>DOMConfigurationImpl.hpp</PATH>
+                        <PATHFORMAT>Windows</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
+                        <PATH>DOMConfigurationImpl.cpp</PATH>
+                        <PATHFORMAT>Windows</PATHFORMAT>
+                    </FILEREF>
                 </GROUP>
             </GROUP>
             <GROUP><NAME>framework</NAME>
@@ -27263,6 +27639,14 @@
                     <PATH>XMLValidityCodes.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\framework</ACCESSPATH>
+                    <PATH>MemoryManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
             </GROUP>
             <GROUP><NAME>internal</NAME>
                 <FILEREF>
@@ -27479,6 +27863,22 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
                     <PATH>XMLReader.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>MemoryManagerImpl.cpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
             </GROUP>
@@ -29347,6 +29747,46 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
                     <PATH>XMLChar.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>SecurityManager.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>DefaultPanicHandler.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
+                    <PATH>PanicHandler.cpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
             </GROUP>
