@@ -924,26 +924,10 @@ catch (const XMLException&amp; toCatch) {
     <q>Why do I get compilation error when compiling &XercesCName; on FreeBSD with native transcoder?</q>
 
     <a>
-       <p>You may get the following compilation errors when compiling &XercesCName; with native transcoder on
-          FreeBSD version 4.3 or below:
-       </p>
-       <p>
-          IconvTransService.cpp:68: wchar.h: No such file or directory<br/>
-          IconvTransService.cpp:70: wctype.h: No such file or directory<br/>
-          IconvTransService.cpp: In method 'int IconvTransService::compareIString(const XMLCh *, const XMLCh *)'<br/>
-          ...
-       </p>
-       <p>This is due to FreeBSD version 4.3 or below missing headers wchar.h and wctype.h,
-          missing the function towupper, and the functions wcstombs and mbstowcs are not conforming
-          to the standard.
+       <p>Please make sure you configure with "-t IconvFBSD" to use FreeBSD specific native transcoder.
        </p>
 
-       <p>See <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">Mail Archive "XercesC under
-          FreeBSD... Dated October 1, 2001"</jump> for earlier discussion and work around.
-       </p>
-
-       <p>Or you can use ICU transcoder (configure with -t icu) instead of the native transcoder on FreeBSD.
-          Or try FreeBSD 4.4 or above.
+       <p>Or you can use ICU transcoder (configure with -t icu) instead of the native transcoder.
        </p>
 
     </a>

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.52  2001/12/03 14:45:11  tng
+# FreeBSD native transcoder (IconvFBSD) added by Max Gotlib.
+#
 # Revision 1.51  2001/11/19 21:59:00  peiyongz
 # Reorganization: Double/Float
 #
@@ -276,7 +279,11 @@ else
 		ifeq (${TRANSCODER},Iconv390)
 		   TRANSCODERMODULE=Iconv390
 		else
-		   TRANSCODERMODULE=Iconv
+		    ifeq (${TRANSCODER},IconvFBSD)
+			TRANSCODERMODULE=IconvFBSD
+		    else
+		        TRANSCODERMODULE=Iconv
+		    endif
 		endif
 	   endif
 	endif

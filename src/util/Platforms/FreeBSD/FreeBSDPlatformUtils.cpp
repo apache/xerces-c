@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/12/03 14:45:11  tng
+ * FreeBSD native transcoder (IconvFBSD) added by Max Gotlib.
+ *
  * Revision 1.1  2001/11/29 18:25:18  tng
  * FreeBSD support by Michael Huedepohl.
  *
@@ -93,7 +96,7 @@
     #include <util/Transcoders/ICU/ICUTransService.hpp>
 #else
     // Use native transcoder. Same as -DXML_USE_NATIVE_TRANSCODER
-    #include <util/Transcoders/Iconv/IconvTransService.hpp>
+    #include <util/Transcoders/IconvFBSD/IconvFBSDTransService.hpp>
 #endif
 
 
@@ -310,7 +313,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 #else
     // Use native transcoding services.
     // same as -DXML_USE_INMEM_MESSAGELOADER
-    return new IconvTransService;
+    return new IconvFBSDTransService;
 
 #endif
 }

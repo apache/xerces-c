@@ -85,7 +85,7 @@ usage()
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390' or 'native'"
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD' or 'native'"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
@@ -363,6 +363,8 @@ case $transcoder in
    Iconv390)
        transcodingDefines="-DXML_USE_ICONV390_TRANSCODER" ;
        TRANSCODER=Iconv390 ;;
+   IconvFBSD)
+       TRANSCODER=IconvFBSD ;;
    native)
        ;;
 

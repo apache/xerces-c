@@ -1254,7 +1254,7 @@ case "${host}" in
         *-*-UnixWare*)  platform=UNIXWARE ;;
         *-*-unixware*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
-	*-*-freebsd*)	platform=FREEBSD ;;
+        *-*-freebsd*)   platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX
                       case "${host}" in
@@ -1440,6 +1440,7 @@ util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
+util/Transcoders/IconvFBSD/Makefile \
 util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
@@ -1582,6 +1583,7 @@ util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
+util/Transcoders/IconvFBSD/Makefile \
 util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
@@ -1679,10 +1681,10 @@ rm -f conftest.s*
 
 EOF
 cat >> $CONFIG_STATUS <<EOF
-
+chmod +x ./runConfigure
 EOF
 cat >> $CONFIG_STATUS <<\EOF
-
+chmod +x ./configure
 exit 0
 EOF
 chmod +x $CONFIG_STATUS
