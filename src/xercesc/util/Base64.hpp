@@ -212,7 +212,7 @@ private :
     static XMLByte* decode(
                            const XMLByte*        const   inputData
                          ,       unsigned int*           outputLength
-                         ,       XMLByte*                canRepData
+                         ,       XMLByte*&               canRepData
                          ,       MemoryManager*  const   memMgr = 0
                          ,       Conformance             conform = Conf_RFC2045
                           );

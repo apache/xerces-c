@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/08/17 21:10:33  peiyongz
+ * fix bug in getting CanRep from decode()
+ *
  * Revision 1.13  2004/08/11 16:47:32  peiyongz
  * Decoding and getCanRep
  *
@@ -460,12 +463,13 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
     /***
      * Move canonical representation to a XMLCh buffer to return
      */
-    XMLCh *canRepData = (XMLCh*) getExternalMemory(memMgr, (decodedLength+1) * sizeof(XMLCh));
+    unsigned int canRepLen = XMLString::stringLen((char*)canRepInByte);
+    XMLCh *canRepData = (XMLCh*) getExternalMemory(memMgr, (canRepLen + 1) * sizeof(XMLCh));
                
-    for (unsigned int j = 0; j < decodedLength; j++)
+    for (unsigned int j = 0; j < canRepLen; j++)
 		canRepData[j] = (XMLCh)canRepInByte[j];
 
-	canRepData[decodedLength] = 0;
+	canRepData[canRepLen] = 0;
 
     /***
      * Release the memory allocated in the actual decoding method
@@ -534,7 +538,7 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
 
 XMLByte* Base64::decode (   const XMLByte*        const   inputData
                           ,       unsigned int*           decodedLength
-                          ,       XMLByte*                canRepData
+                          ,       XMLByte*&               canRepData
                           ,       MemoryManager*  const   memMgr
                           ,       Conformance             conform
                         )
