@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/09 18:54:44  abagchi
+ * Added header-guards to include inlines only once
+ *
  * Revision 1.7  2000/03/02 19:55:07  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -81,6 +84,8 @@
  *
  */
 
+#if !defined(CSETDEFS_HPP)
+#define CSETDEFS_HPP
 
 // ---------------------------------------------------------------------------
 // Define these away for this platform
@@ -149,3 +154,6 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 //  The name of the DLL that is built by the CSet C++ version of the system.
 // ---------------------------------------------------------------------------
 const char* const Xerces_DLLName = "libxerces-c";
+
+#endif // CSETDEFS_HPP
+

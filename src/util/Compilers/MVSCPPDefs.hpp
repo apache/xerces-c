@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/09 18:54:44  abagchi
+ * Added header-guards to include inlines only once
+ *
  * Revision 1.5  2000/03/02 19:55:08  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -90,6 +93,8 @@
  *
  */
 
+#if !defined(MVSCPPDEFS_HPP)
+#define MVSCPPDEFS_HPP
 
 // ---------------------------------------------------------------------------
 // Define these away for this platform
@@ -180,3 +185,5 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 //  The name of the DLL that is built by the MVSCPP version of the system.
 // ---------------------------------------------------------------------------
 const char* const Xerces_DLLName = "libxerces-c";
+
+#endif  // MVSCPPDEFS_HPP
