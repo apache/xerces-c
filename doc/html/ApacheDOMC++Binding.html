@@ -1092,13 +1092,26 @@ prefix) = 0;</font></font></td>
 
 <p><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; // Called to
-indicate that this Node (and its associated childred) is no longer in use</font></font>
-<br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp;&nbsp;
-and that the implementation may relinquish any resources associated with
-it.</font></font>
+indicate that this Node (and its associated children) is no longer in use</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp; and
+that the implementation may relinquish any resources associated with it
+and</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp; its
+associated children.</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
-<br><font face="Courier New,Courier"><font size=-1>&nbsp; // Throw exception
-if this Node has a owner</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; // If this is
+a document, any nodes it owns (created by DOMDocument::createXXXX())</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp; are
+also released.</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; // Access to
+a released object will lead to unexpected result.</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; // @exception
+DOMException</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp;&nbsp;
+INVALID_ACCESS_ERR: Raised if this Node has a parent and thus should not
+be released yet.</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; virtual void&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 release() = 0;</font></font>
@@ -1161,7 +1174,7 @@ DOMNodeList</font></font>
 <td></td>
 </tr>
 </table>
-<font face="Courier New,Courier"><font size=-1></font></font></div>
+</div>
 
 <h3>
 <font color="#000000">DOMNamedNodeMap.hpp:</font></h3>
@@ -1287,7 +1300,7 @@ XMLCh* namespaceURI, const XMLCh* localName) = 0;</font></font></td>
 <td></td>
 </tr>
 </table>
-<font face="Courier New,Courier"><font size=-1></font></font></div>
+</div>
 
 <h3>
 <font color="#000000">DOMCharacterData.hpp:</font></h3>
@@ -2284,6 +2297,9 @@ it.</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp;&nbsp;
 (release() will call detach() where appropriate)</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; // Access to
+a released object will lead to unexpected result.</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; virtual void&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 release() = 0;</font></font>
 <br><font face="Courier New,Courier"><font size=-1>};</font></font>
@@ -2705,6 +2721,9 @@ indicate that this TreeWalker is no longer in use</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp;&nbsp;
 and that the implementation may relinquish any resources associated with
 it.</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; // Access to
+a released object will lead to unexpected result.</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; virtual void&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 release() = 0;</font></font>
@@ -3235,6 +3254,9 @@ and that the implementation may relinquish any resources associated with
 it.</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //&nbsp;&nbsp;
 (release() will call detach() where appropriate)</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; // Access to
+a released object will lead to unexpected result.</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; //</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp; virtual void&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 release() = 0;</font></font>
