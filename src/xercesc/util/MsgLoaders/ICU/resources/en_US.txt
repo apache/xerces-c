@@ -401,7 +401,7 @@ en_US {
 		"Entity '{0}' was not found " ,
 		"Partial markup in parameter entity replacement text. " ,
 		"Failed to validate '{0}' " ,
-		"'{0}' and '{1}' violate the Unique Particle Attribution rule " ,
+		"Complex type '{0}' violates the Unique Particle Attribution rule in its components '{1}' and '{2}' " ,
 		"Abstract type '{0}' should not be used in xsi:type " ,
 		"A member of abstract element {0} substitution group must be specified " ,
 		"Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type " ,

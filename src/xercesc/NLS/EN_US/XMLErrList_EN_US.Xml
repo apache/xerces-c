@@ -403,7 +403,7 @@
             <Message Id="VC_EntityNotFound" Text="Entity '{0}' was not found"/>
             <Message Id="PartialMarkupInPE" Text="Partial markup in parameter entity replacement text."/>
             <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
-            <Message Id="UniqueParticleAttributionFail" Text="'{0}' and '{1}' violate the Unique Particle Attribution rule"/>
+            <Message Id="UniqueParticleAttributionFail" Text="Complex type '{0}' violates the Unique Particle Attribution rule in its components '{1}' and '{2}'"/>
             <Message Id="NoAbstractInXsiType" Text="Abstract type '{0}' should not be used in xsi:type"/>
             <Message Id="NoDirectUseAbstractElement" Text="A member of abstract element {0} substitution group must be specified"/>
             <Message Id="NoUseAbstractType" Text="Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type"/>

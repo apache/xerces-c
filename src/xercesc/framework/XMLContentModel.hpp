@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/09/16 13:32:05  amassari
+ * Updated error message for UPA to also state the complex type that is failing the test
+ *
  * Revision 1.5  2004/09/08 13:55:58  peiyongz
  * Apache License Version 2.0
  *
@@ -163,6 +166,7 @@ public:
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI
+      , const XMLCh*            pComplexTypeName = 0
     ) =0;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector()

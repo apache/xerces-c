@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/09/16 13:32:03  amassari
+ * Updated error message for UPA to also state the complex type that is failing the test
+ *
  * Revision 1.7  2004/09/08 13:56:51  peiyongz
  * Apache License Version 2.0
  *
@@ -112,6 +115,7 @@ public :
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI
+      , const XMLCh*            pComplexTypeName = 0
     ) ;
 
 private :

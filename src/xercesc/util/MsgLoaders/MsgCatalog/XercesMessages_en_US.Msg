@@ -390,7 +390,7 @@ $set 2
 85  Entity '{0}' was not found
 86  Partial markup in parameter entity replacement text.
 87  Failed to validate '{0}'
-88  '{0}' and '{1}' violate the Unique Particle Attribution rule
+88  Complex type '{0}' violates the Unique Particle Attribution rule in its components '{1}' and '{2}'
 89  Abstract type '{0}' should not be used in xsi:type
 90  A member of abstract element {0} substitution group must be specified
 91  Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type

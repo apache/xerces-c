@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2004/09/16 13:32:04  amassari
+ * Updated error message for UPA to also state the complex type that is failing the test
+ *
  * Revision 1.28  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -524,7 +527,7 @@ void ComplexTypeInfo::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     {
         fContentModel = makeContentModel(true);
         if (fContentModel) {
-            fContentModel->checkUniqueParticleAttribution(pGrammar, pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
+            fContentModel->checkUniqueParticleAttribution(pGrammar, pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI, fTypeLocalName);
         }
     }
 }

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/09/16 13:32:03  amassari
+ * Updated error message for UPA to also state the complex type that is failing the test
+ *
  * Revision 1.9  2004/09/08 13:56:51  peiyongz
  * Apache License Version 2.0
  *
@@ -290,6 +293,7 @@ void AllContentModel::checkUniqueParticleAttribution
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
       , unsigned int*     const pContentSpecOrgURI
+      , const XMLCh*            pComplexTypeName /*= 0*/
     )
 {
     SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
@@ -318,6 +322,7 @@ void AllContentModel::checkUniqueParticleAttribution
                                                 fChildren[j],
                                                 &comparator)) {
                 pValidator->emitError(XMLValid::UniqueParticleAttributionFail,
+                                      pComplexTypeName,
                                       fChildren[i]->getRawName(),
                                       fChildren[j]->getRawName());
              }
