@@ -649,7 +649,7 @@ virtual void deallocate(void* p) = 0;
         dynamic allocations within the parsers will make use of this
         object.  Assuming that MyMemoryHandler is a class that
         implements the MemoryManager interface, here is a bit of
-        pseudocode which illustrates thiese ideas:
+        pseudocode which illustrates these ideas:
         </p>
 <source>
 MyMemoryHandler *mm_for_statics = new MyMemoryHandler();
@@ -682,6 +682,34 @@ XMLPlatformUtils::Terminate();
         Xerces default implementation simply uses the global new and
         delete.
       </p>
+      <p>
+        Finally, there are two platform/compiler-related
+        limitations of our memory handling facilities that
+        certain users will need to be aware of:
+      </p>
+      <ul>
+        <li>The compiler shipped with HPUX 11 does not understand
+        "placement" delete operators.  These versions of delete
+        have the same signature as our "placement" new operators
+        but will only be invoked when an exception is thrown
+        during the construction of an object.  Since the HP
+        compiler does not permit delete to be overridden twice
+        within a class, we cannot provide a placement delete;
+        hence, in the few cases in which an exception may be
+        thrown during object construction by Xerces, destructors of objects
+        created during that construction will not be called.</li>
+        <li>There is a bug in versions of GCC older than 2.96
+        which makes it impossible to have the pluggable memory
+        manager create elements in the
+        <code>RefHash3KeysIdPool</code> template hashtable.
+        Therefore, on this compiler, we must use global new for
+        this purpose.  These elements will be properly destroyed
+        under this compiler; the limitation is that, since the
+        pluggable memory manager cannot be used, these particular
+        elements will not be destroyed if the user destroys their
+        memory manager directly.  Note that this hashtable is not
+        used that often in Xerces.</li>
+      </ul>
     </s2>
 
     <anchor name="SecurityManager"/>
