@@ -21,7 +21,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\tests\DOM\DeprecatedDOMCount;
+PATHCPP = .;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
