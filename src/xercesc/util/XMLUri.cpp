@@ -395,6 +395,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	}
 
 	int index = 0;
+	bool foundScheme = false;
 
 	// Check for scheme, which must be before `/'. Also handle names with
 	// DOS drive letters ('D:'), so 1-character schemes are not allowed.
@@ -413,17 +414,18 @@ void XMLUri::initialize(const XMLUri* const baseURI
     }
 	else
     {
-        initializeScheme(trimedUriSpec);
+        foundScheme = true;
+	initializeScheme(trimedUriSpec);
         index = XMLString::stringLen(fScheme)+1;
     }
 
     // It's an error if we stop here
-    if (index == trimedUriSpecLen)
+    if (index == trimedUriSpecLen || (foundScheme && (trimedUriSpec[index] == chPound)))
     {
         ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
                 , errMsg_PATH);
-	}
+    }
 
 	// two slashes means generic URI syntax, so we get the authority
     XMLCh* authUriSpec = (XMLCh*) fMemoryManager->allocate
