@@ -471,7 +471,7 @@ private:
     // -----------------------------------------------------------------------
     void cleanUp();
 
-    bool isBuiltInDV(DatatypeValidator* const);
+    inline bool isBuiltInDV(DatatypeValidator* const);
 
     // -----------------------------------------------------------------------
     //  Private data members
