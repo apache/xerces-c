@@ -127,14 +127,17 @@ DOMConfigurationImpl::~DOMConfigurationImpl() {
                                         
 void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
 
-    if(!canSetParameter(name, value)) {
+    XMLCh* lowerCaseName = XMLString::replicate(name);
+    XMLString::lowerCase(lowerCaseName);
+
+    if(!canSetParameter(lowerCaseName, value)) {
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     }
 
     bool isBooleanParameter = true;
     DOMConfigurationFeature whichFlag;
     try {
-        whichFlag = getFeatureFlag(name);
+        whichFlag = getFeatureFlag(lowerCaseName);
     } catch(DOMException e) {
         // must not be a boolean parameter
         isBooleanParameter = false;
@@ -147,11 +150,11 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
             featureValues &= ~whichFlag;
         }
     } else {
-        if(XMLString::equals(name, fgERROR_HANDLER)) {
+        if(XMLString::equals(lowerCaseName, fgERROR_HANDLER)) {
             fErrorHandler = (DOMErrorHandler*)value;
-        } else if (XMLString::equals(name, fgSCHEMA_TYPE)) {
+        } else if (XMLString::equals(lowerCaseName, fgSCHEMA_TYPE)) {
             fSchemaType = (XMLCh*)value;
-        } else if (XMLString::equals(name, fgSCHEMA_LOCATION)) {
+        } else if (XMLString::equals(lowerCaseName, fgSCHEMA_LOCATION)) {
             fSchemaLocation = (XMLCh*)value;
         } else {  // canSetParameter above should take care of this case
             throw DOMException(DOMException::NOT_FOUND_ERR, 0);
@@ -165,10 +168,13 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
 // --------------------------------------
 
 const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
+    XMLCh* lowerCaseName = XMLString::replicate(name);
+    XMLString::lowerCase(lowerCaseName);
+
     bool isBooleanParameter = true;
     DOMConfigurationFeature whichFlag;
     try {
-        whichFlag = getFeatureFlag(name);
+        whichFlag = getFeatureFlag(lowerCaseName);
     } catch (DOMException e) {
         // must not be a boolean parameter
         isBooleanParameter = false;
@@ -181,11 +187,11 @@ const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
             return fFalse;
         }
     } else {
-        if(XMLString::equals(name, fgERROR_HANDLER)) {
+        if(XMLString::equals(lowerCaseName, fgERROR_HANDLER)) {
             return fErrorHandler;
-        } else if (XMLString::equals(name, fgSCHEMA_TYPE)) {
+        } else if (XMLString::equals(lowerCaseName, fgSCHEMA_TYPE)) {
             return fSchemaType;
-        } else if (XMLString::equals(name, fgSCHEMA_LOCATION)) {
+        } else if (XMLString::equals(lowerCaseName, fgSCHEMA_LOCATION)) {
             return fSchemaLocation;
         } else {
             throw DOMException(DOMException::NOT_FOUND_ERR, 0);
@@ -211,11 +217,14 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
     // if value is null, return true
     if(value == 0) return true;
 
+    XMLCh* lowerCaseName = XMLString::replicate(name);
+    XMLString::lowerCase(lowerCaseName);
+    
     bool isBooleanParameter = true;
     bool booleanValue = false;
     DOMConfigurationFeature whichFlag;
     try {
-        whichFlag = getFeatureFlag(name);
+        whichFlag = getFeatureFlag(lowerCaseName);
         booleanValue = *((bool*)value);
     } catch (DOMException e) {
         // must not be a boolean parameter
@@ -333,11 +342,11 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
             default: return false; // should never be here
         }
     } else {
-        if(XMLString::equals(name, fgERROR_HANDLER)) {
+        if(XMLString::equals(lowerCaseName, fgERROR_HANDLER)) {
             return true;                               // required //
-        } else if (XMLString::equals(name, fgSCHEMA_TYPE)) {
+        } else if (XMLString::equals(lowerCaseName, fgSCHEMA_TYPE)) {
             return false;                            // optional //
-        } else if (XMLString::equals(name, fgSCHEMA_LOCATION)) {
+        } else if (XMLString::equals(lowerCaseName, fgSCHEMA_LOCATION)) {
             return false;                            // optional //
         } 
     }
@@ -349,33 +358,36 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
 // -------------------------------------------
 
 DOMConfigurationImpl::DOMConfigurationFeature DOMConfigurationImpl::getFeatureFlag(const XMLCh* name) const {
-    if(XMLString::equals(name, fgCANONICAL_FORM)) {
+    XMLCh* lowerCaseName = XMLString::replicate(name);
+    XMLString::lowerCase(lowerCaseName);
+  
+    if(XMLString::equals(lowerCaseName, fgCANONICAL_FORM)) {
         return FEATURE_CANONICAL_FORM;
-    } else if (XMLString::equals(name, fgCDATA_SECTIONS )) {
+    } else if (XMLString::equals(lowerCaseName, fgCDATA_SECTIONS )) {
         return FEATURE_CDATA_SECTIONS;
-    } else if (XMLString::equals(name, fgCOMMENTS)) {
+    } else if (XMLString::equals(lowerCaseName, fgCOMMENTS)) {
         return FEATURE_COMMENTS;
-    } else if (XMLString::equals(name, fgDATATYPE_NORMALIZATION))  {
+    } else if (XMLString::equals(lowerCaseName, fgDATATYPE_NORMALIZATION))  {
         return FEATURE_DATATYPE_NORMALIZATION;
-    } else if (XMLString::equals(name, fgDISCARD_DEFAULT_CONTENT)) {
+    } else if (XMLString::equals(lowerCaseName, fgDISCARD_DEFAULT_CONTENT)) {
         return FEATURE_DISCARD_DEFAULT_CONTENT;
-    } else if (XMLString::equals(name, fgENTITIES)) {
+    } else if (XMLString::equals(lowerCaseName, fgENTITIES)) {
         return FEATURE_ENTITIES;
-    } else if (XMLString::equals(name, fgINFOSET))  {
+    } else if (XMLString::equals(lowerCaseName, fgINFOSET))  {
         return FEATURE_INFOSET;
-    } else if (XMLString::equals(name, fgNAMESPACES)) {
+    } else if (XMLString::equals(lowerCaseName, fgNAMESPACES)) {
         return FEATURE_NAMESPACES;
-    } else if (XMLString::equals(name, fgNAMESPACE_DECLARATIONS)) {
+    } else if (XMLString::equals(lowerCaseName, fgNAMESPACE_DECLARATIONS)) {
         return FEATURE_NAMESPACE_DECLARATIONS;
-    } else if (XMLString::equals(name, fgNORMALIZE_CHARACTERS)) {
+    } else if (XMLString::equals(lowerCaseName, fgNORMALIZE_CHARACTERS)) {
         return FEATURE_NORMALIZE_CHARACTERS;
-    } else if (XMLString::equals(name, fgSPLIT_CDATA_SECTIONS)) {
+    } else if (XMLString::equals(lowerCaseName, fgSPLIT_CDATA_SECTIONS)) {
         return FEATURE_SPLIT_CDATA_SECTIONS;
-    } else if (XMLString::equals(name, fgVALIDATE)) {
+    } else if (XMLString::equals(lowerCaseName, fgVALIDATE)) {
         return FEATURE_VALIDATE;
-    } else if (XMLString::equals(name, fgVALIDATE_IF_SCHEMA)) {
+    } else if (XMLString::equals(lowerCaseName, fgVALIDATE_IF_SCHEMA)) {
         return FEATURE_VALIDATE_IF_SCHEMA;
-    } else if (XMLString::equals(name, fgWHITESPACE_IN_ELEMENT_CONTENT)) {
+    } else if (XMLString::equals(lowerCaseName, fgWHITESPACE_IN_ELEMENT_CONTENT)) {
         return FEATURE_WHITESPACE_IN_ELEMENT_CONTENT;
     } else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
