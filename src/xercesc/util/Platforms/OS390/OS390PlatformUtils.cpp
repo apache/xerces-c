@@ -106,6 +106,10 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+// ---------------------------------------------------------------------------
+//  Static data
+// ---------------------------------------------------------------------------
+static bool isPosixEnabled = false;
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
@@ -116,8 +120,40 @@ void XMLPlatformUtils::platformInit()
 // The next conditional section is to turn on support for allowing
 // the NEL character as a valid whitespace character. Once this is
 // enabled the parser is non-compliant with the XML standard.
+// Assumption: Once this is enabled, it cannot be reset and
+// should remain the same during the same process.
 #if defined XML_ALLOW_NELWS
+	try
+	{
      XMLPlatformUtils::recognizeNEL(true);
+	}
+	catch (...)
+	{
+	   panic(XMLPlatformUtils::Panic_SystemInit);
+	}
+#endif
+
+// The next section checks if Posix is enabled on the OS/390 system.
+// It stores the result in the static isPosixEnabled flag.
+// The __isPosixOn() native routine uses too much
+// overhead to call repeatedly at runtime so this will be the only
+// remaining call of it.
+// Assumption: Once this is enabled, it cannot be reset and
+// should remain the same during the same process.
+
+#ifdef OS390BATCH
+	try
+	{
+	   if (__isPosixOn())
+	   {
+        if (!isPosixEnabled)
+            isPosixEnabled = true;
+	   }
+	}
+	catch (...)
+	{
+	   panic(XMLPlatformUtils::Panic_SystemInit);
+	}
 #endif
 }
 
@@ -811,7 +847,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (isPosixEnabled) {
 #endif
     if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
     {
@@ -832,7 +868,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (isPosixEnabled) {
 #endif
     if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
     {
@@ -855,7 +891,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 void* XMLPlatformUtils::makeMutex()
 {
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (isPosixEnabled) {
 #endif
     pthread_mutex_t* mutex = new pthread_mutex_t;
     if (mutex == NULL)
@@ -890,7 +926,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (isPosixEnabled) {
 #endif
     if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
     {
