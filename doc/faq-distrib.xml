@@ -26,8 +26,8 @@
           <td>egcs-2.91.66 and glibc-2.1.2-11</td>
         </tr>
         <tr>
-          <td>AIX 4.2.1</td>
-          <td>xlC 3.6.4</td>
+          <td>AIX 4.3</td>
+          <td>xlC_r 5.0.2</td>
         </tr>
         <tr>
           <td>Solaris 2.6</td>
