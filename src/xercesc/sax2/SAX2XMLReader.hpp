@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/07/04 15:35:44  tng
+ * API Documentation typo fix.
+ *
  * Revision 1.4  2002/06/27 18:46:53  tng
  * API Documentation Update.
  *
@@ -538,7 +541,6 @@ public:
 	  *
 	  */
 	virtual XMLValidator* getValidator() const = 0;
-    //@}
 
     /** Get error count from the last parse operation.
       *
