@@ -102,6 +102,7 @@ class DOMNotationImpl;
 class DOMProcessingInstructionImpl;
 class DOMTextImpl;
 class DOMNodeIteratorImpl;
+class DOMNormalizer;
 class DOMTreeWalkerImpl;
 class DOMNodeFilter;
 class DOMNodeFilterImpl;
@@ -267,6 +268,7 @@ public:
     virtual DOMNode*             adoptNode(DOMNode* source);
     virtual void                 normalizeDocument();
     virtual DOMConfiguration*    getDOMConfiguration() const;
+    virtual void                 setDOMConfiguration(DOMConfiguration *config);
 
     // helper functions to prevent storing userdata pointers on every node.
     void*                        setUserData(DOMNodeImpl* n,
@@ -369,7 +371,7 @@ private:
     DOMDocumentType*      fDocType;
     DOMElement*           fDocElement;
     DOMStringPool*        fNamePool;
-
+    DOMNormalizer*        fNormalizer;
     Ranges*               fRanges;
     NodeIterators*        fNodeIterators;
 

@@ -83,6 +83,7 @@
 #include "DOMEntityImpl.hpp"
 #include "DOMEntityReferenceImpl.hpp"
 #include "DOMNamedNodeMapImpl.hpp"
+#include "DOMNormalizer.hpp"
 #include "DOMNotationImpl.hpp"
 #include "DOMProcessingInstructionImpl.hpp"
 #include "DOMTextImpl.hpp"
@@ -119,6 +120,7 @@ DOMDocumentImpl::DOMDocumentImpl()
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
+      fNormalizer(0),
       fNodeIDMap(0),
       fRanges(0),
       fNodeIterators(0),
@@ -151,6 +153,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
+      fNormalizer(0),
       fNodeIDMap(0),
       fRanges(0),
       fNodeIterators(0),
@@ -227,6 +230,8 @@ DOMDocumentImpl::~DOMDocumentImpl()
     if (fRecycleBufferPtr) {
         delete fRecycleBufferPtr;
     }
+
+    delete fNormalizer;
 
     //  Delete the heap for this document.  This uncerimoniously yanks the storage
     //      out from under all of the nodes in the document.  Destructors are NOT called.
@@ -989,7 +994,11 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* source) {
 }
 
 void DOMDocumentImpl::normalizeDocument() {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+
+    if(!fNormalizer) 
+        fNormalizer = new DOMNormalizer();
+
+    fNormalizer->normalizeDocument(this);
 }
 
 DOMConfiguration* DOMDocumentImpl::getDOMConfiguration() const {
@@ -997,6 +1006,10 @@ DOMConfiguration* DOMDocumentImpl::getDOMConfiguration() const {
         ((DOMDocumentImpl*)this)->fDOMConfiguration = new ((DOMDocumentImpl*)this) DOMConfigurationImpl();
 
     return fDOMConfiguration;
+}
+
+void DOMDocumentImpl::setDOMConfiguration(DOMConfiguration *config) {
+    fDOMConfiguration = config;
 }
 
 DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc)

@@ -818,7 +818,13 @@ public:
      * normalizes attribute values, etc.
      * <br>Mutation events, when supported, are generated to reflect the
      * changes occuring on the document.
-     * @since DOM Level 3
+     * Note that this is a partial implementation. Not all the required features are implemented.
+     * Currently <code>DOMAttr</code> and <code>DOMText</code> nodes are normalized. 
+     * Features to remove <code>DOMComment</code> and <code>DOMCDATASection</code> work.
+     * The feature to normalize namespaces is implemented. This feature is called 
+     * "namespaces" and is incorectly documented in the current WD.
+     * @since DOM Level 3 
+     *
      */
     virtual void                   normalizeDocument() = 0;
 
@@ -827,6 +833,13 @@ public:
      * The configuration used when Document.normalizeDocument is invoked.
      * 
      * @return The <code>DOMConfiguration</code> from this <code>DOMDocument</code>
+     *
+     * Note that this is a partial implementation. Not all the required features are 
+     * implemented and this is only used by normalizeDocument.
+     * Currently <code>DOMAttr</code> and <code>DOMText</code> nodes are normalized. 
+     * Features to remove <code>DOMComment</code> and <code>DOMCDATASection</code> work.
+     * The feature to normalize namespaces is implemented. This feature is called 
+     * "namespaces" and is incorectly documented in the current WD.
      *
      * <p><b>"Experimental - subject to change"</b></p>
      * @since DOM Level 3
