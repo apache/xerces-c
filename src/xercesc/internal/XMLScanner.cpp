@@ -1708,9 +1708,9 @@ void XMLScanner::scanEndTag(bool& gotData)
 
     unsigned int uriId = fEmptyNamespaceId;
     XMLBufBid bbName(&fBufMgr);
+    XMLBufBid bbPrefix(&fBufMgr);
     if (fDoNamespaces)
     {
-        XMLBufBid bbPrefix(&fBufMgr);
         uriId = resolveQName
         (
             qnameBuf.getRawBuffer()
@@ -1893,6 +1893,7 @@ void XMLScanner::scanEndTag(bool& gotData)
             *topElem->fThisElement
             , uriId
             , isRoot
+            , bbPrefix.getRawBuffer()
         );
     }
 
@@ -3488,6 +3489,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 *elemDecl
                 , uriId
                 , isRoot
+                , fPrefixBuf.getRawBuffer()
             );
         }
 

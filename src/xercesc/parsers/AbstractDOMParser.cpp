@@ -505,7 +505,8 @@ void AbstractDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 
 void AbstractDOMParser::endElement( const   XMLElementDecl&     elemDecl
                            , const unsigned int        urlId
-                           , const bool                isRoot)
+                           , const bool                isRoot
+                           , const XMLCh* const        elemPrefix)
 {
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fNodeStack->pop();
@@ -587,14 +588,24 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
 
-        XMLBufBid bbQName(&fBufMgr);
-        XMLBuffer& buf = bbQName.getBuffer();
+        XMLBufBid bbURI(&fBufMgr);
+        XMLBuffer& bufURI = bbURI.getBuffer();
         XMLCh* namespaceURI = 0;
+
+        XMLBufBid elemQName(&fBufMgr);
+
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
-            fScanner->getURIText(urlId, buf);   //get namespaceURI
-            namespaceURI = buf.getRawBuffer();
+            fScanner->getURIText(urlId, bufURI);   //get namespaceURI
+            namespaceURI = bufURI.getRawBuffer();
+
+            if (elemPrefix && *elemPrefix) {
+                elemQName.set(elemPrefix);
+                elemQName.append(chColon);
+            }
         }
-        elem = createElementNSNode(namespaceURI, elemDecl.getFullName());
+        elemQName.append(elemDecl.getBaseName());
+
+        elem = createElementNSNode(namespaceURI, elemQName.getRawBuffer());
         DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
         for (unsigned int index = 0; index < attrCount; ++index) {
             static const XMLCh XMLNS[] = {
@@ -606,8 +617,8 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             if (!XMLString::compareString(oneAttrib -> getName(), XMLNS))    //for xmlns=...
                 attrURIId = fScanner->getXMLNSNamespaceId();
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
-                fScanner->getURIText(attrURIId, buf);   //get namespaceURI
-                namespaceURI = buf.getRawBuffer();
+                fScanner->getURIText(attrURIId, bufURI);   //get namespaceURI
+                namespaceURI = bufURI.getRawBuffer();
             }
             //  revisit.  Optimize to init the named node map to the
             //            right size up front.
@@ -667,7 +678,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
     // If an empty element, do end right now (no endElement() will be called)
     if (isEmpty)
-        endElement(elemDecl, urlId, isRoot);
+        endElement(elemDecl, urlId, isRoot, elemPrefix);
 }
 
 

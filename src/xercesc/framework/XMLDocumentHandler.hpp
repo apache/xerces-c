@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.3  2002/05/28 20:41:11  tng
+  * [Bug 9104] prefixes dissapearing when schema validation turned on.
+  *
   * Revision 1.2  2002/02/20 18:17:01  tng
   * [Bug 5977] Warnings on generating apiDocs.
   *
@@ -202,12 +205,14 @@ public:
       * @param  uriId       The ID of the URI in the URI pool (only valid if
       *                     name spaces is enabled)
       * @param  isRoot      Indicates if this is the root element.
+      * @param  prefixName  The string representing the prefix name
       */
     virtual void endElement
     (
         const   XMLElementDecl& elemDecl
         , const unsigned int    uriId
         , const bool            isRoot
+        , const XMLCh* const    prefixName = 0
     ) = 0;
 
     /** Receive notification when a referenced entity's content ends

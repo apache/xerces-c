@@ -1092,12 +1092,16 @@ public :
       *                 namespaces setting is switched on.
       * @param isRoot   A flag indicating whether this element was the
       *                 root element.
+      * @param elemPrefix A const pointer to a Unicode string containing
+      *                 the namespace prefix for this element. Applicable
+      *                 only when namespace processing is enabled.
       */
     virtual void endElement
     (
         const   XMLElementDecl& elemDecl
         , const unsigned int    urlId
         , const bool            isRoot
+        , const XMLCh* const    elemPrefix=0
     );
 
     /** Handle and end of entity reference event

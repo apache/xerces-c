@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/05/28 20:44:14  tng
+ * [Bug 9104] prefixes dissapearing when schema validation turned on.
+ *
  * Revision 1.4  2002/05/27 18:39:21  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -772,116 +775,116 @@ startElement(   const   XMLElementDecl&         elemDecl
                 , const bool                    isEmpty
                 , const bool                    isRoot)
 {
-
-	// Bump the element depth counter if not empty
+    // Bump the element depth counter if not empty
     if (!isEmpty)
         fElemDepth++;
 
     if (fDocHandler)
-	{
-	
-		if (getDoNamespaces())
-		{
+    {
+        XMLBufBid elemQName( &fStringBuffers ) ;
+        if (elemPrefix && *elemPrefix) {
+            elemQName.set(elemPrefix);
+            elemQName.append(chColon);
+        }
+        elemQName.append(elemDecl.getBaseName());
+
+        if (getDoNamespaces())
+        {
             unsigned int numPrefix = 0;
-			const XMLCh*   nsString = XMLUni::fgXMLNSString;
-			const XMLCh*   nsPrefix = 0;
-			const XMLCh*   nsURI    = 0;
-			const XMLAttr* tempAttr = 0;
+            const XMLCh*   nsString = XMLUni::fgXMLNSString;
+            const XMLCh*   nsPrefix = 0;
+            const XMLCh*   nsURI    = 0;
+            const XMLAttr* tempAttr = 0;
 
             if (!fnamespacePrefix)
-			{
+            {
                 tempAttrVec->removeAllElements();
-			}
+            }
 
-			for (unsigned int i = 0; i < attrCount; i++)
-			{
-				tempAttr = attrList.elementAt(i);
-                  if (XMLString::compareString(tempAttr->getQName(), nsString) == 0)
-					nsURI = tempAttr->getValue();
-                  if (XMLString::compareString(tempAttr->getPrefix(), nsString) == 0)
-				{
-					nsPrefix = tempAttr->getName();
-					nsURI = tempAttr->getValue();
-				}
-				if (!fnamespacePrefix)
-				{
-					if (nsURI == 0)
-						tempAttrVec->addElement((XMLAttr* const)tempAttr);
-				}
-				if (nsURI != 0)
-				{
-					if (nsPrefix == 0)
-						nsPrefix = XMLUni::fgZeroLenString;
-					fDocHandler->startPrefixMapping(nsPrefix, nsURI);
-					
-					XMLBuffer &buf = fStringBuffers.bidOnBuffer()  ;
-					buf.set ( nsPrefix ) ;
-					fPrefixes->push(&buf) ;
-
-					numPrefix++;
-				}
-				nsURI = 0;
-				nsPrefix = 0;	
-			}
-			prefixCounts->push(numPrefix) ;
-			if (!fnamespacePrefix)
-				fAttrList.setVector(tempAttrVec, tempAttrVec->size(), fScanner);
-			else
+            for (unsigned int i = 0; i < attrCount; i++)
+            {
+                tempAttr = attrList.elementAt(i);
+                if (XMLString::compareString(tempAttr->getQName(), nsString) == 0)
+                    nsURI = tempAttr->getValue();
+                if (XMLString::compareString(tempAttr->getPrefix(), nsString) == 0)
+                {
+                    nsPrefix = tempAttr->getName();
+                    nsURI = tempAttr->getValue();
+                }
+                if (!fnamespacePrefix)
+                {
+                    if (nsURI == 0)
+                        tempAttrVec->addElement((XMLAttr* const)tempAttr);
+                }
+                if (nsURI != 0)
+                {
+                    if (nsPrefix == 0)
+                        nsPrefix = XMLUni::fgZeroLenString;
+                    fDocHandler->startPrefixMapping(nsPrefix, nsURI);
+                    XMLBuffer &buf = fStringBuffers.bidOnBuffer();
+                    buf.set ( nsPrefix ) ;
+                    fPrefixes->push(&buf) ;
+                    numPrefix++;
+                }
+                nsURI = 0;
+                nsPrefix = 0;
+            }
+            prefixCounts->push(numPrefix) ;
+            if (!fnamespacePrefix)
+                fAttrList.setVector(tempAttrVec, tempAttrVec->size(), fScanner);
+            else
                 fAttrList.setVector(&attrList, attrCount, fScanner);
 
-			// call startElement() with namespace declarations
-			XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-			XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
+            // call startElement() with namespace declarations
+            XMLBufBid URIBufferBid ( &fStringBuffers ) ;
+            XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
 
-			fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
-			
-			fDocHandler->startElement(URIBuffer.getRawBuffer(),
+            fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
+
+            fDocHandler->startElement(URIBuffer.getRawBuffer(),
+										elemDecl.getBaseName(),
+										elemQName.getRawBuffer(),
+										fAttrList);
+        }
+        else // no namespace
+        {
+            fAttrList.setVector(&attrList, attrCount, fScanner);
+            fDocHandler->startElement(XMLUni::fgZeroLenString,
 										elemDecl.getBaseName(),
 										elemDecl.getFullName(),
 										fAttrList);
-		}
-		else
-		{
-			fAttrList.setVector(&attrList, attrCount, fScanner);
-			fDocHandler->startElement(XMLUni::fgZeroLenString,
-										elemDecl.getBaseName(),
-										elemDecl.getFullName(),
-										fAttrList);
-		}
+        }
 
 
         // If its empty, send the end tag event now
         if (isEmpty)
-		{
+        {
+            // call endPrefixMapping appropriately.
+            if (getDoNamespaces())
+            {
+                XMLBufBid URIBufferBid ( &fStringBuffers ) ;
+                XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
+                fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
 
-			// call endPrefixMapping appropriately.
-			if (getDoNamespaces())
-			{
-				XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-				XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
-
-				fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
-			
-				fDocHandler->endElement(	URIBuffer.getRawBuffer(),
+                fDocHandler->endElement(	URIBuffer.getRawBuffer(),
 											elemDecl.getBaseName(),
-											elemDecl.getFullName() );
-				unsigned int numPrefix = prefixCounts->pop();
-				for (unsigned int i = 0; i < numPrefix; ++i)
-				{
-					XMLBuffer * buf = fPrefixes->pop() ;
-					fDocHandler->endPrefixMapping( buf->getRawBuffer() );
-					fStringBuffers.releaseBuffer(*buf) ;
-				}
-			}
-			else
-			{
-				fDocHandler->endElement(XMLUni::fgZeroLenString,
-							elemDecl.getBaseName(),
-							elemDecl.getFullName() );
+											elemQName.getRawBuffer());
 
-			}
-
-		}
+                unsigned int numPrefix = prefixCounts->pop();
+                for (unsigned int i = 0; i < numPrefix; ++i)
+                {
+                    XMLBuffer * buf = fPrefixes->pop() ;
+                    fDocHandler->endPrefixMapping( buf->getRawBuffer() );
+                    fStringBuffers.releaseBuffer(*buf) ;
+                }
+            }
+            else
+            {
+                fDocHandler->endElement(XMLUni::fgZeroLenString,
+                                elemDecl.getBaseName(),
+                                elemDecl.getFullName());
+            }
+        }
     }
 
     //
@@ -905,46 +908,54 @@ startElement(   const   XMLElementDecl&         elemDecl
 
 void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                             , const unsigned int    uriId
-                            , const bool            isRoot)
+                            , const bool            isRoot
+                            , const XMLCh* const    elemPrefix)
 {
     // Just map to the SAX document handler
     if (fDocHandler)
-	{
+    {
 
-		// get the prefixes back so that we can call endPrefixMapping()
+        // get the prefixes back so that we can call endPrefixMapping()
         if (getDoNamespaces())
-		{
-			XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-			XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
+        {
+            XMLBufBid URIBufferBid ( &fStringBuffers ) ;
+            XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
 
-			fScanner->getURIText(uriId, URIBuffer ) ;
-			fDocHandler->endElement(	URIBuffer.getRawBuffer(),
-										elemDecl.getBaseName(),
-										elemDecl.getFullName() );
+            fScanner->getURIText(uriId, URIBuffer ) ;
 
-			unsigned int numPrefix = prefixCounts->pop();
-			for (unsigned int i = 0; i < numPrefix; i++)
-			{
-				XMLBuffer * buf = fPrefixes->pop() ;
-				fDocHandler->endPrefixMapping( buf->getRawBuffer() );
-				fStringBuffers.releaseBuffer(*buf) ;
-			}
-		}
-		else
-		{
-			fDocHandler->endElement(XMLUni::fgZeroLenString,
+            XMLBufBid elemQName( &fStringBuffers ) ;
+            if (elemPrefix && *elemPrefix) {
+                elemQName.set(elemPrefix);
+                elemQName.append(chColon);
+            }
+            elemQName.append(elemDecl.getBaseName());
+
+            fDocHandler->endElement(	URIBuffer.getRawBuffer(),
 										elemDecl.getBaseName(),
-										elemDecl.getFullName() );
-		}
-	
-	}
+										elemQName.getRawBuffer());
+
+            unsigned int numPrefix = prefixCounts->pop();
+            for (unsigned int i = 0; i < numPrefix; i++)
+            {
+                XMLBuffer * buf = fPrefixes->pop() ;
+                fDocHandler->endPrefixMapping( buf->getRawBuffer() );
+                fStringBuffers.releaseBuffer(*buf) ;
+            }
+        }
+        else
+        {
+            fDocHandler->endElement(XMLUni::fgZeroLenString,
+            elemDecl.getBaseName(),
+            elemDecl.getFullName() );
+        }
+    }
 
     //
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
     for (unsigned int index = 0; index < fAdvDHCount; index++)
-        fAdvDHList[index]->endElement(elemDecl, uriId, isRoot);
+        fAdvDHList[index]->endElement(elemDecl, uriId, isRoot, elemPrefix);
 
     //
     //  Dump the element depth down again. Don't let it underflow in case

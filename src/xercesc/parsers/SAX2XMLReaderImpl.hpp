@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/28 20:44:14  tng
+ * [Bug 9104] prefixes dissapearing when schema validation turned on.
+ *
  * Revision 1.3  2002/05/27 18:39:21  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -283,6 +286,9 @@ public :
       *                 namespaces setting is switched on.
       * @param isRoot   A flag indicating whether this element was the
       *                 root element.
+      * @param elemPrefix A const pointer to a Unicode string containing
+      *                   the namespace prefix for this element. Applicable
+      *                   only when namespace processing is enabled.
       * @see DocumentHandler#endElement
       */
     virtual void endElement
@@ -290,6 +296,7 @@ public :
         const   XMLElementDecl& elemDecl
         , const unsigned int    urlId
         , const bool            isRoot
+        , const XMLCh* const    elemPrefix=0
     );
 
     /**

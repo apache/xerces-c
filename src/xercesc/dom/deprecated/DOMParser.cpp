@@ -546,9 +546,10 @@ void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 }
 
 
-void DOMParser::endElement( const   XMLElementDecl&     elemDecl
+void DOMParser::endElement( const   XMLElementDecl&    elemDecl
                            , const unsigned int        urlId
-                           , const bool                isRoot)
+                           , const bool                isRoot
+                           , const XMLCh* const        elemPrefix)
 {
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fNodeStack->pop();
@@ -626,11 +627,19 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         XMLBuffer buf;
         DOMString namespaceURI = 0;
+        DOMString elemQName = 0;
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
             fScanner->getURIText(urlId, buf);   //get namespaceURI
             namespaceURI = DOMString(buf.getRawBuffer());
+
+            if (elemPrefix && *elemPrefix) {
+                elemQName.appendData(elemPrefix);
+                elemQName.appendData(chColon);
+            }
         }
-        elem = fDocument.createElementNS(namespaceURI, elemDecl.getFullName());
+        elemQName.appendData(elemDecl.getBaseName());
+
+        elem = fDocument.createElementNS(namespaceURI, elemQName);
         ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
         for (unsigned int index = 0; index < attrCount; ++index) {
             static const XMLCh XMLNS[] = {
@@ -692,7 +701,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 
     // If an empty element, do end right now (no endElement() will be called)
     if (isEmpty)
-        endElement(elemDecl, urlId, isRoot);
+        endElement(elemDecl, urlId, isRoot, elemPrefix);
 }
 
 

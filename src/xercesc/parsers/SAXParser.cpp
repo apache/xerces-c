@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/28 20:44:14  tng
+ * [Bug 9104] prefixes dissapearing when schema validation turned on.
+ *
  * Revision 1.3  2002/05/27 18:39:21  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -692,18 +695,31 @@ void SAXParser::endDocument()
 
 void SAXParser::endElement( const   XMLElementDecl& elemDecl
                             , const unsigned int    uriId
-                            , const bool            isRoot)
+                            , const bool            isRoot
+                            , const XMLCh* const    elemPrefix)
 {
     // Just map to the SAX document handler
-    if (fDocHandler)
-        fDocHandler->endElement(elemDecl.getFullName());
+    if (fDocHandler) {
+        if (fScanner->getDoNamespaces()) {
+            XMLBuffer elemQName;
+            if (elemPrefix && *elemPrefix) {
+                elemQName.set(elemPrefix);
+                elemQName.append(chColon);
+            }
+            elemQName.append(elemDecl.getBaseName());
+            fDocHandler->endElement(elemQName.getRawBuffer());
+        }
+        else
+            fDocHandler->endElement(elemDecl.getFullName());
+
+    }
 
     //
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
     for (unsigned int index = 0; index < fAdvDHCount; index++)
-        fAdvDHList[index]->endElement(elemDecl, uriId, isRoot);
+        fAdvDHList[index]->endElement(elemDecl, uriId, isRoot, elemPrefix);
 
     //
     //  Dump the element depth down again. Don't let it underflow in case
@@ -798,11 +814,27 @@ startElement(   const   XMLElementDecl&         elemDecl
     if (fDocHandler)
     {
         fAttrList.setVector(&attrList, attrCount);
-        fDocHandler->startElement(elemDecl.getFullName(), fAttrList);
+        if (fScanner->getDoNamespaces()) {
+            XMLBuffer elemQName;
+            if (elemPrefix && *elemPrefix) {
+                elemQName.set(elemPrefix);
+                elemQName.append(chColon);
+            }
+            elemQName.append(elemDecl.getBaseName());
 
-        // If its empty, send the end tag event now
-        if (isEmpty)
-            fDocHandler->endElement(elemDecl.getFullName());
+            fDocHandler->startElement(elemQName.getRawBuffer(), fAttrList);
+
+            // If its empty, send the end tag event now
+            if (isEmpty)
+                fDocHandler->endElement(elemQName.getRawBuffer());
+        }
+        else {
+            fDocHandler->startElement(elemDecl.getFullName(), fAttrList);
+
+            // If its empty, send the end tag event now
+            if (isEmpty)
+                fDocHandler->endElement(elemDecl.getFullName());
+        }
     }
 
     //
