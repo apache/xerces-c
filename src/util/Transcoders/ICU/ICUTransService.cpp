@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/07 23:08:41  roddey
+ * Add in code to test for some control characters and report them as whitespace.
+ * ICU is not doing this currently, so we need to do it until they get that fixed.
+ *
  * Revision 1.3  1999/11/18 20:16:52  abagchi
  * Now works with ICU 1.3.1
  *
@@ -170,6 +174,18 @@ int ICUTransService::compareNIString(const  XMLCh* const    comp1
 
 bool ICUTransService::isSpace(const XMLCh toCheck) const
 {
+    //
+    //  <TBD>
+    //  For now, we short circuit some of the control chars because ICU
+    //  is not correctly reporting them as space. Later, when they change
+    //  this, we can get rid of this special case.
+    //
+    if ((toCheck == 0x09)
+    ||  (toCheck == 0x0A)
+    ||  (toCheck == 0x0D))
+    {
+        return true;
+    }
     return (Unicode::isSpaceChar(toCheck) != 0);
 }
 
