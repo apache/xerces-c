@@ -62,13 +62,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
-#include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -302,6 +297,49 @@ int ContentSpecNode::getMaxTotalRange() const {
     }
 
     return max;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(ContentSpecNode)
+
+void ContentSpecNode::serialize(XSerializeEngine& serEng)
+{
+    /***
+     *  Since fElement, fFirst, fSecond are NOT created by the default 
+     *  constructor, we need to create them dynamically.
+     ***/
+
+    if (serEng.isStoring())
+    {
+        serEng<<fElement;
+        serEng<<fFirst;
+        serEng<<fSecond;
+
+        serEng<<(int)fType;
+        serEng<<fAdoptFirst;
+        serEng<<fAdoptSecond;
+        serEng<<fMinOccurs;
+        serEng<<fMaxOccurs;
+    }
+    else
+    {
+        serEng>>fElement;
+        serEng>>fFirst;
+        serEng>>fSecond;
+
+        int type;
+        serEng>>type;
+        fType = (NodeTypes)type;
+
+        serEng>>fAdoptFirst;
+        serEng>>fAdoptSecond;
+        serEng>>fMinOccurs;
+        serEng>>fMaxOccurs;
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

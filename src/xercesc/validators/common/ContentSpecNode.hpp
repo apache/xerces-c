@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/09/26 18:29:27  peiyongz
+ * Implement serialization/deserialization
+ *
  * Revision 1.7  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -167,13 +170,15 @@
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLBuffer;
 class Grammar;
 
 
-class ContentSpecNode : public XMemory
+class XMLUTIL_EXPORT ContentSpecNode : public XSerializable, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -268,6 +273,10 @@ public :
     int  getMinTotalRange() const;
     int  getMaxTotalRange() const;
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(ContentSpecNode)
 
 private :
     // -----------------------------------------------------------------------
@@ -403,7 +412,6 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes              type
     , fMaxOccurs(1)
 {
 }
-
 
 inline ContentSpecNode::~ContentSpecNode()
 {
