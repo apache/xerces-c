@@ -159,12 +159,9 @@ LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath)
         int    filePathLen = XMLString::stringLen(filePath);
         XMLCh* fullDir = new XMLCh [ curDirLen + filePathLen + 2];
 
-        fullDir[0] = 0;
         XMLString::copyString(fullDir, curDir);
         fullDir[curDirLen] = chForwardSlash;
-        fullDir[curDirLen+1] = 0;
-        XMLString::catString(&fullDir[curDirLen+1], filePath);
-        fullDir[curDirLen+filePathLen+1] = 0;
+        XMLString::copyString(&fullDir[curDirLen+1], filePath);
         
         XMLPlatformUtils::removeDotSlash(fullDir);
         XMLPlatformUtils::removeDotDotSlash(fullDir);
