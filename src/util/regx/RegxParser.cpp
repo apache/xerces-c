@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/11/16 15:56:37  knoaman
+ * Add check for invalid repeating quantifier.
+ *
  * Revision 1.8  2001/09/20 13:11:42  knoaman
  * Regx  + misc. fixes
  *
@@ -876,6 +879,7 @@ Token* RegxParser::parseFactor() {
             int offset = fOffset;
             int min = 0;
             int max = -1;
+            bool minExist = false;
 
             if (offset >= fStringLen)
                 break;
@@ -883,10 +887,10 @@ Token* RegxParser::parseFactor() {
             XMLInt32 ch = fString[offset++];
 
             if (ch != chComma && (ch < chDigit_0 || ch > chDigit_9))
-                break;
+                ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
 
             if (ch != chComma) {
-
+                minExist = true;
                 min = ch - chDigit_0;
                 while (offset < fStringLen
                        && (ch = fString[offset++]) >= chDigit_0
@@ -895,12 +899,14 @@ Token* RegxParser::parseFactor() {
                     min = min*10 + ch - chDigit_0;
                     ch = -1;
                 }
-
-                if (ch < 0)
-                    break;
             }
 
             max = min;
+
+            if (ch != chCloseCurly && ch != chComma)  {
+                ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
+            }
+
             if (ch == chComma) {
 
                 if (offset >= fStringLen
@@ -909,10 +915,12 @@ Token* RegxParser::parseFactor() {
                     break;
 
                 if (ch == chCloseCurly) {
-                    max = -1;
+                    if (minExist)
+                        max = -1;
+                    else
+                        ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
                 }
                 else {
-
                     max = ch - chDigit_0;
                     while (offset < fStringLen
                            && (ch = fString[offset++]) >= chDigit_0
@@ -922,13 +930,11 @@ Token* RegxParser::parseFactor() {
                         ch = -1;
                     }
 
-					if (ch < 0)
-						break;
+                    if (ch != chCloseCurly)  {
+                        ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
+                    }
                 }
             } // end if ch = chComma
-
-            if (ch != chCloseCurly)
-                break;
 
             if (checkQuestion(offset)) {
 
