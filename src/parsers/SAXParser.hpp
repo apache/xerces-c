@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/07/27 20:24:21  tng
+ * put getScanner() back as they were there before, not to break existing apps.
+ *
  * Revision 1.18  2001/07/16 12:52:09  tng
  * APIDocs fix: default for schema processing in DOMParser, IDOMParser, and SAXParser should be false.
  *
@@ -242,6 +245,14 @@ public :
       * @return A const pointer to the installed error handler object.
       */
     const ErrorHandler* getErrorHandler() const;
+
+    /**
+      * This method returns a reference to the underlying scanner object.
+      * It allows read only access to data maintained in the scanner.
+      *
+      * @return A const reference to the underlying scanner object.
+      */
+    const XMLScanner& getScanner() const;
 
     /**
       * This method returns a reference to the parser's installed
@@ -1469,6 +1480,11 @@ inline ErrorHandler* SAXParser::getErrorHandler()
 inline const ErrorHandler* SAXParser::getErrorHandler() const
 {
     return fErrorHandler;
+}
+
+inline const XMLScanner& SAXParser::getScanner() const
+{
+    return *fScanner;
 }
 
 #endif
