@@ -179,11 +179,11 @@ if ($platform eq "win64bit" )
         # Make the icu dlls
         pchdir ("$ICUROOT\\source\\allinone\\all");
         if (!(length($opt_j) > 0)) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
-	    #For XP we ship both release and debug dlls
+ 	        #For XP 64 bit, we only ship release dlls
             psystem("nmake -f all_win64_release.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	
-	    psystem("type buildlog.txt");
-            psystem("nmake -f all_win64_debug.mak \"CFG=all - $platformname Debug\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	
-	    psystem("type buildlog.txt");
+	        psystem("type buildlog.txt");
+            #psystem("nmake -f all_win64_debug.mak \"CFG=all - $platformname Debug\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	
+	        #psystem("type buildlog.txt");
         }
 
         $transcoder = 0;
@@ -205,7 +205,7 @@ if ($platform eq "win64bit" )
     if ($opt_m =~ m/icu/i) {
         pchdir ("$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources");    	
         psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
-        system("cat buildlog.txt");       
+        system("type buildlog.txt");       
     }
     
     # Clean up all the dependency files, causes problems for nmake
@@ -218,9 +218,10 @@ if ($platform eq "win64bit" )
     psystem( "nmake -f all.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");
     system("type buildlog.txt");
 
-    pchdir ("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all\\XercesLib");
-    psystem("nmake -f XercesLib.mak \"CFG=XercesLib - $platformname Debug\" CPP=$opt_x.exe > buildlog.txt 2>&1 ");
-    system("type buildlog.txt");
+    #For XP 64 bit, we only ship release dlls
+    #pchdir ("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all\\XercesLib");
+    #psystem("nmake -f XercesLib.mak \"CFG=XercesLib - $platformname Debug\" CPP=$opt_x.exe > buildlog.txt 2>&1 ");
+    #system("type buildlog.txt");
 
     # Decide where you want the build copied from
     pchdir ($targetdir);
@@ -538,7 +539,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
                 {
                     psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");            	
                 }
-                psystem("cat buildlog.txt");
+                psystem("type buildlog.txt");
                 if ($platformname eq "Win64")
                 {
                     psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /USEENV /REBUILD /OUT buildlog.txt");
@@ -547,17 +548,17 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
                 {
                     psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");            	
                 }	
-                psystem("cat buildlog.txt");
+                psystem("type buildlog.txt");
             } elsif ($DevStudioVer eq "7.0") {
                 pchdir ("$ICUROOT/as_is/win32");
                 psystem("unzip msvc7.zip");
                 pchdir ("$ICUROOT/as_is/win32/vc7");
 
                 psystem("devenv /rebuild Release /out buildlog.txt /project all allinone.sln");
-                psystem("cat buildlog.txt");
+                psystem("type buildlog.txt");
 
                 psystem("devenv /rebuild debug /out buildlog.txt /project all allinone.sln");
-                psystem("cat buildlog.txt");
+                psystem("type buildlog.txt");
             }
         }
 
@@ -584,7 +585,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     if ($opt_m =~ m/icu/i) {
         pchdir ("$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources");    	
         psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
-        system("cat buildlog.txt");              
+        system("type buildlog.txt");              
     }
     
     # Clean up all the dependency files, causes problems for nmake
@@ -606,7 +607,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     } elsif ($DevStudioVer eq "7.0") {
         psystem( "devenv /rebuild Release /out buildlog.txt /project all xerces-all.sln");
     }
-    system("cat buildlog.txt");
+    system("type buildlog.txt");
 
     # Build the debug xerces dll.  Both debug and release DLLs
     #   are in the standard binary distribution of Xerces.
@@ -623,7 +624,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         } elsif ($DevStudioVer eq "7.0") {
             psystem( "devenv /rebuild debug /out buildlog.txt /project XercesLib xerces-all.sln");
         }
-        system("cat buildlog.txt");
+        system("type buildlog.txt");
     }
 
     # Decide where you want the build copied from
@@ -831,8 +832,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         if ($opt_c eq "") {$opt_c = "xlc_r"; }
         if ($opt_x eq "") {$opt_x = "xlC_r"; }
 
-        $icuCompileFlags = 'CXX="xlC_r" ' .
-                           'CC="xlc_r" ' .
+        $icuCompileFlags = 'CXX="$opt_x" ' .
+                           'CC="$opt_c" ' .
                            'CFLAGS="-w -O2 -qmaxmem=-1" ' .
                            'CXXFLAGS="-w -O2 -qmaxmem=-1" ';
 
@@ -876,11 +877,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
             $opt_m = "inmem";
         }
 
-        if ($opt_x eq 'CC') {
-            $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="-w +O2 +Ofltacc" CFLAGS="-w +O2 +Ofltacc"';
-        } else {
-            $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="-w +O2 +Ofltacc" CFLAGS="-w +O2 +Ofltacc"';
-        }
+        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w +O2 +Ofltacc" CFLAGS="-w +O2 +Ofltacc"';
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'SHLIB_PATH'}="$ICUROOT/lib:$ENV{'SHLIB_PATH'}";
@@ -893,19 +890,14 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         $platform = "beos";
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
-        $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w -O" CFLAGS="-w -O"';
         psystem ("echo LIBRARY_PATH=$ENV{'LIBRARY_PATH'}");
     }
     if ($platform =~ m/Linux/i) {
         $platform = "linux";
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
-        if ($opt_x eq "ecc") {
-            #REVISIT: for ecc, disable optimization.
-            $icuCompileFlags = 'CC=ecc CXX=ecc CXXFLAGS="-w -O0" CFLAGS="-w -O0"';
-        } else {
-            $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
-        }
+        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w -O" CFLAGS="-w -O"';
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
@@ -916,7 +908,6 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     }
 
     if ($platform =~ m/SunOS/i) {
-        $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="-w -O3" CFLAGS="-w -xO3"';
         $platform = "solaris";
         if ($opt_c eq "") {$opt_c = "cc";}
         if ($opt_x eq "") {$opt_x = "CC";}
@@ -925,6 +916,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
         	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
+        
+        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w -O3" CFLAGS="-w -xO3"';        
 
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
@@ -1518,10 +1511,10 @@ sub change_windows_project_for_ICU_VC7() {
     open (FIZZLEOUT, ">$thefile");
     while ($line = <FIZZLE>) {
         if ($line =~ /Release\|Win32/) {
-            $icuuc = "icuucd";
+            $icuuc = "icuuc";
             }
         if ($line =~ /Debug\|Win32/) {
-            $icuuc = "icuuc";
+            $icuuc = "icuucd";
             }
         $line =~ s/AdditionalIncludeDirectories=\"([^"]*)/AdditionalIncludeDirectories=\"$ICUROOT\\include;$1/;
         $line =~ s/AdditionalLibraryDirectories=\"([^"]*)/AdditionalLibraryDirectories=\"$ICUROOT\\lib;$ICUROOT\\source\\data;$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources;$1/;
