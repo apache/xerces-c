@@ -191,3 +191,9 @@ system ("ThreadTest -parser=sax -n -s -f -v -quiet -threads 10 -time 20 personal
 system ("ThreadTest -parser=dom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
 
 chdir "..".$pathsep."..";
+
+chdir "tests".$pathsep."DOM".$pathsep."TypeInfo";
+system ("TypeInfo");
+
+chdir "..".$pathsep."..";
+
