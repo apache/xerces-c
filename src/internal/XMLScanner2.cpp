@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/07/08 00:17:13  andyh
+ * Cleanup of yesterday's speedup changes.  Merged new bit into the
+ * scanner character properties table.
+ *
  * Revision 1.14  2000/07/07 01:08:44  andyh
  * Parser speed up in scan of XML content.
  *
@@ -919,25 +923,26 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
         nextCh = fReaderMgr.peekNextChar();
     }
 
-    // If its not one of the special chars, then assume its char data
-    if (!XMLReader::isSpecialTokenSenseChar(nextCh))
-        return Token_CharData;
 
     //
-    //  Else its something special so lets check them out. Start with the most
+    //  Check for special chars. Start with the most
     //  obvious end of file, which should be legal here at top level.
     //
     if (!nextCh)
         return Token_EOF;
 
+
     //
-    //  See if its an entity reference of some sort. If so, assume it must
+    //  If it's not a '<' we must be in content.
+    //
+    //  This includes entity references '&' of some sort. These must
     //  be character data because that's the only place a reference can
     //  occur in content.
     //
-    if (nextCh == chAmpersand)
+    if (nextCh != chOpenAngle)
         return Token_CharData;
 
+    //  
     //
     //  Ok it had to have been a '<' character. So get it out of the reader
     //  and store the reader number where we saw it, passing it back to the
@@ -951,7 +956,13 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
     //  are all some form of markup.
     //
     nextCh = fReaderMgr.peekNextChar();
-    if (nextCh == chBang)
+
+    if (nextCh == chForwardSlash)
+    {
+        fReaderMgr.getNextChar();
+        return Token_EndTag;
+    }
+    else if (nextCh == chBang)
     {
         static const XMLCh gCDATAStr[] =
         {
@@ -978,11 +989,6 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
         // It must be a PI
         fReaderMgr.getNextChar();
         return Token_PI;
-    }
-     else if (nextCh == chForwardSlash)
-    {
-        fReaderMgr.getNextChar();
-        return Token_EndTag;
     }
 
     //
@@ -1666,15 +1672,19 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
              else
             {
                  //  Eat through as many plain content characters as possible without
-                 //  needing special handling
+                 //  needing special handling.  Moving most content characters here,
+                 //  in this one call, rather than running the overall loop once
+                 //  per content character, is a speed optimization.
                  //
                 if (curState == State_Waiting  &&  !gotLeadingSurrogate)
                 {
-                    while (fReaderMgr.getNextPlainContentChar(nextCh))
-                        toUse.append(nextCh);
+                     fReaderMgr.movePlainContentChars(toUse);
                 }
 
+
                 // Try to get another char from the source
+                //   The code from here on down covers all contengencies, 
+                //
                 if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
                 {
                     // If we were waiting for a trailing surrogate, its an error
@@ -1708,7 +1718,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                 escaped = false;
             }
 
-            // Keep the state machine up to date
+             // Keep the state machine up to date
             if (!escaped)
             {
                 if (nextCh == chCloseSquare)

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/07/08 00:17:13  andyh
+ * Cleanup of yesterday's speedup changes.  Merged new bit into the
+ * scanner character properties table.
+ *
  * Revision 1.11  2000/07/07 01:08:44  andyh
  * Parser speed up in scan of XML content.
  *
@@ -106,6 +110,7 @@
 #define XMLREADER_HPP
 
 #include <framework/XMLRecognizer.hpp>
+#include <framework/XMLBuffer.hpp>
 
 class InputSource;
 class BinInputStream;
@@ -119,7 +124,7 @@ class XMLTranscoder;
 const XMLByte   gBaseCharMask               = 0x1;
 const XMLByte   gSpecialCharDataMask        = 0x2;
 const XMLByte   gNameCharMask               = 0x4;
-const XMLByte   gSpecialTokenSenseCharMask  = 0x8;
+const XMLByte   gPlainContentCharMask       = 0x8;
 const XMLByte   gSpecialStartTagCharMask    = 0x10;
 const XMLByte   gLetterCharMask             = 0x20;
 const XMLByte   gXMLCharMask                = 0x40;
@@ -184,10 +189,10 @@ public:
     static bool isBaseChar(const XMLCh toCheck);
     static bool isFirstNameChar(const XMLCh toCheck);
     static bool isNameChar(const XMLCh toCheck);
+    static bool isPlainContentChar(const XMLCh toCheck);
     static bool isPublicIdChar(const XMLCh toCheck);
     static bool isSpecialCharDataChar(const XMLCh toCheck);
     static bool isSpecialStartTagChar(const XMLCh toCheck);
-    static bool isSpecialTokenSenseChar(const XMLCh toCheck);
     static bool isXMLLetter(const XMLCh toCheck);
     static bool isXMLChar(const XMLCh toCheck);
     static bool isWhitespace(const XMLCh toCheck);
@@ -235,7 +240,7 @@ public:
     bool getName(XMLBuffer& toFill, const bool token);
     bool getNextChar(XMLCh& chGotten);
     bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
-    bool getNextPlainContentChar(XMLCh& chGotten);
+    void movePlainContentChars(XMLBuffer &dest);
     bool getSpaces(XMLBuffer& toFill);
     bool getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck);
     bool peekNextChar(XMLCh& chGotten);
@@ -507,16 +512,6 @@ private:
     //      code and then hard coded into the cpp file for speed.
     // -----------------------------------------------------------------------
     static const XMLByte    fgCharCharsTable[0x10000];
-
-    //------------------------------------------------------------------------
-    //
-    //  Another character property table, to speed the handling of plain character data.
-    //
-    //    ToDo:  Figure out an efficient way to merge with the main character
-    //           properties table.
-    //
-    // -----------------------------------------------------------------------
-    static const XMLByte    fgPlainContentChars[256];
 };
 
 
@@ -533,6 +528,12 @@ inline bool XMLReader::isNameChar(const XMLCh toCheck)
     return (fgCharCharsTable[toCheck] & gNameCharMask) != 0;
 }
 
+inline bool XMLReader::isPlainContentChar(const XMLCh toCheck)
+{
+    return ((fgCharCharsTable[toCheck] & gPlainContentCharMask) != 0);
+}
+
+
 inline bool XMLReader::isSpecialCharDataChar(const XMLCh toCheck)
 {
     return ((fgCharCharsTable[toCheck] & gSpecialCharDataMask) != 0);
@@ -541,11 +542,6 @@ inline bool XMLReader::isSpecialCharDataChar(const XMLCh toCheck)
 inline bool XMLReader::isSpecialStartTagChar(const XMLCh toCheck)
 {
     return ((fgCharCharsTable[toCheck] & gSpecialStartTagCharMask) != 0);
-}
-
-inline bool XMLReader::isSpecialTokenSenseChar(const XMLCh toCheck)
-{
-    return ((fgCharCharsTable[toCheck] & gSpecialTokenSenseCharMask) != 0);
 }
 
 inline bool XMLReader::isXMLChar(const XMLCh toCheck)
@@ -651,31 +647,35 @@ inline void XMLReader::setThrowAtEnd(const bool newValue)
 
 // ---------------------------------------------------------------------------
 //
-//  XMLReader: getNextPlainContentChar() method inlined for speed
+//  XMLReader: movePlainContentChars()
+//
+//       Move as many plain (no special handling of any sort required) content
+//       characters as possible from this reader to the supplied destination buffer.
+//
+//       This is THE hottest performance spot in the parser.
 //
 // ---------------------------------------------------------------------------
-inline bool XMLReader::getNextPlainContentChar(XMLCh& chGotten)
+inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
 {
-    //
-    //  See if there is at least a char in the buffer. If not, just
-    //    return false.  The more general getNextChar routine will
-    //    succeed after this one fails.
-    //
-    if (fCharIndex >= fCharsAvail)
-    {
-        return false;
-    }
+    int count = 0;
+    XMLCh *pStart = &fCharBuf[fCharIndex];
+    XMLCh *pCurrent = pStart;
+    XMLCh *pEnd     = &fCharBuf[fCharsAvail];
 
 
-    XMLCh c = fCharBuf[fCharIndex];
-    if (c < 255 && XMLReader::fgPlainContentChars[c])
+    while (pCurrent < pEnd)
     {
-        fCharIndex++;
-        chGotten = c;
-        return true;
+        if (! XMLReader::isPlainContentChar(*pCurrent++))
+            break;
+        count++;
     }
-        
-    return false;
+
+    if (count > 0)
+    {
+        fCharIndex += count;
+        fCurCol    += count;
+        dest.append(pStart, count);
+    }
 }
 
 

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/07/08 00:17:13  andyh
+ * Cleanup of yesterday's speedup changes.  Merged new bit into the
+ * scanner character properties table.
+ *
  * Revision 1.10  2000/07/07 01:08:44  andyh
  * Parser speed up in scan of XML content.
  *
@@ -162,7 +166,7 @@ public :
     bool getNameToken(XMLBuffer& toFill);
     XMLCh getNextChar();
     bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
-    bool getNextPlainContentChar(XMLCh& chGotten);
+    void movePlainContentChars(XMLBuffer &dest);
     void getSpaces(XMLBuffer& toFill);
     void getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck);
     bool isEmpty() const;
@@ -337,9 +341,9 @@ inline bool ReaderMgr::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
     return fCurReader->getNextCharIfNot(chNotToGet, chGotten);
 }
 
-inline bool ReaderMgr::getNextPlainContentChar(XMLCh& chGotten)
+inline void ReaderMgr::movePlainContentChars(XMLBuffer &dest)
 {
-    return fCurReader->getNextPlainContentChar(chGotten);
+    fCurReader->movePlainContentChars(dest);
 }
 
 inline bool ReaderMgr::getThrowEOE() const
