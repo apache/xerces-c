@@ -1075,37 +1075,37 @@ void DOMParser::entityDecl
 		entityName.appendData(chOpenAngle);
         entityName.appendData(chBang);
 		entityName.appendData(XMLUni::fgEntityString);
-		entityName.appendData(chSpace);
-
-		entityName.appendData(entityDecl.getName());
-		DOMString id = entity->getPublicId();
-		if (id != 0) {
-			entityName.appendData(chSpace);
-			entityName.appendData(XMLUni::fgPubIDString);
+        entityName.appendData(chSpace);
+        
+        entityName.appendData(entityDecl.getName());
+        DOMString id = entity->getPublicId();
+        if (id != 0) {
+            entityName.appendData(chSpace);
+            entityName.appendData(XMLUni::fgPubIDString);
             entityName.appendData(chSpace);
             entityName.appendData(chDoubleQuote);
-			entityName.appendData(id);
-			entityName.appendData(chDoubleQuote);
-		}
-		id = entity->getSystemId();
-		if (id != 0) {
-			entityName.appendData(chSpace);
-			entityName.appendData(XMLUni::fgSysIDString);
+            entityName.appendData(id);
+            entityName.appendData(chDoubleQuote);
+        }
+        id = entity->getSystemId();
+        if (id != 0) {
             entityName.appendData(chSpace);
-			entityName.appendData(chDoubleQuote);
-			entityName.appendData(id);
-			entityName.appendData(chDoubleQuote);
-			
-		}
-		id = entity->getNotationName();
-		if (id != 0) {
-			entityName.appendData(chSpace);
-			entityName.appendData(XMLUni::fgNDATAString);
+            entityName.appendData(XMLUni::fgSysIDString);
             entityName.appendData(chSpace);
-			entityName.appendData(chDoubleQuote);
-			entityName.appendData(id);
-			entityName.appendData(chDoubleQuote);
-		}
+            entityName.appendData(chDoubleQuote);
+            entityName.appendData(id);
+            entityName.appendData(chDoubleQuote);
+            
+        }
+        id = entity->getNotationName();
+        if (id != 0) {
+            entityName.appendData(chSpace);
+            entityName.appendData(XMLUni::fgNDATAString);
+            entityName.appendData(chSpace);
+            entityName.appendData(chDoubleQuote);
+            entityName.appendData(id);
+            entityName.appendData(chDoubleQuote);
+        }
         id = entityDecl.getValue();
         if (id !=0) {
             entityName.appendData(chSpace);
@@ -1113,10 +1113,10 @@ void DOMParser::entityDecl
             entityName.appendData(id);
             entityName.appendData(chDoubleQuote);
         }
+        
+        entityName.appendData(chCloseAngle);
+        fDocumentType->internalSubset.appendData(entityName);
     }
-    entityName.appendData(chCloseAngle);
-    fDocumentType->internalSubset.appendData(entityName);
-	}
 
 	if (fOldDocTypeHandler)
 	{
