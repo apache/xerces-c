@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:19  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:49:37  roddey
+ * Added second getValue() method which takes a short name for the attribute
+ * to get the value for. Just a convenience method.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:19  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:44  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -68,6 +72,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/Janitor.hpp>
 #include <internal/VecAttrListImpl.hpp>
 
 
@@ -153,6 +158,27 @@ const XMLCh* VecAttrListImpl::getValue(const XMLCh* const name) const
     }
     return 0;
 }
+
+const XMLCh* VecAttrListImpl::getValue(const char* const name) const
+{
+    // Temporarily transcode the name for lookup
+    XMLCh* wideName = XMLString::transcode(name);
+    ArrayJanitor<XMLCh> janName(wideName);
+
+    //
+    //  Search the vector for the attribute with the given name and return
+    //  its type.
+    //
+    for (unsigned int index = 0; index < fCount; index++)
+    {
+        const XMLAttr* curElem = fVector->elementAt(index);
+
+        if (!XMLString::compareString(curElem->getName(), wideName))
+            return curElem->getValue();
+    }
+    return 0;
+}
+
 
 
 // ---------------------------------------------------------------------------

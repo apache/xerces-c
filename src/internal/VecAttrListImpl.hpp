@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:19  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:49:37  roddey
+ * Added second getValue() method which takes a short name for the attribute
+ * to get the value for. Just a convenience method.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:19  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:45  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -91,6 +95,7 @@ public :
     virtual const XMLCh* getValue(const unsigned int index) const;
     virtual const XMLCh* getType(const XMLCh* const name) const;
     virtual const XMLCh* getValue(const XMLCh* const name) const;
+    virtual const XMLCh* getValue(const char* const name) const;
 
 
     // -----------------------------------------------------------------------
