@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2002/03/07 21:41:58  peiyongz
+ * Call Terminate() to avoid memory tools reporting memory leak
+ *
  * Revision 1.7  2002/02/04 21:56:57  tng
  * Test DOM Level 2 function getRoot.
  *
@@ -580,6 +583,9 @@ int  main()
         delete doc;
 
     };
+
+    // And call the termination method
+    XMLPlatformUtils::Terminate();
 
     printf("Test Run Successfully\n");
     return 0;

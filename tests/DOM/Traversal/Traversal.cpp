@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2002/03/07 21:42:14  peiyongz
+ * Call Terminate() to avoid memory tools reporting memory leak
+ *
  * Revision 1.5  2002/02/04 20:12:43  tng
  * Test DOM Level missing functions:
  * 1. NodeIterator::getRoot
@@ -323,6 +326,7 @@ int  main()
             TASSERT(iter.getRoot() == root);
             TASSERT(iter.getRoot() != doc);
 
+			delete filter;
         }
         TESTEPILOG;
 
@@ -363,6 +367,8 @@ int  main()
             TASSERT(nd == E13);
             nd = iter.previousNode();
             TASSERT(nd == E122);
+
+			delete filter;
         }
         TESTEPILOG;
 
@@ -389,6 +395,7 @@ int  main()
             nd = iter.previousNode();
             TASSERT(nd == textNode2);
 
+			delete filter;
         }
         TESTEPILOG;
         TESTPROLOG;
@@ -409,6 +416,7 @@ int  main()
             nd = iter.nextNode();
             TASSERT(nd == 0);
 
+			delete filter;
         }
         TESTEPILOG;
         TESTPROLOG;
@@ -429,6 +437,7 @@ int  main()
             nd = iter.nextNode();
             TASSERT(nd == 0);
 
+			delete filter;
 
         }
         TESTEPILOG;
@@ -449,6 +458,7 @@ int  main()
             nd = iter.nextNode();
             TASSERT(nd == 0);
 
+			delete filter;
         }
         TESTEPILOG;
 
@@ -561,6 +571,9 @@ int  main()
     //  Print Final allocation stats for full test
     //
     DomMemDebug().print();
+
+    // And call the termination method
+    XMLPlatformUtils::Terminate();
 
     return 0;
     };
