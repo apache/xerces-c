@@ -316,6 +316,10 @@ void XMLTransService::initTransService()
     gMappings->put((void*)XMLUni::fgISO88591EncodingString6, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString6));
     gMappings->put((void*)XMLUni::fgISO88591EncodingString7, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString7));
     gMappings->put((void*)XMLUni::fgISO88591EncodingString8, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString8));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString9, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString9));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString10, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString10));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString11, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString11));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString12, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString12));
 
     //
     //  Add in our mappings for UTF-16 and UCS-4, little endian
@@ -499,6 +503,8 @@ void XMLTransService::initTransService()
     //
     gMappings->put((void*)XMLUni::fgIBM1140EncodingString, new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString));
     gMappings->put((void*)XMLUni::fgIBM1140EncodingString2, new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString2));
+    gMappings->put((void*)XMLUni::fgIBM1140EncodingString3, new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString3));
+    gMappings->put((void*)XMLUni::fgIBM1140EncodingString4, new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString4));
 
     //
     //  Add in our mappings for Windows-1252. We don't have any aliases for

@@ -178,6 +178,16 @@ const XMLCh XMLUni::fgIBM1140EncodingString2[] =
     chLatin_I, chLatin_B, chLatin_M, chDigit_0, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
 };
 
+const XMLCh XMLUni::fgIBM1140EncodingString3[] =
+{
+    chLatin_C, chLatin_C, chLatin_S, chLatin_I, chLatin_D, chDigit_0, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgIBM1140EncodingString4[] =
+{
+    chLatin_C, chLatin_P, chDigit_0, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
+};
+
 const XMLCh XMLUni::fgIESString[] =
 {
     chLatin_I, chLatin_E, chLatin_S, chNull
@@ -251,6 +261,26 @@ const XMLCh XMLUni::fgISO88591EncodingString7[] =
 const XMLCh XMLUni::fgISO88591EncodingString8[] =
 {
     chLatin_L, chLatin_A, chLatin_T, chLatin_I, chLatin_N, chUnderscore, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString9[] =
+{
+    chLatin_C, chLatin_P, chDigit_8, chDigit_1, chDigit_9, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString10[] =
+{
+    chLatin_C, chLatin_S, chLatin_I, chLatin_S, chLatin_O, chLatin_L, chLatin_A, chLatin_T, chLatin_I, chLatin_N, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString11[] =
+{
+    chLatin_I, chLatin_S, chLatin_O, chDash, chLatin_I, chLatin_R, chDash, chDigit_1, chDigit_0, chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString12[] =
+{
+    chLatin_L, chDigit_1, chNull
 };
 
 const XMLCh XMLUni::fgLocalHostString[] =

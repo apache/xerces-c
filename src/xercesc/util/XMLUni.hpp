@@ -102,6 +102,8 @@ public :
     static const XMLCh fgIBM037EncodingString2[];
     static const XMLCh fgIBM1140EncodingString[];
     static const XMLCh fgIBM1140EncodingString2[];
+    static const XMLCh fgIBM1140EncodingString3[];
+    static const XMLCh fgIBM1140EncodingString4[];
     static const XMLCh fgIESString[];
     static const XMLCh fgIDString[];
     static const XMLCh fgIDRefString[];
@@ -117,6 +119,10 @@ public :
     static const XMLCh fgISO88591EncodingString6[];
     static const XMLCh fgISO88591EncodingString7[];
     static const XMLCh fgISO88591EncodingString8[];
+    static const XMLCh fgISO88591EncodingString9[];
+    static const XMLCh fgISO88591EncodingString10[];
+    static const XMLCh fgISO88591EncodingString11[];
+    static const XMLCh fgISO88591EncodingString12[];
     static const XMLCh fgLocalHostString[];
     static const XMLCh fgNoString[];
     static const XMLCh fgNotationString[];
