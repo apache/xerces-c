@@ -1166,16 +1166,17 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 
     while (*srcPtr)
     {
-        if ( !(*srcPtr++ == pattern[patnIndex++]))
+        if ( !(*srcPtr++ == pattern[patnIndex]))
         {
             patnIndex = 0;
             srcPtr = ++patnStart;
         }
         else
         {
-            if (patnIndex == patnLen)
+            if (++patnIndex == patnLen)
                 // full pattern match found
                 return (srcPtr - patnLen - toSearch);
+
         }
     }
 
