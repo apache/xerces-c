@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/05/21 19:30:47  tng
+ * DOM Reorganization: modify to use the new DOM interface.
+ *
  * Revision 1.4  2002/03/19 21:22:39  knoaman
  * Fix for declarations referenced from a different NS in the case of a circular import.
  *
@@ -108,7 +111,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
                        XMLStringPool* const stringPool,
-                       const IDOM_Element* const root)
+                       const DOMElement* const root)
     : fAdoptInclude(false)
     , fElemAttrDefaultQualified(elemAttrDefaultQualified)
     , fBlockDefault(blockDefault)
@@ -160,13 +163,13 @@ SchemaInfo::~SchemaInfo()
 // ---------------------------------------------------------------------------
 //  SchemaInfo:
 // ---------------------------------------------------------------------------
-IDOM_Element*
+DOMElement*
 SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
                                  const XMLCh* const name,
                                  SchemaInfo** enclosingSchema) {
 
     SchemaInfo* currentInfo = this;
-    IDOM_Element* child = getTopLevelComponent(compCategory, name);
+    DOMElement* child = getTopLevelComponent(compCategory, name);
 
     if (child == 0) {
 
@@ -193,11 +196,11 @@ SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
 }
 
 
-IDOM_Element*
+DOMElement*
 SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
                                   const XMLCh* const name) {
 
-    IDOM_Element* child = XUtil::getFirstChildElement(fSchemaRootElement);
+    DOMElement* child = XUtil::getFirstChildElement(fSchemaRootElement);
 
     while (child != 0) {
 
@@ -209,7 +212,7 @@ SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
         else if (!XMLString::compareString(child->getLocalName(),SchemaSymbols::fgELT_REDEFINE)
                  && (!fFailedRedefineList || !fFailedRedefineList->containsElement(child))) { // if redefine
 
-            IDOM_Element* redefineChild = XUtil::getFirstChildElement(child);
+            DOMElement* redefineChild = XUtil::getFirstChildElement(child);
 
             while (redefineChild != 0) {
 

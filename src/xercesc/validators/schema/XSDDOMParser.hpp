@@ -59,21 +59,21 @@
  *
  */
 
-#if !defined(XSDIDOMPARSER_HPP)
-#define XSDIDOMPARSER_HPP
+#if !defined(XSDDOMPARSER_HPP)
+#define XSDDOMPARSER_HPP
 
 
-#include <xercesc/parsers/IDOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 
-class IDOM_Element;
+class DOMElement;
 class XMLValidator;
 
 
 /**
-  * This class is used to parse schema documents into IDOM trees
+  * This class is used to parse schema documents into DOM trees
   */
-class PARSERS_EXPORT XSDIDOMParser : public IDOMParser
+class PARSERS_EXPORT XSDDOMParser : public XercesDOMParser
 {
 public :
 
@@ -83,7 +83,7 @@ public :
 
     /** @name Constructors and Destructor */
     //@{
-    /** Construct a XSDIDOMParser, with an optional validator
+    /** Construct a XSDDOMParser, with an optional validator
       *
       * Constructor with an instance of validator class to use for
       * validation. If you don't provide a validator, a default one will
@@ -92,12 +92,12 @@ public :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       */
-    XSDIDOMParser(XMLValidator* const valToAdopt = 0);
+    XSDDOMParser(XMLValidator* const valToAdopt = 0);
 
     /**
       * Destructor
       */
-    ~XSDIDOMParser();
+    ~XSDDOMParser();
 
     //@}
 
@@ -105,7 +105,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected Helper methods
     // -----------------------------------------------------------------------
-    virtual IDOM_Element* createElementNSNode(const XMLCh *fNamespaceURI,
+    virtual DOMElement* createElementNSNode(const XMLCh *fNamespaceURI,
                                               const XMLCh *qualifiedName);
 };
 

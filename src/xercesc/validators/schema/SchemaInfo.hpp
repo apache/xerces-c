@@ -77,7 +77,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/idom/IDOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/util/StringPool.hpp>
@@ -104,7 +104,7 @@ public:
                XMLCh* const schemaURL,
                const XMLCh* const targetNSURIString,
                XMLStringPool* const stringPool,
-               const IDOM_Element* const root);
+               const DOMElement* const root);
     ~SchemaInfo();
 
 
@@ -113,7 +113,7 @@ public:
     // -----------------------------------------------------------------------
     XMLCh*                   getCurrentSchemaURL() const;
     const XMLCh* const       getTargetNSURIString() const;
-    const IDOM_Element*      getRoot() const;
+    const DOMElement*      getRoot() const;
     int                      getBlockDefault() const;
     int                      getFinalDefault() const;
     int                      getTargetNSURI() const;
@@ -121,7 +121,7 @@ public:
     unsigned int             getNamespaceScopeLevel() const;
     unsigned short           getElemAttrDefaultQualified() const;
     RefVectorEnumerator<SchemaInfo> getImportingListEnumerator() const;
-    ValueVectorOf<const IDOM_Element*>* getRecursingAnonTypes() const;
+    ValueVectorOf<const DOMElement*>* getRecursingAnonTypes() const;
     ValueVectorOf<const XMLCh*>*        getRecursingTypeNames() const;
 
     // -----------------------------------------------------------------------
@@ -131,25 +131,25 @@ public:
     void setBlockDefault(const int aValue);
     void setFinalDefault(const int aValue);
     void setElemAttrDefaultQualified(const unsigned short aValue);
-    
+
     // -----------------------------------------------------------------------
     //  Access methods
     // -----------------------------------------------------------------------
     void addSchemaInfo(SchemaInfo* const toAdd, const ListType aListType);
     bool containsInfo(const SchemaInfo* const toCheck, const ListType aListType) const;
     SchemaInfo* getImportInfo(const unsigned int namespaceURI) const;
-    IDOM_Element* getTopLevelComponent(const XMLCh* const compCategory,
+    DOMElement* getTopLevelComponent(const XMLCh* const compCategory,
                                        const XMLCh* const name);
-    IDOM_Element* getTopLevelComponent(const XMLCh* const compCategory,
+    DOMElement* getTopLevelComponent(const XMLCh* const compCategory,
                                        const XMLCh* const name,
                                        SchemaInfo** enclosingSchema);
     void updateImportingInfo(SchemaInfo* const importingInfo);
     bool circularImportExist(const unsigned int nameSpaceURI);
-    bool isFailedRedefine(const IDOM_Element* const anElem);
-    void addFailedRedefine(const IDOM_Element* const anElem);
+    bool isFailedRedefine(const DOMElement* const anElem);
+    void addFailedRedefine(const DOMElement* const anElem);
     bool isImportingNS(const int namespaceURI);
     void addImportedNS(const int namespaceURI);
-    void addRecursingType(const IDOM_Element* const elem, const XMLCh* const name);
+    void addRecursingType(const DOMElement* const elem, const XMLCh* const name);
 
 private:
     // -----------------------------------------------------------------------
@@ -165,13 +165,13 @@ private:
     XMLCh*                              fCurrentSchemaURL;
     const XMLCh*                        fTargetNSURIString;
     XMLStringPool*                      fStringPool;
-    const IDOM_Element*                 fSchemaRootElement;
+    const DOMElement*                 fSchemaRootElement;
     RefVectorOf<SchemaInfo>*            fIncludeInfoList;
     RefVectorOf<SchemaInfo>*            fImportedInfoList;
     RefVectorOf<SchemaInfo>*            fImportingInfoList;
-    ValueVectorOf<const IDOM_Element*>* fFailedRedefineList;
+    ValueVectorOf<const DOMElement*>* fFailedRedefineList;
     ValueVectorOf<int>*                 fImportedNSList;
-    ValueVectorOf<const IDOM_Element*>* fRecursingAnonTypes;
+    ValueVectorOf<const DOMElement*>* fRecursingAnonTypes;
     ValueVectorOf<const XMLCh*>*        fRecursingTypeNames;
 };
 
@@ -207,7 +207,7 @@ inline const XMLCh* const SchemaInfo::getTargetNSURIString() const {
     return fTargetNSURIString;
 }
 
-inline const IDOM_Element* SchemaInfo::getRoot() const {
+inline const DOMElement* SchemaInfo::getRoot() const {
 
     return fSchemaRootElement;
 }
@@ -228,7 +228,7 @@ SchemaInfo::getImportingListEnumerator() const {
     return RefVectorEnumerator<SchemaInfo>(fImportingInfoList);
 }
 
-inline ValueVectorOf<const IDOM_Element*>*
+inline ValueVectorOf<const DOMElement*>*
 SchemaInfo::getRecursingAnonTypes() const {
 
     return fRecursingAnonTypes;
@@ -319,7 +319,7 @@ inline bool SchemaInfo::containsInfo(const SchemaInfo* const toCheck,
                                      const ListType aListType) const {
 
     if ((aListType == INCLUDE) && fIncludeInfoList) {
-        return fIncludeInfoList->containsElement(toCheck);        
+        return fIncludeInfoList->containsElement(toCheck);
     }
     else if ((aListType == IMPORT) && fImportedInfoList) {
         return fImportedInfoList->containsElement(toCheck);
@@ -341,7 +341,7 @@ inline bool SchemaInfo::circularImportExist(const unsigned int namespaceURI) {
     return false;
 }
 
-inline bool SchemaInfo::isFailedRedefine(const IDOM_Element* const anElem) {
+inline bool SchemaInfo::isFailedRedefine(const DOMElement* const anElem) {
 
     if (fFailedRedefineList)
         return (fFailedRedefineList->containsElement(anElem));
@@ -349,10 +349,10 @@ inline bool SchemaInfo::isFailedRedefine(const IDOM_Element* const anElem) {
     return false;
 }
 
-inline void SchemaInfo::addFailedRedefine(const IDOM_Element* const anElem) {
+inline void SchemaInfo::addFailedRedefine(const DOMElement* const anElem) {
 
     if (!fFailedRedefineList) {
-        fFailedRedefineList = new ValueVectorOf<const IDOM_Element*>(4);
+        fFailedRedefineList = new ValueVectorOf<const DOMElement*>(4);
     }
 
     fFailedRedefineList->addElement(anElem);
@@ -376,11 +376,11 @@ inline bool SchemaInfo::isImportingNS(const int namespaceURI) {
     return (fImportedNSList->containsElement(namespaceURI));
 }
 
-inline void SchemaInfo::addRecursingType(const IDOM_Element* const elem,
+inline void SchemaInfo::addRecursingType(const DOMElement* const elem,
                                          const XMLCh* const name) {
 
     if (!fRecursingAnonTypes) {
-        fRecursingAnonTypes = new ValueVectorOf<const IDOM_Element*>(8);
+        fRecursingAnonTypes = new ValueVectorOf<const DOMElement*>(8);
         fRecursingTypeNames = new ValueVectorOf<const XMLCh*>(8);
     }
 

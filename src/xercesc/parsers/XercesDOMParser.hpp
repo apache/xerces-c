@@ -59,18 +59,18 @@
  *
  */
 
-#if !defined(IDOMPARSER_HPP)
-#define IDOMPARSER_HPP
+#if !defined(XercesDOMParser_HPP)
+#define XercesDOMParser_HPP
 
 
-#include <xercesc/idom/IDOM_Document.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
 
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
-#include <xercesc/idom/IDOM_DocumentType.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 
 class EntityResolver;
@@ -78,9 +78,9 @@ class ErrorHandler;
 class XMLPScanToken;
 class XMLScanner;
 class XMLValidator;
-class IDDocumentImpl;
-class IDDocumentTypeImpl;
-class IDOM_Element;
+class DOMDocumentImpl;
+class DOMDocumentTypeImpl;
+class DOMElement;
 
 
 /**
@@ -93,7 +93,7 @@ class IDOM_Element;
   * <p>It can be used to instantiate a validating or non-validating
   * parser, by setting a member flag.</p>
   */
-class PARSERS_EXPORT IDOMParser :
+class PARSERS_EXPORT XercesDOMParser :
 
     public XMLDocumentHandler
     , public XMLErrorReporter
@@ -118,7 +118,7 @@ public :
 
     /** @name Constructors and Destructor */
     //@{
-    /** Construct a IDOMParser, with an optional validator
+    /** Construct a XercesDOMParser, with an optional validator
       *
       * Constructor with an instance of validator class to use for
       * validation. If you don't provide a validator, a default one will
@@ -127,18 +127,18 @@ public :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       */
-    IDOMParser(XMLValidator* const valToAdopt = 0);
+    XercesDOMParser(XMLValidator* const valToAdopt = 0);
 
     /**
       * Destructor
       */
-    virtual ~IDOMParser();
+    virtual ~XercesDOMParser();
 
     //@}
 
     /** Reset the parser
       *
-      * This method resets the state of the IDOM driver and makes
+      * This method resets the state of the DOM driver and makes
       * it ready for a fresh parse run.
       */
     void reset();
@@ -146,16 +146,16 @@ public :
     /** Reset the documents vector pool and release all the associated memory
       * back to the system.
       *
-      * When parsing a document using an IDOMParser, all memory allocated
+      * When parsing a document using an XercesDOMParser, all memory allocated
       * for a DOM tree is associated to the DOM document.
       *
-      * If you do multiple parse using the same IDOMParser instance, then
+      * If you do multiple parse using the same XercesDOMParser instance, then
       * multiple DOM documents will be generated and saved in a vector pool.
       * All these documents (and thus all the allocated memory)
       * won't be deleted until the parser instance is destroyed.
       *
       * If you don't need these DOM documents anymore and don't want to
-      * destroy the IDOMParser instance at this moment, then you can call this method
+      * destroy the XercesDOMParser instance at this moment, then you can call this method
       * to reset the document vector pool and release all the allocated memory
       * back to the system.
       *
@@ -176,16 +176,16 @@ public :
     /** @name Getter methods */
     //@{
 
-    /** Get the IDOM document
+    /** Get the DOM document
       *
-      * This method returns the IDOM_Document object representing the
+      * This method returns the DOMDocument object representing the
       * root of the document tree. This object provides the primary
       * access to the document's data.
       *
-      * @return The IDOM_Document object which represents the entire
+      * @return The DOMDocument object which represents the entire
       *         XML document.
       */
-    IDOM_Document* getDocument();
+    DOMDocument* getDocument();
 
     /** Get a pointer to the error handler
       *
@@ -538,7 +538,7 @@ public :
       * on non-validating parsers which always include non-markup text.
       * <p>When set to true (also the default), ignorable whitespaces will be
       * added to the DOM tree as text nodes.  The method
-      * IDOM_Text::isIgnorableWhitespace() will return true for those text
+      * DOMText::isIgnorableWhitespace() will return true for those text
       * nodes only.
       * <p>When set to false, all ignorable whitespace will be discarded and
       * no text node is added to the DOM tree.  Note: applications intended
@@ -688,7 +688,7 @@ public :
       *            wrapping another exception.
       * @exception XMLException An exception from the parser or client
       *            handler code.
-      * @exception IDOM_DOMException A DOM exception as per DOM spec.
+      * @exception DOMException A DOM exception as per DOM spec.
       * @see InputSource#InputSource
       * @see #setEntityResolver
       * @see #setErrorHandler
@@ -711,7 +711,7 @@ public :
       *            wrapping another exception.
       * @exception XMLException An exception from the parser or client
       *            handler code.
-      * @exception DOM_DOMException A DOM exception as per DOM spec.
+      * @exception DOMException A DOM exception as per DOM spec.
       * @see #parse(InputSource,...)
       */
     void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
@@ -731,7 +731,7 @@ public :
       *            wrapping another exception.
       * @exception XMLException An exception from the parser or client
       *            handler code.
-      * @exception DOM_DOMException A DOM exception as per DOM spec.
+      * @exception DOMException A DOM exception as per DOM spec.
       * @see #parse(InputSource,...)
       */
     void parse(const char* const systemId, const bool reuseGrammar = false);
@@ -949,7 +949,7 @@ public :
       * This method allows the user installed Error Handler callback to
       * 'reset' itself.
       *
-      * <b><font color="#FF0000">This method is a no-op for this IDOM
+      * <b><font color="#FF0000">This method is a no-op for this DOM
       * implementation.</font></b>
       */
     virtual void resetErrors();
@@ -968,7 +968,7 @@ public :
       * This method is used to indicate the end of parsing of an external
       * entity file.
       *
-      * <b><font color="#FF0000">This method is a no-op for this IDOM
+      * <b><font color="#FF0000">This method is a no-op for this DOM
       * implementation.</font></b>
       *
       * @param inputSource A const reference to the InputSource object
@@ -984,7 +984,7 @@ public :
       * the XML file being parsed, such as redirection etc.
       *
       * <b><font color="#FF0000">This method always returns 'false'
-      * for this IDOM implementation.</font></b>
+      * for this DOM implementation.</font></b>
       *
       * @param systemId  A const pointer to an Unicode string representing
       *                  the system id scanned by the parser.
@@ -1003,7 +1003,7 @@ public :
       * This method allows the installed XMLEntityHandler to reset
       * itself.
       *
-      * <b><font color="#FF0000">This method is a no-op for this IDOM
+      * <b><font color="#FF0000">This method is a no-op for this DOM
       * implementation.</font></b>
       */
     virtual void resetEntities();
@@ -1034,7 +1034,7 @@ public :
       * This method is used to indicate the start of parsing an external
       * entity file.
       *
-      * <b><font color="#FF0000">This method is a no-op for this IDOM parse
+      * <b><font color="#FF0000">This method is a no-op for this DOM parse
       * implementation.</font></b>
       *
       * @param inputSource A const reference to the InputSource object
@@ -1057,8 +1057,8 @@ public :
     /** Handle document character events
       *
       * This method is used to report all the characters scanned by the
-      * parser. This IDOM implementation stores this data in the appropriate
-      * IDOM node, creating one if necessary.
+      * parser. This DOM implementation stores this data in the appropriate
+      * DOM node, creating one if necessary.
       *
       * @param chars   A const pointer to a Unicode string representing the
       *                character data.
@@ -1113,7 +1113,7 @@ public :
     /** Handle and end of element event
       *
       * This method is used to indicate the end tag of an element. The
-      * IDOMParse pops the current element off the top of the element
+      * DOMParse pops the current element off the top of the element
       * stack, and make it the new current element.
       *
       * @param elemDecl A const reference to the object containing element
@@ -1150,7 +1150,7 @@ public :
       * is only made, if validation is enabled.
       *
       * Any whitespace before content is ignored. If the current node is
-      * already of type IDOM_Node::TEXT_NODE, then these whitespaces are
+      * already of type DOMNode::TEXT_NODE, then these whitespaces are
       * appended, otherwise a new Text node is created which stores this
       * data. Essentially all contiguous ignorable characters are collected
       * in one node.
@@ -1186,7 +1186,7 @@ public :
       *
       * This method is used to report the start of an element. It is
       * called at the end of the element, by which time all attributes
-      * specified are also parsed. A new IDOM Element node is created
+      * specified are also parsed. A new DOM Element node is created
       * along with as many attribute nodes as required. This new element
       * is added appended as a child of the current node in the tree, and
       * then replaces it as the current node (if the isEmpty flag is false.)
@@ -1224,7 +1224,7 @@ public :
       *
       * This method is used to indicate the start of an entity reference.
       * If the expand entity reference flag is true, then a new
-      * IDOM Entity reference node is created.
+      * DOM Entity reference node is created.
       *
       * @param entDecl A const reference to the object containing the
       *                entity declaration information.
@@ -1239,7 +1239,7 @@ public :
       * This method is used to report the XML decl scanned by the parser.
       * Refer to the XML specification to see the meaning of parameters.
       *
-      * <b><font color="#FF0000">This method is a no-op for this IDOM
+      * <b><font color="#FF0000">This method is a no-op for this DOM
       * implementation.</font></b>
       *
       * @param versionStr A const pointer to a Unicode string representing
@@ -1382,12 +1382,12 @@ protected :
 
     /** @name Protected getter methods */
     //@{
-    /** Get the current IDOM node
+    /** Get the current DOM node
       *
       * This provides derived classes with access to the current node, i.e.
       * the node to which new nodes are being added.
       */
-    IDOM_Node* getCurrentNode();
+    DOMNode* getCurrentNode();
 
     //@}
 
@@ -1399,28 +1399,28 @@ protected :
     /** @name Protected setter methods */
     //@{
 
-    /** Set the current IDOM node
+    /** Set the current DOM node
       *
       * This method sets the current node maintained inside the parser to
       * the one specified.
       *
-      * @param toSet The IDOM node which will be the current node.
+      * @param toSet The DOM node which will be the current node.
       */
-    void setCurrentNode(IDOM_Node* toSet);
+    void setCurrentNode(DOMNode* toSet);
 
     /** Set the document node
       *
-      * This method sets the IDOM Document node to the one specified.
+      * This method sets the DOM Document node to the one specified.
       *
-      * @param toSet The new IDOM Document node for this XML document.
+      * @param toSet The new DOM Document node for this XML document.
       */
-    void setDocument(IDOM_Document* toSet);
+    void setDocument(DOMDocument* toSet);
     //@}
 
     // -----------------------------------------------------------------------
     //  Protected Helper methods
     // -----------------------------------------------------------------------
-    virtual IDOM_Element* createElementNSNode(const XMLCh *fNamespaceURI,
+    virtual DOMElement* createElementNSNode(const XMLCh *fNamespaceURI,
                                               const XMLCh *qualifiedName);
 
 
@@ -1458,7 +1458,7 @@ private :
     //
     //  fIncludeIgnorableWhitespace
     //      Indicates whether ignorable whiltespace should be added to
-    //      the IDOM tree for validating parsers.
+    //      the DOM tree for validating parsers.
     //
     //  fNodeStack
     //      Used to track previous parent nodes during nested element events.
@@ -1483,124 +1483,124 @@ private :
     //      Store all the previous fDocument(s) (thus not the current fDocument)
     //      created in this parser.  It is destroyed when the parser is destructed.
     // -----------------------------------------------------------------------
-    IDOM_Node*               fCurrentParent;
-    IDOM_Node*               fCurrentNode;
-    IDDocumentImpl*          fDocument;
+    DOMNode*                 fCurrentParent;
+    DOMNode*                 fCurrentNode;
+    DOMDocumentImpl*         fDocument;
     EntityResolver*          fEntityResolver;
     ErrorHandler*            fErrorHandler;
     bool                     fCreateEntityReferenceNodes;
     bool                     fIncludeIgnorableWhitespace;
-    ValueStackOf<IDOM_Node*>* fNodeStack;
+    ValueStackOf<DOMNode*>* fNodeStack;
     bool                     fParseInProgress;
     bool                     fWithinElement;
-    IDDocumentTypeImpl*      fDocumentType;
-    RefVectorOf<IDDocumentImpl>* fDocumentVector;
+    DOMDocumentTypeImpl*     fDocumentType;
+    RefVectorOf<DOMDocumentImpl>* fDocumentVector;
 };
 
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Handlers for the XMLEntityHandler interface
+//  XercesDOMParser: Handlers for the XMLEntityHandler interface
 // ---------------------------------------------------------------------------
-inline void IDOMParser::endInputSource(const InputSource&)
+inline void XercesDOMParser::endInputSource(const InputSource&)
 {
-    // The IDOM entity resolver doesn't handle this
+    // The DOM entity resolver doesn't handle this
 }
 
-inline bool IDOMParser::expandSystemId(const XMLCh* const, XMLBuffer&)
+inline bool XercesDOMParser::expandSystemId(const XMLCh* const, XMLBuffer&)
 {
-    // The IDOM entity resolver doesn't handle this
+    // The DOM entity resolver doesn't handle this
     return false;
 }
 
-inline void IDOMParser::resetEntities()
+inline void XercesDOMParser::resetEntities()
 {
     // Nothing to do on this one
 }
 
-inline void IDOMParser::startInputSource(const InputSource&)
+inline void XercesDOMParser::startInputSource(const InputSource&)
 {
-    // The IDOM entity resolver doesn't handle this
+    // The DOM entity resolver doesn't handle this
 }
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Getter methods
+//  XercesDOMParser: Getter methods
 // ---------------------------------------------------------------------------
-inline ErrorHandler* IDOMParser::getErrorHandler()
+inline ErrorHandler* XercesDOMParser::getErrorHandler()
 {
     return fErrorHandler;
 }
 
-inline const ErrorHandler* IDOMParser::getErrorHandler() const
+inline const ErrorHandler* XercesDOMParser::getErrorHandler() const
 {
     return fErrorHandler;
 }
 
-inline EntityResolver* IDOMParser::getEntityResolver()
+inline EntityResolver* XercesDOMParser::getEntityResolver()
 {
     return fEntityResolver;
 }
 
-inline const EntityResolver* IDOMParser::getEntityResolver() const
+inline const EntityResolver* XercesDOMParser::getEntityResolver() const
 {
     return fEntityResolver;
 }
 
-inline bool IDOMParser::getExpandEntityReferences() const
+inline bool XercesDOMParser::getExpandEntityReferences() const
 {
     return !fCreateEntityReferenceNodes;
 }
-inline bool IDOMParser::getCreateEntityReferenceNodes() const
+inline bool XercesDOMParser::getCreateEntityReferenceNodes() const
 {
     return fCreateEntityReferenceNodes;
 }
 
-inline bool IDOMParser::getIncludeIgnorableWhitespace() const
+inline bool XercesDOMParser::getIncludeIgnorableWhitespace() const
 {
     return fIncludeIgnorableWhitespace;
 }
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Setter methods
+//  XercesDOMParser: Setter methods
 // ---------------------------------------------------------------------------
-inline void IDOMParser::setExpandEntityReferences(const bool expand)
+inline void XercesDOMParser::setExpandEntityReferences(const bool expand)
 {
     fCreateEntityReferenceNodes = !expand;
 }
 
-inline void IDOMParser::setCreateEntityReferenceNodes(const bool create)
+inline void XercesDOMParser::setCreateEntityReferenceNodes(const bool create)
 {
     fCreateEntityReferenceNodes = create;
 }
 
-inline void IDOMParser::setIncludeIgnorableWhitespace(const bool include)
+inline void XercesDOMParser::setIncludeIgnorableWhitespace(const bool include)
 {
     fIncludeIgnorableWhitespace = include;
 }
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Protected getter methods
+//  XercesDOMParser: Protected getter methods
 // ---------------------------------------------------------------------------
-inline IDOM_Node* IDOMParser::getCurrentNode()
+inline DOMNode* XercesDOMParser::getCurrentNode()
 {
     return fCurrentNode;
 }
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Protected setter methods
+//  XercesDOMParser: Protected setter methods
 // ---------------------------------------------------------------------------
-inline void IDOMParser::setCurrentNode(IDOM_Node* toSet)
+inline void XercesDOMParser::setCurrentNode(DOMNode* toSet)
 {
     fCurrentNode = toSet;
 }
 
-inline void IDOMParser::setDocument(IDOM_Document* toSet)
+inline void XercesDOMParser::setDocument(DOMDocument* toSet)
 {
-    fDocument = (IDDocumentImpl *)toSet;
+    fDocument = (DOMDocumentImpl*)toSet;
 }
 
 #endif

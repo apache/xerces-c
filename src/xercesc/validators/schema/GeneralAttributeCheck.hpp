@@ -62,7 +62,7 @@
 #define GENERALATTRIBUTECHECK_HPP
 
 
-/** 
+/**
   * A general purpose class to check for valid values of attributes, as well
   * as check for proper association with corresponding schema elements.
   */
@@ -79,7 +79,7 @@
 //  Forward declaration
 // ---------------------------------------------------------------------------
 class TraverseSchema;
-class IDOM_Element;
+class DOMElement;
 
 
 class AttributeInfo {
@@ -145,7 +145,7 @@ public:
     // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
-    void checkAttributes(const IDOM_Element* const elem,
+    void checkAttributes(const DOMElement* const elem,
                          const unsigned short elemContext,
                          TraverseSchema* const schema);
 
@@ -171,13 +171,13 @@ private:
     // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
-    void validate(const IDOM_Element* const elem, const XMLCh* const attName, const XMLCh* const attValue,
+    void validate(const DOMElement* const elem, const XMLCh* const attName, const XMLCh* const attValue,
                   const short dvIndex, TraverseSchema* const schema);
 
     // -----------------------------------------------------------------------
     //  Private Constants
     // -----------------------------------------------------------------------
-    // attributes 
+    // attributes
     enum {
         Att_Abstract_D,                // starts with 0
         Att_Attribute_FD_D,
@@ -268,8 +268,8 @@ private:
         localRefPrefix
     };
 
-    // optional vs. required attribute 
-    enum { 
+    // optional vs. required attribute
+    enum {
         Att_Required,
         Att_Optional_Default,
         Att_Optional_NoDefault

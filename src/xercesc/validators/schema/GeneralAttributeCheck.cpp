@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/21 19:30:10  tng
+ * DOM Reorganization: modify to use the new DOM interface.
+ *
  * Revision 1.3  2002/03/21 15:34:40  knoaman
  * Add support for reporting line/column numbers of schema errors.
  *
@@ -125,7 +128,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -861,7 +864,7 @@ GeneralAttributeCheck::reinitGeneralAttCheck() {
 //  GeneralAttributeCheck: Validation methods
 // ---------------------------------------------------------------------------
 void
-GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
+GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
                                        const unsigned short elemContext,
                                        TraverseSchema* const schema) {
 
@@ -917,7 +920,7 @@ GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
 
             XMLCh* attName = attInfo->getName();
             const XMLCh* attValue = elem->getAttribute(attName);
-            IDOM_Attr* attNode = elem->getAttributeNode(attName);
+            DOMAttr* attNode = elem->getAttributeNode(attName);
             unsigned int attValueLen = XMLString::stringLen(attValue);
 
             attNameList.put((void*) attName, 0);
@@ -937,12 +940,12 @@ GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
     // ------------------------------------------------------------------
     // Check for disallowed attributes
     // ------------------------------------------------------------------
-    IDOM_NamedNodeMap* eltAttrs = elem->getAttributes();
+    DOMNamedNodeMap* eltAttrs = elem->getAttributes();
     int attrCount = eltAttrs->getLength();
 
     for (int j = 0; j < attrCount; j++) {
 
-        IDOM_Node*  attribute = eltAttrs->item(j);
+        DOMNode*  attribute = eltAttrs->item(j);
 
         if (!attribute) {
             break;
@@ -1008,7 +1011,7 @@ GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
 }
 
 
-void GeneralAttributeCheck::validate(const IDOM_Element* const elem, 
+void GeneralAttributeCheck::validate(const DOMElement* const elem,
                                      const XMLCh* const attName,
                                      const XMLCh* const attValue,
                                      const short dvIndex,

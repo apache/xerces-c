@@ -56,7 +56,7 @@
 
 /**
 *  This file contains code to build the DOM tree. It registers a document
-*  handler with the scanner. In these handler methods, appropriate IDOM nodes
+*  handler with the scanner. In these handler methods, appropriate DOM nodes
 *  are created and added to the DOM tree.
 *
 * $Id$
@@ -76,32 +76,32 @@
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
-#include <xercesc/parsers/IDOMParser.hpp>
-#include <xercesc/idom/IDOM_DOMImplementation.hpp>
-#include <xercesc/idom/IDOM_Element.hpp>
-#include <xercesc/idom/IDAttrImpl.hpp>
-#include <xercesc/idom/IDOM_CDATASection.hpp>
-#include <xercesc/idom/IDOM_Comment.hpp>
-#include <xercesc/idom/IDTextImpl.hpp>
-#include <xercesc/idom/IDDocumentImpl.hpp>
-#include <xercesc/idom/IDDocumentTypeImpl.hpp>
-#include <xercesc/idom/IDOM_DocumentType.hpp>
-#include <xercesc/idom/IDElementImpl.hpp>
-#include <xercesc/idom/IDEntityImpl.hpp>
-#include <xercesc/idom/IDEntityReferenceImpl.hpp>
-#include <xercesc/idom/IDNotationImpl.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
-#include <xercesc/idom/IDOM_ProcessingInstruction.hpp>
-#include <xercesc/idom/IDNodeIDMap.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/impl/DOMAttrImpl.hpp>
+#include <xercesc/dom/DOMCDATASection.hpp>
+#include <xercesc/dom/DOMComment.hpp>
+#include <xercesc/dom/impl/DOMTextImpl.hpp>
+#include <xercesc/dom/impl/DOMDocumentImpl.hpp>
+#include <xercesc/dom/impl/DOMDocumentTypeImpl.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
+#include <xercesc/dom/impl/DOMElementImpl.hpp>
+#include <xercesc/dom/impl/DOMEntityImpl.hpp>
+#include <xercesc/dom/impl/DOMEntityReferenceImpl.hpp>
+#include <xercesc/dom/impl/DOMNotationImpl.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMProcessingInstruction.hpp>
+#include <xercesc/dom/impl/DOMNodeIDMap.hpp>
 
 
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Constructors and Destructor
+//  XercesDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-IDOMParser::IDOMParser(XMLValidator* const valToAdopt) :
+XercesDOMParser::XercesDOMParser(XMLValidator* const valToAdopt) :
 
 fErrorHandler(0)
 , fEntityResolver(0)
@@ -114,20 +114,20 @@ fErrorHandler(0)
 {
     //
     //  Create a scanner and tell it what validator to use. Then set us
-    //  as the document event handler so we can fill the IDOM document.
+    //  as the document event handler so we can fill the DOM document.
     //
     fScanner = new XMLScanner(valToAdopt);
     fScanner->setDocHandler(this);
     fScanner->setDocTypeHandler(this);
 
-    fNodeStack = new ValueStackOf<IDOM_Node*>(64);
+    fNodeStack = new ValueStackOf<DOMNode*>(64);
     this->reset();
 
 
 }
 
 
-IDOMParser::~IDOMParser()
+XercesDOMParser::~XercesDOMParser()
 {
     if (fDocumentVector)
         delete fDocumentVector;
@@ -138,13 +138,13 @@ IDOMParser::~IDOMParser()
 }
 
 
-void IDOMParser::reset()
+void XercesDOMParser::reset()
 {
     // if fDocument exists already, store the old pointer in the vector for deletion later
     if (fDocument) {
         if (!fDocumentVector) {
             // allocate the vector if not exists yet
-            fDocumentVector  = new RefVectorOf<IDDocumentImpl>(10, true) ;
+            fDocumentVector  = new RefVectorOf<DOMDocumentImpl>(10, true) ;
         }
         fDocumentVector->addElement(fDocument);
     }
@@ -162,34 +162,34 @@ void IDOMParser::reset()
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Getter methods
+//  XercesDOMParser: Getter methods
 // ---------------------------------------------------------------------------
-IDOM_Document* IDOMParser::getDocument()
+DOMDocument* XercesDOMParser::getDocument()
 {
     return fDocument;
 }
 
-const XMLValidator& IDOMParser::getValidator() const
+const XMLValidator& XercesDOMParser::getValidator() const
 {
     return *fScanner->getValidator();
 }
 
-bool IDOMParser::getDoNamespaces() const
+bool XercesDOMParser::getDoNamespaces() const
 {
     return fScanner->getDoNamespaces();
 }
 
-bool IDOMParser::getExitOnFirstFatalError() const
+bool XercesDOMParser::getExitOnFirstFatalError() const
 {
     return fScanner->getExitOnFirstFatal();
 }
 
-bool IDOMParser::getValidationConstraintFatal() const
+bool XercesDOMParser::getValidationConstraintFatal() const
 {
     return fScanner->getValidationConstraintFatal();
 }
 
-IDOMParser::ValSchemes IDOMParser::getValidationScheme() const
+XercesDOMParser::ValSchemes XercesDOMParser::getValidationScheme() const
 {
     const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
 
@@ -201,40 +201,40 @@ IDOMParser::ValSchemes IDOMParser::getValidationScheme() const
     return Val_Auto;
 }
 
-bool IDOMParser::getDoSchema() const
+bool XercesDOMParser::getDoSchema() const
 {
     return fScanner->getDoSchema();
 }
 
-bool IDOMParser::getValidationSchemaFullChecking() const
+bool XercesDOMParser::getValidationSchemaFullChecking() const
 {
     return fScanner->getValidationSchemaFullChecking();
 }
 
-int IDOMParser::getErrorCount() const
+int XercesDOMParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
 }
 
-XMLCh* IDOMParser::getExternalSchemaLocation() const
+XMLCh* XercesDOMParser::getExternalSchemaLocation() const
 {
     return fScanner->getExternalSchemaLocation();
 }
 
-XMLCh* IDOMParser::getExternalNoNamespaceSchemaLocation() const
+XMLCh* XercesDOMParser::getExternalNoNamespaceSchemaLocation() const
 {
     return fScanner->getExternalNoNamespaceSchemaLocation();
 }
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Setter methods
+//  XercesDOMParser: Setter methods
 // ---------------------------------------------------------------------------
-void IDOMParser::setDoNamespaces(const bool newState)
+void XercesDOMParser::setDoNamespaces(const bool newState)
 {
     fScanner->setDoNamespaces(newState);
 }
 
-void IDOMParser::setErrorHandler(ErrorHandler* const handler)
+void XercesDOMParser::setErrorHandler(ErrorHandler* const handler)
 {
     fErrorHandler = handler;
     if (fErrorHandler) {
@@ -247,7 +247,7 @@ void IDOMParser::setErrorHandler(ErrorHandler* const handler)
     }
 }
 
-void IDOMParser::setEntityResolver(EntityResolver* const handler)
+void XercesDOMParser::setEntityResolver(EntityResolver* const handler)
 {
     fEntityResolver = handler;
     if (fEntityResolver) {
@@ -260,17 +260,17 @@ void IDOMParser::setEntityResolver(EntityResolver* const handler)
     }
 }
 
-void IDOMParser::setExitOnFirstFatalError(const bool newState)
+void XercesDOMParser::setExitOnFirstFatalError(const bool newState)
 {
     fScanner->setExitOnFirstFatal(newState);
 }
 
-void IDOMParser::setValidationConstraintFatal(const bool newState)
+void XercesDOMParser::setValidationConstraintFatal(const bool newState)
 {
     fScanner->setValidationConstraintFatal(newState);
 }
 
-void IDOMParser::setValidationScheme(const ValSchemes newScheme)
+void XercesDOMParser::setValidationScheme(const ValSchemes newScheme)
 {
     if (newScheme == Val_Never)
         fScanner->setValidationScheme(XMLScanner::Val_Never);
@@ -280,39 +280,39 @@ void IDOMParser::setValidationScheme(const ValSchemes newScheme)
         fScanner->setValidationScheme(XMLScanner::Val_Auto);
 }
 
-void IDOMParser::setDoSchema(const bool newState)
+void XercesDOMParser::setDoSchema(const bool newState)
 {
     fScanner->setDoSchema(newState);
 }
 
-void IDOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
+void XercesDOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
 }
 
-void IDOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)
+void XercesDOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)
 {
     fScanner->setExternalSchemaLocation(schemaLocation);
 }
-void IDOMParser::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
+void XercesDOMParser::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
 }
 
-void IDOMParser::setExternalSchemaLocation(const char* const schemaLocation)
+void XercesDOMParser::setExternalSchemaLocation(const char* const schemaLocation)
 {
     fScanner->setExternalSchemaLocation(schemaLocation);
 }
-void IDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
+void XercesDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
 }
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Parsing methods
+//  XercesDOMParser: Parsing methods
 // ---------------------------------------------------------------------------
-void IDOMParser::parse(const InputSource& source, const bool reuseGrammar)
+void XercesDOMParser::parse(const InputSource& source, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -332,7 +332,7 @@ void IDOMParser::parse(const InputSource& source, const bool reuseGrammar)
     }
 }
 
-void IDOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
+void XercesDOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -352,7 +352,7 @@ void IDOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
     }
 }
 
-void IDOMParser::parse(const char* const systemId, const bool reuseGrammar)
+void XercesDOMParser::parse(const char* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -375,9 +375,9 @@ void IDOMParser::parse(const char* const systemId, const bool reuseGrammar)
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Progressive parse methods
+//  XercesDOMParser: Progressive parse methods
 // ---------------------------------------------------------------------------
-bool IDOMParser::parseFirst( const   XMLCh* const    systemId
+bool XercesDOMParser::parseFirst( const   XMLCh* const    systemId
                            ,       XMLPScanToken&  toFill
                            , const bool            reuseGrammar)
 {
@@ -391,7 +391,7 @@ bool IDOMParser::parseFirst( const   XMLCh* const    systemId
     return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
-bool IDOMParser::parseFirst( const   char* const         systemId
+bool XercesDOMParser::parseFirst( const   char* const         systemId
                            ,       XMLPScanToken&      toFill
                            , const bool                reuseGrammar)
 {
@@ -405,7 +405,7 @@ bool IDOMParser::parseFirst( const   char* const         systemId
     return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
-bool IDOMParser::parseFirst( const   InputSource&    source
+bool XercesDOMParser::parseFirst( const   InputSource&    source
                            ,       XMLPScanToken&  toFill
                            , const bool            reuseGrammar)
 {
@@ -419,12 +419,12 @@ bool IDOMParser::parseFirst( const   InputSource&    source
     return fScanner->scanFirst(source, toFill, reuseGrammar);
 }
 
-bool IDOMParser::parseNext(XMLPScanToken& token)
+bool XercesDOMParser::parseNext(XMLPScanToken& token)
 {
     return fScanner->scanNext(token);
 }
 
-void IDOMParser::parseReset(XMLPScanToken& token)
+void XercesDOMParser::parseReset(XMLPScanToken& token)
 {
     // Reset the scanner, and then reset the parser
     fScanner->scanReset(token);
@@ -432,9 +432,9 @@ void IDOMParser::parseReset(XMLPScanToken& token)
 }
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Utilities
+//  XercesDOMParser: Utilities
 // ---------------------------------------------------------------------------
-void IDOMParser::resetDocumentPool()
+void XercesDOMParser::resetDocumentPool()
 {
     //  We cannot enter here while a regular parse is in progress.
     if (fParseInProgress)
@@ -449,9 +449,9 @@ void IDOMParser::resetDocumentPool()
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Implementation of the XMLErrorReporter interface
+//  XercesDOMParser: Implementation of the XMLErrorReporter interface
 // ---------------------------------------------------------------------------
-void IDOMParser::error(  const   unsigned int                code
+void XercesDOMParser::error(  const   unsigned int                code
                       , const XMLCh* const                msgDomain
                       , const XMLErrorReporter::ErrTypes  errType
                       , const XMLCh* const                errorText
@@ -488,16 +488,16 @@ void IDOMParser::error(  const   unsigned int                code
         fErrorHandler->error(toThrow);
 }
 
-void IDOMParser::resetErrors()
+void XercesDOMParser::resetErrors()
 {
 }
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Implementation of XMLEntityHandler interface
+//  XercesDOMParser: Implementation of XMLEntityHandler interface
 // ---------------------------------------------------------------------------
 InputSource*
-IDOMParser::resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId)
+XercesDOMParser::resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId)
 {
     //
     //  Just map it to the SAX entity resolver. If there is not one installed,
@@ -511,9 +511,9 @@ IDOMParser::resolveEntity(const XMLCh* const publicId, const XMLCh* const system
 
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Implementation of XMLDocumentHandler interface
+//  XercesDOMParser: Implementation of XMLDocumentHandler interface
 // ---------------------------------------------------------------------------
-void IDOMParser::docCharacters(  const   XMLCh* const    chars
+void XercesDOMParser::docCharacters(  const   XMLCh* const    chars
                               , const unsigned int    length
                               , const bool            cdataSection)
 {
@@ -521,7 +521,7 @@ void IDOMParser::docCharacters(  const   XMLCh* const    chars
     if (!fWithinElement)
         return;
 
-    // idom_revisit.  Is it really safe to null-terminate here?
+    // revisit.  Is it really safe to null-terminate here?
     //                Does the scanner do it already?
     //                If scanner goes up to the very end of an unterminated
     //                buffer, we may be stepping on something bad here.
@@ -531,20 +531,20 @@ void IDOMParser::docCharacters(  const   XMLCh* const    chars
     ncChars[length] = 0;
     if (cdataSection == true)
     {
-        IDOM_CDATASection *node = fDocument->createCDATASection(chars);
+        DOMCDATASection *node = fDocument->createCDATASection(chars);
         fCurrentParent->appendChild(node);
         fCurrentNode = node;
     }
     else
     {
-        if (fCurrentNode->getNodeType() == IDOM_Node::TEXT_NODE)
+        if (fCurrentNode->getNodeType() == DOMNode::TEXT_NODE)
         {
-            IDOM_Text *node = (IDOM_Text *)fCurrentNode;
+            DOMText *node = (DOMText *)fCurrentNode;
             node->appendData(chars);
         }
         else
         {
-            IDOM_Text *node = fDocument->createTextNode(chars);
+            DOMText *node = fDocument->createTextNode(chars);
             fCurrentParent->appendChild(node);
             fCurrentNode = node;
         }
@@ -554,18 +554,18 @@ void IDOMParser::docCharacters(  const   XMLCh* const    chars
 }
 
 
-void IDOMParser::docComment(const XMLCh* const comment)
+void XercesDOMParser::docComment(const XMLCh* const comment)
 {
-    IDOM_Comment *dcom = fDocument->createComment(comment);
+    DOMComment *dcom = fDocument->createComment(comment);
     fCurrentParent->appendChild(dcom);
     fCurrentNode = dcom;
 }
 
 
-void IDOMParser::docPI(  const   XMLCh* const    target
+void XercesDOMParser::docPI(  const   XMLCh* const    target
                       , const XMLCh* const    data)
 {
-    IDOM_ProcessingInstruction *pi = fDocument->createProcessingInstruction
+    DOMProcessingInstruction *pi = fDocument->createProcessingInstruction
         (
         target
         , data
@@ -575,12 +575,12 @@ void IDOMParser::docPI(  const   XMLCh* const    target
 }
 
 
-void IDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
+void XercesDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fCreateEntityReferenceNodes == true)
     {
-        if (fCurrentParent->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE) {
-            IDEntityReferenceImpl *erImpl = (IDEntityReferenceImpl *) fCurrentParent;
+        if (fCurrentParent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+            DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) fCurrentParent;
             erImpl->setReadOnly(true, true);
         }
         fCurrentParent = fNodeStack->pop();
@@ -589,7 +589,7 @@ void IDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 }
 
 
-void IDOMParser::endElement( const   XMLElementDecl&     elemDecl
+void XercesDOMParser::endElement( const   XMLElementDecl&     elemDecl
                            , const unsigned int        urlId
                            , const bool                isRoot)
 {
@@ -602,7 +602,7 @@ void IDOMParser::endElement( const   XMLElementDecl&     elemDecl
 }
 
 
-void IDOMParser::ignorableWhitespace(const   XMLCh* const    chars
+void XercesDOMParser::ignorableWhitespace(const   XMLCh* const    chars
                                     , const unsigned int    length
                                     , const bool            cdataSection)
 {
@@ -610,19 +610,19 @@ void IDOMParser::ignorableWhitespace(const   XMLCh* const    chars
     if (!fWithinElement || !fIncludeIgnorableWhitespace)
         return;
 
-    // idom_revisit.  Not safe to slam in a null like this.
+    // revisit.  Not safe to slam in a null like this.
     XMLCh savedChar = chars[length];
     XMLCh *ncChars  = (XMLCh *)chars;   // cast off const
     ncChars[length] = chNull;
 
-    if (fCurrentNode->getNodeType() == IDOM_Node::TEXT_NODE)
+    if (fCurrentNode->getNodeType() == DOMNode::TEXT_NODE)
     {
-        IDOM_Text *node = (IDOM_Text *)fCurrentNode;
+        DOMText *node = (DOMText *)fCurrentNode;
         node->appendData(chars);
     }
     else
     {
-        IDTextImpl *node = (IDTextImpl *)fDocument->createTextNode(chars);
+        DOMTextImpl *node = (DOMTextImpl *)fDocument->createTextNode(chars);
         node->setIgnorableWhitespace(true);
         fCurrentParent->appendChild(node);
 
@@ -632,36 +632,36 @@ void IDOMParser::ignorableWhitespace(const   XMLCh* const    chars
 }
 
 
-void IDOMParser::resetDocument()
+void XercesDOMParser::resetDocument()
 {
     //
     //  The reset methods are called before a new parse event occurs.
     //  Reset this parsers state to clear out anything that may be left
-    //  from a previous use, in particular the IDOM document itself.
+    //  from a previous use, in particular the DOM document itself.
     //
     this->reset();
-    fDocument = (IDDocumentImpl *)IDOM_DOMImplementation::getImplementation()->createDocument();
+    fDocument = (DOMDocumentImpl *)DOMImplementation::getImplementation()->createDocument();
 }
 
 
-void IDOMParser::startDocument()
+void XercesDOMParser::startDocument()
 {
     // Just set the document as the current parent and current node
     fCurrentParent = fDocument;
     fCurrentNode   = fDocument;
-    // set IDOM error checking off
+    // set DOM error checking off
     fDocument->setErrorChecking(false);
 }
 
 
-void IDOMParser::endDocument()
+void XercesDOMParser::endDocument()
 {
-    // set IDOM error checking back on
+    // set DOM error checking back on
     fDocument->setErrorChecking(true);
 }
 
 
-void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
+void XercesDOMParser::startElement(const  XMLElementDecl&         elemDecl
                              , const unsigned int            urlId
                              , const XMLCh* const            elemPrefix
                              , const RefVectorOf<XMLAttr>&   attrList
@@ -669,9 +669,9 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
                              , const bool                    isEmpty
                              , const bool                    isRoot)
 {
-    IDOM_Element     *elem;
+    DOMElement     *elem;
 
-    if (fScanner -> getDoNamespaces()) {    //IDOM Level 2, doNamespaces on
+    if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         XMLBuffer buf;
         XMLCh* namespaceURI = 0;
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
@@ -679,7 +679,7 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
             namespaceURI = buf.getRawBuffer();
         }
         elem = createElementNSNode(namespaceURI, elemDecl.getFullName());
-        IDElementImpl *elemImpl = (IDElementImpl *) elem;
+        DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
         for (unsigned int index = 0; index < attrCount; ++index) {
             static const XMLCh XMLNS[] = {
             chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
@@ -693,14 +693,14 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
                 fScanner->getURIText(attrURIId, buf);   //get namespaceURI
                 namespaceURI = buf.getRawBuffer();
             }
-            //  idom_revisit.  Optimize to init the named node map to the
+            //  revisit.  Optimize to init the named node map to the
             //                 right size up front.
-            IDAttrImpl *attr = (IDAttrImpl *)
+            DOMAttrImpl *attr = (DOMAttrImpl *)
                 fDocument->createAttributeNS(namespaceURI, oneAttrib->getQName());
             attr->setValue(oneAttrib -> getValue());
             elemImpl->setAttributeNode(attr);
 
-            //IDAttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
+            //DOMAttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
             //    oneAttrib -> getValue());
 
             // Attributes of type ID.  If this is one, add it to the hashtable of IDs
@@ -709,7 +709,7 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
             if (oneAttrib->getType()==XMLAttDef::ID)
             {
                 if (fDocument->fNodeIDMap == 0)
-                    fDocument->fNodeIDMap = new (fDocument) IDNodeIDMap(500, fDocument);
+                    fDocument->fNodeIDMap = new (fDocument) DOMNodeIDMap(500, fDocument);
                 fDocument->fNodeIDMap->add(attr);
                 attr->fNode.isIdAttr(true);
             }
@@ -719,11 +719,11 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
     }
     else {    //DOM Level 1
         elem = fDocument->createElement(elemDecl.getFullName());
-        IDElementImpl *elemImpl = (IDElementImpl *) elem;
+        DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
 			for (unsigned int index = 0; index < attrCount; ++index) {
 				const XMLAttr* oneAttrib = attrList.elementAt(index);
             //AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-            IDAttrImpl *attr = (IDAttrImpl *)
+            DOMAttrImpl *attr = (DOMAttrImpl *)
                 fDocument->createAttribute(oneAttrib->getName());
             attr->setValue(oneAttrib -> getValue());
             elemImpl->setAttributeNode(attr);
@@ -735,7 +735,7 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
 				if (oneAttrib->getType()==XMLAttDef::ID)
 				{
                 if (fDocument->fNodeIDMap == 0)
-                    fDocument->fNodeIDMap = new (fDocument) IDNodeIDMap(500, fDocument);
+                    fDocument->fNodeIDMap = new (fDocument) DOMNodeIDMap(500, fDocument);
                 fDocument->fNodeIDMap->add(attr);
                 attr->fNode.isIdAttr(true);
             }
@@ -755,15 +755,15 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
 }
 
 
-void IDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
+void XercesDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fCreateEntityReferenceNodes == true)
     {
         const XMLCh * entName = entDecl.getName();
-        IDOM_EntityReference *er = fDocument->createEntityReference(entName);
+        DOMEntityReference *er = fDocument->createEntityReference(entName);
 
         //set the readOnly flag to false before appending node, will be reset in endEntityReference
-        IDEntityReferenceImpl *erImpl = (IDEntityReferenceImpl *) er;
+        DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;
         erImpl->setReadOnly(false, true);
 
         fCurrentParent->appendChild(er);
@@ -775,15 +775,15 @@ void IDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         // We'd decide later whether the entity nodes should be created by a
         // separated method in parser or not. For now just stick it in if
         // the ref nodes are created
-        IDOM_NamedNodeMap *entities = fDocumentType->getEntities();
-        IDEntityImpl* entity = (IDEntityImpl*)entities->getNamedItem(entName);
+        DOMNamedNodeMap *entities = fDocumentType->getEntities();
+        DOMEntityImpl* entity = (DOMEntityImpl*)entities->getNamedItem(entName);
         entity->setEntityRef(er);
 
     }
 }
 
 
-void IDOMParser::XMLDecl(const   XMLCh* const version
+void XercesDOMParser::XMLDecl(const   XMLCh* const version
                         , const XMLCh* const encoding
                         , const XMLCh* const standalone
                         , const XMLCh* const actualEncStr)
@@ -792,17 +792,17 @@ void IDOMParser::XMLDecl(const   XMLCh* const version
 }
 
 // ---------------------------------------------------------------------------
-//  IDOMParser: Helper methods
+//  XercesDOMParser: Helper methods
 // ---------------------------------------------------------------------------
-IDOM_Element* IDOMParser::createElementNSNode(const XMLCh *namespaceURI,
+DOMElement* XercesDOMParser::createElementNSNode(const XMLCh *namespaceURI,
                                               const XMLCh *qualifiedName)
 {
     return fDocument->createElementNS(namespaceURI, qualifiedName);
 }
 // ---------------------------------------------------------------------------
-//  IDOMParser: Deprecated methods
+//  XercesDOMParser: Deprecated methods
 // ---------------------------------------------------------------------------
-bool IDOMParser::getDoValidation() const
+bool XercesDOMParser::getDoValidation() const
 {
     //
     //  We don't want to tie the public parser classes to the enum used
@@ -816,7 +816,7 @@ bool IDOMParser::getDoValidation() const
     return false;
 }
 
-void IDOMParser::setDoValidation(const bool newState)
+void XercesDOMParser::setDoValidation(const bool newState)
 {
     fScanner->setDoValidation
     (
@@ -825,7 +825,7 @@ void IDOMParser::setDoValidation(const bool newState)
 }
 
 //doctypehandler interfaces
-void IDOMParser::attDef
+void XercesDOMParser::attDef
 (
     const   DTDElementDecl&     elemDecl
     , const DTDAttDef&          attDef
@@ -940,7 +940,7 @@ void IDOMParser::attDef
     }
 }
 
-void IDOMParser::doctypeComment
+void XercesDOMParser::doctypeComment
 (
     const   XMLCh* const    comment
 )
@@ -962,7 +962,7 @@ void IDOMParser::doctypeComment
     }
 }
 
-void IDOMParser::doctypeDecl
+void XercesDOMParser::doctypeDecl
 (
     const   DTDElementDecl& elemDecl
     , const XMLCh* const    publicId
@@ -970,12 +970,12 @@ void IDOMParser::doctypeDecl
     , const bool            hasIntSubset
 )
 {
-    fDocumentType = (IDDocumentTypeImpl *) fDocument->createDocumentType(elemDecl.getFullName(), publicId, systemId);
+    fDocumentType = (DOMDocumentTypeImpl *) fDocument->createDocumentType(elemDecl.getFullName(), publicId, systemId);
     fDocument->setDocumentType(fDocumentType);
 
 }
 
-void IDOMParser::doctypePI
+void XercesDOMParser::doctypePI
 (
     const   XMLCh* const    target
     , const XMLCh* const    data
@@ -999,7 +999,7 @@ void IDOMParser::doctypePI
 }
 
 
-void IDOMParser::doctypeWhitespace
+void XercesDOMParser::doctypeWhitespace
 (
     const   XMLCh* const    chars
     , const unsigned int    length
@@ -1009,7 +1009,7 @@ void IDOMParser::doctypeWhitespace
 		fDocumentType->setInternalSubset(chars);
 }
 
-void IDOMParser::elementDecl
+void XercesDOMParser::elementDecl
 (
     const   DTDElementDecl& decl
     , const bool            isIgnored
@@ -1037,7 +1037,7 @@ void IDOMParser::elementDecl
 	}
 }
 
-void IDOMParser::endAttList
+void XercesDOMParser::endAttList
 (
     const   DTDElementDecl& elemDecl
 )
@@ -1045,16 +1045,16 @@ void IDOMParser::endAttList
 	// this section sets up default attributes.
 	// default attribute nodes are stored in a NamedNodeMap DocumentTypeImpl::elements
 	// default attribute data attached to the document is used to conform to the
-	// IDOM spec regarding creating element nodes & removing attributes with default values
+	// DOM spec regarding creating element nodes & removing attributes with default values
 	// see DocumentTypeImpl
 	if (elemDecl.hasAttDefs())
 	{		
 		XMLAttDefList* defAttrs = &elemDecl.getAttDefList();
 		XMLAttDef* attr = 0;
 
-		IDAttrImpl * insertAttr = 0;
-      IDOM_Element     *elem  = fDocument->createElement(elemDecl.getFullName());
-      IDElementImpl *elemImpl = (IDElementImpl *) elem;
+		DOMAttrImpl * insertAttr = 0;
+      DOMElement     *elem  = fDocument->createElement(elemDecl.getFullName());
+      DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
 
 		while (defAttrs->hasMoreElements())
         {
@@ -1068,7 +1068,7 @@ void IDOMParser::endAttList
                     // So as long as the XML parser doesn't do it, it needs to
                     // done here.
                     const XMLCh* qualifiedName = attr->getFullName();
-                    int index = IDDocumentImpl::indexofQualifiedName(qualifiedName);
+                    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
 
                     XMLBuffer buf;
                     static const XMLCh XMLNS[] = {
@@ -1101,7 +1101,7 @@ void IDOMParser::endAttList
                             buf.append(XMLUni::fgXMLNSURIName);
                     }
 
-                    insertAttr = (IDAttrImpl *) fDocument->createAttributeNS(
+                    insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(
                        buf.getRawBuffer(),     // NameSpaceURI
                        qualifiedName);   // qualified name
 
@@ -1109,7 +1109,7 @@ void IDOMParser::endAttList
                 else
                 {
                     // Namespaces is turned off...
-                    insertAttr = (IDAttrImpl *) fDocument->createAttribute(attr->getFullName());
+                    insertAttr = (DOMAttrImpl *) fDocument->createAttribute(attr->getFullName());
                 }
                 insertAttr->setValue(attr->getValue());
                 elemImpl->setAttributeNode(insertAttr);
@@ -1120,32 +1120,32 @@ void IDOMParser::endAttList
     }
 }
 
-void IDOMParser::endIntSubset()
+void XercesDOMParser::endIntSubset()
 {
 	fDocumentType->intSubsetReading = false;
 }
 
-void IDOMParser::endExtSubset()
+void XercesDOMParser::endExtSubset()
 {
 }
 
-void IDOMParser::entityDecl
+void XercesDOMParser::entityDecl
 (
     const   DTDEntityDecl&  entityDecl
     , const bool            isPEDecl
     , const bool            isIgnored
 )
 {
-    IDEntityImpl* entity = (IDEntityImpl *) fDocument->createEntity(entityDecl.getName());
+    DOMEntityImpl* entity = (DOMEntityImpl *) fDocument->createEntity(entityDecl.getName());
 
     entity->setPublicId(entityDecl.getPublicId());
     entity->setSystemId(entityDecl.getSystemId());
     entity->setNotationName(entityDecl.getNotationName());
 
-    IDEntityImpl *previousDef = (IDEntityImpl *)
+    DOMEntityImpl *previousDef = (DOMEntityImpl *)
 	    fDocumentType->getEntities()->setNamedItem( entity );
 
-    #ifdef idom_revisit
+    #ifdef _revisit
     //
     //  If this new entity node is replacing an entity node that was already
     //    in the entities named node map (happens if documents redefine the
@@ -1209,18 +1209,18 @@ void IDOMParser::entityDecl
 
 }
 
-void IDOMParser::resetDocType()
+void XercesDOMParser::resetDocType()
 {
 	fDocumentType = 0;
 }
 
-void IDOMParser::notationDecl
+void XercesDOMParser::notationDecl
 (
     const   XMLNotationDecl&    notDecl
     , const bool                isIgnored
 )
 {
-	IDNotationImpl* notation = (IDNotationImpl *)fDocument->createNotation(notDecl.getName());
+	DOMNotationImpl* notation = (DOMNotationImpl *)fDocument->createNotation(notDecl.getName());
 	notation->setPublicId(notDecl.getPublicId());
 	notation->setSystemId(notDecl.getSystemId());
 
@@ -1228,23 +1228,23 @@ void IDOMParser::notationDecl
 
 }
 
-void IDOMParser::startAttList
+void XercesDOMParser::startAttList
 (
     const   DTDElementDecl& elemDecl
 )
 {
 }
 
-void IDOMParser::startIntSubset()
+void XercesDOMParser::startIntSubset()
 {
 	fDocumentType->intSubsetReading = true;
 }
 
-void IDOMParser::startExtSubset()
+void XercesDOMParser::startExtSubset()
 {
 }
 
-void IDOMParser::TextDecl
+void XercesDOMParser::TextDecl
 (
     const   XMLCh* const    versionStr
     , const XMLCh* const    encodingStr

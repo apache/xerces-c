@@ -88,7 +88,7 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/internal/XMLInternalErrorHandler.hpp>
-#include <xercesc/dom/DOM_DOMException.hpp>
+#include <xercesc/dom/DOMException.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
@@ -97,7 +97,7 @@
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
-#include <xercesc/validators/schema/XSDIDOMParser.hpp>
+#include <xercesc/validators/schema/XSDDOMParser.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -226,7 +226,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             XMLAttDef* attDefForWildCard = 0;
             XMLAttDef*  attDef = 0;
-          
+
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
                 //retrieve the att def
@@ -1412,9 +1412,9 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
     Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-        XSDIDOMParser parser;
+        XSDDOMParser parser;
         XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
-        parser.setValidationScheme(IDOMParser::Val_Never);
+        parser.setValidationScheme(XercesDOMParser::Val_Never);
         parser.setDoNamespaces(true);
         parser.setErrorHandler((ErrorHandler*) &internalErrorHandler);
         parser.setEntityResolver(fEntityResolver);
@@ -1497,11 +1497,11 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         if (internalErrorHandler.getSawFatal() && fExitOnFirstFatal)
             emitError(XMLErrs::SchemaScanFatalError);
 
-        IDOM_Document* document = parser.getDocument(); //Our Grammar
+        DOMDocument* document = parser.getDocument(); //Our Grammar
 
         if (document != 0) {
 
-            IDOM_Element* root = document->getDocumentElement();// This is what we pass to TraverserSchema
+            DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
             if (root != 0)
             {
                 const XMLCh* newUri = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);

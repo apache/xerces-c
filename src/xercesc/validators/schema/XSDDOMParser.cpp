@@ -63,30 +63,30 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/validators/schema/XSDIDOMParser.hpp>
-#include <xercesc/idom/IDDocumentImpl.hpp>
+#include <xercesc/validators/schema/XSDDOMParser.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 
 
 // ---------------------------------------------------------------------------
-//  XSDIDOMParser: Constructors and Destructor
+//  XSDDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XSDIDOMParser::XSDIDOMParser(XMLValidator* const valToAdopt) :
-    IDOMParser(valToAdopt)
+XSDDOMParser::XSDDOMParser(XMLValidator* const valToAdopt) :
+    XercesDOMParser(valToAdopt)
 {
 
 }
 
 
-XSDIDOMParser::~XSDIDOMParser()
+XSDDOMParser::~XSDDOMParser()
 {
 }
 
 
 // ---------------------------------------------------------------------------
-//  XSDIDOMParser: Helper methods
+//  XSDDOMParser: Helper methods
 // ---------------------------------------------------------------------------
-IDOM_Element* XSDIDOMParser::createElementNSNode(const XMLCh *namespaceURI,
+DOMElement* XSDDOMParser::createElementNSNode(const XMLCh *namespaceURI,
 	                                             const XMLCh *qualifiedName)
 {
     ReaderMgr::LastExtEntityInfo lastInfo;
