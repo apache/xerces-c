@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/11/17 21:49:42  abagchi
+ * Added the definitions of XMLUInt16 and XMLUInt32
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
  * Revision 1.3  1999/11/12 20:37:00  rahulj
  * Changed library name to xerces-c.lib.
  *
@@ -86,6 +93,11 @@
 // ---------------------------------------------------------------------------
 typedef unsigned short XMLCh;
 
+// ---------------------------------------------------------------------------
+//  Define unsigned 16 and 32 bits integers
+// ---------------------------------------------------------------------------
+typedef unsigned short  XMLUInt16;
+typedef unsigned int    XMLUInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the XML4C debug token if it was on in the build environment
