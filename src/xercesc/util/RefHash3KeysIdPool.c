@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2004/08/30 18:56:21  amassari
+ * Change the order of testing to save some CPU cycles
+ *
  * Revision 1.11  2004/03/01 15:03:08  peiyongz
  * new getter: getHashModulus
  *
@@ -431,7 +434,7 @@ findBucketElem(const void* const key1, const int key2, const int key3, unsigned 
     RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-		if (fHash->equals(key1, curElem->fKey1) && (key2==curElem->fKey2) && (key3==curElem->fKey3))
+		if (key2==curElem->fKey2 && key3==curElem->fKey3 && fHash->equals(key1, curElem->fKey1))
             return curElem;
 
         curElem = curElem->fNext;

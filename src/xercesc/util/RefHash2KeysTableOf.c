@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2004/08/30 18:56:20  amassari
+ * Change the order of testing to save some CPU cycles
+ *
  * Revision 1.8  2004/08/30 15:18:35  amassari
  * - Added transferElement API
  * - The iterator class now can iterate over the items having the same primary key
@@ -375,7 +378,7 @@ findBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
     RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-		if (fHash->equals(key1, curElem->fKey1) && (key2==curElem->fKey2))
+		if (key2==curElem->fKey2 && fHash->equals(key1, curElem->fKey1))
             return curElem;
 
         curElem = curElem->fNext;
