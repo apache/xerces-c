@@ -155,6 +155,12 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 
 void XMLPlatformUtils::platformInit()
 {
+// The next conditional section is to turn on support for allowing
+// the NEL character as a valid whitespace character. Once this is
+// enabled the parser is non-compliant with the XML standard.
+#if defined XML_ALLOW_NELWS
+     XMLPlatformUtils::recognizeNEL(true);
+#endif
 }
 
 // ---------------------------------------------------------------------------
@@ -294,8 +300,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     //     path/path2/filename      => //path.path2.filename
 
     char* datasetName = new char[ strlen(tmpFileName) + 5 ];
+    ArrayJanitor<char> janText((char*)datasetName);
     char *datasetPos = datasetName, *tmpPos = tmpFileName;
-    FileHandle retVal;
 
     // We are in EBCDIC mode here
     // Specify "//" to indicate that the filename refers to a non-POSIX file
@@ -352,9 +358,20 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 
     retVal = (FILE*)fopen( datasetName , "rb" );
 
-    delete [] datasetName;
     }
 #endif
+
+    // fix for file:// protocol                                          
+    // the tmpFileName has a prefix of //absolute path                   
+    // for example, file:////u/.... instead of file:///u/....           
+    // the fopen() on OS/390 cannot open a //u/... POSIX file            
+    if (retVal == NULL) {                                                
+	if ((tmpFileName[0] == '/') && (tmpFileName[1] == '/')) {        
+	    char *srcName = tmpFileName + 1; // points past the first '/'
+	    retVal = (FILE*)fopen( srcName , "rb" );                     
+	}                                                                
+    }                                                                     
+
     if( retVal == NULL )
 	return 0;
     return retVal;
@@ -377,8 +394,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     //     path/path2/filename      => //path.path2.filename
 
     char* datasetName = new char[ strlen(fileName) + 5 ];
+    ArrayJanitor<char> janText((char*)datasetName);
     char *datasetPos = datasetName, *tmpPos = (char *)fileName;
-    FileHandle retVal;
 
     // We are in EBCDIC mode here
     // Specify "//" to indicate that the filename refers to a non-POSIX file
@@ -435,9 +452,20 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
     retVal = (FILE*)fopen( datasetName , "rb" );
 
-    delete [] datasetName;
     }
 #endif
+
+    // fix for file:// protocol                                          
+    // the fileName has a prefix of //absolute path                   
+    // for example, file:////u/.... instead of file:///u/....           
+    // the fopen() on OS/390 cannot open a //u/... POSIX file            
+    if (retVal == NULL) {                                                   
+	if ((fileName[0] == '/') && (fileName[1] == '/')) {                 
+	    const char *srcName = fileName + 1; // points past the first '/'
+	    retVal = (FILE*)fopen( srcName , "rb" );                        
+	}          	                                                         
+    }                                                                       
+  
     if( retVal == NULL )
         return 0;
     return retVal;
