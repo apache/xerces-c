@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/09/05 23:38:26  andyh
+ * Added advanced callback support for XMLDecl()
+ *
  * Revision 1.13  2000/06/19 18:12:56  rahulj
  * Suppress the comments, characters, ignoreableWhitespaces before
  * root element. Only allow the PI's to get through. Still need to come
@@ -549,12 +552,21 @@ void SAXParser::docComment(const XMLCh* const commentText)
 }
 
 
-void SAXParser::XMLDecl(const   XMLCh* const
-                        , const XMLCh* const
-                        , const XMLCh* const
-                        , const XMLCh* const)
+void SAXParser::XMLDecl( const  XMLCh* const    versionStr
+                        , const XMLCh* const    encodingStr
+                        , const XMLCh* const    standaloneStr
+                        , const XMLCh* const    actualEncodingStr
+                        )
 {
-    // SAX has no way to report this event
+    //
+    //  SAX has no way to report this. But, if there are any installed
+    //  advanced handlers, then lets call them with this info.
+    //
+    for (unsigned int index = 0; index < fAdvDHCount; index++)
+        fAdvDHList[index]->XMLDecl( versionStr,
+                                    encodingStr,
+                                    standaloneStr,
+                                    actualEncodingStr );
 }
 
 
