@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/11/12 23:24:58  knoaman
+ * Fix multi threading problem.
+ *
  * Revision 1.6  2004/10/20 15:18:49  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -139,16 +142,15 @@ UnicodeRangeFactory::~UnicodeRangeFactory() {
 // ---------------------------------------------------------------------------
 //  UnicodeRangeFactory: Range creation methods
 // ---------------------------------------------------------------------------
-void UnicodeRangeFactory::buildRanges() {
+void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
 
     if (fRangesCreated)
         return;
 
     if (!fKeywordsInitialized) {
-        initializeKeywordMap();
+        initializeKeywordMap(rangeTokMap);
     }
 
-    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
     TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
 	RangeToken* ranges[UNICATEGSIZE];
     RangeToken* tok;
@@ -222,12 +224,10 @@ void UnicodeRangeFactory::buildRanges() {
 // ---------------------------------------------------------------------------
 //  UnicodeRangeFactory: Initialization methods
 // ---------------------------------------------------------------------------
-void UnicodeRangeFactory::initializeKeywordMap() {
+void UnicodeRangeFactory::initializeKeywordMap(RangeTokenMap *rangeTokMap) {
 
     if (fKeywordsInitialized)
         return;
-
-    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
 
 	for (int k=0; k < UNICATEGSIZE; k++) {
         rangeTokMap->addKeywordMap(uniCategNames[k], fgUnicodeCategory);

@@ -28,6 +28,11 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// ---------------------------------------------------------------------------
+//  Forward Declaration
+// ---------------------------------------------------------------------------
+class RangeTokenMap;
+
 class XMLUTIL_EXPORT RangeFactory : public XMemory
 {
 public:
@@ -39,12 +44,18 @@ public:
     //-----------------------------------------------------------------------
     //  Initialization methods
     // -----------------------------------------------------------------------
-    virtual void initializeKeywordMap() = 0;
+    /**
+     * To maintain src code compatibility, we added a default parameter.
+     * The caller is expected to pass in a valid RangeTokenMap instance.
+     */
+    virtual void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0) = 0;
 
     /*
      * Used by children to build commonly used ranges
+     * To maintain src code compatibility, we added a default parameter.
+     * The caller is expected to pass in a valid RangeTokenMap instance.
      */
-    virtual void buildRanges() = 0;
+    virtual void buildRanges(RangeTokenMap *rangeTokMap = 0) = 0;
 
 protected:
     // -----------------------------------------------------------------------

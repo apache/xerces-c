@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/11/12 23:24:58  knoaman
+ * Fix multi threading problem.
+ *
  * Revision 1.7  2004/10/20 15:18:49  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -126,16 +129,15 @@ XMLRangeFactory::~XMLRangeFactory() {
 // ---------------------------------------------------------------------------
 //  XMLRangeFactory: Range creation methods
 // ---------------------------------------------------------------------------
-void XMLRangeFactory::buildRanges() {
+void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
 
     if (fRangesCreated)
         return;
 
     if (!fKeywordsInitialized) {
-        initializeKeywordMap();
+        initializeKeywordMap(rangeTokMap);
     }
 
-    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
     TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
 
     // Create space ranges
@@ -249,12 +251,10 @@ void XMLRangeFactory::buildRanges() {
 // ---------------------------------------------------------------------------
 //  XMLRangeFactory: Range creation methods
 // ---------------------------------------------------------------------------
-void XMLRangeFactory::initializeKeywordMap() {
+void XMLRangeFactory::initializeKeywordMap(RangeTokenMap *rangeTokMap) {
 
     if (fKeywordsInitialized)
         return;
-
-    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
 
     rangeTokMap->addKeywordMap(fgXMLSpace, fgXMLCategory);
     rangeTokMap->addKeywordMap(fgXMLDigit, fgXMLCategory);

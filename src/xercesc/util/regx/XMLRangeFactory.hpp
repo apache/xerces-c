@@ -40,13 +40,13 @@ public:
     // -----------------------------------------------------------------------
     //  Initialization methods
     // -----------------------------------------------------------------------
-	void initializeKeywordMap();
+	void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0);
 
 protected:
     // -----------------------------------------------------------------------
     //  Protected Helper methods
     // -----------------------------------------------------------------------
-	void buildRanges();
+	void buildRanges(RangeTokenMap *rangeTokMap = 0);
 
 private:
 	// -----------------------------------------------------------------------

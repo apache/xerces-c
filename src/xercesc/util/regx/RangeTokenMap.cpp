@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/11/12 23:24:58  knoaman
+ * Fix multi threading problem.
+ *
  * Revision 1.12  2004/10/20 15:18:49  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -143,7 +146,6 @@ void XMLInitializer::initializeRangeTokenMap()
     if (RangeTokenMap::fInstance)
     {
         rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
-        RangeTokenMap::fInstance->initializeRegistry();
         RangeTokenMap::fInstance->buildTokenRanges();
     }
 }
@@ -179,6 +181,7 @@ RangeTokenMap::RangeTokenMap() :
         fRangeMap = new RefHashTableOf<RangeFactory>(29);
         fCategories = new XMLStringPool(109);
         fTokenFactory = new TokenFactory();
+        initializeRegistry();
     }
     catch(...) {
         cleanUp();
@@ -228,7 +231,7 @@ RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
 
             if (rangeFactory)
             {
-                rangeFactory->buildRanges();
+                rangeFactory->buildRanges(this);
                 rangeTok = elemMap->getRangeToken(complement);
 
                 // see if we are complementing an existing range
@@ -314,38 +317,38 @@ void RangeTokenMap::initializeRegistry() {
     // Add xml range factory
     RangeFactory* rangeFact = new XMLRangeFactory();
     fRangeMap->put((void*)fgXMLCategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+    rangeFact->initializeKeywordMap(this);
 
     // Add ascii range factory
     rangeFact = new ASCIIRangeFactory();
     fRangeMap->put((void*)fgASCIICategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+    rangeFact->initializeKeywordMap(this);
 
     // Add unicode range factory
     rangeFact = new UnicodeRangeFactory();
     fRangeMap->put((void*)fgUnicodeCategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+    rangeFact->initializeKeywordMap(this);
 
     // Add block range factory
     rangeFact = new BlockRangeFactory();
     fRangeMap->put((void*)fgBlockCategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+    rangeFact->initializeKeywordMap(this);
 }
 
 void RangeTokenMap::buildTokenRanges()
 {
     // Build ranges */
     RangeFactory* rangeFactory = fRangeMap->get(fgXMLCategory);
-    rangeFactory->buildRanges();
+    rangeFactory->buildRanges(this);
 
     rangeFactory = fRangeMap->get(fgASCIICategory);
-    rangeFactory->buildRanges();
+    rangeFactory->buildRanges(this);
 
     rangeFactory = fRangeMap->get(fgUnicodeCategory);
-    rangeFactory->buildRanges();
+    rangeFactory->buildRanges(this);
 
     rangeFactory = fRangeMap->get(fgBlockCategory);
-    rangeFactory->buildRanges();
+    rangeFactory->buildRanges(this);
 }
 
 // ---------------------------------------------------------------------------
@@ -361,7 +364,6 @@ RangeTokenMap* RangeTokenMap::instance()
         {
             fInstance = new RangeTokenMap();
             rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
-            fInstance->initializeRegistry();
         }
     }
 
