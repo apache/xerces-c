@@ -1708,6 +1708,9 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         //  have to create one on our own.
         if (!srcToFill)
         {
+            if (fDisableDefaultEntityResolution)
+                return;
+
             ReaderMgr::LastExtEntityInfo lastInfo;
             fReaderMgr.getLastExtEntityInfo(lastInfo);
 
@@ -1891,6 +1894,9 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId
     //  have to create one on our own.
     if (!srcToFill)
     {
+        if (fDisableDefaultEntityResolution)
+            return srcToFill;
+
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
 
@@ -2939,6 +2945,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
             , XMLReader::Source_External
             , srcUsed
             , fCalculateSrcOfs
+            , fDisableDefaultEntityResolution
         );
 
         // Put a janitor on the source so it gets cleaned up on exit
@@ -2947,7 +2954,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
         //  If the creation failed, and its not because the source was empty,
         //  then emit an error and return.
         if (!reader)
-            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed ? srcUsed->getSystemId() : decl->getSystemId(), fMemoryManager);
 
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.39  2005/04/05 15:12:36  cargilld
+ * Implement support for disabling default entity resolution.
+ *
  * Revision 1.38  2005/03/20 19:02:45  cargilld
  * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
  *
@@ -464,6 +467,8 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
             , XMLReader::Type_PE
             , XMLReader::Source_External
             , srcUsed
+            , fScanner->getCalculateSrcOfs()
+            , fScanner->getDisableDefaultEntityResolution()
         );
 
         // Put a janitor on the source so its cleaned up on exit
@@ -471,7 +476,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
 
         // If the creation failed then throw an exception
         if (!reader)
-            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed ? srcUsed->getSystemId() : decl->getSystemId(), fMemoryManager);
 
         // Set the 'throw at end' flag, to the one we were given
         reader->setThrowAtEnd(throwEndOfExt);
@@ -2196,6 +2201,8 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
             , XMLReader::Type_General
             , XMLReader::Source_External
             , srcUsed
+            , fScanner->getCalculateSrcOfs()
+            , fScanner->getDisableDefaultEntityResolution()
         );
 
         // Put a janitor on the source so it gets cleaned up on exit
@@ -2205,7 +2212,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         //  If the creation failed then throw an exception
         //
         if (!reader)
-            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed ? srcUsed->getSystemId() : decl->getSystemId(), fMemoryManager);
 
         //
         //  Push the reader. If its a recursive expansion, then emit an error

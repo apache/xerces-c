@@ -6632,6 +6632,9 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
     //  the update resolveEntity accepting nameSpace, a schemImport could
     //  pass a null schemaLocation)
     if (!srcToFill && loc) {
+        if (fScanner->getDisableDefaultEntityResolution())
+            return 0;
+
         XMLURL urlTmp(fMemoryManager);
         if ((!urlTmp.setURL(fSchemaInfo->getCurrentSchemaURL(), normalizedURI, urlTmp)) ||
             (urlTmp.isRelative()))

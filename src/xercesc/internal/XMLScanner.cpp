@@ -1630,6 +1630,8 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
     //  First we try to parse it as a URL. If that fails, we assume its
     //  a file and try it that way.
     if (!srcToUse) {
+        if (fDisableDefaultEntityResolution)
+            return 0;
 
         try
         {
@@ -1776,12 +1778,14 @@ void XMLScanner::checkInternalDTD(bool hasExtSubset
     if (fUseCachedGrammar && hasExtSubset && !fIgnoreCachedDTD)
     {
         InputSource* sysIdSrc = resolveSystemId(sysId, pubId);
-        Janitor<InputSource> janSysIdSrc(sysIdSrc);
-        Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
+        if (sysIdSrc) {
+            Janitor<InputSource> janSysIdSrc(sysIdSrc);
+            Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
 
-        if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) 
-        {
-            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
+            if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) 
+            {
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
+            }
         }
     }
 

@@ -1432,44 +1432,46 @@ void IGXMLScanner::scanDocTypeDecl()
         if (fUseCachedGrammar && !hasIntSubset)
         {
             srcUsed = resolveSystemId(sysId, pubId);
-            janSrc.reset(srcUsed);
-            Grammar* grammar = fGrammarResolver->getGrammar(srcUsed->getSystemId());
+            if (srcUsed) {
+                janSrc.reset(srcUsed);
+                Grammar* grammar = fGrammarResolver->getGrammar(srcUsed->getSystemId());
 
-            if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
+                if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
 
-                fDTDGrammar = (DTDGrammar*) grammar;
-                fGrammar = fDTDGrammar;
-                fValidator->setGrammar(fGrammar);
-                // If we don't report at least the external subset boundaries,
-                // an advanced document handler cannot know when the DTD end,
-                // since we've already sent a doctype decl that indicates there's
-                // there's an external subset.
-                if (fDocTypeHandler)
-                {
-                    fDocTypeHandler->startExtSubset();
-                    fDocTypeHandler->endExtSubset();
+                    fDTDGrammar = (DTDGrammar*) grammar;
+                    fGrammar = fDTDGrammar;
+                    fValidator->setGrammar(fGrammar);
+                    // If we don't report at least the external subset boundaries,
+                    // an advanced document handler cannot know when the DTD end,
+                    // since we've already sent a doctype decl that indicates there's
+                    // there's an external subset.
+                    if (fDocTypeHandler)
+                    {
+                        fDocTypeHandler->startExtSubset();
+                        fDocTypeHandler->endExtSubset();
+                    }
+                    // should not be modifying cached grammars!
+                    /********
+                    rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
+
+                    if (rootDecl)
+                        ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
+                    else {
+                        rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
+                        (
+                            bbRootName.getRawBuffer()
+                            , fEmptyNamespaceId
+                            , DTDElementDecl::Any
+                            , fGrammarPoolMemoryManager
+                        );
+                        rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+                        rootDecl->setExternalElemDeclaration(true);
+                        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+                    }
+                    ********/
+
+                    return;
                 }
-                // should not be modifying cached grammars!
-                /********
-                rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
-
-                if (rootDecl)
-                    ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
-                else {
-                    rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
-                    (
-                        bbRootName.getRawBuffer()
-                        , fEmptyNamespaceId
-                        , DTDElementDecl::Any
-                        , fGrammarPoolMemoryManager
-                    );
-                    rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
-                    rootDecl->setExternalElemDeclaration(true);
-                    ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
-                }
-                ********/
-
-                return;
             }
         }
 
@@ -1499,12 +1501,13 @@ void IGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Source_External
                             , srcUsed
                             , fCalculateSrcOfs
+                            , fDisableDefaultEntityResolution
                         );
                 janSrc.reset(srcUsed);
             }
             //  If it failed then throw an exception
             if (!reader)
-                ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId(), fMemoryManager);
+                ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed ? srcUsed->getSystemId() : sysId, fMemoryManager);
 
             if (fToCacheGrammar) {
 

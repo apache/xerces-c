@@ -3553,6 +3553,9 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         //  have to create one on our own.
         if (!srcToFill)
         {
+            if (fDisableDefaultEntityResolution)
+                return;
+
             ReaderMgr::LastExtEntityInfo lastInfo;
             fReaderMgr.getLastExtEntityInfo(lastInfo);
 
@@ -3715,6 +3718,9 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId
     //  have to create one on our own.
     if (!srcToFill)
     {
+        if (fDisableDefaultEntityResolution)
+            return 0;
+
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
 

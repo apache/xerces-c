@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2005/04/05 15:12:36  cargilld
+ * Implement support for disabling default entity resolution.
+ *
  * Revision 1.17  2005/04/04 15:11:38  cargilld
  * Fix a problem where illegal qualified names were not reported as errors.  Also store the colon position when searching for a qualified name to avoid looking it up again.
  *
@@ -233,6 +236,7 @@ public :
         , const XMLReader::Sources  source
         ,       InputSource*&       srcToFill
         , const bool                calcSrcOfs = true
+        , const bool                disableDefaultEntityResolution = false
     );
     XMLReader* createReader
     (
@@ -245,6 +249,7 @@ public :
         , const XMLReader::Sources  source
         ,       InputSource*&       srcToFill
         , const bool                calcSrcOfs = true
+        , const bool                disableDefaultEntityResolution = false
     );
     XMLReader* createIntEntReader
     (

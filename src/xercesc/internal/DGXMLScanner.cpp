@@ -980,46 +980,48 @@ void DGXMLScanner::scanDocTypeDecl()
         if (fUseCachedGrammar && !hasIntSubset)
         {
             srcUsed = resolveSystemId(sysId, pubId);
-            janSrc.reset(srcUsed);
-            Grammar* grammar = fGrammarResolver->getGrammar(srcUsed->getSystemId());
+            if (srcUsed) {
+                janSrc.reset(srcUsed);
+                Grammar* grammar = fGrammarResolver->getGrammar(srcUsed->getSystemId());
 
-            if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
+                if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
 
-                fDTDGrammar = (DTDGrammar*) grammar;
-                fGrammar = fDTDGrammar;
-                fValidator->setGrammar(fGrammar);
-                // If we don't report at least the external subset boundaries,
-                // an advanced document handler cannot know when the DTD end,
-                // since we've already sent a doctype decl that indicates there's
-                // there's an external subset.
-                if (fDocTypeHandler)
-                {
-                    fDocTypeHandler->startExtSubset();
-                    fDocTypeHandler->endExtSubset();
+                    fDTDGrammar = (DTDGrammar*) grammar;
+                    fGrammar = fDTDGrammar;
+                    fValidator->setGrammar(fGrammar);
+                    // If we don't report at least the external subset boundaries,
+                    // an advanced document handler cannot know when the DTD end,
+                    // since we've already sent a doctype decl that indicates there's
+                    // there's an external subset.
+                    if (fDocTypeHandler)
+                    {
+                        fDocTypeHandler->startExtSubset();
+                        fDocTypeHandler->endExtSubset();
+                    }
+                    // we *cannot* identify the root element on 
+                    // cached grammars; else we risk breaking multithreaded
+                    // applications.  - NG
+                    /*******
+                    rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
+
+                    if (rootDecl)
+                        ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
+                    else {
+                        rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
+                        (
+                            bbRootName.getRawBuffer()
+                            , fEmptyNamespaceId
+                            , DTDElementDecl::Any
+                            , fGrammarPoolMemoryManager
+                        );
+                        rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+                        rootDecl->setExternalElemDeclaration(true);
+                        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+                    }
+                    *********/
+
+                    return;
                 }
-                // we *cannot* identify the root element on 
-                // cached grammars; else we risk breaking multithreaded
-                // applications.  - NG
-                /*******
-                rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
-
-                if (rootDecl)
-                    ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
-                else {
-                    rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
-                    (
-                        bbRootName.getRawBuffer()
-                        , fEmptyNamespaceId
-                        , DTDElementDecl::Any
-                        , fGrammarPoolMemoryManager
-                    );
-                    rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
-                    rootDecl->setExternalElemDeclaration(true);
-                    ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
-                }
-                *********/
-
-                return;
             }
         }
 
@@ -1035,7 +1037,7 @@ void DGXMLScanner::scanDocTypeDecl()
                             , XMLReader::RefFrom_NonLiteral
                             , XMLReader::Type_General
                             , XMLReader::Source_External
-                            , fCalculateSrcOfs
+                            , fCalculateSrcOfs                            
                         );
             }
             else {
@@ -1049,12 +1051,13 @@ void DGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Source_External
                             , srcUsed
                             , fCalculateSrcOfs
+                            , fDisableDefaultEntityResolution
                         );
                 janSrc.reset(srcUsed);
             }
             //  If it failed then throw an exception
             if (!reader)
-                ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId(), fMemoryManager);
+                ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed ? srcUsed->getSystemId() : sysId, fMemoryManager);
 
             if (fToCacheGrammar) {
 
@@ -2479,7 +2482,7 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId
         fReaderMgr.getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
                             expSysId.getRawBuffer(), 0, pubId, lastInfo.systemId);
-        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
+        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);       
     }
     else
     {
@@ -2490,6 +2493,9 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId
     //  have to create one on our own.
     if (!srcToFill)
     {
+        if (fDisableDefaultEntityResolution)
+            return srcToFill;
+
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
 
@@ -3222,6 +3228,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
             , XMLReader::Source_External
             , srcUsed
             , fCalculateSrcOfs
+            , fDisableDefaultEntityResolution
         );
 
         // Put a janitor on the source so it gets cleaned up on exit
@@ -3230,7 +3237,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
         //  If the creation failed, and its not because the source was empty,
         //  then emit an error and return.
         if (!reader)
-            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed ? srcUsed->getSystemId() : decl->getSystemId(), fMemoryManager);
 
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.

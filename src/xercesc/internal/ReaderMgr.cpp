@@ -465,7 +465,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                                     , const XMLReader::Types    type
                                     , const XMLReader::Sources  source
                                     ,       InputSource*&       srcToFill
-                                    , const bool                calcSrcOfs)
+                                    , const bool                calcSrcOfs
+                                    , const bool                disableDefaultEntityResolution)
 {
     //Normalize sysId 
     XMLBuffer normalizedSysId(1023, fMemoryManager);
@@ -506,6 +507,9 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
     //
     if (!srcToFill)
     {
+        if (disableDefaultEntityResolution)
+            return 0;
+
         LastExtEntityInfo lastInfo;
         getLastExtEntityInfo(lastInfo);
 
@@ -612,7 +616,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                                     , const XMLReader::Types    type
                                     , const XMLReader::Sources  source
                                     ,       InputSource*&       srcToFill
-                                    , const bool                calcSrcOfs)
+                                    , const bool                calcSrcOfs
+                                    , const bool                disableDefaultEntityResolution)
 {
     //Normalize sysId 
     XMLBuffer normalizedSysId(1023, fMemoryManager);
@@ -651,6 +656,9 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
     //
     if (!srcToFill)
     {
+        if (disableDefaultEntityResolution)
+            return 0;
+
         LastExtEntityInfo lastInfo;
 
         const XMLCh* baseuri=baseURI;
