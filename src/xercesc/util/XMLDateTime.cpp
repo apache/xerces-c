@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.23  2004/01/13 19:50:56  peiyongz
+ * remove parseContent()
+ *
  * Revision 1.22  2004/01/13 16:34:20  cargilld
  * Misc memory management changes.
  *
@@ -591,10 +594,6 @@ const XMLCh*  XMLDateTime::getFormattedString() const
 int XMLDateTime::getSign() const
 {
     return 0;
-}
-
-void XMLDateTime::parseContent(const XMLCh* const)
-{
 }
 
 // ---------------------------------------------------------------------------

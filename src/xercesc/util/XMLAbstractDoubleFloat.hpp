@@ -57,8 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.18  2004/01/03 00:03:18  peiyongz
- * parseContent
+ * Revision 1.19  2004/01/13 19:50:56  peiyongz
+ * remove parseContent()
  *
  * Revision 1.17  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
@@ -198,8 +198,6 @@ public:
     virtual const XMLCh*  getFormattedString() const;
 
     virtual int           getSign() const;
-
-    virtual void          parseContent(const XMLCh* const);
 
     MemoryManager*        getMemoryManager() const;
 

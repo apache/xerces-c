@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.25  2004/01/13 19:50:56  peiyongz
+ * remove parseContent()
+ *
  * Revision 1.24  2004/01/12 16:23:39  neilg
  * remove use of static buffers
  *
@@ -179,11 +182,6 @@ XMLAbstractDoubleFloat::~XMLAbstractDoubleFloat()
 {
      fMemoryManager->deallocate(fRawData);//delete [] fRawData;
      fMemoryManager->deallocate(fFormattedString);//delete [] fFormattedString;
-}
-
-void XMLAbstractDoubleFloat::parseContent(const XMLCh* const strValue)
-{
-    init(strValue);
 }
 
 void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)

@@ -56,14 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.20  2004/01/06 04:42:04  neilg
- * Since parseContent may now be called outside a constructor,
- * the destructor may subsequently be invoked.  If this happens,
- * an attempt will be made to delete fRawData if it is non-zero.
- * Therefore, 0 it before throwing the exception after cleanUp() is called.
- *
- * Revision 1.19  2004/01/03 00:03:18  peiyongz
- * parseContent
+ * Revision 1.21  2004/01/13 19:50:56  peiyongz
+ * remove parseContent()
  *
  * Revision 1.18  2003/12/23 21:48:14  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0
@@ -184,16 +178,6 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
 , fIntVal(0)
 , fMemoryManager(manager)
 {
-    parseContent(strValue);
-}
-
-XMLBigDecimal::~XMLBigDecimal()
-{
-    cleanUp();
-}
-
-void XMLBigDecimal::parseContent(const XMLCh* const strValue)
-{
     if ((!strValue) || (!*strValue))
         ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, fMemoryManager);
 
@@ -215,9 +199,13 @@ void XMLBigDecimal::parseContent(const XMLCh* const strValue)
     catch(...)
     {
         cleanUp();
-        fRawData = 0;
         throw;
     }
+}
+
+XMLBigDecimal::~XMLBigDecimal()
+{
+    cleanUp();
 }
 
 void XMLBigDecimal::cleanUp()

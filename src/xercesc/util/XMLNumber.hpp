@@ -57,8 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.11  2004/01/03 00:03:18  peiyongz
- * parseContent
+ * Revision 1.12  2004/01/13 19:50:56  peiyongz
+ * remove parseContent()
  *
  * Revision 1.10  2003/10/17 21:10:55  peiyongz
  * loadNumber() added
@@ -165,8 +165,6 @@ public:
 	 *
 	 */
     virtual int        getSign() const = 0;
-
-    virtual void       parseContent(const XMLCh* const) = 0;
 
     /***
      * Support for Serialization/De-serialization
