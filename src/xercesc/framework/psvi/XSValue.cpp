@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/09/09 20:08:31  peiyongz
+ * Using new error code
+ *
  * Revision 1.9  2004/09/08 19:56:05  peiyongz
  * Remove parameter toValidate from validation interface
  *
@@ -196,6 +199,17 @@ static RegularExpression* getRegEx()
     }
 
     return sXSValueRegEx;
+}
+
+inline
+static bool checkTimeZoneError(XSValue::DataType       const &datatype
+                             , SchemaDateTimeException const &e       )
+{
+    return (((datatype == XSValue::dt_dateTime) || (datatype == XSValue::dt_time)) &&
+            ((e.getCode() == XMLExcepts::DateTime_tz_noUTCsign)   ||
+             (e.getCode() == XMLExcepts::DateTime_tz_stuffAfterZ) ||
+             (e.getCode() == XMLExcepts::DateTime_tz_invalid)     ||
+             (e.getCode() == XMLExcepts::DateTime_tz_hh_invalid)));
 }
 
 // ---------------------------------------------------------------------------
@@ -619,7 +633,7 @@ XSValue::validateNumerics(const XMLCh*         const content
     {
         //getActValue()/getCanonical() need to know the failure details
         //if validation is required
-        status = st_InvalidChar; 
+        status = st_FOCA0002; 
         return false; 
     }
 
@@ -673,11 +687,17 @@ bool XSValue::validateDateTimes(const XMLCh*         const content
         return true; //parsing succeed
     }
 
+    catch (SchemaDateTimeException &e)
+    {       
+        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
+        return false;
+    }
+
     catch (...)
     {
         //getActValue()/getCanonical() need to know the failure details
         //if validation is required
-        status = st_Invalid;
+        status = st_FOCA0002;
         return false; 
     }      
 
@@ -705,7 +725,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
                 if (i == XMLUni::fgBooleanValueSpaceArraySize)
                 {
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                     return false;
                 }
             }
@@ -714,7 +734,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 if (HexBin::getDataLength(content) == -1) 
                 {
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                     return false;
                 }
             }
@@ -723,7 +743,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 if (Base64::getDataLength(content, manager) == -1) 
                 {
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                     return false;
                 }
             }
@@ -953,7 +973,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
     catch (...)
     {
-        status = st_Invalid;
+        status = st_FOCA0002;
         return false; 
     }
 
@@ -983,7 +1003,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             retVal = XMLBigDecimal::getCanonicalRepresentation(content, manager);
 
             if (!retVal)
-                status = st_InvalidChar;
+                status = st_FOCA0002;
 
             return retVal;
 
@@ -993,7 +1013,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             retVal = XMLAbstractDoubleFloat::getCanonicalRepresentation(content, manager);
 
             if (!retVal)
-                status = st_InvalidChar;
+                status = st_FOCA0002;
 
             return retVal;
         }  
@@ -1002,7 +1022,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             retVal = XMLBigInteger::getCanonicalRepresentation(content, manager, datatype == XSValue::dt_nonPositiveInteger);
 
             if (!retVal)
-                status = st_InvalidChar;
+                status = st_FOCA0002;
 
             return retVal;
         }
@@ -1010,7 +1030,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
 
     catch (...)
     {
-        status = st_InvalidChar;
+        status = st_FOCA0002;
         return 0;
     }
 
@@ -1050,7 +1070,7 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
         case XSValue::dt_gMonth:
             {
                 if (toValidate && !validateDateTimes(content, datatype, status, version, manager))
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                 else
                     status = st_NoCanRep;
 
@@ -1063,9 +1083,15 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
         }
     }
 
+    catch (SchemaDateTimeException &e)
+    {
+        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
+        return 0;
+    }
+
     catch (...)
     {
-        status = st_Invalid;
+        status = st_FOCA0002;
         return 0;
     }
 
@@ -1097,7 +1123,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 }
                 else
                 {
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                     return 0;
                 }
             }
@@ -1107,7 +1133,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 //HexBin::getCanonicalRepresentation does validation automatically
                 XMLCh* canRep = HexBin::getCanonicalRepresentation(content, manager);
                 if (!canRep)
-                    status = st_Invalid;
+                    status = st_FOCA0002;
 
                 return canRep;
             }
@@ -1117,7 +1143,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 //Base64::getCanonicalRepresentation does validation automatically
                 XMLCh* canRep = Base64::getCanonicalRepresentation(content, manager);
                 if (!canRep)
-                    status = st_Invalid;
+                    status = st_FOCA0002;
 
                 return canRep;
             }
@@ -1140,7 +1166,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
         case XSValue::dt_IDREFS:
             {
                 if (toValidate && !validateStrings(content, datatype, status, version, manager))
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                 else
                     status = st_NoCanRep;
 
@@ -1155,7 +1181,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
 
     catch (...)
     {
-        status = st_Invalid;
+        status = st_FOCA0002;
         return 0;
     }
 }
@@ -1193,7 +1219,12 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                 , manager
                                 )
                 )
+            {
+                if (status != st_FOCA0002)
+                    status = st_FOCA0001;
+
                 return 0;
+            }
 
             // get the integer
             t_value  actValInt;
@@ -1209,13 +1240,18 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                 , manager
                                 )
                 )
+            {
+                if (status != st_FOCA0002)
+                    status = st_FOCA0001;
+
                 return 0;
+            }
 
             //Prepare the double value
             XMLDouble  data2(content, manager);
             if (data2.isDataConverted())
             {
-                status = st_InvalidRange;
+                status = data2.isDataOverflowed()? st_FOCA0001 : st_InvalidRange;
                 return 0;
             }
 
@@ -1282,7 +1318,12 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                 , manager
                                 )
                 )
+            {
+                if (status != st_FOCA0002)
+                    status = st_FOCA0003;
+
                 return 0;
+            }
 
             switch (datatype)
             { 
@@ -1501,7 +1542,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
     catch (...)
     {
-        status = st_InvalidChar;
+        status = st_FOCA0002;
         return 0; 
     }
 }
@@ -1567,9 +1608,15 @@ XSValue::getActValDateTimes(const XMLCh*         const content
         return retVal;
     }
 
+    catch (SchemaDateTimeException const &e)
+    {
+        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
+        return 0;
+    }
+
     catch (...)
     {
-        status = st_Invalid;
+        status = st_FOCA0002;
         return 0; 
     }
 
@@ -1606,7 +1653,7 @@ XSValue::getActValStrings(const XMLCh*         const content
                 }
                 else
                 {
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                     return 0;
                 }
             }
@@ -1617,7 +1664,7 @@ XSValue::getActValStrings(const XMLCh*         const content
 
                 if (!decodedData)
                 {
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                     return 0;
                 }
 
@@ -1634,7 +1681,7 @@ XSValue::getActValStrings(const XMLCh*         const content
 
                 if (!decodedData)
                 {
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                     return 0;
                 }
 
@@ -1662,7 +1709,7 @@ XSValue::getActValStrings(const XMLCh*         const content
         case XSValue::dt_IDREFS:
             {
                 if (toValidate && !validateStrings(content, datatype, status, version, manager))
-                    status = st_Invalid;
+                    status = st_FOCA0002;
                 else
                     status = st_NoActVal;
 
@@ -1677,7 +1724,7 @@ XSValue::getActValStrings(const XMLCh*         const content
 
     catch (...)
     {
-        status = st_Invalid;
+        status = st_FOCA0002;
         return 0; 
     }
 }
@@ -1718,7 +1765,7 @@ bool XSValue::getActualValue(const XMLCh*         const content
     // check if all chars are valid char
     if ( (endptr - nptr) != strLen)
     {
-        status = st_InvalidChar;
+        status = st_FOCA0002;
         return false;
     }
 

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/09/09 20:08:31  peiyongz
+ * Using new error code
+ *
  * Revision 1.9  2004/09/08 19:56:05  peiyongz
  * Remove parameter toValidate from validation interface
  *
@@ -112,13 +115,15 @@ public:
 
     enum Status {
             st_Init,
-            st_Invalid,
-            st_InvalidChar,     //for numeric
-            st_InvalidRange,    //for numeric
+            st_InvalidRange,    
             st_NoCanRep,
             st_NoActVal,
             st_NotSupported,
             st_CantCreateRegEx,
+            st_FOCA0002,        //invalid lexical value 
+            st_FOCA0001,        //input value too large for decimal 
+            st_FOCA0003,        //input value too large for integer 
+            st_FODT0003,        //invalid timezone value 
             st_UnknownType
     };
 

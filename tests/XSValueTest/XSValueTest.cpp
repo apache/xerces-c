@@ -17,6 +17,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.9  2004/09/09 20:10:04  peiyongz
+* Using new error code
+*
 * Revision 1.8  2004/09/08 19:56:32  peiyongz
 * Remove parameter toValidate from validation interface
 *
@@ -397,7 +400,7 @@ void test_dt_decimal()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid       n/a   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -409,8 +412,8 @@ void test_dt_decimal()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -423,14 +426,14 @@ void test_dt_decimal()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -449,12 +452,12 @@ void test_dt_decimal()
 #else
         ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -468,14 +471,14 @@ void test_dt_decimal()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid          n/a                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -496,8 +499,8 @@ void test_dt_decimal()
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1, DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -568,8 +571,8 @@ void test_dt_float()
      *                             ----------------------------------------------
      *    lexical valid          
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_InvalidChar   
-     *    lexical invalid                                false           st_Invalid
+     *            range  invalid                         false           st_FOCA0002   
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -587,8 +590,8 @@ void test_dt_float()
     VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -601,14 +604,14 @@ void test_dt_float()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -631,8 +634,8 @@ void test_dt_float()
         ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
 
     }
 
@@ -647,14 +650,14 @@ void test_dt_float()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                            XMLCh          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -671,8 +674,8 @@ void test_dt_float()
         CANREP_TEST(data_rawstr_5,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_5,    DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
     }
 
     // lexical valid, range invalid
@@ -758,8 +761,8 @@ void test_dt_double()
      *                             ----------------------------------------------
      *    lexical valid          
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_InvalidChar   
-     *    lexical invalid                                false           st_Invalid
+     *            range  invalid                         false           st_FOCA0002   
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -777,8 +780,8 @@ void test_dt_double()
     VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -791,14 +794,14 @@ void test_dt_double()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -821,8 +824,8 @@ void test_dt_double()
         ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
 
     }
 
@@ -837,14 +840,14 @@ void test_dt_double()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                            XMLCh          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -861,8 +864,8 @@ void test_dt_double()
         CANREP_TEST(data_rawstr_5,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_5,    DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
     }
 
     // lexical valid, range invalid
@@ -936,7 +939,7 @@ void test_dt_integer()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid       n/a   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -948,8 +951,8 @@ void test_dt_integer()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -962,14 +965,14 @@ void test_dt_integer()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -988,12 +991,12 @@ void test_dt_integer()
 #else
         ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -1007,14 +1010,14 @@ void test_dt_integer()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid          n/a                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -1030,8 +1033,8 @@ void test_dt_integer()
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -1082,7 +1085,7 @@ void test_dt_nonPositiveInteger()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid       n/a   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -1094,8 +1097,8 @@ void test_dt_nonPositiveInteger()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -1108,14 +1111,14 @@ void test_dt_nonPositiveInteger()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -1131,11 +1134,11 @@ void test_dt_nonPositiveInteger()
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -1149,14 +1152,14 @@ void test_dt_nonPositiveInteger()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid          n/a                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -1170,8 +1173,8 @@ void test_dt_nonPositiveInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -1219,7 +1222,7 @@ void test_dt_negativeInteger()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid       n/a   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -1231,8 +1234,8 @@ void test_dt_negativeInteger()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -1245,14 +1248,14 @@ void test_dt_negativeInteger()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -1268,11 +1271,11 @@ void test_dt_negativeInteger()
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -1286,14 +1289,14 @@ void test_dt_negativeInteger()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid          n/a                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -1306,8 +1309,8 @@ void test_dt_negativeInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -1361,7 +1364,7 @@ void test_dt_long()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -1375,8 +1378,8 @@ void test_dt_long()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -1389,14 +1392,14 @@ void test_dt_long()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -1419,8 +1422,8 @@ void test_dt_long()
         ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -1434,14 +1437,14 @@ void test_dt_long()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -1456,8 +1459,8 @@ void test_dt_long()
         CANREP_TEST(lex_v_ran64_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -1514,7 +1517,7 @@ void test_dt_int()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -1528,8 +1531,8 @@ void test_dt_int()
     VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -1542,14 +1545,14 @@ void test_dt_int()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -1565,8 +1568,8 @@ void test_dt_int()
         ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
         ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -1580,14 +1583,14 @@ void test_dt_int()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -1602,8 +1605,8 @@ void test_dt_int()
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
 
     }
 
@@ -1664,7 +1667,7 @@ void test_dt_short()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -1678,8 +1681,8 @@ void test_dt_short()
     VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -1692,14 +1695,14 @@ void test_dt_short()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -1715,8 +1718,8 @@ void test_dt_short()
         ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
         ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -1730,14 +1733,14 @@ void test_dt_short()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -1752,8 +1755,8 @@ void test_dt_short()
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
 
     }
 
@@ -1814,7 +1817,7 @@ void test_dt_byte()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -1828,8 +1831,8 @@ void test_dt_byte()
     VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -1842,14 +1845,14 @@ void test_dt_byte()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -1865,8 +1868,8 @@ void test_dt_byte()
         ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
         ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -1880,14 +1883,14 @@ void test_dt_byte()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -1902,8 +1905,8 @@ void test_dt_byte()
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
 
     }
 
@@ -1961,7 +1964,7 @@ void test_dt_nonNegativeInteger()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid       n/a   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -1973,8 +1976,8 @@ void test_dt_nonNegativeInteger()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -1987,14 +1990,14 @@ void test_dt_nonNegativeInteger()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2010,11 +2013,11 @@ void test_dt_nonNegativeInteger()
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2028,14 +2031,14 @@ void test_dt_nonNegativeInteger()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid          n/a                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -2049,8 +2052,8 @@ void test_dt_nonNegativeInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -2106,7 +2109,7 @@ void test_dt_unsignedLong()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -2120,8 +2123,8 @@ void test_dt_unsignedLong()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -2134,14 +2137,14 @@ void test_dt_unsignedLong()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2164,8 +2167,8 @@ void test_dt_unsignedLong()
         ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2179,14 +2182,14 @@ void test_dt_unsignedLong()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -2201,8 +2204,8 @@ void test_dt_unsignedLong()
         CANREP_TEST(lex_v_ran64_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -2259,7 +2262,7 @@ void test_dt_unsignedInt()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -2273,8 +2276,8 @@ void test_dt_unsignedInt()
     VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -2287,14 +2290,14 @@ void test_dt_unsignedInt()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2310,8 +2313,8 @@ void test_dt_unsignedInt()
         ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
         ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2325,14 +2328,14 @@ void test_dt_unsignedInt()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -2347,8 +2350,8 @@ void test_dt_unsignedInt()
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -2405,7 +2408,7 @@ void test_dt_unsignedShort()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -2419,8 +2422,8 @@ void test_dt_unsignedShort()
     VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -2433,14 +2436,14 @@ void test_dt_unsignedShort()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2456,8 +2459,8 @@ void test_dt_unsignedShort()
         ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
         ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2471,14 +2474,14 @@ void test_dt_unsignedShort()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -2493,8 +2496,8 @@ void test_dt_unsignedShort()
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -2551,7 +2554,7 @@ void test_dt_unsignedByte()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid                         false           st_InvalidRange   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -2565,8 +2568,8 @@ void test_dt_unsignedByte()
     VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -2579,14 +2582,14 @@ void test_dt_unsignedByte()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2602,8 +2605,8 @@ void test_dt_unsignedByte()
         ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
         ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2617,14 +2620,14 @@ void test_dt_unsignedByte()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_InvalidRange
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -2639,8 +2642,8 @@ void test_dt_unsignedByte()
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -2697,7 +2700,7 @@ void test_dt_positiveInteger()
      *    lexical valid          
      *            range  valid                           true              n/a
      *            range  invalid       n/a   
-     *    lexical invalid                                false           st_InvalidChar
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -2709,8 +2712,8 @@ void test_dt_positiveInteger()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -2723,14 +2726,14 @@ void test_dt_positiveInteger()
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XSValue         n/a
      *          range  invalid                              0            st_Unpresentable                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2746,11 +2749,11 @@ void test_dt_positiveInteger()
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2764,14 +2767,14 @@ void test_dt_positiveInteger()
      *  lexical valid          
      *          range  valid                              XMLCh          n/a
      *          range  invalid          n/a                  
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid          
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
-     *  lexical invalid                                     0            st_InvalidChar
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -2785,8 +2788,8 @@ void test_dt_positiveInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
 
     }
 
@@ -2823,7 +2826,7 @@ void test_dt_boolean()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *    lexical valid                                  true              n/a
-     *    lexical invalid                                false           st_Invalid
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -2834,7 +2837,7 @@ void test_dt_boolean()
     VALIDATE_TEST(lex_v_4,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -2845,12 +2848,12 @@ void test_dt_boolean()
      *  validation on
      *  ============= 
      *  lexical valid                                    XSValue         n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid                                    XSValue         n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2866,7 +2869,7 @@ void test_dt_boolean()
         ACTVALUE_TEST(lex_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2879,12 +2882,12 @@ void test_dt_boolean()
      *  validation on
      *  ============= 
      *  lexical valid                                    XMLCh            n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid                                    XMLCh            n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -2900,7 +2903,7 @@ void test_dt_boolean()
         CANREP_TEST(lex_v_4,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_4_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
     }
 
 }
@@ -2935,7 +2938,7 @@ void test_dt_hexBinary()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *    lexical valid                                  true              n/a
-     *    lexical invalid                                false           st_Invalid
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -2944,8 +2947,8 @@ void test_dt_hexBinary()
     VALIDATE_TEST(lex_v_2,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -2956,12 +2959,12 @@ void test_dt_hexBinary()
      *  validation on
      *  ============= 
      *  lexical valid                                    XSValue         n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid                                    XSValue         n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -2975,8 +2978,8 @@ void test_dt_hexBinary()
         ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -2989,12 +2992,12 @@ void test_dt_hexBinary()
      *  validation on
      *  ============= 
      *  lexical valid                                    XMLCh            n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid                                    XMLCh            n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -3008,8 +3011,8 @@ void test_dt_hexBinary()
         CANREP_TEST(lex_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_2_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
-        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
     }
 
 }
@@ -3036,7 +3039,7 @@ void test_dt_base64Binary()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *    lexical valid                                  true              n/a
-     *    lexical invalid                                false           st_Invalid
+     *    lexical invalid                                false           st_FOCA0002
      * 
      ***/
 
@@ -3045,8 +3048,8 @@ void test_dt_base64Binary()
     VALIDATE_TEST(lex_v_2,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3057,12 +3060,12 @@ void test_dt_base64Binary()
      *  validation on
      *  ============= 
      *  lexical valid                                    XSValue         n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid                                    XSValue         n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
    
@@ -3076,8 +3079,8 @@ void test_dt_base64Binary()
         ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3090,12 +3093,12 @@ void test_dt_base64Binary()
      *  validation on
      *  ============= 
      *  lexical valid                                    XMLCh            n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *  lexical valid                                    XMLCh            n/a
-     *  lexical invalid                                     0            st_Invalid
+     *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
 
@@ -3109,8 +3112,8 @@ void test_dt_base64Binary()
         CANREP_TEST(lex_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_2_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
-        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
     }
 
 }
@@ -3135,7 +3138,7 @@ void test_dt_duration()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3145,9 +3148,9 @@ void test_dt_duration()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3158,12 +3161,12 @@ void test_dt_duration()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3178,9 +3181,9 @@ void test_dt_duration()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3193,7 +3196,7 @@ void test_dt_duration()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -3214,11 +3217,11 @@ void test_dt_duration()
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
 
@@ -3244,7 +3247,7 @@ void test_dt_date()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3254,9 +3257,9 @@ void test_dt_date()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3267,12 +3270,12 @@ void test_dt_date()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3287,9 +3290,9 @@ void test_dt_date()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3302,7 +3305,7 @@ void test_dt_date()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -3323,11 +3326,11 @@ void test_dt_date()
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
 
@@ -3353,7 +3356,7 @@ void test_dt_gYearMonth()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3363,9 +3366,9 @@ void test_dt_gYearMonth()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3376,12 +3379,12 @@ void test_dt_gYearMonth()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3396,9 +3399,9 @@ void test_dt_gYearMonth()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3411,7 +3414,7 @@ void test_dt_gYearMonth()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -3432,11 +3435,11 @@ void test_dt_gYearMonth()
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
 
@@ -3462,7 +3465,7 @@ void test_dt_gYear()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3472,9 +3475,9 @@ void test_dt_gYear()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3485,12 +3488,12 @@ void test_dt_gYear()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3505,9 +3508,9 @@ void test_dt_gYear()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3520,7 +3523,7 @@ void test_dt_gYear()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -3541,11 +3544,11 @@ void test_dt_gYear()
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
 
@@ -3571,7 +3574,7 @@ void test_dt_gMonthDay()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3581,9 +3584,9 @@ void test_dt_gMonthDay()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3594,12 +3597,12 @@ void test_dt_gMonthDay()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3614,9 +3617,9 @@ void test_dt_gMonthDay()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3629,7 +3632,7 @@ void test_dt_gMonthDay()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -3650,11 +3653,11 @@ void test_dt_gMonthDay()
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
 
@@ -3680,7 +3683,7 @@ void test_dt_gDay()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3690,9 +3693,9 @@ void test_dt_gDay()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3703,12 +3706,12 @@ void test_dt_gDay()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3723,9 +3726,9 @@ void test_dt_gDay()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3738,7 +3741,7 @@ void test_dt_gDay()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -3759,11 +3762,11 @@ void test_dt_gDay()
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
 
@@ -3789,7 +3792,7 @@ void test_dt_gMonth()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3799,9 +3802,9 @@ void test_dt_gMonth()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
 
     /***
      *
@@ -3812,12 +3815,12 @@ void test_dt_gMonth()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3832,9 +3835,9 @@ void test_dt_gMonth()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
     }
 
     /***
@@ -3847,7 +3850,7 @@ void test_dt_gMonth()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -3868,11 +3871,11 @@ void test_dt_gMonth()
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
 
@@ -3890,6 +3893,8 @@ void test_dt_dateTime()
     const char iv_1[]="0000-12-31T23:59:59";
     const char iv_2[]="+2000-11-30T23:59:59Z";
     const char iv_3[]="2000-02-28T23:59.1:59Z";
+    const char iv_4[]="2000-11-30T01:01:01Z99";
+    const char iv_5[]="2000-02-28T01:01:01Z10:61";
 
     const char v_1_canrep[]="2000-12-31T23:59:59.00389Z";
     const char v_2_canrep[]="2000-10-01T05:10:20Z";
@@ -3922,7 +3927,7 @@ void test_dt_dateTime()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -3932,9 +3937,11 @@ void test_dt_dateTime()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_4, dt, EXP_RET_VALID_FALSE, XSValue::st_FODT0003);
+    VALIDATE_TEST(iv_5, dt, EXP_RET_VALID_FALSE, XSValue::st_FODT0003);
 
     /***
      *
@@ -3945,12 +3952,12 @@ void test_dt_dateTime()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -3965,9 +3972,11 @@ void test_dt_dateTime()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
+        ACTVALUE_TEST(iv_5, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
     }
 
     /***
@@ -3980,12 +3989,12 @@ void test_dt_dateTime()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            n/a
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XMLCh            n/a
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      ***/
 
@@ -4000,9 +4009,11 @@ void test_dt_dateTime()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_4, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
+        CANREP_TEST(iv_5, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
 
     }
 
@@ -4020,6 +4031,8 @@ void test_dt_time()
     const char iv_1[]="55:59:59";
     const char iv_2[]="03:99:59";
     const char iv_3[]="23:59.1:59";
+    const char iv_4[]="01:01:01Z99";
+    const char iv_5[]="01:01:01Z10:61";
 
     const char v_1_canrep[]="23:59:59.389Z";
     const char v_2_canrep[]="00:00:00Z";
@@ -4045,7 +4058,7 @@ void test_dt_time()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -4055,9 +4068,11 @@ void test_dt_time()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(iv_4, dt, EXP_RET_VALID_FALSE, XSValue::st_FODT0003);
+    VALIDATE_TEST(iv_5, dt, EXP_RET_VALID_FALSE, XSValue::st_FODT0003);
 
     /***
      *
@@ -4068,12 +4083,12 @@ void test_dt_time()
      *  validation on
      *  ============= 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XSValue         n/a
-     *   invalid                                           0            st_Invalid
+     *   invalid                                           0            st_FOCA0002
      *
      ***/
    
@@ -4088,9 +4103,11 @@ void test_dt_time()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
+        ACTVALUE_TEST(iv_5, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
     }
 
     /***
@@ -4103,12 +4120,12 @@ void test_dt_time()
      *  validation on
      *  ============= 
      *   valid                                          XMLCh            n/a
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                          XMLCh            n/a
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      ***/
 
@@ -4123,10 +4140,11 @@ void test_dt_time()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
-
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_4, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
+        CANREP_TEST(iv_5, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
     }
 
 }
@@ -4145,7 +4163,7 @@ void test_dt_string()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                     n/a             false             st_Invalid
+     *     invalid                     n/a             false             st_FOCA0002
      * 
      ***/
 
@@ -4163,12 +4181,12 @@ void test_dt_string()
      *  validation on
      *  ============= 
      *   valid                                             0             n/a
-     *   invalid                      n/a                  0             st_Invalid
+     *   invalid                      n/a                  0             st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                             0             n/a
-     *   invalid                      n/a                  0             st_Invalid
+     *   invalid                      n/a                  0             st_FOCA0002
      *
      ***/
    
@@ -4193,12 +4211,12 @@ void test_dt_string()
      *  validation on
      *  ============= 
      *   valid                                            0              n/a
-     *   invalid                       n/a                0              st_Invalid
+     *   invalid                       n/a                0              st_FOCA0002
      *
      *  validation off
      *  ============== 
      *   valid                                            0              n/a
-     *   invalid                       n/a                0              st_Invalid
+     *   invalid                       n/a                0              st_FOCA0002
      *
      ***/
 
@@ -4236,7 +4254,7 @@ void test_dt_anyURI()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -4259,7 +4277,7 @@ void test_dt_anyURI()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4280,11 +4298,11 @@ void test_dt_anyURI()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
 
     }
 
@@ -4298,7 +4316,7 @@ void test_dt_anyURI()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4319,11 +4337,11 @@ void test_dt_anyURI()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
     }
 
 }
@@ -4348,7 +4366,7 @@ void test_dt_QName()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                                     false             st_Invalid
+     *     invalid                                     false             st_FOCA0002
      * 
      ***/
 
@@ -4371,7 +4389,7 @@ void test_dt_QName()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4392,11 +4410,11 @@ void test_dt_QName()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
 
     }
 
@@ -4410,7 +4428,7 @@ void test_dt_QName()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4431,11 +4449,11 @@ void test_dt_QName()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
     }
 
 }
@@ -4455,7 +4473,7 @@ void test_dt_NOTATION()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -4474,7 +4492,7 @@ void test_dt_NOTATION()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                         n/a               0             st_Invalid
+     *   invalid                         n/a               0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4506,7 +4524,7 @@ void test_dt_NOTATION()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                            n/a           0              st_Invalid
+     *   invalid                            n/a           0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4548,7 +4566,7 @@ void test_dt_normalizedString()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -4570,7 +4588,7 @@ void test_dt_normalizedString()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4591,9 +4609,9 @@ void test_dt_normalizedString()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -4607,7 +4625,7 @@ void test_dt_normalizedString()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4628,9 +4646,9 @@ void test_dt_normalizedString()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
@@ -4656,7 +4674,7 @@ void test_dt_token()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -4679,7 +4697,7 @@ void test_dt_token()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4700,11 +4718,11 @@ void test_dt_token()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -4718,7 +4736,7 @@ void test_dt_token()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4739,11 +4757,11 @@ void test_dt_token()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
@@ -4769,7 +4787,7 @@ void test_dt_language()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -4792,7 +4810,7 @@ void test_dt_language()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4813,11 +4831,11 @@ void test_dt_language()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -4831,7 +4849,7 @@ void test_dt_language()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4852,11 +4870,11 @@ void test_dt_language()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
@@ -4882,7 +4900,7 @@ void test_dt_NMTOKEN()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -4905,7 +4923,7 @@ void test_dt_NMTOKEN()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4926,11 +4944,11 @@ void test_dt_NMTOKEN()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -4944,7 +4962,7 @@ void test_dt_NMTOKEN()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -4965,11 +4983,11 @@ void test_dt_NMTOKEN()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
@@ -4995,7 +5013,7 @@ void test_dt_NMTOKENS()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -5018,7 +5036,7 @@ void test_dt_NMTOKENS()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5039,11 +5057,11 @@ void test_dt_NMTOKENS()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -5057,7 +5075,7 @@ void test_dt_NMTOKENS()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5078,11 +5096,11 @@ void test_dt_NMTOKENS()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
@@ -5108,7 +5126,7 @@ void test_dt_Name()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -5131,7 +5149,7 @@ void test_dt_Name()
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5152,11 +5170,11 @@ void test_dt_Name()
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -5170,7 +5188,7 @@ void test_dt_Name()
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5191,11 +5209,11 @@ void test_dt_Name()
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
@@ -5221,7 +5239,7 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -5244,7 +5262,7 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5265,11 +5283,11 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -5283,7 +5301,7 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5304,11 +5322,11 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
@@ -5333,7 +5351,7 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
      *                             availability        return value      context
      *                             ----------------------------------------------
      *     valid                                       true              n/a
-     *     invalid                      n/a            false             st_Invalid
+     *     invalid                      n/a            false             st_FOCA0002
      * 
      ***/
 
@@ -5356,7 +5374,7 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
      *  validation on
      *  ============= 
      *   valid                                             0             st_NoActVal
-     *   invalid                                           0             st_Invalid
+     *   invalid                                           0             st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5377,11 +5395,11 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
 
     }
 
@@ -5395,7 +5413,7 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
      *  validation on
      *  ============= 
      *   valid                                            0              st_NoCanRep
-     *   invalid                                          0              st_Invalid
+     *   invalid                                          0              st_FOCA0002
      *
      *  validation off
      *  ============== 
@@ -5416,11 +5434,11 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
 
