@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/23 00:35:49  abagchi
+ * Added OS/390 changes to comply with new ICUDATA library
+ *
  * Revision 1.8  2000/02/08 18:55:59  abagchi
  * Changed it to use Iconv390 transcoder
  *
@@ -114,10 +117,13 @@
 #else   // use native transcoder
     #include <util/Transcoders/Iconv390/Iconv390TransService.hpp>
 #endif
-#include    <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 
-#ifdef OS390BATCH
-    const char CONVERTER_BINARY_FILE_DDNAME[11] = "DD:ICUDATA";
+#if defined (XML_USE_ICU_MESSAGELOADER)
+    #include <util/MsgLoaders/ICU/ICUMsgLoader.hpp>
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+    #include <util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp>
+#else   // use In-memory message loader
+    #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>   //hint for the user to include this file.
 #endif
 
 
@@ -180,7 +186,13 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     XMLMsgLoader* retVal;
     try
     {
+#if defined (XML_USE_ICU_MESSAGELOADER)
+        retVal = new ICUMsgLoader(msgDomain);
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+        retVal = new MsgCatalogLoader(msgDomain);
+#else
         retVal = new InMemMsgLoader(msgDomain);
+#endif
     }
 
     catch(...)
