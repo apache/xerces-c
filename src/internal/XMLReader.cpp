@@ -1531,16 +1531,9 @@ void XMLReader::refreshRawBuffer()
 {
     //
     //  If there are any bytes left, move them down to the start. There
-    //  should only ever be (max bytes per char - 1) at the most. If not,
-    //  optimize and do the fast op and get out.
+    //  should only ever be (max bytes per char - 1) at the most. 
     //
     const unsigned int bytesLeft = fRawBytesAvail - fRawBufIndex;
-    if (!bytesLeft)
-    {
-        // Its empty so do the optimized version
-        fRawBytesAvail = fStream->readBytes(fRawByteBuf, kRawBufSize);
-        return;
-    }
 
     // Move the existing ones down
     for (unsigned int index = 0; index < bytesLeft; index++)
@@ -1558,7 +1551,7 @@ void XMLReader::refreshRawBuffer()
 
     //
     //  We need to reset the buffer index back to the start in all cases,
-    //  since any trailing data will be copied down to the start.
+    //  since any trailing data was copied down to the start.
     //
     fRawBufIndex = 0;
 }
@@ -1579,13 +1572,17 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
         return 0;
 
     //
-    //  If our raw buffer is empty, then lets load up another batch of
-    //  raw bytes now.
+    //  If our raw buffer is low, then lets load up another batch of
+    //  raw bytes now.  We can't check for exactly zero bytes left because
+    //  transcoding of multi-byte encodings may have left a few bytes
+    //  representing a partial character in the buffer that can't be
+    //  used until the next buffer (and the rest of the character)
+    //  is read.
     //
-    if (fRawBufIndex == fRawBytesAvail)
+    unsigned int bytesLeft = fRawBytesAvail - fRawBufIndex;
+    if (bytesLeft < 100)
     {
         refreshRawBuffer();
-        fRawBufIndex = 0;
 
         // If we didn't get anything more just return a zero now
         if (!fRawBytesAvail)
