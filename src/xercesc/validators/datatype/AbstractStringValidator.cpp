@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/09/29 21:47:35  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.12  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -739,6 +742,78 @@ void AbstractStringValidator::normalizeContent(XMLCh* const) const
 {
     // default implementation: do nothing
     return;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(AbstractStringValidator)
+
+void AbstractStringValidator::serialize(XSerializeEngine& serEng)
+{
+
+    DatatypeValidator::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng<<fLength;
+        serEng<<fMaxLength;
+        serEng<<fMinLength;
+        serEng<<fEnumerationInherited;
+
+        /***
+         *
+         *  Serialize RefArrayVectorOf<XMLCh>
+         *
+         ***/
+        if (getEnumeration())
+        {
+            int enumLength = getEnumeration()->size();
+            serEng<<enumLength;
+            for ( int i = 0 ; i < enumLength; i++)
+            {            
+                serEng.writeString(getEnumeration()->elementAt(i));
+            }
+        }
+        else
+        {
+            serEng<<0;
+        }
+
+    }
+    else
+    {
+        serEng>>fLength;
+        serEng>>fMaxLength;
+        serEng>>fMinLength;
+        serEng>>fEnumerationInherited;
+
+        /***
+         *
+         *  Deserialize RefArrayVectorOf<XMLCh>         
+         *
+        ***/
+        int enumLength = 0;;
+        serEng>>enumLength;
+
+        if (enumLength)
+        {
+            if (!fEnumeration)
+            {
+                fEnumeration = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
+            }
+
+            for ( int i = 0; i < enumLength; i++)
+            {
+                XMLCh* enumVal;
+                serEng.readString(enumVal);
+                fEnumeration->addElement(enumVal);
+            }
+        }
+
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/09/29 21:47:35  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.8  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -170,6 +173,11 @@ public:
     virtual int compare(const XMLCh* const, const XMLCh* const);
 
     //@}
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(AbstractStringValidator)
 
 protected:
 

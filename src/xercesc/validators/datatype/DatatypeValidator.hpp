@@ -68,6 +68,7 @@
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -89,7 +90,7 @@ class MemoryManager;
   */
 
 
-class VALIDATORS_EXPORT DatatypeValidator : public XMemory
+class VALIDATORS_EXPORT DatatypeValidator : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -148,7 +149,8 @@ public:
         NOTATION,
         List,
         Union,
-        AnySimpleType
+        AnySimpleType,
+        UnKnown
     };
 
     // -----------------------------------------------------------------------
@@ -312,6 +314,11 @@ public:
      * Returns the plugged-in memory manager
      */
     MemoryManager* getMemoryManager() const;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(DatatypeValidator)
 
 protected:
     // -----------------------------------------------------------------------

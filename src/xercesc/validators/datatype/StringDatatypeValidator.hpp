@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/09/29 21:47:35  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.4  2003/05/15 18:53:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -140,6 +143,11 @@ public:
         , const int finalSet
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(StringDatatypeValidator)
 
 protected:
 

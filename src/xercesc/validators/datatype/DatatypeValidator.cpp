@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/09/29 21:47:35  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -104,7 +107,41 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
+//since we need to dynamically created each and every derivatives 
+//during deserialization by XSerializeEngine>>Derivative, we got
+//to include all hpp
+
+#include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/AnyURIDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/QNameDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/NameDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/NCNameDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/BooleanDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/FloatDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DoubleDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DecimalDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/HexBinaryDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/Base64BinaryDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DurationDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DateTimeDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DateDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/TimeDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/MonthDayDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/YearMonthDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/YearDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/MonthDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DayDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/IDREFDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/ENTITYDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/NOTATIONDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/ListDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/AnySimpleTypeDatatypeValidator.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: Constructors and Destructor
@@ -235,6 +272,313 @@ void DatatypeValidator::cleanUp() {
         fMemoryManager->deallocate(fTypeName);
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(DatatypeValidator)
+
+void DatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        serEng<<fAnonymous;
+        serEng<<fFinalSet;
+        serEng<<fFacetsDefined;
+        serEng<<fFixed;
+        serEng<<(int)fType;
+
+        /***
+         *
+         *  When deserialized, we need to know, exactly what
+         *  validator was serialized here.
+         *
+         ***/
+        if (fBaseValidator)
+        {
+            serEng<<(int) (fBaseValidator->getType());
+            serEng<<fBaseValidator;
+        }
+        else
+        {
+            serEng<<(int) UnKnown;
+        }
+
+        /***
+         *  Serialize RefHashTableOf<KVStringPair>
+         *
+         *  Since the RefHashTableOf does not privide a size() method
+         *  We have to traverse extra time to gather this information
+         *  first, and then the second time for actual serialization.
+         *
+         *  We only need to serialize KVStringPair, when deserialize,
+         *  the KVStringPair.key() can be used as the key to the hash table.
+         *  
+         ***/
+        if (fFacets)
+        {
+            int itemNumber = 0;
+
+            RefHashTableOfEnumerator<KVStringPair> e(fFacets);
+            while (e.hasMoreElements())
+            {
+                e.nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            e.Reset();
+            while (e.hasMoreElements())
+            {
+                KVStringPair& curPair = e.nextElement();
+                curPair.serialize(serEng);
+            }
+        }
+        else
+        {
+            serEng<<0;
+        }
+
+        serEng.writeString(fPattern);
+
+        /***
+         * don't serialize fRegex
+         ***/
+
+        serEng.writeString(fTypeName);
+        serEng.writeString(fTypeLocalName);
+        serEng.writeString(fTypeUri);
+    }
+    else
+    {
+        int dataLen = 0;
+
+        serEng>>fAnonymous;
+        serEng>>fFinalSet;
+        serEng>>fFacetsDefined;
+        serEng>>fFixed;
+
+        int type;
+        serEng>>type;
+        fType=(ValidatorType)type;
+
+        /***
+         *
+         *  get the basevalidator's type
+         *
+         ***/
+
+        serEng>>type;
+
+        switch((ValidatorType)type)
+        {
+        case String: 
+            StringDatatypeValidator* stringdv;
+            serEng>>stringdv;
+            fBaseValidator = stringdv;
+            break;
+        case AnyURI:
+            AnyURIDatatypeValidator* anyuridv;
+            //TODO
+            //serEng>>anyuridv;
+            fBaseValidator = anyuridv;
+            break;
+        case QName: 
+            QNameDatatypeValidator* qnamedv;
+            //TODO
+            //serEng>>qnamedv;
+            fBaseValidator = qnamedv;
+            break;
+        case Name: 
+            NameDatatypeValidator* namedv;
+            //TODO
+            //serEng>>namedv;
+            fBaseValidator = namedv;
+            break;
+        case NCName:  
+            NCNameDatatypeValidator* ncnamedv;
+            //TODO
+            //serEng>>ncnamedv;
+            fBaseValidator = ncnamedv;
+            break;
+        case Boolean: 
+            BooleanDatatypeValidator* booleandv;
+            //TODO
+            //serEng>>booleandv;
+            fBaseValidator = booleandv;
+            break;
+        case Float: 
+            FloatDatatypeValidator* floatdv;
+            //TODO
+            //serEng>>floatdv;
+            fBaseValidator = floatdv;
+            break;
+        case Double: 
+            DoubleDatatypeValidator* doubledv;
+            //TODO
+            //serEng>>doubledv;
+            fBaseValidator = doubledv;
+            break;
+        case Decimal: 
+            DecimalDatatypeValidator* decimaldv;
+            //TODO
+            //serEng>>decimaldv;
+            fBaseValidator = decimaldv;
+            break;
+        case HexBinary:  
+            HexBinaryDatatypeValidator* hexbinarydv;
+            //TODO
+            //serEng>>hexbinarydv;
+            fBaseValidator = hexbinarydv;
+            break;
+        case Base64Binary: 
+            Base64BinaryDatatypeValidator* base64binarydv;
+            //TODO
+            //serEng>>base64binarydv;
+            fBaseValidator = base64binarydv;
+            break;
+        case Duration:     
+            DurationDatatypeValidator* durationdv;
+            //TODO
+            //serEng>>durationdv;
+            fBaseValidator = durationdv;
+            break;
+        case DateTime:       
+            DateTimeDatatypeValidator* datetimedv;
+            //TODO
+            //serEng>>datetimedv;
+            fBaseValidator = datetimedv;
+            break;
+        case Date:          
+            DateDatatypeValidator* datedv;
+            //TODO
+            //serEng>>datedv;
+            fBaseValidator = datedv;
+            break;
+        case Time:         
+            TimeDatatypeValidator* timedv;
+            //TODO
+            //serEng>>timedv;
+            fBaseValidator = timedv;
+            break;
+        case MonthDay:      
+            MonthDayDatatypeValidator* monthdaydv;
+            //TODO
+            //serEng>>monthdaydv;
+            fBaseValidator = monthdaydv;
+            break;
+        case YearMonth:     
+            YearMonthDatatypeValidator* yearmonthdv;
+            //TODO
+            //serEng>>yearmonthdv;
+            fBaseValidator = yearmonthdv;
+            break;
+        case Year:          
+            YearDatatypeValidator* yeardv;
+            //TODO
+            //serEng>>yeardv;
+            fBaseValidator = yeardv;
+            break;
+        case Month:        
+            MonthDatatypeValidator* monthdv;
+            //TODO
+            //serEng>>monthdv;
+            fBaseValidator = monthdv;
+            break;
+        case Day:           
+            DayDatatypeValidator* daydv;
+            //TODO
+            //serEng>>daydv;
+            fBaseValidator = daydv;
+            break;
+        case ID:           
+            IDDatatypeValidator* iddv;
+            //TODO
+            //serEng>>iddv;
+            fBaseValidator = iddv;
+            break;
+        case IDREF:         
+            IDREFDatatypeValidator* idrefdv;
+            //TODO
+            //serEng>>idrefdv;
+            fBaseValidator = idrefdv;
+            break;
+        case ENTITY:       
+            ENTITYDatatypeValidator* entitydv;
+            //TODO
+            //serEng>>entitydv;
+            fBaseValidator = entitydv;
+            break;
+        case NOTATION:     
+            NOTATIONDatatypeValidator* notationdv;
+            //TODO
+            //serEng>>notationdv;
+            fBaseValidator = notationdv;
+            break;
+        case List:          
+            ListDatatypeValidator* listdv;
+            //TODO
+            //serEng>>listdv;
+            fBaseValidator = listdv;
+            break;
+        case Union:         
+            UnionDatatypeValidator* uniondv;
+            //TODO
+            //serEng>>uniondv;
+            fBaseValidator = uniondv;
+            break;
+        case AnySimpleType:  
+            AnySimpleTypeDatatypeValidator* anysimpletypedv;
+            //TODO
+            //serEng>>anysimpletypedv;
+            fBaseValidator = anysimpletypedv;
+            break;
+        case UnKnown:
+            fBaseValidator = 0;
+            break;
+        default: //we treat this same as UnKnown
+            fBaseValidator = 0;
+            break;
+        }
+
+        /***
+         *  Deserialize RefHashTableOf<KVStringPair>
+         *
+        ***/
+        int itemNumber = 0;
+        serEng>>itemNumber;
+
+        if (itemNumber)
+        {
+            if (!fFacets)
+            {
+                fFacets = new (fMemoryManager) RefHashTableOf<KVStringPair>(3, fMemoryManager);
+            }
+
+            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {
+                KVStringPair*  data = new (fMemoryManager) KVStringPair(fMemoryManager);
+                data->serialize(serEng);
+                fFacets->put((void*) data->getKey(), data);        
+            }
+        }
+
+        serEng.readString(fPattern);
+
+        /***
+         * don't serialize fRegex
+         ***/
+        fRegex = 0;
+
+        serEng.readString(fTypeName);
+        serEng.readString((XMLCh*&)fTypeLocalName);
+        serEng.readString((XMLCh*&)fTypeUri);
+
+    }
+
+}
 
 XERCES_CPP_NAMESPACE_END
 
