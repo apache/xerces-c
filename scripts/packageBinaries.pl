@@ -1081,8 +1081,9 @@ sub populateMisc() {
     psystem("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
     psystem("cp $XERCESCROOT/Readme.html $targetdir");
     psystem("cp $XERCESCROOT/credits.txt $targetdir");
-    psystem("cp $XERCESCROOT/LICENSE.txt $targetdir");
-   
+    psystem("cp $XERCESCROOT/LICENSE     $targetdir");
+    psystem("cp $XERCESCROOT/NOTICE      $targetdir");
+       
     psystem("rm -f $targetdir/doc/Doxyfile");
     psystem("rm -rf $targetdir/doc/style");
     psystem("rm -f $targetdir/doc/*.xml");
