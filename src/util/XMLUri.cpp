@@ -368,7 +368,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         return;
 
     XMLCh* pathUriSpec = new XMLCh[trimedUriSpecLen+1];
-    ArrayJanitor<XMLCh> pathName(pathUriSpec);
+    ArrayJanitor<XMLCh> pathUriSpecName(pathUriSpec);
     XMLString::subString(pathUriSpec, trimedUriSpec, index, trimedUriSpecLen);
 
 	initializePath(pathUriSpec);
@@ -440,7 +440,8 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // if we get to this point, we need to resolve relative path
         // RFC 2396 5.2 #6
-        XMLCh* path;
+        XMLCh* path = new XMLCh[trimedUriSpecLen + XMLString::stringLen(fPath) + 1];
+        ArrayJanitor<XMLCh> pathName(path);
         XMLCh* basePath = XMLString::replicate(baseURI->getPath());
         ArrayJanitor<XMLCh> basePathName(basePath);
 
@@ -450,7 +451,6 @@ void XMLUri::initialize(const XMLUri* const baseURI
             int lastSlash = XMLString::lastIndexOf(basePath, chForwardSlash);
             if (lastSlash != -1)
             {
-                path = new XMLCh[trimedUriSpecLen];
                 XMLString::subString(path, basePath, 0, lastSlash+1);
             }
         }
@@ -531,7 +531,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         if (getPath())
             delete [] fPath;
 
-        fPath = path;
+        fPath = XMLString::replicate(path);
     }
 }
 
