@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.4  1999/11/17 22:36:33  rahulj
+# Code works with ICU transcoding service
+#
 # Revision 1.3  1999/11/12 20:38:50  rahulj
 # Replaced XML4CROOT with XERCESCROOT.
 #
@@ -202,6 +205,10 @@ TRANSCODER=NATIVE
 if test $transcoder; then
 case $transcoder in
    icu)
+       if test -z $ICUROOT ; then
+           echo '***Error*** ICUROOT environment variable not defined. Exiting...';
+           exit -1;
+       fi
        transcoderoption="-DXML_USE_ICU_TRANSCODER" ;
        TRANSCODER=ICU ;;
 
@@ -224,6 +231,10 @@ msgloaderoption="-DXML_USE_INMEM_MESSAGELOADER"
 if test $msgloader ; then
 case $msgloader in
    icu)
+       if test -z $ICUROOT ; then
+           echo '***Error*** ICUROOT environment variable not defined. Exiting...';
+           exit -1;
+       fi
        MESSAGELOADER=ICU;
        msgloaderoption="-DXML_USE_ICU_MESSAGELOADER" ;;
 

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:07  twl
- * Initial revision
+ * Revision 1.2  1999/11/17 22:36:41  rahulj
+ * Code works with ICU transcoding service
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:07  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:33  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -174,7 +177,7 @@ XMLTranscoder* ICUTransService::makeNewDefTranscoder()
     //  which will basically cause the system to give up because we really can't
     //  do anything without one.
     //
-    UErrorCode uerr = ZERO_ERROR;
+    UErrorCode uerr = U_ZERO_ERROR;
     UConverter* converter = ucnv_open(NULL, &uerr);
     if (!converter)
         return 0;
@@ -189,7 +192,7 @@ ICUTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
                                         ,       XMLTransService::Codes& resValue
                                         , const unsigned int            blockSize)
 {
-    UErrorCode uerr = ZERO_ERROR;
+    UErrorCode uerr = U_ZERO_ERROR;
     UConverter* converter = ucnv_openU(encodingName, &uerr);
     if (!converter)
     {
@@ -239,7 +242,7 @@ unsigned int ICUTranscoder::calcRequiredSize(const XMLCh* const srcText)
 
     XMLMutexLock lockConverter(&fMutex);
 
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     const int32_t targetCap = ucnv_fromUChars
     (
         fConverter
@@ -249,7 +252,7 @@ unsigned int ICUTranscoder::calcRequiredSize(const XMLCh* const srcText)
         , &err
     );
 
-    if (err != BUFFER_OVERFLOW_ERROR)
+    if (err != U_BUFFER_OVERFLOW_ERROR)
         return 0;
 
     return (unsigned int)targetCap;
@@ -262,7 +265,7 @@ unsigned int ICUTranscoder::calcRequiredSize(const char* const srcText)
 
     XMLMutexLock lockConverter(&fMutex);
 
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     const int32_t targetCap = ucnv_toUChars
     (
         fConverter
@@ -273,7 +276,7 @@ unsigned int ICUTranscoder::calcRequiredSize(const char* const srcText)
         , &err
     );
 
-    if (err != BUFFER_OVERFLOW_ERROR)
+    if (err != U_BUFFER_OVERFLOW_ERROR)
         return 0;
 
     // Subtract one since it includes the terminator space
@@ -291,7 +294,7 @@ XMLCh ICUTranscoder::transcodeOne(  const   char* const     srcData
 
     XMLMutexLock lockConverter(&fMutex);
 
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     const char* startSrc = srcData;
     const XMLCh chRet = ucnv_getNextUChar
     (
@@ -302,7 +305,7 @@ XMLCh ICUTranscoder::transcodeOne(  const   char* const     srcData
     );
 
     // Bail out if an error
-    if (FAILURE(err))
+    if (U_FAILURE(err))
         return 0;
 
     // Calculate the bytes eaten and return the char
@@ -335,7 +338,7 @@ char* ICUTranscoder::transcode(const XMLCh* const toTranscode)
     retBuf = new char[targetLen + 1];
 
     //Convert the Unicode string to char* using Intl stuff
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     int32_t targetCap = ucnv_fromUChars
     (
         fConverter
@@ -346,16 +349,16 @@ char* ICUTranscoder::transcode(const XMLCh* const toTranscode)
     );
 
     // If targetLen is not enough then buffer overflow might occur
-    if (err == BUFFER_OVERFLOW_ERROR)
+    if (err == U_BUFFER_OVERFLOW_ERROR)
     {
         // Reset the error, delete the old buffer, allocate a new one, and try again
-        err = ZERO_ERROR;
+        err = U_ZERO_ERROR;
         delete [] retBuf;
         retBuf = new char[targetCap];
         targetCap = ucnv_fromUChars(fConverter, retBuf, targetCap, toTranscode, &err);
     }
 
-    if (FAILURE(err))
+    if (U_FAILURE(err))
     {
         delete [] retBuf;
         return 0;
@@ -386,11 +389,11 @@ bool ICUTranscoder::transcode(  const   XMLCh* const    toTranscode
 
     XMLMutexLock lockConverter(&fMutex);
 
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     int32_t targetCap;
     targetCap = ucnv_fromUChars(fConverter, toFill, maxChars + 1, toTranscode, &err);
 
-    if (FAILURE(err))
+    if (U_FAILURE(err))
         return false;
 
     return true;
@@ -425,7 +428,7 @@ XMLCh* ICUTranscoder::transcode(const char* const toTranscode)
     //  an BUFFER_OVERFLOW_ERROR in which case it'd get resolved by the
     //  correct capacity value.
     //
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     int32_t targetCap;
     targetCap = ucnv_toUChars
     (
@@ -437,10 +440,10 @@ XMLCh* ICUTranscoder::transcode(const char* const toTranscode)
         , &err
     );
 
-    if (err != BUFFER_OVERFLOW_ERROR)
+    if (err != U_BUFFER_OVERFLOW_ERROR)
         return 0;
 
-    err = ZERO_ERROR;
+    err = U_ZERO_ERROR;
     retVal = new XMLCh[targetCap];
     ucnv_toUChars
     (
@@ -452,7 +455,7 @@ XMLCh* ICUTranscoder::transcode(const char* const toTranscode)
         , &err
     );
 
-    if (FAILURE(err))
+    if (U_FAILURE(err))
         return 0;
 
     return retVal;
@@ -478,7 +481,7 @@ bool ICUTranscoder::transcode(  const   char* const     toTranscode
 
     XMLMutexLock lockConverter(&fMutex);
 
-    UErrorCode err = ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
     const int32_t srcLen = (int32_t)strlen(toTranscode);
 
     ucnv_toUChars
@@ -491,7 +494,7 @@ bool ICUTranscoder::transcode(  const   char* const     toTranscode
         , &err
     );
 
-    if (FAILURE(err))
+    if (U_FAILURE(err))
         return false;
     return true;
 }
@@ -524,7 +527,7 @@ ICUTranscoder::transcodeXML(const   char* const             srcData
     //  when the raw input buffer holds more characters than will fit
     //  in the Unicode output buffer.
     //
-    UErrorCode  err = ZERO_ERROR;
+    UErrorCode  err = U_ZERO_ERROR;
     ucnv_toUnicode
     (
         fConverter
@@ -537,7 +540,7 @@ ICUTranscoder::transcodeXML(const   char* const             srcData
         , &err
     );
 
-    if ((err != ZERO_ERROR) && (err != INDEX_OUTOFBOUNDS_ERROR))
+    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
         ThrowXML(TranscodingException, XML4CExcepts::Trans_CouldNotXCodeXMLData);
 
     // Calculate the bytes eaten and store in caller's param
