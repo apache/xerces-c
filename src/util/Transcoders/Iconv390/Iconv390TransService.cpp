@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/14 17:59:49  abagchi
+ * Reused iconv descriptors
+ *
  * Revision 1.4  2000/02/11 03:10:20  rahulj
  * Fixed defect in compare[N]IString function. Defect and fix reported
  * by Bill Schindler from developer@bitranch.com.
@@ -88,6 +91,7 @@
 #ifdef OS390BATCH
 #include <unistd.h>
 #endif
+#include <ctype.h>
 //
 //  Cannot use the OS/390 c/c++ towupper and towlower functions in the
 //  Unicode environment. We will use mytowupper and mytowlower here.
@@ -145,6 +149,60 @@ static const XMLByte gUnicodeToIBM037XlatTable[256] =
     ,   0x8C, 0x49, 0xCD, 0xCE, 0xCB, 0xCF, 0xCC, 0xE1
     ,   0x70, 0xDD, 0xDE, 0xDB, 0xDC, 0x8D, 0x8E, 0xDF
 };
+iconvconverter * converterList;
+XMLMutex  converterListMutex;
+
+iconvconverter * addConverter(const char* const EncodingName
+                             ,XMLTransService::Codes& resValue)
+{
+    XMLMutexLock lockConverterlist(&converterListMutex);
+    iconvconverter *tconv=converterList;
+    while ( (tconv) &&
+            (strcmp(tconv->name,EncodingName)) )
+      tconv = tconv->nextconverter;
+
+    if (tconv) {
+      tconv->usecount++;
+    }
+    else {
+      tconv = new iconvconverter;
+      strcpy(tconv->name,EncodingName);
+      tconv->usecount=1;
+      tconv->fIconv390Descriptor = iconv_open("UCS-2",EncodingName);
+      if (tconv->fIconv390Descriptor == (iconv_t)(-1)) {
+         resValue = XMLTransService::UnsupportedEncoding;
+         delete tconv;
+         return 0;
+      }
+      tconv->nextconverter = converterList;
+      converterList = tconv;
+    }
+    return tconv;
+}
+
+void removeConverter(iconvconverter* const converter)
+{
+    iconvconverter *pconv,*tconv;
+    tconv = 0;
+    if (converter) {
+      XMLMutexLock lockConverterlist(&converterListMutex);
+      if (--converter->usecount==0) {
+        tconv = converterList;
+        pconv = (iconvconverter*)&converterList;
+        while ( (tconv) && (tconv!=converter) ) {
+          pconv=tconv;
+          tconv=tconv->nextconverter;
+        }
+
+        pconv->nextconverter=tconv->nextconverter;
+      }
+    }
+
+    if (tconv) {
+      iconv_close(tconv->fIconv390Descriptor);
+      delete tconv;
+    }
+}
 
 // ---------------------------------------------------------------------------
 //  Local methods
@@ -177,44 +235,48 @@ Iconv390TransService::~Iconv390TransService()
 //  Iconv390TransService: The virtual transcoding service API
 // ---------------------------------------------------------------------------
 int Iconv390TransService::compareIString(  const   XMLCh* const    comp1
-                                           , const XMLCh* const    comp2)
+                                        , const XMLCh* const    comp2)
 {
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    while ( (*cptr1 != 0) && (*cptr2 != 0) )
+    while ((*cptr1 != 0) && (*cptr2 != 0))
     {
-        wint_t wch1 = towupper(*cptr1);
-        wint_t wch2 = towupper(*cptr2);
-        if (wch1 != wch2)
-            break;
-        
+        wint_t  wch1 = towupper(*cptr1);
+        wint_t  wch2 = towupper(*cptr2);
+        if (wch1 < wch2)
+            return -1;
+        if (wch1 > wch2)
+            return 1;
+
         cptr1++;
         cptr2++;
     }
-    return (int) ( towupper(*cptr1) - towupper(*cptr2) );
+    return 0;
 }
 
 int Iconv390TransService::compareNIString( const   XMLCh* const    comp1
-                                           , const XMLCh* const    comp2
-                                           , const unsigned int    maxChars)
+                                        , const XMLCh* const    comp2
+                                        , const unsigned int    maxChars)
 {
-    unsigned int  n = 0;
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    while ( (*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars) )
+    unsigned int  n = 0;
+    while ((*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars))
     {
-        wint_t wch1 = towupper(*cptr1);
-        wint_t wch2 = towupper(*cptr2);
-        if (wch1 != wch2)
-            break;
-        
+        wint_t  wch1 = towupper(*cptr1);
+        wint_t  wch2 = towupper(*cptr2);
+        if (wch1 < wch2)
+            return -1;
+        if (wch1 > wch2)
+            return 1;
+
         cptr1++;
         cptr2++;
         n++;
     }
-    return (int) ( towupper(*cptr1) - towupper(*cptr2) );
+    return 0;
 }
 
 const XMLCh* Iconv390TransService::getId() const
@@ -230,14 +292,15 @@ bool Iconv390TransService::isSpace(const XMLCh toCheck) const
 
 XMLLCPTranscoder* Iconv390TransService::makeNewLCPTranscoder()
 {
+    XMLTransService::Codes resValue;
     // native MVS default code page is IBM-037
-    iconv_t Iconv390Descriptor = iconv_open("UCS-2","IBM-037");
+    iconvconverter *tconv=addConverter("IBM-037",resValue);
 
-    if (Iconv390Descriptor == (iconv_t)(-1)) {
+    if (tconv == 0) {
         return 0;
     }
 
-    return new Iconv390LCPTranscoder(Iconv390Descriptor);
+    return new Iconv390LCPTranscoder(tconv);
 }
 
 bool Iconv390TransService::supportsSrcOfs() const
@@ -258,29 +321,25 @@ Iconv390TransService::makeNewXMLTranscoder(const   XMLCh* const            encod
     //  Translate the input encodingName from Unicode XMLCh format into
     //  ibm-037 char format via the lookup table.
     //
-    iconv_t Iconv390Descriptor;
     char charEncodingName[256];
     const XMLCh*  srcPtr = encodingName;
     char*         outPtr = charEncodingName;
     while (*srcPtr != 0)
-        *outPtr++ = gUnicodeToIBM037XlatTable[*srcPtr++];
+        *outPtr++ = toupper(gUnicodeToIBM037XlatTable[*srcPtr++]);
     *outPtr=0;
 
-    Iconv390Descriptor = iconv_open("UCS-2",charEncodingName);
-    if (Iconv390Descriptor == (iconv_t)(-1)) {
-       resValue = XMLTransService::UnsupportedEncoding;
-       return 0;
-    }
-    return new Iconv390Transcoder(Iconv390Descriptor, encodingName, 0);
+    iconvconverter *tconv=addConverter(charEncodingName,resValue);
+
+    return new Iconv390Transcoder(tconv, encodingName, 0);
 }
 
 void Iconv390TransService::upperCase(XMLCh* const toUpperCase) const
 {
     XMLCh* outPtr = toUpperCase;
     while (*outPtr != 0) {
-    if ((*outPtr >= 0x61) && (*outPtr <= 0x7A))
-        *outPtr = *outPtr - 0x20;
-    outPtr++;
+	if ((*outPtr >= 0x61) && (*outPtr <= 0x7A))
+	    *outPtr = *outPtr - 0x20;
+	outPtr++;
     }
 }
 
@@ -357,17 +416,17 @@ char* Iconv390LCPTranscoder::transcode(const XMLCh* const toTranscode)
     if (toTranscode)
     {
         unsigned int  wLent = getWideCharLength(toTranscode);
-    //
-    //  Translate the input from Unicode XMLCh format into
-    //  ibm-037 char format via the lookup table.
-    //
+	//
+	//  Translate the input from Unicode XMLCh format into
+	//  ibm-037 char format via the lookup table.
+	//
         retVal = new char[wLent + 1];
         const XMLCh *srcPtr = toTranscode;
         char *outPtr = retVal;
 
-    while (*srcPtr != 0)
-        *outPtr++ = gUnicodeToIBM037XlatTable[*srcPtr++];
-    *outPtr=0;
+	while (*srcPtr != 0)
+	    *outPtr++ = gUnicodeToIBM037XlatTable[*srcPtr++];
+	*outPtr=0;
     }
     else
     {
@@ -395,17 +454,14 @@ bool Iconv390LCPTranscoder::transcode( const   XMLCh* const    toTranscode
         return true;
     }
 
-    size_t retCode;
-    char *tmpInPtr = (char *)toTranscode;
-    char *tmpOutPtr = toFill;
-    size_t inByteLeft = maxBytes;
-    size_t outByteLeft = maxBytes;
-    retCode = iconv(fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
-    if (retCode == -1) {
-        return false;
-    }
-    // Cap it off just in case
-    toFill[maxBytes-outByteLeft] = 0;
+    const XMLCh *srcPtr = toTranscode;
+    char *outPtr = toFill;
+    int bytectr = maxBytes;
+
+    while (bytectr--)
+       *outPtr++ = gUnicodeToIBM037XlatTable[*srcPtr++];
+    *outPtr=0;
+
     return true;
 }
 
@@ -431,7 +487,10 @@ XMLCh* Iconv390LCPTranscoder::transcode(const char* const toTranscode)
         char *tmpOutPtr = (char*) retVal;
         size_t inByteLeft = len;
         size_t outByteLeft = len*2;
-        retCode = iconv(fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+        {
+         XMLMutexLock lockConverter(&converter->fMutex);
+         retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+        }
         if (retCode == -1) {
             delete [] retVal;
             return 0;
@@ -470,7 +529,10 @@ bool Iconv390LCPTranscoder::transcode( const   char* const     toTranscode
     char *tmpOutPtr = (char*) toFill;
     size_t inByteLeft = maxChars;
     size_t outByteLeft = maxChars*2;
-    retCode = iconv(fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+    {
+     XMLMutexLock lockConverter(&converter->fMutex);
+     retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+    }
     if ( (retCode == -1) && (outByteLeft!=0) ) {
         return false;
     }
@@ -487,18 +549,15 @@ Iconv390LCPTranscoder::Iconv390LCPTranscoder()
 {
 }
 
-Iconv390LCPTranscoder::Iconv390LCPTranscoder(iconv_t const  toAdopt) :
-        fIconv390Descriptor(toAdopt)
+Iconv390LCPTranscoder::Iconv390LCPTranscoder(iconvconverter_t* const toAdopt) :
+        converter (toAdopt)
 {
 }
 
 Iconv390LCPTranscoder::~Iconv390LCPTranscoder()
 {
-    if (fIconv390Descriptor)
-    {
-        iconv_close(fIconv390Descriptor);
-        fIconv390Descriptor = 0;
-    }
+    removeConverter(converter);
+    converter=0;
 }
 
 // ---------------------------------------------------------------------------
@@ -510,21 +569,18 @@ Iconv390Transcoder::Iconv390Transcoder(const  XMLCh* const    encodingName
 {
 }
 
-Iconv390Transcoder::Iconv390Transcoder(iconv_t const  toAdopt
-                ,const XMLCh* const encodingName
-                ,const unsigned int blockSize) :
-    XMLTranscoder(encodingName, blockSize)
-       ,fIconv390Descriptor(toAdopt)
+Iconv390Transcoder::Iconv390Transcoder(iconvconverter_t* const toAdopt
+				,const XMLCh* const encodingName
+				,const unsigned int blockSize) :
+ 	XMLTranscoder(encodingName, blockSize)
+       ,converter (toAdopt)
 {
 }
 
 Iconv390Transcoder::~Iconv390Transcoder()
 {
-    if (fIconv390Descriptor)
-    {
-        iconv_close(fIconv390Descriptor);
-        fIconv390Descriptor = 0;
-    }
+    removeConverter(converter);
+    converter=0;
 }
 
 
@@ -542,7 +598,10 @@ XMLCh Iconv390Transcoder::transcodeOne(const   XMLByte* const     srcData
     char *tmpOutPtr = (char*)&toFill;
     size_t inByteLeft = srcBytes;
     size_t outByteLeft = 2;
-    retCode = iconv(fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+    {
+     XMLMutexLock lockConverter(&converter->fMutex);
+     retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+    }
     if (retCode == -1) {
         bytesEaten = 0;
         return 0;
@@ -566,7 +625,7 @@ Iconv390Transcoder::transcodeXML(  const   XMLByte* const             srcData
                                 ,       XMLCh* const            toFill
                                 , const unsigned int            maxChars
                                 ,       unsigned int&           bytesEaten
-                                ,       unsigned char* const    charSizes)
+								,       unsigned char* const    charSizes)
 {
     //
     //  For this one, because we have to maintain the offset table, we have
@@ -580,10 +639,13 @@ Iconv390Transcoder::transcodeXML(  const   XMLByte* const             srcData
     char *tmpOutPtr = (char *) toFill;
     size_t inByteLeft = srcCount;
     size_t outByteLeft = maxChars*2;
-    retCode = iconv(fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+    {
+     XMLMutexLock lockConverter(&converter->fMutex);
+     retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+    }
     if (retCode == -1)
     {
-    return 0;
+	return 0;
     }
 
     // Give back the counts of eaten and transcoded
