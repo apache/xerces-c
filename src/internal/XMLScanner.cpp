@@ -735,31 +735,32 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
     unsigned int orgReader;
     XMLTokens curToken;
 
-    //
-    //  We have to handle any end of entity exceptions that happen here.
-    //  We could be at the end of X nested entities, each of which will
-    //  generate an end of entity exception as we try to move forward.
-    //
-
-    while (true)
-    {
-        try
-        {
-            curToken = senseNextToken(orgReader);
-            break;
-        }
-
-        catch(const EndOfEntityException& toCatch)
-        {
-            // Send an end of entity reference event
-            if (fDocHandler)
-                fDocHandler->endEntityReference(toCatch.getEntity());
-        }
-    }
-
     bool retVal = true;
+
     try
     {
+        while (true)
+        {
+            //
+            //  We have to handle any end of entity exceptions that happen here.
+            //  We could be at the end of X nested entities, each of which will
+            //  generate an end of entity exception as we try to move forward.
+            //
+
+            try
+            {
+                curToken = senseNextToken(orgReader);
+                break;
+            }
+
+            catch(const EndOfEntityException& toCatch)
+            {
+                // Send an end of entity reference event
+                if (fDocHandler)
+                    fDocHandler->endEntityReference(toCatch.getEntity());
+            }
+        }
+
         if (curToken == Token_CharData)
         {
             scanCharData(fCDataBuf);
