@@ -124,9 +124,9 @@ public:
      */
     bool containsNameSpace( const XMLCh* const nameSpaceKey );
 
-    inline XMLGrammarPool* const getGrammarPool() const;
+    inline XMLGrammarPool* getGrammarPool() const;
 
-    inline MemoryManager* const getGrammarPoolMemoryManager() const;
+    inline MemoryManager* getGrammarPoolMemoryManager() const;
 
     //@}
 
@@ -238,12 +238,12 @@ inline void GrammarResolver::useCachedGrammarInParse(const bool aValue)
     fUseCachedGrammar = aValue;
 }
 
-inline XMLGrammarPool* const GrammarResolver::getGrammarPool() const
+inline XMLGrammarPool* GrammarResolver::getGrammarPool() const
 {
     return fGrammarPool;
 }
 
-inline MemoryManager* const GrammarResolver::getGrammarPoolMemoryManager() const
+inline MemoryManager* GrammarResolver::getGrammarPoolMemoryManager() const
 {
     return fGrammarPool->getMemoryManager();
 }
