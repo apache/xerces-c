@@ -124,8 +124,6 @@ if ($platform eq "" )
     psystem ("mkdir $targetdir\\include\\xercesc");
     psystem ("mkdir $targetdir\\samples");
     psystem ("mkdir $targetdir\\samples\\Projects");
-    psystem ("mkdir $targetdir\\samples\\Projects\\Win64");
-    psystem ("mkdir $targetdir\\samples\\Projects\\Win64\\Nmake");
     psystem ("mkdir $targetdir\\samples\\data");
     psystem ("mkdir $targetdir\\samples\\SAXCount");
     psystem ("mkdir $targetdir\\samples\\SAX2Count");
@@ -174,7 +172,7 @@ if ($platform eq "" )
 	    psystem("type buildlog.txt");
         }
 
-        change_windows_makefile_for_ICU("$XERCESCROOT\\Projects\\Win64\\Nmake\\xerces-all/XercesLib/XercesLib.mak");
+        change_windows_makefile_for_ICU("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all/XercesLib/XercesLib.mak");
     }
 
     # Clean up all the dependency files, causes problems for nmake
@@ -183,17 +181,17 @@ if ($platform eq "" )
     psystem ("del /s /f *.dep *.ncb *.plg *.opt");
 
     # Make all files in the Xerces-C system including libraries, samples and tests
-    pchdir ("$XERCESCROOT\\Projects\\Win64\\Nmake\\xerces-all\\all");
+    pchdir ("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all\\all");
     psystem( "nmake -f all.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");
     system("type buildlog.txt");
 
-    pchdir ("$XERCESCROOT\\Projects\\Win64\\Nmake\\xerces-all\\XercesLib");
+    pchdir ("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all\\XercesLib");
     psystem("nmake -f XercesLib.mak \"CFG=XercesLib - $platformname Debug\" CPP=$opt_x.exe > buildlog.txt 2>&1 ");
     system("type buildlog.txt");
 
     # Decide where you want the build copied from
     pchdir ($targetdir);
-    $BUILDDIR = $XERCESCROOT . "\\Build\\Win64\\Nmake\\" . $buildmode;
+    $BUILDDIR = $XERCESCROOT . "\\Build\\Win64\\VC6\\" . $buildmode;
     print "\nBuild is being copied from \'" . $BUILDDIR . "\'";
 
     # Populate the include output directory
@@ -295,7 +293,7 @@ if ($platform eq "" )
     psystem("copy /y $BUILDDIR\\xerces-c_*.lib $targetdir\\lib");
 
     if ($buildmode ne "Debug") {
-        $DEBUGBUILDDIR = "$XERCESCROOT\\Build\\Win64\\Nmake\\Debug";
+        $DEBUGBUILDDIR = "$XERCESCROOT\\Build\\Win32\\VC6\\Debug";
         psystem("copy /y $DEBUGBUILDDIR\\xerces-c_*D.lib $targetdir\\lib");
         psystem("copy /y $DEBUGBUILDDIR\\xerces*D.dll $targetdir\\bin");
     }
@@ -303,7 +301,7 @@ if ($platform eq "" )
 
     # Populate the etc output directory like config.status and the map file
     print ("\n \nCopying misc output to etc ...\n");
-    psystem("copy /y $XERCESCROOT\\Build\\Win64\\Nmake\\Release\\obj\\*.map $targetdir\\etc");
+    psystem("copy /y $XERCESCROOT\\Build\\Win32\\VC6\\Release\\obj\\*.map $targetdir\\etc");
 
 
     # Populate the samples directory
