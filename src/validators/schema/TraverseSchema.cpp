@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/06/05 13:59:54  knoaman
+ * Fixes to include and import.
+ *
  * Revision 1.15  2001/05/30 21:13:50  knoaman
  * Typo fix
  *
@@ -196,17 +199,19 @@ const XMLCh fgStrict[] =
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Constructors and Destructor
 // ---------------------------------------------------------------------------
-TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
-                              , XMLStringPool* const    uriStringPool
-                              , SchemaGrammar* const    schemaGrammar
-                              , GrammarResolver* const  grammarResolver
-                              , XMLScanner* const       xmlScanner
-                              , XMLValidator* const     xmlValidator
-                              , const XMLCh* const      schemaURL
-                              , EntityResolver* const   entityResolver
-                              , ErrorHandler* const     errorHandler)
+TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
+                              , XMLStringPool* const               uriStringPool
+                              , SchemaGrammar* const               schemaGrammar
+                              , GrammarResolver* const             grammarResolver
+                              , XMLScanner* const                  xmlScanner
+                              , XMLValidator* const                xmlValidator
+                              , const XMLCh* const                 schemaURL
+                              , EntityResolver* const              entityResolver
+                              , ErrorHandler* const                errorHandler
+                              , ValueVectorOf<unsigned int>* const importLocations)
     : fElementDefaultQualified(false)
     , fAttributeDefaultQualified(false)
+    , fAdoptImportLocations(false)
     , fTargetNSURI(-1)
     , fCurrentScope(Grammar::TOP_LEVEL_SCOPE)
     , fSimpleTypeAnonCount(0)
@@ -230,7 +235,7 @@ TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
     , fComplexTypeRegistry(0)
     , fSchemaInfoRoot(0)
     , fCurrentSchemaInfo(0)
-    , fImportLocations(0)
+    , fImportLocations(importLocations)
     , fIncludeLocations(0)
     , fCurrentTypeNameStack(0)
     , fAttributeCheck(0)
@@ -262,11 +267,21 @@ void TraverseSchema::doTraverseSchema() {
     fDatatypeRegistry = fGrammarResolver->getDatatypeRegistry();
     fDatatypeRegistry->expandRegistryToFullSchemaSet();
 
+    if (!fImportLocations) {
+        fAdoptImportLocations = true;
+        fImportLocations = new ValueVectorOf<unsigned int>(8);
+    }
+
+    unsigned int schemaURLId = fURIStringPool->addOrFind(fCurrentSchemaURL);
+    fImportLocations->addElement(schemaURLId);    
+
     if (fSchemaRootElement.isNull()) {
         // REVISIT: Anything to do?
         return;
     }
 
+    fIncludeLocations = new ValueVectorOf<unsigned int>(8);
+    fIncludeLocations->addElement(schemaURLId);
     fAttributeCheck = GeneralAttributeCheck::instance();
     fCurrentTypeNameStack = new ValueVectorOf<unsigned int>(8);
     fGlobalTypes = new RefHash2KeysTableOf<XMLCh>(29, false);
@@ -433,10 +448,6 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
     const XMLCh* includeURL = srcToFill->getSystemId();
     unsigned int locationId = fURIStringPool->addOrFind(includeURL);
 
-    if (fIncludeLocations == 0) {
-        fIncludeLocations = new ValueVectorOf<unsigned int>(8);
-    }
-
     if (locationsContain(fIncludeLocations, locationId)) {
         return;
     }
@@ -573,7 +584,7 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
             getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
 
     if (XMLString::stringLen(schemaLocation) == 0) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ImportNoSchemaLocation);
+//        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ImportNoSchemaLocation);
         return;
     }
 
@@ -591,22 +602,12 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
     const XMLCh* importURL = srcToFill->getSystemId();
     unsigned int locationId = fURIStringPool->addOrFind(importURL);
 
-    if (fImportLocations == 0) {
-        fImportLocations = new ValueVectorOf<unsigned int>(8);
-    }
-
     if (locationsContain(fImportLocations, locationId)) {
         return;
     }
 
-    fImportLocations->addElement(locationId);
-
     const XMLCh* nameSpace = getElementAttValue(elem, SchemaSymbols::fgATT_NAMESPACE);
     SchemaGrammar* importedGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(nameSpace);
-
-    if (importedGrammar == 0) {
-        importedGrammar = new SchemaGrammar();
-    }
 
     // ------------------------------------------------------------------
     // Parse input source
@@ -653,9 +654,15 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
                                   schemaLocation, targetNSURIString, nameSpace);
             }
             else {
+
+                if (importedGrammar == 0) {
+                    importedGrammar = new SchemaGrammar();
+                }
+
                 TraverseSchema traverseSchema(root, fURIStringPool, importedGrammar,
                                               fGrammarResolver, fScanner, fValidator,
-                                              importURL, fEntityResolver, fErrorHandler);
+                                              importURL, fEntityResolver, fErrorHandler,
+                                              fImportLocations);
             }
          }
          else {
@@ -2131,11 +2138,12 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                                      SchemaSymbols::fgELT_PATTERN) == 0) {
 
                 if (isFirstPattern) { // fBuffer.isEmpty() - overhead call
+
+                    isFirstPattern = false;
                     pattern.set(attValue.rawBuffer(), attValueLen);
                 }
                 else { //datatypes: 5.2.4 pattern
 
-                    isFirstPattern = false;
                     pattern.append(chPipe);
                     pattern.append(attValue.rawBuffer(), attValueLen);
                 }
@@ -2539,11 +2547,12 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                                      SchemaSymbols::fgELT_PATTERN) == 0) {
 
                         if (isFirstPattern) { // fBuffer.isEmpty() - overhead call
+
+                            isFirstPattern = false;
                             pattern.set(fBuffer.getRawBuffer());
                         }
                         else { //datatypes: 5.2.4 pattern
 
-                            isFirstPattern = false;
                             pattern.append(chPipe);
                             pattern.append(fBuffer.getRawBuffer());
                         }
@@ -2961,7 +2970,10 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
             traverseAnnotationDecl(child);
         }
         else if (name.equals(SchemaSymbols::fgELT_INCLUDE)) {
+
+            fNamespaceScope->increaseDepth();
             traverseInclude(child);
+            fNamespaceScope->decreaseDepth();
         }
         else if (name.equals(SchemaSymbols::fgELT_IMPORT)) {
             traverseImport(child);
@@ -4568,20 +4580,23 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
 
     //  If they didn't create a source via the entity resolver, then we
     //  have to create one on our own.
-    try {
+    if (!srcToFill) {
 
-        XMLURL urlTmp(fCurrentSchemaURL, loc);
+        try {
 
-        if (urlTmp.isRelative()) {
-            ThrowXML(MalformedURLException,
-                     XMLExcepts::URL_NoProtocolPresent);
+            XMLURL urlTmp(fCurrentSchemaURL, loc);
+
+            if (urlTmp.isRelative()) {
+                ThrowXML(MalformedURLException,
+                         XMLExcepts::URL_NoProtocolPresent);
+            }
+
+            srcToFill = new URLInputSource(urlTmp);
         }
-
-        srcToFill = new URLInputSource(urlTmp);
-    }
-    catch(const MalformedURLException&) {
-        // Its not a URL, so lets assume its a local file name.
-        srcToFill = new LocalFileInputSource(fCurrentSchemaURL,loc);
+        catch(const MalformedURLException&) {
+            // Its not a URL, so lets assume its a local file name.
+            srcToFill = new LocalFileInputSource(fCurrentSchemaURL,loc);
+        }
     }
 
     return srcToFill;
@@ -4691,11 +4706,15 @@ void TraverseSchema::cleanUp() {
     delete [] fTargetNSURIString;
     delete [] fCurrentSchemaURL;
     delete fSchemaInfoRoot;
-    delete fImportLocations;
     delete fIncludeLocations;
     delete fCurrentTypeNameStack;
     delete fGlobalTypes;
+
+    if (fAdoptImportLocations) {
+        delete fImportLocations;
+    }
 }
+
 /**
   * End of file TraverseSchema.cpp
   */

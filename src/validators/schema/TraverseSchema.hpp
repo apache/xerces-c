@@ -103,23 +103,24 @@ class GeneralAttributeCheck;
 class VALIDATORS_EXPORT TraverseSchema
 {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
     TraverseSchema
     (
-          const DOM_Element&      schemaRoot
-        , XMLStringPool* const    stringPool
-        , SchemaGrammar* const    schemaGrammar
-        , GrammarResolver* const  grammarResolver
-        , XMLScanner* const       xmlScanner
-        , XMLValidator* const     xmlValidator
-        , const XMLCh* const      schemaURL
-        , EntityResolver* const   entityResolver
-        , ErrorHandler* const     errorHandler
+          const DOM_Element&                 schemaRoot
+        , XMLStringPool* const               stringPool
+        , SchemaGrammar* const               schemaGrammar
+        , GrammarResolver* const             grammarResolver
+        , XMLScanner* const                  xmlScanner
+        , XMLValidator* const                xmlValidator
+        , const XMLCh* const                 schemaURL
+        , EntityResolver* const              entityResolver
+        , ErrorHandler* const                errorHandler
+        , ValueVectorOf<unsigned int>* const importLocations = 0
     );
 
-	~TraverseSchema();
+    ~TraverseSchema();
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -136,13 +137,13 @@ private:
     // -----------------------------------------------------------------------
     //  CleanUp methods
     // -----------------------------------------------------------------------
-	void cleanUp();
+    void cleanUp();
 
     // -----------------------------------------------------------------------
     //  Traversal methods
     // -----------------------------------------------------------------------
     /**
-	  * Traverse the Schema DOM tree
+      * Traverse the Schema DOM tree
       */
     void             doTraverseSchema();
     void             traverseSchemaHeader();
@@ -174,7 +175,7 @@ private:
                                      const int typeNameIndex,
                                      const int finalSet);
     QName*           traverseElementDecl(const DOM_Element& childElem);
-	XMLCh*           traverseNotationDecl(const DOM_Element& childElem);
+    XMLCh*           traverseNotationDecl(const DOM_Element& childElem);
     ContentSpecNode* traverseChoiceSequence(const DOM_Element& elemDecl,
                                             const int modelGroupType);
     ContentSpecNode* traverseAny(const DOM_Element& anyDecl);
@@ -205,7 +206,7 @@ private:
       * Extract all top-level attribute, attributeGroup, and group Decls and 
       * put them in the 3 hash tables in the SchemaGrammar.
       */
-	void extractTopLevel3Components(const DOM_Element& rootElem);
+    void extractTopLevel3Components(const DOM_Element& rootElem);
 
     /**
       * Loop through the children, and traverse the corresponding schema type
@@ -213,7 +214,7 @@ private:
       */
     void processChildren(const DOM_Element& root);
 
-	/**
+    /**
       * Parameters:
       *   rootElem - top element for a given type declaration
       *   contentElem - content must be annotation? or some other simple content
@@ -222,18 +223,18 @@ private:
       * Check for Annotation if it is present, traverse it. If a sibling is
       * found and it is not an annotation return it, otherwise return 0.
       * Used by traverseSimpleTypeDecl.
-	  */
-	DOM_Element checkContent(const DOM_Element& rootElem, 
+      */
+    DOM_Element checkContent(const DOM_Element& rootElem, 
                              const DOM_Element& contentElem,
                              const bool isEmpty);
 
-	/**
+    /**
       * Parameters:
       *   contentElem - content element to check
       *
       * Check for identity constraints content.
-	  */
-	DOM_Element checkIdentityConstraintContent(const DOM_Element& contentElem);
+      */
+    DOM_Element checkIdentityConstraintContent(const DOM_Element& contentElem);
 
     DatatypeValidator* getDatatypeValidator(const XMLCh* const uriStr,
                                             const XMLCh* const localPartStr);
@@ -266,7 +267,7 @@ private:
                                        const XMLCh* const baseTypeStr,
                                        const int baseRefContext);
 
-	/**
+    /**
       * Return a compenent defined as a top level in a schema grammar
       *
       * In redefine we've not only got to look at the space of the thing we
@@ -333,7 +334,7 @@ private:
       */
     bool isValidRefDeclaration(const DOM_Element& elem);
 
-	/**
+    /**
       * If 'typeStr' belongs to a different schema, return that schema URI,
       * otherwise return 0;
       */
@@ -374,7 +375,7 @@ private:
       * Check validity constraint of a substitutionGroup attribute in
       * an element declaration
       */
-	bool isSubstitutionGroupValid(const SchemaElementDecl* const elemDecl,
+    bool isSubstitutionGroupValid(const SchemaElementDecl* const elemDecl,
                                   const ComplexTypeInfo* const typeInfo,
                                   const DatatypeValidator* const validator,
                                   const XMLCh* const elemName);
@@ -489,6 +490,7 @@ private:
     // -----------------------------------------------------------------------
     bool                             fElementDefaultQualified;
     bool                             fAttributeDefaultQualified;
+    bool                             fAdoptImportLocations;
     int                              fTargetNSURI;
     int                              fCurrentScope;
     int                              fSimpleTypeAnonCount;
@@ -510,7 +512,7 @@ private:
     XMLScanner*                      fScanner;
     NamespaceScope*                  fNamespaceScope;
     RefHashTableOf<XMLAttDef>*       fAttributeDeclRegistry;
-	RefHashTableOf<ComplexTypeInfo>* fComplexTypeRegistry;
+    RefHashTableOf<ComplexTypeInfo>* fComplexTypeRegistry;
     SchemaInfo*                      fSchemaInfoRoot;
     SchemaInfo*                      fCurrentSchemaInfo;
     ValueVectorOf<unsigned int>*     fImportLocations;
@@ -593,7 +595,7 @@ inline
 const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
                                                 const XMLCh* const attName) {
 
-	DOMString attValue = elem.getAttribute(attName);
+    DOMString attValue = elem.getAttribute(attName);
 
     if (attValue.length() > 0) {
 
@@ -616,7 +618,7 @@ inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
         return true;
     }
 
-	return false;
+    return false;
 }
 
 inline bool TraverseSchema::isAttrOrAttrGroup(const DOM_Element& elem) {
@@ -639,7 +641,7 @@ inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix,
 
     XMLString::binToText(anonCount++, anonCountStr, 15, 10);
     fBuffer.set(prefix);
-	fBuffer.append(anonCountStr);
+    fBuffer.append(anonCountStr);
 
     int anonTypeId = fStringPool.addOrFind(fBuffer.getRawBuffer());
 

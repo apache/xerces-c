@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/06/05 13:59:53  knoaman
+ * Fixes to include and import.
+ *
  * Revision 1.5  2001/05/11 13:27:32  tng
  * Copyright update.
  *
@@ -107,7 +110,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
 {
     delete [] fTypeName;
 
-	if (fAdoptContentSpec) {
+    if (fAdoptContentSpec) {
         delete fContentSpec;
     }
 
@@ -133,7 +136,7 @@ void ComplexTypeInfo::addAttDef(SchemaAttDef* const toAdd) {
 
 void ComplexTypeInfo::setContentSpec(ContentSpecNode* const toAdopt) {
 
-    if (fContentSpec) {
+    if (fContentSpec && fAdoptContentSpec) {
         delete fContentSpec;
     }
 
