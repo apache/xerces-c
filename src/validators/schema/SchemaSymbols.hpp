@@ -238,6 +238,7 @@ public :
     static const XMLCh fgDT_ANYURI[];
     static const XMLCh fgDT_QNAME[];
     static const XMLCh fgDT_NORMALIZEDSTRING[];
+    static const XMLCh fgDT_ANYSIMPLETYPE[];
     static const XMLCh fgRegEx_XOption[];
     static const int   fgINT_MIN_VALUE;
     static const int   fgINT_MAX_VALUE;

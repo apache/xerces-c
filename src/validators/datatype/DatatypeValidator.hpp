@@ -138,7 +138,8 @@ public:
         ENTITY,
         NOTATION,
         List,
-        Union
+        Union,
+        AnySimpleType
     };
 
     // -----------------------------------------------------------------------
@@ -247,8 +248,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-	virtual DatatypeValidator* newInstance(DatatypeValidator* const,
-                                           RefHashTableOf<KVStringPair>* const,
+	virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const,
                                            RefVectorOf<XMLCh>* const enums,
                                            const int finalSet) = 0;
 

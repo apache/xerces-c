@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/08/24 17:12:02  knoaman
+ * Add support for anySimpleType.
+ * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
+ *
  * Revision 1.10  2001/08/22 16:57:53  tng
  * typo in ##other.
  *
@@ -1045,6 +1049,12 @@ const XMLCh SchemaSymbols::fgDT_NORMALIZEDSTRING[] =
     chLatin_n, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_l, chLatin_i,
     chLatin_z, chLatin_e, chLatin_d, chLatin_S, chLatin_t, chLatin_r, chLatin_i,
     chLatin_n, chLatin_g, chNull
+};
+
+const XMLCh SchemaSymbols::fgDT_ANYSIMPLETYPE[] =
+{
+    chLatin_a, chLatin_n, chLatin_y, chLatin_S, chLatin_i, chLatin_m, chLatin_p,
+    chLatin_l, chLatin_e, chLatin_T, chLatin_y, chLatin_p, chLatin_e, chNull
 };
 
 const XMLCh SchemaSymbols::fgRegEx_XOption[] =

@@ -132,8 +132,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets
+    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
@@ -170,12 +169,11 @@ inline BooleanDatatypeValidator::~BooleanDatatypeValidator()
 // -----------------------------------------------------------------------
 
 inline DatatypeValidator* BooleanDatatypeValidator::newInstance(
-                                      DatatypeValidator* const            baseValidator
-                                    , RefHashTableOf<KVStringPair>* const facets
+                                    RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new BooleanDatatypeValidator(baseValidator, facets, enums, finalSet);
+    return (DatatypeValidator*) new BooleanDatatypeValidator(this, facets, enums, finalSet);
 }
 
 inline void BooleanDatatypeValidator::validate( const XMLCh* const content)

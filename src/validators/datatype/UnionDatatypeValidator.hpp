@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/08/24 17:12:01  knoaman
+ * Add support for anySimpleType.
+ * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
+ *
  * Revision 1.5  2001/08/21 20:05:41  peiyongz
  * put back changes introduced in 1.3
  *
@@ -178,8 +182,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(DatatypeValidator*            const baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets
+    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
@@ -216,12 +219,11 @@ private:
 };
 
 inline DatatypeValidator* UnionDatatypeValidator::newInstance(
-                                      DatatypeValidator*            const baseValidator
-                                    , RefHashTableOf<KVStringPair>* const facets
+                                      RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new UnionDatatypeValidator(baseValidator, facets, enums, finalSet);
+    return (DatatypeValidator*) new UnionDatatypeValidator(this, facets, enums, finalSet);
 }
 
 inline void UnionDatatypeValidator::validate( const XMLCh* const content)

@@ -134,8 +134,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets
+    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
@@ -203,12 +202,11 @@ inline int HexBinaryDatatypeValidator::compare(const XMLCh* const lValue
 }
 
 inline DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
-                                      DatatypeValidator* const            baseValidator
-                                    , RefHashTableOf<KVStringPair>* const facets
+                                      RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new HexBinaryDatatypeValidator(baseValidator, facets, enums, finalSet);
+    return (DatatypeValidator*) new HexBinaryDatatypeValidator(this, facets, enums, finalSet);
 }
 
 inline void HexBinaryDatatypeValidator::validate( const XMLCh* const content)

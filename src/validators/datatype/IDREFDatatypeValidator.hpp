@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/24 17:12:01  knoaman
+ * Add support for anySimpleType.
+ * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
+ *
  * Revision 1.3  2001/07/25 17:58:08  tng
  * Fix compilation errors.
  *
@@ -117,8 +121,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets
+    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
@@ -154,12 +157,11 @@ inline IDREFDatatypeValidator::~IDREFDatatypeValidator()
 }
 
 inline DatatypeValidator* IDREFDatatypeValidator::newInstance(
-                                      DatatypeValidator* const            baseValidator
-                                    , RefHashTableOf<KVStringPair>* const facets
+                                      RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new IDREFDatatypeValidator(baseValidator, facets, enums, finalSet);
+    return (DatatypeValidator*) new IDREFDatatypeValidator(this, facets, enums, finalSet);
 }
 
 // -----------------------------------------------------------------------

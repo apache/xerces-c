@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/08/24 17:12:01  knoaman
+ * Add support for anySimpleType.
+ * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
+ *
  * Revision 1.21  2001/08/01 18:49:16  peiyongz
  * AnyRUIDatatypeValidator
  *
@@ -147,6 +151,7 @@
 #include <validators/datatype/DoubleDatatypeValidator.hpp>
 #include <validators/datatype/FloatDatatypeValidator.hpp>
 #include <validators/datatype/AnyURIDatatypeValidator.hpp>
+#include <validators/datatype/AnySimpleTypeDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -399,7 +404,8 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         initializeDTDRegistry();
     }
 
-
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYSIMPLETYPE,
+                       new AnySimpleTypeDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN,
                        new BooleanDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,
@@ -675,7 +681,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
             }
         }
 
-        datatypeValidator = baseValidator->newInstance(baseValidator, facets, enums, finalSet);
+        datatypeValidator = baseValidator->newInstance(facets, enums, finalSet);
     }
 
     if (datatypeValidator != 0) {

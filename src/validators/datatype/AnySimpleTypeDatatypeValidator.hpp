@@ -56,51 +56,50 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.4  2001/08/24 17:12:01  knoaman
- * Add support for anySimpleType.
- * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
- *
- * Revision 1.3  2001/07/25 17:58:08  tng
- * Fix compilation errors.
- *
- * Revision 1.2  2001/07/24 21:23:40  tng
- * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
- *
- * Revision 1.1  2001/07/04 14:38:25  peiyongz
- * IDDatatypeValidator: created
- * DatatypeValidatorFactory: IDDTV enabled
- * XMLString:isValidName(): to validate Name (XML [4][5])
- *
  */
 
-#if !defined(ID_DATATYPEVALIDATOR_HPP)
-#define ID_DATATYPEVALIDATOR_HPP
+#if !defined(ANYSIMPLETYPEDATATYPEVALIDATOR_HPP)
+#define ANYSIMPLETYPEDATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/StringDatatypeValidator.hpp>
-#include <validators/schema/SchemaSymbols.hpp>
-#include <framework/XMLRefInfo.hpp>
+#include <validators/datatype/DatatypeValidator.hpp>
 
-class VALIDATORS_EXPORT IDDatatypeValidator : public StringDatatypeValidator
+
+class VALIDATORS_EXPORT AnySimpleTypeDatatypeValidator : public DatatypeValidator
 {
 public:
-
     // -----------------------------------------------------------------------
-    //  Public ctor/dtor
+    //  Public Constructor
     // -----------------------------------------------------------------------
-	/** @name Constructor. */
+	/** @name Constructor */
     //@{
 
-    IDDatatypeValidator();
-
-    IDDatatypeValidator(DatatypeValidator*            const baseValidator
-                      , RefHashTableOf<KVStringPair>* const facets
-                      , RefVectorOf<XMLCh>*           const enums
-                      , const int                           finalSet);
-
-    virtual ~IDDatatypeValidator();
+    AnySimpleTypeDatatypeValidator();
 
 	//@}
+
+    // -----------------------------------------------------------------------
+    //  Public Destructor
+    // -----------------------------------------------------------------------
+	/** @name Destructor. */
+    //@{
+
+    virtual ~AnySimpleTypeDatatypeValidator();
+
+	//@}
+
+    // -----------------------------------------------------------------------
+    // Getter methods
+    // -----------------------------------------------------------------------
+    /** @name Getter Functions */
+    //@{
+
+    /**
+      * Returns default value (collapse) for whiteSpace facet.
+      * This function is overwritten in StringDatatypeValidator.
+      */
+    short getWSFacet () const;
+
+    //@}
 
     // -----------------------------------------------------------------------
     // Validation methods
@@ -108,70 +107,91 @@ public:
     /** @name Validation Function */
     //@{
 
-    /**
-     * validate that a string matches the boolean datatype
-     * @param content A string containing the content to be validated
-     *
-     * @exception throws InvalidDatatypeException if the content is
-     * is not valid.
-     */
-
+     /**
+	   * Checks that the "content" string is valid datatype.
+       * If invalid, a Datatype validation exception is thrown.
+	   *
+	   * @param  content   A string containing the content to be validated
+	   *
+	   */
 	void validate(const XMLCh* const content);
+
+    /**
+      * Checks whether a given type can be used as a substitute
+      *
+      * @param  toCheck    A datatype validator of the type to be used as a
+      *                    substitute
+      *
+      */
+
+    bool isSubstitutableBy(const DatatypeValidator* const toCheck);
+
+	 //@}
+
+    // -----------------------------------------------------------------------
+    // Compare methods
+    // -----------------------------------------------------------------------
+    /** @name Compare Function */
+    //@{
+
+    /**
+      * Compares content in the Domain value vs. lexical value.
+      *
+      * @param  value1    string to compare
+      *
+      * @param  value2    string to compare
+      *
+      */
+    int compare(const XMLCh* const value1, const XMLCh* const value2);
+
+    //@}
 
     /**
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
-
-    //@}
-
-	void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
-
-private:
-
-    void addId(const XMLCh* const);
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fIDRefList
-    //      we do not own it.
-    //
-    // -----------------------------------------------------------------------
-    RefHashTableOf<XMLRefInfo>* fIDRefList;
+	DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const,
+                                   RefVectorOf<XMLCh>* const enums,
+                                   const int finalSet);
 };
 
+
 // ---------------------------------------------------------------------------
-//  Constructors and Destructor
+//  DatatypeValidator: Getters
 // ---------------------------------------------------------------------------
-inline IDDatatypeValidator::IDDatatypeValidator()
-:StringDatatypeValidator()
-,fIDRefList(0)
-{
-    DatatypeValidator::setType(DatatypeValidator::ID);
+inline short AnySimpleTypeDatatypeValidator::getWSFacet() const {
+
+    return DatatypeValidator::PRESERVE;
 }
 
-inline IDDatatypeValidator::~IDDatatypeValidator()
+
+// ---------------------------------------------------------------------------
+//  DatatypeValidators: Compare methods
+// ---------------------------------------------------------------------------
+inline int AnySimpleTypeDatatypeValidator::compare(const XMLCh* const lValue,
+                                                   const XMLCh* const rValue)
 {
+    return -1;
 }
 
-inline DatatypeValidator* IDDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+// ---------------------------------------------------------------------------
+//  DatatypeValidators: Validation methods
+// ---------------------------------------------------------------------------
+inline bool
+AnySimpleTypeDatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck)
 {
-    return (DatatypeValidator*) new IDDatatypeValidator(this, facets, enums, finalSet);
+    return true;
 }
 
-inline void IDDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
+inline void
+AnySimpleTypeDatatypeValidator::validate(const XMLCh* const content)
 {
-    fIDRefList = newIDRefList;
+    return;
 }
+
+#endif
 
 /**
-  * End of file IDDatatypeValidator.hpp
+  * End of file AnySimpleTypeDatatypeValidator.hpp
   */
-#endif
+

@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/24 17:12:01  knoaman
+ * Add support for anySimpleType.
+ * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
+ *
  * Revision 1.2  2001/07/24 21:23:40  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -131,8 +135,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(DatatypeValidator*            const baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets
+    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
@@ -183,12 +186,11 @@ inline int ENTITYDatatypeValidator::compare(const XMLCh* const lValue
 }
 
 inline DatatypeValidator* ENTITYDatatypeValidator::newInstance(
-                                      DatatypeValidator*            const baseValidator
-                                    , RefHashTableOf<KVStringPair>* const facets
+                                      RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new ENTITYDatatypeValidator(baseValidator, facets, enums, finalSet);
+    return (DatatypeValidator*) new ENTITYDatatypeValidator(this, facets, enums, finalSet);
 }
 
 // -----------------------------------------------------------------------

@@ -135,8 +135,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets
+    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
@@ -206,12 +205,11 @@ inline int StringDatatypeValidator::compare(const XMLCh* const lValue
 }
 
 inline DatatypeValidator* StringDatatypeValidator::newInstance(
-                                      DatatypeValidator* const            baseValidator
-                                    , RefHashTableOf<KVStringPair>* const facets
+                                      RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new StringDatatypeValidator(baseValidator, facets, enums, finalSet);
+    return (DatatypeValidator*) new StringDatatypeValidator(this, facets, enums, finalSet);
 }
 
 inline void StringDatatypeValidator::validate( const XMLCh* const content)

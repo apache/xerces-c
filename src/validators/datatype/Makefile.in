@@ -55,6 +55,10 @@
 #
 #
 # $Log$
+# Revision 1.18  2001/08/24 17:12:01  knoaman
+# Add support for anySimpleType.
+# Remove parameter 'baseValidator' from the virtual method 'newInstance'.
+#
 # Revision 1.17  2001/08/01 18:49:16  peiyongz
 # AnyRUIDatatypeValidator
 #
@@ -149,7 +153,8 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	DoubleDatatypeValidator.hpp \
 	FloatDatatypeValidator.hpp \
 	AnyURIDatatypeValidator.hpp \
-	IDREFDatatypeValidator.hpp
+	IDREFDatatypeValidator.hpp \
+	AnySimpleTypeDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
 
@@ -172,7 +177,8 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	DoubleDatatypeValidator.$(TO) \
 	FloatDatatypeValidator.$(TO) \
 	AnyURIDatatypeValidator.$(TO) \
-	IDREFDatatypeValidator.$(TO)
+	IDREFDatatypeValidator.$(TO) \
+	AnySimpleTypeDatatypeValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
 

@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/24 17:12:01  knoaman
+ * Add support for anySimpleType.
+ * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
+ *
  * Revision 1.2  2001/08/21 18:42:53  peiyongz
  * Bugzilla# 2816: cleanUp() declared with external linkage and called
  *                          before defined as inline
@@ -133,8 +137,7 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(DatatypeValidator*            const baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets
+    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
@@ -198,12 +201,11 @@ inline int NOTATIONDatatypeValidator::compare(const XMLCh* const lValue
 }
 
 inline DatatypeValidator* NOTATIONDatatypeValidator::newInstance(
-                                      DatatypeValidator*            const baseValidator
-                                    , RefHashTableOf<KVStringPair>* const facets
+                                      RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new NOTATIONDatatypeValidator(baseValidator, facets, enums, finalSet);
+    return (DatatypeValidator*) new NOTATIONDatatypeValidator(this, facets, enums, finalSet);
 }
 
 inline void NOTATIONDatatypeValidator::validate( const XMLCh* const content)
