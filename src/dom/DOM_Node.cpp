@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/06/14 21:08:07  andyh
+ * DOM attribute/named nodemaps: Fix a couple of null ptr problems.
+ * Joe Polastre.
+ *
  * Revision 1.6  2000/06/07 22:49:40  andyh
  * Memory usage reduction:  DOM NamedNodeMaps for attributes are allocated
  * only for elements that actually have attributes.  By Joe Polastre.
@@ -243,7 +247,10 @@ void          *DOM_Node::getUserData() const
   
 DOM_NamedNodeMap DOM_Node::getAttributes() const
 {
-    return (fImpl->getAttributes() == null) ? DOM_NamedNodeMap(fImpl) : DOM_NamedNodeMap(fImpl->getAttributes());
+	if (getNodeType() == ELEMENT_NODE)
+		return (fImpl->getAttributes() == null) ? DOM_NamedNodeMap(fImpl) : DOM_NamedNodeMap(fImpl->getAttributes());
+	else
+		return DOM_NamedNodeMap();
 };
 
   

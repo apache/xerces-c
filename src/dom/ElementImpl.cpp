@@ -129,7 +129,11 @@ short ElementImpl::getNodeType() {
 DOMString ElementImpl::getAttribute(const DOMString &nam)
 {
     static DOMString *emptyString = 0;
-    AttrImpl * attr=(AttrImpl *)(attributes->getNamedItem(nam));
+    AttrImpl * attr=null;
+
+    if (attributes != null)
+	attr=(AttrImpl *)(attributes->getNamedItem(nam));
+
     return (attr==null) ? DStringPool::getStaticString("", &emptyString) : attr->getValue();
 };
 
@@ -171,14 +175,17 @@ void ElementImpl::removeAttribute(const DOMString &nam)
     if (readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
-    AttrImpl *att = (AttrImpl *) attributes->getNamedItem(nam);
-    // Remove it
-    if (att != null)
-    {
-        attributes->removeNamedItem(nam);
-        if (att->nodeRefCount == 0)
-            NodeImpl::deleteIf(att);
+
+    if (attributes != null)
+    {    
+    	AttrImpl *att = (AttrImpl *) attributes->getNamedItem(nam);
+    	// Remove it
+    	if (att != null)
+    	{
+    	    attributes->removeNamedItem(nam);
+    	    if (att->nodeRefCount == 0)
+    	        NodeImpl::deleteIf(att);
+    	}
     }
 };
 
@@ -190,17 +197,20 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    AttrImpl *found = (AttrImpl *) attributes->getNamedItem(oldAttr->getName());
-    
-    // If it is in fact the right object, remove it.
-    
-    if (found == oldAttr)
+    if (attributes != null)
     {
-        attributes->removeNamedItem(oldAttr->getName());
-        return found;
-    }
-    else
-        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+	    AttrImpl *found = (AttrImpl *) attributes->getNamedItem(oldAttr->getName());
+    
+	    // If it is in fact the right object, remove it.
+    
+	    if (found == oldAttr)
+	    {
+	        attributes->removeNamedItem(oldAttr->getName());
+	        return found;
+	    }
+	    else
+	        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+	}
 	return null;	// just to keep the compiler happy
 };
 
@@ -310,15 +320,18 @@ void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
     if (readOnly())
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
-    AttrImpl *att =
-      (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
-    // Remove it 
-    if (att != null) {
-        attributes->removeNamedItemNS(fNamespaceURI, fLocalName);
-        if (att->nodeRefCount == 0)
-            NodeImpl::deleteIf(att);
-    }
+ 
+    if (attributes != null)
+    {   
+		AttrImpl *att =
+		  (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
+		// Remove it 
+		if (att != null) {
+			attributes->removeNamedItemNS(fNamespaceURI, fLocalName);
+			if (att->nodeRefCount == 0)
+				NodeImpl::deleteIf(att);
+		}
+	}
 }
 
 
