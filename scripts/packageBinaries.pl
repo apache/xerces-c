@@ -201,11 +201,18 @@ if ($platform eq "win64bit" )
         change_windows_makefile_for_ICU("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all/XercesLib/XercesLib.mak", $transcoder, $msgloader);
     }
 
+    # Build resource bundle library for ICUMsgLoader
+    if ($opt_m =~ m/icu/i) {
+        pchdir ("$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources");    	
+        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
+        system("cat buildlog.txt");       
+    }
+    
     # Clean up all the dependency files, causes problems for nmake
     # Also clean up all MSVC-generated project files that just cache the IDE state
     pchdir ("$XERCESCROOT");
     psystem ("del /s /f *.dep *.ncb *.plg *.opt");
-
+   
     # Make all files in the Xerces-C system including libraries, samples and tests
     pchdir ("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all\\all");
     psystem( "nmake -f all.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");
@@ -215,18 +222,17 @@ if ($platform eq "win64bit" )
     psystem("nmake -f XercesLib.mak \"CFG=XercesLib - $platformname Debug\" CPP=$opt_x.exe > buildlog.txt 2>&1 ");
     system("type buildlog.txt");
 
-    # Build resource bundle for ICUMsgLoader
-    if ($opt_m =~ m/icu/i) {
-        pchdir ("$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources");    	
-        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
-        system("cat buildlog.txt");
-    }
-
     # Decide where you want the build copied from
     pchdir ($targetdir);
     $BUILDDIR = $XERCESCROOT . "\\Build\\Win64\\VC6\\" . $buildmode;
     print "\nBuild is being copied from \'" . $BUILDDIR . "\'";
 
+    if ($opt_m =~ m/icu/i) {
+        pchdir ("$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources");    	
+        psystem("copy XercesMessages.DLL $BUILDDIR");
+        pchdir ($targetdir);        
+    }
+    
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
 
@@ -326,7 +332,8 @@ if ($platform eq "win64bit" )
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
-            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\*.res $targetdir\\msg");
+            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\XercesMessage*.res $targetdir\\msg");
+            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\XercesMessages.DLL $targetdir\\bin");            
         }        	
 
     }
@@ -572,7 +579,13 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         }
     }
 
-
+    # Build resource bundle library for ICUMsgLoader, before XercesLib
+    if ($opt_m =~ m/icu/i) {
+        pchdir ("$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources");    	
+        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
+        system("cat buildlog.txt");              
+    }
+    
     # Clean up all the dependency files, causes problems for nmake
     # Also clean up all MSVC-generated project files that just cache the IDE state
     pchdir ("$XERCESCROOT");
@@ -612,18 +625,17 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         system("cat buildlog.txt");
     }
 
-    # Build resource bundle for ICUMsgLoader
-    if ($opt_m =~ m/icu/i) {
-        pchdir ("$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources");    	
-        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
-        system("cat buildlog.txt");
-    }
-
     # Decide where you want the build copied from
     pchdir ($targetdir);
     $BUILDDIR = $XERCESCROOT . "/Build/Win32/$VCBuildDir/" . $buildmode;
     print "\nBuild is being copied from \'" . $BUILDDIR . "\'";
 
+    if ($opt_m =~ m/icu/i) {
+        pchdir ("$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources");    	
+        psystem("cp -fv XercesMessages.DLL $BUILDDIR");
+        pchdir ($targetdir);                
+    }
+    
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
 
@@ -722,7 +734,8 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
-            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/msg");
+            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
+            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages.DLL $targetdir/bin");
         }        	
 
     }
@@ -824,6 +837,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LIBPATH'}="$ICUROOT/lib:$ENV{'LIBPATH'}";
+        	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	
         }
         psystem ("echo LIBPATH=$ENV{'LIBPATH'}");
     }
@@ -869,6 +883,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'SHLIB_PATH'}="$ICUROOT/lib:$ENV{'SHLIB_PATH'}";
+        	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
 
         psystem ("echo SHLIB_PATH=$ENV{'SHLIB_PATH'}");
@@ -893,6 +908,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
+        	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
 
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
@@ -906,6 +922,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
+        	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
 
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
@@ -1302,7 +1319,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/msg");
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages.* $targetdir/lib");
         }        	
 
     }
@@ -1420,9 +1438,9 @@ sub change_windows_project_for_ICU() {
             }
 
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
-        $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
-        $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
-        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
+        $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];
+        $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];
+        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages.lib/g;
 
         if ($transcoder)
         {
@@ -1462,9 +1480,9 @@ sub change_windows_makefile_for_ICU() {
         }
 
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
-        $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /machine:IA64];
-        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
-
+        $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources" /machine:IA64];
+        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages.lib/g;
+            
         if ($transcoder) {
             $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
             $line =~ s/Transcoders\\Win32\\Win32TransService/Transcoders\\ICU\\ICUTransService/g;
@@ -1501,8 +1519,8 @@ sub change_windows_project_for_ICU_VC7() {
             $icuuc = "icuuc";
             }
         $line =~ s/AdditionalIncludeDirectories=\"([^"]*)/AdditionalIncludeDirectories=\"$ICUROOT\\include;$1/;
-        $line =~ s/AdditionalLibraryDirectories=\"([^"]*)/AdditionalLibraryDirectories=\"$ICUROOT\\lib;$ICUROOT\\source\\data;$1/;
-        $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib $1/;
+        $line =~ s/AdditionalLibraryDirectories=\"([^"]*)/AdditionalLibraryDirectories=\"$ICUROOT\\lib;$ICUROOT\\source\\data;$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources;$1/;
+        $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages.lib $1/;
 
         if ($transcoder) {
             $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;

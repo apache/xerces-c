@@ -1621,6 +1621,7 @@ util/Platforms/Win32/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
+util/MsgLoaders/ICU/resources/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \

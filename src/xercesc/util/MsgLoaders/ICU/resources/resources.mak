@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002 IBM, Inc.
+# Copyright (c) 2003 IBM, Inc.
 #
 #  File:     resources.mak
 #  Location: <xercesc_root>\src\xercesc\util\MsgLoaders\ICU\resources
@@ -11,23 +11,36 @@
 #
 #    . When adding a resource source (.txt) file for a new locale,
 #           the corresponding .res file must be added to this list,
-#    . AND to the file res-file-list.txt if *dll is to be built
+#    . AND to the file res-file-list.txt
 #
-#
+RESFILES= en_US.res 
+
 PKGNAME  = XercesMessages
-TARGETS  = $(PKGNAME)_en_US.res
+TARGET   = $(PKGNAME).dll
 GENRB    = $(ICUROOT)\bin\genrb.exe
-GENRBOPT = -s. -d. --package-name $(PKGNAME)
-
-all : $(TARGETS)
-	@echo All targets are up to date
-
-clean :
-	-erase $(TARGETS)
-
-$(PKGNAME)_en_US.res : en_US.txt
-	$(GENRB) $(GENRBOPT) $?
+PKGDATA  = $(ICUROOT)\bin\pkgdata
 
 #
-# Note: $(GENRB) $(GENRBOPT) --encoding cp1251 $?
+#  File name extensions for inference rule matching.
+#    clear out the built-in ones (for .c and the like), and add
+#    the definition for .txt to .res.
 #
+.SUFFIXES :
+.SUFFIXES : .txt
+
+#
+#  Inference rule, for compiling a .txt file into a .res file.
+#  -t fools make into thinking there are files such as es.res, etc
+#
+.txt.res:
+	$(GENRB) -t --package-name $(PKGNAME) -d . $*.txt
+
+
+#
+#  all - nmake starts here by default
+#
+all: $(TARGET)
+
+$(TARGET): $(RESFILES)
+	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt
+

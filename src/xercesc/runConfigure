@@ -481,7 +481,7 @@ case $msgloader in
            exit ${ERROR_EXIT_CODE};
        fi
        MESSAGELOADER=ICU;
-       msgloaderLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+       msgloaderLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data -L${XERCESCROOT}/lib";
        msgloaderDefines="-DXML_USE_ICU_MESSAGELOADER -I${ICUROOT}/include";;
 
    inmem)

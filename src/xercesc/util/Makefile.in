@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.27  2003/02/20 18:06:55  peiyongz
+# Bug#7077: build error message shared library for ICUMsgLoader
+#
 # Revision 1.26  2003/01/07 16:02:33  tng
 # need to properly copy and clean the message files in make install and clean.
 #
@@ -614,6 +617,7 @@ ifeq (${MESSAGELOADER},ICU)
 	mkdir -p ${MSG_DIR}
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)/resources
 	$(CP) MsgLoaders/$(MESSAGELOADERMODULE)/resources/*.res ${MSG_DIR}
+	$(CP) MsgLoaders/$(MESSAGELOADERMODULE)/resources/libXercesMessages.* ${XERCESCROOT}/lib
 endif
 
 compilers::

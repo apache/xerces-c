@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.13  2003/02/19 15:37:57  peiyongz
- * Compilation error on Solaris.
+ * Revision 1.14  2003/02/20 18:07:46  peiyongz
+ * Bug#7077: build error message shared library for ICUMsgLoader
  *
  * Revision 1.12  2003/02/17 19:56:03  peiyongz
  * Re-prioritize search order for error message files.
@@ -141,6 +141,8 @@
 #include <xercesc/util/Janitor.hpp>
 #include "ICUMsgLoader.hpp"
 #include "unicode/uloc.h"
+#include "unicode/udata.h" 
+
 #include "string.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -150,6 +152,43 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Local static methods
 // ---------------------------------------------------------------------------
+
+/*
+ *  Resource Data Reference.  
+ * 
+ *  The data is packaged as a dll (or .so or whatever, depending on the platform) that exports a data symbol.
+ *  The application (thic *.cpp) references that symbol here, and will pass the data address to ICU, which 
+ *  will then  be able to fetch resources from the data.
+ */
+
+extern "C" void U_IMPORT *XercesMessages_dat;
+
+/* 
+ *  Tell ICU where our resource data is located in memory. The data lives in the XercesMessages dll, and we just
+ *  pass the address of an exported symbol from that library to ICU.
+ */
+static bool setAppDataOK = false;
+
+static void setAppData()
+{
+    static bool setAppDataDone = false;
+
+    if (setAppDataDone)
+    {
+        return;
+    }
+    else
+    {
+        setAppDataDone = true;
+        UErrorCode err = U_ZERO_ERROR;
+        udata_setAppData("XercesMessages", &XercesMessages_dat, &err);
+        if (U_SUCCESS(err))
+        {
+    	    setAppDataOK = true;
+        }
+    }
+
+}
 
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
@@ -163,7 +202,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     ***/
     if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)    &&
         !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)    &&
-        !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain)    &&
+        !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain) &&
         !XMLString::equals(msgDomain, XMLUni::fgValidityDomain)   )
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
@@ -221,6 +260,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
                  leave it to ICU to decide where to search
                  for the error message.
                  ***/
+                 setAppData();
             }
         }    
     }
@@ -235,7 +275,24 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     fLocaleBundle = ures_open(locationBuf, XMLMsgLoader::getLocale(), &err);
     if (!U_SUCCESS(err) || fLocaleBundle == NULL)
     {
-         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+    	/***
+    	   in case user specified location does not work
+    	   try the dll
+        ***/
+        if (strcmp(locationBuf, "XercesMessages") !=0 )
+        {    	     	   
+            setAppData();        	
+            err = U_ZERO_ERROR;
+            fLocaleBundle = ures_open("XercesMessages", XMLMsgLoader::getLocale(), &err);
+            if (!U_SUCCESS(err) || fLocaleBundle == NULL)
+            {
+                 XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+            }
+        }
+        else
+        {    	     	   
+            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+        }        
     }
 
     /***

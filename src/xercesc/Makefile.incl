@@ -126,7 +126,7 @@ ifeq (${PLATFORM}, SOLARIS)
 
     ifeq (${MESSAGELOADER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -licuuc -licudata -lm -lgen
+                  -licuuc -licudata -lXercesMessages -lm -lgen
     endif
 
   else
@@ -141,7 +141,7 @@ ifeq (${PLATFORM}, SOLARIS)
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
-        ALLLIBS = -mt -licuuc -licudata ${LIBS}
+        ALLLIBS = -mt -licuuc -licudata -lXercesMessages ${LIBS}
     endif
 
   endif
@@ -241,7 +241,7 @@ else
 endif
 
 ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata -lXercesMessages
 endif
 
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
@@ -327,7 +327,7 @@ else
 endif
 
 ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
+    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lXercesMessages
 endif
 
 EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
@@ -404,7 +404,7 @@ ifeq (${PLATFORM}, HPUX)
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
-        ALLLIBS = ${LIBS} -licuuc -licudata
+        ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages
     endif
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
@@ -427,7 +427,7 @@ ifeq (${PLATFORM}, HPUX)
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
-        ALLLIBS = ${LIBS} -licuuc -licudata
+        ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages
     endif
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared
