@@ -80,7 +80,7 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#if defined(macintosh)
+#if defined(XML_MACOS)
 #define PLATFORM_EXPORT		__declspec(export)
 #define PLATFORM_IMPORT		__declspec(import)
 #elif defined(_WIN32) || defined(WIN32)
@@ -111,7 +111,7 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-#if defined(macintosh)
+#if defined(XML_MACOS)
 typedef unsigned short  XMLCh;
 #elif defined(_WIN32) || defined(WIN32)
 typedef wchar_t			XMLCh;
