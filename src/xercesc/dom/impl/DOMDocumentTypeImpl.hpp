@@ -81,7 +81,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class NamedNodeMapImpl;
+class DOMNamedNodeMapImpl;
 
 class CDOM_EXPORT DOMDocumentTypeImpl: public DOMDocumentType {
 private:
@@ -91,21 +91,21 @@ private:
 
 
 
-    const XMLCh *       fName;
-    DOMNamedNodeMap*    fEntities;
-    DOMNamedNodeMap*    fNotations;
-    DOMNamedNodeMap*    fElements;
-    const XMLCh *       fPublicId;
-    const XMLCh *       fSystemId;
-    const XMLCh *       fInternalSubset;
+    const XMLCh *        fName;
+    DOMNamedNodeMapImpl* fEntities;
+    DOMNamedNodeMapImpl* fNotations;
+    DOMNamedNodeMapImpl* fElements;
+    const XMLCh *        fPublicId;
+    const XMLCh *        fSystemId;
+    const XMLCh *        fInternalSubset;
 
-    bool			    fIntSubsetReading;
-    bool                fIsCreatedFromHeap;
+    bool			     fIntSubsetReading;
+    bool                 fIsCreatedFromHeap;
 
-    virtual void        setPublicId(const XMLCh * value);
-    virtual void        setSystemId(const XMLCh * value);
-    virtual void        setInternalSubset(const XMLCh *value);
-    bool                isIntSubsetReading() const;
+    virtual void         setPublicId(const XMLCh * value);
+    virtual void         setSystemId(const XMLCh * value);
+    virtual void         setInternalSubset(const XMLCh *value);
+    bool                 isIntSubsetReading() const;
 
     friend class AbstractDOMParser;
 

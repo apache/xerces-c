@@ -240,9 +240,9 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool 
     if ((DOMDocumentImpl *)this->fNode.getOwnerDocument() && deep)
         fParent.cloneChildren(&other);
 
-    fEntities = ((DOMNamedNodeMapImpl *)other.fEntities)->cloneMap(this);
-    fNotations= ((DOMNamedNodeMapImpl *)other.fNotations)->cloneMap(this);
-    fElements = ((DOMNamedNodeMapImpl *)other.fElements)->cloneMap(this);
+    fEntities = other.fEntities->cloneMap(this);
+    fNotations= other.fNotations->cloneMap(this);
+    fElements = other.fElements->cloneMap(this);
 }
 
 
@@ -285,9 +285,9 @@ void DOMDocumentTypeImpl::setOwnerDocument(DOMDocument *doc) {
             fNode.setOwnerDocument(doc);
             fParent.setOwnerDocument(doc);
 
-            DOMNamedNodeMap* entitiesTemp = ((DOMNamedNodeMapImpl *)fEntities)->cloneMap(this);
-            DOMNamedNodeMap* notationsTemp = ((DOMNamedNodeMapImpl *)fNotations)->cloneMap(this);
-            DOMNamedNodeMap* elementsTemp = ((DOMNamedNodeMapImpl *)fElements)->cloneMap(this);
+            DOMNamedNodeMapImpl* entitiesTemp = fEntities->cloneMap(this);
+            DOMNamedNodeMapImpl* notationsTemp = fNotations->cloneMap(this);
+            DOMNamedNodeMapImpl* elementsTemp = fElements->cloneMap(this);
 
             fEntities = entitiesTemp;
             fNotations = notationsTemp;
@@ -342,9 +342,9 @@ void DOMDocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
 {
     fNode.setReadOnly(readOnl,deep);
     if (fEntities)
-        ((DOMNamedNodeMapImpl *)fEntities)->setReadOnly(readOnl,true);
+        fEntities->setReadOnly(readOnl,true);
     if (fNotations)
-        ((DOMNamedNodeMapImpl *)fNotations)->setReadOnly(readOnl,true);
+        fNotations->setReadOnly(readOnl,true);
 }
 
 
