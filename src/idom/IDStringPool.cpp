@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/29 20:06:36  tng
+ * IDOM: fix wrong void* p cast
+ *
  * Revision 1.5  2001/05/29 18:49:58  tng
  * IDOM: call allocate directly for array allocation to avoid overloading operator new[] which leads to compilation error on SUN CC 4.2
  *
@@ -127,7 +130,7 @@ IDStringPool::IDStringPool(int hashTableSize, IDDocumentImpl *doc)
 
     //fHashTable = new (fDoc) IDStringPoolEntry *[hashTableSize];
     void* p = doc->allocate(sizeof(IDStringPoolEntry*) * hashTableSize);
-    fHashTable = (IDStringPoolEntry**) &p;
+    fHashTable = (IDStringPoolEntry**) p;
     for (int i=0; i<fHashTableSize; i++)
         fHashTable[i] = 0;
 };

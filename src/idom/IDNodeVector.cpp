@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/29 20:06:35  tng
+ * IDOM: fix wrong void* p cast
+ *
  * Revision 1.5  2001/05/29 18:49:57  tng
  * IDOM: call allocate directly for array allocation to avoid overloading operator new[] which leads to compilation error on SUN CC 4.2
  *
@@ -99,8 +102,7 @@ IDNodeVector::IDNodeVector(IDOM_Document *doc, unsigned int size) {
 void IDNodeVector::init(IDOM_Document *doc, unsigned int size) {
     assert(size > 0);
     //data = new (doc) IDOM_Node *[size];
-    void* p = ((IDDocumentImpl *)doc)->allocate(sizeof(IDOM_Node*) * size);
-    data = (IDOM_Node**) &p;
+    data = (IDOM_Node**) ((IDDocumentImpl *)doc)->allocate(sizeof(IDOM_Node*) * size);
     assert(data != 0);
     unsigned int i;
     for (i=0; i<size; i++)
@@ -129,8 +131,7 @@ void IDNodeVector::checkSpace() {
         IDOM_Document *doc = data[0]->getOwnerDocument();
 
         //IDOM_Node **newData = new (doc) IDOM_Node *[newAllocatedSize];
-        void* p = ((IDDocumentImpl *)doc)->allocate(sizeof(IDOM_Node*) * newAllocatedSize);
-        IDOM_Node **newData = (IDOM_Node**) &p;
+        IDOM_Node **newData = (IDOM_Node**) ((IDDocumentImpl *)doc)->allocate(sizeof(IDOM_Node*) * newAllocatedSize);
 
         assert(newData != 0);
         for (unsigned int i=0; i<allocatedSize; i++) {
