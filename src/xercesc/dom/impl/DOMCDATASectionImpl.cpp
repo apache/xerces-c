@@ -158,6 +158,22 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 };
 
 
+bool DOMCDATASectionImpl::getIsWhitespaceInElementContent() const
+{
+    return isIgnorableWhitespace();
+}
+
+const XMLCh* DOMCDATASectionImpl::getWholeText() {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh* content){
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+
 void DOMCDATASectionImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
@@ -208,6 +224,15 @@ void DOMCDATASectionImpl::release()
            void*            DOMCDATASectionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                          {return fNode.setUserData(key, data, handler); };
            void*            DOMCDATASectionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
+           const XMLCh*     DOMCDATASectionImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
+           short            DOMCDATASectionImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           const XMLCh*     DOMCDATASectionImpl::getTextContent() const                  {return fNode.getTextContent(); };
+           void             DOMCDATASectionImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
+           const XMLCh*     DOMCDATASectionImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMCDATASectionImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMCDATASectionImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           DOMNode*         DOMCDATASectionImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
 
 
 //

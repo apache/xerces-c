@@ -94,8 +94,13 @@ public:
 
     // Functions inherited from TEXT
     virtual DOMText*     splitText(XMLSize_t offset);
-    virtual bool         isIgnorableWhitespace() const;
+    // DOM Level 3
+    virtual bool            getIsWhitespaceInElementContent() const;
+    virtual const XMLCh*    getWholeText();
+    virtual DOMText*        replaceWholeText(const XMLCh* content);
 
+    // non-standard extension
+    virtual bool         isIgnorableWhitespace() const;
 
 
     // Declare all of the functions from DOMNode.
