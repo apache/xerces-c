@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/17 18:14:32  tng
+ * Schema Fix: if nillable, it's an error to have default value
+ *
  * Revision 1.7  2001/05/11 15:17:46  tng
  * Schema: Nillable fixes.
  *
@@ -150,6 +153,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
          ||  (modelType == SchemaElementDecl::Children))
     {
         // if nillable, it's an error to have value
+        // XML Schema REC: Validation Rule: Element Locally Valid (Element)
+        // 3.2.1 The element information item must have no
+        // character or element information item [children].
+        //
         if (fNil) {
             if (childCount > 0 || XMLString::compareString(fDatatypeBuffer.getRawBuffer(), XMLUni::fgZeroLenString))
                 emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
@@ -191,6 +198,11 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
 
                     if (elemDefaultValue) {
                         // a default value was specified
+
+                        // if nillable, it's an error to have default value
+                        if (fNil)
+                            emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
+
                         if (!XMLString::compareString(value, XMLUni::fgZeroLenString)) {
                             // if this element didn't specified any value
                             // use default value
