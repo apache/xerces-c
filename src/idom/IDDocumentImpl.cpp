@@ -844,7 +844,9 @@ int             IDDocumentImpl::changes() const{
 XMLCh * IDDocumentImpl::cloneString(const XMLCh *src)
 {
     size_t   len = XMLString::stringLen(src);
-    XMLCh *newStr = (XMLCh *)this->allocate((len+1) * sizeof(XMLCh));
+    len = (len + 1) * sizeof(XMLCh);
+    len = (len % 4) + len;
+    XMLCh *newStr = (XMLCh *)this->allocate(len);
     XMLString::copyString(newStr, src);
     return newStr;
 }

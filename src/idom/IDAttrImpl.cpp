@@ -155,7 +155,9 @@ const XMLCh * IDAttrImpl::getValue() const
     //                does not ever produce such a thing.
 
     //XMLCh * retString = new (this->getOwnerDocument()) XMLCh[length+1];
-    XMLCh * retString = (XMLCh*) ((IDDocumentImpl *)this->getOwnerDocument())->allocate(sizeof(XMLCh) * (length+1));
+    length = sizeof(XMLCh) * (length+1);
+    length = (length % 4) + length;
+    XMLCh * retString = (XMLCh*) ((IDDocumentImpl *)this->getOwnerDocument())->allocate(length);
     retString[0] = 0;
     for (node = fParent.fFirstChild; node != 0; node = castToChildImpl(node)->nextSibling)
     {
