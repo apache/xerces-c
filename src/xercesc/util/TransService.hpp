@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/02/04 22:11:52  peiyongz
+ * bug#16784: Obsolete documentation on XMLTranscoder -- reported by
+ * Colin Paul Adams, Preston Lancashire
+ *
  * Revision 1.5  2002/11/25 21:27:52  tng
  * Performance: use XMLRecognizer::Encodings enum to make new transcode, faster than comparing the encoding string every time.
  *
@@ -405,11 +409,7 @@ public :
 
     /** Get the internal block size
      *
-       * @return The block size indicated in the constructor. This
-       *   lets the derived class preallocate appopriately sized
-       *   buffers. This sets the maximum number of characters which can
-       *   be internalized per call to <code>transcodeFrom()</code> and
-       *   <code>transcodeTo()</code>.
+       * @return The block size indicated in the constructor.
        */
     unsigned int getBlockSize() const;
 
@@ -450,10 +450,7 @@ private :
     //  Private data members
     //
     //  fBlockSize
-    //      This is the block size indicated in the constructor. This lets
-    //      the derived class preallocate appopriately sized buffers. This
-    //      sets the maximum number of characters which can be internalized
-    //      per call to transcodeFrom() and transcodeTo().
+    //      This is the block size indicated in the constructor.
     //
     //  fEncodingName
     //      This is the name of the encoding this encoder is for. All basic
