@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/02 19:20:19  peiyongz
+ * fWhiteSpace added; more dv serialization support added
+ *
  * Revision 1.10  2003/10/01 01:09:35  knoaman
  * Refactoring of some code to improve performance.
  *
@@ -294,6 +297,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fAnonymous;
+        serEng<<fWhiteSpace;
         serEng<<fFinalSet;
         serEng<<fFacetsDefined;
         serEng<<fFixed;
@@ -366,6 +370,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         int dataLen = 0;
 
         serEng>>fAnonymous;
+        serEng>>fWhiteSpace;
         serEng>>fFinalSet;
         serEng>>fFacetsDefined;
         serEng>>fFixed;
@@ -417,20 +422,17 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             break;
         case Float: 
             FloatDatatypeValidator* floatdv;
-            //TODO
-            //serEng>>floatdv;
+            serEng>>floatdv;
             fBaseValidator = floatdv;
             break;
         case Double: 
             DoubleDatatypeValidator* doubledv;
-            //TODO
-            //serEng>>doubledv;
+            serEng>>doubledv;
             fBaseValidator = doubledv;
             break;
         case Decimal: 
             DecimalDatatypeValidator* decimaldv;
-            //TODO
-            //serEng>>decimaldv;
+            serEng>>decimaldv;
             fBaseValidator = decimaldv;
             break;
         case HexBinary:  
@@ -445,56 +447,47 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             break;
         case Duration:     
             DurationDatatypeValidator* durationdv;
-            //TODO
-            //serEng>>durationdv;
+            serEng>>durationdv;
             fBaseValidator = durationdv;
             break;
         case DateTime:       
             DateTimeDatatypeValidator* datetimedv;
-            //TODO
-            //serEng>>datetimedv;
+            serEng>>datetimedv;
             fBaseValidator = datetimedv;
             break;
         case Date:          
             DateDatatypeValidator* datedv;
-            //TODO
-            //serEng>>datedv;
+            serEng>>datedv;
             fBaseValidator = datedv;
             break;
         case Time:         
             TimeDatatypeValidator* timedv;
-            //TODO
-            //serEng>>timedv;
+            serEng>>timedv;
             fBaseValidator = timedv;
             break;
         case MonthDay:      
             MonthDayDatatypeValidator* monthdaydv;
-            //TODO
-            //serEng>>monthdaydv;
+            serEng>>monthdaydv;
             fBaseValidator = monthdaydv;
             break;
         case YearMonth:     
             YearMonthDatatypeValidator* yearmonthdv;
-            //TODO
-            //serEng>>yearmonthdv;
+            serEng>>yearmonthdv;
             fBaseValidator = yearmonthdv;
             break;
         case Year:          
             YearDatatypeValidator* yeardv;
-            //TODO
-            //serEng>>yeardv;
+            serEng>>yeardv;
             fBaseValidator = yeardv;
             break;
         case Month:        
             MonthDatatypeValidator* monthdv;
-            //TODO
-            //serEng>>monthdv;
+            serEng>>monthdv;
             fBaseValidator = monthdv;
             break;
         case Day:           
             DayDatatypeValidator* daydv;
-            //TODO
-            //serEng>>daydv;
+            serEng>>daydv;
             fBaseValidator = daydv;
             break;
         case ID:           
