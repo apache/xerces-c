@@ -1264,6 +1264,74 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             //  not validating of course it will not be at first, but we will
             //  fault it into the pool (to avoid lots of redundant errors.)
             XMLAttDef* attDef = ((DTDElementDecl *)elemDecl)->getAttDef ( fAttNameBuf.getRawBuffer());
+            XMLCh * namePtr = fAttNameBuf.getRawBuffer();
+
+            //  Add this attribute to the attribute list that we use to
+            //  pass them to the handler. We reuse its existing elements
+            //  but expand it as required.
+            // Note that we want to this first since this will
+            // make a copy of the namePtr; we can then make use of
+            // that copy in the hashtable lookup that checks
+            // for duplicates.  This will mean we may have to update
+            // the type of the XMLAttr later.
+            XMLAttr* curAtt;
+            if (attCount >= curAttListSize)
+            {
+                if (fDoNamespaces) {
+                    curAtt = new (fMemoryManager) XMLAttr
+                    (
+                        fEmptyNamespaceId
+                        , fAttNameBuf.getRawBuffer()
+                        , XMLUni::fgZeroLenString
+                        , (attDef)?attDef->getType():XMLAttDef::CData
+                        , true
+                        , fMemoryManager
+                    );
+                }
+                else
+                {
+                    curAtt = new (fMemoryManager) XMLAttr
+                    (
+                        -1
+                        , fAttNameBuf.getRawBuffer()
+                        , XMLUni::fgZeroLenString
+                        , XMLUni::fgZeroLenString
+                        , (attDef)?attDef->getType():XMLAttDef::CData
+                        , true
+                        , fMemoryManager
+                    );
+                }
+                fAttrList->addElement(curAtt);
+            }
+            else
+            {
+                curAtt = fAttrList->elementAt(attCount);
+
+                if (fDoNamespaces)
+                {
+                    curAtt->set
+                    (
+                        fEmptyNamespaceId
+                        , fAttNameBuf.getRawBuffer()
+                        , XMLUni::fgZeroLenString
+                        , (attDef)?attDef->getType():XMLAttDef::CData
+                    );
+                }
+                else
+                {
+                    curAtt->set
+                    (
+                        -1
+                        , fAttNameBuf.getRawBuffer()
+                        , XMLUni::fgZeroLenString
+                        , XMLUni::fgZeroLenString
+                        , (attDef)?attDef->getType():XMLAttDef::CData
+                    );
+                }
+                curAtt->setSpecified(true);
+            }
+            // reset namePtr so it refers to newly-allocated memory
+            namePtr = (XMLCh *)curAtt->getName();
 
             // now need to prepare for duplicate detection
             if(attDef)
@@ -1289,7 +1357,6 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             }
             else
             {
-                XMLCh * namePtr = fAttNameBuf.getRawBuffer();
                 unsigned int *curCountPtr = fUndeclaredAttrRegistry->get(namePtr);
                 if(!curCountPtr)
                 {
@@ -1360,6 +1427,8 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                     return false;
                 }
             }
+            // must set the newly-minted value on the XMLAttr:
+            curAtt->setValue(fAttValueBuf.getRawBuffer());
 
             //  Now that its all stretched out, lets look at its type and
             //  determine if it has a valid value. It will output any needed
@@ -1404,65 +1473,6 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                 }
             }
 
-            //  Add this attribute to the attribute list that we use to
-            //  pass them to the handler. We reuse its existing elements
-            //  but expand it as required.
-            XMLAttr* curAtt;
-            if (attCount >= curAttListSize)
-            {
-                if (fDoNamespaces) {
-                    curAtt = new (fMemoryManager) XMLAttr
-                    (
-                        fEmptyNamespaceId
-                        , fAttNameBuf.getRawBuffer()
-                        , fAttValueBuf.getRawBuffer()
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                        , true
-                        , fMemoryManager
-                    );
-                }
-                else
-                {
-                    curAtt = new (fMemoryManager) XMLAttr
-                    (
-                        -1
-                        , fAttNameBuf.getRawBuffer()
-                        , XMLUni::fgZeroLenString
-                        , fAttValueBuf.getRawBuffer()
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                        , true
-                        , fMemoryManager
-                    );
-                }
-                fAttrList->addElement(curAtt);
-            }
-            else
-            {
-                curAtt = fAttrList->elementAt(attCount);
-
-                if (fDoNamespaces)
-                {
-                    curAtt->set
-                    (
-                        fEmptyNamespaceId
-                        , fAttNameBuf.getRawBuffer()
-                        , fAttValueBuf.getRawBuffer()
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                    );
-                }
-                else
-                {
-                    curAtt->set
-                    (
-                        -1
-                        , fAttNameBuf.getRawBuffer()
-                        , XMLUni::fgZeroLenString
-                        , fAttValueBuf.getRawBuffer()
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                    );
-                }
-                curAtt->setSpecified(true);
-            }
             attCount++;
 
             // And jump back to the top of the loop

@@ -1761,12 +1761,51 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                     return false;
                 }
             }
-
             //  See if this attribute is declared for this element. If we are
             //  not validating of course it will not be at first, but we will
             //  fault it into the pool (to avoid lots of redundant errors.)
             XMLCh * namePtr = fAttNameBuf.getRawBuffer();
             XMLAttDef* attDef = ((DTDElementDecl *)elemDecl)->getAttDef(namePtr);
+
+            //  Add this attribute to the attribute list that we use to
+            //  pass them to the handler. We reuse its existing elements
+            //  but expand it as required.
+            // Note that we want to this first since this will
+            // make a copy of the namePtr; we can then make use of
+            // that copy in the hashtable lookup that checks
+            // for duplicates.  This will mean we may have to update
+            // the type of the XMLAttr later.
+            XMLAttr* curAtt;
+            if (attCount >= curAttListSize)
+            {
+                curAtt = new (fMemoryManager) XMLAttr
+                (
+                    -1
+                    , namePtr
+                    , XMLUni::fgZeroLenString
+                    , XMLUni::fgZeroLenString
+                    , (attDef)?attDef->getType():XMLAttDef::CData
+                    , true
+                    , fMemoryManager
+                );
+                fAttrList->addElement(curAtt);
+            }
+            else
+            {
+                curAtt = fAttrList->elementAt(attCount);
+                curAtt->set
+                (
+                    -1
+                    , namePtr
+                    , XMLUni::fgZeroLenString
+                    , XMLUni::fgZeroLenString
+                    , (attDef)?attDef->getType():XMLAttDef::CData
+                );
+                curAtt->setSpecified(true);
+            }
+            // reset namePtr so it refers to newly-allocated memory
+            namePtr = (XMLCh *)curAtt->getName();
+
             if (!attDef)
             {
                 //  If there is a validation handler, then we are validating
@@ -1821,6 +1860,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                     );
                 }
             }
+
             //  Skip any whitespace before the value and then scan the att
             //  value. This will come back normalized with entity refs and
             //  char refs expanded.
@@ -1858,6 +1898,8 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                     return false;
                 }
             }
+            // must set the newly-minted value on the XMLAttr:
+            curAtt->setValue(fAttValueBuf.getRawBuffer());
 
             //  Now that its all stretched out, lets look at its type and
             //  determine if it has a valid value. It will output any needed
@@ -1878,39 +1920,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                 }
             }
 
-            //  Add this attribute to the attribute list that we use to
-            //  pass them to the handler. We reuse its existing elements
-            //  but expand it as required.
-            XMLAttr* curAtt;
-            if (attCount >= curAttListSize)
-            {
-                curAtt = new (fMemoryManager) XMLAttr
-                (
-                    -1
-                    , namePtr
-                    , XMLUni::fgZeroLenString
-                    , fAttValueBuf.getRawBuffer()
-                    , (attDef)?attDef->getType():XMLAttDef::CData
-                    , true
-                    , fMemoryManager
-                );
-                fAttrList->addElement(curAtt);
-            }
-            else
-            {
-                curAtt = fAttrList->elementAt(attCount);
-                curAtt->set
-                (
-                    -1
-                    , namePtr
-                    , XMLUni::fgZeroLenString
-                    , fAttValueBuf.getRawBuffer()
-                    , (attDef)?attDef->getType():XMLAttDef::CData
-                );
-                curAtt->setSpecified(true);
-            }
             attCount++;
-
             // And jump back to the top of the loop
             continue;
         }
