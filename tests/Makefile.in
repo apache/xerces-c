@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.4  2000/02/18 22:51:39  abagchi
+# Added Traversal
+#
 # Revision 1.3  2000/02/17 20:18:20  abagchi
 # Added Encoding Test
 #
@@ -69,6 +72,7 @@
 
 DOMMemTest_DIR=DOM/DOMMemTest
 DOMTest_DIR=DOM/DOMTest
+Traversal_DIR=DOM/Traversal
 ThreadTest_DIR=ThreadTest
 EncodingTest_DIR=EncodingTest
 
@@ -80,7 +84,7 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 
-all:	dommemtest domtest threadtest encodingtest
+all:	dommemtest domtest threadtest encodingtest traversal
 
 dommemtest:
 	@echo Building "DOMMemTest"
@@ -98,17 +102,23 @@ encodingtest:
 	@echo Building "EncodingTest"
 	cd $(EncodingTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
+traversal:
+	@echo Building "Traversal"
+	cd $(Traversal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+
 clean:
 	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..
+	cd $(Traversal_DIR) && $(MAKE) $@ && cd ..
 
 distclean:
 	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..
+	cd $(Traversal_DIR) && $(MAKE) $@ && cd ..
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
 
