@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/09 21:28:28  peiyongz
+ * explicit ctor/dtor defined.
+ *
  * Revision 1.1  2001/09/27 14:54:03  peiyongz
  * DTV Reorganization: new class
  *
@@ -66,4 +69,11 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/XMLNumber.hpp>
+
+
+XMLNumber::XMLNumber()
+{}
+
+XMLNumber::~XMLNumber()
+{}
 

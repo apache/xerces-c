@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/09 21:28:28  peiyongz
+ * explicit ctor/dtor defined.
+ *
  * Revision 1.1  2001/09/27 14:54:03  peiyongz
  * DTV Reorganization: new class
  *
@@ -70,6 +73,8 @@
 class XMLUTIL_EXPORT XMLNumber
 {
 public:
+
+    virtual ~XMLNumber();
 
 	/**
 	 *  Return string representation of the decimal value.
@@ -88,6 +93,10 @@ public:
 	 *
 	 */
     virtual int        getSign() const = 0;
+
+protected:
+
+    XMLNumber();
 
 };
 
