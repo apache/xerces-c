@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/05/31 21:01:06  peiyongz
+ * move printing of XMLDecl into the processNode().
+ *
  * Revision 1.2  2002/05/29 21:31:50  knoaman
  * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
  *
@@ -424,19 +427,7 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
                                     , XMLFormatter::UnRep_CharRef);
 		Janitor<XMLFormatter> janName(fFormatter);
 
-        //
-		// if this is a document node
-		// print out the XML Decl node first
-		//
-		if (nodeToWrite.getNodeType() == DOMNode::DOCUMENT_NODE)
-		{
-			setURCharRef();
-			*fFormatter << gXMLDecl1 << gXMLDecl2 << fEncodingUsed << gXMLDecl3 << fNewLineUsed;
-		}
-        
 		processNode(&nodeToWrite);
-		*fFormatter << fNewLineUsed; // add linefeed in requested output encoding
-
 	}
 
 	//
@@ -632,6 +623,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
 	case DOMNode::DOCUMENT_NODE: // Not to be shown to Filter
         {
+			setURCharRef();
+			*fFormatter << gXMLDecl1 << gXMLDecl2;
+			*fFormatter << fEncodingUsed << gXMLDecl3;
+			*fFormatter << fNewLineUsed;
+
             DOMNode *child = nodeToWrite->getFirstChild();
             while( child != 0)
             {
