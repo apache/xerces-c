@@ -276,7 +276,7 @@ public :
       *     <br>NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
       *     the feature name.
       *
-      * @see #setFeature
+      * @see #getFeature
       * @see #canSetFeature
       */
     void setFeature(const XMLCh* const name, const bool state);
@@ -292,7 +292,7 @@ public :
       *     NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
       *     the feature name.
       *
-      * @see #getFeature
+      * @see #setFeature
       * @see #canSetFeature
       */
     bool getFeature(const XMLCh* const name);
@@ -333,9 +333,6 @@ public :
       *
       * @param source A const reference to the DOMInputSource object which
       *               points to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
       *         and populated Document is returned. If the DOMBuilder is
       *         asynchronous then <code>null</code> is returned since the
@@ -350,7 +347,7 @@ public :
       * @see #setEntityResolver
       * @see #setErrorHandler
       */
-    DOMDocument* parse(const DOMInputSource& source, const bool reuseGrammar = false);
+    DOMDocument* parse(const DOMInputSource& source);
 
     /**
       * <p><b>"Experimental - subject to change"</b></p>
@@ -362,9 +359,6 @@ public :
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
       *         and populated Document is returned. If the DOMBuilder is
       *         asynchronous then <code>null</code> is returned since the
@@ -377,7 +371,7 @@ public :
       *
       * @see #parse(DOMInputSource,...)
       */
-    DOMDocument* parseURI(const XMLCh* const systemId, const bool reuseGrammar = false);
+    DOMDocument* parseURI(const XMLCh* const systemId);
 
     /**
       * <p><b>"Experimental - subject to change"</b></p>
@@ -389,9 +383,6 @@ public :
       *
       * @param systemId A const char pointer to a native string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
       *         and populated Document is returned. If the DOMBuilder is
       *         asynchronous then <code>null</code> is returned since the
@@ -404,7 +395,7 @@ public :
       *
       * @see #parse(DOMInputSource,...)
       */
-    DOMDocument* parseURI(const char* const systemId, const bool reuseGrammar = false);
+    DOMDocument* parseURI(const char* const systemId);
 
     /**
       * <p><b>"Experimental - subject to change"</b></p>
@@ -440,6 +431,59 @@ public :
         , const short action
     );
 
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+
+    /**
+      * Query the current value of a property in a DOMBuilder.
+      *
+      * The builder owns the returned pointer.  The memory allocated for
+      * the returned pointer will be destroyed when the builder is deleted.
+      *
+      * To ensure assessiblity of the returned information after the builder
+      * is deleted, callers need to copy and store the returned information
+      * somewhere else; otherwise you may get unexpected result.  Since the returned
+      * pointer is a generic void pointer, see
+      * http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties to learn
+      * exactly what type of property value each property returns for replication.
+      *
+      * @param name The unique identifier (URI) of the property being set.
+      * @return     The current value of the property.  The pointer spans the same
+      *             life-time as the parser.  A null pointer is returned if nothing
+      *             was specified externally.
+      * @exception DOMException
+      *     <br>NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
+      *     the requested property.
+      */
+    virtual void* getProperty(const XMLCh* const name) const;
+
+    /**
+      * Set the value of any property in a DOMBuilder.
+      * See http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties for
+      * the list of supported properties.
+      *
+      * It takes a void pointer as the property value.  Application is required to initialize this void
+      * pointer to a correct type.  See http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties
+      * to learn exactly what type of property value each property expects for processing.
+      * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+      * If the same property is set more than once, the last one takes effect.
+      *
+      * @param name The unique identifier (URI) of the property being set.
+      * @param value The requested value for the property.
+      *            See http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties to learn
+      *            exactly what type of property value each property expects for processing.
+      *            Passing a void pointer that was initialized with a wrong type will lead
+      *            to unexpected result.
+      * @exception DOMException
+      *     <br>NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
+      *     the requested property.
+      */
+    virtual void setProperty(const XMLCh* const name, void* value);
+    //@}
 
     // -----------------------------------------------------------------------
     //  Implementation of the XMLErrorReporter interface.
@@ -605,12 +649,20 @@ private :
     //
     //  fFilter
     //      The installed application filter, if any. Null if none.
+    //
+    //  fReuseGrammmar
+    //      If the parser should reuse the grammar
+    //
+    //  fCharsetOverridesXMLEncoding
+    //      Indicates if the "charset-overrides-xml-encoding" is set or not
     //-----------------------------------------------------------------------
     bool                        fAutoValidation;
     bool                        fValidation;
     DOMEntityResolver*          fEntityResolver;
     DOMErrorHandler*            fErrorHandler;
     DOMBuilderFilter*           fFilter;
+    bool                        fReuseGrammar;
+    bool                        fCharsetOverridesXMLEncoding;
 };
 
 
