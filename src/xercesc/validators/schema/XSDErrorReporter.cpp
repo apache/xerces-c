@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.13  2004/07/22 15:37:18  knoaman
+  * Use file static instance instead of local static instance
+  *
   * Revision 1.12  2004/01/09 22:41:58  knoaman
   * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
   *
@@ -120,7 +123,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 static XMLMsgLoader*  gErrMsgLoader = 0;
 static XMLMsgLoader*  gValidMsgLoader = 0;
 static XMLMutex*      sErrRprtrMutex = 0;
-
+static XMLRegisterCleanup errRprtrMutexCleanup;
+static XMLRegisterCleanup cleanupErrMsgLoader;
+static XMLRegisterCleanup cleanupValidMsgLoader;
 
 // ---------------------------------------------------------------------------
 //  Local, static functions
@@ -133,7 +138,6 @@ static void reinitErrRprtrMutex()
 
 static XMLMutex& getErrRprtrMutex()
 {
-    static XMLRegisterCleanup errRprtrMutexCleanup;
     if (!sErrRprtrMutex)
     {
         XMLMutexLock lockInit(XMLPlatformUtils::fgAtomicMutex);
@@ -162,7 +166,6 @@ static void reinitValidMsgLoader()
 
 static XMLMsgLoader* getErrMsgLoader()
 {
-    static XMLRegisterCleanup cleanupErrMsgLoader;
     if (!gErrMsgLoader)
     {
         XMLMutexLock lock(&getErrRprtrMutex());
@@ -184,7 +187,6 @@ static XMLMsgLoader* getErrMsgLoader()
 
 static XMLMsgLoader* getValidMsgLoader()
 {
-    static XMLRegisterCleanup cleanupValidMsgLoader;
     if (!gValidMsgLoader)
     {
         XMLMutexLock lock(&getErrRprtrMutex());

@@ -91,6 +91,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 static bool gStrictIANAEncoding = false;
 RefHashTableOf<ENameMap>* XMLTransService::gMappings = 0;
 RefVectorOf<ENameMap> * XMLTransService::gMappingsRecognizer = 0;
+static XMLRegisterCleanup mappingsCleanup;
+static XMLRegisterCleanup mappingsRecognizerCleanup;
 
 // -----------------------------------------------------------------------
 //  Notification that lazy data has been deleted
@@ -110,9 +112,6 @@ void XMLTransService::reinitMappingsRecognizer() {
 // ---------------------------------------------------------------------------
 XMLTransService::XMLTransService()
 {
-    static XMLRegisterCleanup mappingsCleanup;
-    static XMLRegisterCleanup mappingsRecognizerCleanup;
-
     if (!gMappings) {
         RefHashTableOf<ENameMap>* t = new RefHashTableOf<ENameMap>(103);
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/07/22 15:37:18  knoaman
+ * Use file static instance instead of local static instance
+ *
  * Revision 1.5  2004/01/13 16:17:10  knoaman
  * Fo sanity, use class name to qualify method
  *
@@ -88,6 +91,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 static XMLMutex* sEncValMutex = 0;
 static XMLRegisterCleanup encValRegistryCleanup;
+static XMLRegisterCleanup instanceCleanup;
 
 // ---------------------------------------------------------------------------
 //  Local, static functions
@@ -165,7 +169,6 @@ void EncodingValidator::initializeRegistry() {
 // ---------------------------------------------------------------------------
 EncodingValidator* EncodingValidator::instance()
 {
-    static XMLRegisterCleanup instanceCleanup;
     if (!fInstance)
     {
         XMLMutexLock lock(&getEncValMutex());

@@ -102,6 +102,7 @@ const unsigned short DOMNodeImpl::TOBERELEASED = 0x1<<12;
 // -----------------------------------------------------------------------
 static DOMNodeListImpl *gEmptyNodeList = 0;  // make a singleton empty node list
 static XMLMutex* gEmptyNodeListMutex = 0;
+static XMLRegisterCleanup emptyNodeListCleanup;
 
 static void reinitEmptyNodeList()
 {
@@ -156,8 +157,6 @@ DOMNamedNodeMap * DOMNodeImpl::getAttributes() const {
 
 
 DOMNodeList *DOMNodeImpl::getChildNodes() const {
-
-    static XMLRegisterCleanup emptyNodeListCleanup;
 
     if (!gEmptyNodeList)
     {

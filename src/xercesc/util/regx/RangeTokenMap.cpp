@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/07/22 15:37:18  knoaman
+ * Use file static instance instead of local static instance
+ *
  * Revision 1.9  2004/01/13 16:17:10  knoaman
  * Fo sanity, use class name to qualify method
  *
@@ -132,6 +135,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 static XMLMutex* sRangeTokMapMutex = 0;
 static XMLRegisterCleanup rangeTokMapRegistryCleanup;
+static XMLRegisterCleanup rangeTokMapInstanceCleanup;
 
 // ---------------------------------------------------------------------------
 //  Local, static functions
@@ -341,7 +345,6 @@ void RangeTokenMap::initializeRegistry() {
 // ---------------------------------------------------------------------------
 RangeTokenMap* RangeTokenMap::instance()
 {
-    static XMLRegisterCleanup rangeTokMapInstanceCleanup;
     if (!fInstance)
     {
         XMLMutexLock lock(&getRangeTokMapMutex());

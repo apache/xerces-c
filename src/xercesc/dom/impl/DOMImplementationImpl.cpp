@@ -106,6 +106,8 @@ static const XMLCh  gLS[] =     // Points to "LS"
 // -----------------------------------------------------------------------
 static XMLMsgLoader  *sMsgLoader4DOM = 0;   // Points to the singleton instance
 static XMLMutex      *sMutex4DOM = 0;
+static XMLRegisterCleanup mutex4DOMCleanup;
+static XMLRegisterCleanup msgLoader4DOMCleanup;
 
 static void reinitMsgLoader4DOM()
 {
@@ -121,7 +123,6 @@ static void reinitMutex4DOM()
 
 static XMLMutex& getMutex4DOM()
 {
-    static XMLRegisterCleanup mutex4DOMCleanup;
     if (!sMutex4DOM)
     {
         XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
@@ -138,7 +139,6 @@ static XMLMutex& getMutex4DOM()
 
 XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM()
 {
-    static XMLRegisterCleanup msgLoader4DOMCleanup;
     if (!sMsgLoader4DOM)
     {
         XMLMutexLock lock(&getMutex4DOM());
@@ -163,6 +163,7 @@ XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM()
 static DOMImplementationImpl    *gDomimp = 0;   // Points to the singleton instance
                                             //  of DOMImplementation that is returnedreturned
                                             //  by any call to getImplementation().
+static XMLRegisterCleanup implementationCleanup;
 
 static void reinitImplementation()
 {
@@ -180,7 +181,6 @@ static void reinitImplementation()
 //
 DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl()
 {
-    static XMLRegisterCleanup implementationCleanup;
     if (!gDomimp)
     {
         XMLMutexLock lock(&getMutex4DOM());

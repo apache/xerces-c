@@ -80,6 +80,8 @@ static RefVectorOf<DOMImplementationSource>* gDOMImplSrcVector = 0;
 //  Global mutex that is used to synchronize access to the vector
 static XMLMutex* gDOMImplSrcVectorMutex = 0;
 
+static XMLRegisterCleanup cleanupDOMImplSrcVector;
+static XMLRegisterCleanup cleanupDOMImplSrcVectorMutex;
 
 // -----------------------------------------------------------------------
 //  Function prototypes for internally used functions.
@@ -110,7 +112,6 @@ RefVectorOf<DOMImplementationSource>* getDOMImplSrcVector()
 {
     // Note: we are not synchronizing on creation since that caller is doing
     //       it (i.e. caller is locking a mutex before calling us)
-    static XMLRegisterCleanup cleanupDOMImplSrcVector;
     if (!gDOMImplSrcVector)
     {
         gDOMImplSrcVector = new RefVectorOf<DOMImplementationSource>(3, false);
@@ -122,7 +123,6 @@ RefVectorOf<DOMImplementationSource>* getDOMImplSrcVector()
 
 XMLMutex& getDOMImplSrcVectorMutex()
 {
-    static XMLRegisterCleanup cleanupDOMImplSrcVectorMutex;
     if (!gDOMImplSrcVectorMutex)
     {
         XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
