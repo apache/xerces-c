@@ -78,70 +78,103 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <dom/DOM_Element.hpp>
+#include <util/RefVectorOf.hpp>
+#include <util/RefHash2KeysTableOf.hpp>
+#include <util/StringPool.hpp>
 
 class SchemaInfo
 {
 public:
+
+    enum ListType {
+        // Redefine is treated as an include
+        IMPORT = 1,
+        INCLUDE = 2
+    };
+
     // -----------------------------------------------------------------------
     //  Constructor/Destructor
     // -----------------------------------------------------------------------
-    SchemaInfo(const bool elemDefaultQualified,
-               const bool attrDefaultQualified,
+    SchemaInfo(const unsigned short fElemAttrDefaultQualified,
                const int blockDefault,
                const int finalDefault,
+               const int targetNSURI,
+               const int currentScope,
+               const int scopeCount,
                const unsigned int namespaceScopeLevel,
                XMLCh* const schemaURL,
-               const DOM_Element& root,
-               SchemaInfo* const nextRoot,
-               SchemaInfo* const prevRoot);
+               const XMLCh* const targetNSURIString,
+               XMLStringPool* const stringPool,
+               const DOM_Element& root);
     ~SchemaInfo();
 
 
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    SchemaInfo*  getNext() const;
-    SchemaInfo*  getPrev() const;
-    XMLCh*       getCurrentSchemaURL() const;
-    DOM_Element  getRoot() const;
-    int          getBlockDefault() const;
-    int          getFinalDefault() const;
-    unsigned int getNamespaceScopeLevel() const;
-    bool         isElementDefaultQualified() const;
-    bool         isAttributeDefaultQualified() const;
+    XMLCh*                   getCurrentSchemaURL() const;
+    const XMLCh* const       getTargetNSURIString() const;
+    DOM_Element              getRoot() const;
+    int                      getBlockDefault() const;
+    int                      getFinalDefault() const;
+    int                      getTargetNSURI() const;
+    int                      getCurrentScope() const;
+    int                      getScopeCount() const;
+    unsigned int             getNamespaceScopeLevel() const;
+    unsigned short           getElemAttrDefaultQualified() const;
+    RefVectorEnumerator<SchemaInfo> getImportingListEnumerator() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setNext(SchemaInfo* const nextInfo);    
+    void setCurrentScope(const int aValue);
+    void setScopeCount(const int aValue);
+    
+	// -----------------------------------------------------------------------
+    //  Access methods
+    // -----------------------------------------------------------------------
+    void addSchemaInfo(SchemaInfo* const toAdd, const ListType aListType);
+    void addRedefineInfo(const XMLCh* const categName, const XMLCh* const typeName,
+                         SchemaInfo* const toAdd);
+    bool containsInfo(const SchemaInfo* const toCheck, const ListType aListType) const;
+    SchemaInfo* getImportInfo(const unsigned int namespaceURI) const;
+    SchemaInfo* getRedefInfo(const XMLCh* const categName,
+                             const XMLCh* const typeName);
+    DOM_Element getTopLevelComponent(const XMLCh* const compCategory,
+                                     const XMLCh* const name);
+    DOM_Element getTopLevelComponent(const XMLCh* const compCategory,
+                                     const XMLCh* const name,
+                                     SchemaInfo** enclosingSchema);
+    void updateImportingInfo(SchemaInfo* const importingInfo);
+    bool circularImportExist(const unsigned int nameSpaceURI);
 
 private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool               fElementDefaultQualified;
-    bool               fAttributeDefaultQualified;
+    unsigned short     fElemAttrDefaultQualified;
     int                fBlockDefault;
     int                fFinalDefault;
+    int                fTargetNSURI;
+    int                fCurrentScope;
+    int                fScopeCount;
     unsigned int       fNamespaceScopeLevel;
     XMLCh*             fCurrentSchemaURL;
+    const XMLCh*       fTargetNSURIString;
+    XMLStringPool*     fStringPool;
     DOM_Element        fSchemaRootElement;
-    SchemaInfo*        fNext;
-    SchemaInfo*        fPrev;
+    RefVectorOf<SchemaInfo>* fIncludeList;
+    RefVectorOf<SchemaInfo>* fImportList;
+    RefVectorOf<SchemaInfo>* fImportingList;
+    RefHash2KeysTableOf<SchemaInfo>* fRedefineList;
 };
 
 // ---------------------------------------------------------------------------
 //  SchemaInfo: Getter methods
 // ---------------------------------------------------------------------------
-inline bool SchemaInfo::isAttributeDefaultQualified() const {
+inline unsigned short SchemaInfo::getElemAttrDefaultQualified() const {
 
-    return fAttributeDefaultQualified;
-}
-
-
-inline bool SchemaInfo::isElementDefaultQualified() const {
-
-    return fElementDefaultQualified;
+    return fElemAttrDefaultQualified;
 }
 
 inline int SchemaInfo::getBlockDefault() const {
@@ -163,28 +196,137 @@ inline XMLCh* SchemaInfo::getCurrentSchemaURL() const {
     return fCurrentSchemaURL;
 }
 
+inline const XMLCh* const SchemaInfo::getTargetNSURIString() const {
+
+    return fTargetNSURIString;
+}
+
 inline DOM_Element SchemaInfo::getRoot() const {
 
     return fSchemaRootElement;
 }
 
-inline SchemaInfo* SchemaInfo::getNext() const {
+inline int SchemaInfo::getTargetNSURI() const {
 
-    return fNext;
+    return fTargetNSURI;
 }
 
-inline SchemaInfo* SchemaInfo::getPrev() const {
+inline int SchemaInfo::getCurrentScope() const {
 
-    return fPrev;
+    return fCurrentScope;
 }
 
+inline int SchemaInfo::getScopeCount() const {
+
+    return fScopeCount;
+}
+
+inline RefVectorEnumerator<SchemaInfo>
+SchemaInfo::getImportingListEnumerator() const {
+
+    return RefVectorEnumerator<SchemaInfo>(fImportingList);
+}
 
 // ---------------------------------------------------------------------------
-//  SchemaInfo: Setter methods
+//  Setter methods
 // ---------------------------------------------------------------------------
-inline void SchemaInfo::setNext(SchemaInfo* const nextInfo) {
+inline void SchemaInfo::setCurrentScope(const int aValue) {
 
-    fNext = nextInfo;
+    fCurrentScope = aValue;
+}
+
+inline void SchemaInfo::setScopeCount(const int aValue) {
+
+    fScopeCount = aValue;
+}
+
+// ---------------------------------------------------------------------------
+//  SchemaInfo: Access methods
+// ---------------------------------------------------------------------------
+inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
+                                      const ListType aListType) {
+
+    if (aListType == IMPORT) {
+
+        if (!fImportList)
+            fImportList = new RefVectorOf<SchemaInfo>(8, false);
+
+        if (!fImportList->containsElement(toAdd)) {
+		    fImportList->addElement(toAdd);
+            toAdd->updateImportingInfo(this);
+        }
+    }
+    else {
+
+        if (!fIncludeList)
+            fIncludeList = new RefVectorOf<SchemaInfo>(8, false);
+
+        if (!fIncludeList->containsElement(toAdd))
+		    fIncludeList->addElement(toAdd);
+    }
+}
+
+inline void SchemaInfo::addRedefineInfo(const XMLCh* const categName,
+                                        const XMLCh* const typeName,
+                                        SchemaInfo* const toAdd) {
+
+    if (!fRedefineList) {
+        fRedefineList = new RefHash2KeysTableOf<SchemaInfo>(8, false);
+    }
+
+    fRedefineList->put((void*) categName, fStringPool->addOrFind(typeName), toAdd);
+}
+
+inline SchemaInfo* SchemaInfo::getImportInfo(const unsigned int namespaceURI) const {
+
+    unsigned int importSize = (fImportList) ? fImportList->size() : 0;
+    SchemaInfo* currInfo = 0;
+
+    for (unsigned int i=0; i < importSize; i++) {
+
+        currInfo = fImportList->elementAt(i);
+
+        if (currInfo->getTargetNSURI() == (int) namespaceURI)
+            break;
+    }
+
+    return currInfo;
+}
+
+inline SchemaInfo* SchemaInfo::getRedefInfo(const XMLCh* const categName,
+                                            const XMLCh* const typeName) {
+
+    if (fRedefineList) {
+        return fRedefineList->get(categName, fStringPool->addOrFind(typeName));
+    }
+
+    return 0;
+}
+
+inline bool SchemaInfo::containsInfo(const SchemaInfo* const toCheck,
+                                     const ListType aListType) const {
+
+    if ((aListType == INCLUDE) && fIncludeList) {
+        return fIncludeList->containsElement(toCheck);        
+    }
+    else if ((aListType == IMPORT) && fImportList) {
+        return fImportList->containsElement(toCheck);
+    }
+
+    return false;
+}
+
+inline bool SchemaInfo::circularImportExist(const unsigned int namespaceURI) {
+
+    unsigned int importSize = fImportingList->size();
+
+    for (unsigned int i=0; i < importSize; i++) {
+        if (fImportingList->elementAt(i)->getTargetNSURI() == (int) namespaceURI) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 #endif

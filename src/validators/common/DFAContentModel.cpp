@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2001/10/04 15:08:55  knoaman
+ * Add support for circular import.
+ *
  * Revision 1.24  2001/09/14 14:50:22  tng
  * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
  *
@@ -1151,8 +1154,12 @@ void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pG
 
     // Rename the URI back
     for (i = 0; i < fElemMapSize; i++) {
+
         unsigned int orgURIIndex = fElemMap[i]->getURI();
-        fElemMap[i]->setURI(pContentSpecOrgURI[orgURIIndex]);
+
+        if (orgURIIndex != XMLContentModel::gEOCFakeId) {
+            fElemMap[i]->setURI(pContentSpecOrgURI[orgURIIndex]);
+        }
     }
 
     // Unique Particle Attribution

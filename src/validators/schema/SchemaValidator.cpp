@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/10/04 15:08:56  knoaman
+ * Add support for circular import.
+ *
  * Revision 1.18  2001/09/10 14:06:22  tng
  * Schema: AnyAttribute support in Scanner and Validator.
  *
@@ -468,7 +471,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
             else {
                 // retrieve complexType registry and DatatypeValidator registry
                 RefHashTableOf<ComplexTypeInfo>* complexTypeRegistry = sGrammar->getComplexTypeRegistry();
-                DatatypeValidatorFactory* dataTypeReg = sGrammar->getDatatypeRegistry();
+                DatatypeValidatorFactory* dataTypeReg = fGrammarResolver->getDatatypeRegistry();
 
                 if (!complexTypeRegistry || !dataTypeReg)
                     emitError(XMLValid::BadXsiType, fXsiType->getRawName());

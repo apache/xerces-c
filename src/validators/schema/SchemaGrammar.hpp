@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/04 15:08:56  knoaman
+ * Add support for circular import.
+ *
  * Revision 1.10  2001/09/14 14:50:22  tng
  * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
  *
@@ -123,7 +126,7 @@ class XercesAttGroupInfo;
 // ---------------------------------------------------------------------------
 //  typedef declaration
 // ---------------------------------------------------------------------------
-typedef RefVectorOf<SchemaElementDecl> ElemVector;
+typedef ValueVectorOf<SchemaElementDecl*> ElemVector;
 
 
 class VALIDATORS_EXPORT SchemaGrammar : public Grammar

@@ -183,11 +183,10 @@ private:
     // -----------------------------------------------------------------------
     void faultInAttDefList() const;
     XMLContentModel* createChildModel(ContentSpecNode* specNode, const bool isMixed);
-    XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* specNode = 0,
-                                      Janitor<ContentSpecNode>* const janSpecNode = 0);
+    XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* const specNode = 0);
     XMLCh* formatContentModel () const ;
-    ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const int minOccurs, const int maxOccurs, const bool toAdoptSpecNode = true);
-    ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode = true, const bool checkUPA = false);
+    ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const int minOccurs, const int maxOccurs);
+    ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, const bool checkUPA = false);
     void resizeContentSpecOrgURI();
 
     // -----------------------------------------------------------------------
@@ -215,6 +214,7 @@ private:
     unsigned int*                      fContentSpecOrgURI;
     unsigned int                       fUniqueURI;
     unsigned int                       fContentSpecOrgURISize;
+    RefVectorOf<ContentSpecNode>*      fSpecNodesToDelete;
 };
 
 // ---------------------------------------------------------------------------

@@ -76,6 +76,7 @@
 #include <util/ValueVectorOf.hpp>
 #include <util/RefHash2KeysTableOf.hpp>
 #include <validators/schema/SchemaGrammar.hpp>
+#include <validators/schema/SchemaInfo.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -92,7 +93,6 @@ class XMLAttDef;
 class ContentSpecNode;
 class NamespaceScope;
 class SchemaAttDef;
-class SchemaInfo;
 class InputSource;
 class ErrorHandler;
 class GeneralAttributeCheck;
@@ -117,15 +117,9 @@ public:
         , const XMLCh* const                 schemaURL
         , EntityResolver* const              entityResolver
         , ErrorHandler* const                errorHandler
-        , ValueVectorOf<unsigned int>* const importLocations = 0
     );
 
     ~TraverseSchema();
-
-    // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setCurrentSchemaURL(const XMLCh* const urlStr);
 
 private:
     // -----------------------------------------------------------------------
@@ -135,8 +129,9 @@ private:
     void operator=(const TraverseSchema&);
 
     // -----------------------------------------------------------------------
-    //  CleanUp methods
+    //  Init/CleanUp methods
     // -----------------------------------------------------------------------
+    void init();
     void cleanUp();
 
     // -----------------------------------------------------------------------
@@ -145,8 +140,9 @@ private:
     /**
       * Traverse the Schema DOM tree
       */
-    void                doTraverseSchema();
-    void                traverseSchemaHeader();
+    void                doTraverseSchema(const DOM_Element& schemaRoot,
+                                         const XMLCh* const schemaURL);
+    void                traverseSchemaHeader(const DOM_Element& schemaRoot);
     void                traverseAnnotationDecl(const DOM_Element& childElem);
     void                traverseInclude(const DOM_Element& childElem);
     void                traverseImport(const DOM_Element& childElem);
@@ -176,20 +172,17 @@ private:
                                         const int typeNameIndex,
                                         const int finalSet,
                                         int baseRefContext);
-    QName*              traverseElementDecl(const DOM_Element& childElem);
+    QName*              traverseElementDecl(const DOM_Element& childElem, bool& toDelete);
     XMLCh*              traverseNotationDecl(const DOM_Element& childElem);
     ContentSpecNode*    traverseChoiceSequence(const DOM_Element& elemDecl,
-                                               const int modelGroupType,
-                                               bool& toAdoptSpecNode);
+                                               const int modelGroupType);
     ContentSpecNode*    traverseAny(const DOM_Element& anyDecl);
     ContentSpecNode*    traverseAll(const DOM_Element& allElem);
     XercesGroupInfo*    traverseGroupDecl(const DOM_Element& childElem);
-    XercesGroupInfo*    traverseGroupDeclNS(const XMLCh* const uriStr,
-                                            const XMLCh* const groupName);
     XercesAttGroupInfo* traverseAttributeGroupDecl(const DOM_Element& elem,
                                                     ComplexTypeInfo* const typeInfo);
     XercesAttGroupInfo* traverseAttributeGroupDeclNS(const XMLCh* const uriStr,
-                                                      const XMLCh* const attGroupName);
+                                                     const XMLCh* const name);
     SchemaAttDef*       traverseAnyAttribute(const DOM_Element& elem);
 
     // -----------------------------------------------------------------------
@@ -209,7 +202,7 @@ private:
     /**
       * Retrived the Namespace mapping from the schema element
       */
-    void retrieveNamespaceMapping();
+    void retrieveNamespaceMapping(const DOM_Element& schemaRoot);
 
     /**
       * Loop through the children, and traverse the corresponding schema type
@@ -271,23 +264,6 @@ private:
                                        const XMLCh* const baseTypeStr,
                                        const int baseRefContext);
 
-    /**
-      * Return a compenent defined as a top level in a schema grammar
-      *
-      * In redefine we've not only got to look at the space of the thing we
-      * are redefining but at the original schema too. The idea is to start
-      * from the top, then go down through our list of schemas until we find
-      * what we want. This should not often be necessary, because we've
-      * processed all redefined schemas, but there are conditions in which not
-      * all elements so redefined may have been promoted to the topmost level.
-      */
-    DOM_Element getTopLevelComponentByName(const XMLCh* const compCategory,
-                                           const XMLCh* const name);
-
-    DOM_Element getTopLevelComponentByName(const XMLCh* const compCategory,
-                                           const XMLCh* const name,
-                                           SchemaInfo* const currentInfo);
-
     const XMLCh* resolvePrefixToURI(const XMLCh* const prefix);
 
     /**
@@ -315,7 +291,8 @@ private:
       * Process a 'ref' of an Element declaration
       */
     QName* processElementDeclRef(const DOM_Element& elem,
-                                const XMLCh* const refName);
+                                 const XMLCh* const refName,
+                                 bool& toDelete);
 
     /**
       * Process a 'ref' of an Attribute declaration
@@ -384,13 +361,6 @@ private:
       */
     SchemaElementDecl* getSubstituteGroupElemDecl(const XMLCh* const name,
                                                   bool& noErrorDetected);
-
-    /**
-      * Return a Schema element declared in another schema
-      */
-    SchemaElementDecl* getElementDeclFromNS(const XMLCh* const nameUri,
-                                            const XMLCh* const localPart);
-
 
     /**
       * Check validity constraint of a substitutionGroup attribute in
@@ -472,12 +442,7 @@ private:
     /**
       * Generate a name for an anonymous type
       */
-    const XMLCh* genAnonTypeName(const XMLCh* const prefix,
-                                 int& anonCount);
-
-    int addAttributeDeclFromAnotherSchema(const XMLCh* const name,
-                                          const XMLCh* const uri,
-                                          ComplexTypeInfo* const typeInfo);
+    const XMLCh* genAnonTypeName(const XMLCh* const prefix);
 
     void defaultComplexTypeInfo(ComplexTypeInfo* const typeInfo);
 
@@ -487,7 +452,8 @@ private:
       */
     InputSource* resolveSchemaLocation(const XMLCh* const loc);
 
-    void restoreSchemaInfo(SchemaInfo* const toRestore);
+    void restoreSchemaInfo(SchemaInfo* const toRestore,
+                           SchemaInfo::ListType const aListType = SchemaInfo::INCLUDE);
     int  resetCurrentTypeNameStack(const int);
 
     /**
@@ -650,6 +616,12 @@ private:
       */
     void preprocessRedefineInclude(SchemaInfo* const currSchemaInfo);
 
+    /**
+      * Update the list of valid substitution groups in the case of circular
+      * import.
+      */
+    void updateCircularSubstitutionList(SchemaInfo* const aSchemaInfo);
+
     // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------
@@ -665,6 +637,12 @@ private:
     {
         NoException = 0,
         InvalidComplexTypeInfo = 1
+    };
+
+    enum
+    {
+        Elem_Def_Qualified = 1,
+        Attr_Def_Qualified = 2
     };
 
     // Flags indicate any special restrictions on minOccurs and maxOccurs
@@ -684,21 +662,16 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool                                    fElementDefaultQualified;
-    bool                                    fAttributeDefaultQualified;
-    bool                                    fAdoptImportLocations;
+    bool                                    fFullConstraintChecking;
+    unsigned short                          fElemAttrDefaultQualified;
     int                                     fTargetNSURI;
     int                                     fEmptyNamespaceURI;
     int                                     fCurrentScope;
-    int                                     fSimpleTypeAnonCount;
-    int                                     fComplexTypeAnonCount;
     int                                     fFinalDefault;
     int                                     fBlockDefault;
     int                                     fScopeCount;
-    unsigned int                            fCurrentNamespaceLevel;
-    DOM_Element                             fSchemaRootElement;
-    XMLCh*                                  fTargetNSURIString;
-    XMLCh*                                  fCurrentSchemaURL;
+    unsigned int                            fAnonXSTypeCount;
+    const XMLCh*                            fTargetNSURIString;
     DatatypeValidatorFactory*               fDatatypeRegistry;
     GrammarResolver*                        fGrammarResolver;
     SchemaGrammar*                          fSchemaGrammar;
@@ -714,13 +687,11 @@ private:
     RefHashTableOf<ComplexTypeInfo>*        fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*        fGroupRegistry;
     RefHashTableOf<XercesAttGroupInfo>*     fAttGroupRegistry;
-    RefHashTableOf<SchemaInfo>*             fIncludeLocations;
-    SchemaInfo*                             fSchemaInfoRoot;
-    SchemaInfo*                             fCurrentSchemaInfo;
+    RefHashTableOf<SchemaInfo>*             fSchemaInfoList;
+    SchemaInfo*                             fSchemaInfo;
     XercesGroupInfo*                        fCurrentGroupInfo;
     XercesAttGroupInfo*                     fCurrentAttGroupInfo;
     ComplexTypeInfo*                        fCurrentComplexType;
-    ValueVectorOf<unsigned int>*            fImportLocations;
     ValueVectorOf<unsigned int>*            fCurrentTypeNameStack;
     ValueVectorOf<unsigned int>*            fCurrentGroupStack;
     GeneralAttributeCheck*                  fAttributeCheck;
@@ -731,21 +702,13 @@ private:
     RefHash2KeysTableOf<XMLCh>*             fRedefineComponents;
     RefHash2KeysTableOf<SchemaElementDecl>* fSubstitutionGroups;
     RefHash2KeysTableOf<ElemVector>*        fValidSubstitutionGroups;
-    RefVectorOf<SchemaElementDecl>*         fRefElements;
+    RefHash2KeysTableOf<ElemVector>*        fGrammarSubstitutionGroups;
+    RefVectorOf<QName>*                     fRefElements;
     ValueVectorOf<int>*                     fRefElemScope;
 
     friend class GeneralAttributeCheck;
 };
 
-
-// ---------------------------------------------------------------------------
-//  TraverseSchema: Setter methods
-// ---------------------------------------------------------------------------
-inline void TraverseSchema::setCurrentSchemaURL(const XMLCh* const urlStr) {
-
-    delete [] fCurrentSchemaURL;
-    fCurrentSchemaURL = XMLString::replicate(urlStr);
-}
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Helper methods
@@ -857,12 +820,11 @@ inline bool TraverseSchema::isAttrOrAttrGroup(const DOM_Element& elem) {
     return false;
 }
 
-inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix,
-                                                    int& anonCount) {
+inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix) {
 
     XMLCh anonCountStr[16]; // a count of 15 digits should be enough
 
-    XMLString::binToText(anonCount++, anonCountStr, 15, 10);
+    XMLString::binToText(fAnonXSTypeCount++, anonCountStr, 15, 10);
     fBuffer.set(prefix);
     fBuffer.append(anonCountStr);
 

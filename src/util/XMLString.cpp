@@ -727,7 +727,7 @@ bool XMLString::isValidQName(const XMLCh* const name)
     if (colonPos != -1)
     {
         XMLCh *prefix = new XMLCh[colonPos+1];
-        XMLString::subString(prefix, name, 0, colonPos-1);
+        XMLString::subString(prefix, name, 0, colonPos);
         ArrayJanitor<XMLCh> janName(prefix);
         if (XMLString::isValidNCName(prefix)==false)
             return false;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/04 15:08:56  knoaman
+ * Add support for circular import.
+ *
  * Revision 1.6  2001/08/21 15:57:51  tng
  * Schema: Add isAllowedByWildcard.  Help from James Murphy.
  *
@@ -242,7 +245,7 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(QName* const element, unsi
     if (!theValidSubstitutionGroups)
         return false;
 
-    RefVectorOf<SchemaElementDecl>* subsElements = theValidSubstitutionGroups->get(element->getLocalPart(), uriId);
+    ValueVectorOf<SchemaElementDecl*>* subsElements = theValidSubstitutionGroups->get(element->getLocalPart(), uriId);
 
     if (!subsElements)
         return false;

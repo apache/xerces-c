@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/10/04 15:08:56  knoaman
+ * Add support for circular import.
+ *
  * Revision 1.18  2001/09/05 20:49:11  knoaman
  * Fix for complexTypes with mixed content model.
  *
@@ -136,6 +139,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fFinalSet(0)
     , fScopeDefined(Grammar::TOP_LEVEL_SCOPE)
     , fElementId(XMLElementDecl::fgInvalidElemId)
+    , fContentType(SchemaElementDecl::Empty)
     , fTypeName(0)
     , fBaseDatatypeValidator(0)
     , fDatatypeValidator(0)
@@ -150,6 +154,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fContentSpecOrgURI(0)
     , fUniqueURI(0)
     , fContentSpecOrgURISize(16)
+    , fSpecNodesToDelete(0)
 {
 
 }
@@ -167,6 +172,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fAttDefs;
     delete fAttList;
     delete fElements;
+    delete fSpecNodesToDelete;
 
     delete fContentModel;
     delete [] fFormattedModel;
@@ -296,13 +302,14 @@ void ComplexTypeInfo::checkUniqueParticleAttribution (GrammarResolver*  const pG
 {
     if (fContentSpec) {
         ContentSpecNode* specNode = new ContentSpecNode(*fContentSpec);
-        Janitor<ContentSpecNode> janSpecNode(0);
-        XMLContentModel* cm = makeContentModel(true, specNode, &janSpecNode);
+        XMLContentModel* cm = makeContentModel(true, specNode);
 
         if (cm) {
             cm->checkUniqueParticleAttribution(pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
             delete cm;
         }
+
+        fSpecNodesToDelete->removeAllElements();
     }
 }
 
@@ -347,27 +354,29 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
     return newValue;
 }
 
-XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* specNode,
-                                                   Janitor<ContentSpecNode>* const janSpecNode)
+XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* const specNode)
 {
-    // expand the content spec first
-    fContentSpecOrgURI = new unsigned int[fContentSpecOrgURISize];
-    if (specNode) {
-        specNode = convertContentSpecTree(specNode, true, checkUPA);
+    if ((specNode || fContentSpec) && !fSpecNodesToDelete) {
+        fSpecNodesToDelete = new RefVectorOf<ContentSpecNode>(8);
+    }
 
-        if (janSpecNode) {
-            janSpecNode->reset(specNode);
-        }
+    // expand the content spec first   
+    ContentSpecNode* aSpecNode = specNode;
+    if (aSpecNode) {
+
+        fContentSpecOrgURI = new unsigned int[fContentSpecOrgURISize];
+        aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
+        fSpecNodesToDelete->addElement(aSpecNode);
     }
     else {
-        specNode = convertContentSpecTree(fContentSpec, fAdoptContentSpec, checkUPA);
-        if (specNode != fContentSpec) {
-            if (specNode == fContentSpec->getFirst() && !fAdoptContentSpec)
+        aSpecNode = convertContentSpecTree(fContentSpec, checkUPA);
+        if (aSpecNode != fContentSpec) {
+            if (aSpecNode == fContentSpec->getFirst() && !fAdoptContentSpec)
                 fAdoptContentSpec = false;
             else
                 fAdoptContentSpec = true;
 
-            fContentSpec = specNode;
+            fContentSpec = aSpecNode;
         }
     }
 
@@ -382,11 +391,11 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new MixedContentModel(false, specNode);
+        cmRet = new MixedContentModel(false, aSpecNode);
     }
     else if (fContentType == SchemaElementDecl::Mixed_Complex) {
 
-            cmRet = createChildModel(specNode, true);
+            cmRet = createChildModel(aSpecNode, true);
     }
     else if (fContentType == SchemaElementDecl::Children)
     {
@@ -397,12 +406,13 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-         cmRet = createChildModel(specNode, false);
+         cmRet = createChildModel(aSpecNode, false);
     }
      else
     {
         ThrowXML(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren);
     }
+
     return cmRet;
 }
 
@@ -515,10 +525,14 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     return new DFAContentModel(false, specNode, isMixed);
 }
 
-ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode, const bool checkUPA) {
+ContentSpecNode*
+ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
+                                        const bool checkUPA) {
 
     if (!curNode)
         return 0;
+
+    const ContentSpecNode::NodeTypes curType = curNode->getType();
 
     // When checking Unique Particle Attribution, rename leaf elements
     if (checkUPA) {
@@ -532,7 +546,6 @@ ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const 
     // Get the spec type of the passed node
     int minOccurs = curNode->getMinOccurs();
     int maxOccurs = curNode->getMaxOccurs();
-    const ContentSpecNode::NodeTypes curType = curNode->getType();
     ContentSpecNode* retNode = curNode;
 
     if ((curType & 0x0f) == ContentSpecNode::Any
@@ -540,60 +553,42 @@ ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const 
         || (curType & 0x0f) == ContentSpecNode::Any_NS
         || curType == ContentSpecNode::Leaf)
     {
-        retNode =  expandContentModel(curNode, minOccurs, maxOccurs, toAdoptSpecNode);
+        retNode =  expandContentModel(curNode, minOccurs, maxOccurs);
     }
     else if ((curType == ContentSpecNode::Choice)
         ||   (curType == ContentSpecNode::All)
         ||   (curType == ContentSpecNode::Sequence))
     {
-        bool toAdoptLeft = toAdoptSpecNode? curNode->isFirstAdopted() : false;
-        ContentSpecNode* leftNode = convertContentSpecTree(curNode->getFirst(), toAdoptLeft, checkUPA);
+        ContentSpecNode* childNode = curNode->getFirst();
+        ContentSpecNode* leftNode = convertContentSpecTree(childNode, checkUPA);
         ContentSpecNode* rightNode = curNode->getSecond();
-
-        if (leftNode != curNode->getFirst()) {
-            if (leftNode == curNode->getFirst()->getFirst() && !curNode->isFirstAdopted())
-                toAdoptLeft = false;
-            else
-                toAdoptLeft = true;
-
-            curNode->setAdoptFirst(false);
-            curNode->setFirst(leftNode);
-
-            if (rightNode) {
-                curNode->setAdoptFirst(toAdoptLeft);
-            }
-        }
 
         if (!rightNode) {
 
-            if (toAdoptSpecNode) {
-                retNode = expandContentModel(leftNode, minOccurs, maxOccurs, toAdoptLeft);
-                curNode->setAdoptFirst(false);				
-                delete curNode;
-            }
-            else {
-                retNode = expandContentModel(leftNode, minOccurs, maxOccurs, false);
-            }
-
+            retNode = expandContentModel(leftNode, minOccurs, maxOccurs);
+            curNode->setAdoptFirst(false);
+            delete curNode;
             return retNode;
         }
 
-        bool toAdoptRight = toAdoptSpecNode? curNode->isSecondAdopted() : false;
-        rightNode =  convertContentSpecTree(curNode->getSecond(), toAdoptRight, checkUPA);
+        if (leftNode != childNode) {
 
-        if (rightNode != curNode->getSecond()) {
+            curNode->setAdoptFirst(false);
+            curNode->setFirst(leftNode);
+            curNode->setAdoptFirst(true);
+        }
 
-             if (rightNode == curNode->getSecond()->getFirst() && !curNode->isSecondAdopted())
-                toAdoptRight = false;
-             else
-                toAdoptRight = true;
+        childNode = rightNode;
+        rightNode =  convertContentSpecTree(childNode, checkUPA);
+
+        if (rightNode != childNode) {
 
             curNode->setAdoptSecond(false);
             curNode->setSecond(rightNode);
-            curNode->setAdoptSecond(toAdoptRight);
+            curNode->setAdoptSecond(true);
         }
 
-        retNode =  expandContentModel(curNode, minOccurs, maxOccurs, toAdoptSpecNode);
+        retNode =  expandContentModel(curNode, minOccurs, maxOccurs);
     }
 
     return retNode;
@@ -601,8 +596,7 @@ ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const 
 
 ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const specNode,
                                                      const int minOccurs,
-                                                     const int maxOccurs,
-                                                     const bool toAdoptSpecNode)
+                                                     const int maxOccurs)
 {
     if (!specNode) {
         return 0;
@@ -615,21 +609,17 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
     }
     else if (minOccurs == 0 && maxOccurs == 1) {
 
-        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrOne,
-                                      retNode, 0, toAdoptSpecNode);
+        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrOne, retNode, 0);
     }
     else if (minOccurs == 0 && maxOccurs == -1) {
-        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrMore,
-                                      retNode, 0, toAdoptSpecNode);
+        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrMore, retNode, 0);
     }
     else if (minOccurs == 1 && maxOccurs == -1) {
-        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore,
-                                      retNode, 0, toAdoptSpecNode);
+        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
     }
     else if (maxOccurs == -1) {
 
-        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore,
-                                      retNode, 0, toAdoptSpecNode);
+        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
 
         for (int i=0; i < (int)(minOccurs-1); i++) {
             retNode = new ContentSpecNode(ContentSpecNode::Sequence,
@@ -641,7 +631,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         if (minOccurs == 0) {
 
             ContentSpecNode* optional =
-                new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, toAdoptSpecNode);
+                new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0);
 
             retNode = optional;
 
@@ -652,19 +642,15 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         }
         else {
 
-            bool isRetAdopted = toAdoptSpecNode;
-
             if (minOccurs > 1) {
 
                 retNode = new ContentSpecNode(ContentSpecNode::Sequence,
-                                              retNode, saveNode, toAdoptSpecNode, false);
+                                              retNode, saveNode, true, false);
 
                 for (int i=1; i < (int)(minOccurs-1); i++) {
                     retNode = new ContentSpecNode(ContentSpecNode::Sequence,
                                                   retNode, saveNode, true, false);
                 }
-
-                isRetAdopted = true;
             }
 
             int counter = maxOccurs-minOccurs;
@@ -673,8 +659,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
 
                 ContentSpecNode* optional = new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
 
-                retNode = new ContentSpecNode(ContentSpecNode::Sequence,
-					                          retNode, optional, isRetAdopted, true);
+                retNode = new ContentSpecNode(ContentSpecNode::Sequence, retNode, optional);
 
                 for (int j=1; j < counter; j++) {
 

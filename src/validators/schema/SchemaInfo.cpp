@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/10/04 15:08:56  knoaman
+ * Add support for circular import.
+ *
  * Revision 1.4  2001/07/31 15:26:54  knoaman
  * Added support for <attributeGroup>.
  *
@@ -74,41 +77,160 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/schema/SchemaInfo.hpp>
+#include <validators/schema/XUtil.hpp>
+#include <validators/schema/SchemaSymbols.hpp>
 #include <util/XMLString.hpp>
-
 
 // ---------------------------------------------------------------------------
 //  SchemaInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaInfo::SchemaInfo(const bool elemDefaultQualified,
-                       const bool attrDefaultQualified,
+SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const int blockDefault,
                        const int finalDefault,
+                       const int targetNSURI,
+                       const int currentScope,
+                       const int scopeCount,
                        const unsigned int namespaceScopeLevel,
                        XMLCh* const schemaURL,
-                       const DOM_Element& root,
-                       SchemaInfo* const nextRoot,
-                       SchemaInfo* const prevRoot)
-    : fElementDefaultQualified(elemDefaultQualified)
-    , fAttributeDefaultQualified(attrDefaultQualified)
+                       const XMLCh* const targetNSURIString,
+                       XMLStringPool* const stringPool,
+                       const DOM_Element& root)
+    : fElemAttrDefaultQualified(elemAttrDefaultQualified)
     , fBlockDefault(blockDefault)
     , fFinalDefault(finalDefault)
+    , fTargetNSURI(targetNSURI)
+    , fCurrentScope(currentScope)
+    , fScopeCount(scopeCount)
     , fNamespaceScopeLevel(namespaceScopeLevel)
-    , fCurrentSchemaURL(XMLString::replicate(schemaURL))
+    , fCurrentSchemaURL(schemaURL)
+    , fTargetNSURIString(targetNSURIString)
+    , fStringPool(stringPool)
     , fSchemaRootElement(root)
-    , fNext(nextRoot)
-    , fPrev(prevRoot)
+    , fIncludeList(0)
+    , fImportList(0)
+    , fImportingList(0)
+    , fRedefineList(0)
 {
+    fImportingList = new RefVectorOf<SchemaInfo>(4, false);
 }
 
 
 SchemaInfo::~SchemaInfo()
 {
     delete [] fCurrentSchemaURL;
-    delete fNext;
-    fNext = 0;
+    delete fImportList;
+    delete fIncludeList;
+    delete fImportingList;
+
+    fImportList = fIncludeList = fImportingList = 0;
 }
 
+// ---------------------------------------------------------------------------
+//  SchemaInfo:
+// ---------------------------------------------------------------------------
+DOM_Element
+SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
+                                 const XMLCh* const name,
+                                 SchemaInfo** enclosingSchema) {
+
+    SchemaInfo* currentInfo = this;
+    DOM_Element child = getTopLevelComponent(compCategory, name);
+
+    if (child == 0) {
+
+        unsigned int listSize = (fIncludeList) ? fIncludeList->size() : 0;
+
+        for (unsigned int i=0; i < listSize; i++) {
+
+            currentInfo = fIncludeList->elementAt(i);
+
+            child = currentInfo->getTopLevelComponent(compCategory, name);
+
+            if (child != 0) {
+
+                *enclosingSchema = currentInfo;
+                break;
+            }
+        }
+
+        if (child == 0 && fRedefineList) { // try redefine list
+
+			currentInfo = fRedefineList->get(compCategory, fStringPool->addOrFind(name));
+
+            if (currentInfo) {
+                child = currentInfo->getTopLevelComponent(compCategory, name);
+
+                if (child != 0) {
+                    *enclosingSchema = currentInfo;
+                }
+            }
+        }
+    }
+
+    return child;
+}
+
+
+DOM_Element
+SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
+                                 const XMLCh* const name) {
+
+    DOM_Element child = XUtil::getFirstChildElement(fSchemaRootElement);
+
+    while (child != 0) {
+
+        if (child.getLocalName().equals(compCategory)) {
+
+            if (child.getAttribute(SchemaSymbols::fgATT_NAME).equals(name)) {
+                break;
+            }
+        }
+        else if (child.getLocalName().equals(SchemaSymbols::fgELT_REDEFINE)) { // if redefine
+
+            DOM_Element redefineChild = XUtil::getFirstChildElement(child);
+
+            while (redefineChild != 0) {
+
+                if (redefineChild.getLocalName().equals(compCategory)) {
+
+                    if (redefineChild.getAttribute(SchemaSymbols::fgATT_NAME).equals(name)) {
+                        break;
+                    }
+                }
+
+                redefineChild = XUtil::getNextSiblingElement(redefineChild);
+            }
+
+            if (redefineChild != 0) {
+
+                child = redefineChild;
+                break;
+            }
+        }
+
+        child = XUtil::getNextSiblingElement(child);
+    }
+
+    return child;
+}
+
+void SchemaInfo::updateImportingInfo(SchemaInfo* const importingInfo) {
+
+    if (!fImportingList->containsElement(importingInfo)) {
+        fImportingList->addElement(importingInfo);
+    }
+
+    unsigned int listSize = importingInfo->fImportingList->size();
+
+    for (unsigned int i=0; i < listSize; i++) {
+
+        SchemaInfo* tmpInfo = importingInfo->fImportingList->elementAt(i);
+
+        if (tmpInfo != this && !fImportingList->containsElement(tmpInfo)) {
+            fImportingList->addElement(tmpInfo);
+        }
+    }
+}
 
 /**
   * End of file SchemaInfo.cpp
