@@ -56,6 +56,10 @@
 
 /**
 * $Log$
+* Revision 1.4  2000/01/24 23:35:18  rahulj
+* Fixed the compiler warning generated under Solaris.
+* Matched the api signature in the base class NodeImpl.hpp.
+*
 * Revision 1.3  2000/01/08 00:09:28  andyh
 * Correcf failures in DOMTest with entity references and read-only nodes.
 * Correct reference counting problem NamedNodeMap.
@@ -276,7 +280,7 @@ bool EntityReferenceImpl::isEntityReference()
 *
 * @return org.w3c.dom.NodeList
 */
-NodeImpl *EntityReferenceImpl::item(int index) {
+NodeImpl *EntityReferenceImpl::item(unsigned long  index) {
     synchronize();
     return NodeImpl::item(index);
 }

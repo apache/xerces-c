@@ -59,6 +59,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/24 23:35:18  rahulj
+ * Fixed the compiler warning generated under Solaris.
+ * Matched the api signature in the base class NodeImpl.hpp.
+ *
  * Revision 1.2  1999/12/21 07:47:07  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -102,7 +106,7 @@ public:
     virtual int getLength();
     virtual bool hasChildNodes();
     virtual bool isEntityReference();
-    virtual NodeImpl *item(int index);
+    virtual NodeImpl *item(unsigned long index);
     virtual void setNodeValue(const DOMString &);
     virtual void setReadOnly(bool readOnly,bool deep);
     virtual void synchronize();
