@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/12/04 01:57:09  knoaman
+ * Scanner re-organization.
+ *
  * Revision 1.14  2002/11/04 14:57:03  tng
  * C++ Namespace Support.
  *
@@ -199,6 +202,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class ContentHandler;
 class LexicalHandler;
 class DeclHandler;
+class GrammarResolver;
 
 /**
   * This class implements the SAX2 'XMLReader' interface and should be
@@ -1643,6 +1647,12 @@ private :
     void operator=(const SAX2XMLReaderImpl&);
 
     // -----------------------------------------------------------------------
+    //  Initialize/Cleanup methods
+    // -----------------------------------------------------------------------
+    void initialize();
+    void cleanUp();
+
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fAttrList
@@ -1722,30 +1732,30 @@ private :
     //      Indicate if the document has external DTD subset.
     //
     // -----------------------------------------------------------------------
-	VecAttributesImpl		   fAttrList ;
-	ContentHandler*			   fDocHandler ;
-	RefVectorOf<XMLAttr>*      tempAttrVec ;
-
-	bool                       fnamespacePrefix;
-	bool                       fautoValidation;
-	bool                       fValidation;
-
-	XMLBufferMgr			   fStringBuffers ;
-	RefStackOf<XMLBuffer> *    fPrefixes ;
-	ValueStackOf<unsigned int> * prefixCounts ;
-
-    DTDHandler*                fDTDHandler;
-    unsigned int               fElemDepth;
-    EntityResolver*            fEntityResolver;
-    ErrorHandler*              fErrorHandler;
-    LexicalHandler*            fLexicalHandler;
-    DeclHandler*               fDeclHandler;
-    unsigned int               fAdvDHCount;
-    XMLDocumentHandler**       fAdvDHList;
-    unsigned int               fAdvDHListSize;
-    bool                       fParseInProgress;
-    XMLScanner*                fScanner;
-    bool                       fHasExternalSubset;
+    bool                        fNamespacePrefix;
+    bool                        fAutoValidation;
+    bool                        fValidation;
+    bool                        fParseInProgress;
+    bool                        fHasExternalSubset;
+    unsigned int                fElemDepth;
+    unsigned int                fAdvDHCount;
+    unsigned int                fAdvDHListSize;
+    VecAttributesImpl		fAttrList ;
+    ContentHandler*		fDocHandler ;
+    RefVectorOf<XMLAttr>*       fTempAttrVec ;
+    XMLBufferMgr		fStringBuffers ;
+    RefStackOf<XMLBuffer> *     fPrefixes ;
+    ValueStackOf<unsigned int>* fPrefixCounts ;
+    DTDHandler*                 fDTDHandler;
+    EntityResolver*             fEntityResolver;
+    ErrorHandler*               fErrorHandler;
+    LexicalHandler*             fLexicalHandler;
+    DeclHandler*                fDeclHandler;
+    XMLDocumentHandler**        fAdvDHList;
+    XMLScanner*                 fScanner;
+    GrammarResolver*            fGrammarResolver;
+    XMLStringPool*              fURIStringPool;
+    XMLValidator*               fValidator;
 	
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser
@@ -1755,7 +1765,6 @@ private :
     bool getDoNamespaces() const;
     void setDoSchema(const bool newState);
     bool getDoSchema() const;
-
 };
 
 
@@ -1800,11 +1809,6 @@ inline bool SAX2XMLReaderImpl::getExitOnFirstFatalError() const
 inline bool SAX2XMLReaderImpl::getValidationConstraintFatal() const
 {
     return fScanner->getValidationConstraintFatal();
-}
-
-inline Grammar* SAX2XMLReaderImpl::getGrammar(const XMLCh* const nameSpaceKey)
-{
-    return fScanner->getGrammar(nameSpaceKey);
 }
 
 inline Grammar* SAX2XMLReaderImpl::getRootGrammar()

@@ -78,6 +78,7 @@
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/Wrapper4DOMInputSource.hpp>
+#include <xercesc/validators/common/GrammarResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -231,7 +232,11 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
     {
         if (state || !getScanner()->isCachingGrammarFromParse())
-         getScanner()->useCachedGrammarInParse(state);
+            getScanner()->useCachedGrammarInParse(state);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    {
+        getScanner()->setCalculateSrcOfs(state);
     }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
@@ -304,6 +309,10 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     {
         return getScanner()->isUsingCachedGrammarInParse();
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    {
+        return getScanner()->getCalculateSrcOfs();
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
     }
@@ -320,7 +329,8 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
         (XMLString::compareIString(name, XMLUni::fgDOMValidation) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgDOMValidateIfSchema) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgDOMWhitespaceInElementContent) == 0)) {
+        (XMLString::compareIString(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) ||
+        (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)) {
         return true;
     }
 
@@ -362,6 +372,10 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
 	{
 		setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
+    else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
+    {
+        AbstractDOMParser::useScanner((const XMLCh*) value);
+    }
     else
       throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 }
@@ -577,12 +591,12 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
 
 void DOMBuilderImpl::resetCachedGrammarPool()
 {
-    getScanner()->resetCachedGrammarPool();
+    getGrammarResolver()->resetCachedGrammar();
 }
 
 Grammar* DOMBuilderImpl::getGrammar(const XMLCh* const nameSpaceKey) const
 {
-    return getScanner()->getGrammar(nameSpaceKey);
+    return getGrammarResolver()->getGrammar(nameSpaceKey);
 }
 
 Grammar* DOMBuilderImpl::getRootGrammar() const

@@ -74,6 +74,7 @@
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/validators/common/GrammarResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -111,7 +112,7 @@ bool XercesDOMParser::isUsingCachedGrammarInParse() const
 
 Grammar* XercesDOMParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    return getScanner()->getGrammar(nameSpaceKey);
+    return getGrammarResolver()->getGrammar(nameSpaceKey);
 }
 
 Grammar* XercesDOMParser::getRootGrammar()
@@ -319,7 +320,7 @@ Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
 
 void XercesDOMParser::resetCachedGrammarPool()
 {
-    getScanner()->resetCachedGrammarPool();
+    getGrammarResolver()->resetCachedGrammar();
 }
 
 XERCES_CPP_NAMESPACE_END

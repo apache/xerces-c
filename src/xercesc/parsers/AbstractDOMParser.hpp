@@ -61,7 +61,6 @@
 #if !defined(ABSTRACTDOMPARSER_HPP)
 #define ABSTRACTDOMPARSER_HPP
 
-
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
@@ -81,6 +80,7 @@ class XMLValidator;
 class DOMDocumentImpl;
 class DOMDocumentTypeImpl;
 class DOMElement;
+class GrammarResolver;
 
 
 /**
@@ -362,6 +362,19 @@ public :
       */
     bool  getCreateCommentNodes()const;
 
+    /**
+      * Get the 'calculate src offset flag'
+      *
+      * This method returns the state of the parser's src offset calculation
+      * when parsing an XML document.
+      *
+      * @return true, if the parser is currently configured to
+      *         calculate src offsets, false otherwise.
+      *
+      * @see #setCalculateSrcOfs
+      */
+    bool getCalculateSrcOfs() const;
+
     //@}
 
 
@@ -610,6 +623,29 @@ public :
       * @see #getCreateCommentNodes
       */
     void setCreateCommentNodes(const bool create);
+
+    /** Enable/disable src offset calculation
+      *
+      * This method allows users to enable/disable src offset calculation.
+      * Disabling the calculation will improve performance.
+      *
+      * The parser's default state is: true.
+      *
+      * @param newState The value specifying whether we should enable or
+      *                 disable src offset calculation
+      *
+      * @see #getCalculateSrcOfs
+      */
+    void setCalculateSrcOfs(const bool newState);
+
+    /** Set the scanner to use when scanning the XML document
+      *
+      * This method allows users to set the the scanner to use
+      * when scanning a given XML document.
+      *
+      * @param scannerName The name of the desired scanner
+      */
+    void useScanner(const XMLCh* const scannerName);
 
     //@}
 
@@ -1234,6 +1270,12 @@ protected :
       */
     XMLScanner* getScanner() const;
 
+    /** Get the Grammar resolver
+      *
+      * This provides derived classes with access to the grammar resolver.
+      */
+    GrammarResolver* getGrammarResolver() const;
+
     /** Get the parse in progress flag
       *
       * This provides derived classes with access to the parse in progress
@@ -1290,6 +1332,12 @@ protected :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Initialize/Cleanup methods
+    // -----------------------------------------------------------------------
+    void initialize();
+    void cleanUp();
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -1353,6 +1401,8 @@ private :
     bool                          fIncludeIgnorableWhitespace;
     bool                          fWithinElement;
     bool                          fParseInProgress;
+    bool                          fCreateCommentNodes;
+    bool                          fDocumentAdoptedByUser;
     XMLBufferMgr                  fBufMgr;
     XMLScanner*                   fScanner;
     DOMNode*                      fCurrentParent;
@@ -1362,8 +1412,9 @@ private :
     ValueStackOf<DOMNode*>*       fNodeStack;
     DOMDocumentTypeImpl*          fDocumentType;
     RefVectorOf<DOMDocumentImpl>* fDocumentVector;
-    bool                          fCreateCommentNodes;
-    bool                          fDocumentAdoptedByUser;
+    GrammarResolver*              fGrammarResolver;
+    XMLStringPool*                fURIStringPool;
+    XMLValidator*                 fValidator;
     XMLBuffer&                    fInternalSubset;
 };
 
@@ -1394,6 +1445,11 @@ inline bool AbstractDOMParser::getParseInProgress() const
 inline XMLScanner* AbstractDOMParser::getScanner() const
 {
     return fScanner;
+}
+
+inline GrammarResolver* AbstractDOMParser::getGrammarResolver() const
+{
+    return fGrammarResolver;
 }
 
 inline bool AbstractDOMParser::getCreateCommentNodes() const

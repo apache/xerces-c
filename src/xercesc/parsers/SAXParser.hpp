@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/12/04 01:57:09  knoaman
+ * Scanner re-organization.
+ *
  * Revision 1.14  2002/11/04 14:57:03  tng
  * C++ Namespace Support.
  *
@@ -199,6 +202,7 @@ class XMLPScanToken;
 class XMLScanner;
 class XMLValidator;
 class Grammar;
+class GrammarResolver;
 
 
 /**
@@ -478,6 +482,19 @@ public :
     bool isUsingCachedGrammarInParse() const;
 
     /**
+      * Get the 'calculate src offset flag'
+      *
+      * This method returns the state of the parser's src offset calculation
+      * when parsing an XML document.
+      *
+      * @return true, if the parser is currently configured to
+      *         calculate src offsets, false otherwise.
+      *
+      * @see #setCalculateSrcOfs
+      */
+    bool getCalculateSrcOfs() const;
+
+    /**
      * Retrieve the grammar that is associated with the specified namespace key
      *
      * @param  nameSpaceKey Namespace key
@@ -730,6 +747,28 @@ public :
       */
     void useCachedGrammarInParse(const bool newState);
 
+    /** Enable/disable src offset calculation
+      *
+      * This method allows users to enable/disable src offset calculation.
+      * Disabling the calculation will improve performance.
+      *
+      * The parser's default state is: true.
+      *
+      * @param newState The value specifying whether we should enable or
+      *                 disable src offset calculation
+      *
+      * @see #getCalculateSrcOfs
+      */
+    void setCalculateSrcOfs(const bool newState);
+
+    /** Set the scanner to use when scanning the XML document
+      *
+      * This method allows users to set the scanner to use
+      * when scanning a given XML document.
+      *
+      * @param scannerName The name of the desired scanner
+      */
+    void useScanner(const XMLCh* const scannerName);
 
     //@}
 
@@ -1803,6 +1842,11 @@ private:
     SAXParser(const SAXParser&);
     void operator=(const SAXParser&);
 
+    // -----------------------------------------------------------------------
+    //  Initialize/Cleanup methods
+    // -----------------------------------------------------------------------
+    void initialize();
+    void cleanUp();
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -1851,17 +1895,20 @@ private:
     //      during construction.
     //
     // -----------------------------------------------------------------------
-    VecAttrListImpl         fAttrList;
-    DocumentHandler*        fDocHandler;
-    DTDHandler*             fDTDHandler;
-    unsigned int            fElemDepth;
-    EntityResolver*         fEntityResolver;
-    ErrorHandler*           fErrorHandler;
-    unsigned int            fAdvDHCount;
-    XMLDocumentHandler**    fAdvDHList;
-    unsigned int            fAdvDHListSize;
-    bool                    fParseInProgress;
-    XMLScanner*             fScanner;
+    bool                 fParseInProgress;
+    unsigned int         fElemDepth;
+    unsigned int         fAdvDHCount;
+    unsigned int         fAdvDHListSize;
+    VecAttrListImpl      fAttrList;
+    DocumentHandler*     fDocHandler;
+    DTDHandler*          fDTDHandler;
+    EntityResolver*      fEntityResolver;
+    ErrorHandler*        fErrorHandler;
+    XMLDocumentHandler** fAdvDHList;
+    XMLScanner*          fScanner;
+    GrammarResolver*     fGrammarResolver;
+    XMLStringPool*       fURIStringPool;
+    XMLValidator*        fValidator;
 };
 
 

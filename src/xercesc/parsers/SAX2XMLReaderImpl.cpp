@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/12/04 01:57:09  knoaman
+ * Scanner re-organization.
+ *
  * Revision 1.12  2002/11/04 14:57:03  tng
  * C++ Namespace Support.
  *
@@ -224,6 +227,7 @@
 #include <xercesc/util/XMLChTranscoder.hpp>
 #include <xercesc/util/RefStackOf.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/sax2/ContentHandler.hpp>
 #include <xercesc/sax2/LexicalHandler.hpp>
 #include <xercesc/sax2/DeclHandler.hpp>
@@ -232,8 +236,9 @@
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/sax/SAXException.hpp>
-#include <xercesc/internal/XMLScanner.hpp>
+#include <xercesc/internal/XMLScannerResolver.hpp>
 #include <xercesc/parsers/SAX2XMLReaderImpl.hpp>
+#include <xercesc/validators/common/GrammarResolver.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -245,25 +250,59 @@ const XMLCh gDTDEntityStr[] =
 };
 
 SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
-    fDocHandler(0)
-    , fDTDHandler(0)
+
+    fNamespacePrefix(false)
+    , fAutoValidation(false)
+    , fValidation(true)
+    , fParseInProgress(false)
+    , fHasExternalSubset(false)
     , fElemDepth(0)
+    , fAdvDHCount(0)
+    , fAdvDHListSize(32)
+    , fDocHandler(0)
+    , fTempAttrVec(0)
+    , fPrefixes(0)
+    , fPrefixCounts(0)
+    , fDTDHandler(0)
     , fEntityResolver(0)
     , fErrorHandler(0)
     , fLexicalHandler(0)
     , fDeclHandler(0)
-    , fAdvDHCount(0)
     , fAdvDHList(0)
-    , fAdvDHListSize(32)
-    , fParseInProgress(false)
     , fScanner(0)
-    , fHasExternalSubset(false)
+    , fGrammarResolver(0)
+    , fURIStringPool(0)
 {
-    //
+    try
+    {
+        initialize();
+    }
+    catch(...)
+    {
+        cleanUp();
+        throw;
+    }
+}
+
+SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
+{
+    cleanUp();
+}
+
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Initialize/Cleanup methods
+// ---------------------------------------------------------------------------
+void SAX2XMLReaderImpl::initialize()
+{
+    // Create grammar resolver and string pool that we pass to the scanner
+    fGrammarResolver = new GrammarResolver();
+    fURIStringPool = new XMLStringPool();
+
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
-    //
-    fScanner = new XMLScanner(0);
+    fScanner = XMLScannerResolver::getDefaultScanner(0);
+    fScanner->setGrammarResolver(fGrammarResolver);
+    fScanner->setURIStringPool(fURIStringPool);
 
     // Create the initial advanced handler list array and zero it out
     fAdvDHList = new XMLDocumentHandler*[fAdvDHListSize];
@@ -272,28 +311,24 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 	// SAX2 default is for namespaces (feature http://xml.org/sax/features/namespaces) to be on
 	setDoNamespaces(true) ;
 
-	// SAX2 default is for namespaces-prefixes to be off
-	fnamespacePrefix = false;
-
-	// SAX2 default: validation on, auto-validation off
-	fValidation = true;
-	fautoValidation = false;
-
 	// default: schema is on
 	setDoSchema(true);
 	
 	fPrefixes    = new RefStackOf<XMLBuffer> (10, false) ;
-	tempAttrVec  = new RefVectorOf<XMLAttr>  (10, false) ;
-	prefixCounts = new ValueStackOf<unsigned int>(10) ;
+	fTempAttrVec  = new RefVectorOf<XMLAttr>  (10, false) ;
+	fPrefixCounts = new ValueStackOf<unsigned int>(10) ;
 }
 
-SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
+
+void SAX2XMLReaderImpl::cleanUp()
 {
     delete [] fAdvDHList;
     delete fScanner;
     delete fPrefixes;
-    delete tempAttrVec;
-    delete prefixCounts ;
+    delete fTempAttrVec;
+    delete fPrefixCounts;
+    delete fGrammarResolver;
+    delete fURIStringPool;
 }
 
 // ---------------------------------------------------------------------------
@@ -389,6 +424,7 @@ bool SAX2XMLReaderImpl::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
 // ---------------------------------------------------------------------------
 void SAX2XMLReaderImpl::setValidator(XMLValidator* valueToAdopt)
 {
+    fValidator = valueToAdopt;
 	fScanner->setValidator(valueToAdopt);
 }
 
@@ -757,9 +793,9 @@ void SAX2XMLReaderImpl::resetDocument()
     fElemDepth = 0;
 
     // Pop any prefix buffers left over from previous uses
-    while (!prefixCounts->empty())
+    while (!fPrefixCounts->empty())
     {
-        unsigned int numPrefix = prefixCounts->pop();
+        unsigned int numPrefix = fPrefixCounts->pop();
         for (unsigned int i = 0; i < numPrefix; i++)
         {
             XMLBuffer * buf = fPrefixes->pop() ;
@@ -817,9 +853,9 @@ startElement(   const   XMLElementDecl&         elemDecl
             const XMLCh*   nsURI    = 0;
             const XMLAttr* tempAttr = 0;
 
-            if (!fnamespacePrefix)
+            if (!fNamespacePrefix)
             {
-                tempAttrVec->removeAllElements();
+                fTempAttrVec->removeAllElements();
             }
 
             for (unsigned int i = 0; i < attrCount; i++)
@@ -832,10 +868,10 @@ startElement(   const   XMLElementDecl&         elemDecl
                     nsPrefix = tempAttr->getName();
                     nsURI = tempAttr->getValue();
                 }
-                if (!fnamespacePrefix)
+                if (!fNamespacePrefix)
                 {
                     if (nsURI == 0)
-                        tempAttrVec->addElement((XMLAttr* const)tempAttr);
+                        fTempAttrVec->addElement((XMLAttr* const)tempAttr);
                 }
                 if (nsURI != 0)
                 {
@@ -850,9 +886,9 @@ startElement(   const   XMLElementDecl&         elemDecl
                 nsURI = 0;
                 nsPrefix = 0;
             }
-            prefixCounts->push(numPrefix) ;
-            if (!fnamespacePrefix)
-                fAttrList.setVector(tempAttrVec, tempAttrVec->size(), fScanner);
+            fPrefixCounts->push(numPrefix) ;
+            if (!fNamespacePrefix)
+                fAttrList.setVector(fTempAttrVec, fTempAttrVec->size(), fScanner);
             else
                 fAttrList.setVector(&attrList, attrCount, fScanner);
 
@@ -891,7 +927,7 @@ startElement(   const   XMLElementDecl&         elemDecl
 											elemDecl.getBaseName(),
 											elemQName.getRawBuffer());
 
-                unsigned int numPrefix = prefixCounts->pop();
+                unsigned int numPrefix = fPrefixCounts->pop();
                 for (unsigned int i = 0; i < numPrefix; ++i)
                 {
                     XMLBuffer * buf = fPrefixes->pop() ;
@@ -955,7 +991,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 										elemDecl.getBaseName(),
 										elemQName.getRawBuffer());
 
-            unsigned int numPrefix = prefixCounts->pop();
+            unsigned int numPrefix = fPrefixCounts->pop();
             for (unsigned int i = 0; i < numPrefix; i++)
             {
                 XMLBuffer * buf = fPrefixes->pop() ;
@@ -1339,7 +1375,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fValidation = value;
         if (fValidation)
-            if (fautoValidation)
+            if (fAutoValidation)
                 setValidationScheme(Val_Auto);
             else
                 setValidationScheme(Val_Always);
@@ -1348,14 +1384,14 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     }
     else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
     {
-        fnamespacePrefix = value;
+        fNamespacePrefix = value;
     }
     else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
     {
-        fautoValidation = value;
+        fAutoValidation = value;
         // for auto validation, the sax2 core validation feature must also be enabled.
         if (fValidation)
-            if (fautoValidation)
+            if (fAutoValidation)
                 setValidationScheme(Val_Auto);
             else
                 setValidationScheme(Val_Always);
@@ -1394,6 +1430,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
         if (value || !fScanner->isCachingGrammarFromParse())
             fScanner->useCachedGrammarInParse(value);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    {
+        fScanner->setCalculateSrcOfs(value);
+    }
     else
        throw SAXNotRecognizedException("Unknown Feature");
 }
@@ -1405,9 +1445,9 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
     else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
         return fValidation;
     else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
-        return fnamespacePrefix;
+        return fNamespacePrefix;
     else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
-        return fautoValidation;
+        return fAutoValidation;
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
         return getDoSchema();
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
@@ -1422,6 +1462,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->isCachingGrammarFromParse();
     else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
         return fScanner->isUsingCachedGrammarInParse();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+        return fScanner->getCalculateSrcOfs();
     else
        throw SAXNotRecognizedException("Unknown Feature");
 
@@ -1437,13 +1479,24 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 	{
 		fScanner->setExternalSchemaLocation((XMLCh*)value);
 	}
-
 	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
 	{
 		fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
+    else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
+    {
+        XMLScanner* tempScanner = XMLScannerResolver::resolveScanner((const XMLCh*) value, fValidator);
 
-   else
+        if (tempScanner) {
+
+            // REVISIT: set scanner options and handlers
+            tempScanner->setGrammarResolver(fGrammarResolver);
+            tempScanner->setURIStringPool(fURIStringPool);
+            delete fScanner;
+            fScanner = tempScanner;
+        }
+    }
+    else
        throw SAXNotRecognizedException("Unknown Property");
 }
 
@@ -1454,6 +1507,8 @@ void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
         return (void*)fScanner->getExternalSchemaLocation();
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)fScanner->getExternalNoNamespaceSchemaLocation();
+    else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
+        return (void*)fScanner->getName();
     else
         throw SAXNotRecognizedException("Unknown Property");
     return 0;
@@ -1575,8 +1630,14 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const InputSource& source,
 
 void SAX2XMLReaderImpl::resetCachedGrammarPool()
 {
-    fScanner->resetCachedGrammarPool();
+    fGrammarResolver->resetCachedGrammar();
 }
+
+Grammar* SAX2XMLReaderImpl::getGrammar(const XMLCh* const nameSpaceKey)
+{
+    return fGrammarResolver->getGrammar(nameSpaceKey);
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -68,13 +68,14 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/internal/XMLScannerResolver.hpp>
+#include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/util/IOException.hpp>
-#include <xercesc/internal/XMLScanner.hpp>
-#include <xercesc/validators/DTD/DTDValidator.hpp>
-#include <xercesc/parsers/AbstractDOMParser.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/impl/DOMAttrImpl.hpp>
@@ -92,9 +93,9 @@
 #include <xercesc/dom/DOMProcessingInstruction.hpp>
 #include <xercesc/dom/impl/DOMProcessingInstructionImpl.hpp>
 #include <xercesc/dom/impl/DOMNodeIDMap.hpp>
-
 #include <xercesc/validators/common/ContentSpecNode.hpp>
-#include <xercesc/validators/DTD/DTDAttDefList.hpp>
+#include <xercesc/validators/common/GrammarResolver.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -108,6 +109,8 @@ AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
 , fIncludeIgnorableWhitespace(true)
 , fWithinElement(false)
 , fParseInProgress(false)
+, fCreateCommentNodes(true)
+, fDocumentAdoptedByUser(false)
 , fScanner(0)
 , fCurrentParent(0)
 , fCurrentNode(0)
@@ -116,34 +119,65 @@ AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
 , fNodeStack(0)
 , fDocumentType(0)
 , fDocumentVector(0)
-, fCreateCommentNodes(true)
-, fDocumentAdoptedByUser(false)
+, fGrammarResolver(0)
+, fURIStringPool(0)
+, fValidator(valToAdopt)
 , fInternalSubset(fBufMgr.bidOnBuffer())
 {
-    //
+    try
+    {
+        initialize();
+    }
+    catch(...)
+    {
+       cleanUp();
+       throw;
+    }
+}
+
+
+AbstractDOMParser::~AbstractDOMParser()
+{
+    cleanUp();
+}
+
+// ---------------------------------------------------------------------------
+//  AbstractDOMParser: Initialize/CleanUp methods
+// ---------------------------------------------------------------------------
+void AbstractDOMParser::initialize()
+{
+    //  Create grammar resolver and string pool to pass to the scanner
+    fGrammarResolver = new GrammarResolver;
+    fURIStringPool = new XMLStringPool;
+
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
-    //
-    fScanner = new XMLScanner(valToAdopt);
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator);
     fScanner->setDocHandler(this);
     fScanner->setDocTypeHandler(this);
+    fScanner->setGrammarResolver(fGrammarResolver);
+    fScanner->setURIStringPool(fURIStringPool);
 
     fNodeStack = new ValueStackOf<DOMNode*>(64);
     this->reset();
 }
 
-
-AbstractDOMParser::~AbstractDOMParser()
+void AbstractDOMParser::cleanUp()
 {
     if (fDocumentVector)
         delete fDocumentVector;
 
     if (!fDocumentAdoptedByUser)
         delete fDocument;
+
     delete fNodeStack;
     delete fScanner;
-}
+    delete fGrammarResolver;
+    delete fURIStringPool;
 
+    if (fValidator)
+        delete fValidator;
+}
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Utilities
@@ -266,6 +300,11 @@ bool AbstractDOMParser::getLoadExternalDTD() const
     return fScanner->getLoadExternalDTD();
 }
 
+bool AbstractDOMParser::getCalculateSrcOfs() const
+{
+    return fScanner->getCalculateSrcOfs();
+}
+
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
@@ -328,6 +367,24 @@ void AbstractDOMParser::setLoadExternalDTD(const bool newState)
     fScanner->setLoadExternalDTD(newState);
 }
 
+void AbstractDOMParser::setCalculateSrcOfs(const bool newState)
+{
+    fScanner->setCalculateSrcOfs(newState);
+}
+
+void AbstractDOMParser::useScanner(const XMLCh* const scannerName)
+{
+    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner(scannerName, fValidator);
+
+    if (tempScanner) {
+
+        // REVISIT: need to set scanner options and handlers
+        delete fScanner;
+        fScanner = tempScanner;
+        fScanner->setGrammarResolver(fGrammarResolver);
+        fScanner->setURIStringPool(fURIStringPool);
+    }
+}
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Parsing methods
@@ -801,10 +858,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                         // done here.
                         const XMLCh* qualifiedName = attr->getFullName();
                         XMLBufBid bbPrefixQName(&fBufMgr);
-                        XMLBufBid bbQName(&fBufMgr);
                         XMLBuffer& prefixBuf = bbPrefixQName.getBuffer();
-                        XMLBuffer& nameBuf = bbQName.getBuffer();
-                        unsigned int uriId = fScanner->resolveQName(qualifiedName, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
+                        int colonPos = -1;
+                        unsigned int uriId = fScanner->resolveQName(qualifiedName, prefixBuf, ElemStack::Mode_Attribute, colonPos);
 
                         const XMLCh* namespaceURI = 0;
                         if (XMLString::equals(qualifiedName, XMLNS))    //for xmlns=...

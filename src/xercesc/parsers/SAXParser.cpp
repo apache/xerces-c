@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/04 01:57:09  knoaman
+ * Scanner re-organization.
+ *
  * Revision 1.9  2002/11/04 14:57:03  tng
  * C++ Namespace Support.
  *
@@ -183,14 +186,16 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/internal/XMLScannerResolver.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/sax/DocumentHandler.hpp>
 #include <xercesc/sax/DTDHandler.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
-#include <xercesc/internal/XMLScanner.hpp>
-#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/validators/common/GrammarResolver.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -201,32 +206,66 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 SAXParser::SAXParser(XMLValidator* const valToAdopt) :
 
-    fDocHandler(0)
-    , fDTDHandler(0)
+    fParseInProgress(false)
     , fElemDepth(0)
+    , fAdvDHCount(0)
+    , fAdvDHListSize(32)
+    , fDocHandler(0)
+    , fDTDHandler(0)
     , fEntityResolver(0)
     , fErrorHandler(0)
-    , fAdvDHCount(0)
     , fAdvDHList(0)
-    , fAdvDHListSize(32)
-    , fParseInProgress(false)
     , fScanner(0)
+    , fGrammarResolver(0)
+    , fURIStringPool(0)
+    , fValidator(valToAdopt)
 {
+    try
+    {
+        initialize();
+    }
+    catch(...)
+    {
+        cleanUp();
+        throw;
+    }
+}
+
+
+SAXParser::~SAXParser()
+{
+    cleanUp();
+}
+
+// ---------------------------------------------------------------------------
+//  SAXParser: Initialize/CleanUp methods
+// ---------------------------------------------------------------------------
+void SAXParser::initialize()
+{
+    // Create grammar resolver and string pool to pass to scanner
+    fGrammarResolver = new GrammarResolver();
+    fURIStringPool = new XMLStringPool();
+
     // Create our scanner and tell it what validator to use
-    fScanner = new XMLScanner(valToAdopt);
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator);
+    fScanner->setGrammarResolver(fGrammarResolver);
+    fScanner->setURIStringPool(fURIStringPool);
 
     // Create the initial advanced handler list array and zero it out
     fAdvDHList = new XMLDocumentHandler*[fAdvDHListSize];
     memset(fAdvDHList, 0, sizeof(void*) * fAdvDHListSize);
 }
 
-
-SAXParser::~SAXParser()
+void SAXParser::cleanUp()
 {
     delete [] fAdvDHList;
     delete fScanner;
-}
+    delete fGrammarResolver;
+    delete fURIStringPool;
 
+    if (fValidator)
+        delete fValidator;
+}
 
 
 // ---------------------------------------------------------------------------
@@ -396,9 +435,14 @@ bool SAXParser::isUsingCachedGrammarInParse() const
     return fScanner->isUsingCachedGrammarInParse();
 }
 
+bool SAXParser::getCalculateSrcOfs() const
+{
+    return fScanner->getCalculateSrcOfs();
+}
+
 Grammar* SAXParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    return fScanner->getGrammar(nameSpaceKey);
+    return fGrammarResolver->getGrammar(nameSpaceKey);
 }
 
 Grammar* SAXParser::getRootGrammar()
@@ -487,6 +531,25 @@ void SAXParser::useCachedGrammarInParse(const bool newState)
 {
     if (newState || !fScanner->isCachingGrammarFromParse())
         fScanner->useCachedGrammarInParse(newState);
+}
+
+void SAXParser::setCalculateSrcOfs(const bool newState)
+{
+    fScanner->setCalculateSrcOfs(newState);
+}
+
+void SAXParser::useScanner(const XMLCh* const scannerName)
+{
+    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner(scannerName, fValidator);
+
+    if (tempScanner) {
+
+        // REVISIT: need to set scanner options and handlers
+        delete fScanner;
+        fScanner = tempScanner;
+        fScanner->setGrammarResolver(fGrammarResolver);
+        fScanner->setURIStringPool(fURIStringPool);
+    }
 }
 
 
@@ -1258,7 +1321,7 @@ Grammar* SAXParser::loadGrammar(const InputSource& source,
 
 void SAXParser::resetCachedGrammarPool()
 {
-    fScanner->resetCachedGrammarPool();
+    fGrammarResolver->resetCachedGrammar();
 }
 
 XERCES_CPP_NAMESPACE_END
