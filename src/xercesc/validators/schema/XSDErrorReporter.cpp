@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.6  2002/11/27 18:05:38  tng
+  * Schema Fix: cast the toEmit back to XMLErrs:Codes so that it can be caught by the Scanner properly.
+  *
   * Revision 1.5  2002/11/15 21:58:04  peiyongz
   * Leave thread safety issue to message loader
   *
@@ -226,7 +229,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
 
     // Bail out if its fatal an we are to give up on the first fatal error
     if (errType == XMLErrorReporter::ErrType_Fatal && fExitOnFirstFatal)
-        throw toEmit;
+        throw (XMLErrs::Codes) toEmit;
 }
 
 void XSDErrorReporter::emitError(const unsigned int toEmit,
@@ -268,7 +271,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
 
     // Bail out if its fatal an we are to give up on the first fatal error
     if (errType == XMLErrorReporter::ErrType_Fatal && fExitOnFirstFatal)
-        throw toEmit;
+        throw (XMLErrs::Codes) toEmit;
 }
 
 XERCES_CPP_NAMESPACE_END
