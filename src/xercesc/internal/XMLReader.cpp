@@ -169,7 +169,8 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
                     , const RefFrom                     from
                     , const Types                       type
                     , const Sources                     source
-                    , const bool                        throwAtEnd) :
+                    , const bool                        throwAtEnd
+                    , const bool                        calculateSrcOfs) :
     fCharIndex(0)
     , fCharsAvail(0)
     , fCurCol(1)
@@ -186,6 +187,7 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     , fSource(source)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
+    , fCalculateSrcOfs(calculateSrcOfs)
     , fStream(streamToAdopt)
     , fSystemId(XMLString::replicate(sysId))
     , fSwapped(false)
@@ -242,7 +244,8 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
                     , const RefFrom                 from
                     , const Types                   type
                     , const Sources                 source
-                    , const bool                    throwAtEnd) :
+                    , const bool                    throwAtEnd
+                    , const bool                    calculateSrcOfs) :
     fCharIndex(0)
     , fCharsAvail(0)
     , fCurCol(1)
@@ -260,6 +263,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fSource(source)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
+    , fCalculateSrcOfs(calculateSrcOfs)
     , fStream(streamToAdopt)
     , fSystemId(XMLString::replicate(sysId))
     , fSwapped(false)
@@ -353,7 +357,8 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
                     , const RefFrom                 from
                     , const Types                   type
                     , const Sources                 source
-                    , const bool                    throwAtEnd) :
+                    , const bool                    throwAtEnd
+                    , const bool                    calculateSrcOfs) :
     fCharIndex(0)
     , fCharsAvail(0)
     , fCurCol(1)
@@ -371,6 +376,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fSource(source)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
+    , fCalculateSrcOfs(calculateSrcOfs)
     , fStream(streamToAdopt)
     , fSystemId(XMLString::replicate(sysId))
     , fSwapped(false)
@@ -447,7 +453,7 @@ XMLReader::~XMLReader()
 // ---------------------------------------------------------------------------
 unsigned int XMLReader::getSrcOffset() const
 {
-    if (!fSrcOfsSupported)
+    if (!fSrcOfsSupported || !fCalculateSrcOfs)
         ThrowXML(RuntimeException, XMLExcepts::Reader_SrcOfsNotSupported);
 
     //
@@ -515,8 +521,10 @@ bool XMLReader::refreshCharBuffer()
     //  Add the number of source bytes eaten so far to the base src
     //  offset member.
     //
-    for (startInd = 0; startInd < fCharIndex; startInd++)
-        fSrcOfsBase += fCharSizeBuf[startInd];
+    if (fCalculateSrcOfs) {
+        for (startInd = 0; startInd < fCharIndex; startInd++)
+            fSrcOfsBase += fCharSizeBuf[startInd];
+    }
 
     //
     //  If there are spare chars, then move then down to the bottom. We

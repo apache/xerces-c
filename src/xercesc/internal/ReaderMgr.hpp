@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/12/03 15:31:19  knoaman
+ * Enable/disable calculation of src offset.
+ *
  * Revision 1.4  2002/11/04 14:58:18  tng
  * C++ Namespace Support.
  *
@@ -218,6 +221,7 @@ public :
         , const XMLReader::RefFrom  refFrom
         , const XMLReader::Types    type
         , const XMLReader::Sources  source
+        , const bool                calcSrsOfs = true
     );
     XMLReader* createReader
     (
@@ -228,6 +232,7 @@ public :
         , const XMLReader::Types    type
         , const XMLReader::Sources  source
         ,       InputSource*&       srcToFill
+        , const bool                calcSrcOfs = true
     );
     XMLReader* createReader
     (
@@ -239,6 +244,7 @@ public :
         , const XMLReader::Types    type
         , const XMLReader::Sources  source
         ,       InputSource*&       srcToFill
+        , const bool                calcSrcOfs = true
     );
     XMLReader* createIntEntReader
     (
@@ -248,6 +254,7 @@ public :
         , const XMLCh* const        dataBuf
         , const unsigned int        dataLen
         , const bool                copyBuf
+        , const bool                calcSrcOfs = true
     );
     bool isScanningPERefOutOfLiteral() const;
     bool pushReader

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/12/03 15:31:19  knoaman
+ * Enable/disable calculation of src offset.
+ *
  * Revision 1.8  2002/12/02 17:20:05  knoaman
  * Remove unused data member.
  *
@@ -262,6 +265,7 @@ public:
         , const Types                       type
         , const Sources                     source
         , const bool                        throwAtEnd = false
+        , const bool                        calculateSrcOfs = true
     );
 
     XMLReader
@@ -274,6 +278,7 @@ public:
         , const Types                       type
         , const Sources                     source
         , const bool                        throwAtEnd = false
+        , const bool                        calculateSrcOfs = true
     );
 
     XMLReader
@@ -286,6 +291,7 @@ public:
         , const Types                       type
         , const Sources                     source
         , const bool                        throwAtEnd = false
+        , const bool                        calculateSrcOfs = true
     );
 
     ~XMLReader();
@@ -564,6 +570,7 @@ private:
     Sources                     fSource;
     unsigned int                fSrcOfsBase;
     bool                        fSrcOfsSupported;
+    bool                        fCalculateSrcOfs;
     XMLCh*                      fSystemId;
     BinInputStream*             fStream;
     bool                        fSwapped;

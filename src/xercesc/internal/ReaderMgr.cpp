@@ -411,7 +411,8 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                                     , const bool                xmlDecl
                                     , const XMLReader::RefFrom  refFrom
                                     , const XMLReader::Types    type
-                                    , const XMLReader::Sources  source)
+                                    , const XMLReader::Sources  source
+                                    , const bool                calcSrcOfs)
 {
     //
     //  Ask the input source to create us an input stream. The particular
@@ -447,6 +448,8 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , refFrom
                 , type
                 , source
+                , false
+                , calcSrcOfs
                 );
         }
         else
@@ -459,6 +462,8 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , refFrom
                 , type
                 , source
+                , false
+                , calcSrcOfs
                 );
         }
     }
@@ -487,7 +492,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                                     , const XMLReader::RefFrom  refFrom
                                     , const XMLReader::Types    type
                                     , const XMLReader::Sources  source
-                                    ,       InputSource*&       srcToFill)
+                                    ,       InputSource*&       srcToFill
+                                    , const bool                calcSrcOfs)
 {
     // Create a buffer for expanding the system id
     XMLBuffer expSysId;
@@ -565,6 +571,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         , refFrom
         , type
         , source
+        , calcSrcOfs
     );
 
     // Either way, we can release the input source now
@@ -587,7 +594,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                                     , const XMLReader::RefFrom  refFrom
                                     , const XMLReader::Types    type
                                     , const XMLReader::Sources  source
-                                    ,       InputSource*&       srcToFill)
+                                    ,       InputSource*&       srcToFill
+                                    , const bool                calcSrcOfs)
 {
     // Create a buffer for expanding the system id
     XMLBuffer expSysId;
@@ -666,6 +674,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
         , refFrom
         , type
         , source
+        , calcSrcOfs
     );
 
     // Either way, we can release the input source now
@@ -687,7 +696,8 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
                                 , const XMLReader::Types    type
                                 , const XMLCh* const        dataBuf
                                 , const unsigned int        dataLen
-                                , const bool                copyBuf)
+                                , const bool                copyBuf
+                                , const bool                calcSrcOfs)
 {
     //
     //  This one is easy, we just create an input stream for the data and
@@ -716,6 +726,8 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
         , refFrom
         , type
         , XMLReader::Source_Internal
+        , false
+        , calcSrcOfs
     );
 
     // If it failed for any reason, then return zero.
