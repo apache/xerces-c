@@ -60,6 +60,7 @@
 SAXPrint_DIR=SAXPrint
 SAX2Print_DIR=SAX2Print
 SAXCount_DIR=SAXCount
+SAX2Count_DIR=SAX2Count
 DOMPrint_DIR=DOMPrint
 DOMCount_DIR=DOMCount
 Redirect_DIR=Redirect
@@ -77,7 +78,7 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 
-all::	saxprint sax2print saxcount domprint domcount redirect memparse pparse stdinparse enumval createdomdocument
+all::	saxprint sax2print saxcount sax2count domprint domcount redirect memparse pparse stdinparse enumval createdomdocument
 
 saxprint::
 	@echo Building "SAXPrint"
@@ -90,6 +91,10 @@ sax2print::
 saxcount::
 	@echo Building "SAXCount"
 	cd $(SAXCount_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+
+sax2count::
+	@echo Building "SAX2Count"
+	cd $(SAX2Count_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
 domprint::
 	@echo Building "DOMPrint"
@@ -128,6 +133,7 @@ clean::
 	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
 	cd $(SAX2Print_DIR) && $(MAKE) $@ && cd ..
 	cd $(SAXCount_DIR) && $(MAKE) $@ && cd ..
+	cd $(SAX2Count_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMPrint_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMCount_DIR) && $(MAKE) $@ && cd ..
 	cd $(MemParse_DIR) && $(MAKE) $@ && cd ..
@@ -141,6 +147,7 @@ distclean::
 	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
 	cd $(SAX2Print_DIR) && $(MAKE) $@ && cd ..
 	cd $(SAXCount_DIR) && $(MAKE) $@ && cd ..
+	cd $(SAX2Count_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMPrint_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMCount_DIR) && $(MAKE) $@ && cd ..
 	cd $(MemParse_DIR) && $(MAKE) $@ && cd ..

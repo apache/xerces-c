@@ -66,6 +66,7 @@ AC_SUBST(cflags)
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
 SAXCount/Makefile \
+SAX2Count/Makefile \
 DOMCount/Makefile \
 SAXPrint/Makefile \
 SAX2Print/Makefile \
