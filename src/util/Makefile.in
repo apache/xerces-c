@@ -55,8 +55,8 @@
 # 
 #
 # $Log$
-# Revision 1.6  2000/01/12 19:10:47  aruna1
-# Added XMLNetAccessor.hpp
+# Revision 1.7  2000/01/12 20:10:12  aruna1
+# Modified for new file
 #
 # Revision 1.5  2000/01/05 22:06:11  aruna1
 # MsgCatalog support for AIX introduced
@@ -160,6 +160,7 @@ UTIL_CPP_PUBHEADERS = \
 	ValueStackOf.hpp \
 	ValueVectorOf.hpp \
 	XML4CDefs.hpp \
+	XMLEBCDICTranscoder.hpp \
 	XMLEnumerator.hpp \
 	XMLExceptMsgs.hpp \
 	XMLException.hpp \
@@ -197,6 +198,7 @@ UTIL_CPP_OBJECTS = \
 	StringPool.o \
 	TextOutputStream.o \
 	URL.o \
+	XMLEBCDICTranscoder.o \
 	XMLException.o \
 	XMLString.o \
 	XMLUni.o
