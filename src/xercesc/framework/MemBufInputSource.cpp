@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/16 03:11:30  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -139,6 +142,7 @@ BinInputStream* MemBufInputSource::makeStream() const
         , fByteCount
         , fCopyBufToStream ? BinMemInputStream::BufOpt_Copy
                            : BinMemInputStream::BufOpt_Reference
+        , getMemoryManager()
     );
 }
 

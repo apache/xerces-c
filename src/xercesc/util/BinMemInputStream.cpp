@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 03:11:22  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -89,6 +92,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/BinMemInputStream.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -96,18 +100,23 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  BinMemInputStream: Constructors and Destructor
 // ---------------------------------------------------------------------------
-BinMemInputStream::BinMemInputStream(   const   XMLByte* const  initData
-                                        , const unsigned int    capacity
-                                        , const BufOpts         bufOpt) :
+BinMemInputStream::BinMemInputStream( const XMLByte* const       initData
+                                    , const unsigned int         capacity
+                                    , const BufOpts              bufOpt
+                                    ,       MemoryManager* const manager) :
     fBuffer(0)
     , fBufOpt(bufOpt)
     , fCapacity(capacity)
     , fCurIndex(0)
+    , fMemoryManager(manager)
 {
     // According to the buffer option, do the right thing
     if (fBufOpt == BufOpt_Copy)
     {
-        XMLByte* tmpBuf = new XMLByte[fCapacity];
+        XMLByte* tmpBuf = (XMLByte*) fMemoryManager->allocate
+        (
+            fCapacity * sizeof(XMLByte)
+        );//new XMLByte[fCapacity];
         memcpy(tmpBuf, initData, capacity);
         fBuffer = tmpBuf;
     }
@@ -124,7 +133,7 @@ BinMemInputStream::~BinMemInputStream()
     //  cast off the const'ness in that case in order to delete it.
     //
     if ((fBufOpt == BufOpt_Adopt) || (fBufOpt == BufOpt_Copy))
-        delete [] (XMLByte*)fBuffer;
+        fMemoryManager->deallocate((XMLByte*)fBuffer);//delete [] (XMLByte*)fBuffer;
 }
 
 

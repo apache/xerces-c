@@ -3035,7 +3035,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
 
     if (baseTypeName && *baseTypeName) { //base was provided - get proper validator.
 
-        XMLStringTokenizer unionMembers(baseTypeName);
+        XMLStringTokenizer unionMembers(baseTypeName, fMemoryManager);
         int             tokCount = unionMembers.countTokens();
 
         for (int i = 0; i < tokCount; i++) {
@@ -3673,7 +3673,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     }
     else {
 
-        XMLStringTokenizer tokenizer(nameSpace);
+        XMLStringTokenizer tokenizer(nameSpace, fMemoryManager);
         DatatypeValidator* anyURIDV = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_ANYURI);
 
         attType = XMLAttDef::Any_List;
@@ -4568,7 +4568,7 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
         return blockSet;
     }
 
-    XMLStringTokenizer tokenizer(blockVal);
+    XMLStringTokenizer tokenizer(blockVal, fMemoryManager);
 
     while (tokenizer.hasMoreTokens()) {
 
@@ -4629,7 +4629,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         return finalSet;
     }
 
-    XMLStringTokenizer tokenizer(finalVal);
+    XMLStringTokenizer tokenizer(finalVal, fMemoryManager);
 
     while (tokenizer.hasMoreTokens()) {
 

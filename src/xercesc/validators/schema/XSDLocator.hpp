@@ -66,11 +66,12 @@
 #ifndef XSDLOCATOR_HPP
 #define XSDLOCATOR_HPP
 
+#include <xercesc/util/XMemory.hpp>
 #include <xercesc/sax/Locator.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class VALIDATORS_EXPORT XSDLocator: public Locator
+class VALIDATORS_EXPORT XSDLocator: public XMemory, public Locator
 {
 public:
 

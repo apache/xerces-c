@@ -78,7 +78,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   */
 
 
-class XMLUTIL_EXPORT XMLStringTokenizer
+  class XMLUTIL_EXPORT XMLStringTokenizer :public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -97,7 +97,8 @@ public:
       * @param  srcStr  The string to be parsed.
       *
       */
-	XMLStringTokenizer(const XMLCh* const srcStr);
+	XMLStringTokenizer(const XMLCh* const srcStr,
+                       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
       * Constructs a string tokenizer for the specified string. The characters
@@ -107,7 +108,9 @@ public:
       * @param  srcStr  The string to be parsed.
       * @param  delim   The set of delimiters.
       */
-    XMLStringTokenizer(const XMLCh* const srcStr, const XMLCh* const delim);
+    XMLStringTokenizer(const XMLCh* const srcStr
+                       , const XMLCh* const delim
+                       , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@}
 
@@ -189,6 +192,7 @@ private:
 	XMLCh*              fString;
     XMLCh*              fDelimeters;
 	RefArrayVectorOf<XMLCh>* fTokens;
+    MemoryManager*           fMemoryManager;
 };
 
 
@@ -197,8 +201,8 @@ private:
 // ---------------------------------------------------------------------------
 inline void XMLStringTokenizer::cleanUp() {
 
-	delete [] fString;
-    delete [] fDelimeters;
+	fMemoryManager->deallocate(fString);//delete [] fString;
+    fMemoryManager->deallocate(fDelimeters);//delete [] fDelimeters;
     delete fTokens;
 }
 

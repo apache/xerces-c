@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 03:11:22  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -80,6 +83,7 @@
 #define BINMEMINPUTSTREAM_HPP
 
 #include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -105,6 +109,7 @@ public :
         const   XMLByte* const  initData
         , const unsigned int    capacity
         , const BufOpts         bufOpt = BufOpt_Copy
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~BinMemInputStream();
 
@@ -149,6 +154,7 @@ private :
     BufOpts         fBufOpt;
     unsigned int    fCapacity;
     unsigned int    fCurIndex;
+    MemoryManager*  fMemoryManager;
 };
 
 

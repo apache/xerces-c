@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/05/16 03:11:22  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.9  2003/03/10 20:55:58  peiyongz
  * Schema Errata E2-40 double/float
  *
@@ -155,8 +158,8 @@ XMLFloat::~XMLFloat()
 
 void XMLFloat::checkBoundary(const XMLCh* const strValue)
 {
-    char *nptr = XMLString::transcode(strValue);
-    ArrayJanitor<char> jan1(nptr);
+    char *nptr = XMLString::transcode(strValue, getMemoryManager());
+    ArrayJanitor<char> jan1(nptr, getMemoryManager());
     int   strLen = strlen(nptr);
     char *endptr = 0;
     errno = 0;

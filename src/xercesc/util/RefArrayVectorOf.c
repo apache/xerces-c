@@ -21,7 +21,7 @@ template <class TElem> RefArrayVectorOf<TElem>::~RefArrayVectorOf()
     if (fAdoptedElems)
     {
       for (unsigned int index = 0; index < fCurCount; index++)
-        delete[] fElemList[index];
+        fMemoryManager->deallocate(fElemList[index]);//delete[] fElemList[index];
     }
     fMemoryManager->deallocate(fElemList);//delete [] fElemList;
 }

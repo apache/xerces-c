@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 03:11:22  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -107,13 +110,14 @@ BinFileInputStream::BinFileInputStream(const XMLCh* const fileName) :
     fSource = XMLPlatformUtils::openFile(fileName);
 }
 
-BinFileInputStream::BinFileInputStream(const char* const fileName) :
+BinFileInputStream::BinFileInputStream(const char* const fileName,
+                                       MemoryManager* const manager) :
 
     fSource(0)
 {
     // Transcode the file name and put a janitor on the temp buffer
-    XMLCh* realName = XMLString::transcode(fileName);
-    ArrayJanitor<XMLCh> janName(realName);
+    XMLCh* realName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<XMLCh> janName(realName, manager);
 
     // Try to open the file
     fSource = XMLPlatformUtils::openFile(realName);

@@ -69,7 +69,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class SchemaGrammar;
 
-class VALIDATORS_EXPORT SubstitutionGroupComparator
+class VALIDATORS_EXPORT SubstitutionGroupComparator : public XMemory
 {
 public:
 

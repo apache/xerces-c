@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 03:11:22  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:54  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -89,18 +92,20 @@ const XMLCh fgDelimeters[] =
 // ---------------------------------------------------------------------------
 //  XMLStringTokenizer: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr)
+XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
+                                      , MemoryManager* const manager)
     : fOffset(0)
     , fStringLen(XMLString::stringLen(srcStr))
-    , fString(XMLString::replicate(srcStr))
+    , fString(XMLString::replicate(srcStr, manager))
     , fTokens(0)
+    , fMemoryManager(manager)
 {
 	try {
 
-        fDelimeters = XMLString::replicate(fgDelimeters);
+        fDelimeters = XMLString::replicate(fgDelimeters, fMemoryManager);
 
         if (fStringLen > 0) {
-            fTokens = new RefArrayVectorOf<XMLCh>(4, true);
+            fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true);
         }
     }
     catch(...) {
@@ -109,18 +114,20 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr)
 }
 
 XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
-                                       const XMLCh* const delim)
+                                       const XMLCh* const delim,
+                                       MemoryManager* const manager)
     : fOffset(0)
     , fStringLen(XMLString::stringLen(srcStr))
-    , fString(XMLString::replicate(srcStr))
+    , fString(XMLString::replicate(srcStr, manager))
     , fTokens(0)
+    , fMemoryManager(manager)
 {
 	try {
 
-        fDelimeters = XMLString::replicate(delim);
+        fDelimeters = XMLString::replicate(delim, fMemoryManager);
 
         if (fStringLen > 0) {
-            fTokens = new RefArrayVectorOf<XMLCh>(4, true);
+            fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true);
         }
     }
     catch(...) {
@@ -166,7 +173,10 @@ XMLCh* XMLStringTokenizer::nextToken() {
 
     if (tokFound) {
 
-        XMLCh* tokStr = new XMLCh[(endIndex - startIndex) + 1];
+        XMLCh* tokStr = (XMLCh*) fMemoryManager->allocate
+        (
+            (endIndex - startIndex + 1) * sizeof(XMLCh)
+        );//new XMLCh[(endIndex - startIndex) + 1];
 
         XMLString::subString(tokStr, fString, startIndex, endIndex);
         fTokens->addElement(tokStr);

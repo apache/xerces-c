@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/16 03:11:30  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -93,7 +96,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 BinInputStream* StdInInputSource::makeStream() const
 {
     // Open a binary file stream for the standard input file handle
-    BinFileInputStream* retStream = new BinFileInputStream
+    BinFileInputStream* retStream = new (getMemoryManager()) BinFileInputStream
     (
         XMLPlatformUtils::openStdInHandle()
     );

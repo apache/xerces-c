@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2003/05/16 03:15:51  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.29  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -268,7 +271,7 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
     , fNil(false)
     , fTypeStack(0)
 {
-    fTypeStack = new ValueStackOf<ComplexTypeInfo*>(8);
+    fTypeStack = new (fMemoryManager) ValueStackOf<ComplexTypeInfo*>(8);
 }
 
 SchemaValidator::~SchemaValidator()
@@ -2039,8 +2042,11 @@ SchemaValidator::checkRecurseUnordered(SchemaGrammar* const currentGrammar,
     XMLExcepts::Codes  codeToThrow = XMLExcepts::NoError;
     unsigned int       derivedCount= derivedNodes->size();
     unsigned int       baseCount = baseNodes->size();
-    bool*              foundIt = new bool[baseCount];
-    ArrayJanitor<bool> janFoundIt(foundIt);
+    bool*              foundIt = (bool*) fMemoryManager->allocate
+    (
+        baseCount * sizeof(bool)
+    );//new bool[baseCount];
+    ArrayJanitor<bool> janFoundIt(foundIt, fMemoryManager);
 
     for (unsigned k=0; k < baseCount; k++) {
         foundIt[k] = false;

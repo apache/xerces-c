@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/05/16 03:15:51  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.14  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -401,7 +404,7 @@ inline void SchemaValidator::setXsiType(const XMLCh* const        prefix
        , const unsigned int        uriId)
 {
     delete fXsiType;
-    fXsiType = new QName(prefix, localPart, uriId);
+    fXsiType = new (fMemoryManager) QName(prefix, localPart, uriId);
 }
 
 inline void SchemaValidator::setNillable(bool isNil) {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 03:11:22  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -97,6 +100,7 @@ public :
     BinFileInputStream
     (
         const   char* const     fileName
+        , MemoryManager* const  manager
     );
 
     BinFileInputStream
