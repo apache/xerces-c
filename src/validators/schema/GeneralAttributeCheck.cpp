@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2002/01/02 19:50:34  knoaman
+ * Fix for error message when checking for attributes with a namespace prefix.
+ *
  * Revision 1.15  2001/12/13 18:08:39  knoaman
  * Fix for bug 5410.
  *
@@ -961,11 +964,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
             continue;
         }
 
-
         // for attributes with namespace prefix
-        attName = attribute.getLocalName();
-        aBuffer.set(attName.rawBuffer(), attName.length());
-
         DOMString attrURI = attribute.getNamespaceURI();
 
         if (attrURI != 0 && attrURI.length() != 0) {
@@ -984,7 +983,10 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
                 XMLBuffer tmpBuf(128);
 
                 tmpBuf.set(attrURI.rawBuffer(), attrURI.length());
-                DatatypeValidator* dv = schema->getDatatypeValidator(tmpBuf.getRawBuffer(), aBuffer.getRawBuffer());
+                attName = attribute.getLocalName();
+                aBuffer.set(attName.rawBuffer(), attName.length());
+                tmpName = aBuffer.getRawBuffer();
+                DatatypeValidator* dv = schema->getDatatypeValidator(tmpBuf.getRawBuffer(), tmpName);
 
                 if (dv) {
 
@@ -1009,6 +1011,8 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
             continue;
         }
 
+        attName = attribute.getLocalName();
+        aBuffer.set(attName.rawBuffer(), attName.length());
         tmpName = aBuffer.getRawBuffer();
 
         // check whether this attribute is allowed
