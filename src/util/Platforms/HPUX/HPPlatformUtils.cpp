@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/18 21:33:17  aruna1
+ * Changed getBasePath to getFullPath,
+ * added weavePath()
+ *
  * Revision 1.3  1999/12/14 23:53:31  rahulj
  * Removed the offending Ctrl-M's from the commit message
  * logs which was giving packaging problems.
@@ -96,6 +100,7 @@
 #include    <errno.h>
 #include    <libgen.h>
 #include    <string.h>
+#include    <limits.h>
 #include    <unistd.h>
 #include    <util/XMLString.hpp>
 #include    <util/XMLUni.hpp>
@@ -430,6 +435,11 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     return (unsigned int) retVal;
 }
 
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+{
+    FileHandle retVal = (FILE*) fopen(fileName , "rb");
+    return retVal;
+}
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
@@ -491,29 +501,29 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 
 
 
-XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
-    //
-    //  NOTE: The path provided has always already been opened successfully,
-    //  so we know that it is valid. It comes in native format, and goes out
-    //  as Unicode always
-    //
-    char* newSrc = XMLString::transcode(srcPath);
-    ArrayJanitor<char>  janText(newSrc);
 
-    // Use a local buffer that is big enough for the largest legal path.
-    // Note #1186: dirName() is not thread safe.
+	//
+	//  NOTE: THe path provided has always already been opened successfully,
+	//  so we know that its not some pathological freaky path. It comes in
+	//  in native format, and goes out as Unicode always
+	//
+	char* newSrc = XMLString::transcode(srcPath);
+	ArrayJanitor<char> janText(newSrc);
 
-    char* tmpPath = dirname(newSrc); // dirname() never returns NULL.
+	// Use a local buffer that is big enough for the largest legal path
+	char absPath[PATH_MAX];
+	//get the absolute path
+	char* retPath = realpath(newSrc, &absPath[0]);
+	ArrayJanitor<char> janText2(retPath);
 
-    char* newXMLString = new char[strlen(tmpPath) + 2];
-    ArrayJanitor<char> newJanitor(newXMLString);
-    strcpy(newXMLString, tmpPath);
-    strcat(newXMLString , "/");
-
-    // Return a copy of the path, in Unicode format
-    return XMLString::transcode(newXMLString);
+	if (!retPath)
+	{
+		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetBasePathName);
+	}
+    return XMLString::transcode(absPath);
 }
 
 
@@ -533,6 +543,115 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
     // Else assume its a relative path
     return true;
+}
+
+XMLCh* XMLPlatformUtils::weavePaths
+    (
+        const   XMLCh* const    basePath
+        , const XMLCh* const    relativePath
+    )
+{
+// Create a buffer as large as both parts and empty it
+    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
+                              + XMLString::stringLen(relativePath)
+                              + 2];
+    *tmpBuf = 0;
+
+    //
+    //  If we have no base path, then just take the relative path as
+    //  is.
+    //
+    if (!basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    if (!*basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
+    if ((*basePtr != chForwardSlash)
+    &&  (*basePtr != chBackSlash))
+    {
+        while ((basePtr >= basePath)
+        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+        {
+            basePtr--;
+        }
+    }
+
+    // There is no relevant base path, so just take the relative part
+    if (basePtr < basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    // After this, make sure the buffer gets handled if we exit early
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+
+    //
+    //  We have some path part, so we need to check to see if we ahve to
+    //  weave any of the parts together.
+    //
+    const XMLCh* pathPtr = relativePath;
+    while (true)
+    {
+		// If it does not start with some period, then we are done
+        if (*pathPtr != chPeriod)
+            break;
+
+        unsigned int periodCount = 1;
+        pathPtr++;
+        if (*pathPtr == chPeriod)
+        {
+            pathPtr++;
+            periodCount++;
+        }
+
+        // Has to be followed by a \ or / or the null to mean anything
+        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
+        &&  *pathPtr)
+        {
+            break;
+        }
+        if (*pathPtr)
+            pathPtr++;
+
+        // If its one period, just eat it, else move backwards in the base
+        if (periodCount == 2)
+        {
+            basePtr--;
+            while ((basePtr >= basePath)
+            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            {
+                basePtr--;
+            }
+
+            if (basePtr < basePath)
+            {
+                // The base cannot provide enough levels, so its in error
+                // <TBD>
+            }
+        }
+    }
+
+    // Copy the base part up to the base pointer
+    XMLCh* bufPtr = tmpBuf;
+    const XMLCh* tmpPtr = basePath;
+    while (tmpPtr <= basePtr)
+        *bufPtr++ = *tmpPtr++;
+
+    // And then copy on the rest of our path
+    XMLString::copyString(bufPtr, pathPtr);
+
+    // Orphan the buffer and return it
+    janBuf.orphan();
+	return tmpBuf;
 }
 
 // -----------------------------------------------------------------------
