@@ -64,6 +64,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	XMLScannerResolver.hpp \
 	XObjectComparator.hpp \
 	XProtoType.hpp \
+	XSAXMLScanner.hpp \
 	XSerializable.hpp \
 	XSerializationException.hpp \
 	XSerializeEngine.hpp \
@@ -96,6 +97,7 @@ INTERNAL_CPP_OBJECTS = \
 	XMLScannerResolver.$(TO) \
 	XObjectComparator.$(TO) \
 	XProtoType.$(TO) \
+	XSAXMLScanner.$(TO) \
 	XSerializeEngine.$(TO) \
 	XSObjectFactory.$(TO) \
 	XTemplateComparator.$(TO) \
