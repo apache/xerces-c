@@ -99,7 +99,7 @@ endif
 ifeq (${PLATFORM}, SOLARIS)
   ifeq (${COMPILER}, g++)
 	CMP= -c ${CXXFLAGS}
-	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
+	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
 	LINK = g++ -D${PLATFORM} -fpic
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	EXTRA_LINK_OPTIONS=-lc
@@ -108,7 +108,7 @@ ifeq (${PLATFORM}, SOLARIS)
 	CC= CC -c -D${PLATFORM} -D_REENTRANT -pic
 	LINK =  CC -D${PLATFORM}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
-	EXTRA_LINK_OPTIONS=-lc -lgen -zmuldefs
+	EXTRA_LINK_OPTIONS=-lc -lgen
   endif
   SHLIBSUFFIX=.so
 endif
