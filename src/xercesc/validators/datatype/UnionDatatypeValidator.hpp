@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/01/10 16:48:47  tng
+ * [Bug 14912] crashes inside UnionDatatypeValidator::isSubstitutableBy.   Patch from Alberto Massari.
+ *
  * Revision 1.4  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -325,14 +328,15 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
         return true;
     }
 
-    unsigned int memberSize = fMemberTypeValidators->size();
+    if (fMemberTypeValidators) {
+        unsigned int memberSize = fMemberTypeValidators->size();
 
-    for (unsigned int i=0; i < memberSize; i++) {
-        if (fMemberTypeValidators->elementAt(i)->isSubstitutableBy(toCheck)) {
-            return true;
+        for (unsigned int i=0; i < memberSize; i++) {
+            if (fMemberTypeValidators->elementAt(i)->isSubstitutableBy(toCheck)) {
+                return true;
+            }
         }
     }
-
     return false;
 }
 
