@@ -194,6 +194,7 @@ CLEAN :
 	-@erase "$(INTDIR)\RegxParser.obj"
 	-@erase "$(INTDIR)\RegxUtil.obj"
 	-@erase "$(INTDIR)\sax2Dummy.obj"
+	-@erase "$(INTDIR)\SAX2XMLFilterImpl.obj"
 	-@erase "$(INTDIR)\SAX2XMLReaderImpl.obj"
 	-@erase "$(INTDIR)\SAXException.obj"
 	-@erase "$(INTDIR)\SAXParseException.obj"
@@ -544,6 +545,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
 	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
 	"$(INTDIR)\XercesDOMParser.obj" \
@@ -850,6 +852,7 @@ CLEAN :
 	-@erase "$(INTDIR)\RegxParser.obj"
 	-@erase "$(INTDIR)\RegxUtil.obj"
 	-@erase "$(INTDIR)\sax2Dummy.obj"
+	-@erase "$(INTDIR)\SAX2XMLFilterImpl.obj"
 	-@erase "$(INTDIR)\SAX2XMLReaderImpl.obj"
 	-@erase "$(INTDIR)\SAXException.obj"
 	-@erase "$(INTDIR)\SAXParseException.obj"
@@ -1202,6 +1205,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
 	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
 	"$(INTDIR)\XercesDOMParser.obj" \
@@ -1508,6 +1512,7 @@ CLEAN :
 	-@erase "$(INTDIR)\RegxParser.obj"
 	-@erase "$(INTDIR)\RegxUtil.obj"
 	-@erase "$(INTDIR)\sax2Dummy.obj"
+	-@erase "$(INTDIR)\SAX2XMLFilterImpl.obj"
 	-@erase "$(INTDIR)\SAX2XMLReaderImpl.obj"
 	-@erase "$(INTDIR)\SAXException.obj"
 	-@erase "$(INTDIR)\SAXParseException.obj"
@@ -1860,6 +1865,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
 	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
 	"$(INTDIR)\XercesDOMParser.obj" \
@@ -2166,6 +2172,7 @@ CLEAN :
 	-@erase "$(INTDIR)\RegxParser.obj"
 	-@erase "$(INTDIR)\RegxUtil.obj"
 	-@erase "$(INTDIR)\sax2Dummy.obj"
+	-@erase "$(INTDIR)\SAX2XMLFilterImpl.obj"
 	-@erase "$(INTDIR)\SAX2XMLReaderImpl.obj"
 	-@erase "$(INTDIR)\SAXException.obj"
 	-@erase "$(INTDIR)\SAXParseException.obj"
@@ -2517,6 +2524,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
 	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
 	"$(INTDIR)\XercesDOMParser.obj" \
@@ -3804,6 +3812,12 @@ SOURCE=..\..\..\..\..\src\xercesc\parsers\AbstractDOMParser.cpp
 SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.cpp
 
 "$(INTDIR)\DOMBuilderImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.cpp
+
+"$(INTDIR)\SAX2XMLFilterImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
