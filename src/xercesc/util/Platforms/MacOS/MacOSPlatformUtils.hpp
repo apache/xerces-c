@@ -76,16 +76,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-//
-//	Support for customized panic handling:
-//  The default handling of panics is not very friendly.
-//	To replace it with something more friendly, you'll need to:
-//		- #define XML_USE_CUSTOM_PANIC_PROC
-//		- Write, and link with, XMLCustomPanicProc
-//		- Implement your panic handling within XMLCustomPanicProc.
-//
-extern "C" void XMLCustomPanicProc(XMLPlatformUtils::PanicReasons panicReason, const char* reasonStr);
-
 //	Notes on our Xerces/Mac paths:
 //
 //	Wherever paths are used in Xerces, this Macintosh port assumes that they'll

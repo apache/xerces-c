@@ -185,33 +185,10 @@ bool gUsePosixFiles			= false;
 void 
 XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
-    const char* reasonStr = PanicHandler::getPanicReasonString(reason);
-    
-    //
-    //  The default handling of panics is not very friendly.
-    //	To replace it with something more friendly, you'll need to:
-    //	- #define XML_USE_CUSTOM_PANIC_PROC
-    //	- Write, and link with, XMLCustomPanicProc
-    //	- Implement your panic handling within XMLCustomPanicProc.
-    //
-#if defined(XML_USE_CUSTOM_PANIC_PROC)
-    XMLCustomPanicProc(reason, reasonStr);
-#else
-    char text[256];
-
-    #if defined(XML_METROWERKS) || defined(_GLIBCPP_USE_C99)
-    std::snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
-    #else
-    std::sprintf(text, "Xerces Panic Error: %s", reasonStr);
-    #endif
-
-    Str255 pasText;
-    CopyCStringToPascal(text, pasText);
-    DebugStr(pasText);
-#endif
-
-    //	Life's got us down. Good-bye world.
-    std::exit(-1);
+    if (fgUserPanicHandler)
+		fgUserPanicHandler->panic(reason);
+	else
+		fgDefaultPanicHandler->panic(reason);
 }
 
 
@@ -354,23 +331,23 @@ XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return (toCheck[0] != L'/');
 }
 
+
 XMLCh* XMLPlatformUtils::getCurrentDirectory()
 {
-
-    /*** 
-     *  REVISIT:
-     * 
-     *   To be implemented later
-    ***/
-
-    XMLCh curDir[]={ chPeriod, chForwardSlash, chNull};
-    return getFullPath(curDir);
+	//	Return a newly allocated path to the current directory
+	FSSpec spec;
+	return (noErr == FSMakeFSSpec(0, 0, NULL, &spec))
+		? XMLCreateFullPathFromFSSpec(spec)
+		: NULL;
 }
+
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 
 {
-    return ( chBackSlash == c || chForwardSlash == c);
+	//	We support only forward slash as a path delimiter
+    return (chForwardSlash == c);
 }
+
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Timing Methods
