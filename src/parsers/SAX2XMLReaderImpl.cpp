@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2002/01/28 16:29:21  knoaman
+ * The namespace-prefixes feature in SAX2 should be off by default.
+ *
  * Revision 1.22  2002/01/24 16:30:34  tng
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD() .
  *
@@ -384,8 +387,8 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 	// SAX2 default is for namespaces (feature http://xml.org/sax/features/namespaces) to be on
 	setDoNamespaces(true) ;
 
-	// SAX2 default is for namespaces-prefixes to be on
-	fnamespacePrefix = true;
+	// SAX2 default is for namespaces-prefixes to be off
+	fnamespacePrefix = false;
 
 	// SAX2 default: validation on, auto-validation off
 	fValidation = true;
