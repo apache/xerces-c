@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/02/01 23:48:37  peiyongz
+ * sane_include
+ *
  * Revision 1.8  2001/05/03 19:09:36  knoaman
  * Support Warning/Error/FatalError messaging.
  * Validity constraints errors are treated as errors, with the ability by user to set
@@ -556,7 +559,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
 
             // If its not the exception domain, then we need a header included
             if (XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
-                fwprintf(outHeader, L"#include <framework/XMLErrorReporter.hpp>\n\n");
+                fwprintf(outHeader, L"#include <xercesc/framework/XMLErrorReporter.hpp>\n\n");
 
             fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", errNameSpace);
 

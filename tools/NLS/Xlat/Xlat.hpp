@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/02/01 23:48:37  peiyongz
+ * sane_include
+ *
  * Revision 1.4  2001/05/03 19:09:38  knoaman
  * Support Warning/Error/FatalError messaging.
  * Validity constraints errors are treated as errors, with the ability by user to set
@@ -96,11 +99,11 @@ enum MsgTypes
 // ---------------------------------------------------------------------------
 #include <stdio.h>
 
-#include <util/XercesDefs.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/TransService.hpp>
-#include <sax/SAXParseException.hpp>
-#include <parsers/DOMParser.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TransService.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
 #include "Xlat_ErrHandler.hpp"
 #include "Xlat_Types.hpp"
 #include "Xlat_Formatter.hpp"

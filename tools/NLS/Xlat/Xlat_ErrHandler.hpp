@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/02/01 23:48:37  peiyongz
+ * sane_include
+ *
  * Revision 1.3  2000/03/02 19:55:53  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -72,8 +75,8 @@
  *
  */
 
-#include <util/XercesDefs.hpp>
-#include <sax/ErrorHandler.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
 
 class XlatErrHandler : public ErrorHandler
 {
