@@ -144,9 +144,11 @@ public:
 								const XMLCh* const uri, 
 								PSVIAttributeList* psviAttributes );
 	void handleElementPSVI(	const XMLCh* const localName, 
-								const XMLCh* const uri,
-								PSVIElement* elementInfo );
-
+                                const XMLCh* const uri,
+                                PSVIElement* elementInfo );
+	void handlePartialElementPSVI( const XMLCh* const localName, 
+                                   const XMLCh* const uri,
+                                   PSVIElement* elementInfo ) {};
 private:
     // -----------------------------------------------------------------------
     //  Private methods
