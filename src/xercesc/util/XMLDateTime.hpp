@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/12/31 02:34:11  neilg
+ * enable production of canonical representations for dates with negative years, or years >9999
+ *
  * Revision 1.13  2003/12/17 20:00:49  cargilld
  * Update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -316,6 +319,8 @@ private:
     void                  normalize();
 
     void                  fillString(XMLCh*& ptr, valueIndex ind, int expLen) const;
+
+    int                   fillYearString(XMLCh*& ptr, valueIndex ind) const;
 
     void                  searchMiliSeconds(XMLCh*& miliStartPtr, XMLCh*& miliEndPtr) const;
 

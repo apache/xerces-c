@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2003/12/31 02:34:11  neilg
+ * enable production of canonical representations for dates with negative years, or years >9999
+ *
  * Revision 1.19  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -1521,10 +1524,19 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
     XMLCh* retBuf = (XMLCh*) toUse->allocate( (21 + miliSecondsLen + 2) * sizeof(XMLCh));
     XMLCh* retPtr = retBuf;
 
-    // ccyy-mm-dd'T'hh:mm:ss'Z'    ('.'s+)?
-    //   10       1      8   1
+    // (-?) cc+yy-mm-dd'T'hh:mm:ss'Z'    ('.'s+)?
+    //      2+  8       1      8   1
     //
-    fillString(retPtr, CentYear, 4);
+    int additionalLen = 0;
+    if(additionalLen = fillYearString(retPtr, CentYear))
+    {
+        // very bad luck; have to resize the buffer...
+        XMLCh *tmpBuf = (XMLCh*) toUse->allocate( (additionalLen+21+miliSecondsLen +2) * sizeof(XMLCh));
+        XMLString::moveChars(tmpBuf, retBuf, 4+additionalLen);
+        retPtr = tmpBuf+(retPtr-retBuf);
+        toUse->deallocate(retBuf);
+        retBuf = tmpBuf;
+    }
     *retPtr++ = DATE_SEPARATOR;
     fillString(retPtr, Month, 2);
     *retPtr++ = DATE_SEPARATOR;
@@ -1619,6 +1631,35 @@ void XMLDateTime::fillString(XMLCh*& ptr, valueIndex ind, int expLen) const
         *ptr++ = strBuffer[i];
     }
 
+}
+
+int XMLDateTime::fillYearString(XMLCh*& ptr, valueIndex ind) const
+{
+    XMLCh strBuffer[16];
+    // let's hope we get no years of 15 digits...
+    XMLString::binToText(fValue[ind], strBuffer, 15, 10);
+    int   actualLen = XMLString::stringLen(strBuffer);
+    // don't forget that years can be negative...
+    int negativeYear = 0;
+    if(strBuffer[0] == chDash)
+    {
+        *ptr++ = strBuffer[0];
+        negativeYear = 1;
+    }
+    int   i;
+    //append leading zeros
+    for (i = 0; i < 4 - actualLen+negativeYear; i++)
+    {
+        *ptr++ = chDigit_0;
+    }
+
+    for (i = negativeYear; i < actualLen; i++)
+    {
+        *ptr++ = strBuffer[i];
+    }
+    if(actualLen > 4)
+        return actualLen-4;
+    return 0;
 }
 
 /***
