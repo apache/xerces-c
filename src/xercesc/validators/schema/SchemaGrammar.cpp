@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/10/29 16:22:30  peiyongz
+ * serialize/deserialize substitutiongroup
+ *
  * Revision 1.11  2003/10/17 21:17:12  peiyongz
  * using XTemplateSerializer
  *
@@ -289,6 +292,7 @@ void SchemaGrammar::reset()
 
 void SchemaGrammar::cleanUp()
 {
+
     delete fElemDeclPool;
     if(fElemDeclPool)
         delete fElemNonDeclPool;
@@ -303,9 +307,10 @@ void SchemaGrammar::cleanUp()
     delete fValidSubstitutionGroups;
     delete fIDRefList;
     delete fGramDesc;
+
 }
 
-void SchemaGrammar::setGrammarDescription( XMLGrammarDescription* gramDesc)
+void SchemaGrammar::setGrammarDescription(XMLGrammarDescription* gramDesc)
 {
     if ((!gramDesc) || 
         (gramDesc->getGrammarType() != Grammar::SchemaGrammarType))
@@ -375,10 +380,9 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::storeObject(fIDRefList, serEng);
        
         /***
-         *
          * Serialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
-         * todo
          ***/
+        XTemplateSerializer::storeObject(fValidSubstitutionGroups, serEng);
 
         fDatatypeRegistry.serialize(serEng);
         serEng.writeString(fTargetNamespace);
@@ -423,10 +427,9 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::loadObject(&fIDRefList, 29, true, serEng);
        
         /***
-         *
          * Deserialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
-         * todo
          ***/
+        XTemplateSerializer::loadObject(&fValidSubstitutionGroups, 29, true, serEng);
 
         fDatatypeRegistry.serialize(serEng);
         serEng.readString(fTargetNamespace);
