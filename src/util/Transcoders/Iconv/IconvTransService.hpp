@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/06 01:21:34  aruna1
+ * Transcoding services modified.
+ *
  * Revision 1.3  2000/01/05 23:30:38  abagchi
  * Fixed the new class IconvLCPTranscoder functions. Tested on Linux only.
  *
@@ -136,7 +139,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    IconvTranscoder();
+	IconvTranscoder(const XMLCh* const encodingName, const unsigned int blockSize);
     ~IconvTranscoder();
 
 
@@ -145,18 +148,19 @@ public :
     // -----------------------------------------------------------------------
     virtual XMLCh transcodeOne
     (
-        const   char* const     srcData
+        const   XMLByte* const     srcData
         , const unsigned int    srcBytes
         ,       unsigned int&   bytesEaten
     );
 
     virtual unsigned int transcodeXML
     (
-        const   char* const             srcData
+        const   XMLByte* const             srcData
         , const unsigned int            srcCount
         ,       XMLCh* const            toFill
         , const unsigned int            maxChars
         ,       unsigned int&           bytesEaten
+		,       unsigned char* const    charSizes
     );
 
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/06 01:21:34  aruna1
+ * Transcoding services modified.
+ *
  * Revision 1.7  2000/01/05 23:30:38  abagchi
  * Fixed the new class IconvLCPTranscoder functions. Tested on Linux only.
  *
@@ -220,7 +223,7 @@ IconvTransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
 
 void IconvTransService::upperCase(XMLCh* const toUpperCase) const
 {
-    towuppert(*toUpperCase);
+    towupper(*toUpperCase);
 }
 
 // ---------------------------------------------------------------------------
@@ -454,3 +457,69 @@ IconvLCPTranscoder::~IconvLCPTranscoder()
 {
 }
 
+// ---------------------------------------------------------------------------
+//  IconvTranscoder: Constructors and Destructor
+// ---------------------------------------------------------------------------
+IconvTranscoder::IconvTranscoder(const XMLCh* const encodingName, const unsigned int blockSize)
+: XMLTranscoder(encodingName, blockSize)
+{
+}
+
+IconvTranscoder::~IconvTranscoder()
+{
+}
+
+
+// ---------------------------------------------------------------------------
+//  IconvTranscoder: Implementation of the virtual transcoder API
+// ---------------------------------------------------------------------------
+XMLCh IconvTranscoder::transcodeOne(const   XMLByte* const     srcData
+                                    , const unsigned int    srcBytes
+                                    ,       unsigned int&   bytesEaten)
+{
+    wchar_t  toFill;
+    int eaten = ::mbtowc(&toFill, (const char*)srcData, srcBytes);
+    if (eaten == -1)
+    {
+        bytesEaten = 0;
+        return 0;
+    }
+
+    // Return the bytes we ate and the resulting char.
+    bytesEaten = eaten;
+    return toFill;
+}
+
+
+unsigned int
+IconvTranscoder::transcodeXML(  const   XMLByte* const             srcData
+                                , const unsigned int            srcCount
+                                ,       XMLCh* const            toFill
+                                , const unsigned int            maxChars
+                                ,       unsigned int&           bytesEaten
+								,       unsigned char* const    charSizes)
+{
+    //
+    //  For this one, because we have to maintain the offset table, we have
+    //  to do them one char at a time until we run out of source data.
+    //
+    unsigned int countIn = 0;
+    unsigned int countOut = 0;
+    while (countOut < maxChars)
+    {
+        wchar_t   oneWideChar;
+        const int bytesEaten =
+            ::mbtowc(&oneWideChar, (const char*)&srcData[countIn], srcCount - countIn);
+
+        // We are done, so break out
+        if (bytesEaten == -1)
+            break;
+        toFill[countOut] = (XMLCh) oneWideChar;
+        countIn += (unsigned int) bytesEaten;
+        countOut++;
+    }
+
+    // Give back the counts of eaten and transcoded
+    bytesEaten = countIn;
+    return countOut;
+}
