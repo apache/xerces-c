@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:36  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 13:39:11  tng
+ * [Bug 7162 ] IconvFreeBSDTransService.cpp needs an #include statement fixed to use xercesc.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
+ * sane_include
  *
  * Revision 1.4  2002/01/14 19:45:15  tng
  * Support IconvFBSD in multi-threading environment with all the possible combinations of threading and transcoding options.  By Max Gotlib.
@@ -228,7 +231,7 @@ static size_t fbsd_wcstombs(char *dest, const wchar_t *src, size_t n)
     char*       ptr;
     size_t      slen;
     wchar_t*    wptr;
-    
+
     if (dest)
         return ::wcstombs(dest, src, n);
     if (!src)
@@ -281,7 +284,7 @@ static wint_t fbsd_towupper(wint_t ch)
 
 #if !defined(APP_NO_THREADS)
 
-#  include <util/Mutexes.hpp>
+#include <xercesc/util/Mutexes.hpp>
 // Iconv() access syncronization point
 static XMLMutex	*gIconvMutex = NULL;
 #  define ICONV_LOCK	XMLMutexLock lockConverter(gIconvMutex);
@@ -339,7 +342,7 @@ void	IconvFBSDCD::mbcToXMLCh (const char *mbc, XMLCh *toRet) const
     }
 }
 
-// Convert XMLCh into "native unicode" character 
+// Convert XMLCh into "native unicode" character
 void	IconvFBSDCD::xmlChToMbc (XMLCh xch, char *mbc) const
 {
     if (fUBO == LITTLE_ENDIAN) {
@@ -366,7 +369,7 @@ XMLCh	IconvFBSDCD::toUpper (const XMLCh ch) const
 {
     if (ch <= 0x7F)
 	return toupper(ch);
-    
+
     char	wcbuf[fUChSize * 2];
     xmlChToMbc (ch, wcbuf);
 
@@ -381,7 +384,7 @@ XMLCh	IconvFBSDCD::toUpper (const XMLCh ch) const
 		 &pTmpArr, &bLen) == (size_t) -1)
 	return 0;
     tmpArr[1] = toupper (*tmpArr);
-    *tmpArr = tmpArr[1]; 
+    *tmpArr = tmpArr[1];
     len = 1;
     pTmpArr = wcbuf;
     bLen = fUChSize;
@@ -536,7 +539,7 @@ IconvFBSDTransService::IconvFBSDTransService()
 	    XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
     }
 #endif
-    
+
     // Try to obtain local (host) characterset through the environment
     char*	fLocalCP = setlocale (LC_CTYPE, "");
     if (fLocalCP == NULL)
@@ -645,9 +648,9 @@ int IconvFBSDTransService::compareIString(const XMLCh* const	comp1
 	c1 = toUpper(*(++cptr1));
 	c2 = toUpper(*(++cptr2));
 
-    }    
+    }
     return (int) ( c1 - c2 );
-    
+
 #endif /* !XML_USE_LIBICONV */
 }
 
@@ -661,7 +664,7 @@ int IconvFBSDTransService::compareNIString(const XMLCh* const	comp1
     const XMLCh* cptr2 = comp2;
 
 #ifndef XML_USE_LIBICONV
-    
+
     while (true && maxChars)
     {
         wint_t wch1 = fbsd_towupper(*cptr1);
@@ -809,7 +812,7 @@ IconvFBSDTransService::makeNewXMLTranscoder
     if (encLocal)
 	delete [] encLocal;
     return newTranscoder;
-    
+
 #endif /* !XML_USE_LIBICONV */
 }
 
@@ -836,7 +839,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText)
 {
     if (!srcText)
         return 0;
-    
+
 #ifndef XML_USE_LIBICONV
 
     unsigned int retVal = fbsd_mbstowcs(NULL, srcText, 0);
@@ -881,7 +884,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
         return 0;
 
 #ifndef XML_USE_LIBICONV
-    
+
     wchar_t       tmpWideCharArr[gTempBuffArraySize];
     wchar_t*      allocatedArray = 0;
     wchar_t*      wideCharBuf = 0;
@@ -920,11 +923,11 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 	xmlToMbs (srcText, wLent, wBuf, wLent);
     } else
 	wBuf = (char *) srcText;
-    
+
     char	tmpBuff[gTempBuffArraySize];
     size_t	totalLen = 0;
     char	*srcEnd = wBuf + wLent * uChSize();
-    
+
     for (;;) {
 	char		*pTmpArr = tmpBuff;
 	const char	*ptr = srcEnd - len;
@@ -1110,7 +1113,7 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const	toTranscode
     }
     if (wBufPtr)
 	delete [] wBufPtr;
-    
+
 #endif /* !XML_USE_LIBICONV */
 
     // Cap it off just in case
@@ -1274,12 +1277,12 @@ bool IconvFBSDLCPTranscoder::transcode(const   char* const	toTranscode
 	    delete [] wBufPtr;
 	return false;
     }
-    
+
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
 	mbsToXML (wideCharBuf, wLent, toFill, wLent);
     if (wBufPtr)
 	delete [] wBufPtr;
-    
+
 #endif /* !XML_USE_LIBICONV */
 
     toFill[wLent] = 0x00;
@@ -1377,7 +1380,7 @@ unsigned int	IconvFBSDTranscoder::transcodeFrom
 	} else
 	    startTarget = tmpWBuff;
     } else
-	startTarget = (char *) toFill;    
+	startTarget = (char *) toFill;
 
     // Do character-by-character transcoding
     char	*orgTarget = startTarget;
@@ -1400,7 +1403,7 @@ unsigned int	IconvFBSDTranscoder::transcodeFrom
 	bytesEaten += charSizes[cnt];
 	startSrc = endSrc - srcLen;
 	toReturn++;
-    }    
+    }
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
 	mbsToXML (startTarget, toReturn, toFill, toReturn);
     if (wBufPtr)
