@@ -842,7 +842,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
 
     // Get the raw data we need for the callback
     const XMLCh* rawBuf = toSend.getRawBuffer();
-    const unsigned int len = toSend.getLen();
+    unsigned int len = toSend.getLen();
     XMLBuffer toFill;
 
     //
@@ -896,6 +896,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                     DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
                     ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
                     rawBuf = toFill.getRawBuffer();
+                    len = toFill.getLen();
                 }
 
                 if (fDocHandler)
