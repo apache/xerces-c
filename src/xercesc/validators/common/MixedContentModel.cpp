@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/20 18:12:20  knoaman
+ * Use a bitwise operation to check the node type.
+ *
  * Revision 1.7  2003/11/07 17:08:11  knoaman
  * For PSVI support, distinguish wildcard elements with namespace lists.
  *
@@ -485,7 +488,7 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
 
     // And recurse according to the type of node
     if (((curType & 0x0f) == ContentSpecNode::Choice)
-    ||  (curType == ContentSpecNode::Sequence))
+    ||  ((curType & 0x0f) == ContentSpecNode::Sequence))
     {
         // Recurse on the left and right nodes
         buildChildList(leftNode, toFill, toType);

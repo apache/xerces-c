@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/20 18:12:20  knoaman
+ * Use a bitwise operation to check the node type.
+ *
  * Revision 1.4  2003/11/07 17:08:11  knoaman
  * For PSVI support, distinguish wildcard elements with namespace lists.
  *
@@ -120,7 +123,7 @@ CMBinaryOp::CMBinaryOp( const ContentSpecNode::NodeTypes type
 {
     // Insure that its one of the types we require
     if (((type & 0x0f) != ContentSpecNode::Choice)
-    &&  (type != ContentSpecNode::Sequence))
+    &&  ((type & 0x0f) != ContentSpecNode::Sequence))
     {
         ThrowXML(RuntimeException, XMLExcepts::CM_BinOpHadUnaryType);
     }
@@ -185,7 +188,7 @@ void CMBinaryOp::calcFirstPos(CMStateSet& toSet) const
         toSet = fLeftChild->getFirstPos();
         toSet |= fRightChild->getFirstPos();
     }
-     else if (getType() == ContentSpecNode::Sequence)
+    else if ((getType() & 0x0f) == ContentSpecNode::Sequence)
     {
         //
         //  If our left child is nullable, then its the union of our
@@ -206,7 +209,7 @@ void CMBinaryOp::calcLastPos(CMStateSet& toSet) const
         toSet = fLeftChild->getLastPos();
         toSet |= fRightChild->getLastPos();
     }
-     else if (getType() == ContentSpecNode::Sequence)
+    else if ((getType() & 0x0f) == ContentSpecNode::Sequence)
     {
         //
         //  If our right child is nullable, then its the union of our

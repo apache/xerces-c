@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/20 18:12:20  knoaman
+ * Use a bitwise operation to check the node type.
+ *
  * Revision 1.5  2003/11/07 17:08:11  knoaman
  * For PSVI support, distinguish wildcard elements with namespace lists.
  *
@@ -156,7 +159,7 @@ SimpleContentModel::validateContent(QName** const       children
     //  content check.
     //
     unsigned int index;
-    switch(fOp)
+    switch(fOp & 0x0f)
     {
         case ContentSpecNode::Leaf :
             //
@@ -261,7 +264,6 @@ SimpleContentModel::validateContent(QName** const       children
             break;
 
         case ContentSpecNode::Choice :
-        case ContentSpecNode::Any_NS_Choice :
             //
             //  There can only be one child, and it must be one of the
             //  two types we stored.
@@ -349,7 +351,7 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
     //  content check.
     //
     unsigned int index;
-    switch(fOp)
+    switch(fOp & 0x0f)
     {
         case ContentSpecNode::Leaf :
             //
@@ -429,7 +431,6 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
             break;
 
         case ContentSpecNode::Choice :
-        case ContentSpecNode::Any_NS_Choice :
             //
             //  There can only be one child, and it must be one of the
             //  two types we stored.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.43  2003/11/20 18:12:20  knoaman
+ * Use a bitwise operation to check the node type.
+ *
  * Revision 1.42  2003/11/12 20:35:31  peiyongz
  * Stateless Grammar: ValidationContext
  *
@@ -1348,13 +1351,13 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
     ContentSpecNode::NodeTypes curNodeType = curSpecNode->getType();
     ContentSpecNode::NodeTypes baseNodeType = baseSpecNode->getType();
 
-    if (curNodeType == ContentSpecNode::Sequence ||
+    if ((curNodeType & 0x0f) == ContentSpecNode::Sequence ||
         (curNodeType & 0x0f) == ContentSpecNode::Choice ||
         curNodeType == ContentSpecNode::All) {
         curSpecNode = checkForPointlessOccurrences(curSpecNode, curNodeType, &curVector);
     }
 
-    if (baseNodeType == ContentSpecNode::Sequence ||
+    if ((baseNodeType & 0x0f) == ContentSpecNode::Sequence ||
         (baseNodeType & 0x0f) == ContentSpecNode::Choice ||
         baseNodeType == ContentSpecNode::All) {
         baseSpecNode = checkForPointlessOccurrences(baseSpecNode, baseNodeType, &baseVector);
@@ -1380,7 +1383,6 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
-            case ContentSpecNode::Any_NS_Choice:
             case ContentSpecNode::Sequence:
             case ContentSpecNode::All:
                 {
@@ -1407,7 +1409,6 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                      return;
                 }
             case ContentSpecNode::Choice:
-            case ContentSpecNode::Any_NS_Choice:
             case ContentSpecNode::Sequence:
             case ContentSpecNode::All:
             case ContentSpecNode::Leaf:
@@ -1437,7 +1438,6 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
-            case ContentSpecNode::Any_NS_Choice:
             case ContentSpecNode::Sequence:
             case ContentSpecNode::Leaf:
                 {
@@ -1450,7 +1450,6 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             }
         }
     case ContentSpecNode::Choice:
-    case ContentSpecNode::Any_NS_Choice:
         {
             switch (baseNodeType & 0x0f) {
             case ContentSpecNode::Any:
@@ -1461,7 +1460,6 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
-            case ContentSpecNode::Any_NS_Choice:
                 {
                     checkRecurse(aGrammar, curSpecNode, derivedScope, &curVector,
                                  baseSpecNode, baseScope, &baseVector, baseInfo, true);
@@ -1502,7 +1500,6 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
-            case ContentSpecNode::Any_NS_Choice:
                 {
                     checkMapAndSum(aGrammar, curSpecNode, &curVector, derivedScope,
                                    baseSpecNode, &baseVector, baseScope, baseInfo);
@@ -1572,7 +1569,7 @@ void SchemaValidator::gatherChildren(const ContentSpecNode::NodeTypes parentNode
     else if (!rightNode) {
         gatherChildren(nodeType, specNode->getFirst(), nodes);
     }
-    else if (parentNodeType == nodeType) {
+    else if ((parentNodeType & 0x0f) == (nodeType & 0x0f)) {
 
         gatherChildren(nodeType, specNode->getFirst(), nodes);
         gatherChildren(nodeType, rightNode, nodes);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/20 18:12:20  knoaman
+ * Use a bitwise operation to check the node type.
+ *
  * Revision 1.8  2003/11/07 17:08:11  knoaman
  * For PSVI support, distinguish wildcard elements with namespace lists.
  *
@@ -1094,7 +1097,7 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         ContentSpecNode* rightNode = curNode->getSecond();
 
         if (((curType & 0x0f) == ContentSpecNode::Choice)
-        ||   (curType == ContentSpecNode::Sequence))
+        ||   ((curType & 0x0f) == ContentSpecNode::Sequence))
         {
             //
             //  Recurse on both children, and return a binary op node with the
@@ -1143,7 +1146,7 @@ void DFAContentModel::calcFollowList(CMNode* const curNode)
         calcFollowList(((CMBinaryOp*)curNode)->getLeft());
         calcFollowList(((CMBinaryOp*)curNode)->getRight());
     }
-     else if (curType == ContentSpecNode::Sequence)
+    else if ((curType & 0x0f) == ContentSpecNode::Sequence)
     {
         // Recurse before we process this node
         calcFollowList(((CMBinaryOp*)curNode)->getLeft());
@@ -1250,7 +1253,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
         ++newIndex;
     }
     else if (((curType & 0x0f) == ContentSpecNode::Choice)
-         ||  (curType == ContentSpecNode::Sequence))
+         ||  ((curType & 0x0f) == ContentSpecNode::Sequence))
     {
         newIndex = postTreeBuildInit(((CMBinaryOp*)nodeCur)->getLeft(), newIndex);
         newIndex = postTreeBuildInit(((CMBinaryOp*)nodeCur)->getRight(), newIndex);
