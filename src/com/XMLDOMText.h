@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/01/19 15:18:34  tng
+ * COM Updates by Curt Arnold: changed 1.3 to 1.4, updated the GUID's so
+ * both can coexist and fixed a new minor bugs.  Most of the changes involved
+ * error reporting, now a DOM defined error will return an HRESULT of
+ * 0x80040600 + code and will set an error description to the error name.
+ *
  * Revision 1.3  2000/06/03 00:29:01  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -95,6 +101,7 @@ BEGIN_COM_MAP(CXMLDOMText)
 	COM_INTERFACE_ENTRY(IXMLDOMNode)
 	COM_INTERFACE_ENTRY(IIBMXMLDOMNodeIdentity)
 	COM_INTERFACE_ENTRY(IDispatch)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 	
 	DOM_Text text;

@@ -64,6 +64,14 @@
 #include "XMLDOMNodeList.h"
 #include "XMLDOMNamedNodeMap.h"
 #include "XMLDOMUtil.h"
+#include <dom/DOM_DOMException.hpp>
+
+template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+HRESULT STDMETHODCALLTYPE IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::InterfaceSupportsErrorInfo(REFIID riid)
+{
+	if(riid == *piid) return S_OK;
+	return S_FALSE;
+}
 
 template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
 STDMETHODIMP
@@ -80,6 +88,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeName(BSTR *pVal)
 	{
 		DOMString val = get_DOM_Node().getNodeName();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -113,6 +125,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeValue(VARIANT *pV
 		else
 			V_VT(pVal) = VT_NULL;
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -127,12 +143,23 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_nodeValue(VARIANT new
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::put_nodeValue\n"));
 
-	if (V_VT(&newVal) != VT_BSTR)
-		return E_INVALIDARG;
-
 	try
 	{
-		get_DOM_Node().setNodeValue(V_BSTR(&newVal));
+		if(V_VT(&newVal) == VT_BSTR)
+		{
+			get_DOM_Node().setNodeValue(V_BSTR(&newVal));
+		}
+		//
+		//   coerce to BSTR or throw error
+		//
+		else 
+		{
+			get_DOM_Node().setNodeValue((BSTR) (_bstr_t) newVal);
+		}
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -176,6 +203,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_parentNode(IXMLDOMNod
 			hr = wrapNode(m_pIXMLDOMDocument, n,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 		}
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -207,6 +238,11 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_childNodes(IXMLDOMNod
 	try
 	{
 		pObj->m_container = get_DOM_Node().getChildNodes();
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release(); 
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -244,6 +280,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_firstChild(IXMLDOMNod
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -272,6 +312,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_lastChild(IXMLDOMNode
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -298,6 +342,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_previousSibling(IXMLD
 		DOM_Node n = get_DOM_Node().getPreviousSibling();
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -327,6 +375,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nextSibling(IXMLDOMNo
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -350,6 +402,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_attributes(IXMLDOMNam
 	try
 	{
 		map = get_DOM_Node().getAttributes();
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -430,6 +486,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::insertBefore(IXMLDOMNode 
 		DOM_Node n = get_DOM_Node().insertBefore(*pNewChildNode, *pRefChildNode);
 		hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (outNewChild));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -487,6 +547,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::replaceChild(IXMLDOMNode 
 		DOM_Node n = get_DOM_Node().replaceChild(*pNewChildNode, *pOldChildNode);
 		hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (outNewChild));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -528,6 +592,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::removeChild(IXMLDOMNode *
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (oldChild));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -568,6 +636,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::appendChild(IXMLDOMNode *
 		DOM_Node n = get_DOM_Node().appendChild(*pNewChildNode);
 		hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (outNewChild));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -590,6 +662,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::hasChildNodes(VARIANT_BOO
 	try
 	{
 		*hasChild = (get_DOM_Node().hasChildNodes()) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -633,6 +709,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::cloneNode(VARIANT_BOOL de
 	try
 	{
 		hr = wrapNode(m_pIXMLDOMDocument,get_DOM_Node().cloneNode((VARIANT_TRUE == deep) ? true : false),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -708,6 +788,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_text(BSTR newVal)
 		}
 		else
 			get_DOM_Node().setNodeValue(newVal);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -789,6 +873,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_xml(BSTR *pVal)
 	try {
 		GetXML(get_DOM_Node(),text);
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -854,6 +942,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_namespaceURI(BSTR *pV
 		DOMString val = get_DOM_Node().getNamespaceURI();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -876,6 +968,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_prefix(BSTR *pVal)
 	try {
 		DOMString val = get_DOM_Node().getPrefix();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -900,6 +996,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_baseName(BSTR *pVal)
 		DOMString val = get_DOM_Node().getLocalName();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -916,3 +1016,4 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::transformNodeToObject(IXM
 
 	return E_NOTIMPL;
 }
+

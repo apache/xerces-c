@@ -151,6 +151,10 @@ STDMETHODIMP CXMLDOMXMLDecl::get_data(BSTR  *pVal)
 		}
 
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;

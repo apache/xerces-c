@@ -340,6 +340,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->element = *(static_cast<DOM_Element*> (&node));
 		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
+		}
 		catch(...)
 		{
 			pObj->Release(); 
@@ -366,6 +371,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->attr = *(static_cast<DOM_Attr*> (&node));
+		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
@@ -394,6 +404,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->text = *(static_cast<DOM_Text*> (&node));
 		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
+		}
 		catch(...)
 		{
 			pObj->Release(); 
@@ -420,6 +435,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->cdataSection = *(static_cast<DOM_CDATASection*> (&node));
+		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
@@ -448,6 +468,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->entityReference = *(static_cast<DOM_EntityReference*> (&node));
 		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
+		}
 		catch(...)
 		{
 			pObj->Release(); 
@@ -474,6 +499,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->entity = *(static_cast<DOM_Entity*> (&node));
+		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
@@ -502,6 +532,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->processingInstruction = *(static_cast<DOM_ProcessingInstruction*> (&node));
 		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
+		}
 		catch(...)
 		{
 			pObj->Release(); 
@@ -528,6 +563,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->comment = *(static_cast<DOM_Comment*> (&node));
+		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
@@ -556,6 +596,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->m_Document = *(static_cast<DOM_Document*> (&node));
 		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
+		}
 		catch(...)
 		{
 			pObj->Release(); 
@@ -582,6 +627,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->documentType = *(static_cast<DOM_DocumentType*> (&node));
+		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
@@ -610,6 +660,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->documentFragment = *(static_cast<DOM_DocumentFragment*> (&node));
 		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
+		}
 		catch(...)
 		{
 			pObj->Release(); 
@@ -636,6 +691,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->notation = *(static_cast<DOM_Notation*> (&node));
+		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
@@ -664,6 +724,11 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->xmlDecl = *(static_cast<DOM_XMLDecl*> (&node));
+		}
+		catch(DOM_DOMException& ex) 
+		{
+			pObj->Release(); 
+			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{

@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/01/19 15:18:39  tng
+ * COM Updates by Curt Arnold: changed 1.3 to 1.4, updated the GUID's so
+ * both can coexist and fixed a new minor bugs.  Most of the changes involved
+ * error reporting, now a DOM defined error will return an HRESULT of
+ * 0x80040600 + code and will set an error description to the error name.
+ *
  * Revision 1.4  2000/06/19 20:05:59  rahulj
  * Changes for increased conformance and stability. Submitted by
  * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
@@ -96,7 +102,7 @@
 
 #include <util/PlatformUtils.hpp>
 #include "xml4com.h"
-
+#include <dom/DOM_DOMException.hpp>
 
 //
 //
@@ -285,5 +291,66 @@ STDAPI DllUnregisterServer(void)
 #endif
     return _Module.UnregisterServer(TRUE);
 }
+
+
+static LPOLESTR Msgs[] =
+{
+	OLESTR("UNDEFINED DOM ERROR"),
+	OLESTR("INDEX_SIZE_ERR"),   // INDEX_SIZE_ERR =  1
+	OLESTR("DOMSTRING_SIZE_ERR"),  // DOMSTRING_SIZE_ERR =  2
+	OLESTR("HIERARCHY_REQUEST_ERR"),   // HIERARCHY_REQUEST_ERR =  3
+	OLESTR("WRONG_DOCUMENT_ERR"),   // WRONG_DOCUMENT_ERR =  4
+	OLESTR("INVALID_CHARACTER_ERR"),   // INVALID_CHARACTER_ERR =  5
+	OLESTR("NO_DATA_ALLOWED_ERR"),   // NO_DATA_ALLOWED_ERR =  6
+	OLESTR("NO_MODIFICATION_ALLOWED_ERR"),   // NO_MODIFICATION_ALLOWED_ERR =  7
+	OLESTR("NOT_FOUND_ERR"),   // NOT_FOUND_ERR =  8
+	OLESTR("NOT_SUPPORTED_ERR"),   // NOT_SUPPORTED_ERR =  9
+	OLESTR("INUSE_ATTRIBUTE_ERR"),   // INUSE_ATTRIBUTE_ERR =  10
+	OLESTR("INVALID_STATE_ERR"),   // INVALID_STATE_ERR =  11
+	OLESTR("SYNTAX_ERR	"),   // 	SYNTAX_ERR	 =  12
+	OLESTR("INVALID_MODIFICATION_ERR"),   // 	INVALID_MODIFICATION_ERR =  13
+	OLESTR("NAMESPACE_ERR"),   // 	NAMESPACE_ERR	 =  14
+	OLESTR("INVALID_ACCESS_ERR") // INVALID_ACCESS_ERR   = 15
+};
+
+//
+//
+//   makes an HRESULT with a code based on the DOM error code
+//
+HRESULT MakeHRESULT(DOM_DOMException& ex) 
+{
+	ICreateErrorInfo* pCErr = NULL;
+	HRESULT sc = CreateErrorInfo(&pCErr);
+	if(SUCCEEDED(sc)) {
+		DOMString msg = ex.msg;
+		if(msg == NULL) 
+		{
+			if(ex.code >= DOM_DOMException::INDEX_SIZE_ERR &&
+				ex.code <= DOM_DOMException::INVALID_ACCESS_ERR) 
+			{
+				sc = pCErr->SetDescription(Msgs[ex.code]);
+			}
+			else 
+			{
+				sc = pCErr->SetDescription(Msgs[0]);
+			}
+		}
+		else 
+		{
+			sc = pCErr->SetDescription((BSTR) ex.msg.rawBuffer());
+		}
+
+		IErrorInfo* pErr = NULL;
+		sc = pCErr->QueryInterface(IID_IErrorInfo,(void**) &pErr);
+		if(SUCCEEDED(sc)) 
+		{
+			sc = SetErrorInfo(0,pErr);
+			pErr->Release();
+		}
+		pCErr->Release();
+	}
+	return 0x80040600 + ex.code;
+}
+
 
 

@@ -64,9 +64,9 @@
 import "oaidl.idl"; 
 
 [
-	uuid(C58E1141-26F6-4d3a-AF76-6214CA435238),
-	version(1.3),
-	helpstring("Xerces XML Parser 1.3")
+	uuid(C4775B62-ECD6-11d4-94B4-00A0CC57CBCB),
+	version(1.4),
+	helpstring("Xerces XML Parser 1.4")
 ]
 library Xerces
 {
@@ -121,7 +121,7 @@ library Xerces
 	};
 
 	[
-		uuid(988AE1AE-12FF-4c11-8847-BDD79C1B6B59),
+		uuid(C4775B61-ECD6-11d4-94B4-00A0CC57CBCB),
 		helpstring("DOMDocument Class")
 	]
 	coclass DOMDocument

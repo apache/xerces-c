@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/01/19 15:17:54  tng
+ * COM Updates by Curt Arnold: changed 1.3 to 1.4, updated the GUID's so
+ * both can coexist and fixed a new minor bugs.  Most of the changes involved
+ * error reporting, now a DOM defined error will return an HRESULT of
+ * 0x80040600 + code and will set an error description to the error name.
+ *
  * Revision 1.4  2000/06/19 20:05:56  rahulj
  * Changes for increased conformance and stability. Submitted by
  * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
@@ -91,7 +97,8 @@ template <class T, const IID* piid, const GUID* plibid = &CComModule::m_libid, W
 WORD wMinor = 0, class tihclass = CComTypeInfoHolder>
 class ATL_NO_VTABLE IXMLDOMNodeImpl: 
 	public IDispatchImpl<T,piid,plibid,wMajor,wMinor,tihclass>,
-	public IIBMXMLDOMNodeIdentity
+	public IIBMXMLDOMNodeIdentity,
+	public ISupportErrorInfo
 {
 public:
 
@@ -120,7 +127,11 @@ public:
 		*pVal = reinterpret_cast<long> (&get_DOM_Node());
 		return S_OK;
 	}
+
+	//   ISupportErrorInfo
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo(REFIID iid);
 	
+
 	// IXMLDOMNode 
     STDMETHOD(get_nodeName)(BSTR  *pVal);
 	STDMETHOD(get_nodeValue)(VARIANT  *pVal);
@@ -172,6 +183,9 @@ protected:
 	}
 
 };
+
+class DOM_DOMException;
+HRESULT MakeHRESULT(DOM_DOMException& ex);
 
 #include "IXMLDOMNodeImpl.inl"
 

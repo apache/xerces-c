@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/01/19 15:18:26  tng
+ * COM Updates by Curt Arnold: changed 1.3 to 1.4, updated the GUID's so
+ * both can coexist and fixed a new minor bugs.  Most of the changes involved
+ * error reporting, now a DOM defined error will return an HRESULT of
+ * 0x80040600 + code and will set an error description to the error name.
+ *
  * Revision 1.3  2000/06/03 00:29:00  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -73,7 +79,8 @@
 class ATL_NO_VTABLE CXMLDOMNamedNodeMap : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IDispatchImpl<IXMLDOMNamedNodeMap, &IID_IXMLDOMNamedNodeMap, &LIBID_Xerces>,
-	public NodeContainerImpl<DOM_NamedNodeMap>
+	public NodeContainerImpl<DOM_NamedNodeMap>,
+	public ISupportErrorInfo
 {
 public:
 	CXMLDOMNamedNodeMap()
@@ -90,8 +97,13 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 BEGIN_COM_MAP(CXMLDOMNamedNodeMap)
 	COM_INTERFACE_ENTRY(IXMLDOMNamedNodeMap)
 	COM_INTERFACE_ENTRY(IDispatch)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
   
+
+	//   ISupportErrorInfo
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo(REFIID iid);
+
 	// IXMLDOMNamedNodeMap methods
 	STDMETHOD(getNamedItem)(BSTR name, IXMLDOMNode  * *namedItem);
 	STDMETHOD(setNamedItem)(IXMLDOMNode  *newItem, IXMLDOMNode  * *nameItem);

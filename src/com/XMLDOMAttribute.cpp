@@ -75,6 +75,9 @@ STDMETHODIMP CXMLDOMAttribute::get_name(BSTR  *pVal)
 		DOMString val = attr.getName();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
+	catch(DOM_DOMException& ex) {
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -95,9 +98,12 @@ STDMETHODIMP CXMLDOMAttribute::get_value(VARIANT  *pVal)
 
 	try
 	{
-		V_VT(pVal)   = VT_BSTR;
 		DOMString val = attr.getValue();
+		V_VT(pVal)   = VT_BSTR;
 		V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
+	}
+	catch(DOM_DOMException& ex) {
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -114,10 +120,17 @@ STDMETHODIMP CXMLDOMAttribute::put_value(VARIANT newVal)
 
 	try
 	{
-		if (V_VT(&newVal) != VT_BSTR)
-			return E_FAIL;
+		if(V_VT(&newVal) == VT_BSTR) {
+			attr.setValue(V_BSTR(&newVal));
+		}
+		else {
+			attr.setValue((BSTR) (_bstr_t) newVal);
+		}
 
 		attr.setValue(V_BSTR(&newVal));
+	}
+	catch(DOM_DOMException& ex) {
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -135,6 +148,9 @@ STDMETHODIMP CXMLDOMAttribute::get_specified(VARIANT_BOOL  *pVal)
 	try
 	{
 		*pVal = attr.getSpecified() ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	catch(DOM_DOMException& ex) {
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -156,9 +172,12 @@ STDMETHODIMP CXMLDOMAttribute::get_nodeValue(VARIANT  *pVal)
 
 	try
 	{
-		V_VT(pVal)   = VT_BSTR;
 		DOMString val = attr.getValue();
+		V_VT(pVal)   = VT_BSTR;
 		V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
+	}
+	catch(DOM_DOMException& ex) {
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{

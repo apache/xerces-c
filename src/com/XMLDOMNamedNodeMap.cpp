@@ -62,6 +62,7 @@
 #include "xml4com.h"
 #include "XMLDOMNamedNodeMap.h"
 #include "XMLDOMUtil.h"
+#include "IXMLDOMNodeImpl.h"
 
 typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>, NodeContainerImpl<DOM_NamedNodeMap> >
 		CComEnumUnknownOnNamedNodeContainer;
@@ -84,6 +85,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::getNamedItem(BSTR name, IXMLDOMNode  **pVal)
 		DOM_Node n = m_container.getNamedItem(name);
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -130,6 +135,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::setNamedItem(IXMLDOMNode  *newItem, IXMLDOMNod
 		DOM_Node n = m_container.setNamedItem(*pNewItemNode);
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -187,6 +196,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::get_item(long index, IXMLDOMNode  **pVal)
 		if (index < length)
 			hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -210,6 +223,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::get_length(long  *pVal)
 	try
 	{
 		*pVal = m_container.getLength();
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -239,6 +256,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::getQualifiedItem(BSTR baseName, BSTR namespace
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -266,6 +287,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::removeQualifiedItem(BSTR baseName, BSTR namesp
 		DOM_Node n = m_container.removeNamedItemNS(namespaceURI,baseName);
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -300,6 +325,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::nextNode(IXMLDOMNode  **pVal)
 		DOM_Node n = m_container.item(m_NextNodeIndex);
 		if(!n.isNull())
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -343,4 +372,10 @@ STDMETHODIMP CXMLDOMNamedNodeMap::get__newEnum(IUnknown  **pVal)
 	pe->Release();
 
 	return hr;
+}
+
+HRESULT CXMLDOMNamedNodeMap::InterfaceSupportsErrorInfo(REFIID riid) 
+{
+	if(riid == IID_IXMLDOMNamedNodeMap) return S_OK;
+	return S_FALSE;
 }

@@ -79,6 +79,10 @@ STDMETHODIMP CXMLDOMElement::get_tagName(BSTR  *pVal)
 		DOMString val = element.getTagName();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -103,6 +107,10 @@ STDMETHODIMP CXMLDOMElement::getAttribute(BSTR name, VARIANT  *pVal)
 		V_VT(pVal)   = VT_BSTR;
 		V_BSTR(pVal) = SysAllocStringLen(a.rawBuffer(),a.length());
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...) {
 		return E_FAIL;
 	}
@@ -116,10 +124,17 @@ STDMETHODIMP CXMLDOMElement::setAttribute(BSTR name, VARIANT value)
 
 	try
 	{
-		if (V_VT(&value) != VT_BSTR)
-			return E_INVALIDARG;
-
-		element.setAttribute(name, value.bstrVal);
+		if (V_VT(&value) == VT_BSTR)
+		{
+			element.setAttribute(name, value.bstrVal);
+		}
+		else {
+			element.setAttribute(name,(BSTR) (_bstr_t) value);
+		}
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -137,6 +152,10 @@ STDMETHODIMP CXMLDOMElement::removeAttribute(BSTR name)
 	try
 	{
 		element.removeAttribute(name);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -170,6 +189,11 @@ STDMETHODIMP CXMLDOMElement::getAttributeNode(BSTR name, IXMLDOMAttribute  **att
 	try
 	{
 		pObj->attr = attrNode;
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release(); 
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -239,6 +263,10 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 			}
 		}
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -275,6 +303,11 @@ STDMETHODIMP CXMLDOMElement::removeAttributeNode(IXMLDOMAttribute  *attr, IXMLDO
 		}
 		pObj->attr = element.removeAttributeNode(*((DOM_Attr*) id));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release(); 
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		pObj->Release(); 
@@ -310,6 +343,11 @@ STDMETHODIMP CXMLDOMElement::getElementsByTagName(BSTR tagName, IXMLDOMNodeList 
 	{
 		pObj->m_container = element.getElementsByTagName(tagName);
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release(); 
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		pObj->Release(); 
@@ -331,6 +369,10 @@ STDMETHODIMP CXMLDOMElement::normalize(void)
 	try
 	{
 		element.normalize();
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{

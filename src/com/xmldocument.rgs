@@ -1,26 +1,26 @@
 HKCR
 {
-	Xerces.DOMDocument.1.3 = s 'Apache Xerces Parser for COM'
+	Xerces.DOMDocument.1.4 = s 'Apache Xerces Parser for COM'
 	{
-		CLSID = s '{988AE1AE-12FF-4c11-8847-BDD79C1B6B59}'
+		CLSID = s '{C4775B61-ECD6-11d4-94B4-00A0CC57CBCB}'
 	}
 	Xerces.DOMDocument = s 'Apache Xerces Parser For COM'
 	{
-		CLSID = s '{988AE1AE-12FF-4c11-8847-BDD79C1B6B59}'
-		CurVer = s 'Xerces.DOMDocument.1.3'
+		CLSID = s '{C4775B61-ECD6-11d4-94B4-00A0CC57CBCB}'
+		CurVer = s 'Xerces.DOMDocument.1.4'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove = '{988AE1AE-12FF-4c11-8847-BDD79C1B6B59}' = s 'Apache Xerces Parser for COM'
+		ForceRemove = '{C4775B61-ECD6-11d4-94B4-00A0CC57CBCB}' = s 'Apache Xerces Parser for COM'
 		{
-			ProgID = s 'Xerces.DOMDocument.1.3'
+			ProgID = s 'Xerces.DOMDocument.1.4'
 			VersionIndependentProgID = s 'Xerces.DOMDocument'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%XMLMODULE%'
 			{
 				val ThreadingModel = s 'Apartment'
 			}
-			'TypeLib' = s '{C58E1141-26F6-4d3a-AF76-6214CA435238}'
+			'TypeLib' = s '{C4775B62-ECD6-11d4-94B4-00A0CC57CBCB}'
 		}
 	}
 }

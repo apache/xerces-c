@@ -77,6 +77,11 @@ STDMETHODIMP CXMLDOMProcessingInstruction::get_target(BSTR  *pVal)
 		DOMString val = processingInstruction.getTarget();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
+
 	catch(...)
 	{
 		return E_FAIL;
@@ -99,6 +104,10 @@ STDMETHODIMP CXMLDOMProcessingInstruction::get_data(BSTR  *pVal)
 		DOMString val = processingInstruction.getData();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -115,6 +124,10 @@ STDMETHODIMP CXMLDOMProcessingInstruction::put_data(BSTR newVal)
 	try
 	{
 		processingInstruction.setData(newVal);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{

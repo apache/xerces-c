@@ -334,6 +334,11 @@ STDMETHODIMP CXMLDOMDocument::get_documentElement(IXMLDOMElement  * *pVal)
 	{
 		pObj->element = m_Document.getDocumentElement();
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		pObj->Release(); 
@@ -362,6 +367,10 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 			return S_OK;
 		}
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		return E_FAIL;
@@ -386,6 +395,10 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 			m_Document.appendChild(*pNewValNode);
 		else
 			m_Document.replaceChild(*pNewValNode, elem);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -415,6 +428,11 @@ STDMETHODIMP CXMLDOMDocument::createElement(BSTR tagName, IXMLDOMElement  **pVal
 	try
 	{
 		pObj->element = m_Document.createElement(tagName);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -451,6 +469,11 @@ STDMETHODIMP CXMLDOMDocument::createDocumentFragment(IXMLDOMDocumentFragment  **
 	{
 		pObj->documentFragment = m_Document.createDocumentFragment();
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		pObj->Release(); 
@@ -485,6 +508,11 @@ STDMETHODIMP CXMLDOMDocument::createTextNode(BSTR data, IXMLDOMText  **pVal)
 	try
 	{
 		pObj->text = m_Document.createTextNode(data);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -521,6 +549,11 @@ STDMETHODIMP CXMLDOMDocument::createComment(BSTR data, IXMLDOMComment  **comment
 	{
 		pObj->comment = m_Document.createComment(data);
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		pObj->Release(); 
@@ -555,6 +588,11 @@ STDMETHODIMP CXMLDOMDocument::createCDATASection(BSTR data, IXMLDOMCDATASection 
 	try
 	{
 		pObj->cdataSection = m_Document.createCDATASection(data);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -591,6 +629,11 @@ STDMETHODIMP CXMLDOMDocument::createProcessingInstruction(BSTR target, BSTR data
 	{
 		pObj->processingInstruction = m_Document.createProcessingInstruction(target, data);
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		pObj->Release(); 
@@ -625,6 +668,11 @@ STDMETHODIMP CXMLDOMDocument::createAttribute(BSTR name, IXMLDOMAttribute  **att
 	try
 	{
 		pObj->attr = m_Document.createAttribute(name);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -661,6 +709,11 @@ STDMETHODIMP CXMLDOMDocument::createEntityReference(BSTR name, IXMLDOMEntityRefe
 	{
 		pObj->entityReference = m_Document.createEntityReference(name);
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
+	}
 	catch(...)
 	{
 		pObj->Release(); 
@@ -695,6 +748,11 @@ STDMETHODIMP CXMLDOMDocument::getElementsByTagName(BSTR tagName, IXMLDOMNodeList
 	try
 	{
 		pObj->m_container = m_Document.getElementsByTagName(tagName);
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		pObj->Release();
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -818,6 +876,10 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 			break;
 	}
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		hr = MakeHRESULT(ex);
+	}
 	catch (...)
 	{
 		hr = E_FAIL;
@@ -839,6 +901,10 @@ STDMETHODIMP CXMLDOMDocument::nodeFromID(BSTR idString, IXMLDOMNode  **pVal)
 	try
 	{
 		hr = wrapNode(m_pIXMLDOMDocument, m_Document.getElementById(idString),IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -1402,6 +1468,10 @@ STDMETHODIMP CXMLDOMDocument::save(VARIANT location)
 			DOM_Node child = childs.item(i);
 			GetXML(child,text);
 		}
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{

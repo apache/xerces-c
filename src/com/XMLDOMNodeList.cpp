@@ -62,6 +62,7 @@
 #include "xml4com.h"
 #include "XMLDOMNodeList.h"
 #include "XMLDOMUtil.h"
+#include "IXMLDOMNodeImpl.h"
 
 typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>,NodeContainerImpl<DOM_NodeList> >
 		CComEnumUnknownOnNodeContainer;
@@ -89,6 +90,11 @@ STDMETHODIMP CXMLDOMNodeList::get_item(long index, IXMLDOMNode  **pVal)
 		if (index < length)
 			hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
+	}
+
 	catch(...)
 	{
 		return E_FAIL;
@@ -112,6 +118,10 @@ STDMETHODIMP CXMLDOMNodeList::get_length(long  *pVal)
 	try
 	{
 		*pVal = m_container.getLength();
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -146,6 +156,10 @@ STDMETHODIMP CXMLDOMNodeList::nextNode(IXMLDOMNode  **pVal)
 	try
 	{
 		hr = wrapNode(m_pIXMLDOMDocument,m_container.item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+	}
+	catch(DOM_DOMException& ex) 
+	{
+		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
@@ -189,4 +203,11 @@ STDMETHODIMP CXMLDOMNodeList::get__newEnum(IUnknown  **pVal)
 	pe->Release();
 
 	return hr;
+}
+
+
+HRESULT CXMLDOMNodeList::InterfaceSupportsErrorInfo(REFIID riid) 
+{
+	if(riid == IID_IXMLDOMNodeList) return S_OK;
+	return S_FALSE;
 }

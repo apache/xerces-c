@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/01/19 15:18:10  tng
+ * COM Updates by Curt Arnold: changed 1.3 to 1.4, updated the GUID's so
+ * both can coexist and fixed a new minor bugs.  Most of the changes involved
+ * error reporting, now a DOM defined error will return an HRESULT of
+ * 0x80040600 + code and will set an error description to the error name.
+ *
  * Revision 1.4  2000/06/19 20:05:58  rahulj
  * Changes for increased conformance and stability. Submitted by
  * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
@@ -88,7 +94,6 @@ class ATL_NO_VTABLE CXMLDOMDocument :
 	public IObjectSafetyImpl<CXMLDOMDocument, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
 	public IXMLDOMNodeImpl<IXMLDOMDocument, &IID_IXMLDOMDocument, &LIBID_Xerces>,
 	public IObjectWithSiteImpl<CXMLDOMDocument>,
-	public ISupportErrorInfo,
 	public CProxyXMLDOMDocumentEvents< CXMLDOMDocument >,
 	public IConnectionPointContainerImpl<CXMLDOMDocument>,
 	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces>,
@@ -124,6 +129,7 @@ BEGIN_COM_MAP(CXMLDOMDocument)
 	COM_INTERFACE_ENTRY_IMPL(IConnectionPointContainer)
 	COM_INTERFACE_ENTRY(IProvideClassInfo)
 	COM_INTERFACE_ENTRY(IProvideClassInfo2)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 
 BEGIN_CONNECTION_POINT_MAP(CXMLDOMDocument)
