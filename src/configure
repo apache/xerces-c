@@ -1312,12 +1312,14 @@ case "${host}" in
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
         *-*-os400*)     platform=OS400 ;;
+        *-*-OS400*)     platform=OS400 ;;
         *)              platform=UNKNOWN ;;
 esac
 
 
 case "${host}" in
  *-*-os400*)      ;;
+ *-*-OS400*)      ;;
 *) ;;
 esac
 
