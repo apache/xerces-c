@@ -98,8 +98,8 @@
 //        those types constants directly.
 // ---------------------------------------------------------------------------
 static const XMLCh  gEndElement[] = { chOpenAngle, chForwardSlash, chNull };
-static const XMLCh  gEndPI[] = { chQuestion, chCloseAngle, chSpace, chNull};
-static const XMLCh  gStartPI[] = { chOpenAngle, chQuestion, chSpace, chNull };
+static const XMLCh  gEndPI[] = { chQuestion, chCloseAngle, chNull};
+static const XMLCh  gStartPI[] = { chOpenAngle, chQuestion, chNull };
 static const XMLCh  gXMLDecl1[] =
 {
         chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l

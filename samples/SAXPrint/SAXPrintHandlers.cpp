@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/06/17 01:58:06  rahulj
+ * Now output the PI's with no space between ? and target.
+ *
  * Revision 1.9  2000/05/31 23:58:19  rahulj
  * Needed an explicit char* cast to get it working under Solaris.
  *
@@ -111,8 +114,8 @@
 //        those types constants directly.
 // ---------------------------------------------------------------------------
 static const XMLCh  gEndElement[] = { chOpenAngle, chForwardSlash, chNull };
-static const XMLCh  gEndPI[] = { chQuestion, chCloseAngle, chSpace };
-static const XMLCh  gStartPI[] = { chOpenAngle, chQuestion, chSpace };
+static const XMLCh  gEndPI[] = { chQuestion, chCloseAngle, chNull };
+static const XMLCh  gStartPI[] = { chOpenAngle, chQuestion, chNull };
 static const XMLCh  gXMLDecl1[] =
 {
         chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l
@@ -125,7 +128,7 @@ static const XMLCh  gXMLDecl1[] =
 
 static const XMLCh  gXMLDecl2[] =
 {
-        chDoubleQuote, chSpace, chQuestion, chCloseAngle
+        chDoubleQuote, chQuestion, chCloseAngle
     ,   chCR, chLF, chNull
 };
 
@@ -171,6 +174,7 @@ void SAXPrintHandlers::writeChars(const XMLByte* const toWrite)
     // Quite annoying, considering every other platform printed
     // the string with the explicit cast to char* below.
     cout << (char *) toWrite;
+	cout.flush();
 }
 
 
