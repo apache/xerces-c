@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.51  2003/12/30 06:01:20  neilg
+ * fix segfault when validation of a union type fails
+ *
  * Revision 1.50  2003/12/24 15:24:16  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -733,15 +736,18 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
             DatatypeValidator *memberDTV = context->getValidatingMemberType();
             // actual type for DOMTypeInfo is memberDTV
             fMostRecentAttrValidator = memberDTV;
-            DatatypeValidator::ValidatorType memberDTVType = memberDTV->getType();
-            if (memberDTVType == DatatypeValidator::ID) {
-                thisIsAnId = true;
-            }
-            else if (memberDTVType == DatatypeValidator::IDREF) {
-                // if in prevalidatoin, do not add attDef to IDREFList
-                if (preValidation)
-                    getScanner()->getValidationContext()->toCheckIdRefList(false);
-
+            // no member datatype validator if there was an error
+            if(memberDTV)
+            {
+                DatatypeValidator::ValidatorType memberDTVType = memberDTV->getType();
+                if (memberDTVType == DatatypeValidator::ID) {
+                    thisIsAnId = true;
+                }
+                else if (memberDTVType == DatatypeValidator::IDREF) {
+                    // if in prevalidatoin, do not add attDef to IDREFList
+                    if (preValidation)
+                        getScanner()->getValidationContext()->toCheckIdRefList(false);
+                }
             }
         }
         else if (attDefDVType == DatatypeValidator::ID) {
