@@ -26,45 +26,17 @@
     <a>
 
       <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.</p>
-
-      <p>If C++ Namespace is ENABLED,
-         users' applications must namespace qualified all the &XercesCName; classes/data/variables with
-         <code>"&XercesCNamespace;::"</code> or add the <code>"using namespace &XercesCNamespace;;"</code>
-         clause.  Users also need to ensure all forward declarations are properly qualified or scope.
-         For example
+      
+      <p>If C++ Namespace is ENABLED, users' applications must
+         namespace qualify all the &XercesCName; classes, data, and
+         variables with <code>XERCES_CPP_NAMESPACE_QUALIFIER </code>
+         or add the <code>XERCES_CPP_NAMESPACE_USE</code> clause.
+         Users also need to ensure all forward declarations are
+         properly qualified or scoped.
       </p>
-
-<source>
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;xercesc/sax/HandlerBase.hpp&gt;
-
-// indicate using &XercesCName; namespace in general
-using namespace &XercesCNamespace;;
-
-// need to properly scope any forward declarations
-namespace &XercesCNamespace; {
-class AttributeList;
-}
-
-// or namespace qualifier the forward declarations
-class &XercesCNamespace;::ErrorHandler;
-
-class MySAXHandlers : public HandlerBase
-{
-public:
-    // -----------------------------------------------------------------------
-    //  Handlers for the SAX DocumentHandler interface
-    // -----------------------------------------------------------------------
-    void startElement(const XMLCh* const name, AttributeList&amp; attributes);
-    void characters(const XMLCh* const chars, const unsigned int length);
-:
-:
-};
-</source>
-
+      
       <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">
-         Using C++ Namespace</jump> for more details.
+         Using C++ Namespace</jump> for details.
       </p>
 
     </a>
@@ -160,10 +132,9 @@ public:
             versions of <code>gmake</code> and <code>autoconf</code> are on your system.</li>
         <li>If C++ Namespace support is ENABLED (all the binary distributions of &XercesCName;
             &XercesCVersion; are built with C++ Namespace enabled), users' applications
-            must namespace qualified all the &XercesCName; classes/data/variables with
-            <code>"&XercesCNamespace;::"</code> or add the <code>"using namespace &XercesCNamespace;"</code>
-            clause.  See the Programming Guide <jump href="program-others.html#CPPNamespace">
-            Using C++ Namespace</jump> for more details.</li>
+            must namespace qualify all the &XercesCName; classes, data and variables.  
+            See the Programming Guide <jump href="program-others.html#CPPNamespace">
+            Using C++ Namespace</jump> for details.</li>
       </ol>
     </a>
   </faq>

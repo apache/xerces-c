@@ -749,7 +749,8 @@ void myParsingFunction()
 <source>
 // create an XMLTranscoder that is able to transcode between Unicode and Big5
 // ASSUMPTION: assumes your underlying transcoding utility supports this encoding Big5
-XMLTranscoder* t = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("Big5", failReason, 16*1024);
+XMLTranscoder* t = 
+    XMLPlatformUtils::fgTransService->makeNewTranscoderFor("Big5", failReason, 16*1024, MemoryManager);
 
 // source string is in Unicode, wanna to transcode to Big5
 t-&gt;transcodeTo(source_unicode, length, result_Big5, length, charsEaten, XMLTranscoder::UnRep_Throw );

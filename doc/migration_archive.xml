@@ -220,17 +220,15 @@
     <anchor name="CPPNamespace220"/>
     <s3 title="Using C++ Namespace">
         <p>&XercesCName; 2.2.0 now supports C++ Namespace.  All &XercesCName;
-           classes/data/variables are defined in the <code>"namespace &XercesCNamespace;"</code>
+           classes, data and variables are defined in the &XercesCNamespace; namespace
            if C++ Namespace support is ENABLED.</p>
 
         <p>All the binary distributions of &XercesCName; 2.2.0 are now built with
            C++ Namespace enabled.   Therefore users' applications that links with the distributed
-           binary packages must namespace qualified all the &XercesCName; classes/data/variables
-           with <code>"&XercesCNamespace;::"</code> or add the
-           <code>"using namespace &XercesCNamespace;"</code> clause.</p>
+           binary packages must namespace qualify all the &XercesCName; classes, data and variables.</p>
 
         <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">Using C++ Namespace</jump>
-           for more details.</p>
+           for details.</p>
 
     </s3>
 

@@ -73,17 +73,17 @@ MySAX2Handler::MySAX2Handler()
 {
 }
 
-MySAX2Handler::startElement(const   XMLCh* const    uri,
+void MySAX2Handler::startElement(const   XMLCh* const    uri,
                             const   XMLCh* const    localname,
                             const   XMLCh* const    qname,
                             const   Attributes&amp;     attrs)
 {
-    char* message = XMLString::transcode(name);
+    char* message = XMLString::transcode(localname);
     cout &lt;&lt; "I saw element: "&lt;&lt; message &lt;&lt; endl;
     XMLString::release(&amp;message);
 }
 
-MySAX2Handler::fatalError(const SAXParseException&amp; exception)
+void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 {
     char* message = XMLString::transcode(exception.getMessage());
     cout &lt;&lt; "Fatal Error: " &lt;&lt; message
@@ -114,6 +114,14 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
     #include &lt;xercesc/sax2/DefaultHandler.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
 
+    #if defined(XERCES_NEW_IOSTREAMS)
+    #include &lt;iostream>
+    #else
+    #include &lt;iostream.h>
+    #endif
+
+    XERCES_CPP_NAMESPACE_USE
+
     int main (int argc, char* args[]) {
 
         try {
@@ -121,7 +129,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
         }
         catch (const XMLException&amp; toCatch) {
             char* message = XMLString::transcode(toCatch.getMessage());
-            cout &lt;&lt; "Error during initialization! :\n"
+            cout &lt;&lt; "Error during initialization! :\n";
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
             XMLString::release(&amp;message);

@@ -287,6 +287,14 @@
     #include &lt;xercesc/util/XMLString.hpp>
     #include &lt;xercesc/util/PlatformUtils.hpp>
 
+    #if defined(XERCES_NEW_IOSTREAMS)
+    #include &lt;iostream>
+    #else
+    #include &lt;iostream.h>
+    #endif
+
+    XERCES_CPP_NAMESPACE_USE
+
     int main (int argc, char* args[]) {
 
         try {
@@ -713,6 +721,14 @@
     #include &lt;xercesc/util/XMLString.hpp>
     #include &lt;xercesc/util/PlatformUtils.hpp>
 
+    #if defined(XERCES_NEW_IOSTREAMS)
+    #include &lt;iostream>
+    #else
+    #include &lt;iostream.h>
+    #endif
+
+    XERCES_CPP_NAMESPACE_USE
+    
     int main (int argc, char* args[]) {
 
         try {
@@ -1367,7 +1383,14 @@
     #include &lt;xercesc/dom/DOM.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
     #include &lt;xercesc/util/PlatformUtils.hpp>
+    
+    #if defined(XERCES_NEW_IOSTREAMS)
+    #include &lt;iostream>
+    #else
+    #include &lt;iostream.h>
+    #endif
 
+    XERCES_CPP_NAMESPACE_USE
     int serializeDOM(DOMNode* node) {
 
         XMLCh tempStr[100];

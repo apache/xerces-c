@@ -74,6 +74,10 @@
             are all necessary information to allow developer to reproduce,
             identify, evaluate and eventually, fix the bug, which is the very
             purpose of your reporting of the bug.
-        </p>        
+        </p>  
+	<p>If you are providing a patch please review the information in
+        <jump href="faq-contributing.html#Submitting Patches">Submitting Patches</jump>.
+        </p>
+              
     </s2>
 </s1>

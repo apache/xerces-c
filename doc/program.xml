@@ -19,6 +19,42 @@
 
 <s1 title="Programming Guide">
 
+	<p>Independent of the API you want to use, DOM, SAX, or SAX2, your
+      application must initialize the &XercesCProjectName; system
+      before using the API, and terminate it after you are done. This
+      is achieved by the following code:</p>
+<source>
+int main(int argc, char* argv[])
+{
+  #include &lt;xercesc/util/PlatformUtils.hpp&gt;
+  // Other include files, declarations, and non-&XercesCName; initializations.
+
+  try {
+    XMLPlatformUtils::Initialize();
+  }
+  catch (const XMLException&amp; toCatch) {
+    // Do your failure processing here
+    return 1;
+  }
+
+  // Do your actual work with &XercesCName; here.
+
+  XMLPlatformUtils::Terminate();
+
+  // Other terminations and cleanup.
+  return 0;
+}</source>
+
+
+<p><code>XMLPlatformUtils::Initialize()</code> and
+         <code>XMLPlatformUtils::Terminate</code> must be called at
+         least once in each process. You are allowed to call
+         <code>XMLPlatformUtils::Initialize()</code> and
+         <code>XMLPlatformUtils::Terminate</code> multiple times, but
+         each call to <code>XMLPlatformUtils::Initialize()</code> must
+         be matched with a call to
+         <code>XMLPlatformUtils::Terminate</code>.</p>
+
   <s2 title="DOM Programming Guide">
     <p>The DOM API is based on the
       <jump href="ApacheDOMC++Binding.html">Apache Recommended DOM C++ binding</jump>.</p>
