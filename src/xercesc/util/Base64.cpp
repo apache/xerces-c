@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/08/11 16:47:32  peiyongz
+ * Decoding and getCanRep
+ *
  * Revision 1.12  2004/06/24 15:00:37  peiyongz
  * Schema-Errata: E2-54 new specs for base64
  *
@@ -341,6 +344,141 @@ int Base64::getDataLength(const XMLCh*         const inputData
     }
 }
 
+XMLByte* Base64::decode(const XMLByte*       const  inputData
+                      ,       unsigned int*         decodedLength
+                      ,       MemoryManager* const  memMgr
+                      ,       Conformance           conform )
+{
+    XMLByte* canRepInByte = 0;
+    XMLByte* retStr = decode(
+                              inputData
+                            , decodedLength
+                            , canRepInByte
+                            , memMgr
+                            , conform);
+
+    /***
+     * Release the canRepData
+     */ 
+    if (retStr)
+        returnExternalMemory(memMgr, canRepInByte);
+
+    return retStr;
+}
+
+XMLCh* Base64::decode(const XMLCh*         const   inputData
+                    ,       unsigned int*          decodedLen
+                    ,       MemoryManager* const   memMgr
+                    ,       Conformance            conform )
+{
+	if (!inputData)
+		return 0;
+
+    /***
+     *  Move input data to a XMLByte buffer
+     */
+	unsigned int srcLen = XMLString::stringLen(inputData);
+    XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
+
+    for (unsigned int i = 0; i < srcLen; i++)
+		dataInByte[i] = (XMLByte)inputData[i];
+
+	dataInByte[srcLen] = 0;
+
+    /***
+     * Forward to the actual decoding method to do the decoding
+     */
+	*decodedLen = 0;
+	XMLByte *DecodedBuf = decode(dataInByte, decodedLen, memMgr, conform);
+
+	if (!DecodedBuf)
+		return 0;
+
+    /***
+     * Move decoded data to a XMLCh buffer to return
+     */
+    XMLCh *toRet = (XMLCh*) getExternalMemory(memMgr, (*decodedLen+1) * sizeof(XMLCh));
+               
+    for (unsigned int j = 0; j < *decodedLen; j++)
+		toRet[j] = (XMLCh)DecodedBuf[j];
+
+	toRet[*decodedLen] = 0;
+
+    /***
+     * Release the memory allocated in the actual decoding method
+     */ 
+    returnExternalMemory(memMgr, DecodedBuf);
+
+    return toRet;
+}
+
+/***
+* E2-54
+*
+* Canonical-base64Binary ::= (B64 B64 B64 B64)*((B64 B64 B16 '=')|(B64 B04 '=='))? 
+* B04                    ::= [AQgw]
+* B16                    ::= [AEIMQUYcgkosw048]
+* B64                    ::= [A-Za-z0-9+/] 
+*
+***/
+XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
+                                        ,       MemoryManager* const   memMgr
+                                        ,       Conformance            conform)
+    
+{
+	if (!inputData || !*inputData) 
+		return 0;
+
+    /***
+     *  Move input data to a XMLByte buffer
+     */
+	unsigned int srcLen = XMLString::stringLen(inputData);
+    XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
+
+    for (unsigned int i = 0; i < srcLen; i++)
+		dataInByte[i] = (XMLByte)inputData[i];
+
+	dataInByte[srcLen] = 0;
+
+    /***
+     * Forward to the actual decoding method to do the decoding
+     */
+	unsigned int decodedLength = 0;
+    XMLByte*     canRepInByte = 0;
+    XMLByte*     retStr = decode(
+                              dataInByte
+                            , &decodedLength
+                            , canRepInByte
+                            , memMgr
+                            , conform);
+
+    if (!retStr)
+        return 0;
+
+    /***
+     * Move canonical representation to a XMLCh buffer to return
+     */
+    XMLCh *canRepData = (XMLCh*) getExternalMemory(memMgr, (decodedLength+1) * sizeof(XMLCh));
+               
+    for (unsigned int j = 0; j < decodedLength; j++)
+		canRepData[j] = (XMLCh)canRepInByte[j];
+
+	canRepData[decodedLength] = 0;
+
+    /***
+     * Release the memory allocated in the actual decoding method
+     */ 
+    returnExternalMemory(memMgr, retStr);
+    returnExternalMemory(memMgr, canRepInByte);
+
+    return canRepData;
+}
+// -----------------------------------------------------------------------
+//  Helper methods
+// -----------------------------------------------------------------------
+
 //
 // return 0(null) if invalid data found.
 // return the buffer containning decoded data otherwise
@@ -394,10 +532,12 @@ int Base64::getDataLength(const XMLCh*         const inputData
  *
 */
 
-XMLByte* Base64::decode(const XMLByte*       const  inputData
-                      ,       unsigned int*         decodedLength
-                      ,       MemoryManager* const  memMgr
-                      ,       Conformance           conform )
+XMLByte* Base64::decode (   const XMLByte*        const   inputData
+                          ,       unsigned int*           decodedLength
+                          ,       XMLByte*                canRepData
+                          ,       MemoryManager*  const   memMgr
+                          ,       Conformance             conform
+                        )
 {
     if (!isInitialized)
         init();
@@ -468,6 +608,8 @@ XMLByte* Base64::decode(const XMLByte*       const  inputData
         break;
     }
 
+    //now rawInputData contains canonical representation 
+    //if the data is valid Base64
     rawInputData[ rawInputLength ] = 0;
 
     // the length of raw data should be divisible by four
@@ -583,59 +725,13 @@ XMLByte* Base64::decode(const XMLByte*       const  inputData
     decodedData[ outputIndex ] = 0;
     *decodedLength = outputIndex;
 
+    //allow the caller to have access to the canonical representation
+    jan.release(); 
+    canRepData = rawInputData;
+
     return decodedData;
 }
 
-XMLCh* Base64::decode(const XMLCh*         const   inputData
-                    ,       unsigned int*          decodedLen
-                    ,       MemoryManager* const   memMgr
-                    ,       Conformance            conform )
-{
-	if (!inputData)
-		return 0;
-
-    /***
-     *  Move input data to a XMLByte buffer
-     */
-	unsigned int srcLen = XMLString::stringLen(inputData);
-    XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
-    ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
-
-    for (unsigned int i = 0; i < srcLen; i++)
-		dataInByte[i] = (XMLByte)inputData[i];
-
-	dataInByte[srcLen] = 0;
-
-    /***
-     * Forward to the actual decoding method to do the decoding
-     */
-	*decodedLen = 0;
-	XMLByte *DecodedBuf = decode(dataInByte, decodedLen, memMgr, conform);
-
-	if (!DecodedBuf)
-		return 0;
-
-    /***
-     * Move decoded data to a XMLCh buffer to return
-     */
-    XMLCh *toRet = (XMLCh*) getExternalMemory(memMgr, (*decodedLen+1) * sizeof(XMLCh));
-               
-    for (unsigned int j = 0; j < *decodedLen; j++)
-		toRet[j] = (XMLCh)DecodedBuf[j];
-
-	toRet[*decodedLen] = 0;
-
-    /***
-     * Release the memory allocated in the actual decoding method
-     */ 
-    returnExternalMemory(memMgr, DecodedBuf);
-
-    return toRet;
-}
-
-// -----------------------------------------------------------------------
-//  Helper methods
-// -----------------------------------------------------------------------
 void Base64::init()
 {
     if (isInitialized)

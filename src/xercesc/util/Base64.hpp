@@ -131,7 +131,7 @@ public :
      */
     static XMLByte* decode(
                            const XMLByte*        const   inputData
-                         ,       unsigned int*           outputLength
+                         ,       unsigned int*           decodedLength
                          ,       MemoryManager*  const   memMgr = 0
                          ,       Conformance             conform = Conf_RFC2045
                           );
@@ -156,7 +156,7 @@ public :
      */
     static XMLCh* decode(
                          const XMLCh*          const    inputData
-                       ,       unsigned int*            outputLength
+                       ,       unsigned int*            decodedLength
                        ,       MemoryManager*  const    memMgr = 0
                        ,       Conformance              conform = Conf_RFC2045
                         );
@@ -181,11 +181,41 @@ public :
 
     //@}
 
+     /**
+     * get canonical representation
+     *
+     * Caller is responsible for the proper deallcation
+     * of the string returned.
+     * 
+     * @param inputData A string containing the Base64
+     * @param memMgr client provided memory manager
+     * @param conform conformance specified
+     *
+     * return: the canonical representation of the Base64
+     *         if it is a valid Base64
+     *         0 otherwise
+     */
+
+    static XMLCh* getCanonicalRepresentation
+                  (
+                      const XMLCh*          const inputData
+                    ,       MemoryManager*  const memMgr = 0
+                    ,       Conformance           conform = Conf_RFC2045
+                  );
+
 private :
 
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
+
+    static XMLByte* decode(
+                           const XMLByte*        const   inputData
+                         ,       unsigned int*           outputLength
+                         ,       XMLByte*                canRepData
+                         ,       MemoryManager*  const   memMgr = 0
+                         ,       Conformance             conform = Conf_RFC2045
+                          );
 
     static void init();
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/08/11 16:46:54  peiyongz
+ * Decoding and getCanRep
+ *
  * Revision 1.3  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -76,6 +79,7 @@
 #include <xercesc/util/HexBin.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -115,6 +119,57 @@ bool HexBin::isArrayByteHex(const XMLCh* const hexData)
             return false;
 
     return true;
+}
+
+XMLCh* HexBin::getCanonicalRepresentation(const XMLCh*          const hexData
+                                        ,       MemoryManager*  const manager)
+{
+
+    if (getDataLength(hexData) == -1)
+        return 0;
+
+    XMLCh* retStr = XMLString::replicate(hexData, manager);
+    XMLString::upperCase(retStr);
+
+    return retStr;
+}
+
+
+XMLCh* HexBin::decode(const XMLCh*          const   hexData
+                    ,       MemoryManager*  const   manager)
+{
+    if (( hexData == 0 ) || ( *hexData == 0 )) // zero length
+        return 0;
+
+    int strLen = XMLString::stringLen(hexData);
+    if ( strLen%2 != 0 )
+        return 0;
+
+    if ( !isInitialized )
+        init();
+
+    //prepare the return string
+    XMLCh *retVal = (XMLCh*) manager->allocate( (strLen/2 + 1) * sizeof(XMLCh));
+    ArrayJanitor<XMLCh> janFill(retVal, manager);
+
+    for ( int i = 0; i < strLen; )
+    {
+        if( !isHex(hexData[i])  || 
+            !isHex(hexData[i+1])  )
+            return 0;
+        else
+        {
+            retVal[i/2] = (XMLCh)(
+                                   (((XMLByte) hexData[i]) << 4 ) | 
+                                    ((XMLByte) hexData[i+1])
+                                 );      
+            i+=2;
+        }
+    }
+
+    janFill.release();
+    retVal[strLen/2] = 0;
+    return retVal;
 }
 
 // -----------------------------------------------------------------------

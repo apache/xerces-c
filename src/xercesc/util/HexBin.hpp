@@ -61,7 +61,7 @@
 #ifndef HEXBIN_HPP
 #define HEXBIN_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -91,6 +91,47 @@ public :
      */
 
     static bool isArrayByteHex(const XMLCh* const hexData);
+
+     /**
+     * get canonical representation
+     *
+     * Caller is responsible for the proper deallcation
+     * of the string returned.
+     * 
+     * @param hexData A string containing the HexBinary
+     *
+     * return: the canonical representation of the HexBinary
+     *         if it is a valid HexBinary, 
+     *         0 otherwise
+     */
+
+    static XMLCh* getCanonicalRepresentation
+                  (
+                      const XMLCh*          const hexData
+                    ,       MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
+                  );
+
+    /**
+     * Decodes HexBinary data into XMLCh
+     *
+     * NOTE: The returned buffer is dynamically allocated and is the
+     * responsibility of the caller to delete it when not longer needed.
+     * You can call XMLString::release to release this returned buffer.
+     *
+     * If a memory manager is provided, ask the memory manager to de-allocate
+     * the returned buffer.
+     *
+     * @param hexData HexBinary data in XMLCh stream.
+     * @param memMgr client provided memory manager
+     * @return Decoded binary data in XMLCh stream,
+     *      or NULL if input data can not be decoded.
+     * @see   XMLString::release(XMLCh**)
+     */
+    static XMLCh* decode(
+                         const XMLCh*          const    hexData
+                       ,       MemoryManager*  const    manager = XMLPlatformUtils::fgMemoryManager
+                        );
+
 
     //@}
 
