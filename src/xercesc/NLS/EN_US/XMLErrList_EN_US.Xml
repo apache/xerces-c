@@ -176,6 +176,7 @@
             <Message Id="InvalidAttTNS" Text="The {target namespace} of '{0}' must not match 'http://www.w3.org/2001/XMLSchema-instance'."/>
         </Error>
         <FatalError>
+            <Message Id="EntityExpansionLimitExceeded" Text= "The parser has encountered more than '{0}' entity expansions in this document; this is the limit imposed by the application."/>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
             <Message Id="ExpectedAttrName" Text="Expected an attribute name"/>
             <Message Id="ExpectedNotationName" Text="Expected a notation name"/>

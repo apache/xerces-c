@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -540,6 +540,13 @@ void WFXMLScanner::scanReset(const InputSource& src)
 
     // Push this read onto the reader manager
     fReaderMgr.pushReader(newReader, 0);
+
+    // and reset security-related things if necessary:
+    if(fSecurityManager != 0) 
+    {
+        fEntityExpansionLimit = fSecurityManager->getEntityExpansionLimit();
+        fEntityExpansionCount = 0;
+    }
 }
 
 //  This method is called between markup in content. It scans for character
@@ -2068,6 +2075,20 @@ WFXMLScanner::scanEntityRef(const bool    inAttVal
             emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
 
         return EntityExp_Failed;
+    }
+
+    // here's where we need to check if there's a SecurityManager,
+    // how many entity references we've had
+    if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
+        XMLCh expLimStr[16];
+        XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10);
+        emitError
+        ( 
+            XMLErrs::EntityExpansionLimitExceeded
+            , expLimStr
+        );
+        // there seems nothing better to be done than to reset the entity expansion counter
+        fEntityExpansionCount = 0;
     }
 
     firstCh = fEntityTable->get(bbName.getRawBuffer());

@@ -171,6 +171,7 @@ en_US {
 		"The {target namespace} of '{0}' must not match 'http://www.w3.org/2001/XMLSchema-instance'. " ,
 		"E_ End " ,
 		"F_ Start " , 
+		"The parser has encountered more than '{0}' entity expansions in this document; this is the limit imposed by the application. " ,
 		"Expected comment or CDATA " ,
 		"Expected an attribute name " ,
 		"Expected a notation name " ,

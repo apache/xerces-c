@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,16 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/04/17 22:00:46  neilg
+ * This commit implements detection of exponential entity
+ * expansions inside the scanner code.  This is only done when a
+ * security manager instance has been registered with the parser by
+ * the application.  The default number of entities which may be
+ * expanded is 50000; this appears to work very well for SAX, but DOM
+ * parsing applications may wish to set this limit considerably lower.
+ *
+ * Added SecurityManager to enable detection of exponentially-expanding entities
+ * 
  * Revision 1.18  2003/03/10 15:27:29  tng
  * XML1.0 Errata E38
  *
@@ -259,6 +269,7 @@
 #include <xercesc/framework/XMLRefInfo.hpp>
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/SecurityManager.hpp>
 #include <xercesc/internal/ReaderMgr.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
@@ -448,6 +459,7 @@ public :
     bool getHasNoDTD() const;
     XMLCh* getExternalSchemaLocation() const;
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
+    SecurityManager* getSecurityManager() const;
     bool getLoadExternalDTD() const;
     bool getNormalizeData() const;
     bool isCachingGrammarFromParse() const;
@@ -541,6 +553,7 @@ public :
     void setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation);
     void setExternalSchemaLocation(const char* const schemaLocation);
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
+    void setSecurityManager(SecurityManager* const securityManager);
     void setLoadExternalDTD(const bool loadDTD);
     void setNormalizeData(const bool normalizeData);
     void setCalculateSrcOfs(const bool newValue);
@@ -825,6 +838,17 @@ protected:
     //      The no target namespace XML Schema Location that was specified
     //      externally using setExternalNoNamespaceSchemaLocation.
     //
+    //  fSecurityManager
+    //      The SecurityManager instance; as and when set by the application.
+    //
+    // fEntityExpansionLimit
+    //      The number of entity expansions to be permitted while processing this document
+    //      Only meaningful when fSecurityManager != 0
+    //
+    // fEntityExpansionCount
+    //      The number of general entities expanded so far in this document.
+    //      Only meaningful when fSecurityManager != null
+    //
     //  fLoadExternalDTD
     //      This flag indicates whether the external DTD be loaded or not
     //
@@ -859,6 +883,8 @@ protected:
     bool                        fLoadExternalDTD;
     bool                        fNormalizeData;
     int                         fErrorCount;
+    unsigned int fEntityExpansionLimit;
+    unsigned int fEntityExpansionCount;
     unsigned int                fEmptyNamespaceId;
     unsigned int                fUnknownNamespaceId;
     unsigned int                fXMLNamespaceId;
@@ -890,6 +916,7 @@ protected:
     XMLCh*                      fRootElemName;
     XMLCh*                      fExternalSchemaLocation;
     XMLCh*                      fExternalNoNamespaceSchemaLocation;
+    SecurityManager const*      fSecurityManager;
     XMLReader::XMLVersion       fXMLVersion;    
 
 private :
@@ -1099,6 +1126,11 @@ inline XMLCh* XMLScanner::getExternalNoNamespaceSchemaLocation() const
     return fExternalNoNamespaceSchemaLocation;
 }
 
+inline SecurityManager* XMLScanner::getSecurityManager() const
+{
+    return (SecurityManager *)fSecurityManager;
+}
+
 inline bool XMLScanner::getLoadExternalDTD() const
 {
     return fLoadExternalDTD;
@@ -1244,6 +1276,16 @@ inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const char* const n
 {
     delete [] fExternalNoNamespaceSchemaLocation;
     fExternalNoNamespaceSchemaLocation = XMLString::transcode(noNamespaceSchemaLocation);
+}
+
+inline void XMLScanner::setSecurityManager(SecurityManager* const securityManager)
+{
+    fSecurityManager = securityManager;
+    if(securityManager != 0) 
+    {
+        fEntityExpansionLimit = securityManager->getEntityExpansionLimit();
+        fEntityExpansionCount = 0;
+    }
 }
 
 inline void XMLScanner::setLoadExternalDTD(const bool loadDTD)
