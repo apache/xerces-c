@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/02/05 20:01:39  tng
+ * define NO_NATIVE_BOOL macro only if not pre-defined/reserved
+ *
  * Revision 1.9  2000/10/17 00:52:00  andyh
  * Change XMLCh back to unsigned short on all platforms.
  *
@@ -107,7 +110,9 @@
 // ---------------------------------------------------------------------------
 // Indicate that we do not support native bools
 // ---------------------------------------------------------------------------
+#if !defined(__BOOL__)
 #define NO_NATIVE_BOOL
+#endif
 
 
 // ---------------------------------------------------------------------------
