@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:44  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/30 16:17:19  tng
+ * Add feature to optionally ignore external DTD.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:44  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/06/21 14:25:56  knoaman
  * Fix for bug 1946
@@ -92,12 +95,12 @@ public:
     // -----------------------------------------------------------------------
     //  Class specific types
     //
-    //  NOTE: This should really be private, but some of the compilers we
-    //  have to support cannot understand that.
-    //
     //  EntityExpRes
     //      Returned from scanEntityRef() to indicate how the expanded text
     //      was treated.
+    //
+    //  IDTypes
+    //      Type of the ID
     // -----------------------------------------------------------------------
     enum EntityExpRes
     {
@@ -105,6 +108,14 @@ public:
         , EntityExp_Pushed
         , EntityExp_Returned
     };
+
+    enum IDTypes
+    {
+        IDType_Public
+        , IDType_External
+        , IDType_Either
+    };
+
 
 
     // -----------------------------------------------------------------------
@@ -137,20 +148,16 @@ public:
             DocTypeHandler* const handlerToSet
     );
 
-    void scanDocTypeDecl(const bool reuseGrammar);
+    void scanExtSubsetDecl(const bool inIncludeSect);
+    bool scanInternalSubset();
+    bool scanId
+    (
+                XMLBuffer&  pubIdToFill
+        ,       XMLBuffer&  sysIdToFill
+        , const IDTypes     whatKind
+    );
 
 private:
-    // -----------------------------------------------------------------------
-    //  Private class types
-    // -----------------------------------------------------------------------
-    enum IDTypes
-    {
-        IDType_Public
-        , IDType_External
-        , IDType_Either
-    };
-
-
     // -----------------------------------------------------------------------
     //  Private DTD scanning methods. These are all in XMLValidator2.cpp
     // -----------------------------------------------------------------------
@@ -199,15 +206,7 @@ private:
         , const bool        notation
     );
     bool scanEq();
-    void scanExtSubsetDecl(const bool inIncludeSect);
-    bool scanId
-    (
-                XMLBuffer&  pubIdToFill
-        ,       XMLBuffer&  sysIdToFill
-        , const IDTypes     whatKind
-    );
     void scanIgnoredSection();
-    bool scanInternalSubset();
     void scanMarkupDecl(const bool parseTextDecl);
     bool scanMixed(DTDElementDecl& toFill);
     void scanNotationDecl();

@@ -227,6 +227,7 @@ public :
     static const XMLCh fgSAX2XercesSchemaFullChecking[];
     static const XMLCh fgSAX2XercesSchemaExternalSchemaLocation[];
     static const XMLCh fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[];
+    static const XMLCh fgSAX2XercesLoadExternalDTD[];
 
     // DOMBuilder features
     static const XMLCh fgDOMCanonicalForm[];

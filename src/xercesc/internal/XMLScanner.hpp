@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/05/30 16:20:57  tng
+ * Add feature to optionally ignore external DTD.
+ *
  * Revision 1.4  2002/05/27 18:42:14  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -396,6 +399,7 @@ public :
     bool getHasNoDTD() const;
     XMLCh* getExternalSchemaLocation() const;
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
+    bool getLoadExternalDTD() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -492,6 +496,7 @@ public :
     void setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation);
     void setExternalSchemaLocation(const char* const schemaLocation);
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
+    void setLoadExternalDTD(const bool loadDTD);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -503,7 +508,7 @@ public :
     //  setValidationScheme() instead.
     // -----------------------------------------------------------------------
     bool getDoValidation() const;
-    void setDoValidation(const bool validate, const bool setValScheme = true);
+    void setDoValidation(const bool validate);
 
 
     // -----------------------------------------------------------------------
@@ -683,6 +688,7 @@ private :
                 XMLBuffer&  toFill
         , const XMLCh       chEndChar
     );
+    void scanDocTypeDecl();
 
     // -----------------------------------------------------------------------
     //  Private helper methods
@@ -908,6 +914,9 @@ private :
     //      The no target namespace XML Schema Location that was specified
     //      externally using setExternalNoNamespaceSchemaLocation.
     //
+    //  fLoadExternalDTD
+    //      This flag indicates whether the external DTD be loaded or not
+    //
     // -----------------------------------------------------------------------
     bool                        fDoNamespaces;
     bool                        fExitOnFirstFatal;
@@ -964,6 +973,7 @@ private :
     XMLCh*                      fRootElemName;
     XMLCh*                      fExternalSchemaLocation;
     XMLCh*                      fExternalNoNamespaceSchemaLocation;
+    bool                        fLoadExternalDTD;
 };
 
 
@@ -1162,6 +1172,11 @@ inline XMLCh* XMLScanner::getExternalNoNamespaceSchemaLocation() const
     return fExternalNoNamespaceSchemaLocation;
 }
 
+inline bool XMLScanner::getLoadExternalDTD() const
+{
+    return fLoadExternalDTD;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1281,6 +1296,11 @@ inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const char* const n
     fExternalNoNamespaceSchemaLocation = XMLString::transcode(noNamespaceSchemaLocation);
 }
 
+inline void XMLScanner::setLoadExternalDTD(const bool loadDTD)
+{
+    fLoadExternalDTD = loadDTD;
+}
+
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Mutator methods
@@ -1299,15 +1319,13 @@ inline bool XMLScanner::getDoValidation() const
     return fValidate;
 }
 
-inline void XMLScanner::setDoValidation(const bool validate, const bool setValScheme)
+inline void XMLScanner::setDoValidation(const bool validate)
 {
     fValidate = validate;
-    if (setValScheme) {
-        if (fValidate)
-            fValScheme = Val_Always;
-        else
-            fValScheme = Val_Never;
-    }
+    if (fValidate)
+        fValScheme = Val_Always;
+    else
+        fValScheme = Val_Never;
 }
 
 #endif

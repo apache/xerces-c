@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/05/30 16:20:09  tng
+ * Add feature to optionally ignore external DTD.
+ *
  * Revision 1.6  2002/05/29 21:37:47  knoaman
  * Add baseURI to resolveEntity to support DOMInputSource.
  *
@@ -1368,6 +1371,11 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 		fScanner->setValidationSchemaFullChecking(value);
 	}
 
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesLoadExternalDTD) == 0)
+	{
+		fScanner->setLoadExternalDTD(value);
+	}
+
    else
        throw SAXNotRecognizedException("Unknown Feature");
 }
@@ -1390,6 +1398,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return getDoSchema();
 	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaFullChecking) == 0)
         return fScanner->getValidationSchemaFullChecking();
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesLoadExternalDTD) == 0)
+        return fScanner->getLoadExternalDTD();
    else
        throw SAXNotRecognizedException("Unknown Feature");
 	return false;

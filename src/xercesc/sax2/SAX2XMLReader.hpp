@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:09  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/30 16:22:53  tng
+ * Add feature to optionally ignore external DTD.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
+ * sane_include
  *
  * Revision 1.18  2002/01/28 18:45:40  knoaman
  * Update documentation for SAX2 feature 'namespace-prefixes'.
@@ -519,6 +522,7 @@ public:
     * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
+    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
     * <br>http://apache.org/xml/features/validation/reuse-validator (Deprecated) (default: false)
     *
     * @param name The unique identifier (URI) of the feature.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/05/30 16:20:09  tng
+ * Add feature to optionally ignore external DTD.
+ *
  * Revision 1.5  2002/05/29 21:37:47  knoaman
  * Add baseURI to resolveEntity to support DOMInputSource.
  *
@@ -697,6 +700,7 @@ public :
     * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
+    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
     * <br>http://apache.org/xml/features/validation/reuse-validator (Deprecated) (default: false)
     *
     * @param name The unique identifier (URI) of the feature.

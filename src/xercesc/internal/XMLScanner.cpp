@@ -221,6 +221,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fRootElemName(0)
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
+    , fLoadExternalDTD(true)
 {
    commonInit();
 
@@ -284,6 +285,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fRootElemName(0)
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
+    , fLoadExternalDTD(true)
 {
    commonInit();
 
@@ -2215,28 +2217,7 @@ void XMLScanner::scanProlog()
                 }
                  else if (fReaderMgr.skippedString(XMLUni::fgDocTypeString))
                 {
-                    if (!fReuseGrammar && fValidatorFromUser && !fValidator->handlesDTD())
-                    {
-                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
-                    }
-
-                    //
-                    //  We have a doc type. So, create a DTDScanner and
-                    //  switch the Grammar to the emptyNamespace one.
-                    //
-
-                    if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate)
-                    {
-                        fValidator->emitError
-                        (
-                            XMLValid::GrammarNotFound
-                          , XMLUni::fgZeroLenString
-                        );
-                    }
-
-                    DTDScanner fDTDScanner((DTDGrammar*)fGrammar, fEntityDeclPool, fDocTypeHandler);
-                    fDTDScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
-                    fDTDScanner.scanDocTypeDecl(fReuseGrammar);
+                    scanDocTypeDecl();
 
                     // if reusing grammar, this has been validated already in first scan
                     // skip for performance
@@ -2294,6 +2275,302 @@ void XMLScanner::scanProlog()
             , "in prolog"
         );
     }
+    }
+}
+
+//
+//  This method handles the high level logic of scanning the DOCType
+//  declaration. This calls the DTDScanner and kicks off both the scanning of
+//  the internal subset and the scanning of the external subset, if any.
+//
+//  When we get here the '<!DOCTYPE' part has already been scanned, which is
+//  what told us that we had a doc type decl to parse.
+//
+
+void XMLScanner::scanDocTypeDecl()
+{
+    if (!fReuseGrammar && fValidatorFromUser && !fValidator->handlesDTD())
+    {
+        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+    }
+
+    //
+    //  We have a doc type. So, create a DTDScanner and
+    //  switch the Grammar to the emptyNamespace one.
+    //
+
+    if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate)
+    {
+        fValidator->emitError
+        (
+            XMLValid::GrammarNotFound
+          , XMLUni::fgZeroLenString
+        );
+    }
+
+    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fEntityDeclPool, fDocTypeHandler);
+    dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
+
+    if (fDocTypeHandler)
+        fDocTypeHandler->resetDocType();
+
+    // There must be some space after DOCTYPE
+    if (!fReaderMgr.skipPastSpaces())
+    {
+        emitError(XMLErrs::ExpectedWhitespace);
+
+        // Just skip the Doctype declaration and return
+        fReaderMgr.skipPastChar(chCloseAngle);
+        return;
+    }
+
+    // Get a buffer for the root element
+    XMLBufBid bbRootName(&fBufMgr);
+
+    //
+    //  Get a name from the input, which should be the name of the root
+    //  element of the upcoming content.
+    //
+    fReaderMgr.getName(bbRootName.getBuffer());
+    if (bbRootName.isEmpty())
+    {
+        emitError(XMLErrs::NoRootElemInDOCTYPE);
+        fReaderMgr.skipPastChar(chCloseAngle);
+        return;
+    }
+
+    //
+    //  Store the root element name for later check
+    //
+    setRootElemName(bbRootName.getRawBuffer());
+
+    //
+    //  This element obviously is not going to exist in the element decl
+    //  pool yet, but we need to call docTypeDecl. So force it into
+    //  the element decl pool, marked as being there because it was in
+    //  the DOCTYPE. Later, when its declared, the status will be updated.
+    //
+    //  Only do this if we are not reusing the validator! If we are reusing,
+    //  then look it up instead. It has to exist!
+    //
+    DTDElementDecl* rootDecl;
+    Janitor<DTDElementDecl> janSrc(0);
+
+    if (fReuseGrammar)
+    {
+        if (fGrammar->getGrammarType() == Grammar::DTDGrammarType) {
+            rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
+            if (rootDecl)
+                ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
+            else {
+                rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+                rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+                rootDecl->setExternalElemDeclaration(true);
+                ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+            }
+        }
+        else {
+            rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+            rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+            rootDecl->setExternalElemDeclaration(true);
+            janSrc.reset(rootDecl);
+        }
+    }
+     else
+    {
+        rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+        rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+        rootDecl->setExternalElemDeclaration(true);
+        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+    }
+
+    // Skip any spaces after the name
+    fReaderMgr.skipPastSpaces();
+
+    //
+    //  And now if we are looking at a >, then we are done. It is not
+    //  required to have an internal or external subset, though why you
+    //  would not escapes me.
+    //
+    if (fReaderMgr.skippedChar(chCloseAngle)) {
+        //
+        //  If we have a doc type handler and advanced callbacks are enabled,
+        //  call the doctype event.
+        //
+        if (fDocTypeHandler)
+            fDocTypeHandler->doctypeDecl(*rootDecl, 0, 0, false);
+        return;
+    }
+
+    // either internal/external subset
+    if(!fReuseGrammar) {
+        if (fValScheme == Val_Auto && !fValidate)
+            fValidate = true;
+    }
+
+
+    bool    hasIntSubset = false;
+    bool    hasExtSubset = false;
+    XMLCh*  sysId = 0;
+    XMLCh*  pubId = 0;
+
+    //
+    //  If the next character is '[' then we have no external subset cause
+    //  there is no system id, just the opening character of the internal
+    //  subset. Else, has to be an id.
+    //
+    // Just look at the next char, don't eat it.
+    if (fReaderMgr.peekNextChar() == chOpenSquare)
+    {
+        hasIntSubset = true;
+    }
+     else
+    {
+        // Indicate we have an external subset
+        hasExtSubset = true;
+        fHasNoDTD = false;
+
+        // Get buffers for the ids
+        XMLBufBid bbPubId(&fBufMgr);
+        XMLBufBid bbSysId(&fBufMgr);
+
+        // Get the external subset id
+        if (!dtdScanner.scanId(bbPubId.getBuffer(), bbSysId.getBuffer(), DTDScanner::IDType_External))
+        {
+            fReaderMgr.skipPastChar(chCloseAngle);
+            return;
+        }
+
+        // Get copies of the ids we got
+        pubId = XMLString::replicate(bbPubId.getRawBuffer());
+        sysId = XMLString::replicate(bbSysId.getRawBuffer());
+
+        // Skip spaces and check again for the opening of an internal subset
+        fReaderMgr.skipPastSpaces();
+
+        // Just look at the next char, don't eat it.
+        if (fReaderMgr.peekNextChar() == chOpenSquare) {
+            hasIntSubset = true;
+        }
+    }
+
+    // Insure that the ids get cleaned up, if they got allocated
+    ArrayJanitor<XMLCh> janSysId(sysId);
+    ArrayJanitor<XMLCh> janPubId(pubId);
+
+    //
+    //  If we have a doc type handler and advanced callbacks are enabled,
+    //  call the doctype event.
+    //
+    if (fDocTypeHandler)
+        fDocTypeHandler->doctypeDecl(*rootDecl, pubId, sysId, hasIntSubset);
+
+    //
+    //  Ok, if we had an internal subset, we are just past the [ character
+    //  and need to parse that first.
+    //
+    if (hasIntSubset)
+    {
+        // Eat the opening square bracket
+        fReaderMgr.getNextChar();
+
+        // We can't have any internal subset if we are reusing the validator
+        if (fReuseGrammar)
+            ThrowXML(RuntimeException, XMLExcepts::Val_CantHaveIntSS);
+
+        //
+        //  And try to scan the internal subset. If we fail, try to recover
+        //  by skipping forward tot he close angle and returning.
+        //
+        if (!dtdScanner.scanInternalSubset())
+        {
+            fReaderMgr.skipPastChar(chCloseAngle);
+            return;
+        }
+
+        //
+        //  Do a sanity check that some expanded PE did not propogate out of
+        //  the doctype. This could happen if it was terminated early by bad
+        //  syntax.
+        //
+        if (fReaderMgr.getReaderDepth() > 1)
+        {
+            emitError(XMLErrs::PEPropogated);
+
+            // Ask the reader manager to pop back down to the main level
+            fReaderMgr.cleanStackBackTo(1);
+        }
+
+        fReaderMgr.skipPastSpaces();
+    }
+
+    // And that should leave us at the closing > of the DOCTYPE line
+    if (!fReaderMgr.skippedChar(chCloseAngle))
+    {
+        //
+        //  Do a special check for the common scenario of an extra ] char at
+        //  the end. This is easy to recover from.
+        //
+        if (fReaderMgr.skippedChar(chCloseSquare)
+        &&  fReaderMgr.skippedChar(chCloseAngle))
+        {
+            emitError(XMLErrs::ExtraCloseSquare);
+        }
+         else
+        {
+            emitError(XMLErrs::UnterminatedDOCTYPE);
+            fReaderMgr.skipPastChar(chCloseAngle);
+        }
+    }
+
+    //
+    //  If we had an external subset, then we need to deal with that one
+    //  next. If we are reusing the validator, then don't scan it.
+    //
+    if (hasExtSubset && !fReuseGrammar && (fLoadExternalDTD || fValidate))
+    {
+        // And now create a reader to read this entity
+        InputSource* srcUsed;
+        XMLReader* reader = fReaderMgr.createReader
+        (
+            sysId
+            , pubId
+            , false
+            , XMLReader::RefFrom_NonLiteral
+            , XMLReader::Type_General
+            , XMLReader::Source_External
+            , srcUsed
+        );
+
+        // Put a janitor on the input source
+        Janitor<InputSource> janSrc(srcUsed);
+
+        //
+        //  If it failed then throw an exception
+        //
+        if (!reader)
+            ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId());
+
+        //
+        //  In order to make the processing work consistently, we have to
+        //  make this look like an external entity. So create an entity
+        //  decl and fill it in and push it with the reader, as happens
+        //  with an external entity. Put a janitor on it to insure it gets
+        //  cleaned up. The reader manager does not adopt them.
+        //
+        const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
+        DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
+        declDTD->setSystemId(sysId);
+        Janitor<DTDEntityDecl> janDecl(declDTD);
+
+        // Mark this one as a throw at end
+        reader->setThrowAtEnd(true);
+
+        // And push it onto the stack, with its pseudo name
+        fReaderMgr.pushReader(reader, declDTD);
+
+        // Tell it its not in an include section
+        dtdScanner.scanExtSubsetDecl(false);
     }
 }
 

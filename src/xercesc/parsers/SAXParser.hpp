@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/05/30 16:20:09  tng
+ * Add feature to optionally ignore external DTD.
+ *
  * Revision 1.5  2002/05/29 21:37:47  knoaman
  * Add baseURI to resolveEntity to support DOMInputSource.
  *
@@ -407,6 +410,20 @@ public :
       */
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
 
+    /** Get the 'Loading External DTD' flag
+      *
+      * This method returns the state of the parser's loading external DTD
+      * flag.
+      *
+      * @return false, if the parser is currently configured to
+      *         ignore external DTD completely, true otherwise.
+      *
+      * @see #setLoadExternalDTD
+      * @see #getValidationScheme
+      */
+    bool getLoadExternalDTD() const;
+
+
     //@}
 
 
@@ -577,6 +594,25 @@ public :
       * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
       */
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
+
+    /** Set the 'Loading External DTD' flag
+      *
+      * This method allows users to enable or disable the loading of external DTD.
+      * When set to false, the parser will ignore any external DTD completely
+      * if the validationScheme is set to Val_Never.
+      *
+      * The parser's default state is: true.
+      *
+      * This flag is ignored if the validationScheme is set to Val_Always or Val_Auto.
+      *
+      * @param newState The value specifying whether external DTD should
+      *                 be loaded or not.
+      *
+      * @see #getLoadExternalDTD
+      * @see #setValidationScheme
+      */
+    void setLoadExternalDTD(const bool newState);
+
 
     //@}
 

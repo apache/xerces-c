@@ -227,6 +227,12 @@ XMLCh* AbstractDOMParser::getExternalNoNamespaceSchemaLocation() const
     return fScanner->getExternalNoNamespaceSchemaLocation();
 }
 
+bool AbstractDOMParser::getLoadExternalDTD() const
+{
+    return fScanner->getLoadExternalDTD();
+}
+
+
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -281,6 +287,11 @@ void AbstractDOMParser::setExternalSchemaLocation(const char* const schemaLocati
 void AbstractDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
+void AbstractDOMParser::setLoadExternalDTD(const bool newState)
+{
+    fScanner->setLoadExternalDTD(newState);
 }
 
 

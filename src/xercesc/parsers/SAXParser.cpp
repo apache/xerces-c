@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/05/30 16:20:09  tng
+ * Add feature to optionally ignore external DTD.
+ *
  * Revision 1.5  2002/05/29 21:37:47  knoaman
  * Add baseURI to resolveEntity to support DOMInputSource.
  *
@@ -367,6 +370,11 @@ XMLCh* SAXParser::getExternalNoNamespaceSchemaLocation() const
     return fScanner->getExternalNoNamespaceSchemaLocation();
 }
 
+bool SAXParser::getLoadExternalDTD() const
+{
+    return fScanner->getLoadExternalDTD();
+}
+
 
 // ---------------------------------------------------------------------------
 //  SAXParser: Setter methods
@@ -425,6 +433,11 @@ void SAXParser::setExternalSchemaLocation(const char* const schemaLocation)
 void SAXParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
+void SAXParser::setLoadExternalDTD(const bool newState)
+{
+    fScanner->setLoadExternalDTD(newState);
 }
 
 
