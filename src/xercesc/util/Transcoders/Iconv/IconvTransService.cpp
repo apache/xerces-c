@@ -261,15 +261,16 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
     if (!srcText)
         return 0;
 
-    unsigned charLen = ::mblen(srcText, MB_CUR_MAX);
-    if (charLen == -1)
-        return 0;
-    else if (charLen != 0)
-        charLen = strlen(srcText)/charLen;
-
-    if (charLen == -1)
-        return 0;
-    return charLen;
+    unsigned int len=0;
+    unsigned int size=strlen(srcText);
+    for( unsigned int i = 0; i < size; ++len )
+    {
+        unsigned int retVal=::mblen( &srcText[i], MB_CUR_MAX );
+        if( -1 == retVal ) 
+            return 0;
+        i += retVal;
+    }
+    return len;
 }
 
 
