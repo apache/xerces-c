@@ -83,6 +83,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	ReaderMgr.hpp \
 	VecAttrListImpl.hpp \
 	VecAttributesImpl.hpp \
+	XMLInternalErrorHandler.hpp \
 	XMLReader.hpp \
 	XMLScanner.hpp
 

@@ -244,6 +244,7 @@ $set 1
 247  UnexpectedError
 248  The schemaLocation attribute does not contain pairs of values.
 249  Internal error: don't have a GrammarResolver for TraverseSchema
+250  Fatal error encountered during schema scan
 
 
 $set 2

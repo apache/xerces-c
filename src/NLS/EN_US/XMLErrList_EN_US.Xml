@@ -120,7 +120,7 @@
             <Message Id="EmptyComplexRestrictionDerivation" Text="The content of complexType is EMPTY, but base is not empty or does not have emptiable particle."/>
             <Message Id="MixedOrElementOnly" Text="The content type of the base type:'{0}' and derived type:'{1}' must both be mixed or element-only."/>
             <Message Id="InvalidContentRestriction" Text="The content type is not a valid restriction of the content type of the base."/>
-            <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema"/> 
+            <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema"/>
             <Message Id="AtomicItemType" Text="The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)"/>
             <Message Id="MemberTypeNoUnion" Text="The {member type definitions} must all have {variety} of atomic or list"/>
             <Message Id="GroupContentError" Text="The group:'0' must contain (all | choice | sequence)"/>
@@ -256,6 +256,7 @@
             <Message Id="UnexpectedError" Text="UnexpectedError"/>
             <Message Id="BadSchemaLocation" Text="The schemaLocation attribute does not contain pairs of values."/>
             <Message Id="NoGrammarResolver" Text="Internal error: don't have a GrammarResolver for TraverseSchema"/>
+            <Message Id="SchemaScanFatalError" Text="Fatal error encountered during schema scan"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">

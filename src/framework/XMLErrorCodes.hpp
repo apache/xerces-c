@@ -260,7 +260,8 @@ public :
       , UnexpectedError                    = 247
       , BadSchemaLocation                  = 248
       , NoGrammarResolver                  = 249
-      , F_HighBounds                       = 250
+      , SchemaScanFatalError               = 250
+      , F_HighBounds                       = 251
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

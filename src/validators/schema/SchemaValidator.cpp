@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/07/26 17:04:11  tng
+ * Schema: Process should stop after fatal error, and user throws need to be rethrown.
+ *
  * Revision 1.10  2001/07/24 21:23:40  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -252,6 +255,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             }
             catch (...) {
                 emitError(XMLValid::GenericError);
+                throw;
             }
         }
     }
@@ -445,6 +449,7 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
                                 }
                                 catch (...) {
                                     emitError(XMLValid::GenericError);
+                                    throw;
                                 }
                             }
                         }
@@ -532,6 +537,7 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             }
             catch (...) {
                 emitError(XMLValid::GenericError);
+                throw;
             }
         }
     }

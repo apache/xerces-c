@@ -87,6 +87,7 @@
 #include <framework/XMLValidator.hpp>
 #include <internal/XMLScanner.hpp>
 #include <internal/EndOfEntityException.hpp>
+#include <internal/XMLInternalErrorHandler.hpp>
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_DOMException.hpp>
 #include <sax/EntityResolver.hpp>
@@ -1295,9 +1296,10 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
         DOMParser parser;
+        XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
         parser.setValidationScheme(DOMParser::Val_Never);
         parser.setDoNamespaces(true);
-        parser.setErrorHandler(fErrorHandler);
+        parser.setErrorHandler((ErrorHandler*) &internalErrorHandler);
         parser.setEntityResolver(fEntityResolver);
 
         // Create a buffer for expanding the system id
@@ -1365,22 +1367,9 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         // Put a janitor on the input source
         Janitor<InputSource> janSrc(srcToFill);
 
-        try {
-            parser.parse( *srcToFill) ;
-        }
-        catch (const XMLException& e)
-        {
-            emitError (XMLErrs::XMLException, e.getType(), e.getMessage());
-        }
-        catch (const DOM_DOMException& e)
-        {
-            throw e;
-        }
-        catch (...)
-        {
-            emitError(XMLErrs::UnexpectedError);
-            throw;
-        }
+        parser.parse( *srcToFill) ;
+        if (internalErrorHandler.getSawFatal() && fExitOnFirstFatal)
+            emitError(XMLErrs::SchemaScanFatalError);
 
         DOM_Document  document = parser.getDocument(); //Our Grammar
 

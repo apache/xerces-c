@@ -1000,6 +1000,10 @@ SOURCE=..\..\..\..\..\src\internal\VecAttrListImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\internal\XMLInternalErrorHandler.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\internal\XMLReader.cpp
 # End Source File
 # Begin Source File
