@@ -71,11 +71,11 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "NodeContainer.hpp"
+#include "ParentNode.hpp"
 #include "EntityReferenceImpl.hpp"
 
 
-class CDOM_EXPORT EntityImpl: public NodeContainer {
+class CDOM_EXPORT EntityImpl: public ParentNode {
 private:
     DOMString name;
     DOMString publicId;
@@ -95,7 +95,6 @@ public:
     virtual NodeImpl*   cloneNode(bool deep);
     virtual DOMString getNodeName();
     virtual short getNodeType();
-    virtual NodeImpl*   getParentNode();
     virtual DOMString   getPublicId();
     virtual DOMString   getSystemId();
     virtual DOMString   getNotationName();
@@ -109,8 +108,6 @@ public:
 	virtual NodeListImpl* getChildNodes();
 	virtual bool		hasChildNodes();
 	virtual NodeImpl*   item(unsigned int index);
-	virtual NodeImpl*   getNextSibling();
-	virtual NodeImpl*   getPreviousSibling();
 
 	//DOM Level 2 additions. Non standard functions
 	virtual void		setEntityRef(EntityReferenceImpl*);

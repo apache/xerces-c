@@ -60,7 +60,7 @@
 
 // This class doesn't support having any children, and implements the behavior
 // of an empty NodeList as far getChildNodes is concerned.
-// The NodeContainer subclass overrides this behavior.
+// The ParentNode subclass overrides this behavior.
 
 #include "NodeImpl.hpp"
 #include "DOM_DOMException.hpp"
@@ -77,15 +77,21 @@ static DOMString *s_xmlURI = null;
 static DOMString *s_xmlns = null;
 static DOMString *s_xmlnsURI = null;
 
+const unsigned short NodeImpl::READONLY     = 0x1<<0;
+const unsigned short NodeImpl::SYNCDATA     = 0x1<<1;
+const unsigned short NodeImpl::SYNCCHILDREN = 0x1<<2;
+const unsigned short NodeImpl::OWNED        = 0x1<<3;
+const unsigned short NodeImpl::FIRSTCHILD   = 0x1<<4;
+const unsigned short NodeImpl::SPECIFIED    = 0x1<<5;
+const unsigned short NodeImpl::IGNORABLEWS  = 0x1<<6;
+const unsigned short NodeImpl::SETVALUE     = 0x1<<7;
+
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 {
-    this->ownerDocument=ownerDoc;
-    this->changes = 0;
     this->userData = null;
-    this->readOnly = false;
-    this->previousSibling  = null;
-    this->nextSibling  = null;
-    this->ownerNode  = null;
+    this->flags = 0;
+    // as long as we do not have any owner, ownerNode is our ownerDocument
+    this->ownerNode  = ownerDoc;
     
     this->nodeRefCount = 0;
     NodeImpl::gLiveNodeImpls++; 
@@ -95,20 +101,18 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
 NodeImpl::NodeImpl(const NodeImpl &other) {
-    this->readOnly = false;
-    this->ownerDocument = other.ownerDocument;
+    this->flags = other.flags;
     this->userData = other.userData;
-    this->changes = 0;
+    this->readOnly(false);
     
     this->nodeRefCount = 0;
     NodeImpl::gLiveNodeImpls++; 
     NodeImpl::gTotalNodeImpls++;
     
-    
-    // Need to break the association w/ original siblings and parent
-    this->previousSibling = null;
-    this->nextSibling = null;
-    this->ownerNode = null;
+    // Need to break the association w/ original parent
+    //    this->ownerNode = other.getOwnerDocument(); this doesn't work???
+    this->ownerNode = ((NodeImpl*)&other)->getOwnerDocument();
+    this->owned(false);
 };
 
     
@@ -132,18 +136,23 @@ bool NodeImpl::isElementImpl()           {return false;};
 bool NodeImpl::isEntityReference()       {return false;};
 bool NodeImpl::isTextImpl()              {return false;};
 
+
+void NodeImpl::changed() {}     // overridden in subclasses
+
+int NodeImpl::changes()
+{
+        // overridden in subclasses
+//        throw new RuntimeException(
+//                  "changes() called on a NodeImpl or one of its subclasses" +
+//                  "which doesn't really implement it");
+    return 0;
+};  
+
+
 NodeImpl * NodeImpl::appendChild(NodeImpl *newChild)      
 {
     return insertBefore(newChild, null);
 };
-
-
-
-void NodeImpl::changed()
-{
-    for (NodeImpl *n=this; n != null; n=n->getParentNode())
-        ++n->changes;
-};  
 
 
 //  NodeImpl::deleteIf is called when a node's reference count goes
@@ -156,8 +165,8 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
 {
     if (thisNode == 0)
         return;
-    
-    if (thisNode->ownerNode != 0)
+
+    if (thisNode->owned())
         return;
     
     // Delete this node.  There should be no siblings, as the DOM
@@ -165,12 +174,12 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
     //  its parent while retaining siblings.
     //  The target node may have children, in which case they must
     //  be removed from this node before deleting this node.
-    thisNode->readOnly = false;   // removeChild requires node not be readonly.
+    thisNode->readOnly(false);   // removeChild requires node not be readonly.
     NodeImpl *theNextChild;
     for (NodeImpl *child = thisNode->getFirstChild(); child != 0;
          child=theNextChild)
     {
-        theNextChild = child->nextSibling;
+        theNextChild = child->getNextSibling();
         thisNode->removeChild(child);
         if (child->nodeRefCount == 0)
             deleteIf(child);
@@ -186,29 +195,29 @@ NamedNodeMapImpl * NodeImpl::getAttributes() {
 
 
 NodeListImpl *NodeImpl::getChildNodes() {
-    return this;                // overridden in NodeContainer
+    return this;                // overridden in ParentNode
 };
 
 
 
 NodeImpl * NodeImpl::getFirstChild() {
-    return 0;                   // overridden in NodeContainer
+    return 0;                   // overridden in ParentNode
 }; 
 
 
 NodeImpl * NodeImpl::getLastChild()
 {
-    return 0;                   // overridden in NodeContainer
+    return 0;                   // overridden in ParentNode
 }; 
 
 
 unsigned int NodeImpl::getLength() {
-    return 0;                   // overridden in NodeContainer
+    return 0;                   // overridden in ParentNode
 };
 
 
 NodeImpl * NodeImpl::getNextSibling() {
-    return nextSibling;
+    return null;                // overridden in ChildNode
 }; 
 
 
@@ -221,19 +230,32 @@ DOMString NodeImpl::getNodeValue()
 
 DocumentImpl *NodeImpl::getOwnerDocument()
 {
-    return ownerDocument;
+    // if we have an owner simply forward the request
+    // otherwise ownerNode is our ownerDocument
+    if (owned()) {
+        return ownerNode->getOwnerDocument();
+    } else {
+        return (DocumentImpl *) ownerNode;
+    }
 };  
 
+void NodeImpl::setOwnerDocument(DocumentImpl *doc) {
+    // if we have an owner we rely on it to have it right
+    // otherwise ownerNode is our ownerDocument
+    if (!owned()) {
+        ownerNode = doc;
+    }
+}
 
 NodeImpl * NodeImpl::getParentNode()
 {
-    return ownerNode;           // typical case, overridden in some subclasses
+    return null;                // overridden in ChildNode
 };  
 
 
 NodeImpl*  NodeImpl::getPreviousSibling()
 {
-    return previousSibling;
+    return null;                // overridden in ChildNode
 }; 
 
 
@@ -273,7 +295,7 @@ NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 
   void NodeImpl::referenced()
   {
-      RefCountedImpl::addRef(this->ownerDocument);
+      RefCountedImpl::addRef(this->getOwnerDocument());
   };
   
   
@@ -285,7 +307,7 @@ NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
   //
   void NodeImpl::unreferenced()
   {
-      DocumentImpl *doc = this->ownerDocument;
+      DocumentImpl *doc = this->getOwnerDocument();
       deleteIf(this);       // This gets nodes outside of the document -
       //   deleteIf() deletes only if the parent
       //   node is null.  
@@ -298,7 +320,7 @@ NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 
 void NodeImpl::setNodeValue(const DOMString &val)
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     // Default behavior is to do nothing, overridden in some subclasses
@@ -308,9 +330,9 @@ void NodeImpl::setNodeValue(const DOMString &val)
 
 void NodeImpl::setReadOnly(bool readOnl, bool deep)
 {
-    this->readOnly = readOnl;
+    this->readOnly(readOnl);
     // by default we do not have children, so deep is meaningless
-    // this is overridden by NodeContainer
+    // this is overridden by ParentNode
 }
 
 

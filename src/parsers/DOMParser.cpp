@@ -60,6 +60,27 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.21  2000/04/27 02:52:49  lehors
+* global reorganization similar to what I've done in Java,
+* nodes now are much smaller.
+* The main changes are:
+* renamed NodeContainer to ParentNode,
+* introduced ChildNode and ChildAndParentNode,
+* all the boolean attributes have been changed to bit flags,
+* ownerDocument is no longer an attribute of NodeImpl, only Parent nodes have
+* it, leave nodes rely on their parent to get it, or get it from ownerNode when
+* they do not have a parent,
+* parent Nodes no longer have a direct pointer to the last child
+* instead the last child is stored as the previous sibling of
+* the first child.
+* I also added support for importing a DocumentType as it's done in Java,
+* and got the importNode mechanism back in sync with Java as well.
+*
+* Here are the most significant changes in size:
+* ElementImpl 52 -> 48
+* TextImpl    44 -> 32
+* AttrImpl    52 -> 36
+*
 * Revision 1.20  2000/04/25 20:30:39  aruna1
 * DOM_XMLDecl type node introduced to get the information of the
 * XML Declaration in a document and store it part of the tree
@@ -526,13 +547,13 @@ void DOMParser::docCharacters(  const   XMLCh* const    chars
 			//If the node type is entityRef then set the readOnly flag to false before appending node
 			bool oldReadFlag;
 			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-				oldReadFlag = fCurrentParent.fImpl->readOnly;
-				fCurrentParent.fImpl->readOnly = false;
+				oldReadFlag = fCurrentParent.fImpl->readOnly();
+				fCurrentParent.fImpl->readOnly(false);
 			}
 
             fCurrentParent.appendChild(node);
 			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-				fCurrentParent.fImpl->readOnly = oldReadFlag;
+				fCurrentParent.fImpl->readOnly(oldReadFlag);
 			}
             fCurrentNode = node;
         }
@@ -605,13 +626,13 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
 		//If the node type is entityRef then set the readOnly flag to false before appending node
 		bool oldReadFlag;
 		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-			oldReadFlag = fCurrentParent.fImpl->readOnly;
-			fCurrentParent.fImpl->readOnly = false;
+			oldReadFlag = fCurrentParent.fImpl->readOnly();
+			fCurrentParent.fImpl->readOnly(false);
 		}
 
         fCurrentParent.appendChild(node);
 		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-			fCurrentParent.fImpl->readOnly = oldReadFlag;
+			fCurrentParent.fImpl->readOnly(oldReadFlag);
 		}
         
         fCurrentNode = node;
@@ -697,13 +718,13 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     //If the node type is entityRef then set the readOnly flag to false before appending node
 	bool oldReadFlag;
 	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-		oldReadFlag = fCurrentParent.fImpl->readOnly;
-		fCurrentParent.fImpl->readOnly = false;
+		oldReadFlag = fCurrentParent.fImpl->readOnly();
+		fCurrentParent.fImpl->readOnly(false);
 	}
 
     fCurrentParent.appendChild(elem);
 	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-		fCurrentParent.fImpl->readOnly = oldReadFlag;
+		fCurrentParent.fImpl->readOnly(oldReadFlag);
 	}
 
     fNodeStack->push(fCurrentParent);

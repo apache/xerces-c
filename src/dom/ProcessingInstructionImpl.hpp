@@ -71,11 +71,11 @@
 
 
 #include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include "ChildNode.hpp"
 class    DocumentImpl;
 
 
-class CDOM_EXPORT ProcessingInstructionImpl: public NodeImpl {
+class CDOM_EXPORT ProcessingInstructionImpl: public ChildNode {
 protected:
     DOMString target;
     DOMString data;

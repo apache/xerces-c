@@ -1,6 +1,3 @@
-#ifndef NamedNodeMapImpl_HEADER_GUARD_
-#define NamedNodeMapImpl_HEADER_GUARD_
-
 /*
  * The Apache Software License, Version 1.1
  * 
@@ -61,64 +58,53 @@
  * $Id$
  */
 
-//
-//  This file is part of the internal implementation of the C++ XML DOM.
-//  It should NOT be included or used directly by application programs.
-//
-//  Applications should include the file <dom/DOM.hpp> for the entire
-//  DOM API, or DOM_*.hpp for individual DOM classes, where the class
-//  name is substituded for the *.
-//
+// This class only adds the ability to have siblings
 
-#include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include "ChildNode.hpp"
 
-class NodeVector;
-class DocumentImpl;
-class NodeImpl;
+ChildNode::ChildNode(DocumentImpl *ownerDoc)
+  : NodeImpl(ownerDoc)
+{
+    this->previousSibling  = null;
+    this->nextSibling  = null;
+};  
 
-class CDOM_EXPORT NamedNodeMapImpl {
-private:
-    NodeVector       *nodes;
-    NodeImpl         *ownerNode;    // the node this map belongs to
-    bool              readOnly;
-    int               refCount;
-    static int        gLiveNamedNodeMaps;
-    static int        gTotalNamedNodeMaps;
-    
-    
-    friend class      DOM_NamedNodeMap;
-    friend class      DomMemDebug;
-    friend class      ElementImpl;
-   	friend class	  DocumentImpl;
-    
-public:
-    NamedNodeMapImpl(NodeImpl *ownerNode);
-    
-    virtual                 ~NamedNodeMapImpl();
-    virtual NamedNodeMapImpl *cloneMap(NodeImpl *ownerNode);
-    static  void            addRef(NamedNodeMapImpl *);
-    virtual int             findNamePoint(const DOMString &name);
-    virtual unsigned int    getLength();
-    virtual NodeImpl        *getNamedItem(const DOMString &name);
-    virtual NodeImpl        *item(unsigned int index);
-    virtual void            removeAll();
-    virtual NodeImpl        *removeNamedItem(const DOMString &name);
-    static  void            removeRef(NamedNodeMapImpl *);
-    virtual NodeImpl        *setNamedItem(NodeImpl *arg);
-    virtual void            setReadOnly(bool readOnly, bool deep);
-
-    //Introduced in DOM Level 2
-    virtual int             findNamePoint(const DOMString &namespaceURI,
-	const DOMString &localName);
-    virtual NodeImpl        *getNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &localName);
-    virtual NodeImpl        *setNamedItemNS(NodeImpl *arg);
-    virtual NodeImpl        *removeNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &localName);
-
-    virtual void setOwnerDocument(DocumentImpl *doc);
+// This only makes a shallow copy, cloneChildren must also be called for a
+// deep clone
+ChildNode::ChildNode(const ChildNode &other)
+  : NodeImpl(other)
+{
+    // Need to break the association w/ original siblings and parent
+    this->previousSibling = null;
+    this->nextSibling = null;
+    firstChild(false);
 };
 
-#endif
+ChildNode::~ChildNode() {
+};
 
+void ChildNode::changed()
+{
+    //  ++changes; we just let the parent know
+    NodeImpl *parentNode = getParentNode();
+    if (parentNode != null) {
+        parentNode->changed();
+    }
+};  
+
+NodeImpl * ChildNode::getNextSibling() {
+    return nextSibling;
+}; 
+
+NodeImpl * ChildNode::getParentNode()
+{
+    // if we have an owner, ownerNode is our parent, otherwise it's
+    // our ownerDocument and we don't have a parent
+    return owned() ? ownerNode : null;
+};  
+
+NodeImpl * ChildNode::getPreviousSibling() {
+    // if we are the firstChild, previousSibling actually refers to our
+    // parent's lastChild, but we hide that
+    return firstChild() ? null : previousSibling;
+}; 

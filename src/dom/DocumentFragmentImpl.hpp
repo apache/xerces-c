@@ -70,9 +70,9 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "NodeContainer.hpp"
+#include "ParentNode.hpp"
 
-class CDOM_EXPORT DocumentFragmentImpl: public NodeContainer {
+class CDOM_EXPORT DocumentFragmentImpl: public ParentNode {
 protected:
     DocumentFragmentImpl(DocumentImpl *);
 

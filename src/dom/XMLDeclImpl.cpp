@@ -56,6 +56,27 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/04/27 02:52:45  lehors
+ * global reorganization similar to what I've done in Java,
+ * nodes now are much smaller.
+ * The main changes are:
+ * renamed NodeContainer to ParentNode,
+ * introduced ChildNode and ChildAndParentNode,
+ * all the boolean attributes have been changed to bit flags,
+ * ownerDocument is no longer an attribute of NodeImpl, only Parent nodes have
+ * it, leave nodes rely on their parent to get it, or get it from ownerNode when
+ * they do not have a parent,
+ * parent Nodes no longer have a direct pointer to the last child
+ * instead the last child is stored as the previous sibling of
+ * the first child.
+ * I also added support for importing a DocumentType as it's done in Java,
+ * and got the importNode mechanism back in sync with Java as well.
+ *
+ * Here are the most significant changes in size:
+ * ElementImpl 52 -> 48
+ * TextImpl    44 -> 32
+ * AttrImpl    52 -> 36
+ *
  * Revision 1.1  2000/04/25 20:32:19  aruna1
  * DOM_XMLDecl type node introduced to get the information of the
  * XML Declaration in a document and store it part of the tree
@@ -70,7 +91,7 @@
 
 
 XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc) 
-    : NodeImpl(ownerDoc),
+    : ChildNode(ownerDoc),
     version(DOMString(XMLUni::fgSupportedVersion)),
     encoding (DOMString(XMLUni::fgUTF8EncodingString)),
     standalone (DOMString(XMLUni::fgNoString))
@@ -81,7 +102,7 @@ XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc)
 //Introduced in DOM Level 2
 XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc, const DOMString &ver,
                          const DOMString &enc, const DOMString &std)
-	: NodeImpl (ownerDoc),
+	: ChildNode(ownerDoc),
     version ( ver.clone() ),
     encoding ( enc.clone() ),
     standalone ( std.clone() )
@@ -90,7 +111,7 @@ XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc, const DOMString &ver,
 
 
 XMLDeclImpl::XMLDeclImpl(const XMLDeclImpl &other, bool deep)
-    : NodeImpl (other)
+    : ChildNode(other)
 {
     version     = other.version.clone();
     encoding    = other.encoding.clone();

@@ -56,6 +56,27 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/27 02:52:42  lehors
+ * global reorganization similar to what I've done in Java,
+ * nodes now are much smaller.
+ * The main changes are:
+ * renamed NodeContainer to ParentNode,
+ * introduced ChildNode and ChildAndParentNode,
+ * all the boolean attributes have been changed to bit flags,
+ * ownerDocument is no longer an attribute of NodeImpl, only Parent nodes have
+ * it, leave nodes rely on their parent to get it, or get it from ownerNode when
+ * they do not have a parent,
+ * parent Nodes no longer have a direct pointer to the last child
+ * instead the last child is stored as the previous sibling of
+ * the first child.
+ * I also added support for importing a DocumentType as it's done in Java,
+ * and got the importNode mechanism back in sync with Java as well.
+ *
+ * Here are the most significant changes in size:
+ * ElementImpl 52 -> 48
+ * TextImpl    44 -> 32
+ * AttrImpl    52 -> 36
+ *
  * Revision 1.7  2000/03/02 19:53:54  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -184,7 +205,7 @@ DOM_DocumentType DOM_DOMImplementation::createDocumentType(const DOMString &qual
 {
     if(!DocumentImpl::isXMLName(qualifiedName))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-    return DOM_DocumentType(new DocumentTypeImpl(qualifiedName, publicId, systemId));
+    return DOM_DocumentType(new DocumentTypeImpl(null, qualifiedName, publicId, systemId));
 }
 
 DOM_Document DOM_DOMImplementation::createDocument(const DOMString &namespaceURI,

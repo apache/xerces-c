@@ -122,12 +122,12 @@
 
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
                                          const DOMString &entityName)
-    : NodeContainer(ownerDoc)
+    : ChildAndParentNode(ownerDoc)
 {
     name = entityName.clone();
     // EntityReference behaves as a read-only node, since its contents
     // reflect the Entity it refers to -- but see setNodeName().
-    readOnly = true;
+    readOnly(true);
     entityChanges=-1;
 }
 
@@ -135,13 +135,13 @@ EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
 
 EntityReferenceImpl::EntityReferenceImpl(const EntityReferenceImpl &other,
                                          bool deep)
-    : NodeContainer(other)
+    : ChildAndParentNode(other)
 {
     name = other.name.clone();
     if (deep)
         cloneChildren(other);
     entityChanges = other.entityChanges;
-    readOnly = true;
+    readOnly(true);
 }
 
 
@@ -169,36 +169,6 @@ short EntityReferenceImpl::getNodeType() {
 
 
 /**
-* 
-* @return org.w3c.dom.NodeList
-*/
-NodeListImpl *EntityReferenceImpl::getChildNodes()
-{
-    return NodeContainer::getChildNodes();
-}
-
-
-/**
-* 
-* @return org.w3c.dom.NodeList
-*/
-NodeImpl *EntityReferenceImpl::getFirstChild()
-{
-    return NodeContainer::getFirstChild();
-}
-
-
-/**
-* 
-* @return org.w3c.dom.NodeList
-*/
-NodeImpl *EntityReferenceImpl::getLastChild() 
-{
-    return NodeContainer::getLastChild();
-}
-
-
-/**
 * Query the number of children in the entity definition.
 * (A bit more work than asking locally, but may be able to avoid
 * or defer building the clone subtree.)
@@ -207,7 +177,7 @@ NodeImpl *EntityReferenceImpl::getLastChild()
 */
 unsigned int EntityReferenceImpl::getLength()
 {
-    unsigned int length = NodeContainer::getLength();
+    unsigned int length = ChildAndParentNode::getLength();
     
 #if (0)                 // Till we add entity nodes to the doc root element.
     
@@ -257,15 +227,6 @@ bool EntityReferenceImpl::isEntityReference()
 
 
 /**
-*
-* @return org.w3c.dom.NodeList
-*/
-NodeImpl *EntityReferenceImpl::item(unsigned int index) {
-    return NodeContainer::item(index);
-}
-
-
-/**
 * EntityReferences never have a nodeValue.
 * @throws DOMException(NO_MODIFICATION_ALLOWED_ERR)
 */
@@ -287,7 +248,5 @@ void EntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 {
     if(readOnl==false)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
-    NodeContainer::setReadOnly(readOnl,deep);
+    ChildAndParentNode::setReadOnly(readOnl,deep);
 }
-
-

@@ -73,11 +73,11 @@
 
 #include <util/XercesDefs.hpp>
 #include "AttrImpl.hpp"
-#include "NodeContainer.hpp"
+#include "ChildAndParentNode.hpp"
 
 class DeepNodeListImpl;
 
-class CDOM_EXPORT ElementImpl: public NodeContainer {
+class CDOM_EXPORT ElementImpl: public ChildAndParentNode {
 protected:
     DOMString name;
     NamedNodeMapImpl *attributes;
@@ -115,6 +115,8 @@ public:
     virtual AttrImpl *setAttributeNodeNS(AttrImpl *newAttr);
     virtual DeepNodeListImpl *getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName);
+
+    virtual void setOwnerDocument(DocumentImpl *doc);
 };
 
 #endif

@@ -62,8 +62,6 @@
 #include "DocumentImpl.hpp"
 #include "DOM_DOMException.hpp"
 
-#define null 0
-
 AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
     AttrImpl(ownerDoc, name)
 {
@@ -80,7 +78,6 @@ AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc,
 {
     DOMString xmlns = NodeImpl::getXmlnsString();
     DOMString xmlnsURI = NodeImpl::getXmlnsURIString();
-    this->ownerDocument=ownerDoc;
     this->name = qualifiedName.clone();
 
     int index = DocumentImpl::indexofQualifiedName(qualifiedName);
@@ -141,7 +138,7 @@ void AttrNSImpl::setPrefix(const DOMString &prefix)
     DOMString xmlns = NodeImpl::getXmlnsString();
     DOMString xmlnsURI = NodeImpl::getXmlnsURIString();
 
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     if (namespaceURI == null || localName.equals(xmlns))

@@ -113,7 +113,7 @@ const XMLCh* DocumentImpl::PoolElem::getKey() const
 
 
 DocumentImpl::DocumentImpl()
-    : NodeContainer(null)
+    : ParentNode(this)
 {
     docType=null;
     docElement=null;
@@ -128,7 +128,7 @@ DocumentImpl::DocumentImpl()
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            const DOMString &qualifiedName,
                            DocumentTypeImpl *doctype)
-    : NodeContainer(null)
+    : ParentNode(this)
 {
     docType=null;
     
@@ -151,10 +151,10 @@ void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
         DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     
-    doctype -> setOwnerDocument(this);
-	doctype->getEntities()->ownerNode->ownerDocument = this;
-	doctype->getNotations()->ownerNode->ownerDocument = this;
-	doctype -> referenced();         // Warning, tricky!  An external (DOM_Node) reference
+    doctype->setOwnerDocument(this);
+    doctype->getEntities()->ownerNode->setOwnerDocument(this);
+    doctype->getNotations()->ownerNode->setOwnerDocument(this);
+    doctype -> referenced();         // Warning, tricky!  An external (DOM_Node) reference
                                      //  to a node normally bumps the reference count to its
                                      //  document also.  But this could not happen when the
                                      //  user created the DOM_DocumentType because there was
@@ -190,19 +190,14 @@ DocumentImpl::~DocumentImpl()
 
 
 NodeImpl *DocumentImpl::cloneNode(bool deep) {
+
+    // clone the node itself
     DocumentImpl *newdoc = new DocumentImpl();
+
+    // then the children by _importing_ them
     if (deep)
-        for (NodeImpl *n=getFirstChild(); n!=null; n=n->getNextSibling()) {
-	    if (n -> isDocumentTypeImpl()) {
-		DocumentTypeImpl *doctype = ((DocumentTypeImpl *)n) -> exportNode(newdoc, true);
-		newdoc -> appendChild(doctype);
-		newdoc -> docType = doctype;
-	    } else if (n -> isElementImpl()) {
-		ElementImpl *docelem = (ElementImpl *) newdoc -> importNode(n, true);
-		newdoc -> appendChild(docelem);
-		newdoc -> docElement = docelem;
-	    } else
-		newdoc -> appendChild(newdoc->importNode(n,true));
+        for (ChildNode *n = firstChild; n != null; n = n->nextSibling) {
+            newdoc->appendChild(newdoc->importNode(n, true));
 	}
     return newdoc;
 };
@@ -217,6 +212,13 @@ DOMString DocumentImpl::getNodeName() {
 short DocumentImpl::getNodeType() {
     return DOM_Node::DOCUMENT_NODE;
 };
+
+
+// even though ownerDocument refers to this in this implementation
+// the DOM Level 2 spec says it must be null, so make it appear so
+DocumentImpl * DocumentImpl::getOwnerDocument() {
+    return null;
+}
 
 
 bool DocumentImpl::isDocumentImpl() {
@@ -260,6 +262,20 @@ DocumentTypeImpl *DocumentImpl::createDocumentType(const DOMString &nam)
         DOM_DOMException::INVALID_CHARACTER_ERR, null);
 
     return new DocumentTypeImpl(this, nam);
+};
+
+
+
+DocumentTypeImpl *
+    DocumentImpl::createDocumentType(const DOMString &qualifiedName,
+                                     const DOMString &publicId,
+                                     const DOMString &systemId)
+{
+    if (!isXMLName(qualifiedName))
+        throw DOM_DOMException(
+        DOM_DOMException::INVALID_CHARACTER_ERR, null);
+
+    return new DocumentTypeImpl(this, qualifiedName, publicId, systemId);
 };
 
 
@@ -414,7 +430,7 @@ NodeImpl *DocumentImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild)
         )
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
 
-    NodeContainer::insertBefore(newChild,refChild);
+    ParentNode::insertBefore(newChild,refChild);
 
     // If insert succeeded, cache the kid appropriately
     if(newChild->isElementImpl())
@@ -463,7 +479,7 @@ void DocumentImpl::referenced()
 
 NodeImpl *DocumentImpl::removeChild(NodeImpl *oldChild)
 {
-    NodeContainer::removeChild(oldChild);
+    ParentNode::removeChild(oldChild);
 
     // If remove succeeded, un-cache the kid appropriately
     if(oldChild->isElementImpl())
@@ -513,17 +529,20 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 	    if (source->getLocalName() == null)
 		newelement = createElement(source->getNodeName());
 	    else
-		newelement = createElementNS(source->getNamespaceURI(), source->getNodeName());
+		newelement = createElementNS(source->getNamespaceURI(),
+                                             source->getNodeName());
             NamedNodeMapImpl *srcattr=source->getAttributes();
             if(srcattr!=null)
                 for(unsigned int i=0;i<srcattr->getLength();++i)
 		{
 		    AttrImpl *attr = (AttrImpl *) srcattr->item(i);
-		    if (attr -> getSpecified())	//not a default attribute
+		    if (attr -> getSpecified())	{ // not a default attribute
+                        AttrImpl *nattr = (AttrImpl *) importNode(attr, true);
 			if (attr -> getLocalName() == null)
-			    newelement->setAttributeNode((AttrImpl *)importNode(attr, true));
+			    newelement->setAttributeNode(nattr);
 			else
-			    newelement->setAttributeNodeNS((AttrImpl *)importNode(attr, true));
+			    newelement->setAttributeNodeNS(nattr);
+                    }
 		}
             newnode=newelement;
         }
@@ -532,7 +551,8 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 	if (source->getLocalName() == null)
 	    newnode = createAttribute(source->getNodeName());
 	else
-	    newnode = createAttributeNS(source->getNamespaceURI(), source->getNodeName());
+	    newnode = createAttributeNS(source->getNamespaceURI(),
+                                        source->getNodeName());
 	deep = true;
         // Kids carry value
         break;
@@ -542,15 +562,9 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
     case DOM_Node::CDATA_SECTION_NODE :
         newnode = createCDATASection(source->getNodeValue());
         break;
-    case DOM_Node::COMMENT_NODE :
-        newnode = createComment(source->getNodeValue());
-        break;
     case DOM_Node::ENTITY_REFERENCE_NODE :
         newnode = createEntityReference(source->getNodeName());
-	newnode -> readOnly = false; //allow deep copy temporarily
-//        deep=false; // ????? Right Thing?
-        // Value implied by doctype, so we should not copy it
-        // -- instead, refer to local doctype, if any.
+	newnode -> readOnly(false); //allow deep import temporarily
         break;
     case DOM_Node::ENTITY_NODE :
         {
@@ -561,10 +575,45 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
             newentity->setNotationName(srcentity->getNotationName());
             // Kids carry additional value
             newnode=newentity;
+            newentity->readOnly(false);// allow deep import temporarily
         }
         break;
     case DOM_Node::PROCESSING_INSTRUCTION_NODE :
-        newnode = createProcessingInstruction(source->getNodeName(), source->getNodeValue());
+        newnode = createProcessingInstruction(source->getNodeName(),
+                                              source->getNodeValue());
+        break;
+    case DOM_Node::COMMENT_NODE :
+        newnode = createComment(source->getNodeValue());
+        break;
+    case DOM_Node::DOCUMENT_TYPE_NODE :
+        {
+            DocumentTypeImpl *srcdoctype = (DocumentTypeImpl *)source;
+            DocumentTypeImpl *newdoctype = (DocumentTypeImpl *)
+                createDocumentType(srcdoctype->getNodeName(),
+                                   srcdoctype->getPublicId(),
+                                   srcdoctype->getSystemId());
+            // Values are on NamedNodeMaps
+            NamedNodeMapImpl *smap = srcdoctype->getEntities();
+            NamedNodeMapImpl *tmap = newdoctype->getEntities();
+            if(smap != null) {
+                for(unsigned int i = 0; i < smap->getLength(); i++) {
+                    tmap->setNamedItem(importNode(smap->item(i), true));
+                }
+            }
+            smap = srcdoctype->getNotations();
+            tmap = newdoctype->getNotations();
+            if (smap != null) {
+                for(unsigned int i = 0; i < smap->getLength(); i++) {
+                    tmap->setNamedItem(importNode(smap->item(i), true));
+                }
+            }
+            // NOTE: At this time, the DOM definition of DocumentType
+            // doesn't cover Elements and their Attributes. domimpl's
+            // extentions in that area will not be preserved, even if
+            // copying from domimpl to domimpl. We could special-case
+            // that here. Arguably we should. Consider. ?????
+            newnode = newdoctype;
+        }
         break;
     case DOM_Node::DOCUMENT_FRAGMENT_NODE :
         newnode = createDocumentFragment();
@@ -583,19 +632,20 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
         }
 
     case DOM_Node::DOCUMENT_NODE : // Document can't be child of Document
-    case DOM_Node::DOCUMENT_TYPE_NODE :
     default:                       // Unknown node type
         throw DOM_DOMException(DOM_DOMException::NOT_SUPPORTED_ERR, null);
     }
 
     // If deep, replicate and attach the kids.
     if (deep)
-        for (NodeImpl *srckid = source->getFirstChild(); srckid != null; srckid = srckid->getNextSibling())
-        {
+        for (NodeImpl *srckid = source->getFirstChild();
+             srckid != null;
+             srckid = srckid->getNextSibling()) {
             newnode->appendChild(importNode(srckid, true));
         }
-    if (newnode -> getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)
-	newnode -> readOnly = true;
+    if (newnode->getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE
+        || newnode->getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)
+	newnode->readOnly(true);
 
     return newnode;
 };
@@ -668,3 +718,55 @@ XMLDeclImpl* DocumentImpl::createXMLDecl(const DOMString& version, const DOMStri
 {
     return new XMLDeclImpl(this, version, encoding, standalone);
 }
+
+
+/** Uses the kidOK lookup table to check whether the proposed
+    tree structure is legal.
+
+    ????? It feels like there must be a more efficient solution,
+    but for the life of me I can't think what it would be.
+*/
+bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
+{
+      static int kidOK[14];
+      
+      if (kidOK[DOM_Node::DOCUMENT_NODE] == 0)
+      {
+          kidOK[DOM_Node::DOCUMENT_NODE] = 
+              1 << DOM_Node::ELEMENT_NODE |
+              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE | 
+              1 << DOM_Node::COMMENT_NODE | 
+              1 << DOM_Node::DOCUMENT_TYPE_NODE |
+              1 << DOM_Node::XML_DECL_NODE;
+          
+          kidOK[DOM_Node::DOCUMENT_FRAGMENT_NODE] = 
+              kidOK[DOM_Node::ENTITY_NODE] = 
+              kidOK[DOM_Node::ENTITY_REFERENCE_NODE] = 
+              kidOK[DOM_Node::ELEMENT_NODE] = 
+              1 << DOM_Node::ELEMENT_NODE |
+              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE | 
+              1 << DOM_Node::COMMENT_NODE |
+              1 << DOM_Node::TEXT_NODE |
+              1 << DOM_Node::CDATA_SECTION_NODE |
+              1 << DOM_Node::ENTITY_REFERENCE_NODE |
+              1 << DOM_Node::XML_DECL_NODE;
+          
+          kidOK[DOM_Node::DOCUMENT_TYPE_NODE] = 
+              1 << DOM_Node::NOTATION_NODE |
+              1 << DOM_Node::ENTITY_NODE;
+          
+          kidOK[DOM_Node::ATTRIBUTE_NODE] = 
+              1 << DOM_Node::TEXT_NODE |
+              1 << DOM_Node::ENTITY_REFERENCE_NODE;
+          
+          kidOK[DOM_Node::PROCESSING_INSTRUCTION_NODE] = 
+              kidOK[DOM_Node::COMMENT_NODE] = 
+              kidOK[DOM_Node::TEXT_NODE] = 
+              kidOK[DOM_Node::CDATA_SECTION_NODE] = 
+              kidOK[DOM_Node::NOTATION_NODE] = 
+              0;
+      };
+      int p=parent->getNodeType();
+      int ch = child->getNodeType();
+      return (kidOK[p] & 1<<ch) != 0;
+};

@@ -1,40 +1,40 @@
-#ifndef XMLDeclImpl_HEADER_GUARD_
-#define XMLDeclImpl_HEADER_GUARD_
+#ifndef ChildAndParentNode_HEADER_GUARD_
+#define ChildAndParentNode_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
- *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
+ *    notice, this list of conditions and the following disclaimer. 
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- *
+ * 
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
+ *    if any, must include the following acknowledgment:  
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- *
+ * 
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written
+ *    software without prior written permission. For written 
  *    permission, please contact apache\@apache.org.
- *
+ * 
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -48,43 +48,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- *
+ * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- */
-
-/*
- * $Log$
- * Revision 1.2  2000/04/27 02:52:45  lehors
- * global reorganization similar to what I've done in Java,
- * nodes now are much smaller.
- * The main changes are:
- * renamed NodeContainer to ParentNode,
- * introduced ChildNode and ChildAndParentNode,
- * all the boolean attributes have been changed to bit flags,
- * ownerDocument is no longer an attribute of NodeImpl, only Parent nodes have
- * it, leave nodes rely on their parent to get it, or get it from ownerNode when
- * they do not have a parent,
- * parent Nodes no longer have a direct pointer to the last child
- * instead the last child is stored as the previous sibling of
- * the first child.
- * I also added support for importing a DocumentType as it's done in Java,
- * and got the importNode mechanism back in sync with Java as well.
- *
- * Here are the most significant changes in size:
- * ElementImpl 52 -> 48
- * TextImpl    44 -> 32
- * AttrImpl    52 -> 36
- *
- * Revision 1.1  2000/04/25 20:32:19  aruna1
- * DOM_XMLDecl type node introduced to get the information of the
- * XML Declaration in a document and store it part of the tree
- *
- * $Id$
  */
 
 //
@@ -96,40 +66,23 @@
 //  name is substituded for the *.
 //
 
-#include <util/XercesDefs.hpp>
-#include "ChildNode.hpp"
+/*
+ * $Id$
+ */
 
-class DOMString;
+/**
+ * If we could use multiple inheritance ChildAndParentNode would simply inherit
+ * both from ChildNode and ParentNode. In this case it only inherits from
+ * ChildNode and all the code of ParentNode is "duplicated" here
+ */
 
-class CDOM_EXPORT XMLDeclImpl: public ChildNode {
+#include "ParentNode.hpp"
 
-private:
-    // -----------------------------------------------------------------------
-    //  Private data types
-    // -----------------------------------------------------------------------
-    DOMString version;
-    DOMString encoding;
-    DOMString standalone;
-
-public:
-    XMLDeclImpl(DocumentImpl *ownerDoc);
-    XMLDeclImpl(DocumentImpl *ownerDoc, const DOMString& version, 
-                    const DOMString& encoding, const DOMString& standalone);
-    XMLDeclImpl(const XMLDeclImpl &other, bool deep=false);
-    virtual ~XMLDeclImpl();
-
-    virtual NodeImpl * cloneNode(bool deep);
-    virtual DOMString getNodeName();
-    virtual short getNodeType();
-
-  
-    virtual DOMString getVersion() const;
-    virtual DOMString getEncoding() const;
-    virtual DOMString getStandalone() const;
-
-    virtual void setVersion(const DOMString& data);
-    virtual void setEncoding(const DOMString& data);
-    virtual void setStandalone(const DOMString& data);
-};
+#define THIS_CLASS ChildAndParentNode
+#define PARENT_CLASS ChildNode
+#undef ParentNode_HEADER_GUARD_
+#include "ParentNode.hpp"
+#undef THIS_CLASS
+#undef PARENT_CLASS
 
 #endif

@@ -71,7 +71,7 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "NodeContainer.hpp"
+#include "ParentNode.hpp"
 #include "DOM_Node.hpp"
 #include "DOM_Element.hpp"
 #include "util/RefVectorOf.hpp"
@@ -103,8 +103,7 @@ typedef RefVectorOf<NodeIteratorImpl> NodeIterators;
 typedef RefVectorOf<TreeWalkerImpl> TreeWalkers;
 
 
-class CDOM_EXPORT DocumentImpl: public NodeContainer {
-private:
+class CDOM_EXPORT DocumentImpl: public ParentNode {
 private:
     // -----------------------------------------------------------------------
     //  Private data types
@@ -144,11 +143,15 @@ public:
     virtual NodeImpl            *cloneNode(bool deep);
     virtual DOMString getNodeName();
     virtual short getNodeType();
+    virtual DocumentImpl * getOwnerDocument();
     virtual AttrImpl            *createAttribute(const DOMString &name);
     virtual CDATASectionImpl    *createCDATASection(const DOMString &data);
     virtual CommentImpl         *createComment(const DOMString &data);
     virtual DocumentFragmentImpl *createDocumentFragment();
     virtual DocumentTypeImpl    *createDocumentType(const DOMString &name);
+    virtual DocumentTypeImpl    *createDocumentType(const DOMString &qName,
+                                                    const DOMString &publicId,
+                                                    const DOMString &systemId);
     virtual ElementImpl         *createElement(const DOMString & tagName);
     virtual ElementImpl         *createElement(const XMLCh *tagName);
     virtual EntityImpl          *createEntity(const DOMString & name);
@@ -186,6 +189,7 @@ public:
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
     //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
     static  int                 indexofQualifiedName(const DOMString & qName);
+    static  bool        isKidOK(NodeImpl *parent, NodeImpl *child);
 };
 
 #endif

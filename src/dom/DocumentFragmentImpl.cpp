@@ -67,14 +67,14 @@
 static DOMString *nam;   // Will be lazily initialized to "#document-fragment"
 
 DocumentFragmentImpl::DocumentFragmentImpl(DocumentImpl *masterDoc)
-    : NodeContainer(masterDoc)
+    : ParentNode(masterDoc)
 {
 };
         
 
 DocumentFragmentImpl::DocumentFragmentImpl(const DocumentFragmentImpl &other,
                                            bool deep)
-    : NodeContainer(other)
+    : ParentNode(other)
 {
     if (deep)
         cloneChildren(other);

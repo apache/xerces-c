@@ -69,8 +69,7 @@ static DOMString *gText;   // will be lazily initialized to point to "#text"
 
 
 TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &data)
-    : CharacterDataImpl(ownerDoc, data),
-    fIgnorableWhitespace(false)
+    : CharacterDataImpl(ownerDoc, data)
 {
 };
 
@@ -92,7 +91,7 @@ bool TextImpl::isTextImpl()
 
 NodeImpl *TextImpl::cloneNode(bool deep)
 {
-    return ownerDocument->createTextNode(data);
+    return new TextImpl(*this, deep);
 };
 
 
@@ -107,7 +106,7 @@ short TextImpl::getNodeType() {
 
 TextImpl *TextImpl::splitText(unsigned int offset)
 {
-    if (readOnly)
+    if (readOnly())
     {
         throw DOM_DOMException(
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
@@ -117,7 +116,7 @@ TextImpl *TextImpl::splitText(unsigned int offset)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
                 
     TextImpl *newText = 
-                (TextImpl *) ownerDocument->createTextNode(
+                (TextImpl *) getOwnerDocument()->createTextNode(
                         data.substringData(offset, data.length() - offset));
     NodeImpl *parent = getParentNode();
     if (parent != null)
@@ -130,11 +129,11 @@ TextImpl *TextImpl::splitText(unsigned int offset)
 
 bool TextImpl::isIgnorableWhitespace()
 {
-    return fIgnorableWhitespace;
+    return ignorableWhitespace();
 }
 
 
 void TextImpl::setIgnorableWhitespace(bool ignorable)
 {
-    fIgnorableWhitespace = ignorable;
+    ignorableWhitespace(ignorable);
 }

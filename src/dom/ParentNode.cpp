@@ -58,7 +58,7 @@
  * $Id$
  */
 
-#include "NodeContainer.hpp"
+#include "ParentNode.hpp"
 #include "DOM_DOMException.hpp"
 #include "DOM_Node.hpp"
 #include "DOM_DOMImplementation.hpp"
@@ -68,62 +68,106 @@
 #include "stdio.h"
 #include "TextImpl.hpp"
 
-static DOMString *s_xml = null;
-static DOMString *s_xmlURI = null;
-static DOMString *s_xmlns = null;
-static DOMString *s_xmlnsURI = null;
+// these are redefined in ChildAndParentNode so that the code can be reused.
+#ifndef THIS_CLASS
+#define THIS_CLASS ParentNode
+#endif
+#ifndef PARENT_CLASS
+#define PARENT_CLASS NodeImpl
+#endif
 
-NodeContainer::NodeContainer(DocumentImpl *ownerDoc)
-    : NodeImpl(ownerDoc)
+THIS_CLASS::THIS_CLASS(DocumentImpl *ownerDoc)
+    : PARENT_CLASS(ownerDoc)
 {
+    this->ownerDocument = ownerDoc;
     this->firstChild = null;
-    this->lastChild  = null;
+
+    fChanges = 0;
 };  
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
-NodeContainer::NodeContainer(const NodeContainer &other)
-    : NodeImpl(other)
+THIS_CLASS::THIS_CLASS(const THIS_CLASS &other)
+    : PARENT_CLASS(other)
 {
+    this->ownerDocument = other.ownerDocument;
+
     // Need to break the association w/ original kids
     this->firstChild = null;
-    this->lastChild = null;
+
+    fChanges = 0;
 };
 
 
-void NodeContainer::cloneChildren(const NodeImpl &other) {    
+void THIS_CLASS::cloneChildren(const NodeImpl &other) {    
+  //    for (NodeImpl *mykid = other.getFirstChild(); 
     for (NodeImpl *mykid = ((NodeImpl&)other).getFirstChild(); 
          mykid != null; 
-         mykid = mykid->nextSibling) {
+         mykid = mykid->getNextSibling()) {
         this->appendChild(mykid->cloneNode(true));
     }
 }
 
-NodeImpl * NodeContainer::appendChild(NodeImpl *newChild)      
+DocumentImpl * THIS_CLASS::getOwnerDocument() {
+    return ownerDocument;
+}
+
+void THIS_CLASS::setOwnerDocument(DocumentImpl *doc) {
+    ownerDocument = doc;
+    for (NodeImpl *child = firstChild;
+         child != null; child = child->getNextSibling()) {
+        child->setOwnerDocument(doc);
+    }
+}
+
+
+void THIS_CLASS::changed()
 {
-    return insertBefore(newChild, null);
-};
+    ++fChanges;
+    NodeImpl *parentNode = getParentNode();
+    if (parentNode != null) {
+        parentNode->changed();
+    }
+};  
+
+int THIS_CLASS::changes()
+{
+    return fChanges;
+};  
 
 
-NodeListImpl *NodeContainer::getChildNodes() {
+NodeListImpl *THIS_CLASS::getChildNodes() {
     return this;
 };
 
 
-NodeImpl * NodeContainer::getFirstChild() {
+NodeImpl * THIS_CLASS::getFirstChild() {
     return firstChild;
 }; 
 
 
-NodeImpl * NodeContainer::getLastChild()
+NodeImpl * THIS_CLASS::getLastChild()
 {
-    return lastChild;
+    return lastChild();
 }; 
 
+ChildNode * THIS_CLASS::lastChild()
+{
+    // last child is stored as the previous sibling of first child
+    return firstChild != null ? firstChild->previousSibling : null;
+}; 
 
-unsigned int NodeContainer::getLength() {
+void THIS_CLASS::lastChild(ChildNode *node) {
+        // store lastChild as previous sibling of first child
+        if (firstChild != null) {
+            firstChild->previousSibling = node;
+        }
+    }
+
+
+unsigned int THIS_CLASS::getLength() {
     unsigned int count = 0;
-    NodeImpl *node = firstChild;
+    ChildNode *node = firstChild;
     while(node != null)
     {
         ++count;
@@ -133,28 +177,23 @@ unsigned int NodeContainer::getLength() {
 };
 
 
-bool NodeContainer::hasChildNodes()
+bool THIS_CLASS::hasChildNodes()
 { 
     return firstChild!=null;
 }; 
 
 
 
-NodeImpl *NodeContainer::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
-    if (readOnly)
+NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
+    if (readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    if(  !(newChild->getOwnerDocument() == ownerDocument   ||
-        // SPECIAL-CASE: Document has no owner, but may be the owner.
-        ( this->isDocumentImpl() &&
-        newChild->getOwnerDocument() == (DocumentImpl *)this ) 
-        ) )
+    if (newChild->getOwnerDocument() != ownerDocument)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     
     // Convert to internal type, to avoid repeated casting  
-    //   (left over from the original Java.  Meaningless in this version.)
-    NodeImpl * newInternal= newChild;
+    ChildNode * newInternal= (ChildNode *)newChild;
     
     // Prevent cycles in the tree
     bool treeSafe=true;
@@ -166,7 +205,7 @@ NodeImpl *NodeContainer::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     
     // refChild must in fact be a child of this node (or null)
-    if(refChild!=null && refChild->ownerNode != this)
+    if (refChild!=null && refChild->getParentNode() != this)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
     
     if (newInternal->isDocumentFragmentImpl())
@@ -192,144 +231,115 @@ NodeImpl *NodeContainer::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         kid!=null;
         kid=kid->getNextSibling())
         {
-            if(!isKidOK(this,kid))
-                throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+            if (!DocumentImpl::isKidOK(this, kid))
+              throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
         }                       
         while(newInternal->hasChildNodes())     // Move
             insertBefore(newInternal->getFirstChild(),refChild);
     }
     
-    else if(!isKidOK(this, newInternal))
+    else if (!DocumentImpl::isKidOK(this, newInternal))
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     
     else
     {
-        NodeImpl *oldparent=newInternal->ownerNode;
+        // Convert to internal type, to avoid repeated casting
+        ChildNode *refInternal = (ChildNode *)refChild;
+
+        NodeImpl *oldparent=newInternal->getParentNode();
         if(oldparent!=null)
             oldparent->removeChild(newInternal);
         
-        NodeImpl *prev;
+        ChildNode *prev;
         // Find the node we're inserting after, if any (null if
         // inserting to head of list)
-        prev= (refChild==null)
-            ? lastChild
-            : refChild->previousSibling;
+        prev = (refInternal == null)
+            ? lastChild() : refInternal->previousSibling;
         
         // Attach up
-        newInternal->ownerNode=this;
+        newInternal->ownerNode = this;
+        newInternal->owned(true);
         
         // Attach after
         newInternal->previousSibling=prev;
-        if(prev==null)
-            firstChild=newInternal;
-        else
-            prev->nextSibling=newInternal;
-        
+        if (refInternal == firstChild) {
+            firstChild = newInternal;
+            newInternal->firstChild(true);
+        } else {
+            prev->nextSibling = newInternal;
+        }
+
         // Attach before
-        newInternal->nextSibling = refChild;
-        if(refChild==null)
-            lastChild=newInternal;
-        else
-            refChild->previousSibling=newInternal;
+        newInternal->nextSibling = refInternal;
+        if(refInternal == null) {
+            // store lastChild as previous sibling of first child
+            firstChild->previousSibling = newInternal;
+        } else {
+            refInternal->previousSibling = newInternal;
+            refInternal->firstChild(true);
+        }
     }
     changed();
-    
+
     return newInternal;
 };
-
-
-/** Uses the kidOK lookup table to check whether the proposed
-    tree structure is legal.
-
-    ????? It feels like there must be a more efficient solution,
-    but for the life of me I can't think what it would be.
-*/
-bool NodeContainer::isKidOK(NodeImpl *parent, NodeImpl *child)
-{
-      static int kidOK[14];
-      
-      if (kidOK[DOM_Node::DOCUMENT_NODE] == 0)
-      {
-          kidOK[DOM_Node::DOCUMENT_NODE] = 
-              1 << DOM_Node::ELEMENT_NODE |
-              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE | 
-              1 << DOM_Node::COMMENT_NODE | 
-              1 << DOM_Node::DOCUMENT_TYPE_NODE |
-              1 << DOM_Node::XML_DECL_NODE;
-          
-          kidOK[DOM_Node::DOCUMENT_FRAGMENT_NODE] = 
-              kidOK[DOM_Node::ENTITY_NODE] = 
-              kidOK[DOM_Node::ENTITY_REFERENCE_NODE] = 
-              kidOK[DOM_Node::ELEMENT_NODE] = 
-              1 << DOM_Node::ELEMENT_NODE |
-              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE | 
-              1 << DOM_Node::COMMENT_NODE |
-              1 << DOM_Node::TEXT_NODE |
-              1 << DOM_Node::CDATA_SECTION_NODE |
-              1 << DOM_Node::ENTITY_REFERENCE_NODE |
-              1 << DOM_Node::XML_DECL_NODE;
-          
-          kidOK[DOM_Node::DOCUMENT_TYPE_NODE] = 
-              1 << DOM_Node::NOTATION_NODE |
-              1 << DOM_Node::ENTITY_NODE;
-          
-          kidOK[DOM_Node::ATTRIBUTE_NODE] = 
-              1 << DOM_Node::TEXT_NODE |
-              1 << DOM_Node::ENTITY_REFERENCE_NODE;
-          
-          kidOK[DOM_Node::PROCESSING_INSTRUCTION_NODE] = 
-              kidOK[DOM_Node::COMMENT_NODE] = 
-              kidOK[DOM_Node::TEXT_NODE] = 
-              kidOK[DOM_Node::CDATA_SECTION_NODE] = 
-              kidOK[DOM_Node::NOTATION_NODE] = 
-              0;
-      };
-      int p=parent->getNodeType();
-      int ch = child->getNodeType();
-      return (kidOK[p] & 1<<ch) != 0;
-};
   
   
-  
-NodeImpl *NodeContainer::item(unsigned int index) {
-    NodeImpl *node = firstChild;
+NodeImpl *THIS_CLASS::item(unsigned int index) {
+    ChildNode *node = firstChild;
     for(unsigned int i=0; i<index && node!=null; ++i)
         node = node->nextSibling;
     return node;
 };
   
   
-NodeImpl *NodeContainer::removeChild(NodeImpl *oldChild) 
+NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild) 
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(
           DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
       
-      if (oldChild != null && oldChild->ownerNode != this)
+      if (oldChild != null && oldChild->getParentNode() != this)
           throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
-      
+
+      ChildNode * oldInternal = (ChildNode *) oldChild;
+
       // Patch tree past oldChild
-      NodeImpl *prev = oldChild->previousSibling;
-      NodeImpl *next = oldChild->nextSibling;
-      if (prev != null)
+      ChildNode *prev = oldInternal->previousSibling;
+      ChildNode *next = oldInternal->nextSibling;
+
+      if (oldInternal != firstChild)
           prev->nextSibling = next;
-      else
+      else {
+          oldInternal->firstChild(false);
           firstChild = next;
-      if (next != null)
+          if (next != null) {
+              next->firstChild(true);
+          }
+      }
+
+      if (next != null)         // oldInternal != lastChild
           next->previousSibling = prev;
-      else
-          lastChild = prev;
+      else {
+          if (firstChild != null) {
+              // store lastChild as previous sibling of first child
+              firstChild->previousSibling = prev;
+          }
+      }
       
       // Remove oldChild's references to tree
-      oldChild->ownerNode = null;
-      oldChild->nextSibling = null;
-      oldChild->previousSibling = null;
+      oldInternal->ownerNode = ownerDocument;
+      oldInternal->owned(false);
+      oldInternal->nextSibling = null;
+      oldInternal->previousSibling = null;
+
       changed();
-      return oldChild;
+
+      return oldInternal;
 };
   
   
-NodeImpl *NodeContainer::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
+NodeImpl *THIS_CLASS::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 {
     insertBefore(newChild, oldChild);
     // changed() already done.
@@ -337,13 +347,13 @@ NodeImpl *NodeContainer::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 };
   
 
-void NodeContainer::setReadOnly(bool readOnl, bool deep)
+void THIS_CLASS::setReadOnly(bool readOnl, bool deep)
 {
     NodeImpl::setReadOnly(readOnl, deep);
       
     if (deep)
         // Recursively set kids
-        for (NodeImpl *mykid = firstChild; 
+        for (ChildNode *mykid = firstChild; 
              mykid != null; 
              mykid = mykid->nextSibling)
             if(! (mykid->isEntityReference()))
@@ -353,12 +363,12 @@ void NodeContainer::setReadOnly(bool readOnl, bool deep)
   
 //Introduced in DOM Level 2
   
-void NodeContainer::normalize()
+void THIS_CLASS::normalize()
 {
-    NodeImpl *kid, *next;
-    for (kid = getFirstChild(); kid != null; kid = next)
+    ChildNode *kid, *next;
+    for (kid = firstChild; kid != null; kid = next)
     {
-        next = kid->getNextSibling();
+        next = kid->nextSibling;
         
         // If kid and next are both Text nodes (but _not_ CDATASection,
         // which is a subclass of Text), they can be merged.
@@ -382,3 +392,6 @@ void NodeContainer::normalize()
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };
+
+#undef THIS_CLASS
+#undef PARENT_CLASS

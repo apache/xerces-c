@@ -64,17 +64,17 @@
 
 
 EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
-   : NodeContainer(ownerDoc),
+   : ParentNode(ownerDoc),
 	refEntity(0)
 
 {
     name        = eName.clone();
-    readOnly    = true;
+    readOnly(true);
 };
 
 
 EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
-    : NodeContainer(other)
+    : ParentNode(other)
 {
     name            = other.name.clone();
     if (deep)
@@ -83,7 +83,7 @@ EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
     systemId        = other.systemId.clone();
     notationName    = other.notationName.clone();
     refEntity       = other.refEntity;	
-    readOnly        = true;
+    readOnly(true);
 };
 
 
@@ -104,13 +104,6 @@ DOMString EntityImpl::getNodeName() {
 
 short EntityImpl::getNodeType() {
     return DOM_Node::ENTITY_NODE;
-};
-
-
-// Notation nodes do not have a parent
-NodeImpl * EntityImpl::getParentNode()
-{
-    return 0;
 };
 
 
@@ -185,7 +178,7 @@ NodeImpl * EntityImpl::getFirstChild()
 NodeImpl*   EntityImpl::getLastChild() 
 {
 	cloneEntityRefTree();
-	return lastChild;
+	return lastChild();
 }
 
 NodeListImpl* EntityImpl::getChildNodes() 
@@ -204,20 +197,8 @@ bool EntityImpl::hasChildNodes()
 NodeImpl* EntityImpl::item(unsigned int index) 
 {
 	cloneEntityRefTree();
-    NodeImpl *node = firstChild;
+    ChildNode *node = firstChild;
     for(unsigned int i=0; i<index && node!=null; ++i)
         node = node->nextSibling;
     return node;
-}
-
-NodeImpl * EntityImpl::getNextSibling()
-{
-	cloneEntityRefTree();
-	return nextSibling;
-}
-
-NodeImpl*  EntityImpl::getPreviousSibling()
-{
-	cloneEntityRefTree();
-	return previousSibling;
 }

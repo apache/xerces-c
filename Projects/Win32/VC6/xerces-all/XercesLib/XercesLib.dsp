@@ -821,6 +821,22 @@ SOURCE=..\..\..\..\..\src\dom\CharacterDataImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\ChildAndParentNode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ChildAndParentNode.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ChildNode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ChildNode.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\CommentImpl.cpp
 # End Source File
 # Begin Source File
@@ -1125,14 +1141,6 @@ SOURCE=..\..\..\..\..\src\dom\NameNodeFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeContainer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\dom\NodeContainer.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\dom\NodeImpl.cpp
 # End Source File
 # Begin Source File
@@ -1170,6 +1178,14 @@ SOURCE=..\..\..\..\..\src\dom\NotationImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\NotationImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ParentNode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ParentNode.hpp
 # End Source File
 # Begin Source File
 

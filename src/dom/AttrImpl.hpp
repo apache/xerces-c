@@ -73,16 +73,15 @@
 
 
 #include <util/XercesDefs.hpp>
-#include "NodeContainer.hpp"
+#include "ParentNode.hpp"
 #include "DOM_Node.hpp"
 
 class ElementImpl;
 
-class CDOM_EXPORT AttrImpl: public NodeContainer {
+class CDOM_EXPORT AttrImpl: public ParentNode {
     
 public:
     DOMString name;
-    bool specified;
 
 public:
     AttrImpl(DocumentImpl *ownerDocument, const DOMString &aName);
@@ -93,7 +92,6 @@ public:
     virtual short getNodeType();
     virtual DOMString getName();
     virtual DOMString getNodeValue();
-    virtual NodeImpl * getParentNode();
     virtual bool getSpecified();
     virtual DOMString getValue();
     virtual bool isAttrImpl();

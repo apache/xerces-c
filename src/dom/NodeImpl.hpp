@@ -73,7 +73,19 @@
 /**
  * A NodeImpl doesn't have any children, and can therefore only be directly
  * inherited by classes of nodes that never have any, such as Text nodes. For
- * other types, such as Element, classes must inherit from NodeContainer.
+ * other types, such as Element, classes must inherit from ParentNode.
+ * <P>
+ * All nodes in a single document must originate
+ * in that document. (Note that this is much tighter than "must be
+ * same implementation") Nodes are all aware of their ownerDocument,
+ * and attempts to mismatch will throw WRONG_DOCUMENT_ERR.
+ * <P>
+ * However, to save memory not all nodes always have a direct reference
+ * to their ownerDocument. When a node is owned by another node it relies
+ * on its owner to store its ownerDocument. Parent nodes always store it
+ * though, so there is never more than one level of indirection.
+ * And when a node doesn't have an owner, ownerNode refers to its
+ * ownerDocument.
  **/
 
 #include <util/XercesDefs.hpp>
@@ -99,12 +111,21 @@ const int null = 0;
 
 class CDOM_EXPORT NodeImpl: public NodeListImpl {
 public:
-    bool                    readOnly;
-    DocumentImpl            *ownerDocument; // Document this node belongs to
-    NodeImpl                *previousSibling;
-    NodeImpl                *nextSibling;
     NodeImpl                *ownerNode; // typically the parent but not always!
-    int changes;
+
+    // data
+
+    unsigned short flags;
+
+    static const unsigned short READONLY;
+    static const unsigned short SYNCDATA;
+    static const unsigned short SYNCCHILDREN;
+    static const unsigned short OWNED;
+    static const unsigned short FIRSTCHILD;
+    static const unsigned short SPECIFIED;
+    static const unsigned short IGNORABLEWS;
+    static const unsigned short SETVALUE;
+
     void *userData;
 
     static int              gLiveNodeImpls; // Counters for debug & tuning.
@@ -125,8 +146,10 @@ public:
     virtual bool isEntityReference();
     virtual bool isTextImpl();
 
-    virtual NodeImpl *appendChild(NodeImpl *newChild);
     virtual void changed();
+    virtual int changes();
+
+    virtual NodeImpl *appendChild(NodeImpl *newChild);
     virtual NodeImpl * cloneNode(bool deep) = 0;
     static void deleteIf(NodeImpl *thisNode);
     virtual NamedNodeMapImpl * getAttributes();
@@ -171,6 +194,78 @@ protected:
     static DOMString getXmlnsURIString();
     static DOMString getXmlString();
     static DOMString getXmlURIString();
+
+public: // should really be protected - ALH
+
+    virtual void setOwnerDocument(DocumentImpl *doc);
+
+    /*
+     * Flags setters and getters
+     */
+
+    inline bool readOnly() {
+        return (flags & READONLY) != 0;
+    }
+
+    inline void readOnly(bool value) {
+        flags = (value ? flags | READONLY : flags & ~READONLY);
+    }
+
+    inline bool syncData() {
+        return (flags & SYNCDATA) != 0;
+    }
+
+    inline void syncData(bool value) {
+        flags = (value ? flags | SYNCDATA : flags & ~SYNCDATA);
+    }
+
+    inline bool syncChildren() {
+        return (flags & SYNCCHILDREN) != 0;
+    }
+
+    inline void syncChildren(bool value) {
+        flags = (value ? flags | SYNCCHILDREN : flags & ~SYNCCHILDREN);
+    }
+
+    inline bool owned() {
+        return (flags & OWNED) != 0;
+    }
+
+    inline void owned(bool value) {
+        flags = (value ? flags | OWNED : flags & ~OWNED);
+    }
+
+    inline bool firstChild() {
+        return (flags & FIRSTCHILD) != 0;
+    }
+
+    inline void firstChild(bool value) {
+        flags = (value ? flags | FIRSTCHILD : flags & ~FIRSTCHILD);
+    }
+
+    inline bool specified() {
+        return (flags & SPECIFIED) != 0;
+    }
+
+    inline void specified(bool value) {
+        flags = (value ? flags | SPECIFIED : flags & ~SPECIFIED);
+    }
+
+    inline bool ignorableWhitespace() {
+        return (flags & IGNORABLEWS) != 0;
+    }
+
+    inline void ignorableWhitespace(bool value) {
+        flags = (value ? flags | IGNORABLEWS : flags & ~IGNORABLEWS);
+    }
+
+    inline bool setValue() {
+        return (flags & SETVALUE) != 0;
+    }
+
+    inline void setValue(bool value) {
+        flags = (value ? flags | SETVALUE : flags & ~SETVALUE);
+    }
 };
 
 

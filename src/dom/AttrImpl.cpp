@@ -66,20 +66,18 @@
 #include "DStringPool.hpp"
 
 
-#define null 0
-
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
-    : NodeContainer (ownerDoc)
+    : ParentNode (ownerDoc)
 {
     name = aName.clone();
-    specified = true;
+    specified(true);
 };
 
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
-    : NodeContainer(other)
+    : ParentNode(other)
 {
     name = other.name.clone();
-    specified = false;
+    specified(false);
     if (deep)
       cloneChildren(other);
 };
@@ -117,17 +115,9 @@ DOMString AttrImpl::getNodeValue()
 };
 
 
-// ownerNode is used to store the ownerElement,
-// Attr nodes do not have a parent
-NodeImpl * AttrImpl::getParentNode()
-{
-    return 0;
-};
-
-
 bool AttrImpl::getSpecified() 
 {
-    return specified;
+    return specified();
 };
 
 
@@ -136,13 +126,13 @@ bool AttrImpl::getSpecified()
 DOMString AttrImpl::getValue() 
 {
     int             length = 0;
-    NodeImpl        *node;
-    for (node = getFirstChild(); node != null; node = node->getNextSibling())
+    ChildNode        *node;
+    for (node = firstChild; node != null; node = node->nextSibling)
         length += node->getNodeValue().length();
     
     DOMString retString;
-	retString.reserve(length);
-    for (node = getFirstChild(); node != null; node = node->getNextSibling())
+    retString.reserve(length);
+    for (node = firstChild; node != null; node = node->nextSibling)
     {
         retString.appendData(node->getNodeValue());
     };
@@ -166,14 +156,14 @@ void AttrImpl::setNodeValue(const DOMString &val)
 
 void AttrImpl::setSpecified(bool arg)
 {
-    specified = arg;
+    specified(arg);
 };
 
 
 
 void AttrImpl::setValue(const DOMString &val)
 {
-    if (readOnly)
+    if (readOnly())
     {
         throw DOM_DOMException
         (
@@ -182,7 +172,7 @@ void AttrImpl::setValue(const DOMString &val)
     }
     
     NodeImpl *kid;
-    while ((kid = getFirstChild()) != null)         // Remove existing kids
+    while ((kid = firstChild) != null)         // Remove existing kids
     {
         removeChild(kid);
         if (kid->nodeRefCount == 0)
@@ -191,7 +181,7 @@ void AttrImpl::setValue(const DOMString &val)
 
     if (val != null)              // Create and add the new one
         appendChild(ownerDocument->createTextNode(val));
-    specified = true;
+    specified(true);
     changed();
 };
 
@@ -213,7 +203,9 @@ DOMString AttrImpl::toString()
 
 ElementImpl *AttrImpl::getOwnerElement()
 {
-    return (ElementImpl*) ownerNode;
+    // if we have an owner, ownerNode is our ownerElement, otherwise it's
+    // our ownerDocument and we don't have an ownerElement
+    return (ElementImpl *) (owned() ? ownerNode : null);
 }
 
 
@@ -221,4 +213,5 @@ ElementImpl *AttrImpl::getOwnerElement()
 void AttrImpl::setOwnerElement(ElementImpl *ownerElem)
 {
     ownerNode = ownerElem;
+    owned(false);
 }

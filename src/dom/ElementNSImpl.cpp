@@ -62,8 +62,6 @@
 #include "DocumentImpl.hpp"
 #include "DOM_DOMException.hpp"
 
-#define null 0
-
 ElementNSImpl::ElementNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
     ElementImpl(ownerDoc, name)
 {
@@ -135,7 +133,7 @@ void ElementNSImpl::setPrefix(const DOMString &prefix)
     DOMString xmlns = NodeImpl::getXmlnsString();
     DOMString xmlnsURI = NodeImpl::getXmlnsURIString();
 
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     if(prefix != null && !DocumentImpl::isXMLName(prefix))

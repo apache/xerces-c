@@ -147,7 +147,7 @@ void NotationImpl::setNodeValue(const DOMString &arg)
 
 void NotationImpl::setPublicId(const DOMString &arg)
 {
-    if(readOnly)
+    if(readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
     
@@ -157,7 +157,7 @@ void NotationImpl::setPublicId(const DOMString &arg)
 
 void NotationImpl::setSystemId(const DOMString &arg)
 {
-    if(readOnly)
+    if(readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
     

@@ -67,7 +67,7 @@
 ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *ownerDoc,
                                                      const DOMString &target,
                                                      const DOMString &data)
-    : NodeImpl(ownerDoc)
+    : ChildNode(ownerDoc)
 {
     this->target = target.clone();
     this->data = data.clone();
@@ -77,7 +77,7 @@ ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *ownerDoc,
 ProcessingInstructionImpl::ProcessingInstructionImpl(
                                         const ProcessingInstructionImpl &other,
                                         bool deep)
-    : NodeImpl(other)
+    : ChildNode(other)
 {
     target = other.target.clone();
     data = other.data.clone();
@@ -114,7 +114,7 @@ DOMString ProcessingInstructionImpl::getNodeValue()
 
 void ProcessingInstructionImpl::setNodeValue(const DOMString &value)
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = value.clone();
@@ -151,7 +151,7 @@ DOMString ProcessingInstructionImpl::getTarget()
 */
 void ProcessingInstructionImpl::setData(const DOMString &arg)
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = arg.clone();

@@ -64,13 +64,13 @@
 
 CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc,
                                      const DOMString &data)
-    : NodeImpl(ownerDoc)
+    : ChildNode(ownerDoc)
 {
     this->data = data.clone();
 };
 
 CharacterDataImpl::CharacterDataImpl(const CharacterDataImpl &other, bool deep)
-    : NodeImpl(other)
+    : ChildNode(other)
 {
     data = other.data.clone();
 };
@@ -88,7 +88,7 @@ DOMString CharacterDataImpl::getNodeValue()
 
 void CharacterDataImpl::setNodeValue(const DOMString &value)
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = value.clone();
@@ -97,7 +97,7 @@ void CharacterDataImpl::setNodeValue(const DOMString &value)
 
 void CharacterDataImpl::appendData(const DOMString &data)
 {
-    if(readOnly)
+    if(readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -107,7 +107,7 @@ void CharacterDataImpl::appendData(const DOMString &data)
 
 void CharacterDataImpl::deleteData(unsigned int offset, unsigned int count)
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
 
@@ -145,7 +145,7 @@ unsigned int CharacterDataImpl::getCharDataLength()
 void CharacterDataImpl::insertData(unsigned int offset, const DOMString &data) 
 {
     
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -160,7 +160,7 @@ void CharacterDataImpl::insertData(unsigned int offset, const DOMString &data)
 void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count,
                                     const DOMString &data)
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     deleteData(offset, count);
@@ -172,7 +172,7 @@ void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count,
 
 void CharacterDataImpl::setData(const DOMString &arg)
 {
-    if (readOnly)
+    if (readOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = arg.clone();

@@ -73,11 +73,11 @@
 
 
 #include <util/XercesDefs.hpp>
-#include "NodeContainer.hpp"
+#include "ChildAndParentNode.hpp"
 
 class NamedNodeMapImpl;
 
-class CDOM_EXPORT DocumentTypeImpl: public NodeContainer {
+class CDOM_EXPORT DocumentTypeImpl: public ChildAndParentNode {
 private:
     DOMString			name;
     NamedNodeMapImpl	*entities;
@@ -97,13 +97,15 @@ private:
     
 public:
     DocumentTypeImpl(DocumentImpl *, const DOMString &);
-    DocumentTypeImpl(const DOMString &qualifiedName,	//DOM Level 2
-		const DOMString &publicId, const DOMString &systemId);
+    DocumentTypeImpl(DocumentImpl *,
+                     const DOMString &qualifiedName,	//DOM Level 2
+                     const DOMString &publicId, const DOMString &systemId);
     DocumentTypeImpl(const DocumentTypeImpl &other, bool deep=false);
     virtual ~DocumentTypeImpl();
     virtual bool isDocumentTypeImpl();
     
     virtual NodeImpl *         cloneNode(bool deep);
+    virtual void setOwnerDocument(DocumentImpl *doc);
     virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual NamedNodeMapImpl * getEntities();
@@ -117,9 +119,6 @@ public:
     virtual DOMString     getPublicId();
     virtual DOMString     getSystemId();
     virtual DOMString     getInternalSubset();
-    //internal use only
-    virtual void setOwnerDocument(DocumentImpl *docImpl);
-    virtual DocumentTypeImpl *exportNode(DocumentImpl *docImpl, bool deep);
 };
 
 #endif

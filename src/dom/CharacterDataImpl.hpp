@@ -72,10 +72,9 @@
 
 
 
-#include "NodeImpl.hpp"
-#include "DOMString.hpp"
+#include "ChildNode.hpp"
 
-class CDOM_EXPORT CharacterDataImpl: public NodeImpl
+class CDOM_EXPORT CharacterDataImpl: public ChildNode
 {
 protected:
     DOMString data;

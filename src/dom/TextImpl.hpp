@@ -88,7 +88,6 @@ public:
     virtual bool isIgnorableWhitespace();
 protected:
     virtual void setIgnorableWhitespace(bool ignorable);
-    bool fIgnorableWhitespace;
     friend class DOMParser;
 };
 
