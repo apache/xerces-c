@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/10/29 18:58:33  tng
+ * Support for Linux/390
+ *
  * Revision 1.6  2002/08/23 20:56:00  tng
  * [Bug 11981] inproper "AND" operator in AutoSense.hpp.
  *
@@ -191,6 +194,9 @@
 #elif defined(__linux__)
     #define XML_LINUX
     #define XML_UNIX
+    #if defined(__s390__)
+        #define XML_LINUX_390
+    #endif
 #elif defined(__FreeBSD__)
     #define XML_FREEBSD
     #define XML_UNIX
