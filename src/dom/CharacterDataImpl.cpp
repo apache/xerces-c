@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/04 05:06:29  andyh
+ * Change all DOMString offsets and lengths form signed to unsigned
+ * Other misc. cleanups.
+ *
  * Revision 1.4  2000/02/04 01:49:30  aruna1
  * TreeWalker and NodeIterator changes
  *
@@ -121,23 +125,10 @@ void CharacterDataImpl::deleteData(unsigned int offset, unsigned int count)
     if (readOnly)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if (count < 0)
-        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
-    
-    
-    //int tailLength = Math.max(value.length() - count - offset, 0);
-    //try
-    //{
-    //      value = value.substring(0, offset) + (tailLength > 0 ? value.substring(offset + count, offset + count + tailLength) : "");
-    //}
-    //catch (StringIndexOutOfBoundsException e)
-    //{
-    //      throw DOM_DOMException(DOMException.INDEX_SIZE_ERR, null);
-    
-    unsigned int len = value.length();  //assert(value.length() >= 0)
-    if (offset < 0 || offset >= len)
-        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
-    
+
+    // Note: the C++ DOMString operation throws the correct DOMExceptions
+    //       when parameter values are bad.
+    //  
     value.deleteData(offset, count);
 };
 
@@ -161,7 +152,7 @@ DOMString &CharacterDataImpl::getData()
 //
 unsigned int CharacterDataImpl::getCharDataLength()
 {
-    return value.length();  //assert(value.length() >= 0)
+    return value.length();  
 };
 
 
@@ -173,10 +164,9 @@ void CharacterDataImpl::insertData(unsigned int offset, const DOMString &data)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    unsigned int len = value.length();  //assert(value.length() >= 0)
-    if (offset<0 || offset>len)
-        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
-    
+    // Note: the C++ DOMString operation throws the correct DOMExceptions
+    //       when parameter values are bad.
+    //  
     value.insertData(offset, data);
 }
 
@@ -207,11 +197,10 @@ void CharacterDataImpl::setData(const DOMString &arg)
 
 DOMString CharacterDataImpl::substringData(unsigned int offset, unsigned int count)
 {
-    
-    unsigned int len = value.length();  //assert(value.length() >= 0)
-    if(count < 0 || offset < 0 || offset >= len)
-        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR,null);
-    
+
+    // Note: the C++ DOMString operation throws the correct DOMExceptions
+    //       when parameter values are bad.
+    //  
     return value.substringData(offset, count);
 };
 

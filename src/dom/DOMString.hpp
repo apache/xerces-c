@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/04 05:06:30  andyh
+ * Change all DOMString offsets and lengths form signed to unsigned
+ * Other misc. cleanups.
+ *
  * Revision 1.6  2000/02/04 00:52:58  rahulj
  * Changed size_t to int.
  *
@@ -142,7 +146,7 @@ public:
       * @param other The character array to be imported into the <code>DOMString</code>
       * @param length The length of the character array to be imported
       */
-    DOMString(const XMLCh *other, int length);
+    DOMString(const XMLCh *other, unsigned int length);
 
     /**
       * Constructor to build a DOMString from an 8 bit character array.
@@ -254,7 +258,7 @@ public:
       *
       * @param size The number of 16 bit characters to reserve.
       */
-    void reserve(int size);
+    void reserve(unsigned int size);
 
     
     /**
@@ -309,7 +313,7 @@ public:
       * @param offset The position from the beginning from which the data must be deleted
       * @param count The count of characters from the offset that must be deleted
       */
-    void        deleteData(int offset, int count);
+    void        deleteData(unsigned int offset, unsigned int count);
 
     /**
       * Inserts a string within the existing <code>DOMString</code> at an arbitrary position.
@@ -319,7 +323,7 @@ public:
       * @param data The <code>DOMString</code> containing the data that needs to be inserted
       * @return The object to be returned.
       */
-    void        insertData(int offset, const DOMString &data);
+    void        insertData(unsigned int offset, const DOMString &data);
 
     //@}
     /** @name Functions to get properties of the string. */
@@ -331,7 +335,7 @@ public:
       * @param index The position at which the character is being requested
       * @return Returns the character at the specified position.
       */
-    XMLCh       charAt(int index) const;
+    XMLCh       charAt(unsigned int index) const;
 
     /**
       * Returns a handle to the raw buffer in the <code>DOMString</code>.
@@ -372,14 +376,14 @@ public:
       * @param count The count of characters in the requested sub-string
       * @return The sub-string of the <code>DOMString</code> being requested
       */
-    DOMString   substringData(int offset, int count) const;
+    DOMString   substringData(unsigned int offset, unsigned int count) const;
 
     /**
       * Returns the length of the DOMString.
       *
       * @return The length of the string
       */
-    int         length() const;
+    unsigned int length() const;
 
     //@}
     /** @name Cloning function. */

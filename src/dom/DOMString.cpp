@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/02/04 05:06:29  andyh
+ * Change all DOMString offsets and lengths form signed to unsigned
+ * Other misc. cleanups.
+ *
  * Revision 1.10  2000/02/04 00:52:57  rahulj
  * Changed size_t to int.
  *
@@ -111,6 +115,7 @@
 #include <util/RuntimeException.hpp>
 #include <util/TransService.hpp>
 #include <util/XMLString.hpp>
+#include "DOM_DOMException.hpp"
 #include "DOMString.hpp"
 
 #ifndef XML_DEBUG
@@ -147,9 +152,9 @@ void DOMStringData::addRef()
 };
 
 
-DOMStringData *DOMStringData::allocateBuffer(int length)
+DOMStringData *DOMStringData::allocateBuffer(unsigned int length)
 {
-    int sizeToAllocate = sizeof(DOMStringData) //  buffer will contain an
+    unsigned int sizeToAllocate = sizeof(DOMStringData) //  buffer will contain an
         + length*sizeof(XMLCh);                //  extra elem because of stub
                                                //  array in DOMStringData struct.
     DOMStringData *buf = (DOMStringData *) new char[sizeToAllocate];
@@ -288,7 +293,7 @@ void DOMStringHandle::removeRef()
 };
 
 
-DOMStringHandle *DOMStringHandle::createNewStringHandle(int bufLength)
+DOMStringHandle *DOMStringHandle::createNewStringHandle(unsigned int bufLength)
 {
     DOMStringHandle  *h = new DOMStringHandle;
     XMLPlatformUtils::atomicIncrement(DOMString::gLiveStringHandleCount);
@@ -343,7 +348,7 @@ DOMString::DOMString(const XMLCh *data)
     fHandle = 0;
     if (data != 0)
     {
-        int dataLength = 0;
+        unsigned int dataLength = 0;
         while (data[dataLength] != 0)
             ++dataLength;
                 
@@ -352,7 +357,7 @@ DOMString::DOMString(const XMLCh *data)
             fHandle = DOMStringHandle::createNewStringHandle(dataLength+1);
             fHandle->fLength = dataLength;
             XMLCh *strData = fHandle->fDSData->fData;
-            int i;
+            unsigned int i;
             for (i=0; i<dataLength ; ++i)
                 strData[i] = data[i];
 
@@ -363,7 +368,7 @@ DOMString::DOMString(const XMLCh *data)
 
 
 
-DOMString::DOMString(const XMLCh *data, int dataLength)
+DOMString::DOMString(const XMLCh *data, unsigned int dataLength)
 {
     fHandle = 0;
     if (data != 0)
@@ -373,7 +378,7 @@ DOMString::DOMString(const XMLCh *data, int dataLength)
             fHandle = DOMStringHandle::createNewStringHandle(dataLength+1);
             fHandle->fLength = dataLength;
             XMLCh *strData = fHandle->fDSData->fData;
-            int i;
+            unsigned int i;
             for (i=0; i<dataLength ; ++i)
                 strData[i] = data[i];
 
@@ -485,14 +490,6 @@ DOMString & DOMString::operator = (DOM_NullPtr *arg)
 };
 
 
-#if 0
-DOMString DOMString::operator + (const DOMString &other)
-{
-    DOMString retString = this->clone();
-    retString.appendData(other);
-    return retString;
-};
-#endif
 
 bool DOMString::operator ==(const DOMString &other) const
 {
@@ -518,7 +515,7 @@ bool DOMString::operator != (const DOM_NullPtr *p) const
 
 
 
-void DOMString::reserve(int size)
+void DOMString::reserve(unsigned int size)
 {
 	if (fHandle == 0)
 	{
@@ -531,7 +528,6 @@ void DOMString::reserve(int size)
 
 void DOMString::appendData(const DOMString &other)
 {
-    int i;
     if (other.fHandle == 0 || other.fHandle->fLength == 0)
         return;
 
@@ -547,7 +543,7 @@ void DOMString::appendData(const DOMString &other)
         return;
     }
 
-    int newLength = fHandle->fLength + other.fHandle->fLength;
+    unsigned int newLength = fHandle->fLength + other.fHandle->fLength;
     if (newLength >= fHandle->fDSData->fBufferLength ||
         fHandle->fDSData->fRefCount > 1)
     {
@@ -558,6 +554,7 @@ void DOMString::appendData(const DOMString &other)
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
+        unsigned int i;
         for (i=0; i<fHandle->fLength; ++i)
             newP[i] = oldP[i];
         
@@ -570,6 +567,7 @@ void DOMString::appendData(const DOMString &other)
     //  be appended.  Go ahead and copy it in.
     XMLCh *srcP = other.fHandle->fDSData->fData;
     XMLCh *destP = &fHandle->fDSData->fData[fHandle->fLength];
+    unsigned int i;
     for (i=0; i<=other.fHandle->fLength; i++)
         destP[i] = srcP[i];
 
@@ -580,7 +578,7 @@ void DOMString::appendData(const DOMString &other)
 
 void DOMString::appendData(XMLCh ch)
 {
-	int newLength = 0;
+	unsigned int newLength = 0;
 
 	if (fHandle == 0)
 	{
@@ -600,7 +598,8 @@ void DOMString::appendData(XMLCh ch)
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
-        for (int i=0; i<fHandle->fLength; ++i)
+        unsigned int i;
+        for (i=0; i<fHandle->fLength; ++i)
             newP[i] = oldP[i];
         
         fHandle->fDSData->removeRef();
@@ -644,7 +643,7 @@ DOMString& DOMString::operator +=(XMLCh ch)
 
 
 
-XMLCh     DOMString::charAt(int index) const
+XMLCh     DOMString::charAt(unsigned int index) const
 {
     XMLCh retCh = 0;
     if (fHandle != 0  && index >= 0 &&  index < fHandle->fLength)
@@ -665,20 +664,27 @@ DOMString DOMString::clone() const
 
 
 
-void DOMString::deleteData(int offset, int delLength)
+void DOMString::deleteData(unsigned int offset, unsigned int delLength)
 {
-    assert(delLength >= 0);
-    int stringLen = this->length();
-    assert(offset < stringLen);
+    unsigned int stringLen = this->length();
+    if (offset >= stringLen)
+        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
 
     if (delLength == 0)
         return;
 
 
+    // Cap the value of delLength to avoid trouble with overflows
+    //  in the following length computations.
+    if (delLength > stringLen)
+        delLength = stringLen;
+
+    // If the length of data to be deleted would extend off the end
+    //   of the string, cut it back to stop at the end of string.
     if (offset + delLength >= stringLen)
         delLength = stringLen - offset;
 
-    int newStringLength = stringLen - delLength;
+    unsigned int newStringLength = stringLen - delLength;
     if (fHandle->fDSData->fRefCount > 1 && offset+delLength < stringLen)
     {
         // The deletion is of a range in the middle of the string
@@ -688,7 +694,7 @@ void DOMString::deleteData(int offset, int delLength)
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newStringLength);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
-        int i;
+        unsigned int i;
         for (i=0; i<offset; i++)
             newP[i] = oldP[i];
 
@@ -704,7 +710,7 @@ void DOMString::deleteData(int offset, int delLength)
         // The deletion is of a range in the middle of the string,
         // but no other string is sharing the buffer, so we can
         // just delete in place.
-        int i;
+        unsigned int i;
         XMLCh *bufP =  fHandle->fDSData->fData;
         for (i=offset; i<newStringLength; i++)
             bufP[i] = bufP[i+delLength];
@@ -725,7 +731,7 @@ void DOMString::deleteData(int offset, int delLength)
 
 bool DOMString::equals(const DOMString &other) const
 {
-        bool retVal = true;
+    bool retVal = true;
     if (this->fHandle != 0  && other.fHandle != 0)
     {
         if (this->fHandle->fLength != other.fHandle->fLength)
@@ -736,7 +742,7 @@ bool DOMString::equals(const DOMString &other) const
         {
             XMLCh *thisP  = this->fHandle->fDSData->fData;
             XMLCh *otherP = other.fHandle->fDSData->fData;
-            int i;
+            unsigned int i;
             for (i=0; i<this->fHandle->fLength; i++)
             {
                 if (thisP[i] != otherP[i])
@@ -768,9 +774,9 @@ bool DOMString::equals(const XMLCh *other) const
         // Both strings have non-null data pointers, so
         //  we can go ahead and actually compare them.
         XMLCh *thisP  = this->fHandle->fDSData->fData;
-        int    len    = this->fHandle->fLength;
+        unsigned int len    = this->fHandle->fLength;
 
-        int i;
+        unsigned int i;
         for (i=0; i<len; i++)
         {
             if (other[i] == 0)   // "other" is null terminated.
@@ -805,24 +811,24 @@ bool DOMString::equals(const XMLCh *other) const
 };
 
 
-void DOMString::insertData(int offset, const DOMString &src)
+void DOMString::insertData(unsigned int offset, const DOMString &src)
 {
-    assert(offset>=0);
-    int origStrLength = this->length();
-    assert(offset<=origStrLength);
-
+    unsigned int origStrLength = this->length();
+    if (offset >= origStrLength)
+        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
+    
     if (fHandle == 0)
     {
         *this = src.clone();
         return;
     }
 
-    if (src.fHandle == 0 ||src.fHandle->fLength == 0)
+    if (src.fHandle == 0 || src.fHandle->fLength == 0)
         return;
 
     XMLCh *srcP = src.fHandle->fDSData->fData;
-    int srcLength = src.fHandle->fLength;
-    int newLength = fHandle->fLength + srcLength;
+    unsigned int srcLength = src.fHandle->fLength;
+    unsigned int newLength = fHandle->fLength + srcLength;
     if (newLength >= fHandle->fDSData->fBufferLength ||
         fHandle->fDSData->fRefCount > 1  || fHandle == src.fHandle )
     {
@@ -835,7 +841,7 @@ void DOMString::insertData(int offset, const DOMString &src)
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
         XMLCh *newP  = newBuf->fData;
         XMLCh *oldP   = fHandle->fDSData->fData;
-        int i;
+        unsigned int i;
         for (i=0; i<offset; ++i)
             newP[i] = oldP[i];
 
@@ -855,11 +861,12 @@ void DOMString::insertData(int offset, const DOMString &src)
         //
         XMLCh *destP = fHandle->fDSData->fData;
         int i;
-        for (i=origStrLength-1; i>=offset; i--)
+        for (i=(int)origStrLength-1; i>=(int)offset; i--)
             destP[i+srcLength] = destP[i];
 
-        for (i=0; i<srcLength; i++)
-            destP[i+offset] = srcP[i];
+        unsigned int j;
+        for (j=0; j<srcLength; j++)
+            destP[j+offset] = srcP[j];
     };
 
     fHandle->fLength += srcLength;
@@ -867,9 +874,9 @@ void DOMString::insertData(int offset, const DOMString &src)
 
 
 
-int DOMString::length() const
+unsigned int DOMString::length() const
 {
-    int             len = 0;
+    unsigned int len = 0;
     if (fHandle != 0)
         len = fHandle->fLength;
 
@@ -880,7 +887,7 @@ int DOMString::length() const
 
 void DOMString::print() const
 {
-    int len = this->length();
+    unsigned int len = this->length();
 
     if (len > 0)
     {
@@ -890,7 +897,7 @@ void DOMString::print() const
         //  This is only required because the data in the DOMString buffer
         //  may not be null terminated, but we need the null here.
 		XMLCh* buffer = new XMLCh[len+1];
-        int i;
+        unsigned int i;
 		for (i=0; i<len; i++)
 		   buffer[i] = p[i];
 		buffer[len] = 0;
@@ -940,7 +947,7 @@ char *DOMString::transcode() const
     //
     XMLCh* DOMStrData = fHandle->fDSData->fData;
 
-    const int localBufLen = 1000;
+    const unsigned int localBufLen = 1000;
     XMLCh localBuf[localBufLen];
     XMLCh *allocatedBuf = 0;
     XMLCh *srcP;
@@ -1000,8 +1007,8 @@ int DOMString::compareString(const DOMString &other) const
     //       define some less than - equals - greater than ordering
     //       of strings.  How doesn't matter.
     //
-    int thisLen = length();
-    int otherLen = other.length();
+    unsigned int thisLen = length();
+    unsigned int otherLen = other.length();
 
     if (thisLen < otherLen)
         return -1;
@@ -1014,7 +1021,7 @@ int DOMString::compareString(const DOMString &other) const
 
     XMLCh *thisP =  this->fHandle->fDSData->fData;
     XMLCh *otherP = other.fHandle->fDSData->fData;
-    int i;
+    unsigned int i;
     for (i=0; i<thisLen; i++)
     {
         if (thisP[i] < otherP[i])
@@ -1027,23 +1034,41 @@ int DOMString::compareString(const DOMString &other) const
 };
 
 
-DOMString DOMString::substringData(int offset, int count) const
+DOMString DOMString::substringData(unsigned int offset, unsigned int count) const
 {
-    DOMString retString;
-
-    if (count > 0)
+    if (count == 0)
+        return DOMString();
+    
+    unsigned int thisLen = length();
+    if (offset >= thisLen)
+        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
+    
+    // Cap count to the string length to eliminate overflow
+    //  problems when we get passed bogus values, like -1.
+    if (count > thisLen)
+        count = thisLen;  
+    
+    // If the count extends past the end of the string, cut it
+    //   back so that the returned string will stop at the end
+    //   of the source string.
+    if (offset + count >= thisLen)
+        count = thisLen - offset;
+    
+    // If the substring starts at the beginning of the original string
+    //   we do not need to copy the data, but can set up a new
+    //   string handle with the shorter length.
+    if (offset == 0)
     {
-        int thisLen = length();
-        assert(offset>=0 && count>=0);
-        if (offset+count > thisLen)
-        {
-            assert (offset < thisLen);
-            count = thisLen - offset;
-        }
-        XMLCh *data = fHandle->fDSData->fData;
-        retString = DOMString(data+offset, count);
-    }
-    return retString;
+        DOMString retString = this->clone();
+        retString.fHandle->fLength = count;
+        return retString;
+    };
+
+    // The substring starts somewhere in the interior of the orignal string.
+    // Create a completely new DOMString.  No buffer sharing is possible.
+    XMLCh *data = fHandle->fDSData->fData;
+    return DOMString(data+offset, count);
+    
 };
 
 
