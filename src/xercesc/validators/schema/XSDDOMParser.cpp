@@ -135,10 +135,11 @@ void XSDDOMParser::error(const   unsigned int                code
 }
 
 InputSource* XSDDOMParser::resolveEntity(const XMLCh* const publicId,
-                                             const XMLCh* const systemId)
+                                         const XMLCh* const systemId,
+                                         const XMLCh* const baseURI)
 {
     if (fUserEntityHandler)
-        return fUserEntityHandler->resolveEntity(publicId, systemId);
+        return fUserEntityHandler->resolveEntity(publicId, systemId, baseURI);
 
     return 0;
 }

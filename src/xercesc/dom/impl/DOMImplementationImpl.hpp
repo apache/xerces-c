@@ -71,10 +71,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
 
-class DOMImplementationImpl: public DOMImplementation,
-                             public DOMImplementationLS
+class DOMImplementationImpl: public DOMImplementation
 {
 private:
     DOMImplementationImpl();

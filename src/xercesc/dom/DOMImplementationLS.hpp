@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/30 16:39:06  knoaman
+ * DOM L3 LS.
+ *
  * Revision 1.1  2002/05/29 21:28:02  knoaman
  * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
  *
@@ -181,7 +184,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     DOMImplementationLS(const DOMImplementationLS&);
-    void operator=(const DOMImplementationLS&);
+    DOMImplementationLS& operator=(const DOMImplementationLS&);
 
 };
 

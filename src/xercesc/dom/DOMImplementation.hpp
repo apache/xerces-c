@@ -61,7 +61,7 @@
  * $Id$
  */
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
 
 class DOMDocument;
 class DOMDocumentType;
@@ -72,7 +72,8 @@ class DOMDocumentType;
  */
 
 
-class CDOM_EXPORT DOMImplementation {
+class CDOM_EXPORT DOMImplementation : public DOMImplementationLS
+{
  protected:
      DOMImplementation() {};                                      // no plain constructor
      DOMImplementation(const DOMImplementation &other) {};   // no copy construtor.

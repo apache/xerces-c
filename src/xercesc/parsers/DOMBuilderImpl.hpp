@@ -517,7 +517,7 @@ public :
     (
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
-        , const XMLCh* const    baseURI
+        , const XMLCh* const    baseURI = 0
     );
 
     /** Handle a 'start input source' event

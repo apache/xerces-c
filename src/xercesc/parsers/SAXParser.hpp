@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/05/30 16:39:06  knoaman
+ * DOM L3 LS.
+ *
  * Revision 1.6  2002/05/30 16:20:09  tng
  * Add feature to optionally ignore external DTD.
  *
@@ -1527,7 +1530,7 @@ public :
     (
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
-        , const XMLCh* const    baseURI
+        , const XMLCh* const    baseURI = 0
     );
 
     /**
