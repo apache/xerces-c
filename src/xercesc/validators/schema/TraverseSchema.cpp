@@ -5566,13 +5566,6 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                     reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::EmptyComplexRestrictionDerivation);
                 }
             }
-            else { // if base has no content spec, invalid derivation
-                if (!baseTypeInfo->getContentSpec()) {
-
-                    reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::PD_EmptyBase);
-                    throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
-                }
-            }
 
             // Delay particle constraint checking (5.3) until we have processed
             // the whole schema.
