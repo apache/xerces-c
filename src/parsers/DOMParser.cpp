@@ -87,6 +87,7 @@
 #include <dom/NamedNodeMapImpl.hpp>
 #include <dom/NodeIDMap.hpp>
 
+
 #include <validators/DTD/ContentSpecNode.hpp>
 #include <validators/DTD/DTDAttDefList.hpp>
 
@@ -680,14 +681,7 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         // the ref nodes are created
 		EntityImpl* entity = (EntityImpl*)fDocumentType->entities->getNamedItem(entName);
 		entity->setEntityRef((EntityReferenceImpl*)er.fImpl);
-        bool owned = entity->isOwned();
-        if (owned)
-            entity->isOwned(false);
-        
-        fDocumentType->entities->setNamedItem(entity);
-        
-        if (entity->isOwned != owned)
-            entity->isOwned(owned);
+
     }
 }
 
