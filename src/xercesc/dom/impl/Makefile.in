@@ -90,6 +90,7 @@ DOM_IMPL_CPP_PRIVHEADERS =  \
 	DOMCharacterDataImpl.hpp \
 	DOMChildNode.hpp \
 	DOMCommentImpl.hpp \
+        DOMConfigurationImpl.hpp \
 	DOMDeepNodeListImpl.hpp \
 	DOMDeepNodeListPool.hpp \
 	DOMDocumentFragmentImpl.hpp \
@@ -131,6 +132,7 @@ DOM_IMPL_CPP_OBJECTS = \
 	DOMCharacterDataImpl.$(TO) \
 	DOMChildNode.$(TO) \
 	DOMCommentImpl.$(TO) \
+        DOMConfigurationImpl.$(TO) \
 	DOMDeepNodeListImpl.$(TO) \
 	DOMDocumentFragmentImpl.$(TO) \
 	DOMDocumentImpl.$(TO) \
