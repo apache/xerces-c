@@ -133,7 +133,9 @@
               <li>Move XMLUri copy constructor and operator = as public.</li>
               <li>Move XMLUri::isURIString as public.</li>
               <li>For validation purpose, added two more default parameters to
-              XMLValidator::validateAttrValue</li>
+              XMLValidator::validateAttrValue.</li>
+              <li>To fix [Bug 15802], the getURIText of DOMParser/XercesDOMParser/SAXParser/SAX2XMLReader
+              are being added a const modifier.</li>
             </ul>
         </s4>
 
