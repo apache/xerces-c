@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/10/15 20:18:32  knoaman
+ * Fix for bug 4177.
+ *
  * Revision 1.3  2001/05/11 13:26:52  tng
  * Copyright update.
  *
@@ -118,7 +121,8 @@ static void setupRange(RangeToken* const rangeTok,
 
     // And then the singles until we hit its terminator
     while (*pchCur) {
-        rangeTok->addRange(*pchCur, *pchCur++);
+        const XMLCh chSingle = *pchCur++;
+        rangeTok->addRange(chSingle, chSingle);
     }
 }
 
