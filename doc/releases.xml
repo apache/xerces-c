@@ -12,6 +12,166 @@
     </tr>
 
     <tr>
+        <td>2002-02-05</td>
+        <td>Tinny Ng</td>
+        <td>Add IDOMMemTest.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-05</td>
+        <td>Tinny Ng</td>
+        <td>Modify InitTermTest to take option flag like -s, -f , and -n.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-05</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5716] Can't parse with Validation more than one file.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-05</td>
+        <td>Tinny Ng</td>
+        <td>Recognize IBM01140 (IANA encoding) as alias of intrinsic encoding IBM1140.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-04</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 6114] Memory leaks on IDOM getElementsByTagName().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-04</td>
+        <td>Tinny Ng</td>
+        <td>Add DOM Level2 missing functions: NodeIterator::getRoot, TreeWalker::getRoot
+            Element::hasAttribute, Element::hasAttributeNS and Node::hasAttribute
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-04</td>
+        <td>Tinny Ng</td>
+        <td>Memory leak fix in samples / test cases.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-01</td>
+        <td>PeiYong Zhang</td>
+        <td>src and include folder reorganization for "sane_include".
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-28</td>
+        <td>Khaled Noaman</td>
+        <td>Fix: some SAX calls were not passed to the LexicalHandler.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-29</td>
+        <td>Tinny Ng</td>
+        <td>Remove those jar files that are not clear in license issue.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-28</td>
+        <td>Khaled Noaman</td>
+        <td>Add a 'null' string constant in XMLUni.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-28</td>
+        <td>Khaled Noaman</td>
+        <td>Add SAX2-ext's DeclHandler support.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-28</td>
+        <td>Khaled Noaman</td>
+        <td>The namespace-prefixes feature in SAX2 should be off by default.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-24</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-23</td>
+        <td>Tinny Ng</td>
+        <td>Progressive parse does not do post-validation and thus ID/IDREF are not checked.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-23</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5545] Progressive Parse trashes when encountering "&lt;!  ... "
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-23</td>
+        <td>Tinny Ng</td>
+        <td>Update DOM/IDOM hasFeature method to correctly reflect current status.
+            And add more hasFeature test to DOMMemTest.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-21</td>
+        <td>Tinny Ng</td>
+        <td>Some intrinsic encodings support (e.g. UTF-16) only work as input encoding
+            while reading in XML data; but do not work as output encoding in XMLformatter.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-21</td>
+        <td>Tinny Ng</td>
+        <td>Document encoding alias for intrinsic encoding support.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-21</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5847] ICUMsgLoader can't be compiled with gcc 3.0.3 and ICU2.
+            And also fix the memory leak introduced by Bug 2730 fix.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-18</td>
+        <td>Max Gotlib</td>
+        <td>Adds the capability to compile the tests under FreeBSD and either ICU or
+            IconvFBSD transservice (the transcoding service is automatically detected
+            during configuration stage), with or without pthreads.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-18</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5371] runConfigure extra linker options ignored in Makefiles for tests and samples.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-01-18</td>
         <td>Tinny Ng</td>
         <td>Break program.xml which takes too long to load, into program-sax.xml, program-sax2.xml
@@ -23,7 +183,7 @@
         <td>2002-01-18</td>
         <td>Tinny Ng</td>
         <td>Break faq-parse.xml which becomes longer and longer into faq-parse.xml and faq-build.xml
-            to better categorize the FAQ.
+            to better categorize the FAQ, and update the FAQ
         </td>
     </tr>
 
