@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/11/28 19:05:29  knoaman
+ * Bug 4442: fix by mlovett@uk.ibm.com
+ *
  * Revision 1.4  2000/05/15 22:31:20  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -134,7 +137,8 @@ unsigned int BinMemInputStream::readBytes(          XMLByte* const  toFill
 
     const unsigned int actualToRead = available < maxToRead ?
                                       available : maxToRead;
-    for (unsigned int index = 0; index < actualToRead; index++)
-        toFill[index] = fBuffer[fCurIndex++];
+
+    memcpy(toFill, &fBuffer[fCurIndex], actualToRead);
+    fCurIndex += actualToRead;
     return actualToRead;
 }
