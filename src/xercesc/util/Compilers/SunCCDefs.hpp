@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/27 18:02:40  tng
+ * define XMLSize_t, XMLSSize_t and their associate MAX
+ *
  * Revision 1.2  2002/05/21 19:45:53  tng
  * Define DOMSize_t and XMLSize_t
  *
@@ -112,6 +115,12 @@
 #define SUNCCDEFS_HPP
 
 // ---------------------------------------------------------------------------
+//  Include some runtime files that will be needed product wide
+// ---------------------------------------------------------------------------
+#include <sys/types.h>  // for size_t and ssize_t
+#include <limits.h>  // for MAX of size_t and ssize_t
+
+// ---------------------------------------------------------------------------
 // Define these away for this platform
 // ---------------------------------------------------------------------------
 #define PLATFORM_EXPORT
@@ -154,14 +163,20 @@ typedef unsigned int    XMLUInt32;
 typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
-//  XMLSize_t and DOMSize_t are the unsigned integral type.
+//  XMLSize_t is the unsigned integral type.
 // ---------------------------------------------------------------------------
-#ifdef _SIZE_T
-typedef size_t              XMLSize_t;
+#if defined(_SIZE_T) && defined(SIZE_MAX) && defined(_SSIZE_T) && defined(SSIZE_MAX)
+    typedef size_t              XMLSize_t
+    #define XML_SIZE_MAX        SIZE_MAX
+    typedef ssize_t             XMLSSize_t
+    #define XML_SSIZE_MAX       SSIZE_MAX
 #else
-typedef unsigned long       XMLSize_t;
+    typedef unsigned long       XMLSize_t;
+    #define XML_SIZE_MAX        ULONG_MAX
+    typedef long                XMLSSize_t;
+    #define XML_SSIZE_MAX       LONG_MAX
 #endif
-typedef XMLSize_t           DOMSize_t;
+
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment
