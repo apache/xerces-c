@@ -104,6 +104,7 @@ public:
     bool                     getAbstract() const;
     bool                     getAdoptContentSpec() const;
     bool                     containsAttWithTypeId() const;
+    bool                     getPreprocessed() const;
     int                      getDerivedBy() const;
     int                      getBlockSet() const;
     int                      getFinalSet() const;
@@ -127,7 +128,7 @@ public:
     SchemaElementDecl*       elementAt(const unsigned int index);
     XMLContentModel*         getContentModel(const bool checkUPA = false);
     const XMLCh*             getFormattedContentModel ()   const;
-
+    int                      getRecursingTypeIndex() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -135,6 +136,7 @@ public:
     void setAbstract(const bool isAbstract);
     void setAdoptContentSpec(const bool toAdopt);
     void setAttWithTypeId(const bool value);
+    void setPreprocessed(const bool aValue = true);
     void setDerivedBy(const int derivedBy);
     void setBlockSet(const int blockSet);
     void setFinalSet(const int finalSet);
@@ -150,6 +152,7 @@ public:
     void addAttDef(SchemaAttDef* const toAdd);
     void addElement(SchemaElementDecl* const toAdd);
     void setContentModel(XMLContentModel* const newModelToAdopt);
+    void setRecursingTypeIndex(const int anIndex);
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -198,12 +201,14 @@ private:
     bool                               fAbstract;
     bool                               fAdoptContentSpec;
     bool                               fAttWithTypeId;
+    bool                               fPreprocessed;
     int                                fDerivedBy;
     int                                fBlockSet;
     int                                fFinalSet;
     int                                fScopeDefined;
     unsigned int                       fElementId;
     int                                fContentType;
+    int                                fRecursingTypeIndex;
     XMLCh*                             fTypeName;
     DatatypeValidator*                 fBaseDatatypeValidator;
     DatatypeValidator*                 fDatatypeValidator;
@@ -237,6 +242,11 @@ inline bool ComplexTypeInfo::getAdoptContentSpec() const {
 inline bool ComplexTypeInfo::containsAttWithTypeId() const {
 
     return fAttWithTypeId;
+}
+
+inline bool ComplexTypeInfo::getPreprocessed() const {
+
+    return fPreprocessed;
 }
 
 inline int ComplexTypeInfo::getDerivedBy() const {
@@ -361,6 +371,11 @@ inline XMLContentModel* ComplexTypeInfo::getContentModel(const bool checkUPA)
     return fContentModel;
 }
 
+inline int ComplexTypeInfo::getRecursingTypeIndex() const {
+
+    return fRecursingTypeIndex;
+}
+
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Setter methods
 // ---------------------------------------------------------------------------
@@ -377,6 +392,11 @@ inline void ComplexTypeInfo::setAdoptContentSpec(const bool toAdopt) {
 inline void ComplexTypeInfo::setAttWithTypeId(const bool value) {
 
     fAttWithTypeId = value;
+}
+
+inline void ComplexTypeInfo::setPreprocessed(const bool aValue) {
+
+    fPreprocessed = aValue;
 }
 
 inline void ComplexTypeInfo::setDerivedBy(const int derivedBy) {
@@ -460,6 +480,11 @@ ComplexTypeInfo::setContentModel(XMLContentModel* const newModelToAdopt)
 {
     delete fContentModel;
     fContentModel = newModelToAdopt;
+}
+
+inline void ComplexTypeInfo::setRecursingTypeIndex(const int anIndex) {
+
+    fRecursingTypeIndex = anIndex;
 }
 
 // ---------------------------------------------------------------------------

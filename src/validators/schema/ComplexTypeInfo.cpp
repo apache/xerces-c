@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2002/01/15 19:09:16  knoaman
+ * Fix for bug 5807.
+ *
  * Revision 1.26  2002/01/02 15:20:22  tng
  * Schema Fix: should not store a temp value as the key in the element pool and the attribute pool.
  *
@@ -156,12 +159,14 @@ ComplexTypeInfo::ComplexTypeInfo()
     : fAbstract(false)
     , fAdoptContentSpec(true)
     , fAttWithTypeId(false)
+    , fPreprocessed(false)
     , fDerivedBy(0)
     , fBlockSet(0)
     , fFinalSet(0)
     , fScopeDefined(Grammar::TOP_LEVEL_SCOPE)
     , fElementId(XMLElementDecl::fgInvalidElemId)
     , fContentType(SchemaElementDecl::Empty)
+    , fRecursingTypeIndex(-1)
     , fTypeName(0)
     , fBaseDatatypeValidator(0)
     , fDatatypeValidator(0)

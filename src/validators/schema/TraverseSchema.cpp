@@ -189,11 +189,12 @@ TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
     , fTargetNSURI(-1)
     , fEmptyNamespaceURI(-1)
     , fCurrentScope(Grammar::TOP_LEVEL_SCOPE)
-    , fAnonXSTypeCount(0)
-    , fCircularCheckIndex(0)
     , fFinalDefault(0)
     , fBlockDefault(0)
     , fScopeCount(0)
+    , fRecursingElemIndex(0)
+    , fAnonXSTypeCount(0)
+    , fCircularCheckIndex(0)
     , fTargetNSURIString(0)
     , fDatatypeRegistry(0)
     , fGrammarResolver(grammarResolver)
@@ -229,6 +230,8 @@ TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
     , fIC_NodeListNS(0)
     , fIC_ElementsNS(0)
     , fIC_NamespaceDepthNS(0)
+    , fRecursingAnonTypes(0)
+    , fRecursingTypeNames(0)
 {
 
     try {
@@ -1060,7 +1063,8 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
   *                   ( (attribute | attributeGroup)* , anyAttribute?))))
   *     </complexType>
   */
-int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
+int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem,
+                                            const XMLCh* const recursingTypeName) {
 
     // Get the attributes of the complexType
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
@@ -1074,7 +1078,10 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
             return -1;
         }
 
-        name = genAnonTypeName(fgAnonCNamePrefix);
+        if (recursingTypeName)
+            name = recursingTypeName;
+        else
+            name = genAnonTypeName(fgAnonCNamePrefix);
     }
 
     if (!XMLString::isValidNCName(name)) {
@@ -1094,11 +1101,13 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
 
     int typeNameIndex = fStringPool->addOrFind(fBuffer.getRawBuffer());
     const XMLCh* fullName = fStringPool->getValueForId(typeNameIndex);
-    if (topLevel) {
+    ComplexTypeInfo* typeInfo = 0;
 
-        ComplexTypeInfo* temp = fComplexTypeRegistry->get(fullName);
+    if (topLevel || recursingTypeName) {
 
-        if (temp != 0 ) {
+        typeInfo = fComplexTypeRegistry->get(fullName);
+
+        if (typeInfo && !typeInfo->getPreprocessed()) {
             return typeNameIndex;
         }
     }
@@ -1113,28 +1122,36 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // -----------------------------------------------------------------------
     // Create a new instance
     // -----------------------------------------------------------------------
-    ComplexTypeInfo* typeInfo = new ComplexTypeInfo();
+    bool preProcessFlag = (typeInfo) ? typeInfo->getPreprocessed() : false;
     unsigned int previousCircularCheckIndex = fCircularCheckIndex;
     int previousScope = fCurrentScope;
-    fCurrentScope = fScopeCount++;
+
+    if (preProcessFlag) {
+
+        fCurrentScope = typeInfo->getScopeDefined();
+        typeInfo->setPreprocessed(false);
+    }
+    else {
+
+        // ------------------------------------------------------------------
+        // Register the type
+        // ------------------------------------------------------------------
+        typeInfo = new ComplexTypeInfo();
+        fCurrentScope = fScopeCount++;
+        fComplexTypeRegistry->put((void*) fullName, typeInfo);
+        typeInfo->setTypeName(fullName);
+        typeInfo->setScopeDefined(fCurrentScope);
+    }
+
+    fCurrentTypeNameStack->addElement(typeNameIndex);
+    ComplexTypeInfo* saveTypeInfo = fCurrentComplexType;
+    fCurrentComplexType = typeInfo;
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration and get next child
     // ------------------------------------------------------------------
     DOM_Element child = checkContent(elem, XUtil::getFirstChildElement(elem),
                                      true);
-
-    // ------------------------------------------------------------------
-    // Register the type
-    // ------------------------------------------------------------------
-    // Register the type first, so that in case of a recursive element type
-    // declaration, we can retrieve the complexType info (though the rest of
-    fComplexTypeRegistry->put((void*) fullName, typeInfo);
-    typeInfo->setTypeName(fullName);
-    typeInfo->setScopeDefined(fCurrentScope);
-    fCurrentTypeNameStack->addElement(typeNameIndex);
-    ComplexTypeInfo* saveTypeInfo = fCurrentComplexType;
-    fCurrentComplexType = typeInfo;
 
     // ------------------------------------------------------------------
     // Process the content of the complex type declaration
@@ -1182,39 +1199,62 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
             }
         }
     }
-    catch(TraverseSchema::ExceptionCodes) {
-        defaultComplexTypeInfo(typeInfo);
+    catch(const TraverseSchema::ExceptionCodes aCode) {
+        if (aCode == TraverseSchema::InvalidComplexTypeInfo)
+            defaultComplexTypeInfo(typeInfo);
+        else if (aCode == TraverseSchema::RecursingElement)
+            typeInfo->setPreprocessed();
     }
 
     // ------------------------------------------------------------------
     // Finish the setup of the typeInfo
     // ------------------------------------------------------------------
-    const XMLCh* blockAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_BLOCK);
-    const XMLCh* finalAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_FINAL);
-    const XMLCh* abstractAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
-    int blockSet = parseBlockSet(blockAttVal, C_Block);
-    int finalSet = parseFinalSet(finalAttVal, EC_Final);
+    if (!preProcessFlag) {
 
-    typeInfo->setBlockSet(blockSet);
-    typeInfo->setFinalSet(finalSet);
+        const XMLCh* blockAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_BLOCK);
+        const XMLCh* finalAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_FINAL);
+        const XMLCh* abstractAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
+        int blockSet = parseBlockSet(blockAttVal, C_Block);
+        int finalSet = parseFinalSet(finalAttVal, EC_Final);
 
-    if (XMLString::stringLen(abstractAttVal)
-        && (!XMLString::compareString(abstractAttVal, SchemaSymbols::fgATTVAL_TRUE)
-            || !XMLString::compareString(abstractAttVal, fgValueOne))) {
-        typeInfo->setAbstract(true);
+        typeInfo->setBlockSet(blockSet);
+        typeInfo->setFinalSet(finalSet);
+
+        if (XMLString::stringLen(abstractAttVal)
+            && (!XMLString::compareString(abstractAttVal, SchemaSymbols::fgATTVAL_TRUE)
+                || !XMLString::compareString(abstractAttVal, fgValueOne))) {
+            typeInfo->setAbstract(true);
+        }
+        else {
+            typeInfo->setAbstract(false);
+        }
     }
-    else {
-        typeInfo->setAbstract(false);
-    }
+
+    // ------------------------------------------------------------------
+    // Traverse anonymous complex types for recursing elements
+    // ------------------------------------------------------------------
+    resetCurrentTypeNameStack(0);
+    fCircularCheckIndex = previousCircularCheckIndex;
+
+    int i = fRecursingElemIndex - 1;
+    int recursingTypeIndex = typeInfo->getRecursingTypeIndex();
+
+    for (; i >= recursingTypeIndex && recursingTypeIndex != -1; i--) {
+
+        DOM_Element elem = fRecursingAnonTypes->elementAt(i);
+        const XMLCh* typeName = fRecursingTypeNames->elementAt(i);
+
+        fRecursingAnonTypes->removeElementAt(i);
+        fRecursingTypeNames->removeElementAt(i);
+        fRecursingElemIndex--;
+        traverseComplexTypeDecl(elem, typeName);
+    }    
 
     // ------------------------------------------------------------------
     // Before exiting, restore the scope, mainly for nested anonymous types
     // ------------------------------------------------------------------
     fCurrentScope = previousScope;
     fCurrentComplexType = saveTypeInfo;
-    fCircularCheckIndex = previousCircularCheckIndex;
-    resetCurrentTypeNameStack(0);
-
 
     return typeNameIndex;
 }
@@ -2280,7 +2320,24 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem, bool& toDele
                 noErrorFound = false;
             }
             else if (!isDuplicate) {
+
                 typeInfo->setElementId(elemDecl->getId());
+
+                //Recursing element
+                if (typeInfo->getPreprocessed()) {
+
+                    const XMLCh* typeInfoName = typeInfo->getTypeName();
+                    
+                    if (!fRecursingAnonTypes) {
+                        fRecursingAnonTypes = new ValueVectorOf<DOM_Element>(8);
+                        fRecursingTypeNames = new ValueVectorOf<const XMLCh*>(8);
+                    }
+
+                    fRecursingAnonTypes->addElement(content);
+                    fRecursingTypeNames->addElement(typeInfoName + XMLString::indexOf(typeInfoName, chComma) + 1);
+                    typeInfo->getBaseComplexTypeInfo()->setRecursingTypeIndex(fRecursingElemIndex);
+                    fRecursingElemIndex++;
+                }
             }
 
             anonymousType = true;
@@ -5621,11 +5678,21 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
         baseComplexTypeInfo = fComplexTypeRegistry->get(fullBaseName);
 
         // Circular check
-        if (baseComplexTypeInfo &&
-            fCurrentTypeNameStack->containsElement(fStringPool->addOrFind(fullBaseName), fCircularCheckIndex)) {
+        if (baseComplexTypeInfo) {
 
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, fullBaseName);
-            throw TraverseSchema::InvalidComplexTypeInfo;
+            if (fCurrentTypeNameStack->containsElement(fStringPool->addOrFind(fullBaseName), fCircularCheckIndex)) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, fullBaseName);
+                throw TraverseSchema::InvalidComplexTypeInfo;
+            }
+            else if (fCurrentTypeNameStack->containsElement(fStringPool->addOrFind(fullBaseName))) {
+
+                typeInfo->setBaseComplexTypeInfo(baseComplexTypeInfo);
+                throw TraverseSchema::RecursingElement;
+            }
+            else if (baseComplexTypeInfo->getPreprocessed()) {
+                baseComplexTypeInfo = 0;
+            }
         }
     }
 
@@ -8502,6 +8569,8 @@ void TraverseSchema::cleanUp() {
     delete fIC_ElementsNS;
     delete fIC_NamespaceDepthNS;
     delete fIC_NodeListNS;
+    delete fRecursingAnonTypes;
+    delete fRecursingTypeNames;
 }
 
 /**

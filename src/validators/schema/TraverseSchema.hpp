@@ -181,7 +181,7 @@ private:
                                                   const bool isMixed);
     int                 traverseSimpleTypeDecl(const DOM_Element& childElem,
                                                int baseRefContext = SchemaSymbols::EMPTY_SET);
-    int                 traverseComplexTypeDecl(const DOM_Element& childElem);
+    int                 traverseComplexTypeDecl(const DOM_Element& childElem, const XMLCh* const recursingTypeName = 0);
     int                 traverseByList(const DOM_Element& rootElem,
                                        const DOM_Element& contentElem,
                                        const int typeNameIndex,
@@ -757,8 +757,7 @@ private:
     {
         NoException = 0,
         InvalidComplexTypeInfo = 1,
-        ParticleDerivationNotOK = 2,
-        InvalidContentSpecType = 3
+        RecursingElement = 2
     };
 
     enum
@@ -777,7 +776,8 @@ private:
     int                                           fCurrentScope;
     int                                           fFinalDefault;
     int                                           fBlockDefault;
-    int                                           fScopeCount;    
+    int                                           fScopeCount;
+    int                                           fRecursingElemIndex;
     unsigned int                                  fAnonXSTypeCount;
     unsigned int                                  fCircularCheckIndex;
     const XMLCh*                                  fTargetNSURIString;
@@ -817,6 +817,8 @@ private:
     RefHashTableOf<ValueVectorOf<DOM_Element> >*  fIC_NodeListNS;
     RefHashTableOf<ElemVector>*                   fIC_ElementsNS;
     RefHashTableOf<ValueVectorOf<unsigned int> >* fIC_NamespaceDepthNS;
+    ValueVectorOf<DOM_Element>*                   fRecursingAnonTypes;
+    ValueVectorOf<const XMLCh*>*                  fRecursingTypeNames;
 
     friend class GeneralAttributeCheck;
 };
