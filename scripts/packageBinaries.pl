@@ -71,7 +71,7 @@ $zipfiles = $zipfiles . "/*";
 
 $buildmode = "Release";    # Universally, why do you want to package Debug builds anyway?
 
-if ($platform =~ m/Windows/) {
+if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     $platformname = 'Win32';    # Needed this way by nmake
     if (-e $targetdir.".zip") {
@@ -85,14 +85,6 @@ if ($platform =~ m/Windows/) {
     mkdir ($targetdir . "/bin", "0644");
     mkdir ($targetdir . "/lib", "0644");
     mkdir ($targetdir . "/include", "0644");
-    mkdir ($targetdir . "/include/sax", "0644");
-    mkdir ($targetdir . "/include/framework", "0644");
-    mkdir ($targetdir . "/include/internal", "0644");
-    mkdir ($targetdir . "/include/parsers", "0644");
-    mkdir ($targetdir . "/include/util", "0644");
-    mkdir ($targetdir . "/include/dom", "0644");
-    mkdir ($targetdir . "/include/unicode", "0644");
-    mkdir ($targetdir . "/include/validators", "0644");
     mkdir ($targetdir . "/samples", "0644");
     mkdir ($targetdir . "/samples/Projects", "0644");
     mkdir ($targetdir . "/samples/Projects/Win32", "0644");
@@ -140,8 +132,17 @@ if ($platform =~ m/Windows/) {
 
     # Make all files in the Xerces-C system including libraries, samples and tests
     chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
-    print "Executing: msdev xerces-all.dsp /MAKE \"all - $platformname $buildmode\" /REBUILD";
-    system("msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
+    $cmd = "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD";
+    print "$cmd\n";
+    system($cmd);
+    
+    # Build the debug xerces dll.  Both debug and release DLLs
+    #   are in the standard binary distribution of Xerces.
+    if ($buildmode ne "Debug") {
+        $cmd = "msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /REBUILD";
+        print "$cmd\n";
+        system($cmd);
+    }
     
     # Decide where you want the build copied from
     chdir ($targetdir);
@@ -150,19 +151,75 @@ if ($platform =~ m/Windows/) {
     
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
-    $xcopycommand = "xcopy $XERCESCROOT\\src\\*.hpp $targetdir\\include";
-    $xcopycommand =~ s/\//\\/g;
-    system ("$xcopycommand /S /C /I /R");
-    $xcopycommand = "xcopy $XERCESCROOT\\src\\*.c $targetdir\\include";
-    $xcopycommand =~ s/\//\\/g;
-    system ("$xcopycommand /S /C /I /R");
+    
+    @headerDirectories = qw'
+    	sax
+    	framework
+    	dom
+    	internal
+    	parsers
+    	util
+	util/Compilers 	
+	util/MsgLoaders
+	util/MsgLoaders/ICU
+	util/MsgLoaders/InMemory
+	util/MsgLoaders/MsgCatalog
+	util/MsgLoaders/Win32
+	util/Platforms
+	util/Platforms/AIX
+	util/Platforms/HPUX
+	util/Platforms/Linux
+	util/Platforms/MacOS
+	util/Platforms/OS2
+	util/Platforms/OS390
+	util/Platforms/PTX
+	util/Platforms/Solaris
+	util/Platforms/Tandem
+	util/Platforms/Win32
+	util/Transcoders
+	util/Transcoders/ICU
+	util/Transcoders/Iconv
+	util/Transcoders/Win32
+	validators
+	validators/DTD
+    	';
+     
+     foreach $dir (@headerDirectories) {
+         $inclDir = "include/$dir";
+         if (! (-e $inclDir)) {
+             mkdir($inclDir, "0644");
+         }
+         $srcDir = "$XERCESCROOT/src/$dir";
+         
+         # Weed out directories that have no files to copy, to avoid a bunch of
+         #   warnings from the cp command in the build output.
+         opendir(dir, $srcDir);
+	 @allfiles = readdir(dir);
+	 closedir(dir);
+         foreach $fileKind ("hpp", "c")
+         {
+             $matches = grep(/\.$fileKind$/, @allfiles);
+             if ($matches > 0)
+             {
+                 $cmd = "cp -f $srcDir/*.$fileKind  $targetdir/$inclDir";  
+                 print ($cmd . "\n");  
+                 system($cmd);  
+              }
+         }
+     }
 
+    
+    #
+    #  Remove internal implementation headers from the DOM include directory.
+    #
     system ("rm  $targetdir/include/dom/*Impl.hpp");
     system ("rm  $targetdir/include/dom/DS*.hpp");    
+
     
-	if (length($ICUROOT) > 0) {
+    if (length($ICUROOT) > 0) {
         system("cp -Rfv $ICUROOT/include/* $targetdir/include");
 	}
+
 
     # Populate the binary output directory
     print ("\n\nCopying binary outputs ...\n");
@@ -176,6 +233,13 @@ if ($platform =~ m/Windows/) {
 		system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
 	}
     system("cp -fv $BUILDDIR/xerces-c_1.lib $targetdir/lib");
+    if ($buildmode ne "Debug") {
+        $DEBUGBUILDDIR = "$XERCESCROOT/Build/Win32/VC6/Debug";
+        system("cp -fv $DEBUGBUILDDIR/xerces-c_1D.lib $targetdir/lib");
+        system("cp -fv $DEBUGBUILDDIR/xerces*D.dll $targetdir/bin");
+        }
+
+    
 
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");

@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" encoding = "iso-8859-1" standalone="no"?>
 <!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
 <faqs title="Parsing with &XercesCName;">
@@ -26,7 +26,7 @@
           thread-safe version of the system libraries. For example,
           LIBPATH can be simply set as:</p>
 
-<source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
+          <source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
 
         <p>Where &lt;&XercesCProjectName;&gt; points to the directory where
           &XercesCProjectName; application resides.</p>
@@ -39,7 +39,7 @@
           <ref>/lib</ref> in your LIBPATH variable. That is to say your
           LIBPATH may look like this:</p>
 
-<source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
+          <source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
 
         <p>Where /usr/lib is where your system libraries are.</p>
       </a>
@@ -77,7 +77,7 @@
       settings. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code>
       (or <code>.a</code> or <code>.sl</code>) which must be available from your
       <code>LD_LIBRARY_PATH</code> (or <code>SHLIB_PATH</code> or <code>LIBPATH</code>)
-	  environment variable.</p>
+      environment variable.</p>
 
       <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>,
       you need to point your library path to that directory.
@@ -157,6 +157,22 @@ catch (const XMLException&amp; toCatch) {
         executed concurrently with them.</p>
     </a>
   </faq>
+
+
+<faq title="Can I validate the data contained in a DOM tree?">
+     <q>Can I validate the data contained in a DOM tree?</q>
+     <a><p>Given that I have built a DOM tree, is there a fiacility
+     in xerces-c that wil then validate the document contained in that
+     DOM tree?  That is, without having to re-parse the source document,
+     walk the tree and perform validation?</p>
+
+     <p>No.  This is a frequently requested feature, but at this time
+     it is not possible to feed xml data from the DOM directly back to
+     the DTD validator.  The best option for now is to generate xml
+     source from the DOM and feed that back into the parser.</p>
+     </a>
+</faq>
+
 
     <faq title="Why does my multi-threaded application crash on Solaris?">
         <q>Why does my multi-threaded application crash on Solaris?</q>
@@ -251,51 +267,15 @@ catch (const XMLException&amp; toCatch) {
   <faq title="How can I add support for URL's with HTTP/FTP protocols?">
     <q>How can I add support for URL's with HTTP/FTP protocols?</q>
     <a>
+    <p>Support for the http: protocol is now included by default on all
+       platforms.</p>
       <p>To address the need to make remote connections to resources
-      specified using other protocols like HTTP, FTP etc..., Xerces-C
-      now provides the <code>NetAccessor</code> interface. The header
+      specified using additional protocols, ftp for example, Xerces-C
+      provides the <code>NetAccessor</code> interface. The header
       file is <code>src/util/XMLNetAccessor.hpp</code>. This interface
       allows you to plug in your own implementation of URL networking
       code into the Xerces-C parser.</p>
-
-      <p>One such implementation <em>(tested minimally under WinNT
-      only)</em> is already provided in &XercesCName; source code
-      drop, using <jump href="http://www.w3.org/Library/">W3C's Libwww
-      library</jump>. Libwww is available for free and has been ported
-      to various platforms. Click <jump
-      href="build.html#BuildUsingLibwww">here</jump> to read how you
-      can rebuild Xerces-C binaries with this implementation.</p>
-
-      <p>Some more notes about the NetAccessor implementation using
-      Libwww:</p>
-
-      <ul>
-        <li>This implementation only supports HTTP and does not return
-      adequate error messages when connections cannot be made to the
-      remote resources. It however illustrates how you can add support
-      for HTTP and FTP URL's.</li>
-
-        <li>The Xerces-C team will <em>NOT</em> be able to address any
-      questions related to how things work in Libwww. You can get some
-      help with Libwww by subscribing to the &lt;<jump
-      href="mailto:www-lib-request@w3.org?subject=subscribe">www-lib@w3.org</jump>&gt;
-      public mailing list.</li>
-
-        <li>However, we will welcome any feedback on the design of the
-      NetAccessor interface. Please send all such feedback to <jump
-      href="mailto:xerces-dev@xml.apache.org">xerces-dev@xml.apache.org</jump>.</li>
-
-        <li>You do not have to recompile &XercesCName; to plugin your
-      NetAccessor implementation. You can simply point the static
-      pointer variable <code>XMLPlatformUtils::fgNetAccessor</code> to
-      an instance of your NetAccessor implementation. Please refer to
-      the files <code>src/util/PlatformUtils.cpp</code> and
-      <code>src/util/Platforms/Win32/Win32PlatformUtils.cpp</code> to
-      see how we have done this simple illustrative
-      implementation.</li>
-
-      </ul>
-    </a>
+      </a>
   </faq>
 
 
@@ -311,18 +291,27 @@ catch (const XMLException&amp; toCatch) {
   <faq title="I keep getting an error: &quot;invalid UTF-8 character&quot;. What's wrong?">
     <q>I keep getting an error: "invalid UTF-8 character". What's wrong?</q>
     <a>
-      <p>There are many Unicode characters that are not allowed in
-        your XML document, according to the XML spec. Typical
+    <p>Most commonly, the xml <code>encoding =</code> declaration is
+       either incorrect or missing.  Without a declaration, xml defaults
+       to the use utf-8 character encoding, which is not compatible with
+       the default text file encoding on most systems.</p>
+       <p>The xml declaration should look something like this: </p>
+       <p><code>&lt;?xml version="1.0" encoding="iso-8859-1"?></code></p>
+       <p>Make sure to specify the encoding that is actually used by file.
+       The encoding for "plain" text files depends both on the operating system
+       and the locale (country and language) in use.</p>
+
+      <p>Another common source of problems is that some characters are not allowed in
+        XML documents, according to the XML spec. Typical
         disallowed characters are control characters, even if you
-        escape them using the Character Reference form: See the XML
-        spec, sections 2.2 and 4.1 for details. If the parser is
-        generating this error, it is very likely that there's a
+        escape them using the Character Reference form. See the
+        <jump href="http://www.w3.org/TR/REC-xml#charsets">XML spec</jump>,
+        sections 2.2 and 4.1 for details. If the parser is
+        generating an <code>Invalid character (Unicode: 0x???)</code> error,
+        it is very likely that there's a
         character in there that you can't see.  You can generally use
         a UNIX command like "od -hc" to find it.</p>
 
-      <p>Another reason for this error is that your file is in some
-        non UTF/ASCII encoding but you gave no encoding="" string in
-        your file to tell the parser what its real encoding is.</p>
     </a>
   </faq>
 
