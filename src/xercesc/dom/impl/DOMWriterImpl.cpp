@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.50  2004/01/20 23:23:57  peiyongz
+ * patch to Bug#25751
+ *
  * Revision 1.49  2004/01/13 20:47:42  knoaman
  * Remove unnecessary local static data
  *
@@ -444,6 +447,8 @@ static const XMLByte  BOM_utf16le[] = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte) 0
 static const XMLByte  BOM_ucs4be[]  = {(XMLByte)0x00, (XMLByte)0x00, (XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
 static const XMLByte  BOM_ucs4le[]  = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte)0x00, (XMLByte)0x00, (XMLByte) 0};
 
+static bool lineFeedInTextNodePrinted = false;
+static int  lastWhiteSpaceInTextNode = 0;
 
 //
 // Notification of the error though error handler
@@ -855,11 +860,45 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
-            // Pretty-print skips whitespace-only text nodes unless whitespace-in-element is set.
-            if (getFeature(FORMAT_PRETTY_PRINT_ID) && !getFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID))
+            if (getFeature(FORMAT_PRETTY_PRINT_ID))
             {
+                lineFeedInTextNodePrinted = false;
+                lastWhiteSpaceInTextNode = 0;
+
                 if(XMLString::isAllWhiteSpace(nodeValue))
-                    break;
+                {
+                    // skips whitespace-only text nodes unless whitespace-in-element is set.
+                    if (!getFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID))
+                    {
+                        break;
+                    }
+                    else        
+                    {
+                        //
+                        // we need to trace if newline(s) have been printed out
+                        // to avoid generate extra newline for pretty printing,
+                        // as well as the number of whitespaces after the last
+                        // newline character to do indentation properly.
+                        //
+                        int pos = XMLString::lastIndexOf(nodeValue, chLF);
+                        if (-1 != pos)
+                        {
+                            lineFeedInTextNodePrinted = true;
+                            lastWhiteSpaceInTextNode = lent - pos;
+                        }
+                        else
+                        {
+                            // for those platforms using chCR alone as
+                            // a newline character
+                            pos = XMLString::lastIndexOf(nodeValue, chCR);
+                            if (-1 != pos)
+                            {
+                                lineFeedInTextNodePrinted = true;
+                                lastWhiteSpaceInTextNode = lent - pos;
+                            }
+                        }
+                    }
+                }
             }
 
             setURCharRef();      // character data
@@ -951,10 +990,18 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             if ( filterAction == DOMNodeFilter::FILTER_REJECT)
                 break;
 
-            if(level == 1)
-                printNewLine();
+            if (!lineFeedInTextNodePrinted)
+            {
+                if(level == 1)
+                    printNewLine();
 
-            printNewLine();
+                printNewLine();
+            }
+            else
+            {
+                lineFeedInTextNodePrinted = false;
+            }
+
             printIndent(level);
 
             //track the line number the current node begins on
@@ -1133,7 +1180,14 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     //this node then print a new line and indent
                     if(nodeLine != fCurrentLine)
                     {
-                        printNewLine();
+                        if (!lineFeedInTextNodePrinted)
+                        {
+                            printNewLine();
+                        }
+                        else
+                        {
+                            lineFeedInTextNodePrinted = false;
+                        }
 
                         if(nodeLine != fCurrentLine && level == 0)
                             printNewLine();
@@ -1729,6 +1783,15 @@ void DOMWriterImpl::printIndent(int level) const
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
     {
+        if (lastWhiteSpaceInTextNode)
+        {
+            level -= lastWhiteSpaceInTextNode/2; // two chSpaces equals one indent level
+            lastWhiteSpaceInTextNode = 0;
+            // if lastWhiteSpaceInTextNode/2 is greater than level, then
+            // it means too many spaces have been written to the
+            // output stream and we can no longer indent properly
+        }
+
         for(int i = 0; i < level; i++)
             *fFormatter << chSpace << chSpace;
     }
