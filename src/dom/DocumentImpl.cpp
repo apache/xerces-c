@@ -86,6 +86,7 @@
 #include <internal/XMLReader.hpp>
 #include "TreeWalkerImpl.hpp"
 #include "NodeIteratorImpl.hpp"
+#include "NodeIDMap.hpp"
 #include "DOM_Document.hpp"
 
 
@@ -97,6 +98,8 @@ DocumentImpl::DocumentImpl()
     namePool = new DStringPool(257);
     iterators = 0L;
     treeWalkers = 0L;
+    fNodeIDMap = 0;
+
 };
 
 
@@ -113,8 +116,9 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     docElement=null;
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
     namePool = new DStringPool(257);
-    iterators = 0L;
-    treeWalkers = 0L;
+    iterators = 0;
+    treeWalkers = 0;
+    fNodeIDMap = 0;
 }
 
 void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
@@ -158,6 +162,8 @@ DocumentImpl::~DocumentImpl()
     // Do not delete docType and docElement pointers here.
     //  These are also normal child nodes of the document,
     //  and refcounting will take them out in the usual way.
+
+    delete fNodeIDMap;
 };
 
 
@@ -651,7 +657,14 @@ DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &fNamespa
 
 ElementImpl *DocumentImpl::getElementById(const DOMString &elementId)
 {
-	return null;
+    if (fNodeIDMap == 0)
+        return null;
+
+    AttrImpl *theAttr = fNodeIDMap->find(elementId);
+    if (theAttr == null)
+	    return null;
+
+    return theAttr->getOwnerElement();
 }
 
 

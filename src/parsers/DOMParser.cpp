@@ -84,6 +84,7 @@
 #include <dom/EntityImpl.hpp>
 #include <dom/NotationImpl.hpp>
 #include <dom/NamedNodeMapImpl.hpp>
+#include <dom/NodeIDMap.hpp>
 
 #include <validators/DTD/ContentSpecNode.hpp>
 
@@ -572,7 +573,9 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
                              , const bool                    isEmpty
                              , const bool                    isRoot)
 {
-    DOM_Element elem;
+    DOM_Element     elem;
+    DocumentImpl    *docImpl = (DocumentImpl *)fDocument.fImpl;
+
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         unsigned int globalNSid = fValidator -> getGlobalNamespaceId();
         XMLBuffer buf;
@@ -598,11 +601,18 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             }
             AttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
             oneAttrib -> getValue());
-            // Register identifiers
+
+            // Attributes of type ID.  If this is one, add it to the hashtable of IDs
+            //   that is constructed for use by GetElementByID().
+            //
             if (oneAttrib->getType()==XMLAttDef::ID)
             {
-                // When we record ID attributes, here is the place to do it.
+                if (docImpl->fNodeIDMap == 0)
+                    docImpl->fNodeIDMap = new NodeIDMap(500);
+                docImpl->fNodeIDMap->add(attr);
+                attr->idAttr(true);
             }
+
             attr->setSpecified(oneAttrib->getSpecified());
         }
     } else {    //DOM Level 1
@@ -611,12 +621,18 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
         for (unsigned int index = 0; index < attrCount; ++index) {
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-            // Register identifiers
+
+            // Attributes of type ID.  If this is one, add it to the hashtable of IDs
+            //   that is constructed for use by GetElementByID().
+            //
             if (oneAttrib->getType()==XMLAttDef::ID)
             {
-                // When we record ID attributes, here is the place to do it.
+                if (docImpl->fNodeIDMap == 0)
+                    docImpl->fNodeIDMap = new NodeIDMap(500);
+                docImpl->fNodeIDMap->add(attr);
+                attr->idAttr(true);
             }
-            attr->setSpecified(oneAttrib->getSpecified());
+
         }
     }
     

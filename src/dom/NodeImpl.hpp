@@ -125,6 +125,7 @@ public:
     static const unsigned short SPECIFIED;
     static const unsigned short IGNORABLEWS;
     static const unsigned short SETVALUE;
+    static const unsigned short ID_ATTR;
 
     void *userData;
 
@@ -269,6 +270,15 @@ public: // should really be protected - ALH
     inline void setValue(bool value) {
         flags = (value ? flags | SETVALUE : flags & ~SETVALUE);
     }
+    
+    inline bool idAttr() {
+        return (flags & ID_ATTR) != 0;
+    }
+    
+    inline void idAttr(bool value) {
+        flags = (value ? flags | ID_ATTR : flags & ~ID_ATTR);
+    }
+    
 };
 
 

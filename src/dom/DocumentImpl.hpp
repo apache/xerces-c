@@ -98,6 +98,7 @@ class DOM_NodeFilter;
 class NodeFilterImpl;
 class DOM_DOMImplementation;
 class DOMString;
+class NodeIDMap;
 
 typedef RefVectorOf<NodeIteratorImpl> NodeIterators;
 typedef RefVectorOf<TreeWalkerImpl> TreeWalkers;
@@ -114,6 +115,7 @@ private:
     DocumentTypeImpl            *docType;
     ElementImpl                 *docElement;
     DStringPool                 *namePool;
+    NodeIDMap                   *fNodeIDMap;      // for use by GetElementsById().
 
     NodeIterators               *iterators;
     TreeWalkers                 *treeWalkers;
@@ -164,17 +166,19 @@ public:
     //Introduced in DOM Level 2
     virtual NodeImpl            *importNode(NodeImpl *source, bool deep);
     virtual ElementImpl         *createElementNS(const DOMString &namespaceURI,
-	const DOMString &qualifiedName);
+	                                             const DOMString &qualifiedName);
     virtual AttrImpl            *createAttributeNS(const DOMString &namespaceURI,
-	const DOMString &qualifiedName);
+	                                             const DOMString &qualifiedName);
     virtual DeepNodeListImpl    *getElementsByTagNameNS(const DOMString &namespaceURI,
-	const DOMString &localName);
+	                                              const DOMString &localName);
     virtual ElementImpl         *getElementById(const DOMString &elementId);
 
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
     //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
     static  int                 indexofQualifiedName(const DOMString & qName);
-    static  bool        isKidOK(NodeImpl *parent, NodeImpl *child);
+    static  bool                isKidOK(NodeImpl *parent, NodeImpl *child);
+
+    inline NodeIDMap *          getNodeIDMap() {return fNodeIDMap;};
 };
 
 #endif

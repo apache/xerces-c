@@ -85,6 +85,8 @@ const unsigned short NodeImpl::FIRSTCHILD   = 0x1<<4;
 const unsigned short NodeImpl::SPECIFIED    = 0x1<<5;
 const unsigned short NodeImpl::IGNORABLEWS  = 0x1<<6;
 const unsigned short NodeImpl::SETVALUE     = 0x1<<7;
+const unsigned short NodeImpl::ID_ATTR      = 0x1<<8;
+
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 {

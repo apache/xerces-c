@@ -64,6 +64,7 @@
 #include "TextImpl.hpp"
 #include "ElementImpl.hpp"
 #include "DStringPool.hpp"
+#include "NodeIDMap.hpp"
 
 
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
@@ -78,12 +79,15 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
 {
     name = other.name.clone();
     specified(false);
+    idAttr(false);
     if (deep)
       cloneChildren(other);
 };
 
 
 AttrImpl::~AttrImpl() {
+    if (this->idAttr())
+        this->getOwnerDocument()->getNodeIDMap()->remove(this);
 };
 
 
@@ -177,6 +181,13 @@ void AttrImpl::setValue(const DOMString &val)
         );
     }
     
+    //  If this attribute was of type ID and in the map, take it out,
+    //    then put it back in with the new name.  For now, we don't worry
+    //    about what happens if the new name conflicts
+    //
+    if (idAttr())
+        this->getOwnerDocument()->getNodeIDMap()->remove(this);
+
     NodeImpl *kid;
     while ((kid = firstChild) != null)         // Remove existing kids
     {
@@ -189,6 +200,10 @@ void AttrImpl::setValue(const DOMString &val)
         appendChild(ownerDocument->createTextNode(val));
     specified(true);
     changed();
+    
+    if (idAttr())
+        this->getOwnerDocument()->getNodeIDMap()->add(this);
+
 };
 
 
