@@ -83,6 +83,10 @@
 #include <util/XMLUniDefs.hpp>
 #include <framework/XMLFormatter.hpp>
 #include <util/TranscodingException.hpp>
+
+
+#include <dom/DOM_DOMException.hpp>
+
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM.hpp>
 #include "DOMTreeErrorReporter.hpp"
@@ -215,8 +219,8 @@ private:
 //  gDoNamespaces
 //      Indicates whether namespace processing should be done.
 //
-//  gDoExpand
-//      Indicates whether entity references needs to be expanded or not
+//  gDoCreate
+//      Indicates whether entity reference nodes needs to be created or not
 //      Defaults to false
 //
 //  gEncodingName
@@ -230,7 +234,7 @@ private:
 // ---------------------------------------------------------------------------
 static char*                    gXmlFile               = 0;
 static bool                     gDoNamespaces          = false;
-static bool                     gDoExpand              = false;
+static bool                     gDoCreate              = false;
 static XMLCh*                   gEncodingName          = 0;
 static XMLFormatter::UnRepFlags gUnRepFlags            = XMLFormatter::UnRep_CharRef;
 static DOMParser::ValSchemes    gValScheme             = DOMParser::Val_Auto;
@@ -261,7 +265,7 @@ void usage()
             "tree. It then traverses the DOM tree and prints the contents \n"
             "of the tree. Options are NOT case sensitive.\n\n"
             "Options:\n"
-            "    -e          Expand entity references. Default is no expansion.\n"
+            "    -e          create entity reference nodes. Default is no expansion.\n"
             "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Default is off.\n"
@@ -350,7 +354,7 @@ int main(int argC, char* argV[])
          else if (!strcmp(argV[parmInd], "-e")
               ||  !strcmp(argV[parmInd], "-E"))
         {
-            gDoExpand = true;
+            gDoCreate = true;
         }
          else if (!strncmp(argV[parmInd], "-x=", 3)
               ||  !strncmp(argV[parmInd], "-X=", 3))
@@ -408,7 +412,7 @@ int main(int argC, char* argV[])
     parser->setDoNamespaces(gDoNamespaces);
     ErrorHandler *errReporter = new DOMTreeErrorReporter();
     parser->setErrorHandler(errReporter);
-    parser->setExpandEntityReferences(gDoExpand);
+    parser->setCreateEntityReferenceNodes(gDoCreate);
     parser->setToCreateXMLDeclTypeNode(true);
 
     //
@@ -425,6 +429,14 @@ int main(int argC, char* argV[])
     {
         cerr << "An error occured during parsing\n   Message: "
              << DOMString(e.getMessage()) << endl;
+        errorsOccured = true;
+    }
+
+ 
+    catch (const DOM_DOMException& e)
+    {
+       cerr << "An error occured during parsing\n   Message: "
+             << DOMString(e.msg) << endl;
         errorsOccured = true;
     }
 
