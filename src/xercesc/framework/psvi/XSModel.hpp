@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.7  2003/11/21 17:25:09  knoaman
  * Use XSObjectFactory to create various components.
  *
@@ -131,7 +136,7 @@ public:
     /**
       * The constructor to be used when a grammar pool contains all needed info
       * @param grammarPool  the grammar pool containing the underlying data structures
-      * @param  manager     The configurable memory manager
+      * @param manager      The configurable memory manager
       */
     XSModel( XMLGrammarPool *grammarPool
                 , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -139,14 +144,14 @@ public:
     /**
       * The constructor to be used when the XSModel must represent all
       * components in the union of an existing XSModel and a newly-created
-      * Grammar
+      * Grammar(s) from the GrammarResolver
       *
       * @param baseModel  the XSModel upon which this one is based
-      * @param  grammar  the newly-created grammar whose components are to be merged
-      * @param  manager     The configurable memory manager
+      * @param grammarResolver  the grammar(s) whose components are to be merged
+      * @param manager     The configurable memory manager
       */
     XSModel( XSModel *baseModel
-                , Grammar *grammar
+                , GrammarResolver *grammarResolver
                 , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
@@ -296,6 +301,8 @@ public:
 
     //@}
 private:
+    // Local Functions:
+    void addGrammarToXSModel(XSNamespaceItem* namespaceItem);
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -304,7 +311,7 @@ private:
     XSModel & operator=(const XSModel &);
 
 protected:
-    friend class PSVIUtil;
+    friend class XSObjectFactory;
 
     // -----------------------------------------------------------------------
     //  data members
@@ -328,22 +335,24 @@ protected:
 	      MODEL_GROUP_DEFINITION    = 6,	   
 	      MODEL_GROUP               = 7,	   no 
 	      PARTICLE                  = 8,	   no
-	      WILDCARD                  = 9,	    
+	      WILDCARD                  = 9,	   no
 	      IDENTITY_CONSTRAINT       = 10,	   no
 	      NOTATION_DECLARATION      = 11,	    
-	      ANNOTATION                = 12,	    
+	      ANNOTATION                = 12,	   no 
 	      FACET                     = 13,      no
 	      MULTIVALUE_FACET          = 14       no
     */
     XSNamedMap<XSObject>*                   fComponentMap[XSConstants::MULTIVALUE_FACET];
 
-    // the mapping of Xerces Object to XS Objects
-    //  facets, mulitvaluefacets and xsattributegroupdefinitions are not stored in the 
-    //  the mapping
     XMLStringPool*                          fURIStringPool;
     XSAnnotationList*                       fXSAnnotationList;
     RefHashTableOf<XSNamespaceItem>*        fHashNamespace;
     XSObjectFactory*                        fObjFactory;
+    RefVectorOf<XSNamespaceItem>*           fDeleteNamespace; 
+
+    XSModel*                                fParent;
+    bool                                    fDeleteParent;
+    bool                                    fAddedBuiltinDatatypeValidators;
 };
 
 inline XMLStringPool*  XSModel::getURIStringPool()
@@ -360,8 +369,6 @@ inline XSNamespaceItemList *XSModel::getNamespaceItems()
 {
     return fXSNamespaceItemList;
 }
-
-
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/21 22:34:46  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.1  2003/11/21 17:11:24  knoaman
  * Initial revision
  *
@@ -288,12 +293,31 @@ XSAttributeDeclaration* XSObjectFactory::addOrFind(SchemaAttDef* const attDef,
         if (attDef->getDatatypeValidator())
             xsType = addOrFind(attDef->getDatatypeValidator(), xsModel);
 
+        // need grammar to determine if scope is global:                   
+                                               
+        XSConstants::SCOPE scope = XSConstants::SCOPE_ABSENT;
+        XSComplexTypeDefinition* enclosingCTDefinition = 0;
+        XSNamespaceItem* namespaceItem = xsModel->getNamespaceItem(xsModel->getURIStringPool()->getValueForId(attDef->getAttName()->getURI()));
+        if (namespaceItem)
+        {
+            // REVISIT: what if local name and global name are the same???
+            if (namespaceItem->getSchemaGrammar()->getAttributeDeclRegistry()->get(attDef))
+                scope = XSConstants::SCOPE_GLOBAL;
+            else if (attDef->getEnclosingCT())
+            {
+                scope = XSConstants::SCOPE_LOCAL;
+                enclosingCTDefinition = addOrFind(attDef->getEnclosingCT(), xsModel);
+            }
+        }        
+
         xsObj = new (fMemoryManager) XSAttributeDeclaration
         (
             attDef
             , xsType
             , getAnnotationFromModel(xsModel, attDef)
             , xsModel
+            , scope
+            , enclosingCTDefinition
             , fMemoryManager
         );
         putObjectInMap(attDef, xsObj, xsModel);
@@ -623,16 +647,23 @@ XSAnnotation* XSObjectFactory::getAnnotationFromModel(XSModel* const xsModel,
     {
         annot = namespaceItemList->elementAt(i)->getSchemaGrammar()->getAnnotation(key);
         if (annot)
-            break;
+            return annot;
     }
 
-    return annot;
+    if (xsModel->fParent)
+        return getAnnotationFromModel(xsModel->fParent, key);
+    return 0;
 }
 
 
 XSObject* XSObjectFactory::getObjectFromMap(void* key, XSModel* const xsModel)
 {
-    return fXercesToXSMap->get(key);
+    XSObject* xsObj = fXercesToXSMap->get(key);
+    if (xsObj)
+        return xsObj;
+    if (xsModel->fParent)
+        return getObjectFromMap(key, xsModel->fParent);
+    return 0;
 }
 
 void XSObjectFactory::putObjectInMap(void* key, XSObject* const object, XSModel* const xsModel)

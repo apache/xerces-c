@@ -2329,9 +2329,12 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         bool toClone = false;
 
         if (typeInfo) {
-
             toClone = true;
             typeInfo->addAttDef(attDef);
+            if (!fCurrentAttGroupInfo)
+            {
+                attDef->setEnclosingCT(typeInfo);
+            }
         }
 
         if (fCurrentAttGroupInfo) {
@@ -2639,7 +2642,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
             0,
             fGrammarPoolMemoryManager
         );
-    decl->setNameSpace(fURIStringPool->getValueForId(fTargetNSURI));
+    decl->setNameSpaceId(fTargetNSURI);
     fSchemaGrammar->putNotationDecl(decl);
 
     //we don't really care if something inside <notation> is wrong..

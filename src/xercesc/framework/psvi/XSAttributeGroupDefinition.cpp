@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.5  2003/11/21 17:19:30  knoaman
  * PSVI update.
  *
@@ -79,6 +84,7 @@
 #include <xercesc/framework/psvi/XSAttributeGroupDefinition.hpp>
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -108,6 +114,22 @@ XSAttributeGroupDefinition::~XSAttributeGroupDefinition()
         delete fXSAttributeUseList;
 
     // don't delete fXSWildcard - deleted by XSModel
+}
+
+// XSObject methods
+const XMLCh *XSAttributeGroupDefinition::getName() 
+{
+    return fXSModel->getURIStringPool()->getValueForId(fXercesAttGroupInfo->getNameId());        
+}
+
+const XMLCh *XSAttributeGroupDefinition::getNamespace() 
+{
+    return fXSModel->getURIStringPool()->getValueForId(fXercesAttGroupInfo->getNamespaceId());
+}
+
+XSNamespaceItem *XSAttributeGroupDefinition::getNamespaceItem() 
+{
+    return fXSModel->getNamespaceItem(getNamespace());
 }
 
 

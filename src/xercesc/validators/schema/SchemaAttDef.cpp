@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/21 22:34:46  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.8  2003/10/17 21:17:12  peiyongz
  * using XTemplateSerializer
  *
@@ -126,6 +131,7 @@ SchemaAttDef::SchemaAttDef(MemoryManager* const manager) :
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
+    , fEnclosingCT(0)
 {
 }
 
@@ -143,6 +149,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
+    , fEnclosingCT(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
 }
@@ -164,6 +171,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
+    , fEnclosingCT(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
 }
@@ -181,6 +189,7 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fNamespaceList(0)
     , fValidity(other->fValidity)
     , fValidation(other->fValidation)
+    , fEnclosingCT(other->fEnclosingCT)
 {
     QName* otherName = other->getAttName();
     fAttName = new (getMemoryManager()) QName(otherName->getPrefix(),

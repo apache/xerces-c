@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/21 22:34:46  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.7  2003/10/10 16:25:40  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -105,11 +110,12 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/schema/PSVIDefs.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DatatypeValidator;
 class QName;
-
+class ComplexTypeInfo;
 //
 //  This class is a derivative of the core XMLAttDef class. This class adds
 //  any Schema specific data members and provides Schema specific implementations
@@ -158,7 +164,7 @@ public :
     // ----------------------------------------------------------------------
     // Partial implementation of PSVI
     // The values these methods return are only accurate until the DOMAttr
-    // is created that uses the values. After this a celan up method is called
+    // is created that uses the values. After this a clean up method is called
     // and the SchemaAttDef may be used again.
     // note that some of this information has dependancies. For example,
     // if something is not valid then the information returned by the other 
@@ -236,6 +242,7 @@ public :
     QName* getAttName() const;
     DatatypeValidator* getDatatypeValidator() const;
     ValueVectorOf<unsigned int>* getNamespaceList() const;
+    ComplexTypeInfo* getEnclosingCT() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -254,7 +261,7 @@ public :
     void resetNamespaceList();
     void setValidity(PSVIDefs::Validity valid);
     void setValidationAttempted(PSVIDefs::Validation validation);
-
+    void setEnclosingCT(ComplexTypeInfo* complexTypeInfo);
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -301,6 +308,7 @@ private :
     ValueVectorOf<unsigned int>* fNamespaceList;
     PSVIDefs::Validity           fValidity;
     PSVIDefs::Validation         fValidation;
+    ComplexTypeInfo*             fEnclosingCT;
 };
 
 
@@ -433,6 +441,10 @@ SchemaAttDef::getNamespaceList() const {
     return fNamespaceList;
 }
 
+inline ComplexTypeInfo* SchemaAttDef::getEnclosingCT() const
+{
+    return fEnclosingCT;
+}
 
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Setter methods
@@ -489,6 +501,11 @@ inline void SchemaAttDef::reset() {
     fMemberTypeValidator = 0;
     fValidity = PSVIDefs::UNKNOWN;
     fValidation = PSVIDefs::NONE;    
+}
+
+inline void SchemaAttDef::setEnclosingCT(ComplexTypeInfo* complexTypeInfo)
+{
+    fEnclosingCT = complexTypeInfo;
 }
 
 XERCES_CPP_NAMESPACE_END

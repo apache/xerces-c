@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.6  2003/11/21 17:19:30  knoaman
  * PSVI update.
  *
@@ -95,11 +100,15 @@ XSAttributeDeclaration::XSAttributeDeclaration(SchemaAttDef* const           att
                                                XSSimpleTypeDefinition* const typeDef,
                                                XSAnnotation* const           annot,
                                                XSModel* const                xsModel,
+                                               XSConstants::SCOPE            scope,
+                                               XSComplexTypeDefinition*      enclosingCTDefinition,
                                                MemoryManager * const         manager)
     : XSObject(XSConstants::ATTRIBUTE_DECLARATION, xsModel, manager)
     , fAttDef(attDef)
     , fTypeDefinition(typeDef)
     , fAnnotation(annot)
+    , fScope(scope)
+    , fEnclosingCTDefinition(enclosingCTDefinition)    
 {
 }
 
@@ -131,25 +140,9 @@ unsigned int XSAttributeDeclaration::getId() const
     return fId;
 }
 
-
 // ---------------------------------------------------------------------------
 //  XSAttributeDeclaration: access methods
 // ---------------------------------------------------------------------------
-XSConstants::SCOPE XSAttributeDeclaration::getScope() const
-{   
-    // REVISIT: review... what about SCOPE_ABSENT?
-    // Using just:
-    // if (getNamespaceItem()->getSchemaGrammar()->getAttributeDeclRegistry()->get(fAttDef))
-    // give class conversion error...
-    if (((XSAttributeDeclaration*) this)->getNamespaceItem()->getSchemaGrammar()->getAttributeDeclRegistry()->get(fAttDef))
-        return XSConstants::SCOPE_GLOBAL;
-    return XSConstants::SCOPE_LOCAL;
-}
-
-XSComplexTypeDefinition *XSAttributeDeclaration::getEnclosingCTDefinition()
-{
-    return 0;
-}
 
 XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
 {

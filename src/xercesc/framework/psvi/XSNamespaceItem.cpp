@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.5  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -94,7 +99,6 @@ XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
     , fGrammar(grammar)
     , fXSModel(xsModel)
     , fXSAnnotationList(0)
-
 {
     // Populate XSNamedMaps by going through the components
     for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
@@ -110,7 +114,7 @@ XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
             case XSConstants::NOTATION_DECLARATION:
                 fComponentMap[i] = new (fMemoryManager) XSNamedMap<XSObject> 
                 (
-                    15,     // size
+                    29,     // size
                     29,     // modulus
                     fXSModel->getURIStringPool(),
                     false,  // adoptElems 
@@ -178,32 +182,44 @@ XSNamedMap<XSObject> *XSNamespaceItem::getComponents(XSConstants::COMPONENT_TYPE
 
 XSElementDeclaration *XSNamespaceItem::getElementDeclaration(const XMLCh *name)
 {
-    return (XSElementDeclaration*) fHashMap[XSConstants::ELEMENT_DECLARATION -1]->get(name);
+    if (name)
+        return (XSElementDeclaration*) fHashMap[XSConstants::ELEMENT_DECLARATION -1]->get(name);
+    return 0;
 }
 
 XSAttributeDeclaration *XSNamespaceItem::getAttributeDeclaration(const XMLCh *name)
 {
-    return (XSAttributeDeclaration*) fHashMap[XSConstants::ATTRIBUTE_DECLARATION -1]->get(name);
+    if (name)
+        return (XSAttributeDeclaration*) fHashMap[XSConstants::ATTRIBUTE_DECLARATION -1]->get(name);
+    return 0;
 }
 
 XSTypeDefinition *XSNamespaceItem::getTypeDefinition(const XMLCh *name)
 {
-    return (XSTypeDefinition*) fHashMap[XSConstants::TYPE_DEFINITION -1]->get(name);
+    if (name)
+        return (XSTypeDefinition*) fHashMap[XSConstants::TYPE_DEFINITION -1]->get(name);
+    return 0;
 }
 
 XSAttributeGroupDefinition *XSNamespaceItem::getAttributeGroup(const XMLCh *name)
 {
-    return (XSAttributeGroupDefinition*) fHashMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->get(name);
+    if (name)
+        return (XSAttributeGroupDefinition*) fHashMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->get(name);
+    return 0;
 }
 
 XSModelGroupDefinition *XSNamespaceItem::getModelGroupDefinition(const XMLCh *name)
 {
-    return (XSModelGroupDefinition*) fHashMap[XSConstants::MODEL_GROUP_DEFINITION -1]->get(name);         
+    if (name)
+        return (XSModelGroupDefinition*) fHashMap[XSConstants::MODEL_GROUP_DEFINITION -1]->get(name);         
+    return 0;
 }
 
 XSNotationDeclaration *XSNamespaceItem::getNotationDeclaration(const XMLCh *name)
 {
-    return (XSNotationDeclaration*) fHashMap[XSConstants::NOTATION_DECLARATION -1]->get(name);
+    if (name)
+        return (XSNotationDeclaration*) fHashMap[XSConstants::NOTATION_DECLARATION -1]->get(name);
+    return 0;
 }
 
 StringList *XSNamespaceItem::getDocumentLocations()

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/21 22:34:46  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.10  2003/11/06 15:30:06  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -161,7 +166,7 @@ public:
     const XMLCh* getPublicId() const;
     const XMLCh* getSystemId() const;
     const XMLCh* getBaseURI() const;
-    const XMLCh* getNameSpace() const;
+    const unsigned int getNameSpaceId() const;
     MemoryManager* getMemoryManager() const;
 
 
@@ -176,7 +181,7 @@ public:
     void setPublicId(const XMLCh* const newId);
     void setSystemId(const XMLCh* const newId);
     void setBaseURI(const XMLCh* const newId);
-    void setNameSpace(const XMLCh* const newId);
+    void setNameSpaceId(const unsigned int newId);
 
     // -----------------------------------------------------------------------
     //  Support named collection element semantics
@@ -226,7 +231,7 @@ private :
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
     XMLCh*          fBaseURI;
-    XMLCh*          fNameSpace;
+    unsigned int    fNameSpaceId;
     MemoryManager*  fMemoryManager;
 };
 
@@ -244,9 +249,9 @@ inline const XMLCh* XMLNotationDecl::getName() const
     return fName;
 }
 
-inline const XMLCh* XMLNotationDecl::getNameSpace() const
+inline const unsigned int XMLNotationDecl::getNameSpaceId() const
 {
-    return fNameSpace;
+    return fNameSpaceId;
 }
 
 inline const XMLCh* XMLNotationDecl::getPublicId() const
@@ -277,12 +282,9 @@ inline void XMLNotationDecl::setId(const unsigned int newId)
     fId = newId;
 }
 
-inline void XMLNotationDecl::setNameSpace(const XMLCh* const newId)
+inline void XMLNotationDecl::setNameSpaceId(const unsigned int newId)
 {
-    if (fNameSpace)
-        fMemoryManager->deallocate(fNameSpace);
-
-    fNameSpace = XMLString::replicate(newId, fMemoryManager);
+    fNameSpaceId = newId;
 }
 
 inline void XMLNotationDecl::setPublicId(const XMLCh* const newId)

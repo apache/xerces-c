@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.5  2003/11/21 17:19:30  knoaman
  * PSVI update.
  *
@@ -125,6 +130,31 @@ public:
     /** @name Destructor */
     //@{
     ~XSAttributeGroupDefinition();
+    //@}
+
+    //---------------------
+    /** @name overridden XSObject methods */
+    //@{
+
+    /**
+     * The name of type <code>NCName</code> of this declaration as defined in 
+     * XML Namespaces.
+     */
+    const XMLCh* getName();
+
+    /**
+     *  The [target namespace] of this object, or <code>null</code> if it is 
+     * unspecified. 
+     */
+    const XMLCh* getNamespace();
+
+    /**
+     * A namespace schema information item corresponding to the target 
+     * namespace of the component, if it's globally declared; or null 
+     * otherwise.
+     */
+    XSNamespaceItem* getNamespaceItem();
+
     //@}
 
     //--------------------- 

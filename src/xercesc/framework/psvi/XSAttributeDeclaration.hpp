@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.5  2003/11/21 17:19:30  knoaman
  * PSVI update.
  *
@@ -116,6 +121,8 @@ public:
         , XSSimpleTypeDefinition* const typeDef
         , XSAnnotation* const           annot
         , XSModel* const                xsModel
+        , XSConstants::SCOPE            scope
+        , XSComplexTypeDefinition*      enclosingCTDefinition
         , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -228,6 +235,8 @@ protected:
     XSSimpleTypeDefinition*     fTypeDefinition;
     XSAnnotation*               fAnnotation;
     unsigned int                fId;
+    XSConstants::SCOPE          fScope;
+    XSComplexTypeDefinition*    fEnclosingCTDefinition;
 };
 
 // ---------------------------------------------------------------------------
@@ -248,7 +257,15 @@ inline XSAnnotation *XSAttributeDeclaration::getAnnotation() const
     return fAnnotation;
 }
 
+inline XSConstants::SCOPE XSAttributeDeclaration::getScope() const
+{   
+    return fScope;
+}
 
+inline XSComplexTypeDefinition *XSAttributeDeclaration::getEnclosingCTDefinition()
+{
+    return fEnclosingCTDefinition;
+}
 
 XERCES_CPP_NAMESPACE_END
 

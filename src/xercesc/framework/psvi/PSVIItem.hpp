@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -132,7 +137,7 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    PSVIItem( MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    PSVIItem(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -241,8 +246,10 @@ public:
 
     //@{
 
-    /*
-     / reset the object
+    void setValidationAttempted(PSVIItem::ASSESSMENT_TYPE attemptType);
+    void setValidity(PSVIItem::VALIDITY_STATE validity);
+
+    /** reset the object
      * @param validationContext:  corresponds to schema validation context property
      * @param normalizedValue:  corresponds to schema normalized value property
      * @param validityState:  state of item's validity
@@ -286,17 +293,15 @@ protected:
     //  Type definition that validated this item
     // fMemberType
     //  If fType is a union type, the member type that validated this item
-    const MemoryManager *fMemoryManager;
-    const XMLCh* fValidationContext;
-    const XMLCh* fNormalizedValue;
-    const XMLCh* fDefaultValue;
-    VALIDITY_STATE fValidityState;
-    ASSESSMENT_TYPE fAssessmentType;
-    bool fIsSpecified;
-    XSTypeDefinition * fType;
-    XSSimpleTypeDefinition * fMemberType;
-
-
+    MemoryManager* const        fMemoryManager;
+    const XMLCh*                fValidationContext;
+    const XMLCh*                fNormalizedValue;
+    const XMLCh*                fDefaultValue;
+    VALIDITY_STATE              fValidityState;
+    ASSESSMENT_TYPE             fAssessmentType;
+    bool                        fIsSpecified;
+    XSTypeDefinition*           fType;
+    XSSimpleTypeDefinition*     fMemberType;
 };
 inline PSVIItem::~PSVIItem() {}
 

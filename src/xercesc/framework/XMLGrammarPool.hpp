@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.9  2003/11/06 21:53:52  neilg
  * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
  *
@@ -156,10 +161,10 @@ public :
     /**
       * orphanGrammar
       *
-	  * grammar removed from the grammar pool and owned by the caller
+      * grammar removed from the grammar pool and owned by the caller
       *
-      * @param nameSpaceKey: Key sed to search for grammar in the grammar pool
-	  *
+      * @param nameSpaceKey: Key used to search for grammar in the grammar pool
+      * @return the grammar that was removed from the pool (0 if none)
       */
     virtual Grammar*       orphanGrammar(const XMLCh* const nameSpaceKey) = 0;  
 
@@ -174,10 +179,10 @@ public :
     /**
       * clear
       *
-	  * all grammars are removed from the grammar pool and deleted.
-      *
+      * all grammars are removed from the grammar pool and deleted.
+      * @return true if the grammar pool was cleared. false if it did not.
       */
-    virtual void           clear() = 0;
+    virtual bool           clear() = 0;
         
     /**
       * lockPool
@@ -198,16 +203,10 @@ public :
       * One effect, depending on the underlying implementation, is that the grammar pool
       * may no longer be thread-safe (even on read operations).
       *
+      * For PSVI support any previous XSModel that was produced will be deleted.
       */
     virtual void           unlockPool() = 0;
 
-    /**
-      * setPSVI
-      *
-      * A flag to indicate that PSVI will be performed on the schema grammars as 
-      * a PSVIHandler has been set.
-      */ 
-    virtual void            setPSVI(const bool doPSVI) = 0;
     //@}
 
     // -----------------------------------------------------------------------
@@ -250,6 +249,11 @@ public :
       * in the grammar pool.  If the pool is locked, this should
       * be a thread-safe operation.  It should return null if and only if
       * the pool is empty.
+      *
+      * Calling getXSModel() on an unlocked grammar pool may result in the
+      * creation of a new XSModel with the old XSModel being deleted.  The
+      * function will return a different address for the XSModel if it has
+      * changed.
       */
     virtual XSModel *getXSModel() = 0;
 	

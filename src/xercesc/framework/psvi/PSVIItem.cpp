@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.2  2003/09/17 17:45:37  neilg
  * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
  *
@@ -127,6 +132,16 @@ inline PSVIItem::VALIDITY_STATE PSVIItem::getValidity() const
 inline PSVIItem::ASSESSMENT_TYPE PSVIItem::getValidationAttempted() const
 {
     return fAssessmentType;
+}
+
+void PSVIItem::setValidationAttempted(PSVIItem::ASSESSMENT_TYPE attemptType)
+{
+    fAssessmentType = attemptType;
+}
+ 
+void PSVIItem::setValidity(PSVIItem::VALIDITY_STATE validity)
+{
+    fValidityState = validity;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.6  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -82,6 +87,7 @@
 #include <xercesc/framework/psvi/XSNotationDeclaration.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -115,7 +121,7 @@ const XMLCh *XSNotationDeclaration::getName()
 
 const XMLCh *XSNotationDeclaration::getNamespace() 
 {
-    return fXMLNotationDecl->getNameSpace();
+    return fXSModel->getURIStringPool()->getValueForId(fXMLNotationDecl->getNameSpaceId());
 }
 
 XSNamespaceItem *XSNotationDeclaration::getNamespaceItem() 

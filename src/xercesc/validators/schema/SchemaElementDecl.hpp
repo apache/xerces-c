@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/11/21 22:34:46  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.15  2003/11/06 15:30:08  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -389,6 +394,7 @@ public :
     void updateValidityFromElement(const XMLElementDecl *decl, Grammar::GrammarType eleGrammar);
     
     //called when attribute content of this element was validated    
+    // @deprecated; should not be needed in a thread-safe implementation
     void updateValidityFromAttribute(const SchemaAttDef *def);
 
     //cleans up inbetween uses of the SchemaElementDecl. Resets xsiType, Validity etc.

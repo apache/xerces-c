@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.5  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -246,21 +251,22 @@ protected:
     SchemaGrammar*          fGrammar;
     XSModel*                fXSModel;
 
-    /* Need a XSNamedMap for each component
+    /* Need a XSNamedMap for each component    top-level?
+       that is top level.
 	      ATTRIBUTE_DECLARATION     = 1,	   
 	      ELEMENT_DECLARATION       = 2,	    
 	      TYPE_DEFINITION           = 3,	    
 	      ATTRIBUTE_USE             = 4,	   no 
 	      ATTRIBUTE_GROUP_DEFINITION= 5,	    
-	      MODEL_GROUP_DEFINITION    = 6,	   yes - no
-	      MODEL_GROUP               = 7,	   no - yes (just one of these) 
-	      PARTICLE                  = 8,	    no
-	      WILDCARD                  = 9,	    
-	      IDENTITY_CONSTRAINT       = 10,	     never return
+	      MODEL_GROUP_DEFINITION    = 6,	   
+	      MODEL_GROUP               = 7,	   no 
+	      PARTICLE                  = 8,	   no
+	      WILDCARD                  = 9,	   no
+	      IDENTITY_CONSTRAINT       = 10,	   no
 	      NOTATION_DECLARATION      = 11,	    
-	      ANNOTATION                = 12,	    
-	      FACET                     = 13,       no
-	      MULTIVALUE_FACET          = 14        no
+	      ANNOTATION                = 12,	   no
+	      FACET                     = 13,      no
+	      MULTIVALUE_FACET          = 14       no
     */
     XSNamedMap<XSObject>*                   fComponentMap[XSConstants::MULTIVALUE_FACET];
     XSAnnotationList*                       fXSAnnotationList;

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/21 22:34:45  neilg
+ * More schema component model implementation, thanks to David Cargill.
+ * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
+ * XSAttributeDeclaration and XSAttributeGroup implementations.
+ *
  * Revision 1.2  2003/11/06 21:50:33  neilg
  * fix compilation errors under gcc 3.3.
  *
@@ -65,15 +70,59 @@
  */
 
 #include <xercesc/framework/psvi/PSVIElement.hpp>
+#include <xercesc/framework/psvi/XSElementDeclaration.hpp>
+#include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
+#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-PSVIElement::PSVIElement( MemoryManager* const manager ):  
+PSVIElement::PSVIElement(MemoryManager* const manager ):  
         PSVIItem(manager),
         fElementDecl(0),
         fNotationDecl(0),
         fSchemaInfo(0)
 {
+}
+
+XSTypeDefinition* PSVIElement::getTypeDefinition()
+{
+    return fElementDecl->getTypeDefinition();
+}
+
+    /**
+     * If and only if that type definition is a simple type definition
+     * with {variety} union, or a complex type definition whose {content type}
+     * is a simple type definition with {variety} union, 
+     
+     * then an item isomorphic
+     * to that member of the union's {member type definitions} which actually
+     * validated the element item's normalized value.
+     * 
+     * @return  a simple type declaration
+     */
+XSSimpleTypeDefinition* PSVIElement::getMemberTypeDefinition() 
+{
+    XSTypeDefinition* typeDef = fElementDecl->getTypeDefinition();
+    if (typeDef->getTypeCategory() == XSTypeDefinition::COMPLEX_TYPE)
+    {
+        if (((XSComplexTypeDefinition*)typeDef)->getContentType() == XSComplexTypeDefinition::CONTENTTYPE_SIMPLE)
+        {
+            typeDef = ((XSComplexTypeDefinition*)typeDef)->getSimpleType();
+            if (((XSSimpleTypeDefinition*)typeDef)->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
+            {
+
+            }
+        }        
+    }
+    else
+    {
+        // Simple Type...
+        if (((XSSimpleTypeDefinition*)typeDef)->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
+        {
+
+        }
+    }
+    return 0;
 }
 
 XERCES_CPP_NAMESPACE_END
