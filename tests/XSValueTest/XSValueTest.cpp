@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.2  2004/08/19 21:29:28  peiyongz
+* no message
+*
 * Revision 1.1  2004/08/19 17:17:21  peiyongz
 * XSValueTest
 *
@@ -5494,7 +5497,7 @@ int main(int, char* )
     test_dt_unsignedByte();
     test_dt_positiveInteger();
 
-    printf("XSValueTest %s\n", errSeen? "Fail" : "Pass");
+    printf("\nXSValueTest %s\n", errSeen? "Fail" : "Pass");
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
