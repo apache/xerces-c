@@ -139,6 +139,8 @@ public:
 
     static XMLCanRepGroup::CanRepGroup getCanRepGroup(const DatatypeValidator* const);
 
+    static DatatypeValidator* getBuiltInBaseValidator(const DatatypeValidator* const);
+
     // -----------------------------------------------------------------------
     // Validator Factory methods
     // -----------------------------------------------------------------------

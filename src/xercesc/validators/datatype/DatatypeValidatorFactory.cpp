@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2004/09/13 21:38:34  peiyongz
+ * getBuiltInBaseValidator
+ *
  * Revision 1.28  2004/09/08 13:56:52  peiyongz
  * Apache License Version 2.0
  *
@@ -773,6 +776,21 @@ XMLCanRepGroup::CanRepGroup DatatypeValidatorFactory::getCanRepGroup(const Datat
     }
 
     return XMLCanRepGroup::String;
+}
+
+DatatypeValidator* DatatypeValidatorFactory::getBuiltInBaseValidator(const DatatypeValidator* const dv)
+{
+    DatatypeValidator *curdv = (DatatypeValidator*)dv;
+
+    while (curdv)
+    {
+        if (curdv == getBuiltInRegistry()->get(curdv->getTypeLocalName()))
+            return curdv;
+        else
+            curdv = curdv->getBaseValidator();
+     }
+
+     return 0;
 }
 
 // ---------------------------------------------------------------------------
