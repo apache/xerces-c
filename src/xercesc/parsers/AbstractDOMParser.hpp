@@ -1328,6 +1328,12 @@ protected :
                                               const XMLCh *qualifiedName);
 
     void resetPool();
+
+    /**
+     * Returns true if the user has adopted the document
+     */
+    bool isDocumentAdopted() const;
+
     //@}
 
 

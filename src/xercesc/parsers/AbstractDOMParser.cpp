@@ -222,6 +222,10 @@ void AbstractDOMParser::resetPool()
     fDocument = 0;
 }
 
+bool AbstractDOMParser::isDocumentAdopted() const
+{
+    return fDocumentAdoptedByUser;
+}
 
 DOMDocument* AbstractDOMParser::adoptDocument()
 {
