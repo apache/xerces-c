@@ -70,7 +70,7 @@
 
 
 #include <assert.h>
-//#include "IDRangeImpl.hpp"
+#include "IDRangeImpl.hpp"
 
 class IDOM_Document;
 
@@ -131,11 +131,9 @@ IDOM_Text *IDTextImpl::splitText(unsigned int offset)
                                                      //     application code has.  Do we want to do this?
 
 
-#ifdef idom_revisit
-    if (this->getOwnerDocument() != null) {
-        typedef RefVectorOf<RangeImpl> RangeImpls;
-        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
-        if (ranges != null) {
+    if (this->getOwnerDocument() != 0) {
+        Ranges* ranges = ((IDDocumentImpl *)this->getOwnerDocument())->getRanges();
+        if (ranges != 0) {
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
@@ -144,7 +142,6 @@ IDOM_Text *IDTextImpl::splitText(unsigned int offset)
             }
         }
     }
-#endif
 
     return newText;
 };
@@ -186,7 +183,6 @@ void IDTextImpl::setIgnorableWhitespace(bool ignorable)
            IDOM_Node          *IDTextImpl::removeChild(IDOM_Node *oldChild)        {return fNode.removeChild (oldChild); };
            IDOM_Node          *IDTextImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                                     {return fNode.replaceChild (newChild, oldChild); };
-           void                IDTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fNode.setNodeValue (nodeValue); };
            bool                IDTextImpl::supports(const XMLCh *feature, const XMLCh *version) const
                                                                                     {return fNode.supports (feature, version); };
            void                IDTextImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
@@ -200,13 +196,14 @@ void IDTextImpl::setIgnorableWhitespace(bool ignorable)
      const XMLCh * IDTextImpl::getData() const                  {return fCharacterData.getData();};
      unsigned int  IDTextImpl::getLength() const                {return fCharacterData.getLength();};
      const XMLCh * IDTextImpl::substringData(unsigned int offset, unsigned int count) const
-                                                                {return fCharacterData.substringData(offset, count);};
+                                                                {return fCharacterData.substringData(this, offset, count);};
      void          IDTextImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
      void          IDTextImpl::insertData(unsigned int offset, const  XMLCh *arg)
-                                                                {fCharacterData.insertData(offset, arg);};
+                                                                {fCharacterData.insertData(this, offset, arg);};
      void          IDTextImpl::deleteData(unsigned int offset, unsigned int count)
                                                                 {fCharacterData.deleteData(this, offset, count);};
      void          IDTextImpl::replaceData(unsigned int offset, unsigned int count, const XMLCh *arg)
-                                                                {fCharacterData.replaceData(offset, count, arg);};
-     void          IDTextImpl::setData(const XMLCh *data)       {fCharacterData.setData(data);};
+                                                                {fCharacterData.replaceData(this, offset, count, arg);};
+     void          IDTextImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
+     void          IDTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
 

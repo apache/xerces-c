@@ -61,6 +61,7 @@
 #include "IDCDATASectionImpl.hpp"
 #include "IDNodeImpl.hpp"
 #include "IDDocumentImpl.hpp"
+#include "IDRangeImpl.hpp"
 #include "IDCasts.hpp"
 #include "IDOM_DOMException.hpp"
 #include <util/XMLUniDefs.hpp>
@@ -139,11 +140,9 @@ IDOM_Text *IDCDATASectionImpl::splitText(unsigned int offset)
                                                      //     application code has.  Do we want to do this?
 
 
-#ifdef idom_revisit
-    if (this->getOwnerDocument() != null) {
-        typedef RefVectorOf<RangeImpl> RangeImpls;
-        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
-        if (ranges != null) {
+    if (this->getOwnerDocument() != 0) {
+        Ranges* ranges = ((IDDocumentImpl *)this->getOwnerDocument())->getRanges();
+        if (ranges != 0) {
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
@@ -152,7 +151,6 @@ IDOM_Text *IDCDATASectionImpl::splitText(unsigned int offset)
             }
         }
     }
-#endif
 
     return newText;
 };
@@ -184,7 +182,6 @@ IDOM_Text *IDCDATASectionImpl::splitText(unsigned int offset)
            IDOM_Node          *IDCDATASectionImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDCDATASectionImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };
-           void                IDCDATASectionImpl::setNodeValue(const XMLCh  *nodeValue)   {fNode.setNodeValue (nodeValue); };
            bool                IDCDATASectionImpl::supports(const XMLCh *feature, const XMLCh *version) const
                                                                             {return fNode.supports (feature, version); };
            void                IDCDATASectionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
@@ -198,14 +195,15 @@ IDOM_Text *IDCDATASectionImpl::splitText(unsigned int offset)
      const XMLCh * IDCDATASectionImpl::getData() const                  {return fCharacterData.getData();};
      unsigned int  IDCDATASectionImpl::getLength() const                {return fCharacterData.getLength();};
      const XMLCh * IDCDATASectionImpl::substringData(unsigned int offset, unsigned int count) const
-                                                                {return fCharacterData.substringData(offset, count);};
+                                                                {return fCharacterData.substringData(this, offset, count);};
      void          IDCDATASectionImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
      void          IDCDATASectionImpl::insertData(unsigned int offset, const  XMLCh *arg)
-                                                                {fCharacterData.insertData(offset, arg);};
+                                                                {fCharacterData.insertData(this, offset, arg);};
      void          IDCDATASectionImpl::deleteData(unsigned int offset, unsigned int count)
                                                                 {fCharacterData.deleteData(this, offset, count);};
      void          IDCDATASectionImpl::replaceData(unsigned int offset, unsigned int count, const XMLCh *arg)
-                                                                {fCharacterData.replaceData(offset, count, arg);};
-     void          IDCDATASectionImpl::setData(const XMLCh *data)       {fCharacterData.setData(data);};
+                                                                {fCharacterData.replaceData(this, offset, count, arg);};
+     void          IDCDATASectionImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
+     void          IDCDATASectionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
 
 

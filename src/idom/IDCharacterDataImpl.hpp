@@ -95,13 +95,13 @@ public:
     void           deleteData(const IDOM_Node *node, unsigned int offset, unsigned int count);
     const XMLCh *  getData() const;
     unsigned int   getLength() const;
-    void           insertData(unsigned int offset, const XMLCh * data);
-    void           replaceData(unsigned int offset, unsigned int count, const XMLCh * data);
-    void           setData(const XMLCh * arg);
+    void           insertData(const IDOM_Node *node, unsigned int offset, const XMLCh * data);
+    void           replaceData(const IDOM_Node *node, unsigned int offset, unsigned int count, const XMLCh * data);
+    void           setData(const IDOM_Node *node, const XMLCh * arg);
     void           setNodeValue(const IDOM_Node *node, const XMLCh *value);
 
 
-    const XMLCh *  substringData(unsigned int offset, unsigned int count) const;
+    const XMLCh *  substringData(const IDOM_Node *node, unsigned int offset, unsigned int count) const;
 
 };
 

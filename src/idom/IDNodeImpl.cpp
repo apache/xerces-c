@@ -118,23 +118,6 @@ IDNodeImpl::~IDNodeImpl() {
 };
 
 
-
-void IDParentNode::changed()
-{
-    IDDocumentImpl *doc = (IDDocumentImpl *)(castToNodeImpl(this)->getOwnerDocument());
-    doc->changed();
-}
-
-
-int IDParentNode::changes() const
-{
-    IDDocumentImpl *doc = (IDDocumentImpl *)(castToNode(this)->getOwnerDocument());
-    return doc->changes();
-};
-
-
-
-
 IDOM_Node * IDNodeImpl::appendChild(IDOM_Node *newChild)
 {
     // Only node types that don't allow children will use this default function.

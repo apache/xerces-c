@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 14:55:32  tng
+ * IDOM: Add IRange and IDeepNodeList Support.
+ *
  * Revision 1.2  2001/05/11 13:25:40  tng
  * Copyright update.
  *
@@ -65,78 +68,129 @@
  */
 
 #include "IDDeepNodeListImpl.hpp"
-#include "IDNodeImpl.hpp"
 #include "IDElementImpl.hpp"
+#include "IDDocumentImpl.hpp"
+#include "IDCasts.hpp"
+#include "IDNodeImpl.hpp"
+#include <util/XMLUniDefs.hpp>
 #include <limits.h>
 
-static const XMLCh *kAstr;
+static const XMLCh kAstr[] = {chAsterisk, chNull};
+IDDeepNodeListPool<IDDeepNodeListImpl>* IDDeepNodeListImpl::fNodeListPool = 0;
 
-IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNod, const XMLCh *tagNam)
+IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNode,
+                                       const XMLCh *tagName)
+    : fRootNode(rootNode)
+    , fChanges(0)
+    , fCurrentNode(0)
+    , fCurrentIndexPlus1(0)
+    , fNamespaceURI(0)
+    , fMatchAllURI(false)
+    , fMatchURIandTagname(false)
 {
-#ifdef idom_revisit
-    changes = 0;
-    this->rootNode = rootNod;
-    this->tagName = tagNam;
-    nodes=new (castToNodeImpl(rootNod)->getOwnerDocument()) NodeVector();
-    matchAll = tagName.equals(DStringPool::getStaticString("*", &kAstr));
-    this->namespaceURI = 0;	//DOM Level 2
-    this->matchAllURI = false;	//DOM Level 2
-    this->matchURIandTagname = false;	//DOM Level 2
-#endif
-};
+    fTagName = ((IDDocumentImpl*)rootNode->getOwnerDocument())->getPooledString(tagName);
+    fMatchAll = (XMLString::compareString(fTagName, kAstr) == 0);
+}
 
 
 //DOM Level 2
-IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNod,
-    const XMLCh *fNamespaceURI, const XMLCh *localName)
+IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNode,
+                                       const XMLCh *namespaceURI,
+                                       const XMLCh *localName)
+    : fRootNode(rootNode)
+    , fChanges(0)
+    , fCurrentNode(0)
+    , fCurrentIndexPlus1(0)
+    , fMatchAllURI(false)
+    , fMatchURIandTagname(true)
 {
-#ifdef idom_revisit
-
-    changes = 0;
-    this->rootNode = rootNod;
-    this->tagName = localName;
-    nodes=new (castToNodeImpl(rootNod)->getOwnerDocument()) NodeVector();
-    matchAll = tagName.equals(DStringPool::getStaticString("*", &kAstr));
-    this->namespaceURI = fNamespaceURI;
-    this->matchAllURI = fNamespaceURI.equals(DStringPool::getStaticString("*", &kAstr));
-    this->matchURIandTagname = true;
-#endif
-};
+    fTagName = ((IDDocumentImpl*)rootNode->getOwnerDocument())->getPooledString(localName);
+    fMatchAll = (XMLString::compareString(fTagName, kAstr) == 0);
+    fMatchAllURI = (XMLString::compareString(namespaceURI, kAstr) == 0);
+    fNamespaceURI = ((IDDocumentImpl*)rootNode->getOwnerDocument())->getPooledString(namespaceURI);
+}
 
 
 IDDeepNodeListImpl::~IDDeepNodeListImpl()
 {
-#ifdef idom_revisit
-    delete nodes;
-#endif
-};
+}
 
 
 IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName)
 {
-    // idom_revisit
-    return 0;
-};
+    // idom_revisit - need to recycle NodeList objects from a free list
+    //                or allocate them from the regular heap
+    if(!fNodeListPool) {
+        fNodeListPool = new ((IDDocumentImpl*)rootNode->getOwnerDocument()) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
+    }
 
+    IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, tagName, 0);
+    if (!retList) {
+        // the pool will adopt the IDDeepNodeListImpl
+        int id = fNodeListPool->put((void*) rootNode, (XMLCh*) tagName, 0, new IDDeepNodeListImpl(rootNode, tagName));
+        retList = fNodeListPool->getById(id);
+    }
 
-IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode,	//DOM Level 2
-			                            const XMLCh *namespaceURI,
-                                        const XMLCh *localName)
-{
-    // idom_revisit
-    return 0;
+    return retList;
 }
 
 
-unsigned int IDDeepNodeListImpl::getLength() const
+IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode,     //DOM Level 2
+                                                   const XMLCh *namespaceURI,
+                                                   const XMLCh *localName)
 {
-#ifdef idom_revisit
-    // Preload all matching elements. (Stops when we run out of subtree!)
+    // idom_revisit - need to recycle NodeList objects from a free list
+    //                or allocate them from the regular heap
+    if(!fNodeListPool) {
+        fNodeListPool = new ((IDDocumentImpl*)rootNode->getOwnerDocument()) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
+    }
+
+    IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, localName, namespaceURI);
+    if (!retList) {
+        // the pool will adopt the IDDeepNodeListImpl
+        int id = fNodeListPool->put((void*) rootNode, (XMLCh*) localName, (XMLCh*) namespaceURI, new IDDeepNodeListImpl(rootNode, namespaceURI, localName));
+        retList = fNodeListPool->getById(id);
+    }
+
+    return retList;
+}
+
+
+unsigned int IDDeepNodeListImpl::getLength()
+{
+    // After getting the length of the list, the most likely operation is
+    // to iterate through the list.  Therefore, it's best to cache the
+    // the first element, rather than forcing a search for it the second time.
+    //
+    // idom_revisit:  This assumes the user writes:
+    //
+    //    int len = nodeList->getLength();
+    //    for (i = 0; i < len; i++)
+    //        nodeList->item(i);
+    //
+    // If a foolish user writes the following, the cached node will be reset
+    // to zero on every iteration!  Should we account for this sloppy style?
+    //
+    //    for (i = 0; i < nodeList->getLength(); i++)
+    //        nodeList->item(i);
+    // end idom_revisit
+    item(0);
+    IDOM_Node *cacheFirstNode = fCurrentNode;
+
+    // item(int) stops when we run out of subtree, at which point
+    // fCurrentIndexPlus1 will point past end of list!
     item(INT_MAX);
-    return nodes->size();
-#endif
-    return 0;
-};
+    unsigned int length = fCurrentIndexPlus1;
+
+    // Restore cache to beginning of list
+    if (cacheFirstNode != 0)
+    {
+        fCurrentIndexPlus1 = 1;
+        fCurrentNode = cacheFirstNode;
+    }
+
+    return length;
+}
 
 
 
@@ -150,37 +204,60 @@ unsigned int IDDeepNodeListImpl::getLength() const
 // irrelevant ones.  Doing so in a really useful manner would seem
 // to involve a tree-walk in its own right, or maintaining our data
 // in a parallel tree.
-IDOM_Node *IDDeepNodeListImpl::item(unsigned int index) const
+IDOM_Node *IDDeepNodeListImpl::item(unsigned int index)
 {
-#ifdef idom_revisit
-    NodeImpl *thisNode;
+    unsigned int currentIndexPlus1 = fCurrentIndexPlus1;
+    IDOM_Node *currentNode = fCurrentNode;
 
-    if(rootNode->changes() != changes)
+// idom_revisit ???? If we know that fRootNode must be an IDDocumentImpl *,
+//                   perhaps we should make it so in getDeepNodeList ????
+    if (((IDDocumentImpl *)fRootNode)->changes() != fChanges)
     {
-        nodes->reset();     // Tree changed. Do it all from scratch!
-        changes = rootNode->changes();
+        // Tree changed. Do it all from scratch!
+        currentIndexPlus1 = 0;
+        currentNode = (IDOM_Node *)fRootNode;
+        fChanges = ((IDDocumentImpl *)fRootNode)->changes();
+    }
+    else if (currentIndexPlus1 > index+1)
+    {
+        // Interested in something before cached node.  Do it all from scratch!
+        currentIndexPlus1 = 0;
+        currentNode = (IDOM_Node *)fRootNode;
+    }
+    else if (index+1 == currentIndexPlus1)
+    {
+        // What luck!  User is interested in cached node.
+        return currentNode;
     }
 
-    if(index< nodes->size())      // In the cache
-        return nodes->elementAt((int) index);
-    else                        // Not yet seen
-    {
-        if(nodes->size()==0)     // Pick up where we left off
-            thisNode=rootNode; // (Which may be the beginning)
-        else
-            thisNode=nodes->lastElement();
+    IDOM_Node *nextNode = 0;
 
-        while(thisNode!=0 && index >= nodes->size() && thisNode!=0)
-        {
-            thisNode=nextMatchingElementAfter(thisNode);
-            if(thisNode!=0)
-                nodes->addElement(thisNode);
-        }
-        return thisNode;           // Either what we want, or 0 (not avail.)
+// idom_revisit - ???? How efficient is this loop? ????
+
+    // Start at the place in the tree at which we're
+    // currently pointing and count off nodes until we
+    // reach the node of interest or the end of the tree.
+    while (currentIndexPlus1 < index+1 && currentNode != 0)
+    {
+        nextNode = nextMatchingElementAfter(currentNode);
+        if (nextNode == 0)
+            break;
+        currentNode = nextNode;
+        currentIndexPlus1++;
     }
-#endif
+
+    fCurrentNode = currentNode;
+    fCurrentIndexPlus1 = currentIndexPlus1;
+
+    // If we found a node at the requested index, make that the current node
+    if (nextNode != 0)
+    {
+        return currentNode;
+    }
+
+    // If we didn't find a node at the requested index, return 0
     return 0;
-};
+}
 
 
 
@@ -188,11 +265,9 @@ IDOM_Node *IDDeepNodeListImpl::item(unsigned int index) const
 need to resort to recursion. NOTE THAT only Element nodes are matched
 since we're specifically supporting getElementsByTagName().
 */
-#ifdef idom_revisit
-
 IDOM_Node *IDDeepNodeListImpl::nextMatchingElementAfter(IDOM_Node *current)
 {
-    NodeImpl *next;
+    IDOM_Node *next;
     while (current != 0)
     {
         // Look down to first child.
@@ -203,7 +278,7 @@ IDOM_Node *IDDeepNodeListImpl::nextMatchingElementAfter(IDOM_Node *current)
         // Look right to sibling (but not from root!)
         else
         {
-            if (current != rootNode && 0 != (next = current->getNextSibling()))
+            if (current != fRootNode && 0 != (next = current->getNextSibling()))
             {
                 current = next;
             }
@@ -211,8 +286,9 @@ IDOM_Node *IDDeepNodeListImpl::nextMatchingElementAfter(IDOM_Node *current)
             else
             {
                 next = 0;
-                for (; current != rootNode; // Stop when we return to starting point
-                current = current->getParentNode())
+                for (;
+                     current != fRootNode; // Stop on return to starting point
+                     current = current->getParentNode())
                 {
                     next = current->getNextSibling();
                     if (next != 0)
@@ -224,22 +300,31 @@ IDOM_Node *IDDeepNodeListImpl::nextMatchingElementAfter(IDOM_Node *current)
 
         // Have we found an Element with the right tagName?
         // ("*" matches anything.)
-        if (current != 0 && current != rootNode && current->isElementImpl()) {
-	    if (!matchURIandTagname) {	//DOM Level 1
-		if (matchAll || ((ElementImpl *)current)->getTagName().equals(tagName))
-		    return current;
-	    } else {	//DOM Level 2
-		if (!matchAllURI && !(current -> getNamespaceURI().equals(namespaceURI)))
-		    continue;
-		if (matchAll || current -> getLocalName().equals(tagName))
-		    return current;
-	    }
-	}
+        if (current != 0 && current != fRootNode &&
+            current->getNodeType() == IDOM_Node::ELEMENT_NODE) {
+            IDOM_Element *currElement = (IDOM_Element *)current;
+
+            if (!fMatchURIandTagname) {        //DOM Level 1
+                if (fMatchAll ||
+                    (XMLString::compareString(currElement->getTagName(),
+                                              fTagName) == 0))
+                    return current;
+            } else {        //DOM Level 2
+                if (!fMatchAllURI &&
+                    (XMLString::compareString(current -> getNamespaceURI(),
+                                              fNamespaceURI) != 0))
+                    continue;
+
+                if (fMatchAll ||
+                    (XMLString::compareString(current -> getLocalName(),
+                                              fTagName) == 0))
+                    return current;
+            }
+        }
 
         // Otherwise continue walking the tree
     }
     // Fell out of tree-walk; no more instances found
     return 0;
-};
-#endif
+}
 

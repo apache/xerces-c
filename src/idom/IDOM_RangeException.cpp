@@ -56,54 +56,36 @@
 
 /*
  * $Log$
- * Revision 1.2  2001/05/11 13:25:44  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:24  andyh
- * IDOM
+ * Revision 1.1  2001/06/04 14:55:36  tng
+ * IDOM: Add IRange and IDeepNodeList Support.
  *
  */
 
-// DOM_NameNodeFilter.h: interface for the DOM_NameNodeFilter class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#ifndef DOM_NameNodeFilter_HEADER_GUARD_
-#define DOM_NameNodeFilter_HEADER_GUARD_
+#include "IDOM_RangeException.hpp"
 
 
-#include "DOM_NodeFilter.hpp"
-#include "NodeFilterImpl.hpp"
-#include "DOMString.hpp"
-#include "DOM_Node.hpp"
-
-
-class CDOM_EXPORT NameNodeFilter : public NodeFilterImpl
+IDOM_RangeException::IDOM_RangeException()
+: IDOM_DOMException()
 {
-	public:
-		NameNodeFilter();
-		virtual ~NameNodeFilter();
-
-    // The name to compare with the node name. If null, all node names
-    //  are successfully matched.
-    void setName(DOMString name);
-
-    // Return the name to compare with node name.
-    DOMString getName();
-
-    // If match is true, the node name is accepted when it matches.
-    //  If match is false, the node name is accepted when does not match.
-    void setMatch(bool match) ;
-
-    // Return match value.
-    bool getMatch();
-
-    virtual DOM_NodeFilter::FilterAction acceptNode(DOM_Node n);
-
-	private:
-    DOMString fName;
-    bool fMatch;
-
+        code = (RangeExceptionCode) 0;
 };
 
-#endif
+
+IDOM_RangeException::IDOM_RangeException(RangeExceptionCode exCode, const XMLCh* message)
+: IDOM_DOMException(exCode, message)
+{
+   code = exCode;
+};
+
+
+IDOM_RangeException::IDOM_RangeException(const IDOM_RangeException &other)
+: IDOM_DOMException(other)
+{
+        code = other.code;
+};
+
+
+IDOM_RangeException::~IDOM_RangeException()
+{
+};
+

@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="RangeTest" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="IRangeTest" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Console Application" 0x0103
 
-CFG=RangeTest - Win32 Debug
+CFG=IRangeTest - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE
-!MESSAGE NMAKE /f "RangeTest.mak".
+!MESSAGE NMAKE /f "IRangeTest.mak".
 !MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE
-!MESSAGE NMAKE /f "RangeTest.mak" CFG="RangeTest - Win32 Debug"
+!MESSAGE NMAKE /f "IRangeTest.mak" CFG="IRangeTest - Win32 Debug"
 !MESSAGE
 !MESSAGE Possible choices for configuration are:
 !MESSAGE
-!MESSAGE "RangeTest - Win32 Release" (based on "Win32 (x86) Console Application")
-!MESSAGE "RangeTest - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "IRangeTest - Win32 Release" (based on "Win32 (x86) Console Application")
+!MESSAGE "IRangeTest - Win32 Debug" (based on "Win32 (x86) Console Application")
 !MESSAGE
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=RangeTest - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "RangeTest - Win32 Release"
+!IF  "$(CFG)" == "IRangeTest - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -53,7 +53,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
 # ADD LINK32 kernel32.lib user32.lib xerces-c_1.lib /nologo /version:1.0 /subsystem:console /incremental:yes /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 
-!ELSEIF  "$(CFG)" == "RangeTest - Win32 Debug"
+!ELSEIF  "$(CFG)" == "IRangeTest - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -82,11 +82,11 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "RangeTest - Win32 Release"
-# Name "RangeTest - Win32 Debug"
+# Name "IRangeTest - Win32 Release"
+# Name "IRangeTest - Win32 Debug"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\tests\Dom\RangeTest\RangeTest.cpp
+SOURCE=..\..\..\..\..\tests\IDom\IRangeTest\IRangeTest.cpp
 # End Source File
 # End Target
 # End Project

@@ -134,7 +134,6 @@ short IDCommentImpl::getNodeType() const {
            IDOM_Node          *IDCommentImpl::removeChild(IDOM_Node *oldChild)        {return fNode.removeChild (oldChild); };
            IDOM_Node          *IDCommentImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fNode.replaceChild (newChild, oldChild); };
-           void                IDCommentImpl::setNodeValue(const XMLCh  *nodeValue)   {fNode.setNodeValue (nodeValue); };
            bool                IDCommentImpl::supports(const XMLCh *feature, const XMLCh *version) const
                                                                             {return fNode.supports (feature, version); };
            void                IDCommentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
@@ -148,13 +147,14 @@ short IDCommentImpl::getNodeType() const {
      const XMLCh * IDCommentImpl::getData() const                  {return fCharacterData.getData();};
      unsigned int  IDCommentImpl::getLength() const                {return fCharacterData.getLength();};
      const XMLCh * IDCommentImpl::substringData(unsigned int offset, unsigned int count) const
-                                                                {return fCharacterData.substringData(offset, count);};
+                                                                {return fCharacterData.substringData(this, offset, count);};
      void          IDCommentImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
      void          IDCommentImpl::insertData(unsigned int offset, const  XMLCh *arg)
-                                                                {fCharacterData.insertData(offset, arg);};
+                                                                {fCharacterData.insertData(this, offset, arg);};
      void          IDCommentImpl::deleteData(unsigned int offset, unsigned int count)
                                                                 {fCharacterData.deleteData(this, offset, count);};
      void          IDCommentImpl::replaceData(unsigned int offset, unsigned int count, const XMLCh *arg)
-                                                                {fCharacterData.replaceData(offset, count, arg);};
-     void          IDCommentImpl::setData(const XMLCh *data)       {fCharacterData.setData(data);};
+                                                                {fCharacterData.replaceData(this, offset, count, arg);};
+     void          IDCommentImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
+     void          IDCommentImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
 

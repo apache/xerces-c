@@ -90,7 +90,7 @@ protected:
 
     virtual void	cloneContent(const IDNamedNodeMapImpl *srcmap);
 
-    bool            readOnly() {return false;};  // idom_revisit.  Look at owner node read-only.
+    bool            readOnly();  // idom_revisit.  Look at owner node read-only.
 
 public:
     IDNamedNodeMapImpl(IDOM_Node *ownerNode);

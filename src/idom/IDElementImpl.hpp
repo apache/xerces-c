@@ -93,7 +93,7 @@ public:
     IDNodeImpl       fNode;
     IDParentNode     fParent;
     IDChildNode      fChild;
-    IDAttrMapImpl    fAttributes;
+    IDAttrMapImpl    *fAttributes;
     const XMLCh      *fName;
 
 public:

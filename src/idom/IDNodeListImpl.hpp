@@ -58,6 +58,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 14:55:35  tng
+ * IDOM: Add IRange and IDeepNodeList Support.
+ *
  * Revision 1.2  2001/05/11 13:25:46  tng
  * Copyright update.
  *
@@ -105,8 +108,8 @@ private:
 public:
     IDNodeListImpl(IDOM_Node *node);
     virtual             ~IDNodeListImpl();
-    virtual IDOM_Node *  item(unsigned int index) const;
-    virtual unsigned int getLength() const;
+    virtual IDOM_Node *  item(unsigned int index);
+    virtual unsigned int getLength();
 };
 
 #endif

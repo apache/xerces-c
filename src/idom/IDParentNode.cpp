@@ -63,6 +63,7 @@
 #include "IDOM_Node.hpp"
 
 #include "IDDocumentImpl.hpp"
+#include "IDRangeImpl.hpp"
 #include "IDNodeListImpl.hpp"
 #include "IDParentNode.hpp"
 #include "IDCasts.hpp"
@@ -85,6 +86,19 @@ IDParentNode::IDParentNode(const IDParentNode &other)  :
     this->fFirstChild = 0;
 };
 
+void IDParentNode::changed()
+{
+    IDDocumentImpl *doc = (IDDocumentImpl *)(castToNodeImpl(this)->getOwnerDocument());
+    doc->changed();
+}
+
+
+int IDParentNode::changes() const
+{
+    IDDocumentImpl *doc = (IDDocumentImpl *)(castToNode(this)->getOwnerDocument());
+    return doc->changes();
+};
+
 
 IDOM_Node * IDParentNode::appendChild(IDOM_Node *newChild)
 {
@@ -96,8 +110,9 @@ void IDParentNode::cloneChildren(const IDOM_Node *other) {
   //    for (IDOM_Node *mykid = other.getFirstChild();
     for (IDOM_Node *mykid = other->getFirstChild();
          mykid != 0;
-         mykid = mykid->getNextSibling()) {
-            castToNodeImpl(this)->appendChild(mykid->cloneNode(true));
+         mykid = mykid->getNextSibling())
+    {
+        appendChild(mykid->cloneNode(true));
     }
 }
 
@@ -265,10 +280,8 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
 
     changed();
 
-#ifdef idom_revisit
     if (this->getOwnerDocument() != 0) {
-        typedef RefVectorOf<RangeImpl> RangeImpls;
-        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        Ranges* ranges = ((IDDocumentImpl *)this->getOwnerDocument())->getRanges();
         if ( ranges != 0) {
             unsigned int sz = ranges->size();
             if (sz != 0) {
@@ -278,7 +291,6 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
             }
         }
     }
-#endif
 
     return newChild;
 };
@@ -295,10 +307,8 @@ IDOM_Node *IDParentNode::removeChild(IDOM_Node *oldChild)
         throw IDOM_DOMException(IDOM_DOMException::NOT_FOUND_ERR, 0);
 
     //fix other ranges for change before deleting the node
-#ifdef idom_revisit
     if (this->getOwnerDocument() !=  0  ) {
-        typedef RefVectorOf<RangeImpl> RangeImpls;
-        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        Ranges* ranges = ((IDDocumentImpl *)this->getOwnerDocument())->getRanges();
         if (ranges != 0) {
             unsigned int sz = ranges->size();
             if (sz != 0) {
@@ -309,7 +319,6 @@ IDOM_Node *IDParentNode::removeChild(IDOM_Node *oldChild)
             }
         }
     }
-#endif
 
 
     // Patch linked list around oldChild

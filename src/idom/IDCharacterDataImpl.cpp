@@ -61,14 +61,16 @@
 #include "IDCharacterDataImpl.hpp"
 #include "IDOM_DOMException.hpp"
 #include "IDOM_Node.hpp"
-//#include "RangeImpl.hpp"
+#include "IDRangeImpl.hpp"
 #include "IDDocumentImpl.hpp"
 #include "IDCasts.hpp"
+#include <framework/XMLBuffer.hpp>
+#include <util/XMLUniDefs.hpp>
 
 
 IDCharacterDataImpl::IDCharacterDataImpl(IDOM_Document *doc, const XMLCh *dat)
 {
-    this->fData = ((IDDocumentImpl *)doc)->cloneString(dat);
+    this->fData = ((IDDocumentImpl *)doc)->getPooledString(dat);
 };
 
 
@@ -93,22 +95,19 @@ void IDCharacterDataImpl::setNodeValue(const IDOM_Node *node, const XMLCh *value
     if (castToNodeImpl(node)->isReadOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                0);
-    fData = ((IDDocumentImpl *)node->getOwnerDocument())->cloneString(value);
+    fData = ((IDDocumentImpl *)node->getOwnerDocument())->getPooledString(value);
 
-#ifdef idom_revist
-    if (this->getOwnerDocument() != null) {
-        typedef RefVectorOf<RangeImpl> RangeImpls;
-        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
-        if (ranges != null) {
+    if (node->getOwnerDocument() != 0) {
+        Ranges* ranges = ((IDDocumentImpl *)node->getOwnerDocument())->getRanges();
+        if (ranges != 0) {
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    ranges->elementAt(i)->receiveReplacedText( this);
+                    ranges->elementAt(i)->receiveReplacedText((IDOM_Node*)node);
                 }
             }
         }
     }
-#endif
 };
 
 
@@ -118,9 +117,11 @@ void IDCharacterDataImpl::appendData(const IDOM_Node *node, const XMLCh *dat)
         throw IDOM_DOMException(
         IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-#ifdef idom_revist
-    this->data.appendData(dat);
-#endif
+
+    XMLBuffer temp;
+    temp.set(fData);
+    temp.append(dat);
+    fData = ((IDDocumentImpl *)node->getOwnerDocument())->getPooledString(temp.getRawBuffer());
 };
 
 
@@ -149,33 +150,38 @@ void IDCharacterDataImpl::deleteData(const IDOM_Node *node, unsigned int offset,
     if (offset + count >= len)
         count = len - offset;
 
-
     unsigned int newLen = len - count;
-    XMLCh *newString = new (node->getOwnerDocument()) XMLCh(newLen + 1);
+
+    XMLCh* newString;
+    XMLCh temp[4000];
+    if (newLen >= 3999)
+        newString = new XMLCh[newLen+1];
+    else
+        newString = temp;
 
     XMLString::copyNString(newString, fData, offset);
     XMLString::copyString(newString+offset, fData+offset+len);
 
-    fData = newString;
+    fData = ((IDDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
+
+    if (newLen >= 3999)
+        delete[] newString;
 
     // We don't delete the old string (doesn't work), or alter
     //   the old string (may be shared)
     //   It just hangs around, possibly orphaned.
 
-#ifdef idom_revist
-    if (node->getOwnerDocument() != null) {
-        typedef RefVectorOf<RangeImpl> RangeImpls;
-        RangeImpls* ranges = node->getOwnerDocument()->getRanges();
-        if (ranges != null) {
+    if (node->getOwnerDocument() != 0) {
+        Ranges* ranges = ((IDDocumentImpl *)node->getOwnerDocument())->getRanges();
+        if (ranges != 0) {
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    ranges->elementAt(i)->updateRangeForDeletedText( node, offset, count);
+                    ranges->elementAt(i)->updateRangeForDeletedText( (IDOM_Node*)node, offset, count);
                 }
             }
         }
     }
-#endif //idom_revisit
 };
 
 
@@ -196,62 +202,95 @@ unsigned int IDCharacterDataImpl::getLength() const
 
 
 
-void IDCharacterDataImpl::insertData(unsigned int offset, const XMLCh *dat)
+void IDCharacterDataImpl::insertData(const IDOM_Node *node, unsigned int offset, const XMLCh *dat)
 {
-    #ifdef idom_revist
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    if (castToNodeImpl(node)->isReadOnly())
+        throw IDOM_DOMException(
+        IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
     // Note: the C++ XMLCh * operation throws the correct DOMExceptions
     //       when parameter values are bad.
     //
-    this->data.insertData(offset, dat);
-#endif
+
+    unsigned int len = XMLString::stringLen(this->fData);
+    if (offset >= len)
+        throw IDOM_DOMException(IDOM_DOMException::INDEX_SIZE_ERR, 0);
+
+    unsigned int datLen = XMLString::stringLen(dat);
+
+    unsigned int newLen = len + datLen;
+
+    XMLCh* newString;
+    XMLCh temp[4000];
+    if (newLen >= 3999)
+        newString = new XMLCh[newLen+1];
+    else
+        newString = temp;
+
+    XMLString::copyNString(newString, fData, offset);
+    XMLString::copyNString(newString+offset, dat, datLen);
+    XMLString::copyString(newString+offset+datLen, fData+offset);
+
+    fData = ((IDDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
+
+    if (newLen >= 3999)
+        delete[] newString;
 }
 
 
 
-void IDCharacterDataImpl::replaceData(unsigned int offset, unsigned int count,
+void IDCharacterDataImpl::replaceData(const IDOM_Node *node, unsigned int offset, unsigned int count,
                                     const XMLCh *dat)
 {
-#ifdef idom_revist
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    deleteData(offset, count);
-    insertData(offset, dat);
-#endif
+    if (castToNodeImpl(node)->isReadOnly())
+        throw IDOM_DOMException(
+        IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+    deleteData(node, offset, count);
+    insertData(node, offset, dat);
 };
 
 
 
 
-void IDCharacterDataImpl::setData(const XMLCh *arg)
+void IDCharacterDataImpl::setData(const IDOM_Node *node, const XMLCh *arg)
 {
-#ifdef idom_revist
-    if (isReadOnly())
-        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               null);
-    data = arg.clone();
-#endif
+    if (castToNodeImpl(node)->isReadOnly())
+        throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    fData = ((IDDocumentImpl *)node->getOwnerDocument())->getPooledString(arg);
 };
 
 
 
 
 
-const XMLCh * IDCharacterDataImpl::substringData(unsigned int offset,
+const XMLCh * IDCharacterDataImpl::substringData(const IDOM_Node *node, unsigned int offset,
                                            unsigned int count) const
 {
-#ifdef idom_revist
 
     // Note: the C++ XMLCh * operation throws the correct DOMExceptions
     //       when parameter values are bad.
     //
-    return data.substringData(offset, count);
-#endif
-    return 0;
+
+
+    unsigned int len = XMLString::stringLen(fData);
+
+    XMLCh* newString;
+    XMLCh temp[4000];
+    if (len >= 3999)
+        newString = new XMLCh[len+1];
+    else
+        newString = temp;
+
+    XMLString::copyNString(newString, fData+offset, count);
+    newString[count] = chNull;
+
+    const XMLCh* retString = ((IDDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
+
+    if (len >= 3999)
+        delete[] newString;
+
+    return retString;
 };
 
 

@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Guess values for system-dependent variables and create Makefiles.
-# Generated automatically using autoconf version 2.13 
+# Generated automatically using autoconf version 2.13
 # Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 #
 # This configure script is free software; the Free Software Foundation
@@ -1260,7 +1260,7 @@ if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
   cat >> confdefs.h <<EOF
 #define $ac_tr_hdr 1
 EOF
- 
+
 else
   echo "$ac_t""no" 1>&6
 fi
@@ -1453,7 +1453,9 @@ DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
-ThreadTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+IDOM/IRangeTest/Makefile \
+ThreadTest/Makefile \
+IThreadTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -1552,7 +1554,9 @@ DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
-ThreadTest/Makefile"}
+IDOM/IRangeTest/Makefile \
+ThreadTest/Makefile" \
+IThreadTest/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then

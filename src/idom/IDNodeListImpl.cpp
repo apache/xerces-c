@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 14:55:34  tng
+ * IDOM: Add IRange and IDeepNodeList Support.
+ *
  * Revision 1.2  2001/05/11 13:25:45  tng
  * Copyright update.
  *
@@ -85,7 +88,7 @@ IDNodeListImpl:: ~IDNodeListImpl()
 
 
 
-unsigned int IDNodeListImpl::getLength() const {
+unsigned int IDNodeListImpl::getLength(){
     unsigned int count = 0;
     IDOM_Node *node = castToParentImpl(fNode)->fFirstChild;
     while(node != 0)
@@ -98,7 +101,7 @@ unsigned int IDNodeListImpl::getLength() const {
 
 
 
-IDOM_Node *IDNodeListImpl::item(unsigned int index) const {
+IDOM_Node *IDNodeListImpl::item(unsigned int index){
     IDOM_Node *node = castToParentImpl(fNode)->fFirstChild;
     for(unsigned int i=0; i<index && node!=0; ++i)
         node = castToChildImpl(node)->nextSibling;

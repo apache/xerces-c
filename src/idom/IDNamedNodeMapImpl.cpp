@@ -82,6 +82,9 @@ IDNamedNodeMapImpl::~IDNamedNodeMapImpl()
 {
 };
 
+bool IDNamedNodeMapImpl::readOnly() {
+    return castToNodeImpl(fOwnerNode)->isReadOnly();
+}
 
 IDNamedNodeMapImpl *IDNamedNodeMapImpl::cloneMap(IDOM_Node *ownerNod)
 {

@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 14:55:32  tng
+ * IDOM: Add IRange and IDeepNodeList Support.
+ *
  * Revision 1.2  2001/05/11 13:25:40  tng
  * Copyright update.
  *
@@ -77,6 +80,7 @@
 //
 
 #include <util/XercesDefs.hpp>
+#include "IDDeepNodeListPool.hpp"
 #include "IDOM_NodeList.hpp"
 
 class IDOM_Node;
@@ -84,23 +88,24 @@ class IDOM_Node;
 
 class CDOM_EXPORT IDDeepNodeListImpl: public IDOM_NodeList {
 private:
-    const IDOM_Node    *fRootNode;
+    const IDOM_Node          *fRootNode;
     const XMLCh        *fTagName;
     bool                fMatchAll;
     int                 fChanges;
     IDOM_Node          *fCurrentNode;
-    unsigned int        fCurrentIndex;
+    unsigned int        fCurrentIndexPlus1;
 
     //DOM Level 2
-    const XMLCh *	    fNamespaceURI;
-    bool		        fMatchAllURI;
+    const XMLCh *       fNamespaceURI;
+    bool		            fMatchAllURI;
     bool                fMatchURIandTagname; //match both namespaceURI and tagName
 
 private:
-                        IDDeepNodeListImpl(const IDOM_Node *rootNode, const XMLCh *tagName);
-                        IDDeepNodeListImpl(const IDOM_Node *rootNode,	//DOM Level 2
-			                            const XMLCh *namespaceURI,
-                                        const XMLCh *localName);
+    IDDeepNodeListImpl(const IDOM_Node *rootNode, const XMLCh *tagName);
+    IDDeepNodeListImpl(const IDOM_Node *rootNode,	//DOM Level 2
+	                    const XMLCh *namespaceURI,
+                       const XMLCh *localName);
+    IDOM_Node *        nextMatchingElementAfter(IDOM_Node *current);
 
 public:
     // Factory methods for getting/creating node lists.
@@ -110,12 +115,15 @@ public:
     static IDOM_NodeList *getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName);
     static IDOM_NodeList *getDeepNodeList(const IDOM_Node *rootNode,	//DOM Level 2
 			                            const XMLCh *namespaceURI,
-                                        const XMLCh *localName);
+                                     const XMLCh *localName);
+
+private:
+    static IDDeepNodeListPool<IDDeepNodeListImpl> *fNodeListPool;
 
 public:
     virtual             ~IDDeepNodeListImpl();
-    virtual unsigned int getLength() const;
-    virtual IDOM_Node   *item(unsigned int index) const;
+    virtual unsigned int getLength();
+    virtual IDOM_Node   *item(unsigned int index);
 };
 
 #endif

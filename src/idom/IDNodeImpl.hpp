@@ -121,10 +121,6 @@ public:
     IDNodeImpl(const IDNodeImpl &other);
     ~IDNodeImpl();
 
-
-     void changed();
-     int changes() const;
-
      IDOM_Node         *appendChild(IDOM_Node *newChild);
      IDOM_NamedNodeMap * getAttributes() const;
      IDOM_NodeList     * getChildNodes() const;

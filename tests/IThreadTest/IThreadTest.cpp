@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -104,7 +104,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
     }
 #endif
     HANDLE  tHandle;
-    DWORD   threadID;   
+    DWORD   threadID;
 
     tHandle = CreateThread(0,          // Security Attributes,
                            0x10000,    // Stack Size,
@@ -741,7 +741,7 @@ void parseCommandLine(int argc, char **argv)
     }
     catch (int)
     {
-        fprintf(stderr, "usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"
+        fprintf(stderr, "usage:  ithreadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"
             "     -v             Use validating parser.  Non-validating is default. \n"
             "     -dom           Use a DOM parser.  Default is SAX. \n"
             "     -quiet         Suppress periodic status display. \n"

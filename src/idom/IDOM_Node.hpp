@@ -93,7 +93,7 @@ class  CDOM_EXPORT IDOM_Node {
     /** @name Constructors and assignment operators */
     //@{
     /**
-      * Default constructor for IIDOM_Node.  Protected, because
+      * Default constructor for IDOM_Node.  Protected, because
       * IDOM_Node is an abstract base class.
       *
       */

@@ -92,7 +92,7 @@
 //#include "IDNodeIteratorImpl.hpp"
 #include "IDNodeIDMap.hpp"
 #include <util/HashPtr.hpp>
-//#include "IDRangeImpl.hpp"
+#include "IDRangeImpl.hpp"
 
 
 //idom_revisit.  These can go away once all of the include files above are really there.
@@ -120,7 +120,7 @@ IDDocumentImpl::IDDocumentImpl()
     fIterators   = 0L;
     fTreeWalkers = 0L;
     fNodeIDMap   = 0;
-	fUserData    = 0;
+    fUserData    = 0;
     fRanges      = 0;
     fChanges     = 0;
 };
@@ -142,8 +142,8 @@ IDDocumentImpl::IDDocumentImpl(const XMLCh *fNamespaceURI,
     fNamePool    = new (this) IDStringPool(257, this);
     fIterators   = 0;
     fTreeWalkers = 0;
-    fNodeIDMap  = 0;
-	fUserData    = 0;
+    fNodeIDMap   = 0;
+    fUserData    = 0;
     fRanges      = 0;
     fChanges     = 0;
 }
@@ -214,7 +214,6 @@ short IDDocumentImpl::getNodeType() const {
 IDOM_Document * IDDocumentImpl::getOwnerDocument() const {
     return 0;
 }
-
 
 
 IDOM_Attr *IDDocumentImpl::createAttribute(const XMLCh *nam)
@@ -691,43 +690,34 @@ IDOM_XMLDecl * IDDocumentImpl::createXMLDecl(const XMLCh *version,
 
 IDOM_Range* IDDocumentImpl::createRange()
 {
-#ifdef idom_revisit
 
-    RangeImpl* range = new RangeImpl(DOM_Document(this));
+    IDRangeImpl* range = new (this) IDRangeImpl(this);
 
     if (fRanges == 0L) {
-        fRanges = new RangeImpls(1, false);
+        fRanges = new (this) Ranges(1, false);
     }
     fRanges->addElement(range);
     return range;
-#endif
-    return 0;
 }
 
-IDOM_Range* IDDocumentImpl::getRanges() const
+Ranges* IDDocumentImpl::getRanges() const
 {
-#ifdef idom_revisit
     return fRanges;
-#endif
-    return 0;
 }
 
-void IDDocumentImpl::removeRange(IDOM_Range* range)
+void IDDocumentImpl::removeRange(IDRangeImpl* range)
 {
-#ifdef idom_revisit
     if (fRanges != 0) {
         unsigned int sz = fRanges->size();
         if (sz !=0) {
             for (unsigned int i =0; i<sz; i++) {
                 if (fRanges->elementAt(i) == range) {
                     fRanges->removeElementAt(i);
-                    delete range;
                     break;
                 }
             }
         }
     }
-#endif
 }
 
 /** Uses the kidOK lookup table to check whether the proposed

@@ -70,9 +70,9 @@
 #include "IDStringPool.hpp"
 
 
-//#include "IDDeepNodeListImpl.hpp"
+#include "IDDeepNodeListImpl.hpp"
 //#include "IDDocumentImpl.hpp"
-//#include "IDDocumentTypeImpl.hpp"
+#include "IDDocumentTypeImpl.hpp"
 //#include "IDOM_DOMException.hpp"
 //#include "IDElementDefinitionImpl.hpp"
 #include "IDNamedNodeMapImpl.hpp"
@@ -82,22 +82,26 @@
 class IDOM_Attr;
 
 IDElementImpl::IDElementImpl(IDOM_Document *ownerDoc, const XMLCh *eName)
-    : fNode(ownerDoc), fParent(ownerDoc), fAttributes(this)
+    : fNode(ownerDoc), fParent(ownerDoc), fAttributes(0)
 {
     IDDocumentImpl *docImpl = (IDDocumentImpl *)ownerDoc;
     fName = docImpl->fNamePool->getPooledString(eName);
-	setupDefaultAttributes();
+    setupDefaultAttributes();
+    if (!fAttributes)
+        fAttributes = new (getOwnerDocument()) IDAttrMapImpl(this);
 };
 
 
 IDElementImpl::IDElementImpl(const IDElementImpl &other, bool deep)
     : fNode(other.getOwnerDocument()),
       fParent(other.getOwnerDocument()),
-      fAttributes(this, &other.fAttributes)
+      fAttributes(0)
 {
     fName = other.fName;
-	fAttributes = 0;
-	setupDefaultAttributes();
+    setupDefaultAttributes();
+    if (!fAttributes)
+        fAttributes = new (getOwnerDocument()) IDAttrMapImpl(this);
+
     if (deep)
         fParent.cloneChildren(&other);
 };
@@ -132,7 +136,7 @@ const XMLCh * IDElementImpl::getAttribute(const XMLCh *nam) const
     static const XMLCh emptyString[]  = {0};
     IDOM_Node * attr=0;
 
-    attr=fAttributes.getNamedItem(nam);
+    attr=fAttributes->getNamedItem(nam);
 
     const XMLCh *retString = emptyString;
     if (attr != 0)
@@ -145,7 +149,7 @@ const XMLCh * IDElementImpl::getAttribute(const XMLCh *nam) const
 
 IDOM_Attr *IDElementImpl::getAttributeNode(const XMLCh *nam) const
 {
-    return  (IDOM_Attr *)fAttributes.getNamedItem(nam);
+    return  (IDOM_Attr *)fAttributes->getNamedItem(nam);
 };
 
 #include "stdio.h"
@@ -153,17 +157,14 @@ IDOM_Attr *IDElementImpl::getAttributeNode(const XMLCh *nam) const
 IDOM_NamedNodeMap *IDElementImpl::getAttributes() const
 {
     IDElementImpl *ncThis = (IDElementImpl *)this;   // cast off const
-    return &ncThis->fAttributes;
+    return ncThis->fAttributes;
 };
 
 
 
 IDOM_NodeList *IDElementImpl::getElementsByTagName(const XMLCh *tagname) const
 {
-#ifdef idom_revist
-    return new DeepNodeListImpl(this,tagname);
-#endif
-    return 0;
+    return IDDeepNodeListImpl::getDeepNodeList(this,tagname);
 };
 
 
@@ -179,10 +180,10 @@ void IDElementImpl::removeAttribute(const XMLCh *nam)
         throw IDOM_DOMException(
              IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    IDOM_Node *att = fAttributes.getNamedItem(nam);
+    IDOM_Node *att = fAttributes->getNamedItem(nam);
     if (att != 0)
     {
-        fAttributes.removeNamedItem(nam);
+        fAttributes->removeNamedItem(nam);
     }
 };
 
@@ -194,12 +195,12 @@ IDOM_Attr *IDElementImpl::removeAttributeNode(IDOM_Attr *oldAttr)
         throw IDOM_DOMException(
         IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    IDOM_Node *found = fAttributes.getNamedItem(oldAttr->getName());
+    IDOM_Node *found = fAttributes->getNamedItem(oldAttr->getName());
 
     // If it is in fact the right object, remove it.
 
     if (found == oldAttr)
-        fAttributes.removeNamedItem(oldAttr->getName());
+        fAttributes->removeNamedItem(oldAttr->getName());
     else
         throw IDOM_DOMException(IDOM_DOMException::NOT_FOUND_ERR, 0);
 
@@ -219,7 +220,7 @@ void IDElementImpl::setAttribute(const XMLCh *nam, const XMLCh *val)
     if (!newAttr)
     {
         newAttr = this->fNode.getOwnerDocument()->createAttribute(nam);
-        fAttributes.setNamedItem(newAttr);
+        fAttributes->setNamedItem(newAttr);
     }
 
     newAttr->setNodeValue(val);
@@ -238,9 +239,9 @@ IDOM_Attr * IDElementImpl::setAttributeNode(IDOM_Attr *newAttr)
         // idom_revisit.  Exception doesn't match test.
 
     IDOM_Attr *oldAttr =
-      (IDOM_Attr *) fAttributes.getNamedItem(newAttr->getName());
+      (IDOM_Attr *) fAttributes->getNamedItem(newAttr->getName());
     // This will throw INUSE if necessary
-    fAttributes.setNamedItem(newAttr);
+    fAttributes->setNamedItem(newAttr);
 
     return oldAttr;
 };
@@ -256,7 +257,7 @@ void IDElementImpl::setNodeValue(const XMLCh *x)
 void IDElementImpl::setReadOnly(bool readOnl, bool deep)
 {
     fNode.setReadOnly(readOnl,deep);
-    fAttributes.setReadOnly(readOnl,true);
+    fAttributes->setReadOnly(readOnl,true);
 };
 
 
@@ -265,7 +266,7 @@ const XMLCh * IDElementImpl::getAttributeNS(const XMLCh *fNamespaceURI,
 	const XMLCh *fLocalName) const
 {
     IDOM_Attr * attr=
-      (IDOM_Attr *)(fAttributes.getNamedItemNS(fNamespaceURI, fLocalName));
+      (IDOM_Attr *)(fAttributes->getNamedItemNS(fNamespaceURI, fLocalName));
     return (attr==0) ? 0 : attr->getValue();
 }
 
@@ -280,7 +281,7 @@ void IDElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
     IDOM_Attr *newAttr =
         this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
     newAttr->setNodeValue(fValue);
-    fAttributes.setNamedItem(newAttr);
+    fAttributes->setNamedItem(newAttr);
 }
 
 
@@ -292,10 +293,10 @@ void IDElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
         IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
     IDOM_Attr *att =
-        (IDOM_Attr *)fAttributes.getNamedItemNS(fNamespaceURI, fLocalName);
+        (IDOM_Attr *)fAttributes->getNamedItemNS(fNamespaceURI, fLocalName);
     // Remove it
     if (att != 0) {
-        fAttributes.removeNamedItemNS(fNamespaceURI, fLocalName);
+        fAttributes->removeNamedItemNS(fNamespaceURI, fLocalName);
     }
 }
 
@@ -303,7 +304,7 @@ void IDElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
 IDOM_Attr *IDElementImpl::getAttributeNodeNS(const XMLCh *fNamespaceURI,
 	const XMLCh *fLocalName) const
 {
-    return (IDOM_Attr *)fAttributes.getNamedItemNS(fNamespaceURI, fLocalName);
+    return (IDOM_Attr *)fAttributes->getNamedItemNS(fNamespaceURI, fLocalName);
 }
 
 
@@ -316,21 +317,19 @@ IDOM_Attr *IDElementImpl::setAttributeNodeNS(IDOM_Attr *newAttr)
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
         throw IDOM_DOMException(IDOM_DOMException::WRONG_DOCUMENT_ERR, 0);
 
-    IDOM_Attr *oldAttr = (IDOM_Attr *) fAttributes.getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
+    IDOM_Attr *oldAttr = (IDOM_Attr *) fAttributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
 
     // This will throw INUSE if necessary
-    fAttributes.setNamedItemNS(newAttr);
+    fAttributes->setNamedItemNS(newAttr);
 
     return oldAttr;
 }
 
 
-IDOM_NodeList *IDElementImpl::getElementsByTagNameNS(const XMLCh *fNamespaceURI,
-	const XMLCh *fLocalName) const
+IDOM_NodeList *IDElementImpl::getElementsByTagNameNS(const XMLCh *namespaceURI,
+	const XMLCh *localName) const
 {
-    // idom_revisit
-    // return new IDDeepNodeListImpl(this,fNamespaceURI, fLocalName);
-    return 0;
+    return IDDeepNodeListImpl::getDeepNodeList(this, namespaceURI, localName);
 }
 
 // DOM_NamedNodeMap UTILITIES
@@ -377,7 +376,7 @@ IDOM_Node *IDElementImpl::NNM_removeNamedItem(const XMLCh *nnm_name)
 
 IDOM_Node *IDElementImpl::NNM_setNamedItem(IDOM_Node *nnm_arg)
 {
-	return fAttributes.setNamedItem(nnm_arg);
+	return fAttributes->setNamedItem(nnm_arg);
 }
 
 void IDElementImpl::NNM_setReadOnly(bool nnm_readOnly, bool nnm_deep)
@@ -429,25 +428,20 @@ IDAttrMapImpl *IDElementImpl::getDefaultAttributes()
 	if (tmpdoc->getDoctype() == 0)
 		return 0;
 	
-#ifdef idom_revist
-	IDOM_Node *eldef = tmpdoc->getDoctype()->getElements()->getNamedItem(getNodeName());
+	IDOM_Node *eldef = ((IDDocumentTypeImpl*)tmpdoc->getDoctype())->getElements()->getNamedItem(getNodeName());
 	return (eldef == 0) ? 0 : (IDAttrMapImpl *)(eldef->getAttributes());
-#endif
-    return 0;
 }
 
 // resets all attributes for this node to their default values
 void IDElementImpl::setupDefaultAttributes()
 {
-	if ((fNode.fOwnerNode == 0) || (getOwnerDocument() == 0) || (getOwnerDocument()->getDoctype() == 0))
-		return;
+    if ((fNode.fOwnerNode == 0) || (getOwnerDocument() == 0) || (getOwnerDocument()->getDoctype() == 0))
+        return;
 
-#ifdef idom_revisit
-	AttrMapImpl* defAttrs = getDefaultAttributes();
-	if (defAttrs)
-		fAttributes = new (getOwnderDocument()) AttrMapImpl(this, defAttrs);
-#endif
+    IDAttrMapImpl* defAttrs = getDefaultAttributes();
 
+    if (defAttrs)
+        fAttributes = new (getOwnerDocument()) IDAttrMapImpl(this, defAttrs);
 }
 
 

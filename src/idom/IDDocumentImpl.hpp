@@ -106,7 +106,7 @@ class IDStringPool;
 
 typedef RefVectorOf<IDNodeIteratorImpl> NodeIterators;
 typedef RefVectorOf<IDTreeWalkerImpl>   TreeWalkers;
-typedef RefVectorOf<IDRangeImpl>        RangeImpls;
+typedef RefVectorOf<IDRangeImpl>        Ranges;
 
 
 class CDOM_EXPORT IDDocumentImpl: public IDOM_Document {
@@ -127,7 +127,7 @@ public:
     NodeIterators               *fIterators;
     TreeWalkers                 *fTreeWalkers;
     RefHashTableOf<void>        *fUserData;
-    RangeImpls                  *fRanges;
+    Ranges                      *fRanges;
     int                          fChanges;
 
     bool errorChecking;                          // Bypass error checking.
@@ -178,7 +178,6 @@ public:
     // Add all functions that are pure virutal in IDOM_NODE
     IDOM_NODE_FUNCTIONS;
 
-
     virtual IDOM_Attr             *createAttribute(const XMLCh *name);
     virtual IDOM_CDATASection     *createCDATASection(const XMLCh *data);
     virtual IDOM_Comment          *createComment(const XMLCh *data);
@@ -214,8 +213,8 @@ public:
     virtual void*                  getUserData() const;
     virtual void                   setUserData(void* value);
     virtual IDOM_Range*            createRange();
-    virtual IDOM_Range*            getRanges() const;  //non-standard api
-    virtual void                   removeRange(IDOM_Range* range); //non-standard api
+    virtual Ranges*                getRanges() const;  //non-standard api
+    virtual void                   removeRange(IDRangeImpl* range); //non-standard api
 
 
     // helper functions to prevent storing userdata pointers on every node.

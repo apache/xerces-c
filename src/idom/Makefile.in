@@ -77,8 +77,8 @@ include ../Makefile.incl
 IDOM_CPP_PUBHEADERS = \
        IDCasts.hpp \
        IDChildNode.hpp \
-       IDNameNodeFilter.hpp \
        IDNodeIDMap.hpp \
+       IDDeepNodeListPool.hpp \
        IDNodeVector.hpp \
        IDOM.hpp \
        IDOM_Attr.hpp \
@@ -129,10 +129,12 @@ IDOM_CPP_PRIVHEADERS =  \
        IDNodeListImpl.hpp \
        IDNotationImpl.hpp \
        IDProcessingInstructionImpl.hpp \
+       IDRangeImpl.hpp \
        IDTextImpl.hpp \
        IDXMLDeclImpl.hpp
 
-IDOM_C_FILES =
+IDOM_C_FILES = \
+       IDDeepNodeListPool.c
 
 
 IDOM_CPP_OBJECTS = \
@@ -159,8 +161,10 @@ IDOM_CPP_OBJECTS = \
        IDNodeVector.$(TO) \
        IDNotationImpl.$(TO) \
        IDOM_DOMException.$(TO) \
+       IDOM_RangeException.$(TO) \
        IDParentNode.$(TO) \
        IDProcessingInstructionImpl.$(TO) \
+       IDRangeImpl.$(TO) \
        IDStringPool.$(TO) \
        IDTextImpl.$(TO) \
        IDXMLDeclImpl.$(TO)

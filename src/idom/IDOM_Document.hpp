@@ -109,8 +109,8 @@ protected:
      * IDOM_Document object that refers to no document.  It may subsequently be
      * assigned to refer to an actual Document node.
      *
-     * To create a new document, use the static method
-     *   <code> IDOM_Document::createDocument(). </code>
+     * To create a new document, use the DOMImplementation
+     *   <code> IDOM_DOMImplementation::createDocument(). </code>
      *
      */
     IDOM_Document() {};
@@ -141,7 +141,6 @@ public:
   //@}
   /** @name Factory methods to create new nodes for the Document */
   //@{
-
 
     /**
     *  Create a new entity.

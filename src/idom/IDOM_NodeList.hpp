@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 14:55:35  tng
+ * IDOM: Add IRange and IDeepNodeList Support.
+ *
  * Revision 1.2  2001/05/11 13:25:54  tng
  * Copyright update.
  *
@@ -111,14 +114,14 @@ public:
      *   <code>NodeList</code>, or <code>null</code> if that is not a valid
      *   index.
      */
-    virtual IDOM_Node  *item(unsigned int index) const = 0;
+    virtual IDOM_Node  *item(unsigned int index) = 0;
 
     /**
      * Returns the number of nodes in the list.
      *
      * The range of valid child node indices is 0 to <code>length-1</code> inclusive.
      */
-    virtual unsigned int getLength() const = 0;
+    virtual unsigned int getLength() = 0;
     //@}
 };
 

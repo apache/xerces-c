@@ -22,8 +22,10 @@ group xerces_dom =
     BASE_DIR "\\src\\idom\\IDNodeVector.cpp",
     BASE_DIR "\\src\\idom\\IDNotationImpl.cpp",
     BASE_DIR "\\src\\idom\\IDOM_DOMException.cpp",
+    BASE_DIR "\\src\\idom\\IDOM_RangeException.cpp",
     BASE_DIR "\\src\\idom\\IDParentNode.cpp",
     BASE_DIR "\\src\\idom\\IDProcessingInstructionImpl.cpp",
+    BASE_DIR "\\src\\idom\\IDRangeImpl.cpp",
     BASE_DIR "\\src\\idom\\IDStringPool.cpp",
     BASE_DIR "\\src\\idom\\IDTextImpl.cpp",
     BASE_DIR "\\src\\idom\\IDXMLDeclImpl.cpp"

@@ -2020,6 +2020,10 @@ SOURCE=..\..\..\..\..\src\idom\IDDeepNodeListImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\idom\IDDeepNodeListPool.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\idom\IDDocumentFragmentImpl.cpp
 # End Source File
 # Begin Source File
@@ -2089,10 +2093,6 @@ SOURCE=..\..\..\..\..\src\idom\IDNamedNodeMapImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\idom\IDNamedNodeMapImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\idom\IDNameNodeFilter.hpp
 # End Source File
 # Begin Source File
 
@@ -2224,6 +2224,10 @@ SOURCE=..\..\..\..\..\src\idom\IDOM_Range.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\idom\IDOM_RangeException.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\idom\IDOM_RangeException.hpp
 # End Source File
 # Begin Source File
@@ -2253,6 +2257,14 @@ SOURCE=..\..\..\..\..\src\idom\IDProcessingInstructionImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\idom\IDProcessingInstructionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDRangeImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDRangeImpl.hpp
 # End Source File
 # Begin Source File
 

@@ -56,6 +56,7 @@
 #
 # $Id$
 #
+#
 
 ###################################################################
 #                    IMPORTANT NOTE                               #
@@ -76,21 +77,22 @@ OSVER = @osver@
 LIBS = @libs@
 CC = @compiler@
 
-include ../../version.incl
-include ../Makefile.incl
+include ../../../version.incl
+include ../../Makefile.incl
 
-APP_NAME=IThreadTest
-APP_DIR=IThreadTest
+APP_NAME=IRangeTest
+APP_DIR=DOM/IRangeTest
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
 EXEC=	${XERCESCROOT}/bin
-OBJS=	${OUTDIR}/IThreadTest.o
+OBJS=	${OUTDIR}/IRangeTest.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
 HEADER_FILES=
+INCLUDE = ${INCLUDES}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(THREDTST)'"
+BATCH_TARGET= "//'${LOADMOD}(RANGETST)'"
 all: makedir ${BATCH_TARGET}
 else
 all: makedir ${EXEC}/${APP_NAME}
@@ -100,13 +102,13 @@ makedir:
 	-mkdir -p $(OUTDIR)
 
 ${EXEC}/${APP_NAME}: ${OBJS}
-	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} ${LIBS}
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 ${BATCH_TARGET}: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
-$(OUTDIR)/IThreadTest.o: ${SRC}/IThreadTest.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/IThreadTest.o ${SRC}/IThreadTest.cpp
+$(OUTDIR)/IRangeTest.o: ${SRC}/IRangeTest.cpp ${HEADER_FILES}
+	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/IRangeTest.o ${SRC}/IRangeTest.cpp
 
 clean:
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
