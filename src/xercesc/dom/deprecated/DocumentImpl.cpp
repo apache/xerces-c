@@ -787,10 +787,13 @@ void DocumentImpl::setUserData(NodeImpl* n, void* data)
             , new (fMemoryManager) HashPtr()
             , fMemoryManager
         );
-	if (!data && userData)
-		userData->removeKey((void*)n);
-	else
-		userData->put((void*)n,data);
+	if (userData)
+    {
+        if (!data)
+		    userData->removeKey((void*)n);
+	    else
+		    userData->put((void*)n,data);
+    }
 }
 
 void* DocumentImpl::getUserData(NodeImpl* n)

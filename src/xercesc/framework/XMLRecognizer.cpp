@@ -252,7 +252,7 @@ const XMLCh*
 XMLRecognizer::nameForEncoding(const XMLRecognizer::Encodings theEncoding
                                , MemoryManager* const manager)
 {
-    if (theEncoding > Encodings_Count)
+    if (theEncoding >= Encodings_Count)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::XMLRec_UnknownEncoding, manager);
 
     return gEncodingNameMap[theEncoding];

@@ -873,7 +873,7 @@ const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Nod
     int s = startV->size()-1;
     int e = endV->size()-1;
 
-    NodeImpl* commonAncestor;
+    NodeImpl* commonAncestor = 0;
 
     while (s>=0 && e>=0) {
         if (startV->elementAt(s) == endV->elementAt(e)) {
