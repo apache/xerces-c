@@ -91,7 +91,7 @@
     </tr>
 
     <tr>
-        <td>2001-12-10</td>
+        <td>2001/12/10</td>
         <td>PeiYong Zhang</td>
         <td>Swap checking to avoid "dangling pointer" reported by BoundsChecker.
         </td>
