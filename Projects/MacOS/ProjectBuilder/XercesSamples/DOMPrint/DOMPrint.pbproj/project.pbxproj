@@ -114,6 +114,7 @@
 		};
 		08FB7795FE84155DC02AAC07 = {
 			children = (
+				F52345F503AE603601A80065,
 				02DDAA62FF8BF5E17F000001,
 				02DDAA63FF8BF5E17F000001,
 				02DDAA64FF8BF5E17F000001,
@@ -143,6 +144,8 @@
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
 				PREBINDING = NO;
+				PRECOMPILE_PREFIX_HEADER = YES;
+				PREFIX_HEADER = ../xerces_sample_prefix.h;
 				PRODUCT_NAME = DOMPrint;
 				REZ_EXECUTABLE = YES;
 				SECTORDER_FLAGS = "";
@@ -163,6 +166,7 @@
 				02DDAA65FF8BF5E17F000001,
 				F58FFD0B02C4FB8D01A80065,
 				F58FFD0D02C4FB8D01A80065,
+				F52345F603AE603601A80065,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -252,6 +256,18 @@
 //F52
 //F53
 //F54
+		F52345F503AE603601A80065 = {
+			isa = PBXFileReference;
+			name = xerces_sample_prefix.h;
+			path = "/Volumes/Rock/Users/jberry/Projects/xml-apache/xml-xerces/c/Projects/MacOS/ProjectBuilder/XercesSamples/xerces_sample_prefix.h";
+			refType = 0;
+		};
+		F52345F603AE603601A80065 = {
+			fileRef = F52345F503AE603601A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F58B304702DE343B0195DDC8 = {
 			buildRules = (
 			);

@@ -3211,7 +3211,6 @@
 				F574C34E0327B73C015B10DE,
 				F574C3500327B73C015B10DE,
 				F574C3520327B73C015B10DE,
-				F51053530382B9B101A80066,
 				F51053580382BB2501A80066,
 				F51053590382BB2501A80066,
 				F510535A0382BB2501A80066,
@@ -3221,6 +3220,7 @@
 				F5F38FBE039FA5DB01A80066,
 				F52345E703AE522201A80065,
 				F52345E903AE522201A80065,
+				F52345F803AE61CA01A80065,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3586,7 +3586,7 @@
 //0C4
 		0C26523EFF92762B7F000001 = {
 			children = (
-				F51053520382B9B101A80066,
+				F52345F703AE61CA01A80065,
 				02058CF3FF8AF8CD7F000001,
 				02058D6FFF8AF8CD7F000001,
 				02058D97FF8AF8CD7F000001,
@@ -5444,17 +5444,6 @@
 			settings = {
 			};
 		};
-		F51053520382B9B101A80066 = {
-			isa = PBXFileReference;
-			path = xerces_prefix.h;
-			refType = 2;
-		};
-		F51053530382B9B101A80066 = {
-			fileRef = F51053520382B9B101A80066;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F51053540382BB2501A80066 = {
 			isa = PBXFileReference;
 			path = SchemaDateTimeException.hpp;
@@ -5623,6 +5612,17 @@
 		};
 		F52345E903AE522201A80065 = {
 			fileRef = F52345E503AE522201A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F52345F703AE61CA01A80065 = {
+			isa = PBXFileReference;
+			path = xerces_prefix.h;
+			refType = 2;
+		};
+		F52345F803AE61CA01A80065 = {
+			fileRef = F52345F703AE61CA01A80065;
 			isa = PBXBuildFile;
 			settings = {
 			};

@@ -88,6 +88,7 @@
 		};
 		08FB7794FE84155DC02AAC07 = {
 			children = (
+				F52345FA03AE621701A80065,
 				08FB7795FE84155DC02AAC07,
 				0249A662FF388D9811CA2CEA,
 				1AB674ADFE9D54B511CA2CBB,
@@ -124,6 +125,8 @@
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
 				PREBINDING = NO;
+				PRECOMPILE_PREFIX_HEADER = YES;
+				PREFIX_HEADER = ../xerces_sample_prefix.h;
 				PRODUCT_NAME = SAX2Print;
 				REZ_EXECUTABLE = YES;
 				SECTORDER_FLAGS = "";
@@ -144,6 +147,7 @@
 			files = (
 				F54F8B8F00F8F37F01000001,
 				F54F8B9000F8F37F01000001,
+				F52345FB03AE621701A80065,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -201,6 +205,18 @@
 //F52
 //F53
 //F54
+		F52345FA03AE621701A80065 = {
+			isa = PBXFileReference;
+			name = xerces_sample_prefix.h;
+			path = "/Volumes/Rock/Users/jberry/Projects/xml-apache/xml-xerces/c/Projects/MacOS/ProjectBuilder/XercesSamples/xerces_sample_prefix.h";
+			refType = 0;
+		};
+		F52345FB03AE621701A80065 = {
+			fileRef = F52345FA03AE621701A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F54F8B8B00F8F37F01000001 = {
 			isa = PBXFileReference;
 			path = SAX2Print.cpp;
