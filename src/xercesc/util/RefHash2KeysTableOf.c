@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/10/17 21:10:40  peiyongz
+ * nextElementKey() added
+ *
  * Revision 1.4  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -438,6 +441,24 @@ template <class TVal> TVal& RefHash2KeysTableOfEnumerator<TVal>::nextElement()
     return *saveElem->fData;
 }
 
+template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::nextElementKey(void*& retKey1, int& retKey2)
+{
+    // Make sure we have an element to return
+    if (!hasMoreElements())
+        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+
+    //
+    //  Save the current element, then move up to the next one for the
+    //  next time around.
+    //
+    RefHash2KeysTableBucketElem<TVal>* saveElem = fCurElem;
+    findNext();
+
+    retKey1 = saveElem->fKey1;
+    retKey2 = saveElem->fKey2;
+
+    return;
+}
 
 template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::Reset()
 {

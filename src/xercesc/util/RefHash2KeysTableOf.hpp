@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/17 21:10:40  peiyongz
+ * nextElementKey() added
+ *
  * Revision 1.5  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -253,6 +256,10 @@ public :
     TVal& nextElement();
     void Reset();
 
+    // -----------------------------------------------------------------------
+    //  New interface 
+    // -----------------------------------------------------------------------
+    void nextElementKey(void*&, int&);
 
 private :
     // -----------------------------------------------------------------------
