@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.5  2004/02/12 13:49:43  amassari
  * Updated version to 2.5
  *
@@ -85,7 +88,7 @@
 #ifndef ___xmlhttprequest_h___
 #define ___xmlhttprequest_h___
 
-#include <xercesc/dom/deprecated/DOM_Document.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
 #include "IXMLDOMNodeImpl.h"
 
 #include "resource.h"       // main symbols

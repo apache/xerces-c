@@ -61,7 +61,7 @@
 #ifndef ___xmldomattribute_h___
 #define ___xmldomattribute_h___
 
-#include <xercesc/dom/deprecated/DOM_Attr.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
 #include "IXMLDOMNodeImpl.h"
 XERCES_CPP_NAMESPACE_USE
 
@@ -78,7 +78,7 @@ public:
 		ReleaseOwnerDoc();
 	}
 
-	virtual DOM_Node& get_DOM_Node()			 { return attr;}
+	virtual DOMNode* get_DOMNode()			 { return attr;}
 	virtual DOMNodeType get_DOMNodeType() const  { return NODE_ATTRIBUTE; }
 
 DECLARE_NOT_AGGREGATABLE(CXMLDOMAttribute)
@@ -107,7 +107,7 @@ END_COM_MAP()
 	//
 	STDMETHOD(get_nodeValue)(VARIANT* pVal);
 
-	DOM_Attr attr;
+	DOMAttr* attr;
 };
 
 typedef CComObject<CXMLDOMAttribute> CXMLDOMAttributeObj;

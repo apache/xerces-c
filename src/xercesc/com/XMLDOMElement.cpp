@@ -76,10 +76,9 @@ STDMETHODIMP CXMLDOMElement::get_tagName(BSTR  *pVal)
 
 	try
 	{
-		DOMString val = element.getTagName();
-		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
+		*pVal = SysAllocString(element->getTagName());
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -101,13 +100,11 @@ STDMETHODIMP CXMLDOMElement::getAttribute(BSTR name, VARIANT  *pVal)
 	::VariantInit(pVal);
 	V_VT(pVal) = VT_EMPTY;
 
-	DOMString a = element.getAttribute(name);
-
 	try {
 		V_VT(pVal)   = VT_BSTR;
-		V_BSTR(pVal) = SysAllocStringLen(a.rawBuffer(),a.length());
+		V_BSTR(pVal) = SysAllocString(element->getAttribute(name));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -126,13 +123,13 @@ STDMETHODIMP CXMLDOMElement::setAttribute(BSTR name, VARIANT value)
 	{
 		if (V_VT(&value) == VT_BSTR)
 		{
-			element.setAttribute(name, value.bstrVal);
+			element->setAttribute(name, value.bstrVal);
 		}
 		else {
-			element.setAttribute(name,(BSTR) (_bstr_t) value);
+			element->setAttribute(name,(BSTR) (_bstr_t) value);
 		}
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -151,9 +148,9 @@ STDMETHODIMP CXMLDOMElement::removeAttribute(BSTR name)
 
 	try
 	{
-		element.removeAttribute(name);
+		element->removeAttribute(name);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -173,8 +170,8 @@ STDMETHODIMP CXMLDOMElement::getAttributeNode(BSTR name, IXMLDOMAttribute  **att
 		return E_POINTER;
 
 	*attr = NULL;
-	DOM_Attr attrNode(element.getAttributeNode(name));
-	if(attrNode.isNull())
+	DOMAttr* attrNode=element->getAttributeNode(name);
+	if(attrNode==NULL)
 		return S_OK;
 	
 
@@ -190,7 +187,7 @@ STDMETHODIMP CXMLDOMElement::getAttributeNode(BSTR name, IXMLDOMAttribute  **att
 	{
 		pObj->attr = attrNode;
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -218,7 +215,7 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 
 	*attributeNode = NULL;
 
-	DOM_Attr* newAttr = NULL;
+	DOMAttr* newAttr = NULL;
 	IIBMXMLDOMNodeIdentity* nodeID = NULL;
 	HRESULT sc = attr->QueryInterface(IID_IIBMXMLDOMNodeIdentity,(void**) &nodeID);
 	if(SUCCEEDED(sc)) {
@@ -231,9 +228,9 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 			//
 			sc = E_INVALIDARG;
 			try {
-				DOM_Node* newNode = (DOM_Node*) id;
-				if(newNode->getNodeType() == DOM_Node::ATTRIBUTE_NODE) {
-					newAttr = (DOM_Attr*) newNode;
+				DOMNode* newNode = (DOMNode*) id;
+				if(newNode->getNodeType() == DOMNode::ATTRIBUTE_NODE) {
+					newAttr = (DOMAttr*) newNode;
 				}
 			}
 			catch(...) {
@@ -249,8 +246,8 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 	sc = S_OK;
 	try
 	{
-		DOM_Attr& oldAttr = element.setAttributeNode(*newAttr);
-		if(!oldAttr.isNull()) {
+		DOMAttr* oldAttr = element->setAttributeNode(newAttr);
+		if(oldAttr!=NULL) {
 			CXMLDOMAttributeObj *pObj = NULL;
 			sc = CXMLDOMAttributeObj::CreateInstance(&pObj);
 			if (SUCCEEDED(sc)) {
@@ -263,7 +260,7 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 			}
 		}
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -301,9 +298,9 @@ STDMETHODIMP CXMLDOMElement::removeAttributeNode(IXMLDOMAttribute  *attr, IXMLDO
 			nodeID->get_NodeId(&id);
 			nodeID->Release();
 		}
-		pObj->attr = element.removeAttributeNode(*((DOM_Attr*) id));
+		pObj->attr = element->removeAttributeNode((DOMAttr*) id);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -341,9 +338,9 @@ STDMETHODIMP CXMLDOMElement::getElementsByTagName(BSTR tagName, IXMLDOMNodeList 
 
 	try
 	{
-		pObj->m_container = element.getElementsByTagName(tagName);
+		pObj->m_container = element->getElementsByTagName(tagName);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -368,9 +365,9 @@ STDMETHODIMP CXMLDOMElement::normalize(void)
 
 	try
 	{
-		element.normalize();
+		element->normalize();
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}

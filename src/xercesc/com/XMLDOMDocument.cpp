@@ -60,9 +60,10 @@
 
 #include "stdafx.h"
 
-#include <xercesc/dom/deprecated/DOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
 
 #include "xml4com.h"
 #include "XMLDOMDocument.h"
@@ -80,7 +81,6 @@
 #include "XMLDOMAttribute.h"
 #include "XMLDOMEntityReference.h"
 #include "BindStatusCallback.h"
-#include <xercesc/dom/deprecated/DocumentImpl.hpp>
 
 // I need to make sure the file is registered with long filenames
 HRESULT WINAPI CXMLDOMDocument::UpdateRegistry(BOOL bRegister)
@@ -110,7 +110,7 @@ HRESULT WINAPI CXMLDOMDocument::UpdateRegistry(BOOL bRegister)
 }
 
 CXMLDOMDocument::CXMLDOMDocument()
-	:m_Document					()
+	:m_Document					(NULL)
 	,m_bValidate				(false)
 	,m_lReadyState				(0)
 	,m_url						(_T(""))
@@ -126,6 +126,7 @@ CXMLDOMDocument::CXMLDOMDocument()
 	,m_bParseError				(false)
 	,m_bThreadValidate			(false)
 	,m_bPreserveWhiteSpace      (false)
+    ,m_TmpDocument              (NULL)
 {
 }
 
@@ -144,7 +145,7 @@ HRESULT CXMLDOMDocument::FinalConstruct()
 	m_pParseError->AddRef();
 	m_pIXMLDOMDocument = this;
 
-	m_Document = DOM_Document::createDocument();
+    m_Document = DOMImplementation::getImplementation()->createDocument();
 
 	return hr;
 }
@@ -255,12 +256,12 @@ STDMETHODIMP CXMLDOMDocument::get_doctype(IXMLDOMDocumentType  **pVal)
 		return E_POINTER;
 
 	*pVal = NULL;
-	DOM_DocumentType doctype = m_Document.getDoctype();
+	DOMDocumentType* doctype = m_Document->getDoctype();
 
 	//
 	//   if the document had no doctype then return a null object
 	//
-	if(doctype.isNull())
+	if(doctype==NULL)
 		return S_OK;
 
 	CXMLDOMDocumentTypeObj *pObj = NULL;
@@ -332,9 +333,9 @@ STDMETHODIMP CXMLDOMDocument::get_documentElement(IXMLDOMElement  * *pVal)
 
 	try
 	{
-		pObj->element = m_Document.getDocumentElement();
+		pObj->element = m_Document->getDocumentElement();
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -357,17 +358,17 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 {
 	ATLTRACE(_T("CXMLDOMDocument::putref_documentElement\n"));
 
-	DOM_Element elem;
+	DOMElement* elem;
 
 	try
 	{
-		elem = m_Document.getDocumentElement();
-		if (NULL == newVal && !elem.isNull()) {
-			m_Document.removeChild(elem);
+		elem = m_Document->getDocumentElement();
+		if (NULL == newVal && elem!=NULL) {
+			m_Document->removeChild(elem);
 			return S_OK;
 		}
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -385,18 +386,18 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 	if (S_OK != hr)
 		return hr;
 
-	DOM_Node *pNewValNode = reinterpret_cast<DOM_Node*> (id);
+	DOMNode *pNewValNode = reinterpret_cast<DOMNode*> (id);
 	if (NULL == pNewValNode)
 		return E_INVALIDARG;
 
 	try
 	{
-		if(elem.isNull())
-			m_Document.appendChild(*pNewValNode);
+		if(elem==NULL)
+			m_Document->appendChild(pNewValNode);
 		else
-			m_Document.replaceChild(*pNewValNode, elem);
+			m_Document->replaceChild(pNewValNode, elem);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -427,9 +428,9 @@ STDMETHODIMP CXMLDOMDocument::createElement(BSTR tagName, IXMLDOMElement  **pVal
 
 	try
 	{
-		pObj->element = m_Document.createElement(tagName);
+		pObj->element = m_Document->createElement(tagName);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -467,9 +468,9 @@ STDMETHODIMP CXMLDOMDocument::createDocumentFragment(IXMLDOMDocumentFragment  **
 
 	try
 	{
-		pObj->documentFragment = m_Document.createDocumentFragment();
+		pObj->documentFragment = m_Document->createDocumentFragment();
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -507,9 +508,9 @@ STDMETHODIMP CXMLDOMDocument::createTextNode(BSTR data, IXMLDOMText  **pVal)
 
 	try
 	{
-		pObj->text = m_Document.createTextNode(data);
+		pObj->text = m_Document->createTextNode(data);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -547,9 +548,9 @@ STDMETHODIMP CXMLDOMDocument::createComment(BSTR data, IXMLDOMComment  **comment
 
 	try
 	{
-		pObj->comment = m_Document.createComment(data);
+		pObj->comment = m_Document->createComment(data);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -587,9 +588,9 @@ STDMETHODIMP CXMLDOMDocument::createCDATASection(BSTR data, IXMLDOMCDATASection 
 
 	try
 	{
-		pObj->cdataSection = m_Document.createCDATASection(data);
+		pObj->cdataSection = m_Document->createCDATASection(data);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -627,9 +628,9 @@ STDMETHODIMP CXMLDOMDocument::createProcessingInstruction(BSTR target, BSTR data
 
 	try
 	{
-		pObj->processingInstruction = m_Document.createProcessingInstruction(target, data);
+		pObj->processingInstruction = m_Document->createProcessingInstruction(target, data);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -667,9 +668,9 @@ STDMETHODIMP CXMLDOMDocument::createAttribute(BSTR name, IXMLDOMAttribute  **att
 
 	try
 	{
-		pObj->attr = m_Document.createAttribute(name);
+		pObj->attr = m_Document->createAttribute(name);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -707,9 +708,9 @@ STDMETHODIMP CXMLDOMDocument::createEntityReference(BSTR name, IXMLDOMEntityRefe
 
 	try
 	{
-		pObj->entityReference = m_Document.createEntityReference(name);
+		pObj->entityReference = m_Document->createEntityReference(name);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -747,9 +748,9 @@ STDMETHODIMP CXMLDOMDocument::getElementsByTagName(BSTR tagName, IXMLDOMNodeList
 
 	try
 	{
-		pObj->m_container = m_Document.getElementsByTagName(tagName);
+		pObj->m_container = m_Document->getElementsByTagName(tagName);
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -815,59 +816,59 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 	switch(nodeType) {
 		case NODE_ELEMENT:
 		{
-			DOM_Element node;
+			DOMElement* node;
 			if (SysStringLen(namespaceURI) > 0)
-				node = m_Document.createElementNS(namespaceURI,name);
+				node = m_Document->createElementNS(namespaceURI,name);
 			else
-				node = m_Document.createElement(name);
+				node = m_Document->createElement(name);
 			
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
 		case NODE_ATTRIBUTE:
 		{
-			DOM_Attr node;
+			DOMAttr* node;
 			if (SysStringLen(namespaceURI) > 0)
-				node = m_Document.createAttributeNS(namespaceURI,name);
+				node = m_Document->createAttributeNS(namespaceURI,name);
 			else
-				node = m_Document.createAttribute(name);
+				node = m_Document->createAttribute(name);
 
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
 		case NODE_TEXT:
 		{
-			DOM_Text node = m_Document.createTextNode(OLESTR(""));
+			DOMText* node = m_Document->createTextNode(OLESTR(""));
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
 		case NODE_CDATA_SECTION:
 		{
-			DOM_CDATASection node = m_Document.createCDATASection(OLESTR(""));
+			DOMCDATASection* node = m_Document->createCDATASection(OLESTR(""));
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
 		case NODE_ENTITY_REFERENCE:
 		{
-			DOM_EntityReference node = m_Document.createEntityReference(name);
+			DOMEntityReference* node = m_Document->createEntityReference(name);
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
 		case NODE_PROCESSING_INSTRUCTION:
 		{
-			DOM_ProcessingInstruction node = m_Document.createProcessingInstruction(name,OLESTR(""));
+			DOMProcessingInstruction* node = m_Document->createProcessingInstruction(name,OLESTR(""));
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
 		case NODE_COMMENT:
 		{
-			DOM_Comment node = m_Document.createComment(OLESTR(""));
+			DOMComment* node = m_Document->createComment(OLESTR(""));
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
 		case NODE_DOCUMENT_FRAGMENT:
 		{
-			DOM_DocumentFragment node = m_Document.createDocumentFragment();
+			DOMDocumentFragment* node = m_Document->createDocumentFragment();
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
 		}
@@ -876,7 +877,7 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 			break;
 	}
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		hr = MakeHRESULT(ex);
 	}
@@ -900,9 +901,9 @@ STDMETHODIMP CXMLDOMDocument::nodeFromID(BSTR idString, IXMLDOMNode  **pVal)
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument, m_Document.getElementById(idString),IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
+		hr = wrapNode(m_pIXMLDOMDocument, m_Document->getElementById(idString),IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -1390,7 +1391,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 		}
 	}
 
-	DOMParser parser;
+	XercesDOMParser parser;
 
 	//
 	//   If set to true then an node supporting IXMLDOMProcessingInstruction
@@ -1399,7 +1400,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 	//   Setting to true in a custom DLL will better mimic
 	//      MSXML.DLL but at a cost of conformance errors
 	//      using David Brownell's suite
-	parser.setToCreateXMLDeclTypeNode(false);
+	//parser.setToCreateXMLDeclTypeNode(false);
 
 	parser.setIncludeIgnorableWhitespace(pThis->m_bPreserveWhiteSpace);
 
@@ -1411,7 +1412,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 		//   this brings the COM component into better mimicry to MSXML
 		//      by not throwing a validation error when there is no DOCTYPE
 		//
-		parser.setValidationScheme(pThis->m_bThreadValidate ? DOMParser::Val_Auto : DOMParser::Val_Never);
+		parser.setValidationScheme(pThis->m_bThreadValidate ? AbstractDOMParser::Val_Auto : AbstractDOMParser::Val_Never);
 	}
 
 	if (!pThis->m_bParseError && !pThis->m_bAbort)
@@ -1445,7 +1446,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 	}
 
 	if (!pThis->m_bParseError && !pThis->m_bAbort)
-		pThis->m_TmpDocument = parser.getDocument();
+		pThis->m_TmpDocument = parser.adoptDocument();
 
 	if (!pThis->m_bParseError && !pThis->m_bAbort && pThis->m_bAsync)
 		pThis->PostMessage(MSG_READY_STATE_CHANGE,4);
@@ -1467,16 +1468,16 @@ STDMETHODIMP CXMLDOMDocument::save(VARIANT location)
 	_bstr_t text;
 	
 	try {
-		DOM_NodeList childs = m_Document.getChildNodes();
-		int length = childs.getLength();
+		DOMNodeList* childs = m_Document->getChildNodes();
+		int length = childs->getLength();
 		for (int i=0; i < length; ++i) {
-			DOM_Node child = childs.item(i);
+			DOMNode* child = childs->item(i);
 			_bstr_t nodeText;
 			GetXML(child,nodeText);
 			text += nodeText;
 		}
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.5  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -94,7 +97,7 @@
 #ifndef ___xmldomtext_h___
 #define ___xmldomtext_h___
 
-#include <xercesc/dom/deprecated/DOM_Text.hpp>
+#include <xercesc/dom/DOMText.hpp>
 #include "IXMLDOMTextImpl.h"
 
 XERCES_CPP_NAMESPACE_USE
@@ -112,7 +115,7 @@ public:
 		ReleaseOwnerDoc();
 	}
 
-	virtual DOM_Text& get_DOM_Text()		 	 { return text;}
+	virtual DOMText* get_DOMText()		 	 { return text;}
 	virtual DOMNodeType get_DOMNodeType() const  { return NODE_TEXT; }
 
 DECLARE_NOT_AGGREGATABLE(CXMLDOMText)
@@ -127,7 +130,7 @@ BEGIN_COM_MAP(CXMLDOMText)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 	
-	DOM_Text text;
+	DOMText* text;
 };
 
 typedef CComObject<CXMLDOMText> CXMLDOMTextObj;

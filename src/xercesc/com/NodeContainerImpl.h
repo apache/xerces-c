@@ -70,7 +70,7 @@ public:
 	{
 	public:
 		iterator()
-			:m_container()
+			:m_container(NULL)
 			,m_NextNodeIndex(0)
 			,m_pIXMLDOMDocument(NULL)
 		{
@@ -78,7 +78,7 @@ public:
 			V_VT(&m_NextVar) = VT_NULL;
 		}	
 
-		iterator(const T& container,int idx,IXMLDOMDocument *p)
+		iterator(const T* container,int idx,IXMLDOMDocument *p)
 			:m_container(container)
 			,m_NextNodeIndex(idx)
 			,m_pIXMLDOMDocument(p)
@@ -125,12 +125,12 @@ public:
 			if (m_container == 0)
 				return m_NextVar;
 
-			int length = m_container.getLength(); 
+			int length = m_container->getLength(); 
 			if (m_NextNodeIndex >= length)
 				return m_NextVar;
 			
 			CComPtr<IXMLDOMNode> pNode;
-			HRESULT hr = wrapNode(m_pIXMLDOMDocument,m_container.item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (&pNode));
+			HRESULT hr = wrapNode(m_pIXMLDOMDocument,m_container->item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (&pNode));
 			if (S_OK == hr) {
 				CComQIPtr<IDispatch,&IID_IDispatch> pDisp(pNode);
 				if (pNode) {
@@ -150,7 +150,7 @@ public:
 		
 	private:
 
-		T				 m_container;	
+		const T*		 m_container;	
 		int			     m_NextNodeIndex;
 		IXMLDOMDocument	*m_pIXMLDOMDocument;
 		VARIANT			 m_NextVar;
@@ -171,7 +171,7 @@ public:
 		if (m_container == 0)
 			return iterator(m_container,0,m_pIXMLDOMDocument);
 		else	
-			return iterator(m_container,m_container.getLength(),m_pIXMLDOMDocument);
+			return iterator(m_container,m_container->getLength(),m_pIXMLDOMDocument);
 	}
 	
 	void	SetOwnerDoc(IXMLDOMDocument	*p)
@@ -181,7 +181,7 @@ public:
 			m_pIXMLDOMDocument->AddRef();
 	}
 
-	T				 m_container;
+	T*				 m_container;
 
 protected:
 

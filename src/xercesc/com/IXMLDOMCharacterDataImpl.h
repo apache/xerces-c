@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.3  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -82,20 +85,10 @@ XERCES_CPP_NAMESPACE_USE
 template <class T, const IID* piid, class tihclass = CComTypeInfoHolder>
 class ATL_NO_VTABLE IXMLDOMCharacterDataImpl: public IXMLDOMNodeImpl<T,piid,tihclass>
 {
-private:
-	XMLCh* DOMStringToXMLCh(DOMString str)
-	{
-		XMLCh* cdata = new XMLCh[str.length()+1];
-		for (unsigned int i=0; i < str.length(); i++)
-			cdata[i] = str.charAt(i);
-		cdata[str.length()] = 0;
-		return cdata;
-	}
-
 public:
 
-	virtual DOM_CharacterData& get_DOM_CharacterData() = 0; 
-	virtual DOM_Node& get_DOM_Node() { return get_DOM_CharacterData(); } 
+	virtual DOMCharacterData* get_DOMCharacterData() = 0; 
+	virtual DOMNode* get_DOMNode() { return get_DOMCharacterData(); } 
 
 	// IXMLDOMCharacterData 
 
@@ -110,8 +103,7 @@ STDMETHOD(get_data)(BSTR  *pVal)
 	
 	try
 	{
-		//*pVal = SysAllocString(get_DOM_CharacterData().getData().rawBuffer());
-		*pVal = SysAllocString(DOMStringToXMLCh(get_DOM_CharacterData().getData()));
+		*pVal = SysAllocString(get_DOMCharacterData()->getData());
 	}
 	catch(...)
 	{
@@ -128,7 +120,7 @@ STDMETHOD(put_data)(BSTR newVal)
 
 	try
 	{
-		get_DOM_CharacterData().setData(newVal);
+		get_DOMCharacterData()->setData(newVal);
 	}
 	catch(...)
 	{
@@ -150,7 +142,7 @@ STDMETHOD(get_length)(long  *pVal)
 
 	try
 	{
-		*pVal = get_DOM_CharacterData().getLength();
+		*pVal = get_DOMCharacterData()->getLength();
 	}
 	catch(...)
 	{
@@ -171,8 +163,7 @@ STDMETHOD(substringData)(long offset, long count, BSTR  *data)
 
 	try
 	{
-		// need to copy the string to a new buffer since DOMString doesn't null terminate the substring.
-		*data = SysAllocString(DOMStringToXMLCh(get_DOM_CharacterData().substringData(offset, count)));
+        *data = SysAllocString(get_DOMCharacterData()->substringData(offset, count));
 	}
 	catch(...)
 	{
@@ -188,7 +179,7 @@ STDMETHOD(appendData)(BSTR data)
 
 	try
 	{
-		get_DOM_CharacterData().appendData(data);
+		get_DOMCharacterData()->appendData(data);
 	}
 	catch(...)
 	{
@@ -205,7 +196,7 @@ STDMETHOD(insertData)(long offset, BSTR data)
 
 	try
 	{
-		get_DOM_CharacterData().insertData(offset, data);
+		get_DOMCharacterData()->insertData(offset, data);
 	}
 	catch(...)
 	{
@@ -222,7 +213,7 @@ STDMETHOD(deleteData)(long offset, long count)
 
 	try
 	{
-		get_DOM_CharacterData().deleteData(offset, count);
+		get_DOMCharacterData()->deleteData(offset, count);
 	}
 	catch(...)
 	{
@@ -239,7 +230,7 @@ STDMETHOD(replaceData)(long offset, long count, BSTR data)
 
 	try
 	{
-		get_DOM_CharacterData().replaceData(offset, count, data);
+		get_DOMCharacterData()->replaceData(offset, count, data);
 	}
 	catch(...)
 	{

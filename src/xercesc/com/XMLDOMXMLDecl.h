@@ -58,8 +58,9 @@
 #ifndef ___xmldomxmldecl_h___
 #define ___xmldomxmldecl_h___
 
-#include <xercesc/dom/deprecated/DOM_XMLDecl.hpp>
+#include <xercesc/dom/DOMProcessingInstruction.hpp>
 #include "IXMLDOMNodeImpl.h"
+
 XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMXMLDecl : 
@@ -75,7 +76,7 @@ public:
 		ReleaseOwnerDoc();
 	}
 
-	virtual DOM_Node& get_DOM_Node()			 { return xmlDecl;} 
+	virtual DOMNode* get_DOMNode()			 { return xmlDecl;} 
 	virtual DOMNodeType get_DOMNodeType() const  { return NODE_PROCESSING_INSTRUCTION; }
 
 DECLARE_NOT_AGGREGATABLE(CXMLDOMXMLDecl)
@@ -93,7 +94,7 @@ END_COM_MAP()
 	STDMETHOD(get_data)(BSTR  *pVal);
 	STDMETHOD(put_data)(BSTR newVal);
 
-	DOM_XMLDecl xmlDecl;
+	DOMProcessingInstruction* xmlDecl;
 };
 
 typedef CComObject<CXMLDOMXMLDecl> CXMLDOMXMLDeclObj;

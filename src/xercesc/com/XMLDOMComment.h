@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.5  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -94,7 +97,7 @@
 #ifndef ___xmldomcomment_h___
 #define ___xmldomcomment_h___
 
-#include <xercesc/dom/deprecated/DOM_Comment.hpp>
+#include <xercesc/dom/DOMComment.hpp>
 #include "IXMLDOMCharacterDataImpl.h"
 
 XERCES_CPP_NAMESPACE_USE
@@ -112,7 +115,7 @@ public:
 		ReleaseOwnerDoc();
 	}
 
-	virtual DOM_CharacterData& get_DOM_CharacterData()  { return comment;}
+	virtual DOMCharacterData* get_DOMCharacterData()  { return comment;}
 	virtual DOMNodeType get_DOMNodeType() const			{ return NODE_COMMENT; }
 	
 DECLARE_NOT_AGGREGATABLE(CXMLDOMComment)
@@ -127,7 +130,7 @@ BEGIN_COM_MAP(CXMLDOMComment)
 	COM_INTERFACE_ENTRY(IDispatch)
 END_COM_MAP()
 
-	DOM_Comment comment;
+	DOMComment* comment;
 };
 
 typedef CComObject<CXMLDOMComment> CXMLDOMCommentObj;

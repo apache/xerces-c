@@ -72,10 +72,10 @@
 #include "XMLDOMDocumentType.h"
 #include "XMLDOMDocumentFragment.h"
 #include "XMLDOMNotation.h"
-#include "XMLDOMXMLDecl.h"
 #include "XMLDOMUtil.h"
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 
 const OLECHAR* g_DomNodeName[] =
@@ -96,37 +96,6 @@ const OLECHAR* g_DomNodeName[] =
 };
 
 const int g_DomNodeNameSize = sizeof(g_DomNodeName) / sizeof(OLECHAR*);
-
-DOMString GetText(const DOM_Node& node)
-{
-	DOM_Node::NodeType type = static_cast<DOM_Node::NodeType> (node.getNodeType());
-	DOMString val;		
-
-	if (DOM_Node::DOCUMENT_TYPE_NODE		  == type ||
-		DOM_Node::NOTATION_NODE				  == type)
-		return val;
-	
-	if (DOM_Node::CDATA_SECTION_NODE		  == type ||
-		DOM_Node::COMMENT_NODE				  == type ||
-		DOM_Node::PROCESSING_INSTRUCTION_NODE == type ||
-		DOM_Node::TEXT_NODE					  == type) {
-		val = node.getNodeValue();
-		return val;
-	}
-
-	DOM_NodeList l =  node.getChildNodes();
-	int length = l.getLength();
-	if (length > 0) {
-		for (int i = 0; i < length; ++i)
-			val.appendData(GetText(l.item(i)));
-	}
-	else {
-		val = node.getNodeValue();
-	}
-	return val;
-}
-
-
 
 template <class Base>
 class CComObjectPool
@@ -310,14 +279,14 @@ CComObjectPool<CXMLDOMComment> CPooledComObject<CXMLDOMComment>::m_pool(6);
 typedef CPooledComObject<CXMLDOMComment> CPooledXMLDOMCommentObj;
 
 
-HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal)
+HRESULT wrapNode(IXMLDOMDocument *pDoc, DOMNode* node, REFIID iid, LPVOID *pVal)
 {
 	HRESULT hr = S_OK;
 	if (NULL == pVal)
 		return E_POINTER;
 
 	*pVal = NULL;
-	short type = node.getNodeType();
+	short type = node->getNodeType();
 
 	// the way we are constructing the wrappers is kind of fishy but oh well...
 	// the various IBM DOM wrapper classes don't ever add any members or have
@@ -326,7 +295,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 	switch(type)
 	{
-	case DOM_Node::ELEMENT_NODE:
+	case DOMNode::ELEMENT_NODE:
 	{
 		CXMLDOMElement *pObj = NULL;
 		hr = CPooledXMLDOMElementObj::CreateInstance(&pObj);
@@ -338,9 +307,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->element = *(static_cast<DOM_Element*> (&node));
+			pObj->element = static_cast<DOMElement*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -358,7 +327,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::ATTRIBUTE_NODE:
+	case DOMNode::ATTRIBUTE_NODE:
 	{
 		CXMLDOMAttribute *pObj = NULL;
 		hr = CPooledXMLDOMAttributeObj::CreateInstance(&pObj);
@@ -370,9 +339,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->attr = *(static_cast<DOM_Attr*> (&node));
+			pObj->attr = static_cast<DOMAttr*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -390,7 +359,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::TEXT_NODE:
+	case DOMNode::TEXT_NODE:
 	{
 		CXMLDOMText *pObj = NULL;
 		hr = CPooledXMLDOMTextObj::CreateInstance(&pObj);
@@ -402,9 +371,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->text = *(static_cast<DOM_Text*> (&node));
+			pObj->text = static_cast<DOMText*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -422,7 +391,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::CDATA_SECTION_NODE:
+	case DOMNode::CDATA_SECTION_NODE:
 	{
 		CXMLDOMCDATASection *pObj = NULL;
 		hr = CPooledXMLDOMCDATASectionObj::CreateInstance(&pObj);
@@ -434,9 +403,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->cdataSection = *(static_cast<DOM_CDATASection*> (&node));
+			pObj->cdataSection = static_cast<DOMCDATASection*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -454,7 +423,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::ENTITY_REFERENCE_NODE:
+	case DOMNode::ENTITY_REFERENCE_NODE:
 	{
 		CXMLDOMEntityReference *pObj = NULL;
 		hr = CPooledXMLDOMEntityReferenceObj::CreateInstance(&pObj);
@@ -466,9 +435,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->entityReference = *(static_cast<DOM_EntityReference*> (&node));
+			pObj->entityReference = static_cast<DOMEntityReference*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -486,7 +455,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::ENTITY_NODE:
+	case DOMNode::ENTITY_NODE:
 	{
 		CXMLDOMEntity *pObj = NULL;
 		hr = CPooledXMLDOMEntityObj::CreateInstance(&pObj);
@@ -498,9 +467,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		
 		try
 		{
-			pObj->entity = *(static_cast<DOM_Entity*> (&node));
+			pObj->entity = static_cast<DOMEntity*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -518,7 +487,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::PROCESSING_INSTRUCTION_NODE:
+	case DOMNode::PROCESSING_INSTRUCTION_NODE:
 	{
 		CXMLDOMProcessingInstruction *pObj = NULL;
 		hr = CPooledXMLDOMProcessingInstructionObj::CreateInstance(&pObj);
@@ -530,9 +499,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->processingInstruction = *(static_cast<DOM_ProcessingInstruction*> (&node));
+			pObj->processingInstruction = static_cast<DOMProcessingInstruction*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -550,7 +519,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::COMMENT_NODE:
+	case DOMNode::COMMENT_NODE:
 	{
 		CXMLDOMComment *pObj = NULL;
 		hr = CPooledXMLDOMCommentObj::CreateInstance(&pObj);
@@ -562,9 +531,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->comment = *(static_cast<DOM_Comment*> (&node));
+			pObj->comment = static_cast<DOMComment*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -582,7 +551,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::DOCUMENT_NODE:
+	case DOMNode::DOCUMENT_NODE:
 	{
 		CXMLDOMDocumentObj *pObj = NULL;
 		hr = CXMLDOMDocumentObj::CreateInstance(&pObj);
@@ -594,9 +563,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->m_Document = *(static_cast<DOM_Document*> (&node));
+			pObj->m_Document = static_cast<XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -614,7 +583,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::DOCUMENT_TYPE_NODE:
+	case DOMNode::DOCUMENT_TYPE_NODE:
 	{
 		CXMLDOMDocumentTypeObj *pObj = NULL;
 		hr = CXMLDOMDocumentTypeObj::CreateInstance(&pObj);
@@ -626,9 +595,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->documentType = *(static_cast<DOM_DocumentType*> (&node));
+			pObj->documentType = static_cast<DOMDocumentType*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -646,7 +615,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::DOCUMENT_FRAGMENT_NODE:
+	case DOMNode::DOCUMENT_FRAGMENT_NODE:
 	{
 		CXMLDOMDocumentFragmentObj *pObj = NULL;
 		hr = CXMLDOMDocumentFragmentObj::CreateInstance(&pObj);
@@ -658,9 +627,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->documentFragment = *(static_cast<DOM_DocumentFragment*> (&node));
+			pObj->documentFragment = static_cast<DOMDocumentFragment*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -678,7 +647,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		pObj->Release();
 		break;
 	}
-	case DOM_Node::NOTATION_NODE:
+	case DOMNode::NOTATION_NODE:
 	{
 		CXMLDOMNotationObj *pObj = NULL;
 		hr = CXMLDOMNotationObj::CreateInstance(&pObj);
@@ -690,9 +659,9 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 
 		try
 		{
-			pObj->notation = *(static_cast<DOM_Notation*> (&node));
+			pObj->notation = static_cast<DOMNotation*> (node);
 		}
-		catch(DOM_DOMException& ex)
+		catch(DOMException& ex)
 		{
 			pObj->Release();
 			return MakeHRESULT(ex);
@@ -711,38 +680,6 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		break;
 	}
 
-	case DOM_Node::XML_DECL_NODE:
-	{
-		CXMLDOMXMLDeclObj *pObj = NULL;
-		hr = CXMLDOMXMLDeclObj::CreateInstance(&pObj);
-		if (S_OK != hr)
-			return hr;
-	
-		pObj->AddRef();
-		pObj->SetOwnerDoc(pDoc);
-
-		try
-		{
-			pObj->xmlDecl = *(static_cast<DOM_XMLDecl*> (&node));
-		}
-		catch(DOM_DOMException& ex)
-		{
-			pObj->Release();
-			return MakeHRESULT(ex);
-		}
-		catch(...)
-		{
-			pObj->Release();
-			return E_FAIL;
-		}
-	
-		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr)
-			*pVal = NULL;
-
-		pObj->Release();
-		break;
-	}
 	default:
 		hr = E_NOTIMPL;
 		break;
@@ -776,11 +713,6 @@ public:
 		//    append to stream
 		//
 		append(other,len);
-		return *this;
-	}
-
-	xmlstream& operator<<(const DOMString& other) {
-		append(other.rawBuffer(),other.length());
 		return *this;
 	}
 
@@ -837,63 +769,62 @@ private:
 // ---------------------------------------------------------------------------
 //  outputContent
 //
-//  Write document content from a DOMString to a C++ ostream. Escape the
+//  Write document content from a string to a C++ ostream. Escape the
 //  XML special characters (<, &, etc.) unless this is suppressed by the
 //  command line option.
 // ---------------------------------------------------------------------------
-void outputContent(xmlstream& target, const DOMString &toWrite)
+void outputContent(xmlstream& target, const XMLCh* toWrite)
 {
 
-        int            length = toWrite.length();
-        const XMLCh*   chars  = toWrite.rawBuffer();
+    int            length = XMLString::stringLen(toWrite);
 
-        int index;
-        for (index = 0; index < length; index++)
+    int index;
+    for (index = 0; index < length; index++)
+    {
+        switch (toWrite[index])
         {
-            switch (chars[index])
-            {
-            case chAmpersand :
-                target << XMLStrL("&amp;");
-                break;
+        case chAmpersand :
+            target << XMLStrL("&amp;");
+            break;
 
-            case chOpenAngle :
-                target << XMLStrL("&lt;");
-                break;
+        case chOpenAngle :
+            target << XMLStrL("&lt;");
+            break;
 
-            case chCloseAngle:
-                target << XMLStrL("&gt;");
-                break;
+        case chCloseAngle:
+            target << XMLStrL("&gt;");
+            break;
 
-            case chDoubleQuote :
-                target << XMLStrL("&quot;");
-                break;
+        case chDoubleQuote :
+            target << XMLStrL("&quot;");
+            break;
 
-            default:
-                // If it is none of the special characters, print it as such
-                target << toWrite.substringData(index, 1);
-                break;
-            }
+        default:
+            // If it is none of the special characters, print it as such
+            target << toWrite[index];
+            break;
         }
+    }
 
     return;
 }
 
-xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
+xmlstream& operator<<(xmlstream& target, const DOMNode* toWrite)
 {
     // Get the name and value out for convenience
-    DOMString   nodeName = toWrite.getNodeName();
-    DOMString   nodeValue = toWrite.getNodeValue();
+    const XMLCh* nodeName = toWrite->getNodeName();
+    const XMLCh* nodeValue = toWrite->getNodeValue();
 
 
-	switch (toWrite.getNodeType())
+	switch (toWrite->getNodeType())
     {
-		case DOM_Node::TEXT_NODE:
+		case DOMNode::TEXT_NODE:
         {
             outputContent(target, nodeValue);
             break;
         }
 
-        case DOM_Node::PROCESSING_INSTRUCTION_NODE :
+        case DOMNode::PROCESSING_INSTRUCTION_NODE :
         {
             target  << XMLStrL("<?")
                     << nodeName
@@ -903,39 +834,47 @@ xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
             break;
         }
 
-        case DOM_Node::DOCUMENT_NODE :
+        case DOMNode::DOCUMENT_NODE :
         {
             //
             //  Bug here:  we need to find a way to get the encoding name
             //  for the default code page on the system where the program
             //  is running, and plug that in for the encoding name.
             //
-            //target << "<?xml version='1.0' encoding='ISO-8859-1' ?>\n";
-            DOM_Node child = toWrite.getFirstChild();
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document=(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument*)toWrite;
+            target << XMLStrL("<?xml version=\"") << document->getVersion() << XMLStrL("\"");
+            const XMLCh* str = document->getEncoding();
+            if (str != 0)
+                target << XMLStrL(" encoding=\"") << str << XMLStrL("\"");
+            if(document->getStandalone())
+                target << XMLStrL(" standalone=\"yes\"");
+            target << XMLStrL("?>");
+
+            DOMNode* child = toWrite->getFirstChild();
             while( child != 0)
             {
                 target << child;
-                child = child.getNextSibling();
+                child = child->getNextSibling();
             }
             break;
         }
 
-        case DOM_Node::ELEMENT_NODE :
+        case DOMNode::ELEMENT_NODE :
         {
             // Output the element start tag.
             target << XMLStrL('<') << nodeName;
 
             // Output any attributes on this element
-            DOM_NamedNodeMap attributes = toWrite.getAttributes();
-            int attrCount = attributes.getLength();
+            DOMNamedNodeMap* attributes = toWrite->getAttributes();
+            int attrCount = attributes->getLength();
             for (int i = 0; i < attrCount; i++)
             {
-                DOM_Node  attribute = attributes.item(i);
+                DOMNode*  attribute = attributes->item(i);
 
-                target  << XMLStrL(' ') << attribute.getNodeName()
+                target  << XMLStrL(' ') << attribute->getNodeName()
                         << XMLStrL(" = \"");
                         //  Note that "<" must be escaped in attribute values.
-                        outputContent(target, attribute.getNodeValue());
+                        outputContent(target, attribute->getNodeValue());
                         target << XMLStrL('"');
             }
 
@@ -943,7 +882,7 @@ xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
             //  Test for the presence of children, which includes both
             //  text content and nested elements.
             //
-            DOM_Node child = toWrite.getFirstChild();
+            DOMNode* child = toWrite->getFirstChild();
             if (child != 0)
             {
                 // There are children. Close start-tag, and output children.
@@ -951,7 +890,7 @@ xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
                 while( child != 0)
                 {
                     target << child;
-                    child = child.getNextSibling();
+                    child = child->getNextSibling();
                 }
 
                 // Done with children.  Output the end tag.
@@ -968,68 +907,58 @@ xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
             break;
         }
 
-        case DOM_Node::ENTITY_REFERENCE_NODE:
+        case DOMNode::ENTITY_REFERENCE_NODE:
         {
-            DOM_Node child;
-            for (child = toWrite.getFirstChild(); child != 0; child = child.getNextSibling())
+            DOMNode* child;
+            for (child = toWrite->getFirstChild(); child != 0; child = child->getNextSibling())
                 target << child;
             break;
         }
 
-        case DOM_Node::CDATA_SECTION_NODE:
+        case DOMNode::CDATA_SECTION_NODE:
         {
             target << XMLStrL("<![CDATA[") << nodeValue << XMLStrL("]]>");
             break;
         }
 
-        case DOM_Node::COMMENT_NODE:
+        case DOMNode::COMMENT_NODE:
         {
             target << XMLStrL("<!--") << nodeValue << XMLStrL("-->");
             break;
         }
 
-        case DOM_Node::DOCUMENT_TYPE_NODE:
+        case DOMNode::DOCUMENT_TYPE_NODE:
         {
-			DOM_DocumentType doctype = (DOM_DocumentType &)toWrite;;
+			DOMDocumentType* doctype = (DOMDocumentType*)toWrite;;
 
 			target << XMLStrL("<!DOCTYPE ") << nodeName ;
-			DOMString id = doctype.getPublicId();
+			const XMLCh* id = doctype->getPublicId();
 			if (id != 0)
 				target << XMLStrL(" PUBLIC \"") << id << XMLStrL("\"");
-			id = doctype.getSystemId();
+			id = doctype->getSystemId();
 			if (id != 0)
 				target << XMLStrL(" SYSTEM \"") << id << XMLStrL("\"");
-			id = doctype.getInternalSubset();
+			id = doctype->getInternalSubset();
 			if (id !=0)
 				target << XMLStrL(" [ ") << id  << XMLStrL("]");
 			target  << XMLStrL(">");
             break;
         }
-		case DOM_Node::ENTITY_NODE:
+		case DOMNode::ENTITY_NODE:
         {
+			DOMEntity* entity = (DOMEntity*)toWrite;;
+
 			target << XMLStrL("<!ENTITY ") << nodeName;
-			DOMString id = ((DOM_Entity &)toWrite).getPublicId();
+			const XMLCh* id = entity->getPublicId();
 			if (id != 0)
 				target << XMLStrL("PUBLIC \"") << id << XMLStrL("\"");
-			id = ((DOM_Entity &)toWrite).getSystemId();
+			id = entity->getSystemId();
 			if (id != 0)
 				target << XMLStrL("SYSTEM \"") << id << XMLStrL("\"");
-			id = ((DOM_Entity &)toWrite).getNotationName();
+			id = entity->getNotationName();
 			if (id != 0)
 				target << XMLStrL("NDATA \"") << id << XMLStrL("\"");
 
-            break;
-        }
-        case DOM_Node::XML_DECL_NODE:
-        {
-            target << XMLStrL("<?xml version=") << ((DOM_XMLDecl &)toWrite).getVersion();
-            DOMString str = ((DOM_XMLDecl &)toWrite).getEncoding();
-            if (str != 0)
-                target << XMLStrL(" encoding=") << str;
-            str = ((DOM_XMLDecl &)toWrite).getStandalone();
-            if (str != 0)
-                target << XMLStrL(" standalone=") << str;
-            target << XMLStrL("?>");
             break;
         }
         default:
@@ -1038,7 +967,7 @@ xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
 	return target;
 }
 
-void GetXML(const DOM_Node &node, _bstr_t &text)
+void GetXML(const DOMNode* node, _bstr_t &text)
 {
 	xmlstream stream;
 	stream << node;

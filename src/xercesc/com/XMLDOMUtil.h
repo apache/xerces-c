@@ -62,17 +62,14 @@
 #define ___wrapnode_h___
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/dom/deprecated/DOM_Node.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 XERCES_CPP_NAMESPACE_USE
-
-class XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node;
 
 extern const OLECHAR* g_DomNodeName[];
 extern const int	g_DomNodeNameSize;
 
-void GetXML (const DOM_Node &node, _bstr_t &text);
-DOMString GetText(const DOM_Node& node);
-HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal);
+void GetXML (const DOMNode* node, _bstr_t &text);
+HRESULT wrapNode(IXMLDOMDocument *pDoc, DOMNode* node, REFIID iid, LPVOID *pVal);
 
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.5  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -94,7 +97,7 @@
 #ifndef ___xmldomnotation_h___
 #define ___xmldomnotation_h___
 
-#include <xercesc/dom/deprecated/DOM_Notation.hpp>
+#include <xercesc/dom/DOMNotation.hpp>
 #include "IXMLDOMNodeImpl.h"
 
 XERCES_CPP_NAMESPACE_USE
@@ -112,7 +115,7 @@ public:
 		ReleaseOwnerDoc();
 	}
 
-	virtual DOM_Node& get_DOM_Node()			 { return notation;}
+	virtual DOMNode* get_DOMNode()			 { return notation;}
 	virtual DOMNodeType get_DOMNodeType() const  { return NODE_NOTATION; }
 
 DECLARE_NOT_AGGREGATABLE(CXMLDOMNotation)
@@ -130,7 +133,7 @@ END_COM_MAP()
 	STDMETHOD(get_publicId)(VARIANT  *pVal);
 	STDMETHOD(get_systemId)(VARIANT  *pVal);
 
-	DOM_Notation notation;
+	DOMNotation* notation;
 };
 
 typedef CComObject<CXMLDOMNotation> CXMLDOMNotationObj;

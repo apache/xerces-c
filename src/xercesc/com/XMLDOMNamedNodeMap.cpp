@@ -64,7 +64,7 @@
 #include "XMLDOMUtil.h"
 #include "IXMLDOMNodeImpl.h"
 
-typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>, NodeContainerImpl<DOM_NamedNodeMap> >
+typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>, NodeContainerImpl<DOMNamedNodeMap> >
 		CComEnumUnknownOnNamedNodeContainer;
 
 STDMETHODIMP CXMLDOMNamedNodeMap::getNamedItem(BSTR name, IXMLDOMNode  **pVal)
@@ -82,11 +82,11 @@ STDMETHODIMP CXMLDOMNamedNodeMap::getNamedItem(BSTR name, IXMLDOMNode  **pVal)
 
 	try
 	{
-		DOM_Node n = m_container.getNamedItem(name);
-		if(!n.isNull())
+		DOMNode* n = m_container->getNamedItem(name);
+		if(n!=NULL)
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -122,21 +122,21 @@ STDMETHODIMP CXMLDOMNamedNodeMap::setNamedItem(IXMLDOMNode  *newItem, IXMLDOMNod
 	if (S_OK != hr)
 		return hr;
 
-	DOM_Node *pNewItemNode = reinterpret_cast<DOM_Node*> (id);
+	DOMNode *pNewItemNode = reinterpret_cast<DOMNode*> (id);
 	if (NULL == pNewItemNode)
 		return E_INVALIDARG;
 
 	try
 	{
-		DOMString  name = pNewItemNode->getNodeName();
+		const XMLCh* name = pNewItemNode->getNodeName();
 		//
 		//  returns old node
 		//
-		DOM_Node n = m_container.setNamedItem(*pNewItemNode);
-		if(!n.isNull())
+		DOMNode* n = m_container->setNamedItem(pNewItemNode);
+		if(n!=NULL)
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -163,8 +163,8 @@ STDMETHODIMP CXMLDOMNamedNodeMap::removeNamedItem(BSTR name, IXMLDOMNode  **pVal
 
 	try
 	{
-		DOM_Node n = m_container.removeNamedItem(name);
-		if(!n.isNull())
+		DOMNode* n = m_container->removeNamedItem(name);
+		if(n!=NULL)
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	//
@@ -192,11 +192,11 @@ STDMETHODIMP CXMLDOMNamedNodeMap::get_item(long index, IXMLDOMNode  **pVal)
 		if (m_container == 0 || index < 0)
 			return E_INVALIDARG;
 
-		long length =  m_container.getLength();
+		long length =  m_container->getLength();
 		if (index < length)
-			hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+			hr = wrapNode(m_pIXMLDOMDocument,m_container->item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -222,9 +222,9 @@ STDMETHODIMP CXMLDOMNamedNodeMap::get_length(long  *pVal)
 
 	try
 	{
-		*pVal = m_container.getLength();
+		*pVal = m_container->getLength();
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -252,11 +252,11 @@ STDMETHODIMP CXMLDOMNamedNodeMap::getQualifiedItem(BSTR baseName, BSTR namespace
 
 	try
 	{
-		DOM_Node n = m_container.getNamedItemNS(namespaceURI,baseName);
-		if(!n.isNull())
+		DOMNode* n = m_container->getNamedItemNS(namespaceURI,baseName);
+		if(n!=NULL)
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -284,11 +284,11 @@ STDMETHODIMP CXMLDOMNamedNodeMap::removeQualifiedItem(BSTR baseName, BSTR namesp
 
 	try
 	{
-		DOM_Node n = m_container.removeNamedItemNS(namespaceURI,baseName);
-		if(!n.isNull())
+		DOMNode* n = m_container->removeNamedItemNS(namespaceURI,baseName);
+		if(n!=NULL)
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -311,7 +311,7 @@ STDMETHODIMP CXMLDOMNamedNodeMap::nextNode(IXMLDOMNode  **pVal)
 	if (m_container == 0)
 		return S_OK;
 	
-	int length = m_container.getLength();
+	int length = m_container->getLength();
 	if (0 == length)
 		return S_OK;
 
@@ -322,11 +322,11 @@ STDMETHODIMP CXMLDOMNamedNodeMap::nextNode(IXMLDOMNode  **pVal)
 
 	try
 	{
-		DOM_Node n = m_container.item(m_NextNodeIndex);
-		if(!n.isNull())
+		DOMNode* n = m_container->item(m_NextNodeIndex);
+		if(n!=NULL)
 			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}

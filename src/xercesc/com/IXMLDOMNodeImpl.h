@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.4  2004/02/12 13:49:43  amassari
  * Updated version to 2.5
  *
@@ -93,7 +96,7 @@
 #define ___ixmldomnodeimpl_h___
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/dom/deprecated/DOM_DOMException.hpp>
+#include <xercesc/dom/DOMException.hpp>
 XERCES_CPP_NAMESPACE_USE
 
 
@@ -124,7 +127,7 @@ public:
 		:m_pIXMLDOMDocument(NULL)
 	{}
 
-	virtual DOM_Node& get_DOM_Node()		    = 0;
+	virtual DOMNode* get_DOMNode()		    = 0;
 	virtual DOMNodeType get_DOMNodeType() const = 0;
 
 	void	SetOwnerDoc(IXMLDOMDocument	*p)
@@ -142,7 +145,7 @@ public:
 		if (NULL == pVal)
 			return E_POINTER;
 
-		*pVal = reinterpret_cast<long> (&get_DOM_Node());
+		*pVal = reinterpret_cast<long> (get_DOMNode());
 		return S_OK;
 	}
 
@@ -202,8 +205,7 @@ protected:
 
 };
 
-class XERCES_CPP_NAMESPACE_QUALIFIER DOM_DOMException;
-HRESULT MakeHRESULT(DOM_DOMException& ex);
+HRESULT MakeHRESULT(DOMException& ex);
 
 #include "IXMLDOMNodeImpl.inl"
 

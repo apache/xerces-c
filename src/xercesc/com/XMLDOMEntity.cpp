@@ -74,7 +74,7 @@ STDMETHODIMP CXMLDOMEntity::get_publicId(VARIANT  *pVal)
 
 	try
 	{
-		DOMString val = entity.getPublicId();
+        const XMLCh* val=entity->getPublicId();
 		if(val == NULL)
 		{
 			V_VT(pVal) = VT_NULL;
@@ -82,10 +82,10 @@ STDMETHODIMP CXMLDOMEntity::get_publicId(VARIANT  *pVal)
 		else
 		{
 			V_VT(pVal)   = VT_BSTR;
-			V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
+			V_BSTR(pVal) = SysAllocString(val);
 		}
 	}
-	catch(DOM_DOMException& ex) {
+	catch(DOMException& ex) {
 		return MakeHRESULT(ex);
 	}
 	catch(...)
@@ -107,7 +107,7 @@ STDMETHODIMP CXMLDOMEntity::get_systemId(VARIANT  *pVal)
 
 	try
 	{
-		DOMString val = entity.getSystemId();
+        const XMLCh* val=entity->getSystemId();
 		if(val == NULL)
 		{
 			V_VT(pVal) = VT_NULL;
@@ -115,10 +115,10 @@ STDMETHODIMP CXMLDOMEntity::get_systemId(VARIANT  *pVal)
 		else
 		{
 			V_VT(pVal)   = VT_BSTR;
-			V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
+			V_BSTR(pVal) = SysAllocString(val);
 		}
 	}
-	catch(DOM_DOMException& ex) {
+	catch(DOMException& ex) {
 		return MakeHRESULT(ex);
 	}
 	catch(...)
@@ -140,10 +140,9 @@ STDMETHODIMP CXMLDOMEntity::get_notationName(BSTR  *pVal)
 
 	try
 	{
-		DOMString val = entity.getNotationName();
-		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
+		*pVal = SysAllocString(entity->getNotationName());
 	}
-	catch(DOM_DOMException& ex) {
+	catch(DOMException& ex) {
 		return MakeHRESULT(ex);
 	}
 	catch(...)

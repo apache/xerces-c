@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.5  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -94,7 +97,7 @@
 #ifndef ___xmldomcdatasection_h___
 #define ___xmldomcdatasection_h___
 
-#include <xercesc/dom/deprecated/DOM_CDATASection.hpp>
+#include <xercesc/dom/DOMCDATASection.hpp>
 #include "IXMLDOMTextImpl.h"
 XERCES_CPP_NAMESPACE_USE
 
@@ -111,7 +114,7 @@ public:
 		ReleaseOwnerDoc();
 	}
 
-	virtual DOM_Text& get_DOM_Text()			 { return cdataSection;}
+	virtual DOMText* get_DOMText()			 { return cdataSection;}
 	virtual DOMNodeType get_DOMNodeType() const  { return NODE_CDATA_SECTION; }
 
 DECLARE_NOT_AGGREGATABLE(CXMLDOMCDATASection)
@@ -128,7 +131,7 @@ BEGIN_COM_MAP(CXMLDOMCDATASection)
 	COM_INTERFACE_ENTRY(IDispatch)
 END_COM_MAP()
 
-	DOM_CDATASection cdataSection;
+	DOMCDATASection* cdataSection;
 };
 
 typedef CComObject<CXMLDOMCDATASection> CXMLDOMCDATASectionObj;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.7  2004/02/12 13:49:43  amassari
  * Updated version to 2.5
  *
@@ -104,7 +107,7 @@
 #ifndef ___xmldomdocument_h___
 #define ___xmldomdocument_h___
 
-#include <xercesc/dom/deprecated/DOM_Document.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
 #include "IXMLDOMNodeImpl.h"
 
 #include "resource.h"       // main symbols
@@ -135,8 +138,8 @@ public:
 	HRESULT FinalConstruct();
 	void	FinalRelease();
 
-	virtual DOM_Node&   get_DOM_Node()			 { return m_Document;}
-	virtual DOMNodeType get_DOMNodeType() const  { return NODE_DOCUMENT; }
+	virtual DOMNode*        get_DOMNode()		    { return m_Document;}
+    virtual DOMNodeType     get_DOMNodeType() const { return NODE_DOCUMENT; }
 
 	virtual void resetErrors() {};
 
@@ -218,7 +221,7 @@ END_MSG_MAP()
 
 	bool IsAbort() const { return m_bAbort; }
 
-	DOM_Document		  m_Document;
+	XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument*		  m_Document;
 
 private:
 
@@ -236,7 +239,7 @@ private:
 	// thread data
 	_bstr_t				  m_FileName;
 	_bstr_t				  m_xml;
-	DOM_Document		  m_TmpDocument;
+	XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument*		  m_TmpDocument;
 	bool			      m_bParseError;
 	bool				  m_bThreadValidate;
 	bool                  m_bPreserveWhiteSpace;

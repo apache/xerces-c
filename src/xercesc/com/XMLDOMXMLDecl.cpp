@@ -94,64 +94,9 @@ STDMETHODIMP CXMLDOMXMLDecl::get_data(BSTR  *pVal)
 
 	try
 	{
-		unsigned int len= 0;
-		unsigned int totalLen = 0;
-		DOMString version(xmlDecl.getVersion());
-		len = version.length();
-		if(len > 0) totalLen = len + 10;
-
-		DOMString standalone(xmlDecl.getStandalone());
-		len = standalone.length();
-		if(len > 0) {
-			if(totalLen > 0)
-				totalLen += len + 14;
-			else
-				totalLen = len + 13;
-		}
-
-		DOMString encoding(xmlDecl.getEncoding());
-		len = encoding.length();
-		if(len > 0) {
-			if(totalLen > 0)
-				totalLen += len + 13;
-			else
-				totalLen = len + 12;
-		}
-
-		*pVal = SysAllocStringLen(NULL,totalLen+1);
-		**pVal = 0;
-
-		len = version.length();
-		totalLen = len;
-		if(len > 0) {
-			wcscpy(*pVal,OLESTR("version=\""));
-			wcsncat(*pVal,version.rawBuffer(),len);
-			wcscat(*pVal,OLESTR("\""));
-		}
-
-		len = standalone.length();
-		if(len > 0) {
-			if(totalLen > 0)
-				wcscat(*pVal,OLESTR(" standalone=\""));
-			else
-				wcscat(*pVal,OLESTR("standalone=\""));
-			wcsncat(*pVal,standalone.rawBuffer(),len);
-			wcscat(*pVal,OLESTR("\""));
-			totalLen += len;
-		}
-
-		len = encoding.length();
-		if(len > 0) {
-			if(totalLen > 0)
-				wcscat(*pVal,OLESTR(" encoding=\""));
-			else
-				wcscat(*pVal,OLESTR("encoding=\""));
-			wcsncat(*pVal,encoding.rawBuffer(),len);
-			wcscat(*pVal,OLESTR("\""));
-		}
-
+        *pVal = SysAllocString(xmlDecl->getTarget());
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}

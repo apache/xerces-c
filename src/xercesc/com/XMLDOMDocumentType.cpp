@@ -75,10 +75,9 @@ STDMETHODIMP CXMLDOMDocumentType::get_name(BSTR  *pVal)
 
 	try
 	{
-		DOMString val = documentType.getName();
-		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
+		*pVal = SysAllocString(documentType->getName());
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -110,9 +109,9 @@ STDMETHODIMP CXMLDOMDocumentType::get_entities(IXMLDOMNamedNodeMap  **pVal)
 
 	try
 	{
-		pObj->m_container = documentType.getEntities();
+		pObj->m_container = documentType->getEntities();
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
@@ -150,9 +149,9 @@ STDMETHODIMP CXMLDOMDocumentType::get_notations(IXMLDOMNamedNodeMap  **pVal)
 
 	try
 	{
-		pObj->m_container = documentType.getNotations();
+		pObj->m_container = documentType->getNotations();
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);

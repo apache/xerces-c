@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.6  2004/02/12 13:49:43  amassari
  * Updated version to 2.5
  *
@@ -88,7 +91,7 @@
 #ifndef ___xmldomimplementation_h___
 #define ___xmldomimplementation_h___
 
-#include <xercesc/dom/deprecated/DOM_DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -111,7 +114,7 @@ END_COM_MAP()
 	// IXMLDOMImplementation methods
 	STDMETHOD(hasFeature)(BSTR feature, BSTR ver, VARIANT_BOOL  *pVal);
 
-	DOM_DOMImplementation implementation;
+	DOMImplementation* implementation;
 };
 
 typedef CComObject<CXMLDOMImplementation> CXMLDOMImplementationObj;

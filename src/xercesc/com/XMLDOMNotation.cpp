@@ -73,7 +73,7 @@ STDMETHODIMP CXMLDOMNotation::get_publicId(VARIANT  *pVal)
 
 	try
 	{
-		DOMString val = notation.getPublicId();
+        const XMLCh* val=notation->getPublicId();
 		if(val == NULL)
 		{
 			V_VT(pVal) = VT_NULL;
@@ -81,10 +81,10 @@ STDMETHODIMP CXMLDOMNotation::get_publicId(VARIANT  *pVal)
 		else
 		{
 			V_VT(pVal) = VT_BSTR;
-			V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
+			V_BSTR(pVal) = SysAllocString(val);
 		}
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -108,7 +108,7 @@ STDMETHODIMP CXMLDOMNotation::get_systemId(VARIANT  *pVal)
 
 	try
 	{
-		DOMString val = notation.getSystemId();
+        const XMLCh* val=notation->getSystemId();
 		if(val == NULL)
 		{
 			V_VT(pVal) = VT_NULL;
@@ -116,10 +116,10 @@ STDMETHODIMP CXMLDOMNotation::get_systemId(VARIANT  *pVal)
 		else
 		{
 			V_VT(pVal) = VT_BSTR;
-			V_BSTR(pVal) = SysAllocStringLen(val.rawBuffer(),val.length());
+			V_BSTR(pVal) = SysAllocString(val);
 		}
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}

@@ -64,7 +64,7 @@
 #include "XMLDOMUtil.h"
 #include "IXMLDOMNodeImpl.h"
 
-typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>,NodeContainerImpl<DOM_NodeList> >
+typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>,NodeContainerImpl<DOMNodeList> >
 		CComEnumUnknownOnNodeContainer;
 
 STDMETHODIMP CXMLDOMNodeList::get_item(long index, IXMLDOMNode  **pVal)
@@ -82,15 +82,15 @@ STDMETHODIMP CXMLDOMNodeList::get_item(long index, IXMLDOMNode  **pVal)
 		if (m_container == 0 || index < 0)
 			return E_INVALIDARG;
 
-		long length = m_container.getLength();
+		long length = m_container->getLength();
 		//
 		//    if index is beyond end
 		//       return a null object not an exception
 		//
 		if (index < length)
-			hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+			hr = wrapNode(m_pIXMLDOMDocument,m_container->item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -117,9 +117,9 @@ STDMETHODIMP CXMLDOMNodeList::get_length(long  *pVal)
 
 	try
 	{
-		*pVal = m_container.getLength();
+		*pVal = m_container->getLength();
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -143,7 +143,7 @@ STDMETHODIMP CXMLDOMNodeList::nextNode(IXMLDOMNode  **pVal)
 	if (m_container == 0)
 		return S_OK;
 	
-	int length = m_container.getLength();
+	int length = m_container->getLength();
 	if (0 == length)
 		return S_OK;
 
@@ -155,9 +155,9 @@ STDMETHODIMP CXMLDOMNodeList::nextNode(IXMLDOMNode  **pVal)
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		hr = wrapNode(m_pIXMLDOMDocument,m_container->item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex)
+	catch(DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}

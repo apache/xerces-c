@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.2  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -78,8 +81,8 @@ class ATL_NO_VTABLE IXMLDOMTextImpl: public IXMLDOMCharacterDataImpl<T,piid,tihc
 {
 public:
 
-	virtual DOM_Text& get_DOM_Text() = 0; 
-	virtual DOM_CharacterData& get_DOM_CharacterData() { return get_DOM_Text(); } 
+	virtual DOMText* get_DOMText() = 0; 
+	virtual DOMCharacterData* get_DOMCharacterData() { return get_DOMText(); } 
 
 	// IXMLDOMText
 
@@ -96,7 +99,7 @@ STDMETHOD(splitText)(long offset, IXMLDOMText  **rightHandTextNode)
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,get_DOM_Text().splitText(offset),IID_IXMLDOMText, reinterpret_cast<LPVOID *> (rightHandTextNode));
+		hr = wrapNode(m_pIXMLDOMDocument,get_DOMText()->splitText(offset),IID_IXMLDOMText, reinterpret_cast<LPVOID *> (rightHandTextNode));
 	}
 	catch(...)
 	{

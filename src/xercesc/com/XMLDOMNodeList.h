@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/02/25 18:38:33  amassari
+ * The COM wrapper doesn't use the deprecated DOM anymore
+ *
  * Revision 1.6  2004/02/12 13:49:43  amassari
  * Updated version to 2.5
  *
@@ -97,7 +100,7 @@
 #ifndef ___xmldomnodelist_h___
 #define ___xmldomnodelist_h___
 
-#include <xercesc/dom/deprecated/DOM_NodeList.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
 #include "NodeContainerImpl.h"
 
 XERCES_CPP_NAMESPACE_USE
@@ -105,7 +108,7 @@ XERCES_CPP_NAMESPACE_USE
 class ATL_NO_VTABLE CXMLDOMNodeList :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IDispatchImpl<IXMLDOMNodeList, &IID_IXMLDOMNodeList, &LIBID_Xerces, 2, 50>,
-	public NodeContainerImpl<DOM_NodeList>,
+	public NodeContainerImpl<DOMNodeList>,
 	public ISupportErrorInfo
 {
 public:
