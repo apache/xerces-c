@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/02/11 20:38:50  peiyongz
+ * Fix to bug#26864, thanks to David Bertoni.
+ *
  * Revision 1.13  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -705,7 +708,7 @@ inline size_t XSerializeEngine::allignAdjust() const
 		size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
 	#endif
 	
-	size_t remainder = (long) fBufCur % alignment;	
+	size_t remainder = (size_t) fBufCur % alignment;	
 	return (remainder == 0) ? 0 : (alignment - remainder);
 }
 
