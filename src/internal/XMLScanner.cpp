@@ -3542,3 +3542,4 @@ void XMLScanner::resizeElemState() {
     fElemState = newElemState;
     fElemStateSize = newSize;
 }
+

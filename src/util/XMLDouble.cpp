@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/08/23 11:54:26  tng
+ * Add newline at the end and various typo fixes.
+ *
  * Revision 1.9  2001/08/21 15:10:15  peiyongz
  * Bugzilla# 3017: MSVC5.0: C2202: 'compareSpecial' : not all
  * control paths return a value
@@ -103,19 +106,19 @@
 
 //---------
 // TODO:
-//  
+//
 //   Double is supposed to hold 64 bit number and currently
 //   we have implemented the checking on boundary values, such
 //   the maximum/minimum positive/negative number.
 //
-//   We also need to do roundup/roundoff for extra bit in the 
+//   We also need to do roundup/roundoff for extra bit in the
 //   lexical representation.
 //   In order to do that, we need to store them in a canonical form,
 //   like this.
 //   [-]?[1-9].[0-9]+[E|e][-]?[0-9]+
-//   
+//
 //   Then we can impose the limit of length after the '.' before 'E'.
-//   
+//
 //---------
 
 // ---------------------------------------------------------------------------
@@ -138,22 +141,22 @@ static XMLCh value1[BUF_LEN+1];
 static const XMLCh DBL_MAX_POSITIVE[] =
 {
     chDigit_1, chPeriod,  chDigit_7, chDigit_9, chDigit_7, chDigit_6,
-    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,        
-    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,        
-    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull        
+    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,
+    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,
+    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull
 };
 
 //
-//DBL_MIN Minimum positive value. 
+//DBL_MIN Minimum positive value.
 //2.2250738585072014e-308
 //2.2250 738585 072014 e-308
 //
 static const XMLCh DBL_MIN_POSITIVE[] =
 {
     chDigit_2, chPeriod,  chDigit_2, chDigit_2, chDigit_5, chDigit_0,
-    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,        
-    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,        
-    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull    
+    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,
+    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,
+    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull
 };
 
 //
@@ -164,22 +167,22 @@ static const XMLCh DBL_MAX_NEGATIVE[] =
 {
     chDash,
     chDigit_1, chPeriod,  chDigit_7, chDigit_9, chDigit_7, chDigit_6,
-    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,        
-    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,        
-    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull    
+    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,
+    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,
+    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull
 };
 
 //
 // Deduced from DBL_MIN_POSITIVE
 // -2.2250738585072014e-308
 //
-static const XMLCh DBL_MIN_NEGATIVE[] = 
+static const XMLCh DBL_MIN_NEGATIVE[] =
 {
     chDash,
     chDigit_2, chPeriod,  chDigit_2, chDigit_2, chDigit_5, chDigit_0,
-    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,        
-    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,        
-    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull    
+    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,
+    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,
+    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull
 };
 
 //
@@ -188,8 +191,8 @@ static const XMLCh DBL_MIN_NEGATIVE[] =
 //
 
 static XMLDouble*  maxNegativeValue;
-static XMLDouble*  minNegativeValue; 
-static XMLDouble*  minPositiveValue; 
+static XMLDouble*  minNegativeValue;
+static XMLDouble*  minPositiveValue;
 static XMLDouble*  maxPositiveValue;
 
 /***
@@ -268,7 +271,7 @@ void XMLDouble::init(const XMLCh* const strValue)
 
         //
         // 1234.56E78
-        // 
+        //
         if ( ePos < tmpStrLen - 1)
         {
             XMLCh* tmpExponent = new XMLCh [tmpStrLen - ePos];
@@ -278,9 +281,9 @@ void XMLDouble::init(const XMLCh* const strValue)
         }
         //
         // 1234.56E
-        // 
+        //
         else
-        {        
+        {
             fExponent = new XMLBigInteger(XMLUni::fgZeroString);
         }
 
@@ -302,29 +305,29 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
     {
         isInitialized = true;  // set first to avoid recursion
 
-        maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);   
+        maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);
         XMLPlatformUtils::registerLazyData
         (
             new XMLDeleterFor<XMLDouble>(maxNegativeValue)
-        );        
+        );
 
-        minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE); 
+        minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE);
         XMLPlatformUtils::registerLazyData
         (
             new XMLDeleterFor<XMLDouble>(minNegativeValue)
-        );        
+        );
 
-        minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE); 
+        minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE);
         XMLPlatformUtils::registerLazyData
         (
             new XMLDeleterFor<XMLDouble>(minPositiveValue)
-        );        
+        );
 
         maxPositiveValue = new XMLDouble(DBL_MAX_POSITIVE);
         XMLPlatformUtils::registerLazyData
         (
             new XMLDeleterFor<XMLDouble>(maxPositiveValue)
-        );        
+        );
     }
 
     //
@@ -336,7 +339,7 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
         ( XMLString::compareString(strValue, DBL_MAX_POSITIVE) == 0 )  )
         return;
 
-    //  error: this < maxNegativeValue 
+    //  error: this < maxNegativeValue
     if ( compareValues(this, maxNegativeValue) == -1 )
     {
         ThrowXML2(NumberFormatException
@@ -346,7 +349,7 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
     }
 
     //  error: this > maxPositiveValue
-    if ( compareValues(this, maxPositiveValue) ==  1 )     
+    if ( compareValues(this, maxPositiveValue) ==  1 )
     {
         ThrowXML2(NumberFormatException
                 , XMLExcepts::XMLNUM_DBL_FLT_maxPos
@@ -389,7 +392,7 @@ XMLDouble::XMLDouble(const XMLDouble& toCopy)
 //
 XMLCh*  XMLDouble::toString() const
 {
-    switch (fType) 
+    switch (fType)
     {
     case NegINF:
         return XMLString::replicate(XMLUni::fgNegINFString);
@@ -414,7 +417,7 @@ XMLCh*  XMLDouble::toString() const
         if (fExponent)
         {
             XMLCh *ret_exponent = fExponent->toString();
-            XMLCh *ret_val = new XMLCh [ XMLString::stringLen(ret_mantissa) + 
+            XMLCh *ret_val = new XMLCh [ XMLString::stringLen(ret_mantissa) +
                                          XMLString::stringLen(ret_exponent) + 2];
             *ret_val = 0;
             XMLString::catString(ret_val, ret_mantissa);
@@ -453,7 +456,7 @@ int XMLDouble::compareValues(const XMLDouble* const lValue
         (!rValue->isSpecialValue())  )
     {
         //
-        // if we use fValue to compare two 
+        // if we use fValue to compare two
         // sequences "12.3456E4" and "1234.56E2",
         // they are _NOT_ the same. so we ask
         // BigDecimal to compare.
@@ -501,7 +504,7 @@ int XMLDouble::compareValues(const XMLDouble* const lValue
 int XMLDouble::compareSpecial(const XMLDouble* const specialValue
                             , const XMLDouble* const normalValue)
 {
-    switch (specialValue->fType) 
+    switch (specialValue->fType)
     {
     case NegINF:
         return -1;
@@ -525,3 +528,4 @@ int XMLDouble::compareSpecial(const XMLDouble* const specialValue
         return 0;
     }
 }
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/08/23 11:54:26  tng
+ * Add newline at the end and various typo fixes.
+ *
  * Revision 1.10  2001/08/21 18:14:55  knoaman
  * Defer creation of spec node.
  *
@@ -465,7 +468,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     return new DFAContentModel(false, specNode, isMixed);
 }
 
-ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode, bool checkUPA) {
+ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode, const bool checkUPA) {
 
     if (!curNode)
         return 0;

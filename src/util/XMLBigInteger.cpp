@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/08/23 11:54:26  tng
+ * Add newline at the end and various typo fixes.
+ *
  * Revision 1.6  2001/07/24 13:58:11  peiyongz
  * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
  *
@@ -335,11 +338,11 @@ XMLCh*  XMLBigInteger::toString() const
         retBuf[2] = chNull;
         return retBuf;
     }
- 
-    // Add the leading sign here    
+
+    // Add the leading sign here
     int strLen = XMLString::stringLen(fMagnitude);
     XMLCh* retBuf = new XMLCh[strLen+2];
-    
+
     retBuf[0] = (fSign == 1) ? chPlus : chDash;
     XMLString::moveChars(&(retBuf[1]), &(fMagnitude[0]), strLen);
     retBuf[strLen+1] = chNull;
@@ -356,3 +359,4 @@ int XMLBigInteger::intValue() const
     XMLString::textToBin(fMagnitude, retVal);
     return retVal * getSign();
 }
+

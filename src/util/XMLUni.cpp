@@ -795,3 +795,4 @@ const XMLCh XMLUni::fgZeroString[] =
 {
     chDigit_0, chNull
 };
+

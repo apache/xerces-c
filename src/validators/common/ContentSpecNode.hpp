@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/08/23 11:54:26  tng
+ * Add newline at the end and various typo fixes.
+ *
  * Revision 1.13  2001/08/22 16:04:07  tng
  * ContentSpecNode copy constructor should copy Min and Max as well.
  *
@@ -276,7 +279,7 @@ inline ContentSpecNode::ContentSpecNode() :
     , fMinOccurs(1)
     , fMaxOccurs(1)
 {
-    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+    fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline
@@ -292,7 +295,7 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
     , fMaxOccurs(1)
 {
     if (!element)
-        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
     else
         fElement = new QName(element);
 }
@@ -313,7 +316,7 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes               type
     , fMinOccurs(1)
     , fMaxOccurs(1)
 {
-    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+    fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline
@@ -323,7 +326,7 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
     if (tempElement)
         fElement = new QName(tempElement);
     else
-        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 
     const ContentSpecNode *tmp = toCopy.getFirst();
     if (tmp)
