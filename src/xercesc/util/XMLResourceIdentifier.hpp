@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/25 18:16:38  knoaman
+ * Documentation update. Thanks to David Cargill.
+ *
  * Revision 1.1  2003/10/30 21:37:32  knoaman
  * Enhanced Entity Resolver Support. Thanks to David Cargill.
  *
@@ -84,19 +87,19 @@ XERCES_CPP_NAMESPACE_BEGIN
   * </tr>
   * <tr>
   *  <td>SchemaGrammar</td>
-  *  <td>schemaLocation & nameSpace</td>
+  *  <td>schemaLocation, nameSpace & baseURI (current document)</td>
   * </tr>
   * <tr>
   *  <td>SchemaImport</td>
-  *  <td>schemaLocation & nameSpace</td>
+  *  <td>schemaLocation, nameSpace & baseURI (current document)</td>
   * </tr>
   * <tr>
   *  <td>SchemaInclude</td>
-  *  <td>schemaLocation</td>
+  *  <td>schemaLocation & baseURI (current document)</td>
   * </tr>
   * <tr>
   *  <td>SchemaRedefine</td>
-  *  <td>schemaLocation</td>
+  *  <td>schemaLocation & baseURI (current document)</td>
   * </tr>
   * <tr>
   *  <td>ExternalEntity</td>
