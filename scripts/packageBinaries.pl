@@ -121,6 +121,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir/samples/PParse");
     psystem ("mkdir $targetdir/samples/StdInParse");
     psystem ("mkdir $targetdir/samples/EnumVal");
+    psystem ("mkdir $targetdir/samples/SEnumVal");
     psystem ("mkdir $targetdir/samples/CreateDOMDocument");
     psystem ("mkdir $targetdir/doc");
     psystem ("mkdir $targetdir/doc/html");
@@ -316,6 +317,8 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem("rm -f $targetdir/samples/StdInParse/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
     psystem("rm -f $targetdir/samples/EnumVal/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/SEnumVal/* $targetdir/samples/SEnumVal");
+    psystem("rm -f $targetdir/samples/SEnumVal/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
     psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
 
@@ -519,6 +522,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/samples/PParse");
     psystem ("mkdir $targetdir/samples/StdInParse");
     psystem ("mkdir $targetdir/samples/EnumVal");
+    psystem ("mkdir $targetdir/samples/SEnumVal");
     psystem ("mkdir $targetdir/samples/CreateDOMDocument");
     psystem ("mkdir $targetdir/doc");
     psystem ("mkdir $targetdir/doc/html");
@@ -719,6 +723,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("rm -f $targetdir/samples/StdInParse/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
     psystem("rm -f $targetdir/samples/EnumVal/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/SEnumVal/* $targetdir/samples/SEnumVal");
+    psystem("rm -f $targetdir/samples/SEnumVal/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
     psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
     psystem("rm -f $targetdir/samples/Makefile");
