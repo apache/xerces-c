@@ -310,7 +310,7 @@ rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat
         solved this same problem before you, by checking the Apache XML
         mailing list archives at <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">
         http://marc.theaimsgroup.com/?l=xerces-c-dev</jump> and the
-		<jump href="http://nagoya.apache.org/bugzilla/">Bugzilla</jump>
+		<jump href="http://nagoya.apache.org/jira">Jira</jump>
 		Apache bug database.</p>
     </s2>
 

@@ -4,8 +4,8 @@
 <s1 title="Bug Reporting">
 
     <s2 title="How to report bugs">
-        <p> Please report bugs to <jump href="http://nagoya.apache.org/bugzilla/">Bugzilla</jump>,
-	     the Apache bug database.  Pick the product "Xerces-C++: Apache XML parsers in C++"
+        <p> Please report bugs to <jump href="http://nagoya.apache.org/jira">Jira</jump>,
+	     the Apache bug database.  Pick the product "Xerces-C++"
             using the following components:
         </p>
         <table>
@@ -27,20 +27,15 @@
     </s2>
 			
     <s2 title="Search first">
-        <p> Check the <jump href="http://nagoya.apache.org/bugzilla/">Bugzilla</jump> database
+        <p> Check the <jump href="http://nagoya.apache.org/jira">Jira</jump> database
             before submitting your bug report to avoid creating a duplicate report.
             Even the bug has been reported already, you may add a comment to the existing report
             since your contribution may lead to a quicker identification/resolution to the bug reported.
         </p>
         <p> Here is the list of
             <jump href=
-            "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=allwordssubstr&amp;long_desc=&amp;long_desc_type=allwordssubstr&amp;bug_file_loc=&amp;bug_file_loc_type=allwordssubstr&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;order=bugs.bug_id">
-            outstanding bugs</jump>  that are currently reported in Bugzilla.
-        </p>
-        <p> Here is the list of
-            <jump href=
-            "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=PatchAvailable&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
-            outstanding patch</jump>.
+            "http://nagoya.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=10510&amp;statusIds=1">
+            outstanding bugs</jump>  that are currently reported in Jira.
         </p>
     </s2>
 
@@ -63,8 +58,6 @@
             are all necessary information to allow developer to reproduce,
             identify, evaluate and eventually, fix the bug, which is the very
             purpose of your reporting of the bug.
-        </p>
-        <p> And please use the Keyword <code>"PatchAvailable"</code> if a patch is attached
-        </p>
+        </p>        
     </s2>
 </s1>
