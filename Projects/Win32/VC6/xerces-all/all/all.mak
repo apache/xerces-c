@@ -36,11 +36,12 @@ ALL :
 
 !ELSE 
 
-ALL : "XercesDeprecatedDOMLib - Win64 Release" "SCMPrint - Win64 Release" "PSVIWriter - Win64 Release" "DOMNormalizerTest - Win64 Release" "DOMTypeInfoTest - Win64 Release" "DeprecatedDOMCount - Win64 Release" "DOMTraversalTest - Win64 Release" "XercesLib - Win64 Release" "MemHandlerTest - Win64 Release" "XSerializerTest - Win64 Release" "ThreadTest - Win64 Release" "StdInParse - Win64 Release" "SEnumVal - Win64 Release" "SAXPrint - Win64 Release" "SAXCount - Win64 Release" "SAX2Print - Win64 Release" "SAX2Count - Win64 Release" "Redirect - Win64 Release" "RangeTest - Win64 Release" "PParse - Win64 Release" "MemParse - Win64 Release" "InitTermTest - Win64 Release" "EnumVal - Win64 Release" "EncodingTest - Win64 Release" "DOMTest - Win64 Release" "DOMPrint - Win64 Release" "DOMMemTest - Win64 Release" "DOMCount - Win64 Release" "CreateDOMDocument - Win64 Release" 
+ALL : "XSValueTest - Win64 Release" "XercesDeprecatedDOMLib - Win64 Release" "SCMPrint - Win64 Release" "PSVIWriter - Win64 Release" "DOMNormalizerTest - Win64 Release" "DOMTypeInfoTest - Win64 Release" "DeprecatedDOMCount - Win64 Release" "DOMTraversalTest - Win64 Release" "XercesLib - Win64 Release" "MemHandlerTest - Win64 Release" "XSerializerTest - Win64 Release" "ThreadTest - Win64 Release" "StdInParse - Win64 Release" "SEnumVal - Win64 Release" "SAXPrint - Win64 Release" "SAXCount - Win64 Release" "SAX2Print - Win64 Release" "SAX2Count - Win64 Release" "Redirect - Win64 Release" "RangeTest - Win64 Release" "PParse - Win64 Release" "MemParse - Win64 Release" "InitTermTest - Win64 Release" "EnumVal - Win64 Release" "EncodingTest - Win64 Release" "DOMTest - Win64 Release" "DOMPrint - Win64 Release" "DOMMemTest - Win64 Release" "DOMCount - Win64 Release" "CreateDOMDocument - Win64 Release" 
+
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"CreateDOMDocument - Win64 ReleaseCLEAN" "DOMCount - Win64 ReleaseCLEAN" "DOMMemTest - Win64 ReleaseCLEAN" "DOMPrint - Win64 ReleaseCLEAN" "DOMTest - Win64 ReleaseCLEAN" "EncodingTest - Win64 ReleaseCLEAN" "EnumVal - Win64 ReleaseCLEAN" "InitTermTest - Win64 ReleaseCLEAN" "MemParse - Win64 ReleaseCLEAN" "PParse - Win64 ReleaseCLEAN" "RangeTest - Win64 ReleaseCLEAN" "Redirect - Win64 ReleaseCLEAN" "SAX2Count - Win64 ReleaseCLEAN" "SAX2Print - Win64 ReleaseCLEAN" "SAXCount - Win64 ReleaseCLEAN" "SAXPrint - Win64 ReleaseCLEAN" "SEnumVal - Win64 ReleaseCLEAN" "StdInParse - Win64 ReleaseCLEAN" "ThreadTest - Win64 ReleaseCLEAN" "XSerializerTest - Win64 ReleaseCLEAN" "MemHandlerTest - Win64 ReleaseCLEAN" "XercesLib - Win64 ReleaseCLEAN" "DOMTraversalTest - Win64 ReleaseCLEAN" "DeprecatedDOMCount - Win64 ReleaseCLEAN" "DOMTypeInfoTest - Win64 ReleaseCLEAN" "DOMNormalizerTest - Win64 ReleaseCLEAN" "PSVIWriter - Win64 ReleaseCLEAN" "SCMPrint - Win64 ReleaseCLEAN" "XercesDeprecatedDOMLib - Win64 ReleaseCLEAN" 
+CLEAN :"CreateDOMDocument - Win64 ReleaseCLEAN" "DOMCount - Win64 ReleaseCLEAN" "DOMMemTest - Win64 ReleaseCLEAN" "DOMPrint - Win64 ReleaseCLEAN" "DOMTest - Win64 ReleaseCLEAN" "EncodingTest - Win64 ReleaseCLEAN" "EnumVal - Win64 ReleaseCLEAN" "InitTermTest - Win64 ReleaseCLEAN" "MemParse - Win64 ReleaseCLEAN" "PParse - Win64 ReleaseCLEAN" "RangeTest - Win64 ReleaseCLEAN" "Redirect - Win64 ReleaseCLEAN" "SAX2Count - Win64 ReleaseCLEAN" "SAX2Print - Win64 ReleaseCLEAN" "SAXCount - Win64 ReleaseCLEAN" "SAXPrint - Win64 ReleaseCLEAN" "SEnumVal - Win64 ReleaseCLEAN" "StdInParse - Win64 ReleaseCLEAN" "ThreadTest - Win64 ReleaseCLEAN" "XSerializerTest - Win64 ReleaseCLEAN" "MemHandlerTest - Win64 ReleaseCLEAN" "XercesLib - Win64 ReleaseCLEAN" "DOMTraversalTest - Win64 ReleaseCLEAN" "DeprecatedDOMCount - Win64 ReleaseCLEAN" "DOMTypeInfoTest - Win64 ReleaseCLEAN" "DOMNormalizerTest - Win64 ReleaseCLEAN" "PSVIWriter - Win64 ReleaseCLEAN" "SCMPrint - Win64 ReleaseCLEAN" "XercesDeprecatedDOMLib - Win64 ReleaseCLEAN" "XSValueTest - Win64 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -1529,6 +1530,56 @@ MTL_PROJ=
 "XercesDeprecatedDOMLib - Win64 ReleaseCLEAN" : 
    cd "..\XercesLib"
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesDeprecatedDOMLib.mak" CFG="XercesDeprecatedDOMLib - Win64 Release" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "all - Win32 Release"
+
+"XSValueTest - Win32 Release" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win32 Release" 
+   cd "..\all"
+
+"XSValueTest - Win32 ReleaseCLEAN" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ELSEIF  "$(CFG)" == "all - Win32 Debug"
+
+"XSValueTest - Win32 Debug" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win32 Debug" 
+   cd "..\all"
+
+"XSValueTest - Win32 DebugCLEAN" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ELSEIF  "$(CFG)" == "all - Win64 Debug"
+
+"XSValueTest - Win64 Debug" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win64 Debug" 
+   cd "..\all"
+
+"XSValueTest - Win64 DebugCLEAN" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win64 Debug" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ELSEIF  "$(CFG)" == "all - Win64 Release"
+
+"XSValueTest - Win64 Release" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win64 Release" 
+   cd "..\all"
+
+"XSValueTest - Win64 ReleaseCLEAN" : 
+   cd "..\XSValueTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XSValueTest.mak" CFG="XSValueTest - Win64 Release" RECURSE=1 CLEAN 
    cd "..\all"
 
 !ENDIF 
