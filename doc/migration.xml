@@ -38,6 +38,7 @@
         <li>Optionally ignore loading of external DTD</li>
         <li>Project files for Microsoft Visual C++ .Net</li>
         <li>Codewarrior 8 support</li>
+        <li>Option to enable/disable strict IANA encoding name checking</li>
         <li>plus many more bug fixes and performance enhancement</li>
       </ul>
     </s3>
@@ -272,6 +273,12 @@ void test(char* xmlFile) {
               <li>To support access to Grammar info, the following are added:</li>
                 <ul>
                    <li>XercesDOMParser/DOMParser/SAXParser/SAX2XMLReader functions getRootGrammar, getGrammar, getURIText.</li>
+                </ul>
+              <li>To support strict IANA encoding name checking, the following are added:</li>
+                <ul>
+                   <li>class EncodingValidator.</li>
+                   <li>PlatformUtils functions strictIANAEncoding, isStrictIANAEncoding.</li>
+                   <li>XMLTransService functions strictIANAEncoding, isStrictIANAEncoding.</li>
                 </ul>
             </ul>
         </s4>
