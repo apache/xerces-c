@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/09/28 04:42:21  cargilld
+ * Update sample to use an error handler and only generate xsmodel when a schema document has been loaded successfully.
+ *
  * Revision 1.4  2004/09/08 13:55:34  peiyongz
  * Apache License Version 2.0
  *
@@ -54,6 +57,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/sax2/DefaultHandler.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -114,6 +118,73 @@ inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& ta
 {
     target << toDump.localForm();
     return target;
+}
+
+class SCMPrintHandler : public DefaultHandler
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    SCMPrintHandler();
+    ~SCMPrintHandler();
+
+    bool getSawErrors() const
+    {
+        return fSawErrors;
+    }
+
+	void warning(const SAXParseException& exc);
+    void error(const SAXParseException& exc);
+    void fatalError(const SAXParseException& exc);
+    void resetErrors();
+
+
+private:
+    bool            fSawErrors;
+};
+
+SCMPrintHandler::SCMPrintHandler() :
+    fSawErrors(false)
+{
+}
+
+SCMPrintHandler::~SCMPrintHandler()
+{
+}
+
+// ---------------------------------------------------------------------------
+//  SCMPrintHandler: Overrides of the SAX ErrorHandler interface
+// ---------------------------------------------------------------------------
+void SCMPrintHandler::error(const SAXParseException& e)
+{
+    fSawErrors = true;
+    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
+		 << ", line " << e.getLineNumber()
+		 << ", char " << e.getColumnNumber()
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+}
+
+void SCMPrintHandler::fatalError(const SAXParseException& e)
+{
+    fSawErrors = true;
+    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+		 << ", line " << e.getLineNumber()
+		 << ", char " << e.getColumnNumber()
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+}
+
+void SCMPrintHandler::warning(const SAXParseException& e)
+{
+    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
+		 << ", line " << e.getLineNumber()
+		 << ", char " << e.getColumnNumber()
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+}
+
+void SCMPrintHandler::resetErrors()
+{
+    fSawErrors = false;
 }
 
 // ---------------------------------------------------------------------------
@@ -219,9 +290,13 @@ int main(int argC, char* argV[])
         parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, false);
 	    parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
 	    parser->setFeature(XMLUni::fgXercesDynamic, true);
+        parser->setProperty(XMLUni::fgXercesScannerName, (void *)XMLUni::fgSGXMLScanner);
 
+        SCMPrintHandler handler;    
+        parser->setErrorHandler(&handler);
 
         bool more = true;
+        bool parsedOneSchemaOkay = false;
         XERCES_STD_QUALIFIER ifstream fin;
 
         // the input is a list file
@@ -234,7 +309,7 @@ int main(int argC, char* argV[])
         }
 
         while (more)
-        {
+        {            
             char fURI[1000];
             //initialize the array to zeros
             memset(fURI,0,sizeof(fURI));
@@ -258,32 +333,48 @@ int main(int argC, char* argV[])
             }
 
             parser->loadGrammar(xsdFile, Grammar::SchemaGrammarType, true);
+            if (handler.getSawErrors())
+            {
+                handler.resetErrors();
+            }
+            else
+            {
+                parsedOneSchemaOkay = true;
+            }
         }
 
-        XERCES_STD_QUALIFIER cout << "********** Printing out information from Schema **********" << "\n\n";
+        if (parsedOneSchemaOkay)
+        {
+            XERCES_STD_QUALIFIER cout << "********** Printing out information from Schema **********" << "\n\n";
 
-        XSModel *xsModel = grammarPool->getXSModel();
-        if (xsModel)
-        {    
-            StringList *namespaces = xsModel->getNamespaces();
-            for (unsigned i = 0; i < namespaces->size(); i++) {
+            XSModel *xsModel = grammarPool->getXSModel();
+            if (xsModel)
+            {    
+                StringList *namespaces = xsModel->getNamespaces();
+                for (unsigned i = 0; i < namespaces->size(); i++) {
     
-                XERCES_STD_QUALIFIER cout << "Processing Namespace:   ";
-                const XMLCh *nameSpace = namespaces->elementAt(i);
-                if (nameSpace && (XMLString::stringLen(nameSpace)>0))
-                    XERCES_STD_QUALIFIER cout << StrX(nameSpace);
-                XERCES_STD_QUALIFIER cout << "\n============================================" << XERCES_STD_QUALIFIER endl << XERCES_STD_QUALIFIER endl;
+                    XERCES_STD_QUALIFIER cout << "Processing Namespace:   ";
+                    const XMLCh *nameSpace = namespaces->elementAt(i);
+                    if (nameSpace && (XMLString::stringLen(nameSpace)>0))
+                        XERCES_STD_QUALIFIER cout << StrX(nameSpace);
+                    XERCES_STD_QUALIFIER cout << "\n============================================" << XERCES_STD_QUALIFIER endl << XERCES_STD_QUALIFIER endl;
 
-                processElements(xsModel->getComponentsByNamespace(XSConstants::ELEMENT_DECLARATION,
+                    processElements(xsModel->getComponentsByNamespace(XSConstants::ELEMENT_DECLARATION,
                                                                   nameSpace));
-                processTypeDefinitions(xsModel->getComponentsByNamespace(XSConstants::TYPE_DEFINITION,
+                    processTypeDefinitions(xsModel->getComponentsByNamespace(XSConstants::TYPE_DEFINITION,
                                                                          nameSpace));
-            }   
+                }   
+            }
+            else
+            {
+                XERCES_STD_QUALIFIER cout << "No XSModel to print" << "\n\n";
+            }
         }
         else
         {
-            XERCES_STD_QUALIFIER cout << "No XSModel to print" << "\n\n";
+            XERCES_STD_QUALIFIER cout << "Did not parse a schema document cleanly so not printing Schema for Schema XSModel information";
         }
+        
         XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
     }
     catch (const OutOfMemoryException&)
