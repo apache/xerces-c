@@ -56,17 +56,17 @@
                        <li>Subset of Built-in Datatypes</li>
                        <ul>
                                 <li>Primitive Datatypes</li>
-                                <ol>
+                                <ul>
                                       <li>string</li>
                                       <li>boolean</li>
                                       <li>decimal</li>
                                       <li>hexbinary</li>
                                       <li>base64binary</li>
-                                </ol>
+                                </ul>
                                 <li>Derived Datatypes</li>
-                                <ol>
+                                <ul>
                                       <li>integer</li>
-                                </ol>
+                                </ul>
                        </ul>
                        <li>xsi Markup</li>
                        <ul>
@@ -87,7 +87,7 @@
                        <li>Subset of Built-in Datatypes</li>
                        <ul>
                                 <li>Derived Datatypes</li>
-                                <ol>
+                                <ul>
                                       <li>normalizedString</li>
                                       <li>token</li>
                                       <li>language</li>
@@ -101,7 +101,7 @@
                                       <li>ENTITY</li>
                                       <li>ENTITIES</li>
                                       <li>nonNegativeInteger</li>
-                                </ol>
+                                </ul>
                        </ul>
                </ul>
 
