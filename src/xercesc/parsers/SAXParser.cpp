@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.38  2004/12/30 15:23:41  amassari
+ * Notify advanced handlers of the whitespace before and after the root document element (jira# 729)
+ *
  * Revision 1.37  2004/12/07 19:45:43  knoaman
  * An option to ignore a cached DTD grammar when a document contains an
  * internal and external subset.
@@ -939,12 +942,12 @@ void SAXParser::docCharacters(  const   XMLCh* const    chars
                                 , const bool            cdataSection)
 {
     // Suppress the chars before the root element.
-    if (!fElemDepth)
-        return;
-
-    // Just map to the SAX document handler
-    if (fDocHandler)
-        fDocHandler->characters(chars, length);
+    if (fElemDepth)
+    {
+        // Just map to the SAX document handler
+        if (fDocHandler)
+            fDocHandler->characters(chars, length);
+    }
 
     //
     //  If there are any installed advanced handlers, then lets call them

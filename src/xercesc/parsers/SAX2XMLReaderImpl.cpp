@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.42  2004/12/30 15:23:41  amassari
+ * Notify advanced handlers of the whitespace before and after the root document element (jira# 729)
+ *
  * Revision 1.41  2004/12/07 19:45:43  knoaman
  * An option to ignore a cached DTD grammar when a document contains an
  * internal and external subset.
@@ -777,20 +780,20 @@ void SAX2XMLReaderImpl::docCharacters(  const   XMLCh* const    chars
                                 , const bool            cdataSection)
 {
     // Suppress the chars before the root element.
-    if (!fElemDepth)
-        return;
+    if (fElemDepth)
+    {
+        // Call the installed LexicalHandler.
+        if (cdataSection && fLexicalHandler)
+            fLexicalHandler->startCDATA();
 
-   // Call the installed LexicalHandler.
-   if (cdataSection && fLexicalHandler)
-        fLexicalHandler->startCDATA();
+        // Just map to the SAX document handler
+        if (fDocHandler)
+            fDocHandler->characters(chars, length);
 
-    // Just map to the SAX document handler
-    if (fDocHandler)
-        fDocHandler->characters(chars, length);
-
-   // Call the installed LexicalHandler.
-   if (cdataSection && fLexicalHandler)
-        fLexicalHandler->endCDATA();
+        // Call the installed LexicalHandler.
+        if (cdataSection && fLexicalHandler)
+            fLexicalHandler->endCDATA();
+    }
 
     //
     //  If there are any installed advanced handlers, then lets call them
@@ -803,17 +806,17 @@ void SAX2XMLReaderImpl::docCharacters(  const   XMLCh* const    chars
 
 void SAX2XMLReaderImpl::docComment(const XMLCh* const commentText)
 {
-   // Call the installed LexicalHandler.
-   if (fLexicalHandler)
-   {
+    // Call the installed LexicalHandler.
+    if (fLexicalHandler)
+    {
         // SAX2 reports comment text like characters -- as an
         // array with a length.
         fLexicalHandler->comment(commentText, XMLString::stringLen(commentText));
-   }
+    }
 
     //
     //  OK, if there are any installed advanced handlers,
-   // then let's call them with this info.
+    // then let's call them with this info.
     //
     for (unsigned int index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docComment(commentText);
