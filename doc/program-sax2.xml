@@ -366,7 +366,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
            Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
            If the same property is set more than once, the last one takes effect.</p>
 
-           <p>Property values can be queried using the function <code>void* SAX2XMLReader::getFeature(const XMLCh* const)</code>.
+           <p>Property values can be queried using the function <code>void* SAX2XMLReader::getProperty(const XMLCh* const)</code>.
             The parser owns the returned pointer, and the memory allocated for the returned pointer will
             be destroyed when the parser is deleted.  To ensure accessibility of the returned information after
             the parser is deleted, callers need to copy and store the returned information somewhere else.
