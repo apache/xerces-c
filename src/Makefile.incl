@@ -138,7 +138,7 @@ endif
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, UNIXWARE)
   ifeq (${CXX}, g++)
-    PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
     ifeq (${TRANSCODER}, ICU)

@@ -275,6 +275,8 @@ elif test $platform = "ptx"; then
 elif test $platform = "hp-10"; then
     threadingLibs="-lcma"
     threadingDefines="-DXML_USE_DCE"
+elif test $platform = "unixware"; then
+	threadingLibs="-lthread"
 fi
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/02/09 14:40:02  tng
+ * Update support for SCO UnixWare 7 (gcc).  Tested under UnixWare 7.1.1 with gcc version 2.95.2 19991024 (release) with gmake 3.79.1.  Updated by Martin Kalen.
+ *
  * Revision 1.8  2000/07/25 22:30:54  aruna1
  * Char definitions in XMLUni moved to XMLUniDefs
  *
@@ -92,7 +95,7 @@
 // ---------------------------------------------------------------------------
 
 #if !defined (APP_NO_THREADS)
-#include    <thread.h>
+#include    <pthread.h>
 #endif // APP_NO_THREADS
 
 
@@ -102,12 +105,10 @@
 #include    <errno.h>
 #include    <libgen.h>
 #include    <sys/timeb.h>
-#include    <string.h>
-#include    <link.h>
-#include    <dlfcn.h>
-#include    <util/Janitor.hpp>
+#include    <limits.h>
 #include    <util/PlatformUtils.hpp>
 #include    <util/RuntimeException.hpp>
+#include    <util/Janitor.hpp>
 #include    <util/Mutexes.hpp>
 #include    <util/XMLString.hpp>
 #include    <util/XMLUniDefs.hpp>
@@ -115,16 +116,28 @@
 
 #if defined (XML_USE_ICU_TRANSCODER)
     #include <util/Transcoders/ICU/ICUTransService.hpp>
-#else   // use native transcoder
+#elif defined (XML_USE_NATIVE_TRANSCODER)
     #include <util/Transcoders/Iconv/IconvTransService.hpp>
+#else
+    #error Transcoding service unknown by UnixWarePlatformUtils.cpp
 #endif
 
-#if defined (XML_USE_ICU_MESSAGELOADER)
+
+#if defined(XML_USE_ICU_MESSAGELOADER)
     #include <util/MsgLoaders/ICU/ICUMsgLoader.hpp>
 #elif defined (XML_USE_ICONV_MESSAGELOADER)
     #include <util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp>
-#else   // use In-memory message loader
+#elif defined (XML_USE_INMEM_MESSAGELOADER)
     #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#else
+    #error Message loading service unknown by UnixWarePlatformUtils.cpp
+#endif
+
+
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
+    #include <util/NetAccessors/libWWW/LibWWWNetAccessor.hpp>
+#elif defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
 
@@ -164,7 +177,13 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
+    return new LibWWWNetAccessor();
+#elif defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
 
 
@@ -176,8 +195,8 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 //
 //  This method is called by the platform independent part of this class
 //  when client code asks to have one of the supported message sets loaded.
-//  In our case, we use the ICU based message loader mechanism.
 //
+
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
     XMLMsgLoader* retVal;
@@ -193,7 +212,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     }
     catch(...)
     {
-        panic(XMLPlatformUtils::Panic_NoDefTranscoder);
+        panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
@@ -207,87 +226,13 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 
 XMLTransService* XMLPlatformUtils::makeTransService()
 {
-
 #if defined (XML_USE_ICU_TRANSCODER)
-    //
-    //  We need to figure out the path to the Intl classes. They will be
-    //  in the ./Intl subdirectory under this DLL.
-    //
-
-    static const char * xml4cIntlDirEnvVar = "ICU_DATA";
-    char * intlPath = 0;
-
-    char* envVal = getenv(xml4cIntlDirEnvVar);
-    //
-    // Check if environment variable is set
-    //
-    if (envVal != NULL)         // We have found an environment variable
-    {
-        unsigned int pathLen = strlen(envVal);
-        intlPath = new char[pathLen + 2];
-
-        strcpy((char *) intlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) intlPath, "/");
-        }
-
-        ICUTransService::setICUPath(intlPath);
-        if (intlPath != NULL) delete intlPath;
 
         return new ICUTransService;
-    }
 
-    //
-    //  If we did not find the environment var, so lets try to go the auto
-    //  search route.
-    //
+#elif defined (XML_USE_ICONV_TRANSCODER)
 
-    char libName[256];
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".so");
-
-    void* handle = NULL;
-    handle = dlopen(libName, RTLD_LAZY);
-    if (!handle)
-    {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
-    }
-
-    int       ret = 0;
-    Link_map *firstLib   = NULL;
-
-    ret = dlinfo(handle, RTLD_DI_LINKMAP, (void*) &firstLib);
-    Link_map* nextLib = NULL;
-    nextLib = firstLib;
-
-    while (nextLib)
-    {
-        char* fileName = nextLib->l_name;
-        if (strstr(fileName, libName) != NULL)
-        {
-            char* copyTo = strrchr(fileName, '/');
-            size_t chars_to_extract = copyTo - fileName;
-            char *libPathName = new char[chars_to_extract + 1];
-            strncpy(libPathName, fileName, chars_to_extract);
-            libPathName[chars_to_extract] = 0;
-            fgIntlPath = new char[strlen(libPathName)+ strlen("/icu/data/")+1];
-            strcpy((char *) fgIntlPath, libPathName);
-            strcat((char *) fgIntlPath, "/icu/data/");
-            delete libPathName;
-            break;
-        }
-        nextLib = nextLib->l_next;
-    }
-
-    if (fgIntlPath == NULL)
-    {
-        panic(XMLPlatformUtils::Panic_NoTransService);
-    }
-
-    ICUTransService::setICUPath(fgIntlPath);
-    return new ICUTransService;
+    return new IconvTransService;
 
 #else // Use Native transcoding service
 
@@ -329,7 +274,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
 unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 {
     // Get the current position
-    int curPos = ftell( (FILE*)theFile);
+    int curPos = ftell((FILE*) theFile);
     if (curPos == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetSize);
@@ -353,7 +298,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
                  XMLExcepts::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
-    if (fseek( (FILE*) theFile, 0, SEEK_END) )
+	if (fseek((FILE*) theFile, 0, SEEK_END))
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToEnd);
 
@@ -370,7 +315,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     return (unsigned int)retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     const char* tmpFileName = XMLString::transcode(fileName);
     ArrayJanitor<char> janText((char*)tmpFileName);
@@ -381,13 +326,26 @@ FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+{
+    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
+    
+    if (retVal == NULL)
+        return 0;
+    return retVal;
+}
+
+FileHandle XMLPlatformUtils::openStdInHandle()
+{
+	return (FileHandle)fdopen(dup(0), "rb");
+}
+
 unsigned int
-XMLPlatformUtils::readFileBuffer(FileHandle              theFile
+XMLPlatformUtils::readFileBuffer( FileHandle          theFile
                                , const unsigned int      toRead
                                , XMLByte* const          toFill)
 {
-    size_t noOfItemsRead =
-               fread((void*) toFill, 1, toRead, (FILE*) theFile);
+    size_t noOfItemsRead = fread((void*) toFill, 1, toRead, (FILE*) theFile);
 
     if(ferror((FILE*) theFile))
     {
@@ -408,28 +366,116 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 }
 
 
+XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
+                                    , const XMLCh* const    relativePath)
 
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
-// ---------------------------------------------------------------------------
-
-#if defined (SOLARIS)
-extern "C" int ftime(struct timeb *); // UnixWare headers missing this decl
-#endif
- 
-unsigned long XMLPlatformUtils::getCurrentMillis()
 {
-    timeb aTime;
-    ftime(&aTime);
-    return (unsigned long)(aTime.time*1000 + aTime.millitm);
+    // Create a buffer as large as both parts and empty it
+    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
+                              + XMLString::stringLen(relativePath)
+                              + 2];
+    *tmpBuf = 0;
+
+    //
+    //  If we have no base path, then just take the relative path as
+    //  is.
+    //
+    if (!basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+ 
+    if (!*basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
+    if ((*basePtr != chForwardSlash)
+    &&  (*basePtr != chBackSlash))
+    {
+        while ((basePtr >= basePath)
+        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+        {
+            basePtr--;
+        }
+    }
+
+    // There is no relevant base path, so just take the relative part
+    if (basePtr < basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    // After this, make sure the buffer gets handled if we exit early
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+
+    //
+    //  We have some path part, so we need to check to see if we ahve to
+    //  weave any of the parts together.
+    //
+    const XMLCh* pathPtr = relativePath;
+    while (true)
+    {
+        // If it does not start with some period, then we are done
+        if (*pathPtr != chPeriod)
+            break;
+
+        unsigned int periodCount = 1;
+        pathPtr++;
+        if (*pathPtr == chPeriod)
+        {
+            pathPtr++;
+            periodCount++;
+        }
+
+        // Has to be followed by a \ or / or the null to mean anything
+        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
+        &&  *pathPtr)
+        {
+            break;
+        }
+        if (*pathPtr)
+            pathPtr++;
+
+        // If its one period, just eat it, else move backwards in the base
+        if (periodCount == 2)
+        {
+            basePtr--;
+            while ((basePtr >= basePath)
+            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            {
+                basePtr--;
+            }
+
+            // The base cannot provide enough levels, so its in error/
+            if (basePtr < basePath)
+                ThrowXML(XMLPlatformUtilsException,
+                         XMLExcepts::File_BasePathUnderflow);
+        }
+    }
+
+    // Copy the base part up to the base pointer
+    XMLCh* bufPtr = tmpBuf;
+    const XMLCh* tmpPtr = basePath;
+    while (tmpPtr <= basePtr)
+        *bufPtr++ = *tmpPtr++;
+
+    // And then copy on the rest of our path
+    XMLString::copyString(bufPtr, pathPtr);
+
+    // Orphan the buffer and return it
+    janBuf.orphan();
+    return tmpBuf;
 }
 
-
-
-XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
     //
-    //  NOTE: THe path provided has always already been opened successfully,
+    //  NOTE: The path provided has always already been opened successfully,
     //  so we know that its not some pathological freaky path. It comes in
     //  in native format, and goes out as Unicode always
     //
@@ -437,21 +483,18 @@ XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
     ArrayJanitor<char> janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-     char* tmpPath = dirname((char*)newSrc);
-    if (!tmpPath)
+    char *absPath = new char[PATH_MAX];
+    ArrayJanitor<char> janText2(absPath);
+    //get the absolute path
+    char* retPath = realpath(newSrc, absPath);
+
+    if (!retPath)
     {
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetBasePathName);
     }
-
-    char* newXMLString = new char [strlen(tmpPath) +2];
-    ArrayJanitor<char> newJanitor(newXMLString);
-    strcpy(newXMLString, tmpPath);
-        strcat(newXMLString , "/");
-    // Return a copy of the path, in Unicode format
-    return XMLString::transcode(newXMLString);
+    return XMLString::transcode(absPath);
 }
-
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 {
@@ -471,25 +514,16 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
 
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+
+unsigned long XMLPlatformUtils::getCurrentMillis()
 {
-    WriteCharStr(stderr, toWrite);
-}
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    WriteUStrStdErr(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    WriteUStrStdOut(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    WriteCharStr(stdout, toWrite);
+    timeb aTime;
+    ftime(&aTime);
+    return (unsigned long)(aTime.time*1000 + aTime.millitm);
 }
 
 
@@ -502,59 +536,95 @@ void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-static XMLMutex atomicOpsMutex;
+static pthread_mutex_t* gAtomicOpMutex =0 ;
 
 void XMLPlatformUtils::platformInit()
 {
     //
-    // The atomicOps mutex needs to be created early.
+    // The gAtomicOpMutex mutex needs to be created 
+    // because compareAndSwap, atomicIncrement and atomicDecrement
+    // does not have the atomic system calls for usage
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+
+    gAtomicOpMutex = new pthread_mutex_t;   
+
+    if (pthread_mutex_init(gAtomicOpMutex, NULL))
+        panic( XMLPlatformUtils::Panic_SystemInit );
 }
+
+class  RecursiveMutex
+{
+public:
+    pthread_mutex_t   mutex;
+    int               recursionCount;
+    pthread_t         tid;
+
+    RecursiveMutex() { 
+		if (pthread_mutex_init(&mutex, NULL))
+			ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
+		recursionCount = 0;
+		tid = 0;
+	};
+
+    ~RecursiveMutex() {
+		if (pthread_mutex_destroy(&mutex))
+			ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
+	};
+
+	void lock()      {
+		if (pthread_equal(tid, pthread_self()))
+		{
+			recursionCount++;
+			return;
+		}
+		if (pthread_mutex_lock(&mutex) != 0)
+			ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
+		tid = pthread_self();
+		recursionCount = 1;
+	};
+
+
+	void unlock()    {
+		if (--recursionCount > 0)
+			return;
+
+		if (pthread_mutex_unlock(&mutex) != 0)
+			ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
+		tid = 0;
+	};
+};
+
+void* XMLPlatformUtils::makeMutex()
+{
+    return new RecursiveMutex;
+};
+
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
-    if (mutex_destroy( (mutex_t*)mtxHandle))
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Mutex_CouldNotDestroy);
-    }
-    if ((mutex_t*)mtxHandle)
-        delete mtxHandle;
-}
+    RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
+    delete rm;
+};
+
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
-    if (mutex_lock( (mutex_t*)mtxHandle))
-    {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
-    }
+    RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
+    rm->lock();
 }
 
-void* XMLPlatformUtils::makeMutex()
-{
-    mutex_t* mutex = new mutex_t;
-
-    if (mutex_init(mutex, NULL, NULL))
-    {
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
-    }
-    return (void*)(mutex);
-}
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
-    if (mutex_unlock( (mutex_t*)mtxHandle))
-    {
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
-    }
+    RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
+    rm->unlock();
 }
 
 // -----------------------------------------------------------------------
@@ -568,34 +638,44 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
                     const void* const newValue , 
                     const void* const toCompare)
 {
-    //return ((void*)cas32( (uint32_t*)toFill,  (uint32_t)toCompare, (uint32_t)newValue) );
-    // the below calls are temporarily made till the above functions are part of user library
-    // Currently its supported only in the kernel mode
-
-    lockMutex(&atomicOpsMutex);
+    if (pthread_mutex_lock( gAtomicOpMutex))
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
 
     void *retVal = *toFill;
     if (*toFill == toCompare)
               *toFill = (void *)newValue;
 
-    unlockMutex(&atomicOpsMutex);
+    if (pthread_mutex_unlock( gAtomicOpMutex))
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+
 
     return retVal;
 }
 
 int XMLPlatformUtils::atomicIncrement(int &location)
 {
-    //return (int)atomic_add_32_nv( (uint32_t*)&location, 1);
-    XMLMutexLock localLock(&atomicOpsMutex);
+    if (pthread_mutex_lock( gAtomicOpMutex))
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
 
-    return ++location;
+    int tmp = ++location;
+
+    if (pthread_mutex_unlock( gAtomicOpMutex))
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+
+    return tmp;
 }
+
 int XMLPlatformUtils::atomicDecrement(int &location)
 {
-    //return (int)atomic_add_32_nv( (uint32_t*)&location, -1);
-    XMLMutexLock localLock(&atomicOpsMutex);
+    if (pthread_mutex_lock( gAtomicOpMutex))
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
 
-    return --location;
+    int tmp = --location;
+
+    if (pthread_mutex_unlock( gAtomicOpMutex))
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+
+    return tmp;
 }
 
 #else // #if !defined (APP_NO_THREADS)
@@ -604,17 +684,17 @@ void XMLPlatformUtils::platformInit()
 {
 }
 
+void* XMLPlatformUtils::makeMutex()
+{
+	return 0;
+}
+
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
 }
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-}
-
-void* XMLPlatformUtils::makeMutex()
-{
-        return 0;
 }
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
@@ -644,11 +724,6 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 #endif // APP_NO_THREADS
 
 
-
-FileHandle XMLPlatformUtils::openStdInHandle()
-{
-        return (FileHandle)fdopen(dup(0), "rb");
-}
 
 void XMLPlatformUtils::platformTerm()
 {

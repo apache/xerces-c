@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/02/09 14:40:01  tng
+ * Update support for SCO UnixWare 7 (gcc).  Tested under UnixWare 7.1.1 with gcc version 2.95.2 19991024 (release) with gmake 3.79.1.  Updated by Martin Kalen.
+ *
  * Revision 1.17  2001/01/26 21:59:25  tng
  * Change bug-todo list to xml format.  Other documentation fixes.
  *
@@ -140,16 +143,12 @@
 #elif defined(_HP_UX) || defined(__hpux) || defined(_HPUX_SOURCE)
     #define XML_HPUX
     #define XML_UNIX
-#elif defined(SOLARIS) || defined(__SVR4) || defined(UNIXWARE)
-    #if defined(UNIXWARE)
-        #define XML_UNIXWARE
-        #define XML_CSET
-        #define XML_SCOCC
-        #define XML_UNIX
-    #else
+#elif defined(SOLARIS) || defined(__SVR4)
         #define XML_SOLARIS
         #define XML_UNIX
-    #endif
+#elif defined(UNIXWARE)
+    #define XML_UNIXWARE
+    #define XML_UNIX
 #elif defined(__linux__)
     #define XML_LINUX
     #define XML_UNIX
