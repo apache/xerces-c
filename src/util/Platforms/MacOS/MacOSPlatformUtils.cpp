@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/09/22 23:50:58  jberry
+ * Change file access permissions to fsRdPerm. Since we never write, there's
+ * no reason to request write access. Thanks to John Mostrom @ Adobe.
+ * Also nuke a few spaces and the entire defunct support for reading
+ * directly from MacOS resources.
+ *
  * Revision 1.13  2000/09/21 18:03:50  jberry
  * Change a couple of routine names to make them more orthagonal.
  *
@@ -290,7 +296,7 @@ void XMLMacFile::open(const XMLCh* const fileName)
             err = FSGetDataForkName(&forkName);
         
         if (err == noErr)
-            err = FSOpenFork(&ref, forkName.length, forkName.unicode, fsRdWrPerm, &mFileRefNum);
+            err = FSOpenFork(&ref, forkName.length, forkName.unicode, fsRdPerm, &mFileRefNum);
     }
     else
     {
@@ -299,7 +305,7 @@ void XMLMacFile::open(const XMLCh* const fileName)
             err = fnfErr;
         
         if (err == noErr)
-            err = FSpOpenDF(&spec, fsRdWrPerm, &mFileRefNum);
+            err = FSpOpenDF(&spec, fsRdPerm, &mFileRefNum);
     }
     
     if (err != noErr)
@@ -307,6 +313,7 @@ void XMLMacFile::open(const XMLCh* const fileName)
     
     mFileValid = true;
 }
+
 
 unsigned int XMLMacFile::read(const unsigned int toRead, XMLByte* const toFill)
 {
@@ -493,7 +500,6 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 }
 
 
-
 XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
                                     , const XMLCh* const    relativePath)
                                     
@@ -544,7 +550,6 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
         janBuf.orphan();
         return tmpBuf;
     }
-    
     
     //  We have some path part, so we need to check to see if we have to
     //  weave any of the parts together.
@@ -606,7 +611,6 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 {
     return TickCount() * 100 / 6;
 }
-
 
 
 // ---------------------------------------------------------------------------
@@ -1269,211 +1273,3 @@ XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec)
     ArrayJanitor<char> jan(result);
     return XMLString::transcode(result);
 }
-
-
-/*
-XMLResFile is pretty twisted and not currently used.
-
-static const char *resBaseStr = "/Access The Resource Fork Instead of the data fork?";
-
-
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
-{
-    FileHandle file = 0;
-    int isRes = 0;
-    
-    // Check to make sure the file system is in a state where we can use it
-    if (!gFileSystemReady)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-    //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile(const char* const) -- File system not ready."
-    //          "  Maybe missing gestalt or no support for FSSpec's.");
-    
-    if (strlen(fileName) >= strlen(resBaseStr))
-        if (strstr(fileName, resBaseStr) == fileName)
-            isRes = 1;
-        
-        if (isRes == 0)
-        {
-            file = new XMLMacFile();
-            file->open(fileName);
-        }
-        else
-        {
-            file = new XMLResFile();
-            file->open(&fileName[strlen(resBaseStr)]);
-        }
-        if (file == 0)
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-        //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile(const char* const) -- Failed to allocate file object.");
-        return file;
-}
-
-
-//----------------------------------------------------------------------------
-// XMLResFile methods
-//----------------------------------------------------------------------------
-XMLResFile::XMLResFile();
-
-
-void XMLResFile::open(const char* const resInfo)
-{
-    char option[32], value[32], command[70];
-    int cmdEnd = 0, cmdStart = 0;
-    int optEnd = 0, sep;
-    int mode = -1;
-    int typeValid = 0;
-    
-    if (!strchr(&resInfo[cmdStart], '/'))
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::URL_MalformedURL);
-    
-    while(resInfo[cmdEnd] != '/')
-    {
-        if (strchr(&resInfo[cmdStart], '&') < strchr(&resInfo[cmdStart], '/') && strchr(&resInfo[cmdStart], '&') != 0)
-            cmdEnd = strchr(&resInfo[cmdStart], '&') - resInfo - 1;
-        else
-            cmdEnd = strchr(&resInfo[cmdStart], '/') - resInfo - 1;
-        
-        if (cmdEnd - cmdStart > 68)
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-        //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- resource option too long (>68 chars)");
-        
-        memcpy(command, &resInfo[cmdStart], cmdEnd - cmdStart + 1);
-        command[cmdEnd - cmdStart + 1] = 0;
-        if (!strchr(command, '='))
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::URL_MalformedURL);
-        //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Malformed resource locater");
-        
-        sep = strchr(command, '=') - command;
-        memcpy(option, command, sep);
-        option[sep] = 0;
-        memcpy(value, &command[sep+1], strlen(command) - sep);
-        
-        if (!strcmp(option, "mode"))
-        {
-            if (!strcmp(value, "by_id"))
-                mode = 1;
-            else if (!strcmp(value, "by_id1"))
-                mode = 2;
-            else if (!strcmp(value, "by_name"))
-                mode = 3;
-            else if (!strcmp(value, "by_name1"))
-                mode = 4;
-            else
-                ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-            //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- 'mode' has to be 'by_id' or 'by_id1' or 'by_name' or 'by_name1'");
-            
-        }
-        if (!strcmp(option, "type"))
-        {
-            if (strlen(value) != 4)
-                ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-            //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- 'type' has to be four characters long");
-            typeValid = 1;
-            type = 0;
-            type += value[0] << 24;
-            type += value[1] << 16;
-            type += value[2] << 8;
-            type += value[3];
-        }
-        
-        cmdStart = cmdEnd + 2;
-        cmdEnd++;
-    }
-    
-    if (mode == 0)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-    //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Malformed resource locater requires a 'mode'");
-    if (typeValid == 0)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-    //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Malformed resource locater requires a 'type'");
-    
-    switch(mode)
-    {
-    case 1: case 2:
-        id = atol(&resInfo[cmdEnd+1]);
-        if (mode == 1)
-            data = GetResource(type, id);
-        else
-            data = Get1Resource(type, id);
-        break;
-        
-    case 3: case 4:
-        if (strlen(&resInfo[cmdEnd]) >= 255)
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-        //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Resource names have to be 255 characters or less");
-        strcpy((char*)name, &resInfo[cmdEnd]);
-        name[0] = strlen((char*)&name[1]);
-        if (mode == 3)
-            data = GetNamedResource(type, name);
-        else
-            data = Get1NamedResource(type, name);
-        break;
-    }
-    
-    if (ResError() != noErr)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-    //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Error opening resource");
-    
-    GetResInfo(data, &id, &type, name);
-    len = GetResourceSizeOnDisk(data);
-    if (ResError() != noErr)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
-    //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Error loading resource info");
-    
-    valid = 1;
- }
-                                                
- unsigned int XMLResFile::read(const unsigned int buffLen, XMLByte* const buff)
- {
-     unsigned int totAvail = len - pos;
-     unsigned int numRead = (buffLen >= totAvail) ? totAvail : buffLen;
-     
-     HLock(data);
-     memcpy(buff, *data, numRead);
-     HUnlock(data);
-     pos += numRead;
-     return numRead;
- }
- 
- void XMLResFile::close()
- {
-     if (!valid)
-         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotCloseFile);
-     //throw XMLPlatformUtilsException("XMLPlatformUtils::curFilePos -- Not a valid file");
-     ReleaseResource(data);
-     valid = 0;
- }
- 
- unsigned int XMLResFile::currPos()
- {
-     if (!valid)
-         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetCurPos);
-     //throw XMLPlatformUtilsException("XMLPlatformUtils::curFilePos -- Not a valid file");
-     return pos;
- }
- 
- void XMLResFile::reset()
- {
-     if (!valid)
-         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotResetFile);
-     //throw XMLPlatformUtilsException("XMLPlatformUtils::resetFile -- Not a valid file");
-     pos = 0;
- }
- 
- unsigned int XMLResFile::size()
- {
-     if (!valid)
-         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetSize);
-     //throw XMLPlatformUtilsException("XMLPlatformUtils::fileSize -- Not a valid file");
-     return len;
- }
- 
- XMLResFile::~XMLResFile()
- {
-     if (valid)
-         close();
- }
-*/
-
-
-
