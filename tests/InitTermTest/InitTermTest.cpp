@@ -74,7 +74,7 @@
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include "InitTermTest.hpp"
 
@@ -166,7 +166,11 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
     {                                                             \
         parser->parse(xmlFile);                                   \
     }                                                             \
-                                                                  \
+    catch (const OutOfMemoryException&)                           \
+    {                                                             \
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl; \
+        errorOccurred = true;                                     \
+    }                                                             \
     catch (const XMLException& toCatch)                           \
     {                                                             \
         XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"   \

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/09/02 15:11:42  cargilld
+ * Add OutOfMemoryException block to tests.
+ *
  * Revision 1.5  2004/02/15 19:43:04  amassari
  * Removed cause for warnings in VC 7.1
  *
@@ -87,7 +90,7 @@
 #endif
 #include <assert.h>
 #include <xercesc/util/XercesDefs.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 void* MemoryMonitor::allocate(size_t size)
 {
@@ -425,7 +428,11 @@ int main (int argC,  char *argV[])
                 depDOMParser->parse(xmlFile);
                 saxParser->parse(xmlFile);
             }
-
+            catch (const OutOfMemoryException&)
+            {
+                XERCES_STD_QUALIFIER cerr << "OutOfMemoryException during parsing: '" << xmlFile << "'\n" << XERCES_STD_QUALIFIER endl;;
+                continue;
+            }
             catch (const XMLException& toCatch)
             {
                 char *msg = XMLString::transcode(toCatch.getMessage()); 

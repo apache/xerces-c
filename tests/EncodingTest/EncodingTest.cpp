@@ -74,7 +74,7 @@
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <stdio.h>
@@ -167,7 +167,11 @@ static DOMDocument* parseFile(char *fileName)
     {
         parser->parse(fileName);
     }
-
+    catch (const OutOfMemoryException&)
+    {
+	    fprintf(stderr, "OutOfMemoryException during parsing: %s\n", fileName);        
+	    return 0;
+    }
     catch (const XMLException& e )
     {
 		fprintf(stderr, "Exception Occurred \"%s\".  \n",

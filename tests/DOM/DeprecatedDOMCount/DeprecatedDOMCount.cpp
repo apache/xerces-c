@@ -75,7 +75,7 @@
 #else
 #include <fstream.h>
 #endif
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -272,7 +272,12 @@ int main(int argC, char* argV[])
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
         }
-
+        catch (const OutOfMemoryException&)
+        {
+            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException during parsing: '" << xmlFile << "'\n" << XERCES_STD_QUALIFIER endl;
+            errorOccurred = true;
+            continue;
+        }
         catch (const XMLException& toCatch)
         {
             XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.41  2004/09/02 15:11:42  cargilld
+ * Add OutOfMemoryException block to tests.
+ *
  * Revision 1.40  2004/03/02 13:53:50  amassari
  * Added test for bug# 26919
  *
@@ -157,6 +160,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 #define EXCEPTIONSTEST(operation, expectedException, resultFlag, testNum) \
     {                                                               \
@@ -4542,7 +4546,11 @@ bool DOMTest::testBaseURI(XercesDOMParser* parser) {
         // please modify if this is not correct
         parser->parse("personal-schema.xml");
     }
-
+    catch (const OutOfMemoryException&)
+    {
+	    fprintf(stderr, "OutOfMemoryException.\n");        
+	    return false;
+    }
     catch (...) {
         fprintf(stderr, "parsing personal-schema.xml failed at line %i\n", __LINE__);
         return false;
