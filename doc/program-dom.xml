@@ -1056,9 +1056,9 @@
         <s3 title="DOMWriter Supported Features">
 
            <p>The behavior of the DOMWriter is dependant on the values of the following features.
-           All of the features below can be set using the function <code>DOMWriter::setFeature(cons XMLCh* const, const bool)</code>.
+           All of the features below can be set using the function <code>DOMWriter::setFeature(cons XMLCh* const, bool)</code>.
            And can be queried using the function <code>bool DOMWriter::getFeature(const XMLCh* const)</code>.
-           User can also call <code>DOMWriter::canSetFeature(const XMLCh* const, const bool)</code>
+           User can also call <code>DOMWriter::canSetFeature(const XMLCh* const, bool)</code>
            to query whether setting a feature to a specific value is supported
            </p>
 
@@ -1086,15 +1086,13 @@
 
             <table>
                 <tr><td colspan="2"><em>entities</em></td></tr>
-                <tr><td><em>true:</em></td><td> Create EntityReference nodes in the DOM tree.   The
-                EntityReference nodes and their child nodes will be read-only. </td></tr>
-                <tr><td><em>false:</em></td><td> Do not create EntityReference nodes in the DOM tree.  No
-                EntityReference nodes will be created, only the nodes corresponding to their fully
-                expanded sustitution text will be created.  </td></tr>
+                <tr><td><em>true:</em></td><td> EntityReference nodes are serialized as an entity
+				 reference of the form "&amp;entityName;" in the output. </td></tr>
+                <tr><td><em>false:</em></td><td> EntityReference nodes are serialized as expanded 
+				sustitution text, unless the corresponding entity definition is not found. </td></tr>
                 <tr><td><em>default:</em></td><td> true </td></tr>
-                <tr><td><em>note:</em></td><td> This feature only affects the appearance of
-                EntityReference nodes in the DOM tree. The document will always contain the entity
-                reference child nodes. </td></tr>
+                <tr><td><em>note:</em></td><td> This feature only affects the output XML stream. 
+				The dom tree to be serialized will not be changed. </td></tr>
                 <tr><td><em>see:</em></td><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
@@ -1159,9 +1157,10 @@
             <table>
                 <tr><td colspan="2"><em>split-cdata-sections</em></td></tr>
                 <tr><td><em>true:</em></td><td> Split CDATA sections containing the CDATA section
-                termination marker ']]&gt;'. When a CDATA section is split a warning is issued. </td></tr>
+                termination marker ']]&gt;', or unrepresentable characters in the output encoding.
+				When a CDATA section is split a warning is issued. </td></tr>
                 <tr><td><em>false:</em></td><td> Signal an error if a CDATASection contains
-                an unrepresentable character. </td></tr>
+                CDATA section termination marker ']]&gt;', or an unrepresentable character. </td></tr>
                 <tr><td><em>default:</em></td><td> true </td></tr>
                 <tr><td><em>see:</em></td><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
