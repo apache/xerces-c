@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/27 16:42:00  neilg
+ * fixes for segfaults and infinite loops in schema component model implementation; thanks to David Cargill
+ *
  * Revision 1.6  2003/11/25 17:50:15  knoaman
  * Fix AIX linking error
  *
@@ -512,20 +515,16 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
         if ((typeInfo->getContentType() == SchemaElementDecl::Simple) &&
             (typeInfo->getDatatypeValidator()))
             xsSimpleType = addOrFind(typeInfo->getDatatypeValidator(), xsModel);
-
+        
+        unsigned int attCount;
         if (typeInfo->hasAttDefs())
         {
             SchemaAttDefList& attDefList = (SchemaAttDefList&) typeInfo->getAttDefList();
-            unsigned int attCount = attDefList.getAttDefCount();
-            xsAttList = new (fMemoryManager) RefVectorOf<XSAttributeUse>(attCount, false, fMemoryManager);
-            
-            for(unsigned int i=0; i<attCount; i++)
-            {
-                SchemaAttDef& attDef = (SchemaAttDef&) attDefList.getAttDef(i);
-                XSAttributeDeclaration* xsAttDecl = addOrFind(&attDef, xsModel);
-                XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
-                xsAttList->addElement(attUse);
-            }
+            attCount = attDefList.getAttDefCount();
+            xsAttList = new (fMemoryManager) RefVectorOf<XSAttributeUse>(attCount, false, fMemoryManager);            
+            // create list now put fill it in after we put complextype into map
+            // otherwise we may encounter an infinite loop: complextype needs to
+            // addorfind attdef, which does an addorfind on the enclosingCTdefintion.
         }
 
         // compute fBase
@@ -552,6 +551,19 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
             , fMemoryManager
         );
         putObjectInMap(typeInfo, xsObj, xsModel);
+       
+        if (typeInfo->hasAttDefs())
+        {
+            // now create the xsattributedeclarations...
+            SchemaAttDefList& attDefList = (SchemaAttDefList&) typeInfo->getAttDefList();
+            for(unsigned int i=0; i<attCount; i++)
+            {
+                SchemaAttDef& attDef = (SchemaAttDef&) attDefList.getAttDef(i);
+                XSAttributeDeclaration* xsAttDecl = addOrFind(&attDef, xsModel);
+                XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
+                xsAttList->addElement(attUse);
+            }
+        }
 
         // process local elements
         unsigned int elemCount = typeInfo->elementCount();

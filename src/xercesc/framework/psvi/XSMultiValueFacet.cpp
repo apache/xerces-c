@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/27 16:42:00  neilg
+ * fixes for segfaults and infinite loops in schema component model implementation; thanks to David Cargill
+ *
  * Revision 1.5  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -94,6 +97,7 @@ XSMultiValueFacet::XSMultiValueFacet(XSSimpleTypeDefinition::FACET facetKind,
     , fFacetKind(facetKind)
     , fIsFixed(isFixed)
     , fLexicalValues(lexicalValues)
+    , fXSAnnotationList(0)
 {
     if (headAnnot)
     {

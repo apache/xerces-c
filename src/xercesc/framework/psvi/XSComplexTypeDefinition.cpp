@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/27 16:42:00  neilg
+ * fixes for segfaults and infinite loops in schema component model implementation; thanks to David Cargill
+ *
  * Revision 1.7  2003/11/25 18:08:31  knoaman
  * Misc. PSVI updates. Thanks to David Cargill.
  *
@@ -88,6 +91,7 @@
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
+#include <xercesc/framework/psvi/XSParticle.hpp>
 #include <xercesc/validators/schema/ComplexTypeInfo.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
@@ -152,6 +156,9 @@ XSComplexTypeDefinition::~XSComplexTypeDefinition()
 
     if (fXSAnnotationList)
         delete fXSAnnotationList;
+
+    if (fParticle)
+        delete fParticle;
 }
 
 // ---------------------------------------------------------------------------
