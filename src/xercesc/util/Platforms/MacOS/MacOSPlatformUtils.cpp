@@ -93,6 +93,8 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
+#include <xercesc/util/Platforms/MacOS/MacCarbonFile.hpp>
+#include <xercesc/util/Platforms/MacOS/MacPosixFile.hpp>
 
 #if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
    #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
@@ -116,11 +118,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-//----------------------------------------------------------------------------
-//	Local Constants
-//----------------------------------------------------------------------------
-const std::size_t kMaxStaticPathChars = 512;		// Size of our statically allocated path buffers
-
 
 //----------------------------------------------------------------------------
 // Function Prototypes
@@ -135,9 +132,6 @@ XMLCh*	XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec);
 bool	XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref);
 bool	XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref);
 bool	XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec);
-
-std::size_t TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t maxChars);
-std::size_t TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars);
 
 
 //----------------------------------------------------------------------------
@@ -171,336 +165,18 @@ std::size_t TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChar
 //
 // gHasMPAPIs
 //	 True if the Multiprocessing APIs are available.
+//
+// gUsePosixFiles
+//   True if we're using XMLMacPosixFile rather than XMLMacCarbonFile.
 //----------------------------------------------------------------------------
-static bool gFileSystemCompatible	= false;
-static bool gHasFSSpecAPIs			= false;
-static bool gHasFS2TBAPIs			= false;
-static bool gHasHFSPlusAPIs			= false;
-static bool gHasFSPathAPIs			= false;
-static bool gPathAPIsUsePosixPaths	= false;
-static bool gHasMPAPIs				= false;
-
-
-//----------------------------------------------------------------------------
-// XMLMacFile methods
-//----------------------------------------------------------------------------
-
-unsigned int
-XMLMacFile::currPos()
-{
-    OSErr err = noErr;
-    unsigned int pos = 0;
-
-    if (!mFileValid)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
-
-    if (gHasHFSPlusAPIs)
-    {
-        SInt64 bigPos = 0;
-        err = FSGetForkPosition(mFileRefNum, &bigPos);
-        if (err == noErr)
-            pos = bigPos;
-    }
-    else
-    {
-        long longPos;
-        err = GetFPos(mFileRefNum, &longPos);
-        if (err == noErr)
-            pos = longPos;
-    }
-
-    if (err != noErr)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
-
-    return pos;
-}
-
-
-void
-XMLMacFile::close()
-{
-    OSErr err = noErr;
-    if (!mFileValid)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
-
-    if (gHasHFSPlusAPIs)
-        err = FSCloseFork(mFileRefNum);
-    else
-        err = FSClose(mFileRefNum);
-
-    mFileValid = false;
-
-    if (err != noErr)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
-}
-
-
-unsigned int
-XMLMacFile::size()
-{
-    OSErr err = noErr;
-    unsigned int len = 0;
-
-    if (!mFileValid)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
-
-    if (gHasHFSPlusAPIs)
-    {
-        SInt64 bigLen = 0;
-        err = FSGetForkSize(mFileRefNum, &bigLen);
-        if (err == noErr)
-            len = bigLen;
-    }
-    else
-    {
-        long longLen;
-        err = GetEOF(mFileRefNum, &longLen);
-        if (err == noErr)
-            len = longLen;
-    }
-
-    if (err != noErr)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
-
-    return len;
-}
-
-
-void
-XMLMacFile::openWithPermission(const XMLCh* const fileName, int macPermission)
-{
-    OSErr err = noErr;
-
-    if (mFileValid)
-        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
-
-    if (gHasHFSPlusAPIs)
-    {
-        FSRef ref;
-        if (!XMLParsePathToFSRef(fileName, ref))
-            err = fnfErr;
-
-        HFSUniStr255 forkName;
-        if (err == noErr)
-            err = FSGetDataForkName(&forkName);
-
-        if (err == noErr)
-            err = FSOpenFork(&ref, forkName.length, forkName.unicode, macPermission, &mFileRefNum);
-    }
-    else
-    {
-        FSSpec spec;
-        if (!XMLParsePathToFSSpec(fileName, spec))
-            err = fnfErr;
-
-        if (err == noErr)
-            err = FSpOpenDF(&spec, macPermission, &mFileRefNum);
-    }
-
-    if (err != noErr)
-        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
-
-    mFileValid = true;
-}
-
-
-void
-XMLMacFile::create(const XMLCh* const filePath)
-{
-    OSErr err = noErr;
-
-    //	Split path into directory and filename components
-    int posSlash = XMLString::lastIndexOf(filePath, '/', XMLString::stringLen(filePath) - 1);
-    int posName = (posSlash == -1) ? 0 : posSlash+1;
-
-    const XMLCh* namePtr = filePath + posName;
-    int nameLen = XMLString::stringLen(namePtr);
-
-    //	Make a temporary string of the directory
-    ArrayJanitor<XMLCh> dirPath(new XMLCh[namePtr - filePath + 1]);
-    XMLString::subString(dirPath.get(), filePath, 0, posName);
-
-    //	Create the file as appropriate for API set
-    if (gHasHFSPlusAPIs)
-    {
-    	//	HFS+
-        FSRef ref;
-
-        //	If we find an existing file, delete it
-        if (XMLParsePathToFSRef(filePath, ref))
-            FSDeleteObject(&ref);
-
-        //	Get a ref to the parent directory
-        if (!XMLParsePathToFSRef(dirPath.get(), ref))
-            err = fnfErr;
-
-        //	Create a new file using the unicode name
-        if (err == noErr)
-        {
-            UniChar uniName[256];
-            err = FSCreateFileUnicode(
-                    &ref,
-                    nameLen, CopyXMLChsToUniChars(namePtr, uniName, nameLen, sizeof(uniName)),
-                    0, NULL, NULL, NULL);
-        }
-    }
-    else
-    {
-    	//	HFS
-        FSSpec spec;
-
-        //	If we find an existing file, delete it
-        if (XMLParsePathToFSSpec(filePath, spec))
-            FSpDelete(&spec);
-
-        //	Get a spec to the parent directory
-        if (!XMLParsePathToFSSpec(dirPath.get(), spec))
-            err = fnfErr;
-
-        //	Check that the new name is not too long for HFS
-        if (err == noErr && nameLen > 31)
-            err = errFSNameTooLong;
-
-        if (err == noErr)
-        {
-            //	Transcode the unicode name to native encoding
-            ArrayJanitor<const char> nativeName(XMLString::transcode(namePtr));
-
-            // Make a partial pathname from our current spec (parent directory) to the new file
-            unsigned char name[31 * 2 + 1 * 2 + 1];
-            unsigned char* partial = &name[1];
-
-            *partial++ = ':';      			 // Partial leads with :
-            const unsigned char* specName = spec.name;	// Copy in spec name
-            for (int specCnt = *specName++; specCnt > 0; --specCnt)
-                *partial++ = *specName++;
-
-            *partial++ = ':';      			 // Path component separator
-            char c;
-            for (const char* p = nativeName.get(); (c = *p++) != 0; ) // Copy in new element
-                *partial++ = (c == ':') ? '/' : c;		// Convert : to /
-
-            name[0] = partial - &name[1];   // Set the pascal string name length
-
-            //	Update the spec: this will probably return fnfErr
-            //					 (since we just deleted any existing file)
-            err = FSMakeFSSpec(spec.vRefNum, spec.parID, name, &spec);
-
-            //	Create the file from the spec
-            err = FSpCreate(&spec, '??\??', 'TEXT', smSystemScript);
-        }
-    }
-
-    //	Fail if we didn't create the file
-    if (err != noErr)
-    {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-        //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
-    }
-}
-
-
-void
-XMLMacFile::open(const XMLCh* const fileName)
-{
-    openWithPermission(fileName, fsRdPerm);
-}
-
-
-void
-XMLMacFile::openFileToWrite(const XMLCh* const fileName)
-{
-    create(fileName);
-    openWithPermission(fileName, fsRdWrPerm);
-}
-
-
-unsigned int
-XMLMacFile::read(const unsigned int toRead, XMLByte* const toFill)
-{
-    unsigned int bytesRead = 0;
-    OSErr err = noErr;
-
-    if (!mFileValid)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-
-    if (gHasHFSPlusAPIs)
-    {
-        ByteCount actualCount;
-        err = FSReadFork(mFileRefNum, fsFromMark, 0, toRead, toFill, &actualCount);
-        bytesRead = actualCount;
-    }
-    else
-    {
-        long byteCount = toRead;
-        err = FSRead(mFileRefNum, &byteCount, toFill);
-        bytesRead = byteCount;
-    }
-
-    if (err != noErr && err != eofErr)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-
-    return bytesRead;
-}
-
-
-void
-XMLMacFile::write(const long byteCount, const XMLByte* const buffer)
-{
-    long bytesWritten = 0;
-    OSErr err = noErr;
-
-    if (byteCount <= 0 || buffer == NULL)
-        return;
-
-    if (!mFileValid)
-    {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
-    }
-
-    if (gHasHFSPlusAPIs)
-    {
-        ByteCount actualCount;
-        err = FSWriteFork(mFileRefNum, fsFromMark, 0, byteCount, buffer, &actualCount);
-        bytesWritten = actualCount;
-    }
-    else
-    {
-        long count = byteCount;
-        err = FSWrite(mFileRefNum, &count, buffer);
-        bytesWritten = count;
-    }
-
-    if ((err != noErr && err != eofErr) || (bytesWritten != byteCount))
-    {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
-    }
-}
-
-
-void
-XMLMacFile::reset()
-{
-    OSErr err = noErr;
-
-    if (!mFileValid)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
-
-    if (gHasHFSPlusAPIs)
-        err = FSSetForkPosition(mFileRefNum, fsFromStart, 0);
-    else
-        err = SetFPos(mFileRefNum, fsFromStart, 0);
-
-    if (err != noErr)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
-}
-
-
-XMLMacFile::~XMLMacFile()
-{
-    if (mFileValid)
-        close();
-}
+bool gFileSystemCompatible	= false;
+bool gHasFSSpecAPIs			= false;
+bool gHasFS2TBAPIs			= false;
+bool gHasHFSPlusAPIs		= false;
+bool gHasFSPathAPIs			= false;
+bool gPathAPIsUsePosixPaths	= false;
+bool gHasMPAPIs				= false;
+bool gUsePosixFiles			= false;
 
 
 // ---------------------------------------------------------------------------
@@ -580,8 +256,13 @@ XMLPlatformUtils::fileSize(const FileHandle theFile)
 FileHandle
 XMLPlatformUtils::openFile(const char* const fileName)
 {
-    ArrayJanitor<const XMLCh> xmlPath(XMLString::transcode(fileName));
-    return openFile(xmlPath.get());
+    // Check to make sure the file system is in a state where we can use it
+    if (!gFileSystemCompatible)
+        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
+
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
+    
+    return (file->open(fileName, false)) ? file.release() : NULL;
 }
 
 
@@ -592,18 +273,22 @@ XMLPlatformUtils::openFile(const XMLCh* const fileName)
     if (!gFileSystemCompatible)
         ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
-    Janitor<XMLMacAbstractFile> file(new XMLMacFile());
-    file->open(fileName);
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
 
-    return file.release();
+    return (file->open(fileName, false)) ? file.release() : NULL;
 }
 
 
 FileHandle
 XMLPlatformUtils::openFileToWrite(const char* const fileName)
 {
-    ArrayJanitor<const XMLCh> xmlPath(XMLString::transcode(fileName));
-    return openFileToWrite(xmlPath.get());
+    // Check to make sure the file system is in a state where we can use it
+    if (!gFileSystemCompatible)
+        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
+
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
+
+    return (file->open(fileName, true)) ? file.release() : NULL;
 }
 
 
@@ -614,10 +299,9 @@ XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     if (!gFileSystemCompatible)
         ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
-    Janitor<XMLMacAbstractFile> file(new XMLMacFile());
-    file->openFileToWrite(fileName);
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
 
-    return file.release();
+    return (file->open(fileName, true)) ? file.release() : NULL;
 }
 
 
@@ -815,21 +499,13 @@ XMLPlatformUtils::getCurrentMillis()
 // library, which as of version 2.0 provides a nice set of primitives. Under
 // Mac OS X, the Multiprocessing library is a thin veneer over pthreads.
 //
-// For lack of any really good solutions, I've implemented these mutexes
+// For lack of any really universal solutions, I've implemented these mutexes
 // atop the Multiprocessing library. The critical regions employed here
 // support recursive behavior, which is required by Xerces.
 //
-// Please note that, despite this implementation, there are probably other
-// MacOS barriers to actually using Xerces in a multi-threaded environment.
-// Many other parts of your system and/or development environment may not
-// support pre-emption, even under Mac OS X. Examples may include the memory
-// allocator, the Unicode Converter or Utilities, and perhaps the file
-// system (though the FS is better with Multiprocessing as of System 9.0).
-//
-// These routines are provided somewhat speculatively, and with the philosphy
-// that this code, at least, shouldn't be the reason why multithreading
-// doesn't work. Compatibility of this library wrt the other areas described
-// above will be resolved in time.
+// Please note that, despite this implementation, there may be other barriers
+// to using Xerces in a multithreaded environment. The memory allocator
+// under Mac OS 9, for instance, is not thread safe.
 // ---------------------------------------------------------------------------
 
 void*
@@ -892,9 +568,7 @@ XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 //  Miscellaneous synchronization methods
 //
 // Atomic manipulation is implemented atop routines that were traditionally
-// part of DriverServices, but are now apparently a part of Carbon. If this
-// selection proves to be invalid, similar routines in OpenTransport could
-// be used instead.
+// part of DriverServices, but are now a part of Carbon.
 // ---------------------------------------------------------------------------
 
 void*
@@ -949,7 +623,7 @@ XMLPlatformUtils::platformInit()
 	long value = 0;
 
 	//	Detect available functions
-
+	
     //	Look for file system services
     if (noErr == Gestalt(gestaltFSAttr, &value))
     {
@@ -963,14 +637,26 @@ XMLPlatformUtils::platformInit()
         gHasFSPathAPIs		= false;
         #endif
 
-        gPathAPIsUsePosixPaths = gHasFSPathAPIs && (value & (1 << gestaltFSUsesPOSIXPathsForConversion));
+        gPathAPIsUsePosixPaths = gHasFSPathAPIs
+								 && (value & (1 << gestaltFSUsesPOSIXPathsForConversion));
     }
-
-    //	Look for MP
-	gHasMPAPIs				= MPLibraryIsLoaded();
 
 	//	We require FSSpecs at a minimum
     gFileSystemCompatible	= gHasFSSpecAPIs;
+
+	//	Determine which file system to use (posix or carbon file access)
+	//	If we're using Metrowerks MSL, we surely don't want posix paths,
+	//	as MSL doesn't use them.
+	#if __MSL__ && (__MSL__ < 0x08000 || _MSL_CARBON_FILE_APIS)
+	gUsePosixFiles			= false;
+	#else
+	gUsePosixFiles			= noErr == Gestalt(gestaltSystemVersion, &value)
+							  && value >= 0x00001000
+							  ;
+	#endif
+
+    //	Look for MP
+	gHasMPAPIs				= MPLibraryIsLoaded();
 }
 
 
@@ -1149,6 +835,22 @@ ConvertSlashToColon(char* p, std::size_t charCount)
 }
 
 
+//	Factory method to make an appropriate subclass of XMLMacAbstractFile
+//	for our use
+XMLMacAbstractFile*
+XMLMakeMacFile(void)
+{
+	XMLMacAbstractFile* result = NULL;
+	
+	if (gUsePosixFiles)
+		result = new XMLMacPosixFile;
+	else
+		result = new XMLMacCarbonFile;
+		
+	return result;
+}
+
+
 bool
 XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
 {
@@ -1188,12 +890,12 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
 	std::size_t pathLen = XMLString::stringLen(pathName);
 
     //	Transcode XMLCh into UniChar
-	UniChar uniBuf[kMaxStaticPathChars];
-	CopyXMLChsToUniChars(pathName, uniBuf, pathLen, kMaxStaticPathChars);
+	UniChar uniBuf[kMaxMacStaticPathChars];
+	CopyXMLChsToUniChars(pathName, uniBuf, pathLen, kMaxMacStaticPathChars);
 	
 	//	Transcode Unicode to UTF-8
-	char utf8Buf[kMaxStaticPathChars];
-	pathLen = TranscodeUniCharsToUTF8(uniBuf, utf8Buf, pathLen, kMaxStaticPathChars-1);
+	char utf8Buf[kMaxMacStaticPathChars];
+	pathLen = TranscodeUniCharsToUTF8(uniBuf, utf8Buf, pathLen, kMaxMacStaticPathChars-1);
 	
 	//	Terminate the path
 	char* p = utf8Buf;
@@ -1204,7 +906,7 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
 	if (*p != '/')
 	{
 		//	Right justify the user path to make room for the pre-pended path
-		std::memmove(p + kMaxStaticPathChars - pathLen, p, pathLen);
+		std::memmove(p + kMaxMacStaticPathChars - pathLen, p, pathLen);
 				
 		//	Get the current directory
         FSSpec spec;
@@ -1215,14 +917,14 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
 		
 		//	Get pathname to the current directory
 		if (err == noErr)
-			err = FSRefMakePath(&ref, reinterpret_cast<UInt8*>(p), kMaxStaticPathChars - pathLen - 1);	// leave room for one '/'
+			err = FSRefMakePath(&ref, reinterpret_cast<UInt8*>(p), kMaxMacStaticPathChars - pathLen - 1);	// leave room for one '/'
 		std::size_t prefixLen = std::strlen(p);
 			
 		//	Now munge the two paths back together
 		if (err == noErr)
 		{
 			p[prefixLen++] = '/';
-			std::memmove(p + prefixLen, p + kMaxStaticPathChars - pathLen, pathLen);
+			std::memmove(p + prefixLen, p + kMaxMacStaticPathChars - pathLen, pathLen);
 		}
 		
 		//	We now have a path from an absolute starting point
@@ -1598,19 +1300,19 @@ XMLCreateFullPathFromFSRef_X(const FSRef& startingRef)
 	OSStatus err = noErr;
 	
 	//	Make the path in utf8 form
-	char utf8Buf[kMaxStaticPathChars];
+	char utf8Buf[kMaxMacStaticPathChars];
 	utf8Buf[0] = '\0';
 	
 	if (err == noErr)
-		err = FSRefMakePath(&startingRef, reinterpret_cast<UInt8*>(utf8Buf), kMaxStaticPathChars);
+		err = FSRefMakePath(&startingRef, reinterpret_cast<UInt8*>(utf8Buf), kMaxMacStaticPathChars);
 		
 	//	Bail if path conversion failed
 	if (err != noErr)
 		return NULL;
 	
 	//	Transcode into UniChars
-	UniChar uniBuf[kMaxStaticPathChars];
-	std::size_t pathLen = TranscodeUTF8ToUniChars(utf8Buf, uniBuf, kMaxStaticPathChars-1);
+	UniChar uniBuf[kMaxMacStaticPathChars];
+	std::size_t pathLen = TranscodeUTF8ToUniChars(utf8Buf, uniBuf, kMaxMacStaticPathChars-1);
 	uniBuf[pathLen++] = 0;
 	
 	//	Transcode into a dynamically allocated buffer of XMLChs
@@ -1631,8 +1333,8 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
     HFSUniStr255 name;
     FSRef ref = startingRef;
 
-    XMLCh buf[kMaxStaticPathChars];
-    std::size_t bufPos   = kMaxStaticPathChars;
+    XMLCh buf[kMaxMacStaticPathChars];
+    std::size_t bufPos   = kMaxMacStaticPathChars;
     std::size_t bufCnt   = 0;
 
     ArrayJanitor<XMLCh> result(NULL);
@@ -1645,7 +1347,7 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 	{
 		err = FSGetCatalogInfo(
 			&ref,
-			kFSCatInfoParentDirID,
+			kFSCatInfoNodeFlags | kFSCatInfoParentDirID,
 			&catalogInfo,
 			&name,
 			static_cast<FSSpec*>(NULL),
@@ -1670,28 +1372,39 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 				result.reset(temp.release());
 				resultLen += bufCnt;
 				
-				bufPos = kMaxStaticPathChars;
+				bufPos = kMaxMacStaticPathChars;
 				bufCnt = 0;
 			}
 			
-			// Prepend our new name and a '/'
+			// Prepend a slash if this was a directory
+			if (catalogInfo.nodeFlags & kFSNodeIsDirectoryMask)
+			{
+				buf[--bufPos] = L'/';
+				++bufCnt;
+			}
+			
+			// Prepend our new name
 			bufPos -= name.length;
-			ConvertSlashToColon(CopyUniCharsToXMLChs(name.unicode, &buf[bufPos], name.length, name.length), name.length);
-			buf[--bufPos] = L'/';
-			bufCnt += (name.length + 1);
+			ConvertSlashToColon(
+				CopyUniCharsToXMLChs(name.unicode, &buf[bufPos], name.length, name.length),
+				name.length);
+			bufCnt += name.length;
 		}
 	}
 	while (err == noErr && catalogInfo.parentDirID != fsRtParID);
 	
-	// Composite existing buffer with any previous result buffer
-	ArrayJanitor<XMLCh> final(new XMLCh[bufCnt + resultLen]);
+	// Composite '/' + existing buffer + any previous result buffer
+	ArrayJanitor<XMLCh> final(new XMLCh[1 + bufCnt + resultLen]);
+	
+	// Full pathnames always start with a leading /
+	final.get()[0] = '/';
 	
 	// Copy in the static buffer
-	std::memcpy(final.get(), &buf[bufPos], bufCnt * sizeof(XMLCh));
+	std::memcpy(final.get() + 1, &buf[bufPos], bufCnt * sizeof(XMLCh));
 	
 	// Copy in the old buffer
 	if (resultLen > 0)
-		std::memcpy(final.get() + bufCnt, result.get(), resultLen * sizeof(XMLCh));
+		std::memcpy(final.get() + 1 + bufCnt, result.get(), resultLen * sizeof(XMLCh));
 	
     return final.release();
 }
@@ -1735,8 +1448,8 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
     OSStatus err = noErr;
     FSSpec spec = startingSpec;
 
-    char buf[kMaxStaticPathChars];
-    std::size_t bufPos   = kMaxStaticPathChars;
+    char buf[kMaxMacStaticPathChars];
+    std::size_t bufPos   = kMaxMacStaticPathChars;
     std::size_t bufCnt   = 0;
 
     ArrayJanitor<char> result(NULL);
@@ -1775,15 +1488,21 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 				result.reset(temp.release());
 				resultLen += bufCnt;
 				
-				bufPos = kMaxStaticPathChars;
+				bufPos = kMaxMacStaticPathChars;
 				bufCnt = 0;
 			}
 			
-			// Prepend our new name and a '/'
+			// Prepend a slash if this was a directory
+			if (catInfo.dirInfo.ioFlAttrib & kioFlAttribDirMask)
+			{
+				buf[--bufPos] = '/';
+				++bufCnt;
+			}
+
+			// Prepend our new name
 			bufPos -= nameLen;
 			ConvertSlashToColon((char*)std::memcpy(&buf[bufPos], &spec.name[1], nameLen), nameLen);
-			buf[--bufPos] = '/';
-			bufCnt += (nameLen + 1);
+			bufCnt += nameLen;
 			
 			// From here on out, ignore the input file name
 			index = -1;
@@ -1795,14 +1514,17 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 	while (err == noErr && spec.parID != fsRtParID);
 	
 	// Composite existing buffer with any previous result buffer
-	ArrayJanitor<char> final(new char[bufCnt + resultLen]);
+	ArrayJanitor<char> final(new char[1 + bufCnt + resultLen]);
+	
+	// Full pathnames always start with a leading /
+	final.get()[0] = '/';
 	
 	// Copy in the static buffer
-	std::memcpy(final.get(), &buf[bufPos], bufCnt);
+	std::memcpy(final.get() + 1, &buf[bufPos], bufCnt);
 	
 	// Copy in the old buffer
 	if (resultLen > 0)
-		std::memcpy(final.get() + bufCnt, result.get(), resultLen);
+		std::memcpy(final.get() + 1 + bufCnt, result.get(), resultLen);
 
     // Cleanup and transcode to unicode
     return XMLString::transcode(final.get());
@@ -1810,7 +1532,7 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 
 
 std::size_t
-TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t maxChars)
+TranscodeUniCharsToUTF8(const UniChar* src, char* dst, std::size_t srcCnt, std::size_t maxChars)
 {
 	std::size_t result = 0;
 	
@@ -1853,7 +1575,7 @@ TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t
 
 
 std::size_t
-TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
+TranscodeUTF8ToUniChars(const char* src, UniChar* dst, std::size_t maxChars)
 {
 	std::size_t result = 0;
 	

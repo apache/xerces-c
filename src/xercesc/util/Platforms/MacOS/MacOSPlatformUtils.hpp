@@ -62,6 +62,9 @@
 
 #include <cstdlib>
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/Platforms/MacOS/MacAbstractFile.hpp>
+
 
 #if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
@@ -72,49 +75,6 @@
 #endif
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-//	Abstract class for files. This could be used to allow multiple file paradigms.
-class XMLMacAbstractFile
-{
-    public:
-        XMLMacAbstractFile() {}
-        virtual ~XMLMacAbstractFile() {}
-
-        virtual unsigned int currPos() = 0;
-        virtual void close() = 0;
-        virtual unsigned int size() = 0;
-        virtual void open(const XMLCh* const) = 0;
-        virtual void openFileToWrite(const XMLCh* const) = 0;
-        virtual unsigned int read(const unsigned int, XMLByte* const) = 0;
-        virtual void write(const long byteCount, const XMLByte* const buffer) = 0;
-        virtual void reset() = 0;
-};
-
-
-//	Concrete file class implemented using raw Carbon file system calls.
-class XMLMacFile : public XMLMacAbstractFile
-{
-    public:
-        XMLMacFile() : mFileRefNum(0), mFileValid(false) {}
-        virtual ~XMLMacFile();
-
-        unsigned int currPos();
-        void close();
-        unsigned int size();
-        void open(const XMLCh* const);
-        void openFileToWrite(const XMLCh* const);
-        unsigned int read(const unsigned int, XMLByte* const);
-        void write(const long byteCount, const XMLByte* const buffer);
-        void reset();
-
-    protected:
-        void create(const XMLCh* const);
-        void openWithPermission(const XMLCh* const, int macPermission);
-
-        short	mFileRefNum;
-        bool	mFileValid;
-};
-
 
 //
 //	Support for customized panic handling:
@@ -141,6 +101,10 @@ extern "C" void XMLCustomPanicProc(XMLPlatformUtils::PanicReasons panicReason, c
 //	While the port itself never creates such paths, it does use these same routines to
 //	parse them.
 
+//	Factory method to create an appropriate concrete object
+//	descended from XMLMacAbstractFile.
+XMLUTIL_EXPORT XMLMacAbstractFile* XMLMakeMacFile(void);
+
 //	Convert fom FSRef/FSSpec to a Unicode character string path.
 //	Note that you'll need to delete [] that string after you're done with it!
 XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef);
@@ -160,6 +124,26 @@ XMLUTIL_EXPORT XMLCh*
 CopyUniCharsToXMLChs(const UniChar* src, XMLCh* dst, std::size_t charCount, std::size_t maxChars);
 XMLUTIL_EXPORT UniChar*
 CopyXMLChsToUniChars(const XMLCh* src, UniChar* dst, std::size_t charCount, std::size_t maxChars);
+
+//	UTF8/UniChar transcoding utilities
+XMLUTIL_EXPORT std::size_t
+TranscodeUniCharsToUTF8(const UniChar* src, char* dst, std::size_t srcCnt, std::size_t maxChars);
+XMLUTIL_EXPORT std::size_t
+TranscodeUTF8ToUniChars(const char* src, UniChar* dst, std::size_t maxChars);
+
+// Size of our statically allocated path buffers
+const std::size_t kMaxMacStaticPathChars = 512;
+
+//	Global variables set in platformInit()
+extern bool gFileSystemCompatible;
+extern bool gHasFSSpecAPIs;
+extern bool gHasFS2TBAPIs;
+extern bool gHasHFSPlusAPIs;
+extern bool gHasFSPathAPIs;
+extern bool gPathAPIsUsePosixPaths;
+extern bool gHasMPAPIs;
+extern bool gMacOSX;
+extern bool gUsePosixFiles;
 
 XERCES_CPP_NAMESPACE_END
 
