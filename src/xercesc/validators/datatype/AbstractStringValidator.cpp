@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/10/07 19:39:37  peiyongz
+ * Use of Template_Class Object Serialization/Deserialization API
+ *
  * Revision 1.13  2003/09/29 21:47:35  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -767,18 +770,15 @@ void AbstractStringValidator::serialize(XSerializeEngine& serEng)
          *  Serialize RefArrayVectorOf<XMLCh>
          *
          ***/
-        if (getEnumeration())
+        if (serEng.needToWriteTemplateObject(fEnumeration))
         {
-            int enumLength = getEnumeration()->size();
+            int enumLength = fEnumeration->size();
             serEng<<enumLength;
+
             for ( int i = 0 ; i < enumLength; i++)
             {            
-                serEng.writeString(getEnumeration()->elementAt(i));
+                serEng.writeString(fEnumeration->elementAt(i));
             }
-        }
-        else
-        {
-            serEng<<0;
         }
 
     }
@@ -794,16 +794,17 @@ void AbstractStringValidator::serialize(XSerializeEngine& serEng)
          *  Deserialize RefArrayVectorOf<XMLCh>         
          *
         ***/
-        int enumLength = 0;;
-        serEng>>enumLength;
-
-        if (enumLength)
+        if (serEng.needToReadTemplateObject((void**)&fEnumeration))
         {
             if (!fEnumeration)
             {
                 fEnumeration = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
             }
 
+            serEng.registerTemplateObject(fEnumeration);
+
+            int enumLength = 0;
+            serEng>>enumLength;
             for ( int i = 0; i < enumLength; i++)
             {
                 XMLCh* enumVal;

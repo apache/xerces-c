@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/10/07 19:39:37  peiyongz
+ * Use of Template_Class Object Serialization/Deserialization API
+ *
  * Revision 1.11  2003/10/02 19:20:19  peiyongz
  * fWhiteSpace added; more dv serialization support added
  *
@@ -303,21 +306,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng<<fFixed;
         serEng<<(int)fType;
 
-        /***
-         *
-         *  When deserialized, we need to know, exactly what
-         *  validator was serialized here.
-         *
-         ***/
-        if (fBaseValidator)
-        {
-            serEng<<(int) (fBaseValidator->getType());
-            serEng<<fBaseValidator;
-        }
-        else
-        {
-            serEng<<(int) UnKnown;
-        }
+        storeDV(serEng, fBaseValidator);
 
         /***
          *  Serialize RefHashTableOf<KVStringPair>
@@ -330,7 +319,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *  the KVStringPair.key() can be used as the key to the hash table.
          *  
          ***/
-        if (fFacets)
+        if (serEng.needToWriteTemplateObject(fFacets))
         {
             int itemNumber = 0;
 
@@ -349,10 +338,6 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
                 KVStringPair& curPair = e.nextElement();
                 curPair.serialize(serEng);
             }
-        }
-        else
-        {
-            serEng<<0;
         }
 
         serEng.writeString(fPattern);
@@ -384,170 +369,24 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *  get the basevalidator's type
          *
          ***/
-
-        serEng>>type;
-
-        switch((ValidatorType)type)
-        {
-        case String: 
-            StringDatatypeValidator* stringdv;
-            serEng>>stringdv;
-            fBaseValidator = stringdv;
-            break;
-        case AnyURI:
-            AnyURIDatatypeValidator* anyuridv;
-            serEng>>anyuridv;
-            fBaseValidator = anyuridv;
-            break;
-        case QName: 
-            QNameDatatypeValidator* qnamedv;
-            serEng>>qnamedv;
-            fBaseValidator = qnamedv;
-            break;
-        case Name: 
-            NameDatatypeValidator* namedv;
-            serEng>>namedv;
-            fBaseValidator = namedv;
-            break;
-        case NCName:  
-            NCNameDatatypeValidator* ncnamedv;
-            serEng>>ncnamedv;
-            fBaseValidator = ncnamedv;
-            break;
-        case Boolean: 
-            BooleanDatatypeValidator* booleandv;
-            //TODO
-            //serEng>>booleandv;
-            fBaseValidator = booleandv;
-            break;
-        case Float: 
-            FloatDatatypeValidator* floatdv;
-            serEng>>floatdv;
-            fBaseValidator = floatdv;
-            break;
-        case Double: 
-            DoubleDatatypeValidator* doubledv;
-            serEng>>doubledv;
-            fBaseValidator = doubledv;
-            break;
-        case Decimal: 
-            DecimalDatatypeValidator* decimaldv;
-            serEng>>decimaldv;
-            fBaseValidator = decimaldv;
-            break;
-        case HexBinary:  
-            HexBinaryDatatypeValidator* hexbinarydv;
-            serEng>>hexbinarydv;
-            fBaseValidator = hexbinarydv;
-            break;
-        case Base64Binary: 
-            Base64BinaryDatatypeValidator* base64binarydv;
-            serEng>>base64binarydv;
-            fBaseValidator = base64binarydv;
-            break;
-        case Duration:     
-            DurationDatatypeValidator* durationdv;
-            serEng>>durationdv;
-            fBaseValidator = durationdv;
-            break;
-        case DateTime:       
-            DateTimeDatatypeValidator* datetimedv;
-            serEng>>datetimedv;
-            fBaseValidator = datetimedv;
-            break;
-        case Date:          
-            DateDatatypeValidator* datedv;
-            serEng>>datedv;
-            fBaseValidator = datedv;
-            break;
-        case Time:         
-            TimeDatatypeValidator* timedv;
-            serEng>>timedv;
-            fBaseValidator = timedv;
-            break;
-        case MonthDay:      
-            MonthDayDatatypeValidator* monthdaydv;
-            serEng>>monthdaydv;
-            fBaseValidator = monthdaydv;
-            break;
-        case YearMonth:     
-            YearMonthDatatypeValidator* yearmonthdv;
-            serEng>>yearmonthdv;
-            fBaseValidator = yearmonthdv;
-            break;
-        case Year:          
-            YearDatatypeValidator* yeardv;
-            serEng>>yeardv;
-            fBaseValidator = yeardv;
-            break;
-        case Month:        
-            MonthDatatypeValidator* monthdv;
-            serEng>>monthdv;
-            fBaseValidator = monthdv;
-            break;
-        case Day:           
-            DayDatatypeValidator* daydv;
-            serEng>>daydv;
-            fBaseValidator = daydv;
-            break;
-        case ID:           
-            IDDatatypeValidator* iddv;
-            serEng>>iddv;
-            fBaseValidator = iddv;
-            break;
-        case IDREF:         
-            IDREFDatatypeValidator* idrefdv;
-            serEng>>idrefdv;
-            fBaseValidator = idrefdv;
-            break;
-        case ENTITY:       
-            ENTITYDatatypeValidator* entitydv;
-            serEng>>entitydv;
-            fBaseValidator = entitydv;
-            break;
-        case NOTATION:     
-            NOTATIONDatatypeValidator* notationdv;
-            serEng>>notationdv;
-            fBaseValidator = notationdv;
-            break;
-        case List:          
-            ListDatatypeValidator* listdv;
-            serEng>>listdv;
-            fBaseValidator = listdv;
-            break;
-        case Union:         
-            UnionDatatypeValidator* uniondv;
-            //TODO
-            //serEng>>uniondv;
-            fBaseValidator = uniondv;
-            break;
-        case AnySimpleType:  
-            AnySimpleTypeDatatypeValidator* anysimpletypedv;
-            //TODO
-            //serEng>>anysimpletypedv;
-            fBaseValidator = anysimpletypedv;
-            break;
-        case UnKnown:
-            fBaseValidator = 0;
-            break;
-        default: //we treat this same as UnKnown
-            fBaseValidator = 0;
-            break;
-        }
+        fBaseValidator = loadDV(serEng);
 
         /***
+         *
          *  Deserialize RefHashTableOf<KVStringPair>
          *
-        ***/
-        int itemNumber = 0;
-        serEng>>itemNumber;
-
-        if (itemNumber)
+         ***/
+         if (serEng.needToReadTemplateObject((void**)&fFacets))
         {
             if (!fFacets)
             {
                 fFacets = new (fMemoryManager) RefHashTableOf<KVStringPair>(3, fMemoryManager);
             }
+
+            serEng.registerTemplateObject(fFacets);
+
+            int itemNumber = 0;
+            serEng>>itemNumber;
 
             for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
             {
@@ -568,6 +407,189 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng.readString((XMLCh*&)fTypeLocalName);
         serEng.readString((XMLCh*&)fTypeUri);
 
+    }
+
+}
+
+/***
+ *
+ *  When deserialized, we need to know, exactly what
+ *  validator was serialized here.
+ *
+ *  Design Issue:
+ *    
+ *    This extra type information is only necessary when
+ *  we need to create and deserialize an DatatypeValidator 
+ *  derivative by operator >>, but not by object.serialize().
+ *  Therefore it is appropriate to save this type info by
+ *  hosting object rather than by derivative.serialize().
+ *
+ *
+ ***/
+void DatatypeValidator::storeDV(XSerializeEngine&        serEng
+                              , DatatypeValidator* const dv)
+{
+    if (dv)
+    {
+        serEng<<(int) dv->getType();
+        serEng<<dv;
+    }
+    else
+    {
+        serEng<<(int) UnKnown;
+    }
+
+}
+
+DatatypeValidator* DatatypeValidator::loadDV(XSerializeEngine& serEng)
+{
+
+    int type;
+    serEng>>type;
+
+    switch((ValidatorType)type)
+    {
+    case String: 
+        StringDatatypeValidator* stringdv;
+        serEng>>stringdv;
+        return stringdv;
+        break;
+    case AnyURI:
+        AnyURIDatatypeValidator* anyuridv;
+        serEng>>anyuridv;
+        return anyuridv;
+        break;
+    case QName: 
+        QNameDatatypeValidator* qnamedv;
+        serEng>>qnamedv;
+        return qnamedv;
+        break;
+    case Name: 
+        NameDatatypeValidator* namedv;
+        serEng>>namedv;
+        return namedv;
+        break;
+    case NCName:  
+        NCNameDatatypeValidator* ncnamedv;
+        serEng>>ncnamedv;
+        return ncnamedv;
+        break;
+    case Boolean: 
+        BooleanDatatypeValidator* booleandv;
+        serEng>>booleandv;
+        return booleandv;
+        break;
+    case Float: 
+        FloatDatatypeValidator* floatdv;
+        serEng>>floatdv;
+        return floatdv;
+        break;
+    case Double: 
+        DoubleDatatypeValidator* doubledv;
+        serEng>>doubledv;
+        return doubledv;
+        break;
+    case Decimal: 
+        DecimalDatatypeValidator* decimaldv;
+        serEng>>decimaldv;
+        return decimaldv;
+        break;
+    case HexBinary:  
+        HexBinaryDatatypeValidator* hexbinarydv;
+        serEng>>hexbinarydv;
+        return hexbinarydv;
+        break;
+    case Base64Binary: 
+        Base64BinaryDatatypeValidator* base64binarydv;
+        serEng>>base64binarydv;
+        return base64binarydv;
+        break;
+    case Duration:     
+        DurationDatatypeValidator* durationdv;
+        serEng>>durationdv;
+        return durationdv;
+        break;
+    case DateTime:       
+        DateTimeDatatypeValidator* datetimedv;
+        serEng>>datetimedv;
+        return datetimedv;
+        break;
+    case Date:          
+        DateDatatypeValidator* datedv;
+        serEng>>datedv;
+        return datedv;
+        break;
+    case Time:         
+        TimeDatatypeValidator* timedv;
+        serEng>>timedv;
+        return timedv;
+        break;
+    case MonthDay:      
+        MonthDayDatatypeValidator* monthdaydv;
+        serEng>>monthdaydv;
+        return monthdaydv;
+        break;
+    case YearMonth:     
+        YearMonthDatatypeValidator* yearmonthdv;
+        serEng>>yearmonthdv;
+        return yearmonthdv;
+        break;
+    case Year:          
+        YearDatatypeValidator* yeardv;
+        serEng>>yeardv;
+        return yeardv;
+        break;
+    case Month:        
+        MonthDatatypeValidator* monthdv;
+        serEng>>monthdv;
+        return monthdv;
+        break;
+    case Day:           
+        DayDatatypeValidator* daydv;
+        serEng>>daydv;
+        return daydv;
+        break;
+    case ID:           
+        IDDatatypeValidator* iddv;
+        serEng>>iddv;
+        return iddv;
+        break;
+    case IDREF:         
+        IDREFDatatypeValidator* idrefdv;
+        serEng>>idrefdv;
+        return idrefdv;
+        break;
+    case ENTITY:       
+        ENTITYDatatypeValidator* entitydv;
+        serEng>>entitydv;
+        return entitydv;
+        break;
+    case NOTATION:     
+        NOTATIONDatatypeValidator* notationdv;
+        serEng>>notationdv;
+        return notationdv;
+        break;
+    case List:          
+        ListDatatypeValidator* listdv;
+        serEng>>listdv;
+        return listdv;
+        break;
+    case Union:         
+        UnionDatatypeValidator* uniondv;
+        serEng>>uniondv;
+        return uniondv;
+        break;
+    case AnySimpleType:  
+        AnySimpleTypeDatatypeValidator* anysimpletypedv;
+        serEng>>anysimpletypedv;
+        return anysimpletypedv;
+        break;
+    case UnKnown:
+        return 0;
+        break;
+    default: //we treat this same as UnKnown
+        return 0;
+        break;
     }
 
 }

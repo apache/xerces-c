@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/10/07 19:39:37  peiyongz
+ * Use of Template_Class Object Serialization/Deserialization API
+ *
  * Revision 1.13  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -908,7 +911,7 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
         /***
          * Serialize RefArrayVectorOf<XMLCh>
          ***/
-        if (fStrEnumeration)
+        if (serEng.needToWriteTemplateObject(fStrEnumeration))
         {
             int enumLength = fStrEnumeration->size();
             serEng<<enumLength;
@@ -918,15 +921,11 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
                 serEng.writeString(fStrEnumeration->elementAt(i));
             }
         }
-        else
-        {
-            serEng<<0;
-        }
 
         /***
          * Serialize RefVectorOf<XMLNumber>
          ***/
-        if (fEnumeration)
+        if (serEng.needToWriteTemplateObject(fEnumeration))
         {           
             int enumLength = fEnumeration->size();
             serEng<<enumLength;
@@ -935,10 +934,6 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
             {
                 serEng<<fEnumeration->elementAt(i);
             }
-        }
-        else
-        {
-            serEng<<0;
         }
     
     }
@@ -966,16 +961,17 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
         /***
           *  Deserialize RefArrayVectorOf<XMLCh>         
          ***/
-        int enumLength = 0;;
-        serEng>>enumLength;
-
-        if (enumLength)
+        if (serEng.needToReadTemplateObject((void**)&fStrEnumeration))
         {
             if (!fStrEnumeration)
             {
                 fStrEnumeration = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
             }
 
+            serEng.registerTemplateObject(fStrEnumeration);
+
+            int enumLength = 0;
+            serEng>>enumLength;
             for ( int i = 0; i < enumLength; i++)
             {
                 XMLCh* enumVal;
@@ -987,16 +983,17 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
         /***
           *  Deserialize RefVectorOf<XMLNumber>         
          ***/
-        enumLength = 0;;
-        serEng>>enumLength;
-
-        if (enumLength)
+        if (serEng.needToReadTemplateObject((void**)&fEnumeration))
         {
             if (!fEnumeration)
             {
                 fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(8, true, fMemoryManager);
             }
 
+            serEng.registerTemplateObject(fEnumeration);
+
+            int enumLength = 0;
+            serEng>>enumLength;
             for ( int i = 0; i < enumLength; i++)
             {
                 fEnumeration->addElement(readNumber(numType, serEng));

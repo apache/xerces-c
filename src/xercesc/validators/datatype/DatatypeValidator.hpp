@@ -319,6 +319,34 @@ public:
      ***/
     DECL_XSERIALIZABLE(DatatypeValidator)
 
+    /***
+      *
+      *  Serialzie DatatypeValidator derivative 
+      *
+      *  Param
+      *     serEng: serialize engine
+      *     dv:     DatatypeValidator derivative
+      *
+      *  Return:
+      *
+      ***/
+	static void storeDV(XSerializeEngine&        serEng
+                      , DatatypeValidator* const dv);
+
+    /***
+      *
+      *  Create a DatatypeValidator derivative from the binary
+      *  stream.
+      *
+      *  Param
+      *     serEng: serialize engine
+      *
+      *  Return:
+      *     DatatypeValidator derivative 
+      *
+      ***/
+	static DatatypeValidator* loadDV(XSerializeEngine& serEng);
+
 protected:
     // -----------------------------------------------------------------------
     //  Protected Constructors
