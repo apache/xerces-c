@@ -9,24 +9,55 @@
       <p>Topics discussed are:</p>
       <ul>
         <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="DirChange">Directory change in &XercesCName; &XercesCVersion;</link></li>
         <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion;</link></li>
         <ul>
             <li><link anchor="NewAPI">New Public API</link></li>
             <li><link anchor="ModifiedAPI">Modified Public API</link></li>
             <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
         </ul>
-        <li><link anchor="DirChange">Directory change in &XercesCName; &XercesCVersion;</link></li>
       </ul>
     </s2>
 
     <anchor name="NewFeatures"/>
     <s2 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
-        <li>Added SAX2-ext's DeclHandler.</li>
-        <li>Added support for building with new MacOSURLAccessCF NetAccessor.</li>
-        <li>Used IDOMParser instead of DOMParser in Schema Processing for better performance.</li>
-        <li>Added test case IDOMMemTest.</li>
+        <li>Support SAX2-ext's DeclHandler.</li>
+        <li>Directory sane_include reorganization: add sub-directory 'xercesc' to src / include folder.
+            See <link anchor="DirChange">"Directory change in &XercesCName; &XercesCVersion;"</link>
+            below for detail.</li>
+        <li>More IDOM test cases - port IDOMMemTest, and merge ThreadTest and IThreadTest.</li>
+        <li>Support IconvFBSD in multi-threading environment.</li>
+        <li>Use IDOM in schema processing for faster performance.</li>
+        <li>Add Project files for BCB6.</li>
+        <li>Port to Caldera (SCO) OpenServer.</li>
+        <li>Support building with new MacOSURLAccessCF NetAccessor that doesn't require
+            Carbon but can allow Xerces to live solely within CoreServices layer.</li>
       </ul>
+    </s2>
+
+    <anchor name="DirChange"/>
+    <s2 title="Directory change in &XercesCName; &XercesCVersion;">
+        <ul>
+            <li>A new directory, <em>src/xercesc</em> is created to be the new parent directory of
+                all src's direct subdirectories.</li>
+            <li>And in the binary package, all the headers are distributed in <em>include/xercesc</em> directory.</li>
+            <li>Migration considerations:</li>
+            <ul>
+              <li>Windows application, <br/>
+                  either change the <em>include directories </em> setting to
+                  "..\..\..\..\..\src\<em>xercesc</em>" (Projects->settings->C/C++->Preprocessor), <br/>
+                  or <br/>
+                  change the relevant #include instances in the source/header files, accordingly, eg <br/>
+                  #include &lt;util/XMLString.hpp&gt; be changed to <br/>
+                  #include &lt;<em>xercesc</em>/util/XMLString.hpp&gt; </li>
+              <li>Unix application, <br/>
+                  either change the <em>include search path </em> in the Makefile to
+                  " -I &lt;installroot&gt;/include/<em>xercesc</em>", <br/>
+                  or <br/>
+                  change the relevant #include instances in the source/header files as shown above. </li>
+            </ul>
+        </ul>
     </s2>
 
     <anchor name="API"/>
@@ -104,30 +135,6 @@
             </ul>
         </s3>
 
-    </s2>
-
-    <anchor name="DirChange"/>
-    <s2 title="Directory change in &XercesCName; &XercesCVersion;">
-        <ul>
-            <li>A new directory, <em>src/xercesc</em> is created to be the new parent directory to
-                all src's direct subdirectories.</li>
-            <li>And in the binary package, all the headers are distributed in <em>include/xercesc</em> directory.</li>
-            <li>Migration considerations:</li>
-            <ul>
-              <li>Windows application, <br/>
-                  shall either change the <em>include directories </em> setting to
-                  "..\..\..\..\..\src\<em>xercesc</em>" (Projects->settings->C/C++->Preprocessor), <br/>
-                  or <br/>
-                  change the relevant #include instances in the source/header files, accordingly, eg <br/>
-                  #include &lt;util/XMLString.hpp&gt; be changed to <br/>
-                  #include &lt;<em>xercesc</em>/util/XMLString.hpp&gt; </li>
-              <li>Unix application, <br/>
-                  shall either change the <em>include search path </em> in the Makefile to
-                  " -I &lt;installroot&gt;/include/<em>xercesc</em>", <br/>
-                  or <br/>
-                  change the relevant #include instances in the source/header files as shown above. </li>
-            </ul>
-        </ul>
     </s2>
 
     <s2 title="Migration Archive">

@@ -3,12 +3,20 @@
 
 <s1 title="Releases">
 
-<s2 title="&XercesCName; Version 1.7.0: March 8, 2002">
+<s2 title="&XercesCName; Version 1.7.0: March 7, 2002">
 <table>
     <tr>
         <td>Date</td>
         <td>Contributor</td>
         <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2002-03-06</td>
+        <td>PeiYong Zhang</td>
+        <td>Schema: Allow [+]? [0]* '.'? [0]* and normalize the input to positive zero string.
+            And similarly input comforming to '-' [0]* '.'? [0]* is normalized to negative zero.
+        </td>
     </tr>
 
     <tr>

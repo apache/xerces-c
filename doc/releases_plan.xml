@@ -4,9 +4,9 @@
 <s1 title="Future Releases Plan">
 
 <s2 title="&XercesCName; Future Releases Plan">
-<p>This document hightlights the release plan for &XercesCName;.</p>
-<s3 title="Current Status"><p>&XercesCName; 1.6.0 - released on December 6, 2001.</p></s3>
-<s3 title="Next Target Release"><p>&XercesCName; 1.7.0 - plan to be released in the 2nd / 3rd week of March, 2002.</p></s3>
+<p>This document highlights the release plan for &XercesCName;.</p>
+<s3 title="Current Status"><p>&XercesCName; 1.7.0 - released on March 7, 2002.</p></s3>
+<s3 title="Next Target Release"><p>&XercesCName; 1.8.0 - plan to be released in June or July.</p></s3>
 <s3 title="&XercesCName; Features list">
 <p> The following table lists the TODO items for &XercesCName;.  It does not include fixing
 bugs that are opened in Bugzilla; unless such Bugzilla bug involves a major development
@@ -20,64 +20,6 @@ Those features that have 'Complete' status will be included in the 'Next Target 
         <td>Development Volunteer</td>
         <td>Target Date</td>
         <td>Status</td>
-    </tr>
-
-    <tr>
-        <td>Add SAX2-ext's DeclHandler support</td>
-        <td>Khaled Noaman</td>
-        <td>January</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>Directory sane_include reorganization: add sub-directory 'xercesc' to src / include folder.
-            (proposed by Murray Cumming)</td>
-        <td>PeiYong Zhang</td>
-        <td>January</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>More IDOM test cases - port IDOMMemTest, and merge ThreadTest and IThreadTest.</td>
-        <td>Tinny Ng</td>
-        <td>January</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>Support IconvFBSD in multi-threading environment</td>
-        <td>Max Gotlib</td>
-        <td>January</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>Use IDOM in schema processing for faster performance.</td>
-        <td>Khaled Noaman</td>
-        <td>February</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>Project files for BCB6.</td>
-        <td>Don Mastrovito</td>
-        <td>February</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>[Bug 6445] Caldera (SCO) OpenServer Port.</td>
-        <td>Martin Kalen</td>
-        <td>February</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>Add support for building with new MacOSURLAccessCF NetAccessor that doesn't
-            require Carbon but can allow Xerces to live soley within CoreServices layer.</td>
-        <td>James Berry</td>
-        <td>February</td>
-        <td>Complete</td>
     </tr>
 
     <tr>
@@ -117,6 +59,20 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
+        <td>Produce 64 bit binary distribution for Solaris</td>
+        <td>PeiYong Zhang</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Produce 64 bit binary distribution for HP</td>
+        <td>PeiYong Zhang</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
         <td>Produce 64 bit binary distribution for Linux</td>
         <td>PeiYong Zhang</td>
         <td>May</td>
@@ -124,7 +80,7 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Produce 64 bit binary distribution for Solaris</td>
+        <td>Produce 64 bit binary distribution for Windows</td>
         <td>PeiYong Zhang</td>
         <td>May</td>
         <td></td>
@@ -132,20 +88,27 @@ Those features that have 'Complete' status will be included in the 'Next Target 
 
     <tr>
         <td>DOM Level 3 Core</td>
-        <td></td>
-        <td></td>
+        <td>Tinny Ng</td>
+        <td>April</td>
         <td></td>
     </tr>
 
     <tr>
         <td>DOM Level 3 Load and Save</td>
-        <td></td>
-        <td></td>
+        <td>Tinny Ng</td>
+        <td>May</td>
         <td></td>
     </tr>
 
     <tr>
         <td>DOM Level 3 Abstract Schema Load and Save</td>
+        <td>Khaled Noaman</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>[Bug 5563] Add capacity to build Xerces as static library</td>
         <td></td>
         <td></td>
         <td></td>
