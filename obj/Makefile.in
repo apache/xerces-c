@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.7  1999/12/20 23:04:51  aruna1
+# "transcoder information transferred"
+#
 # Revision 1.6  1999/12/17 01:28:52  rahulj
 # Merged in changes submitted for UnixWare 7 port. Platform
 # specific files are still missing.
@@ -105,6 +108,7 @@ PREFIX = @prefix@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@
+TRANSCODER = @transcoder@
 
 include ../src/Makefile.incl
 
