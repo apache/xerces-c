@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/05 21:25:20  peiyongz
+ * Bug# 10250: Implementation of new platform methods,
+ *                      patch from max@cca.usart.ru (Max Gotlib)
+ *
  * Revision 1.2  2002/05/21 20:31:47  tng
  * Minor update: Remove obsolete code
  *
@@ -218,7 +222,10 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
 
 unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 {
-    int curPos = ftell( (FILE*)theFile);
+    if (theFile == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
+    off_t curPos = ftell( (FILE*)theFile);
     if (curPos == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetSize);
@@ -228,6 +235,9 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 
 void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
+    if (theFile == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
     if (fclose((FILE*)theFile))
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotCloseFile);
@@ -235,24 +245,26 @@ void XMLPlatformUtils::closeFile(FileHandle theFile)
 
 unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 {
+    if (theFile == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
     // Get the current position
-    long  int curPos = ftell((FILE*) theFile);
+    off_t curPos = ftell((FILE*) theFile);
     if (curPos == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
-     if (fseek((FILE*) theFile, 0, SEEK_END))
+    if (fseek((FILE*) theFile, 0, SEEK_END))
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToEnd);
 
-    long int retVal = ftell((FILE*)theFile);
+    off_t retVal = ftell((FILE*)theFile);
     if (retVal == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToEnd);
 
     // And put the pointer back
-
     if (fseek( (FILE*)theFile, curPos, SEEK_SET) )
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToPos);
@@ -262,39 +274,63 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
+    if (fileName == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
     const char* tmpFileName = XMLString::transcode(fileName);
     ArrayJanitor<char> janText((char*)tmpFileName);
-    FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
-
-    if (retVal == NULL)
-        return 0;
+    FileHandle retVal = (FileHandle)fopen( tmpFileName , "r+" );
     return retVal;
 }
 
 FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 {
-    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
-
-    if (retVal == NULL)
-        return 0;
+    if (fileName == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
+    FileHandle retVal = (FileHandle)fopen( fileName , "r+" );
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    if (fileName == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    return fopen( tmpFileName , "w" );
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    if (fileName == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
+    return fopen( fileName , "w" );
+}
 
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
-        return (FileHandle)fdopen(dup(0), "rb");
+    int nfd = dup(0);
+    if (nfd == -1)
+	ThrowXML(XMLPlatformUtilsException,
+		XMLExcepts::File_CouldNotDupHandle);
+    return (FileHandle) fdopen(dup(0), "r");
 }
-
-
 
 unsigned int
 XMLPlatformUtils::readFileBuffer( FileHandle          theFile
                                 , const unsigned int  toRead
                                 , XMLByte* const      toFill)
 {
+    if ( !theFile || !toFill )
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
+    if (toRead == 0)
+	return 0;
     size_t noOfItemsRead = fread((void*) toFill, 1, toRead, (FILE*)theFile);
-
+    
     if(ferror((FILE*)theFile))
     {
         ThrowXML(XMLPlatformUtilsException,
@@ -304,9 +340,50 @@ XMLPlatformUtils::readFileBuffer( FileHandle          theFile
     return (unsigned int)noOfItemsRead;
 }
 
+void XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+					, long                  toWrite
+					, const XMLByte* const  toFlush )
+{
+    if ( !theFile || !toFlush )
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
+    if ( (toWrite <= 0 ) || !*toFlush )
+	return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    size_t bytesWritten = 0;
+
+    while (true)
+    {
+        bytesWritten = fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
+
+        if(ferror((FILE*)theFile))
+	{
+#if 0
+	    ThrowXML(XMLPlatformUtilsException,
+		     XMLExcepts::File_CouldNotWriteToFile);
+#else
+            ThrowXML(XMLPlatformUtilsException,
+		     XMLExcepts::File_CouldNotReadFromFile);
+#endif
+	}
+
+        if (bytesWritten < (size_t) toWrite) //incomplete write
+        {
+            tmpFlush += bytesWritten;
+            toWrite -= bytesWritten;
+            bytesWritten = 0;
+        }
+        else
+            return;
+    }
+}
 
 void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
+    if (theFile == NULL)
+	ThrowXML(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero);
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET))
         ThrowXML(XMLPlatformUtilsException,
@@ -528,7 +605,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
             ThrowXML(XMLPlatformUtilsException,
                      XMLExcepts::Mutex_CouldNotDestroy);
         }
-        delete mtxHandle;
+        delete (pthread_mutex_t*)mtxHandle;
     }
 }
 
