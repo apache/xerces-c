@@ -391,7 +391,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
         , 0              // no shared write
         , 0
         , CREATE_ALWAYS
-        , FILE_FLAG_WRITE_THROUGH
+        , FILE_ATTRIBUTE_NORMAL
         , 0
     );
 
@@ -465,7 +465,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
             , 0              // no shared write
             , 0
             , CREATE_ALWAYS
-            , FILE_FLAG_WRITE_THROUGH
+            , FILE_ATTRIBUTE_NORMAL
             , 0
             );
     }
@@ -483,7 +483,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
             , 0              // no shared write
             , 0
             , CREATE_ALWAYS
-            , FILE_FLAG_WRITE_THROUGH
+            , FILE_ATTRIBUTE_NORMAL
             , 0
             );
         delete [] tmpName;
