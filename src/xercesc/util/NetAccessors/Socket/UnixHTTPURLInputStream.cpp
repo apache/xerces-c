@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/07 14:36:44  tng
+ * [Bug 8852] UnixHTTPURLInputStream.cpp includes unneeded file.
+ *
  * Revision 1.2  2002/03/11 21:08:23  peiyongz
  * Bug#7000: fix to corrupted URL, patch from kent@iastate.edu (Kent)
  *
@@ -99,7 +102,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <iostream.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
