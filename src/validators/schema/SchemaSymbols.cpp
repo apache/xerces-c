@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/22 16:57:53  tng
+ * typo in ##other.
+ *
  * Revision 1.9  2001/08/01 18:49:32  peiyongz
  * AnyRUIDatatypeValidator
  *
@@ -619,7 +622,7 @@ const XMLCh SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL[] =
 
 const XMLCh SchemaSymbols::fgATTVAL_TWOPOUNDOTHER[] =
 {
-    chPound, chPound, chLatin_o, chLatin_o, chLatin_h, chLatin_e, chLatin_r, chNull
+    chPound, chPound, chLatin_o, chLatin_t, chLatin_h, chLatin_e, chLatin_r, chNull
 };
 
 const XMLCh SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE[] =
