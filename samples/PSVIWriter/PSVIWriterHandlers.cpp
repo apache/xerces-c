@@ -1230,7 +1230,7 @@ void PSVIWriterHandlers::sendElementEmpty(const XMLCh* const elementName) {
 	writeEmpty(elementName, fAttrList);
 }
 
-void PSVIWriterHandlers::sendElementValueInt(const XMLCh* elementName, int value) {
+void PSVIWriterHandlers::sendElementValueInt(const XMLCh* const elementName, int value) {
 	XMLString::binToText(value, fTempResult, 50, 10);
 	writeValue(elementName, fTempResult);
 }
@@ -1243,7 +1243,7 @@ void PSVIWriterHandlers::sendElementValue(const XMLCh* const elementName, const 
 	}
 }
 
-void PSVIWriterHandlers::sendElementValueList(const XMLCh* const elementName, const StringList* values) {
+void PSVIWriterHandlers::sendElementValueList(const XMLCh* const elementName, const StringList* const values) {
 	if (values==NULL) {
 		sendElementEmpty(elementName);
 	} else {
@@ -1256,7 +1256,7 @@ void PSVIWriterHandlers::sendIndentedElement(const XMLCh* const elementName) {
 	incIndent();
 }
 
-void PSVIWriterHandlers::sendIndentedElementWithID(const XMLCh* elementName, XSObject* obj) {
+void PSVIWriterHandlers::sendIndentedElementWithID(const XMLCh* const elementName, XSObject* obj) {
 	fDefinedIds->addElement(obj);
 	fAttrList->removeAllElements();
 	fAttrList->addElement((XMLCh*)gId);
@@ -1265,7 +1265,7 @@ void PSVIWriterHandlers::sendIndentedElementWithID(const XMLCh* elementName, XSO
 	incIndent();
 }
 
-void PSVIWriterHandlers::sendUnindentedElement(const XMLCh* elementName) {
+void PSVIWriterHandlers::sendUnindentedElement(const XMLCh* const elementName) {
 	decIndent();
 	writeClose(elementName);
 }
@@ -1300,7 +1300,7 @@ void PSVIWriterHandlers::writeValue(const XMLCh* const elementName, const XMLCh*
 		<< XMLFormatter::NoEscapes << gAngleSlash << elementName <<	gAngleFeed ;
 }
 
-void PSVIWriterHandlers::writeValue(const XMLCh* const elementName, const StringList* values) {
+void PSVIWriterHandlers::writeValue(const XMLCh* const elementName, const StringList* const values) {
 	*fFormatter 
 		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName << chCloseAngle;
 	for (unsigned int i=0; i < values->size(); i++) {

@@ -214,14 +214,14 @@ private:
     void processElementDeclarationRef(const XMLCh* enclose, XSElementDeclaration* elemDecl);
     void sendReference(const XMLCh* elementName, XSObject* obj);
     
-    void sendElementEmpty(const XMLCh* elementName);
-	void sendElementValueInt(const XMLCh* elementName, const int value);
-    void sendElementValue(const XMLCh* elementName, const XMLCh* const value);
+    void sendElementEmpty(const XMLCh* const elementName);
+	void sendElementValueInt(const XMLCh* const elementName, int value);
+    void sendElementValue(const XMLCh* const elementName, const XMLCh* const value);
     void sendElementValueList(const XMLCh* const elementName, const StringList* const values);
 
-	void sendIndentedElement(const XMLCh* elementName);
-    void sendIndentedElementWithID(const XMLCh* elementName, XSObject* obj);	//adds the ID to the attribute list before sending
-    void sendUnindentedElement(const XMLCh* elementName);
+	void sendIndentedElement(const XMLCh* const elementName);
+    void sendIndentedElementWithID(const XMLCh* const elementName, XSObject* obj);	//adds the ID to the attribute list before sending
+    void sendUnindentedElement(const XMLCh* const elementName);
     
     void writeOpen(const XMLCh* const elementName);
 	void writeOpen(const XMLCh* const elementName, const StringList* const attrs);
