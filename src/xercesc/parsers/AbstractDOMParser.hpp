@@ -990,6 +990,13 @@ public :
         , const XMLCh* const            uri
         ,       PSVIElement *           elementInfo
     );
+
+    virtual void handlePartialElementPSVI
+    (
+        const   XMLCh* const            localName 
+        , const XMLCh* const            uri
+        ,       PSVIElement *           elementInfo
+    );
     /**
       * Enables PSVI information about attributes to be passed back to the
       * application.  This callback will be made on *all*

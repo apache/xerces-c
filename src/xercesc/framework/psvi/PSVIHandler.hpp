@@ -16,6 +16,9 @@
 
  /*
   * $Log$
+  * Revision 1.8  2004/09/21 16:09:37  peiyongz
+  * Handle partial PSVIElement
+  *
   * Revision 1.7  2004/09/08 13:56:07  peiyongz
   * Apache License Version 2.0
   *
@@ -80,6 +83,13 @@ public:
       * @param  elementInfo    Object containing the element's PSVI properties
       */
     virtual void handleElementPSVI
+    (
+        const   XMLCh* const            localName 
+        , const XMLCh* const            uri
+        ,       PSVIElement *           elementInfo
+    ) = 0;
+
+    virtual void handlePartialElementPSVI
     (
         const   XMLCh* const            localName 
         , const XMLCh* const            uri

@@ -607,6 +607,14 @@ void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localNam
         fPSVIHandler->handleElementPSVI(localName, uri, elementInfo);
 }
 
+void AbstractDOMParser::handlePartialElementPSVI(const XMLCh* const            localName 
+                                               , const XMLCh* const            uri
+                                               ,       PSVIElement *           elementInfo)
+{
+    if(fPSVIHandler)
+        fPSVIHandler->handlePartialElementPSVI(localName, uri, elementInfo);
+}
+
 void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            localName 
                                             , const XMLCh* const            uri
                                             ,       PSVIAttributeList *     psviAttributes)

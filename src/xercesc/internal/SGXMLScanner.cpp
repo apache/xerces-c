@@ -1758,7 +1758,63 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         }
     }
     else    // not empty
+    {
+
+        // send a partial element psvi
+        if (fPSVIHandler)
+        {
+
+            ComplexTypeInfo*   curTypeInfo = 0;
+            DatatypeValidator* curDV = 0;
+            XSTypeDefinition*  typeDef = 0;
+        
+            if (fValidate && elemDecl->isDeclared())
+            {
+                curTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+                    
+                if (curTypeInfo)
+                {
+                    typeDef = (XSTypeDefinition*) fModel->getXSObject(curTypeInfo);       
+                }
+                else
+                {
+                    curDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+
+                    if (curDV)
+                    {
+                        typeDef = (XSTypeDefinition*) fModel->getXSObject(curDV);
+                    }
+                }
+            }
+                       
+            fPSVIElement->reset
+                (
+                  PSVIElement::VALIDITY_NOTKNOWN 
+                , PSVIElement::VALIDATION_NONE   
+                , fRootElemName                  
+                , ((SchemaValidator*) fValidator)->getIsElemSpecified() 
+                , (elemDecl->isDeclared()) ? (XSElementDeclaration*) fModel->getXSObject(elemDecl) : 0
+                , typeDef 
+                , 0 //memberType
+                , fModel 
+                , ((SchemaElementDecl*)elemDecl)->getDefaultValue()  
+                , 0                                                  
+                , 0                                                  
+                , 0                                                  
+                );
+
+
+            fPSVIHandler->handlePartialElementPSVI
+                (
+                  elemDecl->getBaseName()
+                , fURIStringPool->getValueForId(elemDecl->getURI())
+                , fPSVIElement
+                );
+
+        }
+
         fErrorStack->push(fPSVIElemContext.fErrorOccurred);
+    }
 
     return true;
 }
