@@ -554,7 +554,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652kpzn6566pyi6524xkn6526zm26524xkn6526yq26524pr2657n8qi653qgun&#255;&#155;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642ujfn646ejei642ct2n642ev32642ct2n642eu62642cj72647w46i643ycan&#255;&#155;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -3783,20 +3783,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -4735,13 +4721,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -4749,24 +4728,10 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>AbstractNumericValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
@@ -4785,13 +4750,6 @@
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -4925,6 +4883,48 @@
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
@@ -6953,16 +6953,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -7633,27 +7623,12 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>AbstractNumericValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -7669,11 +7644,6 @@
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -7769,6 +7739,36 @@
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -8274,7 +8274,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652kpzn6566pyi6524xkn6526zm26524xkn6526yq26524pr2657n8qi653qgun&#255;&#155;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642ujfn646ejei642ct2n642ev32642ct2n642eu62642cj72647w46i643ycan&#255;&#155;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -10652,24 +10652,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -11894,15 +11876,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -11912,28 +11885,10 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AbstractNumericValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
                 <FILE>
                     <PATHTYPE>PathRelative</PATHTYPE>
@@ -11958,15 +11913,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -12147,6 +12093,60 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:util:XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
@@ -13646,20 +13646,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -14612,13 +14598,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -14626,21 +14605,7 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AbstractNumericValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -14662,13 +14627,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -14809,6 +14767,48 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:util:XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -15314,7 +15314,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652kpzn6566pyi6524xkn6526zm26524xkn6526yq26524pr2657n8qi653qgun&#255;&#155;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642ujfn646ejei642ct2n642ev32642ct2n642eu62642cj72647w46i643ycan&#255;&#155;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -18543,20 +18543,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -19495,13 +19481,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -19509,24 +19488,10 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>AbstractNumericValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
@@ -19545,13 +19510,6 @@
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -19685,6 +19643,48 @@
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
@@ -21713,16 +21713,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -22393,27 +22383,12 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>AbstractNumericValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AnySimpleTypeDa_peValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -22429,11 +22404,6 @@
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -22529,6 +22499,36 @@
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -23034,7 +23034,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642kjfn6466jei6424t2n6426v326424t2n6426u626424j72647n46i643qcan&#255;&#155;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965kkpxn65q6pwi65k4xin65k6zj265k4xin65k6yn265k4pp265rn8ni65mqgsn&#255;&#155;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -25412,24 +25412,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -26654,15 +26636,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -26672,28 +26645,10 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AbstractNumericValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
                 <FILE>
                     <PATHTYPE>PathRelative</PATHTYPE>
@@ -26718,15 +26673,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -26907,6 +26853,60 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:util:XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
@@ -28406,20 +28406,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:Base64BinaryDat_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:BooleanDatatypeValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -29372,13 +29358,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:FloatDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -29386,21 +29365,7 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AbstractNumericValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AnySimpleTypeDa_peValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -29422,13 +29387,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:validators:datatype:AnyURIDatatypeValidator.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
-                    <PATH>:validators:datatype:AbstractNumeric_etValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -29569,6 +29527,48 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
                     <PATH>:util:XMLUri.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:Base64BinaryDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AnySimpleTypeDTValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:AbstractNumFacetValidator.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -29758,7 +29758,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642kjfn6466jei6424t2n6426v326424t2n6426u626424j72647n46i643qcan&#255;&#155;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965kkpxn65q6pwi65k4xin65k6zj265k4xin65k6yn265k4pp265rn8ni65mqgsn&#255;&#155;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -30589,6 +30589,30 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_Range.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_Range.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_RangeException.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_RangeException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
                         <PATH>DOM_Text.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
@@ -30872,30 +30896,6 @@
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
                         <PATH>XMLDeclImpl.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>DOM_RangeException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>DOM_RangeException.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>DOM_Range.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>DOM_Range.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                 </GROUP>
@@ -31687,13 +31687,13 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
-                        <PATH>VecAttributesImpl.hpp</PATH>
+                        <PATH>VecAttributesImpl.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
-                        <PATH>VecAttributesImpl.cpp</PATH>
+                        <PATH>VecAttributesImpl.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
@@ -31759,25 +31759,7 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
-                        <PATH>SAXParser.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>SAXParser.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>SAX2XMLReaderImpl.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>SAX2XMLReaderImpl.cpp</PATH>
+                        <PATH>IDOMParser.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
@@ -31789,7 +31771,25 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
-                        <PATH>IDOMParser.cpp</PATH>
+                        <PATH>SAX2XMLReaderImpl.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>SAX2XMLReaderImpl.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>SAXParser.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>SAXParser.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                 </GROUP>
@@ -31886,6 +31886,78 @@
                     </FILEREF>
                 </GROUP>
                 <GROUP><NAME>util</NAME>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>AutoSense.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>Base64.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>Base64.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BinFileInputStream.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BinFileInputStream.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BinInputStream.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BinInputStream.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BinMemInputStream.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BinMemInputStream.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BitOps.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BitSet.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>BitSet.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
                     <GROUP><NAME>Compilers</NAME>
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
@@ -31900,6 +31972,96 @@
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
                     </GROUP>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>CountedPointer.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>EmptyStackException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>FlagJanitor.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>HashPtr.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>HashXMLCh.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>HeaderDummy.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>HexBin.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>HexBin.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>IllegalArgumentException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>InvalidCastException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>IOException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>Janitor.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>KeyValuePair.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>KVStringPair.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>KVStringPair.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
                     <GROUP><NAME>MsgLoaders</NAME>
                         <GROUP><NAME>InMemory</NAME>
                             <FILEREF>
@@ -31922,6 +32084,24 @@
                             </FILEREF>
                         </GROUP>
                     </GROUP>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>Mutexes.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>Mutexes.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>NameIdPool.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
                     <GROUP><NAME>NetAccessors</NAME>
                         <GROUP><NAME>MacOSURLAccess</NAME>
                             <FILEREF>
@@ -31950,6 +32130,24 @@
                             </FILEREF>
                         </GROUP>
                     </GROUP>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>NoDefTranscoderException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>NoSuchElementException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>NullPointerException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
                     <GROUP><NAME>Platforms</NAME>
                         <GROUP><NAME>MacOS</NAME>
                             <FILEREF>
@@ -31972,22 +32170,54 @@
                             </FILEREF>
                         </GROUP>
                     </GROUP>
-                    <GROUP><NAME>Transcoders</NAME>
-                        <GROUP><NAME>MacOSUnicodeConverter</NAME>
-                            <FILEREF>
-                                <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                                <PATHTYPE>Name</PATHTYPE>
-                                <PATH>MacOSUnicodeConverter.cpp</PATH>
-                                <PATHFORMAT>MacOS</PATHFORMAT>
-                            </FILEREF>
-                            <FILEREF>
-                                <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                                <PATHTYPE>Name</PATHTYPE>
-                                <PATH>MacOSUnicodeConverter.hpp</PATH>
-                                <PATHFORMAT>MacOS</PATHFORMAT>
-                            </FILEREF>
-                        </GROUP>
-                    </GROUP>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>PlatformUtils.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>PlatformUtils.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>QName.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>QName.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>RefArrayOf.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>RefHashTableOf.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>RefStackOf.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>RefVectorOf.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
                     <GROUP><NAME>regx</NAME>
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
@@ -32323,252 +32553,6 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
-                        <PATH>AutoSense.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>Base64.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>Base64.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BinFileInputStream.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BinFileInputStream.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BinInputStream.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BinInputStream.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BinMemInputStream.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BinMemInputStream.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BitOps.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BitSet.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>BitSet.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>CountedPointer.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>EmptyStackException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>FlagJanitor.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>HashPtr.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>HashXMLCh.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>HeaderDummy.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>HexBin.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>HexBin.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>IllegalArgumentException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>InvalidCastException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>IOException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>Janitor.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>KeyValuePair.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>KVStringPair.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>KVStringPair.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>Mutexes.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>Mutexes.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>NameIdPool.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>NoDefTranscoderException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>NoSuchElementException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>NullPointerException.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>PlatformUtils.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>PlatformUtils.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>QName.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>QName.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>RefArrayOf.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>RefHashTableOf.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>RefStackOf.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>RefVectorOf.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
                         <PATH>RuntimeException.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
@@ -32584,6 +32568,22 @@
                         <PATH>StringPool.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
+                    <GROUP><NAME>Transcoders</NAME>
+                        <GROUP><NAME>MacOSUnicodeConverter</NAME>
+                            <FILEREF>
+                                <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                                <PATHTYPE>Name</PATHTYPE>
+                                <PATH>MacOSUnicodeConverter.cpp</PATH>
+                                <PATHFORMAT>MacOS</PATHFORMAT>
+                            </FILEREF>
+                            <FILEREF>
+                                <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                                <PATHTYPE>Name</PATHTYPE>
+                                <PATH>MacOSUnicodeConverter.hpp</PATH>
+                                <PATHFORMAT>MacOS</PATHFORMAT>
+                            </FILEREF>
+                        </GROUP>
+                    </GROUP>
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
@@ -32725,6 +32725,18 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLDouble.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLDouble.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
                         <PATH>XMLEBCDICTranscoder.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
@@ -32761,6 +32773,18 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLFloat.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLFloat.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
                         <PATH>XMLIBM1140Transcoder.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
@@ -32785,6 +32809,18 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLNumber.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLNumber.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
                         <PATH>XMLString.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
@@ -32797,13 +32833,13 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLStringTokenizer.hpp</PATH>
+                        <PATH>XMLStringTokenizer.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLStringTokenizer.cpp</PATH>
+                        <PATH>XMLStringTokenizer.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
@@ -32828,6 +32864,18 @@
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
                         <PATH>XMLUni.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLUri.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>XMLUri.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
@@ -32878,433 +32926,21 @@
                         <PATH>XMLWin1252Transcoder.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLNumber.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLNumber.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLFloat.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLFloat.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLDouble.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLDouble.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLUri.hpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
-                    <FILEREF>
-                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                        <PATHTYPE>Name</PATHTYPE>
-                        <PATH>XMLUri.cpp</PATH>
-                        <PATHFORMAT>MacOS</PATHFORMAT>
-                    </FILEREF>
                 </GROUP>
                 <GROUP><NAME>validators</NAME>
-                    <GROUP><NAME>datatype</NAME>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>Base64BinaryDat_peValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>Base64BinaryDat_peValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>BooleanDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>BooleanDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidatorFactory.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidatorFactory.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DecimalDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DecimalDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ENTITYDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ENTITYDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>HexBinaryDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>HexBinaryDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>InvalidDatatypeFacetExcept.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>InvalidDatatypeValueExcept.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>StringDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>StringDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>QNameDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>QNameDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>IDDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>IDDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>IDREFDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>IDREFDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ListDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ListDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>NOTATIONDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>NOTATIONDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>UnionDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>UnionDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AnySimpleTypeDa_peValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>FloatDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AbstractNumeric_etValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AbstractNumericValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AnySimpleTypeDa_peValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>NCNameDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DoubleDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AnyURIDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AbstractNumeric_etValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>FloatDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AnyURIDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>NCNameDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>NameDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AbstractNumericValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DoubleDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AbstractStringValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AbstractStringValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>NameDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                    </GROUP>
-                    <GROUP><NAME>DTD</NAME>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DocTypeHandler.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDef.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDef.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDefList.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDefList.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDElementDecl.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDElementDecl.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDEntityDecl.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDGrammar.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDGrammar.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDScanner.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDScanner.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                    </GROUP>
                     <GROUP><NAME>common</NAME>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AllContentModel.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AllContentModel.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
@@ -33437,16 +33073,380 @@
                             <PATH>SimpleContentModel.hpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
+                    </GROUP>
+                    <GROUP><NAME>datatype</NAME>
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AllContentModel.hpp</PATH>
+                            <PATH>AbstractNumericValidator.cpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
-                            <PATH>AllContentModel.cpp</PATH>
+                            <PATH>AbstractNumericValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AbstractNumFacetValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AbstractNumFacetValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AbstractStringValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AbstractStringValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AnySimpleTypeDTValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AnySimpleTypeDTValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AnyURIDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>AnyURIDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>Base64BinaryDTValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>Base64BinaryDTValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>BooleanDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>BooleanDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidatorFactory.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidatorFactory.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DecimalDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DecimalDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DoubleDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DoubleDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ENTITYDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ENTITYDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>FloatDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>FloatDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>HexBinaryDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>HexBinaryDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDREFDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDREFDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>InvalidDatatypeFacetExcept.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>InvalidDatatypeValueExcept.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ListDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ListDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NameDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NameDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NCNameDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NCNameDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NOTATIONDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NOTATIONDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>QNameDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>QNameDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>StringDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>StringDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>UnionDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>UnionDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                    </GROUP>
+                    <GROUP><NAME>DTD</NAME>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DocTypeHandler.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDef.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDef.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDefList.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDefList.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDElementDecl.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDElementDecl.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDEntityDecl.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDGrammar.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDGrammar.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDScanner.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDScanner.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDValidator.hpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
                     </GROUP>
@@ -33598,37 +33598,13 @@
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
-                            <PATH>XUtil.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>XUtil.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>XercesGroupInfo.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>XercesGroupInfo.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>XercesElementWildcard.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
                             <PATH>XercesAttGroupInfo.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>XercesAttGroupInfo.hpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
                         <FILEREF>
@@ -33640,7 +33616,31 @@
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
-                            <PATH>XercesAttGroupInfo.hpp</PATH>
+                            <PATH>XercesElementWildcard.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>XercesGroupInfo.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>XercesGroupInfo.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>XUtil.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>XUtil.hpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
                     </GROUP>
