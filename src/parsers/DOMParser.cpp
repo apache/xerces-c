@@ -621,6 +621,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
         for (unsigned int index = 0; index < attrCount; ++index) {
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+            attr->setSpecified(oneAttrib->getSpecified());
 
             // Attributes of type ID.  If this is one, add it to the hashtable of IDs
             //   that is constructed for use by GetElementByID().
