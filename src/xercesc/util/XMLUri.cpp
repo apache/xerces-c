@@ -200,9 +200,9 @@ static const XMLCh SINGLE_SLASH[] =
     chForwardSlash, chNull
 };
 
-static const XMLCh DOT_SLASH[] =
+static const XMLCh SLASH_DOT_SLASH[] =
 {
-    chPeriod, chForwardSlash, chNull
+    chForwardSlash, chPeriod, chForwardSlash, chNull
 };
 
 static const XMLCh SLASH_DOT[] =
@@ -557,7 +557,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // 6c - remove all "./" where "." is a complete path segment
         index = -1;
-        while ((index = XMLString::patternMatch(path, DOT_SLASH)) != -1)
+        while ((index = XMLString::patternMatch(path, SLASH_DOT_SLASH)) != -1)
         {
             XMLString::subString(tmp1, path, 0, index);
             XMLString::subString(tmp2, path, index+2, XMLString::stringLen(path));
@@ -575,16 +575,26 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // 6e - remove all "<segment>/../" where "<segment>" is a complete
         // path segment not equal to ".."
-        index = 1;
+        index = -1;
         int segIndex = -1;
+		int offset = 1;
 
-        while ((index = XMLString::patternMatch(&(path[1]), SLASH_DOTDOT_SLASH)) != -1)
+        while ((index = XMLString::patternMatch(&(path[offset]), SLASH_DOTDOT_SLASH)) != -1)
         {
-            segIndex = XMLString::lastIndexOf(&(path[index-1]), chForwardSlash);
+			// Undo offset
+			index += offset;
+
+			// Find start of <segment> within substring ending at found point.
+			XMLString::subString(tmp1, path, 0, index-1);
+			segIndex = XMLString::lastIndexOf(tmp1, chForwardSlash);
+
+			// Ensure <segment> exists and != ".."
             if (segIndex != -1                &&
                 (path[segIndex+1] != chPeriod ||
-                 path[index] != chPeriod))
+                 path[segIndex+2] != chPeriod ||
+				 segIndex + 3 != index))
             {
+
                 XMLString::subString(tmp1, path, 0, segIndex);
                 XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path));
 
@@ -592,11 +602,11 @@ void XMLUri::initialize(const XMLUri* const baseURI
                 XMLString::catString(path, tmp1);
                 XMLString::catString(path, tmp2);
 
-                index = segIndex;
+                offset = (segIndex == 0 ? 1 : segIndex);
             }
             else
             {
-                index += 4;
+                offset += 4;
             }
         }// while
 
@@ -604,12 +614,15 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // complete path segment
         if (XMLString::endsWith(path, SLASH_DOTDOT))
         {
+			// Find start of <segment> within substring ending at found point.
             index = XMLString::stringLen(path) - 3;
-            segIndex = XMLString::lastIndexOf(&(path[index-1]), chForwardSlash);
+			XMLString::subString(tmp1, path, 0, index-1);
+			segIndex = XMLString::lastIndexOf(tmp1, chForwardSlash);
 
             if (segIndex != -1                &&
                 (path[segIndex+1] != chPeriod ||
-                 path[index] != chPeriod))
+                 path[segIndex+2] != chPeriod ||
+				 segIndex + 3 != index))
             {
                 path[segIndex+1] = chNull;
             }
