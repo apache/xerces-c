@@ -1,37 +1,37 @@
 #
 # The Apache Software License, Version 1.1
-# 
-# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+#
+# Copyright (c) 1999 The Apache Software Foundation.  All rights
 # reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer. 
-# 
+#    notice, this list of conditions and the following disclaimer.
+#
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in
 #    the documentation and/or other materials provided with the
 #    distribution.
-# 
+#
 # 3. The end-user documentation included with the redistribution,
-#    if any, must include the following acknowledgment:  
+#    if any, must include the following acknowledgment:
 #       "This product includes software developed by the
 #        Apache Software Foundation (http://www.apache.org/)."
 #    Alternately, this acknowledgment may appear in the software itself,
 #    if and wherever such third-party acknowledgments normally appear.
-# 
+#
 # 4. The names "Xerces" and "Apache Software Foundation" must
 #    not be used to endorse or promote products derived from this
-#    software without prior written permission. For written 
+#    software without prior written permission. For written
 #    permission, please contact apache\@apache.org.
-# 
+#
 # 5. Products derived from this software may not be called "Apache",
 #    nor may "Apache" appear in their name, without prior written
 #    permission of the Apache Software Foundation.
-# 
+#
 # THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
 # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,16 +45,19 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # ====================================================================
-# 
+#
 # This software consists of voluntary contributions made by many
 # individuals on behalf of the Apache Software Foundation, and was
 # originally based on software copyright (c) 1999, International
 # Business Machines, Inc., http://www.ibm.com .  For more information
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
-# 
+#
 #
 # $Log$
+# Revision 1.12  2000/02/01 23:42:45  abagchi
+# AS/400 related change
+#
 # Revision 1.11  2000/01/18 00:01:02  aruna1
 # Changed version number
 #
@@ -155,7 +158,7 @@ compile: Prepare Util Sax Internal Framework Parsers Dom Validators
 
 lib: compile ${THISLIB}${VER}${SHLIBSUFFIX}
 
-Prepare:
+Prepare::
 	@echo Preparing the directory structure for a build ...
 	-${MKDIR} -p ${ALL_OBJECTS_DIR}
 	-${MKDIR} -p ${LIB_DIR}
@@ -167,39 +170,39 @@ Prepare:
 	${CD} $(VALIDATORS_DTD_DIR) ; $(MAKE) includes ; ${CD} ../..
 	${CD} $(DOM_DIR) ; $(MAKE) includes ; ${CD} ..
 
-Util:
+Util::
 	@echo Building "util"
 	${CD} $(UTIL_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-Sax:
+Sax::
 	@echo Building "sax"
 	${CD} $(SAX_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-Internal:
+Internal::
 	@echo Building "internal"
 	${CD} $(INTERNAL_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-Framework:
+Framework::
 	@echo Building "framework"
 	${CD} $(FRAMEWORK_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-Parsers:
+Parsers::
 	@echo Building "parsers"
 	${CD} $(PARSERS_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-Dom:
+Dom::
 	@echo Building "dom"
 	${CD} $(DOM_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-Validators:
+Validators::
 	@echo Building "validators"
 	${CD} $(VALIDATORS_DTD_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ../..
 
-${THISLIB}${VER}${SHLIBSUFFIX}:
+${THISLIB}${VER}${SHLIBSUFFIX}::
 	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
 	${CD} $(ALL_OBJECTS_DIR) ; $(MAKE) -k $(MAKE_FLAGS) ; ${CD} ..
 
-install:
+install::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -209,7 +212,7 @@ install:
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(ALL_OBJECTS_DIR) && $(MAKE) $@ && ${CD} ..
 
-clean:
+clean::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -219,7 +222,7 @@ clean:
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(ALL_OBJECTS_DIR) && $(MAKE) $@ && ${CD} ..
 
-distclean:
+distclean::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -232,12 +235,12 @@ distclean:
 	find . -name Makefile -print -exec rm -f {} \;
 	rm -f *~ core
 
-#docs: 
+#docs::
 
-samples:
+samples::
 	${CD} ../samples; ${MAKE}; ${CD} ../src
 
-copy: lib samples
+copy:: lib samples
 	@echo Make the target directory and its main subdirectories
 	-${MKDIR} ${BINTARGETDIR}
 	-${MKDIR} ${BINTARGETDIR}/bin
@@ -337,7 +340,7 @@ endif
 	-{CHMODE} +x ${BINTARGETDIR}/samples/config.sub ${BINTARGETDIR}/samples/config.guess ${BINTARGETDIR}/samples/config.status
 	-{CHMODE} 755 `find ${BINTARGETDIR} -type d`
 
-tarball: copy
+tarball:: copy
 	@echo Now package it all up using tar
 	@echo TARing up all files ...
 	${CD} ${BINTARGETDIR}/..
@@ -346,11 +349,11 @@ tarball: copy
 	@echo Compressing ${BINTARGETDIR}.tar ...
 	gzip ${BINTARGETDIR}.tar
 
-zip: copy
+zip:: copy
 	${CD} ${BINTARGETDIR}/..
 	@echo ZIPping up all files ...
 	zip -r ${BINTARGETDIR}.zip ${BINTARGETDIR}
 
 
-package_bin: zip tarball
+package_bin:: zip tarball
 

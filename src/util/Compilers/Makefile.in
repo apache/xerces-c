@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2000/02/01 23:43:36  abagchi
+# AS/400 related change
+#
 # Revision 1.6  2000/01/21 22:13:33  abagchi
 # OS390 Change: added MVSCPPDefs.hpp to CPP_PUBHEADERS
 #
@@ -117,40 +120,44 @@ CPP_PUBHEADERS = \
 	SCOCCDefs.hpp \
 	SunCCDefs.hpp \
 	SunKaiDefs.hpp \
-    	MIPSproDefs.hpp \
+	OS400SetDefs.hpp \
+        MIPSproDefs.hpp \
 	TandemCCDefs.hpp \
 	VCPPDefs.hpp
 
 
+ifeq (${CXX},icc)
+    CPP_OBJECTS = OS400SetDefs.$(TO)
+endif
 ifeq (${CXX},CC)
     ifeq (${PLATFORM},SOLARIS)
-        CPP_OBJECTS = SunCCDefs.o
+        CPP_OBJECTS = SunCCDefs.$(TO)
     endif
     ifeq (${PLATFORM},HPUX)
-        CPP_OBJECTS = HPCCDefs.o
+        CPP_OBJECTS = HPCCDefs.$(TO)
     endif
     ifeq (${PLATFORM},IRIX)
-        CPP_OBJECTS = MIPSproDefs.o
+        CPP_OBJECTS = MIPSproDefs.$(TO)
     endif
     ifeq (${PLATFORM},UNIXWARE)
-        CPP_OBJECTS = SCOCCDefs.o
+        CPP_OBJECTS = SCOCCDefs.$(TO)
     endif
 endif
 ifeq (${CXX},xlC_r)
-    CPP_OBJECTS = CSetDefs.o
+    CPP_OBJECTS = CSetDefs.$(TO)
 endif
 ifeq (${CXX},g++)
-    CPP_OBJECTS = GCCDefs.o
+    CPP_OBJECTS = GCCDefs.$(TO)
 endif
 ifeq (${CXX},aCC)
-	CPP_OBJECTS = HPCCDefs.o
+	CPP_OBJECTS = HPCCDefs.$(TO)
 endif
 ifeq (${CXX},c++)
     ifeq (${PLATFORM},OS390)
-        CPP_OBJECTS = MVSCPPDefs.o
+        CPP_OBJECTS = MVSCPPDefs.$(TO)
     endif
     ifeq (${PLATFORM},LINUX)
-        CPP_OBJECTS = GCCDefs.o
+        CPP_OBJECTS = GCCDefs.$(TO)
     endif
 endif
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/01 23:43:22  abagchi
+ * AS/400 related change
+ *
  * Revision 1.5  2000/01/21 22:12:29  abagchi
  * OS390 Change: changed OE390 to OS390
  *
@@ -112,7 +115,7 @@
 #elif defined(EXM_OS390)
     #define XML_OS390
     #define XML_UNIX
-#elif defined(AS400)
+#elif defined(__OS400__)
     #define XML_AS400
     #define XML_UNIX
 #elif defined(__OS2__)
@@ -180,7 +183,7 @@
     #define XML_GCC
 #elif defined(__MVS__) && defined(__cplusplus)
     #define XML_MVSCPP
-#elif define(EXM_OS390) && defined(__cplusplus)
+#elif defined(EXM_OS390) && defined(__cplusplus)
     #define XML_MVSCPP
 #elif defined(__IBMCPP__)
     #if defined(XML_WIN32)
@@ -196,6 +199,7 @@
     #endif
 #elif defined(__MWERKS__)
     #define XML_METROWERKS
+#elif defined(__OS400__)
 #else
     #error Code requires port to current development environment
 #endif

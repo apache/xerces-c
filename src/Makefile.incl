@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2000/02/01 23:42:48  abagchi
+# AS/400 related change
+#
 # Revision 1.11  2000/01/21 22:10:42  abagchi
 # OS390 Change
 #
@@ -141,7 +144,11 @@ XML_BUILD_OPTIONS = ${CXXFLAGS}
 XML_LIB_DIR = $(XERCESCROOT)/lib
 XML_INC_DIR = $(XERCESCROOT)/include
 XML_INCL    = -I$(XML_INC_DIR)
-
+ifeq (${SYSOVR},OS400)
+PLATFORM = OS400
+endif
+TO = o
+RM2 = rm -f
 ####################### PLATFORM DEPENDENCIES #####################
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
@@ -222,6 +229,41 @@ PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 MAKE_SHARED = makeC++SharedLib_r -p 5000
 MAKE_SHARED_C = makeC++SharedLib_r -p 5000
 SHLIBSUFFIX=.a
+endif
+
+#================= OS400 SPECIFIC OPTIONS ==========================
+ifeq (${PLATFORM}, OS400)
+ifeq (${SYSOVR},OS400)
+MYCC = /afs/rchland.ibm.com/usr2/phkramer/bin/tvcc.pl
+else
+MYCC = icc
+endif
+CXX = $(MYCC)
+CC = $(MYCC)
+JUSTCC = $(MYCC)
+XML_INCL    += -I${ICUROOT}/include
+ifeq (${SYSOVR},OS400)
+PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
+MAKE_SHARED = makeC++SharedLib_r -p 5000
+MAKE_SHARED_C = makeC++SharedLib_r -p 5000
+TO = qwobj
+SHLIBSUFFIX=.a
+else
+PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE -D_MULTI_THREADED -D${PLATFORM}
+PLATFORM_C_COMPILE_OPTIONS =  -v       -D_THREAD_SAFE -D_MULTI_THREADED -D${PLATFORM}
+MAKE_SHARED = ld -v
+MAKE_SHARED_C = ld -v
+SHLIBSUFFIX=.o
+endif
+ifeq (${SYSOVR},OS400)
+EXTRA_LINK_OPTIONS = -licu-uc -lbsd
+else
+EXTRA_LINK_OPTIONS = -lQZUUC
+endif
+EXTRA_COMPILE_OPTIONS = -I. -g
+
+RM2 = -del
+
 endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
@@ -358,13 +400,15 @@ LINKLIB = $(XML_LIB_DIR)
 
 ######################### SUFFIX RULES ############################
 .SUFFIXES:
-.SUFFIXES: .cpp .c .o
+.SUFFIXES: .cpp .c .$(TO)
 
-.cpp.o:
+.cpp.$(TO):
 	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
 ifeq (${PLATFORM}, IRIX)
 	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(OBJ_OUT)$(@) $(<)
 endif
 
-.c.o:
+.c.$(TO):
+	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
+.C.$(TO):
 	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)

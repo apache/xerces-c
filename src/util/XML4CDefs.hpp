@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/01 23:43:32  abagchi
+ * AS/400 related change
+ *
  * Revision 1.8  2000/01/21 22:12:29  abagchi
  * OS390 Change: changed OE390 to OS390
  *
@@ -161,7 +164,9 @@ static const unsigned int   gXML4CRevision   = 0;
 #if defined(XML_MACOS)
 #include	<util/Platforms/MaxOS/MacOSDefs.hpp>
 #endif
-
+#if defined(XML_AS400)
+#include	<util/Platforms/OS400/OS400Defs.hpp>
+#endif
 
 // ---------------------------------------------------------------------------
 //  And now we subinclude a header according to the development environment
@@ -228,6 +233,9 @@ static const unsigned int   gXML4CRevision   = 0;
 #include	<util/Compilers/CodeWarriorDefs.hpp>
 #endif
 
+#if defined(XML_AS400)
+#include	<util/Compilers/OS400SetDefs.hpp>
+#endif
 
 
 // ---------------------------------------------------------------------------
@@ -253,9 +261,15 @@ typedef XMLUInt32           UCS4Ch;
 //  This flag will be set in the per-development environment stuff above.
 // ---------------------------------------------------------------------------
 #if defined(NO_NATIVE_BOOL)
-typedef int     bool;
-const   bool    true    = 1;
-const   bool    false   = 0;
+  #ifndef bool
+    typedef int     bool;
+  #endif
+  #ifndef true
+    #define  true     1
+  #endif
+  #ifndef false
+    #define false 0
+  #endif
 #endif
 
 

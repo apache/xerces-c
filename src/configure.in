@@ -43,9 +43,16 @@ case "${host}" in
                             *)            osver=HPUX11;;
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
+        *-*-os400*)     platform=OS400 ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)
+
+dnl AS/400 has problems with DEFS due to newline so we will gen conf.h even though it is not used
+case "${host}" in
+ *-*-os400*)  AC_CONFIG_HEADER(conf.h)    ;;
+*) ;;
+esac
 
 cxx=${CXX}
 AC_SUBST(cxx)
@@ -90,6 +97,7 @@ util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
+util/MsgLoaders/MsgFile/Makefile \
 validators/DTD/Makefile \
 framework/Makefile \
 dom/Makefile \
@@ -101,5 +109,5 @@ sax/Makefile \
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
 echo Still cannot resolve it? Find out if someone else had the same problem before.
-echo Go to http://xml-archive.webweaving.org/xml-archive-xerces/ 
+echo Go to http://xml-archive.webweaving.org/xml-archive-xerces/
 

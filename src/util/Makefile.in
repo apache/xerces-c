@@ -1,37 +1,37 @@
 #
 # The Apache Software License, Version 1.1
-# 
-# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+#
+# Copyright (c) 1999 The Apache Software Foundation.  All rights
 # reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer. 
-# 
+#    notice, this list of conditions and the following disclaimer.
+#
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in
 #    the documentation and/or other materials provided with the
 #    distribution.
-# 
+#
 # 3. The end-user documentation included with the redistribution,
-#    if any, must include the following acknowledgment:  
+#    if any, must include the following acknowledgment:
 #       "This product includes software developed by the
 #        Apache Software Foundation (http://www.apache.org/)."
 #    Alternately, this acknowledgment may appear in the software itself,
 #    if and wherever such third-party acknowledgments normally appear.
-# 
+#
 # 4. The names "Xerces" and "Apache Software Foundation" must
 #    not be used to endorse or promote products derived from this
-#    software without prior written permission. For written 
+#    software without prior written permission. For written
 #    permission, please contact apache\@apache.org.
-# 
+#
 # 5. Products derived from this software may not be called "Apache",
 #    nor may "Apache" appear in their name, without prior written
 #    permission of the Apache Software Foundation.
-# 
+#
 # THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
 # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,16 +45,19 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # ====================================================================
-# 
+#
 # This software consists of voluntary contributions made by many
 # individuals on behalf of the Apache Software Foundation, and was
 # originally based on software copyright (c) 1999, International
 # Business Machines, Inc., http://www.ibm.com .  For more information
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
-# 
+#
 #
 # $Log$
+# Revision 1.11  2000/02/01 23:43:25  abagchi
+# AS/400 related change
+#
 # Revision 1.10  2000/01/19 17:37:24  abagchi
 # Removed the streaming classes
 #
@@ -115,18 +118,26 @@ MODULE = util
 ifeq (${TRANSCODER},ICU)
    TRANSCODERMODULE=ICU
 else
-   TRANSCODERMODULE=Iconv
-endif
+  ifeq (${TRANSCODER},Iconv400)
+    TRANSCODERMODULE=Iconv400
+   else
+    TRANSCODERMODULE=Iconv
+   endif
+  endif
 
 ifeq (${MESSAGELOADER},ICU)
    MESSAGELOADERMODULE=ICU
 else
+  ifeq (${MESSAGELOADER},MSGFILE)
+      MESSAGELOADERMODULE=MsgFile
+  else
    ifeq (${MESSAGELOADER},ICONV)
       MESSAGELOADERMODULE=MsgCatalog
       MSG_DIR=${XERCESCROOT}/lib/msg
    else
       MESSAGELOADERMODULE=InMemory
    endif
+  endif
 endif
 
 include ../Makefile.incl
@@ -186,7 +197,7 @@ UTIL_CPP_PUBHEADERS = \
 	XMLUTF8Transcoder.hpp \
 	XMLUni.hpp
 
-UTIL_CPP_PRIVHEADERS = 
+UTIL_CPP_PRIVHEADERS =
 
 C_FILES = \
 	CountedPointer.c \
@@ -204,27 +215,27 @@ C_FILES = \
 	ValueVectorOf.c
 
 UTIL_CPP_OBJECTS = \
-	BinFileInputStream.o \
-	BinInputStream.o \
-	BinMemInputStream.o \
-	BitSet.o \
-	HeaderDummy.o \
-	KVStringPair.o \
-	Mutexes.o \
-	PlatformUtils.o \
-	StringPool.o \
-	TextOutputStream.o \
-	XMLURL.o \
-	TransService.o \
-	XML88591Transcoder.o \
-	XMLASCIITranscoder.o \
-	XMLEBCDICTranscoder.o \
-	XMLException.o \
-	XMLString.o \
-	XMLUCSTranscoder.o \
-	XMLUTF16Transcoder.o \
-	XMLUTF8Transcoder.o \
-	XMLUni.o
+	BinFileInputStream.$(TO) \
+	BinInputStream.$(TO) \
+	BinMemInputStream.$(TO) \
+	BitSet.$(TO) \
+	HeaderDummy.$(TO) \
+	KVStringPair.$(TO) \
+	Mutexes.$(TO) \
+	PlatformUtils.$(TO) \
+	StringPool.$(TO) \
+	TextOutputStream.$(TO) \
+	XMLURL.$(TO) \
+	TransService.$(TO) \
+	XML88591Transcoder.$(TO) \
+	XMLASCIITranscoder.$(TO) \
+	XMLEBCDICTranscoder.$(TO) \
+	XMLException.$(TO) \
+	XMLString.$(TO) \
+	XMLUCSTranscoder.$(TO) \
+	XMLUTF16Transcoder.$(TO) \
+	XMLUTF8Transcoder.$(TO) \
+	XMLUni.$(TO)
 
 all:	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers publish
 
@@ -234,33 +245,33 @@ includes:	pubheaders $(C_FILES)
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd Compilers ; $(MAKE) $@ ; cd ..
 
-platforms:
+platforms::
 	cd Platforms ; $(MAKE) ; cd ..
 
-transcoders:
+transcoders::
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) ; cd ../..
 
-messageloaders:
+messageloaders::
 ifeq (${MESSAGELOADER},ICONV)
 ifeq (${PLATFORM},SOLARIS)
 	mkdir -p ${MSG_DIR}
 	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
-endif        
+endif
 ifeq (${PLATFORM},AIX)
 	mkdir -p ${MSG_DIR}
 	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
-endif        
-endif        
+endif
+endif
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) ; cd ../..
 
-compilers:
+compilers::
 	cd Compilers ; $(MAKE) ; cd ..
 
-pubheaders:
+pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
 	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(XML_INC_DIR)/$(MODULE)
 
-publish:
+publish::
 	-mkdir -p ${ALL_OBJECTS_DIR}
 	$(CP) $(UTIL_CPP_OBJECTS) $(ALL_OBJECTS_DIR)
 
@@ -268,9 +279,9 @@ publish:
 depend: includes
 	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
-clean:
+clean::
 	@echo "Making clean in $(MODULE) ..."
-	$(RM) $(UTIL_CPP_OBJECTS)
+	$(RM2) $(UTIL_CPP_OBJECTS)
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
@@ -289,7 +300,7 @@ distclean:	clean
 	done
 	@echo "Removing all $(MODULE) object files ..."
 	@for file in $(UTIL_CPP_OBJECTS); do \
-	rm -f $(ALL_OBJECTS_DIR)/$$file; \
+	$(RM2) $(ALL_OBJECTS_DIR)/$$file; \
 	done
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..

@@ -142,7 +142,10 @@ case $os in
 		;;
 	-psos*)
 		os=-psos
-		;;
+                ;;
+        -os400*)
+		os=-OS400
+                ;;
 esac
 
 # Decode aliases for certain CPU-COMPANY combinations.
@@ -156,7 +159,7 @@ case $basic_machine in
 		| i390 | sh | powerpc | powerpcle | 1750a | dsp16xx | pdp11 \
 		| mips64 | mipsel | mips64el | mips64orion | mips64orionel \
 		| mipstx39 | mipstx39el \
-		| sparc | sparclet | sparclite | sparc64 | v850)
+		| sparc | sparclet | sparclite | sparc64 | v850 | AS400)
 		basic_machine=$basic_machine-unknown
 		;;
 	# We use `pc' rather than `unknown'
@@ -344,6 +347,9 @@ case $basic_machine in
 		;;
 	hppa-next)
 		os=-nextstep3
+		;;
+	53[0-9][0-9])
+		basic_machine=AS/400
 		;;
 	i390-ibm* | ibm*)
 		basic_machine=i390-ibm
@@ -776,6 +782,18 @@ case $os in
 	-xenix)
 		os=-xenix
 		;;
+	-os400)
+		os=-OS400
+		;;
+        -OS400)
+		os=-OS400
+		;;
+       -xpf)
+		os=-OS400
+		;;
+        -XPF)
+		os=-OS400
+		;;
 	-none)
 		;;
 	*)
@@ -833,6 +851,12 @@ case $basic_machine in
 		;;
 	*-ibm)
 		os=-aix
+		;;
+	AS400)
+		os=-OS400
+		;;
+	AS/400)
+		os=-OS400
 		;;
 	*-hp)
 		os=-hpux
@@ -947,6 +971,9 @@ case $basic_machine in
 				;;
 			-aux*)
 				vendor=apple
+				;;
+			-OS400*)
+				vendor=ibma
 				;;
 		esac
 		basic_machine=`echo $basic_machine | sed "s/unknown/$vendor/"`
