@@ -22,7 +22,7 @@
     <anchor name="NewFeatures"/>
     <s2 title="New features in &XercesCName; latest code base">
       <ul>
-        <li></li>
+        <li>SAX2-ext's DeclHandler.</li>
       </ul>
     </s2>
 
@@ -36,14 +36,28 @@
         <anchor name="NewAPI"/>
         <s3 title="New Public API">
             <ul>
-              <li></li>
+              <li>SAX2-ext's DeclHandler class.
+                  See <jump href="api.html">the API documentation page</jump> for details.</li>
+              <li>To support SAX2-ext's DeclHandler, the following new methods are added:</li>
+              <ul>
+                <li>void DefaultHandler::elementDecl(const XMLCh* const name, const XMLCh* const model)</li>
+                <li>void DefaultHandler::attributeDecl(const XMLCh* const eName, const XMLCh* const aName,
+                    const XMLCh* const type, const XMLCh* const mode, const XMLCh* const value)</li>
+                <li>void DefaultHandler::internalEntityDecl(const XMLCh* const name, const XMLCh* const value)</li>
+                <li>void DefaultHandler::externalEntityDecl(const XMLCh* const name, const XMLCh* const publicId,
+                    const XMLCh* const systemId)</li>
+                <li>DeclHandler* SAX2XMLReader::getDeclarationHandler() const</li>
+                <li>void SAX2XMLReader::setDeclarationHandler(DeclHandler* const handler)</li>
+                <li>DeclHandler* SAX2XMLReaderImpl::getDeclarationHandler() const</li>
+                <li>void SAX2XMLReaderImpl::setDeclarationHandler(DeclHandler* const handler)</li>
+              </ul>
             </ul>
         </s3>
 
         <anchor name="ModifiedAPI"/>
         <s3 title="Modified Public API">
             <ul>
-              <li></li>
+              <li>The namespace-prefixes feature in SAX2 is set to off as default.</li>
             </ul>
         </s3>
 

@@ -75,8 +75,8 @@ parser.parse(xmlFile);
                (default is on).  Note that namespace must be on (default is on) as well.
                </p>
 <source>SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespaces"), true);
-parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), true);
+parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
+parser->setFeature(XMLUni::fgSAX2XercesSchema, true);
 parser->parse(xmlFile);
 </source>
                <p>Review the sample file, 'samples/data/personal-schema.xml' and
@@ -109,9 +109,12 @@ parser.parse("test.xml");
 
 // Instantiate the SAX2 XMLReader.
 SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+XMLCh* propertyValue = XMLString::transcode("personal.xsd");
+ArrayJanitor&lt;XMLCh&gt; janValue(propertyValue);
+
 parser->setProperty(
-       XMLString::transcode("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"),
-       XMLString transcode("personal.xsd"));
+       XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation,
+       propertyValue);
 parser.parse("test.xml");
 </source>
 
@@ -129,9 +132,12 @@ parser.parse("test.xml");
 
 // Instantiate the SAX2 XMLReader.
 SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+XMLCh* propertyValue = XMLString::transcode("http://my.com personal.xsd http://my2.com test2.xsd");
+ArrayJanitor&lt;XMLCh&gt; janValue(propertyValue);
+
 parser->setProperty(
-       XMLString::transcode("http://apache.org/xml/properties/schema/external-SchemaLocation"),
-       XMLString transcode("http://my.com personal.xsd http://my2.com test2.xsd"));
+       XMLCh XMLUni::fgSAX2XercesSchemaExternalSchemaLocation,
+       propertyValue);
 parser.parse("test.xml");
 </source>
                </s3>

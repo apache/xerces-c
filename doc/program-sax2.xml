@@ -26,13 +26,12 @@
 
     char* xmlFile = "x1.xml";
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-    parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation", true)   // optional
-    parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespaces", true)   // optional
+    parser->setFeature(XMLUni::fgSAX2CoreValidation, true)   // optional
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true)   // optional
 
-    ContentHandler* contentHandler = new DefaultHandler();
-    ErrorHandler* errHandler = (ErrorHandler*) contentHandler;
-    parser->setContentHandler(contentHandler);
-    parser->setErrorHandler(errHandler);
+    DefaultHandler* defaultHandler = new DefaultHandler();
+    parser->setContentHandler(defaultHandler);
+    parser->setErrorHandler(defaultHandler);
 
     try {
         parser->parse(xmlFile);
