@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.44  2003/11/24 11:10:58  gareth
+ * Fix for bug 22917. Patch by Adam Heinz .
+ *
  * Revision 1.43  2003/11/10 17:52:58  amassari
  * Fixed memory leak
  *
@@ -833,8 +836,8 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
-            //skip ws if pretty print
-            if (getFeature(FORMAT_PRETTY_PRINT_ID))
+            // Pretty-print skips whitespace-only text nodes unless whitespace-in-element is set.
+            if (getFeature(FORMAT_PRETTY_PRINT_ID) && !getFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID))
             {
                 if(XMLString::isAllWhiteSpace(nodeValue))
                     break;
