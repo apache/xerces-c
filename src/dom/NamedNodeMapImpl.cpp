@@ -435,7 +435,7 @@ void NamedNodeMapImpl::setOwnerDocument(DocumentImpl *doc) {
 
 
 void NamedNodeMapImpl::cloneContent(NamedNodeMapImpl *srcmap) {
-	if ((srcmap != null) && (srcmap->nodes != null))
+   if ((srcmap != null) && (srcmap->nodes != null) && (srcmap->nodes->size() > 0))
 	{
 		if (nodes != null)
 			delete nodes;
