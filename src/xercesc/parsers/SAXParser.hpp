@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2004/04/13 18:58:36  peiyongz
+ * correct comment
+ *
  * Revision 1.29  2004/04/13 16:53:26  peiyongz
  * get/setIdentityConstraintChecking
  *
@@ -755,7 +758,7 @@ public :
       * Only takes effect if Schema validation is enabled.
       * If turned off, identity constraint checking is not done.
       *
-      * The parser's default state is: false.
+      * The parser's default state is: true.
       *
       * @param identityConstraintChecking True to turn on identity constraint checking.
       *

@@ -599,8 +599,8 @@ public :
       * This method allows users to enable or disable the parser's identity
       * constraint checks.
       *
-      * <p>By default, the parser does not to any identity constraint checks. 
-      *    The default value is false.</p>
+      * <p>By default, the parser does identity constraint checks. 
+      *    The default value is true.</p>
       *
       * @param newState The value specifying whether the parser should
       *                 do identity constraint checks or not in the
