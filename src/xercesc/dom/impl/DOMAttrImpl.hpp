@@ -145,6 +145,9 @@ inline void DOMAttrImpl::removeAttrFromIDNodeMap()
 
 inline void DOMAttrImpl::addAttrToIDNodeMap()
 {
+    if (fNode.isIdAttr()) 
+        return;
+
     fNode.isIdAttr(true);
 
     // REVIST For now, we don't worry about what happens if the new
