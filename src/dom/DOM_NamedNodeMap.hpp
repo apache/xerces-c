@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/10 20:19:24  abagchi
+ * Added docs for equality operators
+ *
  * Revision 1.5  2000/02/06 07:47:30  rahulj
  * Year 2K copyright swat.
  *
@@ -131,8 +134,8 @@ public:
     //@}
     /** @name Destructor. */
     //@{
-	 /**
-	  * Destructor for DOM_NamedNodeMap.  The object being destroyed is the reference
+    /**
+      * Destructor for DOM_NamedNodeMap.  The object being destroyed is the reference
       * object, not the underlying NamedNodeMap itself.
       *
       * <p>Like most other DOM types in this implementation, memory management
@@ -148,22 +151,43 @@ public:
 
     /** @Comparisons. */
     //@{
-    /*
+    /**
      *  Test whether this NamedNodeMap reference refers to the same underlying
      *  named node map as the other reference object.  This does not
      *  compare the contents of two different objects.
+     *
+     *  @param arg p The value to be compared
+     *  @return Returns true if the underlying named node map is same
      */
     bool operator == (const DOM_NamedNodeMap &other) const;
+
+    /**
+     *  Test whether this NamedNodeMap reference refers to a different underlying
+     *  named node map as the other reference object.  This does not
+     *  compare the contents of two different objects.
+     *
+     *  @param arg p The value to be compared
+     *  @return Returns true if the underlying named node map is different
+     */
     bool operator != (const DOM_NamedNodeMap &other) const;
 
 
-    /*
+    /**
      *  Use this comparison operator to test whether a Named Node Map reference
      *  is null.
-     *  @param arg p The value to be compared, which must be 0 or null.
      *
+     *  @param arg p The value to be compared, which must be 0 or null.
+     *  @return Returns true if the named node map is null
      */
     bool operator == (const DOM_NullPtr *p) const;
+
+    /**
+     *  Use this comparison operator to test whether a Named Node Map reference
+     *  is not null.
+     *
+     *  @param arg p The value to be compared, which must not be 0 or null.
+     *  @return Returns true if the named node map is not null
+     */
     bool operator != (const DOM_NullPtr *p) const;
 
     //@}
