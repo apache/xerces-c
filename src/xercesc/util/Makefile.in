@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.33  2003/04/21 16:15:10  knoaman
+# Remove MemoryManagerImpl.
+#
 # Revision 1.32  2003/04/21 15:58:07  knoaman
 # Add MemoryManagerImpl.
 #
@@ -481,7 +484,6 @@ UTIL_CPP_PUBHEADERS = \
     KeyRefPair.hpp \
     KeyValuePair.hpp \
     KVStringPair.hpp \
-    MemoryManagerImpl.hpp \
     Mutexes.hpp \
     NameIdPool.hpp \
     NoDefTranscoderException.hpp \
@@ -586,7 +588,6 @@ UTIL_CPP_OBJECTS = \
     HeaderDummy.$(TO) \
     HexBin.$(TO) \
     KVStringPair.$(TO) \
-    MemoryManagerImpl.$(TO) \
     Mutexes.$(TO) \
     PanicHandler.$(TO) \
     PlatformUtils.$(TO) \
