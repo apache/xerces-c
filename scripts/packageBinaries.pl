@@ -1159,13 +1159,9 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         
         # on AIX, create '.a' version for building libxerces-c
         if ( $platform eq "aix") {
-            print("\n\n create icuuc and icudata's DOTA version\n");
-            psystem("cp -f $ICUROOT/lib/libicudata26.1.so $ICUROOT/lib/libicudata26.a");
-            psystem("cp -f $ICUROOT/lib/libicuuc26.1.so   $ICUROOT/lib/libicuuc26.a");
+            psystem("ln -s $ICUROOT/lib/libicudata26.1.so $ICUROOT/lib/libicudata26.a");
+            psystem("ln -s $ICUROOT/lib/libicuuc26.1.so   $ICUROOT/lib/libicuuc26.a");
         }
-        else {
-            print("\n\n on platform other than aix\n");
-        }        	
         
     }
 
@@ -1189,15 +1185,6 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
     psystem ("$MAKE clean");     # May want to comment this line out to speed up
     psystem ("$MAKE");
-
-    # on AIX, create '.a' version for building samples and tests
-    if ( $platform eq "aix") {
-        print("\n\n create xercesc DOTA version\n");    	
-        pchdir ("$XERCESCROOT/lib");    	
-        psystem("cp -f libxerces-c24.0.so libxerces-c24.0.a ");
-        psystem("ln -s libxerces-c24.0.a  libxerces-c24.a ");
-        psystem("ln -s libxerces-c24.a    libxerces-c.a ");         
-    }
                 
     # Move ICU libs into lib dir, so samples will link.  This matches the structure of
     #   the eventual binary packaging, even though we are doing it in the build directory.
@@ -1248,8 +1235,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         
         # on AIX, copy '.a' version
         if ( $platform eq "aix") {
-            psystem("cp -f $ICUROOT/lib/libicudata26.a .");
-            psystem("cp -f $ICUROOT/lib/libicuuc26.a   .");
+            psystem("ln -s libicudata26.so libicudata26.a");
+            psystem("ln -s libicuuc26.so   libicuuc26.a");
         }        
     }
 
@@ -1354,8 +1341,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         psystem("ln -s libxerces-c24.so   libxerces-c.so    ");
     }
 
-    # on AIX, copy '.a' version
-    if ( $platform eq "aix") {
+    if ((-e "$XERCESCROOT/lib/libxerces-c24.0.a" )) {
         psystem("cp -f $XERCESCROOT/lib/libxerces-c24.0.a . ");
         psystem("ln -s libxerces-c24.0.a  libxerces-c24.a ");
         psystem("ln -s libxerces-c24.a    libxerces-c.a ");         
@@ -1424,8 +1410,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         # on AIX, copy '.a' version
         if ( $platform eq "aix") {
-            psystem("cp -f $XERCESCROOT/lib/libicudata26.a .");
-            psystem("cp -f $XERCESCROOT/lib/libicuuc26.a   .");
+            psystem("ln -s libicudata26.so libicudata26.a");
+            psystem("ln -s libicuuc26.so   libicuuc26.a");
         }        
                 
         # Copy the Resouce Bundle for ICUMsgLoader

@@ -146,6 +146,7 @@ ifeq (${PLATFORM}, SOLARIS)
 
   endif
   SHLIBSUFFIX=.so
+  ICUSHLIBSUFFIX=.so
   ## Compiler switch to embed a library name
   LD_SONAME = -h ${SO_NAME}
 endif
@@ -177,6 +178,7 @@ ifeq (${PLATFORM}, UNIXWARE)
     endif
   endif
   SHLIBSUFFIX=.so
+  ICUSHLIBSUFFIX=.so
 endif
 
 #=============== OPENSERVER SPECIFIC OPTIONS =========================
@@ -202,6 +204,7 @@ ifeq (${PLATFORM}, OPENSERVER)
     ALLLIBS = ${LIBS}
   endif
   SHLIBSUFFIX=.so
+  ICUSHLIBSUFFIX=.so
 endif
 
 #================= PTX SPECIFIC OPTIONS ===========================
@@ -221,6 +224,7 @@ MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -G ${LDFLAGS}
 MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -G ${LDFLAGS}
 EXTRA_LINK_OPTIONS = -lm -lgen
 SHLIBSUFFIX=.so
+ICUSHLIBSUFFIX=.so
 endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
@@ -255,7 +259,8 @@ else
 endif
 
 EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
-SHLIBSUFFIX=.so
+SHLIBSUFFIX=.a
+ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME =
 
@@ -278,12 +283,14 @@ MAKE_SHARED = makeC++SharedLib_r -p 5000 ${LDFLAGS}
 MAKE_SHARED_C = makeC++SharedLib_r -p 5000 ${LDFLAGS}
 TO = qwobj
 SHLIBSUFFIX=.a
+ICUSHLIBSUFFIX=.a
 else
 PLATFORM_COMPILE_OPTIONS = -qnotempinc  -D_MULTI_THREADED -D${PLATFORM}
 PLATFORM_C_COMPILE_OPTIONS =  -v  -D_MULTI_THREADED -D${PLATFORM}
 MAKE_SHARED = ld -v ${LDFLAGS}
 MAKE_SHARED_C = ld -v ${LDFLAGS}
 SHLIBSUFFIX=.o
+ICUSHLIBSUFFIX=.o
 endif
 ifeq (${TRANSCODER}, ICU)
 ifeq (${SYSOVR},OS400)
@@ -311,6 +318,7 @@ else
 endif
 EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
 SHLIBSUFFIX=.so
+ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
@@ -345,6 +353,7 @@ endif
 
 EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
 SHLIBSUFFIX=.so
+ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
@@ -366,6 +375,7 @@ endif
 
 EXTRA_LINK_OPTIONS =
 SHLIBSUFFIX=.so
+ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
@@ -382,6 +392,7 @@ else
     ALLLIBS = ${LIBS}
 endif
 SHLIBSUFFIX=.so
+ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
@@ -398,6 +409,7 @@ else
     ALLLIBS = ${LIBS}
 endif
 SHLIBSUFFIX=.so
+ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
@@ -415,6 +427,7 @@ else
     ALLLIBS = ${LIBS} -lC
 endif
 SHLIBSUFFIX=.so
+ICUSHLIBSUFFIX=.so
 endif
 
 
@@ -428,6 +441,7 @@ MAKE_SHARED = ilink /nofree ${LDFLAGS}
 MAKE_SHARED_C = ilink /nofree ${LDFLAGS}
 EXTRA_LINK_OPTIONS = /map /nod /noe /noi /packcode /packdata /exepack /align:4
 SHLIBSUFFIX= .dll
+ICUSHLIBSUFFIX= .dll
 ifneq (${DEBUG}, 1)
 XML_BUILD_OPTIONS += -2
 endif
@@ -459,6 +473,7 @@ ifeq (${PLATFORM}, HPUX)
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
     SHLIBSUFFIX=.sl
+    IUCSHLIBSUFFIX=.sl
   else
     TEMPLATESREPOSITORY = ${XML_OBJ_DIR}/ptrepository
     COMMON_COMPILE_OPTIONS = -D_HP_UX -DXERCES_TMPLSINC \
@@ -482,6 +497,7 @@ ifeq (${PLATFORM}, HPUX)
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared
     SHLIBSUFFIX=.sl
+    ICUSHLIBSUFFIX=.sl
   endif
   ## Compiler switch to embed a library name
   LD_SONAME = -Wl,+h,${SO_NAME}
@@ -524,12 +540,14 @@ endif
 endif
 EXTRA_LINK_OPTIONS =
 SHLIBSUFFIX=.dll
+ICUSHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 endif
 
 #=============== TRU64 SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, TRU64)
   SHLIBSUFFIX=.so
+  ICUSHLIBSUFFIX=.so
   MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
   ifeq (${GXX}, yes)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
@@ -566,6 +584,7 @@ ifeq (${PLATFORM}, MACOSX)
         ALLLIBS = ${LIBS} -L/usr/lib
     endif
     SHLIBSUFFIX=.dylib
+    ICUSHLIBSUFFIX=.dylib
 	LD_SONAME = -install_name ${SO_NAME}
 endif
 
@@ -591,6 +610,7 @@ ifeq (${PLATFORM}, CYGWIN)
               -Xlinker --out-implib \
                   -Xlinker $(XML_LIB_DIR)/${LIBNAME}${SO_TARGET_VERSION}.dll.a
         SHLIBSUFFIX=.dll
+        ICUSHLIBSUFFIX=.dll
 endif
 
 
@@ -611,10 +631,6 @@ ifeq (${PLATFORM}, AIX)
     RESLIB_SO_NAME  =${RESLIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
     RESLIB_REAL_NAME=${RESLIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
     
-    RESLIB_LINK_DOTA=${RESLIBNAME}.a
-    RESLIB_SO_DOTA  =${RESLIBNAME}${SO_TARGET_VERSION}.a
-    RESLIB_REAL_DOTA=${RESLIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.a
-    
 endif
 ifeq (${PLATFORM}, OS390)
 	#
@@ -630,10 +646,6 @@ ifeq (${PLATFORM}, OS390)
     RESLIB_SO_NAME  =${RESLIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
     RESLIB_REAL_NAME=${RESLIBNAME}${VER}${SHLIBSUFFIX}	
 
-    RESLIB_LINK_DOTA=${RESLIBNAME}.a
-    RESLIB_SO_DOTA  =${RESLIBNAME}${SO_TARGET_VERSION}.a
-    RESLIB_REAL_DOTA=${RESLIBNAME}${VER}.a	
-    
 endif
 ifeq (${PLATFORM}, CYGWIN)
 	#
@@ -681,9 +693,6 @@ ifeq ($(SO_NAME),)
     RESLIB_SO_NAME  =${RESLIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
     RESLIB_REAL_NAME=${RESLIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}	
 
-    RESLIB_LINK_DOTA=${RESLIBNAME}.a
-    RESLIB_SO_DOTA  =${RESLIBNAME}.a.${SO_TARGET_VERSION}
-    RESLIB_REAL_DOTA=${RESLIBNAME}.a.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}	
 endif
 
 
@@ -694,10 +703,6 @@ FQ_REAL_NAME=${XML_LIB_DIR}/${REAL_NAME}
 FQ_RESLIB_LINK_NAME=${XML_LIB_DIR}/${RESLIB_LINK_NAME}
 FQ_RESLIB_SO_NAME  =${XML_LIB_DIR}/${RESLIB_SO_NAME}
 FQ_RESLIB_REAL_NAME=${XML_LIB_DIR}/${RESLIB_REAL_NAME}
-
-FQ_RESLIB_LINK_DOTA=${XML_LIB_DIR}/${RESLIB_LINK_DOTA}
-FQ_RESLIB_SO_DOTA  =${XML_LIB_DIR}/${RESLIB_SO_DOTA}
-FQ_RESLIB_REAL_DOTA=${XML_LIB_DIR}/${RESLIB_REAL_DOTA}
 
 ###################### STANDARD TOOLS #############################
 ifeq (${PLATFORM}, OS400)
