@@ -79,7 +79,6 @@
 #include <internal/EndOfEntityException.hpp>
 #include <internal/ReaderMgr.hpp>
 
-
 // ---------------------------------------------------------------------------
 //  ReaderMgr: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -427,30 +426,45 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
     //  to be possibly updated later by the encoding="" setting.
     //
     XMLReader* retVal = 0;
-    if (src.getEncoding())
-    {
-        retVal = new XMLReader
-        (
-            src.getPublicId()
-            , src.getSystemId()
-            , newStream
-            , src.getEncoding()
-            , refFrom
-            , type
-            , source
-        );
+
+    // XMLReader ctor invokes refreshRawBuffer() which calls 
+    // newStream->readBytes().
+    // This readBytes() may throw exception, which neither 
+    // refresRawBuffer(), nor XMLReader ctor catches. 
+    // We need to handle this exception to avoid leak on newStream.
+
+    try {
+        if (src.getEncoding())
+        {
+            retVal = new XMLReader
+                (
+                src.getPublicId()
+                , src.getSystemId()
+                , newStream
+                , src.getEncoding()
+                , refFrom
+                , type
+                , source
+                );
+        }
+        else
+        {
+            retVal = new XMLReader
+                (
+                src.getPublicId()
+                , src.getSystemId()
+                , newStream
+                , refFrom
+                , type
+                , source
+                );
+        }
     }
-     else
+
+    catch (...) //NetAccessorException&
     {
-        retVal = new XMLReader
-        (
-            src.getPublicId()
-            , src.getSystemId()
-            , newStream
-            , refFrom
-            , type
-            , source
-        );
+        delete newStream;
+        return 0;
     }
 
     // Set the next available reader number on this reader
