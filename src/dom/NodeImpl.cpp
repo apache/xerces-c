@@ -56,6 +56,10 @@
 
 /**
 * $Log$
+* Revision 1.14  2000/04/04 19:14:57  lehors
+* got rid of ownerElement attribute on AttrImpl,
+* so we must use getParentNode() instead of parentNode
+*
 * Revision 1.13  2000/02/17 17:47:25  andyh
 * Update Doc++ API comments
 * NameSpace update to track W3C
@@ -277,7 +281,7 @@ NodeImpl * NodeImpl::appendChild(NodeImpl *newChild)
 
 void NodeImpl::changed()
 {
-    for (NodeImpl *n=this; n != null; n=n->parentNode)
+    for (NodeImpl *n=this; n != null; n=n->getParentNode())
         ++n->changes;
 };  
 
@@ -300,7 +304,7 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
     if (thisNode == 0)
         return;
     
-    if (thisNode->parentNode != 0 || thisNode->owned)
+    if (thisNode->getParentNode() != 0 || thisNode->owned)
         return;
     
     // Delete this node.  There should be no siblings, as the DOM
@@ -429,7 +433,9 @@ NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     
     // Prevent cycles in the tree
     bool treeSafe=true;
-    for(NodeImpl *a=this->parentNode;treeSafe && a!=null;a=a->parentNode)
+    for(NodeImpl *a=this->getParentNode();
+        treeSafe && a!=null;
+        a=a->getParentNode())
         treeSafe=(newInternal!=a);
     if(!treeSafe)
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
