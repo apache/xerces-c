@@ -515,6 +515,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\EmptyStackException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp
 # End Source File
 # Begin Source File
@@ -1140,6 +1148,10 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\ElemStack.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\EndOfEntityException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\IANAEncodings.hpp
 # End Source File
 # Begin Source File
 
