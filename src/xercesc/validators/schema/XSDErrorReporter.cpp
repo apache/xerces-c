@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.5  2002/11/15 21:58:04  peiyongz
+  * Leave thread safety issue to message loader
+  *
   * Revision 1.4  2002/11/04 14:49:42  tng
   * C++ Namespace Support.
   *
@@ -211,14 +214,9 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
         msgLoader = gValidMsgLoader;
     }
 
-    // Lock the mutex and load the text
+    if (!msgLoader->loadMsg(toEmit, errText, msgSize))
     {
-        XMLMutexLock lockInit(&gErrMsgMutex());
-
-        if (!msgLoader->loadMsg(toEmit, errText, msgSize))
-        {
                 // <TBD> Should probably load a default message here
-        }
     }
 
     if (fErrorReporter)
@@ -258,14 +256,9 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
         msgLoader = gValidMsgLoader;
     }
 
-    // Lock the mutex and load the text
+    if (!msgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
     {
-        XMLMutexLock lockInit(&gErrMsgMutex());
-
-        if (!msgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
-        {
                 // <TBD> Should probably load a default message here
-        }
     }
 
     if (fErrorReporter)

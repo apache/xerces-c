@@ -1118,13 +1118,9 @@ void XMLScanner::emitError(const XMLErrs::Codes toEmit)
         const unsigned int msgSize = 1023;
         XMLCh errText[msgSize + 1];
 
-        // Lock the mutex and load the text
+        if (!gMsgLoader->loadMsg(toEmit, errText, msgSize))
         {
-            XMLMutexLock lockInit(&gScannerMutex());
-            if (!gMsgLoader->loadMsg(toEmit, errText, msgSize))
-            {
                 // <TBD> Probably should load a default msg here
-            }
         }
 
         //
@@ -1173,13 +1169,9 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        // Lock the mutex and load the text
+        if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
         {
-            XMLMutexLock lockInit(&gScannerMutex());
-            if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
-            {
                 // <TBD> Should probably load a default message here
-            }
         }
 
         //
@@ -1228,13 +1220,9 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        // Lock the mutex and load the text
+        if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
         {
-            XMLMutexLock lockInit(&gScannerMutex());
-            if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
-            {
                 // <TBD> Should probably load a default message here
-            }
         }
 
         //
