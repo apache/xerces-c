@@ -224,6 +224,7 @@ endif
 	@echo Populate the include output directory
 	@echo Copying headers files ...
 	-${CP} -Rf ${XERCESCROOT}/include/* ${BINTARGETDIR}/include
+	-${RM} -rf ${BINTARGETDIR}/include/xercesc/dom/impl
 ifeq (${TRANSCODER},ICU)
 	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include
 else
