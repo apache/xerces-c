@@ -415,7 +415,7 @@ int ThreadParser::parse(int fileNum)
 //
 void ThreadParser::addToCheckSum(const XMLCh *chars, int len)
 {
-    if (len = -1)
+    if (len == -1)
     {
         // Null terminated string.
         while (*chars != 0)
