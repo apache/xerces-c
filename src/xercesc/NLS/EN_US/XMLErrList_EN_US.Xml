@@ -599,7 +599,7 @@
             <Message Id="FACET_Invalid_MinExcl" Text="MinExclusive '{0}' is invalid"/>
             <Message Id="FACET_Invalid_TotalDigit" Text="TotalDigit Value '{0}' is invalid"/>
             <Message Id="FACET_Invalid_FractDigit" Text="FractionDigit Value '{0}' is invalid"/>
-            <Message Id="FACET_NonNeg_TotalDigit" Text="TotalDigit Value '{0}' must be a nonNegativeInteger"/>
+            <Message Id="FACET_PosInt_TotalDigit" Text="TotalDigit Value '{0}' must be a PositiveInteger"/>
             <Message Id="FACET_NonNeg_FractDigit" Text="FractionDigit Value '{0}' must be a nonNegativeInteger"/>
             <Message Id="FACET_max_Incl_Excl" Text="It is an error for both maxInclusive and maxExclusive to be specified for the same datatype"/>
             <Message Id="FACET_min_Incl_Excl" Text="It is an error for both minInclusive and minExclusive to be specified for the same datatype"/>

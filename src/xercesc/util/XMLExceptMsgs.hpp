@@ -191,7 +191,7 @@ public :
       , FACET_Invalid_MinExcl              = 176
       , FACET_Invalid_TotalDigit           = 177
       , FACET_Invalid_FractDigit           = 178
-      , FACET_NonNeg_TotalDigit            = 179
+      , FACET_PosInt_TotalDigit            = 179
       , FACET_NonNeg_FractDigit            = 180
       , FACET_max_Incl_Excl                = 181
       , FACET_min_Incl_Excl                = 182

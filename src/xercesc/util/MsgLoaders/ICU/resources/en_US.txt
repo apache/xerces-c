@@ -600,7 +600,7 @@ en_US {
 		"MinExclusive '{0}' is invalid " ,
 		"TotalDigit Value '{0}' is invalid " ,
 		"FractionDigit Value '{0}' is invalid " ,
-		"TotalDigit Value '{0}' must be a nonNegativeInteger " ,
+		"TotalDigit Value '{0}' must be a PositiveInteger " ,
 		"FractionDigit Value '{0}' must be a nonNegativeInteger " ,
 		"It is an error for both maxInclusive and maxExclusive to be specified for the same datatype " ,
 		"It is an error for both minInclusive and minExclusive to be specified for the same datatype " ,
