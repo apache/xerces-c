@@ -86,11 +86,10 @@ APP_DIR=XSerializerTest
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
 EXEC=	${XERCESCROOT}/bin
-OBJS=	${OUTDIR}/XSerializerTest.o ${OUTDIR}/SAXCountHandlers.o
+OBJS=	${OUTDIR}/XSerializerTest.o ${OUTDIR}/XSerializerHandlers.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
-EXTSRC= ${XERCESCROOT}/samples/SAXCount
-INCLUDES= -I. -I../../samples/SAXCount -I${XERCESCROOT}/include
-HEADER_FILES= ${SRC}/XSerializerTest.hpp ${EXTSRC}/SAXCountHandlers.hpp
+INCLUDES= -I. -I${XERCESCROOT}/include
+HEADER_FILES= ${SRC}/XSerializerTest.hpp ${SRC}/XSerializerHandlers.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -112,8 +111,8 @@ ${BATCH_TARGET}:: ${OBJS}
 $(OUTDIR)/XSerializerTest.o:: ${SRC}/XSerializerTest.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/XSerializerTest.o ${SRC}/XSerializerTest.cpp
 
-$(OUTDIR)/SAXCountHandlers.o:: ${EXTSRC}/SAXCountHandlers.cpp ${HEADER_FILES}
-	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SAXCountHandlers.o ${EXTSRC}/SAXCountHandlers.cpp
+$(OUTDIR)/XSerializerHandlers.o:: ${SRC}/XSerializerHandlers.cpp ${HEADER_FILES}
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/XSerializerHandlers.o ${SRC}/XSerializerHandlers.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
