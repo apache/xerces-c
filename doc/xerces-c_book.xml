@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
 
-<book title="&XercesCName; Documentation" copyright="2001 The Apache Software Foundation">
+<book title="&XercesCName; Documentation" copyright="2003 The Apache Software Foundation">
   <external href="../index.html"  label="Home"/>
 
   <separator/>
