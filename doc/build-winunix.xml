@@ -98,7 +98,7 @@
 		   </p>
 
            <ul>
-		       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg </li>
+		       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB6\Xerces-all\Xerces-all.bpg </li>
     	   </ul>
 
 		   <p> Each project in the group refers a directory belog \Xerces-all.
@@ -106,7 +106,7 @@
            </p>
 
            <ul>
-    	       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB5\Xerces-all\XercesLib </li>
+    	       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB6\Xerces-all\XercesLib </li>
 		   </ul>
 
            <p> To build any project, open the project manager.  Double click on the project

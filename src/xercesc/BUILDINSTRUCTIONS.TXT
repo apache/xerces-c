@@ -132,12 +132,12 @@ Building Xerces-C++ on Windows using Borland C++Builder
 
         The library and demo projects are all contained in the Xerces-all project group:
 
-           * xerces-c-src1_7_0\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg
+           * xerces-c-src1_7_0\Projects\Win32\BCB6\Xerces-all\Xerces-all.bpg
 
         Each project in the group refers a directory belog \Xerces-all. For example, the
         XercesLib project files are contained in the directory
 
-           * xerces-c-src1_7_0\Projects\Win32\BCB5\Xerces-all\XercesLib
+           * xerces-c-src1_7_0\Projects\Win32\BCB6\Xerces-all\XercesLib
 
         To build any project, open the project manager. Double click on the project name.
         Then select "Project|Build" from the menu. For example, double click on
