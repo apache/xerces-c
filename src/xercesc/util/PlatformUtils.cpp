@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/08/27 16:41:56  jberry
+ * Add new static global that always points to array-allocating memory manager
+ *
  * Revision 1.10  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -169,6 +172,7 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/DefaultPanicHandler.hpp>
 #include <xercesc/internal/MemoryManagerImpl.hpp>
+#include <xercesc/internal/MemoryManagerArrayImpl.hpp>
 
 #include <limits.h>
 
@@ -203,12 +207,14 @@ XMLMutex*           gXMLCleanupListMutex = 0;
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Static Data Members
 // ---------------------------------------------------------------------------
-XMLNetAccessor*     XMLPlatformUtils::fgNetAccessor = 0;
-XMLTransService*    XMLPlatformUtils::fgTransService = 0;
-PanicHandler*       XMLPlatformUtils::fgUserPanicHandler = 0;
-PanicHandler*       XMLPlatformUtils::fgDefaultPanicHandler = 0;
-MemoryManager*      XMLPlatformUtils::fgMemoryManager = 0;
-bool                XMLPlatformUtils::fgMemMgrAdopted = true;
+XMLNetAccessor*         XMLPlatformUtils::fgNetAccessor = 0;
+XMLTransService*        XMLPlatformUtils::fgTransService = 0;
+PanicHandler*           XMLPlatformUtils::fgUserPanicHandler = 0;
+PanicHandler*           XMLPlatformUtils::fgDefaultPanicHandler = 0;
+MemoryManager*          XMLPlatformUtils::fgMemoryManager = 0;
+MemoryManagerArrayImpl  gArrayMemoryManager;
+MemoryManager*          XMLPlatformUtils::fgArrayMemoryManager = &gArrayMemoryManager;
+bool                    XMLPlatformUtils::fgMemMgrAdopted = true;
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
@@ -243,7 +249,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
             fgMemoryManager = new MemoryManagerImpl();
         }
     }
-
+	
     //
     //  Make sure we haven't already been initialized. Note that this is not
     //  thread safe and is not intended for that. Its more for those COM

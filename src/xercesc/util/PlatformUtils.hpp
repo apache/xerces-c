@@ -152,6 +152,16 @@ public :
       */
     static MemoryManager*       fgMemoryManager;
     
+    /** The array-allocating memory manager
+      *
+      *   This memory manager always allocates memory by calling the
+      *   global new[] operator. It may be used to allocate memory
+      *   where such memory needs to be deletable by calling delete [].
+      *   Since this allocator is always guaranteed to do the same thing
+      *   there is no reason, nor facility, to override it.
+      */
+    static MemoryManager*       fgArrayMemoryManager;
+    
     //@}
 
 
