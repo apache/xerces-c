@@ -404,7 +404,7 @@ void DOMParentNode::normalize()
 
 bool DOMParentNode::isEqualNode(const DOMNode* arg)
 {
-    if (castToNodeImpl(this)->isEqualNode(arg))
+    if (arg && castToNodeImpl(this)->isEqualNode(arg))
     {
         DOMNode *kid, *argKid;
         for (kid = fFirstChild, argKid = arg->getFirstChild();
@@ -414,7 +414,7 @@ bool DOMParentNode::isEqualNode(const DOMNode* arg)
             if (!kid->isEqualNode(argKid))
                 return false;
         }
-        return true;
+        return (kid || argKid) ? false : true;
     }
     return false;
 }
