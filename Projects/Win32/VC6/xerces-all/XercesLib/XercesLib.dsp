@@ -684,6 +684,14 @@ SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLDateTime.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLDateTime.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLDeleterFor.hpp
 # End Source File
 # Begin Source File
@@ -1815,6 +1823,38 @@ SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidatorFactory.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\DateDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DateDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DayDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DayDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.cpp
 # End Source File
 # Begin Source File
@@ -1828,6 +1868,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\DoubleDatatypeValidator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\datatype\DoubleDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DurationDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DurationDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
@@ -1887,6 +1935,22 @@ SOURCE=..\..\..\..\..\src\validators\datatype\ListDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\MonthDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\MonthDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\MonthDayDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\MonthDayDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\NameDatatypeValidator.cpp
 # End Source File
 # Begin Source File
@@ -1927,11 +1991,35 @@ SOURCE=..\..\..\..\..\src\validators\datatype\StringDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\TimeDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\TimeDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\UnionDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\datatype\UnionDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\YearDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\YearDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\YearMonthDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\YearMonthDatatypeValidator.hpp
 # End Source File
 # End Group
 # Begin Group "DTD"

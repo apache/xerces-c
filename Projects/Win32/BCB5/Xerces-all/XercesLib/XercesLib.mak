@@ -156,6 +156,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLBigInteger.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLChTranscoder.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLDouble.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\XMLDateTime.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLEBCDICTranscoder.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLException.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XMLFloat.obj \
@@ -202,6 +203,16 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\NCNameDatatypeValidator.obj \    
     ..\..\..\..\..\Build\Win32\BCB5\obj\StringDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\UnionDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\DateTimeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\DateTimeDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\DateDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\TimeDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\DayDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\MonthDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\MonthDayDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\YearDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\YearMonthDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\DurationDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\DTDAttDef.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\DTDAttDefList.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\DTDElementDecl.obj \

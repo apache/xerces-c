@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2001/11/07 19:18:52  peiyongz
+ * DateTime Port
+ *
  * Revision 1.25  2001/10/25 15:06:49  tng
  * Thread safe the static instance.
  *
@@ -163,6 +166,15 @@
 #include <validators/datatype/FloatDatatypeValidator.hpp>
 #include <validators/datatype/AnyURIDatatypeValidator.hpp>
 #include <validators/datatype/AnySimpleTypeDatatypeValidator.hpp>
+#include <validators/datatype/DateTimeDatatypeValidator.hpp>
+#include <validators/datatype/DateDatatypeValidator.hpp>
+#include <validators/datatype/TimeDatatypeValidator.hpp>
+#include <validators/datatype/DayDatatypeValidator.hpp>
+#include <validators/datatype/MonthDatatypeValidator.hpp>
+#include <validators/datatype/MonthDayDatatypeValidator.hpp>
+#include <validators/datatype/YearDatatypeValidator.hpp>
+#include <validators/datatype/YearMonthDatatypeValidator.hpp>
+#include <validators/datatype/DurationDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLRegisterCleanup.hpp>
 
@@ -450,14 +462,25 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                        new NameDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,
                        new NCNameDatatypeValidator());
-        /*
-        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DURATION,
-                       new DurationDatatypeValidator());
-        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DAY,
-                       new DayDatatypeValidator());
+
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DATETIME,
+                       new DateTimeDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DATE,
+                       new DateDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_TIME,
                        new TimeDatatypeValidator());
-        */
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DAY,
+                       new DayDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_MONTH,
+                       new MonthDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_MONTHDAY,
+                       new MonthDayDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_YEAR,
+                       new YearDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_YEARMONTH,
+                       new YearMonthDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DURATION,
+                       new DurationDatatypeValidator());
 
         // REVISIT
         // We are creating a lot of Hashtables for the facets of the different

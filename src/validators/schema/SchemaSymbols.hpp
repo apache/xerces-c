@@ -223,15 +223,17 @@ public :
 	static const XMLCh fgDT_USHORT[];
 	static const XMLCh fgDT_UBYTE[];
     static const XMLCh fgDT_POSITIVEINTEGER[];
-    static const XMLCh fgDT_RECURRINGDURATION[];
-	static const XMLCh fgDT_TIMEINSTANT[];
-    static const XMLCh fgDT_TIMEPERIOD[];
+//datetime   
+    static const XMLCh fgDT_DATETIME[];
     static const XMLCh fgDT_DATE[];
+	static const XMLCh fgDT_TIME[];
+    static const XMLCh fgDT_DURATION[];
+    static const XMLCh fgDT_DAY[];
     static const XMLCh fgDT_MONTH[];
+    static const XMLCh fgDT_MONTHDAY[];
     static const XMLCh fgDT_YEAR[];
-    static const XMLCh fgDT_CENTURY[];
-    static const XMLCh fgDT_RECURRINGDATE[];
-    static const XMLCh fgDT_TIMEDURATION[];
+    static const XMLCh fgDT_YEARMONTH[];
+
     static const XMLCh fgDT_BASE64BINARY[];
     static const XMLCh fgDT_HEXBINARY[];
     static const XMLCh fgDT_FLOAT[];

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.22  2001/11/07 19:18:52  peiyongz
+# DateTime Port
+#
 # Revision 1.21  2001/10/01 16:14:22  peiyongz
 # DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
 #
@@ -168,7 +171,17 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	AnySimpleTypeDatatypeValidator.hpp \
 	AbstractNumericFacetValidator.hpp \
 	AbstractNumericValidator.hpp \
-	AbstractStringValidator.hpp
+	AbstractStringValidator.hpp \
+	DateTimeValidator.hpp \
+	DateTimeDatatypeValidator.hpp \
+	DateDatatypeValidator.hpp \
+	TimeDatatypeValidator.hpp \
+	DayDatatypeValidator.hpp \
+	MonthDatatypeValidator.hpp \
+	MonthDayDatatypeValidator.hpp \
+	YearDatatypeValidator.hpp \
+	YearMonthDatatypeValidator.hpp \
+	DurationDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
 
@@ -197,7 +210,17 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	AnySimpleTypeDatatypeValidator.$(TO) \
 	AbstractNumericFacetValidator.$(TO) \
 	AbstractNumericValidator.$(TO) \
-	AbstractStringValidator.$(TO)
+	AbstractStringValidator.$(TO) \
+	DateTimeValidator.$(TO) \
+	DateTimeDatatypeValidator.$(TO) \
+	DateDatatypeValidator.$(TO) \
+	TimeDatatypeValidator.$(TO) \
+	DayDatatypeValidator.$(TO) \
+	MonthDatatypeValidator.$(TO) \
+	MonthDayDatatypeValidator.$(TO) \
+	YearDatatypeValidator.$(TO) \
+	YearMonthDatatypeValidator.$(TO) \
+	DurationDatatypeValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/11/07 19:20:01  peiyongz
+ * DateTime Port
+ *
  * Revision 1.13  2001/09/18 14:41:56  knoaman
  * Add support for <annotation>.
  *
@@ -972,23 +975,10 @@ const XMLCh SchemaSymbols::fgDT_POSITIVEINTEGER[] =
     chLatin_g, chLatin_e, chLatin_r, chNull
 };
 
-const XMLCh SchemaSymbols::fgDT_RECURRINGDURATION[] =
+const XMLCh SchemaSymbols::fgDT_DATETIME[] =
 {
-    chLatin_r, chLatin_e, chLatin_c, chLatin_u, chLatin_r, chLatin_r,
-    chLatin_i, chLatin_n, chLatin_g, chLatin_D, chLatin_u, chLatin_r,
-    chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
-};
-
-const XMLCh SchemaSymbols::fgDT_TIMEINSTANT[] =
-{
-    chLatin_t, chLatin_i, chLatin_m, chLatin_e, chLatin_I, chLatin_n,
-    chLatin_s, chLatin_t, chLatin_a, chLatin_n, chLatin_t, chNull
-};
-
-const XMLCh SchemaSymbols::fgDT_TIMEPERIOD[] =
-{
-    chLatin_t, chLatin_i, chLatin_m, chLatin_e, chLatin_P, chLatin_e,
-    chLatin_r, chLatin_i, chLatin_o, chLatin_d, chNull
+    chLatin_d, chLatin_a, chLatin_t, chLatin_e, 
+    chLatin_T, chLatin_i, chLatin_m, chLatin_e, chNull
 };
 
 const XMLCh SchemaSymbols::fgDT_DATE[] =
@@ -996,31 +986,42 @@ const XMLCh SchemaSymbols::fgDT_DATE[] =
     chLatin_d, chLatin_a, chLatin_t, chLatin_e, chNull
 };
 
+const XMLCh SchemaSymbols::fgDT_TIME[] =
+{
+    chLatin_t, chLatin_i, chLatin_m, chLatin_e, chNull
+};
+
+const XMLCh SchemaSymbols::fgDT_DURATION[] =
+{
+    chLatin_d, chLatin_u, chLatin_r, chLatin_a, 
+    chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh SchemaSymbols::fgDT_DAY[] =
+{
+    chLatin_g, chLatin_D, chLatin_a, chLatin_y, chNull
+};
+
 const XMLCh SchemaSymbols::fgDT_MONTH[] =
 {
-    chLatin_m, chLatin_o, chLatin_n, chLatin_t, chLatin_h, chNull
+    chLatin_g, chLatin_M, chLatin_o, chLatin_n, chLatin_t, chLatin_h, chNull
+};
+
+const XMLCh SchemaSymbols::fgDT_MONTHDAY[] =
+{
+    chLatin_g, chLatin_M, chLatin_o, chLatin_n, chLatin_t, chLatin_h, 
+    chLatin_D, chLatin_a, chLatin_y, chNull
 };
 
 const XMLCh SchemaSymbols::fgDT_YEAR[] =
 {
-    chLatin_y, chLatin_e, chLatin_a, chLatin_r, chNull
+    chLatin_g, chLatin_Y, chLatin_e, chLatin_a, chLatin_r, chNull
 };
 
-const XMLCh SchemaSymbols::fgDT_CENTURY[] =
+const XMLCh SchemaSymbols::fgDT_YEARMONTH[] =
 {
-    chLatin_c, chLatin_e, chLatin_n, chLatin_t, chLatin_u, chLatin_r, chLatin_y,  chNull
-};
-
-const XMLCh SchemaSymbols::fgDT_RECURRINGDATE[] =
-{
-    chLatin_r, chLatin_e, chLatin_c, chLatin_u, chLatin_r, chLatin_r, chLatin_i,
-    chLatin_n, chLatin_g, chLatin_D, chLatin_a, chLatin_t, chLatin_e, chNull
-};
-
-const XMLCh SchemaSymbols::fgDT_TIMEDURATION[] =
-{
-    chLatin_t, chLatin_i, chLatin_m, chLatin_e, chLatin_D, chLatin_u,
-    chLatin_r, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+    chLatin_g, chLatin_Y, chLatin_e, chLatin_a, chLatin_r, 
+    chLatin_M, chLatin_o, chLatin_n, chLatin_t, chLatin_h, chNull
 };
 
 const XMLCh SchemaSymbols::fgDT_BASE64BINARY[] =

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.49  2001/11/07 19:16:03  peiyongz
+# DateTime Port
+#
 # Revision 1.48  2001/10/23 23:09:32  peiyongz
 # [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
 #
@@ -363,6 +366,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLBigDecimal.hpp \
     XMLBigInteger.hpp \
     XMLDouble.hpp \
+    XMLDateTime.hpp \
     XMLChTranscoder.hpp \
     XMLInteger.hpp \
     XMLIBM1140Transcoder.hpp \
@@ -431,6 +435,7 @@ UTIL_CPP_OBJECTS = \
     XMLBigDecimal.$(TO) \
     XMLBigInteger.$(TO) \
     XMLDouble.$(TO) \
+    XMLDateTime.$(TO) \
     XMLChTranscoder.$(TO) \
     XMLIBM1140Transcoder.$(TO) \
     XMLEBCDICTranscoder.$(TO) \
