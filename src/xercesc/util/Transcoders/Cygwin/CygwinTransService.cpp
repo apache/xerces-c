@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 14:04:46  neilg
+ * fix compilation error
+ *
  * Revision 1.6  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -1031,7 +1034,7 @@ char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode)
     return retVal;
 }
 
-char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode
+char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode,
                                      MemoryManager* const manager)
 {
     if (!toTranscode)
