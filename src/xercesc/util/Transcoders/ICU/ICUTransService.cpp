@@ -74,6 +74,9 @@
 #include <unicode/ucnv_err.h>
 #include <unicode/ustring.h>
 #include <unicode/udata.h>
+#if (U_ICU_VERSION_MAJOR_NUM >= 2)
+    #include <unicode/uclean.h>
+#endif
 
 
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
@@ -167,6 +170,10 @@ ICUTransService::ICUTransService()
 
 ICUTransService::~ICUTransService()
 {
+    #if (U_ICU_VERSION_MAJOR_NUM >= 2)
+        // release all lasily allocated data
+        u_cleanup();
+    #endif
 }
 
 
