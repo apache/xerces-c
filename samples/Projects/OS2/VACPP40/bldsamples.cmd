@@ -7,6 +7,8 @@ echo making DOMPrint
 vacbld DOMPrint.icc
 echo making EnumVal
 vacbld EnumVal.icc
+echo making SEnumVal
+vacbld SEnumVal.icc
 echo making MemParse
 vacbld MemParse.icc
 echo making PParse
