@@ -1108,11 +1108,12 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         return true;
 
     // Clean up the old encoding string
-    if (fEncodingStr)
-    {
-        delete [] fEncodingStr;
-        fEncodingStr = 0;
-    }
+	// Do not delete until we know we have a good encoding
+//	if (fEncodingStr)
+//	{
+//		delete [] fEncodingStr;
+//		fEncodingStr = 0;
+//	}
 
     //
     //  Try to map the string to one of our standard encodings. If its not
@@ -1150,10 +1151,16 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             // Override with the original endian specific encoding
             newBaseEncoding = fEncoding;
 
-            if (fEncoding == XMLRecognizer::UTF_16L)
+            if (fEncoding == XMLRecognizer::UTF_16L) {
+
+				delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString);
-            else
+			}
+            else {
+
+				delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString);
+			}
         }
          else if (!XMLString::compareIString(newEncoding, XMLUni::fgUCS4EncodingString)
               ||  !XMLString::compareIString(newEncoding, XMLUni::fgUCS4EncodingString2)
@@ -1168,20 +1175,28 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             // Override with the original endian specific encoding
             newBaseEncoding = fEncoding;
 
-            if (fEncoding == XMLRecognizer::UCS_4L)
+            if (fEncoding == XMLRecognizer::UCS_4L) {
+
+                delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString);
-            else
+			}
+            else {
+
+                delete [] fEncodingStr;
                 fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString);
+			}
         }
          else
         {
             // None of those special cases, so just replicate the new name
+            delete [] fEncodingStr;
             fEncodingStr = XMLString::replicate(newEncoding);
         }
     }
      else
     {
         // Store the new encoding string since it is just an intrinsic
+        delete [] fEncodingStr;
         fEncodingStr = XMLString::replicate(newEncoding);
     }
 
