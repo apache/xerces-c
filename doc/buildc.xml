@@ -1,0 +1,1165 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="Building &XercesCName;">
+
+  <p>This page answers the following questions:</p>
+  <ul>
+    <li><link anchor="BuildWinNT">Building &XercesCName; on Windows.</link></li>
+    <li><link anchor="BuildUNIX">Building &XercesCName; on UNIX.</link></li>
+    <li><link anchor="BuildWinVisualAge">Building &XercesCName; on Windows using Visual Age.</link></li>
+    <li><link anchor="BuildOS2VisualAge">Building &XercesCName; on OS/2 using Visual Age.</link></li>
+    <li><link anchor="BuildAS400">Building &XercesCName; on AS/400.</link></li>
+    <li><link anchor="BuildMac">Building &XercesCName; on Macintosh.</link></li>
+    <li><link anchor="BuildICU">Building ICU.</link></li>
+    <li><link anchor="BuildCOM">Building COM module on Windows 98/NT/2000.</link></li>
+    <li><link anchor="BuildDocs">How to build the User Documentation?.</link></li>
+    <li><link anchor="PortingGuide">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</link></li>
+    <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
+    <li><link anchor="BuildUsingLibWWW">How can I generate Xerces-C binaries which includes the
+               sample NetAccessor implementation using Libwww?</link></li>
+    <li><link anchor="LookForHelp">Where can I look for more help?</link></li>
+  </ul>
+
+    <anchor name="BuildWinNT"/>
+    <s2 title="Building on Windows NT/98">
+        &XercesCName; comes with Microsoft Visual C++ projects and workspaces to
+        help you build &XercesCName;. The following describes the steps you need
+        to build &XercesCName;.
+
+        <s3 title="Building &XercesCName; library">
+            <p>To build &XercesCName; from it source (using MSVC), you will
+            need to open the workspace containing the project. If you are
+            building your application, you may want to add the &XercesCName;
+            project inside your applications's workspace.</p>
+            <p>The workspace containing the &XercesCName; project file and
+            all other samples is:</p>
+<source>&XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\xerces-all.dsw</source>
+            <p>Once you are inside MSVC, you need to build the project marked
+            <em>XercesLib</em>.</p>
+            <p>If you want to include the &XercesCName; project separately,
+            you need to pick up:</p>
+<source>&XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp</source>
+            <p>You must make sure that you are linking your application with
+            the &XercesCWindowsLib;.lib library and also make sure that
+            the associated DLL is somewhere in your path.</p>
+            <note>If you are working on the AlphaWorks version which uses ICU,
+            you must have the ICU data DLL named <code>icudata.dll</code> available from your path
+            setting. For finding out where you can
+            get ICU from and build it, look at the last section of this page.</note>
+        </s3>
+        <s3 title="Building samples">
+            <p>Inside the same workspace (xerces-all.dsw), you'll find several other
+            projects. These are for the samples. Select all the samples and right click
+            on the selection. Then choose "Build (selection only)" to build all the
+            samples in one shot.</p>
+        </s3>
+    </s2>
+
+    <anchor name="BuildUNIX"/>
+    <s2 title="Building on UNIX platforms">
+        <p>&XercesCName; uses
+        <jump href="http://www.gnu.org">GNU</jump> tools like
+        <jump href="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</jump> and
+        <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump>
+        to build the system. You must first make sure you
+        have these tools installed on your system before proceeding.
+        If you don not have required tools, ask your system administrator
+        to get them for you. These tools are free under the GNU Public Licence
+        and may be obtained from the
+        <jump href="http://www.gnu.org">Free Software Foundation</jump>.</p>
+
+        <p><em>Do not jump into the build directly before reading this.</em></p>
+
+        <p>Spending some time reading the following instructions will save you a
+        lot of wasted time and support-related e-mail communication.
+        The &XercesCName; build instructions are a little different from
+        normal product builds. Specifically, there are some wrapper-scripts
+        that have been written to make life easier for you. You are free
+        not to use these scripts and use
+        <jump href="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</jump> and
+        <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump>
+        directly, but we want to make sure you know what you are by-passing and
+        what risks you are taking. So read the following instructions
+        carefully before attempting to build it yourself.</p>
+
+        <p>Besides having all necessary build tools, you also need to know what
+        compilers we have tested &XercesCName; on. The following table lists the
+        relevant platforms and compilers.</p>
+
+        <table>
+            <tr><td><em>Operating System</em></td><td><em>Compiler</em></td></tr>
+            <tr><td>Redhat Linux 6.1</td><td>g++, gcc (egcs)</td></tr>
+            <tr><td>AIX 4.3.3  and higher</td><td>xlC_r, xlc_r</td></tr>
+            <tr><td>Solaris 2.6</td><td>CC, cc</td></tr>
+            <tr><td>HP-UX 10.2</td><td>CC, cc</td></tr>
+            <tr><td>HP-UX 11</td><td>aCC, cc</td></tr>
+        </table>
+
+        <p>If you are not using any of these compilers, you are taking a calculated risk
+        by exploring new grounds. Your effort in making &XercesCName; work on this
+        new compiler is greatly appreciated and any problems you face can be addressed
+        on the &XercesCName; <jump href="mailto:&XercesCEmailAddress;">mailing list</jump>.
+        </p>
+
+        <p><em>Differences between the UNIX platforms:</em> The description below is
+        generic, but as every programmer is aware, there are minor differences
+        within the various UNIX flavors the world has been bestowed with.
+        The one difference that you need to watch out in the discussion below,
+        pertains to the system environment variable for finding libraries.
+        On <em>Linux and Solaris</em>, the environment variable name is called
+        <code>LD_LIBRARY_PATH</code>, on <em>AIX</em> it is <code>LIBPATH</code>,
+        while on <em>HP-UX</em> it is <code>SHLIB_PATH</code>. The following
+        discussion assumes you are working on Linux, but it is with subtle
+        understanding that you know how to interpret it for the other UNIX flavors.</p>
+
+        <note>If you wish to build &XercesCName; with
+        <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/">ICU</jump>,
+        look at the <link anchor="icu">last section</link> of this page.
+        It tells you where you can find ICU and how you can build &XercesCName;
+        to include the ICU international library.</note>
+
+        <s3 title="Setting build environment variables">
+            <p>Before doing the build, you must first set your environment variables
+            to pick-up the compiler and also specify where you extracted &XercesCName;
+            on your machine.
+            While the first one is probably set for you by the system administrator, just
+            make sure you can invoke the compiler. You may do so by typing the
+            compiler invocation command without any parameters (e.g. xlc_r, or g++, or cc)
+            and check if you get a proper response back.</p>
+            <p>Next set your &XercesCName; root path as follows:</p>
+<source>export XERCESCROOT=&lt;full path to &XercesCSrcInstallDir;&gt;</source>
+
+            <p>This should be the full path of the directory where you extracted &XercesCName;.</p>
+            </s3>
+
+        <s3 title="Building &XercesCName; library">
+            <p>As mentioned earlier, you must be ready with the GNU tools like
+            <jump href="http://www.gnu.org/software/autoconf/autoconf.html">autoconf</jump> and
+            <jump href="http://www.gnu.org/software/make/make.html">gmake</jump>
+            before you attempt the build.</p>
+
+            <p>The autoconf tool is required on only one platform and produces
+            a set of portable scripts (configure) that you can run on all
+            other platforms without actually having the autoconf tool installed
+            everywhere. In all probability the autoconf-generated script
+            (called <code>configure</code>) is already in your <code>src</code>
+            directory. If not, type:</p>
+
+<source>cd $XERCESCROOT/src
+autoconf</source>
+
+            <p>This generates a shell-script called <code>configure</code>. It is tempting to run
+            this script directly as is normally the case, but wait a minute. If you are
+            using the default compilers like
+            <jump href="http://www.gnu.org/software/gcc/gcc.html">gcc</jump> and
+            <jump href="http://www.gnu.org/software/gcc/gcc.html">g++</jump> you do not have a problem. But
+            if you are not on the standard GNU compilers, you need to export a few more
+            environment variables before you can invoke configure.</p>
+
+            <p>Rather than make you to figure out what strange environment
+            variables you need to use, we have provided you with a wrapper
+            script that does the job for you. All you need to tell the script
+            is what your compiler is, and what options you are going to use
+            inside your build, and the script does everything for you. Here
+            is what the script takes as input:</p>
+
+<source>runConfigure
+runConfigure: Helper script to run "configure" for one of the
+              supported platforms.
+Usage: runConfigure "options"
+       where options may be any of the following:
+       -p &lt;platform&gt; (accepts 'aix', 'linux', 'solaris',
+                            'hp-10', 'hp-11', 'irix', 'unixware')
+       -c &lt;C compiler name&gt; (e.g. xlc_r, gcc, cc)
+       -x &lt;C++ compiler name&gt; (e.g. xlC_r, g++, CC, aCC)
+       -d (specifies that you want to build debug version)
+       -m &lt;message loader&gt; can be 'inmem', 'icu', 'iconv'
+       -n &lt;net accessor&gt; can be 'fileonly', 'libwww'
+       -t &lt;transcoder&gt; can be 'icu' or 'native'
+       -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
+       -l &lt;extra linker options&gt;
+       -z &lt;extra compiler options&gt;
+       -h (to get help on the above commands)</source>
+
+            <note>&XercesCName; can be built as either a standalone library or as a library
+            dependent on International Components for Unicode (ICU). For simplicity,
+            the following discussion only explains standalone builds.</note>
+
+            <p>One of the common ways to build &XercesCName; is as follows:</p>
+
+<source>runConfigure -plinux -cgcc -xg++ -minmem -nfileonly -tnative</source>
+
+            <p>The response will be something like this:</p>
+<source>
+Generating makefiles with the following options ...
+Platform: linux
+C Compiler: gcc
+C++ Compiler: g++
+Extra compile options:
+Extra link options:
+Message Loader: inmem
+Net Accessor: fileonly
+Transcoder: native
+Thread option:
+Debug is OFF
+
+creating cache ./config.cache
+checking for gcc... gcc
+checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
+checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether we are using GNU C... yes
+checking whether gcc accepts -g... yes
+checking for c++... g++
+checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
+checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether we are using GNU C++... yes
+checking whether g++ accepts -g... yes
+checking for a BSD compatible install... /usr/bin/install -c
+checking for autoconf... autoconf
+checking for floor in -lm... yes
+checking how to run the C preprocessor... gcc -E
+checking for ANSI C header files... yes
+checking for XMLByte... no
+checking host system type... i686-pc-linux-gnu
+updating cache ./config.cache
+creating ./config.status
+creating Makefile
+creating util/Makefile
+creating util/Transcoders/ICU/Makefile
+creating util/Transcoders/Iconv/Makefile
+creating util/Transcoders/Iconv390/Makefile
+creating util/Transcoders/Iconv400/Makefile
+creating util/Platforms/Makefile
+creating util/Compilers/Makefile
+creating util/MsgLoaders/InMemory/Makefile
+creating util/MsgLoaders/ICU/Makefile
+creating util/MsgLoaders/MsgCatalog/Makefile
+creating util/MsgLoaders/MsgFile/Makefile
+creating validators/DTD/Makefile
+creating framework/Makefile
+creating dom/Makefile
+creating parsers/Makefile
+creating internal/Makefile
+creating sax/Makefile
+creating ../obj/Makefile
+creating conf.h
+cat: ./conf.h.in: No such file or directory
+conf.h is unchanged
+
+Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
+Still cannot resolve it? Find out if someone else had the same problem before.
+Go to http://xml-archive.webweaving.org/xml-archive-xerces/
+
+In future, you may also directly type the following commands to create the Makefiles.
+
+export TRANSCODER=NATIVE
+export MESSAGELOADER=INMEM
+export USELIBWWW=0
+export CC=gcc
+export CXX=g++
+export CXXFLAGS=-O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER
+export CFLAGS=-O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER
+export LIBS= -lpthread
+configure
+
+If the result of the above commands look OK to you, go to the directory
+XERCESCROOT and type "gmake" to make the XERCES-C system.</source>
+
+<note>The error message concerning <code>conf.h</code>
+is NOT an indication of a problem. This code has been inserted to make it
+work on AS/400, but it gives this message which appears to be an error. The problem
+will be fixed in future.</note>
+
+            <p>So now you see what the wrapper script has actually been doing! It has
+            invoked <code>configure</code>
+            to create the Makefiles in the individual sub-directories, but in addition
+            to that, it has set a few environment variables to correctly configure
+            your compiler and compiler flags too.</p>
+
+            <p>Now that the Makefiles are all created, you are ready to do the actual build.</p>
+
+<source>gmake</source>
+
+            <p>Is that it? Yes, that's all you need to build &XercesCName;.</p>
+        </s3>
+
+        <s3 title="Building samples">
+            <p>Similarly, you can build the samples by giving the same commands in the
+            <code>samples</code> directory.</p>
+
+<source>cd $XERCESCROOT/samples
+runConfigure -plinux -cgcc -xg++
+gmake</source>
+
+            <p>The samples get built in the <code>bin</code> directory. Before you run the
+            samples, you must make sure that your library path is set to pick up
+            libraries from <code>$XERCESCROOT/lib</code>. If not, type the following to
+            set your library path properly.</p>
+
+<source>export LD_LIBRARY_PATH=$XERCESCROOT/lib:$LD_LIBRARY_PATH</source>
+            <p>You are now set to run the sample applications.</p>
+
+        </s3>
+   </s2>
+
+   <anchor name="BuildWinVisualAge"/>
+   <s2 title="Building &XercesCName; on Windows using Visual Age C++">
+        <p>A few unsupported projects are also packaged with &XercesCName;. Due to
+        origins of &XercesCName; inside IBM labs, we do have projects for IBM's
+        <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump> on Windows.
+        The following describes the steps you need to build &XercesCName; using
+        Visual Age C++.</p>
+
+        <s3 title="Building &XercesCName; library">
+            <p><em>Requirements:</em></p>
+
+            <ul>
+                <li>VisualAge C++ Version 4.0 with Fixpak 1:
+                <br/>Download the
+                <jump href="http://www-4.ibm.com/software/ad/vacpp/service/csd.html">Fixpak</jump>
+                from the IBM VisualAge C++ Corrective Services web page.</li>
+            </ul>
+
+            <p>To include the ICU library:</p>
+
+            <ul>
+                <li>ICU Build:
+                <br/>You should have the
+                <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/icuhtml/index.html">ICU Library</jump>
+                in the same directory as the &XercesCName; library. For example if
+                &XercesCName; is at the top level of the d drive, put the ICU
+                library at the top level of d e.g. d:/xml4c, d:/icu.</li>
+            </ul>
+
+            <p><em>Instructions:</em></p>
+            <ol>
+                <li>Change the directory to d:\xml4c\Projects\Win32</li>
+                <li>If a d:\xml4c\Project\Win32\VACPP40 directory does not exist, create it.</li>
+                <li>Copy the IBM VisualAge project file, <code>XML4C2X.icc</code>,
+                    to the VACPP40 directory.</li>
+                <li>From the VisualAge main menu enter the project file name and path.</li>
+                <li>When the build finishes the status bar displays this message: Last Compile
+                   completed Successfully with warnings on date.</li>
+            </ol>
+            <note>These instructions assume that you install in drive d:\.
+            Replace d with the appropriate drive letter.</note>
+        </s3>
+    </s2>
+
+
+    <anchor name="BuildOS2VisualAge"/>
+    <s2 title="Building on OS/2 using Visual Age C++">
+            <p>OS/2 is a favourite IBM PC platforms. The only
+            option in this platform is to use
+            <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump>.
+            Here are the steps you need to build &XercesCName; using
+            Visual Age C++ on OS/2.</p>
+            <s3 title="Building &XercesCName; library">
+                <p><em>Requirements:</em></p>
+
+                <ul>
+                    <li>VisualAge C++ Version 4.0 with Fixpak 1:
+                    <br/>Download the
+                    <jump href="http://www-4.ibm.com/software/ad/vacpp/service/csd.html">Fixpak</jump>
+                    from the IBM VisualAge C++ Corrective Services web page.</li>
+                </ul>
+
+                <p>To include the ICU library:</p>
+
+                <ul>
+                    <li>ICU Build:
+                    <br/>You should have the
+                    <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/icuhtml/index.html">ICU Library</jump>
+                    in the same directory as the &XercesCName; library. For example if
+                    &XercesCName; is at the top level of the d drive, put the ICU
+                    library at the top level of d e.g. d:/xml4c, d:/icu.</li>
+                </ul>
+
+                <p><em>Instructions</em></p>
+                <ol>
+                   <li>Change directory to d:\xml4c\Projects\OS2</li>
+                   <li>If a d:\xml4c\Project\OS2\VACPP40 directory does not exist, create it.</li>
+                   <li>Copy the IBM VisualAge project file, XML4C2X.icc, to the VACPP40 directory.</li>
+                   <li>From the VisualAge main menu enter the project file name and path.</li>
+                   <li>When the build finishes the status bar displays this message: Last Compile
+                       completed Successfully with warnings on date.</li>
+                </ol>
+                <note>These instructions assume that you install in drive d:\. Replace d with the
+                      appropriate drive letter.</note>
+            </s3>
+    </s2>
+
+    <anchor name="BuildAS400"/>
+    <s2 title="Building on AS/400">
+            <p>The following addresses the requirements and build of
+           &XercesCName; natively on the AS/400.
+            </p>
+            <s3 title="Building &XercesCName; library">
+                <p><em>Requirements:</em></p>
+
+                <ul>
+                    <li><code>QSHELL</code> interpreter installed (install base option 30, operating system)</li>
+                    <li>QShell Utilities,  PRPQ  5799-XEH</li>
+                    <li>ILE C++ for AS/400,  PRPQ 5799-GDW</li>
+                    <li>GNU facilities  (the gnu facilities are currently available by request
+                    only.  Send e-mail to <jump href="mailto:rchgo400@us.ibm.com">rchgo400@us.ibm.com</jump>)</li>
+                </ul>
+
+                <p><em>Recommendations:</em></p>
+
+                <ul>
+                <li>There are a couple of options when building the XML4C parser on AS/400.
+                For messaging support, you can use the in memory message option or the
+                message file support. For code page translation, you can use the AS/400
+                native <code>Iconv400</code> support or ICU. If you choose ICU, follow the instructions
+                to build the ICU service program with the ICU download. Those instructions
+                are not included here.</li>
+
+                <li>Currently we recommend that you take the options of <code>MsgFile</code> and
+                <code>Iconv400</code> (see below)</li>
+                </ul>
+
+                <p><em>Setup Instructions:</em></p>
+
+                <ul>
+                <li>Make sure that you have the requirements installed on your AS/400.
+                We highly recommend that you read the writeup that accompanies the gnu
+                facilities download.  There are install instructions as well as
+                information about how modules, programs and service programs can be
+                created in Unix-like fashion using gnu utilities.  Note that symbolic
+                links are use in the file system to point to actual AS/400 <code>*module</code>,
+                <code>*pgm</code> and <code>*srvpgm</code> objects in libraries.</li>
+                <li>Download the tar file  (unix version) to the AS/400
+                (using a mapped drive), and decompress and <code>untar</code> the source.
+                We have had difficulty with the tar command on AS/400. This is under
+                investigation.  If you have trouble, we recommend the following work
+                around:</li></ul>
+<source>
+qsh:
+gunzip -d &lt;tar file.gz&gt;
+pax -r -f &lt;uncompressed tar file&gt;</source>
+
+                <ul>
+                <li>Create AS400 target library. This library will be the target
+                for the resulting  modules and  &XercesCName; service program. You will
+                specify this library on the <code>OUTPUTDIR</code> environment variable
+                in step 4</li>
+                <li>Set up the following environment variables in your build process
+                (use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
+                </ul>
+<source>
+XERCESCROOT - &lt;the full path to your &XercesCName; sources&gt;
+PLATFORM  - 'OS400'
+MAKE   - '/usr/bin/gmake'
+OUTPUTDIR  - &lt;identifies target as400 library for *module, *pgm and *srvpgm objects&gt;
+ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source>
+
+                <ul>
+                <li>Add <code>QCXXN</code>, to your build process library list.
+                This results in the resolution of <code>CRTCPPMOD</code> used by the
+                <code>icc</code> compiler.</li>
+
+                <li>The runConfigure instruction below uses <code>'egrep'</code>.
+                This is not on the AS/400 but you can create it by doing the following:
+                <code>edtf '/usr/bin/egrep'</code> with the following source:</li>
+                </ul>
+
+<source>
+#!/usr/bin/sh
+/usr/bin/grep -e "$@"</source>
+
+<p>You may want to put the environment variables and library list
+setup instructions in a <code>CL</code> program so you will not forget these steps
+during your build.</p>
+
+<p><em>Configure</em></p>
+
+<p>To configure the make files for an AS/400 build do the following:</p>
+<source>
+qsh
+cd &lt;full path to &XercesCName;&gt;/src
+runConfigure -p os400 -x icc -c icc -m MsgFile -t Iconv400</source>
+
+<p>Troubleshooting:</p>
+<source>error: configure: error: installation or configuration problem:
+C compiler cannot create executables.</source>
+
+<p>If during <code>runConfigure</code> you see the above error message, it
+can mean one of two things. Either <code>QCXXN</code> is not on your library
+list  <em>OR</em> the <code>runConfigure</code> cannot create the temporary
+modules (<code>CONFTest1</code>, etc) it uses to test out the compiler
+options. The second reason happens because the test modules already exist
+from a previous run of <code>runConfigure</code>. To correct the problem,
+do the following:</p>
+<source>
+DLTMOD &lt;your OUTPUTDIR library&gt;/CONFT* and
+DLTPGM your &lt;OUTPUTDIR library&gt;/CONFT*</source>
+
+<p><em>Build</em></p>
+
+<source>
+qsh
+gmake -e</source>
+
+<p>The above gmake will result in a service program being created
+in your specified library and a symbolic link to that service program
+placed in &lt;path to &XercesCName;/lib&gt;. You can either bind your
+XML application programs directly to the parser's service program
+via the <code>BNDSRVPGM</code> option on the <code>CRTPGM</code> or
+<code>CRTSRVPGM</code> command  or you can specify a binding directory
+on your <code>icc</code>  command. To specify an archive file to bind to,
+use the  <code>-L, -l</code> binding options on icc.  An archive file
+on AS/400 is a binding directory. To create an archive file, use
+<code>qar</code> command.  (see the gnu facilities write up).
+</p>
+
+<p>
+After building the &XercesCName; service program, create a binding directory
+by doing the following (note, this binding directory is used when building
+the samples):</p>
+<source>
+qsh
+cd &lt;full path to &XercesCName;>/lib&gt;
+qar -cuv libxercesc1_1.a *.o
+command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/libxercesc1_1.a')
+command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
+
+
+<p><em>Troubleshooting:</em></p>
+<p>If you are on a V4R3 system, you will get a bind problem
+<code>'descriptor  QlgCvtTextDescToDesc not found'</code> using Iconv400.
+On V4R3 the system doesn't automatically pick up the <code>QSYS/QLGUSR</code> service
+program for you when resolving this function. This is not the case on V4R4.
+To fix this, you can either manually create the service program after creating
+all the resulting modules in your &lt;OUTPUTDIR&gt; library or you can create
+a symbolic link to a binding directory that points to  the <code>QLGUSR</code>
+service program and then specify  an additional <code>-L, -l</code> on the
+<code>EXTRA_LINK_OPTIONS</code> in <code>Makefile.incl</code>.
+See the <code>ln</code> and <code>qar</code> function in the gnu utilities.</p>
+
+<p>To build for transcoder ICU:</p>
+<ol>
+ <li>Make sure you have an <code>ICUROOT</code> path set up so that you can
+ find the ICU header files (usually <code>/usr/local</code>)</li>
+ <li>Make sure you have created a binding directory (symbolic link)
+ in the file system so that you can bind the &XercesCName; service program
+ to the ICU service program and specify that on the <code>EXTRA_LINK_OPTIONS</code>
+ in <code>src/Makefile.incl</code> (usually the default is a link
+ in <code>/usr/local/lib</code>).</li>
+</ol>
+
+<p><em>Creating AS400 XML parser message file:</em></p>
+<p>As specified earlier, the <code>-m</code> MsgFile support on the
+<code>runConfigure</code> enable the parser messages to be pulled from
+an AS/400 message file. To view the source for creating  the message file
+and the XML parser messages, see the following stream file:</p>
+<source>
+EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</source>
+
+<p>In the prolog of <code>CrtXMLMsgs</code> there are instructions to create
+the message file:</p>
+<ol>
+<li>Use the <code>CPYFRMSTMF</code> to copy the CL source to an AS/400 source
+physical file. Note that the target source file needs to have record length
+of about 200 bytes to avoid any truncation.</li>
+<li>Create the CL program to create the message file and add the various
+message descriptions</li>
+<li>Call the CL program, providing the name of the message file
+(use <code>QXMLMSG</code> as default) and a library  (this can be any
+library, including any product library in which you wish to embed
+the xml parser)</li>
+</ol>
+
+<p>Note that the &XercesCName; source code for resolving parser messages is
+using by default message file  <code>QXMLMSG, *LIBL</code>.
+If you want to change either the message file name or explicitly qualify the
+library to match your product needs, you must edit the following <code>.cpp</code>
+files prior to your build.</p>
+<source>
+&lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/MsgLoader.cpp
+&lt;full path to &XercesCName;&gt;/src/util/Platforms/OS400/OS400PlatformUtils.cpp</source>
+
+<p><em>Troubleshooting:</em></p>
+<p>If you are using the parser and are failing to get any  message text
+for error codes, it may be because of the <code>*LIBL</code> resolution
+of the message file.</p>
+</s3>
+
+<s3 title="Building Samples on AS/400">
+<source>
+qsh
+cd &lt;full path to &XercesCName;&gt;/samples
+runConfigure -p os400 -x icc -c icc
+gmake -e</source>
+
+<p><em>Troubleshooting:</em></p>
+<p>If you take a <code>'sed'</code> error, while trying to make the samples.
+This is an AS400 anomaly having to do with certain new line character and
+the <code>sed</code> function. A temporary work around is to use <code>EDTF</code>
+on the configure stream file (<code>../samples/configure</code>) and delete the
+following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
+</p>
+
+            </s3>
+    </s2>
+
+    <anchor name="BuildMac"/>
+    <s2 title="Building on Macintosh using CodeWarrior">
+
+        <s3 title="Building &XercesCName; library">
+            <p>The directions in this file cover installing and building
+            &XercesCName; and ICU under the MacOS  using CodeWarrior.</p>
+            <ol>
+                <li><em>Create a folder:</em>
+                    <br/>for the &XercesCName; and ICU distributions,
+                    the "src drop" folder </li>
+
+                <li><em>Download and uncompress:</em>
+                    <br/>the ICU and &XercesCName; source distribution
+                    <br/>the ICU and &XercesCName; binary distributions,
+                    for the documentation included </li>
+
+                <li><em>Move the new folders:</em>
+                    <br/>move the newly created &XercesCName; and icu124
+                    folders to the "src drop" folder.</li>
+
+                <li><em>Drag and drop:</em>
+                    <br/>the &XercesCName; folder into the "rename file" application located in
+                    the same folder as this readme.
+                    <br/>This is a MacPerl script that renames files that have
+                    names too long to fit in a HFS/HFS+ filesystem.
+                    It also searches through all of the source code and changes
+                    the #include statements to refer to the new file names.</li>
+
+                <li><em>Move the MacOS folder:</em>
+                    <br/>from the in the Projects folder to "src drop:&XercesCName;:Projects".</li>
+
+                <li><em>Open and build &XercesCName;:</em>
+                    <br/>open the CodeWarrior project file
+                    "src drop:&XercesCName;:Projects:MacOS:&XercesCName;:&XercesCName;"
+                    and build the &XercesCName; library.</li>
+
+                <li><em>Open and build ICU:</em>
+                    <br/>open the CodeWarrior project file
+                    "src drop:&XercesCName;:Projects:MacOS:icu:icu"
+                    and build the ICU library.</li>
+
+                <li><em>Binary distribution:</em>
+                <br/>If you wish, you can create projects for and build the rest of the tools and test
+                suites.  They are not needed if you just want to use &XercesCName;. I suggest that you
+                use the binary data files distributed with the binary distribution of ICU instead of
+                creating your own from the text data files in the ICE source distribution.</li>
+            </ol>
+
+            <p>There are some things to be aware of when creating your own
+            projects using &XercesCName;.</p>
+            <ol>
+                <li>You will need to link against both the ICU and &XercesCName; libraries.</li>
+                <li>The options "Always search user paths" and "Interpret DOS and Unix Paths" are
+                    very useful.  Some of the code won't compile without them set.</li>
+                <li>Most of the tools and test code will require slight modification to compile and run
+                    correctly (typecasts, command line parameters, etc), but it is possible to get
+                    them working correctly.</li>
+                <li>You will most likely have to set up the Access Paths.  The access paths in the
+                    &XercesCName; projects should serve as a good example.</li>
+            </ol>
+
+
+            <note>These instructions were originally contributed by
+            <jump href="mailto:jbellardo@alumni.calpoly.edu">J. Bellardo</jump>.
+            &XercesCName; has undergone many changes since these instructions
+            were written. So, these instructions are not upto date.
+            But it will give you a jump start if you are struggling to get it
+            to work for the first time. We will be glad to get your changes.
+            Please respond to <jump href="mailto:&XercesCEmailAddress;">
+            &XercesCEmailAddress;</jump> with your comments and corrections.</note>
+
+        </s3>
+    </s2>
+
+    <anchor name="BuildICU"/>
+    <s2 title="How to Build ICU">
+        <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
+        native encoding support and also using ICU where you get support for 100's
+        of encodings. ICU stands for International Components for Unicode and is an
+        open source distribution from IBM. You can get
+        <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
+        <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
+        or go to the ICU
+        <jump href="http://oss.software.ibm.com/icu/download/index.html">download page</jump>
+        directly.</p>
+        <s3 title="Buiding ICU for &XercesCName;">
+            <p>You can find generic instructions to build ICU in the ICU documentation.
+            What we describe below are the minimal steps needed to build ICU for &XercesCName;.
+            Not all ICU components need to be built to make it work with &XercesCName;.</p>
+
+            <note><em>Important:</em> Please remember that <em>ICU and
+            &XercesCName; must be built with the same compiler</em>,
+            preferably with the same version. You cannot for example,
+            build ICU with a threaded version of the xlC compiler and
+            build &XercesCName; with a non-threaded one.</note>
+        </s3>
+
+        <s3 title="Building ICU on Windows">
+            <p>To build ICU from its source, invoke the project
+            <code>\icu\source\allinone\allinone.dsw</code>
+            and build the sub-project labeled <code>all</code>.
+            </p>
+
+            <p>You must make sure that you are linking your application
+            with the &XercesCWindowsLib;.lib library and also make sure
+            that the associated &XercesCName; DLL is somewhere in your path. Note
+            that at runtime, your application will need the ICU data DLL called
+            <code>icudata.dll</code> which must also be available from your path
+            setting.</p>
+        </s3>
+
+        <anchor name="icu"/>
+        <s3 title="Building ICU on UNIX platforms">
+
+            <p>To build ICU on all UNIX platforms you at least need the
+            <code>autoconf</code> tool and GNU's <code>gmake</code> utility.</p>
+
+            <p>First make sure that you have defined the following
+            environment variables:</p>
+
+<source>export ICUROOT = &lt;icu_installdir&gt;</source>
+
+            <p>Next, go to the directory, the following commands will create
+            a shell script called <code>configure</code>: </p>
+
+<source>cd $ICUROOT
+cd source
+autoconf</source>
+
+            <p>Commands for specific UNIX platforms are different and are
+            described separately below.</p>
+
+            <p>You will get a more detailed description of the use of
+            configure in the ICU documentation. The differences lie in the
+            arguments passed to the configure script, which is a
+            platform-independent generated shell-script (through
+            <code>autoconf</code>) and is used to generate platform-specific
+            <code>Makefiles</code> from generic <code>Makefile.in</code> files.</p>
+
+            <p><em>For AIX:</em></p>
+
+            <p>Type the following:</p>
+<source>env CC="xlc_r -L/usr/lpp/xlC/lib" CXX="xlC_r -L/usr/lpp/xlC/lib"
+    C_FLAGS="-w -O" CXX_FLAGS="-w -O"
+configure --prefix=$ICUROOT
+gmake
+gmake install</source>
+            <p>The first line is different for different platforms as outlined below:</p>
+
+            <p><em>For Solaris and Linux:</em></p>
+
+
+<source>env CC="cc" CXX="CC" C_FLAGS="-w -O" CXX_FLAGS="-w -O"
+    ./configure --prefix=$ICUROOT</source>
+
+            <p><em>For HP-UX with the aCC compiler:</em></p>
+
+<source>env CC="cc" CXX="aCC" C_FLAGS="+DAportable -w -O"
+    CXX_FLAGS="+DAportable -w -O" ./configure --prefix=$ICUROOT</source>
+
+            <p><em>For HP-UX with the CC compiler:</em></p>
+
+<source>env CC="cc" CXX="CC" C_FLAGS="+DAportable -w -O"
+    CXX_FLAGS="+eh +DAportable -w -O" ./configure --prefix=$ICUROOT</source>
+
+        </s3>
+
+    </s2>
+
+    <anchor name="BuildCOM"/>
+    <s2 title="How to build XML for COM on Windows">
+
+        <p>To build the COM module for use with XML on Windows platforms, you
+        must first set up your machine appropriately with necessary tools and
+        software modules and then try to compile it. The end result is an additional
+        library that you can use along with the standard &XercesCName; for writing
+        VB templates or for use with IE 5.0 using JavaScript.</p>
+
+		<s3 title="Setting up your machine for COM">
+		<p>To build the COM project you will need to install the MS PlatformSDK.
+		Some of the header files we use don't come with Visual C++ 6.0. You may
+		download it from Microsoft's Website at <jump href="http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm">http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm</jump>
+		or directly FTP it from <jump href="ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe">ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe</jump>.</p>
+
+		<p>The installation is huge, but you don't need most of it. So you
+		may do a <em>custom install</em> by just selecting "Build Environment" and
+		choosing the required components. First select the top level Platform SDK.
+		Then click the down arrow and make all of the components unavailable. Next open the
+		"Build Environment" branch and select only the following items:</p>
+		<ul>
+		<li>Win32 Build Environment</li>
+		<li>COM Headers and Libraries</li>
+		<li>Internet Explorer Headers and Libraries</li>
+		</ul>
+
+		<p><em>Important:</em> When the installation is complete you need to update VC6's
+		include path to include <code>..\platformsdk\include\atl30</code>. You do this by
+		choosing "Tools -> Options -> Directories". This path
+		should be placed <ref>second</ref> after the normal PlatformSDK include.
+		You change the order of the paths by clicking the up and down arrows.</p>
+
+		<note>The order in which the directories appear on your path is important. Your
+		first include path should be <code>..\platformsdk\include</code>. The second one
+		should be <code>..\platformsdk\include\atl30</code>.</note>
+		</s3>
+
+		<s3 title="Building COM module for &XercesCName;">
+		<p>Once you have set up your machine, build &XercesCName; COM module
+		by choosing the project named 'xml4com' inside the workspace. Then select your
+		build mode to be <em>xml4com - Win32 Release MinDependency</em>. Finally build the
+		project. This will produce a DLL named <code>xerces-com.dll</code> which needs
+		to be present in your path (on local machine) before you can use it.</p>
+		</s3>
+
+		<s3 title="Testing the COM module">
+		<p>There are some sample test programs in the <code>test/COMTest</code>
+		directory which show examples of navigating and searching an XML tree
+		using DOM. You need to browse the HTML files in this directory using
+		IE 5.0. Make sure that your build has worked properly, specially the
+		registration of the ActiveX controls that happens in the final step.</p>
+		</s3>
+
+    </s2>
+
+
+    <anchor name="BuildDocs"/>
+    <s2 title="How to build the User Documentation?">
+
+        <p>The user documentation (this very page that you are reading
+        on the browser right now), was generated using an XML
+        application called StyleBook. This application makes use of
+        Xerces-J and Xalan to create the HTML file from the XML source
+        files. The XML source files for the documentation are part of
+        the &XercesCName; module. These files reside in the
+        <code>doc</code> directory.</p>
+
+        <p><em>Pre-requisites for building the user
+        documentation are:</em></p>
+
+        <ul>
+          <li>JDK 1.2.2 (or later).</li>
+          <li>Xerces-J (1.0.0 or later).</li>
+          <li>Xalan (0.19.3 or later)</li>
+          <li>Stylebook 1.0-b2</li>
+          <li>The Apache Style files (dtd's and .xsl files)</li>
+        </ul>
+
+        <p>Setup PATH to include the JDK 1.2.2 bin directory. Also setup
+        CLASSPATH environment variable as follows:</p>
+
+        <ul>
+
+          <li>Under Windows (assumes all jars are in '\jars'
+          directory:)<br/>
+          <code>CLASSPATH=\jars\stylebook-1.0-b2.jar;\jars\xalan.jar;\jars\xerces.jar</code></li>
+
+          <li>Under Unix's (assumes all jars are in '~/jars' directory):<br/>
+          <code>export CLASSPATH="~/jars/stylebook-1.0-b2.jar:~/jars/xalan.jar:~/jars/xerces.jar"</code></li>
+        </ul>
+
+        <p>Next, cd to the &XercesCName; source drop root directory,
+        and enter</p>
+
+        <ul>
+          <li>Under Windows:<br/>
+          <code>createDocs</code></li>
+          <li>Under Unix's:<br/>
+          <code>sh createDocs.bat</code></li>
+        </ul>
+
+        <p>This should generate the .html files in the 'doc/html'
+        directory.</p>
+
+        <p><em>If you are wondering where to get the three</em> <code>jar</code> <em>files referred above,
+        here is where you would find it.</em></p>
+
+        <ul>
+
+          <li>JDK 1.2.2 is available from <jump
+          href="http://java.sun.com/products/jdk/1.2/">http://java.sun.com/products/jdk/1.2/</jump></li>
+
+          <li>Xerces-J is available from <jump
+          href="http://xml.apache.org/dist/">http://xml.apache.org/dist/</jump>. Extract
+          the xerces.jar file from the binary drop and store it in the
+          'jars' directory as mentioned above.</li>
+
+          <li>Xalan is also available from <jump
+          href="http://xml.apache.org/dist/">http://xml.apache.org/dist/</jump>. Extract
+          the xalan.jar file from the 'jar' distribution that you just downloaded and
+          store it in the same 'jars' directory as mentioned above.</li>
+
+          <li>Getting to Stylebook is little more involved. You will
+          have to download one of the 'xml-stylebook' tar balls from
+          <jump
+          href="http://xml.apache.org/from-cvs/xml-stylebook">http://xml.apache.org/from-cvs/xml-stylebook/</jump>
+          and then extract the file:<br/>
+          <code>xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/><br/>
+
+          Under Unix's you may enter:<br/>
+          <code>gzip -d -c xml-stylebook_20000207231311.tar.gz | tar xf -
+          xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/>
+          to extract this file (in this gzip command, subsitute the tar file
+          name with the one you downloaded). Copy it to the 'jars' directory
+          as mentioned above.<br/><br/>Under Windows you may use 'WinZip' to
+          extract the jar file from the tar ball.</li>
+
+          <li>Lastly, the Apache Style (dtd's and .xsl) files reside in
+          the same 'stylebook' tar ball, as described above. The script
+          <code>createdocs.bat</code> assumes that these styles are installed
+          relative to where it is located in the
+          <code>../../xml-stylebook/styles/apachexml</code> directory. If
+          the directory structure on your build machine differs, you can
+          edit this script file to reflect the difference. To extractt the
+          Apache style files enter:<br/>
+          <code>cd &lt;parent of &XercesCName; source directory&gt;</code><br/>
+          <code>gzip -d -c xml-stylebook_20000207231311.tar.gz | tar xf -
+          xml-stylebook/styles</code></li>
+
+
+        </ul>
+
+    </s2>
+
+
+    <anchor name="PortingGuide"/>
+    <s2 title="I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?">
+
+      <p>All platform dependent code in &XercesCProjectName; has been
+      isolated to a couple of files, which should ease the porting
+      effort.  Here are the basic steps that should be followed to
+      port &XercesCProjectName;.</p>
+
+      <ol>
+
+        <li>The directory <code>src/util/Platforms</code> contains the
+        platform sensitive files while <code>src/util/Compilers</code> contains
+        all development environment sensitive files. Each operating
+        system has a file of its own and each development environment
+        has another one of its own too.
+
+        <br/>
+
+        As an example, the Win32 platform as a <code>Win32Defs.hpp</code> file
+        and the Visual C++ environment has a <code>VCPPDefs.hpp</code> file.
+        These files set up certain define tokens, typedefs,
+        constants, etc... that will drive the rest of the code to
+        do the right thing for that platform and development
+        environment. AIX/CSet have their own <code>AIXDefs.hpp</code> and
+        <code>CSetDefs.hpp</code> files, and so on. You should create new
+        versions of these files for your platform and environment
+        and follow the comments in them to set up your own.
+        Probably the comments in the Win32 and Visual C++ will be
+        the best to follow, since that is where the main
+        development is done.</li>
+
+        <li>Next, edit the file <code>XML4CDefs.hpp</code>, which is where all
+            of the fundamental stuff comes into the system. You will
+            see conditional sections in there where the above
+            per-platform and per-environment headers are brought in.
+            Add the new ones for your platform under the appropriate
+            conditionals.</li>
+
+        <li>Now edit <code>AutoSense.hpp</code>. Here we set canonical &XercesCProjectName;
+            internal <code>#define</code> tokens which indicate the platform and
+            compiler. These definitions are based on known platform
+            and compiler defines.
+            <br/>
+            <code>AutoSense.hpp</code> is included in <code>XML4CDefs.hpp</code> and the
+            canonical platform and compiler settings thus defined will
+            make the particular platform and compiler headers to be
+            the included at compilation.
+            <br/>
+            It might be a little tricky to decipher this file so be
+            careful. If you are using say another compiler on Win32,
+            probably it will use similar tokens so that the platform
+            will get picked up already using what is already there.</li>
+
+        <li>Once this is done, you will then need to implement a
+            version of the <ref>platform utilities</ref> for your platform.
+            Each operating system has a file which implements some
+            methods of the XMLPlatformUtils class, specific to that
+            operating system. These are not terribly complex, so it
+            should not be a lot of work. The Win32 verions is called
+            <code>Win32PlatformUtils.cpp</code>, the AIX version is
+            <code>AIXPlatformUtils.cpp</code> and so on. Create one for your
+            platform, with the correct name, and empty out all of the
+            implementation so that just the empty shells of the
+            methods are there (with dummy returns where needed to make
+            the compiler happy.) Once you've done that, you can start
+            to get it to build without any real implementation.</li>
+
+        <li>Once you have the system building, then start
+            implementing your own platform utilties methods. Follow
+            the comments in the Win32 version as to what they do, the
+            comments will be improved in subsequent versions, but they
+            should be fairly obvious now. Once you have these
+            implementations done, you should be able to start
+            debugging the system using the demo programs.</li>
+      </ol>
+      <p>That is the work required in a nutshell!</p>
+    </s2>
+
+
+    <anchor name="WCharT"/>
+    <s2 title="What should I define XMLCh to be?">
+
+        <p>The answer is 'it depends'. We will mention some of the
+        quirks that affect this decision. Hopefully, after reading
+        whats below, you will be able to best decide what the right
+        definition should be. We could not however, resist making a
+        suggestion. Some observations first:</p>
+
+        <ul>
+          <li>Xerces-C uses XMLCh as the fundamental type to hold
+          one Unicode character as, all processing inside Xerces-C
+          happens in Unicode.</li>
+
+          <li>Most modern C++ compilers today provide 'wchar_t' as a
+          fundamental type representing a 'wide character'. Most of them
+          define it in using a typedef. This typedef definition is not
+          consistent on all the platforms that we have come across.</li>
+
+          <li>The size of wchar_t varies among the various compilers. Its
+          either 16-bit or 32-bit. Fortunately, this only affects how
+          much memory you need, to process the XML data, while everything
+          is still in memory.</li>
+
+          <li>Again on most platforms wchar_t represents a unicode
+          character. HPUX, is one exception to this, that we know,
+          where wchar_t <em>does not</em> represent a unicode
+          character, rather its a native wide character.</li>
+
+          <li>Lastly, most OS's/compilers provide a system library to
+          manipulate wide character strings taking wchar_t and
+          wchar_t* arguments. Most applications which support
+          wide-characters make these system calls.</li>
+        </ul>
+
+        <p>Our suggestion is:</p>
+
+        <p>If your compiler defines wchar_t to represent a unicode
+        character, then define XMLCh to be wchar_t.  Such a definition
+        will allow you to pass the data returned by the parser (all
+        api's return XMLCh, which is wchar_t) directly to the
+        wide-character system api's for i/o or manipulation. This is
+        most efficient and convenient.</p>
+
+        <p>However, if your compiler defines wchar_t to be just a
+        wide-character which is not Unicode, then define XMLCh to be
+        unsigned short. For the Xerces-C parser, XMLCh is always
+        Unicode. By defining it to be unsigned short and not wchar_t,
+        the compiler will not let you accidently pass what is
+        returned, via the parser API's, directly to the wide-character
+        library calls. To use the wide-character library of functions,
+        you will have to in your application, call some transcoding
+        function which will convert it from Unicode to the native
+        wide-character form. Again, if your application desires for
+        whatever reason, you may define XMLCh to be 'unsigned
+        long'. By doing so, you have just doubled the memory required
+        to process the XML file.</p>
+
+        <p>Hopefully, you will agree that the answer 'it depends' was
+        the right one.</p>
+    </s2>
+
+
+    <anchor name="BuildUsingLibWWW"/>
+    <s2 title="How can I generate Xerces-C binaries which includes the
+               sample NetAccessor implementation using Libwww?">
+
+      <p>This sample implementation has only been minimally tested
+      only under Windows NT using Libwww 5.2.8. We have not stress
+      tested our implementation can cannot guarantee that there are no
+      memory leaks. The error reporting is also not adequate. Further,
+      it only handles HTTP style URL's. As you can see, this
+      implementation is only for illustrative purposes. Much more work
+      is required to have a robust cross-platform implementation. We
+      would welcome any volunteers who would contribute code to make
+      this happen on various platforms.</p>
+
+      <p>The software that you need are:</p>
+      <ul>
+        <li>You need the &XercesCName; source archive for Windows.</li>
+        <li>LibWWW 5.2.8. Win32 binaries are available at: <jump
+        href="http://www.idm.ru/libwww.htm">http://www.idm.ru/libwww.htm</jump>.
+        Source archives and other details on LibWWW are available at <jump
+        href="http://www.w3.org/Library/">http://www.w3.org/Library/</jump>.</li>
+      </ul>
+
+      <p>All required changes in Xerces-C are restricted to the Project file
+      settings for the XercesLib. To simplify, we will make certain assumptions
+      about how LibWWW binaries (.lib) and header files are installed on your
+      machine.</p>
+
+     <ol>
+
+       <li>First generate all the LibWWW binaries by using the project
+       file supplied. Create a top level (say) <code>\libWWW</code>
+       directory on the same disk drive where you installed the
+       Xerces-C sources.  Copy all the <code>.lib</code> files to
+       <code>\libWWW\lib</code> directory. Next, copy all the
+       <code>.dll</code> files to <code>\libWWW\bin</code> directory
+       and all the header (<code>*.h</code>) files to
+       <code>\libWWW\include</code> directory.</li>
+
+       <li>Next make the following changes to the Xerces-C lib project
+       settings. Invoke the project settings dialog box.</li>
+
+       <ol>
+         <li>In the 'C/C++ : Preprocessor : Preprocessor definitions' add
+         <code>XML_USE_NETACCESSOR_LIBWWW</code></li>
+
+         <li>In the 'C/C++ : Preprocessor : Additional include directories' add
+         <code>\libWWW\include</code>.</li>
+
+       </ol>
+
+       <li>Next, rather than listing all the 20 some LibWWW .lib files in the
+       link settings, add them as external files to the XercesLib project.
+       Right-Click on 'XercesLib files' and choose the 'Add Files to Project'
+       menu item. Next choose all the *.lib files in \libWWW\lib directory and
+       press 'ok'.</li>
+
+       <li>Next, create a new sub-folder in XercesLib:util folder, by
+       right-clicking on 'util' and choosing 'New Folder'. Call it 'libWWW'.</li>
+
+       <li>Add netaccessor files into this 'libWWW' folder again, by
+       right-clicking on 'libWWW' folder and choosing 'Add Files to
+       Folder'.  Choose the four files in
+       <code>&lt;XercesCRoot&gt;\src\util\NetAccessors\libWWW</code>
+       directory.  These files are: <code>BinURLInputStream.[ch]pp and
+       LibWWWNetAccessor.[ch]pp</code>.</li>
+
+       <li>Rebuild the Xerces-C library.</li>
+
+     </ol>
+
+     <p>Make sure you have <code>\libWWW\bin</code> in your
+     <code>PATH</code> environment variable, before you run the
+     samples and refer to a XML file containing HTTP URL's to remote
+     resources.</p>
+
+    </s2>
+
+
+    <anchor name="LookForHelp"/>
+    <s2 title="Where can I look for more help?">
+        <p>If you have read this page, followed the instructions, and
+        still cannot resolve your problem(s), there is more help. You
+        can find out if others have
+        solved this same problem before you, by checking the
+        <jump href="http://xml-archive.webweaving.org/xml-archive-xerces/">
+        &XercesCProjectName; mailing list archives</jump>.</p>
+
+        <p>If all else fails, you may ask for help by subscribing to the
+        <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>.</p>
+    </s2>
+
+</s1>

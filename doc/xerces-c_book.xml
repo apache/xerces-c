@@ -7,7 +7,7 @@
   <separator/>
   <document id="index"       label="Readme"       source="readme.xml"     />
   <document id="install"     label="Installation" source="install.xml"    />
-  <document id="build"       label="Build"        source="build.xml"      />
+  <document id="build"       label="Build"        source="buildc.xml"      />
 
   <separator/>
   <document id="api"         label="API Docs"     source="apidocs.xml"    />
