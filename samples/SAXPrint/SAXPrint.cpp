@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/10/29 17:02:57  tng
+ * Fix typo in samples.
+ *
  * Revision 1.17  2001/10/25 15:18:33  tng
  * delete the parser before XMLPlatformUtils::Terminate.
  *
@@ -174,7 +177,7 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 static void usage()
 {
     cout << "\nUsage:\n"
-            "    SAX2Print [options] <XML file>\n\n"
+            "    SAXPrint [options] <XML file>\n\n"
             "This program invokes the SAX Parser, and then prints the\n"
             "data returned by the various SAX handlers for the specified\n"
             "XML file.\n\n"

@@ -83,7 +83,7 @@
 static void usage()
 {
     cout << "\nUsage:\n"
-            "    IDOMCount [options] <XML file> | List file>\n\n"
+            "    IDOMCount [options] <XML file | List file>\n\n"
             "This program invokes the IDOM parser, builds the DOM tree,\n"
             "and then prints the number of elements found in each XML file.\n\n"
             "Options:\n"

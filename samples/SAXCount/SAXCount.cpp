@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.19  2001/10/29 17:02:57  tng
+* Fix typo in samples.
+*
 * Revision 1.18  2001/10/25 15:18:33  tng
 * delete the parser before XMLPlatformUtils::Terminate.
 *
@@ -138,7 +141,7 @@
 void usage()
 {
     cout << "\nUsage:\n"
-            "    SAXCount [options] <XML file> | List file>\n\n"
+            "    SAXCount [options] <XML file | List file>\n\n"
             "This program invokes the SAX Parser, and then prints the\n"
             "number of elements, attributes, spaces and characters found\n"
             "in each XML file, using SAX API.\n\n"

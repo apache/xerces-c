@@ -1,6 +1,6 @@
 
 Usage:
-    SAXCount [options] <XML file> | List file>
+    SAXCount [options] <XML file | List file>
 
 This program invokes the SAX Parser, and then prints the
 number of elements, attributes, spaces and characters found
@@ -22,7 +22,7 @@ personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
 personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
 
 Usage:
-    SAX2Print [options] <XML file>
+    SAXPrint [options] <XML file>
 
 This program invokes the SAX Parser, and then prints the
 data returned by the various SAX handlers for the specified
@@ -162,7 +162,7 @@ The parser has intrinsic support for the following encodings:
 
 </personnel>
 Usage:
-    SAX2Count [options] <XML file> | List file>
+    SAX2Count [options] <XML file | List file>
 
 This program invokes the SAX2XMLReader, and then prints the
 number of elements, attributes, spaces and characters found
@@ -385,7 +385,7 @@ attributes in the given XML file.
 personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 
 Usage:
-    DOMCount [options] <XML file> | List file>
+    DOMCount [options] <XML file | List file>
 
 This program invokes the DOM parser, builds the DOM tree,
 and then prints the number of elements found in each XML file.
@@ -562,7 +562,7 @@ The parser has intrinsic support for the following encodings:
 
 
 Usage:
-    IDOMCount [options] <XML file> | List file>
+    IDOMCount [options] <XML file | List file>
 
 This program invokes the IDOM parser, builds the DOM tree,
 and then prints the number of elements found in each XML file.

@@ -81,7 +81,7 @@
 void usage()
 {
     cout << "\nUsage:\n"
-            "    DOMCount [options] <XML file> | List file>\n\n"
+            "    DOMCount [options] <XML file | List file>\n\n"
             "This program invokes the DOM parser, builds the DOM tree,\n"
             "and then prints the number of elements found in each XML file.\n\n"
             "Options:\n"
