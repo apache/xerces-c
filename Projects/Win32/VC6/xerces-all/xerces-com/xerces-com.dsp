@@ -51,17 +51,17 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1D.lib /nologo /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\xml4com\Debug/xerces14-com.dll" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1D.lib /nologo /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\xml4com\Debug/xerces15-com.dll" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
 TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces14-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces14-com.dll
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces15-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces15-com.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_4D.dll "$(TargetDir)"
-	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_4D.dll "$(TargetDir)"
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_5D.dll "$(TargetDir)"
+	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_5D.dll "$(TargetDir)"
 	regsvr32 /s /c "$(TargetPath)" 
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
 	
@@ -90,22 +90,22 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency/xerces14-com.dll" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency/xerces15-com.dll" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
 TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
-TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces14-com.dll
-InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces14-com.dll
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces15-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces15-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_4.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_4.dll $(TargetDir) \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_5.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_5.dll $(TargetDir) \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	
 
-"$(TargetDir)\xerces-c_1_4.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(TargetDir)\xerces-c_1_5.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"

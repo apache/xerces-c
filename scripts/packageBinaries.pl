@@ -28,11 +28,11 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_4_0");
-    print (" -o \$HOME/xerces-c_1_4_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_5_0");
+    print (" -o \$HOME/xerces-c_1_5_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src_1_4_0");
-    print (" -o\\xerces-c_1_4_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src_1_5_0");
+    print (" -o\\xerces-c_1_5_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -545,7 +545,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         psystem ("gmake");       # This will take a long time!
         psystem ("gmake install"); # Make this separate since this breaks on Solaris
 
-        # Please check if the following needs any change in Version 1.4
+        # Please check if the following needs any change in Version 1.5
         # For the antiquated CC compiler under HPUX, we need to invoke
         # gmake one extra time to generate the .cnv files.
         # if ( ($platform =~ m/hp-/i) && ($opt_x eq 'CC') ) {

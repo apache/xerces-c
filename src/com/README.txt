@@ -27,7 +27,7 @@ The following lines would create an instance of a Xerces parser:
 Dim xmlparser as new Xerces.DOMDocument
 Dim xmlparser as new DOMDocument
 Set object = CreateObject("Xerces.DOMDocument") 
-set object = CreateObject("Xerces.DOMDocument.1.4")
+set object = CreateObject("Xerces.DOMDocument.1.5")
 
 If you leave both MSXML and Xerces in the same project, you may need to disambiguate interfaces by prepending MSXML or Xerces.
 
