@@ -907,7 +907,7 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
     }
 
     // If targetLen is not enough then buffer overflow might occur
-    if (err == U_BUFFER_OVERFLOW_ERROR)
+    if ((err == U_BUFFER_OVERFLOW_ERROR) || (err == U_STRING_NOT_TERMINATED_WARNING))
     {
         //
         //  Reset the error, delete the old buffer, allocate a new one,
@@ -936,8 +936,6 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
         return 0;
     }
 
-    // Cap it off and return
-    retBuf[targetCap] = 0;
     return retBuf;
 }
 
@@ -1010,7 +1008,7 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode,
     }
 
     // If targetLen is not enough then buffer overflow might occur
-    if (err == U_BUFFER_OVERFLOW_ERROR)
+    if ((err == U_BUFFER_OVERFLOW_ERROR) || (err == U_STRING_NOT_TERMINATED_WARNING))
     {
         //
         //  Reset the error, delete the old buffer, allocate a new one,
@@ -1039,8 +1037,6 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode,
         return 0;
     }
 
-    // Cap it off and return
-    retBuf[targetCap] = 0;
     return retBuf;
 }
 
