@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/19 00:58:07  roddey
+ * Update to support new ICU 1.4 release.
+ *
  * Revision 1.6  1999/12/18 00:22:32  roddey
  * Changes to support the new, completely orthagonal, transcoder architecture.
  *
@@ -88,20 +91,12 @@
 #include <util/TranscodingException.hpp>
 #include "ICUTransService.hpp"
 #include <string.h>
-#include <uloc.h>
-#include <unicode.h>
-#include <ucnv.h>
-#include <ustring.h>
+#include <unicode/uloc.h>
+#include <unicode/unicode.h>
+#include <unicode/ucnv.h>
+#include <unicode/ustring.h>
 
 
-
-// ---------------------------------------------------------------------------
-//  ICUTransService: Public, static methods
-// ---------------------------------------------------------------------------
-void ICUTransService::setICUPath(const char* const pathToSet)
-{
-    uloc_setDataDirectory(pathToSet);
-}
 
 
 // ---------------------------------------------------------------------------
@@ -200,9 +195,9 @@ bool ICUTransService::isSpace(const XMLCh toCheck) const
 XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder()
 {
     //
-    //  Try to create a default converter. If it fails, return a null pointer
-    //  which will basically cause the system to give up because we really can't
-    //  do anything without one.
+    //  Try to create a default converter. If it fails, return a null
+    //  pointer which will basically cause the system to give up because
+    //  we really can't do anything without one.
     //
     UErrorCode uerr = U_ZERO_ERROR;
     UConverter* converter = ucnv_open(NULL, &uerr);

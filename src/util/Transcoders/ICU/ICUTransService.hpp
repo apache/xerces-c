@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/19 00:58:07  roddey
+ * Update to support new ICU 1.4 release.
+ *
  * Revision 1.3  1999/12/18 00:22:32  roddey
  * Changes to support the new, completely orthagonal, transcoder architecture.
  *
@@ -82,12 +85,6 @@ struct UConverter;
 class XMLUTIL_EXPORT ICUTransService : public XMLTransService
 {
 public :
-    // -----------------------------------------------------------------------
-    //  Public, static methods
-    // -----------------------------------------------------------------------
-    static void setICUPath(const char* const pathToSet);
-
-
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------

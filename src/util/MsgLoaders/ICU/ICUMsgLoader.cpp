@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/19 00:58:38  roddey
+ * Update to support new ICU 1.4 release.
+ *
  * Revision 1.2  1999/11/19 21:24:03  aruna1
  * incorporated ICU 1.3.1 related changes int he file
  *
@@ -99,26 +102,6 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  toLoad) :
     fBundle(0)
     , fBundleType((XMLCh*)toLoad)
 {
-    //
-    //  Use the platform util's path to figure out where the resource bundles
-    //  are. We keep them in an NLS directory underneath the DLL/Lib path.
-    //
-    const unsigned int maxChars = 4095;
-    char tmpPath[maxChars + 1];
-    strncpy(tmpPath, XMLPlatformUtils::fgLibLocation, maxChars);
-
-    // Now copy the relative path part onto it
-    strncat(tmpPath, "NLS//ICU//", maxChars);
-
-    if (toLoad == 0)
-        strncat(tmpPath, "XMLExceptMsgs", maxChars);
-    else if (toLoad == 0)
-        strncat(tmpPath, "XMLErrors", maxChars);
-    else
-    {
-        // <TBD> Need to do something here. Panic call?
-    }
-
     // Ok, lets try to create the bundle now
     UErrorCode err = U_ZERO_ERROR;
     fBundle = new ResourceBundle(tmpPath, err);
