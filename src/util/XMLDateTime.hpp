@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/12 20:36:54  peiyongz
+ * SchemaDateTimeException defined
+ *
  * Revision 1.2  2001/11/09 20:41:45  peiyongz
  * Fix: compilation error on Solaris and AIX.
  *
@@ -72,7 +75,7 @@
 #include <util/XMLNumber.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
-#include <util/RuntimeException.hpp>
+#include <util/SchemaDateTimeException.hpp>
 
 class XMLUTIL_EXPORT XMLDateTime : public XMLNumber
 {
@@ -337,8 +340,8 @@ void XMLDateTime::assertBuffer() const
     if ( ( !fBuffer )            || 
          ( fBuffer[0] == chNull ) )
     {
-        ThrowXML(RuntimeException, XMLExcepts::SubGrpComparator_NGR);
-        //" buffer not set properly"
+        ThrowXML(SchemaDateTimeException
+               , XMLExcepts::DateTime_Assert_Buffer_Fail);
     }
 
 }

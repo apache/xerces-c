@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.50  2001/11/12 20:36:54  peiyongz
+# SchemaDateTimeException defined
+#
 # Revision 1.49  2001/11/07 19:16:03  peiyongz
 # DateTime Port
 #
@@ -347,6 +350,7 @@ UTIL_CPP_PUBHEADERS = \
     RefStackOf.hpp \
     RefVectorOf.hpp \
     RuntimeException.hpp \
+    SchemaDateTimeException.hpp \
     StringPool.hpp \
     XMLStringTokenizer.hpp \
     TransENameMap.hpp \

@@ -305,11 +305,42 @@ public :
       , XPath_InvalidChar                  = 294
       , XPath_TokenNotSupported            = 295
       , XPath_FindSolution                 = 296
-      , E_HighBounds                       = 297
-      , W_LowBounds                        = 298
-      , W_HighBounds                       = 299
-      , F_LowBounds                        = 300
-      , F_HighBounds                       = 301
+      , DateTime_Assert_Buffer_Fail        = 297
+      , DateTime_dt_missingT               = 298
+      , DateTime_gDay_invalid              = 299
+      , DateTime_gMth_invalid              = 300
+      , DateTime_gMthDay_invalid           = 301
+      , DateTime_dur_Start_dashP           = 302
+      , DateTime_dur_noP                   = 303
+      , DateTime_dur_DashNotFirst          = 304
+      , DateTime_dur_inv_b4T               = 305
+      , DateTime_dur_NoTimeAfterT          = 306
+      , DateTime_dur_NoElementAtAll        = 307
+      , DateTime_date_incomplete           = 308
+      , DateTime_date_invalid              = 309
+      , DateTime_time_incomplete           = 310
+      , DateTime_time_invalid              = 311
+      , DateTime_ms_noDigit                = 312
+      , DateTime_ym_incomplete             = 313
+      , DateTime_ym_invalid                = 314
+      , DateTime_year_tooShort             = 315
+      , DateTime_year_leadingZero          = 316
+      , DateTime_ym_noMonth                = 317
+      , DateTime_tz_noUTCsign              = 318
+      , DateTime_tz_stuffAfterZ            = 319
+      , DateTime_tz_invalid                = 320
+      , DateTime_year_zero                 = 321
+      , DateTime_mth_invalid               = 322
+      , DateTime_day_invalid               = 323
+      , DateTime_hour_invalid              = 324
+      , DateTime_min_invalid               = 325
+      , DateTime_second_invalid            = 326
+      , DateTime_tz_hh_invalid             = 327
+      , E_HighBounds                       = 328
+      , W_LowBounds                        = 329
+      , W_HighBounds                       = 330
+      , F_LowBounds                        = 331
+      , F_HighBounds                       = 332
     };
 
 };

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/12 20:37:57  peiyongz
+ * SchemaDateTimeException defined
+ *
  * Revision 1.1  2001/11/07 19:18:52  peiyongz
  * DateTime Port
  *
@@ -125,10 +128,6 @@ int DateTimeValidator::compare(const XMLCh* const value1
         return -1; // revisit after implement compareDates()      
     }
 
-}
-
-void DateTimeValidator::initializeValues()
-{
 }
 
 void DateTimeValidator::assignAdditionalFacet( const XMLCh* const key
@@ -260,7 +259,7 @@ void DateTimeValidator::checkContent(const XMLCh* const content
                 ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
         }
     }
-    catch ( RuntimeException e ) 
+    catch (...) 
     {
             ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
             // new error message needed here

@@ -203,6 +203,7 @@ public :
 	static const XMLCh fgParseException_Name[];
 	static const XMLCh fgInvalidDatatypeFacetException_Name[];
 	static const XMLCh fgInvalidDatatypeValueException_Name[];
+	static const XMLCh fgSchemaDateTimeException_Name[];
     static const XMLCh fgXPathException_Name[];
 
     static const XMLCh fgNegINFString[];

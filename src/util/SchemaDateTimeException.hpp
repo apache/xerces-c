@@ -57,96 +57,20 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.2  2001/11/12 20:37:57  peiyongz
+ * Revision 1.1  2001/11/12 20:36:54  peiyongz
  * SchemaDateTimeException defined
  *
- * Revision 1.1  2001/11/07 19:18:52  peiyongz
- * DateTime Port
  *
  */
 
-#if !defined(DATETIME_VALIDATOR_HPP)
-#define DATETIME_VALIDATOR_HPP
 
-#include <validators/datatype/AbstractNumericFacetValidator.hpp>
-#include <util/XMLDateTime.hpp>
+#if !defined(SCHEMA_DATETIME_EXCEPTION_HPP)
+#define SCHEMA_DATETIME_EXCEPTION_HPP
 
-class VALIDATORS_EXPORT DateTimeValidator : public AbstractNumericFacetValidator
-{
-public:
-
-    // -----------------------------------------------------------------------
-    //  Public dtor
-    // -----------------------------------------------------------------------
-	/** @name Constructor. */
-    //@{
-
-    virtual ~DateTimeValidator();
-
-	//@}
-
-	virtual void validate(const XMLCh* const content);
-
-    virtual int  compare(const XMLCh* const value1
-                       , const XMLCh* const value2);
-
-protected:
-
-    // -----------------------------------------------------------------------
-    //  ctor used by derived class
-    // -----------------------------------------------------------------------
-    DateTimeValidator(DatatypeValidator*            const baseValidator
-                    , RefHashTableOf<KVStringPair>* const facets
-                    , const int                           finalSet
-                    , const ValidatorType                 type);
-
-    //
-    // Abstract interface
-    //
-
-    virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
-
-    virtual void inheritAdditionalFacet();
-
-    virtual void checkAdditionalFacetConstraints() const;
-
-    virtual void checkAdditionalFacetConstraintsBase() const;
-
-    virtual int  compareValues(const XMLNumber* const lValue
-                             , const XMLNumber* const rValue);
-
-    virtual void checkContent(const XMLCh* const content
-                            , bool               asBase);
+#include <util/XercesDefs.hpp>
+#include <util/XMLException.hpp>
 
 
-    virtual void  setMaxInclusive(const XMLCh* const);
-
-    virtual void  setMaxExclusive(const XMLCh* const);
-
-    virtual void  setMinInclusive(const XMLCh* const);
-
-    virtual void  setMinExclusive(const XMLCh* const);
-
-    virtual void  setEnumeration();
-
-protected:
-
-    // -----------------------------------------------------------------------
-    //  helper interface: to be implemented/overwritten by derived class  
-    // -----------------------------------------------------------------------
-    virtual XMLDateTime*   parse(const XMLCh* const) = 0;
-
-    // to be overwritten by duration
-    virtual int            compareDates(const XMLDateTime* const lValue
-                                      , const XMLDateTime* const rValue
-                                      , bool                     strict);
-
-};
-
-/**
-  * End of file DateTimeValidator.hpp
-  */
+MakeXMLException(SchemaDateTimeException, XMLUTIL_EXPORT)
 
 #endif
-

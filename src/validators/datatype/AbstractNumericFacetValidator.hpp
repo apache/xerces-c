@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/12 20:37:57  peiyongz
+ * SchemaDateTimeException defined
+ *
  * Revision 1.1  2001/10/01 16:13:56  peiyongz
  * DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
  *
@@ -123,8 +126,6 @@ protected:
     virtual void  setMinExclusive(const XMLCh* const) = 0;
 
     virtual void  setEnumeration() = 0;
-
-    virtual void  initializeValues() {};
 
     static const int INDETERMINATE;
 

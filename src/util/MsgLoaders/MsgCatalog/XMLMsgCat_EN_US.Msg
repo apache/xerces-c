@@ -675,5 +675,36 @@ $set 3
 294  Invalid character following '.' in xpath
 295  XPath token not supported
 296  Find a solution!
+297  buffer not initialized yet!
+298  'T' is missing! '{0}' 
+299  invalid gDay! '{0}' 
+300  invalid gMonth! '{0}' 
+301  invalid gMonthDay! '{0}' 
+302  Duration shall start with '-' or 'P'! '{0}' 
+303  Duration shall always have 'P'! '{0}' 
+304  '-' can only appear at first! '{0}' 
+305  Duration has invalid stuff before 'T'! '{0}' 
+306  Duration has no time elements after 'T'! '{0}' 
+307  Duration shall have at least element ! '{0}' 
+308  Imcomplete Date ! '{0}' 
+309  Invalid Date ! '{0}' 
+310  Imcomplete Time ! '{0}' 
+311  Invalid Time ! '{0}' 
+312  ms shall be present once '.' is present ! '{0}' 
+313  Imcomplete YearMonth! '{0}' 
+314  Year separator is missing or misplaced ! '{0}' 
+315  Year must have 'CCYY' format ! '{0}' 
+316  Invalid leading zero in year! '{0}' 
+317  no month in YearMonth ! '{0}' 
+318  TimeZone is expected ! '{0}' 
+319  Expecting nothing after 'Z'! '{0}' 
+320  Invalid TimeZone! '{0}' 
+321  The year (0000) is an illegal year value! '{0}' 
+322  The month must have values 1 to 12! '{0}' 
+323  The day must have values 1 to 31! '{0}' 
+324  Hour must have values 0-23! '{0}' 
+325  Minute must have values 0-59! '{0}' 
+326  Second must have values 0-60! '{0}' 
+327  Minute must have values 0-59! '{0}' 
 
 

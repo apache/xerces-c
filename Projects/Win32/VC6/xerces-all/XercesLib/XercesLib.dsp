@@ -588,6 +588,10 @@ SOURCE=..\..\..\..\..\src\util\RuntimeException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\SchemaDateTimeException.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\StringPool.cpp
 # End Source File
 # Begin Source File

@@ -761,6 +761,15 @@ const XMLCh XMLUni::fgInvalidDatatypeValueException_Name[] =
     ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+const XMLCh XMLUni::fgSchemaDateTimeException_Name[] =
+{
+        chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a
+    ,   chLatin_D, chLatin_a, chLatin_t, chLatin_e
+    ,   chLatin_T, chLatin_i, chLatin_m, chLatin_e
+    ,   chLatin_E, chLatin_x, chLatin_c, chLatin_e
+    ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
 const XMLCh XMLUni::fgXPathException_Name[] =
 {
         chLatin_X, chLatin_P, chLatin_a, chLatin_t, chLatin_h, chLatin_E

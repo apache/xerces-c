@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/12 20:37:57  peiyongz
+ * SchemaDateTimeException defined
+ *
  * Revision 1.3  2001/10/16 16:29:34  tng
  * Schema: Fix Typo
  *
@@ -156,7 +159,6 @@ AbstractNumericFacetValidator::AbstractNumericFacetValidator(
 //
 void AbstractNumericFacetValidator::init(RefVectorOf<XMLCh>* const enums)
 {
-    initializeValues();
 
     fStrEnumeration = enums; // save the literal value
     Janitor<RefVectorOf<XMLCh> >    janStrEnum(fStrEnumeration);

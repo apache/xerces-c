@@ -689,6 +689,37 @@
             <Message Id="XPath_InvalidChar" Text="Invalid character following '.' in xpath"/>
             <Message Id="XPath_TokenNotSupported" Text="XPath token not supported"/>
             <Message Id="XPath_FindSolution" Text="Find a solution!"/>
+            <Message Id="DateTime_Assert_Buffer_Fail" Text="buffer not initialized yet!"/>
+            <Message Id="DateTime_dt_missingT"        Text="'T' is missing! '{0}' "/>
+            <Message Id="DateTime_gDay_invalid"       Text="invalid gDay! '{0}' "/>
+            <Message Id="DateTime_gMth_invalid"      Text="invalid gMonth! '{0}' "/>
+            <Message Id="DateTime_gMthDay_invalid"   Text="invalid gMonthDay! '{0}' "/>
+            <Message Id="DateTime_dur_Start_dashP"    Text="Duration shall start with '-' or 'P'! '{0}' "/>
+            <Message Id="DateTime_dur_noP"            Text="Duration shall always have 'P'! '{0}' "/>
+            <Message Id="DateTime_dur_DashNotFirst"   Text="'-' can only appear at first! '{0}' "/>
+            <Message Id="DateTime_dur_inv_b4T"        Text="Duration has invalid stuff before 'T'! '{0}' "/>
+            <Message Id="DateTime_dur_NoTimeAfterT"   Text="Duration has no time elements after 'T'! '{0}' "/>
+            <Message Id="DateTime_dur_NoElementAtAll" Text="Duration shall have at least element ! '{0}' "/>
+            <Message Id="DateTime_date_incomplete"    Text="Imcomplete Date ! '{0}' "/>
+            <Message Id="DateTime_date_invalid"       Text="Invalid Date ! '{0}' "/>
+            <Message Id="DateTime_time_incomplete"    Text="Imcomplete Time ! '{0}' "/>
+            <Message Id="DateTime_time_invalid"       Text="Invalid Time ! '{0}' "/>
+            <Message Id="DateTime_ms_noDigit"         Text="ms shall be present once '.' is present ! '{0}' "/>
+            <Message Id="DateTime_ym_incomplete"      Text="Imcomplete YearMonth! '{0}' "/>
+            <Message Id="DateTime_ym_invalid"         Text="Year separator is missing or misplaced ! '{0}' "/>
+            <Message Id="DateTime_year_tooShort"      Text="Year must have 'CCYY' format ! '{0}' "/>
+            <Message Id="DateTime_year_leadingZero"   Text="Invalid leading zero in year! '{0}' "/>
+            <Message Id="DateTime_ym_noMonth"         Text="no month in YearMonth ! '{0}' "/>
+            <Message Id="DateTime_tz_noUTCsign"       Text="TimeZone is expected ! '{0}' "/>
+            <Message Id="DateTime_tz_stuffAfterZ"     Text="Expecting nothing after 'Z'! '{0}' "/>
+            <Message Id="DateTime_tz_invalid"         Text="Invalid TimeZone! '{0}' "/>
+            <Message Id="DateTime_year_zero"          Text="The year (0000) is an illegal year value! '{0}' "/>
+            <Message Id="DateTime_mth_invalid"        Text="The month must have values 1 to 12! '{0}' "/>
+            <Message Id="DateTime_day_invalid"        Text="The day must have values 1 to 31! '{0}' "/>
+            <Message Id="DateTime_hour_invalid"       Text="Hour must have values 0-23! '{0}' "/>
+            <Message Id="DateTime_min_invalid"        Text="Minute must have values 0-59! '{0}' "/>
+            <Message Id="DateTime_second_invalid"     Text="Second must have values 0-60! '{0}' "/>
+            <Message Id="DateTime_tz_hh_invalid"      Text="Minute must have values 0-59! '{0}' "/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
