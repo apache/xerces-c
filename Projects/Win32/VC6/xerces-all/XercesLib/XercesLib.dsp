@@ -1398,6 +1398,18 @@ SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.cpp
 SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.hpp
 # End Source File
 # End Group
+# Begin Group "datatype"
+
+# PROP Default_Filter "*.cpp, *.hpp"
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeFacetException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeValueException.hpp
+# End Source File
+# End Group
 # Begin Group "DTD"
 
 # PROP Default_Filter "*.cpp, *.hpp"
@@ -1446,16 +1458,32 @@ SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.hpp
 SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator2.cpp
 # End Source File
 # End Group
-# Begin Group "datatype"
+# Begin Group "schema"
 
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeFacetException.hpp
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDef.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeValueException.hpp
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDef.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDefList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDefList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.cpp
 # End Source File
 # End Group
 # End Group
