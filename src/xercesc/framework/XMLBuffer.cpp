@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2004/12/13 16:36:43  cargilld
+ * Performance improvement from Christian Will and bug fix from David Bertoni.
+ *
  * Revision 1.7  2004/09/29 20:33:51  peiyongz
  * resize the internal buffer even the handler can successfully flush the buffer
  *
@@ -69,22 +72,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XMLBuffer: Buffer management
 // ---------------------------------------------------------------------------
-void XMLBuffer::append(const XMLCh* const chars, const unsigned int count)
-{
-    unsigned int actualCount = count;
-    if (!count)
-        actualCount = XMLString::stringLen(chars);
-    insureCapacity(actualCount);
-    memcpy(&fBuffer[fIndex], chars, actualCount * sizeof(XMLCh));
-    fIndex += actualCount;
-}
 
 void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
-{
-    // If we can handle it, do nothing yet
-    if (fIndex + extraNeeded < fCapacity)
-        return;
-
+{    
     // If we can't handle it, try doubling the buffer size.
     unsigned int newCap = (fIndex + extraNeeded) * 2;
 
@@ -115,16 +105,21 @@ void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
             ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Array_BadNewSize, fMemoryManager);
     }
 
-    // Allocate new buffer
-    XMLCh* newBuf = (XMLCh*) fMemoryManager->allocate((newCap+1) * sizeof(XMLCh)); //new XMLCh[newCap+1];
+    // Note the previous if block can modify newCap, so we may not need to allocate
+    // at all.
+    if (newCap > fCapacity)
+    {
+        // Allocate new buffer
+        XMLCh* newBuf = (XMLCh*) fMemoryManager->allocate((newCap+1) * sizeof(XMLCh)); //new XMLCh[newCap+1];
+ 
+        // Copy over the old stuff
+        memcpy(newBuf, fBuffer, fIndex * sizeof(XMLCh));
 
-    // Copy over the old stuff
-    memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
-
-    // Clean up old buffer and store new stuff
-    fMemoryManager->deallocate(fBuffer); //delete [] fBuffer;
-    fBuffer = newBuf;
-    fCapacity = newCap;
+        // Clean up old buffer and store new stuff
+        fMemoryManager->deallocate(fBuffer); //delete [] fBuffer;
+        fBuffer = newBuf;
+        fCapacity = newCap;
+    }
 }
 
 XERCES_CPP_NAMESPACE_END
