@@ -1724,28 +1724,6 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
         fReaderMgr.getNextChar();
     }
 
-    //  [2] Char ::= #x9 | #xA | #xD | [#x20-#xD7FF]        // any Unicode character, excluding the
-    //               | [#xE000-#xFFFD] | [#x10000-#x10FFFF] // surrogate blocks, FFFE, and FFFF.
-    bool validChar = false;
-    if (value < 0x20)
-    {
-      if (value == 0x09 || value == 0x0A || value == 0x0D)
-      {
-          validChar = true;
-      }
-    }
-    else if (value <= 0xD7FF || (value >= 0xE000 && (value <= 0xFFFD || (value >= 0x10000 && value <= 0x10FFFF))))
-    {
-          validChar = true;
-    }
-
-    if (!validChar)
-    {
-        // Character reference was not in the valid range
-        emitError(XMLErrs::InvalidCharacterRef);
-        return false;
-    }
-
     // Return the char (or chars)
     if (value >= 0x10000)
     {
