@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/19 18:19:41  tng
+ * [Bug 13487] Linux runs on many non-i386 platforms.
+ *
  * Revision 1.2  2002/10/29 18:58:14  tng
  * Support for Linux/390 which is big endian
  *
@@ -80,13 +83,21 @@
 
 
 // ---------------------------------------------------------------------------
-//  linux runs in little endian mode
+//  Detect endian mode
 // ---------------------------------------------------------------------------
-#ifdef XML_LINUX_390
-    #define ENDIANMODE_BIG
-#else
-    #define ENDIANMODE_LITTLE
-#endif
+#include <endian.h>
+#ifdef __BYTE_ORDER
+    #if __BYTE_ORDER == __LITTLE_ENDIAN
+        #define ENDIANMODE_LITTLE
+    #else
+        #if __BYTE_ORDER == __BIG_ENDIAN
+            #define ENDIANMODE_BIG
+        #else
+            #error: unknown byte order!
+        #endif
+    #endif
+#endif /* __BYTE_ORDER */
+
 typedef void* FileHandle;
 
 #ifndef LINUX
