@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/11 22:09:08  knoaman
+ * Performance: reduce instructions count.
+ *
  * Revision 1.9  2002/12/03 15:31:19  knoaman
  * Enable/disable calculation of src offset.
  *
@@ -742,28 +745,21 @@ inline void XMLReader::setThrowAtEnd(const bool newValue)
 // ---------------------------------------------------------------------------
 inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
 {
-    int count = 0;
-    XMLCh *pStart = &fCharBuf[fCharIndex];
-    XMLCh *pCurrent = pStart;
-    XMLCh *pEnd     = &fCharBuf[fCharsAvail];
+    unsigned int count = fCharIndex;
 
-
-    while (pCurrent < pEnd)
+    while (fCharIndex < fCharsAvail)
     {
-        if (! XMLReader::isPlainContentChar(*pCurrent++))
+        if (!XMLReader::isPlainContentChar(fCharBuf[fCharIndex]))
             break;
-        count++;
+        fCharIndex++;
     }
 
-    if (count > 0)
+    if (count != fCharIndex)
     {
-        fCharIndex += count;
-        fCurCol    += count;
-        dest.append(pStart, count);
+        fCurCol    += (fCharIndex - count);
+        dest.append(&fCharBuf[count], fCharIndex - count);
     }
 }
-
-
 
 
 // ---------------------------------------------------------------------------
