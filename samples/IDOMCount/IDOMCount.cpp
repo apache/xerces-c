@@ -112,16 +112,9 @@ static int countChildElements(IDOM_Node *n)
     int count = 0;
     if (n) {
         if (n->getNodeType() == IDOM_Node::ELEMENT_NODE)
-        {
             count++;
-            for (child = n->getFirstChild(); child != 0; child=child->getNextSibling())
-            {
-                if (child->getNodeType() == IDOM_Node::ELEMENT_NODE)
-                {
-                    count += countChildElements(child);
-                }
-            }
-        }
+        for (child = n->getFirstChild(); child != 0; child=child->getNextSibling())
+            count += countChildElements(child);
     }
     return count;
 }
