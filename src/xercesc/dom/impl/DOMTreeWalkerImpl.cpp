@@ -360,7 +360,7 @@ DOMNode* DOMTreeWalkerImpl::getNextSibling (DOMNode* node) {
     else
     if (accept == DOMNodeFilter::FILTER_SKIP) {
         DOMNode* fChild =  getFirstChild(newNode);
-        if (!fChild) {
+        if (!fChild && !newNode->hasChildNodes()) {
             return getNextSibling(newNode);
         }
         return fChild;
@@ -402,7 +402,7 @@ DOMNode* DOMTreeWalkerImpl::getPreviousSibling (DOMNode* node) {
     else
     if (accept == DOMNodeFilter::FILTER_SKIP) {
         DOMNode* fChild =  getLastChild(newNode);
-        if (!fChild) {
+        if (!fChild && !newNode->hasChildNodes()) {
             return getPreviousSibling(newNode);
         }
         return fChild;
@@ -436,6 +436,7 @@ DOMNode* DOMTreeWalkerImpl::getFirstChild (DOMNode* node) {
         return getFirstChild(newNode);
     }
     return getNextSibling(newNode);
+    
 }
 
 
@@ -463,7 +464,6 @@ DOMNode* DOMTreeWalkerImpl::getLastChild (DOMNode* node) {
         return getLastChild(newNode);
     }
     return getPreviousSibling(newNode);
-
 
 }
 
