@@ -179,8 +179,7 @@ void AbstractDOMParser::cleanUp()
     delete fScanner;
     delete fGrammarResolver;
     delete fURIStringPool;
-
-    delete[] fImplementationFeatures;
+    fMemoryManager->deallocate(fImplementationFeatures);
 
     if (fValidator)
         delete fValidator;

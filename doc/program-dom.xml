@@ -1283,7 +1283,7 @@
             </table>
             <p/>
             <table>
-                <tr><th colspan="2"><em>http://apache.org/xml/properties/parser-use-DOMDocument-from-Implemenation</em></th></tr>
+                <tr><th colspan="2"><em>http://apache.org/xml/properties/parser-use-DOMDocument-from-Implementation</em></th></tr>
                 <tr><th><em>Description</em></th><td>This property allows the user to specify a set of features
                             which the parser will then use to acquire an implementation from which it will create
                             the DOMDocument to use when reading in an XML file.

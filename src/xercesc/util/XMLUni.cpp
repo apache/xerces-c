@@ -1130,19 +1130,17 @@ const XMLCh XMLUni::fgXercesScannerName[] =
 };
 
 //Property
-//Xerces: http://apache.org/xml/properties/parser-use-DOMDocument-from-Implemenation
+//Xerces: http://apache.org/xml/properties/parser-use-DOMDocument-from-Implementation
 const XMLCh XMLUni::fgXercesParserUseDocumentFromImplementation[] =
 {
         chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
     ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
     ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
-    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_p, chLatin_r
-    ,   chLatin_o, chLatin_p, chLatin_e, chLatin_r, chLatin_t, chLatin_i
-    ,   chLatin_e, chLatin_s, chForwardSlash, chLatin_f, chLatin_g, chLatin_X
-    ,   chLatin_e, chLatin_r, chLatin_c, chLatin_e, chLatin_s, chLatin_P, chLatin_a
-    ,   chLatin_r, chLatin_s, chLatin_e, chLatin_r, chLatin_U, chLatin_s, chLatin_e 
-    ,   chLatin_D, chLatin_o, chLatin_c, chLatin_u, chLatin_m, chLatin_e, chLatin_n 
-    ,   chLatin_t, chLatin_F, chLatin_r, chLatin_o, chLatin_m, chLatin_I, chLatin_m
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_p, chLatin_a
+    ,   chLatin_r, chLatin_s, chLatin_e, chLatin_r, chDash, chLatin_u, chLatin_s
+    ,   chLatin_e, chDash, chLatin_D, chLatin_O, chLatin_M, chLatin_D, chLatin_o
+    ,   chLatin_c, chLatin_u, chLatin_m, chLatin_e, chLatin_n, chLatin_t, chDash
+    ,   chLatin_f, chLatin_r, chLatin_o, chLatin_m, chDash, chLatin_I, chLatin_m
     ,   chLatin_p, chLatin_l, chLatin_e, chLatin_m, chLatin_e, chLatin_n, chLatin_t
     ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
