@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/09 13:49:30  neilg
+ * make StringPool functions virtual so that we can implement a synchronized version of StringPool for thread-safe updates.
+ *
  * Revision 1.5  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -220,6 +223,10 @@ const XMLCh* XMLStringPool::getValueForId(const unsigned int id) const
     return fIdMap[id]->fString;
 }
 
+unsigned int XMLStringPool::getStringCount() const
+{
+    return fCurId-1;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLStringPool: Private helper methods

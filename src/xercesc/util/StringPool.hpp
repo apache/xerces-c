@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/09 13:49:30  neilg
+ * make StringPool functions virtual so that we can implement a synchronized version of StringPool for thread-safe updates.
+ *
  * Revision 1.5  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -122,18 +125,19 @@ public :
           const unsigned int   modulus = 109
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
-    ~XMLStringPool();
+    virtual ~XMLStringPool();
 
 
     // -----------------------------------------------------------------------
     //  Pool management methods
     // -----------------------------------------------------------------------
-    unsigned int addOrFind(const XMLCh* const newString);
-    bool exists(const XMLCh* const newString) const;
-    bool exists(const unsigned int id) const;
-    void flushAll();
-    unsigned int getId(const XMLCh* const toFind) const;
-    const XMLCh* getValueForId(const unsigned int id) const;
+    virtual unsigned int addOrFind(const XMLCh* const newString);
+    virtual bool exists(const XMLCh* const newString) const;
+    virtual bool exists(const unsigned int id) const;
+    virtual void flushAll();
+    virtual unsigned int getId(const XMLCh* const toFind) const;
+    virtual const XMLCh* getValueForId(const unsigned int id) const;
+    virtual unsigned int getStringCount() const;
 
 
 private :
@@ -186,14 +190,17 @@ private :
     //      The current capacity of the id map. When the current id hits this
     //      value the map must must be expanded.
     //
-    //  fCurId
-    //      This is the counter used to assign unique ids. It is just bumped
-    //      up one for each new string added.
     // -----------------------------------------------------------------------
     MemoryManager*              fMemoryManager;
     PoolElem**                  fIdMap;
     RefHashTableOf<PoolElem>*   fHashTable;
     unsigned int                fMapCapacity;
+
+protected:
+    // protected data members
+    //  fCurId
+    //      This is the counter used to assign unique ids. It is just bumped
+    //      up one for each new string added.
     unsigned int                fCurId;
 };
 
