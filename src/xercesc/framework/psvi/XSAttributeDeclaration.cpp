@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/29 17:06:31  knoaman
+ * PSVI: return value constraint only if global declaration
+ *
  * Revision 1.8  2003/12/29 16:15:42  knoaman
  * More PSVI updates
  *
@@ -161,7 +164,10 @@ XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
 
 const XMLCh *XSAttributeDeclaration::getConstraintValue()
 {
-    return fAttDef->getValue();
+    if (fScope == XSConstants::SCOPE_GLOBAL)
+        return fAttDef->getValue();
+
+    return 0;
 }
 
 bool XSAttributeDeclaration::getRequired() const
