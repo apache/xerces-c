@@ -93,7 +93,7 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
     XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
     ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
 
-    XMLString::lowerCase(lowerCaseName);
+    XMLString::lowerCaseASCII(lowerCaseName);
 
     if(!canSetParameter(lowerCaseName, value)) {
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, fMemoryManager);
@@ -176,7 +176,7 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
     XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
     ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
     
-    XMLString::lowerCase(lowerCaseName);
+    XMLString::lowerCaseASCII(lowerCaseName);
     
     DOMConfigurationFeature whichFlag;
     try {
@@ -247,7 +247,7 @@ DOMConfigurationImpl::DOMConfigurationFeature DOMConfigurationImpl::getFeatureFl
     XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
     ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
     
-    XMLString::lowerCase(lowerCaseName);
+    XMLString::lowerCaseASCII(lowerCaseName);
   
     if(XMLString::equals(lowerCaseName, fgCANONICAL_FORM)) {
         return FEATURE_CANONICAL_FORM;

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2005/04/05 17:00:45  cargilld
+ * Implement version of lowercase that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
+ *
  * Revision 1.33  2005/03/20 19:02:45  cargilld
  * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
  *
@@ -1514,7 +1517,7 @@ public:
     static void upperCase(XMLCh* const toUpperCase);
 
     /** Converts a string to uppercase
-      * The routine only uppercases A to Z.
+      * The routine only uppercases A to Z (other characters not changed).
       * @param toUpperCase The string which needs to be converted to uppercase.
       *        On return, this buffer also holds the converted uppercase string
       */
@@ -1525,6 +1528,13 @@ public:
       *        On return, this buffer also holds the converted lowercase string
       */
     static void lowerCase(XMLCh* const toLowerCase);
+
+    /** Converts a string to lowercase
+      * The routine only lowercases a to z (other characters not changed).
+      * @param toLowerCase The string which needs to be converted to lowercase.
+      *        On return, this buffer also holds the converted lowercase string
+      */
+    static void lowerCaseASCII(XMLCh* const toLowerCase);
 
 	/** Check if string is WhiteSpace:replace
       * @param toCheck The string which needs to be checked.

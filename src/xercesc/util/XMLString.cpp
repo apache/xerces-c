@@ -1472,6 +1472,21 @@ void XMLString::lowerCase(XMLCh* const toLowerCase)
     XMLPlatformUtils::fgTransService->lowerCase(toLowerCase);
 }
 
+void XMLString::lowerCaseASCII(XMLCh* const toLowerCase)
+{
+    XMLCh* psz1 = toLowerCase;
+
+    if (!psz1)
+        return;
+
+    while (*psz1) {
+        if (*psz1 >= chLatin_A && *psz1 <= chLatin_Z)
+            *psz1 = *psz1 - chLatin_A + chLatin_a;
+
+        psz1++;        
+    }    
+}
+
 void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
                           , const int startIndex, const int endIndex
                           , MemoryManager* const manager)
