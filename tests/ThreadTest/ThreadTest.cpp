@@ -379,10 +379,10 @@ int ThreadParser::parse(int fileNum)
     
     catch (const XMLException& e)
     {
-        errStrm << "  during parsing: '" << fInfo->fileName << "'\n"
-            << "Exception message is:  "
-            << e.getMessage() << "\n" << EndLn;
-        fCheckSum = 0;
+        char *exceptionMessage = XMLString::transcode(e.getMessage());
+        fprintf(stderr, " during parsing: %s \n Exception message is: %s \n",
+            fInfo->fileName, exceptionMessage);
+        delete exceptionMessage;
     }
     
     delete mbis;

@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/18 19:57:30  andyh
+ * Add some DOM L2 tests
+ *
  * Revision 1.4  1999/12/17 02:09:41  andyh
  * Fix bug in DOMString::insertData() that occured if the source
  * and destination strings were the same and the orginal buffer had
@@ -781,10 +784,110 @@ void main()
     }
     TESTEPILOG;
 
+
+    //
+    //  DOM Level 2 tests.  These should be split out as a separate test.
+    //
+
+
+    //
+    // hasFeature.  The set of supported options tested here is for Xerces 1.1
+    //
+    TESTPROLOG;
+    {
+        DOM_DOMImplementation  impl;
+        TASSERT(impl.hasFeature("XML", "2.0")    == true);
+        TASSERT(impl.hasFeature("XML", "")       == true);
+        //  We also support 1.0
+        TASSERT(impl.hasFeature("XML", "1.0")    == true);
+        TASSERT(impl.hasFeature("XML", "3.0")    == false);
+        TASSERT(impl.hasFeature("Traversal", "") == true);
+
+
+        TASSERT(impl.hasFeature("HTML", "")           == false);
+        TASSERT(impl.hasFeature("Views", "")          == false);
+        TASSERT(impl.hasFeature("StyleSheets", "")    == false);
+        TASSERT(impl.hasFeature("CSS", "")            == false);
+        TASSERT(impl.hasFeature("CSS2", "")           == false);
+        TASSERT(impl.hasFeature("Events", "")         == false);
+        TASSERT(impl.hasFeature("UIEvents", "")       == false);
+        TASSERT(impl.hasFeature("MouseEvents", "")    == false);
+        TASSERT(impl.hasFeature("MutationEvents", "") == false);
+        TASSERT(impl.hasFeature("HTMLEvents", "")     == false);
+        TASSERT(impl.hasFeature("Range", "")          == false);
+    }
+    TESTEPILOG;
+
+
+    //
+    // CreateDocumentType
+    //
+    TESTPROLOG;
+    {
+        DOM_DOMImplementation impl;
+        
+        DOMString qName = "foo:docName";
+        DOMString pubId = "pubId";
+        DOMString sysId = "http://sysId";
+        DOMString intSubSet = "Internal subsets are not parsed by this call!";
+        
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        
+        TASSERT(dt != 0);
+        TASSERT(dt.getNodeType() == DOM_Node::DOCUMENT_TYPE_NODE);
+        TASSERT(dt.getNodeName().equals(qName));
+        TASSERT(dt.getPublicID().equals(pubId));
+        TASSERT(dt.getSystemID().equals(sysId));
+        TASSERT(dt.getInternalSubset().equals(intSubSet));
+        
+        DOM_NamedNodeMap nnm = dt.getEntities();
+        TASSERT(nnm.getLength() == 0);
+        nnm = dt.getNotations();
+        TASSERT(nnm.getLength() == 0);
+    }
+    TESTEPILOG;
+    
+
+    //
+    //  DOMImplementation::CreateDocument
+    //
+    TESTPROLOG;
+    {
+        
+        DOM_DOMImplementation impl;
+        
+        DOMString qName = "foo:docName";
+        DOMString pubId = "pubId";
+        DOMString sysId = "http://sysId";
+        DOMString intSubSet = "Internal subsets are not parsed by this call!";
+        
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        
+        DOMString docNSURI = "http://document.namespace";
+        DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
+
+        TASSERT(doc.getNodeType() == DOM_Node::DOCUMENT_NODE);
+        TASSERT(doc.getDoctype() == dt);
+        TASSERT(doc.getNodeName().equals("#document"));
+        TASSERT(doc.getNodeValue() == 0);
+
+        DOM_Element el = doc.getDocumentElement();
+
+        TASSERT(el.getLocalName().equals("docName"));
+        TASSERT(el.getNamespaceURI().equals(docNSURI));
+        TASSERT(el.getNodeName().equals(qName));
+        TASSERT(el.getOwnerDocument() == doc);
+        TASSERT(el.getParentNode() == doc);
+        TASSERT(el.getPrefix().equals("foo"));
+        TASSERT(el.getTagName().equals(qName));
+        TASSERT(el.hasChildNodes() == false);
+    }
+    TESTEPILOG;
+    
     //
     //  Print Final allocation stats for full test
     //
     DomMemDebug().print();
-
-};
-
+    
+    };
+    
