@@ -1438,7 +1438,6 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
                 else if (buffers[curString]->getLen() == 2 &&
                     (((rawValue[0] == chLatin_n) || (rawValue[0] == chLatin_N)) &&
                      ((rawValue[1] == chLatin_o) || (rawValue[1] == chLatin_O))))   
-                    fStandalone = true;
                     fStandalone = false;
             }
         }
