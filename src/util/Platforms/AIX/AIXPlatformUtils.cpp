@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/14 02:18:33  aruna1
+ * modified absolute path creation on heap
+ *
  * Revision 1.6  2000/01/13 22:17:23  aruna1
  * getBasePath changed to getFullPath and now returns the full absolute path
  * WeavePath added
@@ -437,9 +440,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     ArrayJanitor<char> janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-	char absPath[PATH_MAX];
+    char *absPath = new char[PATH_MAX];
 	//get the absolute path 
-	char* retPath = realpath(newSrc, &absPath[0]);	
+	char* retPath = realpath(newSrc, absPath);	
     ArrayJanitor<char> janText2(retPath);
 	
     if (!retPath)
