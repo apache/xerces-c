@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/07/25 20:55:23  jpolast
+ * use gInitFlag as a reference to the number of times
+ * Initialized was called.  this way, the terminate routines are
+ * not invoked until all processes call Terminate() on the parser.
+ *
  * Revision 1.9  2000/06/26 20:30:04  jpolast
  * check if initialized in Terminate() to stop access violations
  * submitted by John_Roper@iOra.com
@@ -121,7 +126,7 @@
 // ---------------------------------------------------------------------------
 static XMLMutex*                gSyncMutex = 0;
 static RefVectorOf<XMLDeleter>* gLazyData;
-static bool                     gInitFlag = false;
+static short                    gInitFlag = 0;
 
 
 // ---------------------------------------------------------------------------
@@ -143,10 +148,11 @@ void XMLPlatformUtils::Initialize()
     //  like processes that cannot keep up with whether they have initialized
     //  us yet or not.
     //
-    if (gInitFlag)
-        return;
-    gInitFlag = true;
+	gInitFlag++;
 
+    if (gInitFlag > 1)
+	    return;
+	
     // Create the local sync mutex
     gSyncMutex = new XMLMutex;
 
@@ -201,7 +207,9 @@ void XMLPlatformUtils::Initialize()
 void XMLPlatformUtils::Terminate()
 {
 
-	if (!gInitFlag)
+	gInitFlag--;
+	
+	if (gInitFlag > 0)
 		return;
 
     // Delete any net accessor that got installed
