@@ -266,11 +266,11 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             	# ICU only has allinone.sln for VC7.0
             	# So the build with ICU on VC7.1 may fail until the VC7.1 version is available            	
                 pchdir ("$ICUROOT/source/allinone");
-
-                psystem("devenv /rebuild Release /out buildlog_release.txt /project all allinone.sln");
+                
+                psystem("devenv.com allinone.sln /rebuild Release /out buildlog_release.txt");
                 psystem("type buildlog_release.txt");
 
-                psystem("devenv /rebuild debug /out buildlog_debug.txt /project all allinone.sln");
+				psystem("devenv.com allinone.sln /rebuild debug /out buildlog_debug.txt");                
                 psystem("type buildlog_debug.txt");                
             } else { #"6.1"
                 pchdir ("$ICUROOT/source/allinone/all");            	
