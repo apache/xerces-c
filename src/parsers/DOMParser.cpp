@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.18  2000/04/19 18:07:38  aruna1
+* Changes to reflect the calls for XMLUni strings fgPubIDString, fgSysIDString and fgNDATAString
+*
 * Revision 1.17  2000/04/19 02:26:30  aruna1
 * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
 *
@@ -903,15 +906,17 @@ void DOMParser::entityDecl
 		DOMString id = entity->getPublicId();
 		if (id != 0) {
 			entityName.appendData(chSpace);
-			entityName.appendData(XMLUni::fgPublicString);
-			entityName.appendData(chDoubleQuote);
+			entityName.appendData(XMLUni::fgPubIDString);
+            entityName.appendData(chSpace);
+            entityName.appendData(chDoubleQuote);
 			entityName.appendData(id);
 			entityName.appendData(chDoubleQuote);
 		}
 		id = entity->getSystemId();
 		if (id != 0) {
 			entityName.appendData(chSpace);
-			entityName.appendData(XMLUni::fgSystemString);
+			entityName.appendData(XMLUni::fgSysIDString);
+            entityName.appendData(chSpace);
 			entityName.appendData(chDoubleQuote);
 			entityName.appendData(id);
 			entityName.appendData(chDoubleQuote);
@@ -920,7 +925,8 @@ void DOMParser::entityDecl
 		id = entity->getNotationName();
 		if (id != 0) {
 			entityName.appendData(chSpace);
-			entityName.appendData(XMLUni::fgNdataString);
+			entityName.appendData(XMLUni::fgNDATAString);
+            entityName.appendData(chSpace);
 			entityName.appendData(chDoubleQuote);
 			entityName.appendData(id);
 			entityName.appendData(chDoubleQuote);
