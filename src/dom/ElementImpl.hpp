@@ -141,7 +141,10 @@ public:
 	virtual AttrMapImpl *getDefaultAttributes();
 	virtual void setupDefaultAttributes();
 
-
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitElementImpl();   
 };
 
 #endif

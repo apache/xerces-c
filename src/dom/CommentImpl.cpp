@@ -72,6 +72,9 @@
 #include "DocumentImpl.hpp"
 #include "DStringPool.hpp"
 
+static DOMString *gComment = 0; // will be lazily initialized to "#comment"
+static XMLRegisterCleanup gCommentCleanup;
+
 CommentImpl::CommentImpl(DocumentImpl *ownerDoc, const DOMString &dat)
     : CharacterDataImpl(ownerDoc, dat)
 {
@@ -96,10 +99,20 @@ NodeImpl * CommentImpl::cloneNode(bool deep)
 
 
 DOMString CommentImpl::getNodeName() {
-    static DOMString *gComment = 0; // will be lazily initialized to "#comment"
-    return DStringPool::getStaticString("#comment", &gComment);
+    return DStringPool::getStaticString("#comment"
+                                      , &gComment
+                                      , reinitCommentImpl
+                                      , gCommentCleanup);
 }
 
 short CommentImpl::getNodeType() {
     return DOM_Node::COMMENT_NODE;
 };
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void CommentImpl::reinitCommentImpl() {
+	delete gComment;
+	gComment = 0;
+}

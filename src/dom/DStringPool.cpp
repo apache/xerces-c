@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/10/25 21:47:14  peiyongz
+ * Replace XMLDeleterFor with XMLRegisterCleanup
+ *
  * Revision 1.5  2000/06/02 00:45:42  andyh
  * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
  * Two plain deletes changed to array deletes.
@@ -87,7 +90,7 @@
 //
 
 #include "DStringPool.hpp"
-#include <util/XMLDeleterFor.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 #include <util/XMLString.hpp>
 #include <util/PlatformUtils.hpp>
 
@@ -190,7 +193,10 @@ const DOMString &DStringPool::getPooledString(const DOMString &in)
 //      This is primarily things like the default names for the various
 //      node types ("#text" and the like).
 //
-const DOMString &DStringPool::getStaticString(const char *in, DOMString **loc)
+const DOMString &DStringPool::getStaticString(const char *in
+                                            , DOMString **loc
+                                            , XMLRegisterCleanup::XMLCleanupFn fn
+                                            , XMLRegisterCleanup &clnObj)
 {
     if (*loc == 0)
     {
@@ -206,13 +212,8 @@ const DOMString &DStringPool::getStaticString(const char *in, DOMString **loc)
             // Register this string for deletion.  Doing each string individually
             //   may be a little heavyweight, but will work for the time being
             //   for arranging the deletion of eveything on Termination of XML.
-            XMLPlatformUtils::registerLazyData
-                (
-                new XMLDeleterFor<DOMString>(*loc)
-                );
+            clnObj.registerCleanup(fn);
         }
     }
     return **loc;
 }
-
-

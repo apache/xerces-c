@@ -63,6 +63,9 @@
 #include "DocumentImpl.hpp"
 #include "DStringPool.hpp"
 
+static DOMString *gcdata_section = 0;   // will be lazily initialized
+static XMLRegisterCleanup gcdata_sectionCleanup;
+
 CDATASectionImpl::CDATASectionImpl(DocumentImpl *ownerDoc,
                                    const DOMString &dat)
     : TextImpl(ownerDoc, dat)
@@ -88,8 +91,11 @@ NodeImpl  *CDATASectionImpl::cloneNode(bool deep)
 
 
 DOMString CDATASectionImpl::getNodeName() {
-    static DOMString *gcdata_section = 0;   // will be lazily initialized
-    return DStringPool::getStaticString("#cdata-section", &gcdata_section);
+
+    return DStringPool::getStaticString("#cdata-section"
+                                       , &gcdata_section
+                                       , reinitCDATASectionImpl
+                                       , gcdata_sectionCleanup);
 };
 
 
@@ -102,3 +108,11 @@ bool CDATASectionImpl::isCDATASectionImpl()
 {
     return true;
 };
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void CDATASectionImpl::reinitCDATASectionImpl() {
+	delete gcdata_section;
+	gcdata_section = 0;
+}

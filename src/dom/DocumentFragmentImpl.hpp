@@ -87,7 +87,11 @@ public:
     virtual short getNodeType();
     virtual bool isDocumentFragmentImpl();
     virtual void setNodeValue(const DOMString &);
-   
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitDocumentFragmentImpl();    
 };
 
 #endif

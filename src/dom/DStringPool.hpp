@@ -73,6 +73,7 @@
 
 #include <util/XercesDefs.hpp>
 #include <dom/DOMString.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 
 struct DStringPoolEntry;
 
@@ -93,8 +94,10 @@ public:
     const DOMString &getPooledString(const DOMString &in);
     const DOMString &getPooledString(const XMLCh *in);
 
-    static const DOMString &getStaticString(const char *in, DOMString **loc);
-
+    static const DOMString &getStaticString(const char *in
+                                          , DOMString **loc
+                                          , XMLRegisterCleanup::XMLCleanupFn fn
+                                          , XMLRegisterCleanup &clnObj);
 
 private:
     DStringPool(const DStringPool &other);      // Copy constructor and assignment

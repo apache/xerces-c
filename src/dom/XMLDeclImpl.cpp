@@ -64,6 +64,8 @@
 #include "DStringPool.hpp"
 #include "DocumentImpl.hpp"
 
+static DOMString *gNam = 0;  // will be lazily initialized to "#xmldecl"
+static XMLRegisterCleanup gNamCleanup;
 
 XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc)
     : ChildNode(ownerDoc),
@@ -105,8 +107,12 @@ NodeImpl * XMLDeclImpl::cloneNode(bool deep)
 
 DOMString XMLDeclImpl::getNodeName()
 {
-    static DOMString *nam = 0;  // will be lazily initialized to "#xmldecl"
-    return DStringPool::getStaticString("#xmldecl", &nam);
+
+    return DStringPool::getStaticString("#xmldecl"
+                                       , &gNam
+                                       , reinitXMLDeclImpl
+                                       , gNamCleanup
+                                       );
 }
 
 short XMLDeclImpl::getNodeType()
@@ -144,3 +150,12 @@ void XMLDeclImpl::setStandalone(const DOMString &data)
     standalone = data.clone();
 }
 
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void XMLDeclImpl::reinitXMLDeclImpl() {
+
+    delete gNam;
+    gNam = 0;
+
+}

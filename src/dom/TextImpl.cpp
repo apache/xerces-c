@@ -66,8 +66,8 @@
 #include "DStringPool.hpp"
 #include "RangeImpl.hpp"
 
-static DOMString *gText;   // will be lazily initialized to point to "#text"
-
+static DOMString *gText = 0;   // will be lazily initialized to point to "#text"
+static XMLRegisterCleanup gTextCleanup;
 
 TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &dat)
     : CharacterDataImpl(ownerDoc, dat)
@@ -97,7 +97,11 @@ NodeImpl *TextImpl::cloneNode(bool deep)
 
 
 DOMString TextImpl::getNodeName() {
-    return DStringPool::getStaticString("#text", &gText);
+    return DStringPool::getStaticString("#text"
+                                      , &gText
+                                      , reinitTextImpl
+                                      , gTextCleanup
+                                      );
 }
 
 short TextImpl::getNodeType() {
@@ -152,4 +156,14 @@ bool TextImpl::isIgnorableWhitespace()
 void TextImpl::setIgnorableWhitespace(bool ignorable)
 {
     ignorableWhitespace(ignorable);
+}
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void TextImpl::reinitTextImpl() {
+
+    delete gText;
+    gText = 0;
+
 }

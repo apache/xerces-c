@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/10/25 21:47:14  peiyongz
+ * Replace XMLDeleterFor with XMLRegisterCleanup
+ *
  * Revision 1.7  2000/03/02 19:53:54  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -222,6 +225,10 @@ class CDOM_EXPORT DOM_DOMImplementation {
 	const DOMString &qualifiedName, const DOM_DocumentType &doctype);
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitDOM_DOMImplementation();   
 };
 
 #endif

@@ -86,6 +86,12 @@ public:
     virtual bool isTextImpl();
     virtual TextImpl *splitText(unsigned int offset);
     virtual bool isIgnorableWhitespace();
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitTextImpl();   
+
 protected:
     virtual void setIgnorableWhitespace(bool ignorable);
     friend class DOMParser;

@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/10/25 21:47:14  peiyongz
+ * Replace XMLDeleterFor with XMLRegisterCleanup
+ *
  * Revision 1.7  2000/03/02 19:53:59  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -129,6 +132,12 @@ public:
     virtual             ~DeepNodeListImpl();
     virtual unsigned int getLength();
     virtual NodeImpl    *item(unsigned int index);
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitDeepNodeListImpl();
+
 private:
     virtual NodeImpl    *nextMatchingElementAfter(NodeImpl *current);
     virtual void        unreferenced();

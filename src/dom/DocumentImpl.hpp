@@ -265,6 +265,12 @@ public:
     inline bool getErrorChecking() {
         return errorChecking;
     }
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitDocumentImpl();    
+
 };
 
 #endif

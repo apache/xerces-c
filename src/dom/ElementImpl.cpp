@@ -69,6 +69,9 @@
 #include "NodeVector.hpp"
 
 
+static DOMString *gEmptyString = 0;
+static XMLRegisterCleanup emptyStringCleanup;
+
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
     : ParentNode(ownerDoc)
 {
@@ -130,13 +133,15 @@ short ElementImpl::getNodeType() {
 
 DOMString ElementImpl::getAttribute(const DOMString &nam)
 {
-    static DOMString *emptyString = 0;
     AttrImpl * attr=null;
 
     if (attributes != null)
 	attr=(AttrImpl *)(attributes->getNamedItem(nam));
 
-    return (attr==null) ? DStringPool::getStaticString("", &emptyString) : attr->getValue();
+    return (attr==null) ? DStringPool::getStaticString(""
+                                                     , &gEmptyString
+                                                     , reinitElementImpl
+                                                     , emptyStringCleanup) : attr->getValue();
 };
 
 
@@ -498,4 +503,14 @@ void ElementImpl::setupDefaultAttributes()
 	AttrMapImpl* defAttrs = getDefaultAttributes();
 	if (defAttrs)
 		attributes = new AttrMapImpl(this, defAttrs);
+}
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void ElementImpl::reinitElementImpl() {
+
+    delete gEmptyString;
+    gEmptyString = 0; 
+
 }

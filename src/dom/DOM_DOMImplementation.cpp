@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/25 21:47:14  peiyongz
+ * Replace XMLDeleterFor with XMLRegisterCleanup
+ *
  * Revision 1.10  2001/10/23 23:04:38  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -137,12 +140,20 @@ static DOM_DOMImplementation    *gDomimp;   // Points to the singleton instance
                                             //  of DOMImplementation that is returned
                                             //  by any call to getImplementation().
 
-static DOMString                *gXML;      // Points to "XML"
-static DOMString                *gxml;      // Points to "xml"
-static DOMString                *g1_0;      // Points to "1.0"
-static DOMString                *g2_0;      // Points to "2.0"
-static DOMString                *gTrav;     // Points to "Traversal"
+static DOMString                *gXML = 0;      // Points to "XML"
+static DOMString                *gxml = 0;      // Points to "xml"
+static DOMString                *g1_0 = 0;      // Points to "1.0"
+static DOMString                *g2_0 = 0;      // Points to "2.0"
+static DOMString                *gTrav = 0;     // Points to "Traversal"
 
+//
+// we define only one clean up object, if any of the above
+// ever get initialized, then the cleanup function will be
+// registered to the same cleanup Obj again and again.
+//
+// that cleanup function will delete/null all the g*
+//
+static XMLRegisterCleanup DOM_DOMImplementationCleanup;
 
 // Note #1136 - There needs to be a separate implementation class for
 //              DOMImplementation, so that the user programming model
@@ -210,15 +221,35 @@ bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMStri
 {
     // Currently, we support only XML Level 1 version 1.0
     // Note #965:  A true case-insensitve compare is needed here.
-    if(feature.equals(DStringPool::getStaticString("XML", &gXML)) ||
-       feature.equals(DStringPool::getStaticString("xml", &gxml)))
+    if(feature.equals(DStringPool::getStaticString("XML"
+                                                 , &gXML
+                                                 , reinitDOM_DOMImplementation
+                                                 , DOM_DOMImplementationCleanup
+                                                   )) ||
+       feature.equals(DStringPool::getStaticString("xml"
+                                                 , &gxml
+                                                 , reinitDOM_DOMImplementation
+                                                 , DOM_DOMImplementationCleanup       
+                                                 )))
     {
         if(version == null ||
-           version.equals(DStringPool::getStaticString("1.0", &g1_0)) ||
-           version.equals(DStringPool::getStaticString("2.0", &g2_0)) )
+           version.equals(DStringPool::getStaticString("1.0"
+                                                     , &g1_0
+                                                     , reinitDOM_DOMImplementation
+                                                     , DOM_DOMImplementationCleanup       
+                                                     )) ||
+           version.equals(DStringPool::getStaticString("2.0"
+                                                      , &g2_0
+                                                      , reinitDOM_DOMImplementation
+                                                      , DOM_DOMImplementationCleanup                                                             
+                                                      )) )
             return true;
     }
-    if(feature.equals(DStringPool::getStaticString("Traversal", &gTrav)))
+    if(feature.equals(DStringPool::getStaticString("Traversal"
+                                                  , &gTrav
+                                                  , reinitDOM_DOMImplementation
+                                                  , DOM_DOMImplementationCleanup       
+                                                  )))
         return true;
     return false;
 }
@@ -239,4 +270,26 @@ DOM_Document DOM_DOMImplementation::createDocument(const DOMString &namespaceURI
 {
     return DOM_Document(new DocumentImpl(namespaceURI, qualifiedName,
 	doctype == null ? null : (DocumentTypeImpl *) doctype.fImpl));
+}
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void DOM_DOMImplementation::reinitDOM_DOMImplementation() {
+
+    delete gXML;
+    gXML = 0; 
+
+    delete gxml;
+    gxml = 0; 
+
+    delete g1_0;
+    g1_0 = 0; 
+
+    delete g2_0;
+    g2_0 = 0; 
+
+    delete gTrav;
+    gTrav = 0;  
+
 }

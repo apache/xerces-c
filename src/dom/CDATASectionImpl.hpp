@@ -84,6 +84,11 @@ public:
     virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual bool        isCDATASectionImpl();
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitCDATASectionImpl();
 };
 
 #endif

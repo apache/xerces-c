@@ -79,6 +79,8 @@ static DOMString *s_xmlURI = null;
 static DOMString *s_xmlns = null;
 static DOMString *s_xmlnsURI = null;
 
+static XMLRegisterCleanup nodeImplCleanup;
+
 const unsigned short NodeImpl::READONLY     = 0x1<<0;
 const unsigned short NodeImpl::SYNCDATA     = 0x1<<1;
 const unsigned short NodeImpl::SYNCCHILDREN = 0x1<<2;
@@ -429,21 +431,35 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 
 
 DOMString NodeImpl::getXmlnsString() {
-    return DStringPool::getStaticString("xmlns", &s_xmlns);
+    return DStringPool::getStaticString("xmlns"
+                                      , &s_xmlns
+                                      , reinitNodeImpl
+                                      , nodeImplCleanup
+                                      );
 }
 
 DOMString NodeImpl::getXmlnsURIString() {
-    return DStringPool::getStaticString("http://www.w3.org/2000/xmlns/",
-                                        &s_xmlnsURI);
+    return DStringPool::getStaticString("http://www.w3.org/2000/xmlns/"
+                                      , &s_xmlnsURI
+                                      , reinitNodeImpl
+                                      , nodeImplCleanup
+                                        );
 }
 
 DOMString NodeImpl::getXmlString() {
-    return DStringPool::getStaticString("xml", &s_xml);
+    return DStringPool::getStaticString("xml"
+                                      , &s_xml
+                                      , reinitNodeImpl
+                                      , nodeImplCleanup
+                                      );
 }
 
 DOMString NodeImpl::getXmlURIString() {
-    return DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace",
-                                        &s_xmlURI);
+    return DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace"
+                                      , &s_xmlURI
+                                      , reinitNodeImpl
+                                      , nodeImplCleanup
+                                        );
 }
 
 //Return a URI mapped from the given prefix and namespaceURI as below
@@ -458,10 +474,26 @@ DOMString NodeImpl::getXmlURIString() {
 const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
                                      const DOMString &namespaceURI, short nType)
 {
-    DOMString xml = DStringPool::getStaticString("xml", &s_xml);
-    DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace", &s_xmlURI);
-    DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
-    DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
+    DOMString xml = DStringPool::getStaticString("xml"
+                                               , &s_xml
+                                               , reinitNodeImpl
+                                               , nodeImplCleanup
+                                               );
+    DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace"
+                                                  , &s_xmlURI
+                                                  , reinitNodeImpl
+                                                  , nodeImplCleanup
+                                                  );
+    DOMString xmlns = DStringPool::getStaticString("xmlns"
+                                                 , &s_xmlns
+                                                 , reinitNodeImpl
+                                                 , nodeImplCleanup
+                                                 );
+    DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/"
+                                                    , &s_xmlnsURI
+                                                    , reinitNodeImpl
+                                                    , nodeImplCleanup
+                                                    );
 
     if (prefix == null)
         return namespaceURI;
@@ -478,4 +510,23 @@ const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
     } else
         return namespaceURI;
     return namespaceURI;
+}
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void NodeImpl::reinitNodeImpl() {
+
+    delete s_xml;
+    s_xml = 0;
+
+    delete s_xmlURI;
+    s_xmlURI = 0;
+
+    delete s_xmlns;
+    s_xmlns = 0;
+
+    delete s_xmlnsURI;
+    s_xmlnsURI = 0;
+
 }

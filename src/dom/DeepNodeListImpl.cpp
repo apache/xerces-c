@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/10/25 21:47:14  peiyongz
+ * Replace XMLDeleterFor with XMLRegisterCleanup
+ *
  * Revision 1.7  2001/10/18 18:01:29  tng
  * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
  *
@@ -109,7 +112,8 @@
 #include "DStringPool.hpp"
 #include <limits.h>
 
-static DOMString *kAstr;
+static DOMString *kAstr = 0;
+static XMLRegisterCleanup kAstrCleanup;
 
 DeepNodeListImpl::DeepNodeListImpl(NodeImpl *rootNod, const DOMString &tagNam)
 {
@@ -117,7 +121,10 @@ DeepNodeListImpl::DeepNodeListImpl(NodeImpl *rootNod, const DOMString &tagNam)
     this->rootNode = rootNod;
     this->tagName = tagNam;
     nodes=new NodeVector();
-    matchAll = tagName.equals(DStringPool::getStaticString("*", &kAstr));
+    matchAll = tagName.equals(DStringPool::getStaticString("*"
+                                                         , &kAstr
+                                                         , reinitDeepNodeListImpl
+                                                         , kAstrCleanup));
     this->namespaceURI = null;	//DOM Level 2
     this->matchAllURI = false;	//DOM Level 2
     this->matchURIandTagname = false;	//DOM Level 2
@@ -132,9 +139,17 @@ DeepNodeListImpl::DeepNodeListImpl(NodeImpl *rootNod,
     this->rootNode = rootNod;
     this->tagName = localName;
     nodes=new NodeVector();
-    matchAll = tagName.equals(DStringPool::getStaticString("*", &kAstr));
+    matchAll = tagName.equals(DStringPool::getStaticString("*"
+                                                         , &kAstr
+                                                         , reinitDeepNodeListImpl
+                                                         , kAstrCleanup));
+
     this->namespaceURI = fNamespaceURI;
-    this->matchAllURI = fNamespaceURI.equals(DStringPool::getStaticString("*", &kAstr));
+    this->matchAllURI = fNamespaceURI.equals(DStringPool::getStaticString("*"
+                                                                        , &kAstr
+                                                                        , reinitDeepNodeListImpl
+                                                                        , kAstrCleanup));
+                                                                        
     this->matchURIandTagname = true;
 };
 
@@ -265,3 +280,10 @@ void DeepNodeListImpl::unreferenced()
       delete ptr;
 };
 
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void DeepNodeListImpl::reinitDeepNodeListImpl() {
+	delete kAstr;
+	kAstr = 0;
+}

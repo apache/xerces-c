@@ -64,7 +64,8 @@
 #include "DStringPool.hpp"
 
 
-static DOMString *nam;   // Will be lazily initialized to "#document-fragment"
+static DOMString *nam = 0;   // Will be lazily initialized to "#document-fragment"
+static XMLRegisterCleanup namCleanup;
 
 DocumentFragmentImpl::DocumentFragmentImpl(DocumentImpl *masterDoc)
     : ParentNode(masterDoc)
@@ -94,7 +95,10 @@ NodeImpl *DocumentFragmentImpl::cloneNode(bool deep)
 
 
 DOMString DocumentFragmentImpl::getNodeName() {
-    return DStringPool::getStaticString("#document-fragment", &nam);
+    return DStringPool::getStaticString("#document-fragment"
+                                       , &nam
+                                       , reinitDocumentFragmentImpl
+                                       , namCleanup);
 }
 
 
@@ -113,3 +117,11 @@ void DocumentFragmentImpl::setNodeValue(const DOMString &x)
 {
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
 };
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void DocumentFragmentImpl::reinitDocumentFragmentImpl() {
+	delete nam;
+	nam = 0;
+}

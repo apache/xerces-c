@@ -294,6 +294,12 @@ public: // should really be protected - ALH
     inline void hasStringValue(bool value) {
         flags = (value ? flags | HASSTRING : flags & ~HASSTRING);
     }
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitNodeImpl();   
+
 };
 
 

@@ -83,6 +83,11 @@ public:
         virtual NodeImpl * cloneNode(bool deep);
     virtual DOMString getNodeName();
     virtual short getNodeType();
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitCommentImpl();
 };
 
 #endif

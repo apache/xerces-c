@@ -92,6 +92,9 @@
 #include "RangeImpl.hpp"
 #include "DOM_Document.hpp"
 
+static DOMString *nam = 0;  // will be lazily initialized to "#document"
+static XMLRegisterCleanup namCleanup;
+
 DocumentImpl::DocumentImpl()
     : ParentNode(this)
 {
@@ -203,8 +206,10 @@ NodeImpl *DocumentImpl::cloneNode(bool deep) {
 
 
 DOMString DocumentImpl::getNodeName() {
-    static DOMString *nam = 0;  // will be lazily initialized to "#document"
-    return DStringPool::getStaticString("#document", &nam);
+    return DStringPool::getStaticString("#document"
+                                       , &nam
+                                       , reinitDocumentImpl
+                                       , namCleanup);
 }
 
 
@@ -854,3 +859,10 @@ int DocumentImpl::changes() {
     return fChanges;
 }
 
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void DocumentImpl::reinitDocumentImpl() {
+	delete nam;
+	nam = 0;
+}

@@ -104,6 +104,12 @@ public:
     virtual void setVersion(const DOMString& data);
     virtual void setEncoding(const DOMString& data);
     virtual void setStandalone(const DOMString& data);
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitXMLDeclImpl();   
+
 };
 
 #endif
