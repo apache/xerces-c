@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/02/17 19:56:03  peiyongz
+ * Re-prioritize search order for error message files.
+ *
  * Revision 1.11  2002/12/12 16:53:25  peiyongz
  * Message file name changed.
  *
@@ -171,15 +174,20 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     ArrayJanitor<char> jan1(domainName);
 
     /***
-	Resolve location
+        Location resolution priority
+         
+         1. XMLMsgLoader::getNLSHome(), set by user through
+            XMLPlatformUtils::Initialize(), which provides user-specified
+            location where the message loader shall retrieve error messages.
 
-	REVISIT: another approach would be: through some system API
-	         which returns the directory of the XercescLib and
-	         that directory would be used to locate the resource bundle
+         2. envrionment var: XERCESC_NLS_HOME
+
+         3. path $XERCESCROOT/msg
     ***/
+
     char locationBuf[1024];
     memset(locationBuf, 0, sizeof locationBuf);
-    char *nlsHome = getenv("XERCESC_NLS_HOME");
+    const char const *nlsHome = XMLMsgLoader::getNLSHome();
 
     if (nlsHome)
     {
@@ -188,15 +196,31 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     }
     else
     {
-        char *altHome = getenv("XERCESCROOT");
-        if (altHome)
+        nlsHome = getenv("XERCESC_NLS_HOME");
+        if (nlsHome)
         {
-            strcpy(locationBuf, altHome);
+            strcpy(locationBuf, nlsHome);
             strcat(locationBuf, U_FILE_SEP_STRING);
-            strcat(locationBuf, "msg");
-            strcat(locationBuf, U_FILE_SEP_STRING);                    
         }
-    }    
+        else
+        {
+            nlsHome = getenv("XERCESCROOT");
+            if (nlsHome)
+            {
+                strcpy(locationBuf, nlsHome);
+                strcat(locationBuf, U_FILE_SEP_STRING);
+                strcat(locationBuf, "msg");
+                strcat(locationBuf, U_FILE_SEP_STRING);                    
+            }
+            else
+            {
+                /***
+                 leave it to ICU to decide where to search
+                 for the error message.
+                 ***/
+            }
+        }    
+    }
 
     /***
 	Open the locale-specific resource bundle
