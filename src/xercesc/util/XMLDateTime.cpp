@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/06 22:22:21  peiyongz
+ * Schema-Errata: E2-12: gMonth
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -123,7 +126,7 @@ static const int YMONTH_MIN_SIZE = 7;    // CCYY_MM
 static const int TIME_MIN_SIZE   = 8;    // hh:mm:ss
 static const int TIMEZONE_SIZE   = 5;    // hh:mm
 static const int DAY_SIZE        = 5;    // ---DD
-static const int MONTH_SIZE      = 6;    // --MM--
+//static const int MONTH_SIZE      = 6;    // --MM--
 static const int MONTHDAY_SIZE   = 7;    // --MM-DD
 static const int NOT_FOUND       = -1;
 
@@ -595,6 +598,7 @@ void XMLDateTime::parseDay()
 
 //
 // {--MM--}[TimeZone]
+// {--MM}[TimeZone]
 //  012345
 //
 void XMLDateTime::parseMonth()
@@ -602,9 +606,7 @@ void XMLDateTime::parseMonth()
     initParser();
 
     if (fBuffer[0] != DATE_SEPARATOR ||
-        fBuffer[1] != DATE_SEPARATOR ||
-        fBuffer[4] != DATE_SEPARATOR ||
-        fBuffer[5] != DATE_SEPARATOR  )
+        fBuffer[1] != DATE_SEPARATOR  )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_gMth_invalid
@@ -616,9 +618,21 @@ void XMLDateTime::parseMonth()
     fValue[Day]      = DAY_DEFAULT;
     fValue[Month]    = parseInt(2, 4);
 
-    if ( MONTH_SIZE < fEnd )
+    // REVISIT: allow both --MM and --MM-- now. 
+    // need to remove the following lines to disallow --MM-- 
+    // when the errata is officially in the rec. 
+    fStart = 4;
+    if ( fEnd >= fStart+2 && fBuffer[fStart] == DATE_SEPARATOR && fBuffer[fStart+1] == DATE_SEPARATOR ) 
+    { 
+        fStart += 2; 
+    } 
+
+    //
+    // parse TimeZone if any
+    //
+    if ( fStart < fEnd )
     {
-        int sign = findUTCSign(MONTH_SIZE);
+        int sign = findUTCSign(fStart);
         if ( sign < 0 )
         {
             ThrowXML1(SchemaDateTimeException
