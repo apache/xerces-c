@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2001/11/07 21:10:46  tng
+ * Performance: move getRawName() to outer loop so that it is called only once per outer loop.
+ *
  * Revision 1.25  2001/10/04 15:08:55  knoaman
  * Add support for circular import.
  *
@@ -290,6 +293,9 @@ DFAContentModel::validateContent( QName** const        children
     {
         // Get the current element index out
         const QName* curElem = children[childIndex];
+        const XMLCh* curElemRawName = 0;
+        if (fDTD)
+            curElemRawName = curElem->getRawName();
 
         // If this is text in a Schema mixed content model, skip it.
         if ( fIsMixed &&
@@ -302,7 +308,7 @@ DFAContentModel::validateContent( QName** const        children
         {
             const QName* inElem  = fElemMap[elemIndex];
             if (fDTD) {
-                if (!XMLString::compareString(inElem->getRawName(), curElem->getRawName())) {
+                if (!XMLString::compareString(inElem->getRawName(), curElemRawName)) {
                     nextState = fTransTable[curState][elemIndex];
                     if (nextState != XMLContentModel::gInvalidTrans)
                         break;
@@ -583,6 +589,9 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
         // Get the current leaf's element index
         const QName* element = fLeafList[outIndex]->getElement();
+        const XMLCh* elementRawName = 0;
+        if (fDTD && element)
+            elementRawName = element->getRawName();
 
         // See if the current leaf node's element index is in the list
         unsigned int inIndex = 0;
@@ -591,7 +600,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         {
             const QName* inElem = fElemMap[inIndex];
             if (fDTD) {
-                if (!XMLString::compareString(inElem->getRawName(), element->getRawName())) {
+                if (!XMLString::compareString(inElem->getRawName(), elementRawName)) {
                     break;
                 }
             }
@@ -630,13 +639,17 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
     for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
     {
+        const QName* element = fElemMap[elemIndex];
+        const XMLCh* elementRawName = 0;
+        if (fDTD && element)
+            elementRawName = element->getRawName();
+
         for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
         {
             const QName* leaf = fLeafList[leafIndex]->getElement();
             const int leafType = fLeafListType[leafIndex];
-            const QName* element = fElemMap[elemIndex];
             if (fDTD) {
-                if (!XMLString::compareString(leaf->getRawName(), element->getRawName())) {
+                if (!XMLString::compareString(leaf->getRawName(), elementRawName)) {
                     fLeafSorter[fSortCount++] = leafIndex;
                 }
             }
