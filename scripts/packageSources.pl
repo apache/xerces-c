@@ -103,7 +103,8 @@ sub package_sources {
    if (length($ICUROOT) > 0) {
    	change_documentation_entities("$srctargetdir/doc/entities.ent");
    }
-   system("java -classpath \$CLASSPATH org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml \$HOME/xml-stylebook/styles/apachexml");  # You must have Xerces-Java and Stylebook installed in addition to JDK1.2.2
+
+   system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan-0.19.2.jar;../tools/jars/xerces-1.0.1.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/style-apachexml.jar");
 
    if ($platform =~ m/Windows/) {
       $RM = "rm";
