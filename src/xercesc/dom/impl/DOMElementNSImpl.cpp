@@ -109,14 +109,8 @@ const XMLCh* DOMElementNSImpl::getBaseURI() const
 
 void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
 {
-    const XMLCh * xml      = DOMNodeImpl::getXmlString();
-    const XMLCh * xmlURI   = DOMNodeImpl::getXmlURIString();
-
     if (fNode.isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
-    if(prefix != 0 && !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, GetDOMNodeMemoryManager);
-
     if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull)
         throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
@@ -125,6 +119,12 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
         fName = fLocalName;
         return;
     }
+
+    if(!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, GetDOMNodeMemoryManager);
+
+    const XMLCh * xml      = DOMNodeImpl::getXmlString();
+    const XMLCh * xmlURI   = DOMNodeImpl::getXmlURIString();
 
     if (XMLString::equals(prefix, xml) &&
         !XMLString::equals(fNamespaceURI, xmlURI))

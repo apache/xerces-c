@@ -78,24 +78,25 @@ const XMLCh * DOMAttrNSImpl::getLocalName() const
 
 void DOMAttrNSImpl::setPrefix(const XMLCh *prefix)
 {
-    const XMLCh * xml = DOMNodeImpl::getXmlString();
-    const XMLCh * xmlURI = DOMNodeImpl::getXmlURIString();
     const XMLCh * xmlns = DOMNodeImpl::getXmlnsString();
-    const XMLCh * xmlnsURI = DOMNodeImpl::getXmlnsURIString();
 
     if (fNode.isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull || XMLString::equals(fLocalName, xmlns))
         throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
-    if (prefix != 0 && !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
-        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, GetDOMNodeMemoryManager);
-
     if (prefix == 0 || prefix[0] == chNull) {
         fName = fLocalName;
         fPrefix = 0;
         return;
     }
+
+    if (!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
+        throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, GetDOMNodeMemoryManager);
+
+    const XMLCh * xml = DOMNodeImpl::getXmlString();
+    const XMLCh * xmlURI = DOMNodeImpl::getXmlURIString();
+    const XMLCh * xmlnsURI = DOMNodeImpl::getXmlnsURIString();
 
     if (XMLString::equals(prefix, xml)&&
         !XMLString::equals(fNamespaceURI, xmlURI)||
