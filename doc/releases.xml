@@ -94,7 +94,7 @@
     <tr>
         <td>2001-10-25</td>
         <td>John Clayton</td>
-        <td>[Bug 4121] BinHTTPUrlInputStream needds to read entire HTTP header.
+        <td>[Bug 4121] BinHTTPUrlInputStream needs to read entire HTTP header.
         </td>
     </tr>
 
@@ -186,7 +186,7 @@
     <tr>
         <td>2001-10-22</td>
         <td>Tinny Ng</td>
-        <td>Check that memory has been acquired successfully after memory acquistion requests in DOMString.
+        <td>Check that memory has been acquired successfully after memory acquisition requests in DOMString.
         </td>
     </tr>
 
@@ -236,7 +236,7 @@
     <tr>
         <td>2001-10-19</td>
         <td>Tinny Ng</td>
-        <td>[Bug 3909] return non-zero an exit code when error was encounted.
+        <td>[Bug 3909] return non-zero an exit code when error was encountered.
         </td>
     </tr>
 
