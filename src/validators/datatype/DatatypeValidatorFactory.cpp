@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/07/05 20:15:25  peiyongz
+ * NOTATIONDatatypeValidator
+ *
  * Revision 1.12  2001/07/04 20:16:31  peiyongz
  * IDREFDatatypeValidator
  *
@@ -112,6 +115,7 @@
 #include <validators/datatype/Base64BinaryDatatypeValidator.hpp>
 #include <validators/datatype/IDDatatypeValidator.hpp>
 #include <validators/datatype/IDREFDatatypeValidator.hpp>
+#include <validators/datatype/NOTATIONDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -324,9 +328,10 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
 /*
         fBuiltInRegistry->put((void*) XMLUni::fgEntityString,
                        new ENTITYDatatypeValidator());
+	    */
         fBuiltInRegistry->put((void*) XMLUni::fgNotationString,
                        new NOTATIONDatatypeValidator());
-	    */
+
 
         // Create 'IDREFS' datatype validator
 	    createDatatypeValidator(XMLUni::fgIDRefsString, 
