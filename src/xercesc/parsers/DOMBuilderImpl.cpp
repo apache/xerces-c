@@ -545,18 +545,24 @@ Grammar* DOMBuilderImpl::loadGrammar(const char* const systemId,
     try
     {
         setParseInProgress(true);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
 
         // Release DOM tree - DTD
         DOMDocument* doc = adoptDocument();
         if (doc)
             doc->release();
-
+        
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
 
     catch(...)
     {
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
         throw;
     }
@@ -576,6 +582,8 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
     try
     {
         setParseInProgress(true);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
 
         // Release DOM tree - DTD
@@ -583,11 +591,15 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
         if (doc)
             doc->release();
 
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
 
     catch(...)
     {
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
         throw;
     }
@@ -609,6 +621,8 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
         Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false, getMemoryManager());
 
         setParseInProgress(true);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(isWrapper, grammarType, toCache);
 
         // Release DOM tree - DTD
@@ -616,11 +630,15 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
         if (doc)
             doc->release();
 
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
 
     catch(...)
     {
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
         throw;
     }

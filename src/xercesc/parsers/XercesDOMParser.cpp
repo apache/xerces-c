@@ -265,12 +265,18 @@ Grammar* XercesDOMParser::loadGrammar(const char* const systemId,
     try
     {
         setParseInProgress(true);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
 
     catch(...)
     {
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);        
         setParseInProgress(false);
         throw;
     }
@@ -290,12 +296,18 @@ Grammar* XercesDOMParser::loadGrammar(const XMLCh* const systemId,
     try
     {
         setParseInProgress(true);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
 
     catch(...)
     {
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);        
         setParseInProgress(false);
         throw;
     }
@@ -315,12 +327,18 @@ Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
     try
     {
         setParseInProgress(true);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(source, grammarType, toCache);
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
 
     catch(...)
     {
+        if (grammarType == Grammar::DTDGrammarType) 
+            getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
         throw;
     }
