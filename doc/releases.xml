@@ -27,6 +27,27 @@
 
     <tr>
         <td>2002-08-23</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 11981] inproper "AND" operator in AutoSense.hpp
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-23</td>
+        <td>Tinny Ng</td>
+        <td>Memory leak fix: enums is not deleted if an error occurred.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-23</td>
+        <td>Tinny Ng</td>
+        <td>Memory leak fix: XMLUri data not deleted if constructor failed.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-23</td>
         <td>James Berry</td>
         <td>Begin addition of support for Codewarrior MachO build of Xerces framework.
         </td>
@@ -36,6 +57,13 @@
         <td>2002-08-23</td>
         <td>James Berry</td>
         <td>[Bug 11776] MacOSUnicodeConvertor::upperCase doesn't work correctly.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-23</td>
+        <td>Robert Buck</td>
+        <td>[Bug 11975] Update to XercesLib VC7 Project File.
         </td>
     </tr>
 
@@ -111,7 +139,7 @@
 
     <tr>
         <td>2002-08-19</td>
-        <td>Derek Harmon</td>
+        <td>Derek Harmon and Abe Backus</td>
         <td>[Bug 6467] Installing Xerces C++ on cygwin environment.
         </td>
     </tr>
