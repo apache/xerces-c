@@ -15,157 +15,147 @@
     <tr>
         <td>2001-06-15</td>
         <td>Tinny Ng</td>
-        <td>  Files created:<br/><br/>
-			  RefHash2KeysTableOf<br/>
-		      SchemaAttDef<br/>
-              SchemaAttDefList<br/>
-			  SchemaElementDecl<br/>
-			  RefHash3KeysIdPool<br/>
-              GrammarResolver<br/>
-			  SchemaGrammar<br/>
-			  SchemaValidator<br/>
-			  Grammar<br/>
-			  DTDGrammar<br/>
-			  DTDScanner<br/><br/>
-			  Components updated:<br/><br/>
-			  XMLValidator<br/>
-			  DTDValidator<br/>
+        <td>Schema:<br/>
+            Add Schema support in XMLParsers (DOM/SAX/SAX2), XMLScanner. <br/>
+            Create SchemaValidator. <br/>
+            Add Grammar Model. <br/>
+            Support xsi:nil. <br/>
+            Support xsi:schemaLocation and xsi:noNamespaceSchemaLocation. <br/>
+            Update samples to enable schema.
         </td>
     </tr>
 
     <tr>
         <td>2001-06-15</td>
         <td>Tinny Ng</td>
-        <td> IDOM:<br/><br/>
-             Complete the Range, 
-			 TreeWalker, NodeIterator, 
-			 and DeepNodeList.<br/>
-			 Add samples IDOMPrint, 
-			 and IDOMCount.<br/>
-			 Add test cases 
-			 IRangeTest and ITraversal.<br/>
+        <td>Break DTDValidator into DTDGrammar, DTDScanner, and DTDValidator.
+        </td>
+    </tr>
 
+    <tr>
+        <td>2001-06-15</td>
+        <td>Tinny Ng</td>
+        <td>IDOM:<br/>
+            Complete the Range, TreeWalker, NodeIterator, and DeepNodeList.<br/>
+            Add samples IDOMPrint, and IDOMCount.<br/>
+            Add test cases IRangeTest and ITraversal.
         </td>
     </tr>
 
     <tr>
         <td>2001-06-15</td>
         <td>Khaled Noaman</td>
-        <td> Files created:<br/><br/>
-             ASCIIRangeFactory<br/>
-             BlockRangeFactory<br/>
-             BMPattern<br/>
-             CharToken<br/>
-             ClosureToken<br/>
-             ConcatToken<br/>
-             ConditionToken<br/>
-             Match<br/>
-             ModifierToken<br/>
-             Op<br/>
-             OpFactory<br/>
-             ParserForXMLSchema<br/>
-             ParenToken<br/>
-             RangeFactory<br/>
-             RangeToken<br/>
-             RangeTokenMap<br/>
-             RegularExpression<br/>
-             RegxDefs<br/>
-             RegxParser<br/>
-             RegxUtil<br/>
-             StringToken<br/>
-             Token<br/>
-             TokenFactory<br/>
-             TokenInc<br/>
-             UniCharTable<br/>
-             UnicodeRangeFactory<br/>
-             UnionToken<br/>
-             XMLRangeFactory<br/>
-             XMLUniCharacter<br/>
-             DatatypeValidator<br/>
-			 DatatypeValidatorFactory<br/>
-			 SchemaSymbols<br/>
-			 StringTokenizer<br/>
-			 ComplexTypeInfo<br/>
-			 NamespaceScope<br/>
-			 TraverseSchema<br/>
-			 SchemaInfo<br/>
-			 GeneralAttributeCheck<br/>
+        <td> Schema:<br/>
+             Add Regular Expression. <br/>
+             Add Schema Messages. <br/>
+             Add Schema Simple Type Support. <br/>
+             Add Schema Complex Type Support (Except Group). <br/>
+             Add Schema Attribute Declarations support. <br/>
+             Add Schema Element Declarations support. <br/>
+             Support Simple Content and Complex Content. <br/>
+             Support Element and attribute reuse using "ref". <br/>
+             Support Schema Choice and Sequence. <br/>
+             Support Schema Import and Include.
+        </td>
+    </tr>
 
+    <tr>
+        <td>2001-06-15</td>
+        <td>Khaled Noaman</td>
+        <td>DatatypeValidator:<br/>
+            Add DatatypeValidator and DatatypeValidatorFactory.
         </td>
     </tr>
 
     <tr>
         <td>2001-06-15</td>
         <td>PeiYong Zhang</td>
-        <td>  Files created:<br/><br/>
-		      NumberFormatException<br/>
-		      ParseException<br/>
-			  InvalidDatatypeFacetException<br/>
-			  InvalidDatatypeValueException<br/>
-		      CMAny<br/>
-			  QName<br/>
-		      ContentLeafNameTypeVector<br/>
-              XUtil<br/>
-		      Base64<br/>
-		      HexBin<br/>
-			  XMLBigInteger<br/>
-			  XMLBigDecimal<br/>
-			  Base64DatatypeValidator<br/>
-			  BooleanDatatypeValidator<br/>
-			  DecimalDatatypeValidator<br/>
-			  HexBinDatatypeValidator<br/>
-			  StringDatatypeValidator<br/>
-              SubsitutionGroupComparator<br/><br/>
-			  Components updated:<br/><br/>
-			  SimpleContentModel<br/>
-			  MixedContentModel<br/>
-			  DFAContentModel<br/>
+        <td>Schema:<br/>
+            Add Schema support in Content Model. <br/>
+            Add Schema Exception Handling. <br/>
+            Add Schema XUtil. <br/>
+            Add QName Support. <br/>
+            Support SubstitutionGroup.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-7</td>
+        <td>2001-06-15</td>
+        <td>PeiYong Zhang</td>
+        <td>DatatypeValidator:<br/>
+             Support Base64DatatypeValidator, <br/>
+             BooleanDatatypeValidator, <br/>
+             DecimalDatatypeValidator, <br/>
+             HexBinDatatypeValidator, <br/>
+             StringDatatypeValidator, <br/>
+             InvalidDatatypeFacetException, <br/>
+             InvalidDatatypeValueException.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-08</td>
         <td>Tinny Ng</td>
-        <td>/src/idom/IDStringPool.cpp<br/>
-		    some compiler (solaris cc/hp acc)
-			requires memory to align, 
-			otherwise core dump.
+        <td>[Bug 2043] XMLFormatter unallocates arrays incorrectly.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-6</td>
+        <td>2001-06-08</td>
+        <td>PeiYong Zhang</td>
+        <td>Documentation update for Xerces 1.5.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-07</td>
+        <td>Khaled Noaman</td>
+        <td>Fix no error message for faulted-in attributes if reuse grammar for 3+ times.
+	</td>
+    </tr>
+
+    <tr>
+        <td>2001-06-06</td>
         <td>Peter A. Volchek</td>
         <td>/Platforms/Win32/Win32PlatformUtils.cpp<br/>
-		    Include stdlib.h
+	    Include stdlib.h.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-6</td>
+        <td>2001-06-06</td>
         <td>James Berry</td>
-        <td>Update Mac OS ProjectBuilder projects,<br/>
-		    Fix invalid file references in project,<br/>
-			Touch up Solaris build; a previous change 
-			to configure was lost since it hadn't been 
-			incorporated into configure.in.<br/>
-			/src/util XMLString.cpp<br/>
-			Clean up compiler warning.<br/>
-			/src/util/regx RegxParser.cpp<br/>
-			Fix two improper NULL tests.
+        <td>Update Mac OS ProjectBuilder projects.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-5</td>
+        <td>2001-06-06</td>
         <td>James Berry</td>
-        <td>DOMPrint:<br/>
-		    Add support for Mac OS X command 
-			line configuration and build.<br/>
-            Small tweak to DOMPrint to start 
-			to illustrate getErrorCount API.<br/>
-			Add support for Mac OS X command 
-			line configuration and build.
+        <td>Fix invalid file references in project.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-06</td>
+        <td>James Berry</td>
+        <td>/src/util XMLString.cpp<br/>
+            Clean up compiler warning.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-06</td>
+        <td>James Berry</td>
+        <td>/src/util/regx RegxParser.cpp<br/>
+            Fix two improper NULL tests.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-05</td>
+        <td>James Berry</td>
+        <td>Add support for Mac OS X command line configuration and build.
         </td>
     </tr>
 
@@ -177,415 +167,333 @@
     </tr>
 
     <tr>
-        <td>2001-06-4</td>
-        <td>James Berry</td>
-        <td>/src/framework/XMLValidator.cpp:<br/>
-		    Increment scanner error count from 
-			schema validator, not just in scanner itself.<br/>
-			/src/sax2/SAX2XMLReader.hpp:<br/>
-			Add pure virtual getErrorCount 
-			to SAX2XMLReader interface.<br/>
-			/src/parsers/SAX2XMLReaderImpl.hpp:<br/>
-			getErrorCount is virtual in this 
-			class reflecting derivation 
-			from SAX2XMLReader.<br/>
-			/src/internal/XMLScanner:<br/>
-			Add method incrementErrorCount
-			for use by validator. Make sure 
-			to reset error count in _both_ 
-			the scanReset methods.
-
-        </td>
-    </tr>
-
-    <tr>
-        <td>2001-06-4</td>
+        <td>2001-06-04</td>
         <td>PeiYong Zhang</td>
-        <td>/src/internal/XMLScanner.cpp<br/>
-		    /src/validators/DTD/DTDScanner.cpp<br/>
-			The start tag "&#60;?xml" could be 
-			followed by (#x20 | #x9 | #xD | #xA)+.
+        <td>The start tag "&#60;?xml" could be	followed by (#x20 | #x9 | #xD | #xA)+.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-4</td>
+        <td>2001-06-04</td>
         <td>James Berry</td>
-        <td>Add support for tracking error 
-		    count during parse; enables 
-			simple parse without 
-			requiring error handler.
+        <td>Add support for tracking error count during parse; enables
+            simple parse without requiring error handler.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-1</td>
+        <td>2001-06-01</td>
         <td>Tinny Ng</td>
         <td>/scripts/packageSources.pl<br/>
-		    Keep the BCB4 project files 
-			in the source package.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2001-05-31</td>
-        <td>Tinny Ng</td>
-        <td>/scripts/packageBinaries.pl<br/>
-            Fix the name of ICU dll.
+	    Keep the BCB4 project files	in the source package.
         </td>
     </tr>
 
     <tr>
         <td>2001-05-22</td>
         <td>James Berry</td>
-        <td> Check for existance of MacOS 
-		     Unicode Converter routines 
-			 prior to instanciating our 
-			 transcoder object; 
-			 Xerces will thus panic, rather 
-			 than crash, if they don't 
-			 exist.
-			 Add support to check for 
-			 existance of MacOS Unicode 
-			 Converter to avoid 
-			 calling through NULL pointer
+        <td>Check for existance of MacOS Unicode Converter routines prior to instanciating our
+	 transcoder object; Xerces will thus panic, rather than crash, if they don't exist.
+	 Add support to check for existance of MacOS Unicode Converter to avoid calling through NULL pointer.
         </td>
     </tr>
 
     <tr>
         <td>2001-05-16</td>
         <td>Henry Zongaro</td>
-        <td>IDOM: Add namespace support</td>
-    </tr>
-
-    <tr>
-        <td>2001-05-11</td>
-        <td>Arnaud LeHors</td>
-        <td>ThreadTest.cpp: 
-		     tiny bug fixed</td>
-    </tr>
-
-    <tr>
-        <td>2001-05-11</td>
-        <td>Tinny Ng</td>
-        <td>LinuxPlatformUtils.cpp: 
-		     Need to add header 
-			 "linux/limits"
-			 for definition of 
-			 PATH_MAX</td>
+        <td>IDOM: Add namespace support.
+        </td>
     </tr>
 
     <tr>
         <td>2001-05-10</td>
         <td>Christian Schuhegger</td>
-        <td>built-in buffer limit could be 
-		    smaller than system limit,
-            use PATH_MAX instead</td>
+        <td>[Bug 1158] built-in buffer limit could be smaller than system limit,
+            use PATH_MAX instead.
+        </td>
     </tr>
 
     <tr>
         <td>2001-05-10</td>
         <td>Arnaud LeHors</td>
-        <td>AttrNSImpl.cpp: fixed typo in 
-		    constructor</td>
+        <td>[Bug 1605] AttrNSImpl.cpp: fixed typo in constructor.
+        </td>
     </tr>
 
     <tr>
         <td>2001-05-09</td>
         <td>Curt Arnold</td>
-        <td>DOMParser.cpp: The public id was 
-		    set twice and the system id was 
-			not set on Notations</td>
+        <td>[Bug 1500] The public id was set twice and the system id was not set on Notations.
+        </td>
     </tr>
 
     <tr>
-        <td>2001-05-4</td>
+        <td>2001-05-04</td>
         <td>Tinny Ng</td>
-        <td>DOMPrint: Check error before 
-		    continuing</td>
+        <td>DOMPrint: Check error before continuing.
+        </td>
     </tr>
 
     <tr>
-        <td>2001-05-3</td>
+        <td>2001-05-03</td>
         <td>Tinny Ng</td>
-        <td>ICU 1.8 update</td>
+        <td>ICU 1.8 update.
+        </td>
     </tr>
 
     <tr>
-        <td>2001-05-3</td>
+        <td>2001-05-03</td>
         <td>Khaled Noaman</td>
-        <td>Added new option to the parsers 
-		    so that the NEL (0x85) char can 
-			be treated as a newline character
-			</td>
-    </tr>
-
-    <tr>
-        <td>2001-05-3</td>
-        <td>Tinny Ng</td>
-        <td>samples update with schema</td>
+        <td>Added new option to the parsers so that the NEL (0x85) char can be
+            treated as a newline character.
+	</td>
     </tr>
 
     <tr>
         <td>2001-04-23</td>
         <td>Erik Rydgren</td>
-        <td>DTDScanner: Reuse grammar should 
-		    allow users to use any stored 
-			element decl as root</td>
+        <td>DTDScanner: Reuse grammar should allow users to use any stored
+            element decl as root.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-19</td>
         <td>William L Hopper</td>
-        <td>Win32PlatformUtils: 
-		    InterlockedCompareExchange on 
-		    different Windows</td>
+        <td>Win32PlatformUtils: InterlockedCompareExchange on different Windows.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-19</td>
         <td>William L Hopper</td>
-        <td>BCB project changes</td>
+        <td>BCB project changes.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-16</td>
         <td>James Berry</td>
-        <td>MacOSUnicodeConverter: Fix include 
-		    path,
-		    Updates to reflect changes for 
-			Mac OS X final and
-			Update MacOS projects for Mac OS X 
-			final ProjectBuilder</td>
+        <td>MacOSUnicodeConverter: Fix include path, Updates to reflect changes for
+            Mac OS X final and Update MacOS projects for Mac OS X final ProjectBuilder.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-11</td>
         <td>Arnaud LeHors</td>
-        <td>AttrImpl: allow value to be set to 
-		    null</td>
+        <td>[Bug 1303] AttrImpl: allow value to be set to null.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-11</td>
         <td>Tinny Ng</td>
-        <td>DOMParser: Attribute default values 
-		    not printed in document 
-		    type internal subset interface</td>
+        <td>DOMParser: Attribute default values not printed in document
+	    type internal subset interface.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-10</td>
         <td>Tinny Ng</td>
-        <td>createdocs.bat: fix PDF generation</td>
+        <td>createdocs.bat: fix PDF generation.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-04</td>
         <td>Alberto Massari</td>
-        <td>DTDElementDecl: Error checking for 
-		    null content spec</td>
+        <td>DTDElementDecl: Error checking for null content spec.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-02</td>
         <td>Andy Heninger</td>
-        <td>IDOM: imported</td>
+        <td>IDOM: imported.
+        </td>
     </tr>
 
     <tr>
         <td>2001-04-02</td>
         <td>Andy Heninger</td>
-        <td>IThreadTest: imported</td>
+        <td>IThreadTest: imported.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-03-30</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 1150] Problems with Namespaces and validating parsing.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-27</td>
         <td>Roman Sulzhyk</td>
-        <td>/src/Makefile.in: Explicit Makefile 
-		    dependency for 'lib' build</td>
+        <td>[Bug 1069] Explicit Makefile dependency for 'lib' build.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-26</td>
         <td>PeiYong Zhang</td>
-        <td>When Standalone="yes", it is NOT 
-		    supposed to accept element
-            which is defined in external DTD 
-			with #FIXED attribute</td>
+        <td>When Standalone="yes", it is NOT supposed to accept element
+            which is defined in external DTD with #FIXED attribute.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-26</td>
         <td>Andy Heninger</td>
-        <td>Update packageBinaries.pl for 
-		    ICU 1.8. ICU debug .lib file 
-			names and locations changed</td>
+        <td>Update packageBinaries.pl for ICU 1.8. ICU debug .lib file
+            names and locations changed.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-23</td>
         <td>Jeff Harrell</td>
-        <td>/src/util/AutoSense.hpp: AutoSense 
-		    looks for "IRIX" when it should 
-			look for "sgi" or "__sgi".</td>
+        <td>[Bug 1018] AutoSense looks for "IRIX" when it should look for "sgi" or "__sgi".
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-22</td>
         <td>Roman Sulzhyk</td>
-        <td>/src/Makefile.incl: The Makefiles 
-		    fail to locate .cpp -> .o 
-		    dependency and rebuild .o all 
-			the time</td>
+        <td>[Bug 1069] The Makefiles fail to locate .cpp -> .o dependency and rebuild .o all the time.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-22</td>
         <td>John Rope</td>
-        <td>/src/util/XMLURL.cpp: Accessing an 
-		    XML file using the file 
-		    "protocol" and a UNC path fails 
-			to open the file</td>
+        <td>[Bug 1021] Accessing an XML file using the file "protocol" and a UNC path fails
+            to open the file.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-09</td>
         <td>Tinny Ng</td>
-        <td>IconvTransService.cpp and 
-		    Iconv390TransService.cpp: Seg fault 
-		    when trying to parse empty filename</td>
+        <td>[Bug 733] Seg fault when trying to parse empty filename.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-06</td>
         <td>Tinny Ng</td>
-        <td>/src/internal/XMLScanner.cpp: 
-		    Infinite loop caused by malformed 
-			XML. Happen when namespace is on.</td>
+        <td>[Bug 677] Infinite loop caused by malformed XML. Happen when namespace is on.
+        </td>
     </tr>
 
     <tr>
         <td>2001-03-02</td>
         <td>Martin Kalen</td>
-        <td>Enabling libWWW NetAccessor support 
-		    under UNIX. Tested with latest 
-			tarball of libWWW (w3c-libwww-5.3.2) 
-			under RedHat Linux 6.1.</td>
+        <td>Enabling libWWW NetAccessor support under UNIX. Tested with latest
+            tarball of libWWW (w3c-libwww-5.3.2) under RedHat Linux 6.1.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-27</td>
         <td>Tinny Ng</td>
-        <td>/src/Makefile.incl: Linux for S/390 
-		    build requires -fPIC</td>
+        <td>[Bug 676] Linux for S/390 build requires -fPIC.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-22</td>
         <td>Tinny Ng</td>
-        <td>StdInParse doesn't output filename 
-		    or duration</td>
+        <td>[Bug 678] StdInParse doesn't output filename or duration.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-21</td>
         <td>Matt Lovett</td>
-        <td>ICUTranscoder::transcodeFrom() 
-		    expects ICU function ucnv_toUnicode 
-		    to return an extra element in 
-			fSrcOffsets to allow us to figure 
-			out the last char size, which in fact 
-			it is not.  The fix is to compute 
-			the last char size ourselves using 
-			the total bytes used.</td>
+        <td>ICUTranscoder::transcodeFrom() expects ICU function ucnv_toUnicode
+            to return an extra element in fSrcOffsets to allow us to figure
+            out the last char size, which in fact it is not.  The fix is to compute
+            the last char size ourselves using the total bytes used.
+           </td>
     </tr>
 
     <tr>
-        <td>2001-02-16</td>
+        <td>2001/02/16</td>
         <td>Andy Heninger</td>
-        <td>/src/util/XMLString.cpp: change 
-		    limit test to reduce spurious 
-			pointer assignment warnings from 
-			BoundsChecker.
-  </td>
+        <td>Change limit test to reduce spurious pointer assignment warnings from BoundsChecker.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-14</td>
         <td>Bob Kline</td>
-        <td>Better FAQ for the checksum error.</td>
+        <td>Better FAQ for the checksum error.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-14</td>
         <td>Mark Everline</td>
-        <td>/src/internal/XMLReader.cpp: Core 
-		    dump when UTF-16 encoding 
-			Contradicts actual encoding</td>
+        <td>Core dump when UTF-16 encoding contradicts actual encoding.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-13</td>
         <td>Hiram Clawson</td>
-        <td>Update samples/tests files for on 
-		    UnixWare 7.1.1 with gcc 2.95. Add 
-			UNIXWARE platform defines to 
-			Makefile.incl, add recognition of 
-			sysv5uw7 to configure.in, and add 
-			unixware as recognized 
-			platform to runConfigure</td>
+        <td>Update samples/tests files for on UnixWare 7.1.1 with gcc 2.95. Add
+            UNIXWARE platform defines to Makefile.incl, add recognition of
+            sysv5uw7 to configure.in, and add unixware as recognized platform to runConfigure.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-09</td>
         <td>Martin Kalen</td>
-        <td>Update support for SCO UnixWare 7 
-		    (gcc). Tested under UnixWare 7.1.1 
-			with gcc version 2.95.2 19991024 
-           (release) with gmake 3.79.1.</td>
+        <td>Update support for SCO UnixWare 7 (gcc). Tested under UnixWare 7.1.1
+            with gcc version 2.95.2 19991024 (release) with gmake 3.79.1.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-08</td>
         <td>Martin Kalen</td>
-        <td>enable COMPAQ Tru64 UNIX machines to 
-		    build xerces-c with gcc (tested using 
-			COMPAQ gcc version2.95.2 
-			19991024 (release) and Tru64 V5.0 
-			1094)</td>
+        <td>Enable COMPAQ Tru64 UNIX machines to build xerces-c with gcc (tested using
+            COMPAQ gcc version2.95.2 19991024 (release) and Tru64 V5.0 1094).
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-07</td>
         <td>Bill Schindler</td>
-        <td>Rearranged statements in Initialize() 
-		    so that platformInit() is called 
-			before an XMLMutex is created.</td>
+        <td>Rearranged statements in Initialize() so that platformInit() is called
+            before an XMLMutex is created.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-07</td>
         <td>Richard Ko</td>
-        <td>/Transcoders/ICU/ICUTransService.cpp: 
-		    Storage overlay in 
-			ucnv_setFromUCallBack.</td>
+        <td>Storage overlay in ucnv_setFromUCallBack.</td>
     </tr>
 
     <tr>
         <td>2001-02-05</td>
         <td>Tinny Ng</td>
-        <td>/src/util/Compilers/CSetDefs.hpp: 
-		    define NO_NATIVE_BOOL macro only 
-			if not pre-defined/reserved</td>
+        <td>[Bug 766] /src/util/Compilers/CSetDefs.hpp: define NO_NATIVE_BOOL macro only
+            if not pre-defined/reserved.
+        </td>
     </tr>
 
     <tr>
         <td>2001-02-05</td>
         <td>Jordan Naftolin</td>
-        <td>createPDF.jar and apachPDFStyle.xsl 
-		    to convert documentation xml files 
-			to pdf format</td>
+        <td>Add createPDF.jar and apachPDFStyle.xsl to convert documentation xml files
+            to pdf format.
+        </td>
     </tr>
 
 </table>
@@ -593,9 +501,9 @@
 
 <s2 title="Release Archive">
 
-    <p> For release information about &XercesCName; &XercesCVersion140;, 
+    <p> For release information about &XercesCName; &XercesCVersion140; or earlier,
         please refer to <jump href="releases_archive.html">Release Archive</jump>.
-	</p>
+    </p>
 </s2>
 
 </s1>
