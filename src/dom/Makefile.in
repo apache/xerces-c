@@ -122,6 +122,7 @@ DOM_CPP_PRIVHEADERS =  \
 	MemDebug.hpp \
 	NameNodeFilter.hpp \
 	NamedNodeMapImpl.hpp \
+	NodeIDMap.hpp \
 	NodeImpl.hpp \
 	NodeIteratorImpl.hpp \
 	NodeListImpl.hpp \
@@ -180,6 +181,7 @@ DOM_CPP_OBJECTS = \
 	EntityImpl.$(TO) \
 	EntityReferenceImpl.$(TO) \
 	NamedNodeMapImpl.$(TO) \
+	NodeIDMap.$(TO) \
 	NodeImpl.$(TO) \
 	NodeIteratorImpl.$(TO) \
         NodeListImpl.$(TO) \

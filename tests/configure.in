@@ -1,4 +1,7 @@
 # $Log$
+# Revision 1.7  2000/05/15 20:46:10  aruna1
+# Unix related changes in for NodeIDMap
+#
 # Revision 1.6  2000/04/04 20:10:17  abagchi
 # Added PTX support
 #
@@ -83,6 +86,7 @@ AC_SUBST(libs)
 
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
+DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/DOMTest/Makefile \
 DOM/Traversal/Makefile \

@@ -132,7 +132,7 @@ public:
                                                             " line: %d,   col: %d \n"
                                                             " Message: %s\n",
                                                             e.getLineNumber(),
-                                                            e.getColumnNumber,
+                                                            e.getColumnNumber(),
                                                             XMLString::transcode(e.getMessage()));};
 private :
     SimpleErrorHandler(const SimpleErrorHandler&);
@@ -166,8 +166,6 @@ private :
 
 int main()
 {
-    printf("Hello, World.\n");
-
     // Initialize the XML4C2 system
     try
     {

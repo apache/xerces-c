@@ -79,7 +79,7 @@ NodeIDMap::NodeIDMap(int initialSize)
     
     fSize = gPrimes[fSizeIndex];
     fNumEntries = 0;
-    fMaxEntries = unsigned long(float(fSize) * gMaxFill);
+    fMaxEntries = (unsigned long)(float(fSize) * gMaxFill);
 
     fTable = new AttrImpl *[fSize];
     unsigned int i;
@@ -240,7 +240,7 @@ void NodeIDMap::growTable()
     //  Figure the new table size.
     //
     fSizeIndex++;
-    unsigned int fSize = gPrimes[fSizeIndex];
+    fSize = gPrimes[fSizeIndex];
     if (fSize == 0)
     {
         // We need to grow bigger than the largest available size.
@@ -257,7 +257,7 @@ void NodeIDMap::growTable()
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
 
-    fMaxEntries = unsigned long(float(fSize) * gMaxFill);
+    fMaxEntries = (unsigned long)(float(fSize) * gMaxFill);
 
     //
     // Move entries over from the old table to the new one.
