@@ -903,9 +903,13 @@ const XMLCh* DOMDocumentImpl::getDocumentURI() const
 }
 
 void DOMDocumentImpl::setDocumentURI(const XMLCh* documentURI){
-    XMLCh* temp = (XMLCh*) this->allocate((XMLString::stringLen(documentURI) + 9)*sizeof(XMLCh));
-    XMLString::fixURI(documentURI, temp);
-    fDocumentURI = temp;
+    if (documentURI && *documentURI) {
+        XMLCh* temp = (XMLCh*) this->allocate((XMLString::stringLen(documentURI) + 9)*sizeof(XMLCh));
+        XMLString::fixURI(documentURI, temp);
+        fDocumentURI = temp;
+    }
+    else
+        fDocumentURI = 0;
 }
 
 bool DOMDocumentImpl::getStrictErrorChecking() const {

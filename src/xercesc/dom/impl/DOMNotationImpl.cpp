@@ -161,9 +161,13 @@ void DOMNotationImpl::release()
 }
 
 void DOMNotationImpl::setBaseURI(const XMLCh* baseURI) {
-    XMLCh* temp = (XMLCh*) ((DOMDocumentImpl *)getOwnerDocument())->allocate((XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh));
-    XMLString::fixURI(baseURI, temp);
-    fBaseURI = temp;
+    if (baseURI && *baseURI) {
+        XMLCh* temp = (XMLCh*) ((DOMDocumentImpl *)getOwnerDocument())->allocate((XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh));
+        XMLString::fixURI(baseURI, temp);
+        fBaseURI = temp;
+    }
+    else
+        fBaseURI = 0;
 }
 
 const XMLCh* DOMNotationImpl::getBaseURI() const

@@ -176,9 +176,13 @@ void DOMEntityImpl::setSystemId(const XMLCh *arg)
 
 
 void DOMEntityImpl::setBaseURI(const XMLCh* baseURI) {
-    XMLCh* temp = (XMLCh*) ((DOMDocumentImpl *)getOwnerDocument())->allocate((XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh));
-    XMLString::fixURI(baseURI, temp);
-    fBaseURI = temp;
+    if (baseURI && *baseURI) {
+        XMLCh* temp = (XMLCh*) ((DOMDocumentImpl *)getOwnerDocument())->allocate((XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh));
+        XMLString::fixURI(baseURI, temp);
+        fBaseURI = temp;
+    }
+    else
+        fBaseURI = 0;
 }
 
 
