@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2002/07/05 11:31:04  tng
+ * Fix typo.
+ *
  * Revision 1.3  2002/07/04 15:24:57  tng
  * DOM L3: add transferElement and removeBucketElemSafe for use in DOMDocument::renameNode.
  *
@@ -267,7 +270,7 @@ template <class TElem> void RefHashTableOf<TElem>::reinitialize(HashBase* hashBa
 // whatever key2 has originally will be purged (if adopted)
 template <class TElem> void RefHashTableOf<TElem>::transferElement(const void* const key1, void* key2)
 {
-    TVal* data = get(key1);
+    TElem* data = get(key1);
 
     unsigned int hashVal;
     removeBucketElemSafe(key1, hashVal);
