@@ -448,6 +448,9 @@ bool DOMNodeImpl::isSameNode(const DOMNode* other)
 
 bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
 {
+    if (!arg)
+        return false;
+
     if (isSameNode(arg)) {
         return true;
     }
