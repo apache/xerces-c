@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/05 22:16:26  robweir
+ * Move DOMString implementation class declarations into a new
+ * file: DOMStringImpl.hpp.  Include this header in DOMString.hpp
+ * for XML_DEBUG builds so the underlying character array will be
+ * visible in the debugger.  <robert_weir@lotus.com>
+ *
  * Revision 1.3  1999/12/03 00:11:22  andyh
  * Added DOMString.clone() to node parameters in and out of the DOM,
  * where they had been missed.
@@ -81,7 +87,12 @@
 
 #include <util/XML4CDefs.hpp>
 
+#ifdef XML_DEBUG
+#include "DOMStringImpl.hpp"
+#else
 class DOMStringHandle;
+#endif
+
 class DOM_NullPtr;
 
 /**

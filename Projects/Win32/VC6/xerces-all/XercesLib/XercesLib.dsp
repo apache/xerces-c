@@ -954,6 +954,10 @@ SOURCE=..\..\..\..\..\src\dom\DOMString.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\DOMStringImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\DStringPool.cpp
 # End Source File
 # Begin Source File

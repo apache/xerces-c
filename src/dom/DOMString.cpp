@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/05 22:16:26  robweir
+ * Move DOMString implementation class declarations into a new
+ * file: DOMStringImpl.hpp.  Include this header in DOMString.hpp
+ * for XML_DEBUG builds so the underlying character array will be
+ * visible in the debugger.  <robert_weir@lotus.com>
+ *
  * Revision 1.5  1999/12/17 02:09:41  andyh
  * Fix bug in DOMString::insertData() that occured if the source
  * and destination strings were the same and the orginal buffer had
@@ -91,9 +97,12 @@
 #include <util/TransService.hpp>
 #include "DOMString.hpp"
 
+#ifndef XML_DEBUG
+#include "DOMStringImpl.hpp"
+#endif
+
 #include <assert.h>
 #include <string.h>
-
 
  
 
@@ -102,17 +111,6 @@
 //      DOMStringData
 //
 //----------------------------------------------
-class   DOMStringData
-{
-public:
-    int                 fBufferLength;
-    int                 fRefCount;
-    XMLCh               fData[1];
-    
-    static DOMStringData *allocateBuffer(int length);
-    inline void         addRef();
-    inline void         removeRef();
-};
 
 void DOMStringData::removeRef()
 {
@@ -156,26 +154,6 @@ DOMStringData *DOMStringData::allocateBuffer(int length)
 //
 //-----------------------------------------------------
 
-class  DOMStringHandle
-{
-public:
-            int              fLength;
-            int              fRefCount;
-            DOMStringData    *fDSData;
-
-    void    *operator new( size_t sizeToAlloc);
-    void    operator delete( void *pvMem );
-private:
-    static  void *freeListPtr;
-public:
-    static  DOMStringHandle  *createNewStringHandle(int bufLength);
-            DOMStringHandle  *cloneStringHandle();
-    inline  void             addRef();
-    inline  void             removeRef();
-                             ~DOMStringHandle() {};
-private:
-    inline                   DOMStringHandle() {};
-};
 
 
 //
