@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/21 18:47:42  peiyongz
+ * AIX 4.2, xlC 3 rev.1 compilation error: dtor() declared with external linkage
+ *                                 and called or defined before being declared as inline
+ *
  * Revision 1.11  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -256,6 +260,102 @@ private :
 };
 
 // ---------------------------------------------------------------------------
+//  ContentSpecNode: Constructors and Destructor
+// ---------------------------------------------------------------------------
+inline ContentSpecNode::ContentSpecNode() :
+
+    fElement(0)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
+    , fAdoptFirst(true)
+    , fAdoptSecond(true)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
+{
+    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+}
+
+inline
+ContentSpecNode::ContentSpecNode(QName* const element) :
+
+    fElement(0)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
+    , fAdoptFirst(true)
+    , fAdoptSecond(true)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
+{
+    if (!element)
+        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+    else
+        fElement = new QName(element);
+}
+
+inline
+ContentSpecNode::ContentSpecNode(const  NodeTypes               type
+                                ,       ContentSpecNode* const  firstAdopt
+                                ,       ContentSpecNode* const  secondAdopt
+                                , const bool                    adoptFirst
+                                , const bool                    adoptSecond) :
+
+    fElement(0)
+    , fFirst(firstAdopt)
+    , fSecond(secondAdopt)
+    , fType(type)
+    , fAdoptFirst(adoptFirst)
+    , fAdoptSecond(adoptSecond)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
+{
+    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+}
+
+inline
+ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
+{
+    const QName* tempElement = toCopy.getElement();
+    if (tempElement)
+        fElement = new QName(tempElement);
+    else
+        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+
+    const ContentSpecNode *tmp = toCopy.getFirst();
+    if (tmp)
+        fFirst = new ContentSpecNode(*tmp);
+    else
+        fFirst = 0;
+
+    tmp = toCopy.getSecond();
+    if (tmp)
+        fSecond = new ContentSpecNode(*tmp);
+    else
+        fSecond = 0;
+
+    fType = toCopy.getType();
+    fAdoptFirst = true;
+    fAdoptSecond = true;
+    fMinOccurs = 1;
+    fMaxOccurs = 1;
+}
+
+inline ContentSpecNode::~ContentSpecNode()
+{
+    // Delete our children, which cause recursive cleanup
+    if (fAdoptFirst) {
+		delete fFirst;
+    }
+
+    if (fAdoptSecond) {
+		delete fSecond;
+    }
+
+    delete fElement;
+}
+
+// ---------------------------------------------------------------------------
 //  ContentSpecNode: Getter methods
 // ---------------------------------------------------------------------------
 inline QName* ContentSpecNode::getElement()
@@ -374,103 +474,6 @@ inline void ContentSpecNode::setAdoptFirst(bool newState)
 inline void ContentSpecNode::setAdoptSecond(bool newState)
 {
     fAdoptSecond = newState;
-}
-
-
-// ---------------------------------------------------------------------------
-//  ContentSpecNode: Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline ContentSpecNode::ContentSpecNode() :
-
-    fElement(0)
-    , fFirst(0)
-    , fSecond(0)
-    , fType(ContentSpecNode::Leaf)
-    , fAdoptFirst(true)
-    , fAdoptSecond(true)
-    , fMinOccurs(1)
-    , fMaxOccurs(1)
-{
-    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-}
-
-inline
-ContentSpecNode::ContentSpecNode(QName* const element) :
-
-    fElement(0)
-    , fFirst(0)
-    , fSecond(0)
-    , fType(ContentSpecNode::Leaf)
-    , fAdoptFirst(true)
-    , fAdoptSecond(true)
-    , fMinOccurs(1)
-    , fMaxOccurs(1)
-{
-    if (!element)
-        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-    else
-        fElement = new QName(element);
-}
-
-inline
-ContentSpecNode::ContentSpecNode(const  NodeTypes               type
-                                ,       ContentSpecNode* const  firstAdopt
-                                ,       ContentSpecNode* const  secondAdopt
-                                , const bool                    adoptFirst
-                                , const bool                    adoptSecond) :
-
-    fElement(0)
-    , fFirst(firstAdopt)
-    , fSecond(secondAdopt)
-    , fType(type)
-    , fAdoptFirst(adoptFirst)
-    , fAdoptSecond(adoptSecond)
-    , fMinOccurs(1)
-    , fMaxOccurs(1)
-{
-    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-}
-
-inline
-ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
-{
-    const QName* tempElement = toCopy.getElement();
-    if (tempElement)
-        fElement = new QName(tempElement);
-    else
-        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-
-    const ContentSpecNode *tmp = toCopy.getFirst();
-    if (tmp)
-        fFirst = new ContentSpecNode(*tmp);
-    else
-        fFirst = 0;
-
-    tmp = toCopy.getSecond();
-    if (tmp)
-        fSecond = new ContentSpecNode(*tmp);
-    else
-        fSecond = 0;
-
-    fType = toCopy.getType();
-    fAdoptFirst = true;
-    fAdoptSecond = true;
-    fMinOccurs = 1;
-    fMaxOccurs = 1;
-}
-
-inline ContentSpecNode::~ContentSpecNode()
-{
-    // Delete our children, which cause recursive cleanup
-    if (fAdoptFirst) {
-		delete fFirst;
-    }
-
-    if (fAdoptSecond) {
-		delete fSecond;
-    }
-
-    delete fElement;
 }
 
 #endif
