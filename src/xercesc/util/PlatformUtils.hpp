@@ -385,6 +385,51 @@ public :
       */
     static XMLCh* getFullPath(const XMLCh* const srcPath);
 
+    /** Gets the current working directory 
+      *
+      * This must be implemented by the per-platform driver. It returns 
+      * the current working directory is. 
+      *
+      * @return Returns the current working directory. 
+      *         This is dyanmically allocated and must be deleted
+      *         by the caller when its no longer needed!
+      */
+    static XMLCh* getCurrentDirectory();
+
+    /** Check if a charater is a slash
+      *
+      * This must be implemented by the per-platform driver. 
+      *
+      * @param c the character to be examined
+      *
+      * @return true  if the character examined is a slash
+      *         false otherwise
+      */
+    static inline bool isAnySlash(XMLCh c);
+    
+    /** Remove occurences of the pair of dot slash 
+      *
+      * To remove the sequence, dot slash if it is part of the sequence,
+      * slash dot slash.
+      *
+      * @param srcPath The path for which you want to remove the dot slash sequence.
+      *
+      * @return 
+      */
+    static void   removeDotSlash(XMLCh* const srcPath);
+
+    /** Remove occurences of the dot dot slash 
+      *
+      * To remove the sequence, slash dot dot slash and its preceding path segment
+      * if and only if the preceding path segment is not slash dot dot slash.
+      *
+      * @param srcPath The path for which you want to remove the slash dot
+      *        dot slash sequence and its preceding path segment.
+      *
+      * @return 
+      */
+    static void   removeDotDotSlash(XMLCh* const srcPath);
+
     /** Determines if a path is relative or absolute
       *
       * This must be implemented by the per-platform driver, which should
@@ -678,6 +723,15 @@ private :
       * parser or utilities services!
       */
     static void platformTerm();
+
+    /** Search for sequence, slash dot dot slash
+      *
+      * @param srcPath the path to search
+      *
+      * @return   the position of the first occurence of slash dot dot slash
+      *            -1 if no such sequence is found
+      */
+    static int  searchSlashDotDotSlash(XMLCh* const srcPath);
 
     //@}
 };

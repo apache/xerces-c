@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.34  2003/04/24 02:49:36  peiyongz
+# Logical Path Resolution
+#
 # Revision 1.33  2003/04/21 16:15:10  knoaman
 # Remove MemoryManagerImpl.
 #
@@ -573,7 +576,8 @@ C_FILES = \
     ValueHashTableOf.c \
     ValueStackOf.c \
     ValueVectorOf.c \
-    XMLDeleterFor.c
+    XMLDeleterFor.c \
+    LogicalPath.c
 
 UTIL_CPP_OBJECTS = \
     Base64.$(TO) \

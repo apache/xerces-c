@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/04/24 02:58:31  peiyongz
+ * Logical Path Resolution
+ *
  * Revision 1.7  2003/03/09 17:00:11  peiyongz
  * PanicHandler
  *
@@ -263,6 +266,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     // Return a copy of the path, in Unicode format
     return XMLString::transcode(newXMLString);
 }
+
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 {
     // Check for pathological case of empty path
@@ -281,6 +285,23 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
+XMLCh* XMLPlatformUtils::getCurrentDirectory()
+{
+
+    /*** 
+     *  REVISIT:
+     * 
+     *   To be implemented later
+    ***/
+
+    XMLCh curDir[]={ chPeriod, chForwardSlash, chNull};
+    return getFullPath(curDir);
+}
+
+inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 
+{
+    return ( chBackSlash == c || chForwardSlash == c);
+}
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Timing Methods
@@ -379,5 +400,6 @@ void XMLPlatformUtils::platformTerm()
     // We don't have any termination requirements at this time
 }
 
+#include <xercesc/util/LogicalPath.c>
 
 XERCES_CPP_NAMESPACE_END
