@@ -47,6 +47,8 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRangeFactory.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUniCharacter.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\Base64.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DefaultPanicHandler.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\PanicHandler.obj \    
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinFileInputStream.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinInputStream.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemInputStream.obj \

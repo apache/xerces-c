@@ -37,6 +37,8 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRangeFactory.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUniCharacter.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\Base64.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DefaultPanicHandler.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\PanicHandler.obj            
       ..\..\..\..\..\Build\Win32\BCB6\obj\BinFileInputStream.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\BinInputStream.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemInputStream.obj
@@ -376,6 +378,8 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\XMLRangeFactory.cpp" FORMNAME="" UNITNAME="XMLRangeFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\XMLUniCharacter.cpp" FORMNAME="" UNITNAME="XMLUniCharacter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Base64.cpp" FORMNAME="" UNITNAME="Base64" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\DefaultPanicHandler.cpp" FORMNAME="" UNITNAME="DefaultPanicHandler" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\PanicHandler.cpp" FORMNAME="" UNITNAME="PanicHandler" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>      
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\BinFileInputStream.cpp" FORMNAME="" UNITNAME="BinFileInputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\BinInputStream.cpp" FORMNAME="" UNITNAME="BinInputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\BinMemInputStream.cpp" FORMNAME="" UNITNAME="BinMemInputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
