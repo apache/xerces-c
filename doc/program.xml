@@ -282,19 +282,19 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
     <anchor name="SAX2Features"/>
     <s3 title="Xerces SAX2 Supported Features">
-    
-       <p>The behavior of the SAX2XMLReader is dependant on the values of the following features.  
-       All of the features below can be set using the <code>SAX2XMLReader::setFeature(XMLCh*,bool)</code> function.  
+
+       <p>The behavior of the SAX2XMLReader is dependant on the values of the following features.
+       All of the features below can be set using the <code>SAX2XMLReader::setFeature(XMLCh*,bool)</code> function.
        None of these features can be modified in the middle of a parse, or an exception will be thrown.</p>
-    
+
         <table>
             <tr><td colspan="2"><em>http://xml.org/sax/features/namespaces</em></td></tr>
             <tr><td><em>true:</em></td><td> Perform Namespace processing (default)</td></tr>
             <tr><td><em>false:</em></td><td> Optionally do not perform Namespace processing</td></tr>
         </table>
-        
+
         <p/>
-    
+
         <table>
             <tr><td colspan="2"><em>http://xml.org/sax/features/namespace-prefixes</em></td></tr>
             <tr><td><em>true:</em></td><td> Report the orignal prefixed names and attributes used for Namespace declarations (default)</td></tr>
@@ -302,7 +302,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
         </table>
 
         <p/>
-    
+
         <table>
             <tr><td colspan="2"><em>http://xml.org/sax/features/validation</em></td></tr>
             <tr><td><em>true:</em></td><td> Report all validation errors. (default)</td></tr>
@@ -310,7 +310,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
         </table>
 
         <p/>
-    
+
         <table>
             <tr><td colspan="2"><em>http://apache.org/xml/features/validation/dynamic</em></td></tr>
             <tr><td><em>true:</em></td><td> The parser will validate the document only if a grammar is specified.  (http://xml.org/sax/features/validation must be true)</td></tr>
@@ -318,11 +318,27 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
         </table>
 
         <p/>
-    
+
         <table>
-            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-validator</em></td></tr>
-            <tr><td><em>true:</em></td><td> The XMLValidator will reuse information from previous parses in subsequent parses. </td></tr>
-            <tr><td><em>false:</em></td><td> The XMLValidator will not reuse any information. (default)</td></tr>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/schema</em></td></tr>
+            <tr><td><em>true:</em></td><td> Enable the parser's schema support. (default) </td></tr>
+            <tr><td><em>false:</em></td><td> Disable the parser's schema support. </td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-grammar</em></td></tr>
+            <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parses in subsequent parses. </td></tr>
+            <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. (default)</td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-validator</em> (deprecated)</td></tr>
+            <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parses in subsequent parses. </td></tr>
+            <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. (default)</td></tr>
         </table>
 
     </s3>
