@@ -284,18 +284,21 @@ int main(int argc, char **argv) {
     normalizer->serializeNode(doc);
     XERCES_STD_QUALIFIER cout << "\n\n";
 
-    //use a binding
-    XMLBuffer buf;
-    buf.set(XMLUni::fgXMLNSString);
-    buf.append(chColon);
-    buf.append(X("po2"));
-    docFirstElementChild->removeAttributeNS(XMLUni::fgXMLNSURIName, XMLUni::fgXMLNSString);
-    docFirstElement->removeAttributeNS(XMLUni::fgXMLNSURIName, XMLUni::fgXMLNSString);
-    docFirstElement->setAttributeNS(XMLUni::fgXMLNSURIName, buf.getRawBuffer(), X("http://www.test2.com"));
-    docFirstElementChild->setPrefix(X("po2"));
-    doc->normalizeDocument();
-    normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    // this block is needed to destroy the XMLBuffer 
+    {
+        //use a binding
+        XMLBuffer buf;
+        buf.set(XMLUni::fgXMLNSString);
+        buf.append(chColon);
+        buf.append(X("po2"));
+        docFirstElementChild->removeAttributeNS(XMLUni::fgXMLNSURIName, XMLUni::fgXMLNSString);
+        docFirstElement->removeAttributeNS(XMLUni::fgXMLNSURIName, XMLUni::fgXMLNSString);
+        docFirstElement->setAttributeNS(XMLUni::fgXMLNSURIName, buf.getRawBuffer(), X("http://www.test2.com"));
+        docFirstElementChild->setPrefix(X("po2"));
+        doc->normalizeDocument();
+        normalizer->serializeNode(doc);
+        XERCES_STD_QUALIFIER cout << "\n\n";
+    }
 
     //some siblngs to ensure the scope stacks are working
     docFirstElementChildChild = doc->createElementNS(X("http://www.test3.com"),X("docEleChildChild2"));
