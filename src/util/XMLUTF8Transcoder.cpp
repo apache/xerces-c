@@ -284,15 +284,13 @@ XMLUTF8Transcoder::transcodeTo( const   XMLCh* const    srcData
     XMLByte*        outPtr = toFill;
     XMLByte*        outEnd = toFill + maxBytes;
 
-    while (true)
+    while (srcPtr < srcEnd)
     {
         //
         //  Tentatively get the next char out. We have to get it into a
         //  32 bit value, because it could be a surrogate pair.
         //
         XMLUInt32 curVal = *srcPtr;
-        if (!curVal)
-            break;
 
         //
         //  If its a leading surrogate, then lets see if we have the trailing
