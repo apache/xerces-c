@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:29  twl
- * Initial revision
+ * Revision 1.2  1999/11/23 01:04:19  roddey
+ * Updates to some of the internal VC++ project files and some small
+ * fixes to make XMLBuffer correctly character size agnostic.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:29  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:35  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -84,7 +88,7 @@ void XMLBuffer::append(const XMLCh* const chars, const unsigned int count)
     if (!count)
         actualCount = XMLString::stringLen(chars);
     insureCapacity(actualCount);
-    memcpy(&fBuffer[fIndex], chars, actualCount * 2);
+    memcpy(&fBuffer[fIndex], chars, actualCount * sizeof(XMLCh));
     fIndex += actualCount;
 }
 
@@ -95,7 +99,7 @@ void XMLBuffer::set(const XMLCh* const chars, const unsigned int count)
         actualCount = XMLString::stringLen(chars);
     fIndex = 0;
     insureCapacity(actualCount);
-    memcpy(fBuffer, chars, actualCount * 2);
+    memcpy(fBuffer, chars, actualCount * sizeof(XMLCh));
     fIndex = actualCount;
 }
 
@@ -108,10 +112,10 @@ void XMLBuffer::expand()
     unsigned int newCap = (unsigned int)(fCapacity * 1.5);
 
     // Allocate the new buffer
-    XMLCh* newBuf = new XMLCh[newCap+1];
+    XMLCh* newBuf = new XMLCh[newCap + 1];
 
     // Copy over the old stuff
-    memcpy(newBuf, fBuffer, fCapacity * 2);
+    memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
 
     // Clean up old buffer and store new stuff
     delete [] fBuffer;
@@ -130,7 +134,7 @@ void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
     XMLCh* newBuf = new XMLCh[newCap+1];
 
     // Copy over the old stuff
-    memcpy(newBuf, fBuffer, fCapacity * 2);
+    memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
 
     // Clean up old buffer and store new stuff
     delete [] fBuffer;
