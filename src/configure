@@ -1285,7 +1285,7 @@ cc=${CC}
 
 
 
-prefix_include=${prefix}/include/xercesc
+prefix_include=${PREFIX}/include/xercesc
 
 
 

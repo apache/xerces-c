@@ -2,6 +2,7 @@ dnl Process this file with autoconf to produce a configure script
 AC_INIT(util/XercesDefs.hpp)
 dnl AC_CONFIG_HEADER(common/icucfg.h)
 
+AM_INIT_AUTOMAKE(xerces-c,1.5.1)
 dnl Checks for programs
 AC_PROG_CC
 AC_PROG_CXX
@@ -62,7 +63,7 @@ cc=${CC}
 AC_SUBST(cc)
 
 AC_SUBST(prefix)
-prefix_include=${PREFIX}/include/xercesc
+prefix_include='${PREFIX}/include/xercesc'
 AC_SUBST(prefix_include)
 
 AC_SUBST(osver)
@@ -139,7 +140,9 @@ parsers/Makefile \
 internal/Makefile \
 sax/Makefile \
 sax2/Makefile \
-../obj/Makefile])
+../obj/Makefile],
+[chmod +x ./configure],
+[chmod +x ./runConfigure],)
 
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
