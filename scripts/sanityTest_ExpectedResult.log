@@ -413,19 +413,20 @@ Usage:
     DOMPrint [options] <XML file>
 
 This program invokes the DOM parser, and builds the DOM tree.
-It then traverses the DOM tree and prints the contents of the
-tree for the specified XML file.
-
+It then asks the DOMWriter to serialize the DOM tree 
 Options:
     -e          create entity reference nodes. Default is no expansion.
-    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
     -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Default is off.
     -s          Enable schema processing. Default is off.
     -f          Enable full schema constraint checking. Defaults is off.
-    -x=XXX      Use a particular encoding for output. Default is
+    -wenc=XXX   Use a particular encoding for output. Default is
                 the same encoding as the input XML file. UTF-8 if
                 input XML file has not XML declaration.
+    -weol=xxx   Set the end of line sequence. default is set by DOMWriter
+    -wscs=xxx   Enable/Disable split-cdata-sections.      default on  
+    -wddc=xxx   Enable/Disable discard-default-content.   default on  
+    -wflt=xxx   Enable/Disable filtering.                 default off 
     -?          Show this help.
 
   * = Default if not provided explicitly.
@@ -435,7 +436,7 @@ The parser has intrinsic support for the following encodings:
     WINDOWS-1252, IBM1140, IBM037.
 
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE personnel "personal.dtd" SYSTEM "personal.dtd">
+<!DOCTYPE personnel SYSTEM "personal.dtd">
 <!-- @version: -->
 <personnel>
 
@@ -476,9 +477,8 @@ The parser has intrinsic support for the following encodings:
   </person>
 
 </personnel>
-
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE personnel "personal.dtd" SYSTEM "personal.dtd">
+<!DOCTYPE personnel SYSTEM "personal.dtd">
 <!-- @version: -->
 <personnel>
 
@@ -519,7 +519,48 @@ The parser has intrinsic support for the following encodings:
   </person>
 
 </personnel>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE personnel SYSTEM "personal.dtd">
+<!-- @version: -->
+<personnel>
 
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
 <?xml version="1.0" encoding="UTF-8"?>
 <personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
 
