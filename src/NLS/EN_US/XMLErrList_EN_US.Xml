@@ -496,8 +496,8 @@
             <Message Id="FACET_maxExcl_minExcl" Text="maxExclusive value '{0}' must be greater than minExclusive value '{1}'"/>
             <Message Id="FACET_maxExcl_minIncl" Text="maxExclusive value '{0}' must be greater than minInclusive value '{1}'"/>
             <Message Id="FACET_maxIncl_minExcl" Text="maxInclusive value '{0}' must be greater than minExclusive value '{1}'"/>
-            <Message Id="FACET_maxIncl_minIncl" Text="maxInclusive value '[0}' must be greater than minInclusive value '{1}'"/>
-            <Message Id="FACET_TotDigit_FractDigit" Text="TotalDigit value '[0}' must be greater than FractionDigit value '{1}'"/>
+            <Message Id="FACET_maxIncl_minIncl" Text="maxInclusive value '{0}' must be greater than minInclusive value '{1}'"/>
+            <Message Id="FACET_TotDigit_FractDigit" Text="TotalDigit value '{0}' must be greater than FractionDigit value '{1}'"/>
             <Message Id="FACET_maxIncl_base_maxExcl" Text="maxInclusive value '{0}' must be less than base's maxExclusive value '{1}'"/>
             <Message Id="FACET_maxIncl_base_maxIncl" Text="maxInclusive value '{0}' must be less than or equal to base's maxInclusive value '{1}'"/>
             <Message Id="FACET_maxIncl_base_minIncl" Text="maxInclusive value '{0}' must be greater than or equal to base's minInclusive value '{1}'"/>
