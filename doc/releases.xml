@@ -12,6 +12,97 @@
     </tr>
 
     <tr>
+        <td>2002-05-03</td>
+        <td>Martin Kalen</td>
+        <td>[Bug 7341] Missing newline at end of util and DOM source files.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-03</td>
+        <td>Martin Kalen</td>
+        <td>[Bug 7261] Remove obsolete define in UnixWareDefs.hpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-03</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 8769] UMR (uninitialized memory read) detected by memory tool.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-01</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 7265] UnixWare port broken in platformTerm().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-24</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 8495] URLInputSource constructor initializes fURL member incorrectly.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-22</td>
+        <td>PeiYong Zhang</td>
+        <td>Build AIX 64 bit binary.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-19</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 8236] Problem with recursive and derived elements.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-18</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 7301] Redundant range-check in HexBin.cpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-17</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 7583] Build warnings with MS Visual Studio .NET.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-17</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 7493] The word "occured" is misspelled and it is a global error.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-17</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 8195] Invalid path to build 'samples' target.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-16</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 8156] Bad path name breaks build.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-16</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 8168] Error when attempting to build NetAccessors.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-04-09</td>
         <td>Khaled Noaman</td>
         <td>[Bug 7706] XMLString::lowerCase() does not work.

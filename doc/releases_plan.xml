@@ -41,14 +41,14 @@ Those features that have 'Complete' status will be included in the 'Next Target 
         <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
             optionally ignore external DTD</td>
         <td>Tinny Ng</td>
-        <td>April</td>
+        <td>May</td>
         <td></td>
     </tr>
 
     <tr>
         <td>Update 32 bit Solaris binary distribution from Solaris 2.6 to Solaris 2.7</td>
         <td>Tinny Ng</td>
-        <td>April</td>
+        <td>May</td>
         <td></td>
     </tr>
 
@@ -63,27 +63,27 @@ Those features that have 'Complete' status will be included in the 'Next Target 
         <td>Modify runConfigure with 64 bit support</td>
         <td>PeiYong Zhang</td>
         <td>April</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
     <tr>
         <td>Produce 64 bit binary distribution for AIX</td>
         <td>PeiYong Zhang</td>
         <td>April</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
     <tr>
         <td>Produce 64 bit binary distribution for Solaris</td>
         <td>PeiYong Zhang</td>
-        <td>April</td>
+        <td>May</td>
         <td></td>
     </tr>
 
     <tr>
         <td>Produce 64 bit binary distribution for HP</td>
         <td>PeiYong Zhang</td>
-        <td>April</td>
+        <td>May</td>
         <td></td>
     </tr>
 
@@ -104,35 +104,35 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     <tr>
         <td>Claim IDOM as non-experimental</td>
         <td>Tinny Ng</td>
-        <td>April</td>
+        <td>May</td>
         <td></td>
     </tr>
 
     <tr>
         <td>DOM Level 3 Core: DOMImplementationSource</td>
         <td>Tinny Ng</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 
     <tr>
         <td>DOM Level 3 Core: Document: set/getEncoding, set/getVersion, set/getStandalone, adoptNode</td>
         <td>Tinny Ng</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 
     <tr>
         <td>DOM Level 3 Core: Node: isSameNode, isEqualNode, getInterface</td>
         <td>Tinny Ng</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 
     <tr>
         <td>DOM Level 3 Core: UserDataHandler, and Node: get/setUserData</td>
         <td>Tinny Ng</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 
@@ -154,7 +154,7 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     <tr>
         <td>DOM L3 Load: DOMInputSource, DOMEntityResolver, DOMBuilder</td>
         <td>Khaled Noaman</td>
-        <td>April</td>
+        <td>May</td>
         <td></td>
     </tr>
     <tr>
