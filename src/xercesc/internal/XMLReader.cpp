@@ -40,7 +40,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  not. Breaks out on the first non-whitespace.
 //
 bool XMLReader::isAllSpaces(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const unsigned int    count) const
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -58,7 +58,7 @@ bool XMLReader::isAllSpaces(const   XMLCh* const    toCheck
 //  not.
 //
 bool XMLReader::containsWhiteSpace(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const unsigned int    count) const
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -73,7 +73,7 @@ bool XMLReader::containsWhiteSpace(const   XMLCh* const    toCheck
 //
 //  This one is not called terribly often, so call the XMLChar utility
 //
-bool XMLReader::isPublicIdChar(const XMLCh toCheck)
+bool XMLReader::isPublicIdChar(const XMLCh toCheck) const
 {
     if (fXMLVersion == XMLV1_1)
         return XMLChar1_1::isPublicIdChar(toCheck);
@@ -704,7 +704,28 @@ bool XMLReader::getSpaces(XMLBuffer& toFill)
                 // Eat this char
                 fCharIndex++;
 
-                handleEOL(curCh, false);
+                //
+                //  'curCh' is a whitespace(x20|x9|xD|xA), so we only can have
+                //  end-of-line combinations with a leading chCR(xD) or chLF(xA)
+                //
+                //  100000 x20
+                //  001001 x9
+                //  001010 chLF
+                //  001101 chCR
+                //  -----------
+                //  000110 == (chCR|chLF) & ~(0x9|0x20)
+                //
+                //  if the result of thelogical-& operation is
+                //  true  : 'curCh' must be xA  or xD
+                //  false : 'curCh' must be x20 or x9
+                //
+                if ( ( curCh & (chCR|chLF) & ~(0x9|0x20) ) == 0 )
+                {
+                    fCurCol++;
+                } else
+                {
+                    handleEOL(curCh, false);
+                }
 
                 // Ok we can add this guy to our buffer
                 toFill.append(curCh);
@@ -747,7 +768,27 @@ bool XMLReader::getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck)
                 // Eat this char
                 fCharIndex++;
 
-                handleEOL(curCh, false);
+                //
+                //  'curCh' is not a whitespace(x20|x9|xD|xA), so we only can
+                //  have end-of-line combinations with a leading chNEL(x85) or
+                //  chLineSeparator(x2028)
+                //
+                //  0010000000101000 chLineSeparator
+                //  0000000010000101 chNEL
+                //  ---------------------
+                //  1101111101010010 == ~(chNEL|chLineSeparator)
+                //
+                //  if the result of the logical-& operation is
+                //  true  : 'curCh' can not be chNEL or chLineSeparator
+                //  false : 'curCh' can be chNEL or chLineSeparator
+                //
+                if ( curCh & (XMLCh) ~(chNEL|chLineSeparator) )
+                {
+                    fCurCol++;
+                } else
+                {
+                    handleEOL(curCh, false);
+                }
 
                 // Add it to our buffer
                 toFill.append(curCh);
@@ -813,7 +854,28 @@ bool XMLReader::skipSpaces(bool& skippedSomething, bool inDecl)
                 // Get the current char out of the buffer and eat it
                 XMLCh curCh = fCharBuf[fCharIndex++];
 
-                handleEOL(curCh, inDecl);
+                //
+                //  'curCh' is a whitespace(x20|x9|xD|xA), so we only can have
+                //  end-of-line combinations with a leading chCR(xD) or chLF(xA)
+                //
+                //  100000 x20
+                //  001001 x9
+                //  001010 chLF
+                //  001101 chCR
+                //  -----------
+                //  000110 == (chCR|chLF) & ~(0x9|0x20)
+                //
+                //  if the result of the logical-& operation is
+                //  true  : 'curCh' must be xA  or xD
+                //  false : 'curCh' must be x20 or x9
+                //
+                if ( ( curCh & (chCR|chLF) & ~(0x9|0x20) ) == 0 )
+                {
+                    fCurCol++;
+                } else
+                {
+                    handleEOL(curCh, inDecl);
+                }
 
             }
             else
@@ -883,7 +945,28 @@ bool XMLReader::skippedSpace()
         // Eat the character
         fCharIndex++;
 
-        handleEOL((XMLCh&)curCh, false);
+        //
+        //  'curCh' is a whitespace(x20|x9|xD|xA), so we only can have
+        //  end-of-line combinations with a leading chCR(xD) or chLF(xA)
+        //
+        //  100000 x20
+        //  001001 x9
+        //  001010 chLF
+        //  001101 chCR
+        //  -----------
+        //  000110 == (chCR|chLF) & ~(0x9|0x20)
+        //
+        //  if the result of the logical-& operation is
+        //  true  : 'curCh' must be xA  or xD
+        //  false : 'curCh' must be x20 or x9
+        //
+        if ( ( curCh & (chCR|chLF) & ~(0x9|0x20) ) == 0 )
+        {
+            fCurCol++;
+        } else
+        {
+            handleEOL((XMLCh&)curCh, false);
+        }
 
         return true;
     }
@@ -1520,6 +1603,103 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
     fRawBufIndex += bytesEaten;
 
     return charsDone;
+}
+
+/***
+ *
+ * XML1.1
+ *
+ * 2.11 End-of-Line Handling
+ *
+ *    XML parsed entities are often stored in computer files which, for editing 
+ *    convenience, are organized into lines. These lines are typically separated 
+ *    by some combination of the characters CARRIAGE RETURN (#xD) and LINE FEED (#xA).
+ *
+ *    To simplify the tasks of applications, the XML processor MUST behave as if 
+ *    it normalized all line breaks in external parsed entities (including the document 
+ *    entity) on input, before parsing, by translating all of the following to a single 
+ *    #xA character:
+ *
+ *  1. the two-character sequence #xD #xA
+ *  2. the two-character sequence #xD #x85
+ *  3. the single character #x85
+ *  4. the single character #x2028
+ *  5. any #xD character that is not immediately followed by #xA or #x85.
+ *
+ *
+ ***/
+void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
+{
+    // 1. the two-character sequence #xD #xA
+    // 2. the two-character sequence #xD #x85
+    // 5. any #xD character that is not immediately followed by #xA or #x85.
+    if (curCh == chCR)
+    {
+        fCurCol = 1;
+        fCurLine++;
+
+        //
+        //  If not already internalized, then convert it to an
+        //  LF and eat any following LF.
+        //
+        if (fSource == Source_External)
+        {
+            if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
+            {
+                if ( fCharBuf[fCharIndex] == chLF              || 
+                    ((fCharBuf[fCharIndex] == chNEL) && fNEL)  )
+                {
+                    fCharIndex++;
+                }
+            }
+            curCh = chLF;
+        }
+    }
+    else if (curCh == chLF)                   
+    {
+        fCurCol = 1;
+        fCurLine++;
+    }
+    // 3. the single character #x85
+    // 4. the single character #x2028
+    else if (curCh == chNEL || curCh == chLineSeparator)
+    {
+        if (inDecl && fXMLVersion == XMLV1_1)
+        {
+
+        /***
+         * XML1.1
+         *
+         * 2.11 End-of-Line Handling
+         *  ...
+         *   The characters #x85 and #x2028 cannot be reliably recognized and translated 
+         *   until an entity's encoding declaration (if present) has been read. 
+         *   Therefore, it is a fatal error to use them within the XML declaration or 
+         *   text declaration. 
+         *
+         ***/
+            ThrowXMLwithMemMgr1
+                (
+                TranscodingException
+                , XMLExcepts::Reader_NelLsepinDecl
+                , fSystemId
+                , fMemoryManager
+                );
+        }
+
+        if (fNEL && fSource == Source_External)
+        {
+            fCurCol = 1;
+            fCurLine++;
+            curCh = chLF;
+        }
+    }
+    else
+    {
+        fCurCol++;
+    }
+
+    return;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2005/03/22 20:43:27  cargilld
+ * Check in Christian's patches for Xercesc-1369 and 1370.
+ *
  * Revision 1.20  2004/09/29 00:24:01  knoaman
  * Performance: improve src offset calculation. Patch by Anthony O'Dowd.
  *
@@ -219,24 +222,24 @@ public:
     (
         const   XMLCh* const    toCheck
         , const unsigned int    count
-    );
+    ) const;
 
     bool containsWhiteSpace
     (
         const   XMLCh* const    toCheck
         , const unsigned int    count
-    );
+    ) const;
 
 
-    bool isXMLLetter(const XMLCh toCheck);
-    bool isFirstNameChar(const XMLCh toCheck);
-    bool isNameChar(const XMLCh toCheck);
-    bool isPlainContentChar(const XMLCh toCheck);
-    bool isSpecialStartTagChar(const XMLCh toCheck);
-    bool isXMLChar(const XMLCh toCheck);
-    bool isWhitespace(const XMLCh toCheck);
-    bool isControlChar(const XMLCh toCheck);
-    bool isPublicIdChar(const XMLCh toCheck);
+    bool isXMLLetter(const XMLCh toCheck) const;
+    bool isFirstNameChar(const XMLCh toCheck) const;
+    bool isNameChar(const XMLCh toCheck) const;
+    bool isPlainContentChar(const XMLCh toCheck) const;
+    bool isSpecialStartTagChar(const XMLCh toCheck) const;
+    bool isXMLChar(const XMLCh toCheck) const;
+    bool isWhitespace(const XMLCh toCheck) const;
+    bool isControlChar(const XMLCh toCheck) const;
+    bool isPublicIdChar(const XMLCh toCheck) const;
 
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
@@ -400,7 +403,7 @@ private:
         , const unsigned int            maxChars
     );
 
-    inline void handleEOL
+    void handleEOL
     (
               XMLCh&   curCh
             , bool     inDecl = false
@@ -590,43 +593,43 @@ private:
 // ---------------------------------------------------------------------------
 //  XMLReader: Public, query methods
 // ---------------------------------------------------------------------------
-inline bool XMLReader::isNameChar(const XMLCh toCheck)
+inline bool XMLReader::isNameChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gNameCharMask) != 0);
 }
 
-inline bool XMLReader::isPlainContentChar(const XMLCh toCheck)
+inline bool XMLReader::isPlainContentChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gPlainContentCharMask) != 0);
 }
 
 
-inline bool XMLReader::isFirstNameChar(const XMLCh toCheck)
+inline bool XMLReader::isFirstNameChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gFirstNameCharMask) != 0);
 }
 
-inline bool XMLReader::isSpecialStartTagChar(const XMLCh toCheck)
+inline bool XMLReader::isSpecialStartTagChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gSpecialStartTagCharMask) != 0);
 }
 
-inline bool XMLReader::isXMLChar(const XMLCh toCheck)
+inline bool XMLReader::isXMLChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gXMLCharMask) != 0);
 }
 
-inline bool XMLReader::isXMLLetter(const XMLCh toCheck)
+inline bool XMLReader::isXMLLetter(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gLetterCharMask) != 0);
 }
 
-inline bool XMLReader::isWhitespace(const XMLCh toCheck)
+inline bool XMLReader::isWhitespace(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gWhitespaceCharMask) != 0);
 }
 
-inline bool XMLReader::isControlChar(const XMLCh toCheck)
+inline bool XMLReader::isControlChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gControlCharMask) != 0);
 }
@@ -784,7 +787,28 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
     chGotten = fCharBuf[fCharIndex++];
 
     // Handle end of line normalization and line/col member maintenance.
-    handleEOL(chGotten, false);
+    //
+    // we can have end-of-line combinations with a leading
+    // chCR(xD), chLF(xA), chNEL(x85), or chLineSeparator(x2028)
+    //
+    // 0000000000001101 chCR
+    // 0000000000001010 chLF
+    // 0000000010000101 chNEL
+    // 0010000000101000 chLineSeparator
+    // -----------------------
+    // 1101111101010000 == ~(chCR|chLF|chNEL|chLineSeparator)
+    //
+    // if the result of the logical-& operation is
+    // true  : 'curCh' can not be chCR, chLF, chNEL or chLineSeparator
+    // false : 'curCh' can be chCR, chLF, chNEL or chLineSeparator
+    //
+    if ( chGotten & (XMLCh) ~(chCR|chLF|chNEL|chLineSeparator) )
+    {
+        fCurCol++;
+    } else
+    {
+        handleEOL(chGotten, false);
+    }
 
     return true;
 }
@@ -812,7 +836,28 @@ inline bool XMLReader::getNextChar(XMLCh& chGotten)
     chGotten = fCharBuf[fCharIndex++];
 
     // Handle end of line normalization and line/col member maintenance.
-    handleEOL(chGotten, false);
+    //
+    // we can have end-of-line combinations with a leading
+    // chCR(xD), chLF(xA), chNEL(x85), or chLineSeparator(x2028)
+    //
+    // 0000000000001101 chCR
+    // 0000000000001010 chLF
+    // 0000000010000101 chNEL
+    // 0010000000101000 chLineSeparator
+    // -----------------------
+    // 1101111101010000 == ~(chCR|chLF|chNEL|chLineSeparator)
+    //
+    // if the result of the logical-& operation is
+    // true  : 'curCh' can not be chCR, chLF, chNEL or chLineSeparator
+    // false : 'curCh' can be chCR, chLF, chNEL or chLineSeparator
+    //
+    if ( chGotten & (XMLCh) ~(chCR|chLF|chNEL|chLineSeparator) )
+    {
+        fCurCol++;
+    } else
+    {
+        handleEOL(chGotten, false);
+    }
 
     return true;
 }
@@ -849,103 +894,6 @@ inline bool XMLReader::peekNextChar(XMLCh& chGotten)
         chGotten = chLF;
 
     return true;
-}
-
-/***
- *
- * XML1.1
- *
- * 2.11 End-of-Line Handling
- *
- *    XML parsed entities are often stored in computer files which, for editing 
- *    convenience, are organized into lines. These lines are typically separated 
- *    by some combination of the characters CARRIAGE RETURN (#xD) and LINE FEED (#xA).
- *
- *    To simplify the tasks of applications, the XML processor MUST behave as if 
- *    it normalized all line breaks in external parsed entities (including the document 
- *    entity) on input, before parsing, by translating all of the following to a single 
- *    #xA character:
- *
- *  1. the two-character sequence #xD #xA
- *  2. the two-character sequence #xD #x85
- *  3. the single character #x85
- *  4. the single character #x2028
- *  5. any #xD character that is not immediately followed by #xA or #x85.
- *
- *
- ***/
-inline void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
-{
-    // 1. the two-character sequence #xD #xA
-    // 2. the two-character sequence #xD #x85
-    // 5. any #xD character that is not immediately followed by #xA or #x85.
-    if (curCh == chCR)
-    {
-        fCurCol = 1;
-        fCurLine++;
-
-        //
-        //  If not already internalized, then convert it to an
-        //  LF and eat any following LF.
-        //
-        if (fSource == Source_External)
-        {
-            if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-            {
-                if ( fCharBuf[fCharIndex] == chLF              || 
-                    ((fCharBuf[fCharIndex] == chNEL) && fNEL)  )
-                {
-                    fCharIndex++;
-                }
-            }
-            curCh = chLF;
-        }
-    }
-    else if (curCh == chLF)                   
-    {
-        fCurCol = 1;
-        fCurLine++;
-    }
-    // 3. the single character #x85
-    // 4. the single character #x2028
-    else if (curCh == chNEL || curCh == chLineSeparator)
-    {
-        if (inDecl && fXMLVersion == XMLV1_1)
-        {
-
-        /***
-         * XML1.1
-         *
-         * 2.11 End-of-Line Handling
-         *  ...
-         *   The characters #x85 and #x2028 cannot be reliably recognized and translated 
-         *   until an entity's encoding declaration (if present) has been read. 
-         *   Therefore, it is a fatal error to use them within the XML declaration or 
-         *   text declaration. 
-         *
-         ***/
-            ThrowXMLwithMemMgr1
-                (
-                TranscodingException
-                , XMLExcepts::Reader_NelLsepinDecl
-                , fSystemId
-                , fMemoryManager
-                );
-        }
-
-        if (fNEL && fSource == Source_External)
-        {
-            fCurCol = 1;
-            fCurLine++;
-            curCh = chLF;
-        }
-    }
-    else
-    {
-        fCurCol++;
-    }
-
-    return;
 }
 
 XERCES_CPP_NAMESPACE_END
