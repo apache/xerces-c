@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/13 20:07:10  roddey
+ * Just a trivial fix of a misspelling in one of the panic messages.
+ *
  * Revision 1.3  2000/01/12 00:16:47  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -245,7 +248,7 @@ static void WriteUStrStdOut(const XMLCh* const toWrite)
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-    const char* reasonStr = "Uknown reason";
+    const char* reasonStr = "Unknown reason";
     if (reason == Panic_NoTransService)
         reasonStr = "Could not load a transcoding service";
     else if (reason == Panic_NoDefTranscoder)
