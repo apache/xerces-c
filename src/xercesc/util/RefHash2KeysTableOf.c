@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2004/09/22 11:14:22  amassari
+ * Reorder initialization of variables in constructor
+ *
  * Revision 1.10  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -429,8 +432,9 @@ template <class TVal> RefHash2KeysTableOfEnumerator<TVal>::
 RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum
                               , const bool adopt
                               , MemoryManager* const manager)
-	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum), fLockPrimaryKey(0)
+	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
     , fMemoryManager(manager)
+    , fLockPrimaryKey(0)
 {
     if (!toEnum)
         ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, fMemoryManager);
