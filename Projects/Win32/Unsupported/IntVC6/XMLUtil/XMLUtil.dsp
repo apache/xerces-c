@@ -183,6 +183,10 @@ SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.cpp
 
 SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -402,6 +406,10 @@ SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.Hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
