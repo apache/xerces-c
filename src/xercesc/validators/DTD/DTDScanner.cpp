@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2003/07/10 19:50:12  peiyongz
+ * Stateless Grammar: create grammar components with grammarPool's memory Manager
+ *
  * Revision 1.27  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -306,8 +309,10 @@ static ContentSpecNode* makeRepNode(const XMLCh testCh,
 // ---------------------------------------------------------------------------
 DTDScanner::DTDScanner( DTDGrammar*           dtdGrammar
                       , DocTypeHandler* const docTypeHandler
+                      , MemoryManager* const  grammarPoolMemoryManager
                       , MemoryManager* const  manager) :
     fMemoryManager(manager)
+    , fGrammarPoolMemoryManager(grammarPoolMemoryManager)
     , fDocTypeHandler(docTypeHandler)
     , fDumAttDef(0)
     , fDumElemDecl(0)
@@ -639,12 +644,12 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
         //  It does not already exist so create a new one, give it the next
         //  available unique id, and add it
         //
-        decl = new (fMemoryManager) DTDAttDef
+        decl = new (fGrammarPoolMemoryManager) DTDAttDef
         (
             bufToUse.getRawBuffer()
             , XMLAttDef::CData
             , XMLAttDef::Implied
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         decl->setId(fNextAttrId++);
         decl->setExternalAttDeclaration(isReadingExternalEntity());
@@ -822,12 +827,12 @@ void DTDScanner::scanAttListDecl()
         //  it having been created because of an attlist. Later, if its
         //  declared, this will be updated.
         //
-        elemDecl = new (fMemoryManager) DTDElementDecl
+        elemDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
         (
             bbName.getRawBuffer()
             , fEmptyNamespaceId
             , DTDElementDecl::Any
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         elemDecl->setCreateReason(XMLElementDecl::AttList);
         elemDecl->setExternalElemDeclaration(isReadingExternalEntity());
@@ -1281,21 +1286,21 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
         if (!decl)
         {
-            decl = new (fMemoryManager) DTDElementDecl
+            decl = new (fGrammarPoolMemoryManager) DTDElementDecl
             (
                 bufToUse.getRawBuffer()
                 , fEmptyNamespaceId
                 , DTDElementDecl::Any
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             );
             decl->setCreateReason(XMLElementDecl::InContentModel);
             decl->setExternalElemDeclaration(isReadingExternalEntity());
             fDTDGrammar->putElemDecl(decl);
         }
-        curNode = new (fMemoryManager) ContentSpecNode
+        curNode = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
             decl->getElementName()
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
 
         // Check for a PE ref here, but don't require spaces
@@ -1303,7 +1308,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
 
         // Check for a repetition character after the leaf
         const XMLCh repCh = fReaderMgr->peekNextChar();
-        ContentSpecNode* tmpNode = makeRepNode(repCh, curNode, fMemoryManager);
+        ContentSpecNode* tmpNode = makeRepNode(repCh, curNode, fGrammarPoolMemoryManager);
         if (tmpNode != curNode)
         {
             if (gotSpaces)
@@ -1345,28 +1350,28 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     if (opCh == chComma)
     {
         curType = ContentSpecNode::Sequence;
-        headNode = new (fMemoryManager) ContentSpecNode
+        headNode = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
             curType
             , curNode
             , 0
             , true
             , true
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         curNode = headNode;
     }
      else if (opCh == chPipe)
     {
         curType = ContentSpecNode::Choice;
-        headNode = new (fMemoryManager) ContentSpecNode
+        headNode = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
             curType
             , curNode
             , 0
             , true
             , true
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         curNode = headNode;
     }
@@ -1445,14 +1450,14 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
                     // Else patch it in and make it the new current
-                    ContentSpecNode* newCur = new (fMemoryManager) ContentSpecNode
+                    ContentSpecNode* newCur = new (fGrammarPoolMemoryManager) ContentSpecNode
                     (
                         curType
                         , subNode
                         , 0
                         , true
                         , true
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     );
                     curNode->setSecond(newCur);
                     lastNode = curNode;
@@ -1480,27 +1485,27 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                     XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
                     if (!decl)
                     {
-                        decl = new (fMemoryManager) DTDElementDecl
+                        decl = new (fGrammarPoolMemoryManager) DTDElementDecl
                         (
                             bufToUse.getRawBuffer()
                             , fEmptyNamespaceId
                             , DTDElementDecl::Any
-                            , fMemoryManager
+                            , fGrammarPoolMemoryManager
                         );
                         decl->setCreateReason(XMLElementDecl::InContentModel);
                         decl->setExternalElemDeclaration(isReadingExternalEntity());
                         fDTDGrammar->putElemDecl(decl);
                     }
 
-                    ContentSpecNode* tmpLeaf = new (fMemoryManager) ContentSpecNode
+                    ContentSpecNode* tmpLeaf = new (fGrammarPoolMemoryManager) ContentSpecNode
                     (
                         decl->getElementName()
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     );
 
                     // Check for a repetition character after the leaf
                     const XMLCh repCh = fReaderMgr->peekNextChar();
-                    ContentSpecNode* tmpLeaf2 = makeRepNode(repCh, tmpLeaf, fMemoryManager);
+                    ContentSpecNode* tmpLeaf2 = makeRepNode(repCh, tmpLeaf, fGrammarPoolMemoryManager);
                     if (tmpLeaf != tmpLeaf2)
                         fReaderMgr->getNextChar();
 
@@ -1510,14 +1515,14 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                     //  Make the new node the second node of the current node,
                     //  and then make it the current node.
                     //
-                    ContentSpecNode* newCur = new (fMemoryManager) ContentSpecNode
+                    ContentSpecNode* newCur = new (fGrammarPoolMemoryManager) ContentSpecNode
                     (
                         curType
                         , tmpLeaf2
                         , 0
                         , true
                         , true
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     );
                     curNode->setSecond(newCur);
                     lastNode = curNode;
@@ -1551,7 +1556,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     //  of it.
     //
     XMLCh repCh = fReaderMgr->peekNextChar();
-    ContentSpecNode* retNode = makeRepNode(repCh, headNode, fMemoryManager);
+    ContentSpecNode* retNode = makeRepNode(repCh, headNode, fGrammarPoolMemoryManager);
     if (retNode != headNode)
         fReaderMgr->getNextChar();
 
@@ -1860,12 +1865,12 @@ void DTDScanner::scanElementDecl()
         //  Create the new empty declaration to fill in and put it into
         //  the decl pool.
         //
-        decl = new (fMemoryManager) DTDElementDecl
+        decl = new (fGrammarPoolMemoryManager) DTDElementDecl
         (
             bbName.getRawBuffer()
             , fEmptyNamespaceId
             , DTDElementDecl::Any
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         fDTDGrammar->putElemDecl(decl);
     }
@@ -1982,7 +1987,7 @@ void DTDScanner::scanEntityDecl()
      else
     {
         // Its not in existence already, then create an entity decl for it
-        entityDecl = new (fMemoryManager) DTDEntityDecl(bbName.getRawBuffer(), false, fMemoryManager);
+        entityDecl = new (fGrammarPoolMemoryManager) DTDEntityDecl(bbName.getRawBuffer(), false, fGrammarPoolMemoryManager);
 
         //
         //  Set the declaration location. The parameter indicates whether its
@@ -3356,17 +3361,17 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
     //  PCDATA element id. This current node pointer will be pushed down the
     //  tree as we go.
     //
-    ContentSpecNode* curNode = new (fMemoryManager) ContentSpecNode
+    ContentSpecNode* curNode = new (fGrammarPoolMemoryManager) ContentSpecNode
     (
-        new (fMemoryManager) QName
+        new (fGrammarPoolMemoryManager) QName
         (
             XMLUni::fgZeroLenString
             , XMLUni::fgZeroLenString
             , XMLElementDecl::fgPCDataElemId
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         )
         , false
-        , fMemoryManager
+        , fGrammarPoolMemoryManager
     );
 
     //
@@ -3434,14 +3439,14 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                 //  node its first child.
                 //
                 if (starRequired || starSkipped) {
-                    headNode = new (fMemoryManager) ContentSpecNode
+                    headNode = new (fGrammarPoolMemoryManager) ContentSpecNode
                     (
                         ContentSpecNode::ZeroOrMore
                         , headNode
                         , 0
                         , true
                         , true
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     );
                 }
 
@@ -3472,12 +3477,12 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, nameBuf.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
             if (!decl)
             {
-                decl = new (fMemoryManager) DTDElementDecl
+                decl = new (fGrammarPoolMemoryManager) DTDElementDecl
                 (
                     nameBuf.getRawBuffer()
                     , fEmptyNamespaceId
                     , DTDElementDecl::Any
-                    , fMemoryManager
+                    , fGrammarPoolMemoryManager
                 );
                 decl->setCreateReason(XMLElementDecl::InContentModel);
                 decl->setExternalElemDeclaration(isReadingExternalEntity());
@@ -3495,18 +3500,18 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             //
             if (curNode == orgNode)
             {
-                curNode = new (fMemoryManager) ContentSpecNode
+                curNode = new (fGrammarPoolMemoryManager) ContentSpecNode
                 (
                     ContentSpecNode::Choice
                     , curNode
-                    , new (fMemoryManager) ContentSpecNode
+                    , new (fGrammarPoolMemoryManager) ContentSpecNode
                       (
                           decl->getElementName()
-                          , fMemoryManager
+                          , fGrammarPoolMemoryManager
                       )
                     , true
                     , true
-                    , fMemoryManager
+                    , fGrammarPoolMemoryManager
                 );
 
                 // Remember the top node
@@ -3517,18 +3522,18 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                 ContentSpecNode* oldRight = curNode->orphanSecond();
                 curNode->setSecond
                 (
-                    new (fMemoryManager) ContentSpecNode
+                    new (fGrammarPoolMemoryManager) ContentSpecNode
                     (
                         ContentSpecNode::Choice
                         , oldRight
-                        , new (fMemoryManager) ContentSpecNode
+                        , new (fGrammarPoolMemoryManager) ContentSpecNode
                           (
                               decl->getElementName()
-                              , fMemoryManager
+                              , fGrammarPoolMemoryManager
                           )
                         , true
                         , true
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     )
                 );
 
@@ -3618,13 +3623,13 @@ void DTDScanner::scanNotationDecl()
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr->getLastExtEntityInfo(lastInfo);
 
-        decl = new (fMemoryManager) XMLNotationDecl
+        decl = new (fGrammarPoolMemoryManager) XMLNotationDecl
         (
             bbName.getRawBuffer()
             , (publicId && *publicId) ? publicId : 0
             , (systemId && *systemId) ? systemId : 0
             , (lastInfo.systemId && *lastInfo.systemId) ? lastInfo.systemId : 0
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         fDTDGrammar->putNotationDecl(decl);
     }

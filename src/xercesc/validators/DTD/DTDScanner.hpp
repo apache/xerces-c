@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/07/10 19:50:12  peiyongz
+ * Stateless Grammar: create grammar components with grammarPool's memory Manager
+ *
  * Revision 1.8  2003/05/16 21:43:19  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -147,6 +150,7 @@ public:
     (
           DTDGrammar*           dtdGrammar
         , DocTypeHandler* const docTypeHandler
+        , MemoryManager* const  grammarPoolMemoryManager
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~DTDScanner();
@@ -298,6 +302,7 @@ private:
     //      declaration
     // -----------------------------------------------------------------------
     MemoryManager*                  fMemoryManager;
+    MemoryManager*                  fGrammarPoolMemoryManager;
     DocTypeHandler*                 fDocTypeHandler;
     DTDAttDef*                      fDumAttDef;
     DTDElementDecl*                 fDumElemDecl;
