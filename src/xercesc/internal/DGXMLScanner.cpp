@@ -825,11 +825,26 @@ void DGXMLScanner::scanDocTypeDecl()
         // this will break getRootElemId on DTDGrammar when
         // cached grammars are in use, but 
         // why would one use this anyway???
-        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+        try {
+            ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+        }
+        catch(const XMLException&)
+        {
+            delete rootDecl;
+            throw;
+        }
     } else 
     {
         // put this in the undeclared pool so it gets deleted...
-        rootDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)rootDecl));
+        XMLElementDecl* elemDecl = fDTDElemNonDeclPool->getByKey(bbRootName.getRawBuffer());
+        if (elemDecl)
+        {
+            rootDecl->setId(elemDecl->getId());
+        }
+        else
+        {
+            rootDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)rootDecl));
+        }
     }
 
     // Skip any spaces after the name

@@ -1386,7 +1386,15 @@ void IGXMLScanner::scanDocTypeDecl()
     } else
     {
         // attach this to the undeclared element pool so that it gets deleted
-        rootDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)rootDecl));
+        XMLElementDecl* elemDecl = fDTDElemNonDeclPool->getByKey(bbRootName.getRawBuffer());
+        if (elemDecl)
+        {
+            rootDecl->setId(elemDecl->getId());
+        }
+        else
+        {
+            rootDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)rootDecl));
+        }
     }
 
     // Skip any spaces after the name
