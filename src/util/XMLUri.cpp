@@ -77,7 +77,7 @@
 //      reserved      = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" |
 //                      "$" | "," | "[" | "]"
 //
-const XMLCh XMLUri::RESERVED_CHARACTERS[] = 
+const XMLCh XMLUri::RESERVED_CHARACTERS[] =
 {
     chSemiColon, chForwardSlash, chQuestion, chColon, chAt,
     chAmpersand, chEqual, chPlus, chDollarSign, chComma, chNull
@@ -128,55 +128,55 @@ static XMLCh value1[BUF_LEN+1];
 // "Query"
 // "Fragment"
 //
-static const XMLCh errMsg_SCHEME[] = 
+static const XMLCh errMsg_SCHEME[] =
 {
     chLatin_S, chLatin_c, chLatin_h, chLatin_e,
     chLatin_m, chLatin_e, chNull
 };
 
-static const XMLCh errMsg_SCHEMESPART[] = 
+static const XMLCh errMsg_SCHEMESPART[] =
 {
-    chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_e, 
-    chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f, 
-    chLatin_i, chLatin_c, chLatin_P, chLatin_a, chLatin_r, chLatin_t, 
+    chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_e,
+    chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f,
+    chLatin_i, chLatin_c, chLatin_P, chLatin_a, chLatin_r, chLatin_t,
     chNull
 };
 
-static const XMLCh errMsg_PARAMS[] = 
+static const XMLCh errMsg_PARAMS[] =
 {
     chLatin_P, chLatin_a, chLatin_r, chLatin_a, chLatin_m,
     chLatin_e, chLatin_t, chLatin_e, chLatin_r, chLatin_s, chNull
 };
 
-static const XMLCh errMsg_USERINFO[] = 
+static const XMLCh errMsg_USERINFO[] =
 {
-    chLatin_U, chLatin_s, chLatin_e, chLatin_r, 
+    chLatin_U, chLatin_s, chLatin_e, chLatin_r,
     chLatin_i, chLatin_n, chLatin_f, chLatin_o, chNull
 };
 
-static const XMLCh errMsg_HOST[] = 
+static const XMLCh errMsg_HOST[] =
 {
     chLatin_H, chLatin_o, chLatin_s, chLatin_t, chNull
 };
 
-static const XMLCh errMsg_PORT[] = 
+static const XMLCh errMsg_PORT[] =
 {
     chLatin_P, chLatin_o, chLatin_r, chLatin_t, chNull
 };
 
-static const XMLCh errMsg_PATH[] = 
+static const XMLCh errMsg_PATH[] =
 {
     chLatin_P, chLatin_a, chLatin_t, chLatin_h, chNull
-};  
+};
 
-static const XMLCh errMsg_QUERY[] = 
+static const XMLCh errMsg_QUERY[] =
 {
     chLatin_Q, chLatin_u, chLatin_e, chLatin_r, chLatin_y, chNull
 };
 
-static const XMLCh errMsg_FRAGMENT[] = 
+static const XMLCh errMsg_FRAGMENT[] =
 {
-    chLatin_F, chLatin_r, chLatin_a, chLatin_g, 
+    chLatin_F, chLatin_r, chLatin_a, chLatin_g,
     chLatin_m, chLatin_e, chLatin_n, chLatin_t, chNull
 };
 
@@ -188,32 +188,32 @@ static const XMLCh errMsg_FRAGMENT[] =
 //  "/../"
 //  "/.."
 //
-static const XMLCh DOUBLE_SLASH[] = 
+static const XMLCh DOUBLE_SLASH[] =
 {
     chForwardSlash, chForwardSlash, chNull
-};  
+};
 
-static const XMLCh SINGLE_SLASH[] = 
+static const XMLCh SINGLE_SLASH[] =
 {
     chForwardSlash, chNull
 };
 
-static const XMLCh DOT_SLASH[] = 
+static const XMLCh DOT_SLASH[] =
 {
     chPeriod, chForwardSlash, chNull
 };
 
-static const XMLCh SLASH_DOT[] = 
+static const XMLCh SLASH_DOT[] =
 {
     chForwardSlash, chPeriod, chNull
 };
 
-static const XMLCh SLASH_DOTDOT_SLASH[] = 
+static const XMLCh SLASH_DOTDOT_SLASH[] =
 {
     chForwardSlash, chPeriod, chPeriod, chForwardSlash, chNull
 };
 
-static const XMLCh SLASH_DOTDOT[] = 
+static const XMLCh SLASH_DOTDOT[] =
 {
     chForwardSlash, chPeriod, chPeriod, chNull
 };
@@ -286,7 +286,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
     ArrayJanitor<XMLCh> janName(trimedUriSpec);
     int trimedUriSpecLen = XMLString::stringLen(trimedUriSpec);
 
-    if ( !baseURI && 
+    if ( !baseURI &&
         (!trimedUriSpec || trimedUriSpecLen == 0))
     {
         ThrowXML1(NumberFormatException
@@ -295,7 +295,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
     }
 
 	// just make a copy of the base if spec is empty
-	if (!trimedUriSpec || trimedUriSpecLen == 0) 
+	if (!trimedUriSpec || trimedUriSpecLen == 0)
     {
         initialize(*baseURI);
         return;
@@ -307,17 +307,17 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	// DOS drive letters ('D:'), so 1-character schemes are not allowed.
     int colonIdx = XMLString::indexOf(trimedUriSpec, chColon);
     int slashIdx = XMLString::indexOf(trimedUriSpec, chForwardSlash);
-	if ((colonIdx < 2)                         || 
-        (colonIdx > slashIdx && slashIdx != -1) ) 
+	if ((colonIdx < 2)                         ||
+        (colonIdx > slashIdx && slashIdx != -1) )
     {
         int fragmentIdx = XMLString::indexOf(trimedUriSpec, chPound);  //'#'
         // A standalone base is a valid URI according to spec
-        if ( !baseURI && fragmentIdx != 0 ) 
+        if ( !baseURI && fragmentIdx != 0 )
         {
             ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_URI_No_Scheme);
         }
     }
-	else 
+	else
     {
         initializeScheme(trimedUriSpec);
         index = XMLString::stringLen(fScheme)+1;
@@ -339,9 +339,9 @@ void XMLUri::initialize(const XMLUri* const baseURI
         while (index < trimedUriSpecLen)
         {
             testChar = trimedUriSpec[index];
-            if (testChar == chForwardSlash || 
-                testChar == chQuestion     || 
-                testChar == chPound         ) 
+            if (testChar == chForwardSlash ||
+                testChar == chQuestion     ||
+                testChar == chPound         )
             {
                 break;
             }
@@ -351,12 +351,12 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // if we found authority, parse it out, otherwise we set the
         // host to empty string
-        if (index > startPos) 
+        if (index > startPos)
         {
             XMLString::subString(authUriSpec, trimedUriSpec, startPos, index);
             initializeAuthority(authUriSpec);
         }
-        else 
+        else
         {
             //fHost = 0;
             setHost(0);
@@ -378,7 +378,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	// (when scheme is specified is the string spec and the base URI
 	// is also specified, for example), but we're just following the
 	// RFC specifications
-	if ( baseURI ) 
+	if ( baseURI )
     {
         // check to see if this is the current doc - RFC 2396 5.2 #2
         // note that this is slightly different from the RFC spec in that
@@ -387,17 +387,19 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // string or a fragment (e.g. "?y" or "#s") -
         // see <http://www.ics.uci.edu/~fielding/url/test1.html> which
         // identified this as a bug in the RFC
-        if (XMLString::stringLen(fPath) == 0 && 
+        if ((!fPath || XMLString::stringLen(fPath) == 0) &&
             fScheme == 0 &&
-            fHost == 0) 
+            fHost == 0)
         {
             fScheme = XMLString::replicate(baseURI->getScheme());
+            delete [] fUserInfo;
             fUserInfo = XMLString::replicate(baseURI->getUserInfo());
             fHost = XMLString::replicate(baseURI->getHost());
             fPort = baseURI->getPort();
+            delete [] fPath;
             fPath = XMLString::replicate(baseURI->getPath());
 
-            if ( !fQueryString ) 
+            if ( !fQueryString )
             {
                 fQueryString = XMLString::replicate(baseURI->getQueryString());
             }
@@ -406,11 +408,11 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // check for scheme - RFC 2396 5.2 #3
         // if we found a scheme, it means absolute URI, so we're done
-        if (fScheme == 0) 
+        if (fScheme == 0)
         {
             fScheme = XMLString::replicate(baseURI->getScheme());
         }
-        else 
+        else
         {
             return;
         }
@@ -419,18 +421,19 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // if we found a host, then we've got a network path, so we're done
         if (fHost == 0)
         {
+            delete [] fUserInfo;
             fUserInfo = XMLString::replicate(baseURI->getUserInfo());
             fHost = XMLString::replicate(baseURI->getHost());
             fPort = baseURI->getPort();
         }
-        else 
+        else
         {
             return;
         }
 
         // check for absolute path - RFC 2396 5.2 #5
         if (XMLString::stringLen(fPath) > 0 &&
-            XMLString::startsWith(fPath, SINGLE_SLASH)) 
+            XMLString::startsWith(fPath, SINGLE_SLASH))
         {
             return;
         }
@@ -442,10 +445,10 @@ void XMLUri::initialize(const XMLUri* const baseURI
         ArrayJanitor<XMLCh> basePathName(basePath);
 
         // 6a - get all but the last segment of the base URI path
-        if (basePath != 0) 
+        if (basePath != 0)
         {
             int lastSlash = XMLString::lastIndexOf(basePath, chForwardSlash);
-            if (lastSlash != -1) 
+            if (lastSlash != -1)
             {
                 path = new XMLCh[trimedUriSpecLen];
                 XMLString::subString(path, basePath, 0, lastSlash+1);
@@ -457,23 +460,23 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // 6c - remove all "./" where "." is a complete path segment
         index = -1;
-        while ((index = XMLString::patternMatch(path, DOT_SLASH)) != -1) 
+        while ((index = XMLString::patternMatch(path, DOT_SLASH)) != -1)
         {
             XMLCh* tmp1 = new XMLCh[trimedUriSpecLen];
             XMLString::subString(tmp1, path, 0, index);
             XMLCh* tmp2 = new XMLCh[trimedUriSpecLen];
-            XMLString::subString(tmp2, path, index+2, XMLString::stringLen(path));             
-            
+            XMLString::subString(tmp2, path, index+2, XMLString::stringLen(path));
+
             path[0] = 0;
             XMLString::catString(path, tmp1);
             XMLString::catString(path, tmp2);
- 
+
             delete [] tmp1;
             delete [] tmp2;
         }
 
         // 6d - remove "." if path ends with "." as a complete path segment
-        if (XMLString::endsWith(path, SLASH_DOT)) 
+        if (XMLString::endsWith(path, SLASH_DOT))
         {
             path[XMLString::stringLen(path) - 1] = chNull;
         }
@@ -483,28 +486,28 @@ void XMLUri::initialize(const XMLUri* const baseURI
         index = 1;
         int segIndex = -1;
 
-        while ((index = XMLString::patternMatch(&(path[1]), SLASH_DOTDOT_SLASH)) != -1) 
+        while ((index = XMLString::patternMatch(&(path[1]), SLASH_DOTDOT_SLASH)) != -1)
         {
             segIndex = XMLString::lastIndexOf(&(path[index-1]), chForwardSlash);
-            if (segIndex != -1                && 
+            if (segIndex != -1                &&
                 (path[segIndex+1] != chPeriod ||
                  path[index] != chPeriod))
             {
                 XMLCh* tmp1 = new XMLCh[trimedUriSpecLen];
                 XMLString::subString(tmp1, path, 0, segIndex);
                 XMLCh* tmp2 = new XMLCh[trimedUriSpecLen];
-                XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path));             
-              
+                XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path));
+
                 path[0] = 0;
                 XMLString::catString(path, tmp1);
                 XMLString::catString(path, tmp2);
- 
+
                 delete [] tmp1;
                 delete [] tmp2;
 
                 index = segIndex;
-            } 
-            else 
+            }
+            else
             {
                 index += 4;
             }
@@ -512,14 +515,14 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // 6f - remove ending "<segment>/.." where "<segment>" is a
         // complete path segment
-        if (XMLString::endsWith(path, SLASH_DOTDOT)) 
+        if (XMLString::endsWith(path, SLASH_DOTDOT))
         {
             index = XMLString::stringLen(path) - 3;
             segIndex = XMLString::lastIndexOf(&(path[index-1]), chForwardSlash);
 
-            if (segIndex != -1                && 
+            if (segIndex != -1                &&
                 (path[segIndex+1] != chPeriod ||
-                 path[index] != chPeriod))               
+                 path[index] != chPeriod))
             {
                 path[segIndex+1] = chNull;
             }
@@ -530,10 +533,10 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         fPath = path;
     }
-}  
+}
 
 // ---------------------------------------------------------------------------
-//  Components initialization 
+//  Components initialization
 // ---------------------------------------------------------------------------
 
 //
@@ -547,7 +550,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
 // userinfo      = *( unreserved | escaped |
 //                 ";" | ":" | "&" | "=" | "+" | "$" | "," )
 //
-  
+
 void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 {
 
@@ -557,13 +560,13 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
     //
     // server = [ [ userinfo "@" ] hostport ]
-	// userinfo is everything up @, 
+	// userinfo is everything up @,
     //
     XMLCh* userinfo = new XMLCh[end+1];
     ArrayJanitor<XMLCh> userName(userinfo);
     index = XMLString::indexOf(uriSpec, chAt);
 
-    if ( index != -1) 
+    if ( index != -1)
     {
         XMLString::subString(userinfo, uriSpec, 0, index);
         index++; // skip the @
@@ -583,7 +586,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 	start = index;
     index = XMLString::indexOf(&(uriSpec[start]), chColon);
 
-    if ( index != -1) 
+    if ( index != -1)
     {
         XMLString::subString(host, uriSpec, start, index);
         index++;  // skip the :
@@ -599,19 +602,19 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     start = index;
     int port = -1;
 
-    if ((XMLString::stringLen(host) > 0) &&   // non empty host 
+    if ((XMLString::stringLen(host) > 0) &&   // non empty host
         (start != -1)                    &&   // ":" found
         (start < end)                     )   // ":" is not the last
     {
         XMLString::subString(portStr, uriSpec, start, end);
 
-        if (XMLString::stringLen(portStr) > 0) 
+        if (XMLString::stringLen(portStr) > 0)
         {
-            try 
+            try
             {
                 port = XMLString::parseInt(portStr);
             }
-            catch (...) 
+            catch (...)
             {
                 throw;
             }
@@ -623,7 +626,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     setHost(host);
     setPort(port);
 	setUserInfo(userinfo);
-}  
+}
 
 // scheme = alpha *( alpha | digit | "+" | "-" | "." )
 void XMLUri::initializeScheme(const XMLCh* const uriSpec)
@@ -634,7 +637,7 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
     {
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_URI_No_Scheme);
     }
-	else 
+	else
     {
         XMLCh* scheme = new XMLCh[XMLString::stringLen(uriSpec)+1];
         ArrayJanitor<XMLCh> tmpName(scheme);
@@ -646,7 +649,7 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
 
 void XMLUri::initializePath(const XMLCh* const uriSpec)
 {
-	if ( !uriSpec ) 
+	if ( !uriSpec )
     {
         ThrowXML1(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
@@ -659,20 +662,20 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 	XMLCh testChar;
 
 	// path - everything up to query string or fragment
-	while (index < end) 
+	while (index < end)
     {
         testChar = uriSpec[index];
-        if (testChar == chQuestion || testChar == chPound) 
+        if (testChar == chQuestion || testChar == chPound)
         {
             break;
         }
 
         // check for valid escape sequence
-        if (testChar == chPercent) 
+        if (testChar == chPercent)
         {
             if (index+2 >= end ||
                 !XMLString::isHex(uriSpec[index+1]) ||
-                !XMLString::isHex(uriSpec[index+2])) 
+                !XMLString::isHex(uriSpec[index+2]))
             {
                 XMLString::moveChars(value1, &(uriSpec[index]), 3);
                 value1[3] = chNull;
@@ -683,7 +686,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             }
         }
         else if (!isReservedCharacter(testChar) &&
-                 !isUnreservedCharacter(testChar)) 
+                 !isUnreservedCharacter(testChar))
         {
             value1[0] = testChar;
             value1[1] = chNull;
@@ -705,23 +708,23 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
     XMLString::subString(fPath, uriSpec, start, index);
 
 	// query - starts with ? and up to fragment or end
-	if (testChar == chQuestion) 
+	if (testChar == chQuestion)
     {
         index++;
         start = index;
-        while (index < end) 
+        while (index < end)
         {
             testChar = uriSpec[index];
-            if (testChar == chPound) 
+            if (testChar == chPound)
             {
                 break;
             }
 
-            if (testChar == chPercent) 
+            if (testChar == chPercent)
             {
                 if (index+2 >= end ||
                     !XMLString::isHex(uriSpec[index+1]) ||
-                    !XMLString::isHex(uriSpec[index+2])) 
+                    !XMLString::isHex(uriSpec[index+2]))
                 {
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
@@ -732,7 +735,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 }
             }
             else if (!isReservedCharacter(testChar) &&
-                     !isUnreservedCharacter(testChar)) 
+                     !isUnreservedCharacter(testChar))
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
@@ -754,19 +757,19 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
     }
 
 	// fragment - starts with #
-	if (testChar == chPound) 
+	if (testChar == chPound)
     {
         index++;
         start = index;
-        while (index < end) 
+        while (index < end)
         {
             testChar = uriSpec[index];
 
-            if (testChar == chPercent) 
+            if (testChar == chPercent)
             {
                 if (index+2 >= end ||
                     !XMLString::isHex(uriSpec[index+1]) ||
-                    !XMLString::isHex(uriSpec[index+2])) 
+                    !XMLString::isHex(uriSpec[index+2]))
                 {
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
@@ -777,7 +780,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 }
             }
             else if (!isReservedCharacter(testChar) &&
-                     !isUnreservedCharacter(testChar)) 
+                     !isUnreservedCharacter(testChar))
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
@@ -801,12 +804,12 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 
     }
 
-}  
+}
 
 // ---------------------------------------------------------------------------
 //  Setter
 // ---------------------------------------------------------------------------
-void XMLUri::setScheme(const XMLCh* const newScheme) 
+void XMLUri::setScheme(const XMLCh* const newScheme)
 {
     if ( !newScheme )
     {
@@ -815,10 +818,10 @@ void XMLUri::setScheme(const XMLCh* const newScheme)
                 , errMsg_SCHEME);
     }
 
-    if (!isConformantSchemeName(newScheme)) 
+    if (!isConformantSchemeName(newScheme))
     {
         ThrowXML2(NumberFormatException
-                , XMLExcepts::XMLNUM_URI_Component_Not_Conformant               
+                , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
                 , errMsg_SCHEME
                 , newScheme);
     }
@@ -840,20 +843,20 @@ void XMLUri::setScheme(const XMLCh* const newScheme)
 // setUserInfo(), setHost() and setPort() are closely related
 // three methods, in a word, userinfo and port has dependency
 // on host.
-// 
+//
 // if host is not present, userinfo must be null and port = -1
 //
 void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
 {
-    if ( newUserInfo && 
-         !getHost()    ) 
+    if ( newUserInfo &&
+         !getHost()    )
     {
         ThrowXML2(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_NullHost
                 , errMsg_USERINFO
                 , newUserInfo);
     }
-    
+
     try
     {
         isConformantUserInfo(newUserInfo);
@@ -873,7 +876,7 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
 }
 
 void XMLUri::setHost(const XMLCh* const newHost)
-{    
+{
     if ( !newHost ||
         XMLString::isAllWhiteSpace(newHost))
     {
@@ -887,7 +890,7 @@ void XMLUri::setHost(const XMLCh* const newHost)
         return;
     }
 
-    if (!isWellFormedAddress(newHost)) 
+    if (!isWellFormedAddress(newHost))
     {
         ThrowXML2(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
@@ -905,23 +908,23 @@ void XMLUri::setHost(const XMLCh* const newHost)
 
 void XMLUri::setPort(int newPort)
 {
-    if (newPort >= 0 && newPort <= 65535) 
+    if (newPort >= 0 && newPort <= 65535)
     {
-        if (!getHost()) 
+        if (!getHost())
         {
             XMLString::binToText(newPort, value1, BUF_LEN, 10);
             ThrowXML2(NumberFormatException
                     , XMLExcepts::XMLNUM_URI_NullHost
                     , errMsg_PORT
-                    , value1);           
+                    , value1);
         }
     }
-    else if (newPort != -1) 
+    else if (newPort != -1)
     {
         XMLString::binToText(newPort, value1, BUF_LEN, 10);
         ThrowXML1(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_PortNo_Invalid
-                , value1);            
+                , value1);
     }
 
     fPort = newPort;
@@ -934,7 +937,7 @@ void XMLUri::setPort(int newPort)
 //
 void XMLUri::setPath(const XMLCh* const newPath)
 {
-    if (!newPath) 
+    if (!newPath)
     {
         if (getPath())
             delete [] fPath;
@@ -943,7 +946,7 @@ void XMLUri::setPath(const XMLCh* const newPath)
         setQueryString(0);
         setFragment(0);
     }
-    else 
+    else
     {
       initializePath(newPath);
     }
@@ -954,34 +957,34 @@ void XMLUri::setPath(const XMLCh* const newPath)
 //
 void XMLUri::setFragment(const XMLCh* const newFragment)
 {
-	if ( !newFragment ) 
+	if ( !newFragment )
     {
         if (getFragment())
             delete [] fFragment;
 
         fFragment = 0;
 	}
-	else if (!isGenericURI()) 
+	else if (!isGenericURI())
     {
         ThrowXML2(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
                 , errMsg_FRAGMENT
                 , newFragment);
 	}
-	else if ( !getPath() )  
+	else if ( !getPath() )
     {
         ThrowXML2(NumberFormatException
                , XMLExcepts::XMLNUM_URI_NullPath
                , errMsg_FRAGMENT
                , newFragment);
 	}
-	else if (!isURIString(newFragment)) 
+	else if (!isURIString(newFragment))
     {
         ThrowXML1(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                 , errMsg_FRAGMENT);
 	}
-	else 
+	else
     {
         if (getFragment())
         {
@@ -990,42 +993,42 @@ void XMLUri::setFragment(const XMLCh* const newFragment)
 
         fFragment = XMLString::replicate(newFragment);
 	}
-}  
+}
 
 //
 // query = *uric
 //
 void XMLUri::setQueryString(const XMLCh* const newQueryString)
 {
-	if ( !newQueryString ) 
+	if ( !newQueryString )
     {
         if (getQueryString())
             delete [] fQueryString;
 
         fQueryString = 0;
 	}
-	else if (!isGenericURI()) 
+	else if (!isGenericURI())
     {
         ThrowXML2(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
                 , errMsg_QUERY
                 , newQueryString);
 	}
-	else if ( !getPath() ) 
+	else if ( !getPath() )
     {
         ThrowXML2(NumberFormatException
                 , XMLExcepts::XMLNUM_URI_NullPath
                 , errMsg_QUERY
                 , newQueryString);
 	}
-	else if (!isURIString(newQueryString)) 
+	else if (!isURIString(newQueryString))
     {
         ThrowXML2(NumberFormatException
                , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                , errMsg_QUERY
                , newQueryString);
 	}
-	else 
+	else
     {
         if (getQueryString())
         {
@@ -1034,7 +1037,7 @@ void XMLUri::setQueryString(const XMLCh* const newQueryString)
 
         fQueryString = XMLString::replicate(newQueryString);
 	}
-}  
+}
 
 // ---------------------------------------------------------------------------
 //  XMLUri: Public, static methods
@@ -1065,11 +1068,11 @@ bool XMLUri::isConformantSchemeName(const XMLCh* const scheme)
     }
 
     return true;
-}  
+}
 
 //
 // userinfo = *( unreserved | escaped |
-//              ";" | ":" | "&" | "=" | "+" | "$" | "," )        
+//              ";" | ":" | "&" | "=" | "+" | "$" | "," )
 //
 void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
 {
@@ -1087,7 +1090,7 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
         else if (*tmpStr == chPercent)               // '%'
         {
             if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
-                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex 
+                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
             {
                 tmpStr+=3;
             }
@@ -1104,7 +1107,7 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
                         , value1);
             }
         }
-        else 
+        else
         {	
             ThrowXML2(NumberFormatException
                     , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
@@ -1114,7 +1117,7 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
     } //while
 
     return;
-}  
+}
 
 //
 // uric     = reserved | unreserved | escaped
@@ -1131,14 +1134,14 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
     while (*tmpStr)
     {
         if (isReservedCharacter(*tmpStr)    ||
-            isUnreservedCharacter(*tmpStr)   ) 
+            isUnreservedCharacter(*tmpStr)   )
         {
             tmpStr++;
         }
         else if (*tmpStr == chPercent)               // '%'
         {
             if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
-                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex 
+                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
             {
                 tmpStr+=3;
             }
@@ -1147,14 +1150,14 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
                 return false;
             }
         }
-        else 
+        else
         {	
             return false;
         }
     }
 
     return true;
-}  
+}
 
 //
 //  host          = hostname | IPv4address
@@ -1164,7 +1167,7 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
 //  toplabel      = alpha | alpha *( alphanum | "-" ) alphanum
 //
 //  IPv4address   = 1*digit "." 1*digit "." 1*digit "." 1*digit
-//      
+//
 bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
 {
 	if (!addrString)
@@ -1180,10 +1183,10 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
         (XMLString::stringLen(tmpAddr) > 255) )
         return false;
 
-    // 
+    //
     // the frist letter shall NOT be "." or "-"
     //
-	if (*addrString == chPeriod || 
+	if (*addrString == chPeriod ||
         *addrString == chDash    )
         return false;
 
@@ -1193,7 +1196,7 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
     int lastPeriodPos = XMLString::lastIndexOf(addrString, chPeriod);
     if (lastPeriodPos == -1)
         return false;
-    
+
     int addrStrLen = XMLString::stringLen(addrString);
 
     // if the string ends with "."
@@ -1215,37 +1218,37 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
         //
         // IPv4address   = 1*digit "." 1*digit "." 1*digit "." 1*digit
         //
-        // make sure that 
-        // 1) we see only digits and dot separators, 
+        // make sure that
+        // 1) we see only digits and dot separators,
         // 2) that any dot separator is preceded and followed by a digit
         // 3) that we find 3 dots
 
         int numDots = 0;
-        for (int i = 0; i < addrStrLen; i++) 
+        for (int i = 0; i < addrStrLen; i++)
         {
-            if (addrString[i] == chPeriod) 
+            if (addrString[i] == chPeriod)
             {
-                if (((i > 0)  && 
+                if (((i > 0)  &&
                     (!XMLString::isDigit(addrString[i-1]))) ||
-                    ((i + 1 < addrStrLen) && 
-                    (!XMLString::isDigit(addrString[i+1])))  ) 
+                    ((i + 1 < addrStrLen) &&
+                    (!XMLString::isDigit(addrString[i+1])))  )
                 {
                     return false;
                 }
                 numDots++;
             }
-            else if (!XMLString::isDigit(addrString[i])) 
+            else if (!XMLString::isDigit(addrString[i]))
             {
                 return false;
             }
         } //for
 
-        if (numDots != 3) 
+        if (numDots != 3)
         {
             return false;
         }
     } // end of IPv4address
-	else 
+	else
     {
         //
         //  hostname      = *( domainlabel "." ) toplabel [ "." ]
@@ -1254,20 +1257,20 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
         //
         // domain labels can contain alphanumerics and '-"
         // but must start and end with an alphanumeric
-        for (int i = 0; i < addrStrLen; i++) 
+        for (int i = 0; i < addrStrLen; i++)
         {
-            if (addrString[i] == chPeriod) 
+            if (addrString[i] == chPeriod)
             {
-              if (((i > 0)  && 
+              if (((i > 0)  &&
                    (!XMLString::isAlphaNum(addrString[i-1]))) ||
-                  ((i + 1 < addrStrLen) && 
-                   (!XMLString::isAlphaNum(addrString[i+1])))  ) 
+                  ((i + 1 < addrStrLen) &&
+                   (!XMLString::isAlphaNum(addrString[i+1])))  )
                 {
                     return false;
                 }
             }
-            else if (!XMLString::isAlphaNum(addrString[i]) && 
-                      addrString[i] != chDash) 
+            else if (!XMLString::isAlphaNum(addrString[i]) &&
+                      addrString[i] != chDash)
             {
                 return false;
             }
@@ -1275,7 +1278,7 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
     }
 
     return true;
-}  
+}
 
 bool XMLUri::isGenericURI()
 {

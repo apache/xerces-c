@@ -776,6 +776,8 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
         fUser = 0;
         delete [] fPassword;
         fPassword = 0;
+        delete [] fHost;
+        fHost = 0;
 
         fHost = XMLString::replicate(baseURL.fHost);
         fUser = XMLString::replicate(baseURL.fUser);
@@ -926,6 +928,7 @@ void XMLURL::parse(const XMLCh* const urlText)
             {
                 if (ptr1 != srcPtr)
                 {
+                    delete [] fHost;
                     fHost = new XMLCh[(ptr1 - srcPtr) + 1];
                     ptr2 = fHost;
                     while (srcPtr < ptr1)
@@ -935,6 +938,7 @@ void XMLURL::parse(const XMLCh* const urlText)
             }
              else
             {
+                delete [] fHost;
                 fHost = XMLString::replicate(srcPtr);
 
                 // Update source pointer to the end
@@ -959,6 +963,7 @@ void XMLURL::parse(const XMLCh* const urlText)
         {
             // Get this info out as the user name
             *ptr1 = 0;
+            delete [] fUser;
             fUser = XMLString::replicate(fHost);
             ptr1++;
 
@@ -974,6 +979,7 @@ void XMLURL::parse(const XMLCh* const urlText)
 
                 // And copy out the remainder to the password field
                 ptr2++;
+                delete [] fPassword;
                 fPassword = XMLString::replicate(ptr2);
             }
         }
@@ -1017,6 +1023,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     ptr1 = XMLString::findAny(srcPtr, listFive);
     if (!ptr1)
     {
+        delete [] fPath;
         fPath = XMLString::replicate(srcPtr);
         return;
     }
@@ -1024,6 +1031,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     // Everything from where we are to what we found is the path
     if (ptr1 > srcPtr)
     {
+        delete [] fPath;
         fPath = new XMLCh[(ptr1 - srcPtr) + 1];
         ptr2 = fPath;
         while (srcPtr < ptr1)
@@ -1038,6 +1046,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     if (*srcPtr == chPound)
     {
         srcPtr++;
+        delete [] fFragment;
         fFragment = XMLString::replicate(srcPtr);
         return;
     }
@@ -1048,6 +1057,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     //
     srcPtr++;
     ptr1 = XMLString::findAny(srcPtr, listSix);
+    delete [] fQuery;
     if (!ptr1)
     {
         fQuery = XMLString::replicate(srcPtr);
@@ -1066,6 +1076,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     if (*srcPtr == chPound)
     {
         srcPtr++;
+        delete [] fFragment;
         fFragment = XMLString::replicate(srcPtr);
     }
 }
