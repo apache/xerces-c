@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/04 00:52:57  rahulj
+ * Changed size_t to int.
+ *
  * Revision 1.9  2000/02/03 23:07:27  andyh
  * Add several new functions from Robert Weir to DOMString.
  *
@@ -515,7 +518,7 @@ bool DOMString::operator != (const DOM_NullPtr *p) const
 
 
 
-void DOMString::reserve(size_t size)
+void DOMString::reserve(int size)
 {
 	if (fHandle == 0)
 	{

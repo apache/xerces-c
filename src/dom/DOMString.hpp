@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/04 00:52:58  rahulj
+ * Changed size_t to int.
+ *
  * Revision 1.5  2000/02/03 23:07:27  andyh
  * Add several new functions from Robert Weir to DOMString.
  *
@@ -251,7 +254,7 @@ public:
       *
       * @param size The number of 16 bit characters to reserve.
       */
-    void reserve(size_t size);
+    void reserve(int size);
 
     
     /**
