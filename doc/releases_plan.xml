@@ -47,7 +47,7 @@
 	or is an enhancement suggestion,</p>
 	
 	<p>This list tracks current ideas and developer sign-up for 3.0 features. Some items
-	on this list have no vontunteer. Items that have no volunteer will receive no
+	on this list have no volunteer. Items that have no volunteer will receive no
 	development attention and therefore will not become part of 3.0. If you would
 	like to volunteer for these or other items please email the &XercesCName; mailing
 	list</p>
@@ -89,6 +89,7 @@
 					<li>Solaris - Scott Cantor [test]</li>
 					<li>Cygwin - Neil</li>
 					<li>MingGW - Alberto</li>
+					<li>Interix - Alberto</li>
 					<li>AIX - cargilld</li>
 					<li>OS390 - cargilld</li>
 				<ol>
@@ -177,7 +178,7 @@
 		<tr>
 			<td>20</td>
 			<td>Remove Deprecated DOM altogether -
-			 	Whether we should actually do this is still still being debated.
+			 	Whether we should actually do this is still being debated.
 			</td>
 			<td>Gareth</td>
 		</tr>
