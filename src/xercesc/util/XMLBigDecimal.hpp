@@ -111,6 +111,12 @@ public:
                 ,        MemoryManager* const manager
                 );
 
+    static void  parseDecimal
+                ( 
+                   const XMLCh*         const toParse
+                ,        MemoryManager* const manager
+                );
+
     /**
      *
      *  Deprecated: please use getRawData
@@ -129,6 +135,8 @@ public:
     unsigned int          getScale() const;
 
     unsigned int          getTotalDigit() const;
+
+    inline XMLCh*         getIntVal() const;
 
     /**
      * Compares this object to the specified object.
@@ -196,6 +204,7 @@ private:
     XMLCh*         fRawData;
     XMLCh*         fIntVal;
     MemoryManager* fMemoryManager;
+
 };
 
 inline int XMLBigDecimal::getSign() const
@@ -231,6 +240,11 @@ inline const XMLCh*  XMLBigDecimal::getFormattedString() const
 inline MemoryManager* XMLBigDecimal::getMemoryManager() const
 {
     return fMemoryManager;
+}
+
+inline XMLCh*  XMLBigDecimal::getIntVal() const
+{
+    return fIntVal;
 }
 
 //

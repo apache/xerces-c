@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/08/11 16:17:58  peiyongz
+ * Light weight parsing method
+ *
  * Revision 1.22  2004/03/19 01:15:55  peiyongz
  * store/load fRawData
  *
@@ -417,6 +420,74 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
     }
 
     *retPtr = chNull;   //terminated
+    return;
+}
+
+void  XMLBigDecimal::parseDecimal(const XMLCh*         const toParse
+                               ,        MemoryManager* const manager)
+{
+
+    // Strip leading white space, if any. 
+    const XMLCh* startPtr = toParse;
+    while (XMLChar1_0::isWhitespace(*startPtr))
+        startPtr++;
+
+    // If we hit the end, then return failure
+    if (!*startPtr)
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_WSString, manager);
+
+    // Strip tailing white space, if any.
+    const XMLCh* endPtr = toParse + XMLString::stringLen(toParse);
+    while (XMLChar1_0::isWhitespace(*(endPtr - 1)))
+        endPtr--;
+
+    // '+' or '-' is allowed only at the first position
+    // and is NOT included in the return parsed string
+
+    if (*startPtr == chDash)
+    {
+        startPtr++;
+    }
+    else if (*startPtr == chPlus)
+    {
+        startPtr++;
+    }
+
+    // Strip leading zeros
+    while (*startPtr == chDigit_0)
+        startPtr++;
+
+    // containning zero, only zero, nothing but zero
+    // it is a zero, indeed
+    if (startPtr >= endPtr)
+    {
+        return;
+    }
+
+    // Scan data
+    bool   dotSignFound = false;
+    while (startPtr < endPtr)
+    {
+        if (*startPtr == chPeriod)
+        {
+            if (!dotSignFound)
+            {
+                dotSignFound = true;
+                startPtr++;
+                continue;
+            }
+            else  // '.' is allowed only once
+                ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_2ManyDecPoint, manager);
+        }
+
+        // If not valid decimal digit, then an error
+        if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
+
+        startPtr++;
+
+    }
+
     return;
 }
 
