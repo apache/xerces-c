@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2004/10/26 14:50:13  peiyongz
+ * Reinitialize buffer after expansion
+ *
  * Revision 1.5  2004/09/08 13:56:13  peiyongz
  * Apache License Version 2.0
  *
@@ -119,6 +122,8 @@ void BinMemOutputStream::insureCapacity(const unsigned int extraNeeded)
     (
         (newCap+4) * sizeof(XMLByte)
     );
+
+    memset(newBuf, 0, (newCap+4) * sizeof(XMLByte));
 
     // Copy over the old stuff
     memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);
