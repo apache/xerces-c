@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.9  2001/08/13 15:06:39  knoaman
  * update <any> validation.
  *
@@ -170,6 +173,14 @@ public :
 
     virtual unsigned int getNextState(const unsigned int currentState,
                                       const unsigned int elementIndex) const;
+
+    virtual void checkUniqueParticleAttribution
+    (
+        GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+      , XMLValidator*     const pValidator
+      , unsigned int*     const pContentSpecOrgURI
+    ) ;
 
  private :
     // -----------------------------------------------------------------------

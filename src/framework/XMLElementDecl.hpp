@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/08/21 16:06:10  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.17  2001/07/24 18:30:47  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -121,9 +124,9 @@
 #include <util/XMLString.hpp>
 #include <framework/XMLAttr.hpp>
 #include <framework/XMLAttDefList.hpp>
-#include <framework/XMLContentModel.hpp>
 
 class ContentSpecNode;
+class XMLContentModel;
 
 /**
  *  This class defines the core information of an element declaration. Each
@@ -321,6 +324,46 @@ class XMLPARSER_EXPORT XMLElementDecl
       *         object. Any previous object is destroyed.
       */
     virtual void setContentSpec(ContentSpecNode* toAdopt) = 0;
+    
+    /** Get a pointer to the abstract content model
+      *
+      * This method will return a const pointer to the content model object
+      * of this element. This class is a simple abstraction that allows an
+      * element to define and use multiple, specialized content model types
+      * internally but still allow the outside world to do simple stuff with
+      * them.
+      *
+      * @return A pointer to the element's content model, via the basic
+      * abstract content model type.
+      */
+    virtual XMLContentModel* getContentModel() = 0;    
+    
+    /** Set the content model object for this element type
+      *
+      * This method will adopt the based content model object. This is called
+      * by the actual validator which is parsing its DTD or Schema or whatever
+      * a creating an element decl. It will build what it feels is the correct
+      * content model type object and store it on the element decl object via
+      * this method.
+      *
+      * @param  newModelToAdopt This method will adopt the passed content model
+      *         object. Any previous object is destroyed.
+      */
+    virtual void setContentModel(XMLContentModel* const newModelToAdopt) = 0;    
+    
+    /** Geta formatted string of the content model
+      *
+      * This method is a convenience method which will create a formatted
+      * representation of the content model of the element. It will not always
+      * exactly recreate the original model, since some normalization or
+      * or reformatting may occur. But, it will be a technically accurate
+      * representation of the original content model.
+      *
+      * @return A pointer to an internal buffer which contains the formatted
+      *         content model. The caller does not own this buffer and should
+      *         copy it if it needs to be kept around.
+      */
+    virtual const XMLCh* getFormattedContentModel ()   const = 0;    
 
     //@}
 
@@ -369,19 +412,6 @@ class XMLPARSER_EXPORT XMLElementDecl
       * be on.
       */
     const XMLCh* getFullName() const;
-
-    /** Get a pointer to the abstract content model
-      *
-      * This method will return a const pointer to the content model object
-      * of this element. This class is a simple abstraction that allows an
-      * element to define and use multiple, specialized content model types
-      * internally but still allow the outside world to do simple stuff with
-      * them.
-      *
-      * @return A pointer to the element's content model, via the basic
-      * abstract content model type.
-      */
-    XMLContentModel* getContentModel();
 
     /** Get the create reason for this element type
       *
@@ -474,19 +504,6 @@ class XMLPARSER_EXPORT XMLElementDecl
       */
       void setElementName(const QName* const    elementName);
 
-    /** Set the content model object for this element type
-      *
-      * This method will adopt the based content model object. This is called
-      * by the actual validator which is parsing its DTD or Schema or whatever
-      * a creating an element decl. It will build what it feels is the correct
-      * content model type object and store it on the element decl object via
-      * this method.
-      *
-      * @param  newModelToAdopt This method will adopt the passed content model
-      *         object. Any previous object is destroyed.
-      */
-    void setContentModel(XMLContentModel* const newModelToAdopt);
-
     /** Update the create reason for this element type.
       *
       * This method will update the 'create reason' field for this element
@@ -523,20 +540,6 @@ class XMLPARSER_EXPORT XMLElementDecl
     /** @name Miscellenous methods */
     //@{
 
-    /** Geta formatted string of the content model
-      *
-      * This method is a convenience method which will create a formatted
-      * representation of the content model of the element. It will not always
-      * exactly recreate the original model, since some normalization or
-      * or reformatting may occur. But, it will be a technically accurate
-      * representation of the original content model.
-      *
-      * @return A pointer to an internal buffer which contains the formatted
-      *         content model. The caller does not own this buffer and should
-      *         copy it if it needs to be kept around.
-      */
-    const XMLCh* getFormattedContentModel ()   const;
-
     //@}
 
 
@@ -545,14 +548,6 @@ protected :
     //  Hidden constructors
     // -----------------------------------------------------------------------
     XMLElementDecl();
-
-
-    // -----------------------------------------------------------------------
-    //  Protected, virtual methods
-    // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel() = 0;
-    virtual XMLCh* formatContentModel ()   const = 0;
-
 
 private :
     // -----------------------------------------------------------------------
@@ -568,21 +563,12 @@ private :
     //  fElementName
     //      This is the name of the element decl.
     //
-    //  fContentModel
-    //      The content model object for this element. It is stored here via
-    //      its abstract interface.
-    //
     //  fCreateReason
     //      We sometimes have to put an element decl object into the elem
     //      decl pool before the element's declaration is seen, such as when
     //      its used in another element's content model or an att list is
     //      seen for it. This flag tells us whether its been declared, and
     //      if not why it had to be created.
-    //
-    //  fFormattedModel
-    //      This is a faulted in member. When the outside world asks for
-    //      our content model as a string, we format it and fault it into
-    //      this field (to avoid doing the formatted over and over.)
     //
     //  fId
     //      The unique id of this element. This is created by the derived
@@ -595,9 +581,7 @@ private :
     //      This flag indicates whether or the element was declared externally.
     // -----------------------------------------------------------------------
     QName*              fElementName;
-    XMLContentModel*    fContentModel;
     CreateReasons       fCreateReason;
-    XMLCh*              fFormattedModel;
     unsigned int        fId;
     bool                fExternalElement;
 };
@@ -636,13 +620,6 @@ inline const XMLCh* XMLElementDecl::getFullName() const
     return fElementName->getRawName();
 }
 
-inline XMLContentModel* XMLElementDecl::getContentModel()
-{
-    if (!fContentModel)
-        fContentModel = makeContentModel();
-    return fContentModel;
-}
-
 inline XMLElementDecl::CreateReasons XMLElementDecl::getCreateReason() const
 {
     return fCreateReason;
@@ -668,13 +645,6 @@ inline bool XMLElementDecl::isExternal() const
 // ---------------------------------------------------------------------------
 //  XMLElementDecl: Setter methods
 // ---------------------------------------------------------------------------
-inline void
-XMLElementDecl::setContentModel(XMLContentModel* const newModelToAdopt)
-{
-    delete fContentModel;
-    fContentModel = newModelToAdopt;
-}
-
 inline void
 XMLElementDecl::setCreateReason(const XMLElementDecl::CreateReasons newReason)
 {

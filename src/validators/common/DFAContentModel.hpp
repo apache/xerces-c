@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.10  2001/08/13 15:06:39  knoaman
  * update <any> validation.
  *
@@ -138,12 +141,12 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DFAContentModel(const bool             dtd
-                  , XMLElementDecl* const  elemDecl);
+    DFAContentModel(const bool              dtd
+                  , ContentSpecNode* const  elemContentSpec);
 
-    DFAContentModel(const bool             dtd
-                  , XMLElementDecl* const  elemDecl
-                  , const bool             isMixed);
+    DFAContentModel(const bool              dtd
+                  , ContentSpecNode* const  elemContentSpec
+                  , const bool              isMixed);
 
     virtual ~DFAContentModel();
 
@@ -158,7 +161,7 @@ public:
       , const unsigned int    emptyNamespaceId
     ) const;
 
-	virtual int validateContentSpecial
+    virtual int validateContentSpecial
     (
         QName** const           children
       , const unsigned int      childCount
@@ -166,6 +169,14 @@ public:
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
     ) const;
+
+    virtual void checkUniqueParticleAttribution
+    (
+        GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+      , XMLValidator*     const pValidator
+      , unsigned int*     const pContentSpecOrgURI
+    ) ;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
@@ -271,7 +282,6 @@ private :
     //
     //  fIsMixed
     //      DFA ContentModel with mixed PCDATA.
-    //
     // -----------------------------------------------------------------------
     QName**                 fElemMap;
     ContentSpecNode::NodeTypes  *fElemMapType;
@@ -308,3 +318,4 @@ DFAContentModel::getNextState(const unsigned int currentState,
 }
 
 #endif
+

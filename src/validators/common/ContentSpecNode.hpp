@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.10  2001/08/20 13:18:58  tng
  * bug in ContentSpecNode copy constructor.
  *
@@ -174,6 +177,10 @@ public :
     NodeTypes getType() const;
     ContentSpecNode* orphanFirst();
     ContentSpecNode* orphanSecond();
+    unsigned int getMinOccurs();
+    unsigned int getMaxOccurs();
+    bool isFirstAdopted();
+    bool isSecondAdopted();
 
 
     // -----------------------------------------------------------------------
@@ -183,6 +190,10 @@ public :
     void setFirst(ContentSpecNode* const toAdopt);
     void setSecond(ContentSpecNode* const toAdopt);
     void setType(const NodeTypes type);
+    void setMinOccurs(unsigned int min);
+    void setMaxOccurs(unsigned int max);
+    void setAdoptFirst(bool adoptFirst);
+    void setAdoptSecond(bool adoptSecond);
 
 
     // -----------------------------------------------------------------------
@@ -227,6 +238,12 @@ private :
     //      Indicate if this ContentSpecNode adopts the fSecond, and is responsible
     //      for deleting it.
     //
+    //  fMinOccurs
+    //      Indicate the minimum times that this node can occur
+    //
+    //  fMaxOccurs
+    //      Indicate the maximum times that this node can occur
+    //      -1 (Unbounded), default (1)
     // -----------------------------------------------------------------------
     QName*              fElement;
     ContentSpecNode*    fFirst;
@@ -234,6 +251,8 @@ private :
     NodeTypes           fType;
     bool                fAdoptFirst;
     bool                fAdoptSecond;
+    unsigned int        fMinOccurs;
+    unsigned int        fMaxOccurs;
 };
 
 // ---------------------------------------------------------------------------
@@ -288,6 +307,26 @@ inline ContentSpecNode* ContentSpecNode::orphanSecond()
     return retNode;
 }
 
+inline unsigned int ContentSpecNode::getMinOccurs()
+{
+    return fMinOccurs;
+}
+
+inline unsigned int ContentSpecNode::getMaxOccurs()
+{
+    return fMaxOccurs;
+}
+
+inline bool ContentSpecNode::isFirstAdopted()
+{
+    return fAdoptFirst;
+}
+
+inline bool ContentSpecNode::isSecondAdopted()
+{
+    return fAdoptSecond;
+}
+
 
 // ---------------------------------------------------------------------------
 //  ContentSpecType: Setter methods
@@ -317,6 +356,26 @@ inline void ContentSpecNode::setType(const NodeTypes type)
     fType = type;
 }
 
+inline void ContentSpecNode::setMinOccurs(unsigned int min)
+{
+    fMinOccurs = min;
+}
+
+inline void ContentSpecNode::setMaxOccurs(unsigned int max)
+{
+    fMaxOccurs = max;
+}
+
+inline void ContentSpecNode::setAdoptFirst(bool newState)
+{
+    fAdoptFirst = newState;
+}
+
+inline void ContentSpecNode::setAdoptSecond(bool newState)
+{
+    fAdoptSecond = newState;
+}
+
 
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Constructors and Destructor
@@ -329,6 +388,8 @@ inline ContentSpecNode::ContentSpecNode() :
     , fType(ContentSpecNode::Leaf)
     , fAdoptFirst(true)
     , fAdoptSecond(true)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
 {
     fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
@@ -342,6 +403,8 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
     , fType(ContentSpecNode::Leaf)
     , fAdoptFirst(true)
     , fAdoptSecond(true)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
 {
     if (!element)
         fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
@@ -362,6 +425,8 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes               type
     , fType(type)
     , fAdoptFirst(adoptFirst)
     , fAdoptSecond(adoptSecond)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
 {
     fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
@@ -390,6 +455,8 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
     fType = toCopy.getType();
     fAdoptFirst = true;
     fAdoptSecond = true;
+    fMinOccurs = 1;
+    fMaxOccurs = 1;
 }
 
 inline ContentSpecNode::~ContentSpecNode()

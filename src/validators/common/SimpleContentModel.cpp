@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.8  2001/05/11 13:27:19  tng
  * Copyright update.
  *
@@ -107,8 +110,10 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/RuntimeException.hpp>
+#include <framework/XMLValidator.hpp>
 #include <validators/common/SimpleContentModel.hpp>
 #include <validators/schema/SubstitutionGroupComparator.hpp>
+#include <validators/schema/XercesElementWildcard.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -470,5 +475,39 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
 ContentLeafNameTypeVector* SimpleContentModel::getContentLeafNameTypeVector() const
 {
     return 0;
+}
+
+void SimpleContentModel::checkUniqueParticleAttribution
+    (
+        GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+      , XMLValidator*     const pValidator
+      , unsigned int*     const pContentSpecOrgURI
+    )
+{
+    // rename back
+    unsigned int orgURIIndex = 0;
+
+    orgURIIndex = fFirstChild->getURI();
+    fFirstChild->setURI(pContentSpecOrgURI[orgURIIndex]);
+
+    orgURIIndex = fSecondChild->getURI();
+    fSecondChild->setURI(pContentSpecOrgURI[orgURIIndex]);
+
+    // only possible violation is when it's a choice
+    if (fOp == ContentSpecNode::Choice) {
+
+        SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
+
+        if (XercesElementWildcard::conflict(ContentSpecNode::Leaf,
+                                            fFirstChild,
+                                            ContentSpecNode::Leaf,
+                                            fSecondChild,
+                                            &comparator))
+
+            pValidator->emitError(XMLValid::UniqueParticleAttributionFail,
+                                  fFirstChild->getRawName(),
+                                  fSecondChild->getRawName());
+    }
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/08/21 16:06:10  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.12  2001/08/13 15:06:38  knoaman
  * update <any> validation.
  *
@@ -110,6 +113,7 @@
 class ContentLeafNameTypeVector;
 class GrammarResolver;
 class XMLStringPool;
+class XMLValidator;
 
 /**
  *  This class defines the abstract interface for all content models. All
@@ -171,6 +175,14 @@ public:
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
     ) const =0;
+
+	virtual void checkUniqueParticleAttribution
+    (
+        GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+      , XMLValidator*     const pValidator
+      , unsigned int*     const pContentSpecOrgURI
+    ) =0;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector()
 	  const = 0;

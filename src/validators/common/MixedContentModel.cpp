@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.11  2001/07/09 15:22:37  knoaman
  * complete <any> declaration.
  *
@@ -129,9 +132,9 @@
 // ---------------------------------------------------------------------------
 //  MixedContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-MixedContentModel::MixedContentModel(const bool            dtd
-                                   , XMLElementDecl* const parentElem
-                                   , const bool            ordered) :
+MixedContentModel::MixedContentModel(const bool             dtd
+                                   , ContentSpecNode* const parentContentSpec
+                                   , const bool             ordered) :
    fCount(0)
  , fChildren(0)
  , fChildTypes(0)
@@ -153,7 +156,7 @@ MixedContentModel::MixedContentModel(const bool            dtd
     //  of nodes that describes the content model. We will iterate this
     //  tree.
     //
-    ContentSpecNode* curNode = parentElem->getContentSpec();
+    ContentSpecNode* curNode = parentContentSpec;
     if (!curNode)
         ThrowXML(RuntimeException, XMLExcepts::CM_NoParentCSN);
 

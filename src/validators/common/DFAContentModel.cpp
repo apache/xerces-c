@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.19  2001/08/17 16:12:51  peiyongz
  * Fix to memory leak in buildDFA(),  patch from Nick Chiang (nchiang@ss8.com)
  *
@@ -151,7 +154,9 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/RuntimeException.hpp>
+#include <framework/XMLBuffer.hpp>
 #include <framework/XMLElementDecl.hpp>
+#include <framework/XMLValidator.hpp>
 #include <validators/common/CMAny.hpp>
 #include <validators/common/CMBinaryOp.hpp>
 #include <validators/common/CMLeaf.hpp>
@@ -159,19 +164,22 @@
 #include <validators/common/DFAContentModel.hpp>
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/common/Grammar.hpp>
+#include <validators/schema/SchemaSymbols.hpp>
 #include <validators/schema/SubstitutionGroupComparator.hpp>
+#include <validators/schema/XercesElementWildcard.hpp>
 #include <util/RefHashTableOf.hpp>
 #include <util/HashCMStateSet.hpp>
 #include <util/XMLInteger.hpp>
 
+
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DFAContentModel::DFAContentModel(const bool            dtd
-                               , XMLElementDecl* const elemDecl) :
+DFAContentModel::DFAContentModel(const bool             dtd
+                               , ContentSpecNode* const elemContentSpec) :
 
     fElemMap(0)
-	 , fElemMapType(0)
+    , fElemMapType(0)
     , fElemMapSize(0)
     , fEmptyOk(false)
     , fEOCPos(0)
@@ -187,15 +195,15 @@ DFAContentModel::DFAContentModel(const bool            dtd
     , fLeafNameTypeVector(0)
 {
     // And build the DFA data structures
-    buildDFA(elemDecl->getContentSpec());
+    buildDFA(elemContentSpec);
 }
 
-DFAContentModel::DFAContentModel(const bool            dtd
-                               , XMLElementDecl* const elemDecl
-                               , const bool            isMixed) :
+DFAContentModel::DFAContentModel(const bool             dtd
+                               , ContentSpecNode* const elemContentSpec
+                               , const bool             isMixed ):
 
     fElemMap(0)
-	 , fElemMapType(0)
+    , fElemMapType(0)
     , fElemMapSize(0)
     , fEmptyOk(false)
     , fEOCPos(0)
@@ -211,7 +219,7 @@ DFAContentModel::DFAContentModel(const bool            dtd
     , fLeafNameTypeVector(0)
 {
     // And build the DFA data structures
-    buildDFA(elemDecl->getContentSpec());
+    buildDFA(elemContentSpec);
 }
 
 DFAContentModel::~DFAContentModel()
@@ -269,7 +277,7 @@ DFAContentModel::validateContent( QName** const        children
         const QName* curElem = children[childIndex];
 
         // If this is text in a Schema mixed content model, skip it.
-        if ( fIsMixed && 
+        if ( fIsMixed &&
             ( curElem->getURI() == XMLElementDecl::fgPCDataElemId))
             continue;
 
@@ -373,7 +381,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
         QName* curElem = children[childIndex];
 
         // If this is text in a Schema mixed content model, skip it.
-        if ( fIsMixed && 
+        if ( fIsMixed &&
             ( curElem->getURI() == XMLElementDecl::fgPCDataElemId))
             continue;
 
@@ -384,7 +392,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             QName* inElem  = fElemMap[elemIndex];
             ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
             if (type == ContentSpecNode::Leaf)
-            {           
+            {
                 if (comparator.isEquivalentTo(curElem, inElem) )
                 {
                     nextState = fTransTable[curState][elemIndex];
@@ -548,6 +556,8 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     fElemMap = new QName*[fLeafCount];
     fElemMapType = new ContentSpecNode::NodeTypes[fLeafCount];
     fElemMapSize = 0;
+
+
     for (unsigned int outIndex = 0; outIndex < fLeafCount; outIndex++)
     {
         fElemMap[outIndex] = new QName();
@@ -561,6 +571,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
         // See if the current leaf node's element index is in the list
         unsigned int inIndex = 0;
+
         for (; inIndex < fElemMapSize; inIndex++)
         {
             const QName* inElem = fElemMap[inIndex];
@@ -597,6 +608,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
      * We are *assuming* that each element appears in at least one leaf.
      **/
     // don't forget to delete it
+
     int *fLeafSorter = new int[fLeafCount + fElemMapSize];
     unsigned int fSortCount = 0;
 
@@ -615,12 +627,13 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             else {
                 if ((leaf->getURI() == element->getURI()) &&
                     (!XMLString::compareString(leaf->getLocalPart(), element->getLocalPart()))) {
-                    fLeafSorter[fSortCount++] = leafIndex;
+                      fLeafSorter[fSortCount++] = leafIndex;
                 }
             }
         }
         fLeafSorter[fSortCount++] = -1;
     }
+
     //
     //  Next lets create some arrays, some that that hold transient info
     //  during the DFA build and some that are permament. These are kind of
@@ -662,12 +675,12 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     statesToDo[curState] = setT;
     curState++;
 
-    // 
+    //
     // the stateTable is an auxiliary means to fast
     // identification of new state created (instead
-    // of squential loop statesToDo to find out), 
+    // of squential loop statesToDo to find out),
     // while the role that statesToDo plays remain unchanged.
-    // 
+    //
     // TODO: in the future, we may change the 29 to something
     //       derived from curArraySize.
     RefHashTableOf<XMLInteger> *stateTable = new RefHashTableOf<XMLInteger>(curArraySize, true, new HashCMStateSet());
@@ -713,6 +726,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 newSet->zeroBits();
 
 #ifdef OBSOLETED
+// unoptimized code
             for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
             {
                 // If this leaf index (DFA position) is in the current set...
@@ -732,13 +746,14 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     }
                     else {
                         if ((leaf->getURI() == element->getURI()) &&
-                            (!XMLString::compareString(leaf->getLocalPart(), element->getLocalPart())) {
+                            (!XMLString::compareString(leaf->getLocalPart(), element->getLocalPart()))) {
                             *newSet |= *fFollowList[leafIndex];
                         }
                     }
                 }
             } // for leafIndex
 #endif
+
             // Optimization(Jan, 2001)
             int leafIndex = fLeafSorter[sorterIndex++];
 
@@ -767,7 +782,6 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 //  Search the 'states to do' list to see if this new
                 //  state set is already in there.
                 //
-
                 /***
                 unsigned int stateIndex = 0;
                 for (; stateIndex < curState; stateIndex++)
@@ -861,7 +875,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //
     // Note on memory leak: Bugzilla#2707:
     // ===================================
-    // The CMBinary, pointed to by fHeadNode, shall be released by 
+    // The CMBinary, pointed to by fHeadNode, shall be released by
     // deleted by itself.
     //
     // Change has been made to postTreeBuildInit() such that fLeafList[]
@@ -878,7 +892,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
     //
     // removeAll() will delete all data, XMLInteger,
-    // while the keys are to be deleted by the 
+    // while the keys are to be deleted by the
     // deletion of statesToDo.
     //
     delete stateTable;
@@ -891,7 +905,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         delete fLeafList[index];
     delete [] fLeafList;
 
-	delete [] fLeafSorter;
+    delete [] fLeafSorter;
 
 }
 
@@ -1061,6 +1075,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
         fLeafListType[newIndex] = curType;
         ++newIndex;
 
+
         delete qname;
     }
     else if ((curType == ContentSpecNode::Choice)
@@ -1089,8 +1104,8 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
             // will NOT delete the nodeCur --twice--,
             // thuse to make delete the owner of the nodeCur possible.
             //
-            fLeafList[newIndex] = new CMLeaf(((CMLeaf*)nodeCur)->getElement(), 
-                                           ((CMLeaf*)nodeCur)->getPosition()); 
+            fLeafList[newIndex] = new CMLeaf(((CMLeaf*)nodeCur)->getElement(),
+                                           ((CMLeaf*)nodeCur)->getPosition());
             fLeafListType[newIndex] = ContentSpecNode::Leaf;
             ++newIndex;
         }
@@ -1109,4 +1124,74 @@ ContentLeafNameTypeVector* DFAContentModel::getContentLeafNameTypeVector() const
    //later change it to return the data member
 	return fLeafNameTypeVector;
 };
+
+void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pGrammarResolver,
+                                                      XMLStringPool*    const pStringPool,
+                                                      XMLValidator*     const pValidator,
+                                                      unsigned int*     const pContentSpecOrgURI)
+{
+
+    SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
+
+    unsigned int i, j, k;
+
+    // Rename the URI back
+    for (i = 0; i < fElemMapSize; i++) {
+        unsigned int orgURIIndex = fElemMap[i]->getURI();
+        fElemMap[i]->setURI(pContentSpecOrgURI[orgURIIndex]);
+    }
+
+    // Unique Particle Attribution
+    // store the conflict results between any two elements in fElemMap
+    // XMLContentModel::gInvalidTrans: not compared; 0: no conflict; 1: conflict
+    unsigned int** fConflictTable = new unsigned int*[fElemMapSize];
+
+    // initialize the conflict table
+    for (j = 0; j < fElemMapSize; j++) {
+        fConflictTable[j] = new unsigned int[fElemMapSize];
+        for (k = j+1; k < fElemMapSize; k++)
+            fConflictTable[j][k] = XMLContentModel::gInvalidTrans;
+    }
+
+    // for each state, check whether it has overlap transitions
+    for (i = 0; i < fTransTableSize; i++) {
+        for (j = 0; j < fElemMapSize; j++) {
+            for (k = j+1; k < fElemMapSize; k++) {
+                if (fTransTable[i][j] != XMLContentModel::gInvalidTrans &&
+                    fTransTable[i][k] != XMLContentModel::gInvalidTrans &&
+                    fConflictTable[j][k] == XMLContentModel::gInvalidTrans) {
+                    if (XercesElementWildcard::conflict(fElemMapType[j], fElemMap[j], fElemMapType[k], fElemMap[k], &comparator)) {
+                       fConflictTable[j][k] = 1;
+
+                       XMLBuffer buf1;
+                       if (((fElemMapType[j] & 0x0f) == ContentSpecNode::Any) ||
+                           ((fElemMapType[j] & 0x0f) == ContentSpecNode::Any_NS))
+                           buf1.set(SchemaSymbols::fgATTVAL_TWOPOUNDANY);
+                       else if ((fElemMapType[j] & 0x0f) == ContentSpecNode::Any_Other)
+                           buf1.set(SchemaSymbols::fgATTVAL_TWOPOUNDOTHER);
+                       else
+                           buf1.set(fElemMap[j]->getRawName());
+
+                       XMLBuffer buf2;
+                       if (((fElemMapType[k] & 0x0f) == ContentSpecNode::Any) ||
+                           ((fElemMapType[k] & 0x0f) == ContentSpecNode::Any_NS))
+                           buf2.set(SchemaSymbols::fgATTVAL_TWOPOUNDANY);
+                       else if ((fElemMapType[k] & 0x0f) == ContentSpecNode::Any_Other)
+                           buf2.set(SchemaSymbols::fgATTVAL_TWOPOUNDOTHER);
+                       else
+                           buf2.set(fElemMap[j]->getRawName());
+
+                       pValidator->emitError(XMLValid::UniqueParticleAttributionFail,  buf1.getRawBuffer(), buf2.getRawBuffer());
+                    }
+                    else
+                       fConflictTable[j][k] = 0;
+                }
+            }
+        }
+    }
+
+    for (i = 0; i < fElemMapSize; i++)
+        delete [] fConflictTable[i];
+    delete [] fConflictTable;
+}
 

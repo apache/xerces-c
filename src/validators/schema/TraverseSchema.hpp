@@ -199,7 +199,7 @@ private:
     // -----------------------------------------------------------------------
     void reportSchemaError(const XMLCh* const msgDomain, const int errorCode);
     void reportSchemaError(const XMLCh* const msgDomain,
-                           const int errorCode, 
+                           const int errorCode,
                            const XMLCh* const text1,
                            const XMLCh* const text2 = 0,
                            const XMLCh* const text3 = 0,
@@ -223,13 +223,13 @@ private:
       * Parameters:
       *   rootElem - top element for a given type declaration
       *   contentElem - content must be annotation? or some other simple content
-      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?) 
+      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?)
       *
       * Check for Annotation if it is present, traverse it. If a sibling is
       * found and it is not an annotation return it, otherwise return 0.
       * Used by traverseSimpleTypeDecl.
       */
-    DOM_Element checkContent(const DOM_Element& rootElem, 
+    DOM_Element checkContent(const DOM_Element& rootElem,
                              const DOM_Element& contentElem,
                              const bool isEmpty);
 
@@ -417,10 +417,9 @@ private:
                                     const XMLCh* const attName,
                                     const bool toTrim = false);
 
-    ContentSpecNode* expandContentModel(ContentSpecNode* const specNode, 
-                                        const DOM_Element& elem,
-                                        const int allContext = Not_All_Context,
-                                        const bool toAdoptSpecNode = true);
+    void checkMinMax(ContentSpecNode* const specNode,
+                     const DOM_Element& elem,
+                     const int allContext = Not_All_Context);
 
     /**
       * Process complex content for a complexType
@@ -498,7 +497,7 @@ private:
 
     /**
       * Used by emptiableMixedContent to get the 'particle'
-      * minimum/maximum total range. 
+      * minimum/maximum total range.
       */
     int getMinTotalRange(const ContentSpecNode* const specNode);
     int getMaxTotalRange(const ContentSpecNode* const specNode);
@@ -532,7 +531,7 @@ private:
       * Attribute wild card intersection.
       *
       * Note:
-      *    The first parameter will be the result of the intersection, so 
+      *    The first parameter will be the result of the intersection, so
       *    we need to make sure that first parameter is a copy of the
       *    actual attribute definition we need to intersect with.
       *
@@ -546,7 +545,7 @@ private:
       * Attribute wild card union.
       *
       * Note:
-      *    The first parameter will be the result of the union, so 
+      *    The first parameter will be the result of the union, so
       *    we need to make sure that first parameter is a copy of the
       *    actual attribute definition we need to intersect with.
       *
@@ -728,7 +727,7 @@ TraverseSchema::isValidRefDeclaration(const DOM_Element& elem) {
              || elem.getAttribute(SchemaSymbols::fgATT_BLOCK).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_FINAL).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_TYPE).length() != 0
-             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0 
+             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_FIXED).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_SUBSTITUTIONGROUP).length() != 0);
 }
@@ -755,7 +754,7 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
         }
 
         unsigned int elemId = fStringPool->addOrFind(bufValue);
-        return fStringPool->getValueForId(elemId);  
+        return fStringPool->getValueForId(elemId);
     }
 
     return 0;
@@ -766,7 +765,7 @@ inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
     if (XMLString::compareString(baseURI,fTargetNSURIString) != 0
         && XMLString::compareString(baseURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0
         && XMLString::stringLen(baseURI) != 0) {
-        //REVISIT, !!!! a hack: for schema that has no 
+        //REVISIT, !!!! a hack: for schema that has no
         //target namespace, e.g. personal-schema.xml
         return true;
     }
@@ -812,7 +811,7 @@ inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
     return value;
 }
 
-inline void 
+inline void
 TraverseSchema::copyWildCardData(const SchemaAttDef* const srcWildCard,
                                  SchemaAttDef* const destWildCard) {
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.12  2001/08/09 15:23:16  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -578,143 +581,173 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
 void SchemaValidator::preContentValidation(bool reuseGrammar)
 {
+    //  Lets go through all the grammar in the GrammarResolver
+    //    and validate those that has not been validated yet
     //
     //  Lets enumerate all of the elements in the element decl pool
-    //  and put out an error for any that did not get declared.
-    //  We also check all of the attributes as well.
+    //    and put out an error for any that did not get declared.
+    //    We also check all of the attributes as well.
     //
-    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = fSchemaGrammar->getElemEnumerator();
-    while (elemEnum.hasMoreElements())
+    //  And enumerate all the complextype info in the grammar
+    //    and do Unique Particle Attribution Checking
+
+    RefHashTableOfEnumerator<Grammar> grammarEnum = fGrammarResolver->getGrammarEnumerator();
+    while (grammarEnum.hasMoreElements())
     {
-        const SchemaElementDecl& curElem = elemEnum.nextElement();
-        const SchemaElementDecl::CreateReasons reason = curElem.getCreateReason();
+        SchemaGrammar& sGrammar = (SchemaGrammar&) grammarEnum.nextElement();
+        if (sGrammar.getGrammarType() != Grammar::SchemaGrammarType || sGrammar.getUPAChecked())
+             continue;
 
-        //
-        //  See if this element decl was ever marked as declared. If
-        //  not, then put out an error. In some cases its just
-        //  a warning, such as being referenced in a content model.
-        //
-        if (reason != XMLElementDecl::Declared)
+        sGrammar.setUPAChecked(true);
+
+        RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = sGrammar.getElemEnumerator();
+
+        while (elemEnum.hasMoreElements())
         {
-            if (reason == XMLElementDecl::AttList)
-            {
-                getScanner()->emitError
-                (
-                    XMLErrs::UndeclaredElemInAttList
-                    , curElem.getFullName()
-                );
-            }
-             else if (reason == XMLElementDecl::AsRootElem)
-            {
-                emitError
-                (
-                    XMLValid::UndeclaredElemInDocType
-                    , curElem.getFullName()
-                );
-            }
-             else if (reason == XMLElementDecl::InContentModel)
-            {
-                getScanner()->emitError
-                (
-                    XMLErrs::UndeclaredElemInCM
-                    , curElem.getFullName()
-                );
-            }
-            else
-            {
-            }
-        }
+            SchemaElementDecl& curElem = elemEnum.nextElement();
 
-        //
-        //  Check all of the attributes of the current element.
-        //  We check for:
-        //
-        //  1) Multiple ID attributes
-        //  2) That all of the default values of attributes are
-        //      valid for their type.
-        //  3) That for any notation types, that their lists
-        //      of possible values refer to declared notations.
-        //
-        if (curElem.hasAttDefs()) {
-            XMLAttDefList& attDefList = curElem.getAttDefList();
-            bool seenId = false;
-            while (attDefList.hasMoreElements())
-            {
-                const XMLAttDef& curAttDef = attDefList.nextElement();
+            //  First check if declared or not
+            //
+            //  See if this element decl was ever marked as declared. If
+            //  not, then put out an error. In some cases its just
+            //  a warning, such as being referenced in a content model.
+            //
+            const SchemaElementDecl::CreateReasons reason = curElem.getCreateReason();
 
-                if (curAttDef.getType() == XMLAttDef::ID)
+            if (reason != XMLElementDecl::Declared)
+            {
+                if (reason == XMLElementDecl::AttList)
                 {
-                    if (seenId)
-                    {
-                        emitError
-                        (
-                            XMLValid::MultipleIdAttrs
-                            , curElem.getFullName()
-                        );
-                        break;
-                    }
-
-                    seenId = true;
+                    getScanner()->emitError
+                    (
+                        XMLErrs::UndeclaredElemInAttList
+                        , curElem.getFullName()
+                    );
                 }
-                 else if (curAttDef.getType() == XMLAttDef::Notation)
+                 else if (reason == XMLElementDecl::AsRootElem)
                 {
-                    //
-                    //  We need to verify that all of its possible values
-                    //  (in the enum list) refer to valid notations.
-                    //
-                    XMLCh* list = XMLString::replicate(curAttDef.getEnumeration());
-                    ArrayJanitor<XMLCh> janList(list);
+                    emitError
+                    (
+                        XMLValid::UndeclaredElemInDocType
+                        , curElem.getFullName()
+                    );
+                }
+                 else if (reason == XMLElementDecl::InContentModel)
+                {
+                    getScanner()->emitError
+                    (
+                        XMLErrs::UndeclaredElemInCM
+                        , curElem.getFullName()
+                    );
+                }
+                else
+                {
+                }
+            }
 
-                    //
-                    //  Search forward for a space or a null. If a null,
-                    //  we are done. If a space, cap it and look it up.
-                    //
-                    bool    breakFlag = false;
-                    XMLCh*  listPtr = list;
-                    XMLCh*  lastPtr = listPtr;
-                    while (true)
+            //
+            //  Then check all of the attributes of the current element.
+            //  We check for:
+            //
+            //  1) Multiple ID attributes
+            //  2) That all of the default values of attributes are
+            //      valid for their type.
+            //  3) That for any notation types, that their lists
+            //      of possible values refer to declared notations.
+            //
+            if (curElem.hasAttDefs()) {
+                XMLAttDefList& attDefList = curElem.getAttDefList();
+                bool seenId = false;
+                while (attDefList.hasMoreElements())
+                {
+                    const XMLAttDef& curAttDef = attDefList.nextElement();
+
+                    if (curAttDef.getType() == XMLAttDef::ID)
                     {
-                        while (*listPtr && (*listPtr != chSpace))
-                            listPtr++;
-
-                        //
-                        //  If at the end, indicate we need to break after
-                        //  this one. Else, cap it off here.
-                        //
-                        if (!*listPtr)
-                            breakFlag = true;
-                        else
-                            *listPtr = chNull;
-
-                        if (!fSchemaGrammar->getNotationDecl(lastPtr))
+                        if (seenId)
                         {
                             emitError
                             (
-                                XMLValid::UnknownNotRefAttr
-                                , curAttDef.getFullName()
-                                , lastPtr
+                                XMLValid::MultipleIdAttrs
+                                , curElem.getFullName()
                             );
+                            break;
                         }
 
-                        // Break out if we hit the end last time
-                        if (breakFlag)
-                            break;
+                        seenId = true;
+                    }
+                     else if (curAttDef.getType() == XMLAttDef::Notation)
+                    {
+                        //
+                        //  We need to verify that all of its possible values
+                        //  (in the enum list) refer to valid notations.
+                        //
+                        XMLCh* list = XMLString::replicate(curAttDef.getEnumeration());
+                        ArrayJanitor<XMLCh> janList(list);
 
-                        // Else move upwards and try again
-                        listPtr++;
-                        lastPtr = listPtr;
+                        //
+                        //  Search forward for a space or a null. If a null,
+                        //  we are done. If a space, cap it and look it up.
+                        //
+                        bool    breakFlag = false;
+                        XMLCh*  listPtr = list;
+                        XMLCh*  lastPtr = listPtr;
+                        while (true)
+                        {
+                            while (*listPtr && (*listPtr != chSpace))
+                                listPtr++;
+
+                            //
+                            //  If at the end, indicate we need to break after
+                            //  this one. Else, cap it off here.
+                            //
+                            if (!*listPtr)
+                                breakFlag = true;
+                            else
+                                *listPtr = chNull;
+
+                            if (!sGrammar.getNotationDecl(lastPtr))
+                            {
+                                emitError
+                                (
+                                    XMLValid::UnknownNotRefAttr
+                                    , curAttDef.getFullName()
+                                    , lastPtr
+                                );
+                            }
+
+                            // Break out if we hit the end last time
+                            if (breakFlag)
+                                break;
+
+                            // Else move upwards and try again
+                            listPtr++;
+                            lastPtr = listPtr;
+                        }
+                    }
+
+                    // If it has a default/fixed value, then validate it
+                    if (curAttDef.getValue())
+                    {
+                        validateAttrValue
+                        (
+                            &curAttDef
+                            , curAttDef.getValue()
+                        );
                     }
                 }
+            }
+        }
 
-                // If it has a default/fixed value, then validate it
-                if (curAttDef.getValue())
-                {
-                    validateAttrValue
-                    (
-                        &curAttDef
-                        , curAttDef.getValue()
-                    );
-                }
+        //  For each complex type info, check the Unique Particle Attribution
+        if (getScanner()->getValidationSchemaFullChecking()) {
+            RefHashTableOf<ComplexTypeInfo>* complexTypeRegistry = sGrammar.getComplexTypeRegistry();
+
+            RefHashTableOfEnumerator<ComplexTypeInfo> complexTypeEnum(complexTypeRegistry);
+            while (complexTypeEnum.hasMoreElements())
+            {
+                ComplexTypeInfo& curTypeInfo = complexTypeEnum.nextElement();
+                curTypeInfo.checkUniqueParticleAttribution(fGrammarResolver, getScanner()->getURIStringPool(), this);
             }
         }
     }

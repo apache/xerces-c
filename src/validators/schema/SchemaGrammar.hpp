@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.8  2001/07/31 15:27:10  knoaman
  * Added support for <attributeGroup>.
  *
@@ -212,6 +215,7 @@ public:
     DatatypeValidatorFactory* getDatatypeRegistry() const;
     NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
+    bool getUPAChecked() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -224,6 +228,7 @@ public:
     void setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry);
     void setNamespaceScope(NamespaceScope* const nsScope);
     void setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const);
+    void setUPAChecked(bool newState);
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -276,6 +281,10 @@ private:
     //
     //  fValidSubstitutionGroups
     //      Valid list of elements that can substitute a given element
+    //
+    //  fUPAChecked
+    //      Indicates if this Grammar has already been validated for  
+    //      schema unique particle attribute constraint checking. 
     // -----------------------------------------------------------------------
     XMLCh*                                 fTargetNamespace;
     RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
@@ -288,6 +297,7 @@ private:
     DatatypeValidatorFactory*              fDatatypeRegistry;
     NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
+    bool                                   fUPAChecked;
 };
 
 
@@ -339,6 +349,10 @@ SchemaGrammar::getValidSubstitutionGroups() const {
     return fValidSubstitutionGroups;
 }
 
+inline bool SchemaGrammar::getUPAChecked() const {
+    return fUPAChecked;
+}
+
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
@@ -387,6 +401,9 @@ SchemaGrammar::setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const
     fValidSubstitutionGroups = other;
 }
 
+inline void SchemaGrammar::setUPAChecked(bool newState) {
+    fUPAChecked = newState;
+}
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Virtual methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.11  2001/07/24 18:33:46  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -98,10 +101,6 @@
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
-#include <framework/XMLBuffer.hpp>
-#include <validators/common/DFAContentModel.hpp>
-#include <validators/common/MixedContentModel.hpp>
-#include <validators/common/SimpleContentModel.hpp>
 #include <validators/schema/SchemaAttDefList.hpp>
 #include <validators/schema/SchemaElementDecl.hpp>
 
@@ -271,6 +270,15 @@ bool SchemaElementDecl::resetDefs()
     return fComplexTypeInfo->resetDefs();
 }
 
+const XMLCh*
+SchemaElementDecl::getFormattedContentModel() const
+{
+    if (fComplexTypeInfo != 0) {
+        return fComplexTypeInfo->getFormattedContentModel();
+    }
+    return 0; 
+}  
+
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Getter methods
 // ---------------------------------------------------------------------------
@@ -291,176 +299,4 @@ SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const in
 
     return fComplexTypeInfo->getAttDef(baseName, uriId);
 }
-
-
-// ---------------------------------------------------------------------------
-//  SchemaElementDecl: Implementation of the protected virtual interface
-// ---------------------------------------------------------------------------
-XMLCh*
-SchemaElementDecl::formatContentModel() const
-{
-    XMLCh* newValue = 0;
-    if (fModelType == Any)
-    {
-        newValue = XMLString::replicate(XMLUni::fgAnyString);
-    }
-     else if (fModelType == Empty)
-    {
-        newValue = XMLString::replicate(XMLUni::fgEmptyString);
-    }
-     else
-    {
-        //
-        //  Use a temp XML buffer to format into. Content models could be
-        //  pretty long, but very few will be longer than one K. The buffer
-        //  will expand to handle the more pathological ones.
-        //
-        const ContentSpecNode* specNode = getContentSpec();
-
-        if (specNode) {
-            XMLBuffer bufFmt;
-        
-
-            specNode->formatSpec(bufFmt);
-            newValue = XMLString::replicate(bufFmt.getRawBuffer());
-        }
-    }
-    return newValue;
-}
-
-XMLContentModel* SchemaElementDecl::makeContentModel()
-{
-    XMLContentModel* cmRet = 0;
-    if (fModelType == Simple) {
-       // just return nothing
-    }
-     else if (fModelType == Mixed)
-    {
-        //
-        //  Just create a mixel content model object. This type of
-        //  content model is optimized for mixed content validation.
-        //
-        ContentSpecNode* specNode = getContentSpec();
-
-        if(!specNode)
-            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
-
-        if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
-            cmRet = new MixedContentModel(false, this);
-        }
-        else {
-            cmRet = createChildModel(true);
-        }
-    }
-     else if (fModelType == Children)
-    {
-        //
-        //  This method will create an optimal model for the complexity
-        //  of the element's defined model. If its simple, it will create
-        //  a SimpleContentModel object. If its a simple list, it will
-        //  create a SimpleListContentModel object. If its complex, it
-        //  will create a DFAContentModel object.
-        //
-         cmRet = createChildModel(false);
-    }
-     else
-    {
-        ThrowXML(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren);
-    }
-    return cmRet;
-}
-
-
-
-// ---------------------------------------------------------------------------
-//  SchemaElementDecl: Private helper methods
-// ---------------------------------------------------------------------------
-XMLContentModel* SchemaElementDecl::createChildModel(const bool isMixed)
-{
-    // Get the content spec node of the element
-    ContentSpecNode* specNode = getContentSpec();
-
-    if(!specNode)
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
-
-    //
-    //  Do a sanity check that the node is does not have a PCDATA id. Since,
-    //  if it was, it should have already gotten taken by the Mixed model.
-    //
-    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
-        ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
-
-    //
-    //  According to the type of node, we will create the correct type of
-    //  content model.
-    //
-    if (((specNode->getType() & 0x0f) == ContentSpecNode::Any) ||
-       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Other) ||
-       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_NS)) {
-       // let fall through to build a DFAContentModel
-    }
-    else if (isMixed)
-    {
-        //REVISIT once we introduce ALL content model
-    }
-     else if (specNode->getType() == ContentSpecNode::Leaf)
-    {
-        // Create a simple content model
-        return new SimpleContentModel
-        (
-            false
-            , specNode->getElement()
-            , 0
-            , ContentSpecNode::Leaf
-        );
-    }
-     else if ((specNode->getType() == ContentSpecNode::Choice)
-          ||  (specNode->getType() == ContentSpecNode::Sequence))
-    {
-        //
-        //  Lets see if both of the children are leafs. If so, then it has to
-        //  be a simple content model
-        //
-        if ((specNode->getFirst()->getType() == ContentSpecNode::Leaf)
-        &&  (specNode->getSecond()->getType() == ContentSpecNode::Leaf))
-        {
-            return new SimpleContentModel
-            (
-                false
-                , specNode->getFirst()->getElement()
-                , specNode->getSecond()->getElement()
-                , specNode->getType()
-            );
-        }
-    }
-     else if ((specNode->getType() == ContentSpecNode::OneOrMore)
-          ||  (specNode->getType() == ContentSpecNode::ZeroOrMore)
-          ||  (specNode->getType() == ContentSpecNode::ZeroOrOne))
-    {
-        //
-        //  Its a repetition, so see if its one child is a leaf. If so its a
-        //  repetition of a single element, so we can do a simple content
-        //  model for that.
-        //
-        if (specNode->getFirst()->getType() == ContentSpecNode::Leaf)
-        {
-            return new SimpleContentModel
-            (
-                false
-                , specNode->getFirst()->getElement()
-                , 0
-                , specNode->getType()
-            );
-        }
-    }
-     else
-    {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
-    }
-
-    // Its not any simple type of content, so create a DFA based content model
-    return new DFAContentModel(false, this, isMixed);
-}
-
-
 

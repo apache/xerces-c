@@ -75,6 +75,7 @@
 #include <util/RefHash2KeysTableOf.hpp>
 #include <util/RefVectorOf.hpp>
 #include <framework/XMLElementDecl.hpp>
+#include <framework/XMLContentModel.hpp>
 #include <validators/schema/SchemaAttDef.hpp>
 
 
@@ -94,9 +95,9 @@ public:
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
     ComplexTypeInfo();
-	~ComplexTypeInfo();
+    ~ComplexTypeInfo();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     bool                     getAbstract() const;
@@ -106,7 +107,7 @@ public:
     int                      getFinalSet() const;
     int                      getScopeDefined() const;
     unsigned int             getElementId() const;
-	int                      getContentType() const;
+    int                      getContentType() const;
     unsigned int             elementCount() const;
     XMLCh*                   getTypeName() const;
     DatatypeValidator*       getBaseDatatypeValidator() const;
@@ -122,9 +123,11 @@ public:
     XMLAttDefList&           getAttDefList() const;
     const SchemaElementDecl* elementAt(const unsigned int index) const;
     SchemaElementDecl*       elementAt(const unsigned int index);
-    
+    XMLContentModel*         getContentModel(const bool checkUPA = false);
+    const XMLCh*             getFormattedContentModel ()   const;
 
-	// -----------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setAbstract(const bool isAbstract);
@@ -143,8 +146,9 @@ public:
     void setAttWildCard(SchemaAttDef* const toAdopt);
     void addAttDef(SchemaAttDef* const toAdd);
     void addElement(SchemaElementDecl* const toAdd);
+    void setContentModel(XMLContentModel* const newModelToAdopt);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
     bool hasAttDefs() const;
@@ -159,7 +163,12 @@ public:
         ,       bool&           wasAdded
     )   const;
     bool resetDefs();
-
+    void checkUniqueParticleAttribution
+    (
+        GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+      , XMLValidator*     const pValidator
+    ) ;
 
 private:
     // -----------------------------------------------------------------------
@@ -172,7 +181,12 @@ private:
     //  Private helper methods
     // -----------------------------------------------------------------------
     void faultInAttDefList() const;
-
+    XMLContentModel* createChildModel(ContentSpecNode* specNode, const bool isMixed);
+    XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* specNode = 0);
+    XMLCh* formatContentModel () const ;
+    ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const bool toAdoptSpecNode = true);
+    ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode = true, const bool checkUPA = false);
+    void resizeContentSpecOrgURI();
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -184,7 +198,7 @@ private:
     int                                fFinalSet;
     int                                fScopeDefined;
     unsigned int                       fElementId;
-	int                                fContentType;
+    int                                fContentType;
     XMLCh*                             fTypeName;
     DatatypeValidator*                 fBaseDatatypeValidator;
     DatatypeValidator*                 fDatatypeValidator;
@@ -194,6 +208,11 @@ private:
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     SchemaAttDefList*                  fAttList;
     RefVectorOf<SchemaElementDecl>*    fElements;
+    XMLContentModel*                   fContentModel;
+    XMLCh*                             fFormattedModel;
+    unsigned int*                      fContentSpecOrgURI;
+    unsigned int                       fUniqueURI;
+    unsigned int                       fContentSpecOrgURISize;
 };
 
 // ---------------------------------------------------------------------------
@@ -303,7 +322,7 @@ inline SchemaAttDef* ComplexTypeInfo::getAttDef(const XMLCh* const baseName,
     return fAttDefs->get(baseName, uriId);
 }
 
-inline SchemaElementDecl* 
+inline SchemaElementDecl*
 ComplexTypeInfo::elementAt(const unsigned int index) {
 
     if (!fElements) {
@@ -313,7 +332,7 @@ ComplexTypeInfo::elementAt(const unsigned int index) {
     return fElements->elementAt(index);
 }
 
-inline const SchemaElementDecl* 
+inline const SchemaElementDecl*
 ComplexTypeInfo::elementAt(const unsigned int index) const {
 
     if (!fElements) {
@@ -321,6 +340,14 @@ ComplexTypeInfo::elementAt(const unsigned int index) const {
     }
 
     return fElements->elementAt(index);
+}
+
+inline XMLContentModel* ComplexTypeInfo::getContentModel(const bool checkUPA)
+{
+    if (!fContentModel)
+        fContentModel = makeContentModel(checkUPA);
+
+    return fContentModel;
 }
 
 // ---------------------------------------------------------------------------
@@ -410,6 +437,13 @@ inline void ComplexTypeInfo::setAttWildCard(SchemaAttDef* const toAdopt) {
     }
 
     fAttWildCard = toAdopt;
+}
+
+inline void
+ComplexTypeInfo::setContentModel(XMLContentModel* const newModelToAdopt)
+{
+    delete fContentModel;
+    fContentModel = newModelToAdopt;
 }
 
 // ---------------------------------------------------------------------------

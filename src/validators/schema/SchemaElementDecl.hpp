@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.10  2001/08/09 15:23:16  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -169,6 +172,9 @@ public :
     virtual const ContentSpecNode* getContentSpec() const;
     virtual ContentSpecNode* getContentSpec();
     virtual void setContentSpec(ContentSpecNode* toAdopt);
+    virtual XMLContentModel* getContentModel();
+    virtual void setContentModel(XMLContentModel* const newModelToAdopt);      
+    virtual const XMLCh* getFormattedContentModel ()   const;        
 
 
     // -----------------------------------------------------------------------
@@ -206,23 +212,7 @@ public :
     void setTypeFromAnotherSchemaURI(const XMLCh* const uriStr);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
 
-
-protected :
-    // -----------------------------------------------------------------------
-    //  Protected, virtual methods
-    // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel() ;
-    virtual XMLCh* formatContentModel()   const;
-
-
 private :
-    // -----------------------------------------------------------------------
-    //  Private helper methods
-    // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel(const bool isMixed) ;
-    void faultInAttDefList() const;
-
-
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -291,7 +281,7 @@ inline ContentSpecNode* SchemaElementDecl::getContentSpec()
         return fComplexTypeInfo->getContentSpec();
     }
 
-	return 0;
+    return 0;
 }
 
 inline const ContentSpecNode* SchemaElementDecl::getContentSpec() const
@@ -300,7 +290,7 @@ inline const ContentSpecNode* SchemaElementDecl::getContentSpec() const
         return fComplexTypeInfo->getContentSpec();
     }
 
-	return 0;
+    return 0;
 }
 
 inline void
@@ -308,6 +298,21 @@ SchemaElementDecl::setContentSpec(ContentSpecNode* toAdopt)
 {
     //Handled by complexType
 }
+
+inline XMLContentModel* SchemaElementDecl::getContentModel()
+{
+    if (fComplexTypeInfo != 0) {
+        return fComplexTypeInfo->getContentModel();
+    }
+    return 0;    
+}
+
+inline void
+SchemaElementDecl::setContentModel(XMLContentModel* const newModelToAdopt)
+{
+    //Handled by complexType
+}
+
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Getter methods

@@ -85,28 +85,6 @@ const XMLCh         XMLElementDecl::fgPCDataElemName[] =
 XMLElementDecl::~XMLElementDecl()
 {
     delete fElementName;
-    delete fContentModel;
-    delete [] fFormattedModel;
-}
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Miscellaneous
-// ---------------------------------------------------------------------------
-const XMLCh*
-XMLElementDecl::getFormattedContentModel() const
-{
-    //
-    //  If its not already built, then call the protected virtual method
-    //  to allow the derived class to build it (since only it knows.)
-    //  Otherwise, just return the previously formatted methods.
-    //
-    //  Since we are faulting this in, within a const getter, we have to
-    //  cast off the const-ness.
-    //
-    if (!fFormattedModel)
-        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel();
-
-    return fFormattedModel;
 }
 
 // ---------------------------------------------------------------------------
@@ -142,9 +120,7 @@ XMLElementDecl::setElementName(const QName* const    elementName)
 XMLElementDecl::XMLElementDecl() :
 
     fElementName(0)
-    , fContentModel(0)
     , fCreateReason(XMLElementDecl::NoReason)
-    , fFormattedModel(0)
     , fId(XMLElementDecl::fgInvalidElemId)
     , fExternalElement (false)
 {

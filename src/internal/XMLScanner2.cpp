@@ -1391,10 +1391,19 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
 
             grammar = new SchemaGrammar();
             TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
+            fGrammar = grammar;
+            fValidator->setGrammar(fGrammar);
+
+            if (!fReuseGrammar && fValidate) {
+                //  validate the Schema scan so far
+                fValidator->preContentValidation(fReuseGrammar);
+            }
         }
     }
-    fGrammar = grammar;
-    fValidator->setGrammar(fGrammar);
+    else {
+        fGrammar = grammar;
+        fValidator->setGrammar(fGrammar);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -2792,7 +2801,7 @@ bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector*
 
                     nextState = cm->getNextState(currState, i);
 
-                    if (nextState != XMLContentModel::gInvalidTrans) { 
+                    if (nextState != XMLContentModel::gInvalidTrans) {
                         fElemState[parentElemDepth] = nextState;
                         break;
                     }
@@ -2809,7 +2818,7 @@ bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector*
                 if (uri == elementURI) {
                     anyEncountered = true;
                 }
-            } 
+            }
 
             if (anyEncountered) {
 

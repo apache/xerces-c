@@ -83,6 +83,8 @@ DTDElementDecl::DTDElementDecl() :
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(Any)
+    , fContentModel(0)  
+    , fFormattedModel(0)      
 {
 }
 
@@ -93,6 +95,8 @@ DTDElementDecl::DTDElementDecl( const   XMLCh* const              elemRawName
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(type)
+    , fContentModel(0)  
+    , fFormattedModel(0)        
 {
     setElementName(elemRawName, uriId);
 }
@@ -103,6 +107,8 @@ DTDElementDecl::DTDElementDecl( QName* const                elementName
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(type)
+    , fContentModel(0)      
+    , fFormattedModel(0)    
 {
     setElementName(elementName);
 }
@@ -112,6 +118,8 @@ DTDElementDecl::~DTDElementDecl()
     delete fAttDefs;
     delete fAttList;
     delete fContentSpec;
+    delete fContentModel;    
+    delete [] fFormattedModel;    
 }
 
 
@@ -226,6 +234,24 @@ DTDElementDecl::setContentSpec(ContentSpecNode* toAdopt)
     fContentSpec = toAdopt;
 }
 
+const XMLCh*
+DTDElementDecl::getFormattedContentModel() const
+{
+    //
+    //  If its not already built, then call the protected virtual method
+    //  to allow the derived class to build it (since only it knows.)
+    //  Otherwise, just return the previously formatted methods.
+    //
+    //  Since we are faulting this in, within a const getter, we have to
+    //  cast off the const-ness.
+    //
+    if (!fFormattedModel)
+        ((DTDElementDecl*)this)->fFormattedModel = formatContentModel();
+
+    return fFormattedModel;
+}
+
+
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Getter methods
 // ---------------------------------------------------------------------------
@@ -266,7 +292,7 @@ void DTDElementDecl::addAttDef(DTDAttDef* const toAdd)
 
 
 // ---------------------------------------------------------------------------
-//  DTDElementDecl: Implementation of the protected virtual interface
+//  DTDElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
 XMLCh*
 DTDElementDecl::formatContentModel() const
@@ -303,7 +329,7 @@ XMLContentModel* DTDElementDecl::makeContentModel()
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new MixedContentModel(true, this);
+        cmRet = new MixedContentModel(true, this->getContentSpec());
     }
      else if (fModelType == Children)
     {
@@ -324,10 +350,6 @@ XMLContentModel* DTDElementDecl::makeContentModel()
 }
 
 
-
-// ---------------------------------------------------------------------------
-//  DTDElementDecl: Private helper methods
-// ---------------------------------------------------------------------------
 XMLContentModel* DTDElementDecl::createChildModel()
 {
     // Get the content spec node of the element
@@ -403,7 +425,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
     }
 
     // Its not any simple type of content, so create a DFA based content model
-    return new DFAContentModel(true, this);
+    return new DFAContentModel(true, this->getContentSpec());
 }
 
 

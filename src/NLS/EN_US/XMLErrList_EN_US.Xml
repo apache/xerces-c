@@ -357,6 +357,7 @@
             <Message Id="VC_EntityNotFound" Text="Entity '{0}' was not found"/>
             <Message Id="PartialMarkupInPE" Text="Partial markup in parameter entity replacement text."/>
             <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
+            <Message Id="UniqueParticleAttributionFail" Text="'{0}' and '{1}' violate the Unique Particle Attribution rule"/>            
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">

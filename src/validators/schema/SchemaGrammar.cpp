@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.6  2001/07/31 15:27:10  knoaman
  * Added support for <attributeGroup>.
  *
@@ -104,6 +107,7 @@ SchemaGrammar::SchemaGrammar() :
     , fDatatypeRegistry(0)
     , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
+    , fUPAChecked(false)
 {
     //
     //  Init all the pool members.
@@ -178,6 +182,7 @@ void SchemaGrammar::reset()
     fElemDeclPool->removeAll();
     fGroupElemDeclPool->removeAll();
     fNotationDeclPool->removeAll();
+    fUPAChecked = false;
 }
 
 

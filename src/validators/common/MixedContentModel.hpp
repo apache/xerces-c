@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.9  2001/08/13 15:06:39  knoaman
  * update <any> validation.
  *
@@ -107,8 +110,6 @@
 #include <validators/common/ContentLeafNameTypeVector.hpp>
 
 class ContentSpecNode;
-class XMLElementDecl;
-
 
 //
 //  MixedContentModel is a derivative of the abstract content model base
@@ -131,9 +132,9 @@ public :
     // -----------------------------------------------------------------------
     MixedContentModel
     (
-        const bool             dtd
-      , XMLElementDecl* const  parentElem
-		, const bool             ordered = false
+        const bool              dtd
+      , ContentSpecNode* const  parentContentSpec
+		, const bool              ordered = false
     );
 
     ~MixedContentModel();
@@ -167,6 +168,14 @@ public :
 
     virtual unsigned int getNextState(const unsigned int currentState,
                                       const unsigned int elementIndex) const;
+
+    virtual void checkUniqueParticleAttribution
+    (
+        GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+      , XMLValidator*     const pValidator
+      , unsigned int*     const pContentSpecOrgURI
+    ) ;
 
 private :
     // -----------------------------------------------------------------------
@@ -221,11 +230,29 @@ inline ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVecto
 	return 0;
 }
 
-inline unsigned int 
+inline unsigned int
 MixedContentModel::getNextState(const unsigned int currentState,
                                 const unsigned int elementIndex) const {
 
     return XMLContentModel::gInvalidTrans;
 }
 
+inline void MixedContentModel::checkUniqueParticleAttribution
+    (
+        GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+      , XMLValidator*     const pValidator
+      , unsigned int*     const pContentSpecOrgURI
+    )
+{
+    // rename back
+    unsigned int i = 0;
+    for (i = 0; i < fCount; i++) {
+        unsigned int orgURIIndex = fChildren[i]->getURI();
+        fChildren[i]->setURI(pContentSpecOrgURI[orgURIIndex]);
+    }
+
+    // for mixed content model, it's only a sequence
+    // UPA checking is not necessary
+}
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.8  2001/08/09 15:23:16  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -85,9 +88,13 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <framework/XMLBuffer.hpp>
 #include <validators/schema/ComplexTypeInfo.hpp>
 #include <validators/schema/SchemaAttDefList.hpp>
 #include <validators/common/ContentSpecNode.hpp>
+#include <validators/common/DFAContentModel.hpp>
+#include <validators/common/MixedContentModel.hpp>
+#include <validators/common/SimpleContentModel.hpp>
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Constructors and Destructor
@@ -109,6 +116,11 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fAttDefs(0)
     , fAttList(0)
     , fElements(0)
+    , fContentModel(0)
+    , fFormattedModel(0)
+    , fContentSpecOrgURI(0)
+    , fUniqueURI(0)
+    , fContentSpecOrgURISize(16)
 {
 
 }
@@ -126,6 +138,10 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fAttDefs;
     delete fAttList;
     delete fElements;
+
+    delete fContentModel;
+    delete [] fFormattedModel;
+    delete [] fContentSpecOrgURI;
 }
 
 // ---------------------------------------------------------------------------
@@ -172,17 +188,26 @@ XMLAttDefList& ComplexTypeInfo::getAttDefList() const
     return *fAttList;
 }
 
+const XMLCh*
+ComplexTypeInfo::getFormattedContentModel() const
+{
+    //
+    //  If its not already built, then call the protected virtual method
+    //  to allow the derived class to build it (since only it knows.)
+    //  Otherwise, just return the previously formatted methods.
+    //
+    //  Since we are faulting this in, within a const getter, we have to
+    //  cast off the const-ness.
+    //
+    if (!fFormattedModel)
+        ((ComplexTypeInfo*)this)->fFormattedModel = formatContentModel();
+
+    return fFormattedModel;
+}
+
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Helper methods
 // ---------------------------------------------------------------------------
-void ComplexTypeInfo::faultInAttDefList() const
-{
-    // Use a hash modulus of 29 and tell it owns its elements
-    ((ComplexTypeInfo*)this)->fAttDefs =
-                    new RefHash2KeysTableOf<SchemaAttDef>(29, true);
-}
-
-
 XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const qName
                                      , const unsigned int uriId
                                      , const XMLCh* const baseName
@@ -233,6 +258,370 @@ bool ComplexTypeInfo::resetDefs() {
         enumDefs.nextElement().setProvided(false);
 
     return true;
+}
+
+
+void ComplexTypeInfo::checkUniqueParticleAttribution (GrammarResolver*  const pGrammarResolver,
+                                                      XMLStringPool*    const pStringPool,
+                                                      XMLValidator*     const pValidator)
+{
+    if (fContentSpec) {
+        ContentSpecNode* specNode = new ContentSpecNode(*fContentSpec);
+        XMLContentModel* cm = makeContentModel(true, specNode);
+
+        if (cm) {
+            cm->checkUniqueParticleAttribution(pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
+            delete cm;
+        }
+
+        delete specNode;
+    }
+}
+
+// ---------------------------------------------------------------------------
+//  ComplexTypeInfo: Private Helper methods
+// ---------------------------------------------------------------------------
+void ComplexTypeInfo::faultInAttDefList() const
+{
+    // Use a hash modulus of 29 and tell it owns its elements
+    ((ComplexTypeInfo*)this)->fAttDefs =
+                    new RefHash2KeysTableOf<SchemaAttDef>(29, true);
+}
+
+XMLCh* ComplexTypeInfo::formatContentModel() const
+{
+    XMLCh* newValue = 0;
+    if (fContentType == SchemaElementDecl::Any)
+    {
+        newValue = XMLString::replicate(XMLUni::fgAnyString);
+    }
+     else if (fContentType == SchemaElementDecl::Empty)
+    {
+        newValue = XMLString::replicate(XMLUni::fgEmptyString);
+    }
+     else
+    {
+        //
+        //  Use a temp XML buffer to format into. Content models could be
+        //  pretty long, but very few will be longer than one K. The buffer
+        //  will expand to handle the more pathological ones.
+        //
+        const ContentSpecNode* specNode = fContentSpec;
+
+        if (specNode) {
+            XMLBuffer bufFmt;
+
+
+            specNode->formatSpec(bufFmt);
+            newValue = XMLString::replicate(bufFmt.getRawBuffer());
+        }
+    }
+    return newValue;
+}
+
+XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* specNode)
+{
+    // expand the content spec first
+    fContentSpecOrgURI = new unsigned int[fContentSpecOrgURISize];
+    if (specNode) {
+        specNode = convertContentSpecTree(specNode, true, checkUPA);
+    }
+    else {
+        specNode = convertContentSpecTree(fContentSpec, fAdoptContentSpec, checkUPA);
+        if (specNode != fContentSpec) {
+            fContentSpec = specNode;
+            fAdoptContentSpec = true;
+        }
+    }
+
+
+    XMLContentModel* cmRet = 0;
+    if (fContentType == SchemaElementDecl::Simple) {
+       // just return nothing
+    }
+     else if (fContentType == SchemaElementDecl::Mixed)
+    {
+        //
+        //  Just create a mixel content model object. This type of
+        //  content model is optimized for mixed content validation.
+        //
+        if(!specNode)
+            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+
+        if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
+            cmRet = new MixedContentModel(false, specNode);
+        }
+        else {
+            cmRet = createChildModel(specNode, true);
+        }
+    }
+     else if (fContentType == SchemaElementDecl::Children)
+    {
+        //
+        //  This method will create an optimal model for the complexity
+        //  of the element's defined model. If its simple, it will create
+        //  a SimpleContentModel object. If its a simple list, it will
+        //  create a SimpleListContentModel object. If its complex, it
+        //  will create a DFAContentModel object.
+        //
+         cmRet = createChildModel(specNode, false);
+    }
+     else
+    {
+        ThrowXML(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren);
+    }
+    return cmRet;
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  SchemaElementDecl: Private helper methods
+// ---------------------------------------------------------------------------
+XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, const bool isMixed)
+{
+    if(!specNode)
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+
+    //
+    //  Do a sanity check that the node is does not have a PCDATA id. Since,
+    //  if it was, it should have already gotten taken by the Mixed model.
+    //
+    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
+        ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
+
+    //
+    //  According to the type of node, we will create the correct type of
+    //  content model.
+    //
+    if (((specNode->getType() & 0x0f) == ContentSpecNode::Any) ||
+       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Other) ||
+       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_NS)) {
+       // let fall through to build a DFAContentModel
+    }
+    else if (isMixed)
+    {
+        //REVISIT once we introduce ALL content model
+    }
+     else if (specNode->getType() == ContentSpecNode::Leaf)
+    {
+        // Create a simple content model
+        return new SimpleContentModel
+        (
+            false
+            , specNode->getElement()
+            , 0
+            , ContentSpecNode::Leaf
+        );
+    }
+     else if ((specNode->getType() == ContentSpecNode::Choice)
+          ||  (specNode->getType() == ContentSpecNode::Sequence))
+    {
+        //
+        //  Lets see if both of the children are leafs. If so, then it has to
+        //  be a simple content model
+        //
+        if ((specNode->getFirst()->getType() == ContentSpecNode::Leaf)
+        &&  (specNode->getSecond()->getType() == ContentSpecNode::Leaf))
+        {
+            return new SimpleContentModel
+            (
+                false
+                , specNode->getFirst()->getElement()
+                , specNode->getSecond()->getElement()
+                , specNode->getType()
+            );
+        }
+    }
+     else if ((specNode->getType() == ContentSpecNode::OneOrMore)
+          ||  (specNode->getType() == ContentSpecNode::ZeroOrMore)
+          ||  (specNode->getType() == ContentSpecNode::ZeroOrOne))
+    {
+        //
+        //  Its a repetition, so see if its one child is a leaf. If so its a
+        //  repetition of a single element, so we can do a simple content
+        //  model for that.
+        //
+        if (specNode->getFirst()->getType() == ContentSpecNode::Leaf)
+        {
+            return new SimpleContentModel
+            (
+                false
+                , specNode->getFirst()->getElement()
+                , 0
+                , specNode->getType()
+            );
+        }
+    }
+     else
+    {
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+    }
+
+    // Its not any simple type of content, so create a DFA based content model
+    return new DFAContentModel(false, specNode, isMixed);
+}
+
+ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode, bool checkUPA) {
+
+    if (!curNode)
+        return 0;
+
+    // Get the spec type of the passed node
+    const ContentSpecNode::NodeTypes curType = curNode->getType();
+
+    // When checking Unique Particle Attribution, rename leaf elements
+    if (checkUPA) {
+        fContentSpecOrgURI[fUniqueURI] = curNode->getElement()->getURI();
+        curNode->getElement()->setURI(fUniqueURI);
+        fUniqueURI++;
+        if (fUniqueURI == fContentSpecOrgURISize)
+            resizeContentSpecOrgURI();
+    }
+
+    if ((curType & 0x0f) == ContentSpecNode::Any
+        || (curType & 0x0f) == ContentSpecNode::Any_Other
+        || (curType & 0x0f) == ContentSpecNode::Any_NS
+        || curType == ContentSpecNode::Leaf)
+    {
+
+        return expandContentModel(curNode, toAdoptSpecNode);
+    }
+    else if ((curType == ContentSpecNode::Choice)
+        ||   (curType == ContentSpecNode::All)
+        ||   (curType == ContentSpecNode::Sequence))
+    {
+        ContentSpecNode* leftNode = convertContentSpecTree(curNode->getFirst(), curNode->isFirstAdopted(), checkUPA);
+        ContentSpecNode* rightNode =  convertContentSpecTree(curNode->getSecond(), curNode->isSecondAdopted(), checkUPA);
+
+        if (leftNode != curNode->getFirst()) {
+            curNode->setAdoptFirst(false);
+            curNode->setFirst(leftNode);
+            curNode->setAdoptFirst(true);
+        }
+        if (rightNode != curNode->getSecond()) {
+            curNode->setAdoptSecond(false);
+            curNode->setSecond(rightNode);
+            curNode->setAdoptSecond(true);
+        }
+
+        return expandContentModel(curNode, toAdoptSpecNode);
+    }
+    else {
+        return curNode;
+    }
+}
+
+ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const specNode, const bool toAdoptSpecNode)
+{
+    if (!specNode) {
+        return 0;
+    }
+
+    unsigned int minOccurs = specNode->getMinOccurs();
+    unsigned int maxOccurs = specNode->getMaxOccurs();
+
+    ContentSpecNode* saveNode = specNode;
+    ContentSpecNode* retNode = specNode;
+
+    if (minOccurs == 1 && maxOccurs == 1) {
+    }
+    else if (minOccurs == 0 && maxOccurs == 1) {
+
+        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrOne,
+                                      retNode, 0, toAdoptSpecNode);
+    }
+    else if (minOccurs == 0 && maxOccurs == -1) {
+        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrMore,
+                                      retNode, 0, toAdoptSpecNode);
+    }
+    else if (minOccurs == 1 && maxOccurs == -1) {
+        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore,
+                                      retNode, 0, toAdoptSpecNode);
+    }
+    else if (maxOccurs == -1) {
+
+        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore,
+                                      retNode, 0, toAdoptSpecNode);
+
+        for (int i=0; i < (int)(minOccurs-1); i++) {
+            retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                                          saveNode, retNode, false);
+        }
+    }
+    else {
+
+        if (minOccurs == 0) {
+
+            ContentSpecNode* optional =
+                new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, toAdoptSpecNode);
+
+            retNode = optional;
+
+            for (int i=0; i < (int)(maxOccurs-minOccurs-1); i++) {
+                retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                                              retNode, optional, true, false);
+            }
+        }
+        else {
+
+            bool isRetAdopted = false;
+
+            if (minOccurs > 1) {
+
+                retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                                              retNode, saveNode, toAdoptSpecNode, false);
+
+                for (int i=1; i < (int)(minOccurs-1); i++) {
+                    retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                                                  retNode, saveNode, true, false);
+                }
+
+                isRetAdopted = true;
+            }
+
+            ContentSpecNode* optional = 0;
+            if (isRetAdopted)
+                optional = new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
+            else
+                optional = new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, toAdoptSpecNode);
+
+            int counter = maxOccurs-minOccurs;
+
+            if (counter > 0) {
+
+                retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+					                          retNode, optional, isRetAdopted, true);
+
+                for (int j=1; j < counter; j++) {
+
+                    retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+					                              retNode, optional, true, false);
+                }
+            }
+        }
+    }
+
+    return retNode;
+}
+
+void ComplexTypeInfo::resizeContentSpecOrgURI() {
+
+    unsigned int newSize = fContentSpecOrgURISize * 2;
+    unsigned int* newContentSpecOrgURI = new unsigned int[newSize];
+
+    // Copy the existing values
+    unsigned int index = 0;
+    for (; index < fContentSpecOrgURISize; index++)
+        newContentSpecOrgURI[index] = fContentSpecOrgURI[index];
+
+    for (; index < newSize; index++)
+        newContentSpecOrgURI[index] = 0;
+
+    // Delete the old array and udpate our members
+    delete [] fContentSpecOrgURI;
+    fContentSpecOrgURI = newContentSpecOrgURI;
+    fContentSpecOrgURISize = newSize;
 }
 
 

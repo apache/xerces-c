@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/08/21 16:06:11  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.10  2001/05/11 13:27:08  tng
  * Copyright update.
  *
@@ -98,6 +101,7 @@
 #include <util/RefHashTableOf.hpp>
 #include <util/QName.hpp>
 #include <framework/XMLElementDecl.hpp>
+#include <framework/XMLContentModel.hpp>
 #include <validators/DTD/DTDAttDef.hpp>
 
 class ContentSpecNode;
@@ -111,6 +115,7 @@ class DTDAttDefList;
 //  QNames, so they are not split out and element decls don't live within
 //  URL namespaces or anything like that.
 //
+
 class VALIDATORS_EXPORT DTDElementDecl : public XMLElementDecl
 {
 public :
@@ -172,6 +177,9 @@ public :
     virtual const ContentSpecNode* getContentSpec() const;
     virtual ContentSpecNode* getContentSpec();
     virtual void setContentSpec(ContentSpecNode* toAdopt);
+    virtual XMLContentModel* getContentModel();
+    virtual void setContentModel(XMLContentModel* const newModelToAdopt);      
+    virtual const XMLCh* getFormattedContentModel ()   const;     
 
     // -----------------------------------------------------------------------
     // Support keyed collections
@@ -197,20 +205,14 @@ public :
     void setModelType(const DTDElementDecl::ModelTypes toSet);
 
 
-protected :
-    // -----------------------------------------------------------------------
-    //  Protected, virtual methods
-    // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel() ;
-    virtual XMLCh* formatContentModel () const ;
-
-
 private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
+    void faultInAttDefList() const;    
     XMLContentModel* createChildModel() ;
-    void faultInAttDefList() const;
+    XMLContentModel* makeContentModel() ;
+    XMLCh* formatContentModel () const ;    
 
 
     // -----------------------------------------------------------------------
@@ -236,11 +238,22 @@ private :
     //  fModelType
     //      The content model type of this element. This tells us what kind
     //      of content model to create.
+    //
+    //  fContentModel
+    //      The content model object for this element. It is stored here via
+    //      its abstract interface.    
+    //
+    //  fFormattedModel
+    //      This is a faulted in member. When the outside world asks for
+    //      our content model as a string, we format it and fault it into
+    //      this field (to avoid doing the formatted over and over.)    
     // -----------------------------------------------------------------------
     RefHashTableOf<DTDAttDef>*  fAttDefs;
     DTDAttDefList*              fAttList;
     ContentSpecNode*            fContentSpec;
     ModelTypes                  fModelType;
+    XMLContentModel*            fContentModel;    
+    XMLCh*                      fFormattedModel;    
 };
 
 // ---------------------------------------------------------------------------
@@ -254,6 +267,20 @@ inline ContentSpecNode* DTDElementDecl::getContentSpec()
 inline const ContentSpecNode* DTDElementDecl::getContentSpec() const
 {
     return fContentSpec;
+}
+
+inline XMLContentModel* DTDElementDecl::getContentModel()
+{
+    if (!fContentModel)
+        fContentModel = makeContentModel();
+    return fContentModel;
+}
+
+inline void
+DTDElementDecl::setContentModel(XMLContentModel* const newModelToAdopt)
+{
+    delete fContentModel;
+    fContentModel = newModelToAdopt;
 }
 
 // ---------------------------------------------------------------------------
