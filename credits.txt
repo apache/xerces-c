@@ -26,14 +26,19 @@ Chih Hsiang Chou
 Radovan Chytracek
 Hiram Clawson
 John Clayton
+Nathan Codding
 Todd Collins
 Michael Crawford
 Murray Cumming
+Zeid Derhally
+James Devries
+Ailian Ding
 Helmut Eiken
 Mark Everline
 Simon Fell
 Paul Ferguson
 Pierpaolo Fumagalli
+Guido Gagliardi
 Gary Gale
 Natalie Gorden
 Max Gotlib
@@ -41,6 +46,7 @@ Petr Gotthard
 Neil Graham
 Susan Hardenbrook
 Jeff Harrell
+Andrew Hefford
 Andy Heninger
 William L. Hopper
 Michael Huedepohl
@@ -54,14 +60,17 @@ Bob Kline
 Richard Ko
 Paul Kramer
 Volker Krause
+Berin Lautenbach
 Arnaud LeHors
 Andy Levine
 Jeff Lewis
+Pedro Lopes
 Matt Lovett
 Sean MacRoibeaird
 Alberto Massari
 Don Mastrovito
 David McCreedy
+Urs Muff
 Jordan Naftolin
 Tinny Ng
 David Nickerson
@@ -88,6 +97,7 @@ Gereon Steffens
 Jason Stewart
 Rick J. Stevens
 Roman Sulzhyk
+Vasily Tchekalkin
 Linda M. Swan
 Pieter Van-Dyck
 Curtis Walker
@@ -102,5 +112,6 @@ Dietrich Wolf
 Kirk Wylie
 Peter A. Volchek
 Grace Yan
+Hiramatsu Yoshifumi
 PeiYong Zhang
 Henry Zongaro
