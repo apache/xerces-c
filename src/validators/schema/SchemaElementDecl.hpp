@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/09 15:23:16  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.9  2001/07/24 18:33:46  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -173,6 +176,8 @@ public :
     // -----------------------------------------------------------------------
     const SchemaAttDef* getAttDef(const XMLCh* const baseName, const int uriId) const;
     SchemaAttDef* getAttDef(const XMLCh* const baseName, const int uriId);
+    const SchemaAttDef* getAttWildCard() const;
+    SchemaAttDef* getAttWildCard();
     ModelTypes getModelType() const;
     DatatypeValidator* getDatatypeValidator() const;
     int getEnclosingScope() const;
@@ -361,6 +366,24 @@ inline XMLCh* SchemaElementDecl::getTypeFromAnotherSchemaURI() const {
 inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
 {
     return fComplexTypeInfo;
+}
+
+inline const SchemaAttDef* SchemaElementDecl::getAttWildCard() const {
+
+    if (fComplexTypeInfo) {
+        return fComplexTypeInfo->getAttWildCard();
+    }
+
+    return 0;
+}
+
+inline SchemaAttDef* SchemaElementDecl::getAttWildCard() {
+
+    if (fComplexTypeInfo) {
+        return fComplexTypeInfo->getAttWildCard();
+    }
+
+    return 0;
 }
 
 // ---------------------------------------------------------------------------

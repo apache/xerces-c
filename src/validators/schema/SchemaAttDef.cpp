@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/08/09 15:23:16  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.3  2001/07/31 15:26:54  knoaman
  * Added support for <attributeGroup>.
  *
@@ -89,6 +92,7 @@ SchemaAttDef::SchemaAttDef() :
     fElemId(XMLElementDecl::fgInvalidElemId)
     , fAttName(0)
     , fDatatypeValidator(0)
+    , fNamespaceList(0)
 {
 }
 
@@ -100,6 +104,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
     XMLAttDef(type, defType)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
+    , fNamespaceList(0)
 {
     fAttName = new QName(prefix, localPart, uriId);
 }
@@ -114,6 +119,8 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
 
     XMLAttDef(attValue, type, defType, enumValues)
     , fElemId(XMLElementDecl::fgInvalidElemId)
+    , fDatatypeValidator(0)
+    , fNamespaceList(0)
 {
     fAttName = new QName(prefix, localPart, uriId);
 }
@@ -124,16 +131,22 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
               other->getDefaultType(), other->getEnumeration())
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fAttName(0)
-    , fDatatypeValidator(other->getDatatypeValidator())
+    , fDatatypeValidator(other->fDatatypeValidator)
+    , fNamespaceList(0)
 {
     QName* otherName = other->getAttName();
     fAttName = new QName(otherName->getPrefix(), 
                          otherName->getLocalPart(), otherName->getURI());
+
+    if (other->fNamespaceList && other->fNamespaceList->size()) {
+        fNamespaceList = new ValueVectorOf<unsigned int>(*(other->fNamespaceList));
+    }
 }
 
 SchemaAttDef::~SchemaAttDef()
 {
    delete fAttName;
+   delete fNamespaceList;
 }
 
 

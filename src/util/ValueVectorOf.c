@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2001/08/09 15:24:37  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.3  2000/03/02 19:54:47  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -201,6 +204,18 @@ removeElementAt(const unsigned int removeAt)
 template <class TElem> void ValueVectorOf<TElem>::removeAllElements()
 {
     fCurCount = 0;
+}
+
+template <class TElem> 
+bool ValueVectorOf<TElem>::containsElement(const TElem& toCheck) {
+
+    for (unsigned int i = 0; i < fCurCount; i++) {
+        if (fElemList[i] == toCheck) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 

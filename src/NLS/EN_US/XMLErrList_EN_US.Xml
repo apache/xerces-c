@@ -128,6 +128,16 @@
             <Message Id="BadMinMaxAllCT" Text="When a model group has {compositor} 'all' which constitutes the {content type} of a complex type, minOccurs=maxOccurs=1"/>
             <Message Id="BadMinMaxAllElem" Text="In an 'all' schema component, the value of minCoccurs/maxOccurs of an element must be '0' or '1'."/>
             <Message Id="NoCircularAttGroup" Text="Circular attributeGroup reference -{0}- is disallowed outside &lt;redefine&gt;"/>
+            <Message Id="DuplicateAttInDerivation" Text="Attribute '{0}' already defined in base and should not appear in derivation by extension."/>
+            <Message Id="NotExpressibleWildCardIntersection" Text="The intensional intersection of {attributes wildcard}s must be expressible"/>
+            <Message Id="BadAttDerivation_1" Text="Base type definition does not have any attributes"/>
+            <Message Id="BadAttDerivation_2" Text="Attribute '{0}' has an inconsistent REQUIRED setting with that of the base"/>
+            <Message Id="BadAttDerivation_3" Text="Type of attribute '{0}' must be validly derived from type of attribute in base"/>
+            <Message Id="BadAttDerivation_4" Text="Attribute '{0}' is either not fixed, or has a different value from that of the base"/>
+            <Message Id="BadAttDerivation_5" Text="Attribute '{0}' has invalid target namespace with respect to a base wildcard constraint or, base has no wildcard"/>
+            <Message Id="BadAttDerivation_6" Text="An attribute wildcard is present in the derived type, but not in the base"/>
+            <Message Id="BadAttDerivation_7" Text="The attribute wildcard in the derived type is not a valid subset of that in the base"/>
+            <Message Id="AllContentError" Text="Content of &lt;all&gt; is restricted to elements only. '{0}' encountered and ignored."/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>

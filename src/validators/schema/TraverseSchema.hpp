@@ -70,7 +70,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/XMLUniDefs.hpp>
-#include <util/StringPool.hpp>
 #include <dom/DOM_Element.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
@@ -110,7 +109,7 @@ public:
     TraverseSchema
     (
           const DOM_Element&                 schemaRoot
-        , XMLStringPool* const               stringPool
+        , XMLStringPool* const               uriStringPool
         , SchemaGrammar* const               schemaGrammar
         , GrammarResolver* const             grammarResolver
         , XMLScanner* const                  xmlScanner
@@ -488,9 +487,6 @@ private:
       */
     InputSource* resolveSchemaLocation(const XMLCh* const loc);
 
-    bool locationsContain(const ValueVectorOf<unsigned int>* const locations,
-                          const unsigned int locationId);
-
     void restoreSchemaInfo();
     int  resetCurrentTypeNameStack(const int);
 
@@ -532,6 +528,59 @@ private:
                                 XercesAttGroupInfo* const toAttGroup,
                                 ComplexTypeInfo* const typeInfo);
 
+    /**
+      * Attribute wild card intersection.
+      *
+      * Note:
+      *    The first parameter will be the result of the intersection, so 
+      *    we need to make sure that first parameter is a copy of the
+      *    actual attribute definition we need to intersect with.
+      *
+      *    What we need to wory about is: type, defaultType, namespace,
+      *    and URI. All remaining data members should be the same.
+      */
+    void attWildCardIntersection(SchemaAttDef* const resultWildCart,
+                                 const SchemaAttDef* const toCompareWildCard);
+
+    /**
+      * Attribute wild card union.
+      *
+      * Note:
+      *    The first parameter will be the result of the union, so 
+      *    we need to make sure that first parameter is a copy of the
+      *    actual attribute definition we need to intersect with.
+      *
+      *    What we need to wory about is: type, defaultType, namespace,
+      *    and URI. All remaining data members should be the same.
+      */
+    void attWildCardUnion(SchemaAttDef* const resultWildCart,
+                          const SchemaAttDef* const toCompareWildCard);
+
+    void copyWildCardData(const SchemaAttDef* const srcWildCard,
+                          SchemaAttDef* const destWildCard);
+
+    /**
+      * Check that the attributes of a type derived by restriction satisfy
+      * the constraints of derivation valid restriction
+      */
+    void checkAttDerivationOK(const ComplexTypeInfo* const baseTypeInfo,
+                              const ComplexTypeInfo* const childTypeInfo);
+
+    /**
+      * Check whether a namespace value is valid with respect to wildcard
+      * constraint
+      */
+    bool wildcardAllowsNamespace(const SchemaAttDef* const baseAttWildCard,
+                                 const unsigned int nameURI);
+
+    /**
+      * Check whether a namespace constraint is an intensional subset of
+      * another namespace constraint
+      */
+    bool isWildCardSubset(const SchemaAttDef* const baseAttWildCard,
+                          const SchemaAttDef* const childAttWildCard);
+
+    bool isAnyType(const XMLCh* const typeName);
 
     // -----------------------------------------------------------------------
     //  Private constants
@@ -571,6 +620,7 @@ private:
     bool                                    fAttributeDefaultQualified;
     bool                                    fAdoptImportLocations;
     int                                     fTargetNSURI;
+    int                                     fEmptyNamespaceURI;
     int                                     fCurrentScope;
     int                                     fSimpleTypeAnonCount;
     int                                     fComplexTypeAnonCount;
@@ -587,6 +637,7 @@ private:
     EntityResolver*                         fEntityResolver;
     ErrorHandler*                           fErrorHandler;
     XMLStringPool*                          fURIStringPool;
+    XMLStringPool*                          fStringPool;
     XMLBuffer                               fBuffer;
     XMLValidator*                           fValidator;
     XMLScanner*                             fScanner;
@@ -612,7 +663,6 @@ private:
     RefHash2KeysTableOf<ElemVector>*        fValidSubstitutionGroups;
     RefVectorOf<SchemaElementDecl>*         fRefElements;
     ValueVectorOf<int>*                     fRefElemScope;
-    static XMLStringPool                    fStringPool;
 
     friend class GeneralAttributeCheck;
 };
@@ -641,9 +691,9 @@ inline const XMLCh* TraverseSchema::getPrefix(const XMLCh* const rawName) {
     fBuffer.set(rawName, colonIndex + 1);
     XMLString::subString(fBuffer.getRawBuffer(), rawName, 0, colonIndex);
 
-    unsigned int nameId = fStringPool.addOrFind(fBuffer.getRawBuffer());
+    unsigned int nameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
 
-    return fStringPool.getValueForId(nameId);
+    return fStringPool->getValueForId(nameId);
 }
 
 inline const XMLCh* TraverseSchema::getLocalPart(const XMLCh* const rawName) {
@@ -665,9 +715,9 @@ inline const XMLCh* TraverseSchema::getLocalPart(const XMLCh* const rawName) {
                              colonIndex + 1, rawNameLen);
     }
 
-    unsigned int nameId = fStringPool.addOrFind(fBuffer.getRawBuffer());
+    unsigned int nameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
 
-    return fStringPool.getValueForId(nameId);
+    return fStringPool->getValueForId(nameId);
 }
 
 inline bool
@@ -704,8 +754,8 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
             }
         }
 
-        unsigned int elemId = fStringPool.addOrFind(bufValue);
-        return fStringPool.getValueForId(elemId);  
+        unsigned int elemId = fStringPool->addOrFind(bufValue);
+        return fStringPool->getValueForId(elemId);  
     }
 
     return 0;
@@ -746,24 +796,9 @@ inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix,
     fBuffer.set(prefix);
     fBuffer.append(anonCountStr);
 
-    int anonTypeId = fStringPool.addOrFind(fBuffer.getRawBuffer());
+    int anonTypeId = fStringPool->addOrFind(fBuffer.getRawBuffer());
 
-    return fStringPool.getValueForId(anonTypeId);
-}
-
-inline bool
-TraverseSchema::locationsContain(const ValueVectorOf<unsigned int>* const locations,
-                                 const unsigned int locationId) {
-
-    unsigned int locSize = locations->size();
-
-    for (unsigned int i=0; i < locSize; i++) {
-        if (locations->elementAt(i) == locationId) {
-            return true;
-        }
-    }
-
-    return false;
+    return fStringPool->getValueForId(anonTypeId);
 }
 
 inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
@@ -777,6 +812,24 @@ inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
     return value;
 }
 
+inline void 
+TraverseSchema::copyWildCardData(const SchemaAttDef* const srcWildCard,
+                                 SchemaAttDef* const destWildCard) {
+
+    destWildCard->getAttName()->setURI(srcWildCard->getAttName()->getURI());
+    destWildCard->setType(srcWildCard->getType());
+    destWildCard->setDefaultType(srcWildCard->getDefaultType());
+}
+
+inline bool
+TraverseSchema::isAnyType(const XMLCh* const typeName) {
+
+    const XMLCh* const localPart = getLocalPart(typeName);
+    const XMLCh* const uri = resolvePrefixToURI(getPrefix(typeName));
+
+    return (!XMLString::compareString(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+            && !XMLString::compareString(localPart, SchemaSymbols::fgATTVAL_ANYTYPE));
+}
 
 #endif
 

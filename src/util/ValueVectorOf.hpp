@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/08/09 15:24:37  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.4  2000/03/02 19:54:47  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -109,6 +112,7 @@ public :
     void insertElementAt(const TElem& toInsert, const unsigned int insertAt);
     void removeElementAt(const unsigned int removeAt);
     void removeAllElements();
+    bool containsElement(const TElem& toCheck);
 
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/08/09 15:23:16  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.7  2001/07/24 18:33:46  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -102,6 +105,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fDatatypeValidator(0)
     , fBaseComplexTypeInfo(0)
     , fContentSpec(0)
+    , fAttWildCard(0)
     , fAttDefs(0)
     , fAttList(0)
     , fElements(0)
@@ -118,6 +122,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
         delete fContentSpec;
     }
 
+    delete fAttWildCard;
     delete fAttDefs;
     delete fAttList;
     delete fElements;

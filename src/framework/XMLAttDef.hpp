@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/09 15:23:37  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.11  2001/06/21 14:25:26  knoaman
  * Fix for bug 1946
  *
@@ -154,12 +157,11 @@ public:
         , Simple            = 10
         , Any_Any           = 11
         , Any_Other         = 12
-        , Any_Local         = 13
-        , Any_List          = 14
+        , Any_List          = 13
 
         , AttTypes_Count
         , AttTypes_Min      = 0
-        , AttTypes_Max      = 14
+        , AttTypes_Max      = 13
         , AttTypes_Unknown  = -1
 	};
 
@@ -168,8 +170,8 @@ public:
         Default                  = 0
         , Required               = 1
         , Implied                = 2
-        , Fixed                  = 3
-        , Prohibited             = 4
+        , Prohibited             = 3
+        , Fixed                  = 4
         , Required_And_Fixed     = 5
         , ProcessContents_Strict = 6
         , ProcessContents_Lax    = 7
@@ -577,7 +579,13 @@ inline void XMLAttDef::setDefaultType(const XMLAttDef::DefAttTypes newValue)
 inline void XMLAttDef::setEnumeration(const XMLCh* const newValue)
 {
     delete [] fEnumeration;
-    fEnumeration = XMLString::replicate(newValue);
+
+    if (newValue) {
+        fEnumeration = XMLString::replicate(newValue);
+    }
+    else {
+        fEnumeration = 0;
+    }
 }
 
 inline void XMLAttDef::setId(const unsigned int newId)

@@ -56,11 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/09 15:23:17  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.1  2001/07/31 15:26:54  knoaman
  * Added support for <attributeGroup>.
- *
- * Revision 1.1  2001/07/24 18:33:46  knoaman
- * Added support for <group> + extra constraint checking for complexType
  *
  */
 
@@ -76,6 +76,7 @@
 XercesAttGroupInfo::XercesAttGroupInfo()
     : fAttributes(0)
     , fAnyAttributes(0)
+    , fCompleteWildCard(0)
 {
 
 }
@@ -85,6 +86,7 @@ XercesAttGroupInfo::~XercesAttGroupInfo()
 {
     delete fAttributes;
     delete fAnyAttributes;
+    delete fCompleteWildCard;
 }
 
 bool XercesAttGroupInfo::containsAttribute(const XMLCh* const name,
@@ -112,7 +114,7 @@ bool XercesAttGroupInfo::containsAttribute(const XMLCh* const name,
 }
 
 /**
-  * End of file XercesGroupInfo.cpp
+  * End of file XercesAttGroupInfo.cpp
   */
 
 

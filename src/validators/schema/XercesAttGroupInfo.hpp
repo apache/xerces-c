@@ -94,12 +94,14 @@ public:
     const SchemaAttDef* attributeAt(const unsigned int index) const;
     SchemaAttDef*       anyAttributeAt(const unsigned int index);
     const SchemaAttDef* anyAttributeAt(const unsigned int index) const;
+    SchemaAttDef*       getCompleteWildCard() const;
     
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void addAttDef(SchemaAttDef* const toAdd, const bool toClone = false);
     void addAnyAttDef(SchemaAttDef* const toAdd, const bool toClone = false);
+    void setCompleteWildCard(SchemaAttDef* const toSet);
 
 	// -----------------------------------------------------------------------
     //  Query methods
@@ -118,6 +120,7 @@ private:
     // -----------------------------------------------------------------------
     RefVectorOf<SchemaAttDef>* fAttributes;
     RefVectorOf<SchemaAttDef>* fAnyAttributes;
+    SchemaAttDef*              fCompleteWildCard;
 };
 
 // ---------------------------------------------------------------------------
@@ -181,6 +184,12 @@ XercesAttGroupInfo::anyAttributeAt(const unsigned int index) const {
     return 0;
 }
 
+inline SchemaAttDef*
+XercesAttGroupInfo::getCompleteWildCard() const {
+
+    return fCompleteWildCard;
+}
+
 // ---------------------------------------------------------------------------
 //  XercesAttGroupInfo: Setter methods
 // ---------------------------------------------------------------------------
@@ -200,7 +209,7 @@ inline void XercesAttGroupInfo::addAttDef(SchemaAttDef* const toAdd,
 }
 
 inline void XercesAttGroupInfo::addAnyAttDef(SchemaAttDef* const toAdd,
-                                                const bool toClone) {
+                                             const bool toClone) {
 
     if (!fAnyAttributes) {   
         fAnyAttributes = new RefVectorOf<SchemaAttDef>(2);
@@ -214,9 +223,19 @@ inline void XercesAttGroupInfo::addAnyAttDef(SchemaAttDef* const toAdd,
     }
 }
 
+inline void
+XercesAttGroupInfo::setCompleteWildCard(SchemaAttDef* const toSet) {
+
+    if (fCompleteWildCard) {
+        delete fCompleteWildCard;
+    }
+
+    fCompleteWildCard = toSet;
+}
+
 #endif
 
 /**
-  * End of file XercesGroupInfo.hpp
+  * End of file XercesAttGroupInfo.hpp
   */
 

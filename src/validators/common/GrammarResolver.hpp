@@ -63,7 +63,9 @@
 #define GRAMMARRESOLVER_HPP
 
 #include <util/RefHashTableOf.hpp>
+#include <util/StringPool.hpp>
 #include <validators/common/Grammar.hpp>
+
 
 class DatatypeValidator;
 class DatatypeValidatorFactory;
@@ -116,6 +118,15 @@ public:
      */
     RefHashTableOfEnumerator<Grammar> getGrammarEnumerator() const;
 
+
+    /**
+     * Get a string pool of schema grammar element/attribute names/prefixes
+     * (used by TraverseSchema)
+     *
+     * @return a string pool of schema grammar element/attribute names/prefixes
+     */
+    XMLStringPool* getStringPool();
+
     /**
      * Is the specified Namespace key in Grammar pool?
      *
@@ -155,13 +166,22 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
+    //  fStringPool          The string pool used by TraverseSchema to store
+    //                       element/attribute names and prefixes.
+    //
     //  fGrammarRegistry     The Grammar Pool.  It represents a mapping
     //                       between Namespace and a Grammar
     //  fDataTypeReg         DatatypeValidatorFactory register
     //
     // -----------------------------------------------------------------------
+    XMLStringPool                fStringPool;
     RefHashTableOf<Grammar>*     fGrammarRegistry;
     DatatypeValidatorFactory*    fDataTypeReg;
 };
+
+inline XMLStringPool* GrammarResolver::getStringPool() {
+
+    return &fStringPool;
+}
 
 #endif

@@ -99,25 +99,27 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    bool                getAbstract() const;
-    bool                getAdoptContentSpec() const;
-    int                 getDerivedBy() const;
-    int                 getBlockSet() const;
-    int                 getFinalSet() const;
-    int                 getScopeDefined() const;
-    unsigned int        getElementId() const;
-	int                 getContentType() const;
-    unsigned int        elementCount() const;
-    XMLCh*              getTypeName() const;
-    DatatypeValidator*  getBaseDatatypeValidator() const;
-    DatatypeValidator*  getDatatypeValidator() const;
-    ComplexTypeInfo*    getBaseComplexTypeInfo() const;
-    ContentSpecNode*    getContentSpec() const;
-    const SchemaAttDef* getAttDef(const XMLCh* const baseName,
-                                  const int uriId) const;
-    SchemaAttDef*       getAttDef(const XMLCh* const baseName,
-                                  const int uriId);
-    XMLAttDefList&      getAttDefList() const;
+    bool                     getAbstract() const;
+    bool                     getAdoptContentSpec() const;
+    int                      getDerivedBy() const;
+    int                      getBlockSet() const;
+    int                      getFinalSet() const;
+    int                      getScopeDefined() const;
+    unsigned int             getElementId() const;
+	int                      getContentType() const;
+    unsigned int             elementCount() const;
+    XMLCh*                   getTypeName() const;
+    DatatypeValidator*       getBaseDatatypeValidator() const;
+    DatatypeValidator*       getDatatypeValidator() const;
+    ComplexTypeInfo*         getBaseComplexTypeInfo() const;
+    ContentSpecNode*         getContentSpec() const;
+    const SchemaAttDef*      getAttWildCard() const;
+    SchemaAttDef*            getAttWildCard();
+    const SchemaAttDef*      getAttDef(const XMLCh* const baseName,
+                                       const int uriId) const;
+    SchemaAttDef*            getAttDef(const XMLCh* const baseName,
+                                       const int uriId);
+    XMLAttDefList&           getAttDefList() const;
     const SchemaElementDecl* elementAt(const unsigned int index) const;
     SchemaElementDecl*       elementAt(const unsigned int index);
     
@@ -138,6 +140,7 @@ public:
     void setDatatypeValidator(DatatypeValidator* const validator);
     void setBaseComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setContentSpec(ContentSpecNode* const toAdopt);
+    void setAttWildCard(SchemaAttDef* const toAdopt);
     void addAttDef(SchemaAttDef* const toAdd);
     void addElement(SchemaElementDecl* const toAdd);
 
@@ -187,6 +190,7 @@ private:
     DatatypeValidator*                 fDatatypeValidator;
     ComplexTypeInfo*                   fBaseComplexTypeInfo;
     ContentSpecNode*                   fContentSpec;
+    SchemaAttDef*                      fAttWildCard;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     SchemaAttDefList*                  fAttList;
     RefVectorOf<SchemaElementDecl>*    fElements;
@@ -267,6 +271,16 @@ inline ComplexTypeInfo* ComplexTypeInfo::getBaseComplexTypeInfo() const {
 inline ContentSpecNode* ComplexTypeInfo::getContentSpec() const {
 
     return fContentSpec;
+}
+
+inline const SchemaAttDef* ComplexTypeInfo::getAttWildCard() const {
+
+    return fAttWildCard;
+}
+
+inline SchemaAttDef* ComplexTypeInfo::getAttWildCard() {
+
+    return fAttWildCard;
 }
 
 inline const SchemaAttDef* ComplexTypeInfo::getAttDef(const XMLCh* const baseName,
@@ -387,6 +401,15 @@ inline void ComplexTypeInfo::addElement(SchemaElementDecl* const elem) {
     }
 
     fElements->addElement(elem);
+}
+
+inline void ComplexTypeInfo::setAttWildCard(SchemaAttDef* const toAdopt) {
+
+    if (fAttWildCard) {
+       delete fAttWildCard;
+    }
+
+    fAttWildCard = toAdopt;
 }
 
 // ---------------------------------------------------------------------------

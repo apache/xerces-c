@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/09 15:23:16  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.11  2001/07/26 17:04:11  tng
  * Schema: Process should stop after fatal error, and user throws need to be rethrown.
  *
@@ -341,7 +344,6 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
     //  Check the Any Type
     if (type == XMLAttDef::Any_Any
      || type == XMLAttDef::Any_List
-     || type == XMLAttDef::Any_Local
      || type == XMLAttDef::Any_Other) {
 
         if (defType == XMLAttDef::ProcessContents_Skip) {

@@ -95,7 +95,6 @@ const XMLCh* const gAttTypeStrings[XMLAttDef::AttTypes_Count] =
     , XMLUni::fgCDATAString
     , XMLUni::fgCDATAString
     , XMLUni::fgCDATAString
-    , XMLUni::fgCDATAString
 
 };
 
@@ -104,8 +103,8 @@ const XMLCh* const gDefAttTypeStrings[XMLAttDef::DefAttTypes_Count] =
     XMLUni::fgDefaultString
     , XMLUni::fgRequiredString
     , XMLUni::fgImpliedString
-    , XMLUni::fgFixedString
     , XMLUni::fgImpliedString
+    , XMLUni::fgFixedString
     , XMLUni::fgImpliedString
     , XMLUni::fgImpliedString
     , XMLUni::fgImpliedString

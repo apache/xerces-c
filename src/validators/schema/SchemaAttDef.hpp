@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/08/09 15:23:16  knoaman
+ * add support for <anyAttribute> declaration.
+ *
  * Revision 1.4  2001/07/31 15:26:54  knoaman
  * Added support for <attributeGroup>.
  *
@@ -74,6 +77,7 @@
 
 #include <util/XMLString.hpp>
 #include <framework/XMLAttDef.hpp>
+#include <util/ValueVectorOf.hpp>
 
 class DatatypeValidator;
 class QName;
@@ -113,7 +117,7 @@ public :
     (
           const SchemaAttDef*                   other
     );
-    ~SchemaAttDef();
+    virtual ~SchemaAttDef();
 
     // -----------------------------------------------------------------------
     //  Implementation of the XMLAttDef interface
@@ -127,7 +131,7 @@ public :
     unsigned int getElemId() const;
     QName* getAttName() const;
     DatatypeValidator* getDatatypeValidator() const;
-
+    ValueVectorOf<unsigned int>* getNamespaceList() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -140,6 +144,8 @@ public :
        ,const int                 uriId = -1
     );
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
+    void setNamespaceList(const ValueVectorOf<unsigned int>* const toSet);
+    void resetNamespaceList();
 
 
 private :
@@ -158,10 +164,14 @@ private :
     //  fDatatypeValidator
     //      The DatatypeValidator used to validate this attribute type.
     //
+    //  fNamespaceList
+    //      The list of namespace values for a wildcard attribute
+    //
     // -----------------------------------------------------------------------
-    unsigned int       fElemId;
-    QName*             fAttName;
-    DatatypeValidator* fDatatypeValidator;
+    unsigned int                 fElemId;
+    QName*                       fAttName;
+    DatatypeValidator*           fDatatypeValidator;
+    ValueVectorOf<unsigned int>* fNamespaceList;
 };
 
 
@@ -184,6 +194,11 @@ inline DatatypeValidator* SchemaAttDef::getDatatypeValidator() const
     return fDatatypeValidator;
 }
 
+inline ValueVectorOf<unsigned int>*
+SchemaAttDef::getNamespaceList() const {
+    return fNamespaceList;
+}
+
 
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Setter methods
@@ -195,7 +210,30 @@ inline void SchemaAttDef::setElemId(const unsigned int newId)
 
 inline void SchemaAttDef::setDatatypeValidator(DatatypeValidator* newDatatypeValidator)
 {
-   fDatatypeValidator = newDatatypeValidator;
+    fDatatypeValidator = newDatatypeValidator;
+}
+
+inline void SchemaAttDef::resetNamespaceList() {
+
+    if (fNamespaceList && fNamespaceList->size()) {
+        fNamespaceList->removeAllElements();
+    }
+}
+
+inline void SchemaAttDef::setNamespaceList(const ValueVectorOf<unsigned int>* toSet) {
+
+    if (toSet && toSet->size()) {
+
+        if (fNamespaceList) {
+            *fNamespaceList = *toSet;
+        }
+        else {
+            fNamespaceList = new ValueVectorOf<unsigned int>(*toSet);
+        }
+    }
+    else  {
+        resetNamespaceList();
+    }
 }
 
 #endif
