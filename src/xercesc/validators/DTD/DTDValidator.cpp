@@ -303,6 +303,8 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
 
     XMLCh* valPtr = pszTmpVal;
 
+    bool doNamespace = getScanner()->getDoNamespaces();
+
     while (true)
     {
         // Reset the trigger flags
@@ -343,7 +345,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             //  All these must be valid XMLName
             // If namespace is enabled, colon is not allowed in the first 6
 
-            if (*valPtr == chColon && firstNameChar && getScanner()->getDoNamespaces())
+            if (doNamespace && *valPtr == chColon && firstNameChar)
                 getScanner()->emitError(XMLErrs::ColonNotLegalWithNS);
 
             if (!XMLReader::isNameChar(*valPtr))
