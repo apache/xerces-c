@@ -394,6 +394,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir/samples");
     psystem ("mkdir $targetdir/samples/Projects");
     psystem ("mkdir $targetdir/samples/Projects/Win32");
+    psystem ("mkdir $targetdir/samples/Projects/Win32/VC6");
     psystem ("mkdir $targetdir/samples/data");
     psystem ("mkdir $targetdir/samples/SAXCount");
     psystem ("mkdir $targetdir/samples/SAX2Count");
