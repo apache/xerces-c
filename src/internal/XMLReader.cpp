@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/14 19:27:07  roddey
+ * Make an EBCDIC file without an encoding="" string an error.
+ *
  * Revision 1.8  2000/02/06 07:47:53  rahulj
  * Year 2K copyright swat.
  *
@@ -381,8 +384,15 @@ bool XMLReader::refreshCharBuffer()
     //  any encoding="" string and the encoding was not forced, so lets
     //  create one now. We know that it won't change now.
     //
+    //  However, note that if we autosensed EBCDIC, then we have to
+    //  consider it an error if we never got an encoding since we don't
+    //  know what variant of EBCDIC it is.
+    //
     if (!fTranscoder)
     {
+        if (fEncoding == XMLRecognizer::EBCDIC)
+            ThrowXML(RuntimeException, XML4CExcepts::Reader_EncodingStrRequired);
+
         // Ask the transcoding service to make use a transcoder
         XMLTransService::Codes failReason;
         fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
