@@ -376,6 +376,14 @@ void XMLUri::initialize(const XMLUri* const baseURI
         index = XMLString::stringLen(fScheme)+1;
     }
 
+    // It's an error if we stop here
+    if (index == trimedUriSpecLen)
+    {
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_Empty
+                , errMsg_PATH);
+	}
+
 	// two slashes means generic URI syntax, so we get the authority
     XMLCh* authUriSpec = new XMLCh[trimedUriSpecLen+1];
     ArrayJanitor<XMLCh> authName(authUriSpec);

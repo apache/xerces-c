@@ -592,25 +592,21 @@ void XMLString::trim(char* const toTrim)
 void XMLString::subString(char* const targetStr, const char* const srcStr
                           , const int startIndex, const int endIndex)
 {
-	//if (startIndex < 0 || endIndex < 0)
-    //    ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_NegativeIndex);
-
-	if (targetStr == 0)
+    if (targetStr == 0)
         ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
 
     const int srcLen = strlen(srcStr);
-	const int copySize = endIndex - startIndex;
+    const int copySize = endIndex - startIndex;
 
     // Make sure the start index is within the XMLString bounds
-	if (startIndex > srcLen-1 || endIndex > srcLen )
+    if ( startIndex < 0 || startIndex > endIndex || endIndex > srcLen)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
 
-	for (int i= startIndex; i < endIndex; i++) {
+    for (int i= startIndex; i < endIndex; i++) {
+        targetStr[i-startIndex] = srcStr[i];
+    }
 
-		targetStr[i-startIndex] = srcStr[i];
-	}
-
-	targetStr[copySize] = 0;
+    targetStr[copySize] = 0;
 }
 
 /**
@@ -1450,25 +1446,24 @@ void XMLString::lowerCase(XMLCh* const toLowerCase)
 void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
                           , const int startIndex, const int endIndex)
 {
-	//if (startIndex < 0 || endIndex < 0)
+    //if (startIndex < 0 || endIndex < 0)
     //    ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_NegativeIndex);
 
-	if (targetStr == 0)
+    if (targetStr == 0)
         ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
 
     const int srcLen = stringLen(srcStr);
-	const int copySize = endIndex - startIndex;
+    const int copySize = endIndex - startIndex;
 
     // Make sure the start index is within the XMLString bounds
-	if (startIndex > srcLen-1 || endIndex > srcLen )
+    if ( startIndex < 0 || startIndex > endIndex || endIndex > srcLen)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
 
-	for (int i= startIndex; i < endIndex; i++) {
+    for (int i= startIndex; i < endIndex; i++) {
+        targetStr[i-startIndex] = srcStr[i];
+    }
 
-		targetStr[i-startIndex] = srcStr[i];
-	}
-
-	targetStr[copySize] = 0;
+    targetStr[copySize] = 0;
 }
 
 RefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc)
