@@ -271,25 +271,26 @@ XMLFormatter& operator<< (XMLFormatter& strm, const DOMString& s);
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage: DOMPrint [options] <XML file>\n\n"
-            "This program invokes the Xerces-C DOM parser and builds the DOM\n"
-            "tree. It then traverses the DOM tree and prints the contents\n"
-            "of the tree. Options are NOT case sensitive.\n\n"
+    cout << "\nUsage:\n"
+            "    DOMPrint [options] <XML file>\n\n"
+            "This program invokes the DOM parser, and builds the DOM tree.\n"
+            "It then traverses the DOM tree and prints the contents of the\n"
+            "tree for the specified XML file.\n\n"
             "Options:\n"
             "    -e          create entity reference nodes. Default is no expansion.\n"
-            "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]\n"
-            "    -v=xxx      Validation scheme [always | never | auto*]\n"
+            "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].\n"
+            "    -v=xxx      Validation scheme [always | never | auto*].\n"
             "    -n          Enable namespace processing. Default is off.\n"
             "    -s          Enable schema processing. Default is off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
             "    -x=XXX      Use a particular encoding for output. Default is\n"
             "                the same encoding as the input XML file. UTF-8 if\n"
             "                input XML file has not XML declaration.\n"
-            "    -?          Show this help (must be the only parameter)\n\n"
-            "  * = Default if not provided explicitly\n\n"
+		      "    -?          Show this help.\n\n"
+            "  * = Default if not provided explicitly.\n\n"
             "The parser has intrinsic support for the following encodings:\n"
             "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
-            "    WINDOWS-1252, IBM1140, IBM037\n"
+            "    WINDOWS-1252, IBM1140, IBM037.\n"
           <<  endl;
 }
 
@@ -326,14 +327,6 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    // Watch for special case help request
-    if (!strcmp(argV[1], "-?"))
-    {
-        usage();
-        XMLPlatformUtils::Terminate();
-        return 2;
-    }
-
     // See if non validating dom parser configuration is requested.
     int parmInd;
     for (parmInd = 1; parmInd < argC; parmInd++)
@@ -342,8 +335,15 @@ int main(int argC, char* argV[])
         if (argV[parmInd][0] != '-')
             break;
 
-        if (!strncmp(argV[parmInd], "-v=", 3)
-        ||  !strncmp(argV[parmInd], "-V=", 3))
+        // Watch for special case help request
+        if (!strcmp(argV[parmInd], "-?"))
+        {
+            usage();
+            XMLPlatformUtils::Terminate();
+            return 2;
+        }
+         else if (!strncmp(argV[parmInd], "-v=", 3)
+              ||  !strncmp(argV[parmInd], "-V=", 3))
         {
             const char* const parm = &argV[parmInd][3];
 
@@ -356,6 +356,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -399,6 +400,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -u= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -504,19 +506,23 @@ int main(int argC, char* argV[])
         {
             gFormatter = new XMLFormatter(gEncodingName, formatTarget,
                                           XMLFormatter::NoEscapes, gUnRepFlags);
-            cout << doc << endl;
+            cout << doc;
+            *gFormatter << chLF; // add linefeed in requested output encoding
+            cout << flush;
         }
         catch (XMLException& e)
         {
             cerr << "An error occurred during creation of output transcoder. Msg is:"
                  << endl
                  << DOMString(e.getMessage()) << endl;
-            retval = 3;
+            retval = 4;
         }
 
-    delete formatTarget;
-    delete gFormatter;
+        delete formatTarget;
+        delete gFormatter;
     }
+    else
+        retval = 4;
 
     delete [] gEncodingName;
     //
@@ -587,7 +593,10 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             DOM_Node child = toWrite.getFirstChild();
             while( child != 0)
             {
-                target << child << endl;
+                target << child;
+                // add linefeed in requested output encoding
+                *gFormatter << chLF;
+                target << flush;
                 child = child.getNextSibling();
             }
             break;
