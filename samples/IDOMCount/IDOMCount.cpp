@@ -105,12 +105,15 @@ static int countChildElements(IDOM_Node *n)
 {
     IDOM_Node *child;
     int count = 0;
-    for (child = n->getFirstChild(); child != 0; child=child->getNextSibling())
+    if (n->getNodeType() == IDOM_Node::ELEMENT_NODE)
     {
-        if (n->getNodeType() == IDOM_Node::ELEMENT_NODE)
+        count++;
+        for (child = n->getFirstChild(); child != 0; child=child->getNextSibling())
         {
-            count++;
-            count += countChildElements(child);
+            if (child->getNodeType() == IDOM_Node::ELEMENT_NODE)
+            {
+                count += countChildElements(child);
+            }
         }
     }
     return count;
@@ -265,7 +268,7 @@ int main(int argC, char* argV[])
     {
         IDOM_Document *doc = parser.getDocument();
         //unsigned int elementCount = doc.getElementsByTagName("*").getLength();
-        unsigned int elementCount = countChildElements(doc);
+        unsigned int elementCount = countChildElements((IDOM_Node*)doc->getDocumentElement());
 
         // Print out the stats that we collected and time taken.
         cout << xmlFile << ": " << duration << " ms ("
