@@ -473,7 +473,7 @@ public:
     /**
      * Sets the value of the node.
      *
-     * Any node which can have a nodeValue (@see getNodeValue) will
+     * Any node which can have a nodeValue will
      * also accept requests to set it to a string. The exact response to
      * this varies from node to node -- Attribute, for example, stores
      * its values in its children and has to replace them with a new Text
@@ -482,6 +482,7 @@ public:
      * For most types of Node, value is null and attempting to set it
      * will throw DOMException(NO_MODIFICATION_ALLOWED_ERR). This will
      * also be thrown if the node is read-only.
+     * @see #getNodeValue
      * @since DOM Level 1
      */
     virtual void              setNodeValue(const XMLCh  *nodeValue) = 0;
@@ -698,7 +699,7 @@ public:
      *   <code>null</code>.
      * @return Returns the void* object previously associated to
      *   the given key on this node, or <code>null</code> if there was none.
-     * @see getUserData
+     * @see #getUserData
      *
      * @since DOM Level 3
      */
@@ -716,7 +717,7 @@ public:
      * @param key The key the object is associated to.
      * @return Returns the <code>void*</code> associated to the given key
      *   on this node, or <code>null</code> if there was none.
-     * @see setUserData
+     * @see #setUserData
      * @since DOM Level 3
      */
     virtual void*             getUserData(const XMLCh* key) const = 0;
@@ -758,14 +759,10 @@ public:
 
     /**
      * This attribute returns the text content of this node and its
-     * descendants. When it is defined to be null, setting it has no effect.
-     * When set, any possible children this node may have are removed and
-     * replaced by a single <code>DOMText</code> node containing the string
-     * this attribute is set to. On getting, no serialization is performed,
-     * the returned string does not contain any markup. No whitespace
-     * normalization is performed, the returned string does not contain the
-     * element content whitespaces . Similarly, on setting, no parsing is
-     * performed either, the input string is taken as pure textual content.
+     * descendants. No serialization is performed, the returned string 
+     * does not contain any markup. No whitespace normalization is 
+     * performed and the returned string does not contain the white 
+     * spaces in element content.
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
@@ -773,8 +770,8 @@ public:
      * depending on its type, as defined below:
      * <table border='1'>
      * <tr>
-     * <th>Node type</th>
-     * <th>Content</th>
+     * <td>Node type</td>
+     * <td>Content</td>
      * </tr>
      * <tr>
      * <td valign='top' rowspan='1' colspan='1'>
@@ -797,61 +794,25 @@ public:
      * </tr>
      * </table>
      * @exception DOMException
-     *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-     * @exception DOMException
      *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
      *   fit in a <code>DOMString</code> variable on the implementation
-     *   platform.
+     *   platform.     
+     * @see #setTextContext
      * @since DOM Level 3
      */
     virtual const XMLCh*           getTextContent() const = 0;
 
     /**
-     * This attribute returns the text content of this node and its
-     * descendants. When it is defined to be null, setting it has no effect.
-     * When set, any possible children this node may have are removed and
-     * replaced by a single <code>DOMText</code> node containing the string
-     * this attribute is set to. On getting, no serialization is performed,
-     * the returned string does not contain any markup. No whitespace
-     * normalization is performed, the returned string does not contain the
-     * element content whitespaces . Similarly, on setting, no parsing is
-     * performed either, the input string is taken as pure textual content.
+     * This attribute removes any possible children this node may have and, if the 
+     * new string is not empty or null, replaced by a single <code>DOMText</code> 
+     * node containing the string this attribute is set to. No parsing is 
+     * performed, the input string is taken as pure textual content.  
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
-     * <br>The string returned is made of the text content of this node
-     * depending on its type, as defined below:
-     * <table border='1'>
-     * <tr>
-     * <th>Node type</th>
-     * <th>Content</th>
-     * </tr>
-     * <tr>
-     * <td valign='top' rowspan='1' colspan='1'>
-     * ELEMENT_NODE, ENTITY_NODE, ENTITY_REFERENCE_NODE,
-     * DOCUMENT_FRAGMENT_NODE</td>
-     * <td valign='top' rowspan='1' colspan='1'>concatenation of the <code>textContent</code>
-     * attribute value of every child node, excluding COMMENT_NODE and
-     * PROCESSING_INSTRUCTION_NODE nodes</td>
-     * </tr>
-     * <tr>
-     * <td valign='top' rowspan='1' colspan='1'>ATTRIBUTE_NODE, TEXT_NODE,
-     * CDATA_SECTION_NODE, COMMENT_NODE, PROCESSING_INSTRUCTION_NODE</td>
-     * <td valign='top' rowspan='1' colspan='1'>
-     * <code>nodeValue</code></td>
-     * </tr>
-     * <tr>
-     * <td valign='top' rowspan='1' colspan='1'>DOCUMENT_NODE, DOCUMENT_TYPE_NODE, NOTATION_NODE</td>
-     * <td valign='top' rowspan='1' colspan='1'>
-     * null</td>
-     * </tr>
-     * </table>
      * @exception DOMException
-     *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-     * @exception DOMException
-     *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
-     *   fit in a <code>DOMString</code> variable on the implementation
-     *   platform.
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.     
+     * @see #getTextContext
      * @since DOM Level 3
      */
     virtual void                   setTextContent(const XMLCh* textContent) = 0;
