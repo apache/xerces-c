@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2005/04/05 18:36:01  cargilld
+ * Change platform mutex code to do a panic instead of throwing an exception as the exception code uses mutexes and this can result in infinite recursion.
+ *
  * Revision 1.25  2005/01/12 20:06:55  cargilld
  * Remove warning messages.
  *
@@ -583,8 +586,7 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutexattr_settype(attr, PTHREAD_MUTEX_RECURSIVE_NP);
     if (pthread_mutex_init(mutex, attr))
     {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                 XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
     pthread_mutexattr_destroy(attr);
     delete attr;
@@ -612,8 +614,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     {
         if (pthread_mutex_lock((pthread_mutex_t*) mtxHandle))
         {
-            ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                     XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+            panic(PanicHandler::Panic_MutexErr);
         }
     }
 }
@@ -625,8 +626,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     {
         if (pthread_mutex_unlock((pthread_mutex_t*) mtxHandle))
         {
-            ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                     XMLExcepts::Mutex_CouldNotUnlock, fgMemoryManager);
+            panic(PanicHandler::Panic_MutexErr);
         }
     }
 }

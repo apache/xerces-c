@@ -437,7 +437,7 @@ public:
 
     RecursiveMutex() {
                if (pthread_mutex_init(&mutex, NULL))
-                   ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, XMLPlatformUtils::fgMemoryManager);
+                   XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
                        recursionCount = 0;
                        tid = 0;
                      }
@@ -454,7 +454,7 @@ public:
                   return;
               }
               if (pthread_mutex_lock(&mutex) != 0)
-                  ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, XMLPlatformUtils::fgMemoryManager);
+                  XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
               tid = pthread_self();
               recursionCount = 1;
               }
@@ -465,7 +465,7 @@ public:
                               return;
 
               if (pthread_mutex_unlock(&mutex) != 0)
-                  ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, XMLPlatformUtils::fgMemoryManager);
+                  XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
                           tid = 0;
                        }
    };
@@ -477,16 +477,14 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutex_t* mutex = new pthread_mutex_t;
     if (mutex ==  NULL)
     {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                 XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
     pthread_mutexattr_t attr;
     pthread_mutexattr_create(&attr);
     pthread_mutexattr_setkind_np(&attr, MUTEX_RECURSIVE_NP);
     if (pthread_mutex_init(mutex, attr))
     {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                 XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
     pthread_mutexattr_delete(&attr);
     return (void*)(mutex);

@@ -261,7 +261,7 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutex_t *mutex = new pthread_mutex_t;
     if( pthread_mutex_init( mutex, &attr ) != EOK ) {
         delete mutex;
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
     pthread_mutexattr_destroy( &attr );
     return mutex;
@@ -279,7 +279,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
     if( mtxHandle == NULL || pthread_mutex_lock( (pthread_mutex_t *)mtxHandle ) != EOK ) {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
 }
 
@@ -287,7 +287,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
     if( mtxHandle == NULL || pthread_mutex_unlock( (pthread_mutex_t *)mtxHandle ) != EOK ) {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
 }
 

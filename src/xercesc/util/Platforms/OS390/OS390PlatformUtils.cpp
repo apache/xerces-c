@@ -981,7 +981,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     if (isPosixEnabled) {
         if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
         {
-            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+            panic(PanicHandler::Panic_MutexErr);
         }
     } // __isPosixOn
     else {
@@ -1001,7 +1001,7 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutex_t* mutex = new pthread_mutex_t;
     if (mutex == NULL)
     {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
 
     pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
@@ -1009,8 +1009,7 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutexattr_setkind_np(attr, __MUTEX_RECURSIVE);
     if (pthread_mutex_init(mutex, attr))
     {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
     pthread_mutexattr_destroy(attr);
     delete attr;
@@ -1031,7 +1030,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     if (isPosixEnabled) {
         if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
         {
-            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, fgMemoryManager);
+            panic(PanicHandler::Panic_MutexErr);
         }
     } // __isPosixOn
     else {

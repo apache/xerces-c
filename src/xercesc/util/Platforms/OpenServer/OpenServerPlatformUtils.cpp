@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2005/04/05 18:36:01  cargilld
+ * Change platform mutex code to do a panic instead of throwing an exception as the exception code uses mutexes and this can result in infinite recursion.
+ *
  * Revision 1.16  2004/09/08 13:56:42  peiyongz
  * Apache License Version 2.0
  *
@@ -467,8 +470,7 @@ public:
 
 	RecursiveMutex() {
 		if (pthread_mutex_init(&mutex, NULL))
-			ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-					 XMLExcepts::Mutex_CouldNotCreate, XMLPlatformUtils::fgMemoryManager);
+			XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
 		recursionCount = 0;
 		tid = 0;
 	}
@@ -486,8 +488,7 @@ public:
 			return;
 		}
 		if (pthread_mutex_lock(&mutex) != 0)
-			ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-					 XMLExcepts::Mutex_CouldNotLock, XMLPlatformUtils::fgMemoryManager);
+			XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
 		tid = pthread_self();
 		recursionCount = 1;
 	}
@@ -497,8 +498,7 @@ public:
 			return;
 
 		if (pthread_mutex_unlock(&mutex) != 0)
-			ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-					 XMLExcepts::Mutex_CouldNotUnlock, XMLPlatformUtils::fgMemoryManager);
+			XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
 		tid = 0;
 	}
 };

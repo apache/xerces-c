@@ -262,7 +262,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 
     if (DosRequestMutexSem( (HMTX)mtxHandle,(ULONG) SEM_INDEFINITE_WAIT) )
     {
-      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+      panic(PanicHandler::Panic_MutexErr);
     }
 #endif
 }
@@ -273,7 +273,7 @@ void* XMLPlatformUtils::makeMutex()
     HMTX hRet; // Mutex Handle
 
     if (DosCreateMutexSem(NULL, &hRet, 0, FALSE))
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     return (void*)hRet;
 #else
     return 0;
@@ -288,7 +288,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 
     if (DosReleaseMutexSem( (HMTX)mtxHandle))
     {
-      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, fgMemoryManager);
+        panic(PanicHandler::Panic_MutexErr);
     }
 #endif
 }

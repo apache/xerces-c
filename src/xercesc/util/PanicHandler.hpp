@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2005/04/05 18:36:00  cargilld
+ * Change platform mutex code to do a panic instead of throwing an exception as the exception code uses mutexes and this can result in infinite recursion.
+ *
  * Revision 1.8  2004/10/20 15:18:35  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -89,7 +92,7 @@ public:
         , Panic_SynchronizationErr
         , Panic_SystemInit
         , Panic_AllStaticInitErr
-
+        , Panic_MutexErr
         , PanicReasons_Count
     };
     //@}
