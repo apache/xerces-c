@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/10/13 19:23:34  peiyongz
+ * using ValueHashTableOf to reduce footprint
+ *
  * Revision 1.13  2004/09/28 08:54:34  amassari
  * Silence a warning about missing final "return"
  *
@@ -168,7 +171,7 @@ static XMLRegisterCleanup XSValueMutexCleanup;
 static RegularExpression* sXSValueRegEx = 0;
 static XMLRegisterCleanup XSValueRegExCleanup;
 
-RefHashTableOf<XSValue>*  XSValue::fDataTypeRegistry = 0;
+ValueHashTableOf<XSValue::DataType>*  XSValue::fDataTypeRegistry = 0;
 static XMLRegisterCleanup XSValueRegistryCleanup;
 
 static XMLMutex& gXSValueMutex()
@@ -228,52 +231,53 @@ XSValue::DataType  XSValue::getDataType(const XMLCh* const dtString)
 		{
             try {
                 //using the XMLPlatformUtils::fgMemoryManager
-                fDataTypeRegistry  = new RefHashTableOf<XSValue>(43, true, new HashXMLCh() );
+                fDataTypeRegistry  = new ValueHashTableOf<XSValue::DataType>(47);
 
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_STRING,             new  XSValue(dt_string));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN,            new  XSValue(dt_boolean));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,            new  XSValue(dt_decimal));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,              new  XSValue(dt_float));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,             new  XSValue(dt_double));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DURATION,           new  XSValue(dt_duration));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DATETIME,           new  XSValue(dt_dateTime));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_TIME,               new  XSValue(dt_time));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DATE,               new  XSValue(dt_date));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_YEARMONTH,          new  XSValue(dt_gYearMonth));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_YEAR,               new  XSValue(dt_gYear));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_MONTHDAY,           new  XSValue(dt_gMonthDay));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DAY,                new  XSValue(dt_gDay));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_MONTH,              new  XSValue(dt_gMonth));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_HEXBINARY,          new  XSValue(dt_hexBinary));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY,       new  XSValue(dt_base64Binary));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,             new  XSValue(dt_anyURI));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_QNAME,              new  XSValue(dt_QName));
-                fDataTypeRegistry->put((void*) XMLUni::fgNotationString,               new  XSValue(dt_NOTATION));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NORMALIZEDSTRING,   new  XSValue(dt_normalizedString));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_TOKEN,              new  XSValue(dt_token));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_LANGUAGE,           new  XSValue(dt_language));
-                fDataTypeRegistry->put((void*) XMLUni::fgNmTokenString,                new  XSValue(dt_NMTOKEN));
-                fDataTypeRegistry->put((void*) XMLUni::fgNmTokensString,               new  XSValue(dt_NMTOKENS));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NAME,               new  XSValue(dt_Name));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,             new  XSValue(dt_NCName));
-                fDataTypeRegistry->put((void*) XMLUni::fgIDString,                     new  XSValue(dt_ID));
-                fDataTypeRegistry->put((void*) XMLUni::fgIDRefString,                  new  XSValue(dt_IDREF));
-                fDataTypeRegistry->put((void*) XMLUni::fgIDRefsString,                 new  XSValue(dt_IDREFS));
-                fDataTypeRegistry->put((void*) XMLUni::fgEntityString,                 new  XSValue(dt_ENTITY));
-                fDataTypeRegistry->put((void*) XMLUni::fgEntitiesString,               new  XSValue(dt_ENTITIES));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_INTEGER,            new  XSValue(dt_integer));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NONPOSITIVEINTEGER, new  XSValue(dt_nonPositiveInteger));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NEGATIVEINTEGER,    new  XSValue(dt_negativeInteger));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_LONG,               new  XSValue(dt_long));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_INT,                new  XSValue(dt_int));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_SHORT,              new  XSValue(dt_short));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BYTE,               new  XSValue(dt_byte));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NONNEGATIVEINTEGER, new  XSValue(dt_nonNegativeInteger));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_ULONG,              new  XSValue(dt_unsignedLong));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_UINT,               new  XSValue(dt_unsignedInt));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_USHORT,             new  XSValue(dt_unsignedShort));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_UBYTE,              new  XSValue(dt_unsignedByte));
-                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_POSITIVEINTEGER,    new  XSValue(dt_positiveInteger));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_STRING,             XSValue::dt_string);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN,            XSValue::dt_boolean);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,            XSValue::dt_decimal);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,              XSValue::dt_float);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,             XSValue::dt_double);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DURATION,           XSValue::dt_duration);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DATETIME,           XSValue::dt_dateTime);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_TIME,               XSValue::dt_time);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DATE,               XSValue::dt_date);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_YEARMONTH,          XSValue::dt_gYearMonth);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_YEAR,               XSValue::dt_gYear);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_MONTHDAY,           XSValue::dt_gMonthDay);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DAY,                XSValue::dt_gDay);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_MONTH,              XSValue::dt_gMonth);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_HEXBINARY,          XSValue::dt_hexBinary);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY,       XSValue::dt_base64Binary);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,             XSValue::dt_anyURI);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_QNAME,              XSValue::dt_QName);
+                fDataTypeRegistry->put((void*) XMLUni::fgNotationString,               XSValue::dt_NOTATION);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NORMALIZEDSTRING,   XSValue::dt_normalizedString);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_TOKEN,              XSValue::dt_token);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_LANGUAGE,           XSValue::dt_language);
+                fDataTypeRegistry->put((void*) XMLUni::fgNmTokenString,                XSValue::dt_NMTOKEN);
+                fDataTypeRegistry->put((void*) XMLUni::fgNmTokensString,               XSValue::dt_NMTOKENS);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NAME,               XSValue::dt_Name);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,             XSValue::dt_NCName);
+                fDataTypeRegistry->put((void*) XMLUni::fgIDString,                     XSValue::dt_ID);
+                fDataTypeRegistry->put((void*) XMLUni::fgIDRefString,                  XSValue::dt_IDREF);
+                fDataTypeRegistry->put((void*) XMLUni::fgIDRefsString,                 XSValue::dt_IDREFS);
+                fDataTypeRegistry->put((void*) XMLUni::fgEntityString,                 XSValue::dt_ENTITY);
+                fDataTypeRegistry->put((void*) XMLUni::fgEntitiesString,               XSValue::dt_ENTITIES);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_INTEGER,            XSValue::dt_integer);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NONPOSITIVEINTEGER, XSValue::dt_nonPositiveInteger);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NEGATIVEINTEGER,    XSValue::dt_negativeInteger);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_LONG,               XSValue::dt_long);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_INT,                XSValue::dt_int);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_SHORT,              XSValue::dt_short);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BYTE,               XSValue::dt_byte);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NONNEGATIVEINTEGER, XSValue::dt_nonNegativeInteger);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_ULONG,              XSValue::dt_unsignedLong);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_UINT,               XSValue::dt_unsignedInt);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_USHORT,             XSValue::dt_unsignedShort);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_UBYTE,              XSValue::dt_unsignedByte);
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_POSITIVEINTEGER,    XSValue::dt_positiveInteger);
+
 
             }
             catch (...)
@@ -284,10 +288,8 @@ XSValue::DataType  XSValue::getDataType(const XMLCh* const dtString)
             XSValueRegistryCleanup.registerCleanup(XSValue::reinitRegistry);
         }
     }
-
-    XSValue* data = fDataTypeRegistry->get(dtString);
-    return data? data->fData.f_datatype : dt_MAXCOUNT;
-
+   
+    return fDataTypeRegistry->containsKey(dtString) ? fDataTypeRegistry->get(dtString) : dt_MAXCOUNT;
 }
 
 inline

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/10/13 19:23:34  peiyongz
+ * using ValueHashTableOf to reduce footprint
+ *
  * Revision 1.12  2004/09/23 21:22:47  peiyongz
  * Documentation
  * st_noContent added
@@ -60,7 +63,7 @@
 #define XSVALUE_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/ValueHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -420,7 +423,7 @@ private:
                ,       MemoryManager* const  manager
                );
 
-    static RefHashTableOf<XSValue>*    fDataTypeRegistry;
+    static ValueHashTableOf<DataType>*    fDataTypeRegistry;
 
     // -----------------------------------------------------------------------
     //  data members
