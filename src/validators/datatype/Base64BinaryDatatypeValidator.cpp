@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/17 18:13:46  tng
+ * Schema Fix: issue error message when binary data is invalid.
+ *
  * Revision 1.1  2001/05/16 15:24:40  tng
  * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
  *
@@ -465,13 +468,15 @@ void Base64BinaryDatatypeValidator::checkContent( const XMLCh* const content, bo
     if (asBase)
         return;
 
-    unsigned int base64Len = Base64::getDataLength(content);
-    if (base64Len <= 0) 
+    int base64Lentemp = Base64::getDataLength(content);
+    if (base64Lentemp <= 0) 
     {
         ThrowXML(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType);
         //ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_Not_Base64, content);
         // "Value '"+content+"' is not encoded in Base64" );
     }
+
+    unsigned int base64Len = base64Lentemp;
 
     if (((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (base64Len > getMaxLength()))
