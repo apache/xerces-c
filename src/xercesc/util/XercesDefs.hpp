@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/02/23 05:44:12  jberry
+ * Ripple through changes of BeOSDefs.h name change
+ *
  * Revision 1.11  2002/12/31 19:31:07  tng
  * [Bug 15590] BeOSDefs.hpp has wrong case in CVS.
  *
@@ -260,7 +263,7 @@
 #endif
 
 #if defined(XML_BEOS)
-#include    <xercesc/util/Platforms/BeOS/BeOSDef.hpp>
+#include    <xercesc/util/Platforms/BeOS/BeOSDefs.hpp>
 #endif
 
 #if defined(XML_LINUX)

@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.3  2003/02/23 05:44:12  jberry
+# Ripple through changes of BeOSDefs.h name change
+#
 # Revision 1.2  2002/12/31 19:30:56  tng
 # [Bug 15590] BeOSDefs.hpp has wrong case in CVS.
 #
@@ -85,7 +88,7 @@ include ../../../Makefile.incl
 
 SUBMODULE = Platforms/BeOS
 CXXFLAGS += -D_GNU_SOURCE -D__USE_GNU
-CPP_PUBHEADERS = BeOSDef.hpp
+CPP_PUBHEADERS = BeOSDefs.hpp
 CPP_OBJECTS = BeOSPlatformUtils.$(TO)
 
 include ../../Makefile.util.submodule
