@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/25 01:02:12  roddey
+ * More small fixes in the output from the recent change to get away from
+ * the util/xx streams.
+ *
  * Revision 1.3  2000/01/21 23:58:06  roddey
  * Initial move away from util streams was bad. Wide char APIs didn't allow enough
  * control to do canonical output, so changed to use std short char APIs.
@@ -864,8 +868,8 @@ void TestParser::error( const   unsigned int                errCode
             entName = &systemId[ofs + 1];
 
         cout << lineNum << "/" << colNum
-                << L":" << entName
-                << L" - " << text
+                << ":" << StrX(entName)
+                << " - " << StrX(text)
                 << endl;
         return;
     }
