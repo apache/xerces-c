@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/02/12 20:44:34  peiyongz
+ * XercesC2_5_0
+ *
  * Revision 1.20  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -180,7 +183,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  */
 
 #if defined(_WIN32) || defined(WIN32)
-extern "C" void U_IMPORT *XercesMessages2_4_0_dat;
+extern "C" void U_IMPORT *XercesMessages2_5_0_dat;
 #else
 extern "C" void U_IMPORT *XercesMessages_dat;
 #endif
@@ -204,7 +207,7 @@ static void setAppData()
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
 #if defined(_WIN32) || defined(WIN32)
-        udata_setAppData("XercesMessages", &XercesMessages2_4_0_dat, &err);
+        udata_setAppData("XercesMessages", &XercesMessages2_5_0_dat, &err);
 #else
         udata_setAppData("XercesMessages", &XercesMessages_dat, &err);
 #endif        

@@ -84,11 +84,11 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_4_0");
-    print (" -o \$HOME/xerces-c2_4_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_5_0");
+    print (" -o \$HOME/xerces-c2_5_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src2_4_0");
-    print (" -o\\xerces-c2_4_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src2_5_0");
+    print (" -o\\xerces-c2_5_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -1582,7 +1582,7 @@ sub change_windows_project_for_ICU() {
        
         if ($msgloader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_4_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_5_0.lib/g;
         }        
         elsif ($transcoder)
         {
@@ -1631,7 +1631,7 @@ sub change_windows_makefile_for_ICU() {
 
         if ($msgloader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_4_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_5_0.lib/g;
         }        
         elsif ($transcoder)
         {
@@ -1678,7 +1678,7 @@ sub change_windows_project_for_ICU_VC7() {
         
         if ($msgloader)
         {
-            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages2_4_0.lib $1/;
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages2_5_0.lib $1/;
         }        
         elsif ($transcoder)
         {
