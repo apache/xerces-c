@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.4  2003/11/25 14:20:21  neilg
+  * clean up usage of const in PSVIHandler
+  *
   * Revision 1.3  2003/11/17 18:12:00  neilg
   * PSVIAttributeList needs to be included by PSVIHandler.  Thanks to Pete Lloyd for the patch
   *
@@ -110,10 +113,10 @@ public:
       */
     virtual void handleElementPSVI
     (
-        const   XMLCh *                 localName 
+        const   XMLCh* const            localName 
         , const XMLCh* const            uri
         , const XMLCh* const            prefix
-        , const PSVIElement *           elementInfo
+        ,       PSVIElement *           elementInfo
     ) = 0;
 
     /**
@@ -130,10 +133,10 @@ public:
       */
     virtual void handleAttributesPSVI
     (
-        const   XMLCh *                 localName 
+        const   XMLCh* const            localName 
         , const XMLCh* const            uri
         , const XMLCh* const            prefix
-        , const PSVIAttributeList *     psviAttributes
+        ,       PSVIAttributeList *     psviAttributes
     ) = 0;
 
 
