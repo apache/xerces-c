@@ -58,6 +58,15 @@
 # 
 #
 # $Log$
+# Revision 1.4  2000/01/05 20:52:16  abagchi
+# Added a few echo statements to clarify what is actually happening
+# inside runConfigure. There were a few questions on why we need this
+# wrapper script. We don't, it's just a convenience.
+# PR:
+# Obtained from:
+# Submitted by:
+# Reviewed by:
+#
 # Revision 1.3  1999/12/02 18:10:51  dirkx
 # Changed exit codes from -1 to '1'. Added indirection.
 #
@@ -237,8 +246,19 @@ rm -f config.status
 ./configure
 
 echo
+echo In future, you may also directly type the following commands to create the Makefiles.
+echo
+echo export CC=$CC
+echo export CXX=$CXX
+echo export CXXFLAGS=$CXXFLAGS
+echo export CFLAGS=$CFLAGS
+echo export LIBS=$LIBS
+echo export LDFLAGS=$LDFLAGS
+echo configure
+
+echo
 echo If the result of the above commands look OK to you, go to the directory
-echo ${XERCESCROOT}/src and type \"make\" to make the XERCES-C system.
+echo ${XERCESCROOT}/src and type \"gmake\" to make the XERCES-C system.
 
 exit 0;
 

@@ -58,6 +58,15 @@
 # 
 #
 # $Log$
+# Revision 1.13  2000/01/05 20:52:44  abagchi
+# Added a few echo statements to clarify what is actually happening
+# inside runConfigure. There were a few questions on why we need this
+# wrapper script. We don't, it's just a convenience.
+# PR:
+# Obtained from:
+# Submitted by:
+# Reviewed by:
+#
 # Revision 1.12  1999/12/17 01:28:52  rahulj
 # Merged in changes submitted for UnixWare 7 port. Platform
 # specific files are still missing.
@@ -449,8 +458,21 @@ rm -f config.status
 ./configure
 
 echo
+echo In future, you may also directly type the following commands to create the Makefiles.
+echo
+echo export TRANSCODER=$TRANSCODER
+echo export MESSAGELOADER=$MESSAGELOADER
+echo export USELIBWWW=$USELIBWWW
+echo export CC=$CC
+echo export CXX=$CXX
+echo export CXXFLAGS=$CXXFLAGS
+echo export CFLAGS=$CFLAGS
+echo export LIBS=$LIBS
+echo configure
+
+echo
 echo If the result of the above commands look OK to you, go to the directory
-echo ${XERECSCROOT}/src and type \"make\" to make the XERECS-C system.
+echo ${XERCESCROOT}/src and type \"gmake\" to make the XERCES-C system.
 
 exit  0;
 
