@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.6  2003/08/14 03:00:11  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -90,6 +93,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/MonthDatatypeValidator.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -135,6 +139,10 @@ XMLDateTime* MonthDatatypeValidator::parse(const XMLCh* const content)
     try
     {
         pRetDate->parseMonth();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...)
     {

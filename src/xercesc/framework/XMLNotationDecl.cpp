@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2003/10/01 16:32:38  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.6  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -90,6 +93,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLNotationDecl.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -125,6 +129,10 @@ XMLNotationDecl::XMLNotationDecl( const XMLCh* const   notName
         fPublicId = XMLString::replicate(pubId, fMemoryManager);
         fSystemId = XMLString::replicate(sysId, fMemoryManager);
         fBaseURI  = XMLString::replicate(baseURI, fMemoryManager);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

@@ -90,6 +90,7 @@
 #include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/XMLUni.hpp>
 #include    <xercesc/util/PanicHandler.hpp>
+#include    <xercesc/util/OutOfMemoryException.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)
     #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
@@ -149,6 +150,10 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 #else
         retVal = new InMemMsgLoader(msgDomain);
 #endif
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/01 16:32:42  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.4  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -83,6 +86,7 @@
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -101,6 +105,10 @@ IdentityConstraint::IdentityConstraint(const XMLCh* const identityConstraintName
     try {
         fIdentityConstraintName = XMLString::replicate(identityConstraintName, fMemoryManager);
         fElemName = XMLString::replicate(elemName, fMemoryManager);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
 

@@ -65,6 +65,7 @@
 #include <xercesc/framework/XMLAttDef.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -187,6 +188,10 @@ XMLAttDef::XMLAttDef( const XMLCh* const           attrValue
     {
         fValue = XMLString::replicate(attrValue, fMemoryManager);
         fEnumeration = XMLString::replicate(enumValues, fMemoryManager);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

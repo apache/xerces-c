@@ -173,18 +173,10 @@ DOMStringData *DOMStringData::allocateBuffer(unsigned int length)
         + length*sizeof(XMLCh);                //  extra elem because of stub
                                                //  array in DOMStringData struct.
     DOMStringData *buf = 0;
-    try {
-        buf = (DOMStringData *) XMLPlatformUtils::fgMemoryManager->allocate
+    buf = (DOMStringData *) XMLPlatformUtils::fgMemoryManager->allocate
         (
             sizeToAllocate * sizeof(char)
         );//new char[sizeToAllocate];
-    }
-    catch (...) {
-        ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
-    }
-    if (!buf)
-       ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
-
     XMLPlatformUtils::atomicIncrement(DOMString::gLiveStringDataCount);
     XMLPlatformUtils::atomicIncrement(DOMString::gTotalStringDataCount);
     buf->fBufferLength = length;
@@ -1227,3 +1219,4 @@ static void reinitDomMutex()
 
 XERCES_CPP_NAMESPACE_END
 
+

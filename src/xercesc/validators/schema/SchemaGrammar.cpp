@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/01 16:32:42  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.8  2003/09/22 19:49:02  neilg
  * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
  *
@@ -127,6 +130,7 @@
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -177,6 +181,10 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
         //  done every time we are reset.)
         //
         reset();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
 

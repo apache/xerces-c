@@ -65,6 +65,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/util/XMLChar.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -264,6 +265,10 @@ XMLUri::XMLUri(const XMLCh* const uriSpec,
     try {
         initialize((XMLUri *)0, uriSpec);
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         cleanUp();
@@ -288,6 +293,10 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
     try {
         initialize(baseURI, uriSpec);
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         cleanUp();
@@ -310,6 +319,10 @@ XMLUri::XMLUri(const XMLUri& toCopy)
     try {
         initialize(toCopy);
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         cleanUp();
@@ -322,6 +335,10 @@ XMLUri& XMLUri::operator=(const XMLUri& toAssign)
 {
     try {
         initialize(toAssign);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...)
     {
@@ -775,6 +792,10 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
             {
                 port = XMLString::parseInt(portStr);
             }
+            catch(const OutOfMemoryException&)
+            {
+                throw;
+            }
             catch (...)
             {
                 throw;
@@ -1097,6 +1118,10 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
     try
     {
         isConformantUserInfo(newUserInfo);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...)
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/10/01 16:32:40  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.9  2003/05/15 18:37:49  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -119,6 +122,7 @@
 #include    <libgen.h>
 #include    <sys/timeb.h>
 #include    <string.h>
+#include    <xercesc/util/OutOfMemoryException.hpp>
 
 #if defined (XML_USE_ICU_MESSAGELOADER)
     #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
@@ -154,6 +158,10 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 #else
         retVal = new InMemMsgLoader(msgDomain);
 #endif
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

@@ -96,6 +96,7 @@
 
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -126,6 +127,10 @@ DOMParser::DOMParser( XMLValidator* const   valToAdopt
     try
     {
         initialize();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -429,7 +434,10 @@ void DOMParser::parse(const InputSource& source)
         fScanner->scanDocument(source);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;
@@ -449,7 +457,10 @@ void DOMParser::parse(const XMLCh* const systemId)
         fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;
@@ -469,7 +480,10 @@ void DOMParser::parse(const char* const systemId)
         fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;
@@ -1363,8 +1377,10 @@ Grammar* DOMParser::loadGrammar(const char* const systemId,
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
         fParseInProgress = false;
     }
-
-    catch(...)
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }    catch(...)
     {
         fParseInProgress = false;
         throw;
@@ -1388,7 +1404,10 @@ Grammar* DOMParser::loadGrammar(const XMLCh* const systemId,
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;
@@ -1413,7 +1432,10 @@ Grammar* DOMParser::loadGrammar(const InputSource& source,
         grammar = fScanner->loadGrammar(source, grammarType, toCache);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;

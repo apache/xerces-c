@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/01 16:32:42  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.4  2003/05/18 14:02:09  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -77,6 +80,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -90,6 +94,10 @@ XPathMatcherStack::XPathMatcherStack(MemoryManager* const manager)
 {
     try {
         fMatchers = new (manager) RefVectorOf<XPathMatcher>(8, true, manager);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
 

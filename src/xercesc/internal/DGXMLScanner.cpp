@@ -78,6 +78,7 @@
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -108,6 +109,10 @@ DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt
         {
             fValidator = fDTDValidator;
         }
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -144,6 +149,10 @@ DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
         {
             fValidator = fDTDValidator;
         }
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -273,6 +282,10 @@ void DGXMLScanner::scanDocument(const InputSource& src)
                     , excToCatch.getMessage()
                 );
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Flush the reader manager and rethrow user's error
@@ -282,6 +295,10 @@ void DGXMLScanner::scanDocument(const InputSource& src)
 
         // If it returned, then reset the reader manager and fall through
         fReaderMgr.reset();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -447,6 +464,10 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
                     , excToCatch.getMessage()
                 );
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Reset and rethrow user error
@@ -457,6 +478,10 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
         // Reset and return failure
         fReaderMgr.reset();
         return false;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -1685,7 +1710,10 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
                     , excToCatch.getMessage()
                 );
         }
-
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Flush the reader manager and rethrow user's error
@@ -1695,6 +1723,10 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
 
         // If it returned, then reset the reader manager and fall through
         fReaderMgr.reset();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

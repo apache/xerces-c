@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,43 +55,80 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2003/10/01 16:32:38  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.1  2003/04/21 16:20:41  knoaman
- * Initial check-in.
- *
+ * $Id$
  */
 
+#if !defined(OUT_OF_MEMORY_EXCEPTION_HPP)
+#define OUT_OF_MEMORY_EXCEPTION_HPP
 
-// ---------------------------------------------------------------------------
-//  Includes
-// ---------------------------------------------------------------------------
-#include <xercesc/internal/MemoryManagerImpl.hpp>
-#include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/XMLExceptMsgs.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-void* MemoryManagerImpl::allocate(size_t size)
+const XMLCh gDefOutOfMemoryErrMsg[] =
 {
-    void* memptr;
-    try {
-        memptr = ::operator new(size);
-    }
-    catch(...) {
-        throw OutOfMemoryException();
-    }
-    if (memptr != NULL) {
-        return memptr;
-    }
-    throw OutOfMemoryException();
+        chLatin_O, chLatin_u, chLatin_t, chLatin_O
+    ,   chLatin_f, chLatin_M, chLatin_e, chLatin_m
+    ,   chLatin_o, chLatin_r, chLatin_y, chNull
+};
+
+class XMLUTIL_EXPORT OutOfMemoryException : public XMemory
+{
+public:
+  
+    OutOfMemoryException();
+    ~OutOfMemoryException();
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    XMLExcepts::Codes getCode() const;
+    const XMLCh* getMessage() const;
+    const XMLCh* getType() const;
+    const char* getSrcFile() const;
+    unsigned int getSrcLine() const;
+
+    OutOfMemoryException(const OutOfMemoryException& toCopy);
+    OutOfMemoryException& operator=(const OutOfMemoryException& toAssign);
+};
+
+// constructors/destructors...
+inline OutOfMemoryException::OutOfMemoryException() {}
+inline OutOfMemoryException::~OutOfMemoryException() {}
+inline OutOfMemoryException::OutOfMemoryException(const OutOfMemoryException& toCopy) {}
+inline OutOfMemoryException& OutOfMemoryException::operator=(const OutOfMemoryException& toAssign) 
+{
+    return *this;
 }
 
-void MemoryManagerImpl::deallocate(void* p)
+// ---------------------------------------------------------------------------
+//  OutOfMemoryException: Getter methods
+// ---------------------------------------------------------------------------
+inline XMLExcepts::Codes OutOfMemoryException::getCode() const
 {
-    ::operator delete(p);
+    return XMLExcepts::Out_Of_Memory;
+}
+
+inline const XMLCh* OutOfMemoryException::getMessage() const
+{
+    return gDefOutOfMemoryErrMsg;
+}
+
+inline const XMLCh* OutOfMemoryException::getType() const
+{
+    return gDefOutOfMemoryErrMsg;
+}
+
+inline const char* OutOfMemoryException::getSrcFile() const
+{
+    return "";
+}
+    
+inline unsigned int OutOfMemoryException::getSrcLine() const {
+    return 0;
 }
 
 XERCES_CPP_NAMESPACE_END
-
+
+#endif

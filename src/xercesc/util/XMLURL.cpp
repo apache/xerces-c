@@ -73,6 +73,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLUri.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -223,6 +224,10 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
 	{
 		setURL(baseURL, relativeURL);
 	}
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanup();
@@ -252,6 +257,10 @@ XMLURL::XMLURL(const XMLCh* const  baseURL
 	{
 		setURL(baseURL, tmpRel);
 	}
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanup();
@@ -278,6 +287,10 @@ XMLURL::XMLURL(const XMLURL&         baseURL
 	{
 		setURL(baseURL, relativeURL);
 	}
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanup();
@@ -306,6 +319,10 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
 	{
 		setURL(baseURL, tmpRel);
 	}
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanup();
@@ -333,6 +350,10 @@ XMLURL::XMLURL(const XMLCh* const urlText,
 	{
 	    setURL(urlText);
 	}
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanup();
@@ -361,6 +382,10 @@ XMLURL::XMLURL(const char* const urlText,
 	{
 	    setURL(tmpText);
 	}
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanup();
@@ -391,6 +416,10 @@ XMLURL::XMLURL(const XMLURL& toCopy) :
         fQuery = XMLString::replicate(toCopy.fQuery, fMemoryManager);
         fUser = XMLString::replicate(toCopy.fUser, fMemoryManager);
         fURLText = XMLString::replicate(toCopy.fURLText, fMemoryManager);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -1438,3 +1467,4 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
 
 XERCES_CPP_NAMESPACE_END
 
+

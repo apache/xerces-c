@@ -72,7 +72,7 @@
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -95,6 +95,10 @@ WFXMLScanner::WFXMLScanner( XMLValidator* const  valToAdopt
     try
     {
         commonInit();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -123,6 +127,10 @@ WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const docHandler
     try
     {	
         commonInit();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -241,6 +249,10 @@ void WFXMLScanner::scanDocument(const InputSource& src)
                     , excToCatch.getMessage()
                 );
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Flush the reader manager and rethrow user's error
@@ -250,6 +262,10 @@ void WFXMLScanner::scanDocument(const InputSource& src)
 
         // If it returned, then reset the reader manager and fall through
         fReaderMgr.reset();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -406,6 +422,10 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
                     , excToCatch.getMessage()
                 );
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Reset and rethrow user error
@@ -416,6 +436,10 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
         // Reset and return failure
         fReaderMgr.reset();
         return false;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

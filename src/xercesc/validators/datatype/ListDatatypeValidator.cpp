@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.10  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -122,6 +125,7 @@
 #include <xercesc/validators/datatype/ListDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -432,6 +436,10 @@ void ListDatatypeValidator::inspectFacetBase()
                     {
                         for ( int j = 0; j < tokenNumber; j++)
                             getBaseValidator()->validate(tempList->elementAt(j));
+                    }
+                    catch(const OutOfMemoryException&)
+                    {
+                        throw;
                     }
                     catch (...)
                     {

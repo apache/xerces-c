@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/01 16:32:40  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.3  2003/05/15 18:42:54  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -80,6 +83,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -101,7 +105,11 @@ BMPattern::BMPattern( const XMLCh*         const pattern
         fPattern = XMLString::replicate(pattern, fMemoryManager);
 		initialize();
 	}
-	catch(...) {
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch(...) {
 
 		cleanUp();
 		throw;
@@ -124,7 +132,11 @@ BMPattern::BMPattern( const XMLCh*         const pattern
         fPattern = XMLString::replicate(pattern, fMemoryManager);
 		initialize();
 	}
-	catch(...) {
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch(...) {
 
 		cleanUp();
 		throw;

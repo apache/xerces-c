@@ -78,6 +78,7 @@
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -416,6 +417,10 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
             );
         return;
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         // Just rethrow this, since its not our problem
@@ -531,6 +536,10 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
             );
         return false;
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         // Just rethrow this, since its not our problem
@@ -626,6 +635,10 @@ bool XMLScanner::scanFirst( const   InputSource&    src
                     , excToCatch.getMessage()
                 );
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Reset and rethrow the user error
@@ -636,6 +649,10 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         // Reset and return a failure
         fReaderMgr.reset();
         return false;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -1658,6 +1675,10 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                     , excToCatch.getMessage()
                 );
                 return 0;
+        }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
         }
         catch(...)
         {

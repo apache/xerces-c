@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/10/01 16:32:39  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.13  2003/05/15 18:37:47  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -136,6 +139,7 @@
 #include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/XMLUni.hpp>
 #include    <xercesc/util/PanicHandler.hpp>
+#include    <xercesc/util/OutOfMemoryException.hpp>
 
 #if defined(XML_USE_ICU_TRANSCODER)
     #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
@@ -195,7 +199,10 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
         retVal = new InMemMsgLoader(msgDomain);
 #endif
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         panic(PanicHandler::Panic_CantLoadMsgDomain);

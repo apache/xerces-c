@@ -91,6 +91,7 @@
 #include <xercesc/util/HashPtr.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/impl/XSDElementNSImpl.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -256,6 +257,10 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
             doTraverseSchema(schemaRoot);
         }
 
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
 
@@ -2178,6 +2183,10 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         catch (const XMLException& excep) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valueToCheck);
         }
@@ -2648,6 +2657,10 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         catch (const XMLException& excep) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, deflt);
         }
@@ -2920,6 +2933,10 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
             catch (const XMLException& excep) {
                 reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
             }
+            catch(const OutOfMemoryException&)
+            {
+                throw;
+            }
             catch(...) {
                 reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
                                   XMLErrs::DatatypeValidatorCreationError, typeName);
@@ -2999,6 +3016,10 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
                 try {
                     scope = fAttributeCheck.getFacetId(facetName);
+                }
+                catch(const OutOfMemoryException&)
+                {
+                    throw;
                 }
                 catch (...) {
 
@@ -3105,6 +3126,10 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
         catch (const XMLException& excep) {
             reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...) {
             reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
                               XMLErrs::DatatypeValidatorCreationError, typeName);
@@ -3210,6 +3235,10 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     }
     catch (const XMLException& excep) {
         reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
@@ -3439,6 +3468,10 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                 try {
                     scope = fAttributeCheck.getFacetId(facetName);
                 }
+                catch(const OutOfMemoryException&)
+                {
+                    throw;
+                }
                 catch(...) {
                     break;
                 }
@@ -3528,6 +3561,10 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                 }
                 catch (const XMLException& excep) {
                     reportSchemaError(simpleContent, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+                }
+                catch(const OutOfMemoryException&)
+                {
+                    throw;
                 }
                 catch(...) {
                     reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::DatatypeValidatorCreationError, typeName);
@@ -5540,6 +5577,10 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                         catch(const XMLException& excep) {
                             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
                         }
+                        catch(const OutOfMemoryException&)
+                        {
+                            throw;
+                        }
                         catch (...) {
                             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valueConstraint);
                         }
@@ -5584,6 +5625,10 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         try {
             minOccurs = XMLString::parseInt(minOccursStr);
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch (...) {
             minOccurs = 1;
         }
@@ -5607,6 +5652,10 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         else {
             try {
                 maxOccurs = XMLString::parseInt(maxOccursStr);
+            }
+            catch(const OutOfMemoryException&)
+            {
+                throw;
             }
             catch(...) {
                 maxOccurs = minOccurs;

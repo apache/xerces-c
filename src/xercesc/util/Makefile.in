@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.37  2003/10/01 16:32:39  neilg
+# improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+#
 # Revision 1.36  2003/05/29 11:27:51  gareth
 # fix to bug #20325. Removed unused file and updated Projects.
 #
@@ -498,6 +501,7 @@ UTIL_CPP_PUBHEADERS = \
     NoSuchElementException.hpp \
     NullPointerException.hpp \
     NumberFormatException.hpp \
+	OutOfMemoryException.hpp \
     PanicHandler.hpp \
     ParseException.hpp \
     PlatformUtils.hpp \

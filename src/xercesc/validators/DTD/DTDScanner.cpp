@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.28  2003/07/10 19:50:12  peiyongz
  * Stateless Grammar: create grammar components with grammarPool's memory Manager
  *
@@ -247,7 +250,7 @@
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -518,7 +521,10 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
             {
                 scanExtSubsetDecl(false, false);
             }
-
+            catch(const OutOfMemoryException&)
+            {
+                throw;
+            }
             catch(...)
             {
                 // Pop the reader back to the original level

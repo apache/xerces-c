@@ -78,6 +78,7 @@
 #include "DOMDeepNodeListImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMNamedNodeMapImpl.hpp"
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -539,6 +540,10 @@ const XMLCh* DOMElementImpl::getBaseURI() const
                     XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
                     XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
                     uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
+                }
+                catch(const OutOfMemoryException&)
+                {
+                    throw;
                 }
                 catch (...){
                     // REVISIT: what should happen in this case?

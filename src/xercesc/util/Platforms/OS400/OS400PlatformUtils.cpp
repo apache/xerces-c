@@ -80,6 +80,7 @@
 #include    <qmhsndpm.h>
 #include    <except.h>
 #include <mih/cmpswp.h>
+#include    <xercesc/util/OutOfMemoryException.hpp>
 
 #if defined (XML_USE_ICONV400_TRANSCODER)
     #include <xercesc/util/Transcoders/Iconv400/Iconv400TransService.hpp>
@@ -165,7 +166,10 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 	retVal = new InMemMsgLoader(msgDomain);
 #endif
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         panic( PanicHandler::Panic_CantLoadMsgDomain );

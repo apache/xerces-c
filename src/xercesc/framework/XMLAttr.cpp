@@ -64,6 +64,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -106,6 +107,10 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
         fAttName = new (fMemoryManager) QName(attrPrefix, attrName, uriId, fMemoryManager);
         setValue(attrValue);
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanUp();
@@ -132,6 +137,10 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
         //  work is required to replicate that functionality here.
         fAttName = new (fMemoryManager) QName(rawName, uriId, fMemoryManager);
         setValue(attrValue);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

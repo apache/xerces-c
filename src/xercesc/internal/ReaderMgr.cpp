@@ -78,6 +78,7 @@
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/internal/ReaderMgr.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -474,7 +475,10 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 );
         }
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...) //NetAccessorException&
     {
         delete newStream;

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.6  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -112,6 +115,7 @@
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -197,6 +201,10 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
         {
             // no relative uri support here
             XMLUri  newURI(uriPart, fMemoryManager);
+        }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
         }
         catch (...)
         {

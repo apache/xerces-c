@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/01 16:32:39  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.10  2003/09/25 22:24:28  peiyongz
  * Using writeString/readString
  *
@@ -116,6 +119,7 @@
  */
 
 #include <xercesc/util/QName.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -157,6 +161,10 @@ QName::QName( const XMLCh* const   prefix
         //
         setName(prefix, localPart, uriId);
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanUp();
@@ -183,6 +191,10 @@ QName::QName( const XMLCh* const rawName
         //  work is required to replicate that functionality here.
         //
         setName(rawName, uriId);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

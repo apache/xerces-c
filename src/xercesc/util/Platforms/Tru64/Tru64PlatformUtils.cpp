@@ -79,6 +79,7 @@
 #include    <xercesc/util/XMLUni.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/PanicHandler.hpp>
+#include    <xercesc/util/OutOfMemoryException.hpp>
 
 //
 //  These control which transcoding service is used by the Tru64 version.
@@ -151,6 +152,10 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 #else
     retVal = new InMemMsgLoader(msgDomain);
 #endif
+  }
+  catch(const OutOfMemoryException&)
+  {
+    throw;
   }
   catch(...)
   {

@@ -85,6 +85,7 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -169,6 +170,10 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
             appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
         else if (fNamespaceURI)
             throw DOMException(DOMException::NAMESPACE_ERR, 0);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...) {
         this->deleteHeap();
@@ -543,6 +548,10 @@ DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
         else
             return removeChild(oldChild);
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...) {
         fDocType = tempDocType;
         fDocElement = tempDocElement;
@@ -841,16 +850,9 @@ void *         DOMDocumentImpl::allocate(size_t amount)
 		size_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
 
 		//	Try to allocate the block
-        void* newBlock = 0;
-        try {
-            newBlock = fMemoryManager->allocate((sizeOfHeader + amount) * sizeof(char)); //new char[amount + sizeOfHeader];
-        }
-        catch (...) {
-            ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
-        }
-        if (!newBlock)
-           ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
-
+        void* newBlock;
+        newBlock = fMemoryManager->allocate((sizeOfHeader + amount) * sizeof(char)); //new char[amount + sizeOfHeader];
+        
 		//	Link it into the list beyond current block, as current block
 		//	is still being subdivided. If there is no current block
 		//	then track that we have no bytes to further divide.
@@ -880,16 +882,9 @@ void *         DOMDocumentImpl::allocate(size_t amount)
 		size_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
 
         // Get a new block from the system allocator.
-        void* newBlock = 0;
-        try {
-            newBlock = fMemoryManager->allocate(kHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
-        }
-        catch (...) {
-            ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
-        }
-        if (!newBlock)
-           ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
-
+        void* newBlock;
+        newBlock = fMemoryManager->allocate(kHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
+        
         *(void **)newBlock = fCurrentBlock;
         fCurrentBlock = newBlock;
         fFreePtr = (char *)newBlock + sizeOfHeader;
@@ -1408,3 +1403,4 @@ void * DOMDocumentImpl::allocate(size_t amount, NodeObjectType type)
 }
 
 XERCES_CPP_NAMESPACE_END
+

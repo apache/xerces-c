@@ -91,6 +91,7 @@
 #include    <xercesc/util/PanicHandler.hpp>
 #include    "Path390.hpp"
 #include    "FileHandleImpl.hpp"
+#include    <xercesc/util/OutOfMemoryException.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)
     #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
@@ -135,6 +136,10 @@ void XMLPlatformUtils::platformInit()
    {
      XMLPlatformUtils::recognizeNEL(true);
    }
+   catch(const OutOfMemoryException&)
+   {
+     throw;
+   }
    catch (...)
    {
       panic(PanicHandler::Panic_SystemInit);
@@ -156,6 +161,10 @@ void XMLPlatformUtils::platformInit()
         if (!isPosixEnabled)
             isPosixEnabled = true;
       }
+   }
+   catch(const OutOfMemoryException&)
+   {
+      throw;
    }
    catch (...)
    {
@@ -195,10 +204,13 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
         retVal = new InMemMsgLoader(msgDomain);
 #endif
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
-   panic(PanicHandler::Panic_CantLoadMsgDomain);
+        panic(PanicHandler::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }

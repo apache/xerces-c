@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.42  2003/10/01 16:32:37  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.41  2003/08/14 16:31:13  gareth
  * Method added to allow serilization of custom nodes from derived classes.
  *
@@ -203,7 +206,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/dom/StDOMNode.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -639,7 +642,10 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
         destination->flush();
         return false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     //
     // DOMSystemException
     // This exception will be raised in response to any sort of IO or system
@@ -679,6 +685,10 @@ XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
     try
     {
         retVal = writeNode(&destination, nodeToWrite);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...)
     {

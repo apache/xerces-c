@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2003/10/01 16:32:38  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.27  2003/09/16 18:30:54  neilg
  * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
  *
@@ -302,7 +305,7 @@
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -345,6 +348,10 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     try
     {
         initialize();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -620,7 +627,10 @@ void SAX2XMLReaderImpl::parse (const   InputSource&    source)
         fScanner->scanDocument(source);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         fParseInProgress = false;
@@ -640,7 +650,10 @@ void SAX2XMLReaderImpl::parse (const   XMLCh* const    systemId)
         fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         fParseInProgress = false;
@@ -660,7 +673,10 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
         fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         fParseInProgress = false;
@@ -1659,7 +1675,10 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const char* const systemId,
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;
@@ -1684,7 +1703,10 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const XMLCh* const systemId,
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;
@@ -1709,7 +1731,10 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const InputSource& source,
         grammar = fScanner->loadGrammar(source, grammarType, toCache);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;

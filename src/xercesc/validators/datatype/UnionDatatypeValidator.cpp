@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.11  2003/08/16 18:42:49  neilg
  * fix for bug 22457.  Union types that are restrictions of other union types were previously considered not to inherit their parents member types.  This is at variance with the behaviour of the Java parser and apparently with the spec, so I have changed this.
  *
@@ -114,6 +117,7 @@
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -197,6 +201,10 @@ UnionDatatypeValidator::UnionDatatypeValidator(
     try
     {
         init(baseValidator, facets, enums);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...)
     {

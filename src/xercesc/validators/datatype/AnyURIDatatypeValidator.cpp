@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.8  2003/10/01 00:27:12  knoaman
  * Performance: call a static method to check the validity of URI instead of
  * creating/deleting local objects.
@@ -123,6 +126,7 @@
 #include <xercesc/validators/datatype/AnyURIDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -164,6 +168,10 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
     try
     {
         init(enums);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...)
     {
@@ -227,6 +235,10 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
                     , XMLExcepts::VALUE_URI_Malformed
                     , content);
         }
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...)
     {

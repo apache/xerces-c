@@ -82,6 +82,7 @@
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -563,7 +564,10 @@ Grammar* DOMBuilderImpl::loadGrammar(const char* const systemId,
             getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         if (grammarType == Grammar::DTDGrammarType) 
@@ -600,7 +604,10 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
             getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         if (grammarType == Grammar::DTDGrammarType) 
@@ -639,7 +646,10 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
             getScanner()->setDocTypeHandler(this);
         setParseInProgress(false);
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         if (grammarType == Grammar::DTDGrammarType) 

@@ -71,7 +71,7 @@
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 #include <xercesc/internal/XMLScannerResolver.hpp>
 #include <xercesc/internal/ElemStack.hpp>
-#include <xercesc/sax/EntityResolver.hpp>
+//#include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
@@ -97,6 +97,8 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 
@@ -133,6 +135,10 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
     try
     {
         initialize();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -441,7 +447,10 @@ void AbstractDOMParser::parse(const InputSource& source)
         fScanner->scanDocument(source);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }    
     catch(...)
     {
         fParseInProgress = false;
@@ -461,7 +470,10 @@ void AbstractDOMParser::parse(const XMLCh* const systemId)
         fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;
@@ -481,7 +493,10 @@ void AbstractDOMParser::parse(const char* const systemId)
         fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         fParseInProgress = false;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.13  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -162,6 +165,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -409,6 +413,10 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
                     catch(const XMLException& excep) {
                         schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
                     }
+                    catch(const OutOfMemoryException&)
+                    {
+                        throw;
+                    }
                     catch(...) {
                         schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue, attrVal, attName);
                     }
@@ -426,6 +434,10 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
 
         try {
             attNameId= fAttMap->get(attName);
+        }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
         }
         catch(...) {
 
@@ -543,6 +555,10 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
         }
         catch(const XMLException& excep) {
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+        }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
         }
         catch(...) {
             isInvalid = true;

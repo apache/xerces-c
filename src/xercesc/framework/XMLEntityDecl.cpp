@@ -64,7 +64,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLEntityDecl.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -119,6 +119,10 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
         fValue = XMLString::replicate(value, fMemoryManager);
         fName = XMLString::replicate(entName, fMemoryManager);
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...)
     {
         cleanUp();
@@ -144,6 +148,10 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
         dummy[0] = value;
         fValue = XMLString::replicate(dummy, fMemoryManager);
         fName = XMLString::replicate(entName, fMemoryManager);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/10/01 16:32:38  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.2  2003/09/06 22:37:55  jberry
  * Fix bug #22938. Deletion of void* is illegal. Thanks Dave Bertoni.
  *
@@ -69,14 +72,26 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/MemoryManagerArrayImpl.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 void* MemoryManagerArrayImpl::allocate(size_t size)
 {
-    //return ::operator new[](size);
-	return new char[size];
+    
+    void* memptr;
+    try {
+        //return ::operator new[](size);
+        //return new char[size];
+        memptr = new char[size];
+    }
+    catch(...) {
+        throw OutOfMemoryException();
+    }
+    if (memptr != NULL) {
+        return memptr;
+    }
+    throw OutOfMemoryException();
 }
 
 void MemoryManagerArrayImpl::deallocate(void* p)
@@ -87,3 +102,4 @@ void MemoryManagerArrayImpl::deallocate(void* p)
 
 XERCES_CPP_NAMESPACE_END
 
+

@@ -83,6 +83,7 @@
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -116,6 +117,10 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
          // use fDTDValidator as the default validator
          if (!valToAdopt)
              fValidator = fDTDValidator;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -155,6 +160,10 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
         //use fDTDValidator as the default validator
         if (!valToAdopt)
             fValidator = fDTDValidator;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -284,6 +293,10 @@ void IGXMLScanner::scanDocument(const InputSource& src)
                     , excToCatch.getMessage()
                 );
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Flush the reader manager and rethrow user's error
@@ -293,6 +306,10 @@ void IGXMLScanner::scanDocument(const InputSource& src)
 
         // If it returned, then reset the reader manager and fall through
         fReaderMgr.reset();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -464,6 +481,10 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
                     , excToCatch.getMessage()
                 );
         }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Reset and rethrow user error
@@ -474,6 +495,10 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
         // Reset and return failure
         fReaderMgr.reset();
         return false;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
@@ -2934,7 +2959,10 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
                     , excToCatch.getMessage()
                 );
         }
-
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
         catch(...)
         {
             // Flush the reader manager and rethrow user's error
@@ -2944,6 +2972,10 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
 
         // If it returned, then reset the reader manager and fall through
         fReaderMgr.reset();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

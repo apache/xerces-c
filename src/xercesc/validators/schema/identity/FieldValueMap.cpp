@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/01 16:32:42  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.6  2003/05/22 02:10:52  knoaman
  * Default the memory manager.
  *
@@ -83,6 +86,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/FieldValueMap.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -116,6 +120,10 @@ FieldValueMap::FieldValueMap(const FieldValueMap& other)
                 fValues->addElement(XMLString::replicate(other.fValues->elementAt(i), fMemoryManager));
             }
         }
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
 

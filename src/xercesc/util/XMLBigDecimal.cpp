@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/10/01 16:32:39  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.13  2003/09/25 22:24:28  peiyongz
  * Using writeString/readString
  *
@@ -128,7 +131,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/XMLChar.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -171,6 +174,10 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
         memcpy(fRawData, strValue, (fRawDataLen+1) * sizeof(XMLCh));
         fIntVal = fRawData + fRawDataLen + 1;
         parseBigDecimal(strValue, fRawDataLen);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/01 16:32:42  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.8  2003/05/18 14:02:09  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -97,6 +100,7 @@
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -116,6 +120,10 @@ XPathMatcher::XPathMatcher( XercesXPath* const xpath
 {
     try {
         init(xpath);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
 
@@ -139,6 +147,10 @@ XPathMatcher::XPathMatcher(XercesXPath* const xpath,
 {
     try {
         init(xpath);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/10/01 16:32:41  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.8  2003/08/14 03:00:11  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -97,6 +100,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -150,6 +154,10 @@ int DateTimeValidator::compare(const XMLCh* const value1
         Janitor<XMLDateTime> jName2(pDate2);
         int result = compareDates(pDate1, pDate2, true);
         return (result==INDETERMINATE)? -1 : result;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch (...) // RuntimeException e
     {

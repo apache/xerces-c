@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/01 16:32:42  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.8  2003/05/26 22:05:01  knoaman
  * Pass the memory manager to XMLString::replicate.
  *
@@ -92,6 +95,7 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/util/HashPtr.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -108,6 +112,10 @@ ValueStoreCache::ValueStoreCache(MemoryManager* const manager)
 {
     try {
         init();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
         cleanUp();

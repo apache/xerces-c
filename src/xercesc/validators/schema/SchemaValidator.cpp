@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.38  2003/10/01 16:32:42  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.37  2003/10/01 01:09:35  knoaman
  * Refactoring of some code to improve performance.
  *
@@ -273,7 +276,7 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -556,6 +559,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
                 valid = false;
             }
+            catch(const OutOfMemoryException&)
+            {
+                throw;
+            }
             catch (...) {
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 emitError(XMLValid::GenericError);
@@ -764,6 +771,10 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         catch (XMLException& idve) {
             valid = false;
             emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());       
+        }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
         }
         catch (...) {
             emitError(XMLValid::GenericError);

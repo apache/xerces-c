@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/10/01 16:32:40  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.14  2003/08/14 02:57:27  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -142,6 +145,7 @@
 #include <xercesc/util/ParseException.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -292,7 +296,11 @@ RegularExpression::RegularExpression(const char* const pattern,
         ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
 		setPattern(tmpBuf);
 	}
-	catch (...) {
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch (...) {
 
 		cleanUp();
 		throw;
@@ -327,7 +335,11 @@ RegularExpression::RegularExpression(const char* const pattern,
 		ArrayJanitor<XMLCh> janOps(tmpOptions, fMemoryManager);
 		setPattern(tmpBuf, tmpOptions);
 	}
-	catch (...) {
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch (...) {
 
 		cleanUp();
 		throw;
@@ -358,7 +370,11 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 
 		setPattern(pattern);
 	}
-	catch (...) {
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch (...) {
 
 		cleanUp();
 		throw;
@@ -389,7 +405,11 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 
 		setPattern(pattern, options);
 	}
-	catch (...) {
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch (...) {
 
 		cleanUp();
 		throw;

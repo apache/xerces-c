@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/01 16:32:39  neilg
+ * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
+ *
  * Revision 1.5  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -81,6 +84,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -111,6 +115,10 @@ XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
             fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
         }
     }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch(...) {
         cleanUp();
     }
@@ -132,6 +140,10 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
         if (fStringLen > 0) {
             fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
         }
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...) {
         cleanUp();
