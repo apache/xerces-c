@@ -428,13 +428,18 @@ Iconv400Transcoder::transcodeXML(const   XMLByte* const          srcData
         }
          else
         {
-            // <TBD> Does Iconv return an extra element to allow us to figure
-            //  out the last char size? It better!!
+            //  ICU does not return an extra element to allow us to figure
+            //  out the last char size, so we have to compute it from the
+            //  total bytes used.
             unsigned int index;
-            for (index = 0; index < charsDecoded; index++)
+            for (index = 0; index < charsDecoded - 1; index++)
             {
                 charSizes[index] = (unsigned char)(fSrcOffsets[index + 1]
                                                     - fSrcOffsets[index]);
+            }
+            if( charsDecoded > 0 ) {
+                charSizes[charsDecoded - 1] = (unsigned char)(bytesEaten
+                                              - fSrcOffsets[charsDecoded - 1]);
             }
         }
     }
@@ -543,13 +548,18 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
         }
          else
         {
-            // <TBD> Does ICU return an extra element to allow us to figure
-            //  out the last char size? It better!!
+            //  ICU does not return an extra element to allow us to figure
+            //  out the last char size, so we have to compute it from the
+            //  total bytes used.
             unsigned int index;
-            for (index = 0; index < charsDecoded; index++)
+            for (index = 0; index < charsDecoded - 1; index++)
             {
                 charSizes[index] = (unsigned char)(fSrcOffsets[index + 1]
                                                     - fSrcOffsets[index]);
+            }
+            if( charsDecoded > 0 ) {
+                charSizes[charsDecoded - 1] = (unsigned char)(bytesEaten
+                                              - fSrcOffsets[charsDecoded - 1]);
             }
         }
     }
