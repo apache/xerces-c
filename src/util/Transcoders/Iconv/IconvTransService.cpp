@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/11/20 00:28:19  rahulj
+ * Added code for case-insensitive wide character string compares
+ *
  * Revision 1.2  1999/11/17 21:52:49  abagchi
  * Changed wcscasecmp() to wcscmp() to make it work on Solaris and AIX
  * PR:
@@ -117,60 +120,47 @@ IconvTransService::~IconvTransService()
 int IconvTransService::compareIString(  const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2)
 {
-    unsigned int  lent1 = getWideCharLength(comp1);
-    unsigned int  lent2 = getWideCharLength(comp2);
+    const XMLCh* cptr1 = comp1;
+    const XMLCh* cptr2 = comp2;
 
-    wchar_t*    tmp1 = new wchar_t[lent1 + 1];
-    wchar_t*    tmp2 = new wchar_t[lent2 + 1];
+    while ((*cptr1 != NULL) && (*cptr2 != NULL))
+    {
+        wint_t  wch1 = towupper(*cptr1);
+        wint_t  wch2 = towupper(*cptr2);
+        if (wch1 < wch2)
+            return -1;
+        if (wch1 > wch2)
+            return 1;
 
-    const XMLCh*  ptr = comp1;
-    wchar_t*      target = tmp1;
-    while (*ptr++)
-        *target++ = *ptr;
-    *target = 0x00;
-    
-    ptr = comp2;
-    target = tmp2;
-    while (*ptr++)
-        *target++ = *ptr;
-    *target = 0x00;
-
-    int retval = wcscmp(tmp1, tmp2);
-
-    delete [] tmp1;
-    delete [] tmp2;
-
-    return retval;
+        cptr1++;
+        cptr2++;
+    }
+    return 0;
 }
+
 
 int IconvTransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
                                         , const unsigned int    maxChars)
 {
-    unsigned int  lent1 = getWideCharLength(comp1);
-    unsigned int  lent2 = getWideCharLength(comp2);
+    const XMLCh* cptr1 = comp1;
+    const XMLCh* cptr2 = comp2;
 
-    wchar_t*    tmp1 = new wchar_t[lent1 + 1];
-    wchar_t*    tmp2 = new wchar_t[lent2 + 1];
+    unsigned int  n = 0;
+    while ((*cptr1 != NULL) && (*cptr2 != NULL) && (n < maxChars))
+    {
+        wint_t  wch1 = towupper(*cptr1);
+        wint_t  wch2 = towupper(*cptr2);
+        if (wch1 < wch2)
+            return -1;
+        if (wch1 > wch2)
+            return 1;
 
-    const XMLCh*  ptr = comp1;
-    wchar_t*      target = tmp1;
-    while (*ptr++)
-        *target++ = *ptr;
-    *target = 0x00;
-    
-    ptr = comp2;
-    target = tmp2;
-    while (*ptr++)
-        *target++ = *ptr;
-    *target = 0x00;
-
-    int retval = wcsncmp(tmp1, tmp2, maxChars);
-
-    delete [] tmp1;
-    delete [] tmp2;
-
-    return retval;
+        cptr1++;
+        cptr2++;
+        n++;
+    }
+    return 0;
 }
 
 
