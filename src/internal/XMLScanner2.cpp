@@ -1414,7 +1414,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
                         fXsiType.set(valuePtr);
                 }
                 else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgATT_NILL)
-                         && fValidator
+                         && fValidator && fValidator->handlesSchema()
                          && !XMLString::compareString(valuePtr, SchemaSymbols::fgATTVAL_TRUE)) {
                             ((SchemaValidator*)fValidator)->setNillable(true);
                 }
