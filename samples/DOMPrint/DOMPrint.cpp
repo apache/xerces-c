@@ -485,6 +485,9 @@ int main(int argC, char* argV[])
                  << DOMString(e.getMessage()) << endl;
             retval = 3;
         }
+
+    delete formatTarget;
+    delete gFormatter;
     }
 
     delete gEncodingName;
