@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/07/07 01:08:44  andyh
+ * Parser speed up in scan of XML content.
+ *
  * Revision 1.13  2000/05/11 23:11:33  andyh
  * Add missing validity checks for stand-alone documents, character range
  * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
@@ -1662,6 +1665,15 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
             }
              else
             {
+                 //  Eat through as many plain content characters as possible without
+                 //  needing special handling
+                 //
+                if (curState == State_Waiting  &&  !gotLeadingSurrogate)
+                {
+                    while (fReaderMgr.getNextPlainContentChar(nextCh))
+                        toUse.append(nextCh);
+                }
+
                 // Try to get another char from the source
                 if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
                 {

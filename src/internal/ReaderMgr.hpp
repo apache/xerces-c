@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/07/07 01:08:44  andyh
+ * Parser speed up in scan of XML content.
+ *
  * Revision 1.9  2000/03/02 19:54:29  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -159,6 +162,7 @@ public :
     bool getNameToken(XMLBuffer& toFill);
     XMLCh getNextChar();
     bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
+    bool getNextPlainContentChar(XMLCh& chGotten);
     void getSpaces(XMLBuffer& toFill);
     void getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck);
     bool isEmpty() const;
@@ -331,6 +335,11 @@ inline bool ReaderMgr::getNameToken(XMLBuffer& toFill)
 inline bool ReaderMgr::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
 {
     return fCurReader->getNextCharIfNot(chNotToGet, chGotten);
+}
+
+inline bool ReaderMgr::getNextPlainContentChar(XMLCh& chGotten)
+{
+    return fCurReader->getNextPlainContentChar(chGotten);
 }
 
 inline bool ReaderMgr::getThrowEOE() const

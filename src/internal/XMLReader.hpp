@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/07/07 01:08:44  andyh
+ * Parser speed up in scan of XML content.
+ *
  * Revision 1.10  2000/07/06 21:00:52  jpolast
  * inlined getNextCharIfNot() for better performance
  *
@@ -232,6 +235,7 @@ public:
     bool getName(XMLBuffer& toFill, const bool token);
     bool getNextChar(XMLCh& chGotten);
     bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
+    bool getNextPlainContentChar(XMLCh& chGotten);
     bool getSpaces(XMLBuffer& toFill);
     bool getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck);
     bool peekNextChar(XMLCh& chGotten);
@@ -503,6 +507,16 @@ private:
     //      code and then hard coded into the cpp file for speed.
     // -----------------------------------------------------------------------
     static const XMLByte    fgCharCharsTable[0x10000];
+
+    //------------------------------------------------------------------------
+    //
+    //  Another character property table, to speed the handling of plain character data.
+    //
+    //    ToDo:  Figure out an efficient way to merge with the main character
+    //           properties table.
+    //
+    // -----------------------------------------------------------------------
+    static const XMLByte    fgPlainContentChars[256];
 };
 
 
@@ -634,10 +648,42 @@ inline void XMLReader::setThrowAtEnd(const bool newValue)
 }
 
 
+
+// ---------------------------------------------------------------------------
+//
+//  XMLReader: getNextPlainContentChar() method inlined for speed
+//
+// ---------------------------------------------------------------------------
+inline bool XMLReader::getNextPlainContentChar(XMLCh& chGotten)
+{
+    //
+    //  See if there is at least a char in the buffer. If not, just
+    //    return false.  The more general getNextChar routine will
+    //    succeed after this one fails.
+    //
+    if (fCharIndex >= fCharsAvail)
+    {
+        return false;
+    }
+
+
+    XMLCh c = fCharBuf[fCharIndex];
+    if (c < 255 && XMLReader::fgPlainContentChars[c])
+    {
+        fCharIndex++;
+        chGotten = c;
+        return true;
+    }
+        
+    return false;
+}
+
+
+
+
 // ---------------------------------------------------------------------------
 //  XMLReader: getNextCharIfNot() method inlined for speed
 // ---------------------------------------------------------------------------
-
 inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
 {
     //
