@@ -60,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2002/11/27 18:46:39  tng
+ * Documentation: clarify that DOMWriter::writeToString always returns string in UTF-16
+ *
  * Revision 1.8  2002/11/04 15:09:25  tng
  * C++ Namespace Support.
  *
@@ -576,7 +579,8 @@ public:
      * @param nodeToWrite  The node to be written.
      * @return  Returns the serialized data, or <code>null</code> in case a
      *   failure occured and the failure wasn't canceled by the error
-     *   handler.
+     *   handler.   The returned string is always in UTF-16.
+     *   The encoding information available in DOMWriter is ignored in writeToString().
      * @since DOM Level 3
      */
     virtual XMLCh*     writeToString(const DOMNode &nodeToWrite) = 0;
