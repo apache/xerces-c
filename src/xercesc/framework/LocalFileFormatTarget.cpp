@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2004/11/02 17:09:42  peiyongz
+ * Handling OutOfMemory exception
+ *
  * Revision 1.10  2004/09/08 13:55:57  peiyongz
  * Apache License Version 2.0
  *
@@ -54,6 +57,7 @@
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/IOException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -126,9 +130,17 @@ void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
                                      , XMLFormatter * const        )
 {
     if (count) {
-        insureCapacity(count);
-        memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
-        fIndex += count;
+        if (insureCapacity(count))
+        {
+            memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
+            fIndex += count;
+        }
+        else
+        {
+            //flush whatever we have in the buffer and the incoming byte stream
+            flushBuffer();
+            XMLPlatformUtils::writeBufferToFile(fSource, (long) count, toWrite, fMemoryManager);
+        }
     }
 
     return;
@@ -147,18 +159,37 @@ void LocalFileFormatTarget::flushBuffer()
     fDataBuf[fIndex + 3] = 0;
 }
 
-void LocalFileFormatTarget::insureCapacity(const unsigned int extraNeeded)
+/***
+ *
+ *   if the current capacity is not enough, and we can not have
+ *   enough memory for the new buffer, we got to notify the caller 
+ *
+ ***/
+bool LocalFileFormatTarget::insureCapacity(const unsigned int extraNeeded)
 {
     // If we can handle it, do nothing yet
     if (fIndex + extraNeeded < fCapacity)
-        return;
+        return true;
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
     const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
-    XMLByte* newBuf = (XMLByte*) fMemoryManager->allocate
-    (
-        (newCap+4) * sizeof(XMLByte)
-    );//new XMLByte[newCap+4];
+    XMLByte* newBuf = 0;
+
+    try
+    {
+        newBuf = (XMLByte*) fMemoryManager->allocate
+        (
+            (newCap+4) * sizeof(XMLByte)
+        );//new XMLByte[newCap+4];
+    }
+    catch(const OutOfMemoryException&)
+    {
+        return false;
+    }
+    catch (...)
+    {
+        return false;
+    }
 
     // Copy over the old stuff
     memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);
@@ -170,6 +201,7 @@ void LocalFileFormatTarget::insureCapacity(const unsigned int extraNeeded)
 
     // flush the buffer too
     flushBuffer();
+    return true;
 }
 
 XERCES_CPP_NAMESPACE_END

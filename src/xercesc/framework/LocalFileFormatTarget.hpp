@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2004/11/02 17:09:42  peiyongz
+ * Handling OutOfMemory exception
+ *
  * Revision 1.7  2004/09/08 13:55:57  peiyongz
  * Apache License Version 2.0
  *
@@ -88,7 +91,7 @@ private:
     //  Private helpers
     // -----------------------------------------------------------------------
     void flushBuffer();
-    void insureCapacity(const unsigned int extraNeeded);
+    bool insureCapacity(const unsigned int extraNeeded);
 
     // -----------------------------------------------------------------------
     //  Private data members
