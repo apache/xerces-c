@@ -1347,7 +1347,7 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 	{
 		err = FSGetCatalogInfo(
 			&ref,
-			kFSCatInfoNodeFlags | kFSCatInfoParentDirID,
+			kFSCatInfoParentDirID,
 			&catalogInfo,
 			&name,
 			static_cast<FSSpec*>(NULL),
@@ -1376,35 +1376,26 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 				bufCnt = 0;
 			}
 			
-			// Prepend a slash if this was a directory
-			if (catalogInfo.nodeFlags & kFSNodeIsDirectoryMask)
-			{
-				buf[--bufPos] = L'/';
-				++bufCnt;
-			}
-			
-			// Prepend our new name
+			// Prepend our new name and a '/'
 			bufPos -= name.length;
 			ConvertSlashToColon(
 				CopyUniCharsToXMLChs(name.unicode, &buf[bufPos], name.length, name.length),
 				name.length);
-			bufCnt += name.length;
+			buf[--bufPos] = L'/';
+			bufCnt += (name.length + 1);
 		}
 	}
 	while (err == noErr && catalogInfo.parentDirID != fsRtParID);
 	
-	// Composite '/' + existing buffer + any previous result buffer
-	ArrayJanitor<XMLCh> final(new XMLCh[1 + bufCnt + resultLen]);
-	
-	// Full pathnames always start with a leading /
-	final.get()[0] = '/';
+	// Composite existing buffer + any previous result buffer
+	ArrayJanitor<XMLCh> final(new XMLCh[bufCnt + resultLen]);
 	
 	// Copy in the static buffer
-	std::memcpy(final.get() + 1, &buf[bufPos], bufCnt * sizeof(XMLCh));
+	std::memcpy(final.get(), &buf[bufPos], bufCnt * sizeof(XMLCh));
 	
 	// Copy in the old buffer
 	if (resultLen > 0)
-		std::memcpy(final.get() + 1 + bufCnt, result.get(), resultLen * sizeof(XMLCh));
+		std::memcpy(final.get() + bufCnt, result.get(), resultLen * sizeof(XMLCh));
 	
     return final.release();
 }
@@ -1492,17 +1483,11 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 				bufCnt = 0;
 			}
 			
-			// Prepend a slash if this was a directory
-			if (catInfo.dirInfo.ioFlAttrib & kioFlAttribDirMask)
-			{
-				buf[--bufPos] = '/';
-				++bufCnt;
-			}
-
-			// Prepend our new name
+			// Prepend our new name and a '/'
 			bufPos -= nameLen;
 			ConvertSlashToColon((char*)std::memcpy(&buf[bufPos], &spec.name[1], nameLen), nameLen);
-			bufCnt += nameLen;
+			buf[--bufPos] = '/';
+			bufCnt += (nameLen + 1);
 			
 			// From here on out, ignore the input file name
 			index = -1;
@@ -1514,17 +1499,14 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 	while (err == noErr && spec.parID != fsRtParID);
 	
 	// Composite existing buffer with any previous result buffer
-	ArrayJanitor<char> final(new char[1 + bufCnt + resultLen]);
-	
-	// Full pathnames always start with a leading /
-	final.get()[0] = '/';
+	ArrayJanitor<char> final(new char[bufCnt + resultLen]);
 	
 	// Copy in the static buffer
-	std::memcpy(final.get() + 1, &buf[bufPos], bufCnt);
+	std::memcpy(final.get(), &buf[bufPos], bufCnt);
 	
 	// Copy in the old buffer
 	if (resultLen > 0)
-		std::memcpy(final.get() + 1 + bufCnt, result.get(), resultLen);
+		std::memcpy(final.get() + bufCnt, result.get(), resultLen);
 
     // Cleanup and transcode to unicode
     return XMLString::transcode(final.get());
