@@ -2,7 +2,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -54,263 +54,480 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
+# =============================================================================
+# Author: Mike Pawlowski
+# -----------------------------------------------------------------------------
+# Packages XML4C source
+# Requires Doxygen to be installed
+# Requires Graphviz to be installed
+# Requires X-windows to be running (on UNIX)
+# If running on windows, make sure cygwin utilities bin overrides windows
+# utilities bin in PATH
+# This script will not work with the perl provided by cygwin
+# -> use the ActiveState version of perl
+# =============================================================================
+# $Log$
+# Revision 1.49  2003/10/06 19:45:51  peiyongz
+# Rewrite from Mike Pawlowski.
+#
+# $Id$
 
-push(@INC, "/home/xerces-c/bin", "/home/xerces-c/bin/perl/perl-RUN/opt/perl5/lib", "/Development2/cupert/bin/perl/perl-RUN/opt/perl5/lib", "/Development/cupert/usr/local/perl/perl-RUN/opt/perl5/lib");
-require "getopt.pl";
+# Includes ////////////////////////////////////////////////////////////////////
 
-$|=1;   # Force a flush after every print
+use strict;
+use DirHandle;
+use Getopt::Std;
+use Cwd;
 
-# Set up the environment variables for XERCES-C and ICU
-$XERCESCROOT = $ENV{'XERCESCROOT'};
+# Global Variables ////////////////////////////////////////////////////////////
 
-# Check for the environment variables and exit if error
-if (!length($XERCESCROOT)) {
-        print "You must set an environment variable called XERCESCROOT to work with this script.\n";
-        exit(-1);
+my $xercescroot = undef;
+my $above_dir   = undef;
+my $packages    = undef;
+my $old_root    = undef;
+
+my $fs          = undef;
+my $doc_cmd     = undef;
+my $sub1        = undef;
+my $sub2        = undef;
+my $find_delim  = undef;
+my $lbl1        = undef;
+my $lbl2        = undef;
+
+$| = 1;
+
+# Functions ///////////////////////////////////////////////////////////////////
+
+
+# =============================================================================
+# Function [main]:
+# =============================================================================
+# =============================================================================
+
+sub main {
+
+   # --------------------------------------------------------------------------
+   # --------------------------------------------------------------------------
+
+   get_parameters();
+   determine_opts();
+   sanity_check();
+   package_sources();
+
+
+   exit( 0 );
+
 }
 
-&Getopt('o');
-$OUTPUTDIR = $opt_o;
 
-# Check for the environment variables and exit if error
-if (!length($XERCESCROOT) || !length($OUTPUTDIR)) {
-        print ("Usage is: packageSources -o<output_directory>\n");
-        print ("Example: perl packageSources.pl -oc:\\xerces-c_1_1_1\n");
-        print ("         perl packageSources.pl -o\$HOME/xerces-c_1_1_1\n");
-        exit(-1);
+# ==================================================================
+# Function [get_parameters]:
+# ==================================================================
+# ==================================================================
+
+sub get_parameters {
+
+   #----------------------------------------------------------------
+   #----------------------------------------------------------------
+
+   my %opts     = ();
+   my $help     = undef;
+
+   getopt('xhp', \%opts);
+
+   $old_root    = $opts{'x'};
+   $packages    = $opts{'p'};
+   $help        = $opts{'h'};
+
+   if ( defined( $help ) ||
+        !defined( $packages ) ||
+        !defined( $old_root ) ) {
+      print "\nperl packageSources.pl -x <xercescroot> -p <package names> [-h <help>]\n\n" .
+             "-x :  the root of Xerces-C\n" .
+             "-p :  the name of the source packages\n" .
+             "-h :  this help screen\n\n";
+      exit( 1 );
+   }
+
+   return 1;
+
 }
 
-#Fix the backslashes on the Windows platform
-$XERCESCROOT =~ s/\\/\//g;
 
-# Read the target version from the file $XERCESCROOT/src/util/XercesDefs.hpp
-$versionfile = "$XERCESCROOT/src/xercesc/util/XercesDefs.hpp";
-$openresult = open (VERSIONFILE, "<$versionfile");
+# ==================================================================
+# Function [determine_opts]:
+# ==================================================================
+# ==================================================================
 
-if ($openresult == 0) {
-   print "Sorry, I could not find the file $versionfile to pick up the version. Aborting ...\n";
-   exit(-1);
+sub determine_opts {
+
+   #----------------------------------------------------------------
+   #----------------------------------------------------------------
+
+   if ( $^O =~ /win/i ) {
+      $fs = "\\";
+      $doc_cmd = 'createDocs.bat';
+      $sub1 = "\r\n";
+      $lbl1 = '\r\n';
+      $sub2 = "\n";
+      $lbl2 = '\n';
+      $find_delim = ';';
+   } else {
+      $ENV{DISPLAY} = ':0';
+      $fs = '/';
+      $doc_cmd = 'sh createDocs.sh';
+      $sub1 = "\n";
+      $lbl1 = '\n';
+      $sub2 = "\r\n";
+      $lbl2 = '\r\n';
+      $find_delim = '\;';
+   }
+
+
+   return 1;
+
 }
 
-close(VERSIONFILE);
 
-# Now check if the target directory exists, exit if it does
-if (-e $OUTPUTDIR) {
-        print ("Error: The target directory \'$OUTPUTDIR\' already exists.\n");
-        print ("       You must start with a clean directory to package your product.\n");
-        exit(1);
+
+# ==================================================================
+# Function [sanity_check]:
+# ==================================================================
+# ==================================================================
+
+sub sanity_check {
+
+   #----------------------------------------------------------------
+   #----------------------------------------------------------------
+
+   my $zip_file = $old_root . $fs . '..' . $fs . $packages . '.zip';
+   my $tar_file = $old_root . $fs . '..' . $fs . $packages . '.tar';
+   my $gz_file  = $old_root . $fs . '..' . $fs . $packages . '.tar.gz';
+
+   if ( ! -e $old_root ) {
+      die "ERROR:  $old_root does not exist";
+   } elsif ( -e $zip_file ) {
+      die "ERROR:  $zip_file already exists";
+   } elsif ( -e $tar_file ) {
+      die "ERROR:  $tar_file already exists";
+   } elsif ( -e $gz_file ) {
+      die "ERROR:  $gz_file already exists";
+   }
+
+   return 1;
+
 }
 
-#Construct the name of the zip file by extracting the last directory name
-$srczipfiles = $OUTPUTDIR;
-$srczipfiles =~ s/.*\/([\w|-]*)$/$1/g;
-$srczipfiles = $srczipfiles . "/*";
-$srctargetdir = $OUTPUTDIR;
 
-# Find out the platform from 'uname -a'
-open(PLATFORM, "uname -a|");
-$platform = <PLATFORM>;
-$platform =~ m/(\w*)/;
-$platform = $1;
-close (PLATFORM);
+# ==================================================================
+# Function [rename_root]:
+# ==================================================================
+# ==================================================================
 
-print "\nPackaging XERCES-C sources in $srctargetdir on platform $platform ...\n";
+sub rename_root {
 
-&package_sources();
+   #----------------------------------------------------------------
+   #----------------------------------------------------------------
 
-exit(0);
+   # Retrive directory above Xerces-C root
+
+   pchdir( $old_root . $fs . '..' );
+   $above_dir = cwd();
+
+   # For some reason, cygwin on windows returns / instead of \ in the cwd
+   # -> get rid of them
+
+   if ( $^O =~ /win/i ) {
+      $above_dir =~ s/\//\\/g;
+   }
+
+   # Rename Xerces-C root
+
+   $xercescroot = $above_dir . $fs . $packages;
+   rename( $old_root, $xercescroot );
+
+   return 1;
+
+}
+
+
+# ==================================================================
+# Function [pchdir]:
+# ==================================================================
+# ==================================================================
+
+sub pchdir {
+
+   #----------------------------------------------------------------
+   my $dir = shift;
+   #----------------------------------------------------------------
+
+   my $status = 0;
+
+	print "\nChange Directory:  $dir\n";
+   $status = chdir( $dir );
+	print "\n -> Status: [$status]\n";
+
+   return 1;
+}
+
+
+# ==================================================================
+# Function [psystem]:
+# ==================================================================
+# ==================================================================
+
+sub psystem {
+
+   #----------------------------------------------------------------
+   my $command  = shift;
+   #----------------------------------------------------------------
+
+   my $status = 0;
+
+	print "\nSystem Command:  $command\n";
+   $status = system( $command );
+	print "\n -> Status: [$status]\n";
+
+   return 1;
+}
+
+
+# ==================================================================
+# Function [pmkdir]:
+# ==================================================================
+# ==================================================================
+
+sub pmkdir {
+
+   #----------------------------------------------------------------
+   my $dir = shift;
+   #----------------------------------------------------------------
+
+   my $status = 0;
+
+   print "\nMaking Directory:  $dir\n";
+   $status = mkdir( $dir, 0755 );
+	print "\n -> Status: [$status]\n";
+
+   return 1;
+}
+
+
+# ==================================================================
+# Function [convert]:
+# ==================================================================
+# ==================================================================
+
+sub convert {
+
+   #----------------------------------------------------------------
+   #----------------------------------------------------------------
+
+   my $file  = undef;
+   my $cmd   = 'find . -name "*" -exec file {} ' . $find_delim . ' | grep "text"';
+   my $line  = undef;
+   my $rest  = undef;
+   my $pid   = undef;
+
+   $pid = open( README, "$cmd |");
+   while ( $line = <README> ) {
+      ( $file, $rest ) = split( /:/, $line );
+      do_sub( $file );
+   }
+   close( README );
+
+}
+
+
+# ==================================================================
+# Function [do_sub]:
+# ==================================================================
+# ==================================================================
+
+sub do_sub {
+
+   #----------------------------------------------------------------
+   my $file = shift;
+   #----------------------------------------------------------------
+
+   my $bak  = undef;
+   my $line = undef;
+
+   print "Substituting $lbl1 with $lbl2: $file\n";
+
+   $bak = $file . '.bak';
+   rename ( $file, $bak );
+
+   open ( IN, "<$bak" );
+   open ( OUT, ">$file" );
+
+   while ( $line = <IN> ) {
+      $line =~ s/$sub1/$sub2/g;
+      print OUT $line;
+   }
+   close ( OUT );
+   close ( IN );
+   unlink ( $bak );
+
+   return 1;
+
+}
+
+
+# ==================================================================
+# Function [remove_exports]:
+# ==================================================================
+# ==================================================================
+
+sub remove_exports {
+
+   #----------------------------------------------------------------
+   my $dir = shift;
+   #----------------------------------------------------------------
+
+   my $dh   = undef;
+   my $file = undef;
+   my $bak  = undef;
+   my $line = undef;
+
+   $dh = DirHandle->new( $dir );
+
+   while ( defined ( $file = $dh->read() ) ) {
+
+      if ( $file =~ /\.html$/ ) {
+
+         print "Removing export clauses: $file\n";
+
+         $file = $dir . $fs . $file;
+         $bak = $file . '.bak';
+         rename ( $file, $bak );
+
+         open ( IN, "<$bak" );
+         open ( OUT, ">$file" );
+
+         while ( $line = <IN> ) {
+            $line =~ s/SAX_EXPORT//g;
+            $line =~ s/SAX2_EXPORT//g;
+            $line =~ s/CDOM_EXPORT//g;
+            $line =~ s/XMLPARSER_EXPORT//g;
+            $line =~ s/PARSERS_EXPORT//g;
+            $line =~ s/XMLUTIL_EXPORT//g;
+            print OUT $line;
+        }
+        close ( OUT );
+        close ( IN );
+        unlink ( $bak );
+
+      }
+   }
+
+   return 1;
+}
+
+
+# ==================================================================
+# Function [package_sources]:
+# ==================================================================
+# ==================================================================
 
 sub package_sources {
 
-   # Packaging of source files begins here
-   # We just copy over the relevant files from the actual source tree into
-   # a mirror location, and then zip (or tar) it up
+   #----------------------------------------------------------------
+   #----------------------------------------------------------------
 
-   chdir ("$srctargetdir");
+   print "\nPACKAGING SOURCES\n";
 
-   # Now copy over the files directory-by-directory
-   print ("\nCopying source tree ...\n");
-   system ("mkdir $srctargetdir");
-   print ("Targetdir is : " . $srctargetdir . "\n");
-   system("cp -Rf $XERCESCROOT/* $srctargetdir");
+   print "\nRENAMING ROOT\n\n";
 
-   # Now create the API documentation from the XML sources
-   chdir ("$srctargetdir/doc");
-   system ("doxygen");
+   rename_root();
 
-   # Now create the User documentation from the XML sources
+   print "\nEXECUTING DOXYGEN\n\n";
 
-   if ($platform =~ m/Windows/ || $platform =~ m/CYGWIN_NT/) {
-      $RM = "rm";
-      system("$RM -rf *.obj");
-      system("$RM -rf *.dep");
-      system("$RM -rf *.mak");
-      system("$RM -rf Makefile");
-      chdir ("$srctargetdir");
-      system("createdocs");
+   pchdir( $xercescroot . $fs . 'doc' );
+   psystem( 'doxygen' );
+
+   print "\nCREATING DOCS\n\n";
+
+   pchdir( $xercescroot );
+   psystem( $doc_cmd );
+
+   print "\nDELETING FILES\n\n";
+
+   pchdir( $xercescroot );
+   psystem( 'find . -depth -type "d" -name "CVS" -exec rm -fr {} ' . $find_delim );
+   psystem( 'rm -rf .' . $fs . 'samples' . $fs . 'Projects' . $fs . 'OS2' );
+   psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'OS2' );
+   psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'BCB4' );
+   psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'BCB5' );
+   psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'Unsupported' );
+   psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'VACPP40' );
+
+   print "\nCHANGING FILE PERMISSIONS\n\n";
+
+   pchdir( $xercescroot );
+   psystem( 'find . -type f -exec chmod 644 {} ' . $find_delim );
+   psystem( 'find . -type d -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "con*" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "run*" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "install*" -exec chmod 755 {} ' . $find_delim );
+
+   print "\nREMOVING EXPORT CLAUSES\n\n";
+
+   remove_exports( $xercescroot . $fs . 'doc' . $fs . 'html' . $fs . 'apiDocs' );
+
+   print "\nREMOVING MYSELF\n\n";
+
+   pchdir( $xercescroot );
+   psystem( 'rm .' . $fs . 'scripts' . $fs . 'packageSources.pl' );
+
+   if ( $^O =~ /win/i ) {
+
+      print "\nCREATING WINDOWS PACKAGE\n\n";
+
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "zip -qr ${packages}\.zip $packages" );
+
+   } else {
+
+      print "\nCREATING UNIX PACKAGE\n\n";
+
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "tar -cf ${packages}\.tar $packages" );
+      psystem ( "gzip ${packages}\.tar" );
 
    }
-   else {   # all UNIX flavors
 
-#   Docs are only building on Windows for now...
+   print "\nCONVERTING ASCII FILES\n\n";
 
-      $RM = "\\rm";
-      system("find $srctargetdir -name \"*.o\" -print -exec rm -f {} \\;");
-      system("find $srctargetdir -name \"core\" -print -exec rm -f {} \\;");
-      system("find $srctargetdir -name \"a.out\" -print -exec rm -f {} \\;");
-      system("find $srctargetdir -name \"Makefile\" -print -exec rm -f {} \\;");
-      system("find $srctargetdir -name \"*.dep\" -print -exec rm -f {} \\;");
-      system("find $srctargetdir -name \"*.mak\" -print -exec rm -f {} \\;");
+   pchdir( $xercescroot );
+   convert();
 
-      print "Changing directory permissions of the following files ...\n";
-      # Change the directory permissions
-      system ("chmod 644 `find $srctargetdir -type f -print`");
-      system ("chmod 755 `find $srctargetdir -type d -print`");
+   if ( $^O =~ /win/i ) {
 
-      # Change the script file permissions
-      system ("chmod 755 `find $srctargetdir -name runConfigure -print`");
-      system ("chmod 755 `find $srctargetdir -name configure -print`");
-      system ("chmod 755 `find $srctargetdir -name install-sh -print`");
+      print "\nCREATING UNIX PACKAGE\n\n";
 
-      # To make sure that configure script is updated, run autoconf
-      # chdir ("$srctargetdir/src");
-      # system("autoconf"); # Our configure script is special, it has OS390 and AS400 tweaks
-      # chdir ("$srctargetdir/samples");
-      # system("autoconf"); # Our configure script is special, it has OS390 and AS400 tweaks
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "tar -cf ${packages}\.tar $packages" );
+      psystem ( "gzip ${packages}\.tar" );
+
+   } else {
+
+      print "\nCREATING WINDOWS PACKAGE\n\n";
+
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "zip -qr ${packages}\.zip $packages" );
+
    }
 
-   # Delete the irrelevant parts before the packaging
-   system("$RM -f $srctargetdir/CMVC.GON");
-   system("$RM -f $srctargetdir/KEYS");
-   system("$RM -rf $srctargetdir/*.\$??");
-   system("$RM -rf $srctargetdir/*.o");
-   system("$RM -rf $srctargetdir/Build");
-   system("$RM -rf $srctargetdir/build");
-   system("$RM -rf $srctargetdir/bin");
-   system("$RM -rf $srctargetdir/obj/*.o");
-   system("$RM -rf $srctargetdir/obj/Makefile");
-   system("$RM -rf $srctargetdir/obj/*.obj");
-   system("$RM -rf $srctargetdir/lib");
-   system("$RM -rf $srctargetdir/include");
-   system("$RM -rf $srctargetdir/doc/*.zip");
 
-   system("$RM -rf $srctargetdir/samples/Projects/OS2");
-   system("$RM -rf $srctargetdir/Projects/OS2");
-   system("$RM -rf $srctargetdir/Projects/Win32/BCB4");
-   system("$RM -rf $srctargetdir/Projects/Win32/BCB5");
-   system("$RM -rf $srctargetdir/Projects/Win32/Unsupported");
-   system("$RM -rf $srctargetdir/Projects/Win32/VACPP40");
+   print "\nSOURCE PACKAGING COMPLETE\n\n";
 
-   system("$RM $srctargetdir/scripts/packageSources.pl");
-
-   chdir ($srctargetdir);
-   system("$RM -rf *.opt");
-   system("$RM -rf *.o");
-   system("$RM -rf *.so");
-   system("$RM -rf *.sl");
-   system("$RM -rf *.a");
-   system("$RM -rf *.ncb");
-   system("$RM -rf *.plg");
-   system("$RM -rf #*");
-
-   # Walk through the source directory structure and delete all CVS directories
-   &deleteCVSdirs($srctargetdir);
-
-   # remove the export clauses
-   chdir ("$srctargetdir/doc/html/apiDocs");
-   opendir (THISDIR, "$srctargetdir/doc/html/apiDocs");
-   @allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
-   @allhtmlfiles = grep(/\.html/, @allfiles);
-   closedir(THISDIR);
-   foreach $htmlfile (@allhtmlfiles) {
-       &remove_export_clauses ("$srctargetdir/doc/html/apiDocs/" . $htmlfile);
-   }
-
-   chdir ("$srctargetdir/..");
-   if ($platform =~ m/Windows/ || $platform =~ m/CYGWIN/) {
-
-      # Now package it all up using ZIP
-      print ("\n\nZIPping up all source files ...\n");
-      $srczipname = $srctargetdir . ".zip";
-      print ("zip -r $srczipname $srczipfiles");
-      system ("zip -r $srczipname $srczipfiles");
-   }
-   else {
-      # Now package it all up using TAR
-      print ("\n\nTARing all source files ...\n");
-      $srczipname = $srctargetdir . ".tar";
-      print ("tar -cvf $srczipname $srczipfiles");
-      system ("tar -cvf $srczipname $srczipfiles");
-
-      system ("gzip $srczipname");
-   }
-   print ("Done with packaging sources.\n");
+   return 1;
 }
 
-sub remove_export_clauses()
-{
-        my ($thefile) = @_;
-        print "\nRemoving export clauses in file $thefile";
-        my $thefiledotbak = $thefile . ".bak";
-        rename ($thefile, $thefiledotbak);
 
-        open (FIZZLE, $thefiledotbak);
-        open (FIZZLEOUT, ">$thefile");
-        while ($line = <FIZZLE>) {
-                $line =~ s/SAX_EXPORT//g;
-                $line =~ s/SAX2_EXPORT//g;
-                $line =~ s/CDOM_EXPORT//g;
-                $line =~ s/XMLPARSER_EXPORT//g;
-                $line =~ s/PARSERS_EXPORT//g;
-                $line =~ s/XMLUTIL_EXPORT//g;
-                print FIZZLEOUT $line;
-        }
-        close (FIZZLEOUT);
-        close (FIZZLE);
-        unlink ($thefiledotbak);
-}
+# Main Program /////////////////////////////////////////////////////////////
 
-sub deleteCVSdirs {
-	local($dir,$nlink) = @_;
-	local($dev,$ino,$mode,$subcount);
+main();
 
-	($dev,$ino,$mode,$nlink) = stat($dir) unless $nlink;
-
-	opendir(DIR, $dir) || die "Cannot open $dir";
-	local(@filenames) = readdir(DIR);
-	closedir(DIR);
-
-	if ($nlink == 2) {
-		for (@filenames) {
-			next if $_ eq '.';
-			next if $_ eq '..';
-			print "$dir/$_\n";
-		}
-	}
-	else {
-		$subcount = $nlink - 2;
-		for (@filenames) {
-			next if $_ eq '.';
-			next if $_ eq '..';
-			$name = "$dir/$_";
-                       $localName = "$_";
-			# print $name, "\n";
-			next if $subcount == 0;
-
-			($dev,$ino,$mode,$nlink) = lstat($_);			
-
-			if ($localName =~ m/CVS/i) {
-				print ("Removing $name ...\n");
-				system("$RM -rf $name");
-				next;
-			}
-			
-			next unless -d _;			
-			
-			chdir $_ || die "Cannot cd to $name";
-			&deleteCVSdirs($name,$nlink);
-			chdir '..';
-			--$subcount;
-		}
-	}
-}
