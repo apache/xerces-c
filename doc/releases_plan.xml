@@ -165,6 +165,12 @@
 		</tr>    
 
 		<tr>
+			<td>14</td>
+			<td>Roll .c code into template headers?</td>
+			<td></td>       
+		</tr>    
+
+		<tr>
 			<th></th><th colspan='2'>Features/APIs to be removed</th>
 		</tr>
 
