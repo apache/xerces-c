@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/05/28 20:24:15  tng
+ * XMLUni::fgEmptyString which is defined as "EMPTY" is incorrectly used as an empty string, should use XMLUni::fgZeroLenString instead
+ *
  * Revision 1.6  2002/02/01 22:40:44  peiyongz
  * sane_include
  *
@@ -239,7 +242,7 @@ void SAX2PrintHandlers::endElement(const XMLCh* const uri,
     fFormatter << XMLFormatter::NoEscapes << gEndElement ;
 	if ( fExpandNS )
 	{
-		if (XMLString::compareIString(uri,XMLUni::fgEmptyString) != 0)
+		if (XMLString::compareIString(uri,XMLUni::fgZeroLenString) != 0)
 				fFormatter  << uri << chColon;
 		fFormatter << localname << chCloseAngle;
 	}
@@ -279,7 +282,7 @@ void SAX2PrintHandlers::startElement(const   XMLCh* const    uri,
     fFormatter  << XMLFormatter::NoEscapes << chOpenAngle ;
 	if ( fExpandNS )
 	{
-		if (XMLString::compareIString(uri,XMLUni::fgEmptyString) != 0)
+		if (XMLString::compareIString(uri,XMLUni::fgZeroLenString) != 0)
 				fFormatter  << uri << chColon;
 		fFormatter << localname ;
 	}
@@ -297,7 +300,7 @@ void SAX2PrintHandlers::startElement(const   XMLCh* const    uri,
         fFormatter  << XMLFormatter::NoEscapes << chSpace ;
 		if ( fExpandNS )
 		{
-			if (XMLString::compareIString(attributes.getURI(index),XMLUni::fgEmptyString) != 0)
+			if (XMLString::compareIString(attributes.getURI(index),XMLUni::fgZeroLenString) != 0)
 				fFormatter  << attributes.getURI(index) << chColon;
 			fFormatter  << attributes.getLocalName(index) ;
 		}
