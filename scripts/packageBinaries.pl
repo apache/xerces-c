@@ -646,7 +646,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         psystem("cp $XERCESCROOT/XLicense.html $targetdir");
     }
     psystem("rm -f $targetdir/doc/Doxyfile");
-    psystem("rm -rf $targetdir/doc/dtd");
+    psystem("rm -rf $targetdir/doc/style");
     psystem("rm -f $targetdir/doc/*.xml");
     psystem("rm -f $targetdir/doc/*.ent");
     psystem("rm -f $targetdir/doc/*.gif");
@@ -1158,7 +1158,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         psystem("cp $XERCESCROOT/XLicense.html $targetdir");
     }
     psystem("rm -f $targetdir/doc/Doxyfile");
-    psystem("rm -rf $targetdir/doc/dtd");
+    psystem("rm -rf $targetdir/doc/style");
     psystem("rm -f $targetdir/doc/*.xml");
     psystem("rm -f $targetdir/doc/*.ent");
     psystem("rm -f $targetdir/doc/*.gif");
