@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/07/21 18:04:29  jpolast
+ * more fixes for the put() change
+ * pointed out by Erik Schroeder
+ *
  * Revision 1.15  2000/07/10 21:20:15  jpolast
  * bug fix for new put(key,value) function.
  *
@@ -403,7 +407,7 @@ Win32TransService::Win32TransService()
                 }
 
                 CPMapEntry* newEntry = new CPMapEntry(nameBuf, CPId, IEId);
-                fCPMap->put(nameBuf, newEntry);
+                fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
             }
         }
 
