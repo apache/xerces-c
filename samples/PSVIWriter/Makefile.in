@@ -91,7 +91,7 @@ HEADER_FILES=${SRC}/PSVIWriter.hpp ${SRC}/PSVIUni.hpp ${SRC}/PSVIWriterHandlers.
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(SAX2Cont)'"
+BATCH_TARGET= "//'${LOADMOD}(PSVIWRIT)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}
