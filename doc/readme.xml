@@ -57,6 +57,8 @@
                <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">
                    XML Schema Part 2: Datatypes</jump>, W3C Recommendation 2 May 2001</li>
             </ul>
+            <li>Experimental Implementation of <jump href="http://www.w3.org/TR/xml11/">
+                XML 1.1</jump>, W3C Candidate Recommendation of October 15, 2002</li>
             <li>Contains a partial implementation of the
             <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409/">
             DOM Level 3.0 Core Specification</jump>, W3C Working Draft of 09 April 2002 and
