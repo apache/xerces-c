@@ -12,9 +12,95 @@
     </tr>
 
     <tr>
+        <td>2002-02-28</td>
+        <td>Tinny Ng</td>
+        <td>Fix: ReaderMgr Should check if XMLReader is created successfully.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-28</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 1368] improper DOMStringHandle locking.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-28</td>
+        <td>Martin Kalen</td>
+        <td>[Bug 6445] Caldera (SCO) OpenServer Port.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-27</td>
+        <td>Tinny Ng</td>
+        <td>Fix: default attribute are not added when namespace is on and validation is off.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-27</td>
+        <td>Tinny Ng</td>
+        <td>Fix: SAX AttributeList::getName should attach prefix if present
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-26</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 6672] SAXValidator results in an access violation when validating against schema
+            with empty element that has default value.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-26</td>
+        <td>Khaled Noaman</td>
+        <td>Fix: Create ZeroOrOne node for PCDATA only if needed.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-25</td>
+        <td>Tinny Ng</td>
+        <td>Schema Fix: Thread-safe the built-in datatype validator registry.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-25</td>
+        <td>Tinny Ng</td>
+        <td>Merge IThreadTest and ThreadTest.  Modify ThreadTest to do schema processing, and
+            add ThreadTest to sanityTest.pl
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-20</td>
+        <td>Don Mastrovito</td>
+        <td>Project files for BCB6.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-20</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2845] HP-UX 10.20 with CC A.10.40 needs +Z instead of +z.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-20</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5977] Warnings on generating apiDocs.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-02-18</td>
         <td>PeiYong Zhang</td>
-        <td>Fix: Add code for ContentSpecNode::All in formatNode().
+        <td>Fix: Add code for ContentSpecNode::All in formatNode.
         </td>
     </tr>
 
@@ -1489,7 +1575,7 @@
     <tr>
         <td>2001-08-29</td>
         <td>Tinny Ng</td>
-        <td>Performance: No need to new the child QName in ElemStack addChild.  Remove it for performance gain. for BCB5.
+        <td>Performance: No need to new the child QName in ElemStack addChild.  Remove it for performance gain.
         </td>
     </tr>
 
