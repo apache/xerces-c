@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.6  2003/11/28 05:14:34  neilg
+  * update XMLDocumentHandler to enable stateless passing of type information for elements.  Note that this is as yet unimplemented.
+  *
   * Revision 1.5  2003/03/07 18:08:10  tng
   * Return a reference instead of void for operator=
   *
@@ -321,12 +324,12 @@ public:
       * Currently neither DOM nor SAX provide API's to return back this
       * information.
       *
-      * @param  versionStr      The value of the <code>version</code> attribute
+      * @param  versionStr      The value of the <code>version</code> pseudoattribute
       *                         of the XML decl.
-      * @param  encodingStr     The value of the <code>encoding</code> attribute
+      * @param  encodingStr     The value of the <code>encoding</code> pseudoattribute
       *                         of the XML decl.
       * @param  standaloneStr   The value of the <code>standalone</code>
-      *                         attribute of the XML decl.
+      *                         pseudoattribute of the XML decl.
       * @param  autoEncodingStr The encoding string auto-detected by the
       *                         scanner. In absence of any 'encoding' attribute in the
       *                         XML decl, the XML standard specifies how a parser can
@@ -340,6 +343,31 @@ public:
         , const XMLCh* const    standaloneStr
         , const XMLCh* const    autoEncodingStr
     ) = 0;
+
+    /** Receive notification of the name and namespace of the type that validated 
+      * the element corresponding to the most recent endElement event.
+      * This event will be fired immediately after the
+      * endElement() event that signifies the end of the element
+      * to which it applies; no other events will intervene.
+      * This method is <emEXPERIMENTAL</em> and may change, disappear 
+      * or become pure virtual at any time.
+      *
+      * This corresponds to a part of the information required by DOM Core
+      * level 3's TypeInfo interface.
+      *
+      * @param  typeName        local name of the type that actually validated
+      *                         the content of the element corresponding to the
+      *                         most recent endElement() callback
+      * @param  typeURI         namespace of the type that actually validated
+      *                         the content of the element corresponding to the
+      *                         most recent endElement() callback
+      * @experimental
+      */
+    virtual void elementTypeInfo
+    (
+        const   XMLCh* const    typeName
+        , const XMLCh* const    typeURI
+    ) { /* non pure virtual to permit backward compatibility of implementations.  */  };
     //@}
 
 
