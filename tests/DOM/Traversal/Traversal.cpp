@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2001/11/23 16:18:54  tng
+ * Elimiate compiler warning: Warning: String literal converted to char* in formal argument file in call to tassert(bool, char*, int).
+ *
  * Revision 1.2  2000/03/11 03:19:57  chchou
  * Fix bug # 19, add const keyword to API.
  * As a result, update test case.
@@ -93,7 +96,7 @@
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
-void tassert(bool c, char *file, int line)
+void tassert(bool c, const char *file, int line)
 {
     if (!c)
         printf("Failure.  Line %d,   file %s\n", line, file);
@@ -126,7 +129,7 @@ void tassert(bool c, char *file, int line)
 
 class  MyFilter : public DOM_NodeFilter {
 public:
-    
+
   MyFilter(short nodeType, bool reject=false) : DOM_NodeFilter(), fNodeType(nodeType), fReject(reject) {};
   virtual short acceptNode(const DOM_Node &node) const;
 private:
@@ -179,7 +182,7 @@ int  main()
     //
     //  Doc - Create a small document tree
     //
-    
+
     {
         //creating a DOM Tree
          /* Tests are based on the tree structure below
@@ -216,15 +219,15 @@ int  main()
         E11.appendChild(E111);
         DOM_Attr        attr01  = doc.createAttribute("Attr01");
         E11.setAttributeNode(attr01);
-        
+
         DOM_Element     E112 = doc.createElement("FirstSiblingChild2");
         E11.appendChild(E112);
 
         DOM_Element     E121 = doc.createElement("SecondSiblingChild1");
         E12.appendChild(E121);
         DOM_Attr attr02 = doc.createAttribute("Attr01");
-        E12.setAttributeNode(attr02);  
-                
+        E12.setAttributeNode(attr02);
+
         DOM_Element     E122 = doc.createElement("SecondSiblingChild2");
         E12.appendChild(E122);
 
@@ -236,11 +239,11 @@ int  main()
 
         DOM_CDATASection  cdataSec = doc.createCDATASection("DocCDataSection");
         E11.appendChild(cdataSec);
-        
+
         DOM_ProcessingInstruction  docPI = doc.createProcessingInstruction("DocPI", "DocTarget");
         E13.appendChild(docPI);
-        
-        
+
+
         /*
         following are whatToShow types:
             SHOW_ALL                       = 0x0000FFFF,
@@ -267,11 +270,11 @@ int  main()
             DOM_Node    node = doc.getFirstChild();
             unsigned long       whatToShow = DOM_NodeFilter::SHOW_ALL;
             MyFilter* filter = new MyFilter(0);
-        
+
             DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter.getWhatToShow() == 65535);
             TASSERT(iter.getExpandEntityReferences() == 1);
-            
+
             DOM_Node  nd;
             nd = iter.nextNode();
             TASSERT (nd ==root);
@@ -307,7 +310,7 @@ int  main()
             TASSERT(nd == docPI);
             nd = iter.previousNode();
             TASSERT(nd == E131);
-            
+
         }
         TESTEPILOG;
 
@@ -318,11 +321,11 @@ int  main()
             DOM_Node    node = doc.getFirstChild();
             unsigned long       whatToShow = DOM_NodeFilter::SHOW_ELEMENT;
             MyFilter* filter = new MyFilter(DOM_Node::ELEMENT_NODE);
-        
+
             DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter.getWhatToShow() == 1);
             TASSERT(iter.getExpandEntityReferences() == 1);
-            
+
             DOM_Node  nd;
             nd = iter.nextNode();
             TASSERT (nd ==root);
@@ -360,12 +363,12 @@ int  main()
             DOM_Node    node = doc.getFirstChild();
             unsigned long       whatToShow = DOM_NodeFilter::SHOW_TEXT;
             MyFilter* filter = new MyFilter(DOM_Node::TEXT_NODE);
-        
+
             DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
-            
+
             TASSERT(iter.getWhatToShow() == 4);
             TASSERT(iter.getExpandEntityReferences() == 1);
-            
+
             DOM_Node  nd;
             nd = iter.nextNode();
             TASSERT (nd ==textNode1);
@@ -373,27 +376,27 @@ int  main()
             TASSERT (nd ==textNode2);
             nd = iter.previousNode();
             TASSERT(nd == textNode2);
-            
+
         }
         TESTEPILOG;
         TESTPROLOG;
         {
             //CDataSection node itearating test
-            
+
             DOM_Node    node = doc.getFirstChild();
             unsigned long       whatToShow = DOM_NodeFilter::SHOW_CDATA_SECTION;
             MyFilter* filter = new MyFilter(DOM_Node::CDATA_SECTION_NODE);
-        
+
             DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter.getWhatToShow() == 8);
             TASSERT(iter.getExpandEntityReferences() == 1);
-            
+
             DOM_Node  nd;
             nd = iter.nextNode();
             TASSERT(nd == cdataSec);
             nd = iter.nextNode();
             TASSERT(nd == 0);
-        
+
         }
         TESTEPILOG;
         TESTPROLOG;
@@ -403,31 +406,31 @@ int  main()
             DOM_Node    node = doc.getFirstChild();
             unsigned long       whatToShow = DOM_NodeFilter::SHOW_PROCESSING_INSTRUCTION;
             MyFilter* filter = new MyFilter(DOM_Node::PROCESSING_INSTRUCTION_NODE);
-        
+
             DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter.getWhatToShow() == 64);
             TASSERT(iter.getExpandEntityReferences() == 1);
-            
+
             DOM_Node  nd;
             nd = iter.nextNode();
             TASSERT(nd == docPI);
             nd = iter.nextNode();
             TASSERT(nd == 0);
-        
-        
+
+
         }
         TESTEPILOG;
-       
+
         TESTPROLOG;
         {
             DOM_Node    node = doc.getFirstChild();
             unsigned long       whatToShow = DOM_NodeFilter::SHOW_COMMENT;
             MyFilter* filter = new MyFilter(DOM_Node::COMMENT_NODE);
-        
+
             DOM_NodeIterator  iter = doc.createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter.getWhatToShow() == 128);
             TASSERT(iter.getExpandEntityReferences() == 1);
-            
+
             DOM_Node  nd;
             nd = iter.nextNode();
             TASSERT(nd == comment);
@@ -437,10 +440,10 @@ int  main()
         }
         TESTEPILOG;
 
-        
+
 
         ////////// TreeWalker Test Cases ////////////////
-       
+
 
         TESTPROLOG;
         {
@@ -534,15 +537,15 @@ int  main()
             TASSERT(tw.nextNode() == 0);    //E11 rejected so can't get to textNode1
         }
         TESTEPILOG;
-       
+
     };
-  
+
 
     //
     //  Print Final allocation stats for full test
     //
     DomMemDebug().print();
-    
+
     return 0;
     };
-    
+

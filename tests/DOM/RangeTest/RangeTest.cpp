@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -63,8 +63,8 @@
 
 /** This RangeTest tests all of the cases delineated as examples
  *  in the DOM Level 2 Range specification, and a few others.
- *  <p>These do not by any means completely test the API and 
- *  corner cases. 
+ *  <p>These do not by any means completely test the API and
+ *  corner cases.
  */
 
 #include <stdio.h>
@@ -82,7 +82,7 @@
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
-void tassert(bool c, char *file, int line)
+void tassert(bool c, const char *file, int line)
 {
     if (!c)
         printf("Failure.  Line %d,   file %s\n", line, file);
@@ -130,13 +130,13 @@ int  main()
 
     /*
     Range tests include testing of
-    
+
     createRange
 
-    setStart, setStartBefore. setStartAfter, 
+    setStart, setStartBefore. setStartAfter,
     setEnd, setEndBefore. setEndAfter
     getStartContainer, getStartOffset
-    getEndContainer, getEndOffset    
+    getEndContainer, getEndOffset
     getCommonAncestorContainer
     selectNode
     selectNodeContents
@@ -152,38 +152,38 @@ int  main()
     toString
     detach
     removeChild
-    */  
+    */
     {
-        
+
         {
             DOM_Document    doc = DOM_Document::createDocument();
             //Creating a root element
             DOM_Element     root = doc.createElement("Body");
             doc.appendChild(root);
-            
+
             //Creating the siblings of root
             DOM_Element     E11 = doc.createElement("H1");
             root.appendChild(E11);
-            
+
             DOM_Element     E12 = doc.createElement("P");
             root.appendChild(E12);
-            
+
             //Attaching texts to siblings
             DOM_Text        textNode1 = doc.createTextNode("Title");
             E11.appendChild(textNode1);
-            
+
             DOM_Text        textNode11 = doc.createTextNode("AnotherText");
             E11.appendChild(textNode11);
-            
+
             DOM_Text        textNode2 = doc.createTextNode("Blah xyz");
             E12.appendChild(textNode2);
-            
+
             DOM_Text     E210 = doc.createTextNode("insertedText");
-            
-            
+
+
         }
-        
-        
+
+
         TESTPROLOG;
         {
             //DOM Tree and some usable node creation
@@ -191,37 +191,37 @@ int  main()
             //Creating a root element
             DOM_Element     root = doc.createElement("Body");
             doc.appendChild(root);
-            
+
             //Creating the siblings of root
             DOM_Element     E11 = doc.createElement("H1");
             root.appendChild(E11);
-            
+
             DOM_Element     E12 = doc.createElement("P");
             root.appendChild(E12);
-            
+
             //Attaching texts to siblings
             DOM_Text        textNode1 = doc.createTextNode("Title");
             E11.appendChild(textNode1);
-            
+
             DOM_Text        textNode11 = doc.createTextNode("AnotherText");
             E11.appendChild(textNode11);
-            
+
             DOM_Text        textNode2 = doc.createTextNode("Blah xyz");
             E12.appendChild(textNode2);
-            
+
             //experimental nodes
             DOM_Element     E120 = doc.createElement("Element1");
             DOM_Element     E121 = doc.createElement("Element2");
             DOM_Element     E122 = doc.createElement("Element3");
             DOM_Element     E311 = doc.createElement("SurroundNode1");
-            
+
             DOM_Text     E210 = doc.createTextNode("insertedText");
-            
+
             DOM_Node rt = doc.getDocumentElement();
             DOM_Range range = doc.createRange();
 
-     
-     
+
+
             //Tests start here
             // Initial dom tree looks like :
             // <Body><H1>TitleAnother Text</H1><P>Blah xyz</P></Body>
@@ -232,12 +232,12 @@ int  main()
             //  |           |                    |
             //  "Title"  "Another Text"        "Blah xyz"
 
-  
+
             //test for start and end settings of a range
             range.setStart(rt.getFirstChild(), 0);
             TASSERT(range.getStartContainer() == rt.getFirstChild() );
             TASSERT(range.getStartOffset() == 0);
-  
+
             range.setEnd(rt.getFirstChild(), 1);
             TASSERT(range.getEndContainer() == rt.getFirstChild() );
             TASSERT(range.getEndOffset() == 1);
@@ -245,7 +245,7 @@ int  main()
 
             DOM_Node node = range.getCommonAncestorContainer();
             TASSERT(range.getCommonAncestorContainer() == rt.getFirstChild());
-           
+
             //selection related test
             range.selectNode(rt.getLastChild());
             TASSERT(range.getStartContainer() == rt);
@@ -255,7 +255,7 @@ int  main()
 
             //insertion related tests
             range.insertNode(E120);
- 
+
             //only end offset moves and new node gets into range as being inserted at boundary point
             TASSERT(range.getStartContainer() == rt);
             TASSERT(range.getStartOffset() == 1);
@@ -302,7 +302,7 @@ int  main()
             TASSERT(range.getStartContainer() == rt.getFirstChild().getNextSibling().getFirstChild());
             TASSERT(range.getStartContainer().getNodeValue().equals("Title"));
             TASSERT(range.getStartOffset() == 2);
-          
+
             range.setEnd(rt.getFirstChild().getNextSibling().getFirstChild(), 4);
             TASSERT(range.getEndContainer() == rt.getFirstChild().getNextSibling().getFirstChild());
             TASSERT(range.getEndContainer().getNodeValue().equals("Title"));
@@ -350,7 +350,7 @@ int  main()
             //
             // range has "ReplacedText" as start container and "tle" as end container
             //   and 0 as start offset, 2 as end offset
-       
+
             //changing the selection. Preparing for 'surround'
             range.setStart(range.getStartContainer().getParentNode(), 2);
             range.setEnd(range.getStartContainer(), 5);
@@ -358,7 +358,7 @@ int  main()
             TASSERT(range.getEndContainer().getNodeName().equals("H1"));
             TASSERT(range.toString().equals("insertedTexttle"));
 
-            range.surroundContents(E311);          
+            range.surroundContents(E311);
             TASSERT(range.getStartContainer().getNodeName().equals("H1"));
             TASSERT(range.getStartOffset() == 2);
             TASSERT(range.getEndContainer().getNodeName().equals("H1"));
@@ -380,8 +380,8 @@ int  main()
             //                          Element1(E120)   "insertedText"(E210)   "tle"
             //
             // range has H1 as start and end container and 2 as start offset, 3 as end offset
-                 
-            //testing cloning            
+
+            //testing cloning
             DOM_Range aRange = range.cloneRange();
 
             TASSERT(aRange.getStartContainer() == range.getStartContainer());
@@ -393,7 +393,7 @@ int  main()
 
             //comparing the ranges
             short compVal = range.compareBoundaryPoints(DOM_Range::END_TO_END, aRange);
-            TASSERT(compVal == 0); 
+            TASSERT(compVal == 0);
             compVal = range.compareBoundaryPoints(DOM_Range::START_TO_START, aRange);
             TASSERT(compVal == 1);
             compVal = range.compareBoundaryPoints(DOM_Range::START_TO_END, aRange);
@@ -407,14 +407,14 @@ int  main()
             TASSERT(range.getStartOffset() == 2);
             TASSERT(range.getEndOffset() == 3);
 
-            //selectNodeContents 
+            //selectNodeContents
             range.selectNodeContents(rt.getLastChild().getFirstChild());
             TASSERT(range.getStartContainer() == rt.getLastChild().getFirstChild());
             TASSERT(range.getEndContainer() == rt.getLastChild().getFirstChild());
             TASSERT(range.getStartOffset() == 0);
             TASSERT(range.getEndOffset() == 8);
             TASSERT(range.toString().equals("Blah xyz"));
-            
+
             //testing collapse
             range.collapse(true); //collapse to start
             TASSERT(range.getCollapsed() == true);
@@ -423,7 +423,7 @@ int  main()
             TASSERT(range.toString().equals(""));
             TASSERT(aRange.getEndOffset() == 3); //other range is unaffected
             TASSERT(aRange.toString().equals("eplacedTextinsertedTexttle"));
-           
+
             //After above operations, now the tree looks like:
             // <Body><Element3/><H1>ReplacedText<SurroundNode1><Element1/>insertedTexttle</SurroundNode1>Another Text</H1><Element2/><P>Blah xyz</P></Body>
             //i.e.,            Body(rt)
@@ -439,15 +439,15 @@ int  main()
             // range has "Blah xyz" as start and end container and 0 as start and end offset (collapsed)
             // aRange has "ReplacedText" as start container and H1 as end container
             //    and 1 as start offset and 3 as end offset
-       
+
             DOM_DocumentFragment docFrag = aRange.cloneContents();
             TASSERT( docFrag != 0);
             range.selectNode(rt.getFirstChild());
-            TASSERT(range.getStartContainer() == rt); 
+            TASSERT(range.getStartContainer() == rt);
             TASSERT(range.getEndContainer() == rt);
             TASSERT(range.getStartOffset() == 0);
             TASSERT(range.getEndOffset() == 1);
-            
+
             //Testing toString()
             const char* str = aRange.toString().transcode();
             char* str2 = "eplacedTextinsertedTexttle";
@@ -460,16 +460,16 @@ int  main()
             TASSERT(range.getEndOffset() == 0);
             range.setStartAfter(rt.getLastChild());
             TASSERT(range.getStartOffset() == 4);
-           
+
             range.setStartAfter(rt.getFirstChild());
             TASSERT(range.getStartOffset() == 1);
-            
+
             range.setEndBefore(rt.getLastChild());
             TASSERT(range.getEndOffset() == 3);
-            
+
             range.setEndAfter(rt.getLastChild());
             TASSERT(range.getEndOffset() == 4);
-            
+
             //testing extract()
             DOM_DocumentFragment frag2 = range.extractContents();
             TASSERT( frag2 != 0);
@@ -894,21 +894,21 @@ int  main()
 
     }
     TESTEPILOG;
-            
-    
+
+
     } //creating the dom tree and tests
-    
-    
+
+
     //
     //  Print Final allocation stats for full test
     //
     DomMemDebug().print();
-    
+
     // And call the termination method
     XMLPlatformUtils::Terminate();
-    
+
     return 0;
 };
 
- 
-    
+
+

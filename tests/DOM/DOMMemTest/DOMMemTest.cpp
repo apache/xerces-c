@@ -80,7 +80,7 @@
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
-void tassert(bool c, char *file, int line)
+void tassert(bool c, const char *file, int line)
 {
     if (!c)
         printf("Failure.  Line %d,   file %s\n", line, file);

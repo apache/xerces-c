@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2001/11/23 16:18:54  tng
+ * Elimiate compiler warning: Warning: String literal converted to char* in formal argument file in call to tassert(bool, char*, int).
+ *
  * Revision 1.3  2001/07/19 20:45:16  tng
  * Add some test cases in the tests folder to sanityTest.pl
  *
@@ -90,7 +93,7 @@
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
-void tassert(bool c, char *file, int line)
+void tassert(bool c, const char *file, int line)
 {
     if (!c)
         printf("Failure.  Line %d,   file %s\n", line, file);
