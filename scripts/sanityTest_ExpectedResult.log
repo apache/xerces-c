@@ -174,6 +174,7 @@ Options:
                 Default to off (Input file is an XML file).
     -v=xxx      Validation scheme [always | never | auto*].
     -f          Enable full schema constraint checking processing. Defaults to off.
+    -i          Enable identity constraint checking processing. Defaults to on.    
     -p          Enable namespace-prefixes feature. Defaults to off.
     -n          Disable namespace processing. Defaults to on.
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
