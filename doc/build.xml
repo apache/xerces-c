@@ -68,7 +68,7 @@
 		
 	 	<table>
 	        <tr><td><em>Operating System</em></td><td><em>Compiler</em></td></tr>
-	        <tr><td>Redhat Linux 6.0</td><td>gcc</td></tr>
+	        <tr><td>Redhat Linux 6.0</td><td>egcs-2.91.66 &amp; glibc-2.1.1-6</td></tr>
 	        <tr><td>AIX 4.1.4  and higher</td><td>xlC 3.1</td></tr>
 	        <tr><td>Solaris 2.6</td><td>CC version 4.2</td></tr>
 	        <tr><td>HP-UX B10.2</td><td>aCC and CC</td></tr>
