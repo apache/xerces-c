@@ -836,8 +836,11 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
-            if (XMLString::equals(oneAttrib -> getName(), XMLNS))    //for xmlns=...
+            bool foundXMLNS = false;
+            if (XMLString::equals(oneAttrib -> getName(), XMLNS)) {   //for xmlns=...
                 attrURIId = fScanner->getXMLNSNamespaceId();
+                foundXMLNS = true;
+            }
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                 namespaceURI = fScanner->getURIText(attrURIId);   //get namespaceURI
             }
@@ -887,9 +890,12 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                         attr->setTypeInfo(SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
                     }
                 }
-                else {
+                else if(foundXMLNS || XMLString::equals(oneAttrib->getPrefix(), XMLUni::fgXMLNSString)){
                     //for normal ns attrs
                     attr->setTypeInfo(SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+                }
+                else {
+                    attr->setTypeInfo(SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
                 }
             }
         }
