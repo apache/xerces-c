@@ -700,9 +700,10 @@ short DOMRangeImpl::compareBoundaryPoints(DOMRange::CompareHow how, const DOMRan
     // we use relative node depth walking which is usually faster
 
     int depthDiff = 0;
-    for ( DOMNode* n = pointB; n != 0; n = n->getParentNode() )
+    DOMNode* n = 0;
+    for ( n = pointB; n != 0; n = n->getParentNode() )
         depthDiff++;
-    for ( DOMNode* n = pointA; n != 0; n = n->getParentNode() )
+    for ( n = pointA; n != 0; n = n->getParentNode() )
         depthDiff--;
     while (depthDiff > 0) {
         pointB = pointB->getParentNode();
@@ -720,7 +721,7 @@ short DOMRangeImpl::compareBoundaryPoints(DOMRange::CompareHow how, const DOMRan
         pointB = pB;
         pointA = pA;
     }
-    for ( DOMNode* n = pointB->getNextSibling();
+    for ( n = pointB->getNextSibling();
          n != 0;
          n = n->getNextSibling() )
     {
