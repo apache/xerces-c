@@ -90,7 +90,6 @@ DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt
                          , MemoryManager* const manager) :
 
     XMLScanner(valToAdopt, grammarResolver, manager)
-    , fElemStack(manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)
@@ -130,7 +129,6 @@ DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
                           , MemoryManager* const      manager) :
 
     XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, grammarResolver, manager)
-    , fElemStack(manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)

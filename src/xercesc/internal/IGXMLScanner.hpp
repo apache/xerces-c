@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/22 20:22:30  knoaman
+ * Prepare for annotation support.
+ *
  * Revision 1.10  2003/09/22 19:51:41  neilg
  * scanners should maintain their own pools of undeclared elements, rather than requiring grammars to do this.  This makes grammar objects stateless with regard to validation.
  *
@@ -94,7 +97,6 @@
 #define IGXMLSCANNER_HPP
 
 #include <xercesc/internal/XMLScanner.hpp>
-#include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/util/RefHash3KeysIdPool.hpp>
@@ -288,10 +290,6 @@ private :
     // -----------------------------------------------------------------------
     //  Data members
     //
-    //  fElemStack
-    //      This is the element stack that is used to track the elements that
-    //      are currently being worked on.
-    //
     //  fRawAttrList
     //      During the initial scan of the attributes we can only do a raw
     //      scan for key/value pairs. So this vector is used to store them
@@ -332,7 +330,6 @@ private :
     Grammar::GrammarType        fGrammarType;
     unsigned int                fElemStateSize;
     unsigned int*               fElemState;
-    ElemStack                   fElemStack;
     XMLBuffer                   fContent;
     RefVectorOf<KVStringPair>*  fRawAttrList;
     DTDValidator*               fDTDValidator;

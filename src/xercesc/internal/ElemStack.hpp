@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/22 20:22:30  knoaman
+ * Prepare for annotation support.
+ *
  * Revision 1.6  2003/05/16 21:36:57  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -119,11 +122,18 @@
 
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/QName.hpp>
+#include <xercesc/util/ValueVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLElementDecl;
 class Grammar;
+
+struct PrefMapElem : public XMemory
+{
+    unsigned int        fPrefId;
+    unsigned int        fURIId;
+};
 
 //
 //  During the scan of content, we have to keep up with the nesting of
@@ -184,12 +194,6 @@ public :
     //      affected by an sibling xmlns attributes, whereas elements are
     //      affected by its own xmlns attributes.
     // -----------------------------------------------------------------------
-    struct PrefMapElem : public XMemory
-    {
-        unsigned int        fPrefId;
-        unsigned int        fURIId;
-    };
-
     struct StackElem : public XMemory
     {
         XMLElementDecl*     fThisElement;
@@ -264,7 +268,9 @@ public :
         , const MapModes        mode
         ,       bool&           unknown
     )   const;
-
+    ValueVectorOf<PrefMapElem*>* getNamespaceMap() const;
+    unsigned int getPrefixId(const XMLCh* const prefix) const;
+    const XMLCh* getPrefixForId(unsigned int prefId) const;
 
     // -----------------------------------------------------------------------
     //  Miscellaneous methods
@@ -333,18 +339,19 @@ private :
     //      the 'xml' and 'xmlns' namespaces. And also its prefix pool id,
     //      which is stored here for fast access.
     // -----------------------------------------------------------------------
-    unsigned int    fEmptyNamespaceId;
-    unsigned int    fGlobalPoolId;
-    XMLStringPool   fPrefixPool;
-    StackElem**     fStack;
-    unsigned int    fStackCapacity;
-    unsigned int    fStackTop;
-    unsigned int    fUnknownNamespaceId;
-    unsigned int    fXMLNamespaceId;
-    unsigned int    fXMLPoolId;
-    unsigned int    fXMLNSNamespaceId;
-    unsigned int    fXMLNSPoolId;
-    MemoryManager*  fMemoryManager;
+    unsigned int                 fEmptyNamespaceId;
+    unsigned int                 fGlobalPoolId;
+    XMLStringPool                fPrefixPool;
+    StackElem**                  fStack;
+    unsigned int                 fStackCapacity;
+    unsigned int                 fStackTop;
+    unsigned int                 fUnknownNamespaceId;
+    unsigned int                 fXMLNamespaceId;
+    unsigned int                 fXMLPoolId;
+    unsigned int                 fXMLNSNamespaceId;
+    unsigned int                 fXMLNSPoolId;
+    ValueVectorOf<PrefMapElem*>* fNamespaceMap;
+    MemoryManager*               fMemoryManager;
 };
 
 
@@ -380,12 +387,6 @@ public :
     //      affected by an sibling xmlns attributes, whereas elements are
     //      affected by its own xmlns attributes.
     // -----------------------------------------------------------------------
-    struct PrefMapElem : public XMemory
-    {
-        unsigned int        fPrefId;
-        unsigned int        fURIId;
-    };
-
     struct StackElem : public XMemory
     {
         int                 fTopPrefix;        
@@ -578,6 +579,16 @@ inline void ElemStack::setCurrentURI(unsigned int uri)
 {
     fStack[fStackTop-1]->fCurrentURI = uri;
     return;
+}
+
+inline unsigned int ElemStack::getPrefixId(const XMLCh* const prefix) const
+{
+    return fPrefixPool.getId(prefix);
+}
+
+inline const XMLCh* ElemStack::getPrefixForId(unsigned int prefId) const
+{
+    return fPrefixPool.getValueForId(prefId);
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/22 20:22:30  knoaman
+ * Prepare for annotation support.
+ *
  * Revision 1.7  2003/07/10 19:47:24  peiyongz
  * Stateless Grammar: Initialize scanner with grammarResolver,
  *                                creating grammar through grammarPool
@@ -85,7 +88,6 @@
 #define WFXMLSCANNER_HPP
 
 #include <xercesc/internal/XMLScanner.hpp>
-#include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
@@ -195,10 +197,6 @@ private :
     // -----------------------------------------------------------------------
     //  Data members
     //
-    //  fElemStack
-    //      This is the element stack that is used to track the elements that
-    //      are currently being worked on.
-    //
     //  fEntityTable
     //      This the table that contains the default entity entries.
     //
@@ -217,7 +215,6 @@ private :
     ValueVectorOf<unsigned int>*       fAttrNameHashList;
     ValueVectorOf<XMLAttr*>*           fAttrNSList;
     RefHashTableOf<XMLElementDecl>*    fElementLookup;  
-    ElemStack                          fElemStack;
 };
 
 inline const XMLCh* WFXMLScanner::getName() const

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/10/22 20:22:30  knoaman
+ * Prepare for annotation support.
+ *
  * Revision 1.23  2003/07/10 19:47:24  peiyongz
  * Stateless Grammar: Initialize scanner with grammarResolver,
  *                                creating grammar through grammarPool
@@ -285,6 +288,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/SecurityManager.hpp>
 #include <xercesc/internal/ReaderMgr.hpp>
+#include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
@@ -433,7 +437,6 @@ public :
         , const bool            toCache = false
     ) = 0;
 
-
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
@@ -486,6 +489,9 @@ public :
     Grammar* getRootGrammar() const;
     XMLReader::XMLVersion getXMLVersion() const;
     MemoryManager* getMemoryManager() const;
+    ValueVectorOf<PrefMapElem*>* getNamespaceContext() const;
+    unsigned int getPrefixId(const XMLCh* const prefix) const;
+    const XMLCh* getPrefixForId(unsigned int prefId) const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -941,6 +947,7 @@ protected:
     XMLBuffer                   fQNameBuf;
     XMLBuffer                   fPrefixBuf;
     XMLBuffer                   fURIBuf;
+    ElemStack                   fElemStack;
 
 private :
     // -----------------------------------------------------------------------
@@ -1197,6 +1204,21 @@ inline XMLReader::XMLVersion XMLScanner::getXMLVersion() const
 inline MemoryManager* XMLScanner::getMemoryManager() const
 {
     return fMemoryManager;
+}
+
+inline ValueVectorOf<PrefMapElem*>* XMLScanner::getNamespaceContext() const
+{
+    return fElemStack.getNamespaceMap();
+}
+
+inline unsigned int XMLScanner::getPrefixId(const XMLCh* const prefix) const
+{
+    return fElemStack.getPrefixId(prefix);
+}
+
+inline const XMLCh* XMLScanner::getPrefixForId(unsigned int prefId) const
+{
+    return fElemStack.getPrefixForId(prefId);
 }
 
 // ---------------------------------------------------------------------------

@@ -220,6 +220,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fQNameBuf(1023, manager)
     , fPrefixBuf(1023, manager)
     , fURIBuf(1023, manager)
+    , fElemStack(manager)
 {
    commonInit();
 
@@ -289,6 +290,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fQNameBuf(1023, manager)
     , fPrefixBuf(1023, manager)
     , fURIBuf(1023, manager)
+    , fElemStack(manager)
 {
    commonInit();
 

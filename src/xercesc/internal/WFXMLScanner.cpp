@@ -90,7 +90,6 @@ WFXMLScanner::WFXMLScanner( XMLValidator* const  valToAdopt
     , fAttrNameHashList(0)
     , fAttrNSList(0)
     , fElementLookup(0)
-    , fElemStack(manager)
 {
     try
     {
@@ -122,7 +121,6 @@ WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const docHandler
     , fAttrNameHashList(0)
     , fAttrNSList(0)
     , fElementLookup(0)
-    , fElemStack(manager)
 {
     try
     {	

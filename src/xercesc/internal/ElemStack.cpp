@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/22 20:22:30  knoaman
+ * Prepare for annotation support.
+ *
  * Revision 1.7  2003/05/18 14:02:04  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -165,6 +168,7 @@ ElemStack::ElemStack(MemoryManager* const manager) :
     , fXMLPoolId(0)
     , fXMLNSNamespaceId(0)
     , fXMLNSPoolId(0)
+    , fNamespaceMap(0)
     , fMemoryManager(manager)
 {
     // Do an initial allocation of the stack and zero it out
@@ -173,6 +177,8 @@ ElemStack::ElemStack(MemoryManager* const manager) :
         fStackCapacity * sizeof(StackElem*)
     );//new StackElem*[fStackCapacity];
     memset(fStack, 0, fStackCapacity * sizeof(StackElem*));
+
+    fNamespaceMap = new (fMemoryManager) ValueVectorOf<PrefMapElem*>(16);
 }
 
 ElemStack::~ElemStack()
@@ -466,6 +472,32 @@ unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
     return fUnknownNamespaceId;
 }
 
+
+ValueVectorOf<PrefMapElem*>* ElemStack::getNamespaceMap() const
+{
+    fNamespaceMap->removeAllElements();
+
+    //  Start at the stack top and work backwards until we come to some
+    //  element that mapped this prefix.
+    int startAt = (int)(fStackTop - 1);
+    for (int index = startAt; index >= 0; index--)
+    {
+        // Get a convenience pointer to the current element
+        StackElem* curRow = fStack[index];
+
+        // If no prefixes mapped at this level, then go the next one
+        if (!curRow->fMapCount)
+            continue;
+
+        // Search the map at this level for the passed prefix
+        for (unsigned int mapIndex = 0; mapIndex < curRow->fMapCount; mapIndex++)
+        {
+            fNamespaceMap->addElement(&(curRow->fMap[mapIndex]));
+        }
+    }
+
+    return fNamespaceMap;
+}
 
 // ---------------------------------------------------------------------------
 //  ElemStack: Miscellaneous methods
