@@ -324,6 +324,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
@@ -485,6 +486,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSParticle.obj" \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSValue.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
@@ -979,6 +981,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
@@ -1141,6 +1144,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSParticle.obj" \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSValue.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
@@ -1635,6 +1639,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
@@ -1797,6 +1802,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSParticle.obj" \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSValue.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
@@ -2290,6 +2296,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
@@ -2452,6 +2459,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSParticle.obj" \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSValue.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
@@ -3451,6 +3459,12 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSValue.cpp
+
+"$(INTDIR)\XSValue.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp
 
 "$(INTDIR)\XSWildcard.obj" : $(SOURCE) "$(INTDIR)"
@@ -4176,11 +4190,13 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraint.
 "$(INTDIR)\IdentityConstraint.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp
 
 "$(INTDIR)\IdentityConstraintHandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
-	
+
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStore.cpp
 
 "$(INTDIR)\ValueStore.obj" : $(SOURCE) "$(INTDIR)"
@@ -4589,28 +4605,28 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-depdom\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-depdom\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-depdom\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-depdom\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
 
 
 !ENDIF 
