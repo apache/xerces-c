@@ -186,7 +186,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     ValueHashTableOfEnumerator(ValueHashTableOf<TVal>* const toEnum, const bool adopt = false);
-    ~ValueHashTableOfEnumerator();
+    virtual ~ValueHashTableOfEnumerator();
 
 
     // -----------------------------------------------------------------------

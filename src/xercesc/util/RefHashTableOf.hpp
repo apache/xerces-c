@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/08/21 17:45:00  tng
+ * [Bug 7087] compiler warnings when using gcc.
+ *
  * Revision 1.4  2002/07/11 18:49:53  knoaman
  * Add setAdoptElements method.
  * Rename removeBucketElemSafe to orphanKey.
@@ -253,7 +256,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum, const bool adopt = false);
-    ~RefHashTableOfEnumerator();
+    virtual ~RefHashTableOfEnumerator();
 
 
     // -----------------------------------------------------------------------

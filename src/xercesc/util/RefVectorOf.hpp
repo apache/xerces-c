@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/08/21 17:45:00  tng
+ * [Bug 7087] compiler warnings when using gcc.
+ *
  * Revision 1.2  2002/02/05 13:11:06  tng
  * [Bug 6114] Memory leaks on iDOM getElementsByTagName().
  *
@@ -159,7 +162,7 @@ public :
                 RefVectorOf<TElem>* const   toEnum
         , const bool                        adopt = false
     );
-    ~RefVectorEnumerator();
+    virtual ~RefVectorEnumerator();
 
 
     // -----------------------------------------------------------------------
