@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2001/11/21 18:05:09  tng
+ * Schema Fix: Check both XMLAttDef::Fixed and XMLAttDef::Required_And_Fixed for default values.
+ *
  * Revision 1.25  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
  *
@@ -371,7 +374,7 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
     //  If the default type is fixed, then make sure the passed value maps
     //  to the fixed value.
     //
-    if (defType == XMLAttDef::Fixed)
+    if (defType == XMLAttDef::Fixed || defType == XMLAttDef::Required_And_Fixed)
     {
         const XMLCh* const valueText = attDef->getValue();
         if (XMLString::compareString(attrValue, valueText))
