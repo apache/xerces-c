@@ -235,13 +235,13 @@ ifeq (${PLATFORM}, AIX)
 #endif
 
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc24 -licudt24b
 else
     ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
 endif
 
 ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata -lXercesMessages
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc24 -licudt24b -lXercesMessages
 endif
 
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
