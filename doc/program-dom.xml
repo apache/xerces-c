@@ -339,7 +339,7 @@
                 EntityReference nodes and their child nodes will be read-only. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not create EntityReference nodes in the DOM tree.  No
                 EntityReference nodes will be created, only the nodes corresponding to their fully
-                expanded sustitution text will be created.  </td></tr>
+                expanded substitution text will be created.  </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
                 <tr><th><em>note:</em></th><td> This feature only affects the appearance of
                 EntityReference nodes in the DOM tree. The document will always contain the entity
