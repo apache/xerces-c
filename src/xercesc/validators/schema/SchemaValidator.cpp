@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:47  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/07 16:41:29  knoaman
+ * Fix for xsi:type.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:47  peiyongz
+ * sane_include
  *
  * Revision 1.26  2001/11/21 18:05:09  tng
  * Schema Fix: Check both XMLAttDef::Fixed and XMLAttDef::Required_And_Fixed for default values.
@@ -484,8 +487,38 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
             const XMLCh* uriStr = getScanner()->getURIText(uri);
             SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uriStr);
 
-            if (!sGrammar || sGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
-                // Grammar not found
+            if (!sGrammar) {
+
+                // Check built-in simple types
+                if (!XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
+
+                    fXsiTypeValidator = fGrammarResolver->getDatatypeRegistry()->getDatatypeValidator(localPart);
+
+                    if (!fXsiTypeValidator)
+                        emitError(XMLValid::BadXsiType, fXsiType->getRawName());
+                    else {
+                        DatatypeValidator* ancestorValidator = ((SchemaElementDecl*)elemDef)->getDatatypeValidator();
+                        if (ancestorValidator && !ancestorValidator->isSubstitutableBy(fXsiTypeValidator)) {
+                            // the type is not derived from ancestor
+                            emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                        }
+                        else {
+                            // the type is derived from ancestor
+                            if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::RESTRICTION)
+                                emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                            if (elemDef->hasAttDefs()) {
+                                // if we have an attribute but xsi:type's type is simple, we have a problem...
+                                emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                            }
+                        }
+                    }
+                }
+                else {
+                    // Grammar not found
+                    emitError(XMLValid::GrammarNotFound, uriStr);
+                }
+            }
+            else if (sGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
                 emitError(XMLValid::GrammarNotFound, uriStr);
             }
             else {
