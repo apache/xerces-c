@@ -72,6 +72,8 @@
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
 #include "DOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
@@ -97,6 +99,7 @@ static void usage()
             "    -s          Enable schema processing. Defaults to off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
             "    -locale=ll_CC specify the locale, default: en_US.\n"
+            "    -p          Print out names of elements and attributes encountered.\n"
 		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
          << endl;
@@ -107,17 +110,48 @@ static void usage()
 // ---------------------------------------------------------------------------
 //
 //  Recursively Count up the total number of child Elements under the specified Node.
+//  Process attributes of the node, if any.
 //
 // ---------------------------------------------------------------------------
-static int countChildElements(DOMNode *n)
+static int countChildElements(DOMNode *n, bool printOutEncounteredEles)
 {
     DOMNode *child;
     int count = 0;
     if (n) {
         if (n->getNodeType() == DOMNode::ELEMENT_NODE)
-            count++;
+		{
+            if(printOutEncounteredEles) {
+                char *name = XMLString::transcode(n->getNodeName());
+                cout <<"----------------------------------------------------------"<<endl;
+                cout <<"Encountered Element : "<< name << endl;
+                
+                XMLString::release(&name);
+			
+                if(n->hasAttributes()) {
+                    // get all the attributes of the node
+                    DOMNamedNodeMap *pAttributes = n->getAttributes();
+                    int nSize = pAttributes->getLength();
+                    cout <<"\tAttributes" << endl;
+                    cout <<"\t----------" << endl;
+                    for(int i=0;i<nSize;++i) {
+                        DOMAttr *pAttributeNode = (DOMAttr*) pAttributes->item(i);
+                        // get attribute name
+                        char *name = XMLString::transcode(pAttributeNode->getName());
+                        
+                        cout << "\t" << name << "=";
+                        XMLString::release(&name);
+                        
+                        // get attribute type
+                        name = XMLString::transcode(pAttributeNode->getValue());
+                        cout << name << endl;
+                        XMLString::release(&name);
+                    }
+                }
+            }
+			++count;
+		}
         for (child = n->getFirstChild(); child != 0; child=child->getNextSibling())
-            count += countChildElements(child);
+            count += countChildElements(child, printOutEncounteredEles);
     }
     return count;
 }
@@ -145,6 +179,7 @@ int main(int argC, char* argV[])
     bool                       doList = false;
     bool                       errorOccurred = false;
     bool                       recognizeNEL = false;
+    bool                       printOutEncounteredEles = false;
     char                       localeStr[64];
     memset(localeStr, 0, sizeof localeStr);
 
@@ -206,6 +241,11 @@ int main(int argC, char* argV[])
             // do not turn this on unless really necessary
 
              recognizeNEL = true;
+        }
+         else if (!strcmp(argV[argInd], "-p")
+              ||  !strcmp(argV[argInd], "-P"))
+        {
+            printOutEncounteredEles = true;
         }
          else if (!strncmp(argV[argInd], "-locale=", 8))
         {
@@ -383,7 +423,7 @@ int main(int argC, char* argV[])
         {
             unsigned int elementCount = 0;
             if (doc) {
-                elementCount = countChildElements((DOMNode*)doc->getDocumentElement());
+                elementCount = countChildElements((DOMNode*)doc->getDocumentElement(), printOutEncounteredEles);
                 // test getElementsByTagName and getLength
                 XMLCh xa[] = {chAsterisk, chNull};
                 if (elementCount != doc->getElementsByTagName(xa)->getLength()) {
