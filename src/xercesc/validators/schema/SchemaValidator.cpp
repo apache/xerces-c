@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2002/12/04 02:47:26  knoaman
+ * scanner re-organization.
+ *
  * Revision 1.21  2002/11/27 22:15:42  peiyongz
  * Schema Errat E2-24 Duration 'T': allow to catch SchemaDateTimeException
  *
@@ -212,6 +215,7 @@
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
+#include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/validators/datatype/ListDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
@@ -417,12 +421,11 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         //  the notation pool (after the Grammar is parsed), then obviously
                         //  this value will be legal since it matches one of them.
                         //
-                        XMLBuffer nameBuf(XMLString::stringLen(value)+1);
-                        XMLBuffer prefixBuf(XMLString::stringLen(value)+1);
-                        unsigned int uriId = getScanner()->resolveQName(value, nameBuf, prefixBuf, ElemStack::Mode_Element);
+                        int colonPos = -1;
+                        unsigned int uriId = getScanner()->resolveQName(value, notationBuf, ElemStack::Mode_Element, colonPos);
                         notationBuf.set(getScanner()->getURIText(uriId));
                         notationBuf.append(chColon);
-                        notationBuf.append(nameBuf.getRawBuffer());
+                        notationBuf.append(&value[colonPos + 1]);
                         value = notationBuf.getRawBuffer();
                     }
 
@@ -474,7 +477,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             fCurrentDV->validate(value);
                     }
                 }
-            }
+            } 
             catch (XMLException& idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
@@ -647,13 +650,12 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 //  the notation pool (after the Grammar is parsed), then obviously
                 //  this value will be legal since it matches one of them.
                 //
-                XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
-                XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
                 XMLBuffer notationBuf;
-                unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Element);
+                int colonPos = -1;
+                unsigned int uriId = getScanner()->resolveQName(attrValue, notationBuf, ElemStack::Mode_Element, colonPos);
                 notationBuf.set(getScanner()->getURIText(uriId));
                 notationBuf.append(chColon);
-                notationBuf.append(nameBuf.getRawBuffer());
+                notationBuf.append(&attrValue[colonPos + 1]);
 
                 attDefDV->validate(notationBuf.getRawBuffer());
             }

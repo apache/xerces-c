@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/12/04 02:47:25  knoaman
+ * scanner re-organization.
+ *
  * Revision 1.3  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -88,18 +91,6 @@
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-// ---------------------------------------------------------------------------
-//  Local const data
-//
-//  These are the text for the require char refs that must always be present.
-//  We init these into the entity pool upon construction.
-// ---------------------------------------------------------------------------
-static const XMLCh gAmp[] = { chLatin_a, chLatin_m, chLatin_p, chNull };
-static const XMLCh gLT[] = { chLatin_l, chLatin_t, chNull };
-static const XMLCh gGT[] = { chLatin_g, chLatin_t, chNull };
-static const XMLCh gQuot[] = { chLatin_q, chLatin_u, chLatin_o, chLatin_t, chNull };
-static const XMLCh gApos[] = { chLatin_a, chLatin_p, chLatin_o, chLatin_s, chNull };
 
 //---------------------------------------------------------------------------
 //  DTDGrammar: Constructors and Destructor
@@ -204,11 +195,11 @@ void DTDGrammar::resetEntityDeclPool() {
     //  We also mark them as special char entities, which allows them to be
     //  used in places whether other non-numeric general entities cannot.
     //
-    fEntityDeclPool->put(new DTDEntityDecl(gAmp, chAmpersand, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gLT, chOpenAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gGT, chCloseAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gQuot, chDoubleQuote, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gApos, chSingleQuote, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/12/04 02:47:25  knoaman
+ * scanner re-organization.
+ *
  * Revision 1.4  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -91,6 +94,8 @@
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XMLScanner;
 
 /*
  * Default implementation of an XML DTD scanner.
@@ -314,27 +319,6 @@ inline const DocTypeHandler* DTDScanner::getDocTypeHandler() const
 inline void DTDScanner::setDocTypeHandler(DocTypeHandler* const handlerToSet)
 {
     fDocTypeHandler = handlerToSet;
-}
-
-
-// -----------------------------------------------------------------------
-//  Setter methods
-// -----------------------------------------------------------------------
-inline void DTDScanner::setScannerInfo(XMLScanner* const      owningScanner
-                            , ReaderMgr* const      readerMgr
-                            , XMLBufferMgr* const   bufMgr)
-{
-    // We don't own any of these, we just reference them
-    fScanner = owningScanner;
-    fReaderMgr = readerMgr;
-    fBufMgr = bufMgr;
-
-    if (fScanner->getDoNamespaces())
-        fEmptyNamespaceId = fScanner->getEmptyNamespaceId();
-    else
-        fEmptyNamespaceId = 0;
-
-    fDocTypeReaderId = fReaderMgr->getCurrentReaderNum();
 }
 
 // -----------------------------------------------------------------------

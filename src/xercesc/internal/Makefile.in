@@ -83,12 +83,15 @@ INTERNAL_CPP_PUBHEADERS = \
 	ElemStack.hpp \
 	EndOfEntityException.hpp \
 	IANAEncodings.hpp \
+	IGXMLScanner.hpp \
 	ReaderMgr.hpp \
 	VecAttrListImpl.hpp \
 	VecAttributesImpl.hpp \
+	WFXMLScanner.hpp \
 	XMLInternalErrorHandler.hpp \
 	XMLReader.hpp \
-	XMLScanner.hpp
+	XMLScanner.hpp \
+	XMLScannerResolver.hpp
 
 INTERNAL_CPP_PRIVHEADERS =
 
@@ -96,12 +99,15 @@ INTERNAL_C_FILES =
 
 INTERNAL_CPP_OBJECTS = \
 	ElemStack.$(TO) \
+	IGXMLScanner.$(TO) \
+	IGXMLScanner2.$(TO) \
 	ReaderMgr.$(TO) \
 	VecAttrListImpl.$(TO) \
 	VecAttributesImpl.$(TO) \
+	WFXMLScanner.$(TO) \
 	XMLReader.$(TO) \
 	XMLScanner.$(TO) \
-	XMLScanner2.$(TO)
+	XMLScannerResolver.$(TO)
 
 all::	includes $(INTERNAL_CPP_OBJECTS)
 

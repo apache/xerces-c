@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2002/12/04 02:47:25  knoaman
+ * scanner re-organization.
+ *
  * Revision 1.16  2002/11/14 22:34:11  tng
  * [Bug 14265] Access violation with Null systemId/publicId in DTDScanner
  *
@@ -203,6 +206,7 @@
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
@@ -210,6 +214,7 @@
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -280,6 +285,27 @@ DTDScanner::~DTDScanner()
     delete fDumEntityDecl;
     delete fPEntityDeclPool;
 }
+
+// -----------------------------------------------------------------------
+//  Setter methods
+// -----------------------------------------------------------------------
+void DTDScanner::setScannerInfo(XMLScanner* const      owningScanner
+                            , ReaderMgr* const      readerMgr
+                            , XMLBufferMgr* const   bufMgr)
+{
+    // We don't own any of these, we just reference them
+    fScanner = owningScanner;
+    fReaderMgr = readerMgr;
+    fBufMgr = bufMgr;
+
+    if (fScanner->getDoNamespaces())
+        fEmptyNamespaceId = fScanner->getEmptyNamespaceId();
+    else
+        fEmptyNamespaceId = 0;
+
+    fDocTypeReaderId = fReaderMgr->getCurrentReaderNum();
+}
+
 
 // ---------------------------------------------------------------------------
 //  DTDScanner: Private scanning methods
