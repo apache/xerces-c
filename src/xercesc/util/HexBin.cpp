@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:10  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/18 14:55:38  peiyongz
+ * Bug#7301: Redundant range-check in HexBin.cpp, patch from Martin Kalen
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:10  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/05/16 15:25:38  tng
  * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
@@ -112,13 +115,13 @@ bool HexBin::isArrayByteHex(const XMLCh* const hexData)
 // -----------------------------------------------------------------------
 //  Helper methods
 // -----------------------------------------------------------------------
-bool HexBin::isHex(const XMLCh& octect) 
+bool HexBin::isHex(const XMLCh& octet) 
 {
     // sanity check to avoid out-of-bound index
-    if (( octect >= BASELENGTH ) || ( octect < 0 ))
+    if ( octet >= BASELENGTH )
         return false;
 
-    return (hexNumberTable[octect]);
+    return (hexNumberTable[octet]);
 }
 
 void HexBin::init()
