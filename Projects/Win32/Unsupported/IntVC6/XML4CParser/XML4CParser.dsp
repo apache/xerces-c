@@ -96,6 +96,22 @@ LINK32=link.exe
 # PROP Default_Filter "cpp"
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\framework\LocalFileInputSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\MemBufInputSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\StdInInputSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\URLInputSource.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\framework\XMLAttDef.cpp
 # End Source File
 # Begin Source File
@@ -138,6 +154,22 @@ SOURCE=..\..\..\..\..\src\framework\XMLValidator.cpp
 # Begin Group "Framework Header Files"
 
 # PROP Default_Filter "hpp"
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\LocalFileInputSource.Hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\MemBufInputSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\StdInInputSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\URLInputSource.hpp
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\framework\XMLAttDef.hpp
@@ -220,19 +252,7 @@ SOURCE=..\..\..\..\..\src\internal\ElemStack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\MemBufInputSource.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\internal\ReaderMgr.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\StdInInputSource.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\URLInputSource.cpp
 # End Source File
 # Begin Source File
 
@@ -268,19 +288,7 @@ SOURCE=..\..\..\..\..\src\internal\EndOfEntityException.Hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\MemBufInputSource.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\internal\ReaderMgr.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\StdInInputSource.Hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\URLInputSource.hpp
 # End Source File
 # Begin Source File
 
