@@ -1171,6 +1171,14 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.hpp
 # End Group
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\BinOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\BinOutputStream.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.cpp
 # End Source File
 # Begin Source File
@@ -1387,6 +1395,14 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLValidityCodes.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\CharTypeTables.hpp
 # End Source File
 # Begin Source File
@@ -1516,6 +1532,30 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializable.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializationException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.hpp
 # End Source File
 # End Group
 # Begin Group "sax"
