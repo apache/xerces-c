@@ -707,7 +707,7 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
     fCurrentEntity = entity;
 
     if (fCreateEntityReferenceNodes == true)
-    {        
+    {
         DOMEntityReference *er = fDocument->createEntityReference(entName);
 
         //set the readOnly flag to false before appending node, will be reset in endEntityReference
@@ -733,10 +733,7 @@ void AbstractDOMParser::XMLDecl(const   XMLCh* const version
                                 , const XMLCh* const standalone
                                 , const XMLCh* const actualEncStr)
 {
-    const XMLCh standalone_true[] = {
-            chLatin_t, chLatin_r, chLatin_u, chLatin_e, chNull
-            };
-    fDocument->setStandalone(!XMLString::compareString(standalone_true, standalone));
+    fDocument->setStandalone(!XMLString::compareString(XMLUni::fgYesString, standalone));
 
     fDocument->setVersion(version);
     fDocument->setEncoding(encoding);
