@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.46  2003/11/24 19:52:22  neilg
+ * fix a typo
+ *
  * Revision 1.45  2003/11/24 12:27:57  gareth
  * added in support for xml-declaration feature.
  *
@@ -235,7 +238,7 @@ static const int SPLIT_CDATA_SECTIONS_ID          = 0x5;
 static const int VALIDATION_ID                    = 0x6;
 static const int WHITESPACE_IN_ELEMENT_CONTENT_ID = 0x7;
 static const int BYTE_ORDER_MARK_ID               = 0x8;
-static const int XML_DECLARATIION                 = 0x9;
+static const int XML_DECLARATION                 = 0x9;
 
 //    feature                      true                       false
 // ================================================================================
@@ -514,7 +517,7 @@ DOMWriterImpl::DOMWriterImpl(MemoryManager* const manager)
     setFeature(VALIDATION_ID,                    false);
     setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
     setFeature(BYTE_ORDER_MARK_ID,               false);
-    setFeature(XML_DECLARATIION,                 true );
+    setFeature(XML_DECLARATION,                 true );
 
 }
 
@@ -894,7 +897,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             //[32] SDDecl       ::= S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"'))
             //
 
-            if (getFeature(XML_DECLARATIION)) {
+            if (getFeature(XML_DECLARATION)) {
                 const XMLCh* versionNo = (docu->getVersion()) ? docu->getVersion() : gXMLDecl_ver10;
                 *fFormatter << gXMLDecl_VersionInfo << versionNo << gXMLDecl_separator;
 
@@ -1463,7 +1466,7 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     else if (XMLString::equals(featName, XMLUni::fgDOMWRTBOM))
         featureId = BYTE_ORDER_MARK_ID;
     else if (XMLString::equals(featName, XMLUni::fgDOMXMLDeclaration))
-        featureId = XML_DECLARATIION;
+        featureId = XML_DECLARATION;
 
 
     //feature name not resolvable
