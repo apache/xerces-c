@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/06/12 19:07:14  peiyongz
+ * Memory leak: fixed by Erik Rydgren
+ *
  * Revision 1.12  2001/06/12 17:30:49  knoaman
  * Fix Typo
  *
@@ -174,8 +177,12 @@ DFAContentModel::~DFAContentModel()
         delete [] fTransTable[index];
     delete [] fTransTable;
 
+    for (index = 0; index < fLeafCount; index++)
+        delete fElemMap[index];
     delete [] fElemMap;
+
     delete [] fElemMapType;
+    delete [] fLeafListType;
 }
 
 
@@ -321,7 +328,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
             if (type == ContentSpecNode::Leaf)
             {
-                if (comparator.isEquivalentTo(curElem, inElem))
+                if (comparator.isEquivalentTo(curElem, inElem) )
                 {
                     nextState = fTransTable[curState][elemIndex];
                     if (nextState != XMLContentModel::gInvalidTrans)
@@ -786,18 +793,22 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  Now we can clean up all of the temporary data that was needed during
     //  DFA build.
     //
-    delete fHeadNode;
+
+    // the CMBinary will be released by fLeafList[]
+    //delete fHeadNode;
     fHeadNode = 0;
 
     for (index = 0; index < fLeafCount; index++)
         delete fFollowList[index];
+    delete [] fFollowList;
 
     for (index = 0; index < curState; index++)
         delete (CMStateSet*)statesToDo[index];
-
-    delete [] fLeafList;
-    delete [] fFollowList;
     delete [] statesToDo;
+
+    for (index = 0; index < fLeafCount; index++)
+        delete fLeafList[index];
+    delete [] fLeafList;
 
 	delete [] fLeafSorter;
 }

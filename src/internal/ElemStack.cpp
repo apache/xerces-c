@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/06/12 19:08:27  peiyongz
+ * Memory leak: fixed by Erik Rydgren
+ *
  * Revision 1.12  2001/05/28 20:55:19  tng
  * Schema: Store Grammar in ElemStack as well.
  *
@@ -146,6 +149,9 @@ ElemStack::~ElemStack()
             break;
 
         // Delete the row for this entry, then delete the row structure
+        for (unsigned int childIndex = 0; childIndex < fStack[stackInd]->fChildCount; ++childIndex)
+            delete fStack[stackInd]->fChildren[childIndex];
+
         delete [] fStack[stackInd]->fChildren;
         delete [] fStack[stackInd]->fMap;
         delete fStack[stackInd];
