@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.27  2004/04/13 19:40:47  peiyongz
+* usage
+*
 * Revision 1.26  2004/04/13 16:47:02  peiyongz
 * command line option to turn on/off Identity Constraint checking
 *
@@ -167,11 +170,12 @@ void usage()
             "                Default to off (Input file is an XML file).\n"
             "    -v=xxx      Validation scheme [always | never | auto*].\n"
             "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
-            "    -i          Enable identity constraint checking processing. Defaults to on.\n"
             "    -p          Enable namespace-prefixes feature. Defaults to off.\n"
             "    -n          Disable namespace processing. Defaults to on.\n"
             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
             "    -s          Disable schema processing. Defaults to on.\n"
+            "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
+            "    -i          Disable identity constraint checking. Defaults to on.\n"
             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
             "    -locale=ll_CC specify the locale, default: en_US.\n"
             "    -?          Show this help.\n\n"
