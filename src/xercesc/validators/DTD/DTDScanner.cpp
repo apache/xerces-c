@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/08/22 21:05:29  tng
+ * [Bug 7475] Xerces-C++ reports validation error with Docbook.
+ *
  * Revision 1.11  2002/08/22 20:26:01  tng
  * [Bug 7512] Wrong error message created .
  *
@@ -1634,6 +1637,9 @@ void DTDScanner::scanDefaultDecl(DTDAttDef& toFill)
     //  If we don't, then emit an error but just set the default value to
     //  an empty string and try to keep going.
     //
+    // Check for PE ref or optional whitespace
+    checkForPERef(false, false, true);
+
     XMLBufBid bbValue(fBufMgr);
     if (!scanAttValue(toFill.getFullName(), bbValue.getBuffer(), toFill.getType()))
         fScanner->emitError(XMLErrs::ExpectedDefAttrDecl);
