@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2000/07/19 19:36:00  andyh
+# Add 'make install' target
+#
 # Revision 1.11  2000/04/04 20:11:46  abagchi
 # Added PTX support
 #
@@ -152,3 +155,7 @@ clean::
 
 distclean::
 	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
+
+install::
+	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
+
