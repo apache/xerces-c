@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:11  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/08 19:05:29  knoaman
+ * [Bug 7701] NameIdPoolEnumerator copy constructor should call base class - fix by Martin Kalen
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/03/02 19:54:42  roddey
  * This checkin includes many changes done while waiting for the
@@ -344,7 +347,8 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
 template <class TElem> NameIdPoolEnumerator<TElem>::
 NameIdPoolEnumerator(NameIdPool<TElem>* const toEnum) :
 
-    fCurIndex(0)
+    XMLEnumerator<TElem>()
+    , fCurIndex(0)
     , fToEnum(toEnum)
 {
     //
