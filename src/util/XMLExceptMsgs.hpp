@@ -281,11 +281,12 @@ public :
       , NEL_RepeatedCalls                  = 270
       , RethrowError                       = 271
       , Out_Of_Memory                      = 272
-      , E_HighBounds                       = 273
-      , W_LowBounds                        = 274
-      , W_HighBounds                       = 275
-      , F_LowBounds                        = 276
-      , F_HighBounds                       = 277
+      , DV_InvalidOperation                = 273
+      , E_HighBounds                       = 274
+      , W_LowBounds                        = 275
+      , W_HighBounds                       = 276
+      , F_LowBounds                        = 277
+      , F_HighBounds                       = 278
     };
 
 };

@@ -93,10 +93,9 @@
             <Message Id="ForbiddenDerivationByRestriction" Text="Derivation by restriction is forbidden by either the base type '{0}' or the schema"/>
             <Message Id="ForbiddenDerivationByExtension" Text="Derivation by extension is forbidden by either the base type '{0}' or the schema"/>
             <Message Id="BaseNotComplexType" Text="The base type specified in the complexContent element must be a complexType"/>
-            <Message Id="ImportNoSchemaLocation" Text="A schemaLocation attribute must be specified on an 'import' element."/>
             <Message Id="ImportNamespaceDifference" Text="Imported schema '{0}' has a different targetNameSpace '{1}' from what's declared '{2}'"/>
             <Message Id="ImportRootError" Text="Could not get the doc root for imported Schema: {0}"/>
-            <Message Id="IncludeNoSchemaLocation" Text="A schemaLocation attribute must be specified on an 'include' element."/>
+            <Message Id="DeclarationNoSchemaLocation" Text="A schemaLocation attribute must be specified on '{0}' element."/>
             <Message Id="IncludeNamespaceDifference" Text="Included schema '{0}' has a different targetNameSpace '{1}'"/>
             <Message Id="OnlyAnnotationExpected" Text="At most one &lt;annotation&gt; element is expected in the content."/>
             <Message Id="InvalidAttributeContent" Text="The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered"/>
@@ -138,6 +137,15 @@
             <Message Id="BadAttDerivation_6" Text="An attribute wildcard is present in the derived type, but not in the base"/>
             <Message Id="BadAttDerivation_7" Text="The attribute wildcard in the derived type is not a valid subset of that in the base"/>
             <Message Id="AllContentError" Text="Content of &lt;all&gt; is restricted to elements only. '{0}' encountered and ignored."/>
+            <Message Id="RedefineNamespaceDifference" Text="Redefined schema '{0}' has a different targetNameSpace '{1}'."/>
+            <Message Id="Redefine_InvalidSimpleType" Text="A simpleType child of a &lt;redefine&gt; must have a restriction element as a child"/>
+            <Message Id="Redefine_InvalidSimpleTypeBase" Text="The base attribute of the restriction child of a simpleType, must be the same as the redefine simpleType's name attribute"/>
+            <Message Id="Redefine_InvalidComplexType" Text="A complexType child of a &lt;redefine&gt; must have a restriction or extension element as a grandchild"/>
+            <Message Id="Redefine_InvalidComplexTypeBase" Text="The base attribute of a restriction/extension must be the same as the complexType's name attribute in &lt;redefine&gt;"/>
+            <Message Id="Redefine_InvalidGroupMinMax" Text="The group '{0}' which contains a reference to a group being redefined must have minOccurs = maxOccurs = 1"/>
+            <Message Id="Redefine_DeclarationNotFound" Text="Could not find a declaration in the schema to be redefined corresponding to '{0}'"/>
+            <Message Id="Redefine_GroupRefCount" Text="If a group child of a &lt;redefine&gt; element contains a group ref'ing itself, it must have exactly 1 reference."/>
+            <Message Id="Redefine_AttGroupRefCount" Text="If an attributeGroup of a &lt;redefine&gt; element contains a reference to itself, such reference must be exactly 1"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
@@ -357,7 +365,7 @@
             <Message Id="VC_EntityNotFound" Text="Entity '{0}' was not found"/>
             <Message Id="PartialMarkupInPE" Text="Partial markup in parameter entity replacement text."/>
             <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
-            <Message Id="UniqueParticleAttributionFail" Text="'{0}' and '{1}' violate the Unique Particle Attribution rule"/>            
+            <Message Id="UniqueParticleAttributionFail" Text="'{0}' and '{1}' violate the Unique Particle Attribution rule"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
@@ -633,6 +641,7 @@
             <Message Id="NEL_RepeatedCalls" Text="Enabling the NEL option can only be called once per process."/>
             <Message Id="RethrowError" Text="{0}"/>
             <Message Id="Out_Of_Memory" Text="operator new fails.  Possibly running Of memory"/>
+            <Message Id="DV_InvalidOperation" Text="Operation is not allowed"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
