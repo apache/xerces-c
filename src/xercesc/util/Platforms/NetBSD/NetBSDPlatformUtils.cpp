@@ -156,115 +156,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 #endif
 }
 
-
-
-XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
-                                    , const XMLCh* const    relativePath)
-
-{
-    // Create a buffer as large as both parts and empty it
-    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
-                              + XMLString::stringLen(relativePath)
-                              + 2];
-    *tmpBuf = 0;
-
-    //
-    //  If we have no base path, then just take the relative path as
-    //  is.
-    //
-    if (!basePath)
-    {
-        XMLString::copyString(tmpBuf, relativePath);
-        return tmpBuf;
-    }
-
-    if (!*basePath)
-    {
-        XMLString::copyString(tmpBuf, relativePath);
-        return tmpBuf;
-    }
-
-    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
-    if ((*basePtr != chForwardSlash)
-    &&  (*basePtr != chBackSlash))
-    {
-        while ((basePtr >= basePath)
-        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
-        {
-            basePtr--;
-        }
-    }
-
-    // There is no relevant base path, so just take the relative part
-    if (basePtr < basePath)
-    {
-        XMLString::copyString(tmpBuf, relativePath);
-        return tmpBuf;
-    }
-
-    // After this, make sure the buffer gets handled if we exit early
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
-
-    //
-    //  We have some path part, so we need to check to see if we ahve to
-    //  weave any of the parts together.
-    //
-    const XMLCh* pathPtr = relativePath;
-    while (true)
-    {
-        // If it does not start with some period, then we are done
-        if (*pathPtr != chPeriod)
-            break;
-
-        unsigned int periodCount = 1;
-        pathPtr++;
-        if (*pathPtr == chPeriod)
-        {
-            pathPtr++;
-            periodCount++;
-        }
-
-        // Has to be followed by a \ or / or the null to mean anything
-        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
-        &&  *pathPtr)
-        {
-            break;
-        }
-        if (*pathPtr)
-            pathPtr++;
-
-        // If its one period, just eat it, else move backwards in the base
-        if (periodCount == 2)
-        {
-            basePtr--;
-            while ((basePtr >= basePath)
-            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
-            {
-                basePtr--;
-            }
-
-            // The base cannot provide enough levels, so its in error/
-            if (basePtr < basePath)
-                ThrowXML(XMLPlatformUtilsException,
-                         XMLExcepts::File_BasePathUnderflow);
-        }
-    }
-
-    // Copy the base part up to the base pointer
-    XMLCh* bufPtr = tmpBuf;
-    const XMLCh* tmpPtr = basePath;
-    while (tmpPtr <= basePtr)
-        *bufPtr++ = *tmpPtr++;
-
-    // And then copy on the rest of our path
-    XMLString::copyString(bufPtr, pathPtr);
-
-    // Orphan the buffer and return it
-    janBuf.orphan();
-    return tmpBuf;
-}
-
-
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
@@ -572,6 +463,25 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
+XMLCh* XMLPlatformUtils::getCurrentDirectory()
+{
+    char  dirBuf[PATH_MAX + 1];
+    char  *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
+
+    if (!curDir)
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::File_CouldNotGetBasePathName);
+    }
+
+    return XMLString::transcode(curDir);
+}
+
+inline bool XMLPlatformUtils::isAnySlash(XMLCh c)
+{
+    return ( chBackSlash == c || chForwardSlash == c);
+}
+
 
 // -----------------------------------------------------------------------
 //  Mutex methods
@@ -738,5 +648,7 @@ void XMLPlatformUtils::platformTerm()
         atomicOpsMutex.fHandle = 0;
 #endif
 }
+
+#include <xercesc/util/LogicalPath.c>
 
 XERCES_CPP_NAMESPACE_END
