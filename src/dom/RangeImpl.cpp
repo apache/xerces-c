@@ -762,8 +762,8 @@ DOMString RangeImpl::toString() const
         }
     }
     
-    if ( fEndContainer.getNodeType()!= DOM_Node.TEXT_NODE &&
-        fEndContainer.getNodeType()!= DOM_Node.CDATA_SECTION_NODE ){
+    if ( fEndContainer.getNodeType()!= DOM_Node::TEXT_NODE &&
+        fEndContainer.getNodeType()!= DOM_Node::CDATA_SECTION_NODE ){
         int i=fEndOffset;
         stopNode = fEndContainer.getFirstChild();
         while( i>0 && stopNode!=null ){
@@ -776,8 +776,8 @@ DOMString RangeImpl::toString() const
         
     while (node != stopNode) {  //look into all kids of the Range
         if (node == null) break;
-        if (node.getNodeType() == DOM_Node.TEXT_NODE
-            ||  node.getNodeType() == DOM_Node.CDATA_SECTION_NODE) {
+        if (node.getNodeType() == DOM_Node::TEXT_NODE
+            ||  node.getNodeType() == DOM_Node::CDATA_SECTION_NODE) {
             tempString.appendData(node.getNodeValue());
         }
         node = nextNode(node, true);
