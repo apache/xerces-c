@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/20 17:06:05  knoaman
+ * PSVI: store name and namespace information
+ *
  * Revision 1.7  2003/11/13 23:20:47  peiyongz
  * initSize
  *
@@ -106,6 +109,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XercesAttGroupInfo::XercesAttGroupInfo(MemoryManager* const manager)
     : fTypeWithId(false)
+    , fNameId(0)
+    , fNamespaceId(0)
     , fAttributes(0)
     , fAnyAttributes(0)
     , fCompleteWildCard(0)
@@ -114,6 +119,19 @@ XercesAttGroupInfo::XercesAttGroupInfo(MemoryManager* const manager)
 
 }
 
+XercesAttGroupInfo::XercesAttGroupInfo(unsigned int attGroupNameId,
+                                       unsigned int attGroupNamespaceId,
+                                       MemoryManager* const manager)
+    : fTypeWithId(false)
+    , fNameId(attGroupNameId)
+    , fNamespaceId(attGroupNamespaceId)
+    , fAttributes(0)
+    , fAnyAttributes(0)
+    , fCompleteWildCard(0)
+    , fMemoryManager(manager)
+{
+
+}
 
 XercesAttGroupInfo::~XercesAttGroupInfo()
 {
@@ -185,6 +203,8 @@ void XercesAttGroupInfo::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fTypeWithId;
+        serEng<<fNameId;
+        serEng<<fNamespaceId;
 
         /***
          *
@@ -205,6 +225,8 @@ void XercesAttGroupInfo::serialize(XSerializeEngine& serEng)
     else
     {
         serEng>>fTypeWithId;
+        serEng>>fNameId;
+        serEng>>fNamespaceId;
 
         /***
          *

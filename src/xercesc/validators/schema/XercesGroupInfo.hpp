@@ -91,10 +91,15 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesGroupInfo(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~XercesGroupInfo();
+    XercesGroupInfo
+    (
+        unsigned int groupNameId
+        , unsigned int groupNamespaceId
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    ~XercesGroupInfo();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     bool                     getCheckElementConsistency() const;
@@ -105,6 +110,8 @@ public:
     const SchemaElementDecl* elementAt(const unsigned int index) const;
     XSDLocator*              getLocator() const;
     XercesGroupInfo*         getBaseGroup() const;
+    unsigned int             getNameId() const;
+    unsigned int             getNamespaceId() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
@@ -120,6 +127,7 @@ public:
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(XercesGroupInfo)
+    XercesGroupInfo(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
     // -----------------------------------------------------------------------
@@ -133,6 +141,8 @@ private:
     // -----------------------------------------------------------------------
     bool                            fCheckElementConsistency;
     int                             fScope;
+    unsigned int                    fNameId;
+    unsigned int                    fNamespaceId;
     ContentSpecNode*                fContentSpec;
     RefVectorOf<SchemaElementDecl>* fElements;
     XercesGroupInfo*                fBaseGroup; // redefine by restriction
@@ -182,6 +192,16 @@ inline XercesGroupInfo* XercesGroupInfo::getBaseGroup() const {
 inline bool XercesGroupInfo::getCheckElementConsistency() const {
 
     return fCheckElementConsistency;
+}
+
+inline unsigned int XercesGroupInfo::getNameId() const
+{
+    return fNameId;
+}
+
+inline unsigned int XercesGroupInfo::getNamespaceId() const
+{
+    return fNamespaceId;
 }
 
 // ---------------------------------------------------------------------------

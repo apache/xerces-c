@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/20 17:06:05  knoaman
+ * PSVI: store name and namespace information
+ *
  * Revision 1.10  2003/11/13 23:20:47  peiyongz
  * initSize
  *
@@ -111,6 +114,23 @@ XERCES_CPP_NAMESPACE_BEGIN
 XercesGroupInfo::XercesGroupInfo(MemoryManager* const manager)
     : fCheckElementConsistency(true)
     , fScope(-1)
+    , fNameId(0)
+    , fNamespaceId(0)
+    , fContentSpec(0)
+    , fElements(0)
+    , fBaseGroup(0)
+    , fLocator(0)
+{
+    fElements = new (manager) RefVectorOf<SchemaElementDecl>(4, false, manager);
+}
+
+XercesGroupInfo::XercesGroupInfo(unsigned int groupNameId,
+                                 unsigned int groupNamespaceId,
+                                 MemoryManager* const manager)
+    : fCheckElementConsistency(true)
+    , fScope(-1)
+    , fNameId(groupNameId)
+    , fNamespaceId(groupNamespaceId)
     , fContentSpec(0)
     , fElements(0)
     , fBaseGroup(0)
@@ -147,11 +167,12 @@ IMPL_XSERIALIZABLE_TOCREATE(XercesGroupInfo)
 
 void XercesGroupInfo::serialize(XSerializeEngine& serEng)
 {
-
     if (serEng.isStoring())
     {   
         serEng<<fCheckElementConsistency;
         serEng<<fScope;
+        serEng<<fNameId;
+        serEng<<fNamespaceId;
         serEng<<fContentSpec;
 
         /***
@@ -170,6 +191,8 @@ void XercesGroupInfo::serialize(XSerializeEngine& serEng)
     {
         serEng>>fCheckElementConsistency;
         serEng>>fScope;
+        serEng>>fNameId;
+        serEng>>fNamespaceId;
         serEng>>fContentSpec;
 
         /***

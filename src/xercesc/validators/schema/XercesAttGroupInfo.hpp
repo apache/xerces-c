@@ -84,15 +84,22 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesAttGroupInfo(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~XercesAttGroupInfo();
+    XercesAttGroupInfo
+    (
+        unsigned int           attGroupNameId
+        , unsigned int         attGroupNamespaceId
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    ~XercesAttGroupInfo();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     bool                containsTypeWithId() const;
     unsigned int        attributeCount() const;
     unsigned int        anyAttributeCount() const;
+    unsigned int        getNameId() const;
+    unsigned int        getNamespaceId() const;
     SchemaAttDef*       attributeAt(const unsigned int index);
     const SchemaAttDef* attributeAt(const unsigned int index) const;
     SchemaAttDef*       anyAttributeAt(const unsigned int index);
@@ -118,6 +125,7 @@ public:
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(XercesAttGroupInfo)
+    XercesAttGroupInfo(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
     // -----------------------------------------------------------------------
@@ -130,6 +138,8 @@ private:
     //  Private data members
     // -----------------------------------------------------------------------
     bool                       fTypeWithId;
+    unsigned int               fNameId;
+    unsigned int               fNamespaceId;
     RefVectorOf<SchemaAttDef>* fAttributes;
     RefVectorOf<SchemaAttDef>* fAnyAttributes;
     SchemaAttDef*              fCompleteWildCard;
@@ -160,6 +170,16 @@ inline unsigned int XercesAttGroupInfo::anyAttributeCount() const {
     }
 
     return 0;
+}
+
+inline unsigned int XercesAttGroupInfo::getNameId() const
+{
+    return fNameId;
+}
+
+inline unsigned int XercesAttGroupInfo::getNamespaceId() const
+{
+    return fNamespaceId;
 }
 
 inline SchemaAttDef*
