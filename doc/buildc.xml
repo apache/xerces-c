@@ -441,7 +441,7 @@ gmake</source>
           directory. Run <code>packageBinaries</code>, giving the source and target directories
           like this:</p>
 
-          <source>packageBinaries -s D:\Your\Xerces\Source -o D:\xerces_1_3_0</source>
+          <source>packageBinaries -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-os2</source>
 
           <p>(Match the source directory to your system; the target directory can be
           anything you want.)</p>
@@ -842,7 +842,7 @@ gmake install</source>
     <s2 title="Building Xerces-C with ICU using bundled Perl scripts">
 
         <p>To simplify the builds, we use the bundled perl script
-        'packageBinary.pl'. It requires some setup, but once it is done,
+        'packageBinaries.pl'. It requires some setup, but once it is done,
         repeating it becomes easy. Here's how we do it.</p>
 
         <p>Prerequisites:</p>
@@ -875,12 +875,12 @@ gmake install</source>
         <p>For Windows</p>
 
         <p>Extract Xerces-C source files from the .zip archive using WinZip, say
-        in the root directory. It should create a directory like
-        '<code>\xerces-c-src_1_3_0</code>'.</p>
+        in the root directory (an arbitrary drive x:). It should create a directory like
+        '<code>x:\&XercesCSrcInstallDir;</code>'.</p>
 
         <p>Extract the ICU files, using WinZip, in root directory of the disk
         where you have installed Xerces-C, sources. After extraction, there
-        should be a new directory '<code>\icu</code>' which contains all the ICU
+        should be a new directory '<code>x:\icu</code>' which contains all the ICU
         source files.</p>
 
         <p>There are two options to build Xerces-C with ICU. One is to use the
@@ -898,10 +898,13 @@ gmake install</source>
         '<code>VCVARS32.BAT</code>' or a similar file. Next at the prompt
         enter:</p>
 
-        <source>    set XERCESCROOT=\xerces-c-src_1_3_0
-set ICUROOT=\icu
-cd \xerces-c-src_1_3_0\scripts
-perl packageBinaries.pl -s \xerces-c-src_1_3_0 -o \temp\xerces-c-1_3_0-win32 -t icu</source>
+        <source>    set XERCESCROOT=x:\&XercesCSrcInstallDir;
+set ICUROOT=x:\icu
+cd x:\&XercesCSrcInstallDir;\scripts
+perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -t icu</source>
+
+        <p>(Match the source directory to your system; the target directory can be
+        anything you want.)</p>
 
         <p>If everything is setup right and works right, then you should see a
         binary drop created in the target directory specified above. This script
