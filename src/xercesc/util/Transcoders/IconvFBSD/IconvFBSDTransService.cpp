@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/03/07 15:08:57  tng
+ * [Bug 17571] fix building IconvFBSD (namespaces) .  Patch from Bjoern A. Zeeb.
+ *
  * Revision 1.9  2003/03/07 14:42:45  tng
  * [Bug 17570] IconvFBSD build on alpha,sparc.  Patch from Bjoern A. Zeeb.
  *
@@ -213,6 +216,10 @@ static const IconvFBSDEncoding    gIconvFBSDEncodings[] = {
 #include <stdlib.h>
 #include <stdio.h>
 
+#if !defined(APP_NO_THREADS)
+#include <xercesc/util/Mutexes.hpp>
+#endif
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -320,8 +327,6 @@ static wint_t fbsd_towlower(wint_t ch)
 #else /* XML_USE_LIBICONV */
 
 #if !defined(APP_NO_THREADS)
-
-#include <xercesc/util/Mutexes.hpp>
 // Iconv() access syncronization point
 static XMLMutex    *gIconvMutex = NULL;
 #  define ICONV_LOCK    XMLMutexLock lockConverter(gIconvMutex);
