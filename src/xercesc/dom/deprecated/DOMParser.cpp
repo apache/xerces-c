@@ -173,7 +173,7 @@ void DOMParser::reset()
     //  will cause the old one to go away unless application code is also
     //  holding a reference to it.
     //
-    fDocument = DOM_Document::createDocument();
+    fDocument = DOM_Document::createDocument(fMemoryManager);
     resetDocType();
 
     fCurrentParent   = 0;
@@ -782,7 +782,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             if (oneAttrib->getType()==XMLAttDef::ID)
             {
                 if (docImpl->fNodeIDMap == 0)
-                    docImpl->fNodeIDMap = new NodeIDMap(500);
+                    docImpl->fNodeIDMap = new (fMemoryManager) NodeIDMap(500, fMemoryManager);
                 docImpl->fNodeIDMap->add(attr);
                 attr->isIdAttr(true);
             }
@@ -804,7 +804,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             if (oneAttrib->getType()==XMLAttDef::ID)
             {
                 if (docImpl->fNodeIDMap == 0)
-                    docImpl->fNodeIDMap = new NodeIDMap(500);
+                    docImpl->fNodeIDMap = new (fMemoryManager) NodeIDMap(500, fMemoryManager);
                 docImpl->fNodeIDMap->add(attr);
                 attr->isIdAttr(true);
             }
@@ -1166,7 +1166,7 @@ void DOMParser::endAttList
                             buf.append(XMLUni::fgXMLNSURIName);
                     }
 
-                    insertAttr = new AttrNSImpl((DocumentImpl*)fDocument.fImpl,
+                    insertAttr = new (fMemoryManager) AttrNSImpl((DocumentImpl*)fDocument.fImpl,
                        DOMString(buf.getRawBuffer()),     // NameSpaceURI
                        qualifiedName);   // qualified name
 
@@ -1174,7 +1174,7 @@ void DOMParser::endAttList
                 else
                 {
                     // Namespaces is turned off...
-                    insertAttr = new AttrImpl((DocumentImpl*)fDocument.fImpl, attr->getFullName());
+                    insertAttr = new (fMemoryManager) AttrImpl((DocumentImpl*)fDocument.fImpl, attr->getFullName());
                 }
                 insertAttr->setValue(attr->getValue());
                 // memory leak here

@@ -98,7 +98,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 static DOMString *nam = 0;  // will be lazily initialized to "#document"
 static XMLRegisterCleanup namCleanup;
 
-DocumentImpl::DocumentImpl()
+DocumentImpl::DocumentImpl(MemoryManager* const manager)
     : ParentNode(this)
     , docType(0)
     , docElement(0)
@@ -110,16 +110,17 @@ DocumentImpl::DocumentImpl()
     , ranges(0)
     , fChanges(0)
     , errorChecking(true)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
-    namePool    = new (fMemoryManager) DStringPool(257);
+    namePool    = new (fMemoryManager) DStringPool(257, fMemoryManager);
 };
 
 
 //DOM Level 2
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            const DOMString &qualifiedName,
-                           DocumentTypeImpl *doctype)
+                           DocumentTypeImpl *doctype,
+                           MemoryManager* const manager)
     : ParentNode(this)
     , docType(0)
     , docElement(0)
@@ -131,10 +132,10 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     , ranges(0)
     , fChanges(0)
     , errorChecking(true)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
 	setDocumentType(doctype);
-    namePool    = new (fMemoryManager) DStringPool(257);
+    namePool    = new (fMemoryManager) DStringPool(257, fMemoryManager);
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
 }
 
@@ -197,7 +198,7 @@ DocumentImpl::~DocumentImpl()
 NodeImpl *DocumentImpl::cloneNode(bool deep) {
 
     // clone the node itself
-    DocumentImpl *newdoc = new DocumentImpl();
+    DocumentImpl *newdoc = new (fMemoryManager) DocumentImpl(fMemoryManager);
 
     // then the children by _importing_ them
     if (deep) {
@@ -429,7 +430,7 @@ ElementImpl *DocumentImpl::getDocumentElement()
 
 DeepNodeListImpl *DocumentImpl::getElementsByTagName(const DOMString &tagname)
 {
-    return new DeepNodeListImpl(this,tagname);
+    return new (fMemoryManager) DeepNodeListImpl(this,tagname);
 };
 
 
@@ -695,7 +696,7 @@ AttrImpl *DocumentImpl::createAttributeNS(const DOMString &fNamespaceURI,
 DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    return new DeepNodeListImpl(this, fNamespaceURI, fLocalName);
+    return new (fMemoryManager) DeepNodeListImpl(this, fNamespaceURI, fLocalName);
 }
 
 

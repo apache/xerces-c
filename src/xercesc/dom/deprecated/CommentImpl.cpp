@@ -97,7 +97,7 @@ CommentImpl::~CommentImpl() {
 
 NodeImpl * CommentImpl::cloneNode(bool deep)
 {
-    return new CommentImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) CommentImpl(*this, deep);
 };
 
 

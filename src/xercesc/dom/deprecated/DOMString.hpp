@@ -320,10 +320,28 @@ public:
       * caller owns the (char *) string that is returned, and is responsible
       * for deleting it.
       *
+      * Note: The buffer returned is allocated using the global operator new
+      *       and users need to make sure to use the corresponding delete [].
+      *       This method will be deprecated in later versions, as we move
+      *       towards using a memory manager for allocation and deallocation.
+      *
       * @return A pointer to a newly allocated buffer of char elements, which
       *         represents the original string, but in the local encoding.
       */
     char        *transcode() const;
+
+    /**
+      * Returns a copy of the string, transcoded to the local code page. The
+      * caller owns the (char *) string that is returned, and is responsible
+      * for deleting it.
+      *
+      * @param  manager the memory manager to use for allocating returned
+      *         returned buffer.
+      *
+      * @return A pointer to a newly allocated buffer of char elements, which
+      *         represents the original string, but in the local encoding.
+      */
+    char        *transcode(MemoryManager* const manager) const;
 
 
     /**

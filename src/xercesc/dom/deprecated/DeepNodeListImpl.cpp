@@ -63,6 +63,7 @@
 #include "NodeImpl.hpp"
 #include "ElementImpl.hpp"
 #include "DStringPool.hpp"
+#include "DocumentImpl.hpp"
 #include <limits.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -76,7 +77,8 @@ DeepNodeListImpl::DeepNodeListImpl(NodeImpl *rootNod, const DOMString &tagNam)
     changes = 0;
     this->rootNode = rootNod;
     this->tagName = tagNam;
-    nodes=new NodeVector();
+    MemoryManager* manager= rootNod->getDocument()->getMemoryManager();
+    nodes=new (manager) NodeVector(manager);
     matchAll = tagName.equals(DStringPool::getStaticString("*"
                                                          , &kAstr
                                                          , reinitDeepNodeListImpl
@@ -94,7 +96,8 @@ DeepNodeListImpl::DeepNodeListImpl(NodeImpl *rootNod,
     changes = 0;
     this->rootNode = rootNod;
     this->tagName = localName;
-    nodes=new NodeVector();
+    MemoryManager* manager = rootNod->getDocument()->getMemoryManager();
+    nodes=new (manager) NodeVector(manager);
     matchAll = tagName.equals(DStringPool::getStaticString("*"
                                                          , &kAstr
                                                          , reinitDeepNodeListImpl

@@ -115,7 +115,7 @@ ElementImpl::~ElementImpl()
 
 NodeImpl *ElementImpl::cloneNode(bool deep)
 {
-    return new ElementImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) ElementImpl(*this, deep);
 };
 
 
@@ -170,7 +170,7 @@ NamedNodeMapImpl *ElementImpl::getAttributes()
 
 DeepNodeListImpl *ElementImpl::getElementsByTagName(const DOMString &tagname)
 {
-    return new DeepNodeListImpl(this,tagname);
+    return new (getOwnerDocument()->getMemoryManager()) DeepNodeListImpl(this,tagname);
 };
 
 
@@ -242,10 +242,7 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
     if (!newAttr)
     {
 		if (attributes == 0) {
-            if (getOwnerDocument())
-                attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
-			else
-                attributes = new AttrMapImpl(this, null);
+            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
         }
         newAttr = (AttrImpl*)ownerDocument->createAttribute(nam);
         attributes->setNamedItem(newAttr);
@@ -268,10 +265,7 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
     if (!(newAttr->isAttrImpl()))
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
 	if (attributes == 0) {
-        if (getOwnerDocument())
-            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
-		else
-            attributes = new AttrMapImpl(this, null);
+        attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
     }
     AttrImpl *oldAttr =
       (AttrImpl *) attributes->getNamedItem(newAttr->getName());
@@ -322,10 +316,7 @@ AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
                                                     qualifiedName);
     newAttr->setNodeValue(fValue);
 	if (attributes == 0) {
-        if (getOwnerDocument())
-		    attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
-        else
-            attributes = new AttrMapImpl(this, null);
+        attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
     }
     AttrImpl *oldAttr = (AttrImpl *)attributes->setNamedItem(newAttr);
 
@@ -378,10 +369,7 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
         }
     }
     if (attributes == 0) {
-        if (getOwnerDocument())
-            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
-        else
-            attributes = new AttrMapImpl(this, null);
+        attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, null);
     }
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
 
@@ -404,7 +392,7 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
 DeepNodeListImpl *ElementImpl::getElementsByTagNameNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    return new DeepNodeListImpl(this,fNamespaceURI, fLocalName);
+    return new (getOwnerDocument()->getMemoryManager())DeepNodeListImpl(this,fNamespaceURI, fLocalName);
 }
 
 bool ElementImpl::hasAttributes()
@@ -468,10 +456,7 @@ NodeImpl *ElementImpl::NNM_removeNamedItem(const DOMString &nnm_name)
 NodeImpl *ElementImpl::NNM_setNamedItem(NodeImpl *nnm_arg)
 {
 	if (getAttributes() == null) {
-        if (getOwnerDocument())
-		    attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this);
-        else
-		    attributes = new AttrMapImpl(this);
+	    attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this);
     }
 	return attributes->setNamedItem(nnm_arg);
 }
@@ -495,10 +480,7 @@ NodeImpl *ElementImpl::NNM_getNamedItemNS(const DOMString &nnm_namespaceURI, con
 NodeImpl *ElementImpl::NNM_setNamedItemNS(NodeImpl *nnm_arg)
 {
 	if (getAttributes() == null) {
-        if (getOwnerDocument())
-            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this);
-		else
-            attributes = new AttrMapImpl(this);
+        attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this);
     }
 	return getAttributes()->setNamedItemNS(nnm_arg);
 }
@@ -545,11 +527,7 @@ void ElementImpl::setupDefaultAttributes()
 	
 	AttrMapImpl* defAttrs = getDefaultAttributes();
 	if (defAttrs) {
-
-        if (getOwnerDocument())
-            attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, defAttrs);
-        else
-            attributes = new AttrMapImpl(this, defAttrs);
+        attributes = new (getOwnerDocument()->getMemoryManager()) AttrMapImpl(this, defAttrs);
     }
 }
 

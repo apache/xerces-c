@@ -99,6 +99,7 @@ class PARSERS_EXPORT DOMParser :
     , public XMLErrorReporter
     , public XMLEntityHandler
     , public DocTypeHandler
+    , public XMemory
 {
 public :
     // -----------------------------------------------------------------------

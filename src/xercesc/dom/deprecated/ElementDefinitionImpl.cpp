@@ -59,6 +59,7 @@
  */
 
 #include "ElementDefinitionImpl.hpp"
+#include "DocumentImpl.hpp"
 #include "NamedNodeMapImpl.hpp"
 #include "NodeImpl.hpp"
 
@@ -95,7 +96,7 @@ ElementDefinitionImpl::~ElementDefinitionImpl()
 
 NodeImpl *ElementDefinitionImpl::cloneNode(bool deep)
 {
-    return new ElementDefinitionImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) ElementDefinitionImpl(*this, deep);
 };
 
 

@@ -105,11 +105,12 @@ void NamedNodeMapImpl::addRef(NamedNodeMapImpl *This)
 
 NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNod)
 {
-    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(ownerNod);
+    MemoryManager* manager = ownerNod->getDocument()->getMemoryManager();
+    NamedNodeMapImpl *newmap = new (manager) NamedNodeMapImpl(ownerNod);
 	
     if (nodes != null)
     {
-        newmap->nodes = new NodeVector(nodes->size());
+        newmap->nodes = new (manager) NodeVector(nodes->size(), manager);
         for (unsigned int i = 0; i < nodes->size(); ++i)
         {
             NodeImpl *n = nodes->elementAt(i)->cloneNode(true);
@@ -285,8 +286,10 @@ NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
     else
     {
         i=-1-i; // Insert point (may be end of list)
-        if(null==nodes)
-            nodes=new NodeVector();
+        if(null==nodes) {
+            MemoryManager* manager = ownerNode->getDocument()->getMemoryManager();
+            nodes=new (manager) NodeVector(manager);
+        }
         nodes->insertElementAt(arg,i);
     }
     if (previous != null) {
@@ -390,8 +393,10 @@ NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
         i=findNamePoint(arg->getNodeName()); // Insert point (may be end of list)
         if (i<0)
           i = -1 - i;
-        if(null==nodes)
-            nodes=new NodeVector();
+        if(null==nodes) {
+            MemoryManager* manager = ownerNode->getDocument()->getMemoryManager();
+            nodes=new (manager) NodeVector(manager);
+        }
         nodes->insertElementAt(arg,i);
     }
     if (previous != null) {
@@ -441,9 +446,12 @@ void NamedNodeMapImpl::setOwnerDocument(DocumentImpl *doc) {
 void NamedNodeMapImpl::cloneContent(NamedNodeMapImpl *srcmap) {
    if ((srcmap != null) && (srcmap->nodes != null) && (srcmap->nodes->size() > 0))
 	{
-		if (nodes != null)
+		if (nodes != null) {
 			delete nodes;
-		nodes = new NodeVector(srcmap->nodes->size());
+		}
+
+        MemoryManager* manager = ownerNode->getDocument()->getMemoryManager();
+        nodes = new (manager) NodeVector(srcmap->nodes->size(), manager);
 		for (unsigned int i = 0; i < srcmap->nodes->size(); i++)
 		{
 			NodeImpl *n = srcmap->nodes->elementAt(i);

@@ -70,7 +70,7 @@
 //
 
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -78,17 +78,20 @@ XERCES_CPP_NAMESPACE_BEGIN
 class NodeImpl;
 
 
-class  NodeVector {
+class  NodeVector : public XMemory {
 private:
     NodeImpl        **data;
     unsigned int    allocatedSize;
     unsigned int    nextFreeSlot;
+    MemoryManager*  fMemoryManager;
+
     void            init(unsigned int size);
     void            checkSpace();
 
 public:
-    NodeVector();
-    NodeVector(unsigned int size);
+    NodeVector(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    NodeVector(unsigned int size,
+               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~NodeVector();
 
     unsigned int    size();

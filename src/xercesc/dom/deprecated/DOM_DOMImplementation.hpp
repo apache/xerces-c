@@ -61,7 +61,7 @@
 #ifndef DOM_DOMImplementation_HEADER_GUARD_
 #define DOM_DOMImplementation_HEADER_GUARD_
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include "DOMString.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -189,7 +189,8 @@ class CDOM_EXPORT DOM_DOMImplementation {
      *   been used with a different document.
      */
     DOM_Document createDocument(const DOMString &namespaceURI,
-	const DOMString &qualifiedName, const DOM_DocumentType &doctype);
+	const DOMString &qualifiedName, const DOM_DocumentType &doctype,
+	MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     //@}
 
     // -----------------------------------------------------------------------

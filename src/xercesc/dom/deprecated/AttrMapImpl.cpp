@@ -63,6 +63,7 @@
 #include "NamedNodeMapImpl.hpp"
 #include "NodeImpl.hpp"
 #include "ElementImpl.hpp"
+#include "DocumentImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -93,7 +94,7 @@ AttrMapImpl::~AttrMapImpl()
 
 AttrMapImpl *AttrMapImpl::cloneAttrMap(NodeImpl *ownerNode_p)
 {
-	AttrMapImpl *newmap = new AttrMapImpl(ownerNode_p);
+	AttrMapImpl *newmap = new (ownerNode_p->getDocument()->getMemoryManager()) AttrMapImpl(ownerNode_p);
 	newmap->cloneContent(this);
 	newmap->attrDefaults = this->attrDefaults;
 	return newmap;

@@ -95,7 +95,7 @@ bool TextImpl::isTextImpl()
 
 NodeImpl *TextImpl::cloneNode(bool deep)
 {
-    return new TextImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) TextImpl(*this, deep);
 };
 
 

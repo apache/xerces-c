@@ -170,7 +170,7 @@ void AttrImpl::makeChildNode() {
 
 NodeImpl * AttrImpl::cloneNode(bool deep)
 {
-    return new AttrImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) AttrImpl(*this, deep);
 };
 
 

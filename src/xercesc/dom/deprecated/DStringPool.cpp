@@ -76,7 +76,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //                      hash table array itself is a pointer to the head
 //                      of a singly-linked list of these structs.
 //
-struct DStringPoolEntry
+struct DStringPoolEntry : public XMemory
 {
     DStringPoolEntry    *fNext;
     DOMString           fString;
@@ -84,10 +84,15 @@ struct DStringPoolEntry
 
 
 
-DStringPool::DStringPool(int hashTableSize)
+DStringPool::DStringPool(int hashTableSize,
+                         MemoryManager* const manager)
 {
     fHashTableSize = hashTableSize;
-    fHashTable = new DStringPoolEntry *[hashTableSize];
+    fHashTable = (DStringPoolEntry**) manager->allocate
+    (
+        hashTableSize * sizeof(DStringPoolEntry*)
+    );//new DStringPoolEntry *[hashTableSize];
+    fMemoryManager = manager;
     for (int i=0; i<fHashTableSize; i++)
         fHashTable[i] = 0;
 };
@@ -111,7 +116,7 @@ DStringPool::~DStringPool()
                            //   on spe->fString.
         }
     }
-    delete [] fHashTable;
+    fMemoryManager->deallocate(fHashTable);//delete [] fHashTable;
     fHashTable = 0;
 };
 
@@ -129,7 +134,7 @@ const DOMString &DStringPool::getPooledString(const XMLCh *in)
             return (*pspe)->fString;
         pspe = &((*pspe)->fNext);
     }
-    *pspe = spe = new DStringPoolEntry;
+    *pspe = spe = new (fMemoryManager) DStringPoolEntry;
     spe->fNext = 0;
     spe->fString = DOMString(in);
     return spe->fString;
@@ -152,7 +157,7 @@ const DOMString &DStringPool::getPooledString(const DOMString &in)
             return (*pspe)->fString;
         pspe = &((*pspe)->fNext);
     }
-    *pspe = spe = new DStringPoolEntry;
+    *pspe = spe = new (fMemoryManager) DStringPoolEntry;
     spe->fNext = 0;
     spe->fString = DOMString(in);
     return spe->fString;

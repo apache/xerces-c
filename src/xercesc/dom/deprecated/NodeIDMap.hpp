@@ -78,7 +78,7 @@
 //  smaller when tuned for this exact usage, and the generic RefHashTableOf
 //  from the xerces utils project is not a paricularly good fit.
 //
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -87,10 +87,12 @@ class AttrImpl;
 class DOMString;
 
 
-class NodeIDMap {
+class NodeIDMap : public XMemory {
 public:
 
-    NodeIDMap(int initialSize);    // Create a new hash table, sized to hold "initialSize"
+    // Create a new hash table, sized to hold "initialSize"
+    NodeIDMap(int initialSize,
+              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
                                    //  Entries.  It will automatically grow if need be.
 
     virtual ~NodeIDMap();
@@ -118,7 +120,7 @@ private:
     unsigned int  fNumEntries;             // The number of entries used.
     unsigned int  fMaxEntries;             // The max number of entries to use before
                                            //   growing the table.
-
+    MemoryManager* fMemoryManager;
 
 };
 

@@ -217,10 +217,10 @@ DOM_DocumentType DOM_DOMImplementation::createDocumentType(const DOMString &qual
 }
 
 DOM_Document DOM_DOMImplementation::createDocument(const DOMString &namespaceURI,
-	const DOMString &qualifiedName, const DOM_DocumentType &doctype)
+	const DOMString &qualifiedName, const DOM_DocumentType &doctype, MemoryManager* const manager)
 {
-    return DOM_Document(new DocumentImpl(namespaceURI, qualifiedName,
-	doctype == null ? null : (DocumentTypeImpl *) doctype.fImpl));
+    return DOM_Document(new (manager) DocumentImpl(namespaceURI, qualifiedName,
+	doctype == null ? null : (DocumentTypeImpl *) doctype.fImpl, manager));
 }
 
 // -----------------------------------------------------------------------

@@ -105,7 +105,7 @@ XMLDeclImpl::~XMLDeclImpl()
 
 NodeImpl * XMLDeclImpl::cloneNode(bool deep)
 {
-    return new XMLDeclImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) XMLDeclImpl(*this, deep);
 }
 
 DOMString XMLDeclImpl::getNodeName()

@@ -107,7 +107,7 @@ ElementNSImpl::ElementNSImpl(const ElementNSImpl &other, bool deep) :
 };
 
 NodeImpl * ElementNSImpl::cloneNode(bool deep) {
-    return new ElementNSImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) ElementNSImpl(*this, deep);
 }
 
 DOMString ElementNSImpl::getNamespaceURI()

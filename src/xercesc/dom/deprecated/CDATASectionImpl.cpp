@@ -89,7 +89,7 @@ CDATASectionImpl::~CDATASectionImpl()
 
 NodeImpl  *CDATASectionImpl::cloneNode(bool deep)
 {
-    return new CDATASectionImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) CDATASectionImpl(*this, deep);
 };
 
 

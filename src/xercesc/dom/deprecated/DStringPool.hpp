@@ -73,6 +73,7 @@
 
 #include "DOMString.hpp"
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -90,7 +91,8 @@ struct DStringPoolEntry;
 class DStringPool : public XMemory
 {
 public:
-    DStringPool(int  hashTableSize);
+    DStringPool(int  hashTableSize,
+                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~DStringPool();
 
     const DOMString &getPooledString(const DOMString &in);
@@ -107,6 +109,7 @@ private:
 
     DStringPoolEntry **fHashTable;
     int              fHashTableSize;
+    MemoryManager*   fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -62,6 +62,7 @@
 #include "DOM_Node.hpp"
 #include "DOM_DOMException.hpp"
 #include "DStringPool.hpp"
+#include "DocumentImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -93,7 +94,7 @@ DocumentFragmentImpl::~DocumentFragmentImpl()
 
 NodeImpl *DocumentFragmentImpl::cloneNode(bool deep)
 {
-    return new DocumentFragmentImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) DocumentFragmentImpl(*this, deep);
 };
 
 

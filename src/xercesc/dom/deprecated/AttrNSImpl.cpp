@@ -117,7 +117,7 @@ AttrNSImpl::AttrNSImpl(const AttrNSImpl &other, bool deep) :
 
 NodeImpl * AttrNSImpl::cloneNode(bool deep)
 {
-    return new AttrNSImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) AttrNSImpl(*this, deep);
 };
 
 DOMString AttrNSImpl::getNamespaceURI()

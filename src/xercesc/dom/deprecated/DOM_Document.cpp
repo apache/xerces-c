@@ -102,9 +102,9 @@ DOM_Document & DOM_Document::operator = (const DOM_NullPtr *other)
 };
 
 
-DOM_Document    DOM_Document::createDocument()
+DOM_Document    DOM_Document::createDocument(MemoryManager* const manager)
 {
-        return DOM_Document(new DocumentImpl);
+        return DOM_Document(new (manager) DocumentImpl(manager));
 };
 
 

@@ -69,7 +69,9 @@ static const int gPrimes[] = {997, 9973, 99991, 999983, 0 };  // To do - add a f
 static const float gMaxFill = 0.8f;   // The maximum fraction of the total
                                     // table entries to consume before exanding.
 
-NodeIDMap::NodeIDMap(int initialSize)
+NodeIDMap::NodeIDMap(int initialSize,
+                     MemoryManager* const manager)
+: fMemoryManager(manager)
 {
     for (fSizeIndex = 0; gPrimes[fSizeIndex] < initialSize; fSizeIndex++)
     {
@@ -86,7 +88,7 @@ NodeIDMap::NodeIDMap(int initialSize)
     fNumEntries = 0;
     fMaxEntries = (unsigned long)(float(fSize) * gMaxFill);
 
-    fTable = new AttrImpl *[fSize];
+    fTable = (AttrImpl**) manager->allocate(fSize * sizeof(AttrImpl*));// new AttrImpl *[fSize];
     unsigned int i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
@@ -96,7 +98,7 @@ NodeIDMap::NodeIDMap(int initialSize)
 NodeIDMap::~NodeIDMap()
 {
     delete[] fTable;
-    fTable = 0;
+    fMemoryManager->deallocate(fTable);//fTable = 0;
 };
 
 
@@ -251,7 +253,7 @@ void NodeIDMap::growTable()
     //
     //  Allocate the new table.
     //
-    fTable = new AttrImpl *[fSize];
+    fTable = (AttrImpl**) fMemoryManager->allocate(fSize * sizeof(AttrImpl*));//new AttrImpl *[fSize];
     unsigned int i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
@@ -267,7 +269,7 @@ void NodeIDMap::growTable()
             add(oldTable[i]);
     }
 
-    delete [] oldTable;
+    fMemoryManager->deallocate(oldTable);//delete [] oldTable;
 
 };
 

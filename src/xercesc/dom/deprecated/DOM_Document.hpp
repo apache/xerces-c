@@ -181,7 +181,7 @@ public:
     *   @return A new <code>DOM_Document</code>, which may then
     *   be populated using the DOM API calls.
     */
-    static DOM_Document   createDocument();
+    static DOM_Document   createDocument(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
     *  Create a new entity.

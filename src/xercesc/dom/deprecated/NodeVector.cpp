@@ -68,24 +68,29 @@
 //
 
 #include "NodeVector.hpp"
+#include <xercesc/framework/MemoryManager.hpp>
 #include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-NodeVector::NodeVector()
+NodeVector::NodeVector(MemoryManager* const manager)
+: fMemoryManager(manager)
 {
 	init(10);
 };
 
-NodeVector::NodeVector(unsigned int size) {
+NodeVector::NodeVector(unsigned int size,
+                       MemoryManager* const manager)
+: fMemoryManager(manager)
+{
 	init(size);
 };
 
 
 void NodeVector::init(unsigned int size) {
 	assert(size > 0);
-	data = new NodeImpl *[size];
+	data = (NodeImpl**) fMemoryManager->allocate(size * sizeof(NodeImpl*));//new NodeImpl *[size];
 	assert(data != 0);
 	allocatedSize = size;
 	nextFreeSlot = 0;
@@ -93,7 +98,7 @@ void NodeVector::init(unsigned int size) {
 
 
 NodeVector::~NodeVector() {
-	delete [] data;
+	fMemoryManager->deallocate(data);//delete [] data;
 };
 
 
@@ -109,12 +114,15 @@ void NodeVector::checkSpace() {
                 unsigned int grow = allocatedSize/2;
                 if (grow < 50) grow = 50;
 		unsigned int newAllocatedSize = allocatedSize + grow;
-		NodeImpl **newData = new NodeImpl *[newAllocatedSize];
+		NodeImpl **newData = (NodeImpl**) fMemoryManager->allocate
+        (
+            newAllocatedSize * sizeof(NodeImpl*)
+        );//new NodeImpl *[newAllocatedSize];
 		assert(newData != 0);
 		for (unsigned int i=0; i<allocatedSize; i++) {
 			newData[i] = data[i];
 		};
-		delete [] data;
+		fMemoryManager->deallocate(data);//delete [] data;
 		allocatedSize = newAllocatedSize;
 		data = newData;
 	};

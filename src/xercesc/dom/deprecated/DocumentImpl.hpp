@@ -174,9 +174,11 @@ private:
    	friend class DOMParser;
 
 public:
-    DocumentImpl();
+    DocumentImpl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     DocumentImpl(const DOMString &namespaceURI,	    //DOM Level 2
-	const DOMString &qualifiedName, DocumentTypeImpl *doctype);
+	             const DOMString &qualifiedName,
+                 DocumentTypeImpl *doctype,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~DocumentImpl();
     virtual bool isDocumentImpl();   // RTTI replacement function
 

@@ -61,6 +61,7 @@
 #include "DOM_DOMException.hpp"
 #include "DOM_Node.hpp"
 #include "EntityImpl.hpp"
+#include "DocumentImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -99,7 +100,7 @@ EntityImpl::~EntityImpl() {
 
 NodeImpl *EntityImpl::cloneNode(bool deep)
 {
-    return new EntityImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) EntityImpl(*this, deep);
 };
 
 

@@ -168,7 +168,7 @@ EntityReferenceImpl::~EntityReferenceImpl()
 
 NodeImpl *EntityReferenceImpl::cloneNode(bool deep)
 {
-    return new EntityReferenceImpl(*this, deep);
+    return new (getOwnerDocument()->getMemoryManager()) EntityReferenceImpl(*this, deep);
 }
 
 

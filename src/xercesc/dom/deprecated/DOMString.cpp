@@ -155,7 +155,7 @@ void DOMStringData::removeRef()
     {
         fBufferLength = 0xcccc;
         fRefCount     = 0xcccc;
-        delete [] this;  //  was allocated with new char[size] !
+        XMLPlatformUtils::fgMemoryManager->deallocate(this);//delete [] this;  //  was allocated with new char[size] !
         XMLPlatformUtils::atomicDecrement(DOMString::gLiveStringDataCount);
     };
 };
@@ -174,7 +174,10 @@ DOMStringData *DOMStringData::allocateBuffer(unsigned int length)
                                                //  array in DOMStringData struct.
     DOMStringData *buf = 0;
     try {
-        buf = (DOMStringData *) new char[sizeToAllocate];
+        buf = (DOMStringData *) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            sizeToAllocate * sizeof(char)
+        );//new char[sizeToAllocate];
     }
     catch (...) {
         ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
@@ -250,8 +253,11 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
         // Allocate a new batch of them, using the system's
         // operator new to get a chunk of memory.
         //
-       DOMStringHandle *dsg =
-            ::new DOMStringHandle[allocGroupSize];
+        DOMStringHandle *dsg = (DOMStringHandle*)
+            XMLPlatformUtils::fgMemoryManager->allocate
+            (
+                allocGroupSize * sizeof(DOMStringHandle)
+            );//::new DOMStringHandle[allocGroupSize];
 
         // Link the block itself into the list of blocks.  The purpose of this is to
         //   let us locate and delete the blocks when shutting down.
@@ -297,7 +303,7 @@ void DOMStringHandle::operator delete(void *pMem)
         for (pThisBlock = blockListPtr; pThisBlock != 0; pThisBlock = pNextBlock)
         {
             pNextBlock = *(DOMStringHandle **)pThisBlock;
-            delete [] pThisBlock;
+            XMLPlatformUtils::fgMemoryManager->deallocate(pThisBlock);//delete [] pThisBlock;
         }
         blockListPtr = 0;
         freeListPtr  = 0;
@@ -912,10 +918,10 @@ void DOMString::print() const
     if (len > 0)
     {
         // Transcode from Unicode to char * in whatever the system local code page is.
-        char *pc = transcode();
+        char *pc = transcode(XMLPlatformUtils::fgMemoryManager);
         fputs(pc, stdout);
 
-        delete [] pc;
+        XMLPlatformUtils::fgMemoryManager->deallocate(pc);//delete [] pc;
     }
 };
 
@@ -1003,6 +1009,81 @@ char *DOMString::transcode() const
         }
     }
     delete [] allocatedBuf;   // which will be null if we didn't allocate one.
+
+    // Cap it off and return it
+    retP[charsNeeded] = 0;
+    return retP;
+}
+
+char *DOMString::transcode(MemoryManager* const manager) const
+{
+    if (!fHandle || fHandle->fLength == 0)
+    {
+        char* retP = (char*) manager->allocate(sizeof(char));//new char[1];
+        *retP = 0;
+        return retP;
+    }
+
+    // We've got some data
+    // DOMStrings are not always null terminated, so we may need to
+    // copy to another buffer first in order to null terminate it for
+    // use as input to the transcoding routines..
+    //
+    XMLCh* DOMStrData = fHandle->fDSData->fData;
+
+    const unsigned int localBufLen = 1000;
+    XMLCh localBuf[localBufLen];
+    XMLCh *allocatedBuf = 0;
+    XMLCh *srcP;
+
+    if (DOMStrData[fHandle->fLength] == 0)
+    {
+        // The data in the DOMString itself happens to be null terminated.
+        //  Just use it in place.
+        srcP = DOMStrData;
+    }
+    else if (fHandle->fLength < localBufLen-1)
+    {
+        // The data is not null terminated, but does fit in the
+        //  local buffer (fast allocation).  Copy it over, and add
+        //  the null termination,
+        memcpy(localBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
+        srcP = localBuf;
+        srcP[fHandle->fLength] = 0;
+    }
+    else
+    {
+        // The data is too big for the local buffer.  Heap allocate one.
+        allocatedBuf = srcP = (XMLCh*) manager->allocate
+        (
+            (fHandle->fLength + 1) * sizeof(XMLCh)
+        );//new XMLCh[fHandle->fLength + 1];
+        memcpy(allocatedBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
+        srcP[fHandle->fLength] = 0;
+    }
+
+    //
+    //  Find out how many output chars we need and allocate a buffer big enough
+    //  for that plus a null.
+    //
+    //  The charsNeeded normally is same as fHandle->fLength.  To enhance performance,
+    //  we start with this estimate, and if overflow, then call calcRequiredSize for actual size
+    unsigned int charsNeeded = fHandle->fLength;
+    char* retP = (char*) manager->allocate((charsNeeded + 1) * sizeof(char));//new char[charsNeeded + 1];
+
+    if (!getDomConverter()->transcode(srcP, retP, charsNeeded) || (XMLString::stringLen(retP) != charsNeeded))
+    {
+        manager->deallocate(retP);//delete [] retP;
+        charsNeeded = getDomConverter()->calcRequiredSize(srcP);
+        retP = (char*) manager->allocate((charsNeeded + 1) * sizeof(char));//new char[charsNeeded + 1];
+        if (!getDomConverter()->transcode(srcP, retP, charsNeeded))
+        {
+            // <TBD> We should throw something here?
+        }
+    }
+
+    if (allocatedBuf)
+	    manager->deallocate(allocatedBuf);//delete [] allocatedBuf;   // which will be null if we didn't allocate one.
 
     // Cap it off and return it
     retP[charsNeeded] = 0;
