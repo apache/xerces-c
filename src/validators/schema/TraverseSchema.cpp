@@ -5320,7 +5320,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
 }
 
 
-void TraverseSchema::restoreSchemaInfo(SchemaInfo* toRestore) {
+void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore) {
 
     fCurrentSchemaInfo = toRestore;
     setCurrentSchemaURL(fCurrentSchemaInfo->getCurrentSchemaURL());
@@ -6404,7 +6404,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOM_Element& redefineChild
                                                 const XMLCh* const redefineChildComponentName,
                                                 const XMLCh* const redefineChildTypeName,
                                                 const int redefineNameCounter,
-                                                SchemaInfo* redefiningSchemaInfo) {
+                                                SchemaInfo* const redefiningSchemaInfo) {
 
     const XMLCh* baseTypeName = 0;
     unsigned int typeNameId = fStringPool->addOrFind(redefineChildTypeName);
