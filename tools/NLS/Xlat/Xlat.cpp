@@ -17,6 +17,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/12/06 11:45:14  cargilld
+ * Add check to Xlat to see if message text is greater than 128 characters.
+ *
  * Revision 1.21  2004/09/08 13:57:07  peiyongz
  * Apache License Version 2.0
  *
@@ -381,6 +384,13 @@ enumMessages(   const   DOMElement*             srcElem
         //  Write out an entry to the target header file. These are enums, so
         //  we use the id as the enum name.
         //
+
+        if (XMLString::stringLen(msgText) > 128) {
+            wprintf(L"Message text %s is too long, 128 character limit\n\n", xmlStrToPrintable(msgText));            
+            throw ErrReturn_SrcFmtError;
+        }
+
+
         fwprintf(headerFl, L"      , %-32s   = %d\n", xmlStrToPrintable(msgId), count);
         releasePrintableStr
 
