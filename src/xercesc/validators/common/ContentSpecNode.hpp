@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/04/04 14:42:41  knoaman
+ * Change min/maxOccurs from unsigned int to int.
+ *
  * Revision 1.2  2002/03/21 15:41:48  knoaman
  * Move behavior from TraverseSchema.
  *
@@ -214,8 +217,8 @@ public :
     NodeTypes getType() const;
     ContentSpecNode* orphanFirst();
     ContentSpecNode* orphanSecond();
-    unsigned int getMinOccurs() const;
-    unsigned int getMaxOccurs() const;
+    int getMinOccurs() const;
+    int getMaxOccurs() const;
     bool isFirstAdopted() const;
     bool isSecondAdopted() const;
 
@@ -227,8 +230,8 @@ public :
     void setFirst(ContentSpecNode* const toAdopt);
     void setSecond(ContentSpecNode* const toAdopt);
     void setType(const NodeTypes type);
-    void setMinOccurs(unsigned int min);
-    void setMaxOccurs(unsigned int max);
+    void setMinOccurs(int min);
+    void setMaxOccurs(int max);
     void setAdoptFirst(bool adoptFirst);
     void setAdoptSecond(bool adoptSecond);
 
@@ -291,8 +294,8 @@ private :
     NodeTypes           fType;
     bool                fAdoptFirst;
     bool                fAdoptSecond;
-    unsigned int        fMinOccurs;
-    unsigned int        fMaxOccurs;
+    int                 fMinOccurs;
+    int                 fMaxOccurs;
 };
 
 // ---------------------------------------------------------------------------
@@ -436,12 +439,12 @@ inline ContentSpecNode* ContentSpecNode::orphanSecond()
     return retNode;
 }
 
-inline unsigned int ContentSpecNode::getMinOccurs() const
+inline int ContentSpecNode::getMinOccurs() const
 {
     return fMinOccurs;
 }
 
-inline unsigned int ContentSpecNode::getMaxOccurs() const
+inline int ContentSpecNode::getMaxOccurs() const
 {
     return fMaxOccurs;
 }
@@ -487,12 +490,12 @@ inline void ContentSpecNode::setType(const NodeTypes type)
     fType = type;
 }
 
-inline void ContentSpecNode::setMinOccurs(unsigned int min)
+inline void ContentSpecNode::setMinOccurs(int min)
 {
     fMinOccurs = min;
 }
 
-inline void ContentSpecNode::setMaxOccurs(unsigned int max)
+inline void ContentSpecNode::setMaxOccurs(int max)
 {
     fMaxOccurs = max;
 }

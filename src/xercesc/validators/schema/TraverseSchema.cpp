@@ -5314,10 +5314,10 @@ void TraverseSchema::processAttributeDeclRef(const IDOM_Element* const elem,
 
 void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
                                  const IDOM_Element* const elem,
-                            const int allContextFlag) {
+                                 const int allContextFlag) {
 
-    unsigned int minOccurs = 1;
-    unsigned int maxOccurs = 1;
+    int minOccurs = 1;
+    int maxOccurs = 1;
     const XMLCh* minOccursStr = getElementAttValue(elem, SchemaSymbols::fgATT_MINOCCURS, true);
     const XMLCh* maxOccursStr = getElementAttValue(elem, SchemaSymbols::fgATT_MAXOCCURS, true);
 
@@ -5326,7 +5326,13 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             minOccurs = specNode->getMinOccurs();
     }
     else {
-        XMLString::textToBin(minOccursStr, minOccurs);
+        try {
+            minOccurs = XMLString::parseInt(minOccursStr);
+        }
+        catch (...) {
+            minOccurs = 1;
+        }
+
         if (specNode)
             specNode->setMinOccurs(minOccurs);
     }
@@ -5344,7 +5350,13 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
                 maxOccurs = specNode->getMaxOccurs();
         }
         else {
-            XMLString::textToBin(maxOccursStr, maxOccurs);
+            try {
+                maxOccurs = XMLString::parseInt(maxOccursStr);
+            }
+            catch(...) {
+                maxOccurs = minOccurs;
+            }
+
             if (specNode)
                 specNode->setMaxOccurs(maxOccurs);
         }
