@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/03/16 05:42:04  peiyongz
+ * Bug#17983 Formatter does not escape control characters
+ *
  * Revision 1.12  2003/01/28 18:31:47  peiyongz
  * Bug#13694: Allow Xerces to write the BOM to XML files
  *
@@ -438,6 +441,9 @@ private:
     //  fFilter
     //      don't own it
     //
+    //  fDocumentVersion
+    //      The XML Version of the document to be serialized.
+    // 
     //  fEncodingUsed (session var)
     //      the actual encoding used in WriteNode(),
     //      it does not own any data(memory).
@@ -466,6 +472,7 @@ private:
     XMLCh                        *fNewLine;
     DOMErrorHandler              *fErrorHandler;
     DOMWriterFilter              *fFilter;
+    const XMLCh                  *fDocumentVersion;
 
     //session vars
     const XMLCh                  *fEncodingUsed;
@@ -473,6 +480,8 @@ private:
     XMLFormatter                 *fFormatter;
     int                           fErrorCount;
     int                           fCurrentLine;
+
+
 };
 
 inline void DOMWriterImpl::setFeature(const int featureId

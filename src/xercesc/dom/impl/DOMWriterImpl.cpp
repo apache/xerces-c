@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.31  2003/03/16 05:42:04  peiyongz
+ * Bug#17983 Formatter does not escape control characters
+ *
  * Revision 1.30  2003/02/25 16:07:37  tng
  * [Bug 13493] Use const on static data in DOMWriterImpl.cpp.
  *
@@ -427,6 +430,7 @@ DOMWriterImpl::DOMWriterImpl()
 ,fNewLine(0)
 ,fErrorHandler(0)
 ,fFilter(0)
+,fDocumentVersion(XMLUni::fgVersion1_0)
 ,fEncodingUsed(0)
 ,fNewLineUsed(0)
 ,fFormatter(0)
@@ -548,6 +552,7 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     try
     {
         fFormatter = new XMLFormatter(fEncodingUsed
+                                     ,fDocumentVersion
                                      ,destination
                                      ,XMLFormatter::NoEscapes
                                      ,XMLFormatter::UnRep_CharRef);
@@ -699,6 +704,16 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
      *  The default value for this attribute is null
      */
     fNewLineUsed = (fNewLine && *fNewLine)? fNewLine : gEOLSeq;
+
+    /**
+     *  get Document Version
+     */
+    const DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
+                              (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
+    if (docu)
+    {
+        fDocumentVersion = docu->getVersion();
+    }
 
     fErrorCount = 0;
 }
