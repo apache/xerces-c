@@ -42,7 +42,7 @@ public :
         , const bool adoptElems = true
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
-    virtual ~BaseRefVectorOf() = 0;
+    virtual ~BaseRefVectorOf();
 
 
     // -----------------------------------------------------------------------

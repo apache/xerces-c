@@ -321,39 +321,75 @@ endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
-PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
-MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
-MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
 
-ifeq (${BITSTOBUILD}, 64)
-ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
-else
-    ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
-endif
+    ifeq (${CXX}, xlC_r)
 
-ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lXercesMessages
-endif
-else
-ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
-else
-    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
-endif
+        ifeq (${TRANSCODER}, ICU)
+            ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata
+        else
+            ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
+        endif
 
-ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lXercesMessages
-endif
-endif
+        ifeq (${MESSAGELOADER}, ICU)
+            ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata -lXercesMessages
+        endif
 
-EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
-DEPDOM_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_DEPDOM}.map
-SHLIBSUFFIX=.so
-ICUSHLIBSUFFIX=.so
-## Compiler switch to embed a library name
-LD_SONAME = -Wl,-soname,${SO_NAME}
-LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}
+        PLATFORM_COMPILE_OPTIONS = -w -O -qproto -qroconst -DPIC -qpic=large -D_THREAD_SAFE
+    
+        ifeq (${BITSTOBUILD}, 64)
+            MAKE_SHARED   = xlC_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS} -X64
+            MAKE_SHARED_C = xlc_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS} -X64
+        else
+            MAKE_SHARED   = xlC_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS}
+            MAKE_SHARED_C = xlc_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS}
+        endif
+
+        #EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+        #DEPDOM_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBDEPDOM}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+        
+        ## Compiler switch to embed a library name
+        LD_SONAME =
+        
+    else  
+    #non xlC_r
+    #
+        PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
+        MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+        MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+
+        ifeq (${BITSTOBUILD}, 64)
+            ifeq (${TRANSCODER}, ICU)
+                ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
+            else
+                ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
+            endif
+
+            ifeq (${MESSAGELOADER}, ICU)
+                ALLLIBS = ${LIBS} -L/usr/lib64 -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lXercesMessages
+            endif
+        else
+            ifeq (${TRANSCODER}, ICU)
+                ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
+            else
+                ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
+            endif
+
+            ifeq (${MESSAGELOADER}, ICU)
+                ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lXercesMessages
+            endif
+        endif
+
+        EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
+        DEPDOM_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_DEPDOM}.map
+        
+        ## Compiler switch to embed a library name
+        LD_SONAME = -Wl,-soname,${SO_NAME}
+        LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}        
+    endif        
+
+    SHLIBSUFFIX=.so
+    ICUSHLIBSUFFIX=.so
+
 endif
 
 #=============== QNX SPECIFIC OPTIONS =========================

@@ -167,12 +167,25 @@ endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
-CMP= -c ${CXXFLAGS}
-CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
-LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
-PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
-EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
-SHLIBSUFFIX=.so
+
+    ifeq (${CXX}, xlC_r)
+        CMP= -c ${CXXFLAGS} -qnotempinc
+        CC=${COMPILER} -D${PLATFORM}
+        LINK =  ${COMPILER} ${LDFLAGS}
+
+        ifeq (${BITSTOBUILD}, 64)                                   
+	    EXTRA_LINK_OPTIONS=-bmaxdata:0x80000000000
+        else
+	    EXTRA_LINK_OPTIONS=-bmaxdata:0x80000000
+        endif
+    else
+        CMP= -c ${CXXFLAGS}
+        CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+        LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
+        PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
+        EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
+    endif
+    SHLIBSUFFIX=.so
 endif
 
 #=============== QNX SPECIFIC OPTIONS =========================
