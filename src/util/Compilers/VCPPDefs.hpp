@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/14 00:51:30  roddey
+ * Added the requested XMLStrL() macro to support some portable
+ * optimization of DOM code. This still needs to be added to the other
+ * per-compiler files.
+ *
  * Revision 1.2  1999/11/10 21:26:14  abagchi
  * Changed the DLL name
  *
@@ -77,6 +82,14 @@
 // ---------------------------------------------------------------------------
 #define PLATFORM_EXPORT     __declspec(dllexport)
 #define PLATFORM_IMPORT     __declspec(dllimport)
+
+
+// ---------------------------------------------------------------------------
+//  Each compiler might support L"" prefixed constants. There are places in
+//  the DOM for instance, where it is advantageous to use the L"" where it
+//  supported, to avoid unnecessary transcoding. VC++ does support this.
+// ---------------------------------------------------------------------------
+#define XMLStrL(str)  L##str
 
 
 // ---------------------------------------------------------------------------
