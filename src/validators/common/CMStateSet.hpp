@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/08/16 21:51:43  peiyongz
+ * hashCode() added
+ *
  * Revision 1.4  2001/05/11 13:27:17  tng
  * Copyright update.
  *
@@ -329,6 +332,22 @@ public :
             for (unsigned int index = 0; index < fByteCount; index++)
                 fByteArray[index] = 0;
         }
+    }
+
+    int hashCode() const
+    {
+        if (fBitCount < 65)
+        {
+            return fBits1+ fBits2 * 31;
+        }
+        else
+        {
+            int hash = 0;
+            for (int index = fByteCount - 1; index >= 0; index--)
+                hash = fByteArray[index] + hash * 31;
+            return hash;
+        }
+
     }
 
 private :
