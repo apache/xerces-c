@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/08/25 20:39:47  neilg
+ * fix XMLString::findAny(...) docs so that they match what the method actually does (and has done since time immemorial)
+ *
  * Revision 1.17  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -903,11 +906,13 @@ public:
     );
 
 
-    /** Tells if a string has any occurance of another string within itself
+    /** Tells if a string has any occurance of any character of another 
+      * string within itself
       * @param toSearch The string to be searched
-      * @param searchList The sub-string to be searched within the string
-      * @return Returns the pointer to the location where the sub-string was
-      * found, else returns 0
+      * @param searchList The string from which characters to be searched for are drawn 
+      * @return Returns the pointer to the location where the first occurrence of any
+      * character from searchList is found,
+      * else returns 0
       */
     static const XMLCh* findAny
     (
@@ -915,11 +920,13 @@ public:
         , const XMLCh* const    searchList
     );
 
-    /** Tells if a string has any occurance of another string within itself
+    /** Tells if a string has any occurance of any character of another 
+      * string within itself
       * @param toSearch The string to be searched
-      * @param searchList The sub-string to be searched within the string
-      * @return Returns the pointer to the location where the sub-string was
-      * found, else returns 0
+      * @param searchList The string from which characters to be searched for are drawn 
+      * @return Returns the pointer to the location where the first occurrence of any
+      * character from searchList is found,
+      * else returns 0
       */
     static XMLCh* findAny
     (
@@ -929,7 +936,7 @@ public:
 
     /** Tells if a string has pattern within itself
       * @param toSearch The string to be searched
-      * @param pattern The pattern to be searched within the string
+      * @param pattern The pattern to be located within the string
       * @return Returns index to the location where the pattern was
       * found, else returns -1
       */
