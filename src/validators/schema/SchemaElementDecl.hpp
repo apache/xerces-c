@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/11/23 18:25:45  tng
+ * Eliminate Warning from AIX xlC 3.6: 1540-399: (W) "IdentityConstraint" is undefined.  The delete operator will not call a destructor.
+ *
  * Revision 1.15  2001/11/02 14:13:45  knoaman
  * Add support for identity constraints.
  *
@@ -110,11 +113,11 @@
 #include <util/QName.hpp>
 #include <validators/common/Grammar.hpp>
 #include <validators/schema/ComplexTypeInfo.hpp>
+#include <validators/schema/identity/IdentityConstraint.hpp>
 
 class ContentSpecNode;
 class SchemaAttDefList;
 class DatatypeValidator;
-class IdentityConstraint;
 
 //
 //  This class is a derivative of the basic element decl. This one implements
@@ -529,7 +532,7 @@ SchemaElementDecl::setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo)
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: IC methods
 // ---------------------------------------------------------------------------
-inline void 
+inline void
 SchemaElementDecl::addIdentityConstraint(IdentityConstraint* const ic) {
 
     if (!fIdentityConstraints) {
