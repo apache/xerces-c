@@ -305,7 +305,7 @@ docRootNode.AppendChild(aNode);</source>
         specific needs of the DOM API.</p>
 
       <p>The design derives from two primary sources: from the DOM's
-        CharacterData interface and from class java.lang.string</p>
+        CharacterData interface and from class <code>java.lang.string</code>.</p>
 
       <p>Main features are:</p>
 

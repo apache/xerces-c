@@ -179,7 +179,7 @@
 
         <p>The new samples are:</p>
         <ol>
-           <li>PParse - Demonstrates 'progressive parse', (see below)</li>
+           <li>PParse - Demonstrates 'progressive parse' (see below)</li>
            <li>StdInParse - Demonstrates use of the standard in input source</li>
            <li>EnumVal - Shows how to enumerate the markup decls in a DTD Validator</li>
         </ol>
@@ -341,8 +341,7 @@ while (gotMore &amp;&amp; !handler.getDone())
         this:</p>
 
 <source>SAXParser myParser;
-
-// Tell it whether to do namespacse
+// Tell it whether to do namespace
 myParser.setDoNamespaces(true);</source>
     </s2>
 

@@ -20,7 +20,7 @@ cd MemParse
 gmake</source>
         <p>
         This will create the object files in the current directory and the executable named
-        MemParse in ' &XercesCInstallDir;-linux/bin' directory.</p>
+        <code>MemParse</code> in '&XercesCInstallDir;-linux/bin' directory.</p>
 
         <p>To delete all the generated object files and executables, type</p>
 <source>gmake clean</source>

@@ -13,7 +13,7 @@
     <li><link anchor="BuildMac">Building &XercesCName; on Macintosh.</link></li>
     <li><link anchor="BuildICU">Building ICU.</link></li>
     <li><link anchor="BuildCOM">Building COM module on Windows 98/NT/2000.</link></li>
-    <li><link anchor="BuildDocs">How to build the User Documentation?.</link></li>
+    <li><link anchor="BuildDocs">How to build the User Documentation?</link></li>
     <li><link anchor="PortingGuide">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</link></li>
     <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
     <li><link anchor="BuildUsingLibWWW">How can I generate Xerces-C binaries which includes the
@@ -582,8 +582,8 @@ files prior to your build.</p>
 
 <p><em>Troubleshooting:</em></p>
 <p>If you are using the parser and are failing to get any  message text
-for error codes, it may be because of the <code>*LIBL</code> resolution
-of the message file.</p>
+for error codes, it may be because of the <code>*LIBL</code> resolution of
+the message file.</p>
 </s3>
 
 <s3 title="Building Samples on AS/400">

@@ -32,7 +32,7 @@ gmake</source>
 			and the executable named PParse in ' &XercesCInstallDir;-linux/bin'
 			directory.</p>
 
-	        <p>To delete all the generated object files and executables, type</p>
+	        <p>To delete all the generated object files and executables, type:</p>
 <source>gmake clean</source>
         </s3>
 

@@ -19,7 +19,7 @@
 		You are encouraged to read this document for a better
 		understanding of the SAX API in &XercesCName;.</p>
 
-	    <p><em><jump href="apiDocs/index.html">Click here for the &XercesCName; API documentation.</jump></em></p>
+	    <p>See the <em><jump href="apiDocs/index.html">&XercesCName; API documentation.</jump></em> for more details.</p>
 
 	    <note>The API documentation is automatically generated using
 		<jump href="http://www.stack.nl/~dimitri/doxygen/">doxygen</jump> and

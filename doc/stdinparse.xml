@@ -21,7 +21,7 @@ gmake</source>
 			and the executable named
 	        StdInParse in ' &XercesCInstallDir;-linux/bin' directory.</p>
 
-	        <p>To delete all the generated object files and executables, type</p>
+	        <p>To delete all the generated object files and executables, type:</p>
  <source>gmake clean</source>
         </s3>
 
@@ -30,7 +30,7 @@ gmake</source>
 		  count of the number of
           elements in the file. To run StdInParse, enter the following: </p>
 <source>StdInParse &lt; &lt;XML file&gt;</source>
-          <p>Here is a sample output from StdInParse</p>
+          <p>Here is a sample output from StdInParse:</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
 StdInParse &lt; personal.xml
 personal.xml: 60 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
@@ -39,6 +39,4 @@ personal.xml: 60 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
           machine processor.</note>
         </s3>
     </s2>
-
-
 </s1>
