@@ -70,6 +70,25 @@
         </ul>
     </s2>
 
+    <s2 title="Digital Signatures">
+        <p>The distributions of &XercesCName; Version &XercesCVersion; have been digitally signed
+           (using GPG). There is an accompanyiny distribution.asc file in the same directory with each
+           distribution. Here is the <jump href="http://xml.apache.org/xerces-c/keys/KEYS">KEYS file</jump>.
+        </p>
+        <p>Always test available signatures, e.g.</p>
+            <source>
+            pgpk -a KEYS
+            pgpv &XercesCSrcInstallDir;.tar.gz.asc
+            -- or --
+            pgp -ka KEYS
+            pgp &XercesCSrcInstallDir;.tar.gz.asc
+            -- or --
+            gpg --import KEYS
+            gpg --verify &XercesCSrcInstallDir;.tar.gz.asc
+            </source>
+    </s2>
+
+
     <s2 title="Other ports...">
         <ul>
             <li>OS/390</li>
