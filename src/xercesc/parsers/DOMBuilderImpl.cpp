@@ -201,10 +201,13 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
     	  setDoSchema(state);
     }
-
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
     {
     	  setValidationSchemaFullChecking(state);
+    }
+    else if ((XMLString::compareIString(name, XMLUni::fgXercesResetDocumentPool) == 0) && state)
+    {
+    	  resetDocumentPool();
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
@@ -340,8 +343,7 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
 	{
 		setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
-
-   else
+    else
       throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 }
 

@@ -1009,6 +1009,21 @@ const XMLCh XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation[] =
     ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+//Xerces: http://apache.org/xml/features/validation/reset-documentPool
+const XMLCh XMLUni::fgXercesResetDocumentPool[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_t, chDash, chLatin_d
+    ,   chLatin_o, chLatin_c, chLatin_u, chLatin_m, chLatin_e, chLatin_n, chLatin_t
+    ,   chLatin_P, chLatin_o, chLatin_o, chLatin_l, chNull
+};
+
 //Introduced in DOM Level 3
 const XMLCh XMLUni::fgDOMCanonicalForm[] =
 {
