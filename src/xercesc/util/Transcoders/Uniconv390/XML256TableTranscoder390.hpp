@@ -56,13 +56,16 @@
 
 /*
  * $Log$
+ * Revision 1.2  2004/04/22 22:46:46  neilg
+ * not all 390 processors support the new transcoding instructions; this patch makes Xerces work there as well.  Thanks to Steve Dulin
+ *
  * Revision 1.1  2004/02/06 15:02:11  cargilld
  * Intrinsic transcoding support for 390.
  *
  */
 
-#ifndef XML256TABLETRANSCODER_HPP
-#define XML256TABLETRANSCODER_HPP
+#ifndef XML256TABLETRANSCODER390_HPP
+#define XML256TABLETRANSCODER390_HPP
 
 #include <xercesc/util/TransService.hpp>
 

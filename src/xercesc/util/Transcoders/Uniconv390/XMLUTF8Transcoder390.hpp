@@ -56,13 +56,16 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/04/22 22:46:46  neilg
+ * not all 390 processors support the new transcoding instructions; this patch makes Xerces work there as well.  Thanks to Steve Dulin
+ *
  * Revision 1.2  2004/02/06 18:18:09  cargilld
  * Misc 390 changes.
  *
  */
 
-#ifndef XMLUTF8TRANSCODER_HPP
-#define XMLUTF8TRANSCODER_HPP
+#ifndef XMLUTF8TRANSCODER390_HPP
+#define XMLUTF8TRANSCODER390_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>
