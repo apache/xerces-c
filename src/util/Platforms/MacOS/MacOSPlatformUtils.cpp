@@ -1531,6 +1531,13 @@ TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t
 {
 	std::size_t result = 0;
 	
+    //	This special casing is needed because the Text Encoding Converter
+    //	fails on Mac OS X public beta if the HIToolbox has not been
+    //	dragged in. This should be fixed before final. But for now,
+    //	we use CFString instead to do the transcoding on X. An alternative
+    //	temporary fix would be to explicitly drag in HIToolbox by
+    //	doing something like: if (KeyScript != KeyScript) KeyScript(0);
+    //		-jdb
 	if (gIsClassic || !TARGET_API_MAC_CARBON)
 	{
 		//	Use the text encoding converter to perform the format conversion.
@@ -1584,6 +1591,7 @@ TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t
 #endif
 	}
 	
+    //	Return number of chas in dst
 	return result;
 }
 
@@ -1593,6 +1601,13 @@ TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
 {
 	std::size_t result = 0;
 	
+    //	This special casing is needed because the Text Encoding Converter
+    //	fails on Mac OS X public beta if the HIToolbox has not been
+    //	dragged in. This should be fixed before final. But for now,
+    //	we use CFString instead to do the transcoding on X. An alternative
+    //	temporary fix would be to explicitly drag in HIToolbox by
+    //	doing something like: if (KeyScript != KeyScript) KeyScript(0);
+    //		-jdb
 	if (gIsClassic || !TARGET_API_MAC_CARBON)
 	{
 		//	Use the text encoding converter to perform the format conversion.
@@ -1627,7 +1642,7 @@ TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
 						
 		TECDisposeConverter(tec);
 		
-		result = bytesProduced;
+		result = bytesProduced / sizeof(UniChar);
 	}
 	else
 	{
@@ -1650,5 +1665,6 @@ TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
 #endif
 	}
 	
+    //	Return number of unicode characters in dst
 	return result;
 }
