@@ -1303,12 +1303,13 @@ echo "$ac_t""$host" 1>&6
 
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
+        *-*-sco*)       platform=OPENSERVER ;;
         *-*-sysv5*)     platform=UNIXWARE ;;
         *-*-UnixWare*)  platform=UNIXWARE ;;
-        *-*-*unixware*)  platform=UNIXWARE ;;
+        *-*-*unixware*) platform=UNIXWARE ;;
         *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
-	*-*-freebsd*)	platform=FREEBSD ;;
+        *-*-freebsd*)   platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;
@@ -1320,7 +1321,7 @@ case "${host}" in
         *-*-mvs*)       platform=OS390 ;;
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
-		*-*-osf*)	platform=TRU64 ;;
+        *-*-osf*)       platform=TRU64 ;;
         *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
@@ -1343,7 +1344,9 @@ ldflags=${LDFLAGS}
 
 threads=${THREADS}
 
+
 bitstobuild=${BITSTOBUILD}
+
 
 extra_libs=${EXTRA_LIBS}
 

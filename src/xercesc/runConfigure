@@ -57,7 +57,6 @@
 #
 # $Id$
 #
-#
 
 #
 # runConfigure:
@@ -67,11 +66,17 @@
 # The following variables are defined and exported at the end of this
 # script.
 #
-# LIBS
-# LDFLAGS
-# CXXFLAGS
-# TRANSCODER
+# THREADS
 # BITSTOBUILD
+# TRANSCODER
+# MESSAGELOADER
+# NETACCESSOR
+# CC
+# CXX
+# CXXFLAGS
+# CFLAGS
+# LDFLAGS
+# LIBS
 #
 
 usage()
@@ -82,24 +87,19 @@ usage()
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
             'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
             'ptx', 'tru64', 'macosx')"
-    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc, ecc)"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++, ecc)"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc or ecc)"
     echo "       -d (specifies that you want to build debug version)"
-    echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or
-            'iconv'"
-    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or
-            'native'"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390',
-            'IconvFBSD' or 'native'"
-    echo "       -r <thread option> can be 'pthread',
-            'dce' (only on aix, HP-11 and solaris),
-            'sproc' (only on IRIX) or 'none'"
+    echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
+    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD' or 'native'"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'"
+    echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
-    echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -C <any one extra configure options>"
-    echo "       -h (to get help on the above commands)"
+    echo "       -h (get help on the above commands)"
 }
 
 ERROR_EXIT_CODE=1
@@ -126,9 +126,9 @@ fi
 
 # Check the command line parameters
 if test -x /usr/bin/getopt; then
-getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
+getoptErr=`getopt p:c:x:d:m:n:t:r:b:l:z:P:C:h $*`
 else
-getoptErr=`getopts p:c:x:dm:n:t:r:b:l:z:P:C:h `$*``
+getoptErr=`getopts p:c:x:d:m:n:t:r:b:l:z:P:C:h `$*``
 fi
 if [ $? != 0 ]
    then
@@ -138,9 +138,9 @@ fi
 
 # Now get the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
+set -- `getopt p:c:x:d:m:n:t:r:b:l:z:P:C:h $*`
 else
-set -- `getopts p:c:x:dm:n:t:r:b:l:z:P:C:h `$*``
+set -- `getopts p:c:x:d:m:n:t:r:b:l:z:P:C:h `$*``
 fi
 
 # Set up the default values for each parameter
@@ -150,7 +150,7 @@ msgloader=inmem          # by default use inmem message loader
 netaccessor=socket       # by default use socket (can do HTTP URL's)
 thread=pthread           # by default use POSIX threads
 configureoptions=""
-bitsToBuild=32            # by default 32 bit build assumed
+bitsToBuild=32           # by default 32 bit build assumed
 
 while [ $# -gt 0 ]
    do
@@ -182,11 +182,11 @@ while [ $# -gt 0 ]
    -b)
         bitsToBuild=$2; shift 2;;
 
-   -l)
-        linkeroptions="$linkeroptions $2"; shift 2;;
-
    -z)
         compileroptions="$compileroptions $2"; shift 2;;
+
+   -l)
+        linkeroptions="$linkeroptions $2"; shift 2;;
 
    -P)
         configureoptions="$configureoptions --prefix=$2"; shift 2;;
@@ -212,13 +212,13 @@ echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
-echo "Extra compile options: $compileroptions"
-echo "Extra link options: $linkeroptions"
 echo "Message Loader: $msgloader"
 echo "Net Accessor: $netaccessor"
 echo "Transcoder: $transcoder"
 echo "Thread option: $thread"
 echo "bitsToBuild option: $bitsToBuild"
+echo "Extra compile options: $compileroptions"
+echo "Extra link options: $linkeroptions"
 echo "Extra configure options: $configureoptions"
 
 
@@ -227,7 +227,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | freebsd | solaris | hp-10 | hp-11 | irix | openserver | unixware | os400 | ptx | tru64 | macosx)
+   aix | openserver | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -246,11 +246,11 @@ if test $debug = "off"; then
          echo "NATIVE OS400 BUILD"
          debugflag="";
       elif test $platform = "irix"; then
-         debugflag="-O2";
+         debugflag="-w -O2";
       elif test $platform = "aix"; then
-         debugflag="-O2";
+         debugflag="-w -O2";
       else
-         debugflag="-O";
+         debugflag="-w -O";
       fi
     else
       echo "OVERRIDE FOR OS400 ON AIX"
@@ -267,8 +267,8 @@ fi
 #
 if test $thread = "none"; then
     THREADS=none
-    threadingLibs=""
     threadingDefines="-DAPP_NO_THREADS -DXML_USE_NO_THREADS"
+    threadingLibs=""
 else
     THREADS=pthread
     threadingDefines="-DXML_USE_PTHREADS"
@@ -287,19 +287,19 @@ else
                exit ${ERROR_EXIT_CODE};;
         esac
         fi
-	elif test $platform = "openserver"; then
-		case $thread in
-			pthread)
-				if test $cppcompiler = "g++"; then
-					threadingLibs="-Wl,-B,static,-l,pthread,-B,dynamic"
-				fi
-				;;
-			*)
-				echo "I do not recognize the thread option '$thread'."
-				echo "Please type '${0} -h' for help."
-				exit ${ERROR_EXIT_CODE}
-				;;
-		esac
+    elif test $platform = "openserver"; then
+        case $thread in
+           pthread)
+               if test $cppcompiler = "g++"; then
+                  threadingLibs="-Wl,-B,static,-l,pthread,-B,dynamic"
+               fi
+               ;;
+           *)
+               echo "I do not recognize the thread option '$thread'."
+               echo "Please type '${0} -h' for help."
+               exit ${ERROR_EXIT_CODE}
+               ;;
+        esac
     elif test $platform = "freebsd"; then
         threadingLibs="-pthread -lc_r"
         threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
@@ -354,7 +354,7 @@ else
                threadingLibs="-ldce";
                threadingDefines="-DXML_USE_DCE";;
            *)
-               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
                exit ${ERROR_EXIT_CODE};;
         esac
         fi
@@ -368,7 +368,7 @@ else
             threadingLibs=" ";
             threadingDefines="-DXML_USE_SPROC" ;;
         *)
-           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+            echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
             exit ${ERROR_EXIT_CODE};;
         esac
         fi
@@ -397,7 +397,7 @@ if test $bitsToBuild = 64; then
               bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
            hp-11)
               bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
-              bitstobuildLink=" +DA2.0W" ;;
+              bitstobuildLink=" +DA2.0W " ;;
            linux)
               bitstobuildDefines=" $bitstobuildDefines " ;;
            *)
@@ -581,14 +581,13 @@ export CXX
 #
 # Set the extra C and C++ compiler flags
 #
-#
 # include the user defined CXXFLAGS/CFLAGS first in case they have
 # set an platform spefic flags
 #
 CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines $bitstobuildDefines"
 export CXXFLAGS
 
-CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines "
+CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines  $bitstobuildDefines"
 export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment

@@ -113,6 +113,16 @@ ifeq (${PLATFORM}, SOLARIS)
   SHLIBSUFFIX=.so
 endif
 
+#=============== OPENSERVER SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OPENSERVER)
+  CC=${COMPILER} -D${PLATFORM} -fPIC
+  CMP=-c ${CXXFLAGS}
+  LINK=${CC} ${LDFLAGS}
+  EXTRA_LINK_OPTIONS=-lc -lsocket ${EXTRA_LIBS}
+  PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+  SHLIBSUFFIX=.so
+endif
+
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, UNIXWARE)
   CMP= -O2 -c ${CXXFLAGS} -pthread
@@ -250,7 +260,7 @@ CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D
 endif
 LINK =  ${CC} ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=
-EXTRA_LINK_OPTIONS =${EXTRA_LIBS}
+EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
 SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
