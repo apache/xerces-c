@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/27 18:22:31  roddey
+ * Fixed a couple of small reported bugs, in the parsing code and in the
+ * special cased local file stream creation code.
+ *
  * Revision 1.3  2000/01/19 00:56:59  roddey
  * Changes to get rid of dependence on old utils standard streams and to
  * get rid of the fgLibLocation stuff.
@@ -500,7 +504,7 @@ BinInputStream* XMLURL::makeNewStream() const
                         if (((chDrive >= chLatin_A) && (chDrive <= chLatin_Z))
                         ||  ((chDrive >= chLatin_a) && (chDrive <= chLatin_z)))
                         {
-                            realPath = fPath + 3;
+                            realPath = fPath + 1;
                         }
                     }
                 }
@@ -737,8 +741,8 @@ void XMLURL::parse(const XMLCh* const urlText)
     {
         if (*(urlText + 1) == chColon)
         {
-            if (((*urlText + 2) == chForwardSlash)
-            ||  ((*urlText + 2) == chBackSlash))
+            if ((*(urlText + 2) == chForwardSlash)
+            ||  (*(urlText + 2) == chBackSlash))
             {
                 ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
             }
