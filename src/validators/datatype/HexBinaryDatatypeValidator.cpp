@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/02 18:59:29  peiyongz
+ * Invalid_Facet_Tag to display the tag name
+ *
  * Revision 1.10  2001/09/24 15:33:15  peiyongz
  * DTV Reorganization: virtual methods moved to *.cpp
  *
@@ -128,10 +131,12 @@ DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
-void HexBinaryDatatypeValidator::assignAdditionalFacet( const XMLCh* const
+void HexBinaryDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
                                                       , const XMLCh* const)
 {
-    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+    ThrowXML1(InvalidDatatypeFacetException
+            , XMLExcepts::FACET_Invalid_Tag
+            , key);
 }
 
 void HexBinaryDatatypeValidator::inheritAdditionalFacet()

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/10/02 18:59:29  peiyongz
+ * Invalid_Facet_Tag to display the tag name
+ *
  * Revision 1.5  2001/10/01 21:03:55  peiyongz
  * DTV Reorganization:derived from AbstractNumericValidator
  *
@@ -139,9 +142,11 @@ FloatDatatypeValidator::FloatDatatypeValidator(DatatypeValidator*            con
 }
 
 void FloatDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
-                                                 , const XMLCh* const value)
+                                                 , const XMLCh* const)
 {
-    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+    ThrowXML1(InvalidDatatypeFacetException
+            , XMLExcepts::FACET_Invalid_Tag
+            , key);
 }
 
 void FloatDatatypeValidator::inheritAdditionalFacet()

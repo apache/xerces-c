@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/10/02 18:59:29  peiyongz
+ * Invalid_Facet_Tag to display the tag name
+ *
  * Revision 1.17  2001/10/01 21:04:40  peiyongz
  * DTV Reorganization:fix to memory leak in compare() method.
  *
@@ -223,7 +226,9 @@ void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
     }
     else
     {
-        ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+        ThrowXML1(InvalidDatatypeFacetException
+                , XMLExcepts::FACET_Invalid_Tag
+                , key);
     }
 }
 

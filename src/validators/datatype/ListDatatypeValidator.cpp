@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/10/02 18:59:29  peiyongz
+ * Invalid_Facet_Tag to display the tag name
+ *
  * Revision 1.5  2001/09/20 13:11:42  knoaman
  * Regx  + misc. fixes
  *
@@ -243,7 +246,9 @@ void ListDatatypeValidator::init(DatatypeValidator*            const baseValidat
             }
             else
             {
-                 ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+                 ThrowXML1(InvalidDatatypeFacetException
+                         , XMLExcepts::FACET_Invalid_Tag
+                         , key);
             }
         }//while
 

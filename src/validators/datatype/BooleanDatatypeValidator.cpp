@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/02 18:59:29  peiyongz
+ * Invalid_Facet_Tag to display the tag name
+ *
  * Revision 1.6  2001/06/22 16:26:01  peiyongz
  * fix: redefinition of SIZE
  *
@@ -110,7 +113,9 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
 
         // Boolean shall NOT have enumeration
         if (enums)
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+            ThrowXML1(InvalidDatatypeFacetException
+                    , XMLExcepts::FACET_Invalid_Tag
+                    , "enumeration");
     
         XMLCh* key;
         XMLCh* value;
@@ -129,7 +134,9 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
             }
             else
             {
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+                ThrowXML1(InvalidDatatypeFacetException
+                        , XMLExcepts::FACET_Invalid_Tag
+                        , key);
             }
 
         }
