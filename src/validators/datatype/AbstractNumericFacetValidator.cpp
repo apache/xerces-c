@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/09 21:17:41  peiyongz
+ * . macro to simplify code
+ * .save get***() to temp vars.
+ *
  * Revision 1.1  2001/10/01 16:13:56  peiyongz
  * DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
  *
@@ -68,14 +72,38 @@
 #include <validators/datatype/AbstractNumericFacetValidator.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <validators/datatype/InvalidDatatypeFacetException.hpp>
-#include <validators/datatype/InvalidDatatypeValueException.hpp>
 #include <util/NumberFormatException.hpp>
 
 const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 
-static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
+#define  REPORT_FACET_ERROR(val1, val2, except_code)    \
+  XMLCh* value1 = (val1)->toString();                   \
+  ArrayJanitor<XMLCh> jan1(value1);                     \
+  XMLCh* value2 = (val2)->toString();                   \
+  ArrayJanitor<XMLCh> jan2(value2);                     \
+  ThrowXML2(InvalidDatatypeFacetException               \
+          , except_code                                 \
+          , value2                                      \
+          , value1);                            
+
+
+#define  FROM_BASE_VALUE_SPACE(val, facetFlag, except_code)   \
+  if ((thisFacetsDefined & facetFlag) != 0)                   \
+{                                                             \
+    XMLCh* value1 = (val)->toString();                        \
+    ArrayJanitor<XMLCh> jan(value1);                          \
+    try                                                       \
+{                                                             \
+        numBase->checkContent(value1, false);                 \
+}                                                             \
+    catch ( XMLException& )                                   \
+{                                                             \
+        ThrowXML1(InvalidDatatypeFacetException               \
+                , except_code                                 \
+                , value1);                                    \
+}                                                             \
+}
+
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -123,23 +151,6 @@ AbstractNumericFacetValidator::AbstractNumericFacetValidator(
 //
 //  P1. Enumeration
 //
-//  P2. Facets
-//   a. assign facets
-//        assign common facets
-//        assign additional facet
-//
-//   b. check facet among self
-//         check common facets
-//         check Additional Facet Constraint
-//   c. check vs base
-//         check common facets
-//         check enumeration
-//         check Additional Facet Constraint
-//
-//  P3. Inherit facet from base
-//   a. inherit common facets
-//   b. inherit additional facet
-//
 void AbstractNumericFacetValidator::init(RefVectorOf<XMLCh>* const enums)
 {
     initializeValues();
@@ -158,6 +169,11 @@ void AbstractNumericFacetValidator::init(RefVectorOf<XMLCh>* const enums)
     inheritFacet();
 }
 
+//
+//   Assign facets
+//        assign common facets
+//        assign additional facet
+//
 void AbstractNumericFacetValidator::assignFacet()
 {
 
@@ -263,23 +279,32 @@ void AbstractNumericFacetValidator::assignFacet()
 
 }// end of assigneFacet()
 
+//
+// Check facet among self
+//         check common facets
+//         check Additional Facet Constraint
+//
 void AbstractNumericFacetValidator::inspectFacet()
 {
-    
+   
     int thisFacetsDefined = getFacetsDefined();
+    XMLNumber *thisMaxInclusive = getMaxInclusive();
+    XMLNumber *thisMaxExclusive = getMaxExclusive();
+    XMLNumber *thisMinInclusive = getMinInclusive();
+    XMLNumber *thisMinExclusive = getMinExclusive();
 
     if (!thisFacetsDefined)
         return;
 
     // non co-existence checking
     // check 4.3.8.c1 error: maxInclusive + maxExclusive
-    if ( ((thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
         ((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) )
         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_max_Incl_Excl);
 
     // non co-existence checking
     // check 4.3.9.c1 error: minInclusive + minExclusive
-    if ( ((thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
         ((thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_min_Incl_Excl);
 
@@ -287,20 +312,15 @@ void AbstractNumericFacetValidator::inspectFacet()
     // minExclusive < minInclusive <= maxInclusive < maxExclusive
     //
     // check 4.3.7.c1 must: minInclusive <= maxInclusive
-    if ( ((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
         ((thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
     {
-        int result = compareValues(getMinInclusive(), getMaxInclusive());
+        int result = compareValues(thisMinInclusive, thisMaxInclusive);
         if ( result == 1 || result == INDETERMINATE )
         {
-            XMLCh* value1 = getMinInclusive()->toString();
-            ArrayJanitor<XMLCh> jan1(value1);
-            XMLCh* value2 = getMaxInclusive()->toString();
-            ArrayJanitor<XMLCh> jan2(value2);
-            ThrowXML2(InvalidDatatypeFacetException
-                , XMLExcepts::FACET_maxIncl_minIncl
-                , value2
-                , value1);
+            REPORT_FACET_ERROR(thisMinInclusive
+                             , thisMaxInclusive
+                             , XMLExcepts::FACET_maxIncl_minIncl)
         }
     }
 
@@ -311,14 +331,9 @@ void AbstractNumericFacetValidator::inspectFacet()
         int result = compareValues(getMinExclusive(), getMaxExclusive());
         if ( result == 1 || result == INDETERMINATE )
         {
-            XMLCh* value1 = getMinExclusive()->toString();
-            ArrayJanitor<XMLCh> jan1(value1);
-            XMLCh* value2 = getMaxExclusive()->toString();
-            ArrayJanitor<XMLCh> jan2(value2);
-            ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_maxExcl_minExcl
-                        , value2
-                        , value1);
+            REPORT_FACET_ERROR(thisMinExclusive
+                             , thisMaxExclusive
+                             , XMLExcepts::FACET_maxExcl_minExcl)
         }
     }
 
@@ -329,14 +344,9 @@ void AbstractNumericFacetValidator::inspectFacet()
         int result = compareValues(getMinExclusive(), getMaxInclusive());
         if ( result != -1 )
         {
-            XMLCh* value1 = getMinExclusive()->toString();
-            ArrayJanitor<XMLCh> jan1(value1);
-            XMLCh* value2 = getMaxInclusive()->toString();
-            ArrayJanitor<XMLCh> jan2(value2);
-            ThrowXML2(InvalidDatatypeFacetException
-                , XMLExcepts::FACET_maxIncl_minExcl
-                                , value2
-                                , value1);
+            REPORT_FACET_ERROR(thisMinExclusive
+                             , thisMaxInclusive
+                             , XMLExcepts::FACET_maxIncl_minExcl)
         }
     }
 
@@ -347,14 +357,9 @@ void AbstractNumericFacetValidator::inspectFacet()
         int result = compareValues(getMinInclusive(), getMaxExclusive());
         if ( result != -1)
         {
-            XMLCh* value1 = getMinInclusive()->toString();
-            ArrayJanitor<XMLCh> jan1(value1);
-            XMLCh* value2 = getMaxExclusive()->toString();
-            ArrayJanitor<XMLCh> jan2(value2);
-            ThrowXML2(InvalidDatatypeFacetException
-                    , XMLExcepts::FACET_maxExcl_minIncl
-                                , value2
-                                , value1);
+            REPORT_FACET_ERROR(thisMinInclusive
+                             , thisMaxExclusive
+                             , XMLExcepts::FACET_maxExcl_minIncl)
         }
     }
 
@@ -362,6 +367,12 @@ void AbstractNumericFacetValidator::inspectFacet()
 
 }// end of inspectFacet()
 
+//
+//  Check vs base
+//         check common facets
+//         check enumeration
+//         check Additional Facet Constraint
+//
 void AbstractNumericFacetValidator::inspectFacetBase()
 {
 
@@ -374,6 +385,17 @@ void AbstractNumericFacetValidator::inspectFacetBase()
     
     int baseFacetsDefined = numBase->getFacetsDefined();
 
+    XMLNumber *thisMaxInclusive = getMaxInclusive();
+    XMLNumber *thisMaxExclusive = getMaxExclusive();
+    XMLNumber *thisMinInclusive = getMinInclusive();
+    XMLNumber *thisMinExclusive = getMinExclusive();
+
+    XMLNumber *baseMaxInclusive = numBase->getMaxInclusive();
+    XMLNumber *baseMaxExclusive = numBase->getMaxExclusive();
+    XMLNumber *baseMinInclusive = numBase->getMinInclusive();
+    XMLNumber *baseMinExclusive = numBase->getMinExclusive();
+    int       baseFixed = numBase->getFixed();
+
                 //                                     this
                 //                 minExclusive                          maxExclusive
                 //                    minInclusive                  maxInclusive
@@ -382,7 +404,6 @@ void AbstractNumericFacetValidator::inspectFacetBase()
                 //  minExclusive                                                          maxExclusive
                 //      minInclusive                                                   maxInclusive
                 //
-
 
     // check 4.3.7.c2 error:
     // maxInclusive > base.maxInclusive && maxInclusive != base.maxInclusive if (base.fixed)
@@ -394,81 +415,56 @@ void AbstractNumericFacetValidator::inspectFacetBase()
     {
         if ((baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) 
         {
-            int result = compareValues(getMaxInclusive(), numBase->getMaxInclusive());           
+            int result = compareValues(thisMaxInclusive, baseMaxInclusive);           
         
-            if (((numBase->getFixed() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
+            if (((baseFixed & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
                  (result != 0 ))
             {
-                XMLCh* value1 = getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxIncl_base_fixed
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxInclusive
+                                 , thisMaxInclusive
+                                 , XMLExcepts::FACET_maxIncl_base_fixed)
             }
 
             if (result == 1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxIncl_base_maxIncl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxInclusive
+                                 , thisMaxInclusive
+                                 , XMLExcepts::FACET_maxIncl_base_maxIncl)
             }
 
         }
 
         if ((baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) 
         {
-            int result = compareValues(getMaxInclusive(), numBase->getMaxExclusive());
+            int result = compareValues(thisMaxInclusive, baseMaxExclusive);
             if (result != -1 )
             {
-                XMLCh* value1 = getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxIncl_base_maxExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxExclusive
+                                 , thisMaxInclusive
+                                 , XMLExcepts::FACET_maxIncl_base_maxExcl)
             }
         }
 
 
         if ((baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0) 
         {
-            int result = compareValues(getMaxInclusive(), numBase->getMinInclusive());
+            int result = compareValues(thisMaxInclusive, baseMinInclusive);
             if (result == -1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxIncl_base_minIncl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinInclusive
+                                 , thisMaxInclusive
+                                 , XMLExcepts::FACET_maxIncl_base_minIncl)
             }
         }
 
         if ((baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) 
         {
-            int result = compareValues(getMaxInclusive(), numBase->getMinExclusive());
+            int result = compareValues(thisMaxInclusive, baseMinExclusive);
             if (result != 1 )
             {
-                XMLCh* value1 = getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxIncl_base_minExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinExclusive
+                                 , thisMaxInclusive
+                                 , XMLExcepts::FACET_maxIncl_base_minExcl)
             }
         }
 
@@ -484,80 +480,54 @@ void AbstractNumericFacetValidator::inspectFacetBase()
     {
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0)
         {
-            int result = compareValues(getMaxExclusive(), numBase->getMaxExclusive());
+            int result = compareValues(thisMaxExclusive, baseMaxExclusive);
 
-            if (((numBase->getFixed() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+            if (((baseFixed & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
                  (result != 0 ))                
             {
-                XMLCh* value1 = getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxExcl_base_fixed
-                                , value1
-                                , value2);
-            }                    
+                REPORT_FACET_ERROR(baseMaxExclusive
+                                 , thisMaxExclusive
+                                 , XMLExcepts::FACET_maxExcl_base_fixed)
+             }                    
 
             if (result == 1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxExcl_base_maxExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxExclusive
+                                 , thisMaxExclusive
+                                 , XMLExcepts::FACET_maxExcl_base_maxExcl)
             }
         }
 
-
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
         {
-            int result = compareValues(getMaxExclusive(), numBase->getMaxInclusive());
+            int result = compareValues(thisMaxExclusive, baseMaxInclusive);
             if (result == 1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxExcl_base_maxIncl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxExclusive
+                                 , thisMaxExclusive
+                                 , XMLExcepts::FACET_maxExcl_base_maxIncl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0)
         {
-            int result = compareValues(getMaxExclusive(), numBase->getMinExclusive());
+            int result = compareValues(thisMaxExclusive, baseMinExclusive);
             if (result != 1)
             {
-                XMLCh* value1 = getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxExcl_base_minExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinExclusive
+                                 , thisMaxExclusive
+                                 , XMLExcepts::FACET_maxExcl_base_minExcl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
         {
-            int result = compareValues(getMaxExclusive(), numBase->getMinInclusive());
+            int result = compareValues(thisMaxExclusive, baseMinInclusive);
             if (result != 1)
             {
-                XMLCh* value1 = getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_maxExcl_base_minExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinInclusive
+                                 , thisMaxExclusive
+                                 , XMLExcepts::FACET_maxExcl_base_minExcl)
             }
         }
     }
@@ -572,79 +542,54 @@ void AbstractNumericFacetValidator::inspectFacetBase()
     {
         if (( baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0)
         {
-            int result = compareValues(getMinExclusive(), numBase->getMinExclusive());
+            int result = compareValues(thisMinExclusive, baseMinExclusive);
 
-            if (((numBase->getFixed() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
+            if (((baseFixed & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
                  (result != 0 ))                
             {
-                XMLCh* value1 = getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_minExcl_base_fixed
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinExclusive
+                                 , thisMinExclusive
+                                 , XMLExcepts::FACET_minExcl_base_fixed)
             }
        
             if (result == -1 || result == INDETERMINATE)
             {                  
-                XMLCh* value1 = getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_minExcl_base_minExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinExclusive
+                                 , thisMinExclusive
+                                 , XMLExcepts::FACET_minExcl_base_minExcl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
         {
-            int result = compareValues(getMinExclusive(), numBase->getMaxInclusive());
+            int result = compareValues(thisMinExclusive, baseMaxInclusive);
             if (result == 1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                    , XMLExcepts::FACET_minExcl_base_maxIncl
-                    , value1
-                    , value2);
+                REPORT_FACET_ERROR(baseMaxInclusive
+                                 , thisMinExclusive
+                                 , XMLExcepts::FACET_minExcl_base_maxIncl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
         {
-            int result = compareValues(getMinExclusive(), numBase->getMinInclusive());
+            int result = compareValues(thisMinExclusive, baseMinInclusive);
             if (result == -1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_minExcl_base_minIncl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinInclusive
+                                 , thisMinExclusive
+                                 , XMLExcepts::FACET_minExcl_base_minIncl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0)
         {
-            int result = compareValues(getMinExclusive(), numBase->getMaxExclusive());
+            int result = compareValues(thisMinExclusive, baseMaxExclusive);
             if (result != -1)
             {
-                XMLCh* value1 = getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                    , XMLExcepts::FACET_minExcl_base_maxExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxExclusive
+                                 , thisMinExclusive
+                                 , XMLExcepts::FACET_minExcl_base_maxExcl)
             }
         }
 
@@ -659,82 +604,56 @@ void AbstractNumericFacetValidator::inspectFacetBase()
 
     if ((thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
     {
-
         if ((baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
         {
-            int result = compareValues(getMinInclusive(), numBase->getMinInclusive());
+            int result = compareValues(thisMinInclusive, baseMinInclusive);
 
-            if (((numBase->getFixed() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
+            if (((baseFixed & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
                  (result != 0 ))                
             {
-                XMLCh* value1 = getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_minIncl_base_fixed
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinInclusive
+                                 , thisMinInclusive
+                                 , XMLExcepts::FACET_minIncl_base_fixed)
             }                   
 
             if (result == -1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_minIncl_base_minIncl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinInclusive
+                                 , thisMinInclusive
+                                 , XMLExcepts::FACET_minIncl_base_minIncl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
         {
-            int result = compareValues(getMinInclusive(), numBase->getMaxInclusive());
+            int result = compareValues(thisMinInclusive, baseMaxInclusive);
             if (result == 1 || result == INDETERMINATE)
             {
-                XMLCh* value1 = getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_minIncl_base_maxIncl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxInclusive
+                                 , thisMinInclusive
+                                 , XMLExcepts::FACET_minIncl_base_maxIncl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0)
         {
-            int result = compareValues(getMinInclusive(), numBase->getMinExclusive());
+            int result = compareValues(thisMinInclusive, baseMinExclusive);
             if (result != 1)
             {
-                XMLCh* value1 = getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                                , XMLExcepts::FACET_minIncl_base_minExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMinExclusive
+                                 , thisMinInclusive
+                                 , XMLExcepts::FACET_minIncl_base_minExcl)
             }
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0)
         {
-            int result = compareValues(getMinInclusive(), numBase->getMaxExclusive());
+            int result = compareValues(thisMinInclusive, baseMaxExclusive);
             if (result != -1)
             {
-                XMLCh* value1 = getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = numBase->getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeFacetException
-                    , XMLExcepts::FACET_minIncl_base_maxExcl
-                                , value1
-                                , value2);
+                REPORT_FACET_ERROR(baseMaxExclusive
+                                 , thisMinInclusive
+                                 , XMLExcepts::FACET_minIncl_base_maxExcl)
             }
         }
 
@@ -759,77 +678,29 @@ void AbstractNumericFacetValidator::inspectFacetBase()
     // shall come from the base's value space as well
     //
 
-    if ((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
-    {
-        XMLCh* value1 = getMaxInclusive()->toString();
-        ArrayJanitor<XMLCh> jan(value1);
-        try
-        {
-            numBase->checkContent(value1, false);
-        }
-        catch ( XMLException& )
-        {
-            ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::FACET_maxIncl_notFromBase
-                , value1
-                );
-        }
-    }
+    FROM_BASE_VALUE_SPACE(thisMaxInclusive
+                        , DatatypeValidator::FACET_MAXINCLUSIVE
+                        , XMLExcepts::FACET_maxIncl_notFromBase)
 
-    if ((thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0)
-    {
-        XMLCh* value1 = getMaxExclusive()->toString();
-        ArrayJanitor<XMLCh> jan(value1);
-        try
-        {
-            numBase->checkContent(value1, false);
-        }
-        catch ( XMLException& )
-        {
-            ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::FACET_maxExcl_notFromBase
-                , value1
-                );
-        }
-    }
+    FROM_BASE_VALUE_SPACE(thisMaxExclusive
+                        , DatatypeValidator::FACET_MAXEXCLUSIVE
+                        , XMLExcepts::FACET_maxExcl_notFromBase)
 
-    if ((thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
-    {
-        XMLCh* value1 = getMinInclusive()->toString();
-        ArrayJanitor<XMLCh> jan(value1);
-        try
-        {
-            numBase->checkContent(value1, false);
-        }
-        catch ( XMLException& )
-        {
-            ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::FACET_minIncl_notFromBase
-                , value1
-                );
-        }
-    }
+    FROM_BASE_VALUE_SPACE(thisMinInclusive
+                        , DatatypeValidator::FACET_MININCLUSIVE
+                        , XMLExcepts::FACET_minIncl_notFromBase)
 
-    if ((thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0)
-    {
-        XMLCh* value1 = getMinExclusive()->toString();
-        ArrayJanitor<XMLCh> jan(value1);
-        try
-        {
-            numBase->checkContent(value1, false);  
-        }
-        catch ( XMLException& )
-        {
-            ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::FACET_minExcl_notFromBase
-                , value1
-                );
-        }
-    }
+    FROM_BASE_VALUE_SPACE(thisMinExclusive
+                        , DatatypeValidator::FACET_MINEXCLUSIVE
+                        , XMLExcepts::FACET_minExcl_notFromBase)
 
 } //end of inspectFacetBase
 
-
+//
+//  Inherit facet from base
+//    a. inherit common facets
+//    b. inherit additional facet
+//
 void AbstractNumericFacetValidator::inheritFacet()
 {
 
@@ -851,8 +722,8 @@ void AbstractNumericFacetValidator::inheritFacet()
 
     // inherit maxInclusive          
     if ((( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&         
-        (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&              
-        (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )              
+        (( thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&              
+        (( thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )              
     {          
         fMaxInclusive = numBase->getMaxInclusive();
         fMaxInclusiveInherited = true;              
@@ -899,4 +770,3 @@ void AbstractNumericFacetValidator::inheritFacet()
 /**
   * End of file AbstractNumericFacetValidator::cpp
   */
-
