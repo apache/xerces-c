@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/11/19 21:33:42  peiyongz
+ * Reorganization: Double/Float
+ *
  * Revision 1.12  2001/11/19 17:27:55  peiyongz
  * Boundary Values updated
  *
@@ -103,34 +106,10 @@
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/NumberFormatException.hpp>
-#include <util/TransService.hpp>
-#include <util/Janitor.hpp>
-#include <util/XMLUni.hpp>
-#include <math.h>
-
-//---------
-// TODO:
-//
-//   Double is supposed to hold 64 bit number and currently
-//   we have implemented the checking on boundary values, such
-//   the maximum/minimum positive/negative number.
-//
-//   We also need to do roundup/roundoff for extra bit in the
-//   lexical representation.
-//   In order to do that, we need to store them in a canonical form,
-//   like this.
-//   [-]?[1-9].[0-9]+[E|e][-]?[0-9]+
-//
-//   Then we can impose the limit of length after the '.' before 'E'.
-//
-//---------
 
 // ---------------------------------------------------------------------------
 //  local data member
 // ---------------------------------------------------------------------------
-static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
- 
 //
 // 2^24 x 2^104 = 2^128	= 3.4028236692093846346337460743177e+38
 //                        +
@@ -204,108 +183,17 @@ static XMLFloat*  maxPositiveValue = 0;
 static XMLMutex* sFloatMutex = 0;
 static XMLRegisterCleanup XMLFloatCleanup;
 
-/***
- *   Algo:
- *
- *   . Check for special cases
- *   . Construct fMantissa, fExponent (optional)
- *   .   Checking boundary
- *   .
-***/
+// ---------------------------------------------------------------------------
+//  ctor/dtor
+// ---------------------------------------------------------------------------
 XMLFloat::XMLFloat(const XMLCh* const strValue)
-:fMantissa(0)
-,fExponent(0)
-,fType(Normal)
+:XMLAbstractDoubleFloat()
 {
-    try
-    {
-        init(strValue);
-    }
-    catch (...)
-    {
-        cleanUp();
-        throw;
-    }
-
+    init(strValue);
 }
 
-void XMLFloat::init(const XMLCh* const strValue)
+XMLFloat::~XMLFloat()
 {
-    if ((!strValue) || (!*strValue))
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
-
-    XMLCh* tmpStrValue = XMLString::replicate(strValue);
-    ArrayJanitor<XMLCh> janTmpName(tmpStrValue);
-    XMLString::trim(tmpStrValue);
-
-    if (XMLString::compareString(tmpStrValue, XMLUni::fgNegINFString) == 0)
-    {
-        fType = NegINF;
-        return;
-    }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNegZeroString) == 0)
-    {
-        fType = NegZero;
-        return;
-    }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosZeroString) == 0)
-    {
-        fType = PosZero;
-        return;
-    }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosINFString) == 0)
-    {
-        fType = PosINF;
-        return;
-    }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNaNString) == 0)
-    {
-        fType = NaN;
-        return;
-    }
-
-    //
-    // Normal case
-    //
-    int ePos = 0;
-    int tmpStrLen = XMLString::stringLen(tmpStrValue);
-
-    if ((( ePos = XMLString::indexOf(tmpStrValue, chLatin_E)) != -1 ) ||
-        (( ePos = XMLString::indexOf(tmpStrValue, chLatin_e)) != -1 )  )
-    {
-        XMLCh* tmpMantissa = new XMLCh [ePos+1];
-        XMLString::subString(tmpMantissa, tmpStrValue, 0, ePos);
-        ArrayJanitor<XMLCh> janMantissa(tmpMantissa);
-        fMantissa = new XMLBigDecimal(tmpMantissa);
-
-        //
-        // 1234.56E78
-        //
-        if ( ePos < tmpStrLen - 1)
-        {
-            XMLCh* tmpExponent = new XMLCh [tmpStrLen - ePos];
-            XMLString::subString(tmpExponent, tmpStrValue, ePos + 1, tmpStrLen);
-            ArrayJanitor<XMLCh> janExponent(tmpExponent);
-            fExponent = new XMLBigInteger(tmpExponent);
-        }
-        //
-        // 1234.56E
-        //
-        else
-        {
-            ThrowXML1(NumberFormatException
-                    , XMLExcepts::XMLNUM_DBL_FLT_No_Exponent
-                    , strValue);
-        }
-
-    }
-    else
-    {
-        fMantissa = new XMLBigDecimal(tmpStrValue);
-        fExponent = new XMLBigInteger(XMLUni::fgZeroString);
-    }
-
-    checkBoundary(tmpStrValue);
 }
 
 //
@@ -375,164 +263,6 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
                 , FLT_MIN_POSITIVE);
     }
 
-}
-
-XMLFloat::XMLFloat(const XMLFloat& toCopy)
-:fMantissa(0)
-,fExponent(0)
-,fType(Normal)
-{
-    if (!toCopy.isSpecialValue())
-    {
-        fMantissa = new XMLBigDecimal(*(toCopy.fMantissa));
-        fExponent = new XMLBigInteger(*(toCopy.fExponent));
-    }
-
-    fType  = toCopy.fType;
-}
-
-//
-// Add the 'E' as necessary
-// The caller needs to de-allocate the memory allocated by this function
-// Deallocate the memory allocated by XMLBigInteger
-//
-XMLCh*  XMLFloat::toString() const
-{
-    switch (fType)
-    {
-    case NegINF:
-        return XMLString::replicate(XMLUni::fgNegINFString);
-
-    case NegZero:
-        return XMLString::replicate(XMLUni::fgNegZeroString);
-
-    case PosZero:
-        return XMLString::replicate(XMLUni::fgPosZeroString);
-
-    case PosINF:
-        return XMLString::replicate(XMLUni::fgPosINFString);
-
-    case NaN:
-        return XMLString::replicate(XMLUni::fgNaNString);
-
-    case Normal:
-
-        XMLCh *ret_mantissa;
-        ret_mantissa = fMantissa->toString();
-
-        if (fExponent)
-        {
-            XMLCh *ret_exponent = fExponent->toString();
-            XMLCh *ret_val = new XMLCh [ XMLString::stringLen(ret_mantissa) +
-                                         XMLString::stringLen(ret_exponent) + 2];
-            *ret_val = 0;
-            XMLString::catString(ret_val, ret_mantissa);
-            XMLString::catString(ret_val, XMLUni::fgEString);
-            XMLString::catString(ret_val, ret_exponent);
-
-            delete [] ret_mantissa;
-            delete [] ret_exponent;
-            return ret_val;
-        }
-        else
-            return ret_mantissa;
-
-        break;
-    default:
-        XMLString::binToText(fType, value1, 16, 10);
-        ThrowXML1(NumberFormatException
-                , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
-                , value1);
-    };
-
-    return (XMLCh*) 0;
-}
-
-//
-//
-//
-int XMLFloat::compareValues(const XMLFloat* const lValue
-                           , const XMLFloat* const rValue)
-{
-    //
-    // case#1: lValue normal
-    //         rValue normal
-    //
-    if ((!lValue->isSpecialValue()) &&
-        (!rValue->isSpecialValue())  )
-    {
-        //
-        // if we use fValue to compare two
-        // sequences "12.3456E4" and "1234.56E2",
-        // they are _NOT_ the same. so we ask
-        // BigDecimal to compare.
-        //
-        XMLBigDecimal ldv = XMLBigDecimal(*(lValue->fMantissa), lValue->fExponent->intValue());
-        XMLBigDecimal rdv = XMLBigDecimal(*(rValue->fMantissa), rValue->fExponent->intValue());
-
-        return XMLBigDecimal::compareValues(&ldv, &rdv);
-    }
-    //
-    // case#2: lValue special
-    //         rValue special
-    //
-    else
-    if ((lValue->isSpecialValue()) &&
-        (rValue->isSpecialValue())  )
-    {
-        if (lValue->fType == rValue->fType)
-            return 0;
-        else
-            return (lValue->fType > rValue->fType ? 1 : -1);
-    }
-    //
-    // case#3: lValue special
-    //         rValue normal
-    //
-    else
-    if ((lValue->isSpecialValue()) &&
-        (!rValue->isSpecialValue())  )
-    {
-        return compareSpecial(lValue, rValue);
-    }
-    //
-    // case#4: lValue normal
-    //         rValue special
-    //
-    else
-    {
-        return (-1) * compareSpecial(rValue, lValue);
-    }
-
-    return 0;
-}
-
-int XMLFloat::compareSpecial(const XMLFloat* const specialValue
-                            , const XMLFloat* const normalValue)
-{
-    switch (specialValue->fType)
-    {
-    case NegINF:
-        return -1;
-
-    case NegZero:
-    case PosZero:
-        return (normalValue->getSign() > 0 ? -1 : 1);
-
-    case PosINF:
-        return 1;
-
-    case NaN:
-        return 1;
-
-    default:
-        XMLString::binToText(specialValue->fType, value1, 16, 10);
-        ThrowXML1(NumberFormatException
-                , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
-                , value1);
-        return 0;
-        //internal error
-    }
 }
 
 // -----------------------------------------------------------------------

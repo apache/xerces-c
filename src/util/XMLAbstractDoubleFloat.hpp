@@ -57,54 +57,83 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.7  2001/11/19 21:33:42  peiyongz
+ * Revision 1.1  2001/11/19 21:33:42  peiyongz
  * Reorganization: Double/Float
- *
- * Revision 1.6  2001/10/26 16:37:46  peiyongz
- * Add thread safe code
- *
- * Revision 1.4  2001/09/27 14:54:20  peiyongz
- * DTV Reorganization: derived from XMLAbstractDoubleFloat
- *
- * Revision 1.3  2001/08/29 19:03:03  peiyongz
- * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
- *
- * Revision 1.2  2001/07/31 13:48:29  peiyongz
- * fValue removed
- *
- * Revision 1.1  2001/07/26 20:41:37  peiyongz
- * XMLFloat
  *
  *
  */
 
-#ifndef XML_FLOAT_HPP
-#define XML_FLOAT_HPP
+#ifndef XML_ABSTRACT_DOUBLE_FLOAT_HPP
+#define XML_ABSTRACT_DOUBLE_FLOAT_HPP
 
-#include <util/XMLAbstractDoubleFloat.hpp>
+#include <util/XercesDefs.hpp>
+#include <util/XMLNumber.hpp>
+#include <util/XMLBigDecimal.hpp>
 
-class XMLUTIL_EXPORT XMLFloat : public XMLAbstractDoubleFloat
+/***
+ * 3.2.5.1 Lexical representation
+ *
+ *   double values have a lexical representation consisting of a mantissa followed, 
+ *   optionally, by the character "E" or "e", followed by an exponent. 
+ *
+ *   The exponent ·must· be an integer. 
+ *   The mantissa must be a decimal number. 
+ *   The representations for exponent and mantissa must follow the lexical rules 
+ *   for integer and decimal. 
+ *
+ *   If the "E" or "e" and the following exponent are omitted, 
+ *   an exponent value of 0 is assumed. 
+***/
+
+/***
+ * 3.2.4.1 Lexical representation
+ *
+ *   float values have a lexical representation consisting of a mantissa followed, 
+ *   optionally, by the character "E" or "e", followed by an exponent. 
+ *
+ *   The exponent ·must· be an integer. 
+ *   The mantissa must be a decimal number. 
+ *   The representations for exponent and mantissa must follow the lexical rules 
+ *   for integer and decimal. 
+ *
+ *   If the "E" or "e" and the following exponent are omitted, 
+ *   an exponent value of 0 is assumed. 
+***/
+
+class XMLUTIL_EXPORT XMLAbstractDoubleFloat : public XMLNumber
 {
 public:
 
-	/**
-	 * Constructs a newly allocated <code>XMLFloat</code> object that
-	 * represents the value represented by the string.
-	 *
-	 * @param      the <code>String</code> to be converted to an
-	 *                 <code>XMLFloat</code>.
-	 * @exception  NumberFormatException  if the <code>String</code> does not
-	 *               contain a parsable XMLFloat.
-	 */
+    enum LiteralType
+    {
+        NegINF,
+        NegZero,
+        PosZero,
+        PosINF,
+        NaN,
+        SpecialTypeNum = 5,
+        Normal
+    };
 
-    XMLFloat(const XMLCh* const strValue);
-
-    ~XMLFloat();
+    virtual ~XMLAbstractDoubleFloat();
   
-	/**
+    virtual XMLCh*        toString() const;
+
+    virtual int           getSign() const;
+
+protected:
+
+    //
+    // To be used by derived class exclusively
+    //
+    XMLAbstractDoubleFloat();
+    
+    void                  init(const XMLCh* const strValue);
+
+    /**
 	 * Compares this object to the specified object.
 	 * The result is <code>true</code> if and only if the argument is not
-	 * <code>null</code> and is an <code>XMLFloat</code> object that contains
+	 * <code>null</code> and is an <code>XMLAbstractDoubleFloat</code> object that contains
 	 * the same <code>int</code> value as this object.
 	 *
 	 * @param   obj   the object to compare with.
@@ -112,17 +141,13 @@ public:
 	 *          <code>false</code> otherwise.
 	 */
 
-    inline static int            compareValues(const XMLFloat* const lValue
-                                             , const XMLFloat* const rValue);
+    static int            compareValues(const XMLAbstractDoubleFloat* const lValue
+                                      , const XMLAbstractDoubleFloat* const rValue);
 
-    // -----------------------------------------------------------------------
-    //  Notification that lazy data has been deleted
-    // -----------------------------------------------------------------------
-	static void reinitXMLFloat();   
-
-protected:
-
-    void                  checkBoundary(const XMLCh* const strValue);
+    //
+    // to be overwritten by derived class
+    //
+    virtual void          checkBoundary(const XMLCh* const strValue) = 0;
 
 private:
     //
@@ -131,16 +156,36 @@ private:
     // copy ctor
     // assignment ctor
     //
-    XMLFloat(const XMLFloat& toCopy);
-    operator=(const XMLFloat& toAssign);
+    XMLAbstractDoubleFloat(const XMLAbstractDoubleFloat& toCopy);
+    operator=(const XMLAbstractDoubleFloat& toAssign);
 
+    inline bool           isSpecialValue() const;
+
+    static int            compareSpecial(const XMLAbstractDoubleFloat* const specialValue
+                                       , const XMLAbstractDoubleFloat* const normalValue);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fMantissa
+    //     the XMLBigDecimal holding the value of mantissa.
+    //
+    //  fExponent
+    //     the XMLBigInteger holding the value of exponent.
+    //
+    //  fType
+    //     the type of the object.
+    //
+    // -----------------------------------------------------------------------
+
+    XMLBigDecimal*          fMantissa;
+	XMLBigInteger*          fExponent;   
+    LiteralType             fType;
 };
 
-int XMLFloat::compareValues(const XMLFloat* const lValue
-                          , const XMLFloat* const rValue)
+bool XMLAbstractDoubleFloat::isSpecialValue() const
 {
-    return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat* const) lValue,
-                                                 (const XMLAbstractDoubleFloat* const) rValue );
+    return (fType < SpecialTypeNum);
 }
 
 #endif

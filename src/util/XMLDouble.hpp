@@ -57,11 +57,14 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/11/19 21:33:42  peiyongz
+ * Reorganization: Double/Float
+ *
  * Revision 1.8  2001/10/26 16:37:46  peiyongz
  * Add thread safe code
  *
  * Revision 1.6  2001/09/27 14:54:20  peiyongz
- * DTV Reorganization: derived from XMLNumber
+ * DTV Reorganization: derived from XMLAbstractDoubleFloat
  *
  * Revision 1.5  2001/08/29 19:03:03  peiyongz
  * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
@@ -83,26 +86,9 @@
 #ifndef XML_DOUBLE_HPP
 #define XML_DOUBLE_HPP
 
-#include <util/XercesDefs.hpp>
-#include <util/XMLNumber.hpp>
-#include <util/XMLBigDecimal.hpp>
+#include <util/XMLAbstractDoubleFloat.hpp>
 
-/***
- * 3.2.5.1 Lexical representation
- *
- *   double values have a lexical representation consisting of a mantissa followed, 
- *   optionally, by the character "E" or "e", followed by an exponent. 
- *
- *   The exponent ·must· be an integer. 
- *   The mantissa must be a decimal number. 
- *   The representations for exponent and mantissa must follow the lexical rules 
- *   for integer and decimal. 
- *
- *   If the "E" or "e" and the following exponent are omitted, 
- *   an exponent value of 0 is assumed. 
-***/
-
-class XMLUTIL_EXPORT XMLDouble : public XMLNumber
+class XMLUTIL_EXPORT XMLDouble : public XMLAbstractDoubleFloat
 {
 public:
 
@@ -116,27 +102,10 @@ public:
 	 *               contain a parsable XMLDouble.
 	 */
 
-    enum LiteralType
-    {
-        NegINF,
-        NegZero,
-        PosZero,
-        PosINF,
-        NaN,
-        SpecialTypeNum = 5,
-        Normal
-    };
-
     XMLDouble(const XMLCh* const strValue);
 
     ~XMLDouble();
-
-    XMLDouble(const XMLDouble& toCopy);
-   
-    virtual XMLCh*        toString() const;
-
-    virtual int           getSign() const;
-
+  
 	/**
 	 * Compares this object to the specified object.
 	 * The result is <code>true</code> if and only if the argument is not
@@ -147,75 +116,36 @@ public:
 	 * @return  <code>true</code> if the objects are the same;
 	 *          <code>false</code> otherwise.
 	 */
-	bool operator==(const XMLDouble& toCompare) const;
 
-    static int            compareValues(const XMLDouble* const lValue
-                                      , const XMLDouble* const rValue);
+    inline static int            compareValues(const XMLDouble* const lValue
+                                             , const XMLDouble* const rValue);
 
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
 	static void reinitXMLDouble();   
 
-private:
-
-    void                  init(const XMLCh* const strValue);
+protected:
 
     void                  checkBoundary(const XMLCh* const strValue);
 
-    void                  cleanUp();
-
-    bool                  isSpecialValue() const;
-
-    static int            compareSpecial(const XMLDouble* const specialValue
-                                       , const XMLDouble* const normalValue);
-
-    // -----------------------------------------------------------------------
-    //  Private data members
+private:
     //
-    //  fMantissa
-    //     the XMLBigDecimal holding the value of mantissa.
+    // Unimplemented
     //
-    //  fExponent
-    //     the XMLBigInteger holding the value of exponent.
+    // copy ctor
+    // assignment ctor
     //
-    //  fType
-    //     the type of the object.
-    //
-    // -----------------------------------------------------------------------
+     XMLDouble(const XMLDouble& toCopy);
+     operator=(const XMLDouble& toAssign);
 
-    XMLBigDecimal*          fMantissa;
-	XMLBigInteger*          fExponent;   
-    LiteralType             fType;
 };
 
-inline int XMLDouble::getSign() const
+int XMLDouble::compareValues(const XMLDouble* const lValue
+                           , const XMLDouble* const rValue)
 {
-    return fMantissa->getSign();
-}
-
-inline bool XMLDouble::operator==(const XMLDouble& toCompare) const
-{
-    return ( XMLDouble::compareValues(this, &toCompare) == 0 ? true : false);
-}
-
-inline bool XMLDouble::isSpecialValue() const
-{
-    return (fType < SpecialTypeNum);
-}
-
-inline void XMLDouble::cleanUp()
-{
-    if (fMantissa)
-        delete fMantissa;
-
-    if (fExponent)
-        delete fExponent;
-}
-
-inline XMLDouble::~XMLDouble()
-{
-    cleanUp();
+    return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat* const) lValue,
+                                                 (const XMLAbstractDoubleFloat* const) rValue );
 }
 
 #endif
