@@ -1089,7 +1089,7 @@ XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
             {
             	//	Case-insensitive compare
             	if (XMLString::compareNIString(
-									ConvertColonToSlash(
+									ConvertSlashToColon(
 										CopyUniCharsToXMLChs(hfsStr.unicode, xmlBuf, segLen, kXMLBufCount),
 										segLen),
 									p, segLen) == 0)
