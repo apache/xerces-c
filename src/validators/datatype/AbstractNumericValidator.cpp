@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/09 21:16:31  peiyongz
+ * . macro to simplify code
+ *
  * Revision 1.1  2001/10/01 16:13:56  peiyongz
  * DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
  *
@@ -68,9 +71,15 @@
 #include <validators/datatype/AbstractNumericValidator.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 
-static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
+#define  REPORT_VALUE_ERROR(val1, val2, except_code)    \
+  XMLCh* value1 = (val1)->toString();                   \
+  ArrayJanitor<XMLCh> jan1(value1);                     \
+  XMLCh* value2 = (val2)->toString();                   \
+  ArrayJanitor<XMLCh> jan2(value2);                     \
+  ThrowXML2(InvalidDatatypeValueException               \
+          , except_code                                 \
+          , value1                                      \
+          , value2);                            
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -107,14 +116,9 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
             result = compareValues(theData, getMaxExclusive());
             if ( result != -1)
             {
-                XMLCh* value1 = theData->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = getMaxExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeValueException
-                                 , XMLExcepts::VALUE_exceed_maxExcl
-                                 , value1
-                                 , value2);
+                REPORT_VALUE_ERROR(theData
+                                 , getMaxExclusive()
+                                 , XMLExcepts::VALUE_exceed_maxExcl)
             }
         } 	
 
@@ -124,14 +128,9 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
             result = compareValues(theData, getMaxInclusive());
             if (result == 1)
             {
-                XMLCh* value1 = theData->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = getMaxInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeValueException
-                                 , XMLExcepts::VALUE_exceed_maxIncl
-                                 , value1
-                                 , value2);
+                REPORT_VALUE_ERROR(theData
+                                 , getMaxInclusive()
+                                 , XMLExcepts::VALUE_exceed_maxIncl)
             }
         }
 
@@ -141,31 +140,21 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
             result = compareValues(theData, getMinInclusive());
             if (result == -1)
             {
-                XMLCh* value1 = theData->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = getMinInclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeValueException
-                                 , XMLExcepts::VALUE_exceed_minIncl
-                                 , value1
-                                 , value2);
+                REPORT_VALUE_ERROR(theData
+                                 , getMinInclusive()
+                                 , XMLExcepts::VALUE_exceed_minIncl)
             }
         }
 
         // must be > MinExclusive
-        if ( (getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0 )
+        if ( (thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0 )
         {
             result = compareValues(theData, getMinExclusive());
             if (result != 1)
             {
-                XMLCh* value1 = theData->toString();
-                ArrayJanitor<XMLCh> jan1(value1);
-                XMLCh* value2 = getMinExclusive()->toString();
-                ArrayJanitor<XMLCh> jan2(value2);
-                ThrowXML2(InvalidDatatypeValueException
-                                 , XMLExcepts::VALUE_exceed_minExcl
-                                 , value1
-                                 , value2);
+                REPORT_VALUE_ERROR(theData
+                                 , getMinExclusive()
+                                 , XMLExcepts::VALUE_exceed_minExcl)
             }
         }
     }
