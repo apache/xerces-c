@@ -654,7 +654,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             DOMAttrImpl *attr = (DOMAttrImpl *)
                 fDocument->createAttributeNS(namespaceURI, oneAttrib->getQName());
             attr->setValue(oneAttrib -> getValue());
-            DOMNode* remAttr = elemImpl->setAttributeNode(attr);
+            DOMNode* remAttr = elemImpl->setAttributeNodeNS(attr);
             if (remAttr)
                 remAttr->release();
 
@@ -1079,17 +1079,20 @@ void AbstractDOMParser::endAttList
                        buf.getRawBuffer(),     // NameSpaceURI
                        qualifiedName);   // qualified name
 
+                    DOMNode* remAttr = elemImpl->setAttributeNodeNS(insertAttr);
+                    if (remAttr)
+                        remAttr->release();
                 }
                 else
                 {
                     // Namespaces is turned off...
                     insertAttr = (DOMAttrImpl *) fDocument->createAttribute(attr->getFullName());
+                    DOMNode* remAttr = elemImpl->setAttributeNode(insertAttr);
+                    if (remAttr)
+                        remAttr->release();
                 }
-                insertAttr->setValue(attr->getValue());
-                DOMNode* remAttr = elemImpl->setAttributeNode(insertAttr);
-                if (remAttr)
-                    remAttr->release();
 
+                insertAttr->setValue(attr->getValue());
                 insertAttr->setSpecified(false);
             }
         }
