@@ -79,6 +79,7 @@ include ../Makefile.incl
 DOM_CPP_PUBHEADERS = \
 	DOM.hpp \
 	DOMAttr.hpp \
+	DOMBuilder.hpp \
 	DOMCDATASection.hpp \
 	DOMCharacterData.hpp \
 	DOMComment.hpp \
@@ -90,10 +91,13 @@ DOM_CPP_PUBHEADERS = \
 	DOMElement.hpp \
 	DOMEntity.hpp \
 	DOMEntityReference.hpp \
+	DOMEntityResolver.hpp \
 	DOMError.hpp \
 	DOMErrorHandler.hpp \
 	DOMException.hpp \
 	DOMImplementation.hpp \
+	DOMImplementationLS.hpp \
+	DOMInputSource.hpp \
 	DOMLocator.hpp \
 	DOMNamedNodeMap.hpp \
 	DOMNode.hpp \
@@ -115,7 +119,9 @@ DOM_C_FILES =
 
 DOM_CPP_OBJECTS = \
 	DOMException.$(TO) \
-	DOMRangeException.$(TO)
+	DOMRangeException.$(TO) \
+	DOMWriter.$(TO) \
+	DOMWriterFilter.$(TO)
 
 all::	includes $(DOM_CPP_OBJECTS) impl deprecated
 

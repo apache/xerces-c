@@ -57,16 +57,19 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/05/29 21:31:50  knoaman
+ * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
+ *
  * Revision 1.1  2002/05/28 22:39:39  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
  */
 
-#include <xercesc/dom/impl/DOMWriterImpl.hpp>
+#include "DOMWriterImpl.hpp"
 
 #include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/impl/DOMErrorImpl.hpp>
-#include <xercesc/dom/impl/DOMLocatorImpl.hpp>
+#include "DOMErrorImpl.hpp"
+#include "DOMLocatorImpl.hpp"
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>

@@ -61,6 +61,7 @@
 #include "DOMImplementationImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
+#include "DOMWriterImpl.hpp"
 
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -68,6 +69,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/parsers/DOMBuilderImpl.hpp>
 
 //
 //  Static constants.  These are lazily initialized on first usage.
@@ -211,5 +213,28 @@ DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
 DOMDocument *DOMImplementationImpl::createDocument()
 {
         return new DOMDocumentImpl();
+}
+
+
+// DOM LS
+
+DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short mode,
+                                                    const XMLCh* const schemaType)
+{
+    if (mode == DOMImplementationLS::MODE_ASYNCHRONOUS)
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+
+    return new DOMBuilderImpl();
+}
+
+
+DOMWriter* DOMImplementationImpl::createDOMWriter()
+{
+    return new DOMWriterImpl();
+}
+
+DOMInputSource* DOMImplementationImpl::createDOMInputSource()
+{
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
 

@@ -71,8 +71,11 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
 
-class DOMImplementationImpl: public DOMImplementation {
+class DOMImplementationImpl: public DOMImplementation,
+                             public DOMImplementationLS
+{
 private:
     DOMImplementationImpl();
     DOMImplementationImpl(const DOMImplementationImpl & other);
@@ -86,6 +89,12 @@ public:
     virtual DOMDocument               *createDocument(const XMLCh *namespaceURI,
                                             const XMLCh *qualifiedName, DOMDocumentType *doctype);
     virtual DOMDocument               *createDocument();
+
+    // DOMImplementationLS
+    virtual DOMBuilder* createDOMBuilder(const short mode,
+                                         const XMLCh* const schemaType);
+    virtual DOMWriter* createDOMWriter();
+    virtual DOMInputSource* createDOMInputSource();
 };
 
 
