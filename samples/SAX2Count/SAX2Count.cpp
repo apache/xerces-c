@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.19  2002/09/27 19:24:57  tng
+* Samples Fix: wrong length in memset
+*
 * Revision 1.18  2002/07/17 18:58:35  tng
 * samples update: for testing special encoding purpose.
 *
@@ -318,7 +321,7 @@ int main(int argC, char* argV[])
     {
         char fURI[1000];
         //initialize the array to zeros
-        memset(fURI,0,sizeof(fURI));
+        memset(fURI,0,strlen(fURI));
 
         if (doList) {
             if (! fin.eof() ) {
