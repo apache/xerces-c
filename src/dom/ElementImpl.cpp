@@ -287,8 +287,9 @@ void ElementImpl::setReadOnly(bool readOnl, bool deep)
 DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    AttrImpl * attr=
-      (AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
+    AttrImpl * attr= (attributes != null) ?
+      (AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName))
+    : null;
     return (attr==null) ? DOMString(null) : attr->getValue();
 }
 
