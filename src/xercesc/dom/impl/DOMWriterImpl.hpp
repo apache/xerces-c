@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/06/10 16:02:21  peiyongz
+ * format-pretty-print partially supported
+ * resolve encoding from DOMDocument Interface
+ *
  * Revision 1.2  2002/06/05 16:03:03  peiyongz
  * delete[] used.
  *
@@ -348,7 +352,11 @@ private:
 	void                          processNode(const DOMNode* const);
     DOMNodeFilter::FilterAction   checkFilter(const DOMNode* const) const;
 
-	inline void                setURCharRef();
+    void                          printNewLine() const;
+    void                          setFeature(const XMLCh* const
+                                           , const XMLCh* const); 
+
+	inline void                   setURCharRef();
 
     // -----------------------------------------------------------------------
     //  Private data members

@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/06/10 16:02:21  peiyongz
+ * format-pretty-print partially supported
+ * resolve encoding from DOMDocument Interface
+ *
  * Revision 1.6  2002/06/06 20:58:37  tng
  * [Bug 9639] enum_mem in DOMError clashes with constant.
  *
@@ -133,27 +137,45 @@ static const XMLCh  gStartPI[] =
 	chOpenAngle, chQuestion, chNull
 };
 
-//<?xml version="1.0
-static const XMLCh  gXMLDecl1[] =
+//<?xml version="
+static const XMLCh  gXMLDecl_VersionInfo[] =
 {
 	chOpenAngle, chQuestion, chLatin_x,     chLatin_m,  chLatin_l,  chSpace,
 	chLatin_v,   chLatin_e,  chLatin_r,     chLatin_s,  chLatin_i,  chLatin_o,
-	chLatin_n,   chEqual,    chDoubleQuote, chDigit_1,  chPeriod,   chDigit_0,
-	chNull
+	chLatin_n,   chDoubleQuote, chEqual,    chNull
 };
 
-//" encoding="
-static const XMLCh  gXMLDecl2[] =
+static const XMLCh gXMLDecl_ver10[] =
 {
-	chDoubleQuote, chSpace,   chLatin_e, chLatin_n, chLatin_c,
-    chLatin_o,     chLatin_d, chLatin_i, chLatin_n, chLatin_g, chEqual,
-    chDoubleQuote, chNull
+    chDigit_1, chPeriod, chDigit_0, chNull
 };
 
-//"?>
-static const XMLCh  gXMLDecl3[] =
+//encoding="
+static const XMLCh  gXMLDecl_EncodingDecl[] =
 {
-	chDoubleQuote, chQuestion, chCloseAngle,  chNull
+	chLatin_e,  chLatin_n,  chLatin_c,  chLatin_o,      chLatin_d, chLatin_i, 
+    chLatin_n,  chLatin_g,  chEqual,    chDoubleQuote,  chNull
+};
+
+
+//" standalone="
+static const XMLCh  gXMLDecl_SDDecl[] =
+{
+	chLatin_s, chLatin_t, chLatin_a,   chLatin_n,    chLatin_d,   chLatin_a, 
+    chLatin_l, chLatin_o, chLatin_n,   chLatin_e,    chEqual,     chDoubleQuote, 
+    chNull
+};
+
+//" 
+static const XMLCh  gXMLDecl_separator[] =
+{
+	chDoubleQuote, chSpace, chNull
+};
+
+//?>
+static const XMLCh  gXMLDecl_endtag[] =
+{
+	chQuestion, chCloseAngle,  chNull
 };
 
 //<![CDATA[
@@ -235,9 +257,9 @@ static const XMLCh  gUnrecognizedNodeType[] =
 // are available from DOM3 core
 //
 // REVISIT: use throwing exception to abort serialization is an interesting
-// thing here, since the serializer is a recusively called function, we
+// thing here, since the serializer is a recusive function, we
 // can't use return, obviously. However we may have multiple try/catch
-// along it is way go back to writeNode(). So far we can't think of a
+// along its way going back to writeNode(). So far we don't come up with a
 // "short-cut" to go "directly" back.
 //
 #define  TRY_CATCH_THROW(action, forceToRethrow)                 \
@@ -245,7 +267,7 @@ fFormatter->setUnRepFlags(XMLFormatter::UnRep_Fail);             \
 try                                                              \
 {                                                                \
      action;                                                     \
-}                                                              \
+}                                                                \
 catch(TranscodingException const &e)                             \
 {                                                                \
     DOMLocatorImpl  locator(0                                    \
@@ -253,10 +275,17 @@ catch(TranscodingException const &e)                             \
                           , (DOMNode* const)nodeToWrite          \
                           , 0                                    \
                           , 0);                                  \
-    DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR      \
+                                                                 \
+    DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR  \
                            , e.getMessage()                      \
                            , &locator);                          \
-    bool  retVal = fErrorHandler->handleError(domError);         \
+                                                                 \
+    bool            retVal = false;                              \
+                                                                 \
+    if (fErrorHandler)                                           \
+    {                                                            \
+        retVal = fErrorHandler->handleError(domError);           \
+    }                                                            \
                                                                  \
     if (forceToRethrow || !retVal)                               \
         throw;                                                   \
@@ -278,7 +307,7 @@ DOMWriterImpl::~DOMWriterImpl()
 //canonical-form                 [optional] Not Supported     [required] (default)
 //discard-default-content        [required] (default)         [required]
 //entity                         [required] (default)         [optional]
-//format-pretty-print            [optional] Not Supported     [required] (default)
+//format-pretty-print            [optional] Partially Supported [required] (default)
 //normalize-characters           [optional] Not Supported     [required] (default)
 //split-cdata-sections           [required] (default)         [required]
 //validation                     [optional] Not Supported     [required] (default)
@@ -293,22 +322,14 @@ DOMWriterImpl::DOMWriterImpl()
 {
 	fFeatures = new RefHashTableOf<KVStringPair>(9, true);
 
-	fFeatures->put((void*)XMLUni::fgDOMWRTCanonicalForm,
-		            new KVStringPair(XMLUni::fgDOMWRTCanonicalForm, gFalse));
-	fFeatures->put((void*)XMLUni::fgDOMWRTDiscardDefaultContent,
-		            new KVStringPair(XMLUni::fgDOMWRTDiscardDefaultContent, gTrue));
-	fFeatures->put((void*)XMLUni::fgDOMWRTEntities,
-		            new KVStringPair(XMLUni::fgDOMWRTEntities, gTrue));
-	fFeatures->put((void*)XMLUni::fgDOMWRTFormatPrettyPrint,
-		            new KVStringPair(XMLUni::fgDOMWRTFormatPrettyPrint, gFalse));
-	fFeatures->put((void*)XMLUni::fgDOMWRTNormalizeCharacters,
-                    new KVStringPair(XMLUni::fgDOMWRTNormalizeCharacters, gFalse));
-	fFeatures->put((void*)XMLUni::fgDOMWRTSplitCdataSections,
-		            new KVStringPair(XMLUni::fgDOMWRTSplitCdataSections, gTrue));
-	fFeatures->put((void*)XMLUni::fgDOMWRTValidation,
-		            new KVStringPair(XMLUni::fgDOMWRTValidation, gFalse));
-	fFeatures->put((void*)XMLUni::fgDOMWRTWhitespaceInElementContent,
-		            new KVStringPair(XMLUni::fgDOMWRTWhitespaceInElementContent, gTrue));
+	setFeature(XMLUni::fgDOMWRTCanonicalForm,              gFalse);
+	setFeature(XMLUni::fgDOMWRTDiscardDefaultContent,      gTrue);
+	setFeature(XMLUni::fgDOMWRTEntities,                   gTrue);
+	setFeature(XMLUni::fgDOMWRTFormatPrettyPrint,	        gFalse);
+	setFeature(XMLUni::fgDOMWRTNormalizeCharacters,        gFalse);
+	setFeature(XMLUni::fgDOMWRTSplitCdataSections,         gTrue);
+	setFeature(XMLUni::fgDOMWRTValidation,                 gFalse);
+	setFeature(XMLUni::fgDOMWRTWhitespaceInElementContent, gTrue);
 
 }
 //
@@ -322,8 +343,6 @@ bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
 		return false;
 
 	if ((XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm)==0) && state)
-		return false;
-	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTFormatPrettyPrint)==0) && state)
 		return false;
 	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTNormalizeCharacters)==0) && state)
 		return false;
@@ -349,16 +368,20 @@ void DOMWriterImpl::setFeature(const XMLCh* const featName
 		throw DOMException(DOMException::NOT_SUPPORTED_ERR, featName);
         //DOMException.NOT_SUPPORTED_ERR,"Feature "+featName+" cannot be set as "+state);
 
-	// REVISIT
+	setFeature(featName, (state? gTrue : gFalse));
+
+	// 
 	// canonical-form and format-pretty-print can not be both set to true
 	// meaning set canonical-form true will automatically set
 	// format-pretty-print to false and vise versa.
-	// right now only false is supported for both of them, we need
-	// not worry about that, but later if we decide to support true for
-	// them, we need to add code to ensure they are not true at the same time.
-	fFeatures->put((void*)featName, new KVStringPair(featName, (state? gTrue : gFalse)));
+    //
+    if ((XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm) == 0) && state)
+        setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFalse);
 
-	return;
+    if ((XMLString::compareString(featName, XMLUni::fgDOMWRTFormatPrettyPrint) == 0) && state)
+        setFeature(XMLUni::fgDOMWRTCanonicalForm, gFalse);
+
+    return;
 }
 
 bool DOMWriterImpl::getFeature(const XMLCh* const featName) const
@@ -525,9 +548,20 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 	}
 	else
 	{
-        // REVISIT: DOM3 core may provide getEncoding()
-		// fEncodingUsed = nodeToWrite.getEncoding();
-	}
+        DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
+                            (DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
+        if (docu)
+        {
+            if (docu->getEncoding())
+            {
+                fEncodingUsed = docu->getEncoding();
+            }
+            else if (docu->getActualEncoding())
+            {
+                fEncodingUsed = docu->getActualEncoding();
+            }
+        }
+    }
 
 /**
  *  The end-of-line sequence of characters to be used in the XML being
@@ -582,6 +616,14 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 //                           false                     ---      ERROR
 //
 
+//
+// REVISIT
+//    FormatPrettyPrint requires proper indentation, newline, and etc.
+//    currently we partially support this feature by adding new line to
+//    xmldecl, doctype and root element, later on we need to work on
+//    other nodes, such as element, attribute and so on.
+// 
+
 // ---------------------------------------------------------------------------
 //  Stream out a DOM node, and, recursively, all of its children. This
 //  function is the heart of writing a DOM tree out as XML source. Give it
@@ -593,13 +635,6 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
     const XMLCh*    nodeName = nodeToWrite->getNodeName();
     const XMLCh*    nodeValue = nodeToWrite->getNodeValue();
     unsigned long   lent = XMLString::stringLen(nodeValue);
-
-	/***
-{FILTER_ACCEPT = 1,
-                           FILTER_REJECT = 2,
-                           FILTER_SKIP   = 3};
-***/
-
 
     switch (nodeToWrite->getNodeType())
     {
@@ -634,16 +669,33 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 	case DOMNode::DOCUMENT_NODE: // Not to be shown to Filter
         {
 			setURCharRef();
-			*fFormatter << gXMLDecl1 << gXMLDecl2;
-			*fFormatter << fEncodingUsed << gXMLDecl3;
-			*fFormatter << fNewLineUsed;
+            DOMDocument *docu = (DOMDocument*)nodeToWrite;
+
+            //[23] XMLDecl      ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>' 
+            //[24] VersionInfo  ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+            //[80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' | "'" EncName  
+            //[32] SDDecl       ::= S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"'))  
+            //
+            // We always print out the xmldecl no matter whether it is
+            // present in the original XML instance document or not.
+            //
+            const XMLCh* versionNo = (docu->getVersion()) ? docu->getVersion() : gXMLDecl_ver10;
+			*fFormatter << gXMLDecl_VersionInfo << versionNo << gXMLDecl_separator;
+
+            // use the encoding resolved in initSession()
+            *fFormatter << gXMLDecl_EncodingDecl << fEncodingUsed << gXMLDecl_separator;
+
+            const XMLCh* st = (docu->getStandalone())? XMLUni::fgYesString : XMLUni::fgNoString;
+            *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
+
+            *fFormatter << gXMLDecl_endtag;           
+            printNewLine();
 
             DOMNode *child = nodeToWrite->getFirstChild();
             while( child != 0)
             {
                 processNode(child);
-                *fFormatter << fNewLineUsed;      // add linefeed in requested output encoding
-
+                printNewLine();
                 child = child->getNextSibling();
             }
             break;
@@ -937,7 +989,9 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			if (id)
 				*fFormatter << gNotation << id << chDoubleQuote;
 
-			*fFormatter << chCloseAngle << fNewLineUsed;
+            *fFormatter << chCloseAngle;
+
+            printNewLine();
 
 			break;
         }
@@ -981,4 +1035,16 @@ DOMNodeFilter::FilterAction DOMWriterImpl::checkFilter(const DOMNode* const node
 inline void DOMWriterImpl::setURCharRef()
 {
 	fFormatter->setUnRepFlags(XMLFormatter::UnRep_CharRef);
+}
+
+inline void DOMWriterImpl::printNewLine() const
+{
+    if (getFeature(XMLUni::fgDOMWRTFormatPrettyPrint))               \
+        *fFormatter << fNewLineUsed;
+}
+
+inline void DOMWriterImpl::setFeature(const XMLCh* const featName
+                                    , const XMLCh* const state)
+{
+    fFeatures->put((void*)featName, new KVStringPair(featName, state));      
 }
