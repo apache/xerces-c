@@ -962,14 +962,14 @@ void parseCommandLine(int argc, char **argv)
     catch (int)
     {
         fprintf(stderr, "usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"
-            "     -v             Use validating parser.  Non-validating is default. \n"
+            "     -v             Use validating parser.  Non-validating is default.\n"
             "     -n             Enable namespace processing. Defaults to off.\n"
             "     -s             Enable schema processing. Defaults to off.\n"
-            "     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX. \n"
-            "     -quiet         Suppress periodic status display. \n"
-            "     -verbose       Display extra messages. \n"
+            "     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX.\n"
+            "     -quiet         Suppress periodic status display.\n"
+            "     -verbose       Display extra messages.\n"
             "     -reuse         Retain and reuse parser.  Default creates new for each parse.\n"
-            "     -threads nnn   Number of threads.  Default is 2. \n"
+            "     -threads nnn   Number of threads.  Default is 2.\n"
             "     -time nnn      Total time to run, in seconds.  Default is forever.\n"
             "     -dump          Dump DOM tree on error.\n"
             "     -mem           Read files into memory once only, and parse them from there.\n"
@@ -1284,7 +1284,7 @@ int main (int argc, char **argv)
             ThreadFuncs::Sleep(1000);
         }
         if (gRunInfo.verbose)
-            printf("Thread #%d: is finished \n", threadNum);
+            printf("Thread #%d: is finished.\n", threadNum);
 
     }
 
