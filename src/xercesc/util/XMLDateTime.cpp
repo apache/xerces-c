@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/09/25 15:22:54  peiyongz
+ * Solve HP complier error
+ *
  * Revision 1.14  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -1445,14 +1448,16 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
     //REVISIT: may not need to call base since it does nothing
     XMLNumber::serialize(serEng);
 
+    int i = 0;
+
     if (serEng.isStoring())
     {
-        for (int i = 0; i < TOTAL_SIZE; i++)
+        for (i = 0; i < TOTAL_SIZE; i++)
         {
             serEng<<fValue[i];
         }
 
-        for (int i = 0; i < TIMEZONE_ARRAYSIZE; i++)
+        for (i = 0; i < TIMEZONE_ARRAYSIZE; i++)
         {
             serEng<<fTimeZone[i];
         }
@@ -1464,15 +1469,16 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
         int bufferLen = XMLString::stringLen(fBuffer);
         serEng<<bufferLen;
         serEng.write(fBuffer, bufferLen);
+
     }
     else
     {
-        for (int i = 0; i < TOTAL_SIZE; i++)
+        for (i = 0; i < TOTAL_SIZE; i++)
         {
             serEng>>fValue[i];
         }
 
-        for (int i = 0; i < TIMEZONE_ARRAYSIZE; i++)
+        for (i = 0; i < TIMEZONE_ARRAYSIZE; i++)
         {
             serEng>>fTimeZone[i];
         }
@@ -1481,12 +1487,13 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
         serEng>>fEnd;
         serEng>>fBufferMaxLen;
 
-        fBuffer = (XMLCh*) fMemoryManager->allocate(fBufferMaxLen+1);
+        fBuffer = (XMLCh*) fMemoryManager->allocate((fBufferMaxLen+1) * sizeof(XMLCh));
 
         int bufferLen = 0;
         serEng>>bufferLen;
         serEng.read(fBuffer, bufferLen);
         fBuffer[bufferLen] = 0;
+
     }
 
 }
