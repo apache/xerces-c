@@ -1,0 +1,10 @@
+Disclaimer:
+
+    XML4C is not officially supported under MacOS. These instructions
+    were provided by one of the contributers/users of XML4C and have
+    been included in the XML4C distribution just for convenience and
+    benefit of other users. XML4C team, will not be able to maintain
+    these files, but will be very willing to accept changes as
+    submitted by the users. All such changes may be sent to
+    xml4c@us.ibm.com.
+
