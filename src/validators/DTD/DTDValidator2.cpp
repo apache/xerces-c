@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.18  2000/05/15 22:08:33  rahulj
+ * Fixed 'fatal error' when 'reusing the validator' problem reported
+ * by Rocky Raccoon (rrockey@bigfoot.com). Fix submitted by
+ * Dean Roddey (droddey@charmedquark.com).
+ *
  * Revision 1.17  2000/05/12 15:45:09  andyh
  * Bug fix - A PE ref appearing at the start of a skipped conditional section
  * was incorrectly being processed rather than ignored.  Fix from Dean Roddey.
@@ -1558,9 +1563,26 @@ void DTDValidator::scanDocTypeDecl(const bool reuseValidator)
     //  the element decl pool, marked as being there because it was in
     //  the DOCTYPE. Later, when its declared, the status will be updated.
     //
-    DTDElementDecl* rootDecl = new DTDElementDecl(bbRootName.getRawBuffer());
-    rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
-    fRootElemId = fElemDeclPool->put(rootDecl);
+    //  Only do this if we are not reusing the validator! If we are reusing,
+    //  then look it up instead. It has to exist!
+    //
+    DTDElementDecl* rootDecl;
+    if (reuseValidator)
+    {
+        rootDecl = fElemDeclPool->getByKey(bbRootName.getRawBuffer());
+        if (!rootDecl)
+        {
+            emitError(XMLValid::UndeclaredElemInDocType, bbRootName.getRawBuffer());
+            getReaderMgr()->skipPastChar(chCloseAngle);
+            return;
+        }
+    }
+     else
+    {
+        rootDecl = new DTDElementDecl(bbRootName.getRawBuffer());
+        rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+        fRootElemId = fElemDeclPool->put(rootDecl);
+    }
 
     // Skip any spaces after the name
     getReaderMgr()->skipPastSpaces();
