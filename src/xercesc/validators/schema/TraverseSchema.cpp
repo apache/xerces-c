@@ -1932,7 +1932,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         dv = traverseSimpleTypeDecl(simpleType, false);
     }
     else if (!dvType || !*dvType) {
-        dv = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_STRING);
+        dv = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_ANYSIMPLETYPE);
     }
     else {
 
