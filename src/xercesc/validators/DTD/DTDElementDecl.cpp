@@ -532,4 +532,9 @@ void DTDElementDecl::serialize(XSerializeEngine& serEng)
 
 }
 
+XMLElementDecl::objectType  DTDElementDecl::getObjectType() const
+{
+    return DTD;
+}
+
 XERCES_CPP_NAMESPACE_END

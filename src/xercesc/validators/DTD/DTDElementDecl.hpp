@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/12 18:35:44  peiyongz
+ * getObjectType()
+ *
  * Revision 1.7  2003/10/10 16:24:51  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -237,6 +240,8 @@ public :
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(DTDElementDecl)
+
+    virtual XMLElementDecl::objectType  getObjectType() const;
 
 private :
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/12 18:36:37  peiyongz
+ * getObjectType()
+ *
  * Revision 1.17  2003/11/24 05:21:04  neilg
  * update method documentation
  *
@@ -431,6 +434,8 @@ public :
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(SchemaElementDecl)
+
+    virtual XMLElementDecl::objectType  getObjectType() const;
 
 private :
     // -----------------------------------------------------------------------

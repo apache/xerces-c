@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/12 18:36:37  peiyongz
+ * getObjectType()
+ *
  * Revision 1.15  2003/11/13 23:20:47  peiyongz
  * initSize
  *
@@ -516,6 +519,11 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
 
     }
 
+}
+
+XMLElementDecl::objectType  SchemaElementDecl::getObjectType() const
+{
+    return Schema;
 }
 
 XERCES_CPP_NAMESPACE_END
