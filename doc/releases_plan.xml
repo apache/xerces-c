@@ -23,49 +23,77 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>XML 1.1</td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-
-    <tr>
         <td>More DOM Level 3 Core Support</td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>Schema 1.0 Errata</td>
-        <td></td>
+        <td>Gareth Reakes</td>
         <td></td>
         <td></td>
     </tr>
 
     <tr>
-        <td>NLS messages</td>
-        <td></td>
-        <td></td>
+        <td>ICU Message Loader</td>
+        <td>PeiYong Zhang</td>
+        <td>November</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>Static Library Build</td>
+        <td>Message Catalog Message Loader</td>
+        <td>PeiYong Zhang</td>
+        <td>November</td>
         <td></td>
+    </tr>
+
+    <tr>
+        <td>XML 1.1</td>
+        <td>PeiYong Zhang</td>
+        <td>December</td>
         <td></td>
+    </tr>
+
+    <tr>
+        <td>Schema 1.0 Errata - Datatypes</td>
+        <td>PeiYong Zhang</td>
+        <td>November</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Schema 1.0 Errata - Structures</td>
+        <td>Khaled Noaman</td>
+        <td>December</td>
         <td></td>
     </tr>
 
     <tr>
         <td>Selectable Component Build (Xerces-C++ Lite)</td>
+        <td>Khaled Noaman</td>
+        <td>November</td>
         <td></td>
-        <td></td>
+    </tr>
+
+    <tr>
+        <td>Break XMLScanner for better performance</td>
+        <td>Khaled Noaman</td>
+        <td>November</td>
         <td></td>
     </tr>
 
     <tr>
         <td>Use C++ namespace</td>
+        <td>Tinny Ng</td>
+        <td>November</td>
+        <td>Complete</td>
+    </tr>
+
+    <tr>
+        <td>DOM Messages</td>
+        <td>Tinny Ng</td>
+        <td>November</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Static Library Build</td>
         <td></td>
         <td></td>
         <td></td>
