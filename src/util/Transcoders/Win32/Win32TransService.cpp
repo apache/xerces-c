@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/25 22:49:58  roddey
+ * Moved the supportsSrcOfs() method from the individual transcoder to the
+ * transcoding service, where it should have been to begin with.
+ *
  * Revision 1.5  2000/01/25 19:19:09  roddey
  * Simple addition of a getId() method to the xcode and netacess abstractions to
  * allow each impl to give back an id string.
@@ -149,6 +153,12 @@ XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder()
 }
 
 
+bool Win32TransService::supportsSrcOfs() const
+{
+    return false;
+}
+
+
 void Win32TransService::upperCase(XMLCh* const toUpperCase) const
 {
     wcsupr(toUpperCase);
@@ -194,13 +204,6 @@ Win32Transcoder::~Win32Transcoder()
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-
-// This will never get called because objects of this type are never created
-bool Win32Transcoder::supportsSrcOfs() const
-{
-    return false;
-}
-
 
 // This will never get called because objects of this type are never created
 XMLCh Win32Transcoder::transcodeOne(const   XMLByte* const

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/01/25 22:49:57  roddey
+ * Moved the supportsSrcOfs() method from the individual transcoder to the
+ * transcoding service, where it should have been to begin with.
+ *
  * Revision 1.10  2000/01/25 20:56:51  abagchi
  * Now at least compiles
  *
@@ -226,6 +230,11 @@ XMLLCPTranscoder* IconvTransService::makeNewLCPTranscoder()
     return new IconvLCPTranscoder;
 }
 
+bool IconvTransService::supportsSrcOfs() const
+{
+    return true;
+}
+
 
 // ---------------------------------------------------------------------------
 //  IconvTransService: The protected virtual transcoding service API
@@ -251,6 +260,8 @@ void IconvTransService::upperCase(XMLCh* const toUpperCase) const
 {
     towupper(*toUpperCase);
 }
+
+
 
 // ---------------------------------------------------------------------------
 //  IconvLCPTranscoder: The virtual transcoder API
@@ -485,8 +496,10 @@ IconvLCPTranscoder::~IconvLCPTranscoder()
 // ---------------------------------------------------------------------------
 //  IconvTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-IconvTranscoder::IconvTranscoder(const XMLCh* const encodingName, const unsigned int blockSize)
-: XMLTranscoder(encodingName, blockSize)
+IconvTranscoder::IconvTranscoder(const  XMLCh* const    encodingName
+                                , const unsigned int    blockSize) :
+
+    XMLTranscoder(encodingName, blockSize)
 {
 }
 
@@ -498,7 +511,7 @@ IconvTranscoder::~IconvTranscoder()
 // ---------------------------------------------------------------------------
 //  IconvTranscoder: Implementation of the virtual transcoder API
 // ---------------------------------------------------------------------------
-XMLCh IconvTranscoder::transcodeOne(const   XMLByte* const     srcData
+XMLCh IconvTranscoder::transcodeOne(const   XMLByte* const  srcData
                                     , const unsigned int    srcBytes
                                     ,       unsigned int&   bytesEaten)
 {
@@ -517,7 +530,7 @@ XMLCh IconvTranscoder::transcodeOne(const   XMLByte* const     srcData
 
 
 unsigned int
-IconvTranscoder::transcodeXML(  const   XMLByte* const             srcData
+IconvTranscoder::transcodeXML(  const   XMLByte* const          srcData
                                 , const unsigned int            srcCount
                                 ,       XMLCh* const            toFill
                                 , const unsigned int            maxChars

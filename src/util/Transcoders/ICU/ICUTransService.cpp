@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.12  2000/01/25 22:49:56  roddey
+ * Moved the supportsSrcOfs() method from the individual transcoder to the
+ * transcoding service, where it should have been to begin with.
+ *
  * Revision 1.11  2000/01/25 19:19:07  roddey
  * Simple addition of a getId() method to the xcode and netacess abstractions to
  * allow each impl to give back an id string.
@@ -289,6 +293,13 @@ XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder()
 }
 
 
+bool ICUTransService::supportsSrcOfs() const
+{
+    // This implementation supports source offset information
+    return true;
+}
+
+
 void ICUTransService::upperCase(XMLCh* const toUpperCase) const
 {
     XMLCh* outPtr = toUpperCase;
@@ -378,13 +389,6 @@ ICUTranscoder::~ICUTranscoder()
 // ---------------------------------------------------------------------------
 //  ICUTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-bool ICUTranscoder::supportsSrcOfs() const
-{
-    // This implementation supports source offset information
-    return true;
-}
-
-
 XMLCh ICUTranscoder::transcodeOne(  const   XMLByte* const  srcData
                                     , const unsigned int    srcBytes
                                     ,       unsigned int&   bytesEaten)

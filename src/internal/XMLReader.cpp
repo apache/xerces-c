@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/25 22:49:54  roddey
+ * Moved the supportsSrcOfs() method from the individual transcoder to the
+ * transcoding service, where it should have been to begin with.
+ *
  * Revision 1.6  2000/01/25 01:04:21  roddey
  * Fixes a bogus error about ]]> in char data.
  *
@@ -194,6 +198,9 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     // Do an initial load of raw bytes
     refreshRawBuffer();
 
+    // Ask the transcoding service if it supports src offset info
+    fSrcOfsSupported = XMLPlatformUtils::fgTransService->supportsSrcOfs();
+
     //
     //  Use the recognizer class to get a basic sense of what family of
     //  encodings this file is in. We'll start off with a reader of that
@@ -269,6 +276,9 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     // Copy the encoding string to our member
     fEncodingStr = XMLString::replicate(encodingStr);
 
+    // Ask the transcoding service if it supports src offset info
+    fSrcOfsSupported = XMLPlatformUtils::fgTransService->supportsSrcOfs();
+
     //
     //  Map the passed encoding name to one of our enums. If it does not
     //  match one of the intrinsic encodings, it will come back 'other',
@@ -300,9 +310,6 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
             , fEncodingStr
         );
     }
-
-    // Ask the transcoder if it supports src offset info
-    fSrcOfsSupported = fTranscoder->supportsSrcOfs();
 
     //
     //  Note that, unlike above, we do not do an initial decode of the
@@ -391,9 +398,6 @@ bool XMLReader::refreshCharBuffer()
                 , fEncodingStr
             );
         }
-
-        // Ask the transcoder if it supports src offset info
-        fSrcOfsSupported = fTranscoder->supportsSrcOfs();
     }
 
     //
@@ -1296,9 +1300,6 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
 
     // Update the base encoding member with the new base encoding found
     fEncoding = newBaseEncoding;
-
-    // Ask our new transcoder if it supports src offsets
-    fSrcOfsSupported = fTranscoder->supportsSrcOfs();
 
     // Looks ok to us
     return true;

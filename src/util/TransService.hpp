@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/25 22:49:55  roddey
+ * Moved the supportsSrcOfs() method from the individual transcoder to the
+ * transcoding service, where it should have been to begin with.
+ *
  * Revision 1.4  2000/01/25 19:19:07  roddey
  * Simple addition of a getId() method to the xcode and netacess abstractions to
  * allow each impl to give back an id string.
@@ -153,6 +157,8 @@ public :
 
     virtual XMLLCPTranscoder* makeNewLCPTranscoder() = 0;
 
+    virtual bool supportsSrcOfs() const = 0;
+
     virtual void upperCase(XMLCh* const toUpperCase) const = 0;
 
 
@@ -221,8 +227,6 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual transcoding interface
     // -----------------------------------------------------------------------
-    virtual bool supportsSrcOfs() const = 0;
-
     virtual XMLCh transcodeOne
     (
         const   XMLByte* const  srcData
