@@ -57,6 +57,9 @@
 //REVISIT
 /*
  * $Log$
+ * Revision 1.3  2004/02/10 17:36:38  cargilld
+ * Fix build problems.
+ *
  * Revision 1.2  2004/02/09 13:23:45  cargilld
  * Fix build problems and update usage.
  *
@@ -276,7 +279,7 @@ int main(int argC, char* argV[])
     unsigned long duration;
 
     bool more = true;
-    ifstream fin;
+    XERCES_STD_QUALIFIER ifstream fin;
 
     // the input is a list file
     if (doList) //REVISIT

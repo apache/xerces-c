@@ -65,11 +65,15 @@
 #include "PSVIWriterHandlers.hpp"
 #include <stdlib.h>
 #include <string.h>
-#include <iostream.h>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
+#include <iostream.h>
+#endif
 
 
 // ---------------------------------------------------------------------------
@@ -111,7 +115,7 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;
