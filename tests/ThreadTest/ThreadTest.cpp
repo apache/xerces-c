@@ -247,10 +247,12 @@ struct ThreadInfo
 {
     bool    fHeartBeat;            // Set true by the thread each time it finishes
                                    //   parsing a file.
+    bool    fInProgress;           // Set to false by the thread when parse in progress
     unsigned int     fParses;      // Number of parses completed.
     int              fThreadNum;   // Identifying number for this thread.
     ThreadInfo() {
         fHeartBeat = false;
+        fInProgress = false;
         fParses = 0;
         fThreadNum = -1;
     }
@@ -965,6 +967,7 @@ void parseCommandLine(int argc, char **argv)
             "     -v             Use validating parser.  Non-validating is default.\n"
             "     -n             Enable namespace processing. Defaults to off.\n"
             "     -s             Enable schema processing. Defaults to off.\n"
+            "     -f             Enable full schema constraint checking. Defaults to off.\n"
             "     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX.\n"
             "     -quiet         Suppress periodic status display.\n"
             "     -verbose       Display extra messages.\n"
@@ -972,7 +975,7 @@ void parseCommandLine(int argc, char **argv)
             "     -threads nnn   Number of threads.  Default is 2.\n"
             "     -time nnn      Total time to run, in seconds.  Default is forever.\n"
             "     -dump          Dump DOM tree on error.\n"
-            "     -mem           Read files into memory once only, and parse them from there.\n"
+            "     -mem           Read files into memory once only, and parse them from there.\n\n"
             );
         exit(1);
     }
@@ -1070,14 +1073,8 @@ void threadMain (void *param)
     //
     while (gRunInfo.stopNow == false)
     {
-        //
-        // wait until my heartbeat is set to false
-        //
-        while (true) {
-            if (thInfo->fHeartBeat == false)
-                break;
-        }
 
+        thInfo->fInProgress = true;
 
         if (thParser == 0)
             thParser = new ThreadParser;
@@ -1124,6 +1121,7 @@ void threadMain (void *param)
 
         thInfo->fHeartBeat = true;
         thInfo->fParses++;
+        thInfo->fInProgress = false;
     }
 
     delete thParser;
@@ -1245,28 +1243,24 @@ int main (int argc, char **argv)
     while (gRunInfo.totalTime == 0 || gRunInfo.totalTime > elapsedSeconds)
     {
         ThreadFuncs::Sleep(1000);
-
-        char c = '+';
-        int threadNum;
-        for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
-        {
-            if (gThreadInfo[threadNum].fHeartBeat == false)
-            {
-                c = '.';
-                break;
-            };
-        }
-
         if (gRunInfo.quiet == false && gRunInfo.verbose == false)
         {
+            char c = '+';
+            int threadNum;
+            for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
+            {
+                if (gThreadInfo[threadNum].fHeartBeat == false)
+                {
+                    c = '.';
+                    break;
+                };
+            }
             fputc(c, stdout);
             fflush(stdout);
+            if (c == '+')
+                for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
+                    gThreadInfo[threadNum].fHeartBeat = false;
         }
-
-        if (c == '+')
-            for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
-                gThreadInfo[threadNum].fHeartBeat = false;
-
         elapsedSeconds = (XMLPlatformUtils::getCurrentMillis() - startTime) / 1000;
     };
 
@@ -1280,7 +1274,7 @@ int main (int argc, char **argv)
     //  Make sure all threads are done before terminate
     //
     for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++) {
-        while (gThreadInfo[threadNum].fHeartBeat == false) {
+        while (gThreadInfo[threadNum].fInProgress == true) {
             ThreadFuncs::Sleep(1000);
         }
         if (gRunInfo.verbose)
@@ -1298,8 +1292,10 @@ int main (int argc, char **argv)
         // printf("%f   ", totalParsesCompleted);
     }
 
-    double parsesPerMinute = totalParsesCompleted / (double(gRunInfo.totalTime) / double(60));
-    printf("\n%8.1f parses per minute.", parsesPerMinute);
+    if (gRunInfo.quiet == false) {
+        double parsesPerMinute = totalParsesCompleted / (double(gRunInfo.totalTime) / double(60));
+        printf("\n%8.1f parses per minute.\n", parsesPerMinute);
+    }
 
     XMLPlatformUtils::Terminate();
 
