@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/07/30 05:18:31  jberry
+ * Remove stray character
+ *
  * Revision 1.8  2000/07/29 05:44:44  jberry
  * Incorporate new MacOSURLAccess net accessor
  *
@@ -946,7 +949,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
                 hfsParams.volumeParam.ioVolIndex = volIndex;
                 err = PBHGetVInfoSync(&hfsParams);
                 volRefNum = hfsParams.volumeParam.ioVRefNum;
-7#else
+#else
                 err = nsvErr;
 #endif
             }
