@@ -24,6 +24,22 @@ Xerces-C Bug List</H2>
 		<TD WIDTH="78%">Description</TD>
 	</TR>
 	<TR>
+		<TD WIDTH="9%">2000-10-26</TD>
+		<TD WIDTH="13%">Dean Roddey</TD>
+		<TD WIDTH="78%">EnumVal Sample should have an error handler installed, so that errors in the DTD would be displayed in some reasonable
+			way.</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="9%">2000-10-31</TD>
+		<TD WIDTH="13%">Gareth Reakes</TD>
+		<TD WIDTH="78%">DOM NodeIterators sometimes continue too far in tree.</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="9%">2000-10-30</TD>
+		<TD WIDTH="13%">Radovan Chytracek</TD>
+		<TD WIDTH="78%">ignorableWhiteSpace not called during progressive SAX parsing.  Works correctly with batch parsing.</TD>
+	</TR>
+	<TR>
 		<TD WIDTH="9%">2000-10-15</TD>
 		<TD WIDTH="13%">Curt Arnold</TD>
 		<TD WIDTH="78%">Binary builds do not include COM.</TD>
@@ -163,6 +179,12 @@ Xerces-C Bug List</H2>
 		<TD WIDTH="9%">2000-07-31</TD>
 		<TD WIDTH="13%">Pawel Hubczak</TD>
 		<TD WIDTH="78%">Possible memory leak when ErrorHandler::error override called.  (This might be fixed already)</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="9%">2000-03-08</TD>
+		<TD WIDTH="13%">Dean Roddey</TD>
+		<TD WIDTH="78%">DOMString feature request - transcode to a caller supplied buffer, rather than always allocating a new one on the
+			heap.  Primarily for better performance.</TD>
 	</TR>
 </TABLE>
 </P>
