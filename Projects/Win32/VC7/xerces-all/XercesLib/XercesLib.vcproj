@@ -247,9 +247,6 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\NameIdPool.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\NoDefTranscoderException.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\NoSuchElementException.hpp">
 			</File>
 			<File

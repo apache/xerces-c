@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.36  2003/05/29 11:27:51  gareth
+# fix to bug #20325. Removed unused file and updated Projects.
+#
 # Revision 1.35  2003/04/30 15:54:03  knoaman
 # Add XMemory.
 #
@@ -492,7 +495,6 @@ UTIL_CPP_PUBHEADERS = \
     KVStringPair.hpp \
     Mutexes.hpp \
     NameIdPool.hpp \
-    NoDefTranscoderException.hpp \
     NoSuchElementException.hpp \
     NullPointerException.hpp \
     NumberFormatException.hpp \

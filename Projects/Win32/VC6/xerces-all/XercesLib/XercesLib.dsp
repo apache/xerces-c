@@ -607,10 +607,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\NameIdPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\NoDefTranscoderException.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\util\NoSuchElementException.hpp
 # End Source File
 # Begin Source File
