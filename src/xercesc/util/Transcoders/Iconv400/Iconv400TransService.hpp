@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,7 @@
  */
 
 /**
+ * @02A           V5R2M0    200419   jrhansen : support lowercase function
  * $Id$
  */
 
@@ -130,7 +131,10 @@ private :
     void operator=(const Iconv400TransService&);
 
     XMLCh toUnicodeUpper(XMLCh toupper) const;
-    Qlg_CCSID_ReqCtlBlk_T convertCtlblk; 
+    XMLCh toUnicodeLower(XMLCh tolower) const;
+
+    Qlg_CCSID_ReqCtlBlk_T convertCtlblkUpper;
+    Qlg_CCSID_ReqCtlBlk_T convertCtlblkLower;
 
 };
 

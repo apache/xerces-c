@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,7 @@
 
 /**
  * @01A D998714.1 V5R2M0    100301   Swan    :Fix error return flags
+ * @02A           V5R2M0    200419   jrhansen : support lowercase function
  * $Id$
  */
 
@@ -110,10 +111,15 @@ static const XMLCh gMyServiceId[] =
 // ---------------------------------------------------------------------------
 Iconv400TransService::Iconv400TransService()
 {
-    memset((char*)&convertCtlblk,'\0',sizeof(convertCtlblk));
-    convertCtlblk.Type_of_Request = 1;
-    convertCtlblk.Case_Request = 0;
-    convertCtlblk.CCSID_of_Input_Data = 13488;
+    memset((char*)&convertCtlblkUpper,'\0',sizeof(convertCtlblkUpper));
+    convertCtlblkUpper.Type_of_Request = 1;
+    convertCtlblkUpper.Case_Request = 0;   // upper case
+    convertCtlblkUpper.CCSID_of_Input_Data = 13488;
+
+    memset((char*)&convertCtlblkLower,'\0',sizeof(convertCtlblkLower));
+    convertCtlblkLower.Type_of_Request = 1;
+    convertCtlblkLower.Case_Request = 1;
+    convertCtlblkLower.CCSID_of_Input_Data = 13488;
 }
 
 Iconv400TransService::~Iconv400TransService()
@@ -247,13 +253,18 @@ void Iconv400TransService::upperCase(XMLCh* const toUpperCase) const
 
 void Iconv400TransService::lowerCase(XMLCh* const toLowerCase) const
 {
-    //TO DO
+    XMLCh* outPtr = toLowerCase;
+    while (*outPtr)
+    {
+        *outPtr = toUnicodeLower(*outPtr);
+        outPtr++;
+    }
 }
 
 // ---------------------------------------------------------------------------
 //  Iconv400TransService: The virtual transcoding service API
 // ---------------------------------------------------------------------------
-XMLCh Iconv400TransService::toUnicodeUpper(XMLCh comp1) const
+XMLCh Iconv400TransService::toUnicodeUpper(XMLCh comp1) const  
 {
     XMLCh chRet;
     struct {
@@ -266,7 +277,30 @@ XMLCh Iconv400TransService::toUnicodeUpper(XMLCh comp1) const
      error_code.bytes_available = sizeof(error_code);
  
     long charlen =2;
-    QlgConvertCase((char*)&convertCtlblk,
+
+    QlgConvertCase((char*)&convertCtlblkUpper,
+                       (char*)&comp1,
+                       (char*)&chRet,
+                       (long*)&charlen,
+                       (char*)&error_code);
+    return chRet;
+}
+
+XMLCh Iconv400TransService::toUnicodeLower(XMLCh comp1) const
+{
+    XMLCh chRet;
+    struct {
+             int bytes_available;
+             int bytes_used;
+             char exception_id[7];
+             char reserved;
+             char exception_data[15];
+            } error_code;
+     error_code.bytes_available = sizeof(error_code);
+ 
+    long charlen =2;
+
+    QlgConvertCase((char*)&convertCtlblkLower,
                        (char*)&comp1,
                        (char*)&chRet,
                        (long*)&charlen,
