@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/11 19:17:58  roddey
+ * If a SAX error handler is installed, then the resetErrors() event handler
+ * should call the one on the installed SAX error handler.
+ *
  * Revision 1.8  2000/04/05 18:56:17  roddey
  * Init the fDTDHandler member. Enable installation of DTDHandler
  * on SAX parser.
@@ -845,6 +849,8 @@ void SAXParser::TextDecl(   const  XMLCh* const
 // ---------------------------------------------------------------------------
 void SAXParser::resetErrors()
 {
+    if (fErrorHandler)
+        fErrorHandler->resetErrors();
 }
 
 
