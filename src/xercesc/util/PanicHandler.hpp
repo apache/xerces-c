@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/24 17:12:21  cargilld
+ * Memory management update.
+ *
  * Revision 1.5  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -104,7 +107,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   *
   */
 
-class XMLUTIL_EXPORT PanicHandler: public XMemory 
+class XMLUTIL_EXPORT PanicHandler
 {
 public:
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/12/24 17:12:21  cargilld
+ * Memory management update.
+ *
  * Revision 1.2  2003/03/10 16:05:11  peiyongz
  * assignment operator
  *
@@ -84,7 +87,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   * </p>
   */
 
-class XMLUTIL_EXPORT DefaultPanicHandler : public PanicHandler
+class XMLUTIL_EXPORT DefaultPanicHandler : public XMemory, public PanicHandler
 {
 public:
 
