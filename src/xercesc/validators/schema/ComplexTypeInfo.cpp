@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/01/09 22:41:58  knoaman
+ * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
+ *
  * Revision 1.23  2003/12/24 17:42:03  knoaman
  * Misc. PSVI updates
  *
@@ -258,73 +261,75 @@ ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)
 {
     if (!sAnyTypeMutexRegistered)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sAnyTypeMutex, tmpMutex, 0))
+        if (!sAnyTypeMutex)
         {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpMutex;
+            XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+            if (!sAnyTypeMutex)
+                sAnyTypeMutex = new XMLMutex;
         }
 
-        // Now lock it and try to register it
-        XMLMutexLock lock(sAnyTypeMutex);
-
-        // If we got here first, then register it and set the registered flag
-        if (!sAnyTypeMutexRegistered)
+        // Use a faux scope to synchronize while we do this
         {
-            // create type name
-            XMLCh typeName[128];
-            unsigned int nsLen = XMLString::stringLen(
-                SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            XMLMutexLock lock(sAnyTypeMutex);
 
-			XMLString::copyString(
-                typeName, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-            typeName[nsLen] = chComma;
-            XMLString::copyString(
-                typeName + nsLen + 1, SchemaSymbols::fgATTVAL_ANYTYPE);
+            // If we got here first, then register it and set the registered flag
+            if (!sAnyTypeMutexRegistered)
+            {
+                // create type name
+                XMLCh typeName[128];
+                unsigned int nsLen = XMLString::stringLen(
+                    SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
 
-            // Create and initialize 'anyType'
-            fAnyType = new ComplexTypeInfo();
+			    XMLString::copyString(
+                    typeName, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+                typeName[nsLen] = chComma;
+                XMLString::copyString(
+                    typeName + nsLen + 1, SchemaSymbols::fgATTVAL_ANYTYPE);
 
-            ContentSpecNode* term = new ContentSpecNode
-            (
-                new QName
+                // Create and initialize 'anyType'
+                fAnyType = new ComplexTypeInfo();
+
+                ContentSpecNode* term = new ContentSpecNode
+                (
+                    new QName
+                    (
+                        XMLUni::fgZeroLenString
+                        , XMLUni::fgZeroLenString
+                        , emptyNSId
+                    )
+                    , false
+                );
+                term->setType(ContentSpecNode::Any_Lax);
+                term->setMinOccurs(0);
+                term->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
+
+                ContentSpecNode* particle = new ContentSpecNode
+                (
+                    ContentSpecNode::ModelGroupSequence
+                    , term
+                    , 0
+                );
+
+                SchemaAttDef* attWildCard = new SchemaAttDef
                 (
                     XMLUni::fgZeroLenString
                     , XMLUni::fgZeroLenString
                     , emptyNSId
-                )
-                , false
-            );
-            term->setType(ContentSpecNode::Any_Lax);
-            term->setMinOccurs(0);
-            term->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
+                    , XMLAttDef::Any_Any
+                    , XMLAttDef::ProcessContents_Lax
+                );
 
-            ContentSpecNode* particle = new ContentSpecNode
-            (
-                ContentSpecNode::ModelGroupSequence
-                , term
-                , 0
-            );
+                fAnyType->setTypeName(typeName);
+                fAnyType->setBaseComplexTypeInfo(fAnyType);
+                fAnyType->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
+                fAnyType->setContentType(SchemaElementDecl::Mixed_Complex);
+                fAnyType->setContentSpec(particle);
+                fAnyType->setAttWildCard(attWildCard);
 
-            SchemaAttDef* attWildCard = new SchemaAttDef
-            (
-                XMLUni::fgZeroLenString
-                , XMLUni::fgZeroLenString
-                , emptyNSId
-                , XMLAttDef::Any_Any
-                , XMLAttDef::ProcessContents_Lax
-            );
-
-            fAnyType->setTypeName(typeName);
-            fAnyType->setBaseComplexTypeInfo(fAnyType);
-            fAnyType->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
-            fAnyType->setContentType(SchemaElementDecl::Mixed_Complex);
-            fAnyType->setContentSpec(particle);
-            fAnyType->setAttWildCard(attWildCard);
-
-            // register cleanup method
-            anyTypeCleanup.registerCleanup(reinitAnyType);
-            sAnyTypeMutexRegistered = true;
+                // register cleanup method
+                anyTypeCleanup.registerCleanup(reinitAnyType);
+                sAnyTypeMutexRegistered = true;
+            }
         }
     }
 

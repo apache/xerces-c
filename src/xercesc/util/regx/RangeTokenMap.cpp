@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/09 22:41:58  knoaman
+ * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
+ *
  * Revision 1.7  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -120,6 +123,37 @@
 #include <xercesc/util/StringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+// ---------------------------------------------------------------------------
+//  Local static data
+// ---------------------------------------------------------------------------
+static XMLMutex* sRangeTokMapMutex = 0;
+static XMLRegisterCleanup rangeTokMapRegistryCleanup;
+
+// ---------------------------------------------------------------------------
+//  Local, static functions
+// ---------------------------------------------------------------------------
+static void reinitRangeTokMapMutex()
+{
+    delete sRangeTokMapMutex;
+    sRangeTokMapMutex = 0;
+}
+
+static XMLMutex& getRangeTokMapMutex()
+{
+    if (!sRangeTokMapMutex)
+    {
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!sRangeTokMapMutex)
+        {
+            sRangeTokMapMutex = new XMLMutex;
+            rangeTokMapRegistryCleanup.registerCleanup(reinitRangeTokMapMutex);
+        }
+    }
+    return *sRangeTokMapMutex;
+}
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -283,10 +317,7 @@ void RangeTokenMap::setRangeToken(const XMLCh* const keyword,
 // ---------------------------------------------------------------------------
 void RangeTokenMap::initializeRegistry() {
 
-    if (fRegistryInitialized)
-        return;
-
-    // Use a faux scope to synchronize while we do this
+    if (!fRegistryInitialized)
     {
         XMLMutexLock lockInit(&fMutex);
 
@@ -295,8 +326,8 @@ void RangeTokenMap::initializeRegistry() {
             fTokenFactory = new TokenFactory();
             fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109);
             fRangeMap = new RefHashTableOf<RangeFactory>(29);
-	        fCategories = new XMLStringPool(109);
-	        fRegistryInitialized = true;
+            fCategories = new XMLStringPool(109);
+            fRegistryInitialized = true;
         }
     }
 }
@@ -305,21 +336,20 @@ void RangeTokenMap::initializeRegistry() {
 // ---------------------------------------------------------------------------
 //  RangeTokenMap: Instance methods
 // ---------------------------------------------------------------------------
-RangeTokenMap* RangeTokenMap::instance() {
-    static XMLRegisterCleanup instanceCleanup;
+RangeTokenMap* RangeTokenMap::instance()
+{
+    static XMLRegisterCleanup rangeTokMapInstanceCleanup;
+    if (!fInstance)
+    {
+        XMLMutexLock lock(&getRangeTokMapMutex());
 
-    if (!fInstance) {
-        RangeTokenMap* t = new RangeTokenMap();
-        if (XMLPlatformUtils::compareAndSwap((void **)&fInstance, t, 0) != 0)
+        if (!fInstance)
         {
-            delete t;
+            fInstance = new RangeTokenMap();
+            rangeTokMapInstanceCleanup.registerCleanup(reinitInstance);
         }
-        else
-        {
-            instanceCleanup.registerCleanup(reinitInstance);
-        }
-
     }
+
     return (fInstance);
 }
 

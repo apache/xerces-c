@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/01/09 22:41:58  knoaman
+ * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
+ *
  * Revision 1.3  2003/03/04 21:11:12  knoaman
  * [Bug 17516] Thread safety problems in ../util/ and ../util/regx.
  *
@@ -76,6 +79,37 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+// ---------------------------------------------------------------------------
+//  Local static data
+// ---------------------------------------------------------------------------
+static XMLMutex* sEncValMutex = 0;
+static XMLRegisterCleanup encValRegistryCleanup;
+
+// ---------------------------------------------------------------------------
+//  Local, static functions
+// ---------------------------------------------------------------------------
+static void reinitEncValMutex()
+{
+    delete sEncValMutex;
+    sEncValMutex = 0;
+}
+
+static XMLMutex& getEncValMutex()
+{
+    if (!sEncValMutex)
+    {
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!sEncValMutex)
+        {
+            sEncValMutex = new XMLMutex;
+            encValRegistryCleanup.registerCleanup(reinitEncValMutex);
+        }
+    }
+    return *sEncValMutex;
+}
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -126,21 +160,20 @@ void EncodingValidator::initializeRegistry() {
 // ---------------------------------------------------------------------------
 //  EncodingValidator: Instance methods
 // ---------------------------------------------------------------------------
-EncodingValidator* EncodingValidator::instance() {
+EncodingValidator* EncodingValidator::instance()
+{
     static XMLRegisterCleanup instanceCleanup;
+    if (!fInstance)
+    {
+        XMLMutexLock lock(&getEncValMutex());
 
-    if (!fInstance) {
-        EncodingValidator* t = new EncodingValidator();
-        if (XMLPlatformUtils::compareAndSwap((void **)&fInstance, t, 0) != 0)
-        {
-            delete t;
-        }
-        else
-        {
+        if (!fInstance)
+        { 
+            fInstance = new EncodingValidator();
             instanceCleanup.registerCleanup(reinitInstance);
         }
-
     }
+
     return (fInstance);
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/01/09 22:41:58  knoaman
+ * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
+ *
  * Revision 1.18  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -264,26 +267,29 @@ void GeneralAttributeCheck::mapElements()
 {
     if (!sGeneralAttCheckMutexRegistered)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sGeneralAttCheckMutex, tmpMutex, 0))
+        if (!sGeneralAttCheckMutex)
         {
-            // Some other thread beat us to it, so let's clean up ours.
-            delete tmpMutex;
+            XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+
+            if (!sGeneralAttCheckMutex)
+                sGeneralAttCheckMutex = new XMLMutex;
         }
 
-        // Now lock it and try to register it
-        XMLMutexLock lock(sGeneralAttCheckMutex);
-
-        // If we got here first, then register it and set the registered flag
-        if (!sGeneralAttCheckMutexRegistered)
+        // Use a faux scope to synchronize while we do this
         {
-            // initialize
-            setUpValidators();
-            mapAttributes();
+            XMLMutexLock lock(sGeneralAttCheckMutex);
 
-            // register for cleanup at Termination.
-            sGeneralAttCheckCleanup.registerCleanup(reinitGeneralAttCheck);
-            sGeneralAttCheckMutexRegistered = true;
+            // If we got here first, then register it and set the registered flag
+            if (!sGeneralAttCheckMutexRegistered)
+            {
+                // initialize
+                setUpValidators();
+                mapAttributes();
+
+                // register for cleanup at Termination.
+                sGeneralAttCheckCleanup.registerCleanup(reinitGeneralAttCheck);
+                sGeneralAttCheckMutexRegistered = true;
+            }
         }
     }
 }

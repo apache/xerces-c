@@ -75,7 +75,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //                      of order of initialization dependencies.)
 // -----------------------------------------------------------------------
 // Points to the singleton instance of a registry of DOMImplementationSource
-static RefVectorOf<DOMImplementationSource>* gDOMImplSrcVector;
+static RefVectorOf<DOMImplementationSource>* gDOMImplSrcVector = 0;
 
 //  Global mutex that is used to synchronize access to the vector
 static XMLMutex* gDOMImplSrcVectorMutex = 0;
@@ -108,20 +108,15 @@ static void reinitDOMImplSrcVectorMutex()
 // -----------------------------------------------------------------------
 RefVectorOf<DOMImplementationSource>* getDOMImplSrcVector()
 {
-	static XMLRegisterCleanup cleanupDOMImplSrcVector;
-
-    if (gDOMImplSrcVector == 0)
+    // Note: we are not synchronizing on creation since that caller is doing
+    //       it (i.e. caller is locking a mutex before calling us)
+    static XMLRegisterCleanup cleanupDOMImplSrcVector;
+    if (!gDOMImplSrcVector)
     {
-        RefVectorOf<DOMImplementationSource> *t = new RefVectorOf<DOMImplementationSource>(3, false);
-        if (XMLPlatformUtils::compareAndSwap((void **)&gDOMImplSrcVector, t, 0) != 0)
-        {
-            delete t;
-        }
-        else
-        {
-			cleanupDOMImplSrcVector.registerCleanup(reinitDOMImplSrcVector);
-        }
+        gDOMImplSrcVector = new RefVectorOf<DOMImplementationSource>(3, false);
+        cleanupDOMImplSrcVector.registerCleanup(reinitDOMImplSrcVector);
     }
+
     return gDOMImplSrcVector;
 }
 
@@ -130,15 +125,13 @@ XMLMutex& getDOMImplSrcVectorMutex()
     static XMLRegisterCleanup cleanupDOMImplSrcVectorMutex;
     if (!gDOMImplSrcVectorMutex)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&gDOMImplSrcVectorMutex, tmpMutex, 0))
-        {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpMutex;
-        }
-        else
-            cleanupDOMImplSrcVectorMutex.registerCleanup(reinitDOMImplSrcVectorMutex);
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
 
+        if (!gDOMImplSrcVectorMutex)
+        {
+            gDOMImplSrcVectorMutex = new XMLMutex;
+            cleanupDOMImplSrcVectorMutex.registerCleanup(reinitDOMImplSrcVectorMutex);
+        }
     }
 
     return *gDOMImplSrcVectorMutex;

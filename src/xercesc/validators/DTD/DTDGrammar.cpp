@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/01/09 22:41:58  knoaman
+ * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
+ *
  * Revision 1.13  2003/11/12 20:32:47  peiyongz
  * Do not serialize/deserialize fElemNonDeclPool
  *
@@ -124,6 +127,13 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
+//  Local static data
+// ---------------------------------------------------------------------------
+static bool               sEntityPoolMutexRegistered = false;
+static XMLMutex*          sEntityPoolMutex = 0;
+static XMLRegisterCleanup entityPoolRegistryCleanup;
+
+// ---------------------------------------------------------------------------
 //  DTDGrammar: Static member data
 // ---------------------------------------------------------------------------
 NameIdPool<DTDEntityDecl>* DTDGrammar::fDefaultEntities = 0;
@@ -177,8 +187,14 @@ DTDGrammar::~DTDGrammar()
 //  Notification that lazy data has been deleted
 // -----------------------------------------------------------------------
 void DTDGrammar::reinitDfltEntities() {
-	delete fDefaultEntities;
-	fDefaultEntities = 0;
+
+    delete fDefaultEntities;
+    fDefaultEntities = 0;
+
+    // delete local static data
+    delete sEntityPoolMutex;
+    sEntityPoolMutex = 0;
+    sEntityPoolMutexRegistered = false;
 }
 
 // -----------------------------------------------------------------------
@@ -259,36 +275,45 @@ void DTDGrammar::reset()
 
 void DTDGrammar::resetEntityDeclPool() {
 
-    static XMLRegisterCleanup builtInRegistryCleanup;
-
     // Initialize default entities if not initialized
-    if (fDefaultEntities == 0) {
-
-        NameIdPool<DTDEntityDecl>* t = new NameIdPool<DTDEntityDecl>(11, 12);
-
-        if (XMLPlatformUtils::compareAndSwap((void **)&fDefaultEntities, t, 0) != 0)
+    if (!sEntityPoolMutexRegistered)
+    {
+        if (!sEntityPoolMutex)
         {
-            delete t;
+            XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+            if (!sEntityPoolMutex)
+                sEntityPoolMutex = new XMLMutex;
         }
-        else
-        {
-            builtInRegistryCleanup.registerCleanup(reinitDfltEntities);
 
-            //
-            // Add the default entity entries for the character refs that must
-            // always be present. We indicate that they are from the internal
-            // subset. They aren't really, but they have to look that way so
-            // that they are still valid for use within a standalone document.
-            //
-            // We also mark them as special char entities, which allows them
-            // to be used in places whether other non-numeric general entities
-            // cannot.
-            //
-            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
-            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
-            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
-            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
-            fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
+        // Use a faux scope to synchronize while we do this
+        {
+            XMLMutexLock lock(sEntityPoolMutex);
+
+            // If we got here first, then register it and set the registered flag
+            if (!sEntityPoolMutexRegistered)
+            {
+                fDefaultEntities = new NameIdPool<DTDEntityDecl>(11, 12);
+
+                //
+                // Add the default entity entries for the character refs that must
+                // always be present. We indicate that they are from the internal
+                // subset. They aren't really, but they have to look that way so
+                // that they are still valid for use within a standalone document.
+                //
+                // We also mark them as special char entities, which allows them
+                // to be used in places whether other non-numeric general entities
+                // cannot.
+                //
+                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
+                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
+                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
+                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
+                fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
+
+                // register cleanup method
+                entityPoolRegistryCleanup.registerCleanup(reinitDfltEntities);
+                sEntityPoolMutexRegistered = true;
+            }
         }
     }
 }

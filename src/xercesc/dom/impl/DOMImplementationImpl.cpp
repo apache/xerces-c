@@ -107,40 +107,63 @@ static const XMLCh  gLS[] =     // Points to "LS"
 // -----------------------------------------------------------------------
 //  Message Loader for DOM
 // -----------------------------------------------------------------------
-static XMLMsgLoader             *gMsgLoader4DOM;   // Points to the singleton instance
+static XMLMsgLoader  *sMsgLoader4DOM = 0;   // Points to the singleton instance
+static XMLMutex      *sMutex4DOM = 0;
 
 static void reinitMsgLoader4DOM()
 {
-	delete gMsgLoader4DOM;
-	gMsgLoader4DOM = 0;
+	delete sMsgLoader4DOM;
+	sMsgLoader4DOM = 0;
 }
 
-XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM() {
-	static XMLRegisterCleanup msgLoader4DOMCleanup;
+static void reinitMutex4DOM()
+{
+	delete sMutex4DOM;
+	sMutex4DOM = 0;
+}
 
-    if (gMsgLoader4DOM == 0)
+static XMLMutex& getMutex4DOM()
+{
+    static XMLRegisterCleanup mutex4DOMCleanup;
+    if (!sMutex4DOM)
     {
-        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
-        if (!t)
-            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
-        else {
-            if (XMLPlatformUtils::compareAndSwap((void **)&gMsgLoader4DOM, t, 0) != 0)
-            {
-                delete t;
-            }
-            else
-            {
-                msgLoader4DOMCleanup.registerCleanup(reinitMsgLoader4DOM);
-            }
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!sMutex4DOM)
+        {
+            sMutex4DOM = new XMLMutex;
+            mutex4DOMCleanup.registerCleanup(reinitMutex4DOM);
         }
     }
-    return gMsgLoader4DOM;
+    return *sMutex4DOM;
+}
+
+XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM()
+{
+    static XMLRegisterCleanup msgLoader4DOMCleanup;
+    if (!sMsgLoader4DOM)
+    {
+        XMLMutexLock lock(&getMutex4DOM());
+
+        if (!sMsgLoader4DOM)
+        {
+            sMsgLoader4DOM = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
+
+            if (!sMsgLoader4DOM)
+                XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+            else
+                msgLoader4DOMCleanup.registerCleanup(reinitMsgLoader4DOM);
+        }
+    }
+
+    return sMsgLoader4DOM;
 };
 
 // -----------------------------------------------------------------------
 //  Singleton DOMImplementationImpl
 // -----------------------------------------------------------------------
-static DOMImplementationImpl    *gDomimp;   // Points to the singleton instance
+static DOMImplementationImpl    *gDomimp = 0;   // Points to the singleton instance
                                             //  of DOMImplementation that is returnedreturned
                                             //  by any call to getImplementation().
 
@@ -158,22 +181,20 @@ static void reinitImplementation()
 //                         promise that different documents can safely be
 //                         used concurrently by different threads.
 //
-DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl() {
-	static XMLRegisterCleanup implementationCleanup;
-
-    if (gDomimp == 0)
+DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl()
+{
+    static XMLRegisterCleanup implementationCleanup;
+    if (!gDomimp)
     {
-        DOMImplementationImpl *t = new DOMImplementationImpl;
-        if (XMLPlatformUtils::compareAndSwap((void **)&gDomimp, t, 0) != 0)
-        {
-            delete t;
-        }
-        else
-        {
-			implementationCleanup.registerCleanup(reinitImplementation);
-        }
+        XMLMutexLock lock(&getMutex4DOM());
 
+        if (!gDomimp)
+        {
+            gDomimp = new DOMImplementationImpl;
+            implementationCleanup.registerCleanup(reinitImplementation);
+        }
     }
+
     return gDomimp;
 };
 

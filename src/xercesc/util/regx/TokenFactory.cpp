@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/09 22:41:58  knoaman
+ * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
+ *
  * Revision 1.10  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -157,22 +160,14 @@ void TokenFactory::reinitTokenFactoryMutex()
 //  itself, we have to do this the low level way using a compare and swap.
 static XMLMutex& gTokenFactoryMutex()
 {
-    if (!sTokFactoryMutex)
+    if (!sTokFactoryMutexRegistered)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sTokFactoryMutex, tmpMutex, 0))
-        {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpMutex;
-        }
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
 
-        // Now lock it and try to register it
-        XMLMutexLock lock(sTokFactoryMutex);
-
-        // If we got here first, then register it and set the registered flag
         if (!sTokFactoryMutexRegistered)
         {
-			tokenFactoryMutexCleanup.registerCleanup(TokenFactory::reinitTokenFactoryMutex);
+            sTokFactoryMutex = new XMLMutex;
+            tokenFactoryMutexCleanup.registerCleanup(TokenFactory::reinitTokenFactoryMutex);
             sTokFactoryMutexRegistered = true;
         }
     }
@@ -500,10 +495,7 @@ Token* TokenFactory::getGraphemePattern() {
 // ---------------------------------------------------------------------------
 void TokenFactory::initializeRegistry() {
 
-    if (fRangeInitialized)
-        return;
-
-    // Use a faux scope to synchronize while we do this
+    if (!fRangeInitialized)
     {
         XMLMutexLock lockInit(&gTokenFactoryMutex());
 

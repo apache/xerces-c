@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.12  2004/01/09 22:41:58  knoaman
+  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
+  *
   * Revision 1.11  2003/12/24 15:24:16  cargilld
   * More updates to memory management so that the static memory manager.
   *
@@ -114,13 +117,37 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Local static data
 // ---------------------------------------------------------------------------
-static XMLMsgLoader*      gErrMsgLoader = 0;
-static XMLMsgLoader*      gValidMsgLoader = 0;
+static XMLMsgLoader*  gErrMsgLoader = 0;
+static XMLMsgLoader*  gValidMsgLoader = 0;
+static XMLMutex*      sErrRprtrMutex = 0;
 
 
 // ---------------------------------------------------------------------------
 //  Local, static functions
 // ---------------------------------------------------------------------------
+static void reinitErrRprtrMutex()
+{
+    delete sErrRprtrMutex;
+    sErrRprtrMutex = 0;
+}
+
+static XMLMutex& getErrRprtrMutex()
+{
+    static XMLRegisterCleanup errRprtrMutexCleanup;
+    if (!sErrRprtrMutex)
+    {
+        XMLMutexLock lockInit(XMLPlatformUtils::fgAtomicMutex);
+
+        if (!sErrRprtrMutex)
+        {
+            sErrRprtrMutex = new XMLMutex;
+            errRprtrMutexCleanup.registerCleanup(reinitErrRprtrMutex);
+        }
+    }
+
+    return *sErrRprtrMutex;
+}
+
 static void reinitErrMsgLoader()
 {
 	delete gErrMsgLoader;
@@ -136,22 +163,21 @@ static void reinitValidMsgLoader()
 static XMLMsgLoader* getErrMsgLoader()
 {
     static XMLRegisterCleanup cleanupErrMsgLoader;
-    if (gErrMsgLoader == 0)
+    if (!gErrMsgLoader)
     {
-        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
-        if (!t)
-            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
-        else {
-            if (XMLPlatformUtils::compareAndSwap((void **)&gErrMsgLoader, t, 0) != 0)
-            {
-                delete t;
-            }
+        XMLMutexLock lock(&getErrRprtrMutex());
+
+        if (!gErrMsgLoader)
+        {
+            gErrMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+
+            if (!gErrMsgLoader)
+                XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
             else
-            {
                 cleanupErrMsgLoader.registerCleanup(reinitErrMsgLoader);
-            }
         }
     }
+
     return gErrMsgLoader;
 }
 
@@ -159,20 +185,18 @@ static XMLMsgLoader* getErrMsgLoader()
 static XMLMsgLoader* getValidMsgLoader()
 {
     static XMLRegisterCleanup cleanupValidMsgLoader;
-    if (gValidMsgLoader == 0)
+    if (!gValidMsgLoader)
     {
-        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
-        if (!t)
-            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
-        else {
-            if (XMLPlatformUtils::compareAndSwap((void **)&gValidMsgLoader, t, 0) != 0)
-            {
-                delete t;
-            }
+        XMLMutexLock lock(&getErrRprtrMutex());
+
+        if (!gValidMsgLoader)
+        {
+            gValidMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
+
+            if (!gValidMsgLoader)
+                XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
             else
-            {
                 cleanupValidMsgLoader.registerCleanup(reinitValidMsgLoader);
-            }
         }
     }
     return gValidMsgLoader;
