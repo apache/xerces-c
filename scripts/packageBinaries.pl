@@ -210,6 +210,13 @@ if ($platform eq "win64bit" )
     psystem("nmake -f XercesLib.mak \"CFG=XercesLib - $platformname Debug\" CPP=$opt_x.exe > buildlog.txt 2>&1 ");
     system("type buildlog.txt");
 
+    # Build resource bundle for ICUMsgLoader
+    if ($opt_m =~ m/icu/i) {
+        pchdir ("$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources");    	
+        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");        
+        system("cat buildlog.txt");        
+    }
+
     # Decide where you want the build copied from
     pchdir ($targetdir);
     $BUILDDIR = $XERCESCROOT . "\\Build\\Win64\\VC6\\" . $buildmode;
@@ -310,6 +317,12 @@ if ($platform eq "win64bit" )
 
         psystem("copy /y $ICUROOT\\lib\\icuuc.lib $targetdir\\lib");
         psystem("copy /y $ICUROOT\\lib\\icuucd.lib $targetdir\\lib");
+
+        # Copy the Resouce Bundle for ICUMsgLoader
+        if ( $opt_m =~ m/icu/i) {
+            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\*.res $targetdir\\lib");
+        }        	
+        
     }
 
     psystem("copy /y $BUILDDIR\\xerces-c_*.lib $targetdir\\lib");
@@ -507,7 +520,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     }	
 
     system("cat buildlog.txt");
-
+          
     # Build the debug xerces dll.  Both debug and release DLLs
     #   are in the standard binary distribution of Xerces.
     if ($buildmode ne "Debug") {
@@ -522,6 +535,13 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         system("cat buildlog.txt");
     }
 
+    # Build resource bundle for ICUMsgLoader
+    if ($opt_m =~ m/icu/i) {
+        pchdir ("$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources");    	
+        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");        
+        system("cat buildlog.txt");        
+    }
+    
     # Decide where you want the build copied from
     pchdir ($targetdir);
     $BUILDDIR = $XERCESCROOT . "/Build/Win32/VC6/" . $buildmode;
@@ -621,6 +641,12 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
         psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
         psystem("cp -fv $ICUROOT/lib/icuucd.lib $targetdir/lib");
+        
+        # Copy the Resouce Bundle for ICUMsgLoader
+        if ( $opt_m =~ m/icu/i) {
+            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/lib");
+        }        	
+        
     }
     psystem("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
