@@ -1594,7 +1594,7 @@ bool XMLString::isWSReplaced(const XMLCh* const toCheck)
 {
     // If no string, then its a OK
     if (( !toCheck ) || ( !*toCheck ))
-        true;
+        return true;
 
     const XMLCh* startPtr = toCheck;
     while ( *startPtr )
@@ -1656,6 +1656,9 @@ void XMLString::replaceWS(XMLCh* const toConvert)
 //
 bool XMLString::isWSCollapsed(const XMLCh* const toCheck)
 {
+    if (( !toCheck ) || ( !*toCheck ))
+        return true;
+
     // shall be whitespace::replaced first
     if ( !isWSReplaced(toCheck) )
         return false;
