@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2004/03/19 01:18:08  peiyongz
+ * Let base dv to store/load (Max,Min)(Inc,Exc)sives
+ *
  * Revision 1.11  2004/01/29 11:51:22  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -228,6 +231,16 @@ private:
     void inspectFacetBase(MemoryManager* const manager);
 
     void inheritFacet();
+
+    void storeClusive(XSerializeEngine&
+                    , bool
+                    , XMLNumber*);
+
+    void loadClusive(XSerializeEngine&
+                   , bool&
+                   , XMLNumber*&
+                   , XMLNumber::NumberType
+                   , int );
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators

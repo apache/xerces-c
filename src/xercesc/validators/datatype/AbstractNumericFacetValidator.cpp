@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2004/03/19 01:18:08  peiyongz
+ * Let base dv to store/load (Max,Min)(Inc,Exc)sives
+ *
  * Revision 1.18  2004/01/29 11:51:22  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -974,18 +977,14 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
          ***/
         DatatypeValidator::serialize(serEng);
 
-        serEng<<fMaxInclusiveInherited;
-        serEng<<fMaxExclusiveInherited;
-        serEng<<fMinInclusiveInherited;
-        serEng<<fMinExclusiveInherited;
-        serEng<<fEnumerationInherited;
- 
         // need not write type info for the XMLNumber since
-        // the derivative class has done that
-        serEng<<fMaxInclusive;
-        serEng<<fMaxExclusive;
-        serEng<<fMinInclusive;
-        serEng<<fMinExclusive;
+        // the derivative class has done that       
+        storeClusive(serEng, fMaxInclusiveInherited, fMaxInclusive);
+        storeClusive(serEng, fMaxExclusiveInherited, fMaxExclusive);
+        storeClusive(serEng, fMinInclusiveInherited, fMinInclusive);
+        storeClusive(serEng, fMinExclusiveInherited, fMinExclusive);
+
+        serEng<<fEnumerationInherited;
 
         /***
          * Serialize RefArrayVectorOf<XMLCh>
@@ -1005,16 +1004,12 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
 
         DatatypeValidator::serialize(serEng);
 
-        serEng>>fMaxInclusiveInherited;
-        serEng>>fMaxExclusiveInherited;
-        serEng>>fMinInclusiveInherited;
-        serEng>>fMinExclusiveInherited;
-        serEng>>fEnumerationInherited;
+        loadClusive(serEng, fMaxInclusiveInherited, fMaxInclusive, numType, 1);
+        loadClusive(serEng, fMaxExclusiveInherited, fMaxExclusive, numType, 2);
+        loadClusive(serEng, fMinInclusiveInherited, fMinInclusive, numType, 3);
+        loadClusive(serEng, fMinExclusiveInherited, fMinExclusive, numType, 4);
 
-        fMaxInclusive=XMLNumber::loadNumber(numType, serEng);
-        fMaxExclusive=XMLNumber::loadNumber(numType, serEng);
-        fMinInclusive=XMLNumber::loadNumber(numType, serEng);
-        fMinExclusive=XMLNumber::loadNumber(numType, serEng);
+        serEng>>fEnumerationInherited;
 
         /***
          *  Deserialize RefArrayVectorOf<XMLCh>         
@@ -1022,6 +1017,66 @@ void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::loadObject(&fStrEnumeration, 8, true, serEng);
         XTemplateSerializer::loadObject(&fEnumeration, 8, true, numType, serEng);
+
+    }
+
+}
+
+//
+// A user defined dv may inherit any of the Max/Min/Inc/Exc from a
+// built dv, which will create its own Max/Min/Inc/Exc during the
+// loading. Therefore if the user defined store and load this 
+// facet, and does not own it, that will cause leakage.
+//
+// To avoid checking if the facet belongs to a builtIn dv or not, we
+// do this way, for any inherited *clusive, we will not store it, and later 
+// on during loading, we get it from the base dv.
+//
+void AbstractNumericFacetValidator::storeClusive(XSerializeEngine&       serEng
+                                               , bool                    inherited
+                                               , XMLNumber*              data)
+{
+    serEng<<inherited;
+
+    //store only if own it
+    if (!inherited)
+        serEng<<data;
+
+}
+
+// it is guranteed that the base dv is loaded before this dv
+//
+void AbstractNumericFacetValidator::loadClusive(XSerializeEngine&       serEng
+                                              , bool&                   inherited
+                                              , XMLNumber*&             data
+                                              , XMLNumber::NumberType   numType
+                                              , int                     flag)
+{
+    serEng>>inherited;
+
+    if (!inherited)
+        data = XMLNumber::loadNumber(numType, serEng);
+    else
+    {
+        AbstractNumericFacetValidator* basedv = (AbstractNumericFacetValidator*) getBaseValidator();
+
+        switch(flag)
+        {
+        case 1: 
+            data = basedv->getMaxInclusive();
+            break;
+        case 2:
+            data = basedv->getMaxExclusive();
+            break;
+        case 3:
+            data = basedv->getMinInclusive();
+            break;
+        case 4:
+            data = basedv->getMinExclusive();
+            break;
+        default:
+            break;
+        }
 
     }
 
