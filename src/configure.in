@@ -44,6 +44,7 @@ case "${host}" in
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
         *-*-os400*)     platform=OS400 ;;
+        *-*-OS400*)     platform=OS400 ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)
