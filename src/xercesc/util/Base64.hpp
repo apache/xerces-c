@@ -80,6 +80,12 @@ class XMLUTIL_EXPORT Base64
 {
 public :
 
+    enum Conformance
+    {
+        Conf_RFC2045
+      , Conf_Schema
+    };
+
     //@{
 
     /**
@@ -102,7 +108,7 @@ public :
      */
     static XMLByte* encode(const XMLByte* const inputData
                          , const unsigned int   inputLength
-                         , unsigned int*        outputLength                         
+                         , unsigned int*        outputLength
                          , MemoryManager* const memMgr = 0);
 
     /**
@@ -118,13 +124,17 @@ public :
      * @param inputData Base64 data in XMLByte stream.
      * @param outputLength Length of decoded XMLByte stream.
      * @param memMgr client provided memory manager
+     * @param conform conformance specified
      * @return Decoded binary data in XMLByte stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLByte**)
      */
-    static XMLByte* decode(const XMLByte* const inputData
-                         , unsigned int*        outputLength                         
-                         , MemoryManager* const memMgr = 0);
+    static XMLByte* decode(
+                           const XMLByte*        const   inputData
+                         ,       unsigned int*           outputLength
+                         ,       MemoryManager*  const   memMgr = 0
+                         ,       Conformance             conform = Conf_RFC2045
+                          );
 
     /**
      * Decodes Base64 data into XMLCh
@@ -139,13 +149,17 @@ public :
      * @param inputData Base64 data in XMLCh stream.
      * @param outputLength Length of decoded XMLCh stream
      * @param memMgr client provided memory manager
+     * @param conform conformance specified
      * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLCh**)
      */
-    static XMLCh* decode(const XMLCh* const   inputData
-                       , unsigned int*        outputLength
-                       , MemoryManager* const memMgr = 0);
+    static XMLCh* decode(
+                         const XMLCh*          const    inputData
+                       ,       unsigned int*            outputLength
+                       ,       MemoryManager*  const    memMgr = 0
+                       ,       Conformance              conform = Conf_RFC2045
+                        );
 
     /**
      * Get data length
@@ -154,11 +168,16 @@ public :
      * containing encoded data.
      *
      * @param inputData Base64 data in XMLCh stream.
+     * @param memMgr client provided memory manager
+     * @param conform conformance specified
      * @return Length of decoded data,
 	 *      or -1 if input data can not be decoded.
      */
-    static int getDataLength(const XMLCh* const inputData
-        , MemoryManager* const memMgr = 0);
+    static int getDataLength(
+                             const XMLCh*         const  inputData
+                            ,      MemoryManager* const  memMgr = 0
+                            ,      Conformance           conform = Conf_RFC2045
+                             );
 
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/06/24 15:00:37  peiyongz
+ * Schema-Errata: E2-54 new specs for base64
+ *
  * Revision 1.11  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -321,11 +324,13 @@ XMLByte* Base64::encode(const XMLByte* const inputData
 // Since decode() has track of length of the decoded data, we
 // will get this length from decode(), instead of strLen().
 //
-int Base64::getDataLength(const XMLCh* const inputData
-                          , MemoryManager* const manager)
+int Base64::getDataLength(const XMLCh*         const inputData
+                        ,       MemoryManager* const manager
+                        ,       Conformance          conform )
+
 {
     unsigned int    retLen = 0;
-    XMLCh* decodedData = decode(inputData, &retLen, manager);
+    XMLCh* decodedData = decode(inputData, &retLen, manager, conform);
 
     if ( !decodedData )
         return -1;
@@ -358,11 +363,41 @@ int Base64::getDataLength(const XMLCh* const inputData
  *     B04          ::= [AQgw]
  *     B16          ::= [AEIMQUYcgkosw048]
  *     B64          ::= [A-Za-z0-9+/]
+ *
+ *
+ *     E2-54
+ *
+ *     Base64Binary  ::=  ((B64S B64S B64S B64S)*
+ *                         ((B64S B64S B64S B64) |
+ *                          (B64S B64S B16S '=') |
+ *                          (B64S B04S '=' #x20? '=')))?
+ *
+ *     B64S         ::= B64 #x20?
+ *     B16S         ::= B16 #x20?
+ *     B04S         ::= B04 #x20?
+ *
+ *
+ *     Note that this grammar requires the number of non-whitespace characters 
+ *     in the lexical form to be a multiple of four, and for equals signs to 
+ *     appear only at the end of the lexical form; strings which do not meet these 
+ *     constraints are not legal lexical forms of base64Binary because they 
+ *     cannot successfully be decoded by base64 decoders.
+ * 
+ *     Note: 
+ *     The above definition of the lexical space is more restrictive than that given 
+ *     in [RFC 2045] as regards whitespace -- this is not an issue in practice. Any 
+ *     string compatible with the RFC can occur in an element or attribute validated 
+ *     by this type, because the ·whiteSpace· facet of this type is fixed to collapse, 
+ *     which means that all leading and trailing whitespace will be stripped, and all 
+ *     internal whitespace collapsed to single space characters, before the above grammar 
+ *     is enforced.
+ *
 */
 
-XMLByte* Base64::decode(const XMLByte* const inputData
-                      , unsigned int*        decodedLength                      
-                      , MemoryManager* const memMgr)
+XMLByte* Base64::decode(const XMLByte*       const  inputData
+                      ,       unsigned int*         decodedLength
+                      ,       MemoryManager* const  memMgr
+                      ,       Conformance           conform )
 {
     if (!isInitialized)
         init();
@@ -381,23 +416,58 @@ XMLByte* Base64::decode(const XMLByte* const inputData
     int rawInputLength = 0;
     bool inWhiteSpace = false;
 
-    while ( inputIndex < inputLength )
+    switch (conform)
     {
-        if (!XMLChar1_0::isWhitespace(inputData[inputIndex]))
+    case Conf_RFC2045:
+        while ( inputIndex < inputLength )
         {
-            rawInputData[ rawInputLength++ ] = inputData[ inputIndex ];
-            inWhiteSpace = false;
-        }
-        else
-        {
-            if (inWhiteSpace)
-                return 0; // more than 1 whitespaces encountered
-            else
-                inWhiteSpace = true;
+            if (!XMLChar1_0::isWhitespace(inputData[inputIndex]))
+            {
+                rawInputData[ rawInputLength++ ] = inputData[ inputIndex ];
+            }
+            // RFC2045 does not explicitly forbid more than ONE whitespace 
+            // before, in between, or after base64 octects.
+            // Besides, S? allows more than ONE whitespace as specified in the production 
+            // [3]   S   ::=   (#x20 | #x9 | #xD | #xA)+
+            // therefore we do not detect multiple ws
+
+            inputIndex++;
         }
 
-        inputIndex++;
+        break;
+    case Conf_Schema:
+        // no leading #x20
+        if (chSpace == inputData[inputIndex])
+            return 0;
+
+        while ( inputIndex < inputLength )
+        {
+            if (chSpace != inputData[inputIndex])
+            {
+                rawInputData[ rawInputLength++ ] = inputData[ inputIndex ];
+                inWhiteSpace = false;
+            }
+            else
+            {
+                if (inWhiteSpace)
+                    return 0; // more than 1 #x20 encountered
+                else
+                    inWhiteSpace = true;
+            }
+
+            inputIndex++;
+        }
+
+        // no trailing #x20
+        if (inWhiteSpace)
+            return 0;
+
+        break;
+
+    default:
+        break;
     }
+
     rawInputData[ rawInputLength ] = 0;
 
     // the length of raw data should be divisible by four
@@ -516,9 +586,10 @@ XMLByte* Base64::decode(const XMLByte* const inputData
     return decodedData;
 }
 
-XMLCh* Base64::decode(const XMLCh* const   inputData
-                    , unsigned int*        decodedLen
-                    , MemoryManager* const memMgr)
+XMLCh* Base64::decode(const XMLCh*         const   inputData
+                    ,       unsigned int*          decodedLen
+                    ,       MemoryManager* const   memMgr
+                    ,       Conformance            conform )
 {
 	if (!inputData)
 		return 0;
@@ -539,7 +610,7 @@ XMLCh* Base64::decode(const XMLCh* const   inputData
      * Forward to the actual decoding method to do the decoding
      */
 	*decodedLen = 0;
-	XMLByte *DecodedBuf = decode(dataInByte, decodedLen, memMgr);
+	XMLByte *DecodedBuf = decode(dataInByte, decodedLen, memMgr, conform);
 
 	if (!DecodedBuf)
 		return 0;

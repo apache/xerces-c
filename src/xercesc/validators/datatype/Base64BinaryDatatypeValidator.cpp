@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/06/24 15:00:58  peiyongz
+ * Schema-Errata: E2-54 new specs for base64
+ *
  * Revision 1.8  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -180,7 +183,7 @@ void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content
 int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content
                                          , MemoryManager* const manager) const
 {
-    return Base64::getDataLength(content, manager);
+    return Base64::getDataLength(content, manager, Base64::Conf_Schema);
 }
 
 void Base64BinaryDatatypeValidator::normalizeEnumeration(MemoryManager* const manager)
