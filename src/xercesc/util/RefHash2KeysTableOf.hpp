@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/08/30 15:18:35  amassari
+ * - Added transferElement API
+ * - The iterator class now can iterate over the items having the same primary key
+ *
  * Revision 1.10  2004/03/01 15:03:08  peiyongz
  * new getter: getHashModulus
  *
@@ -195,7 +199,7 @@ public:
     bool containsKey(const void* const key1, const int key2) const;
     void removeKey(const void* const key1, const int key2);
     void removeAll();
-
+    void transferElement(const void* const key1, void* key2);
 
     // -----------------------------------------------------------------------
     //  Getters
@@ -210,7 +214,6 @@ public:
     //  Putters
     // -----------------------------------------------------------------------
 	void put(void* key1, int key2, TVal* const valueToAdopt);
-
 
 private :
     // -----------------------------------------------------------------------
@@ -290,6 +293,7 @@ public :
     //  New interface 
     // -----------------------------------------------------------------------
     void nextElementKey(void*&, int&);
+    void setPrimaryKey(const void* key);
 
 private :
     // -----------------------------------------------------------------------
@@ -321,12 +325,18 @@ private :
     //
     //  fToEnum
     //      The value array being enumerated.
+    //
+    //  fLockPrimaryKey
+    //      Indicates that we are requested to iterate over the secondary keys
+    //      associated with the given primary key
+    //
     // -----------------------------------------------------------------------
     bool                                    fAdopted;
     RefHash2KeysTableBucketElem<TVal>*      fCurElem;
     unsigned int                            fCurHash;
     RefHash2KeysTableOf<TVal>*              fToEnum;
     MemoryManager* const                    fMemoryManager;
+    const void*                             fLockPrimaryKey;
 };
 
 XERCES_CPP_NAMESPACE_END

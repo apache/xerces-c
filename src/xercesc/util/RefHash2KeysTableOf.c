@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.8  2004/08/30 15:18:35  amassari
+ * - Added transferElement API
+ * - The iterator class now can iterate over the items having the same primary key
+ *
  * Revision 1.7  2004/03/01 15:03:08  peiyongz
  * new getter: getHashModulus
  *
@@ -240,6 +244,57 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::removeAll()
     }
 }
 
+// this function transfer the data from key1 to key2
+template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void* const key1, void* key2)
+{
+    // Hash the key
+    unsigned int hashVal = fHash->getHashVal(key1, fHashModulus);
+    if (hashVal > fHashModulus)
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+
+    //
+    //  Search the given bucket for this key. Keep up with the previous
+    //  element so we can patch around it.
+    //
+    RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
+    RefHash2KeysTableBucketElem<TVal>* lastElem = 0;
+
+    while (curElem)
+    {
+        // if this element has the same primary key, remove it and add it using the new primary key
+        if (fHash->equals(key1, curElem->fKey1))
+        {
+            if (!lastElem)
+            {
+                // It was the first in the bucket
+                fBucketList[hashVal] = curElem->fNext;
+            }
+            else
+            {
+                // Patch around the current element
+                lastElem->fNext = curElem->fNext;
+            }
+
+            put(key2, curElem->fKey2, curElem->fData);
+
+            RefHash2KeysTableBucketElem<TVal>* elemToDelete = curElem;
+            
+            // Update just curElem; lastElem must stay the same
+            curElem = curElem->fNext;
+
+            // Delete the current element
+            delete elemToDelete;
+        }
+        else
+        {
+            // Move both pointers upwards
+            lastElem = curElem;
+            curElem = curElem->fNext;
+        }
+    }
+}
+
+
 
 // ---------------------------------------------------------------------------
 //  RefHash2KeysTableOf: Getters
@@ -408,7 +463,7 @@ template <class TVal> RefHash2KeysTableOfEnumerator<TVal>::
 RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum
                               , const bool adopt
                               , MemoryManager* const manager)
-	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum), fLockPrimaryKey(0)
     , fMemoryManager(manager)
 {
     if (!toEnum)
@@ -482,18 +537,40 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::nextElementKey(v
 
 template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::Reset()
 {
-    fCurHash = (unsigned int)-1;
+    if(fLockPrimaryKey)
+        fCurHash=fToEnum->fHash->getHashVal(fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager);
+    else
+        fCurHash = (unsigned int)-1;
     fCurElem = 0;
     findNext();
 }
 
 
+template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::setPrimaryKey(const void* key)
+{
+    fLockPrimaryKey=key;
+    Reset();
+}
 
 // ---------------------------------------------------------------------------
 //  RefHash2KeysTableOfEnumerator: Private helper methods
 // ---------------------------------------------------------------------------
 template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::findNext()
 {
+    //  Code to execute if we have to return only values with the primary key
+    if(fLockPrimaryKey)
+    {
+        if(!fCurElem)
+            fCurElem = fToEnum->fBucketList[fCurHash];
+        else
+            fCurElem = fCurElem->fNext;
+        while (fCurElem && !fToEnum->fHash->equals(fLockPrimaryKey, fCurElem->fKey1) )
+            fCurElem = fCurElem->fNext;
+        // if we didn't found it, make so hasMoreElements() returns false
+        if(!fCurElem)
+            fCurHash = fToEnum->fHashModulus;
+        return;
+    }
     //
     //  If there is a current element, move to its next element. If this
     //  hits the end of the bucket, the next block will handle the rest.
