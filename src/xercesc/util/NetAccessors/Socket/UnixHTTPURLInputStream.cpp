@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2005/03/04 19:52:54  amassari
+ * The URL fragments were leaked (jira# 1362)
+ *
  * Revision 1.18  2004/09/08 13:56:35  peiyongz
  * Apache License Version 2.0
  *
@@ -243,7 +246,8 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         pathAsASCII = (char*) fMemoryManager->allocate
         (
             (transSize+1) * sizeof(char)
-        );//new char[transSize+1];        
+        );//new char[transSize+1];
+        janBuf3.reset(pathAsASCII, fMemoryManager);
         trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
@@ -256,6 +260,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
+        janBuf4.reset(fragmentAsASCII, fMemoryManager);
         trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
@@ -268,6 +273,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
+        janBuf5.reset(queryAsASCII, fMemoryManager);
         trans->transcodeTo(query, transSize, (unsigned char *) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
@@ -283,6 +289,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     (
         (transSize+1) * sizeof(char)
     );//new char[transSize+1];
+    ArrayJanitor<char>  janBuf6(portAsASCII, fMemoryManager);
     trans->transcodeTo(portBuffer, transSize, (unsigned char *) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     delete trans;
