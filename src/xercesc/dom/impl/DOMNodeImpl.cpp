@@ -441,8 +441,9 @@ void DOMNodeImpl::callUserDataHandlers(DOMUserDataHandler::DOMOperationType oper
                                        const DOMNode* src,
                                        const DOMNode* dst) const
 {
-    if (((DOMDocumentImpl*)getOwnerDocument()))
-        ((DOMDocumentImpl*)getOwnerDocument())->callUserDataHandlers(this, operation, src, dst);
+    DOMDocumentImpl* doc=(DOMDocumentImpl*)getOwnerDocument();
+    if (doc)
+        doc->callUserDataHandlers(this, operation, src, dst);
 }
 
 bool DOMNodeImpl::isSameNode(const DOMNode* other) const

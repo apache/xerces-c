@@ -1328,8 +1328,9 @@ void DOMDocumentImpl::release()
     DOMDocument* doc = (DOMDocument*) this;
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
 
-    // notify userdatahandler first
-    releaseDocNotifyUserData(this);
+    // notify userdatahandler first, if we have some
+    if (fUserDataTable)
+        releaseDocNotifyUserData(this);
 
     // release the docType in case it was created from heap
     if (fDocType) {
@@ -1339,7 +1340,7 @@ void DOMDocumentImpl::release()
 
     // delete the document memory pool
     delete doc;
-};
+}
 
 void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
 {
