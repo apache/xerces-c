@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/29 16:17:48  peiyongz
+ * size() added
+ *
  * Revision 1.5  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -285,7 +288,7 @@ public :
     bool hasMoreElements() const;
     TVal& nextElement();
     void Reset();
-
+    int  size() const;
 
 private :
     // -----------------------------------------------------------------------
