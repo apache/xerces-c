@@ -4088,7 +4088,7 @@ void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot
         else if (XMLString::equals(attName, XMLUni::fgXMLNSString)) { // == 'xmlns'
 
             const XMLCh* attValue = attribute->getNodeValue();
-            fNamespaceScope->addPrefix( XMLUni::fgZeroLenString, fURIStringPool->addOrFind(attValue));
+            fNamespaceScope->addPrefix(XMLUni::fgZeroLenString, fURIStringPool->addOrFind(attValue));
             seenXMLNS = true;
         }
     } // end for
@@ -5784,35 +5784,46 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     int                  saveScope = fCurrentScope;
 
-    // -------------------------------------------------------------
     // check if the base type is from another schema
-    // -------------------------------------------------------------
-    if (isBaseFromAnotherSchema(uriStr)) {
+    if (!XMLString::equals(uriStr, fTargetNSURIString)) {
 
-        // Make sure that we have an explicit import statement.
-        // Clause 4 of Schema Representation Constraint:
-        // http://www.w3.org/TR/xmlschema-1/#src-resolve
-        unsigned int uriId = fURIStringPool->addOrFind(uriStr);
+        // check for datatype validator if it's schema for schema URI
+        if (XMLString::equals(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
-        if (!fSchemaInfo->isImportingNS(uriId)) {
+            baseDTValidator = getDatatypeValidator(uriStr, localPart);
 
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
-            throw TraverseSchema::InvalidComplexTypeInfo;
+            if (!baseDTValidator) {
+                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
+                throw TraverseSchema::InvalidComplexTypeInfo;
+            }
         }
+        else {
+			
+            // Make sure that we have an explicit import statement.
+            // Clause 4 of Schema Representation Constraint:
+            // http://www.w3.org/TR/xmlschema-1/#src-resolve
+            unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
-        baseComplexTypeInfo = getTypeInfoFromNS(elem, uriStr, localPart);
+            if (!fSchemaInfo->isImportingNS(uriId)) {
 
-        if (!baseComplexTypeInfo) {
-
-            SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(uriStr));
-
-            if (!impInfo || impInfo->getProcessed()) {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
+                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
                 throw TraverseSchema::InvalidComplexTypeInfo;
             }
 
-            infoType = SchemaInfo::IMPORT;
-            restoreSchemaInfo(impInfo, infoType);
+            baseComplexTypeInfo = getTypeInfoFromNS(elem, uriStr, localPart);
+
+            if (!baseComplexTypeInfo) {
+
+                SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(uriStr));
+
+                if (!impInfo || impInfo->getProcessed()) {
+                    reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
+                    throw TraverseSchema::InvalidComplexTypeInfo;
+                }
+
+                infoType = SchemaInfo::IMPORT;
+                restoreSchemaInfo(impInfo, infoType);
+            }
         }
     }
     else {
@@ -5846,8 +5857,8 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
 
     // if not found, 2 possibilities:
     //           1: ComplexType in question has not been compiled yet;
-    //           2: base is SimpleTYpe;
-    if (!baseComplexTypeInfo) {
+    //           2: base is SimpleType;
+    if (!baseComplexTypeInfo && !baseDTValidator) {
 
         baseDTValidator = getDatatypeValidator(uriStr, localPart);
 
