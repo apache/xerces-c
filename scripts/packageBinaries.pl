@@ -336,21 +336,27 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
      ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ) {
 
-    # Decide on the platform specific stuff first
+    # Set defaults for platform-independent options.
+    if ($opt_m eq "") {$opt_m = "inmem";   # In memory  message loader. 
+    }
+    if ($opt_n eq "") {$opt_n = "socket";  # Socket based net accessor.
+    }
+    if ($opt_t eq "") {$opt_t = "native";  # Native transcoding service.
+    }
+    
+    
+    # Set defaults for platform-specific options.
     if ($platform =~ m/AIX/i) {
+        $platform = "aix";
+        if ($opt_c eq "") {$opt_c = "xlc_r"; }
+        if ($opt_x eq "") {$opt_x = "xlC_r"; }
+       
         $icuCompileFlags = 'CXX="xlC_r" ' .
-                          # '-L/usr/lpp/xlC/lib" ' .
                            'CC="xlc_r" ' .
-                          # '-L/usr/lpp/xlC/lib" ' . 
                            'C_FLAGS="-w -O" ' .
                            'CXX_FLAGS="-w -O" ';
     }
     if ($platform eq 'HP-UX') {
-        if ($opt_x eq 'CC') {
-            $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"';
-        } else {
-            $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="+DAportable -w -O" CFLAGS="+DAportable -w -O"';
-        }
         # Find out the operating system version from 'uname -r'
         open(OSVERSION, "uname -r|");
         $osversion = <OSVERSION>;
@@ -358,18 +364,43 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         close (OSVERSION);
         $platform = 'hp-11' if ($osversion =~ m/11\./);
         $platform = 'hp-10' if ($osversion =~ m/10\./);
+        
+        if ($opt_c eq "") {$opt_c = "cc"; }
+        if ($opt_x eq "") {
+            $opt_x = "CC";
+            if ($platform eq "hp-11") {
+                $opt_x = "aCC";
+            }
+        }
+        if ($opt_m eq "") {
+            $opt_m = "inmem";
+        }
         $opt_r = 'dce' if ($opt_r eq ''); # By default, use dce threads if not specified
+        
+        if ($opt_x eq 'CC') {
+            $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"';
+        } else {
+            $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="+DAportable -w -O" CFLAGS="+DAportable -w -O"';
+        }
         
     }
     if ($platform =~ m/Linux/i) {
         $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
-        $platform =~ tr/A-Z/a-z/;
+        $platform = "linux";
+        if ($opt_c eq "") {$opt_c = "gcc";}
+        if ($opt_x eq "") {$opt_x = "g++";}
     }
+    
     if ($platform =~ m/SunOS/i) {
         $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        $platform = "solaris";
+        if ($opt_c eq "") {$opt_c = "cc";}
+        if ($opt_x eq "") {$opt_x = "CC";}
     }
+    
     if ($platform =~ m/ptx/i) {
         # Check if the patches have been applied or not
+        $platform = "ptx";
         if (!(-d "$XERCESCROOT/src/util/Platforms/PTX")) {
             print ("Error: Could not locate PTX-specific XML4C directory.\n");
             print ("    The PTX-specific patches must be applied to both XML4C and ICU before a build can succeed.\n");
@@ -407,7 +438,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         exit(1);
     }
     
-    $platform =~ tr/A-Z/a-z/;
     
     # Make the target directory and its main subdirectories
     system ("mkdir $targetdir");
@@ -466,7 +496,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system ("mkdir $targetdir/doc/html/apiDocs");
     
     # Build ICU if needed
-    if (length($ICUROOT) > 0) {
+    if (length(($ICUROOT) > 0) && ($opt_j eq "")) {
         print("\n\nBuild ICU ...\n");
         # First make the ICU files executable
         chdir ("$ICUROOT/source");
@@ -502,15 +532,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     print("\n\nBuild the xerces-c library ...\n");
     chdir ("$XERCESCROOT/src");
     
-    if ( $platform =~ m/sunos/i ) {
-        $platform = "solaris";
-    }
-    if ( $platform =~ m/AIX/i ) {
-        $platform = "aix";
-    }
-    if ( $platform =~ m/ptx/i ) {
-        $platform = "ptx";
-    }
     
     psystem ("chmod +x run* con* install-sh");
     
