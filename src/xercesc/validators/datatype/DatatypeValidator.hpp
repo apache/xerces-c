@@ -246,19 +246,32 @@ public:
      *    it has its own canonical representation other than
      *    the default one.
      *
-     * @param rawData: data in raw string
-     * @param memMgr:  memory manager
+     * @param rawData:    data in raw string
+     * @param memMgr:     memory manager
+     * @param toValiate:  to validate the raw string or not
      *
      * @return: canonical representation of the data
      * 
-     * Note:  user need to use the dv's memory manager to
-     *        deallocate the memory for the string returned.
+     * Note:  
+     *
+     *    1. the return value is kept in memory allocated
+     *       by the memory manager passed in or by dv's
+     *       if no memory manager is provided.
+     *
+     *    2. client application is responsible for the 
+     *       proper deallcation of the memory allocated
+     *       for the returned value.
+     *
+     *    3. In the case where the rawData is not valid
+     *       with regards to the fundamental datatype,
+     *       a null string is returned.
      *
      */
     virtual const XMLCh* getCanonicalRepresentation
                         (
                           const XMLCh*         const rawData
                         ,       MemoryManager* const memMgr = 0
+                        ,       bool                 toValidate = false
                         ) const;
 
     //@}

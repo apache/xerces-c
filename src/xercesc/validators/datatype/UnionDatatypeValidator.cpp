@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
+ *
  * Revision 1.21  2003/12/17 00:18:39  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -493,15 +497,26 @@ const RefArrayVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
  * in which the values have the canonical lexical representation of the appropriate ·memberTypes·.       
  ***/
 const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
-                                                              ,       MemoryManager* const memMgr ) const
+                                                              ,       MemoryManager* const memMgr
+                                                              ,       bool                 toValidate) const
 {
-
+    MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
     UnionDatatypeValidator* temp = (UnionDatatypeValidator*) this;
-    temp->checkContent(rawData, 0, false, memMgr);
+
+    if (toValidate)
+    {
+        try
+        {
+            temp->checkContent(rawData, 0, false, toUse);
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }    
 
     //get the native unionDv
     UnionDatatypeValidator* bdv = (UnionDatatypeValidator*) temp->getBaseValidator();
-    MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
     while (bdv)
     {
         temp = bdv;
@@ -510,12 +525,12 @@ const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*    
 
     //let the member dv which recognize the rawData, to return
     //us the canonical form
-    for ( unsigned int i = 0; i < fMemberTypeValidators->size(); ++i )
+    for ( unsigned int i = 0; i < temp->fMemberTypeValidators->size(); ++i )
     {
         try
         {
-            fMemberTypeValidators->elementAt(i)->validate(rawData, 0, toUse);                       
-            return fMemberTypeValidators->elementAt(i)->getCanonicalRepresentation(rawData, toUse);
+            temp->fMemberTypeValidators->elementAt(i)->validate(rawData, 0, toUse);                       
+            return temp->fMemberTypeValidators->elementAt(i)->getCanonicalRepresentation(rawData, toUse, false);
         }
         catch (XMLException&)
         {
@@ -523,7 +538,7 @@ const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*    
         }
     }
 
-    //its not likely we reach here, but who knows ...
+    //if no member dv recognize it
     return 0;
 }
 

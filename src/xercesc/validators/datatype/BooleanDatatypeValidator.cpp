@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
+ *
  * Revision 1.12  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -278,11 +282,25 @@ const RefArrayVectorOf<XMLCh>* BooleanDatatypeValidator::getEnumString() const
  * The canonical representation for boolean is the set of literals {true, false}.
  ***/
 const XMLCh* BooleanDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
-                                                                ,       MemoryManager* const memMgr) const
+                                                                ,       MemoryManager* const memMgr
+                                                                ,       bool           toValidate) const
 {
-    BooleanDatatypeValidator *temp = (BooleanDatatypeValidator*) this;
+
     MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
-    temp->checkContent(rawData, 0, false, toUse);   
+    
+    if (toValidate)
+    {
+        BooleanDatatypeValidator *temp = (BooleanDatatypeValidator*) this;
+
+        try
+        {
+            temp->checkContent(rawData, 0, false, toUse);   
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
 
     return ( XMLString::equals(rawData, fgValueSpace[0]) ||
              XMLString::equals(rawData, fgValueSpace[2])  ) ?

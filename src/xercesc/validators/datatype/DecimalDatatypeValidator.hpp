@@ -57,8 +57,9 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.12  2003/12/19 23:02:25  cargilld
- * More memory management updates.
+ * Revision 1.13  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
  *
  * Revision 1.11  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
@@ -178,6 +179,7 @@ public:
                         (
                           const XMLCh*         const rawData
                         ,       MemoryManager* const memMgr = 0
+                        ,       bool                 toValidate = false
                         ) const;
 
     /***
@@ -259,6 +261,7 @@ private:
     // -----------------------------------------------------------------------
     unsigned int         fTotalDigits;
     unsigned int         fFractionDigits;
+
 };
 
 // -----------------------------------------------------------------------

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
+ *
  * Revision 1.19  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -639,11 +643,25 @@ DatatypeValidator::isBuiltInDV(DatatypeValidator* const dv)
  *
  */
 const XMLCh* DatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
-                                                          ,      MemoryManager* const memMgr) const
+                                                          ,      MemoryManager* const memMgr
+                                                          ,      bool                 toValidate) const
 {
-    DatatypeValidator *temp = (DatatypeValidator*) this;
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    temp->validate(rawData, 0, toUse);    
+
+    if (toValidate)
+    {
+        DatatypeValidator *temp = (DatatypeValidator*) this;
+
+        try
+        {
+            temp->validate(rawData, 0, toUse);    
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
+
     return XMLString::replicate(rawData, toUse);
 }
 

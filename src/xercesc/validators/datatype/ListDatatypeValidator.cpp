@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
+ *
  * Revision 1.16  2003/12/17 20:41:47  neilg
  * fix a segfault and a possible buffer overflow condition
  *
@@ -502,45 +506,67 @@ void ListDatatypeValidator::inheritFacet()
  * lexical representation of its ·itemType·.
  ***/
 const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
-                                                             ,       MemoryManager* const memMgr) const
+                                                             ,       MemoryManager* const memMgr
+                                                             ,       bool                 toValidate) const
 {
-    ListDatatypeValidator* temp = (ListDatatypeValidator*) this;
-
-    temp->setContent(rawData);
     MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
+    ListDatatypeValidator* temp = (ListDatatypeValidator*) this;
+    temp->setContent(rawData);
     BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(rawData, toUse);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);    
-    temp->checkContent(tokenVector, rawData, 0, false, toUse);
-    
-    unsigned int  retBufSize = 2 * XMLString::stringLen(rawData);
 
+    if (toValidate)
+    {
+        try
+        {
+            temp->checkContent(tokenVector, rawData, 0, false, toUse);
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
+   
+    unsigned int  retBufSize = 2 * XMLString::stringLen(rawData);
     XMLCh* retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh));
     retBuf[0] = 0;
     XMLCh* retBufPtr = retBuf;
-
     DatatypeValidator* itemDv = this->getItemTypeDTV();
-    for (unsigned int i = 0; i < tokenVector->size(); i++)
+
+    try 
     {
-        XMLCh* itemCanRep = (XMLCh*) itemDv->getCanonicalRepresentation(tokenVector->elementAt(i), toUse);
-        unsigned int itemLen = XMLString::stringLen(itemCanRep); 
-        if(retBufPtr+itemLen+2 >= retBuf+retBufSize)
+        for (unsigned int i = 0; i < tokenVector->size(); i++)
         {
-            // need to resize
-            XMLCh * oldBuf = retBuf;
-            retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh) * 2);
-            memcpy(retBuf, oldBuf, retBufSize * sizeof(XMLCh ));
-            retBufPtr = (retBufPtr - oldBuf) + retBuf;
-            toUse->deallocate(oldBuf);
-            retBufSize <<= 1;
+            XMLCh* itemCanRep = (XMLCh*) itemDv->getCanonicalRepresentation(tokenVector->elementAt(i), toUse, false);
+            unsigned int itemLen = XMLString::stringLen(itemCanRep); 
+
+            if(retBufPtr+itemLen+2 >= retBuf+retBufSize)
+            {
+                // need to resize
+                XMLCh * oldBuf = retBuf;
+                retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh) * 2);
+                memcpy(retBuf, oldBuf, retBufSize * sizeof(XMLCh ));
+                retBufPtr = (retBufPtr - oldBuf) + retBuf;
+                toUse->deallocate(oldBuf);
+                retBufSize <<= 1;
+            }
+
+            XMLString::catString(retBufPtr, itemCanRep);
+            retBufPtr = retBufPtr + itemLen + 1;
+            *(retBufPtr++) = chSpace;
+            *(retBufPtr) = chNull;
+            toUse->deallocate(itemCanRep);
         }
-        XMLString::catString(retBufPtr, itemCanRep);
-        retBufPtr = retBufPtr + itemLen + 1;
-        *(retBufPtr++) = chSpace;
-        *(retBufPtr) = chNull;
-        toUse->deallocate(itemCanRep);
+
+        return retBuf;
+
+    }
+    catch (...)
+    {
+        return 0;
     }
 
-    return retBuf;
+
 }
 
 /***

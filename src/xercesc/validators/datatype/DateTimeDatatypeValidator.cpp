@@ -57,8 +57,9 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.13  2003/12/19 23:02:25  cargilld
- * More memory management updates.
+ * Revision 1.14  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
  *
  * Revision 1.12  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
@@ -179,17 +180,36 @@ void DateTimeDatatypeValidator::parse(XMLDateTime* const pDate)
 }
 
 const XMLCh* DateTimeDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
-                                                                  ,      MemoryManager* const memMgr) const
+                                                                  ,      MemoryManager* const memMgr
+                                                                  ,      bool                 toValidate) const
 {
-    // we need the checkContent to build the fDateTime
-    // to get the canonical representation
-    DateTimeDatatypeValidator* temp = (DateTimeDatatypeValidator*) this;
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    temp->checkContent(rawData, 0, false, toUse);
+
+    if (toValidate)
+    {
+        DateTimeDatatypeValidator* temp = (DateTimeDatatypeValidator*) this;
+
+        try
+        {
+            temp->checkContent(rawData, 0, false, toUse);   
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
     
-    //Have the fDateTime to do the job
-    XMLDateTime aDateTime(rawData, toUse);
-    return aDateTime.getDateTimeCanonicalRepresentation(toUse);
+    try
+    {
+        XMLDateTime aDateTime(rawData, toUse);
+        aDateTime.parseDateTime();
+        return aDateTime.getDateTimeCanonicalRepresentation(toUse);
+    }
+    catch (...)
+    {
+        return 0;
+    }
+
 }
 
 /***

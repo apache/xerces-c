@@ -104,6 +104,7 @@ public:
                         (
                           const XMLCh*         const rawData
                         ,       MemoryManager* const memMgr = 0
+                        ,       bool                 toValidate = false
                         ) const;
     //@}
 

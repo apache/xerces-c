@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
+ *
  * Revision 1.10  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -204,14 +208,29 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber*         const theDat
 }
 
 const XMLCh* AbstractNumericValidator::getCanonicalRepresentation(const XMLCh*         const rawData
-                                                                 ,      MemoryManager* const memMgr) const
+                                                                 ,      MemoryManager* const memMgr
+                                                                 ,      bool                 toValidate) const
 {
-    //Validate the content
-    AbstractNumericValidator* temp = (AbstractNumericValidator*) this;
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    temp->checkContent(rawData, 0, false, toUse);
-    
+
+    if (toValidate)
+    {
+        AbstractNumericValidator* temp = (AbstractNumericValidator*) this;
+
+        try 
+        {
+            temp->checkContent(rawData, 0, false, toUse);
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
+
+    // XMLAbstractDoubleFloat::getCanonicalRepresentation handles
+    // exceptional cases
     return XMLAbstractDoubleFloat::getCanonicalRepresentation(rawData, toUse);
+
 }
 
 /***

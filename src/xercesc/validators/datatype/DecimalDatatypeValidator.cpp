@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/12/23 21:50:36  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0,
+ * only validate when required
+ *
  * Revision 1.20  2003/12/19 23:02:25  cargilld
  * More memory management updates.
  *
@@ -687,24 +691,33 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
  ***/
 
 const XMLCh* DecimalDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
-                                                                 ,      MemoryManager* const memMgr) const
+                                                                 ,      MemoryManager* const memMgr
+                                                                 ,      bool                 toValidate) const
 {
-    //Validate it first
-    DecimalDatatypeValidator* temp = (DecimalDatatypeValidator*) this;
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    temp->checkContent(rawData, 0, false, toUse);
-    
+    DecimalDatatypeValidator* temp = (DecimalDatatypeValidator*) this;
+
+    if (toValidate)
+    {
+        try
+        {
+            temp->checkContent(rawData, 0, false, toUse);   
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
+
+    // XMLBigInteger::getCanonicalRepresentation and
+    // XMLBigDecimal::getCanonicalRepresentation will handle exceptional cases
     XMLCanRepGroup::CanRepGroup dvType = DatatypeValidatorFactory::getCanRepGroup(temp);
 
     if ((dvType == XMLCanRepGroup::Decimal_Derivated_signed)   ||
         (dvType == XMLCanRepGroup::Decimal_Derivated_unsigned) ||
         (dvType == XMLCanRepGroup::Decimal_Derivated_npi)        )
     {          
-        return XMLBigInteger::getCanonicalRepresentation
-               (
-                rawData
-              , toUse
-               );
+        return XMLBigInteger::getCanonicalRepresentation(rawData, toUse);
     }
     else if (dvType == XMLCanRepGroup::Decimal) 
     {
@@ -714,6 +727,7 @@ const XMLCh* DecimalDatatypeValidator::getCanonicalRepresentation(const XMLCh*  
     {
         return XMLString::replicate(rawData, toUse);
     }
+
 }
 
 /***
