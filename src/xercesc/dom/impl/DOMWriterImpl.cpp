@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.56  2005/03/08 09:33:32  amassari
+ * Redeclare a namespace binding if the prefix is already bound to a different namespace (jira# 1371)
+ *
  * Revision 1.55  2004/09/08 13:55:52  peiyongz
  * Apache License Version 2.0
  *
@@ -1017,9 +1020,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     {
                         RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
                         const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
-                        if(thisUri && XMLString::equals(thisUri,nodeToWrite->getNamespaceURI()))
+                        if(thisUri)
                         {
-                            bPrefixDeclared=true;
+                            // the prefix has been declared: check if it binds to the correct namespace, otherwise, redeclare it
+                            if(XMLString::equals(thisUri,nodeToWrite->getNamespaceURI()))
+                                bPrefixDeclared=true;
                             break;
                         }
                     }
@@ -1105,9 +1110,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                                 {
                                     RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
                                     const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
-                                    if(thisUri && XMLString::equals(thisUri,attribute->getNamespaceURI()))
+                                    if(thisUri)
                                     {
-                                        bPrefixDeclared=true;
+                                        // the prefix has been declared: check if it binds to the correct namespace, otherwise, redeclare it
+                                        if(XMLString::equals(thisUri,attribute->getNamespaceURI()))
+                                            bPrefixDeclared=true;
                                         break;
                                     }
                                 }
