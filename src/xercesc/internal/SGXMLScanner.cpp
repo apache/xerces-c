@@ -2783,7 +2783,7 @@ void SGXMLScanner::updateNSMap(const  XMLCh* const    attrName
     //        3. yyy is not XMLUni::fgXMLNSURIName
     //        4. if xxx is not null, then yyy cannot be an empty string.
     const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-    const unsigned int colonOfs = XMLString::indexOf(attrName, chColon);
+    const int colonOfs = XMLString::indexOf(attrName, chColon);
     if (colonOfs != -1) {
         prefPtr = &attrName[colonOfs + 1];
 
@@ -3912,7 +3912,8 @@ bool SGXMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned in
     if (wildCardType == XMLAttDef::Any_Any)
         anyEncountered = true;
     else if (wildCardType == XMLAttDef::Any_Other) {
-        if (attWildCard->getAttName()->getURI() != uriId)
+        if (attWildCard->getAttName()->getURI() != uriId
+            && uriId != fEmptyNamespaceId)
             anyEncountered = true;
     }
     else if (wildCardType == XMLAttDef::Any_List) {
