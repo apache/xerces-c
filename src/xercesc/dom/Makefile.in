@@ -114,6 +114,7 @@ DOM_CPP_PUBHEADERS = \
 	DOMRangeException.hpp \
 	DOMText.hpp \
 	DOMTreeWalker.hpp \
+	DOMTypeInfo.hpp \
 	DOMUserDataHandler.hpp \
 	DOMWriter.hpp \
 	DOMWriterFilter.hpp
