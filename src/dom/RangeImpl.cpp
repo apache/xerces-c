@@ -829,7 +829,9 @@ bool RangeImpl::hasLegalRootContainer(const DOM_Node& node) const {
         return false;
 
     DOM_Node rootContainer = node;
-    for (; rootContainer.getParentNode()!=null; rootContainer = rootContainer.getParentNode());
+    for (; rootContainer.getParentNode()!=null; rootContainer = rootContainer.getParentNode())
+        ;
+    
     switch( rootContainer.getNodeType() ) {
         case DOM_Node::ATTRIBUTE_NODE:
         case DOM_Node::DOCUMENT_NODE:
