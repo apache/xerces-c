@@ -654,6 +654,8 @@ void AbstractDOMParser::docPI(  const   XMLCh* const    target
 
 void AbstractDOMParser::endEntityReference(const XMLEntityDecl&)
 {
+    if (!fCreateEntityReferenceNodes) return;
+
     DOMEntityReferenceImpl *erImpl = 0;
     DOMNode* firstChild = 0;
 
@@ -664,69 +666,7 @@ void AbstractDOMParser::endEntityReference(const XMLEntityDecl&)
 
     fCurrentParent = fNodeStack->pop();
 
-    if (!fCreateEntityReferenceNodes && erImpl && firstChild) {
-        DOMNode *kid, *next;
-        fCurrentNode   = fCurrentParent->getLastChild();
-
-        for (kid = firstChild; kid != 0; kid = next)
-        {
-            // If kid and fCurrentNode are both Text nodes (but _not_ CDATASection,
-            // which is a subclass of Text), they can be merged.
-            if (kid->getNodeType() == DOMNode::TEXT_NODE   &&
-                fCurrentNode &&
-                fCurrentNode->getNodeType() == DOMNode::TEXT_NODE )
-            {
-                ((DOMTextImpl *) fCurrentNode)->appendData(((DOMTextImpl *) kid)->getData());
-            }
-            else {
-                // append the child of erImpl to currentParent
-                fCurrentNode = kid->cloneNode(true);
-                fCurrentParent->appendChild(fCurrentNode);
-
-                if (erImpl->getBaseURI()) {
-                    /**
-                     * Record baseURI information for the Element (by adding xml:base attribute)
-                     * or for the ProcessingInstruction (by setting a baseURI field)
-                     */
-                    if (fCurrentNode->getNodeType() == DOMNode::ELEMENT_NODE) {
-                        // if an element already has xml:base attribute
-                        // do nothing
-                        const XMLCh baseString[] =
-                        {
-                            chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
-                        };
-                        const XMLCh xmlBaseString[] =
-                        {
-                            chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
-                        };
-
-                        if (fScanner -> getDoNamespaces() && (((DOMElement*)fCurrentNode)->getAttributeNodeNS(DOMNodeImpl::getXmlURIString(), baseString) != 0)) {
-                            return;
-                        } else if (((DOMElement*)fCurrentNode)->getAttributeNode(xmlBaseString) != 0) {
-                            return;
-                        }
-
-                        // retrive the baseURI from the entity decl
-                        const XMLCh* baseURI = erImpl->getBaseURI();
-                        if (baseURI != 0 && !XMLString::equals(baseURI,fDocument->getDocumentURI())) {
-                            if (fScanner -> getDoNamespaces()) {
-                                ((DOMElement*)fCurrentNode)->setAttributeNS(DOMNodeImpl::getXmlURIString(), baseString, baseURI);
-                            } else {
-                                ((DOMElement*)fCurrentNode)->setAttribute(xmlBaseString, baseURI);
-                            }
-                        }
-                    }
-                    else if (fCurrentNode->getNodeType() == DOMNode::PROCESSING_INSTRUCTION_NODE) {
-                        ((DOMProcessingInstructionImpl*)fCurrentNode)->setBaseURI(erImpl->getBaseURI());
-                    }
-                }
-            }
-
-            next = kid->getNextSibling();
-        }
-    }
-    else
-        fCurrentNode   = fCurrentParent;
+    fCurrentNode   = fCurrentParent;
 
     if (erImpl)
         erImpl->setReadOnly(true, true);
@@ -1039,27 +979,30 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         entity->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
     fCurrentEntity = entity;
 
-    DOMEntityReference *er = fDocument->createEntityReferenceByParser(entName);
 
-    //set the readOnly flag to false before appending node, will be reset in endEntityReference
-    DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;
-    erImpl->setReadOnly(false, true);
+    // Following line has been moved up so that erImpl is only declared
+    // and used if create entity ref flag is true
+    if (fCreateEntityReferenceNodes == true)    {
+        DOMEntityReference *er = fDocument->createEntityReferenceByParser(entName);
 
-    if (fCreateEntityReferenceNodes == true)
-    {
+        //set the readOnly flag to false before appending node, will be reset 
+        // in endEntityReference
+        DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;
+        erImpl->setReadOnly(false, true);
+
         fCurrentParent->appendChild(er);
-    }
 
-    fNodeStack->push(fCurrentParent);
-    fCurrentParent = er;
-    fCurrentNode = er;
+        fNodeStack->push(fCurrentParent);
+        fCurrentParent = er;
+        fCurrentNode = er;
 
     // this entityRef needs to be stored in Entity map too.
     // We'd decide later whether the entity nodes should be created by a
     // separated method in parser or not. For now just stick it in if
     // the ref nodes are created
-    if (entity)
-        entity->setEntityRef(er);
+        if (entity)
+            entity->setEntityRef(er);
+    }
 }
 
 
