@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2002/08/16 13:49:56  tng
+ * [Bug 11360] Release user data using handler.
+ *
  * Revision 1.25  2002/08/09 20:21:21  tng
  * Test DOM L3 compareTreePosition.
  *
@@ -1022,6 +1025,11 @@ bool DOMTest::testAttr(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
+
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
         fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
@@ -1385,6 +1393,11 @@ bool DOMTest::testCDATASection(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
+
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
         fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
@@ -1645,6 +1658,11 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
+
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
         fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
@@ -1830,6 +1848,11 @@ bool DOMTest::testComment(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
 
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
@@ -2161,6 +2184,11 @@ bool DOMTest::testDocument(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
 
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
@@ -2775,6 +2803,11 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
+
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
         fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
@@ -3173,6 +3206,11 @@ bool DOMTest::testEntity(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
+
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
         fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
@@ -3330,6 +3368,11 @@ bool DOMTest::testEntityReference(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
 
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
@@ -3504,6 +3547,11 @@ bool DOMTest::testNode(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
+
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
         fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
@@ -3660,6 +3708,11 @@ bool DOMTest::testNotation(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
 
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
@@ -3843,6 +3896,11 @@ bool DOMTest::testPI(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
 
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
@@ -4029,6 +4087,11 @@ bool DOMTest::testText(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // test delete
+    myimport->setUserData(tempStr2, (void*) userTest, &userhandler);
+    myimport->release();
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_DELETED, tempStr2, userTest, 0, 0, __LINE__);
 
     // Test isSameNode
     if (!userTest->isSameNode(userTest)) {
