@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/11 03:00:24  chchou
+ * Fix bug # 18, remove set method of readonly attributes.
+ * As a result, remove related test cases
+ *
  * Revision 1.9  2000/03/02 19:55:45  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -691,14 +695,6 @@ void DTest::testAttr(DOM_Document document)
         OK = false;
     }
 
-    // IBM Specific function
-    attributeNode.setSpecified(F);//***** How do we change this for external use??
-    if (! F ==attributeNode.getSpecified())
-    {
-        printf("Warning!!! DOM_Attr's 'setSpecified' method failed to work properly!\n");
-        OK = false;
-    }
-    
     attributeNode.setValue(null);
     if (! attributeNode.getValue().equals(""))
     {
@@ -1592,29 +1588,6 @@ void DTest::testEntity(DOM_Document document)
     }
     // Deep clone test comparison is in testNode & testDocument
 
-    entity.setNotationName("testNotationName");
-    compare = "testNotationName";
-    if(! compare.equals(entity.getNotationName()))
-    {
-        printf("Warning!!! DOM_Entity's 'setNotationName' and/or getNotationName' failed!\n");
-        OK = false;
-    }
-    entity.setPublicId("testPublicId");
-    compare = "testPublicId";
-    if(! compare.equals(entity.getPublicId()))
-    {
-        printf("Warning!!! DOM_Entity's 'setPublicId' and/or getPublicId' failed!\n");
-        OK = false;
-    }   
-    entity.setSystemId("testSystemId");
-    compare = "testSystemId";
-    if(! compare.equals(entity.getSystemId()))
-    {
-        printf("Warning!!! DOM_Entity's 'setSystemId' and/or getSystemId' failed!\n");
-        OK = false;
-    }       
-    //  entity.setNodeValue("This shouldn't work");//!! Throws a NO_MODIFICATION_ALLOWED_ERR ********
-    
 // For debugging*****       printf("All DOM_Entity method calls worked correctly.\n");
     if (!OK)
         printf("\n*****The DOM_Entity method calls listed above failed, all others worked correctly.*****\n");
@@ -1738,22 +1711,6 @@ void DTest::testNotation(DOM_Document document)
     }
     // Deep clone test comparison is in testNode & testDocument
 
-    // IBM specific call...
-    notation.setPublicId("testPublicId");//*****?
-    compare = "testPublicId";
-    if (!compare.equals(notation.getPublicId()))
-    {
-        printf("Warning!!! DOM_Notation's 'getPublicId' failed!");
-        OK = false;
-    }
-    // IBM specific call...
-    notation.setSystemId("testSystemId");//*****?
-    compare = "testSystemId";
-    if (! compare.equals(notation.getSystemId()))
-    {
-        printf("Warning!!! DOM_Notation's 'getSystemId' failed!\n");
-        OK = false;
-    }
     //  notation.setNodeValue("This shouldn't work");//!! Throws a NO_MODIFICATION_ALLOWED_ERR ********
     
 // For debugging*****       printf("All DOM_Notation method calls worked correctly.\n");

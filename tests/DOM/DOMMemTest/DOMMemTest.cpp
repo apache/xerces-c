@@ -66,6 +66,10 @@
 
 /*
  * $Log$
+ * Revision 1.20  2000/03/11 03:00:13  chchou
+ * Fix bug # 18, remove set method of readonly attributes.
+ * As a result, remove related test cases
+ *
  * Revision 1.19  2000/03/10 02:15:15  chchou
  * add null DOM_DocumentType constructor
  *
@@ -747,7 +751,6 @@ int  main()
 
         DOM_NamedNodeMap notationMap = dt.getNotations();
         DOM_Notation    nt1 = doc.createNotation("Notation01");
-        nt1.setPublicId("Notation01PublicId");
         notationMap.setNamedItem (nt1);
 		DOM_Node  abc1 = notationMap.getNamedItem("Notation01");
         DOM_Notation    nt2 = (DOM_Notation &) abc1;
