@@ -220,6 +220,7 @@ public :
     static const XMLCh fgXercesCalculateSrcOfs[];
     static const XMLCh fgXercesStandardUriConformant[];
     static const XMLCh fgXercesDOMHasPSVIInfo[];
+    static const XMLCh fgXercesGenerateSyntheticAnnotations[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];

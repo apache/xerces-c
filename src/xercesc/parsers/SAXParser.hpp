@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2004/09/23 01:09:55  cargilld
+ * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
+ *
  * Revision 1.32  2004/09/08 13:56:18  peiyongz
  * Apache License Version 2.0
  *
@@ -642,6 +645,19 @@ public :
      */
     unsigned int getSrcOffset() const;
 
+    /** Get the 'generate synthetic validations' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         generate synthetic annotations, false otherwise.
+      *         A synthetic XSAnnotation is created when a schema
+      *         component has non-schema attributes but has no
+      *         child annotations so that the non-schema attributes
+      *         can be recovered under PSVI.
+      *
+      * @see #setGenerateSyntheticAnnotations
+      */
+    bool getGenerateSyntheticAnnotations() const;
+
     //@}
 
 
@@ -651,6 +667,18 @@ public :
 
     /** @name Setter methods */
     //@{
+    /** set the 'generate synthetic validations' flag
+      *    
+      * @param newValue The value for specifying whether Synthetic Annotations
+      *        should be generated or not.
+      *        A synthetic XSAnnotation is created when a schema
+      *        component has non-schema attributes but has no
+      *        child annotations.
+      *
+      * @see #getGenerateSyntheticAnnotations
+      */
+    void setGenerateSyntheticAnnotations(const bool newValue);
+
     /**
       * This method allows users to enable or disable the parser's
       * namespace processing. When set to true, parser starts enforcing

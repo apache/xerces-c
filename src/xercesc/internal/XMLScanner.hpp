@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.38  2004/09/23 01:09:55  cargilld
+ * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
+ *
  * Revision 1.37  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -513,6 +516,8 @@ public :
     unsigned int getPrefixId(const XMLCh* const prefix) const;
     const XMLCh* getPrefixForId(unsigned int prefId) const;
 
+    bool getGenerateSyntheticAnnotations() const;
+
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
@@ -605,6 +610,8 @@ public :
     void setCalculateSrcOfs(const bool newValue);
     void setParseSettings(XMLScanner* const refScanner);
     void setStandardUriConformant(const bool newValue);
+
+    void setGenerateSyntheticAnnotations(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -957,6 +964,7 @@ protected:
     bool                        fUseCachedGrammar;
     bool                        fLoadExternalDTD;
     bool                        fNormalizeData;
+    bool                        fGenerateSyntheticAnnotations;
     int                         fErrorCount;
     unsigned int                fEntityExpansionLimit;
     unsigned int                fEntityExpansionCount;
@@ -1302,6 +1310,11 @@ inline const XMLCh* XMLScanner::getPrefixForId(unsigned int prefId) const
     return fElemStack.getPrefixForId(prefId);
 }
 
+inline bool XMLScanner::getGenerateSyntheticAnnotations() const
+{
+    return fGenerateSyntheticAnnotations;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1453,6 +1466,11 @@ inline void XMLScanner::setStandardUriConformant(const bool newValue)
 {
     fStandardUriConformant = newValue;
     fReaderMgr.setStandardUriConformant(newValue);
+}
+
+inline void XMLScanner::setGenerateSyntheticAnnotations(const bool newValue)
+{
+    fGenerateSyntheticAnnotations = newValue;
 }
 
 // ---------------------------------------------------------------------------

@@ -230,6 +230,11 @@ bool AbstractDOMParser::getDoNamespaces() const
     return fScanner->getDoNamespaces();
 }
 
+bool AbstractDOMParser::getGenerateSyntheticAnnotations() const
+{
+    return fScanner->getGenerateSyntheticAnnotations();
+}
+
 bool AbstractDOMParser::getExitOnFirstFatalError() const
 {
     return fScanner->getExitOnFirstFatal();
@@ -321,6 +326,11 @@ void AbstractDOMParser::setPSVIHandler(PSVIHandler* const handler)
 void AbstractDOMParser::setDoNamespaces(const bool newState)
 {
     fScanner->setDoNamespaces(newState);
+}
+
+void AbstractDOMParser::setGenerateSyntheticAnnotations(const bool newState)
+{
+    fScanner->setGenerateSyntheticAnnotations(newState);
 }
 
 void AbstractDOMParser::setExitOnFirstFatalError(const bool newState)

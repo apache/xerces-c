@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2004/09/23 01:09:55  cargilld
+ * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
+ *
  * Revision 1.33  2004/09/08 13:56:17  peiyongz
  * Apache License Version 2.0
  *
@@ -446,6 +449,10 @@ bool SAXParser::getDoNamespaces() const
     return fScanner->getDoNamespaces();
 }
 
+bool SAXParser::getGenerateSyntheticAnnotations() const
+{
+    return fScanner->getGenerateSyntheticAnnotations();
+}
 
 bool SAXParser::getExitOnFirstFatalError() const
 {
@@ -558,6 +565,10 @@ void SAXParser::setDoNamespaces(const bool newState)
     fScanner->setDoNamespaces(newState);
 }
 
+void SAXParser::setGenerateSyntheticAnnotations(const bool newState)
+{
+    fScanner->setGenerateSyntheticAnnotations(newState);
+}
 
 void SAXParser::setExitOnFirstFatalError(const bool newState)
 {

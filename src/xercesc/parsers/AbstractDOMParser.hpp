@@ -408,6 +408,19 @@ public :
       */
     bool  getCreateSchemaInfo() const;
 
+    /** Get the 'generate synthetic validations' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         generate synthetic annotations, false otherwise.
+      *         A synthetic XSAnnotation is created when a schema
+      *         component has non-schema attributes but has no
+      *         child annotations so that the non-schema attributes
+      *         can be recovered under PSVI.
+      *
+      * @see #setGenerateSyntheticAnnotations
+      */
+    bool getGenerateSyntheticAnnotations() const;
+
     //@}
 
 
@@ -417,6 +430,18 @@ public :
 
     /** @name Setter methods */
     //@{
+    /** set the 'generate synthetic validations' flag
+      *    
+      * @param newValue The value for specifying whether Synthetic Annotations
+      *        should be generated or not.
+      *         A synthetic XSAnnotation is created when a schema
+      *         component has non-schema attributes but has no
+      *         child annotations so that the non-schema attributes
+      *         can be recovered under PSVI.
+      *
+      * @see #getGenerateSyntheticAnnotations
+      */
+    void setGenerateSyntheticAnnotations(const bool newValue);
 
     /** Set the 'do namespaces' flag
       *

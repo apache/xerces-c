@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2004/09/23 01:09:55  cargilld
+ * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
+ *
  * Revision 1.35  2004/09/08 13:56:17  peiyongz
  * Apache License Version 2.0
  *
@@ -1557,6 +1560,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setStandardUriConformant(value);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    {
+        fScanner->setGenerateSyntheticAnnotations(value);
+    }
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 }
@@ -1591,6 +1598,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->getCalculateSrcOfs();
     else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
         return fScanner->getStandardUriConformant();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+        return fScanner->getGenerateSyntheticAnnotations();
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 

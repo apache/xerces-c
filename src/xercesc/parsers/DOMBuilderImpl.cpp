@@ -231,6 +231,10 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         setCreateSchemaInfo(state);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    {
+        getScanner()->setGenerateSyntheticAnnotations(state);
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -320,6 +324,10 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     }
     else if (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) {
         return getCreateSchemaInfo();
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    {
+        return getScanner()->getGenerateSyntheticAnnotations();
     }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());

@@ -683,6 +683,9 @@ private:
 
     void processAttValue(const XMLCh* const attVal, XMLBuffer& aBuf);
 
+    // routine to generate synthetic annotations
+    XSAnnotation* generateSyntheticAnnotation(const DOMElement* const elem
+                                             , ValueVectorOf<DOMNode*>* nonXSAttList);
     // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------
