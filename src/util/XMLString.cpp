@@ -828,9 +828,9 @@ bool XMLString::copyNString(        XMLCh* const    target
 {
     XMLCh* outPtr = target;
     const XMLCh* srcPtr = src;
-    const XMLCh* endPtr = src + maxChars;
+    const XMLCh* endPtr = src + maxChars - 1;
 
-    while (*srcPtr && (srcPtr < endPtr))
+    while (*srcPtr && (srcPtr <= endPtr))
         *outPtr++ = *srcPtr++;
 
     // Cap it off here
