@@ -976,7 +976,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             {
                 curAtt = new (fMemoryManager) XMLAttr
                 (
-                    -1
+                    0
                     , attNameRawBuf
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
@@ -992,7 +992,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
                 curAtt = fAttrList->elementAt(attCount);
                 curAtt->set
                 (
-                    -1
+                    0
                     , attNameRawBuf
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()

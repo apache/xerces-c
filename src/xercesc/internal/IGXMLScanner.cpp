@@ -1773,7 +1773,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
             {
                 curAtt = new (fMemoryManager) XMLAttr
                 (
-                    -1
+                    0
                     , namePtr
                     , XMLUni::fgZeroLenString
                     , XMLUni::fgZeroLenString
@@ -1788,7 +1788,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                 curAtt = fAttrList->elementAt(attCount);
                 curAtt->set
                 (
-                    -1
+                    0
                     , namePtr
                     , XMLUni::fgZeroLenString
                     , XMLUni::fgZeroLenString
@@ -2021,7 +2021,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                     {
                         curAtt = new (fMemoryManager) XMLAttr
                         (
-                            -1
+                            0
                             , curDef.getFullName()
                             , XMLUni::fgZeroLenString
                             , curDef.getValue()
@@ -2037,7 +2037,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                         curAtt = fAttrList->elementAt(attCount);
                         curAtt->set
                         (
-                            -1
+                            0
                             , curDef.getFullName()
                             , XMLUni::fgZeroLenString
                             , curDef.getValue()
