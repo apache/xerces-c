@@ -236,7 +236,7 @@ endif
 #   export LOADMOD=USERID.LOAD                                    #
 #   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
-# to specify your LOADMOD and the IXM4C40 definition sidedeck     #
+# to specify your LOADMOD and the IXM4C40X definition sidedeck    #
 # dataset.  													  #
 ###################################################################
 
@@ -244,9 +244,9 @@ ifeq (${PLATFORM}, OS390)
 CMP= -c -DOS390 ${CXXFLAGS}
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
 else
-CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
 endif
 LINK =  ${CC} ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=
@@ -255,7 +255,7 @@ SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-LIBRARY_NAMES="//'${LOADEXP}(IXM4C40)'"
+LIBRARY_NAMES="//'${LOADEXP}(IXM4C40X)'"
 else
 LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
 endif
