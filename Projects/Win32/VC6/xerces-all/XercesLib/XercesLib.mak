@@ -1733,7 +1733,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLFloat.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
-	"$(INTDIR)\XMLNumber.obj" \	
+	"$(INTDIR)\XMLNumber.obj" \
 	"$(INTDIR)\XMLString.obj" \
 	"$(INTDIR)\XMLStringTokenizer.obj" \
 	"$(INTDIR)\XMLUCSTranscoder.obj" \
