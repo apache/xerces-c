@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/29 13:26:44  knoaman
+ * Fix memory leak when using deprecated dom.
+ *
  * Revision 1.3  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -97,9 +100,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 template <class TElem>
 ValueStackOf<TElem>::ValueStackOf(const unsigned int fInitCapacity,
-                                  MemoryManager* const manager) :
+                                  MemoryManager* const manager,
+                                  const bool toCallDestructor) :
 
-    fVector(fInitCapacity, manager)
+    fVector(fInitCapacity, manager, toCallDestructor)
 {
 }
 

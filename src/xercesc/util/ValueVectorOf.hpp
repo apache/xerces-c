@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/29 13:26:44  knoaman
+ * Fix memory leak when using deprecated dom.
+ *
  * Revision 1.6  2003/05/16 21:37:00  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -120,6 +123,7 @@ public :
     (
         const unsigned int maxElems
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        , const bool toCallDestructor = false
     );
     ValueVectorOf(const ValueVectorOf<TElem>& toCopy);
     ~ValueVectorOf();
@@ -174,6 +178,7 @@ private:
     //      The list of elements, which is dynamically allocated to the needed
     //      size.
     // -----------------------------------------------------------------------
+    bool            fCallDestructor;
     unsigned int    fCurCount;
     unsigned int    fMaxCount;
     TElem*          fElemList;

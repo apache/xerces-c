@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2003/05/29 13:26:44  knoaman
+ * Fix memory leak when using deprecated dom.
+ *
  * Revision 1.6  2003/05/20 21:06:30  knoaman
  * Set values to 0.
  *
@@ -112,9 +115,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 template <class TElem>
 ValueVectorOf<TElem>::ValueVectorOf(const unsigned int maxElems,
-                                    MemoryManager* const manager) :
+                                    MemoryManager* const manager,
+                                    const bool toCallDestructor) :
 
-    fCurCount(0)
+    fCallDestructor(toCallDestructor)
+    , fCurCount(0)
     , fMaxCount(maxElems)
     , fElemList(0)
     , fMemoryManager(manager)
@@ -130,7 +135,8 @@ ValueVectorOf<TElem>::ValueVectorOf(const unsigned int maxElems,
 template <class TElem>
 ValueVectorOf<TElem>::ValueVectorOf(const ValueVectorOf<TElem>& toCopy) :
 
-    fCurCount(toCopy.fCurCount)
+    fCallDestructor(toCopy.fCallDestructor)
+    , fCurCount(toCopy.fCurCount)
     , fMaxCount(toCopy.fMaxCount)
     , fElemList(0)
     , fMemoryManager(toCopy.fMemoryManager)
@@ -139,12 +145,18 @@ ValueVectorOf<TElem>::ValueVectorOf(const ValueVectorOf<TElem>& toCopy) :
     (
         fMaxCount * sizeof(TElem)
     ); //new TElem[fMaxCount];
+
+    memset(fElemList, 0, fMaxCount * sizeof(TElem));
     for (unsigned int index = 0; index < fCurCount; index++)
         fElemList[index] = toCopy.fElemList[index];
 }
 
 template <class TElem> ValueVectorOf<TElem>::~ValueVectorOf()
 {
+    if (fCallDestructor) {
+        for (int index= fMaxCount - 1; index >= 0; index--)
+            fElemList[index].~TElem();
+    }
     fMemoryManager->deallocate(fElemList); //delete [] fElemList;
 }
 

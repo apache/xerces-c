@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/29 13:26:44  knoaman
+ * Fix memory leak when using deprecated dom.
+ *
  * Revision 1.5  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -114,7 +117,8 @@ public :
     ValueStackOf
     (
           const unsigned int fInitCapacity
-		  , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+          , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+          , const bool toCallDestructor = false
     );
     ~ValueStackOf();
 
