@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/23 16:16:52  tng
+ * Elimiate compiler warning Warning: String literal converted to char* in initialization.
+ *
  * Revision 1.1  2001/08/09 19:28:47  tng
  * Port test case DOMTest to  IDOMTest
  *
@@ -1045,9 +1048,9 @@ void IDTest::testDocument(IDOM_Document* document)
     IDOM_Element* newElement;
     IDOM_Node* node, *node2;
 
-    char* elementNames[] =  {"dFirstElement", "dTestBody", "dBodyLevel21","dBodyLevel31","dBodyLevel32",
+    const char* elementNames[] =  {"dFirstElement", "dTestBody", "dBodyLevel21","dBodyLevel31","dBodyLevel32",
                    "dBodyLevel22","dBodyLevel33","dBodyLevel34","dBodyLevel23","dBodyLevel24"};
-    char* newElementNames[] = {"dFirstElement", "dTestBody", "dBodyLevel22","dBodyLevel33","dBodyLevel34","dBodyLevel23"};
+    const char* newElementNames[] = {"dFirstElement", "dTestBody", "dBodyLevel22","dBodyLevel33","dBodyLevel34","dBodyLevel23"};
 
 
     bool result;
@@ -1338,10 +1341,10 @@ void IDTest::testElement(IDOM_Document* document)
     IDOM_Element* element, *element2;
     IDOM_Node* node, *node2;
 
-    char* attributeCompare[] = {"AnotherFirstElementAttribute", "dFirstElement", "testAttribute"};
-    char* elementNames[] =  {"dFirstElement", "dTestBody", "dBodyLevel21","dBodyLevel31","dBodyLevel32",
+    const char* attributeCompare[] = {"AnotherFirstElementAttribute", "dFirstElement", "testAttribute"};
+    const char* elementNames[] =  {"dFirstElement", "dTestBody", "dBodyLevel21","dBodyLevel31","dBodyLevel32",
                    "dBodyLevel22","dBodyLevel33","dBodyLevel34","dBodyLevel23","dBodyLevel24"};
-    char* textCompare[] = {"dBodyLevel31'sChildTextNode11",
+    const char* textCompare[] = {"dBodyLevel31'sChildTextNode11",
                                 "dBodyLevel31'sChildTextNode12",
                                 "dBodyLevel31'sChildTextNode13"};
 
