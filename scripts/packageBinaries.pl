@@ -466,6 +466,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # Make the target directory and its main subdirectories
     psystem ("mkdir $targetdir");
     psystem ("mkdir $targetdir/bin");
+    psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/lib");
     psystem ("mkdir $targetdir/include");
     if (length($ICUROOT) > 0) {
@@ -688,6 +689,10 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("cp -f $XERCESCROOT/lib/* $targetdir/lib");
 
     psystem("rm -rf $targetdir/bin/obj");
+
+    # Populate the etc output directory
+    print ("\n\nCopying misc output to etc ...\n");
+    psystem("cp -Rf $XERCESCROOT/src/config.status $targetdir/etc");
 
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
