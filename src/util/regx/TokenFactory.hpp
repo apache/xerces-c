@@ -89,12 +89,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Constructors and destructors
     // -----------------------------------------------------------------------
+    TokenFactory();
     ~TokenFactory();
-
-	// -----------------------------------------------------------------------
-    //  Instance methods
-    // -----------------------------------------------------------------------
-	static TokenFactory* instance();
 
     // -----------------------------------------------------------------------
     //  Factory methods
@@ -115,10 +111,6 @@ public:
     ConditionToken* createCondition(const int refNo, Token* const condition,
                                     Token* const yesFlow, Token* const noFlow);
 
-    // -----------------------------------------------------------------------
-    //  CleanUp methods
-    // -----------------------------------------------------------------------
-    static void cleanUp();
 
 	//static void printUnicode();
 
@@ -148,7 +140,8 @@ private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    TokenFactory();
+    TokenFactory(const TokenFactory&);
+    operator=(const TokenFactory&);
 
     // -----------------------------------------------------------------------
     //  Private Helpers methods
@@ -169,35 +162,25 @@ private:
     //  fToken
     //      Contains user created Token objects. Used for memory cleanup.
     // -----------------------------------------------------------------------
-    bool                 fRangeInitialized;
-	XMLMutex             fMutex;
-    RefVectorOf<Token>*  fTokens;
-    Token*               fEmpty;
-    Token*               fLineBegin;
-    Token*               fLineBegin2;
-    Token*               fLineEnd;
-    Token*               fStringBegin;
-    Token*               fStringEnd;
-    Token*               fStringEnd2;
-    Token*               fWordEdge;
-    Token*               fNotWordEdge;
-    Token*               fWordEnd;
-    Token*               fWordBegin;
-    Token*               fDot;
-	Token*				 fCombiningChar;
-	Token*				 fGrapheme;
-	static TokenFactory* fInstance;
+    bool                fRangeInitialized;
+	XMLMutex            fMutex;
+    RefVectorOf<Token>* fTokens;
+    Token*              fEmpty;
+    Token*              fLineBegin;
+    Token*              fLineBegin2;
+    Token*              fLineEnd;
+    Token*              fStringBegin;
+    Token*              fStringEnd;
+    Token*              fStringEnd2;
+    Token*              fWordEdge;
+    Token*              fNotWordEdge;
+    Token*              fWordEnd;
+    Token*              fWordBegin;
+    Token*              fDot;
+	Token*              fCombiningChar;
+	Token*              fGrapheme;
 };
 
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Instance methods
-// ---------------------------------------------------------------------------
-inline void TokenFactory::cleanUp() {
-
-	delete fInstance;
-	fInstance = 0;
-}
 
 #endif
 

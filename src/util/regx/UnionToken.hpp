@@ -85,7 +85,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Children manipulation methods
     // -----------------------------------------------------------------------
-    void addChild(Token* const child);
+    void addChild(Token* const child, TokenFactory* const tokFactory);
 
 private:
 	// -----------------------------------------------------------------------

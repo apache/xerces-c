@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:18  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:26:39  knoaman
  * Schema: Regular expression handling part II
  *
@@ -68,6 +83,7 @@
 #include <util/regx/RegxDefs.hpp>
 #include <util/regx/TokenFactory.hpp>
 #include <util/regx/RangeToken.hpp>
+#include <util/regx/RangeTokenMap.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -95,39 +111,46 @@ void ASCIIRangeFactory::buildRanges() {
     if (fRangesCreated)
         return;
 
+    if (!fKeywordsInitialized) {
+        initializeKeywordMap();
+    }
+
+    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+    TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
+
     // Create space ranges
-    RangeToken* tok = TokenFactory::instance()->createRange();
+    RangeToken* tok = tokFactory->createRange();
     tok->addRange(chHTab, chHTab);
 	tok->addRange(chLF, chLF);
 	tok->addRange(chFF, chFF);
 	tok->addRange(chCR, chCR);
 	tok->addRange(chSpace, chSpace);
-    setRangeToken(fgASCIISpace, tok);
+	rangeTokMap->setRangeToken(fgASCIISpace, tok);
 
     // Create digits ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     tok->addRange(chDigit_0, chDigit_9);
-    setRangeToken(fgASCIIDigit, tok);
+    rangeTokMap->setRangeToken(fgASCIIDigit, tok);
 
     // Create word ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     tok->addRange(chDigit_0, chDigit_9);
 	tok->addRange(chLatin_A, chLatin_Z);
     tok->addRange(chUnderscore, chUnderscore);
 	tok->addRange(chLatin_a, chLatin_z);
-    setRangeToken(fgASCIIWord, tok);
+    rangeTokMap->setRangeToken(fgASCIIWord, tok);
 
     // Create xdigit ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     tok->addRange(chDigit_0, chDigit_9);
     tok->addRange(chLatin_A, chLatin_F);
     tok->addRange(chLatin_a, chLatin_a);
-    setRangeToken(fgASCIIXDigit, tok);
+    rangeTokMap->setRangeToken(fgASCIIXDigit, tok);
 
     // Create ascii ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     tok->addRange(0x00, 0x7F);
-    setRangeToken(fgASCII, tok);
+    rangeTokMap->setRangeToken(fgASCII, tok);
 
     fRangesCreated = true;
 }
@@ -140,11 +163,13 @@ void ASCIIRangeFactory::initializeKeywordMap() {
     if (fKeywordsInitialized)
         return;
 
-    addKeywordMap(fgASCIISpace, fgASCIICategory);
-    addKeywordMap(fgASCIIDigit, fgASCIICategory);
-    addKeywordMap(fgASCIIWord, fgASCIICategory);
-    addKeywordMap(fgASCIIXDigit, fgASCIICategory);
-    addKeywordMap(fgASCII, fgASCIICategory);
+	RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+
+    rangeTokMap->addKeywordMap(fgASCIISpace, fgASCIICategory);
+    rangeTokMap->addKeywordMap(fgASCIIDigit, fgASCIICategory);
+    rangeTokMap->addKeywordMap(fgASCIIWord, fgASCIICategory);
+    rangeTokMap->addKeywordMap(fgASCIIXDigit, fgASCIICategory);
+    rangeTokMap->addKeywordMap(fgASCII, fgASCIICategory);
 
     fKeywordsInitialized = true;
 }

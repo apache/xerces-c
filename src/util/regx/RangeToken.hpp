@@ -66,6 +66,11 @@
 // ---------------------------------------------------------------------------
 #include <util/regx/Token.hpp>
 
+// ---------------------------------------------------------------------------
+//  Forward Declaration
+// ---------------------------------------------------------------------------
+class TokenFactory;
+
 
 class XMLUTIL_EXPORT RangeToken : public Token {
 public:
@@ -84,7 +89,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	RangeToken* getCaseInsensitiveToken();
+	RangeToken* getCaseInsensitiveToken(TokenFactory* const tokFactory);
 
 	// -----------------------------------------------------------------------
     //  Setter methods
@@ -100,7 +105,8 @@ public:
 	void compactRanges();
 	void subtractRanges(RangeToken* const tok);
 	void intersectRanges(RangeToken* const tok);
-	static Token* complementRanges(RangeToken* const tok);
+	static Token* complementRanges(RangeToken* const tok,
+                                   TokenFactory* const tokFactory);
 
 	// -----------------------------------------------------------------------
     //  Match methods

@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:18:02  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:26:50  knoaman
  * Schema: Regular expression handling part II
  *
@@ -69,6 +84,7 @@
 #include <util/regx/RegxDefs.hpp>
 #include <util/regx/TokenFactory.hpp>
 #include <util/regx/RangeToken.hpp>
+#include <util/regx/RangeTokenMap.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -122,29 +138,36 @@ void XMLRangeFactory::buildRanges() {
     if (fRangesCreated)
         return;
 
+    if (!fKeywordsInitialized) {
+        initializeKeywordMap();
+    }
+
+    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+    TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
+
     // Create space ranges
-    RangeToken* tok = TokenFactory::instance()->createRange();
+    RangeToken* tok = tokFactory->createRange();
     setupRange(tok, gWhitespaceChars);
-    setRangeToken(fgXMLSpace, tok);
+    rangeTokMap->setRangeToken(fgXMLSpace, tok);
 
     // Create digits ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     setupRange(tok, gDigitChars);
     tok->sortRanges();
     tok->compactRanges();
-    setRangeToken(fgXMLDigit, tok);
+    rangeTokMap->setRangeToken(fgXMLDigit, tok);
 
     // Create word ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     setupRange(tok, gBaseChars);
     setupRange(tok, gXMLChars);
     setupRange(tok, gDigitChars);
     tok->sortRanges();
     tok->compactRanges();
-    setRangeToken(fgXMLWord, tok);
+    rangeTokMap->setRangeToken(fgXMLWord, tok);
 
     // Create NameChar ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     setupRange(tok, gBaseChars);
     setupRange(tok, gCombiningChars);
     setupRange(tok, gExtenderChars);
@@ -156,17 +179,17 @@ void XMLRangeFactory::buildRanges() {
     tok->addRange(chUnderscore, chUnderscore);
     tok->sortRanges();
     tok->compactRanges();
-    setRangeToken(fgXMLNameChar, tok);
+    rangeTokMap->setRangeToken(fgXMLNameChar, tok);
 
     // Create initialNameChar ranges
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     setupRange(tok, gBaseChars);
     setupRange(tok, gXMLChars);
     tok->addRange(chColon, chColon);
     tok->addRange(chUnderscore, chUnderscore);
     tok->sortRanges();
     tok->compactRanges();
-    setRangeToken(fgXMLInitialNameChar, tok);
+    rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok);
 
     fRangesCreated = true;
 }
@@ -179,11 +202,13 @@ void XMLRangeFactory::initializeKeywordMap() {
     if (fKeywordsInitialized)
         return;
 
-    addKeywordMap(fgXMLSpace, fgXMLCategory);
-    addKeywordMap(fgXMLDigit, fgXMLCategory);
-    addKeywordMap(fgXMLWord, fgXMLCategory);
-    addKeywordMap(fgXMLNameChar, fgXMLCategory);
-    addKeywordMap(fgXMLInitialNameChar, fgXMLCategory);
+    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+
+    rangeTokMap->addKeywordMap(fgXMLSpace, fgXMLCategory);
+    rangeTokMap->addKeywordMap(fgXMLDigit, fgXMLCategory);
+    rangeTokMap->addKeywordMap(fgXMLWord, fgXMLCategory);
+    rangeTokMap->addKeywordMap(fgXMLNameChar, fgXMLCategory);
+    rangeTokMap->addKeywordMap(fgXMLInitialNameChar, fgXMLCategory);
 
     fKeywordsInitialized = true;
 }

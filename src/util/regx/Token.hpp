@@ -65,8 +65,14 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/XercesDefs.hpp>
+#include <util/RuntimeException.hpp>
 
+// ---------------------------------------------------------------------------
+//  Forward Declaration
+// ---------------------------------------------------------------------------
 class RangeToken;
+class TokenFactory;
+
 
 class XMLUTIL_EXPORT Token {
 public:
@@ -143,12 +149,13 @@ public:
 	// -----------------------------------------------------------------------
     //  Putter methods
     // -----------------------------------------------------------------------
-	virtual void addChild(Token* const child);
+	virtual void addChild(Token* const child, TokenFactory* const tokFactory);
 
 	// -----------------------------------------------------------------------
     //  Helper methods 
     // -----------------------------------------------------------------------
-	int analyzeFirstCharacter(RangeToken* const rangeTok, const int options);
+	int analyzeFirstCharacter(RangeToken* const rangeTok, const int options,
+                              TokenFactory* const tokFactory);
     Token* findFixedString(int options, int& outOptions);
 
 private:
@@ -243,9 +250,9 @@ inline bool Token::isSet(const int options, const unsigned int flag) {
 // ---------------------------------------------------------------------------
 //  Token: setter methods
 // ---------------------------------------------------------------------------
-inline void Token::addChild(Token* const child) {
+inline void Token::addChild(Token* const child, TokenFactory* const tokFactory) {
 
-	throw; //ThrowXML(RuntimeException, "Not supported")
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 // ---------------------------------------------------------------------------
@@ -253,38 +260,32 @@ inline void Token::addChild(Token* const child) {
 // ---------------------------------------------------------------------------
 inline void Token::addRange(const XMLInt32 start, const XMLInt32 end) {
 
-	//REVISIT DO we need to throw an exception or just do nothing
-	//throw; //ThrowXML(RuntimeException, "Not supported")
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline void Token::mergeRanges(const Token *const tok) {
 
-	//REVISIT DO we need to throw an exception or just do nothing
-	//throw; //ThrowXML(RuntimeException, "Not supported")
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline void Token::sortRanges() {
 
-	//REVISIT DO we need to throw an exception or just do nothing
-	//throw; //ThrowXML(RuntimeException, "Not supported")
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline void Token::compactRanges() {
 
-	//REVISIT DO we need to throw an exception or just do nothing
-	//throw; //ThrowXML(RuntimeException, "Not supported")
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline void Token::subtractRanges(RangeToken* const tok) {
 
-	//REVISIT DO we need to throw an exception or just do nothing
-	//throw; //ThrowXML(RuntimeException, "Not supported")
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline void Token::intersectRanges(RangeToken* const tok) {
 
-	//REVISIT DO we need to throw an exception or just do nothing
-	//throw; //ThrowXML(RuntimeException, "Not supported")
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 #endif

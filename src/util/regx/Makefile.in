@@ -56,6 +56,21 @@
 #
 #
 # $Log$
+# Revision 1.2  2001/05/03 18:17:24  knoaman
+# Some design changes:
+# o Changed the TokenFactory from a single static instance, to a
+#    normal class. Each RegularExpression object will have its own
+#    instance of TokenFactory, and that instance will be passed to
+#    other classes that need to use a TokenFactory to create Token
+#    objects (with the exception of RangeTokenMap).
+# o Added a new class RangeTokenMap to map a the different ranges
+#    in a given category to a specific RangeFactory object. In the old
+#    design RangeFactory had dual functionality (act as a Map, and as
+#    a factory for creating RangeToken(s)). The RangeTokenMap will
+#    have its own copy of the TokenFactory. There will be only one
+#    instance of the RangeTokenMap class, and that instance will be
+#    lazily deleted when XPlatformUtils::Terminate is called.
+#
 # Revision 1.1  2001/03/02 19:26:43  knoaman
 # Schema: Regular expression handling part II
 #
@@ -106,6 +121,7 @@ CPP_PUBHEADERS = RegxDefs.hpp \
 	BlockRangeFactory.hpp \
 	UnicodeRangeFactory.hpp \
 	ASCIIRangeFactory.hpp \
+	RangeTokenMap.hpp \
 	TokenFactory.hpp \
 	RegxParser.hpp \
 	ParserForXMLSchema.hpp \
@@ -132,6 +148,7 @@ CPP_OBJECTS = Op.$(TO) \
 	BlockRangeFactory.$(TO) \
 	UnicodeRangeFactory.$(TO) \
 	ASCIIRangeFactory.$(TO) \
+	RangeTokenMap.$(TO) \
 	TokenFactory.$(TO) \
 	RegxParser.$(TO) \
 	ParserForXMLSchema.$(TO) \

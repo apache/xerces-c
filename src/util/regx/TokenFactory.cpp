@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/03 18:17:52  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.2  2001/03/22 13:23:34  knoaman
  * Minor modifications to eliminate compiler warnings.
  *
@@ -73,13 +88,9 @@
 #include <util/regx/ASCIIRangeFactory.hpp>
 #include <util/regx/UnicodeRangeFactory.hpp>
 #include <util/regx/BlockRangeFactory.hpp>
+#include <util/regx/RangeTokenMap.hpp>
 #include <util/regx/RegxDefs.hpp>
-#include <stdlib.h>
 
-// ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-TokenFactory* TokenFactory::fInstance = 0;
 
 // ---------------------------------------------------------------------------
 //  TokenFactory: Constructors and Destructor
@@ -121,10 +132,12 @@ Token* TokenFactory::createToken(const unsigned short tokType) {
 
 	Token* tmpTok = new Token(tokType);
 
-	if (tokType == Token::EMPTY)
+	if (tokType == Token::EMPTY) {
 		fEmpty = tmpTok;
+    }
 
 	fTokens->addElement(tmpTok);
+
 	return tmpTok;
 }
 
@@ -243,7 +256,7 @@ RangeToken* TokenFactory::getRange(const XMLCh* const keyword,
 		initializeRegistry();
 	}
 
-	return RangeFactory::instance()->getRange(keyword, complement);
+	return RangeTokenMap::instance()->getRange(keyword, complement);
 }
 
 Token* TokenFactory::getLineBegin() {
@@ -379,12 +392,12 @@ Token* TokenFactory::getGraphemePattern() {
         combiner_wo_virama->addRange(0xFF9F, 0xFF9F); // extras
 
         Token* left = TokenFactory::createUnion();       // base_char?
-        left->addChild(base_char);
-        left->addChild(createToken(Token::EMPTY));
+        left->addChild(base_char, this);
+        left->addChild(createToken(Token::EMPTY), this);
 
         Token* foo = createUnion();
-        foo->addChild(TokenFactory::createConcat(virama,getRange(fgUniLetter)));
-        foo->addChild(combiner_wo_virama);
+        foo->addChild(TokenFactory::createConcat(virama,getRange(fgUniLetter)), this);
+        foo->addChild(combiner_wo_virama, this);
 
         foo = createClosure(foo);
         foo = createConcat(left, foo);
@@ -394,22 +407,6 @@ Token* TokenFactory::getGraphemePattern() {
 
 	return fGrapheme;
 }
-
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Instance methods
-// ---------------------------------------------------------------------------
-TokenFactory* TokenFactory::instance() {
-
-    if (!fInstance) {
-
-        fInstance = new TokenFactory();
-        atexit(TokenFactory::cleanUp);
-    }
-	
-    return (fInstance);
-}
-
 
 // ---------------------------------------------------------------------------
 //  TokenFactory - Helper methods
@@ -421,32 +418,32 @@ void TokenFactory::initializeRegistry() {
     if (fRangeInitialized)
         return;
 
-    RangeFactory::instance()->initializeRegistry();
+    RangeTokenMap::instance()->initializeRegistry();
 
 	    // Add categories
-    RangeFactory::instance()->addCategory(fgXMLCategory);
-    RangeFactory::instance()->addCategory(fgASCIICategory);
-    RangeFactory::instance()->addCategory(fgUnicodeCategory);
-    RangeFactory::instance()->addCategory(fgBlockCategory);
+    RangeTokenMap::instance()->addCategory(fgXMLCategory);
+    RangeTokenMap::instance()->addCategory(fgASCIICategory);
+    RangeTokenMap::instance()->addCategory(fgUnicodeCategory);
+    RangeTokenMap::instance()->addCategory(fgBlockCategory);
 
 	// Add xml range factory
     RangeFactory* rangeFact = new XMLRangeFactory();
-    rangeFact->addRangeMap(fgXMLCategory, rangeFact);
+    RangeTokenMap::instance()->addRangeMap(fgXMLCategory, rangeFact);
     rangeFact->initializeKeywordMap();
 
     // Add ascii range factory
     rangeFact = new ASCIIRangeFactory();
-    rangeFact->addRangeMap(fgASCIICategory, rangeFact);
+    RangeTokenMap::instance()->addRangeMap(fgASCIICategory, rangeFact);
     rangeFact->initializeKeywordMap();
 
     // Add unicode range factory
     rangeFact = new UnicodeRangeFactory();
-    rangeFact->addRangeMap(fgUnicodeCategory, rangeFact);
+    RangeTokenMap::instance()->addRangeMap(fgUnicodeCategory, rangeFact);
     rangeFact->initializeKeywordMap();
 
     // Add block range factory
     rangeFact = new BlockRangeFactory();
-    rangeFact->addRangeMap(fgBlockCategory, rangeFact);
+    RangeTokenMap::instance()->addRangeMap(fgBlockCategory, rangeFact);
     rangeFact->initializeKeywordMap();
 
     fRangeInitialized = true;

@@ -76,6 +76,7 @@
 // ---------------------------------------------------------------------------
 class Token;
 class RangeToken;
+class TokenFactory;
 
 class XMLUTIL_EXPORT RegxParser {
 public:
@@ -130,11 +131,13 @@ public:
     int            getNoParen() const;
 	int            getOffset() const;
 	bool           hasBackReferences() const;
+    TokenFactory*  getTokenFactory() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
 	void setParseContext(const unsigned short value);
+    void setTokenFactory(TokenFactory* const tokFactory);
 
 	// -----------------------------------------------------------------------
     //  Public Parsing methods
@@ -228,6 +231,7 @@ private:
 	XMLInt32                        fCharData;
 	XMLCh*                          fString;
 	RefVectorOf<ReferencePosition>* fReferences;
+    TokenFactory*                   fTokenFactory;
 	XMLMutex						fMutex;
 };
 
@@ -265,12 +269,22 @@ inline bool RegxParser::hasBackReferences() const {
 	return fHasBackReferences;
 }
 
+inline TokenFactory* RegxParser::getTokenFactory() const {
+
+    return fTokenFactory;
+}
+
 // ---------------------------------------------------------------------------
 //  RegxParser: Setter Methods
 // ---------------------------------------------------------------------------
 inline void RegxParser::setParseContext(const unsigned short value) {
 
 	fParseContext = value;
+}
+
+inline void RegxParser::setTokenFactory(TokenFactory* const tokFactory) {
+
+    fTokenFactory = tokFactory;
 }
 
 // ---------------------------------------------------------------------------

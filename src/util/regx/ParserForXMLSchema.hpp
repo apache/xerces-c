@@ -65,7 +65,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/regx/RegxParser.hpp>
-//#include <util/ParseException.hpp>
+#include <util/RuntimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -156,26 +156,22 @@ inline bool ParserForXMLSchema::checkQuestion(const int off) {
 // ---------------------------------------------------------------------------
 inline Token* ParserForXMLSchema::processLook(const unsigned short tokType) {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_A() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_B() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-    return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_b() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_C() {
@@ -192,14 +188,12 @@ inline Token* ParserForXMLSchema::processBacksolidus_c() {
 
 inline Token* ParserForXMLSchema::processBacksolidus_g() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_gt() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_I() {
@@ -216,63 +210,53 @@ inline Token* ParserForXMLSchema::processBacksolidus_i() {
 
 inline Token* ParserForXMLSchema::processBacksolidus_lt() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_X() {
 
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_Z() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBacksolidus_z() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processBackReference() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processCondition() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processIndependent() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processModifiers() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline Token* ParserForXMLSchema::processParen2() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline RangeToken* ParserForXMLSchema::parseSetOperations() {
 
-    // REVISIT: Do we need to throw an exception or just do nothing
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 #endif
 

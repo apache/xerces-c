@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:30  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:26:43  knoaman
  * Schema: Regular expression handling part II
  *
@@ -69,6 +84,7 @@
 #include <util/regx/RangeToken.hpp>
 #include <util/regx/TokenInc.hpp>
 #include <util/regx/RegxDefs.hpp>
+#include <util/ParseException.hpp>
 
 // ---------------------------------------------------------------------------
 //  ParserForXMLSchema: Constructors and Destructors
@@ -89,44 +105,46 @@ ParserForXMLSchema::~ParserForXMLSchema() {
 Token* ParserForXMLSchema::processCaret() {
 
 	processNext();
-	return TokenFactory::instance()->createChar(chCaret);
+	return getTokenFactory()->createChar(chCaret);
 }
 
 Token* ParserForXMLSchema::processDollar() {
 
 	processNext();
-	return TokenFactory::instance()->createChar(chDollarSign);
+	return getTokenFactory()->createChar(chDollarSign);
 }
 
 Token* ParserForXMLSchema::processPlus(Token* const tok) {
 
 	processNext();
-    return TokenFactory::instance()->createConcat(tok, 
-		                       TokenFactory::instance()->createClosure(tok));
+    return getTokenFactory()->createConcat(tok, 
+		                       getTokenFactory()->createClosure(tok));
 }
 
 Token* ParserForXMLSchema::processStar(Token* const tok) {
 
     processNext();
-    return TokenFactory::instance()->createClosure(tok);
+    return getTokenFactory()->createClosure(tok);
 }
 
 Token* ParserForXMLSchema::processQuestion(Token* const tok) {
 
     processNext();
-    Token* retTok = TokenFactory::instance()->createUnion();
-	retTok->addChild(tok);
-	retTok->addChild(TokenFactory::instance()->createToken(Token::EMPTY));
+
+    TokenFactory* tokFactory = getTokenFactory();
+    Token* retTok = tokFactory->createUnion();
+	retTok->addChild(tok, tokFactory);
+	retTok->addChild(tokFactory->createToken(Token::EMPTY), tokFactory);
 	return retTok;
 }
 
 Token* ParserForXMLSchema::processParen() {
 
     processNext();
-    Token* retTok = TokenFactory::instance()->createParenthesis(parseRegx(), 0);
+    Token* retTok = getTokenFactory()->createParenthesis(parseRegx(), 0);
 
     if (getState() != T_RPAREN) {
-        ThrowXML(RuntimeException, XMLExcepts::Parser_Factor1);
+        ThrowXML(ParseException, XMLExcepts::Parser_Factor1);
     }
 
     processNext();
@@ -146,12 +164,12 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
         isNRange = true;
         processNext();
-        base = TokenFactory::instance()->createRange();
+        base = getTokenFactory()->createRange();
         base->addRange(0, Token::UTF16_MAX);
-        tok = TokenFactory::instance()->createRange();
+        tok = getTokenFactory()->createRange();
 	}
 	else {
-        tok= TokenFactory::instance()->createRange();
+        tok= getTokenFactory()->createRange();
 	}
 
     int type;
@@ -205,7 +223,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                     RangeToken* tok2 = processBacksolidus_pP(ch);
 
                     if (tok2 == 0) {
-						ThrowXML(RuntimeException,XMLExcepts::Parser_Atom5);
+						ThrowXML(ParseException,XMLExcepts::Parser_Atom5);
                     }
 
 					tok->mergeRanges(tok2);
@@ -228,7 +246,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 			tok->subtractRanges(rangeTok);
 
             if (getState() != T_CHAR || getCharData() != chCloseSquare) {
-                ThrowXML(RuntimeException,XMLExcepts::Parser_CC5);
+                ThrowXML(ParseException,XMLExcepts::Parser_CC5);
             }
             break;
         } // end if T_XMLSCHEMA...
@@ -240,10 +258,10 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
             if (type == T_CHAR) {
 
 				if (ch == chOpenSquare)
-					ThrowXML(RuntimeException,XMLExcepts::Parser_CC6);
+					ThrowXML(ParseException,XMLExcepts::Parser_CC6);
 
 				if (ch == chCloseSquare)
-                    ThrowXML(RuntimeException,XMLExcepts::Parser_CC7);
+                    ThrowXML(ParseException,XMLExcepts::Parser_CC7);
             }
 
 			if (getState() != T_CHAR || getCharData() != chDash) {
@@ -253,7 +271,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
 				processNext();
                 if ((type = getState()) == T_EOF)
-					ThrowXML(RuntimeException,XMLExcepts::Parser_CC2);
+					ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
 				if (type == T_CHAR && getCharData() == chCloseSquare) {
 
@@ -271,10 +289,10 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 					if (type == T_CHAR) {
 
 						if (rangeEnd == chOpenSquare)
-							ThrowXML(RuntimeException,XMLExcepts::Parser_CC6);
+							ThrowXML(ParseException,XMLExcepts::Parser_CC6);
 
 						if (rangeEnd == chCloseSquare)
-							ThrowXML(RuntimeException,XMLExcepts::Parser_CC7);
+							ThrowXML(ParseException,XMLExcepts::Parser_CC7);
 					}
 
 					if (type == T_BACKSOLIDUS) {
@@ -290,7 +308,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
     }
 
 	if (getState() == T_EOF)
-		ThrowXML(RuntimeException,XMLExcepts::Parser_CC2);
+		ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
 	tok->sortRanges();
 	tok->compactRanges();
@@ -314,25 +332,25 @@ Token* ParserForXMLSchema::getTokenForShorthand(const XMLInt32 ch) {
 
     switch(ch) {
     case chLatin_d:
-        return TokenFactory::instance()->getRange(fgXMLDigit);
+        return getTokenFactory()->getRange(fgXMLDigit);
     case chLatin_D:
-        return TokenFactory::instance()->getRange(fgXMLDigit, true);
+        return getTokenFactory()->getRange(fgXMLDigit, true);
     case chLatin_w:
-        return TokenFactory::instance()->getRange(fgXMLWord);
+        return getTokenFactory()->getRange(fgXMLWord);
     case chLatin_W:
-        return TokenFactory::instance()->getRange(fgXMLWord, true);
+        return getTokenFactory()->getRange(fgXMLWord, true);
     case chLatin_s:
-        return TokenFactory::instance()->getRange(fgXMLSpace);
+        return getTokenFactory()->getRange(fgXMLSpace);
     case chLatin_S:
-        return TokenFactory::instance()->getRange(fgXMLSpace, true);
+        return getTokenFactory()->getRange(fgXMLSpace, true);
     case chLatin_c:
-        return TokenFactory::instance()->getRange(fgXMLNameChar);
+        return getTokenFactory()->getRange(fgXMLNameChar);
     case chLatin_C:
-        return TokenFactory::instance()->getRange(fgXMLNameChar, true);
+        return getTokenFactory()->getRange(fgXMLNameChar, true);
     case chLatin_i:
-        return TokenFactory::instance()->getRange(fgXMLInitialNameChar);
+        return getTokenFactory()->getRange(fgXMLInitialNameChar);
     case chLatin_I:
-        return TokenFactory::instance()->getRange(fgXMLInitialNameChar, true);
+        return getTokenFactory()->getRange(fgXMLInitialNameChar, true);
     }
 
     return 0;
@@ -344,7 +362,7 @@ Token* ParserForXMLSchema::getTokenForShorthand(const XMLInt32 ch) {
 XMLInt32 ParserForXMLSchema::decodeEscaped() {
 
 	if (getState() != T_BACKSOLIDUS)
-		ThrowXML(RuntimeException,XMLExcepts::Parser_Next1);;
+		ThrowXML(ParseException,XMLExcepts::Parser_Next1);;
 
 	XMLInt32 ch = getCharData();
 
@@ -363,11 +381,11 @@ XMLInt32 ParserForXMLSchema::decodeEscaped() {
 	case chLatin_x:
 	case chLatin_u:
 	case chLatin_v:
-		ThrowXML(RuntimeException,XMLExcepts::Parser_Process1);
+		ThrowXML(ParseException,XMLExcepts::Parser_Process1);
 	case chLatin_A:
 	case chLatin_Z:
 	case chLatin_z:
-		ThrowXML(RuntimeException,XMLExcepts::Parser_Descape5);
+		ThrowXML(ParseException,XMLExcepts::Parser_Descape5);
 	}
 
 	return ch;

@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:21  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:26:41  knoaman
  * Schema: Regular expression handling part II
  *
@@ -65,9 +80,10 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/regx/BlockRangeFactory.hpp>
-#include <util/regx/TokenFactory.hpp>
 #include <util/regx/RangeToken.hpp>
 #include <util/regx/RegxDefs.hpp>
+#include <util/regx/TokenFactory.hpp>
+#include <util/regx/RangeTokenMap.hpp>
 #include <util/XMLString.hpp>
 
 
@@ -291,16 +307,23 @@ void BlockRangeFactory::buildRanges() {
     if (fRangesCreated)
         return;
 
+    if (!fKeywordsInitialized) {
+        initializeKeywordMap();
+    }
+
+    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+    TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
+
     for (int i=0; i < SIZE; i++) {
 
-		RangeToken* tok = TokenFactory::instance()->createRange();
+		RangeToken* tok = tokFactory->createRange();
         tok->addRange(blockRanges[i*2], blockRanges[(i*2)+1]);
 
 		if (XMLString::compareString((XMLCh*)fgBlockNames[i] , (XMLCh*) fgBlockSpecials) == 0) {
             tok->addRange(0xFFF0, 0xFFFd);
         }
 
-		setRangeToken(fgBlockNames[i], tok);
+		rangeTokMap->setRangeToken(fgBlockNames[i], tok);
     }
 
     fRangesCreated = true;
@@ -314,8 +337,10 @@ void BlockRangeFactory::initializeKeywordMap() {
     if (fKeywordsInitialized)
         return;
 
+	RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+
 	for (int i=0; i< SIZE; i++) {
-        addKeywordMap(fgBlockNames[i], fgBlockCategory);
+        rangeTokMap->addKeywordMap(fgBlockNames[i], fgBlockCategory);
     }
 
     fKeywordsInitialized = true;

@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:49  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:22:58  knoaman
  * Schema: Regular expression handling part I
  *
@@ -151,8 +166,8 @@ int Token::getMinLength() const {
 	case LOOKBEHIND:
 	case NEGATIVELOOKBEHIND:
 		return 0; // *****  - REVIST
-	default:
-		throw; //ThrowXML(RuntimeExceptions, ...)
+//	default:
+//		throw;
 	}
 
 	// We should not get here, but we have it to make some compilers happy
@@ -233,8 +248,8 @@ int Token::getMaxLength() const {
     case LOOKBEHIND:
     case NEGATIVELOOKBEHIND:
 		return 0; // REVISIT
-    default:
-		throw; //ThrowXML(RuntimeException, ...)
+//    default:
+//		throw; //ThrowXML(RuntimeException, ...)
     } // end switch
 
 	return -1;
@@ -244,7 +259,8 @@ int Token::getMaxLength() const {
 //  Token: Helper mthods
 // ---------------------------------------------------------------------------
 int Token::analyzeFirstCharacter(RangeToken* const rangeTok, 
-								 const int options)
+								 const int options,
+                                 TokenFactory* const tokFactory)
 {
 	switch(fTokenType) {
 	case CONCAT:
@@ -255,7 +271,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 				Token* tok = getChild(i);
 				if (tok
 					&& (ret=tok->analyzeFirstCharacter(rangeTok,
-                                                       options))!= FC_CONTINUE)
+                                    options, tokFactory))!= FC_CONTINUE)
 					break;
 			}
 			return ret;
@@ -271,7 +287,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 
 			for (unsigned int i=0; i < childSize; i++) {
 
-                ret = getChild(i)->analyzeFirstCharacter(rangeTok, options);
+                ret = getChild(i)->analyzeFirstCharacter(rangeTok, options, tokFactory);
 
 				if (ret == FC_ANY)
 					break;
@@ -282,14 +298,14 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 		}
 	case CONDITION:
 		{
-            int ret1 = getChild(0)->analyzeFirstCharacter(rangeTok, options);
+            int ret1 = getChild(0)->analyzeFirstCharacter(rangeTok, options, tokFactory);
 
             if (size() == 1)
                 return FC_CONTINUE;
 
 			int ret2;
 			if (ret1 != FC_ANY) {
-			    ret2 = getChild(1)->analyzeFirstCharacter(rangeTok, options);  
+			    ret2 = getChild(1)->analyzeFirstCharacter(rangeTok, options, tokFactory);
 			}
 
 			if (ret1 == FC_ANY || ret2 == FC_ANY)
@@ -305,7 +321,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 		{
 			Token* tok = getChild(0);
 			if (tok)
-				tok->analyzeFirstCharacter(rangeTok, options);
+				tok->analyzeFirstCharacter(rangeTok, options, tokFactory);
 			return FC_CONTINUE;
 		}
 	case DOT:
@@ -325,7 +341,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 		{
 			if (isSet(options, RegularExpression::IGNORE_CASE)) {
                 rangeTok->mergeRanges(((RangeToken*) 
-                                         this)->getCaseInsensitiveToken());
+                                         this)->getCaseInsensitiveToken(tokFactory));
 			}
 			else {
 				rangeTok->mergeRanges(this);
@@ -337,12 +353,12 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 			if (isSet(options, RegularExpression::IGNORE_CASE)) {
 
 				RangeToken* caseITok = (((RangeToken*) 
-					                       this)->getCaseInsensitiveToken());
-				rangeTok->mergeRanges(RangeToken::complementRanges(caseITok));
+					                       this)->getCaseInsensitiveToken(tokFactory));
+				rangeTok->mergeRanges(RangeToken::complementRanges(caseITok, tokFactory));
 			}
 			else {
 				rangeTok->mergeRanges(
-					RangeToken::complementRanges((RangeToken*) this));
+					RangeToken::complementRanges((RangeToken*) this, tokFactory));
 			}
 		}
 	case INDEPENDENT:
@@ -350,9 +366,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 		{
 			Token* tok = getChild(0);
 			if (tok)
-				return tok->analyzeFirstCharacter(rangeTok,options);
-			else
-				throw; // ThrowXML(RuntimeException, ...)
+				return tok->analyzeFirstCharacter(rangeTok,options, tokFactory);
 		}
 	case MODIFIERGROUP:
 	case BACKREFERENCE:
@@ -377,8 +391,8 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 	case LOOKBEHIND:
 	case NEGATIVELOOKBEHIND:
 		FC_CONTINUE;
-	default:
-		throw;
+//	default:
+//		throw;
 	}
 
 	return 0;

@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:56  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:26:48  knoaman
  * Schema: Regular expression handling part II
  *
@@ -67,6 +82,7 @@
 #include <util/regx/UnicodeRangeFactory.hpp>
 #include <util/regx/TokenFactory.hpp>
 #include <util/regx/RangeToken.hpp>
+#include <util/regx/RangeTokenMap.hpp>
 #include <util/regx/RegxDefs.hpp>
 #include <util/regx/XMLUniCharacter.hpp>
 
@@ -147,9 +163,16 @@ void UnicodeRangeFactory::buildRanges() {
     if (fRangesCreated)
         return;
 
+    if (!fKeywordsInitialized) {
+        initializeKeywordMap();
+    }
+
+    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+    TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
 	RangeToken* ranges[UNICATEGSIZE];
+
     for (int i=0; i < UNICATEGSIZE; i++) {
-        ranges[i] = TokenFactory::instance()->createRange();
+        ranges[i] = tokFactory->createRange();
     }
 
     for (int j=0; j < 0x10000; j++) {
@@ -173,36 +196,37 @@ void UnicodeRangeFactory::buildRanges() {
 	ranges[XMLUniCharacter::UNASSIGNED]->addRange(0x10000, Token::UTF16_MAX);
 
 	for (int k=0; k < UNICATEGSIZE; k++) {
-        setRangeToken(uniCategNames[k], ranges[k]);
+        rangeTokMap->setRangeToken(uniCategNames[k], ranges[k]);
     }
 
     // Create all range
-	RangeToken* tok = TokenFactory::instance()->createRange();
+	RangeToken* tok = tokFactory->createRange();
 	tok->addRange(0, Token::UTF16_MAX);
-	setRangeToken(fgUniAll, tok);
+	rangeTokMap->setRangeToken(fgUniAll, tok);
 
     // Create alpha range
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     tok->mergeRanges(ranges[XMLUniCharacter::UPPERCASE_LETTER]);
     tok->mergeRanges(ranges[XMLUniCharacter::LOWERCASE_LETTER]);
     tok->mergeRanges(ranges[XMLUniCharacter::OTHER_LETTER]);
-    setRangeToken(fgUniIsAlpha, tok);
+    rangeTokMap->setRangeToken(fgUniIsAlpha, tok);
 
     // Create alpha-num range
-    RangeToken* alnumTok = TokenFactory::instance()->createRange();
+    RangeToken* alnumTok = tokFactory->createRange();
     alnumTok->mergeRanges(tok);
     alnumTok->mergeRanges(ranges[XMLUniCharacter::DECIMAL_DIGIT_NUMBER]);
-    setRangeToken(fgUniIsAlnum, alnumTok);
+    rangeTokMap->setRangeToken(fgUniIsAlnum, alnumTok);
 
     // Create word range
-    tok = TokenFactory::instance()->createRange();
+    tok = tokFactory->createRange();
     tok->mergeRanges(alnumTok);
     tok->addRange(chUnderscore, chUnderscore);
-    setRangeToken(fgUniIsWord, tok);
+    rangeTokMap->setRangeToken(fgUniIsWord, tok);
 
     // Create assigned range
     tok = ranges[XMLUniCharacter::UNASSIGNED];
-    setRangeToken(fgUniAssigned,(RangeToken*)RangeToken::complementRanges(tok));
+    rangeTokMap->setRangeToken(fgUniAssigned,(RangeToken*)RangeToken::complementRanges(tok,
+		          tokFactory));
 
     fRangesCreated = true;
 }
@@ -215,15 +239,17 @@ void UnicodeRangeFactory::initializeKeywordMap() {
     if (fKeywordsInitialized)
         return;
 
+    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+
 	for (int k=0; k < UNICATEGSIZE; k++) {
-        addKeywordMap(uniCategNames[k], fgUnicodeCategory);
+        rangeTokMap->addKeywordMap(uniCategNames[k], fgUnicodeCategory);
     }
 
-	addKeywordMap(fgUniAll, fgUnicodeCategory);
-    addKeywordMap(fgUniIsAlpha, fgUnicodeCategory);
-    addKeywordMap(fgUniIsAlnum, fgUnicodeCategory);
-    addKeywordMap(fgUniIsWord, fgUnicodeCategory);
-    addKeywordMap(fgUniAssigned, fgUnicodeCategory);
+	rangeTokMap->addKeywordMap(fgUniAll, fgUnicodeCategory);
+    rangeTokMap->addKeywordMap(fgUniIsAlpha, fgUnicodeCategory);
+    rangeTokMap->addKeywordMap(fgUniIsAlnum, fgUnicodeCategory);
+    rangeTokMap->addKeywordMap(fgUniIsWord, fgUnicodeCategory);
+    rangeTokMap->addKeywordMap(fgUniAssigned, fgUnicodeCategory);
 
     fKeywordsInitialized = true;
 }

@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <util/XercesDefs.hpp>
 #include <util/RefVectorOf.hpp>
+#include <util/RuntimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -319,68 +320,57 @@ inline const Op* Op::getNextOp() const {
 
 inline int Op::getSize() const {
 
-	//REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline XMLInt32	Op::getData() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline XMLInt32	Op::getData2() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline int	Op::getRefNo() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline const Op* Op::elementAt(int index) const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline const Op* Op::getChild() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline const Op* Op::getConditionFlow() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline const Op* Op::getYesFlow() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 inline const Op* Op::getNoFlow() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 	
 inline const XMLCh* Op::getLiteral() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 	
 inline const Token* Op::getToken() const {
 
-    //REVISIT do we throw an exception
-	return 0;
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
 // ---------------------------------------------------------------------------

@@ -81,6 +81,7 @@ class Token;
 class BMPattern;
 class RangeToken;
 class Match;
+class TokenFactory;
 
 class XMLUTIL_EXPORT RegularExpression {
 public:
@@ -264,6 +265,7 @@ private:
 	static RangeToken* fWordRange;
 	OpFactory          fOpFactory;
 	XMLMutex           fMutex;  
+    TokenFactory*      fTokenFactory;
 };
 
 
@@ -276,6 +278,7 @@ inline void RegularExpression::cleanUp() {
     delete [] fFixedString;
     delete fContext;
     delete fBMPattern;
+    delete fTokenFactory;
 }
 
 // ---------------------------------------------------------------------------

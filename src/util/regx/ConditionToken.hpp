@@ -117,7 +117,7 @@ inline int ConditionToken::getReferenceNo() const {
 inline Token* ConditionToken::getChild(const int index) const {
 
     if (index < 0 || index > 1)
-        throw; //ThrowXML(RuntimeException, ...)
+        ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidChildIndex);
 
     if (index == 0)
         return fYesToken;

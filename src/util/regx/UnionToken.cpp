@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:59  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:23:02  knoaman
  * Schema: Regular expression handling part I
  *
@@ -94,7 +109,7 @@ UnionToken::~UnionToken() {
 // ---------------------------------------------------------------------------
 //  UnionToken: Children manipulation methods
 // ---------------------------------------------------------------------------
-void UnionToken::addChild(Token* const child) {
+void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
 
     if (child == 0)
         return;
@@ -152,7 +167,7 @@ void UnionToken::addChild(Token* const child) {
 			stringBuf.append((XMLCh) ch);
 		}
 
-		previousTok = TokenFactory::instance()->createString(0);
+		previousTok = tokFactory->createString(0);
 		fChildren->setElementAt(previousTok, childSize - 1);
 	}
 	else {

@@ -65,6 +65,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/ArrayIndexOutOfBoundsException.hpp>
+#include <util/RuntimeException.hpp>
 
 /**
   * An instance of this class has ranges captured in matching
@@ -131,7 +132,7 @@ private:
 inline int Match::getNoGroups() const {
 
 	if (fNoGroups < 0)
-		throw; // ThrowXML(IllegalStateException, REGEX_RESULT_NOT_SET)
+		ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
 
 	return fNoGroups;
 }
@@ -139,7 +140,7 @@ inline int Match::getNoGroups() const {
 inline int Match::getStartPos(int index) const {
 
 	if (!fStartPositions)
-		throw; // ThrowXML(IllegalStateException, REGEX_RESULT_NOT_SET)
+		ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
 
 	if (index < 0 || fNoGroups <= index)
 		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
@@ -150,7 +151,7 @@ inline int Match::getStartPos(int index) const {
 inline int Match::getEndPos(int index) const {
 
 	if (!fEndPositions)
-		throw; // ThrowXML(IllegalStateException, REGEX_RESULT_NOT_SET)
+		ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
 
 	if (index < 0 || fNoGroups <= index)
 		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
@@ -164,7 +165,7 @@ inline int Match::getEndPos(int index) const {
 inline void Match::setStartPos(const int index, const int value) {
 
 	if (!fStartPositions)
-		throw; // ThrowXML(IllegalStateException, REGEX_RESULT_NOT_SET)
+        ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
 
 	if (index < 0 || fNoGroups <= index)
 		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
@@ -175,7 +176,7 @@ inline void Match::setStartPos(const int index, const int value) {
 inline void Match::setEndPos(const int index, const int value) {
 
 	if (!fEndPositions)
-		throw; // ThrowXML(IllegalStateException, REGEX_RESULT_NOT_SET)
+        ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
 
 	if (index < 0 || fNoGroups <= index)
 		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);

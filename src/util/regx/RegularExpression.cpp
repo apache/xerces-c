@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:42  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:22:52  knoaman
  * Schema: Regular expression handling part I
  *
@@ -74,6 +89,8 @@
 #include <util/regx/XMLUniCharacter.hpp>
 #include <util/regx/ParserForXMLSchema.hpp>
 #include <util/Janitor.hpp>
+#include <util/ParseException.hpp>
+
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -108,7 +125,6 @@ RegularExpression::Context::Context() :
 	, fMatch(0)
 	, fString(0)
 {
-
 }
 
 RegularExpression::Context::~Context()
@@ -191,7 +207,8 @@ RegularExpression::RegularExpression(const char* const pattern)
 	 fFixedString(0),
 	 fOperations(0),
 	 fTokenTree(0),
-	 fFirstChar(0) 
+	 fFirstChar(0),
+     fTokenFactory(0)
 {
 	try {
 
@@ -302,11 +319,16 @@ RegularExpression::~RegularExpression() {
 void RegularExpression::setPattern(const XMLCh* const pattern,
 								   const XMLCh* const options) {
 
+    fTokenFactory = new TokenFactory();
 	fOptions = parseOptions(options);
 	fPattern = XMLString::replicate(pattern);
 
 	RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE) 
 		? new ParserForXMLSchema() : new RegxParser();
+
+    if (regxParser) {
+        regxParser->setTokenFactory(fTokenFactory);
+    }
 
 	Janitor<RegxParser> janRegxParser(regxParser);
 	fTokenTree = regxParser->parse(fPattern, fOptions);
@@ -516,7 +538,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 			RangeToken* range = fFirstChar;
 
 			if (ignoreCase)
-				range = fFirstChar->getCaseInsensitiveToken();
+				range = fFirstChar->getCaseInsensitiveToken(fTokenFactory);
 
 			for (matchStart=context->fStart; matchStart<=limit; matchStart++) {
 
@@ -958,7 +980,7 @@ bool RegularExpression::matchBackReference(Context* const context,
 										   const bool ignoreCase)
 {
 	if (refNo <=0 || refNo >= fNoGroups)
-		throw; // ThrowXML(..., "Reference no must be more than zero")
+		ThrowXML(IllegalArgumentException, XMLExcepts::Regex_BadRefNo);
 
 	if (context->fMatch->getStartPos(refNo) < 0
 		|| context->fMatch->getEndPos(refNo) < 0)
@@ -1055,7 +1077,7 @@ int RegularExpression::parseOptions(const XMLCh* const options)
 		int v = getOptionValue(options[i]);
 
 		if (v == 0)
-			throw; // ThrowXML(ParseException, "Unknown option {0}", options);
+			ThrowXML1(ParseException, XMLExcepts::Regex_UnknownOption, options);
 
 		opts |= v;
 	}
@@ -1119,7 +1141,7 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
 		ret = compileCondition(token, next, reverse);
 		break;
 	default:
-		//ThrowXML(RuntimeException, "Unknown token type {0}", tokenTypeAsString)
+		ThrowXML(RuntimeException, XMLExcepts::Regex_UnknownTokenType);
 		break; // this line to be deleted
 	}
 
@@ -1150,8 +1172,8 @@ void RegularExpression::prepare() {
 	if (!isSet(fOptions, PROHIBIT_HEAD_CHARACTER_OPTIMIZATION) &&
 		!isSet(fOptions, XMLSCHEMA_MODE))							{
 
-		RangeToken* rangeTok = TokenFactory::instance()->createRange();
-		int result = fTokenTree->analyzeFirstCharacter(rangeTok, fOptions);
+		RangeToken* rangeTok = fTokenFactory->createRange();
+		int result = fTokenTree->analyzeFirstCharacter(rangeTok, fOptions, fTokenFactory);
 
 		if (result == Token::FC_TERMINAL) {
 
@@ -1224,9 +1246,9 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 
 			if (fWordRange == 0) {
 
-				fWordRange = TokenFactory::instance()->getRange(fgUniIsWord);
+				fWordRange = fTokenFactory->getRange(fgUniIsWord);
 				if (fWordRange == 0)
-					throw; //ThrowXML(RuntimeException, "Failed to get {0} RangeToken", fgUniIsWord)
+					ThrowXML1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord);
 			}
 
 			return fWordRange->match(ch) ? WT_LETTER : WT_OTHER;

@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/03 18:17:33  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.2  2001/03/22 13:23:32  knoaman
  * Minor modifications to eliminate compiler warnings.
  *
@@ -68,35 +83,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/regx/RangeFactory.hpp>
-#include <util/regx/RangeToken.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/regx/RegxDefs.hpp>
-#include <stdlib.h>
-
-// ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-RefHashTableOf<RangeTokenElemMap>* RangeFactory::fTokenRegistry = 0;
-RefHashTableOf<RangeFactory>*      RangeFactory::fRangeMap = 0;
-XMLStringPool*                     RangeFactory::fCategories = 0;
-RangeFactory*                      RangeFactory::fInstance = 0;
-bool                               RangeFactory::fRegistryInitialized = false;
-
-
-// ---------------------------------------------------------------------------
-//  RangeTokenElemMap: Constructors and Destructor
-// ---------------------------------------------------------------------------
-RangeTokenElemMap::RangeTokenElemMap(unsigned int categoryId) :
-    fCategoryId(categoryId)
-    , fRange(0)
-    , fNRange(0)
-{
-
-}
-
-RangeTokenElemMap::~RangeTokenElemMap()
-{
-}
 
 // ---------------------------------------------------------------------------
 //  RangeFactory: Constructors and Destructor
@@ -107,151 +93,6 @@ RangeFactory::RangeFactory() {
 
 RangeFactory::~RangeFactory() {
 
-}
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Getter methods
-// ---------------------------------------------------------------------------
-RangeToken* RangeFactory::getRange(const XMLCh* const keyword,
-								   const bool complement) {
-
-	if (fTokenRegistry == 0 || fRangeMap == 0 || fCategories == 0)
-		return 0;
-
-    if (!fTokenRegistry->containsKey(keyword))
-		return 0;
-
-
-	RangeTokenElemMap* elemMap = 0;
-
-	// Use a faux scope to synchronize while we do this
-    {
-        XMLMutexLock lockInit(&fMutex);
-
-		elemMap = fTokenRegistry->get(keyword);
-		RangeToken* rangeTok = 0;
-
-		if (elemMap->getRangeToken() == 0) {
-		
-			unsigned int categId = elemMap->getCategoryId();
-			const XMLCh* categName = fCategories->getValueForId(categId);
-			RangeFactory* rangeFactory = fRangeMap->get(categName);
-
-			if (rangeFactory == 0)
-				return 0;
-
-			rangeFactory->buildRanges();
-		}
-
-		if (complement && ((rangeTok = elemMap->getRangeToken()) != 0)) {
-			elemMap->setRangeToken((RangeToken*)
-									RangeToken::complementRanges(rangeTok),
-									complement);    
-		}        
-    }
-
-	return (elemMap == 0) ? 0 : elemMap->getRangeToken(complement);
-}
-
-void RangeFactory::buildRanges() {
-
-	return;
-}
-
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Putter methods
-// ---------------------------------------------------------------------------
-void RangeFactory::addCategory(const XMLCh* const categoryName) {
-
-    if (fCategories)
-	    fCategories->addOrFind(categoryName);
-}
-
-void RangeFactory::addRangeMap(const XMLCh* const categoryName,
-                               RangeFactory* const rangeFactory) {
-
-    if (fRangeMap)
-	    fRangeMap->put((void*)categoryName, rangeFactory);
-}
-
-void RangeFactory::addKeywordMap(const XMLCh* const keyword,
-                                 const XMLCh* const categoryName) {
-
-    if (fCategories == 0 || fTokenRegistry == 0)
-        return;
-
-	unsigned int categId = fCategories->getId(categoryName);
-
-	if (categId == 0) {
-		throw; // ThrowXML(RuntimeException, "Invalid Category")
-	}
-
-    if (fTokenRegistry->containsKey(keyword)) {
-
-        RangeTokenElemMap* elemMap = fTokenRegistry->get(keyword);
-
-		if (elemMap->getCategoryId() != categId)
-			elemMap->setCategoryId(categId);
-
-		return;
-	}
-
-	fTokenRegistry->put((void*) keyword, new RangeTokenElemMap(categId));
-}
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Setter methods
-// ---------------------------------------------------------------------------
-void RangeFactory::setRangeToken(const XMLCh* const keyword,
-                                 RangeToken* const tok,const bool complement) {
-
-    if (fTokenRegistry == 0)
-		return;
-
-	if (fTokenRegistry->containsKey(keyword)) {
-        fTokenRegistry->get(keyword)->setRangeToken(tok, complement);
-    }
-    else {
-		throw; //ThrowXML(RuntimeException, "Keyword {0} not found")
-	}
-}
-
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Initialization methods
-// ---------------------------------------------------------------------------
-void RangeFactory::initializeRegistry() {
-
-	XMLMutexLock lockInit(&fMutex);
-
-	if (fRegistryInitialized)
-		return;
-
-    fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109, false);
-    fRangeMap = new RefHashTableOf<RangeFactory>(29);
-	fCategories = new XMLStringPool();
-	fRegistryInitialized = true;
-}
-
-
-void RangeFactory::initializeKeywordMap() {
-	// Behavior defined at child level
-}
-
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Instance methods
-// ---------------------------------------------------------------------------
-RangeFactory* RangeFactory::instance() {
-
-	if (!fInstance) {
-
-		fInstance = new RangeFactory();
-		atexit(RangeFactory::cleanUp);
-	}
-	
-    return (fInstance);
 }
 
 /**

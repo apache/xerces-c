@@ -56,6 +56,21 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 18:17:37  knoaman
+ * Some design changes:
+ * o Changed the TokenFactory from a single static instance, to a
+ *    normal class. Each RegularExpression object will have its own
+ *    instance of TokenFactory, and that instance will be passed to
+ *    other classes that need to use a TokenFactory to create Token
+ *    objects (with the exception of RangeTokenMap).
+ * o Added a new class RangeTokenMap to map a the different ranges
+ *    in a given category to a specific RangeFactory object. In the old
+ *    design RangeFactory had dual functionality (act as a Map, and as
+ *    a factory for creating RangeToken(s)). The RangeTokenMap will
+ *    have its own copy of the TokenFactory. There will be only one
+ *    instance of the RangeTokenMap class, and that instance will be
+ *    lazily deleted when XPlatformUtils::Terminate is called.
+ *
  * Revision 1.1  2001/03/02 19:26:46  knoaman
  * Schema: Regular expression handling part II
  *
@@ -66,6 +81,7 @@
 // ---------------------------------------------------------------------------
 #include <util/regx/RangeToken.hpp>
 #include <util/regx/TokenFactory.hpp>
+#include <util/XMLExceptMsgs.hpp>
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -99,15 +115,15 @@ RangeToken::~RangeToken() {
 // ---------------------------------------------------------------------------
 //  RangeToken: Getter methods
 // ---------------------------------------------------------------------------
-RangeToken* RangeToken::getCaseInsensitiveToken() {
+RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) {
 
 	// REVIST
 	// We will not build a token with case insenstive ranges
 	// For now we will return a copy of ourselves.
-	if (fCaseIToken == 0) {
+	if (fCaseIToken == 0 && tokFactory) {
 	
 		bool isNRange = (getTokenType() == NRANGE) ? true : false;
-		RangeToken* lwrToken = TokenFactory::instance()->createRange(isNRange);
+		RangeToken* lwrToken = tokFactory->createRange(isNRange);
 
 		lwrToken->mergeRanges(this);
 		fCaseIToken = lwrToken;
@@ -233,7 +249,7 @@ void RangeToken::compactRanges() {
 				target += 2;
 			}
 			else {
-				throw; //ThrowXML(RuntimeException, "CompactRanges - Internal Error")
+				ThrowXML(RuntimeException, XMLExcepts::Regex_CompactRangesError);
 			}
 		} // inner while
 
@@ -254,7 +270,7 @@ void RangeToken::mergeRanges(const Token *const tok) {
 
 
 	if (tok->getTokenType() != this->getTokenType())
-		throw; //ThrowXML(IllegalArgumentException, "Merge Ranges - Mismatched type")
+		ThrowXML(IllegalArgumentException, XMLExcepts::Regex_MergeRangesTypeMismatch);
 
 	RangeToken* rangeTok = (RangeToken *) tok;
 	
@@ -382,7 +398,7 @@ void RangeToken::subtractRanges(RangeToken* const tok) {
 		}
 		else {
 			delete [] result;
-			throw; //ThrowXML(RuntimeExceptions, "SubtractRanges - Internal Error")
+			ThrowXML(RuntimeException, XMLExcepts::Regex_SubtractRangesError);
 		}
 	} //end while
 
@@ -475,7 +491,7 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
 		else {
 
 			delete [] result;
-			throw; //ThrowXML(RuntimeException, "IntersectRanges - Internal Error")
+			ThrowXML(RuntimeException, XMLExcepts::Regex_IntersectRangesError);
 		}
 	} //end while
 
@@ -489,16 +505,17 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
   * for RANGE: Creates complement.
   * for NRANGE: Creates the same meaning RANGE.
   */
-Token* RangeToken::complementRanges(RangeToken* const tok) {
+Token* RangeToken::complementRanges(RangeToken* const tok,
+                                    TokenFactory* const tokFactory) {
 
 	if (tok->getTokenType() != RANGE && tok->getTokenType() != NRANGE)
-		throw; //ThrowXML(IllegalArgumentException, "Must be RangeToken")
+		ThrowXML(IllegalArgumentException, XMLExcepts::Regex_ComplementRangesInvalidArg);
 
 	tok->sortRanges();
 	tok->compactRanges();
 
 	XMLInt32 lastElem = tok->fRanges[tok->fElemCount - 1];
-	RangeToken* rangeTok = TokenFactory::instance()->createRange();
+	RangeToken* rangeTok = tokFactory->createRange();
 
 	if (tok->fRanges[0] > 0) {
 		rangeTok->addRange(0, tok->fRanges[0] - 1);
