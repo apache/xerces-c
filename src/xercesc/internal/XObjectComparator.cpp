@@ -57,6 +57,9 @@
 /*
  *
  * $Log$
+ * Revision 1.4  2003/12/16 18:42:27  knoaman
+ * fMayMatch is no longer a data member of IC_Field
+ *
  * Revision 1.3  2003/11/12 20:29:05  peiyongz
  * removal of fIDRefList
  *
@@ -874,7 +877,6 @@ bool XObjectComparator::isEquivalent(IC_Field* const lValue
     IS_EQUIVALENT(lValue, rValue)
 
     return (
-             (lValue->fMayMatch == rValue->fMayMatch)  &&
              isEquivalent(lValue->fXPath
                         , rValue->fXPath)              &&
              isEquivalent(lValue->fIdentityConstraint
