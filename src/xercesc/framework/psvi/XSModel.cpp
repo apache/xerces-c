@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/17 18:38:51  neilg
+ * work around HP compiler bug
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -176,9 +179,9 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
     
     // Now loop through all of the NamespaceItem's
     unsigned int numberOfNamespaces = fXSNamespaceItemList->size();
-    for (unsigned int i=0; i<numberOfNamespaces; i++)
+    for (unsigned int j=0; j<numberOfNamespaces; j++)
     {
-        XSNamespaceItem* namespaceItem = fXSNamespaceItemList->elementAt(i);
+        XSNamespaceItem* namespaceItem = fXSNamespaceItemList->elementAt(j);
 
         // First loop through top-level BUILTIN simple type definitions in the grammar...
         // all grammar's would be the same...    
@@ -188,7 +191,7 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
         {
             DatatypeValidator& curSimple = simpleEnum.nextElement();
             XSSimpleTypeDefinition* xsSimple;
-            if (i == 0)
+            if (j == 0)
             {
                 xsSimple = new (fMemoryManager) XSSimpleTypeDefinition(&curSimple, this, fMemoryManager);
                 fXercesToXSMap->put((void *)&curSimple, xsSimple);
