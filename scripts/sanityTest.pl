@@ -71,6 +71,8 @@ system ("SAX2Print");
 system ("SAX2Print -v=never personal.xml");
 system ("SAX2Print personal.xml");
 system ("SAX2Print -p personal-schema.xml");
+system ("SAX2Print personal.xsd");
+system ("SAX2Print -sa personal.xsd");
 
 #  Run MemParse
 system ("MemParse");

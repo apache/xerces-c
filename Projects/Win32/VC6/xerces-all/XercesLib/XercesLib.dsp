@@ -72,7 +72,6 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FR /FD /c
-# SUBTRACT CPP /YX
 # ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -1752,6 +1751,14 @@ SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp
 # End Source File
 # Begin Source File
@@ -2553,6 +2560,10 @@ SOURCE=..\..\..\..\..\src\xercesc\sax2\DefaultHandler.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\sax2\sax2Dummy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\sax2\SAX2XMLFilter.hpp
 # End Source File
 # Begin Source File
 

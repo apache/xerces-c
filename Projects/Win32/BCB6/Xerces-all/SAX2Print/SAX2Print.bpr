@@ -5,7 +5,8 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="..\..\..\..\..\Build\Win32\BCB6\SAX2Print.exe"/>
     <OBJFILES value="..\..\..\..\..\Build\Win32\BCB6\obj\SAX2Print.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2PrintHandlers.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2PrintHandlers.obj
+	  ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2FilterHandlers.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <DEFFILE value=""/>

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/12/24 19:21:46  amassari
+ * Add support for SAX2 filters (jira# 1133)
+ *
  * Revision 1.17  2004/09/08 13:55:33  peiyongz
  * Apache License Version 2.0
  *
@@ -81,6 +84,7 @@
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include "SAX2Print.hpp"
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include "SAX2FilterHandlers.hpp"
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -109,6 +113,7 @@ static bool                     doNamespaces    = true;
 static bool                     doSchema        = true;
 static bool                     schemaFullChecking = false;
 static bool                     namespacePrefixes = false;
+static bool                     sortAttributes  = false;
 
 
 // ---------------------------------------------------------------------------
@@ -132,6 +137,7 @@ static void usage()
              "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
              "    -s          Disable schema processing. Defaults to on.\n"
              "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
+             "    -sa         Print the attributes in alfabetic order. Defaults to off.\n"
              "    -?          Show this help.\n\n"
              "  * = Default if not provided explicitly.\n\n"
              "The parser has intrinsic support for the following encodings:\n"
@@ -249,6 +255,10 @@ int main(int argC, char* argV[])
         {
             namespacePrefixes = true;
         }
+         else if (!strcmp(argV[parmInd], "-sa"))
+        {
+            sortAttributes = true;
+        }
          else
         {
             XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
@@ -272,7 +282,16 @@ int main(int argC, char* argV[])
     //  Create a SAX parser object. Then, according to what we were told on
     //  the command line, set it to validate or not.
     //
-    SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+    SAX2XMLReader* parser;
+    SAX2XMLReader* reader = XMLReaderFactory::createXMLReader();
+    SAX2XMLReader* filter = NULL;
+    if(sortAttributes)
+    {
+        filter=new SAX2SortAttributesFilter(reader);
+        parser=filter;
+    }
+    else
+        parser=reader;
 
     //
     //  Then, according to what we were told on
@@ -337,7 +356,9 @@ int main(int argC, char* argV[])
     //
     //  Delete the parser itself.  Must be done prior to calling Terminate, below.
     //
-    delete parser;
+    delete reader;
+    if(filter)
+        delete filter;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

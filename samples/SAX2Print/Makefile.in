@@ -47,9 +47,9 @@ APP_NAME=SAX2Print
 
 OUTDIR= ${XERCESCOUT}/bin/obj/${APP_NAME}
 EXEC=	${XERCESCOUT}/bin
-OBJS=	${OUTDIR}/SAX2Print.o ${OUTDIR}/SAX2PrintHandlers.o
+OBJS=	${OUTDIR}/SAX2Print.o ${OUTDIR}/SAX2PrintHandlers.o ${OUTDIR}/SAX2FilterHandlers.o
 SRC=	${XERCESCOUT}/samples/${APP_NAME}
-HEADER_FILES=${SRC}/SAX2Print.hpp ${SRC}/SAX2PrintHandlers.hpp
+HEADER_FILES=${SRC}/SAX2Print.hpp ${SRC}/SAX2PrintHandlers.hpp ${SRC}/SAX2FilterHandlers.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -72,6 +72,9 @@ $(OUTDIR)/SAX2Print.o:: ${SRC}/SAX2Print.cpp ${HEADER_FILES}
 
 $(OUTDIR)/SAX2PrintHandlers.o:: ${SRC}/SAX2PrintHandlers.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SAX2PrintHandlers.o ${SRC}/SAX2PrintHandlers.cpp
+
+$(OUTDIR)/SAX2FilterHandlers.o:: ${SRC}/SAX2FilterHandlers.cpp ${HEADER_FILES}
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SAX2FilterHandlers.o ${SRC}/SAX2FilterHandlers.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

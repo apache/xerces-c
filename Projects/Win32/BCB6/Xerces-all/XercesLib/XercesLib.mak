@@ -131,6 +131,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractDOMParser.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMBuilderImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2XMLReaderImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2XMLFilterImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\SAXParser.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XercesDOMParser.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\AllContentModel.obj \

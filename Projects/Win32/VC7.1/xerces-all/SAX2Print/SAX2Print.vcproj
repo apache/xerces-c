@@ -252,6 +252,12 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.hpp">
+		</File>
+		<File
 			RelativePath="..\..\..\..\..\samples\SAX2Print\SAX2Print.cpp">
 		</File>
 		<File

@@ -6,7 +6,8 @@ BCB = $(MAKEDIR)\..
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
 PROJECT = $(TARGETPATH)\SAX2Print.exe
 OBJFILES = $(TARGETPATH)\obj\SAX2Print.obj \
-    $(TARGETPATH)\obj\SAX2PrintHandlers.obj
+    $(TARGETPATH)\obj\SAX2PrintHandlers.obj \
+	$(TARGETPATH)\obj\SAX2FilterHandlers.obj
 RESFILES = 
 MAINSOURCE = SAX2Print.cpp
 RESDEPEN = $(RESFILES)

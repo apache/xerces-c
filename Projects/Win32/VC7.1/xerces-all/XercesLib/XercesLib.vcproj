@@ -1605,6 +1605,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp">
 			</File>
 			<File
@@ -2213,6 +2219,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\sax2\sax2Dummy.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\sax2\SAX2XMLFilter.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\sax2\SAX2XMLReader.hpp">

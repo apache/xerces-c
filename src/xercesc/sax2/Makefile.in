@@ -47,6 +47,7 @@ SAX2_CPP_PUBHEADERS = \
 	LexicalHandler.hpp \
 	DeclHandler.hpp \
 	SAX2XMLReader.hpp \
+	SAX2XMLFilter.hpp \
 	XMLReaderFactory.hpp
 
 SAX2_CPP_PRIVHEADERS =

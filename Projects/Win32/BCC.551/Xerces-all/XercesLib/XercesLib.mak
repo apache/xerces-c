@@ -161,6 +161,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XMLReader.obj \
     $(TARGETPATH)\obj\XMLScanner.obj \
     $(TARGETPATH)\obj\SAX2XMLReaderImpl.obj \
+    $(TARGETPATH)\obj\SAX2XMLFilterImpl.obj \
     $(TARGETPATH)\obj\SAXParser.obj \
     $(TARGETPATH)\obj\DOMAttrImpl.obj \
     $(TARGETPATH)\obj\DOMAttrMapImpl.obj \

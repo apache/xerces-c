@@ -131,6 +131,12 @@
 		<File
 			RelativePath="..\..\..\..\..\samples\SAX2Print\SAX2PrintHandlers.hpp">
 		</File>
+		<File
+			RelativePath="..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.hpp">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

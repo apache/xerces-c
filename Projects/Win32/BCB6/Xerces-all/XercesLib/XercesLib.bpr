@@ -133,6 +133,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractDOMParser.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMBuilderImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2XMLReaderImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2XMLFilterImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXParser.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XercesDOMParser.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\AllContentModel.obj 
@@ -530,6 +531,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\AbstractDOMParser.cpp" FORMNAME="" UNITNAME="AbstractDOMParser" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.cpp" FORMNAME="" UNITNAME="DOMBuilderImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp" FORMNAME="" UNITNAME="SAX2XMLReaderImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.cpp" FORMNAME="" UNITNAME="SAX2XMLFilterImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\SAXParser.cpp" FORMNAME="" UNITNAME="SAXParser" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\XercesDOMParser.cpp" FORMNAME="" UNITNAME="XercesDOMParser" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\common\AllContentModel.cpp" FORMNAME="" UNITNAME="AllContentModel" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
