@@ -75,8 +75,8 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#define PLATFORM_EXPORT
-#define PLATFORM_IMPORT
+#define PLATFORM_EXPORT __declspec(export)
+#define PLATFORM_IMPORT __declspec(import)
 
 
 // ---------------------------------------------------------------------------
@@ -137,9 +137,10 @@ typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Provide some common string ops that are different/notavail for CodeWarrior.
-//	(these routines are defined in CW 8 by extras.h)
+//	(these routines are defined in CW 8 by extras.h, but there is no MachO
+//	library for extras).
 // ---------------------------------------------------------------------------
-#if 0
+#if __MACH__ && __MWERKS__
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
 #endif

@@ -62,9 +62,10 @@
 #include <ctype.h>
 
 // These functions are needed because MacOS doesn't define them
-//	(these routines are defined in CW 8 by extras.h)
+//	(these routines are defined in CW 8 by extras.h, but there is no MachO
+//	library for extras).
 
-#if 0
+#if __MACH__ && __MWERKS__
 // Compare lexigraphically two strings
 int stricmp(const char *s1, const char *s2)
 {
