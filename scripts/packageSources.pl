@@ -21,8 +21,8 @@ $OUTPUTDIR = $opt_o;
 # Check for the environment variables and exit if error
 if (!length($XERCESCROOT) || !length($OUTPUTDIR)) {
         print ("Usage is: packageSources -o<output_directory>\n");
-        print ("Example: perl packageSources.pl -od:\\xerces-c_1_0_0d01\n");
-        print ("         perl packageSources.pl -o\$HOME/xerces-c_1_0_0d01\n");
+        print ("Example: perl packageSources.pl -oc:\\xerces-c_1_1_1\n");
+        print ("         perl packageSources.pl -o\$HOME/xerces-c_1_1_1\n");
         exit(-1);
 }
 
@@ -78,60 +78,9 @@ close (PLATFORM);
 
 print "\nPackaging XERCES-C sources in " . $srctargetdir . " on platform " . $platform . "...\n";
 
-# Build the API docs
-$docppfilelist = "";
-
-# First scan the 'src/sax' directory
-$hppdir = "$XERCESCROOT/src/sax";
-chdir ($hppdir);
-opendir (THISDIR, $hppdir);
-@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
-@allhppfiles = grep(/\.hpp/, @allfiles);
-closedir(THISDIR);
-foreach $hppfile (@allhppfiles) {
-       $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
-}
-
-# Next scan the 'src/dom' directory
-$hppdir = "$XERCESCROOT/src/dom";
-chdir ($hppdir);
-opendir (THISDIR, $hppdir);
-@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
-@allhppfiles = grep(/\.hpp/, @allfiles);
-@alldomhppfiles = grep(/DOM_/, @allhppfiles);
-closedir(THISDIR);
-foreach $hppfile (@alldomhppfiles) {
-   $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
-}
-
-# Next scan the 'src/framework' directory
-$hppdir = "$XERCESCROOT/src/framework";
-chdir ($hppdir);
-opendir (THISDIR, $hppdir);
-@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
-@allhppfiles = grep(/\.hpp/, @allfiles);
-closedir(THISDIR);
-foreach $hppfile (@allhppfiles) {
-       $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
-}
-
-# Add a few more files that we left out
-$docppfilelist = $docppfilelist . " $XERCESCROOT/src/dom/DOMString.hpp";
-$docppfilelist = $docppfilelist . " $XERCESCROOT/src/util/XMLString.hpp";
-$docppfilelist = $docppfilelist . " $XERCESCROOT/src/util/PlatformUtils.hpp";
-$docppfilelist = $docppfilelist . " $XERCESCROOT/src/parsers/DOMParser.hpp";
-$docppfilelist = $docppfilelist . " $XERCESCROOT/src/parsers/SAXParser.hpp";
-
-system ("doc++ -d $XERCESCROOT/doc/html/apiDocs -B $XERCESCROOT/doc/html/apiDocs/tail.html -a -G -k -H -S $docppfilelist");
-
-# Now create the User documentation from the XML sources
-if (length($ICUROOT) > 0) {
-	change_documentation_entities("$XERCESCROOT/doc/entities.ent");
-}
-chdir ("$XERCESCROOT");
-system("createdocs.bat");  # You must have Xerces-Java and Stylebook installed in addition to JDK1.2.2
-
 &package_sources();
+
+exit(0);
 
 sub package_sources {
 
@@ -146,6 +95,15 @@ sub package_sources {
    system ("mkdir $srctargetdir");
    print ("Targetdir is : " . $srctargetdir . "\n");
    system("cp -Rf $XERCESCROOT/* $srctargetdir");
+
+   chdir ("$srctargetdir/doc");
+   system ("doxygen");
+
+   # Now create the User documentation from the XML sources
+   if (length($ICUROOT) > 0) {
+   	change_documentation_entities("$srctargetdir/doc/entities.ent");
+   }
+   system("java org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml $HOME/xml-stylebook/styles/apachexml");  # You must have Xerces-Java and Stylebook installed in addition to JDK1.2.2
 
    if ($platform =~ m/Windows/) {
       $RM = "rm";
@@ -179,7 +137,7 @@ sub package_sources {
       # chdir ("$srctargetdir/samples");
       # system("autoconf"); # Our configure script is special, it has OS390 and AS400 tweaks
    }
-   
+
    # Delete the irrelevant parts before the packaging
    system("$RM -f $srctargetdir/CMVC.GON");
    system("$RM -rf $srctargetdir/*.\$??");
@@ -267,13 +225,13 @@ sub remove_export_clauses()
 sub deleteCVSdirs {
 	local($dir,$nlink) = @_;
 	local($dev,$ino,$mode,$subcount);
-	
+
 	($dev,$ino,$mode,$nlink) = stat($dir) unless $nlink;
-	
+
 	opendir(DIR, $dir) || die "Cannot open $dir";
 	local(@filenames) = readdir(DIR);
 	closedir(DIR);
-	
+
 	if ($nlink == 2) {
 		for (@filenames) {
 			next if $_ eq '.';
@@ -289,10 +247,10 @@ sub deleteCVSdirs {
 			$name = "$dir/$_";
 			# print $name, "\n";
 			next if $subcount == 0;
-			
+
 			($dev,$ino,$mode,$nlink) = lstat($_);
 			next unless -d _;
-			
+
 			if ($name =~ m/CVS/i) {
 				print ("Removing $name ...\n");
 				system("$RM -rf $name");
