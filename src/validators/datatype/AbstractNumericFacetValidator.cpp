@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/12/13 16:48:29  peiyongz
+ * Avoid dangling pointer
+ *
  * Revision 1.5  2001/12/10 22:13:21  peiyongz
  * swap checking to avoid "dangling pointer" reported by BoundsChecker
  *
@@ -132,7 +135,7 @@ AbstractNumericFacetValidator::~AbstractNumericFacetValidator()
         delete fMinExclusive;
 
     //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
+    if (!fEnumerationInherited &&  fEnumeration)
         delete fEnumeration;
 }
 

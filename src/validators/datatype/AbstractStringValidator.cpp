@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/12/13 16:48:29  peiyongz
+ * Avoid dangling pointer
+ *
  * Revision 1.6  2001/10/15 20:57:27  tng
  * Schema: we should propagate the exception thrown from checkContent.
  *
@@ -121,7 +124,7 @@ static XMLCh value2[BUF_LEN+1];
 AbstractStringValidator::~AbstractStringValidator()
 {
     //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
+    if ( !fEnumerationInherited && fEnumeration)
     {
         delete fEnumeration;
         fEnumeration = 0;

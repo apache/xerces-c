@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/12/13 16:48:29  peiyongz
+ * Avoid dangling pointer
+ *
  * Revision 1.8  2001/11/22 20:23:20  peiyongz
  * _declspec(dllimport) and inline warning C4273
  *
@@ -262,7 +265,7 @@ inline void AbstractStringValidator::setEnumeration(RefVectorOf<XMLCh>* enums
 {
     if (enums)
     {
-        if (fEnumeration && !fEnumerationInherited)
+        if ( !fEnumerationInherited && fEnumeration)
             delete fEnumeration;
 
         fEnumeration = enums;

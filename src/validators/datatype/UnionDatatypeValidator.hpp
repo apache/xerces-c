@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/12/13 16:48:29  peiyongz
+ * Avoid dangling pointer
+ *
  * Revision 1.8  2001/09/05 20:49:10  knoaman
  * Fix for complexTypes with mixed content model.
  *
@@ -240,7 +243,7 @@ inline void UnionDatatypeValidator::validate( const XMLCh* const content)
 inline void UnionDatatypeValidator::cleanUp()
 {
     //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
+    if ( !fEnumerationInherited && fEnumeration)
         delete fEnumeration;
 
     if (fMemberTypeValidators)
@@ -257,7 +260,7 @@ inline void UnionDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
 {
     if (enums)
     {
-        if (fEnumeration && !fEnumerationInherited)
+        if (  !fEnumerationInherited && fEnumeration)
             delete fEnumeration;
 
         fEnumeration = enums;
