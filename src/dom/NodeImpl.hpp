@@ -99,21 +99,19 @@ const int null = 0;
 
 class CDOM_EXPORT NodeImpl: public NodeListImpl {
 public:
-    DOMString               value;                  // String value (not used in all nodes)
     bool                    readOnly;
-    DocumentImpl            *ownerDocument;         // Document this node belongs to
+    DocumentImpl            *ownerDocument; // Document this node belongs to
     NodeImpl                *previousSibling;
     NodeImpl                *nextSibling;
     NodeImpl                *ownerNode; // typically the parent but not always!
     int changes;
     void *userData;
 
-    static int              gLiveNodeImpls;         // Counters for debug & tuning.
+    static int              gLiveNodeImpls; // Counters for debug & tuning.
     static int              gTotalNodeImpls;
 
 public:
-    NodeImpl(DocumentImpl *ownerDocument,
-        const DOMString &initValue);
+    NodeImpl(DocumentImpl *ownerDocument);
     NodeImpl(const NodeImpl &other);
     virtual ~NodeImpl();
     

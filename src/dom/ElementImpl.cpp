@@ -70,7 +70,7 @@
 
 
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
-    : NodeContainer(ownerDoc, null)
+    : NodeContainer(ownerDoc)
 {
     name = eName.clone();
     

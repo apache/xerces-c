@@ -67,7 +67,7 @@
 static DOMString *nam;   // Will be lazily initialized to "#document-fragment"
 
 DocumentFragmentImpl::DocumentFragmentImpl(DocumentImpl *masterDoc)
-    : NodeContainer(masterDoc, null)
+    : NodeContainer(masterDoc)
 {
 };
         

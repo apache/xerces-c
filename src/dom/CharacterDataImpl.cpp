@@ -64,19 +64,35 @@
 
 CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc,
                                      const DOMString &data)
-    : NodeImpl(ownerDoc, data)
+    : NodeImpl(ownerDoc)
 {
+    this->data = data.clone();
 };
 
 CharacterDataImpl::CharacterDataImpl(const CharacterDataImpl &other, bool deep)
     : NodeImpl(other)
 {
+    data = other.data.clone();
 };
 
 
 CharacterDataImpl::~CharacterDataImpl() {
 };
 
+
+DOMString CharacterDataImpl::getNodeValue()
+{
+    return data;
+};
+
+
+void CharacterDataImpl::setNodeValue(const DOMString &value)
+{
+    if (readOnly)
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    data = value.clone();
+};
 
 
 void CharacterDataImpl::appendData(const DOMString &data)
@@ -85,7 +101,7 @@ void CharacterDataImpl::appendData(const DOMString &data)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    value.appendData(data);
+    this->data.appendData(data);
 };
 
 
@@ -98,14 +114,14 @@ void CharacterDataImpl::deleteData(unsigned int offset, unsigned int count)
     // Note: the C++ DOMString operation throws the correct DOMExceptions
     //       when parameter values are bad.
     //  
-    value.deleteData(offset, count);
+    data.deleteData(offset, count);
 };
 
 
 
 DOMString &CharacterDataImpl::getData()
 {
-    return value; 
+    return data; 
 };
 
 
@@ -121,7 +137,7 @@ DOMString &CharacterDataImpl::getData()
 //
 unsigned int CharacterDataImpl::getCharDataLength()
 {
-    return value.length();  
+    return data.length();  
 };
 
 
@@ -136,12 +152,13 @@ void CharacterDataImpl::insertData(unsigned int offset, const DOMString &data)
     // Note: the C++ DOMString operation throws the correct DOMExceptions
     //       when parameter values are bad.
     //  
-    value.insertData(offset, data);
+    this->data.insertData(offset, data);
 }
 
 
 
-void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count, const DOMString &data)
+void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count,
+                                    const DOMString &data)
 {
     if (readOnly)
         throw DOM_DOMException(
@@ -156,20 +173,22 @@ void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count, con
 void CharacterDataImpl::setData(const DOMString &arg)
 {
     if (readOnly)
-        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    value = arg.clone();
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    data = arg.clone();
 };
 
 
 
 
 
-DOMString CharacterDataImpl::substringData(unsigned int offset, unsigned int count)
+DOMString CharacterDataImpl::substringData(unsigned int offset,
+                                           unsigned int count)
 {
 
     // Note: the C++ DOMString operation throws the correct DOMExceptions
     //       when parameter values are bad.
     //  
-    return value.substringData(offset, count);
+    return data.substringData(offset, count);
 };
 

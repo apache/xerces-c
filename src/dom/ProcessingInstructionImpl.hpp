@@ -77,7 +77,8 @@ class    DocumentImpl;
 
 class CDOM_EXPORT ProcessingInstructionImpl: public NodeImpl {
 protected:
-    DOMString name;
+    DOMString target;
+    DOMString data;
 
 public:
     ProcessingInstructionImpl(DocumentImpl *ownerDoc,
@@ -87,6 +88,8 @@ public:
                               bool deep=false);
     virtual ~ProcessingInstructionImpl();
     virtual NodeImpl *cloneNode(bool deep);
+    virtual DOMString getNodeValue();
+    virtual void setNodeValue(const DOMString &value);
     virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual DOMString getData();

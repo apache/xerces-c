@@ -67,9 +67,10 @@
 ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *ownerDoc,
                                                      const DOMString &target,
                                                      const DOMString &data)
-    : NodeImpl(ownerDoc,data)
+    : NodeImpl(ownerDoc)
 {
-    name = target.clone();
+    this->target = target.clone();
+    this->data = data.clone();
 };
 
 
@@ -78,7 +79,8 @@ ProcessingInstructionImpl::ProcessingInstructionImpl(
                                         bool deep)
     : NodeImpl(other)
 {
-    name = other.name.clone();
+    target = other.target.clone();
+    data = other.data.clone();
 };
 
 
@@ -95,7 +97,7 @@ NodeImpl *ProcessingInstructionImpl::cloneNode(bool deep)
 
 DOMString ProcessingInstructionImpl::getNodeName()
 {
-    return name;
+    return target;
 };
 
 
@@ -104,9 +106,24 @@ short ProcessingInstructionImpl::getNodeType() {
 };
 
 
+DOMString ProcessingInstructionImpl::getNodeValue()
+{
+    return data.clone();
+};
+
+
+void ProcessingInstructionImpl::setNodeValue(const DOMString &value)
+{
+    if (readOnly)
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    data = value.clone();
+};
+
+
 DOMString ProcessingInstructionImpl::getData()
 {
-    return value.clone();
+    return data.clone();
 };
 
 
@@ -122,7 +139,7 @@ should be directed to. It is defined differently in HTML and XML.
 */
 DOMString ProcessingInstructionImpl::getTarget()
 {
-    return name.clone();
+    return target.clone();
 };
 
 
@@ -134,9 +151,8 @@ DOMString ProcessingInstructionImpl::getTarget()
 */
 void ProcessingInstructionImpl::setData(const DOMString &arg)
 {
-    if(readOnly)
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
-    
-    value = arg;
+    if (readOnly)
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    data = arg.clone();
 };

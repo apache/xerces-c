@@ -65,7 +65,7 @@
 
 CDATASectionImpl::CDATASectionImpl(DocumentImpl *ownerDoc,
                                    const DOMString &data)
-    : TextImpl(ownerDoc,data)
+    : TextImpl(ownerDoc, data)
 {
 };
 

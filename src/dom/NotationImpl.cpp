@@ -87,7 +87,7 @@
 */
 
 NotationImpl::NotationImpl(DocumentImpl *ownerDoc, const DOMString &nName)
-    : NodeImpl(ownerDoc, null)
+    : NodeImpl(ownerDoc)
 {
     name = nName.clone();
 };

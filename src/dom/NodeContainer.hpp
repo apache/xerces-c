@@ -87,8 +87,7 @@ public:
     NodeImpl                *lastChild;
 
 public:
-    NodeContainer(DocumentImpl *ownerDocument,
-                  const DOMString &initValue);
+    NodeContainer(DocumentImpl *ownerDocument);
     NodeContainer(const NodeContainer &other);
     
     virtual NodeImpl *appendChild(NodeImpl *newChild);

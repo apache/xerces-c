@@ -113,7 +113,7 @@ const XMLCh* DocumentImpl::PoolElem::getKey() const
 
 
 DocumentImpl::DocumentImpl()
-    : NodeContainer(null, null)
+    : NodeContainer(null)
 {
     docType=null;
     docElement=null;
@@ -128,7 +128,7 @@ DocumentImpl::DocumentImpl()
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            const DOMString &qualifiedName,
                            DocumentTypeImpl *doctype)
-    : NodeContainer(null, null)
+    : NodeContainer(null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
 	// a doctype can belong to only one DocumentImpl

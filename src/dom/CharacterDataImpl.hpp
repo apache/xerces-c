@@ -77,10 +77,15 @@
 
 class CDOM_EXPORT CharacterDataImpl: public NodeImpl
 {
+protected:
+    DOMString data;
+
 public:
     CharacterDataImpl(DocumentImpl *ownerDocument, const DOMString &data);
     CharacterDataImpl(const CharacterDataImpl &other, bool deep = false);
     virtual ~CharacterDataImpl();
+    virtual DOMString getNodeValue();
+    virtual void setNodeValue(const DOMString &value);
     virtual void appendData(const DOMString &data);
     virtual void deleteData(unsigned int offset, unsigned int count);
     virtual DOMString &getData();

@@ -69,7 +69,7 @@
 #define null 0
 
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
-    : NodeContainer (ownerDoc, DOMString())
+    : NodeContainer (ownerDoc)
 {
     name = aName.clone();
     specified = true;

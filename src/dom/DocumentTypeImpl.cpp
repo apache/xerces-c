@@ -67,7 +67,7 @@
 
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &dtName) 
-    : NodeContainer(ownerDoc,null),
+    : NodeContainer(ownerDoc),
     publicId(null), systemId(null)	//DOM Level 2
 {
     name = dtName.clone();
@@ -82,7 +82,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     const DOMString &fPublicId, const DOMString &fSystemId)
-    : NodeContainer(null, null),
+    : NodeContainer(null),
     publicId(fPublicId), systemId(fSystemId)
 {
     name = qualifiedName.clone();
@@ -98,7 +98,7 @@ DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
 
 
 DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
-: NodeContainer(other)
+    : NodeContainer(other)
 {
     name = other.name.clone();
     if (deep)

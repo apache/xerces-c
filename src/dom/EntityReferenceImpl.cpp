@@ -122,7 +122,7 @@
 
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
                                          const DOMString &entityName)
-    : NodeContainer(ownerDoc, null)
+    : NodeContainer(ownerDoc)
 {
     name = entityName.clone();
     // EntityReference behaves as a read-only node, since its contents

@@ -73,9 +73,8 @@ static DOMString *s_xmlURI = null;
 static DOMString *s_xmlns = null;
 static DOMString *s_xmlnsURI = null;
 
-NodeContainer::NodeContainer(DocumentImpl *ownerDoc,
-                             const DOMString &initValue)
-    : NodeImpl(ownerDoc, initValue)
+NodeContainer::NodeContainer(DocumentImpl *ownerDoc)
+    : NodeImpl(ownerDoc)
 {
     this->firstChild = null;
     this->lastChild  = null;

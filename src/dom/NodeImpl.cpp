@@ -77,12 +77,9 @@ static DOMString *s_xmlURI = null;
 static DOMString *s_xmlns = null;
 static DOMString *s_xmlnsURI = null;
 
-NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
-                   const DOMString &initValue)
+NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 {
     this->ownerDocument=ownerDoc;
-    this->value=initValue.clone();
-    
     this->changes = 0;
     this->userData = null;
     this->readOnly = false;
@@ -98,7 +95,6 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
 NodeImpl::NodeImpl(const NodeImpl &other) {
-    this->value = other.value.clone();
     this->readOnly = false;
     this->ownerDocument = other.ownerDocument;
     this->userData = other.userData;
@@ -219,7 +215,7 @@ NodeImpl * NodeImpl::getNextSibling() {
 
 DOMString NodeImpl::getNodeValue()
 {
-    return value;
+    return null;                // overridden in some subclasses
 };
 
 
@@ -298,21 +294,18 @@ NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
       //    the entire document will be deleted as well.
       RefCountedImpl::removeRef(doc);
   };
-  
-  
-  void NodeImpl::setNodeValue(const DOMString &val)
-  {
-      if (readOnly)
-          throw DOM_DOMException(
-          DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-      
-      // Default behavior, overridden in some subclasses
-      this->value = val.clone();
-  };
-  
-  
 
-  
+
+void NodeImpl::setNodeValue(const DOMString &val)
+{
+    if (readOnly)
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    // Default behavior is to do nothing, overridden in some subclasses
+};
+
+
+
 void NodeImpl::setReadOnly(bool readOnl, bool deep)
 {
     this->readOnly = readOnl;

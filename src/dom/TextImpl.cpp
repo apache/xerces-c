@@ -92,7 +92,7 @@ bool TextImpl::isTextImpl()
 
 NodeImpl *TextImpl::cloneNode(bool deep)
 {
-    return ownerDocument->createTextNode(value);
+    return ownerDocument->createTextNode(data);
 };
 
 
@@ -112,18 +112,18 @@ TextImpl *TextImpl::splitText(unsigned int offset)
         throw DOM_DOMException(
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     }
-	unsigned int len = value.length();
+	unsigned int len = data.length();
     if (offset >= len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
                 
     TextImpl *newText = 
                 (TextImpl *) ownerDocument->createTextNode(
-                        value.substringData(offset, value.length() - offset));
+                        data.substringData(offset, data.length() - offset));
     NodeImpl *parent = getParentNode();
     if (parent != null)
         parent->insertBefore(newText, getNextSibling());
 
-    value = value.substringData(0, offset);
+    data = data.substringData(0, offset);
     return newText;
 };
 
