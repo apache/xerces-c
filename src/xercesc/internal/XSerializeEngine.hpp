@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/16 21:55:18  peiyongz
+ * maintain the same size on both 32/64 bit architecture
+ *
  * Revision 1.11  2004/01/15 23:42:32  peiyongz
  * proper allignment for built-in datatype read/write
  *
@@ -124,7 +127,7 @@ public:
     static int defaultDataLen;
 
 
-    typedef unsigned long   XSerializedObjectId_t;
+    typedef unsigned int   XSerializedObjectId_t;
 
     /***
       *
