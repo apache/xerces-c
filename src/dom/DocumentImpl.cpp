@@ -171,8 +171,11 @@ DocumentImpl::~DocumentImpl()
         ranges = 0;
     }
     
-	if (userData)
-		delete userData;
+    if (userData) {
+        // make sure we won't access userData any further
+        hasUserData(false);
+        delete userData;
+    }
 
     delete namePool;
     // Do not delete docType and docElement pointers here.
