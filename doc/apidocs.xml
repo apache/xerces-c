@@ -17,7 +17,7 @@
 		we recommend you to read these documents.</p>
 
 	    <p>&XercesCName; SAX is an implementation of the
-		<jump href="http://www.megginson.com/SAX/index.html">SAX 1.0/2.0</jump> specification.
+		<jump href="http://sax.sourceforge.net/">SAX 1.0/2.0</jump> specification.
 		You are encouraged to read this document for a better
 		understanding of the SAX API in &XercesCName;.</p>
 
