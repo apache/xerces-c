@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2001/07/08 20:13:04  jberry
+# Simplify file existance checks
+#
 # Revision 1.5  2001/07/08 19:54:35  jberry
 # Fix clean and distclean targets; broken because rm fails if passed no files
 #
@@ -137,7 +140,7 @@ depend:: includes
 
 clean::
 	@echo "Making clean in $(MODULE) ..."
-ifneq ($(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_CPP_OBJECTS)),)
+ifneq ($(strip $(VALIDATORS_CPP_OBJECTS)),)
 	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_CPP_OBJECTS))
 endif
 	cd common ; $(MAKE) $@ ; cd ..
@@ -150,10 +153,10 @@ endif
 distclean:: clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
-ifneq ($(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_CPP_PUBHEADERS)),)
+ifneq ($(strip $(VALIDATORS_CPP_PUBHEADERS)),)
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_CPP_PUBHEADERS))
 endif
-ifneq ($(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_C_FILES)),)
+ifneq ($(strip $(VALIDATORS_C_FILES)),)
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_C_FILES))
 endif
 	cd common ; $(MAKE) $@ ; cd ..
