@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/02/04 19:27:43  knoaman
+ * Performance: use global buffer to eliminate repetitive memory creation/deletion.
+ *
  * Revision 1.19  2003/01/09 19:07:08  tng
  * [Bug 15802] Add "const" qualifier to getURIText.
  *
@@ -204,6 +207,7 @@
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -1953,6 +1957,7 @@ private:
     GrammarResolver*     fGrammarResolver;
     XMLStringPool*       fURIStringPool;
     XMLValidator*        fValidator;
+    XMLBuffer            fElemQNameBuf;
 };
 
 

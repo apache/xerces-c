@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/02/04 19:27:43  knoaman
+ * Performance: use global buffer to eliminate repetitive memory creation/deletion.
+ *
  * Revision 1.14  2003/01/09 19:07:08  tng
  * [Bug 15802] Add "const" qualifier to getURIText.
  *
@@ -854,13 +857,17 @@ void SAXParser::endElement( const   XMLElementDecl& elemDecl
     // Just map to the SAX document handler
     if (fDocHandler) {
         if (fScanner->getDoNamespaces()) {
-            XMLBuffer elemQName;
+
             if (elemPrefix && *elemPrefix) {
-                elemQName.set(elemPrefix);
-                elemQName.append(chColon);
+
+                fElemQNameBuf.set(elemPrefix);
+                fElemQNameBuf.append(chColon);
+                fElemQNameBuf.append(elemDecl.getBaseName());
+                fDocHandler->endElement(fElemQNameBuf.getRawBuffer());
             }
-            elemQName.append(elemDecl.getBaseName());
-            fDocHandler->endElement(elemQName.getRawBuffer());
+            else {
+                fDocHandler->endElement(elemDecl.getBaseName());
+            }
         }
         else
             fDocHandler->endElement(elemDecl.getFullName());
@@ -968,18 +975,26 @@ startElement(   const   XMLElementDecl&         elemDecl
     {
         fAttrList.setVector(&attrList, attrCount);
         if (fScanner->getDoNamespaces()) {
-            XMLBuffer elemQName;
+
             if (elemPrefix && *elemPrefix) {
-                elemQName.set(elemPrefix);
-                elemQName.append(chColon);
+
+                fElemQNameBuf.set(elemPrefix);
+                fElemQNameBuf.append(chColon);
+                fElemQNameBuf.append(elemDecl.getBaseName());
+                fDocHandler->startElement(fElemQNameBuf.getRawBuffer(), fAttrList);
+
+                // If its empty, send the end tag event now
+                if (isEmpty)
+                    fDocHandler->endElement(fElemQNameBuf.getRawBuffer());
             }
-            elemQName.append(elemDecl.getBaseName());
+            else {
 
-            fDocHandler->startElement(elemQName.getRawBuffer(), fAttrList);
+                fDocHandler->startElement(elemDecl.getBaseName(), fAttrList);
 
-            // If its empty, send the end tag event now
-            if (isEmpty)
-                fDocHandler->endElement(elemQName.getRawBuffer());
+                // If its empty, send the end tag event now
+                if (isEmpty)
+                    fDocHandler->endElement(elemDecl.getBaseName());
+            }
         }
         else {
             fDocHandler->startElement(elemDecl.getFullName(), fAttrList);
