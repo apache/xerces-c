@@ -982,3 +982,29 @@ Options:
 Test Run Successfully
 Test Run Successfully
 Test Run Successfully
+No input XML file specified on command line.
+usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...
+     -v             Use validating parser.  Non-validating is default.
+     -n             Enable namespace processing. Defaults to off.
+     -s             Enable schema processing. Defaults to off.
+     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX.
+     -quiet         Suppress periodic status display.
+     -verbose       Display extra messages.
+     -reuse         Retain and reuse parser.  Default creates new for each parse.
+     -threads nnn   Number of threads.  Default is 2.
+     -time nnn      Total time to run, in seconds.  Default is forever.
+     -dump          Dump DOM tree on error.
+     -mem           Read files into memory once only, and parse them from there.
+
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully

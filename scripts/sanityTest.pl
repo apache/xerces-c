@@ -199,4 +199,19 @@ system ("InitTermTest personal.xml");
 system ("InitTermTest -n -s personal-schema.xml");
 system ("InitTermTest -n -s -f personal-schema.xml");
 
+#  Run ThreadTest
+system ("ThreadTest");
+system ("ThreadTest -parser=sax -quiet -threads 10 -time 20 personal.xml");
+system ("ThreadTest -parser=dom -quiet -threads 10 -time 20 personal.xml");
+system ("ThreadTest -parser=idom -quiet -threads 10 -time 20 personal.xml");
+system ("ThreadTest -parser=sax -v -quiet -threads 10 -time 20 personal.xml");
+system ("ThreadTest -parser=dom -v -quiet -threads 10 -time 20 personal.xml");
+system ("ThreadTest -parser=idom -v -quiet -threads 10 -time 20 personal.xml");
+system ("ThreadTest -parser=sax -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=dom -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=idom -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=sax -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=dom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=idom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+
 chdir "..".$pathsep."..";
