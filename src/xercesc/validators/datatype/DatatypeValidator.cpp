@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/09/30 21:32:23  peiyongz
+ * AnyURI, Base64, HexBin, NOTATION, List and QName
+ *
  * Revision 1.8  2003/09/30 18:17:53  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -384,14 +387,12 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             break;
         case AnyURI:
             AnyURIDatatypeValidator* anyuridv;
-            //TODO
-            //serEng>>anyuridv;
+            serEng>>anyuridv;
             fBaseValidator = anyuridv;
             break;
         case QName: 
             QNameDatatypeValidator* qnamedv;
-            //TODO
-            //serEng>>qnamedv;
+            serEng>>qnamedv;
             fBaseValidator = qnamedv;
             break;
         case Name: 
@@ -430,14 +431,12 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             break;
         case HexBinary:  
             HexBinaryDatatypeValidator* hexbinarydv;
-            //TODO
-            //serEng>>hexbinarydv;
+            serEng>>hexbinarydv;
             fBaseValidator = hexbinarydv;
             break;
         case Base64Binary: 
             Base64BinaryDatatypeValidator* base64binarydv;
-            //TODO
-            //serEng>>base64binarydv;
+            serEng>>base64binarydv;
             fBaseValidator = base64binarydv;
             break;
         case Duration:     
@@ -511,14 +510,12 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             break;
         case NOTATION:     
             NOTATIONDatatypeValidator* notationdv;
-            //TODO
-            //serEng>>notationdv;
+            serEng>>notationdv;
             fBaseValidator = notationdv;
             break;
         case List:          
             ListDatatypeValidator* listdv;
-            //TODO
-            //serEng>>listdv;
+            serEng>>listdv;
             fBaseValidator = listdv;
             break;
         case Union:         
