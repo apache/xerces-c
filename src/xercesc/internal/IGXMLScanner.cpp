@@ -1025,7 +1025,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
                 for (int i = oldCount - 1; i >= 0; i--) {
 
                     XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                    matcher->endElement(*(topElem->fThisElement));
+                    matcher->endElement(*(topElem->fThisElement), fContent.getRawBuffer());
                 }
 
                 if (fMatcherStack->size() > 0) {
@@ -1040,14 +1040,8 @@ void IGXMLScanner::scanEndTag(bool& gotData)
                     XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
                     IdentityConstraint* ic = matcher->getIdentityConstraint();
 
-                    if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
-
-                        matcher->endDocumentFragment();
+                    if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
                         fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-                    }
-                    else if (!ic) {
-                        matcher->endDocumentFragment();
-                    }
                 }
 
                 // now handle keyref's...
@@ -1063,8 +1057,6 @@ void IGXMLScanner::scanEndTag(bool& gotData)
                         if (values) { // nothing to do if nothing matched!
                             values->endDcocumentFragment(fValueStoreCache);
                         }
-
-                        matcher->endDocumentFragment();
                     }
                 }
 
@@ -1928,6 +1920,9 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  ever be false if this is the root and its empty.
     gotData = true;
 
+    // Reset element content buffer
+    fContent.reset();
+
     //  The current position is after the open bracket, so we need to read in
     //  in the element name.
     if (!fReaderMgr.getName(fQNameBuf))
@@ -2437,7 +2432,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     for (int i = oldCount - 1; i >= 0; i--) {
 
                         XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                        matcher->endElement(*elemDecl);
+                        matcher->endElement(*elemDecl, fContent.getRawBuffer());
                     }
 
                     if (fMatcherStack->size() > 0) {
@@ -2452,14 +2447,8 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
                         IdentityConstraint* ic = matcher->getIdentityConstraint();
 
-                        if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
-
-                            matcher->endDocumentFragment();
+                        if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
                             fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-                        }
-                        else if (!ic) {
-                            matcher->endDocumentFragment();
-                        }
                     }
 
                     // now handle keyref's...
@@ -2475,8 +2464,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                             if (values) { // nothing to do if nothing matched!
                                 values->endDcocumentFragment(fValueStoreCache);
                             }
-
-                            matcher->endDocumentFragment();
                         }
                     }
 

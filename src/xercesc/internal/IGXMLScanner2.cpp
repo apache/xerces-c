@@ -965,11 +965,8 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                     // call all active identity constraints
-                    unsigned int count = fMatcherStack->getMatcherCount();
-
-                    for (unsigned int i = 0; i < count; i++) {
-                        fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
-                    }
+                    if (fMatcherStack->getMatcherCount())
+                        fContent.append(toFill.getRawBuffer(), toFill.getLen());
 
                     if (fDocHandler)
                         fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
@@ -1010,11 +1007,8 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                     // call all active identity constraints
-                    unsigned int count = fMatcherStack->getMatcherCount();
-
-                    for (unsigned int i = 0; i < count; i++) {
-                        fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
-                    }
+                    if (fMatcherStack->getMatcherCount())
+                        fContent.append(toFill.getRawBuffer(), toFill.getLen());
 
                     if (fDocHandler)
                         fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
@@ -1031,11 +1025,8 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
         // call all active identity constraints
         if (fGrammarType == Grammar::SchemaGrammarType) {
 
-            unsigned int count = fMatcherStack->getMatcherCount();
-
-            for (unsigned int i = 0; i < count; i++) {
-                fMatcherStack->getMatcherAt(i)->docCharacters(toSend.getRawBuffer(), toSend.getLen());
-            }
+            if (fMatcherStack->getMatcherCount())
+                fContent.append(toSend.getRawBuffer(), toSend.getLen());
         }
 
         // Always assume its just char data if not validating
@@ -1953,12 +1944,8 @@ void IGXMLScanner::scanCDSection()
         {
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
-                // call all active identity constraints
-                unsigned int count = fMatcherStack->getMatcherCount();
-
-                for (unsigned int i = 0; i < count; i++) {
-                    fMatcherStack->getMatcherAt(i)->docCharacters(bbCData.getRawBuffer(), bbCData.getLen());
-                }
+                if (fMatcherStack->getMatcherCount())
+                    fContent.append(bbCData.getRawBuffer(), bbCData.getLen());
             }
 
             // If we have a doc handler, call it

@@ -89,7 +89,7 @@ public:
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     XPathMatcher(XercesXPath* const xpath);
-    XPathMatcher(XercesXPath* const xpath, const bool shouldBufferContent,
+    XPathMatcher(XercesXPath* const xpath,
                  IdentityConstraint* const ic);
     virtual ~XPathMatcher();
 
@@ -104,23 +104,32 @@ public:
     /**
       * Returns true if XPath has been matched.
       */
-    bool isMatched();
+    int isMatched();
     virtual int getInitialDepth() const;
 
     // -----------------------------------------------------------------------
     //  XMLDocumentHandler methods
     // -----------------------------------------------------------------------
     virtual void startDocumentFragment();
-    virtual void endDocumentFragment();
     virtual void startElement(const XMLElementDecl& elemDecl,
                               const unsigned int urlId,
                               const XMLCh* const elemPrefix,
                               const RefVectorOf<XMLAttr>& attrList,
                               const unsigned int attrCount);
-    virtual void endElement(const XMLElementDecl& elemDecl);
-    virtual void docCharacters(const XMLCh* const chars, const unsigned int length);
+    virtual void endElement(const XMLElementDecl& elemDecl,
+                            const XMLCh* const elemContent);
 
 protected:
+
+    enum
+    {
+        XP_MATCHED = 1        // matched any way
+        , XP_MATCHED_A = 3    // matched on the attribute axis
+        , XP_MATCHED_D = 5    // matched on the descendant-or-self axixs
+        , XP_MATCHED_DP = 13  // matched some previous (ancestor) node on the
+                              // descendant-or-self-axis, but not this node
+    };
+
     // -----------------------------------------------------------------------
     //  Match methods
     // -----------------------------------------------------------------------
@@ -133,25 +142,15 @@ protected:
                          DatatypeValidator* const dv, const bool isNil);
 
 private:
+
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
     void init(XercesXPath* const xpath);
     void cleanUp();
 
-    /**
-      * Clears the match values.
-      */
-    void clear();
-
     // -----------------------------------------------------------------------
     //  Data members
-    //
-    //  fShouldBufferContent
-    //      Application preference to buffer content or not.
-    //
-    //  fBufferContent
-    //      True, if we should buffer character content at this time.
     //
     //  fMatched
     //      Indicates whether XPath has been matched or not
@@ -174,19 +173,14 @@ private:
     //      The identity constraint we're the matcher for.  Only used for
     //      selectors.
     //
-    //  fMatchedBuffer
-    //      To hold match text.
     // -----------------------------------------------------------------------
-    bool                             fShouldBufferContent;
-    bool                             fBufferContent;
     unsigned int                     fLocationPathSize;
-    bool*                            fMatched;
+    int*                             fMatched;
     int*                             fNoMatchDepth;
     int*                             fCurrentStep;
     RefVectorOf<ValueStackOf<int> >* fStepIndexes;
     RefVectorOf<XercesLocationPath>* fLocationPaths;
     IdentityConstraint*              fIdentityConstraint;
-    XMLBuffer                        fMatchedBuffer;
 };
 
 // ---------------------------------------------------------------------------

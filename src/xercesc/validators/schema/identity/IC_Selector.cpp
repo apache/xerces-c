@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/13 16:30:19  knoaman
+ * [Bug 14469] Validator doesn't enforce xsd:key.
+ *
  * Revision 1.3  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -94,7 +97,7 @@ SelectorMatcher::SelectorMatcher(XercesXPath* const xpath,
                                  IC_Selector* const selector,
                                  FieldActivator* const fieldActivator,
                                  const int initialDepth)
-    : XPathMatcher(xpath, false, selector->getIdentityConstraint())
+    : XPathMatcher(xpath, selector->getIdentityConstraint())
     , fInitialDepth(initialDepth)
     , fElementDepth(0)
     , fMatchedDepth(-1)
@@ -123,7 +126,9 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
     fElementDepth++;
 
     // activate the fields, if selector is matched
-    if (fMatchedDepth == -1 && isMatched()) {
+    int matched = isMatched();
+    if ((fMatchedDepth == -1 && ((matched & XP_MATCHED) == XP_MATCHED))
+        || ((matched & XP_MATCHED_D) == XP_MATCHED_D)) {
 
         IdentityConstraint* ic = fSelector->getIdentityConstraint();
         int count = ic->getFieldCount();
@@ -133,17 +138,16 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
 
         for (int i = 0; i < count; i++) {
 
-            IC_Field* field = ic->getFieldAt(i);
-            XPathMatcher* matcher = fFieldActivator->activateField(field, fInitialDepth);
-
+            XPathMatcher* matcher = fFieldActivator->activateField(ic->getFieldAt(i), fInitialDepth);
             matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
         }
     }
 }
 
-void SelectorMatcher::endElement(const XMLElementDecl& elemDecl) {
+void SelectorMatcher::endElement(const XMLElementDecl& elemDecl,
+                                 const XMLCh* const elemContent) {
 
-    XPathMatcher::endElement(elemDecl);
+    XPathMatcher::endElement(elemDecl, elemContent);
 
     if (fElementDepth-- == fMatchedDepth) {
 

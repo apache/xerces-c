@@ -971,7 +971,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
             for (int i = oldCount - 1; i >= 0; i--) {
 
                 XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                matcher->endElement(*(topElem->fThisElement));
+                matcher->endElement(*(topElem->fThisElement), fContent.getRawBuffer());
             }
 
             if (fMatcherStack->size() > 0) {
@@ -986,14 +986,8 @@ void SGXMLScanner::scanEndTag(bool& gotData)
                 XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
                 IdentityConstraint* ic = matcher->getIdentityConstraint();
 
-                if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
-
-                    matcher->endDocumentFragment();
+                if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
                     fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-                }
-                else if (!ic) {
-                    matcher->endDocumentFragment();
-                }
             }
 
             // now handle keyref's...
@@ -1009,8 +1003,6 @@ void SGXMLScanner::scanEndTag(bool& gotData)
                     if (values) { // nothing to do if nothing matched!
                         values->endDcocumentFragment(fValueStoreCache);
                     }
-
-                    matcher->endDocumentFragment();
                 }
             }
 
@@ -1081,6 +1073,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //  Assume we will still have data until proven otherwise. It will only
     //  ever be false if this is the root and its empty.
     gotData = true;
+
+    // Reset element content
+    fContent.reset();
 
     //  The current position is after the open bracket, so we need to read in
     //  in the element name.
@@ -1546,7 +1541,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 for (int i = oldCount - 1; i >= 0; i--) {
 
                     XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                    matcher->endElement(*elemDecl);
+                    matcher->endElement(*elemDecl, fContent.getRawBuffer());
                 }
 
                 if (fMatcherStack->size() > 0) {
@@ -1561,14 +1556,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
                     IdentityConstraint* ic = matcher->getIdentityConstraint();
 
-                    if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
-
-                        matcher->endDocumentFragment();
+                    if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
                         fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-                    }
-                    else if (!ic) {
-                        matcher->endDocumentFragment();
-                    }
                 }
 
                 // now handle keyref's...
@@ -1584,8 +1573,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                         if (values) { // nothing to do if nothing matched!
                             values->endDcocumentFragment(fValueStoreCache);
                         }
-
-                        matcher->endDocumentFragment();
                     }
                 }
 
@@ -2699,11 +2686,8 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                 // call all active identity constraints
-                unsigned int count = fMatcherStack->getMatcherCount();
-
-                for (unsigned int i = 0; i < count; i++) {
-                    fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
-                }
+                if (fMatcherStack->getMatcherCount())
+                    fContent.append(toFill.getRawBuffer(), toFill.getLen());
 
                 if (fDocHandler)
                     fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
@@ -2736,11 +2720,8 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                 // call all active identity constraints
-                unsigned int count = fMatcherStack->getMatcherCount();
-
-                for (unsigned int i = 0; i < count; i++) {
-                    fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
-                }
+                if (fMatcherStack->getMatcherCount())
+                    fContent.append(toFill.getRawBuffer(), toFill.getLen());
 
                 if (fDocHandler)
                     fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
@@ -2754,11 +2735,8 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
     else
     {
         // call all active identity constraints
-        unsigned int count = fMatcherStack->getMatcherCount();
-
-        for (unsigned int i = 0; i < count; i++) {
-            fMatcherStack->getMatcherAt(i)->docCharacters(toSend.getRawBuffer(), toSend.getLen());
-        }
+        if (fMatcherStack->getMatcherCount())
+            fContent.append(toSend.getRawBuffer(), toSend.getLen());
 
         // Always assume its just char data if not validating
         if (fDocHandler)
@@ -3439,11 +3417,8 @@ void SGXMLScanner::scanCDSection()
                 emitError(XMLErrs::Expected2ndSurrogateChar);
 
             // call all active identity constraints
-            unsigned int count = fMatcherStack->getMatcherCount();
-
-            for (unsigned int i = 0; i < count; i++) {
-                fMatcherStack->getMatcherAt(i)->docCharacters(bbCData.getRawBuffer(), bbCData.getLen());
-            }
+            if (fMatcherStack->getMatcherCount())
+                fContent.append(bbCData.getRawBuffer(), bbCData.getLen());
 
             // If we have a doc handler, call it
             if (fDocHandler)

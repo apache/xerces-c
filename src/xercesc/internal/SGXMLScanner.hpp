@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/01/13 16:30:18  knoaman
+ * [Bug 14469] Validator doesn't enforce xsd:key.
+ *
  * Revision 1.1  2002/12/05 16:19:27  knoaman
  * Initial check-in.
  *
@@ -286,6 +289,7 @@ private :
     unsigned int                fElemStateSize;
     unsigned int*               fElemState;
     ElemStack                   fElemStack;
+    XMLBuffer                   fContent;
     ValueHashTableOf<XMLCh>*    fEntityTable;
     RefVectorOf<KVStringPair>*  fRawAttrList;
     SchemaGrammar*              fSchemaGrammar;

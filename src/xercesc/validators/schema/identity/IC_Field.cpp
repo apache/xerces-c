@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/13 16:30:19  knoaman
+ * [Bug 14469] Validator doesn't enforce xsd:key.
+ *
  * Revision 1.2  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -84,7 +87,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 FieldMatcher::FieldMatcher(XercesXPath* const xpath, IC_Field* const aField,
                            ValueStore* const valueStore)
-    : XPathMatcher(xpath, true, 0)
+    : XPathMatcher(xpath, 0)
     , fField(aField)
     , fValueStore(valueStore)
 {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/01/13 16:30:19  knoaman
+ * [Bug 14469] Validator doesn't enforce xsd:key.
+ *
  * Revision 1.4  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -92,16 +95,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XPathMatcher: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XPathMatcher::XPathMatcher(XercesXPath* const xpath)
-    : fShouldBufferContent(false)
-    , fBufferContent(false)
-    , fLocationPathSize(0)
+    : fLocationPathSize(0)
     , fMatched(0)
     , fNoMatchDepth(0)
     , fCurrentStep(0)
     , fStepIndexes(0)
     , fLocationPaths(0)
     , fIdentityConstraint(0)
-    , fMatchedBuffer(128)
 {
     try {
         init(xpath);
@@ -115,16 +115,14 @@ XPathMatcher::XPathMatcher(XercesXPath* const xpath)
 
 
 XPathMatcher::XPathMatcher(XercesXPath* const xpath,
-                           const bool shouldBufferContent,
                            IdentityConstraint* const ic)
-    : fShouldBufferContent(shouldBufferContent)
-    , fLocationPathSize(0)
+    : fLocationPathSize(0)
     , fMatched(0)
     , fNoMatchDepth(0)
     , fCurrentStep(0)
+    , fStepIndexes(0)
     , fLocationPaths(0)
     , fIdentityConstraint(ic)
-    , fMatchedBuffer(0)
 {
     try {
         init(xpath);
@@ -157,7 +155,7 @@ void XPathMatcher::init(XercesXPath* const xpath) {
             fStepIndexes = new RefVectorOf<ValueStackOf<int> >(fLocationPathSize);
             fCurrentStep = new int[fLocationPathSize];
             fNoMatchDepth = new int[fLocationPathSize];
-            fMatched = new bool[fLocationPathSize];
+            fMatched = new int[fLocationPathSize];
 
             for(unsigned int i=0; i < fLocationPathSize; i++) {
                 fStepIndexes->addElement(new ValueStackOf<int>(8));
@@ -166,30 +164,18 @@ void XPathMatcher::init(XercesXPath* const xpath) {
     }
 }
 
-void XPathMatcher::clear() {
-
-        fBufferContent = false;
-        fMatchedBuffer.reset();
-
-        for(int i = 0; i < (int) fLocationPathSize; i++)
-            fMatched[i] = false;
-
-}
 
 // ---------------------------------------------------------------------------
 //  XPathMatcher: XMLDocumentHandler methods
 // ---------------------------------------------------------------------------
 void XPathMatcher::startDocumentFragment() {
 
-    // reset state
-    clear();
-
     for(unsigned int i = 0; i < fLocationPathSize; i++) {
 
         fStepIndexes->elementAt(i)->removeAllElements();
         fCurrentStep[i] = 0;
         fNoMatchDepth[i] = 0;
-        fMatched[i] = false;
+        fMatched[i] = 0;
     }
 }
 
@@ -206,9 +192,13 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
         fStepIndexes->elementAt(i)->push(startStep);
 
         // try next xpath, if not matching
-        if (fMatched[i] || fNoMatchDepth[i] > 0) {
+        if ((fMatched[i] & XP_MATCHED_D) == XP_MATCHED || fNoMatchDepth[i] > 0) {
             fNoMatchDepth[i]++;
             continue;
+        }
+
+        if((fMatched[i] & XP_MATCHED_D) == XP_MATCHED_D) {
+            fMatched[i] = XP_MATCHED_DP;
         }
 
         // consume self::node() steps
@@ -222,14 +212,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
         if (fCurrentStep[i] == stepSize) {
 
-            fMatched[i] = true;
-            int j=0;
-
-            for(; j<i && !fMatched[j]; j++) ;
-
-            if(j==i)
-                fBufferContent = fShouldBufferContent;
-
+            fMatched[i] = XP_MATCHED;
             continue;
         }
 
@@ -244,6 +227,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
             fCurrentStep[i]++;
         }
 
+        bool sawDescendant = fCurrentStep[i] > descendantStep;
         if (fCurrentStep[i] == stepSize) {
 
             fNoMatchDepth[i]++;
@@ -279,13 +263,14 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
         if (fCurrentStep[i] == stepSize) {
 
-            fMatched[i] = true;
-            int j=0;
+            if (sawDescendant) {
 
-            for(; j<i && !fMatched[j]; j++) ;
-
-            if(j==i)
-                fBufferContent = fShouldBufferContent;
+                fCurrentStep[i] = descendantStep;
+                fMatched[i] = XP_MATCHED_D;
+            }
+            else {
+                fMatched[i] = XP_MATCHED;
+            }
 
             continue;
         }
@@ -309,10 +294,10 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
                         if (fCurrentStep[i] == stepSize) {
 
-                            fMatched[i] = true;
+                            fMatched[i] = XP_MATCHED_A;
                             int j=0;
 
-                            for(; j<i && !fMatched[j]; j++) ;
+                            for(; j<i && ((fMatched[j] & XP_MATCHED) != XP_MATCHED); j++) ;
 
                             if(j == i) {
 
@@ -326,7 +311,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
                 }
             }
 
-            if (!fMatched[i]) {
+            if ((fMatched[i] & XP_MATCHED) != XP_MATCHED) {
 
                 if(fCurrentStep[i] > descendantStep) {
 
@@ -340,23 +325,13 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
     }
 }
 
-void XPathMatcher::docCharacters(const XMLCh* const chars,
-                                 const unsigned int length) {
-
-    // collect match content
-    // so long as one of our paths is matching, store the content
-    for(int i=0; i < (int) fLocationPathSize; i++) {
-
-        if (fBufferContent && fNoMatchDepth[i] == 0) {
-            fMatchedBuffer.append(chars, length);
-            break;
-        }
-    }
-}
-
-void XPathMatcher::endElement(const XMLElementDecl& elemDecl) {
+void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
+                              const XMLCh* const elemContent) {
 
     for(int i = 0; i < (int) fLocationPathSize; i++) {
+
+        // go back a step
+        fCurrentStep[i] = fStepIndexes->elementAt(i)->pop();
 
         // don't do anything, if not matching
         if (fNoMatchDepth[i] > 0) {
@@ -366,47 +341,35 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl) {
         else {
 
             int j=0;
+            for(; j<i && ((fMatched[j] & XP_MATCHED) != XP_MATCHED); j++) ;
 
-            for(; j<i && !fMatched[j]; j++) ;
-
-            if (j < i)
+            if (j < i || (fMatched[j] == 0)
+                || ((fMatched[j] & XP_MATCHED_A) == XP_MATCHED_A))
 				continue;
 
-            if (fBufferContent) {
+            DatatypeValidator* dv = ((SchemaElementDecl*) &elemDecl)->getDatatypeValidator();
+            bool isNillable = (((SchemaElementDecl *) &elemDecl)->getMiscFlags() & SchemaSymbols::NILLABLE) != 0;
 
-                DatatypeValidator* dv = ((SchemaElementDecl*) &elemDecl)->getDatatypeValidator();
-                bool isNillable = (((SchemaElementDecl *) &elemDecl)->getMiscFlags() & SchemaSymbols::NILLABLE) != 0;
-
-                fBufferContent = false;
-                matched(fMatchedBuffer.getRawBuffer(), dv, isNillable);
-            }
-
-            clear();
+            matched(elemContent, dv, isNillable);
+            fMatched[i] = 0;
         }
-
-        // go back a step
-        fCurrentStep[i] = fStepIndexes->elementAt(i)->pop();
     }
-}
-
-void XPathMatcher::endDocumentFragment() {
-
-    clear();
 }
 
 
 // ---------------------------------------------------------------------------
 //  XPathMatcher: Match methods
 // ---------------------------------------------------------------------------
-bool XPathMatcher::isMatched() {
+int XPathMatcher::isMatched() {
 
     // xpath has been matched if any one of the members of the union have matched.
     for (int i=0; i < (int) fLocationPathSize; i++) {
-        if (fMatched[i])
-            return true;
+        if (((fMatched[i] & XP_MATCHED) == XP_MATCHED)
+            && ((fMatched[i] & XP_MATCHED_DP) != XP_MATCHED_DP))
+            return fMatched[i];
     }
 
-    return false;
+    return 0;
 }
 
 void XPathMatcher::matched(const XMLCh* const content,
