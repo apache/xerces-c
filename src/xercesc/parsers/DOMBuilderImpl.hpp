@@ -814,6 +814,11 @@ private :
     //
     //  fCharsetOverridesXMLEncoding
     //      Indicates if the "charset-overrides-xml-encoding" is set or not
+    //
+    //  fUserAdoptsDocument
+    //      The DOMDocument ownership has been transferred to application
+    //      If set to true, the parser does not own the document anymore
+    //      and thus will not release its memory.
     //-----------------------------------------------------------------------
     bool                        fAutoValidation;
     bool                        fValidation;
@@ -821,6 +826,7 @@ private :
     DOMErrorHandler*            fErrorHandler;
     DOMBuilderFilter*           fFilter;
     bool                        fCharsetOverridesXMLEncoding;
+    bool                        fUserAdoptsDocument;
 };
 
 

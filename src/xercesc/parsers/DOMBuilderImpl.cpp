@@ -96,6 +96,7 @@ AbstractDOMParser(valToAdopt)
 , fEntityResolver(0)
 , fFilter(0)
 , fCharsetOverridesXMLEncoding(true)
+, fUserAdoptsDocument(false)
 {
     // dom spec has different default from scanner's default, so set explicitly
     getScanner()->setNormalizeData(false);
@@ -207,9 +208,9 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     else if (XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0)
     {
         if(state)
-            adoptDocument();
+            fUserAdoptsDocument = true;
         else
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+            fUserAdoptsDocument = false;
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
@@ -317,7 +318,7 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
         return getScanner()->getCalculateSrcOfs();
     }
     else if(XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) {
-        return isDocumentAdopted();
+        return fUserAdoptsDocument;
     }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
@@ -336,6 +337,7 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
         (XMLString::compareIString(name, XMLUni::fgDOMValidateIfSchema) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgDOMWhitespaceInElementContent) == 0) ||
+        (XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)) {
         return true;
     }
@@ -347,8 +349,7 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
             return true;
     }
     else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) {
+             XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ) {
         if (state)
             return true;
     }
@@ -420,19 +421,28 @@ DOMDocument* DOMBuilderImpl::parse(const DOMInputSource& source)
     Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false);
 
     AbstractDOMParser::parse(isWrapper);
-    return getDocument();
+    if (fUserAdoptsDocument)
+        return adoptDocument();
+    else
+        return getDocument();
 }
 
 DOMDocument* DOMBuilderImpl::parseURI(const XMLCh* const systemId)
 {
     AbstractDOMParser::parse(systemId);
-    return getDocument();
+    if (fUserAdoptsDocument)
+        return adoptDocument();
+    else
+        return getDocument();
 }
 
 DOMDocument* DOMBuilderImpl::parseURI(const char* const systemId)
 {
     AbstractDOMParser::parse(systemId);
-    return getDocument();
+    if (fUserAdoptsDocument)
+        return adoptDocument();
+    else
+        return getDocument();
 }
 
 void DOMBuilderImpl::parseWithContext(const DOMInputSource& source,
