@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -73,7 +73,6 @@
 #include <dom/DOM_DocumentType.hpp>
 #include <validators/DTD/DTDElementDecl.hpp>
 #include <validators/DTD/DTDValidator.hpp>
-#include <util/NameIdPool.hpp>
 
 class EntityResolver;
 class ErrorHandler;
@@ -136,7 +135,7 @@ public :
     //@}
 
     /** Reset the parser
-      * 
+      *
       * This method resets the state of the DOM driver and makes
       * it ready for a fresh parse run.
       */
@@ -146,7 +145,7 @@ public :
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
- 
+
     /** @name Getter methods */
     //@{
 
@@ -275,7 +274,7 @@ public :
 
     /** Get the 'to create MXLDecl node' flag.
       *
-      * This method returns the state of the parser's to create XMLDecl 
+      * This method returns the state of the parser's to create XMLDecl
       * DOM Node flag.
       *
       * @return 'true' if the toCreateXMLDeclTypeNode flag is set on
@@ -415,7 +414,7 @@ public :
 
     /**
       * This method allows users to set the toCreateXMLDeclTypeNode flag
-      * by this parser. By setting it to 'true' user can have XMLDecl type 
+      * by this parser. By setting it to 'true' user can have XMLDecl type
       * nodes attached to the DOM tree.
       *
       * <p>The parser's default state is: false </p>
@@ -424,7 +423,7 @@ public :
       *
       */
     void setToCreateXMLDeclTypeNode(const bool create);
-    
+
     //@}
 
 
@@ -733,7 +732,7 @@ public :
       *                  the system id scanned by the parser.
       * @param toFill    A pointer to a buffer in which the application
       *                  processed system id is stored.
-      * @return 'true', if any processing is done, 'false' otherwise. 
+      * @return 'true', if any processing is done, 'false' otherwise.
       */
     virtual bool expandSystemId
     (
@@ -781,7 +780,7 @@ public :
       * implementation.</font></b>
       *
       * @param inputSource A const reference to the InputSource object
-      *                    which points to the external entity 
+      *                    which points to the external entity
       *                    being parsed.
       */
     virtual void startInputSource(const InputSource& inputSource);
@@ -933,7 +932,7 @@ public :
       * along with as many attribute nodes as required. This new element
       * is added appended as a child of the current node in the tree, and
       * then replaces it as the current node (if the isEmpty flag is false.)
-      * 
+      *
       * @param elemDecl A const reference to the object containing element
       *                 declaration information.
       * @param urlId    An id referring to the namespace prefix, if
@@ -1111,7 +1110,7 @@ public :
         , const XMLCh* const    encodingStr
     );
 
-	
+
     //@}
 
 
@@ -1215,12 +1214,12 @@ private :
     //      in fDocument
     //
     //  fOldDocTypeHandler
-    //      Used to chain the old documentType node if the user has set it 
+    //      Used to chain the old documentType node if the user has set it
     //      from outside
     //
     //  fToCreateXMLDecTypeNode
     //      A flag to create a DOM_XMLDecl node in the ODM tree if it exists
-    //      This is an extension to xerces implementation 
+    //      This is an extension to xerces implementation
     //
     // -----------------------------------------------------------------------
     DOM_Node                fCurrentParent;
