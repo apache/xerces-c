@@ -1182,10 +1182,13 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
      else
     {
         // call all active identity constraints
-        unsigned int count = fMatcherStack->getMatcherCount();
+        if (fGrammarType == Grammar::SchemaGrammarType) {
 
-        for (unsigned int i = 0; i < count; i++) {
-            fMatcherStack->getMatcherAt(i)->docCharacters(toSend.getRawBuffer(), toSend.getLen());
+            unsigned int count = fMatcherStack->getMatcherCount();
+
+            for (unsigned int i = 0; i < count; i++) {
+                fMatcherStack->getMatcherAt(i)->docCharacters(toSend.getRawBuffer(), toSend.getLen());
+            }
         }
 
         // Always assume its just char data if not validating
@@ -2128,11 +2131,14 @@ void XMLScanner::scanCDSection()
         //
         if (nextCh == chCloseSquare && fReaderMgr.skippedString(CDataClose))
         {
-            // call all active identity constraints
-            unsigned int count = fMatcherStack->getMatcherCount();
+            if (fGrammarType == Grammar::SchemaGrammarType) {
 
-            for (unsigned int i = 0; i < count; i++) {
-                fMatcherStack->getMatcherAt(i)->docCharacters(bbCData.getRawBuffer(), bbCData.getLen());
+                // call all active identity constraints
+                unsigned int count = fMatcherStack->getMatcherCount();
+
+                for (unsigned int i = 0; i < count; i++) {
+                    fMatcherStack->getMatcherAt(i)->docCharacters(bbCData.getRawBuffer(), bbCData.getLen());
+                }
             }
 
             // If we have a doc handler, call it
