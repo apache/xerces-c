@@ -195,15 +195,6 @@ public :
       */
     const EntityResolver* getEntityResolver() const;
 
-    /** Get a const reference to the underlying scanner
-      *
-      * This method returns a reference to the underlying scanner object.
-      * It allows read only access to data maintained in the scanner.
-      *
-      * @return A const reference to the underlying scanner object.
-      */
-    const XMLScanner& getScanner() const;
-
     /** Get a const reference to the validator
       *
       * This method returns a reference to the parser's installed
@@ -1407,11 +1398,6 @@ inline bool DOMParser::getCreateEntityReferenceNodes() const
 inline bool DOMParser::getIncludeIgnorableWhitespace() const
 {
     return fIncludeIgnorableWhitespace;
-}
-
-inline const XMLScanner& DOMParser::getScanner() const
-{
-    return *fScanner;
 }
 
 inline bool DOMParser::getToCreateXMLDeclTypeNode() const

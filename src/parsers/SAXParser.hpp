@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/06/23 14:13:16  tng
+ * Remove getScanner from the Parser headers as this is not needed and Scanner is not internal class.
+ *
  * Revision 1.16  2001/06/03 19:26:20  jberry
  * Add support for querying error count following parse; enables simple parse without requiring error handler.
  *
@@ -236,14 +239,6 @@ public :
       * @return A const pointer to the installed error handler object.
       */
     const ErrorHandler* getErrorHandler() const;
-
-    /**
-      * This method returns a reference to the underlying scanner object.
-      * It allows read only access to data maintained in the scanner.
-      *
-      * @return A const reference to the underlying scanner object.
-      */
-    const XMLScanner& getScanner() const;
 
     /**
       * This method returns a reference to the parser's installed
@@ -1471,11 +1466,6 @@ inline ErrorHandler* SAXParser::getErrorHandler()
 inline const ErrorHandler* SAXParser::getErrorHandler() const
 {
     return fErrorHandler;
-}
-
-inline const XMLScanner& SAXParser::getScanner() const
-{
-    return *fScanner;
 }
 
 #endif
