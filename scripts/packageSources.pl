@@ -161,14 +161,16 @@ sub package_sources {
       system("find $srctargetdir -name \"*.dep\" -print -exec rm -f {} \\;");
       system("find $srctargetdir -name \"*.mak\" -print -exec rm -f {} \\;");
 
+      print "Changing directory permissions of the following files ...\n";
       # Change the directory permissions
-      system ("chmod 644 `find $srctargetdir -type f`");
-      system ("chmod 755 `find $srctargetdir -type d`");
+      system ("chmod 644 `find $srctargetdir -type f -print`");
+      system ("chmod 755 `find $srctargetdir -type d -print`");
+
       # Change the script file permissions
-      system ("chmod 755 $srctargetdir/src/runConfigure $srctargetdir/src/configure $srctargetdir/src/install-sh");
-      system ("chmod 755 $srctargetdir/src/config.sub $srctargetdir/src/config.guess");
-      system ("chmod 755 $srctargetdir/samples/runConfigure $srctargetdir/samples/configure $srctargetdir/samples/install-sh");
-      system ("chmod 755 $srctargetdir/samples/config.sub $srctargetdir/samples/config.guess");
+      system ("chmod 755 `find $srctargetdir -name runConfigure -print`");
+      system ("chmod 755 `find $srctargetdir -name configure -print`");
+      system ("chmod 755 `find $srctargetdir -name install-sh -print`");
+
       # To make sure that configure script is updated, run autoconf
       # chdir ("$srctargetdir/src");
       # system("autoconf"); # Our configure script is special, it has OS390 and AS400 tweaks
