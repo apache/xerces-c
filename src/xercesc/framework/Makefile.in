@@ -55,8 +55,11 @@
 #
 #
 # $Log$
-# Revision 1.1  2002/02/01 22:21:50  peiyongz
-# Initial revision
+# Revision 1.2  2002/05/28 22:40:46  peiyongz
+# DOM3 Save Interface: DOMWriter/DOMWriterFilter
+#
+# Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
+# sane_include
 #
 # Revision 1.11  2001/07/06 17:11:56  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
@@ -125,7 +128,9 @@ MODULE = framework
 FRAMEWORK_CPP_PUBHEADERS = \
 	LocalFileInputSource.hpp \
 	MemBufInputSource.hpp \
+	MemBufFormatTarget.hpp \
 	StdInInputSource.hpp \
+	StdOutFormatTarget.hpp \
 	URLInputSource.hpp \
 	XMLAttDef.hpp \
 	XMLAttDefList.hpp \
@@ -154,7 +159,9 @@ FRAMEWORK_C_FILES =
 FRAMEWORK_CPP_OBJECTS = \
 	LocalFileInputSource.$(TO) \
 	MemBufInputSource.$(TO) \
+	MemBufFormatTarget.$(TO) \
 	StdInInputSource.$(TO) \
+	StdOutFormatTarget.$(TO) \
 	URLInputSource.$(TO) \
 	XMLAttDef.$(TO) \
 	XMLAttr.$(TO) \

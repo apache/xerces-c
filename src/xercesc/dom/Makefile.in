@@ -105,7 +105,9 @@ DOM_CPP_PUBHEADERS = \
 	DOMRange.hpp \
 	DOMRangeException.hpp \
 	DOMText.hpp \
-	DOMTreeWalker.hpp
+	DOMTreeWalker.hpp \
+	DOMWriter.hpp \
+	DOMWriterFilter.hpp
 
 DOM_CPP_PRIVHEADERS =
 

@@ -868,6 +868,14 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileInputSource.Hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\MemBufFormatTarget.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\MemBufFormatTarget.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\MemBufInputSource.cpp
 # End Source File
 # Begin Source File
@@ -881,6 +889,14 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\StdInInputSource.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\framework\StdInInputSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\StdOutFormatTarget.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\StdOutFormatTarget.hpp
 # End Source File
 # Begin Source File
 
@@ -2187,6 +2203,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp
 # End Source File
 # Begin Source File
@@ -2797,6 +2821,22 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMText.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMTreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.hpp
 # End Source File
 # End Group
 # Begin Source File

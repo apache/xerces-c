@@ -113,6 +113,7 @@ DOM_IMPL_CPP_PRIVHEADERS =  \
 	DOMStringPool.hpp \
 	DOMTextImpl.hpp \
 	DOMTreeWalkerImpl.hpp \
+	DOMWriterImpl.hpp \
 	XSDElementNSImpl.hpp
 
 DOM_IMPL_C_FILES = \
@@ -151,6 +152,7 @@ DOM_IMPL_CPP_OBJECTS = \
 	DOMStringPool.$(TO) \
 	DOMTextImpl.$(TO) \
 	DOMTreeWalkerImpl.$(TO) \
+	DOMWriterImpl.$(TO) \
 	XSDElementNSImpl.$(TO)
 
 

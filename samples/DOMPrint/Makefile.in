@@ -82,9 +82,9 @@ APP_NAME=DOMPrint
 
 OUTDIR= ${XERCESCROOT}/bin/obj/${APP_NAME}
 EXEC=	${XERCESCROOT}/bin
-OBJS=	${OUTDIR}/DOMPrint.o ${OUTDIR}/DOMTreeErrorReporter.o
+OBJS=	${OUTDIR}/DOMPrint.o ${OUTDIR}/DOMTreeErrorReporter.o ${OUTDIR}/DOMPrintFilter.o
 SRC=	${XERCESCROOT}/samples/${APP_NAME}
-HEADER_FILES=${SRC}/DOMTreeErrorReporter.hpp
+HEADER_FILES=${SRC}/DOMTreeErrorReporter.hpp ${SRC}/DOMPrintFilter.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -108,6 +108,9 @@ $(OUTDIR)/DOMPrint.o:: ${SRC}/DOMPrint.cpp ${HEADER_FILES}
 $(OUTDIR)/DOMTreeErrorReporter.o:: ${SRC}/DOMTreeErrorReporter.cpp ${HEADER_FILES}
 	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/DOMTreeErrorReporter.o ${SRC}/DOMTreeErrorReporter.cpp
 
+$(OUTDIR)/DOMPrintFilter.o:: ${SRC}/DOMPrintFilter.cpp ${HEADER_FILES}
+	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/DOMPrintFilter.o ${SRC}/DOMPrintFilter.cpp
+	
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
 
