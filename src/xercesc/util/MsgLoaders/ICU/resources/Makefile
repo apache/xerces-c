@@ -24,7 +24,7 @@ all : $(TARGETS)
 	@echo All targets are up to date
 
 clean :
-	-erase $(TARGETS)
+	-rm -f $(TARGETS)
 
 $(PKGNAME)_en_US.res : en_US.txt
 	$(GENRB) $(GENRBOPT) $?
