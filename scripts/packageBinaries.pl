@@ -230,7 +230,7 @@ if ($platform eq "win64bit" )
 
     if ($opt_m =~ m/icu/i) {
         pchdir ("$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources");    	
-        psystem("copy XercesMessages.DLL $BUILDDIR");
+        psystem("copy XercesMessages*.DLL $BUILDDIR");
         pchdir ($targetdir);        
     }
     
@@ -334,7 +334,7 @@ if ($platform eq "win64bit" )
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
             psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\XercesMessage*.res $targetdir\\msg");
-            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\XercesMessages*.dll $targetdir\\bin");
+            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\XercesMessages*.DLL $targetdir\\bin");
             psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\XercesMessages*.lib $targetdir\\lib");
         }        	
 
@@ -635,7 +635,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
 
     if ($opt_m =~ m/icu/i) {
         pchdir ("$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources");    	
-        psystem("cp -fv XercesMessages*.dll $BUILDDIR");
+        psystem("cp -fv XercesMessages*.DLL $BUILDDIR");
         psystem("cp -fv XercesMessages*.lib $BUILDDIR");
         pchdir ($targetdir);                
     }
@@ -739,7 +739,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
             psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
-            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.dll $targetdir/bin");
+            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.DLL $targetdir/bin");
             psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.lib $targetdir/lib");
         }        	
 

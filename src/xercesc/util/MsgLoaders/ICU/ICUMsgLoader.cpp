@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/03/17 19:28:05  peiyongz
+ * Build versioned XercesMessages on Windows
+ *
  * Revision 1.15  2003/03/09 16:41:20  peiyongz
  * PanicHandler
  *
@@ -164,7 +167,11 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  will then  be able to fetch resources from the data.
  */
 
+#if defined(_WIN32) || defined(WIN32)
+extern "C" void U_IMPORT *XercesMessages2_3_0_dat;
+#else
 extern "C" void U_IMPORT *XercesMessages_dat;
+#endif
 
 /* 
  *  Tell ICU where our resource data is located in memory. The data lives in the XercesMessages dll, and we just
@@ -184,7 +191,11 @@ static void setAppData()
     {
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
+#if defined(_WIN32) || defined(WIN32)
+        udata_setAppData("XercesMessages", &XercesMessages2_3_0_dat, &err);
+#else
         udata_setAppData("XercesMessages", &XercesMessages_dat, &err);
+#endif        
         if (U_SUCCESS(err))
         {
     	    setAppDataOK = true;

@@ -13,8 +13,7 @@
 #           the corresponding .res file must be added to this list,
 #    . AND to the file res-file-list.txt
 #
-#  If built versioned dll/lib directly, then we need to change the
-#  the symbol, XercesMessages_dat to XercesMessages2_2_0_dat.
+#  keep synchronous with ICUMsgLoader.cpp
 #
 
 # for VER
@@ -23,10 +22,8 @@ include ..\..\..\..\..\..\version.incl
 RESFILES= en_US.res 
 
 PKGNAME       = XercesMessages
-TARGET_DLL    = $(PKGNAME).DLL
-TARGET_LIB    = $(PKGNAME).lib
-TAR_VER_DLL   = $(PKGNAME)$(VER).dll
-TAR_VER_LIB   = $(PKGNAME)$(VER).lib
+TARGET_DLL    = $(PKGNAME)$(VER).DLL
+TARGET_LIB    = $(PKGNAME)$(VER).lib
 
 GENRB    = $(ICUROOT)\bin\genrb.exe
 PKGDATA  = $(ICUROOT)\bin\pkgdata
@@ -53,6 +50,5 @@ REN      = ren
 all: $(TARGET_DLL)
 
 $(TARGET_DLL): $(RESFILES)
-	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt
-	$(REN) $(TARGET_DLL) $(TAR_VER_DLL)
-	$(REN) $(TARGET_LIB) $(TAR_VER_LIB)
+	$(PKGDATA) --name $(PKGNAME)$(VER) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt
+
