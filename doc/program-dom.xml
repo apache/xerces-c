@@ -269,6 +269,7 @@
     #include &lt;xercesc/dom/DOM.hpp>
     #include &lt;xercesc/sax/HandlerBase.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
+    #include &lt;xercesc/util/PlatformUtils.hpp>
 
     int main (int argc, char* args[]) {
 
@@ -303,7 +304,7 @@
             return -1;
         }
         catch (const DOMException&amp; toCatch) {
-            char* message = XMLString::transcode(toCatch.getMessage());
+            char* message = XMLString::transcode(toCatch.msg);
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
             delete [] message;
@@ -603,6 +604,7 @@
     <source>
     #include &lt;xercesc/dom/DOM.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
+    #include &lt;xercesc/util/PlatformUtils.hpp>
 
     int main (int argc, char* args[]) {
 
@@ -651,7 +653,7 @@
             return -1;
         }
         catch (const DOMException&amp; toCatch) {
-            char* message = XMLString::transcode(toCatch.getMessage());
+            char* message = XMLString::transcode(toCatch.msg);
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
             delete [] message;
@@ -1169,6 +1171,7 @@
     <source>
     #include &lt;xercesc/dom/DOM.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
+    #include &lt;xercesc/util/PlatformUtils.hpp>
 
     int serializeDOM(DOMNode* node) {
 
@@ -1210,7 +1213,7 @@
             return -1;
         }
         catch (const DOMException&amp; toCatch) {
-            char* message = XMLString::transcode(toCatch.getMessage());
+            char* message = XMLString::transcode(toCatch.msg);
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
             delete [] message;
