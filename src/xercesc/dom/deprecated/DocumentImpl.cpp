@@ -122,7 +122,6 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
 	setDocumentType(doctype);
 	
     docElement=null;
-    appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
     namePool    = new DStringPool(257);
     iterators   = 0;
     treeWalkers = 0;
@@ -131,6 +130,7 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     ranges      = 0;
     fChanges = 0;
     errorChecking = true;
+    appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
 }
 
 void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
