@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/01/25 21:34:45  roddey
+ * Added support for the two new panic errors.
+ *
  * Revision 1.9  2000/01/22 00:03:47  roddey
  * Added a check for a broken pipe error on file read. This allows folks to support
  * a pipe as an input source and not die when the other side drops the sending
@@ -175,6 +178,10 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
         reasonStr = "Unknown message domain";
     else if (reason == Panic_CantLoadMsgDomain)
         reasonStr = "Cannot load message domain";
+    else if (reason == Panic_SynchronizationErr)
+        reasonStr = "A system synchronization error occured";
+    else if (reason == Panic_SystemInit)
+        reasonStr = "Failed to complete platfrom dependent initialization";
 
     //
     //  We just do a popup and exit. Replace this code to do whatever
