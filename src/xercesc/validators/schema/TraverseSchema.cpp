@@ -8763,8 +8763,8 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     // next is the namespaces on the elem
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
     int              attrCount = eltAttrs->getLength();
-
-    for (int j = 0; j < attrCount; j++) 
+    int j;
+    for (j = 0; j < attrCount; j++) 
     {
         DOMNode*     attribute = eltAttrs->item(j);
         const XMLCh* attName = attribute->getNodeName();
@@ -8799,7 +8799,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     eltAttrs = fSchemaInfo->getRoot()->getAttributes();
     attrCount = eltAttrs->getLength();
 
-    for (int j = 0; j < attrCount; j++) 
+    for (j = 0; j < attrCount; j++) 
     {
         DOMNode*     attribute = eltAttrs->item(j);
         if (!attribute) {
