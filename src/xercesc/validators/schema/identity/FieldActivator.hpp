@@ -69,7 +69,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/ValueHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -101,10 +101,16 @@ public:
     FieldActivator& operator =(const FieldActivator& other);
 
     // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    bool getMayMatch(IC_Field* const field);
+
+    // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setValueStoreCache(ValueStoreCache* const other);
     void setMatcherStack(XPathMatcherStack* const matcherStack);
+    void setMayMatch(IC_Field* const field, bool value);
 
 	// -----------------------------------------------------------------------
     //  Activation methods
@@ -131,11 +137,20 @@ private:
     // -----------------------------------------------------------------------
     //  Data
     // -----------------------------------------------------------------------
-    ValueStoreCache*   fValueStoreCache;
-    XPathMatcherStack* fMatcherStack;
-    MemoryManager*     fMemoryManager;
+    ValueStoreCache*        fValueStoreCache;
+    XPathMatcherStack*      fMatcherStack;
+    ValueHashTableOf<bool>* fMayMatch;
+    MemoryManager*          fMemoryManager;
 };
 
+
+// ---------------------------------------------------------------------------
+//  FieldActivator: Getter methods
+// ---------------------------------------------------------------------------
+inline bool FieldActivator::getMayMatch(IC_Field* const field) {
+
+    return fMayMatch->get(field);
+}
 
 // ---------------------------------------------------------------------------
 //  FieldActivator: Setter methods
@@ -149,6 +164,11 @@ inline void
 FieldActivator::setMatcherStack(XPathMatcherStack* const matcherStack) {
 
     fMatcherStack = matcherStack;
+}
+
+inline void FieldActivator::setMayMatch(IC_Field* const field, bool value) {
+
+    fMayMatch->put(field, value);
 }
 
 XERCES_CPP_NAMESPACE_END

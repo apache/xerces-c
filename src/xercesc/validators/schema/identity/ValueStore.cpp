@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/16 18:41:15  knoaman
+ * Make IC_Field stateless
+ *
  * Revision 1.7  2003/05/18 14:02:09  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -94,6 +97,7 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
+#include <xercesc/validators/schema/identity/FieldActivator.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
@@ -132,7 +136,14 @@ void ValueStore::addValue(IC_Field* const field,
                           DatatypeValidator* const dv,
                           const XMLCh* const value) {
 
-    if (!field->getMayMatch() && fDoReportError) {
+}
+
+void ValueStore::addValue(FieldActivator* const fieldActivator,
+                          IC_Field* const field,
+                          DatatypeValidator* const dv,
+                          const XMLCh* const value) {
+
+    if (!fieldActivator->getMayMatch(field) && fDoReportError) {
         fScanner->getValidator()->emitError(XMLValid::IC_FieldMultipleMatch);
     }
 

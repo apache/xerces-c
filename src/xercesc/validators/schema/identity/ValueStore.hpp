@@ -94,27 +94,36 @@ public:
                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ValueStore();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     IdentityConstraint* getIdentityConstraint() const;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
     void append(const ValueStore* const other);
     void startValueScope();
     void endValueScope();
-    void addValue(IC_Field* const field, DatatypeValidator* const dv,
+    void addValue(FieldActivator* const fieldActivator,
+                  IC_Field* const field,
+                  DatatypeValidator* const dv,
                   const XMLCh* const value);
     bool contains(const FieldValueMap* const other);
 
-	// -----------------------------------------------------------------------
+    /**
+      * @deprecated
+      */
+    void addValue(IC_Field* const field, DatatypeValidator* const dv,
+                  const XMLCh* const value);
+
+
+    // -----------------------------------------------------------------------
     //  Document handling methods
     // -----------------------------------------------------------------------
     void endDcocumentFragment(ValueStoreCache* const valueStoreCache);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Error reporting methods
     // -----------------------------------------------------------------------
     void duplicateValue();

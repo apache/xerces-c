@@ -75,6 +75,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Forward Declaration
 // ---------------------------------------------------------------------------
 class ValueStore;
+class FieldActivator;
 
 
 class VALIDATORS_EXPORT IC_Field : public XSerializable, public XMemory
@@ -93,21 +94,38 @@ public:
     bool operator== (const IC_Field& other) const;
     bool operator!= (const IC_Field& other) const;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    bool getMayMatch() const { return fMayMatch; }
     XercesXPath* getXPath() const { return fXPath; }
     IdentityConstraint* getIdentityConstraint() const { return fIdentityConstraint; }
 
-	// -----------------------------------------------------------------------
+    /**
+      * @deprecated
+      */
+    bool getMayMatch() const { return false; }
+
+    // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setMayMatch(const bool other) { fMayMatch = other; }
+    /**
+      * @deprecated
+      */
+    void setMayMatch(const bool) {}
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Factory methods
     // -----------------------------------------------------------------------
+    XPathMatcher* createMatcher
+    (
+        FieldActivator* const fieldActivator
+        , ValueStore* const valueStore
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    /**
+      * @deprecated
+      */
     XPathMatcher* createMatcher(ValueStore* const valueStore,
                                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
@@ -128,7 +146,6 @@ private:
     // -----------------------------------------------------------------------
     //  Data members
     // -----------------------------------------------------------------------
-    bool                fMayMatch;
     XercesXPath*        fXPath;
     IdentityConstraint* fIdentityConstraint;
 };
@@ -161,6 +178,7 @@ private:
     FieldMatcher(XercesXPath* const anXPath,
                  IC_Field* const aField,
                  ValueStore* const valueStore,
+                 FieldActivator* const fieldActivator,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
@@ -177,8 +195,9 @@ private:
     // -----------------------------------------------------------------------
     //  Data members
     // -----------------------------------------------------------------------
-    ValueStore* fValueStore;
-    IC_Field*   fField;
+    ValueStore*     fValueStore;
+    IC_Field*       fField;
+    FieldActivator* fFieldActivator;
 };
 
 XERCES_CPP_NAMESPACE_END

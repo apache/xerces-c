@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/16 18:41:15  knoaman
+ * Make IC_Field stateless
+ *
  * Revision 1.5  2003/10/14 15:24:23  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -82,10 +85,10 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/validators/schema/identity/FieldActivator.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
-
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -96,10 +99,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 FieldMatcher::FieldMatcher(XercesXPath* const xpath,
                            IC_Field* const aField,
                            ValueStore* const valueStore,
+                           FieldActivator* const fieldActivator,
                            MemoryManager* const manager)
     : XPathMatcher(xpath, (IdentityConstraint*) 0, manager)
     , fField(aField)
     , fValueStore(valueStore)
+    , fFieldActivator(fieldActivator)
 {
 }
 
@@ -114,12 +119,12 @@ void FieldMatcher::matched(const XMLCh* const content,
         fValueStore->reportNilError(fField->getIdentityConstraint());
     }
 
-    fValueStore->addValue(fField, dv, content);
+    fValueStore->addValue(fFieldActivator, fField, dv, content);
 
     // once we've stored the value for this field, we set the mayMatch
     // member to false so that, in the same scope, we don't match any more
     // values (and throw an error instead).
-    fField->setMayMatch(false);
+    fFieldActivator->setMayMatch(fField, false);
 }
 
 // ---------------------------------------------------------------------------
@@ -157,7 +162,14 @@ bool IC_Field::operator!= (const IC_Field& other) const {
 XPathMatcher* IC_Field::createMatcher(ValueStore* const valueStore,
                                       MemoryManager* const manager) {
 
-    return new (manager) FieldMatcher(fXPath, this, valueStore, manager);
+    return 0;
+}
+
+XPathMatcher* IC_Field::createMatcher(FieldActivator* const fieldActivator,
+                                      ValueStore* const valueStore,
+                                      MemoryManager* const manager)
+{
+    return new (manager) FieldMatcher(fXPath, this, valueStore, fieldActivator, manager);
 }
 
 /***
@@ -171,14 +183,12 @@ void IC_Field::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
-        serEng<<fMayMatch;
         serEng<<fXPath;
         
         IdentityConstraint::storeIC(serEng, fIdentityConstraint);
     }
     else
     {
-        serEng>>fMayMatch;
         serEng>>fXPath;
 
         fIdentityConstraint = IdentityConstraint::loadIC(serEng);

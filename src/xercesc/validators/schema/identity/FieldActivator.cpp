@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/16 18:41:15  knoaman
+ * Make IC_Field stateless
+ *
  * Revision 1.5  2003/05/22 02:10:52  knoaman
  * Default the memory manager.
  *
@@ -83,6 +86,7 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
+#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -94,15 +98,27 @@ FieldActivator::FieldActivator(ValueStoreCache* const valueStoreCache,
                                MemoryManager* const manager)
     : fValueStoreCache(valueStoreCache)
     , fMatcherStack(matcherStack)
+    , fMayMatch(0)
     , fMemoryManager(manager)
 {
+    fMayMatch = new (manager) ValueHashTableOf<bool>(29, new (manager) HashPtr(), manager);
 }
 
 FieldActivator::FieldActivator(const FieldActivator& other)
     : fValueStoreCache(other.fValueStoreCache)
     , fMatcherStack(other.fMatcherStack)
+    , fMayMatch(0)
     , fMemoryManager(other.fMemoryManager)
 {
+    fMayMatch = new (fMemoryManager) ValueHashTableOf<bool>(29, new (fMemoryManager) HashPtr(), fMemoryManager);
+    ValueHashTableOfEnumerator<bool> mayMatchEnum(other.fMayMatch);
+
+    // Build key set
+    while (mayMatchEnum.hasMoreElements())
+    {
+        IC_Field* field = (IC_Field*) mayMatchEnum.nextElementKey();
+        fMayMatch->put(field, other.fMayMatch->get(field));
+    }
 }
 
 
@@ -130,9 +146,9 @@ FieldActivator& FieldActivator::operator =(const FieldActivator& other) {
 XPathMatcher* FieldActivator::activateField(IC_Field* const field, const int initialDepth) {
 
     ValueStore* valueStore = fValueStoreCache->getValueStoreFor(field, initialDepth);
-    XPathMatcher* matcher = field->createMatcher(valueStore, fMemoryManager);
+    XPathMatcher* matcher = field->createMatcher(this, valueStore, fMemoryManager);
 
-    field->setMayMatch(true);
+    setMayMatch(field, true);
     fMatcherStack->addMatcher(matcher);
     matcher->startDocumentFragment();
 
