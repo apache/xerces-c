@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/24 02:12:53  aruna1
+ * ReaderMgr:;getReaderDepth() added
+ *
  * Revision 1.6  2000/02/06 07:47:53  rahulj
  * Year 2K copyright swat.
  *
@@ -214,6 +217,7 @@ public :
     const XMLReader* getCurrentReader() const;
     XMLReader* getCurrentReader();
     unsigned int getCurrentReaderNum() const;
+    unsigned int getReaderDepth() const;
     void getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const;
     unsigned int getSrcOffset() const;
     bool getThrowEOE() const;

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/24 02:12:36  aruna1
+ * ReaderMgr:;getReaderDepth() added
+ *
  * Revision 1.8  2000/02/09 21:42:39  abagchi
  * Copyright swatswat
  *
@@ -1602,7 +1605,7 @@ void DTDValidator::scanDocTypeDecl(const bool reuseValidator)
         //  the doctype. This could happen if it was terminated early by bad
         //  syntax.
         //
-        if (getReaderMgr()->getCurrentReaderNum() > 1)
+        if (getReaderMgr()->getReaderDepth() > 1)
         {
             getScanner()->emitError(XML4CErrs::PEPropogated);
 

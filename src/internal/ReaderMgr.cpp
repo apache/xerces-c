@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/24 02:12:54  aruna1
+ * ReaderMgr:;getReaderDepth() added
+ *
  * Revision 1.8  2000/02/22 00:36:50  roddey
  * Added a new 'native XMLCh' transcoder to correctly handle
  * internal entities now that XMLCh isn't always UTF-16.
@@ -662,6 +665,12 @@ XMLReader* ReaderMgr::getCurrentReader()
     return fCurReader;
 }
 
+unsigned int ReaderMgr::getReaderDepth() const
+{
+    if (!fEntityStack)
+        return 0;
+    return fEntityStack->size() + 1;
+}
 
 void ReaderMgr::getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const
 {
