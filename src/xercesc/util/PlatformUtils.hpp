@@ -699,7 +699,15 @@ public :
       */
     static bool isStrictIANAEncoding();
     //@}
-
+		
+    /**
+      * Aligns the specified pointer per platform block allocation
+	  * requirements.
+	  *
+	  *	The results of this function may be altered by defining
+	  * XML_PLATFORM_NEW_BLOCK_ALIGNMENT.
+	  */
+	static inline void* alignPointerForNewBlockAllocation(void* ptr);
 
 private :
     /** @name Private static methods */
@@ -778,6 +786,35 @@ private :
 
 
 MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
+
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: alignPointerForNewBlockAllocation
+// ---------------------------------------------------------------------------
+//  Calculate alignment required by platform for a new
+//	block allocation. We use this in our custom allocators
+//	to ensure that returned blocks are properly aligned.
+inline void*
+XMLPlatformUtils::alignPointerForNewBlockAllocation(void* ptr)
+{
+	//	Macro XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be defined
+	//	as needed to dictate alignment requirements on a
+	//	per-architecture basis. In the absense of that we
+	//	take an educated guess.
+	#ifdef XML_PLATFORM_NEW_BLOCK_ALIGNMENT
+		size_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
+	#else
+		size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
+	#endif
+	
+	//	Calculate current alignment of pointer
+	size_t current = (long)ptr % alignment;
+	
+	//	Adjust pointer alignment as needed
+	return (current == 0)
+		 ? ptr
+		 : ((char*)ptr + alignment - current);
+}
 
 
 

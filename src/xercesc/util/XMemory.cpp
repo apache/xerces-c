@@ -69,31 +69,11 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
-//  Calculate alignment required by platform.
-//	Total size of our header must match platform
-//	architecture-specific alignment, in order
-//	that the returned block ptr (which follows our
-//	header), maintains block/structure alignment.
-inline size_t
-CalculateBlockHeaderSize()
-{
-	//	Macro XML_NEW_BLOCK_ALIGNMENT may be defined
-	//	as needed to calculate alignment on a per-architecture
-	//	basis.
-	#ifdef XML_NEW_BLOCK_ALIGNMENT
-		size_t alignment = XML_NEW_BLOCK_ALIGNMENT;
-	#else
-        size_t alignment = sizeof(void*) > sizeof(double) ? sizeof(void*) : sizeof(double);
-	#endif
-	
-	size_t headerUsage = sizeof(MemoryManager*);
-	return (headerUsage + (alignment - headerUsage % alignment));
-}
-
 void* XMemory::operator new(size_t size)
 {
-	size_t headerSize = CalculateBlockHeaderSize();
+	size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
+										sizeof(MemoryManager*));
+	
     void* const block = XMLPlatformUtils::fgMemoryManager->allocate
         (
 	        headerSize + size
@@ -107,7 +87,8 @@ void* XMemory::operator new(size_t size, MemoryManager* manager)
 {
     assert(manager != 0);
 	
-	size_t headerSize = CalculateBlockHeaderSize();
+	size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
+										sizeof(MemoryManager*));
     void* const block = manager->allocate(headerSize + size);
     *(MemoryManager**)block = manager;
 
@@ -118,7 +99,8 @@ void XMemory::operator delete(void* p)
 {
     if (p != 0)
     {
-		size_t headerSize = CalculateBlockHeaderSize();
+		size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
+											sizeof(MemoryManager*));
         void* const block = (char*)p - headerSize;
 
         MemoryManager* const manager = *(MemoryManager**)block;
@@ -136,7 +118,8 @@ void XMemory::operator delete(void* p, MemoryManager* manager)
 	
 	if (p != 0)
 	{
-		size_t headerSize = CalculateBlockHeaderSize();
+		size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
+											sizeof(MemoryManager*));
         void* const block = (char*)p - headerSize;
 		
 		assert(*(MemoryManager**)block == manager);
