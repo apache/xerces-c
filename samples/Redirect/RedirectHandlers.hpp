@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2005/04/05 15:16:36  cargilld
+ * Update Redirect sample to use newer entity resolver callback.
+ *
  * Revision 1.8  2004/09/08 13:55:33  peiyongz
  * Apache License Version 2.0
  *
@@ -52,6 +55,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -60,7 +64,7 @@ class AttributeList;
 XERCES_CPP_NAMESPACE_END
 
 
-class RedirectHandlers : public HandlerBase
+class RedirectHandlers : public HandlerBase, public XMLEntityResolver
 {
 public:
     // -----------------------------------------------------------------------
@@ -111,6 +115,8 @@ public:
     void fatalError(const SAXParseException& exc);
 
 
+#if 0
+    // This is the old resolveEntity interface
     // -----------------------------------------------------------------------
     //  Handlers for the SAX EntityResolver interface
     // -----------------------------------------------------------------------
@@ -119,7 +125,14 @@ public:
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
     );
-
+#endif
+    // -----------------------------------------------------------------------
+    //  Handlers for the XMLEntityResolver interface
+    // -----------------------------------------------------------------------
+    InputSource* resolveEntity
+    (
+        XMLResourceIdentifier* resourceIdentifier
+    );
 
 private:
     // -----------------------------------------------------------------------

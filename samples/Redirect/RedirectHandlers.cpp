@@ -133,6 +133,8 @@ void RedirectHandlers::warning(const SAXParseException& e)
 }
 
 
+#if 0
+// This is the old resolveEntity interface...
 // -----------------------------------------------------------------------
 //  Handlers for the SAX EntityResolver interface
 // -----------------------------------------------------------------------
@@ -149,6 +151,41 @@ InputSource* RedirectHandlers::resolveEntity(const   XMLCh* const    /* publicId
     //
     const XMLCh* s1 = gFileToTrap;
     const XMLCh* s2 = systemId;
+    while (true)
+    {
+        // Break out on any difference
+        if (*s1 != *s2)
+            return 0;
+
+        // If one is null, then both were null, so they are equal
+        if (!*s1)
+            break;
+
+        // Else get the next char
+        s1++;
+        s2++;
+    }
+
+    // They were equal, so redirect to our other file
+    return new LocalFileInputSource(gRedirectToFile);
+}
+#endif
+// -----------------------------------------------------------------------
+//  Handlers for the XMLEntityResolver interface
+// -----------------------------------------------------------------------
+
+InputSource* RedirectHandlers::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
+{
+    //
+    //  If its our file, then create a new URL input source for the file that
+    //  we want to really be used. Otherwise, just return zero to let the
+    //  default action occur.
+    //
+    //  We cannot assume that the XMLCh type is ok to pass to wcscmp(), so
+    //  just do a comparison ourselves.
+    //
+    const XMLCh* s1 = gFileToTrap;
+    const XMLCh* s2 = resourceIdentifier->getSystemId();
     while (true)
     {
         // Break out on any difference

@@ -35,6 +35,9 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.12  2005/04/05 15:16:36  cargilld
+ * Update Redirect sample to use newer entity resolver callback.
+ *
  * Revision 1.11  2004/09/08 13:55:33  peiyongz
  * Apache License Version 2.0
  *
@@ -139,7 +142,9 @@ int main(int argc, char* args[])
     RedirectHandlers handler;
     parser->setDocumentHandler(&handler);
     parser->setErrorHandler(&handler);
-    parser->setEntityResolver(&handler);
+    //Use the new XML Entity Resolver
+    //parser->setEntityResolver(&handler);
+    parser->setXMLEntityResolver(&handler);    
 
     //
     //  Get the starting time and kick off the parse of the indicated file.
