@@ -56,16 +56,20 @@
 
 /*
  * $Id$
+ * $Log$
+ * Revision 1.5  2001/09/19 20:35:23  peiyongz
+ * DTV reorganization: inherit from AbstractStringVaildator
+ *
  */
 
 #if !defined(HEXBINARY_DATATYPEVALIDATOR_HPP)
 #define HEXBINARY_DATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
-#include <validators/schema/SchemaSymbols.hpp>
-#include <util/RefVectorOf.hpp>
+#include <validators/datatype/AbstractStringValidator.hpp>
+#include <validators/datatype/InvalidDatatypeValueException.hpp>
+#include <util/HexBin.hpp>
 
-class VALIDATORS_EXPORT HexBinaryDatatypeValidator : public DatatypeValidator
+class VALIDATORS_EXPORT HexBinaryDatatypeValidator : public AbstractStringValidator
 {
 public:
 
@@ -86,122 +90,31 @@ public:
 
 	//@}
 
-    // -----------------------------------------------------------------------
-    // Getter methods
-    // -----------------------------------------------------------------------
-    /** @name Getter Functions */
-    //@{
-
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    // Validation methods
-    // -----------------------------------------------------------------------
-    /** @name Validation Function */
-    //@{
-
-    /**
-     * validate that a string matches the boolean datatype
-     * @param content A string containing the content to be validated
-     *
-     * @exception throws InvalidDatatypeException if the content is
-     * is not valid.
-     */
-
-	void validate(const XMLCh* const content);
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    // Compare methods
-    // -----------------------------------------------------------------------
-    /** @name Compare Function */
-    //@{
-
-    /**
-     * Compare two boolean data types
-     * 
-     * @param content1
-     * @param content2
-     * @return 
-     */
-    int compare(const XMLCh* const, const XMLCh* const);
-
-    //@}
-
     /**
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    inline DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                        , RefVectorOf<XMLCh>*           const enums
+                                        , const int                           finalSet);
 
+
+protected:
+
+    inline void checkValueSpace(const XMLCh* const content);
+
+    inline int  getLength(const XMLCh* const content) const;
 
 private:
-
-    void checkContent( const XMLCh* const content, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    void cleanUp();
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-    unsigned int         getLength() const;
-
-    unsigned int         getMaxLength() const;
-
-    unsigned int         getMinLength() const;
-
-    RefVectorOf<XMLCh>*  getEnumeration() const;
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-
-    void                 setLength(unsigned int);
-
-    void                 setMaxLength(unsigned int);
-
-    void                 setMinLength(unsigned int);
-
-    void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  
-    //      .
-	//		
+	//		Nil.
     // -----------------------------------------------------------------------    
-     int                  fLength;
-     int                  fMaxLength;  
-     int                  fMinLength; 
-     bool                 fEnumerationInherited;     
-     RefVectorOf<XMLCh>*  fEnumeration;
-
 };
 
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-inline int HexBinaryDatatypeValidator::compare(const XMLCh* const lValue
-                                             , const XMLCh* const rValue)
-{
-    return 0;
-}
-
-inline DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
+DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
@@ -209,72 +122,19 @@ inline DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
     return (DatatypeValidator*) new HexBinaryDatatypeValidator(this, facets, enums, finalSet);
 }
 
-inline void HexBinaryDatatypeValidator::validate( const XMLCh* const content)
+
+int HexBinaryDatatypeValidator::getLength(const XMLCh* const content) const
 {
-    checkContent(content, false);
+    return HexBin::getDataLength(content);
 }
 
-inline void HexBinaryDatatypeValidator::cleanUp()
+void HexBinaryDatatypeValidator::checkValueSpace(const XMLCh* const content)
 {
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-inline unsigned int HexBinaryDatatypeValidator::getLength() const
-{
-    return fLength;
-}
-
-inline unsigned int HexBinaryDatatypeValidator::getMaxLength() const
-{
-    return fMaxLength;
-}
-
-inline unsigned int HexBinaryDatatypeValidator::getMinLength() const
-{
-    return fMinLength;
-}
-
-inline RefVectorOf<XMLCh>* HexBinaryDatatypeValidator:: getEnumeration() const
-{
-    return fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-
-inline void HexBinaryDatatypeValidator::setLength(unsigned int newLength)
-{
-    fLength = newLength;
-}
-
-inline void HexBinaryDatatypeValidator::setMaxLength(unsigned int newMaxLength)
-{
-    fMaxLength = newMaxLength;
-}
-
-inline void HexBinaryDatatypeValidator::setMinLength(unsigned int newMinLength)
-{
-    fMinLength = newMinLength;
-}
-
-inline void HexBinaryDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
-                                                  , bool                inherited)
-{
-    if (enums)
+    if (getLength(content) <= 0) 
     {
-        if (fEnumeration && !fEnumerationInherited)
-            delete fEnumeration;
-
-        fEnumeration = enums;
-        fEnumerationInherited = inherited;
-        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_Not_HexBin
+                , content);
     }
 }
 
