@@ -1426,7 +1426,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 			else {
 				XMLByte *pXMLByte =  reinterpret_cast<XMLByte*> (static_cast<XMLCh*>(pThis->m_xml));
 				MemBufInputSource memBufIS(pXMLByte,pThis->m_xml.length()*sizeof(XMLCh),OLESTR("IBMXMLParser"),false);
-				memBufIS.setEncoding(OLESTR("UTF-16"));
+				memBufIS.setEncoding(OLESTR("UTF-16LE"));
 				if (!pThis->m_bParseError && !pThis->m_bAbort)
 					parser.parse(memBufIS);
 			}
