@@ -115,7 +115,7 @@ static void reinitMappingsRecognizer() {
 }
 
 // ---------------------------------------------------------------------------
-//  XLMTransService: Constructors and destructor
+//  XMLTransService: Constructors and destructor
 // ---------------------------------------------------------------------------
 XMLTransService::XMLTransService()
 {
@@ -164,7 +164,7 @@ void XMLTransService::addEncoding(const XMLCh* const encoding,
 }
 
 // ---------------------------------------------------------------------------
-//  XLMTranscoder: Non-virtual API
+//  XMLTransService: Non-virtual API
 // ---------------------------------------------------------------------------
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  const   char* const             encodingName
@@ -242,7 +242,7 @@ XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encoding
     //
     // We can only make transcoder if the passed encodingEnum is under this range
     //
-    if (encodingEnum < XMLRecognizer::EBCDIC || encodingEnum > XMLRecognizer::XERCES_XMLCH) {
+    if (encodingEnum < XMLRecognizer::Encodings_Min || encodingEnum > XMLRecognizer::Encodings_Max) {
         resValue = XMLTransService::InternalFailure;
         return 0;
     }
@@ -256,61 +256,20 @@ XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encoding
        return temp;
     }
     else {
-        resValue = XMLTransService::InternalFailure;
-        return 0;
+        XMLTranscoder* temp =  makeNewXMLTranscoder(XMLRecognizer::nameForEncoding(encodingEnum), resValue, blockSize);
+
+        // if successful, set resValue to OK
+        // if failed, the makeNewXMLTranscoder has already set the proper failing resValue
+        if (temp) resValue =  XMLTransService::Ok;
+
+        return temp;
     }
 
 }
 
 
 // ---------------------------------------------------------------------------
-//  XLMTranscoder: Public Destructor
-// ---------------------------------------------------------------------------
-XMLTranscoder::~XMLTranscoder()
-{
-    delete [] fEncodingName;
-}
-
-
-// ---------------------------------------------------------------------------
-//  XLMTranscoder: Hidden Constructors
-// ---------------------------------------------------------------------------
-XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
-                            , const unsigned int    blockSize) :
-    fEncodingName(0)
-    , fBlockSize(blockSize)
-{
-    fEncodingName = XMLString::replicate(encodingName);
-}
-
-
-// ---------------------------------------------------------------------------
-//  XLMTranscoder: Protected helpers
-// ---------------------------------------------------------------------------
-void XMLTranscoder::checkBlockSize(const unsigned int toCheck)
-{
-//    if (toCheck > fBlockSize)
-//        ThrowXML(TranscodingException, XMLExcepts::Trans_BadBlockSize);
-}
-
-
-// ---------------------------------------------------------------------------
-//  XLMLCPTranscoder: Public Destructor
-// ---------------------------------------------------------------------------
-XMLLCPTranscoder::XMLLCPTranscoder()
-{
-}
-
-
-// ---------------------------------------------------------------------------
-//  XLMTranscoder: Hidden Constructors
-// ---------------------------------------------------------------------------
-XMLLCPTranscoder::~XMLLCPTranscoder()
-{
-}
-
-// ---------------------------------------------------------------------------
-//  XLMTranscoder: Hidden Init Method
+//  XMLTransTransService: Hidden Init Method
 //
 //  This is called by platform utils during startup.
 // ---------------------------------------------------------------------------
@@ -550,7 +509,7 @@ void XMLTransService::initTransService()
 }
 
 // ---------------------------------------------------------------------------
-//  XLMTransService: IANA encoding setting
+//  XMLTransService: IANA encoding setting
 // ---------------------------------------------------------------------------
 void XMLTransService::strictIANAEncoding(const bool newState)
 {
@@ -560,6 +519,52 @@ void XMLTransService::strictIANAEncoding(const bool newState)
 bool XMLTransService::isStrictIANAEncoding()
 {
     return gStrictIANAEncoding;
+}
+
+// ---------------------------------------------------------------------------
+//  XMLTranscoder: Public Destructor
+// ---------------------------------------------------------------------------
+XMLTranscoder::~XMLTranscoder()
+{
+    delete [] fEncodingName;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLTranscoder: Hidden Constructors
+// ---------------------------------------------------------------------------
+XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
+                            , const unsigned int    blockSize) :
+    fEncodingName(0)
+    , fBlockSize(blockSize)
+{
+    fEncodingName = XMLString::replicate(encodingName);
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLTranscoder: Protected helpers
+// ---------------------------------------------------------------------------
+void XMLTranscoder::checkBlockSize(const unsigned int toCheck)
+{
+//    if (toCheck > fBlockSize)
+//        ThrowXML(TranscodingException, XMLExcepts::Trans_BadBlockSize);
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLLCPTranscoder: Public Destructor
+// ---------------------------------------------------------------------------
+XMLLCPTranscoder::XMLLCPTranscoder()
+{
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLLCPTranscoder: Hidden Constructors
+// ---------------------------------------------------------------------------
+XMLLCPTranscoder::~XMLLCPTranscoder()
+{
 }
 
 XERCES_CPP_NAMESPACE_END
