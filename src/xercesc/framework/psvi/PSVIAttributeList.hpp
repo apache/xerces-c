@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/02 16:21:41  neilg
+ * fix for ArrayIndexOutOfBoundsException in PSVIAttributeList; thanks to Pete Lloyd
+ *
  * Revision 1.3  2003/11/26 16:20:37  neilg
  * more complete implementation of PSVIAttributeList; remove some problematic const-ness
  *
@@ -210,7 +213,7 @@ inline PSVIAttributeList::~PSVIAttributeList()
 inline PSVIAttribute *PSVIAttributeList::getPSVIAttributeToFill()
 {
     PSVIAttribute *retAttr = 0;
-    if(fAttrPos+1 == fAttrList->size())
+    if(fAttrPos == fAttrList->size())
     {
         retAttr = new (fMemoryManager)PSVIAttribute(fMemoryManager);
         fAttrList->addElement(retAttr);
