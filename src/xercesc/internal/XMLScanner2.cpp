@@ -764,13 +764,6 @@ bool XMLScanner::normalizeAttRawValue( const   XMLCh* const        attrName
                                     , const XMLCh* const        value
                                     ,       XMLBuffer&          toFill)
 {
-    // A simple state value for a whitespace processing state machine
-    enum States
-    {
-        InWhitespace
-        , InContent
-    };
-
     // Assume its going to go fine, and empty the target buffer in preperation
     bool retVal = true;
     toFill.reset();
@@ -779,9 +772,7 @@ bool XMLScanner::normalizeAttRawValue( const   XMLCh* const        attrName
     //  Loop through the chars of the source value and normalize it according
     //  to the type.
     //
-    States curState = InContent;
     bool escaped;
-    bool firstNonWS = false;
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
     while (*srcPtr)
@@ -1312,10 +1303,6 @@ void XMLScanner::updateNSMap(const  XMLCh* const    attrName
 
 void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount) {
 
-    //  Schema Xsi Type yyyy (e.g. xsi:type="yyyyy")
-    XMLBufBid bbXsi(&fBufMgr);
-    XMLBuffer& fXsiType = bbXsi.getBuffer();
-
     //
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
@@ -1329,11 +1316,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
     {
         // each attribute has the prefix:suffix="value"
         const KVStringPair* curPair = fRawAttrList->elementAt(index);
-        const XMLCh* valuePtr = curPair->getValue();
         const XMLCh* rawPtr = curPair->getKey();
-
-        QName attName(rawPtr, fEmptyNamespaceId);
-        const XMLCh* suffPtr = attName.getLocalPart();
 
         //  If either the key begins with "xmlns:" or its just plain
         //  "xmlns", then use it to update the map.
@@ -1341,6 +1324,8 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
         if (!XMLString::compareNString(rawPtr, XMLUni::fgXMLNSColonString, 6)
         ||  !XMLString::compareString(rawPtr, XMLUni::fgXMLNSString))
         {
+            const XMLCh* valuePtr = curPair->getValue();
+
             updateNSMap(rawPtr, valuePtr);
 
             // if the schema URI is seen in the the valuePtr, set the boolean seeXsi
@@ -1353,20 +1338,27 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
     // walk through the list again to deal with "xsi:...."
     if (fDoSchema && fSeeXsi)
     {
+        //  Schema Xsi Type yyyy (e.g. xsi:type="yyyyy")
+        XMLBufBid bbXsi(&fBufMgr);
+        XMLBuffer& fXsiType = bbXsi.getBuffer();
+
+        QName attName;
+
         for (index = 0; index < attCount; index++)
         {
             // each attribute has the prefix:suffix="value"
             const KVStringPair* curPair = fRawAttrList->elementAt(index);
-            const XMLCh* valuePtr = curPair->getValue();
             const XMLCh* rawPtr = curPair->getKey();
 
-            QName attName(rawPtr, fEmptyNamespaceId);
+            attName.setName(rawPtr, fEmptyNamespaceId);
             const XMLCh* prefPtr = attName.getPrefix();
-            const XMLCh* suffPtr = attName.getLocalPart();
 
             // if schema URI has been seen, scan for the schema location and uri
             // and resolve the schema grammar; or scan for schema type
             if (resolvePrefix(prefPtr, ElemStack::Mode_Attribute) == fSchemaNamespaceId) {
+
+                const XMLCh* valuePtr = curPair->getValue();
+                const XMLCh* suffPtr = attName.getLocalPart();
 
                 if (!fReuseGrammar) {
                     if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
