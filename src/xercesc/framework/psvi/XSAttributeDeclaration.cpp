@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/06 03:55:26  knoaman
+ * Various PSVI fixes.
+ *
  * Revision 1.10  2003/12/30 20:41:06  neilg
  * do not report anything about default/fixed values for non-global attribute declarations
  *
@@ -157,7 +160,8 @@ XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
 {
     if (fScope != XSConstants::SCOPE_GLOBAL)
         return XSConstants::VC_NONE;
-    if (fAttDef->getDefaultType() & XMLAttDef::Default)
+
+    if (fAttDef->getDefaultType() == XMLAttDef::Default)
         return XSConstants::VC_DEFAULT;
 
     if ((fAttDef->getDefaultType() == XMLAttDef::Fixed) ||

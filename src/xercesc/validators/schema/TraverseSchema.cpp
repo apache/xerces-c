@@ -570,7 +570,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
 
     if (fAnnotation)
-        delete fAnnotation;//fSchemaGrammar->addAnnotation(fAnnotation);
+        fSchemaGrammar->addAnnotation(fAnnotation);
 
     // -----------------------------------------------------------------------
     // Get 'schemaLocation' attribute
@@ -718,7 +718,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
 
     if (fAnnotation)
-        delete fAnnotation;//fSchemaGrammar->addAnnotation(fAnnotation);
+        fSchemaGrammar->addAnnotation(fAnnotation);
 
     // -----------------------------------------------------------------------
     // Handle 'namespace' attribute
@@ -1646,107 +1646,112 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // Handle "ref="
     // ------------------------------------------------------------------
+    XercesAttGroupInfo* attGroupInfo = 0;
     if (!topLevel) {
 
         if (refEmpty) {
             return 0;
         }
 
-        return processAttributeGroupRef(elem, ref, typeInfo);
+        attGroupInfo = processAttributeGroupRef(elem, ref, typeInfo);
     }
-
-    // ------------------------------------------------------------------
-    // Handle "name="
-    // ------------------------------------------------------------------
-    // name must be a valid NCName
-    if (!XMLString::isValidNCName(name)) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
-                          SchemaSymbols::fgELT_ATTRIBUTEGROUP, name);
-        return 0;
-    }
-
-    // ------------------------------------------------------------------
-    // Check for annotations
-    // ------------------------------------------------------------------
-    DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
-    Janitor<XSAnnotation> janAnnot(fAnnotation);
-
-    // ------------------------------------------------------------------
-    // Process contents of global attributeGroups
-    // ------------------------------------------------------------------
-    XercesAttGroupInfo* saveAttGroupInfo = fCurrentAttGroupInfo;
-    XercesAttGroupInfo* attGroupInfo = new (fGrammarPoolMemoryManager) XercesAttGroupInfo(
-        fStringPool->addOrFind(name), fTargetNSURI, fGrammarPoolMemoryManager);
-
-    fDeclStack->addElement(elem);
-    fCurrentAttGroupInfo = attGroupInfo;
-
-    for (; content !=0; content = XUtil::getNextSiblingElement(content)) {
-
-        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTE)) {
-            traverseAttributeDecl(content, typeInfo);
+    else
+    {
+        // name must be a valid NCName
+        if (!XMLString::isValidNCName(name)) {
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
+                              SchemaSymbols::fgELT_ATTRIBUTEGROUP, name);
+            return 0;
         }
-        else if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
-            traverseAttributeGroupDecl(content, typeInfo);
-        }
-        else {
-            break;
-        }
-    }
 
-    if (content != 0) {
+        // Check for annotations
+        DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+        Janitor<XSAnnotation> janAnnot(fAnnotation);
 
-        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ANYATTRIBUTE)) {
+        // Process contents of global attributeGroups
+        XercesAttGroupInfo* saveAttGroupInfo = fCurrentAttGroupInfo;
+        attGroupInfo = new (fGrammarPoolMemoryManager) XercesAttGroupInfo(
+            fStringPool->addOrFind(name), fTargetNSURI, fGrammarPoolMemoryManager);
 
-            SchemaAttDef* anyAtt = traverseAnyAttribute(content);
+        fDeclStack->addElement(elem);
+        fCurrentAttGroupInfo = attGroupInfo;
 
-            if (anyAtt) {
-                fCurrentAttGroupInfo->addAnyAttDef(anyAtt);
+        for (; content !=0; content = XUtil::getNextSiblingElement(content)) {
+
+            if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTE)) {
+                traverseAttributeDecl(content, typeInfo);
             }
+            else if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
+                traverseAttributeGroupDecl(content, typeInfo);
+            }
+            else {
+                break;
+            }
+        }
 
-            if (XUtil::getNextSiblingElement(content) != 0) {
+        if (content != 0) {
+
+            if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ANYATTRIBUTE)) {
+
+                SchemaAttDef* anyAtt = traverseAnyAttribute(content);
+
+                if (anyAtt) {
+                    fCurrentAttGroupInfo->addAnyAttDef(anyAtt);
+                }
+
+                if (XUtil::getNextSiblingElement(content) != 0) {
+                    reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AttGroupContentError, name);
+                }
+            }
+            else {
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AttGroupContentError, name);
             }
         }
-        else {
-            reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AttGroupContentError, name);
+
+        // Pop declaration
+        fDeclStack->removeElementAt(fDeclStack->size() - 1);
+
+        // Restore old attGroupInfo
+        fAttGroupRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), attGroupInfo);
+        fCurrentAttGroupInfo = saveAttGroupInfo;
+
+        // Check Attribute Derivation Restriction OK
+        fBuffer.set(fTargetNSURIString);
+        fBuffer.append(chComma);
+        fBuffer.append(name);
+
+        unsigned int nameIndex = fStringPool->addOrFind(fBuffer.getRawBuffer());
+
+        if (fRedefineComponents && fRedefineComponents->get(SchemaSymbols::fgELT_ATTRIBUTEGROUP, nameIndex)) {
+
+            fBuffer.set(name);
+            fBuffer.append(SchemaSymbols::fgRedefIdentifier);
+            XercesAttGroupInfo* baseAttGroupInfo = fAttGroupRegistry->get(fBuffer.getRawBuffer());
+
+            if (baseAttGroupInfo)
+                checkAttDerivationOK(elem, baseAttGroupInfo, attGroupInfo);
         }
+
+        // Store annotation
+        if (!janAnnot.isDataNull())
+            fSchemaGrammar->putAnnotation(attGroupInfo, janAnnot.release());
     }
 
-    // ------------------------------------------------------------------
-    // Pop declaration
-    // ------------------------------------------------------------------
-    fDeclStack->removeElementAt(fDeclStack->size() - 1);
+    // calculate complete wildcard if necessary
+    if (attGroupInfo)
+    {
+        unsigned int anyAttCount = attGroupInfo->anyAttributeCount();
+        if (anyAttCount && !attGroupInfo->getCompleteWildCard())
+        {
+            SchemaAttDef* attGroupWildCard =  new (fGrammarPoolMemoryManager)
+                SchemaAttDef(attGroupInfo->anyAttributeAt(0));
 
-    // ------------------------------------------------------------------
-    // Restore old attGroupInfo
-    // ------------------------------------------------------------------
-    fAttGroupRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), attGroupInfo);
-    fCurrentAttGroupInfo = saveAttGroupInfo;
+            for (unsigned int k= 1; k < anyAttCount; k++)
+                attWildCardIntersection(attGroupWildCard, attGroupInfo->anyAttributeAt(k));
 
-    // ------------------------------------------------------------------
-    // Check Attribute Derivation Restriction OK
-    // ------------------------------------------------------------------
-    fBuffer.set(fTargetNSURIString);
-    fBuffer.append(chComma);
-    fBuffer.append(name);
-
-    unsigned int nameIndex = fStringPool->addOrFind(fBuffer.getRawBuffer());
-
-    if (fRedefineComponents && fRedefineComponents->get(SchemaSymbols::fgELT_ATTRIBUTEGROUP, nameIndex)) {
-
-        fBuffer.set(name);
-        fBuffer.append(SchemaSymbols::fgRedefIdentifier);
-        XercesAttGroupInfo* baseAttGroupInfo = fAttGroupRegistry->get(fBuffer.getRawBuffer());
-
-        if (baseAttGroupInfo) {
-            checkAttDerivationOK(elem, baseAttGroupInfo, attGroupInfo);
+            attGroupInfo->setCompleteWildCard(attGroupWildCard);
         }
     }
-
-    // Store annotation
-    if (!janAnnot.isDataNull())
-        fSchemaGrammar->putAnnotation(attGroupInfo, janAnnot.release());
 
     return attGroupInfo;
 }
@@ -6264,18 +6269,6 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
                 }
 
                 SchemaAttDef* attGroupWildCard = attGroupInfo->getCompleteWildCard();
-
-                if (!attGroupWildCard) {
-
-                    attGroupWildCard = new (fGrammarPoolMemoryManager) SchemaAttDef(attGroupInfo->anyAttributeAt(0));
-
-                    for (unsigned int i= 1; i < anyAttCount; i++) {
-                        attWildCardIntersection(attGroupWildCard, attGroupInfo->anyAttributeAt(i));
-                    }
-
-                    attGroupInfo->setCompleteWildCard(attGroupWildCard);
-                }
-
                 if (completeWildCard) {
                     attWildCardIntersection(completeWildCard, attGroupWildCard);
                 }
@@ -6540,6 +6533,9 @@ void TraverseSchema::checkFixedFacet(const DOMElement* const elem,
         (XMLString::equals(fixedFacet, SchemaSymbols::fgATTVAL_TRUE)
          || XMLString::equals(fixedFacet, fgValueOne))) {
 
+        if (XMLString::equals(SchemaSymbols::fgELT_LENGTH, facetName)) {
+            flags |= DatatypeValidator::FACET_LENGTH;
+        }
         if (XMLString::equals(SchemaSymbols::fgELT_MINLENGTH, facetName)) {
             flags |= DatatypeValidator::FACET_MINLENGTH;
         }

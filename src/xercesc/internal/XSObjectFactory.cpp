@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/01/06 03:55:26  knoaman
+ * Various PSVI fixes.
+ *
  * Revision 1.16  2003/12/30 19:46:15  neilg
  * use a null-terminated string when tokenizing pattern facets
  *
@@ -1055,7 +1058,7 @@ void XSObjectFactory::processAttUse(SchemaAttDef* const attDef,
     bool isRequired = false;
     XSConstants::VALUE_CONSTRAINT constraintType = XSConstants::VC_NONE;
     
-    if (attDef->getDefaultType() & XMLAttDef::Default)
+    if (attDef->getDefaultType() == XMLAttDef::Default)
     {
         constraintType = XSConstants::VC_DEFAULT;
     }
