@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/11/10 21:54:51  neilg
+ * implementation for new stateless means of traversing attribute definition lists
+ *
  * Revision 1.17  2003/11/07 17:08:12  knoaman
  * For PSVI support, distinguish wildcard elements with namespace lists.
  *
@@ -284,6 +287,10 @@ void ComplexTypeInfo::addAttDef(SchemaAttDef* const toAdd) {
 
     fAttDefs->put((void*)(toAdd->getAttName()->getLocalPart()),
                           toAdd->getAttName()->getURI(), toAdd);
+    // update and/or create fAttList
+    if(!fAttList)
+        ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs,fMemoryManager);
+    fAttList->addAttDef(toAdd);
 }
 
 void ComplexTypeInfo::setContentSpec(ContentSpecNode* const toAdopt) {
@@ -378,9 +385,13 @@ XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const qName
         retVal->setElemId(getElementId());
         fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 
+        // update and/or create fAttList
+        if(!fAttList)
+            ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs,fMemoryManager);
+        fAttList->addAttDef(retVal);
         wasAdded = true;
     }
-     else
+    else
     {
         wasAdded = false;
     }

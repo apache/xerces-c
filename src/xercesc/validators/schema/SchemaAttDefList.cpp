@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/10 21:54:51  neilg
+ * implementation for new stateless means of traversing attribute definition lists
+ *
  * Revision 1.6  2003/10/20 11:46:28  gareth
  * Pass in memory manager to constructors and use for creation of enumerators.
  *
@@ -89,6 +92,7 @@
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -99,13 +103,19 @@ SchemaAttDefList::SchemaAttDefList(RefHash2KeysTableOf<SchemaAttDef>* const list
 : XMLAttDefList(manager)
 ,fEnum(0)
 ,fList(listToUse)
+,fArray(0)
+,fCount(0)
+,fSize(0)
 {
     fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(listToUse);
+    fArray = (SchemaAttDef **)((getMemoryManager())->allocate( sizeof(SchemaAttDef*) << 1));
+    fSize = 2;
 }
 
 SchemaAttDefList::~SchemaAttDefList()
 {
     delete fEnum;
+    (getMemoryManager())->deallocate(fArray);
 }
 
 
@@ -171,6 +181,34 @@ void SchemaAttDefList::Reset()
     fEnum->Reset();
 }
 
+/**
+ * return total number of attributes in this list
+ */
+unsigned int SchemaAttDefList::getAttDefCount() const
+{
+    return fCount;
+}
+
+/**
+ * return attribute at the index-th position in the list.
+ */
+XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index) 
+{
+    if(index >= fCount)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    return *(fArray[index]);
+}
+
+/**
+ * return attribute at the index-th position in the list.
+ */
+const XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index) const 
+{
+    if(index >= fCount)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    return *(fArray[index]);
+}
+
 /***
  * Support for Serialization/De-serialization
  ***/
@@ -190,6 +228,7 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
          *
          ***/
         XTemplateSerializer::storeObject(fList, serEng);
+        serEng << fCount;
 
         // do not serialize fEnum
     }
@@ -202,9 +241,21 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::loadObject(&fList, 3, true, serEng);
 
+        // assume empty so we can size fArray just right
+        serEng >> fSize;
         if (!fEnum && fList)
         {
             fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList);
+        }
+        if(fSize) 
+        {
+            (getMemoryManager())->deallocate(fArray);
+            fArray = (SchemaAttDef **)((getMemoryManager())->allocate( sizeof(SchemaAttDef*) * fSize));
+            fCount = 0;
+            while(fEnum->hasMoreElements())
+            {
+                fArray[fCount++] = &fEnum->nextElement();
+            }
         }
     }
 
@@ -213,6 +264,9 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
 SchemaAttDefList::SchemaAttDefList(MemoryManager* const manager)
 :fEnum(0)
 ,fList(0)
+,fArray(0)
+,fCount(0)
+,fSize(0)
 {
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/10 21:54:51  neilg
+ * implementation for new stateless means of traversing attribute definition lists
+ *
  * Revision 1.5  2003/10/20 11:46:28  gareth
  * Pass in memory manager to constructors and use for creation of enumerators.
  *
@@ -129,6 +132,10 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the virtual interface
     // -----------------------------------------------------------------------
+
+    /** 
+     * @deprecated This method is not thread-safe.
+     */
     virtual bool hasMoreElements() const;
     virtual bool isEmpty() const;
     virtual XMLAttDef* findAttDef
@@ -151,8 +158,31 @@ public :
         const   XMLCh* const        attURI
         , const XMLCh* const        attName
     )   const;
+
+    /** 
+     * @deprecated This method is not thread-safe.
+     */
     virtual XMLAttDef& nextElement();
+
+    /** 
+     * @deprecated This method is not thread-safe.
+     */
     virtual void Reset();
+
+    /**
+     * return total number of attributes in this list
+     */
+    virtual unsigned int getAttDefCount() const ;
+
+    /**
+     * return attribute at the index-th position in the list.
+     */
+    virtual XMLAttDef &getAttDef(unsigned int index) ;
+
+    /**
+     * return attribute at the index-th position in the list.
+     */
+    virtual const XMLAttDef &getAttDef(unsigned int index) const ;
 
     /***
      * Support for Serialization/De-serialization
@@ -162,6 +192,9 @@ public :
 	DTDAttDefList(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private :
+
+    void addAttDef(DTDAttDef *toAdd);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -172,10 +205,35 @@ private :
     //  fList
     //      The list of DTDAttDef objects that represent the attributes that
     //      a particular element supports.
+    //  fArray
+    //      vector of pointers to the DTDAttDef objects contained in this list
+    //  fSize
+    //      size of fArray
+    //  fCount
+    //      number of DTDAttDef objects currently stored in this list
     // -----------------------------------------------------------------------
     RefHashTableOfEnumerator<DTDAttDef>*    fEnum;
     RefHashTableOf<DTDAttDef>*              fList;
+    DTDAttDef**                             fArray;
+    unsigned int                            fSize;
+    unsigned int                            fCount;
+
+    friend class DTDElementDecl;
 };
+
+inline void DTDAttDefList::addAttDef(DTDAttDef *toAdd)
+{
+    if(fCount == fSize)
+    {
+        // need to grow fArray
+        fSize <<= 1;
+        DTDAttDef** newArray = (DTDAttDef **)((getMemoryManager())->allocate( sizeof(DTDAttDef*) * fSize ));
+        memcpy(newArray, fArray, fCount * sizeof(DTDAttDef *));
+        (getMemoryManager())->deallocate(fArray);
+        fArray = newArray;
+    }
+    fArray[fCount++] = toAdd;
+}
 
 XERCES_CPP_NAMESPACE_END
 

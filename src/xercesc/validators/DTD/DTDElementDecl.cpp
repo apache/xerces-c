@@ -165,6 +165,10 @@ XMLAttDef* DTDElementDecl::findAttr(const   XMLCh* const    qName
         );
         retVal->setElemId(getId());
         fAttDefs->put((void*)retVal->getFullName(), retVal);
+        // update and/or create fAttList
+        if(!fAttList)
+            ((DTDElementDecl*)this)->fAttList = new (getMemoryManager()) DTDAttDefList(fAttDefs,getMemoryManager());
+        fAttList->addAttDef(retVal);
 
         wasAdded = true;
     }
@@ -306,6 +310,10 @@ void DTDElementDecl::addAttDef(DTDAttDef* const toAdd)
     toAdd->setElemId(getId());
 
     fAttDefs->put((void*)(toAdd->getFullName()), toAdd);
+    // update and/or create fAttList
+    if(!fAttList)
+        ((DTDElementDecl*)this)->fAttList = new (getMemoryManager()) DTDAttDefList(fAttDefs,getMemoryManager());
+    fAttList->addAttDef(toAdd);
 }
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/10 21:54:51  neilg
+ * implementation for new stateless means of traversing attribute definition lists
+ *
  * Revision 1.5  2003/10/20 11:46:28  gareth
  * Pass in memory manager to constructors and use for creation of enumerators.
  *
@@ -93,6 +96,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -103,13 +107,19 @@ DTDAttDefList::DTDAttDefList(RefHashTableOf<DTDAttDef>* const listToUse, MemoryM
 : XMLAttDefList(manager)
 ,fEnum(0)
 ,fList(listToUse)
+,fArray(0)
+,fSize(0)
+,fCount(0)
 {
     fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(listToUse);
+    fArray = (DTDAttDef **)((getMemoryManager())->allocate( sizeof(DTDAttDef*) << 1));
+    fSize = 2;
 }
 
 DTDAttDefList::~DTDAttDefList()
 {
     delete fEnum;
+    (getMemoryManager())->deallocate(fArray);
 }
 
 
@@ -173,6 +183,34 @@ void DTDAttDefList::Reset()
     fEnum->Reset();
 }
 
+/**
+ * return total number of attributes in this list
+ */
+unsigned int DTDAttDefList::getAttDefCount() const
+{
+    return fCount;
+}
+
+/**
+ * return attribute at the index-th position in the list.
+ */
+XMLAttDef &DTDAttDefList::getAttDef(unsigned int index) 
+{
+    if(index >= fCount)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    return *(fArray[index]);
+}
+
+/**
+ * return attribute at the index-th position in the list.
+ */
+const XMLAttDef &DTDAttDefList::getAttDef(unsigned int index) const 
+{
+    if(index >= fCount)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    return *(fArray[index]);
+}
+
 /***
  * Support for Serialization/De-serialization
  ***/
@@ -192,6 +230,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
          *
          ***/
         XTemplateSerializer::storeObject(fList, serEng);
+        serEng << fCount;
 
         // do not serialize fEnum
     }
@@ -203,10 +242,21 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
          *
          ***/
         XTemplateSerializer::loadObject(&fList, 3, true, serEng);
-
+        // assume empty so we can size fArray just right
+        serEng >> fSize;
         if (!fEnum && fList)
         {
              fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(fList);
+        }
+        if(fSize) 
+        {
+            (getMemoryManager())->deallocate(fArray);
+            fArray = (DTDAttDef **)((getMemoryManager())->allocate( sizeof(DTDAttDef*) * fSize));
+            fCount = 0;
+            while(fEnum->hasMoreElements())
+            {
+                fArray[fCount++] = &fEnum->nextElement();
+            }
         }
     }
 
@@ -217,6 +267,9 @@ DTDAttDefList::DTDAttDefList(MemoryManager* const manager)
 : XMLAttDefList(manager)
 ,fEnum(0)
 ,fList(0)
+,fArray(0)
+,fSize(0)
+,fCount(0)
 {
 }
 
