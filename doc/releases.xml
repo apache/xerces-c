@@ -62,6 +62,13 @@
     </tr>
 
     <tr>
+        <td>2001-12-05</td>
+        <td>Edward Avis</td>
+        <td>Fix runConfigure which can run into infinite loop with invalid argument
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-12-03</td>
         <td>Tinny Ng</td>
         <td>[Bug 5237] PATH_MAX undefined during build without threading support.

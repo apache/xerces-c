@@ -5,6 +5,7 @@ the Apache Software Foundation.
 
 Nadav Aharoni
 Curt Arnold
+Edward Avis
 Anupam Bagchi
 Torbjörn Bäckström
 Matthew Baker

@@ -144,6 +144,11 @@ while [ $# -gt 0 ]
 
    --)
         shift; break;;
+
+   *)
+       echo "unknown option $1"
+       usage
+       exit ${ERROR_EXIT_CODE};;
    esac
 done
 

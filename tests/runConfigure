@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2001/12/05 16:49:53  tng
+# Fix runConfigure which can run into infinite loop with invalid argument  By Edward Avis.
+#
 # Revision 1.11  2001/11/23 16:17:46  tng
 # Remove -lC for Solaris build.
 #
@@ -173,6 +176,11 @@ for i in $*
 
    --)
         shift; break;;
+
+   *)
+       echo "unknown option $1"
+       usage
+       exit ${ERROR_EXIT_CODE};;
    esac
 done
 
