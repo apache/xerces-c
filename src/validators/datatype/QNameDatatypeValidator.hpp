@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/20 15:36:49  peiyongz
+ * DTV reorganization: inherit from AbstractStringVaildator
+ *
  * Revision 1.3  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -73,11 +76,10 @@
 #if !defined(QNAME_DATATYPEVALIDATOR_HPP)
 #define QNAME_DATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
-#include <validators/schema/SchemaSymbols.hpp>
-#include <util/RefVectorOf.hpp>
+#include <validators/datatype/AbstractStringValidator.hpp>
+#include <validators/datatype/InvalidDatatypeValueException.hpp>
 
-class VALIDATORS_EXPORT QNameDatatypeValidator : public DatatypeValidator
+class VALIDATORS_EXPORT QNameDatatypeValidator : public AbstractStringValidator
 {
 public:
 
@@ -98,122 +100,28 @@ public:
 
 	//@}
 
-    // -----------------------------------------------------------------------
-    // Getter methods
-    // -----------------------------------------------------------------------
-    /** @name Getter Functions */
-    //@{
-
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    // Validation methods
-    // -----------------------------------------------------------------------
-    /** @name Validation Function */
-    //@{
-
-    /**
-     * validate that a string matches the boolean datatype
-     * @param content A string containing the content to be validated
-     *
-     * @exception throws InvalidDatatypeException if the content is
-     * is not valid.
-     */
-
-	void validate(const XMLCh* const content);
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    // Compare methods
-    // -----------------------------------------------------------------------
-    /** @name Compare Function */
-    //@{
-
-    /**
-     * Compare two boolean data types
-     * 
-     * @param content1
-     * @param content2
-     * @return 
-     */
-    int compare(const XMLCh* const, const XMLCh* const);
-
-    //@}
-
     /**
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    inline DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                        , RefVectorOf<XMLCh>*           const enums
+                                        , const int                           finalSet);
+protected:
+
+    inline void checkValueSpace(const XMLCh* const content);
 
 private:
-
-    void checkContent(const XMLCh* const content, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    void cleanUp();
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-    unsigned int         getLength() const;
-
-    unsigned int         getMaxLength() const;
-
-    unsigned int         getMinLength() const;
-
-    RefVectorOf<XMLCh>*  getEnumeration() const;
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-
-    void                 setLength(unsigned int);
-
-    void                 setMaxLength(unsigned int);
-
-    void                 setMinLength(unsigned int);
-
-    void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  
-    //      .
-	//		
+	//		Nil
     // -----------------------------------------------------------------------    
-     int                  fLength;
-     int                  fMaxLength;  
-     int                  fMinLength;  
-     bool                 fEnumerationInherited;
-     RefVectorOf<XMLCh>*  fEnumeration;
 
 };
 
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-inline int QNameDatatypeValidator::compare(const XMLCh* const lValue
-                                         , const XMLCh* const rValue)
-{
-    return XMLString::compareString(lValue, rValue);
-}
-
-inline DatatypeValidator* QNameDatatypeValidator::newInstance(
+DatatypeValidator* QNameDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
@@ -221,76 +129,21 @@ inline DatatypeValidator* QNameDatatypeValidator::newInstance(
     return (DatatypeValidator*) new QNameDatatypeValidator(this, facets, enums, finalSet);
 }
 
-inline void QNameDatatypeValidator::validate( const XMLCh* const content)
+void QNameDatatypeValidator::checkValueSpace(const XMLCh* const content)
 {
-    checkContent(content, false);
-}
-
-inline void QNameDatatypeValidator::cleanUp()
-{
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-inline unsigned int QNameDatatypeValidator::getLength() const
-{
-    return fLength;
-}
-
-inline unsigned int QNameDatatypeValidator::getMaxLength() const
-{
-    return fMaxLength;
-}
-
-inline unsigned int QNameDatatypeValidator::getMinLength() const
-{
-    return fMinLength;
-}
-
-inline RefVectorOf<XMLCh>* QNameDatatypeValidator:: getEnumeration() const
-{
-    return fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-
-inline void QNameDatatypeValidator::setLength(unsigned int newLength)
-{
-    fLength = newLength;
-}
-
-inline void QNameDatatypeValidator::setMaxLength(unsigned int newMaxLength)
-{
-    fMaxLength = newMaxLength;
-}
-
-inline void QNameDatatypeValidator::setMinLength(unsigned int newMinLength)
-{
-    fMinLength = newMinLength;
-}
-
-inline void QNameDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
-                                                 , bool                inherited)
-{
-    if (enums)
+    //
+    // check 3.2.18.c0 must: QName
+    //
+    if ( !XMLString::isValidQName(content))
     {
-        if (fEnumeration && !fEnumerationInherited)
-            delete fEnumeration;
-
-        fEnumeration = enums;
-        fEnumerationInherited = inherited;
-        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_QName_Invalid
+                , content);
     }
 }
 
 /**
   * End of file QNameDatatypeValidator.hpp
   */
+
 #endif
