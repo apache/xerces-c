@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/07/23 16:05:50  amassari
+ * transcode was badly terminating the converted string (jira#1179)
+ *
  * Revision 1.15  2003/12/24 15:24:15  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -1274,8 +1277,6 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     if (wLent > maxBytes)
         wLent = maxBytes;
 
-    size_t mblen;
-
 #ifndef XML_USE_LIBICONV
 
     wchar_t       tmpWideCharArr[gTempBuffArraySize];
@@ -1295,7 +1296,7 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     wideCharBuf[wLent] = 0x00;
 
     // Ok, go ahead and try the transcoding. If it fails, then ...
-    mblen = fbsd_wcstombs(toFill, wideCharBuf, maxBytes);
+    size_t mblen = fbsd_wcstombs(toFill, wideCharBuf, maxBytes);
     if (mblen == -1) {
         if (allocatedArray)
             manager->deallocate(allocatedArray);//delete [] allocatedArray;
@@ -1304,6 +1305,8 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     if (allocatedArray)
         manager->deallocate(allocatedArray);//delete [] allocatedArray;
 
+    // Cap it off just in case
+    toFill[mblen] = 0;
 #else /* XML_USE_LIBICONV */
 
     // Fill the "unicode" string
@@ -1331,8 +1334,8 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
     // Ok, go ahead and try the transcoding. If it fails, then ...
     char    *ptr = toFill;
-    mblen = iconvTo(wideCharBuf, &len, &ptr, maxBytes);
-    if (mblen == (size_t)-1) {
+    size_t rc = iconvTo(wideCharBuf, &len, &ptr, maxBytes);
+    if (rc == (size_t)-1) {
         if (wBufPtr)
            manager->deallocate(wBufPtr);//delete [] wBufPtr;
         return false;
@@ -1340,10 +1343,9 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     if (wBufPtr)
         manager->deallocate(wBufPtr);//delete [] wBufPtr;
 
+    *ptr = 0;
 #endif /* !XML_USE_LIBICONV */
 
-    // Cap it off just in case
-    toFill[mblen] = 0;
     return true;
 }
 
