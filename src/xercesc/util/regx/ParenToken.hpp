@@ -111,7 +111,7 @@ inline int ParenToken::getNoParen() const {
     return fNoParen;
 }
 
-inline Token* ParenToken::getChild(const int index) const {
+inline Token* ParenToken::getChild(const int) const {
 
     return fChild;
 }

@@ -116,7 +116,7 @@ inline int ModifierToken::getOptionsMask() const {
     return fOptionsMask;
 }
 
-inline Token* ModifierToken::getChild(const int index) const {
+inline Token* ModifierToken::getChild(const int) const {
 
     return fChild;
 }

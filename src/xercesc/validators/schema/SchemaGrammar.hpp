@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/08/22 15:42:10  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.3  2002/07/11 18:21:20  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -462,7 +465,7 @@ inline const XMLCh* SchemaGrammar::getTargetNamespace() const {
 // Element Decl
 inline unsigned int SchemaGrammar::getElemId (const   unsigned int  uriId
                                               , const XMLCh* const    baseName
-                                              , const XMLCh* const    qName
+                                              , const XMLCh* const
                                               , unsigned int          scope ) const
 {
     //
@@ -482,7 +485,7 @@ inline unsigned int SchemaGrammar::getElemId (const   unsigned int  uriId
 
 inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  uriId
                                               , const XMLCh* const    baseName
-                                              , const XMLCh* const    qName
+                                              , const XMLCh* const  
                                               , unsigned int          scope )   const
 {
     const SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
@@ -500,7 +503,7 @@ inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  u
 
 inline XMLElementDecl* SchemaGrammar::getElemDecl (const   unsigned int  uriId
                                               , const XMLCh* const    baseName
-                                              , const XMLCh* const    qName
+                                              , const XMLCh* const  
                                               , unsigned int          scope )
 {
     SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);

@@ -191,7 +191,7 @@ inline int Token::size() const {
 	return 0;
 }
 
-inline Token* Token::getChild(const int index) const {
+inline Token* Token::getChild(const int) const {
 
 	return 0;
 }
@@ -234,11 +234,11 @@ inline void Token::setTokenType(const unsigned short tokType) {
 	fTokenType = tokType;
 }
 
-inline void Token::setMax(const int maxVal) {
+inline void Token::setMax(const int) {
 	// ClosureToken
 }
 
-inline void Token::setMin(const int minVal) {
+inline void Token::setMin(const int) {
 	// ClosureToken
 }
 
@@ -250,7 +250,7 @@ inline bool Token::isSet(const int options, const unsigned int flag) {
 // ---------------------------------------------------------------------------
 //  Token: setter methods
 // ---------------------------------------------------------------------------
-inline void Token::addChild(Token* const child, TokenFactory* const tokFactory) {
+inline void Token::addChild(Token* const, TokenFactory* const) {
 
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
@@ -258,12 +258,12 @@ inline void Token::addChild(Token* const child, TokenFactory* const tokFactory) 
 // ---------------------------------------------------------------------------
 //  Token: Range manipulation methods
 // ---------------------------------------------------------------------------
-inline void Token::addRange(const XMLInt32 start, const XMLInt32 end) {
+inline void Token::addRange(const XMLInt32, const XMLInt32) {
 
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
-inline void Token::mergeRanges(const Token *const tok) {
+inline void Token::mergeRanges(const Token *const) {
 
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
@@ -278,12 +278,12 @@ inline void Token::compactRanges() {
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
-inline void Token::subtractRanges(RangeToken* const tok) {
+inline void Token::subtractRanges(RangeToken* const) {
 
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
 
-inline void Token::intersectRanges(RangeToken* const tok) {
+inline void Token::intersectRanges(RangeToken* const) {
 
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
