@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/21 12:05:48  amassari
+ * Updated version to 2.4
+ *
  * Revision 1.2  2003/03/14 12:44:49  tng
  * [Bug 17147] C++ namespace breaks build of XercesCOM DLL
  *
@@ -106,10 +109,9 @@ XERCES_CPP_NAMESPACE_USE
 #endif
 
 
-template <class T, const IID* piid, const GUID* plibid = &CComModule::m_libid, WORD wMajor = 1,
-WORD wMinor = 0, class tihclass = CComTypeInfoHolder>
+template <class T, const IID* piid, class tihclass = CComTypeInfoHolder>
 class ATL_NO_VTABLE IXMLDOMNodeImpl:
-	public IDispatchImpl<T,piid,plibid,wMajor,wMinor,tihclass>,
+	public IDispatchImpl<T,piid,&LIBID_Xerces, 2, 40,tihclass>,
 	public IIBMXMLDOMNodeIdentity,
 	public ISupportErrorInfo
 {

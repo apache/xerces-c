@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:40  peiyongz
- * Initial revision
+ * Revision 1.2  2003/11/21 12:05:48  amassari
+ * Updated version to 2.4
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:40  peiyongz
+ * sane_include
  *
  * Revision 1.2  2000/03/30 02:00:12  abagchi
  * Initial checkin of working code with Copyright Notice
@@ -70,9 +73,8 @@
 #include "XMLDOMUtil.h"
 #include "IXMLDOMCharacterDataImpl.h"
 
-template <class T, const IID* piid, const GUID* plibid = &CComModule::m_libid, WORD wMajor = 1,
-WORD wMinor = 0, class tihclass = CComTypeInfoHolder>
-class ATL_NO_VTABLE IXMLDOMTextImpl: public IXMLDOMCharacterDataImpl<T,piid,plibid,wMajor,wMinor,tihclass>
+template <class T, const IID* piid, class tihclass = CComTypeInfoHolder>
+class ATL_NO_VTABLE IXMLDOMTextImpl: public IXMLDOMCharacterDataImpl<T,piid,tihclass>
 {
 public:
 

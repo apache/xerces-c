@@ -68,16 +68,16 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
-HRESULT STDMETHODCALLTYPE IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::InterfaceSupportsErrorInfo(REFIID riid)
+template <class T, const IID* piid, class tihclass>
+HRESULT STDMETHODCALLTYPE IXMLDOMNodeImpl<T,piid,tihclass>::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if(riid == *piid) return S_OK;
 	return S_FALSE;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeName(BSTR *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_nodeName(BSTR *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_nodeName\n"));
 
@@ -103,9 +103,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeName(BSTR *pVal)
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeValue(VARIANT *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_nodeValue(VARIANT *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_nodeValue\n"));
 
@@ -139,9 +139,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeValue(VARIANT *pV
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_nodeValue(VARIANT newVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::put_nodeValue(VARIANT newVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::put_nodeValue\n"));
 
@@ -172,9 +172,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_nodeValue(VARIANT new
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeType(DOMNodeType *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_nodeType(DOMNodeType *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_nodeType\n"));
 
@@ -186,9 +186,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeType(DOMNodeType 
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_parentNode(IXMLDOMNode **pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_parentNode(IXMLDOMNode **pVal)
 {	
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_parentNode\n"));
 	
@@ -218,9 +218,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_parentNode(IXMLDOMNod
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_childNodes(IXMLDOMNodeList * *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_childNodes(IXMLDOMNodeList * *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_childNodes\n"));
 	
@@ -260,9 +260,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_childNodes(IXMLDOMNod
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_firstChild(IXMLDOMNode **pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_firstChild(IXMLDOMNode **pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_firstChild\n"));
 
@@ -295,9 +295,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_firstChild(IXMLDOMNod
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_lastChild(IXMLDOMNode **pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_lastChild(IXMLDOMNode **pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_lastChild\n"));
 
@@ -327,9 +327,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_lastChild(IXMLDOMNode
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_previousSibling(IXMLDOMNode * *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_previousSibling(IXMLDOMNode * *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_previousSibling\n"));
 
@@ -358,9 +358,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_previousSibling(IXMLD
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nextSibling(IXMLDOMNode * *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_nextSibling(IXMLDOMNode * *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_nextSibling\n"));
 
@@ -389,9 +389,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nextSibling(IXMLDOMNo
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_attributes(IXMLDOMNamedNodeMap * *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_attributes(IXMLDOMNamedNodeMap * *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_attributes\n"));
 
@@ -437,9 +437,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_attributes(IXMLDOMNam
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::insertBefore(IXMLDOMNode *newChild, VARIANT refChild, IXMLDOMNode **outNewChild)
+IXMLDOMNodeImpl<T,piid,tihclass>::insertBefore(IXMLDOMNode *newChild, VARIANT refChild, IXMLDOMNode **outNewChild)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::insertBefore\n"));
 
@@ -500,9 +500,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::insertBefore(IXMLDOMNode 
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::replaceChild(IXMLDOMNode *newChild, IXMLDOMNode *oldChild, IXMLDOMNode * *outNewChild)
+IXMLDOMNodeImpl<T,piid,tihclass>::replaceChild(IXMLDOMNode *newChild, IXMLDOMNode *oldChild, IXMLDOMNode * *outNewChild)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::replaceChild\n"));
 
@@ -561,9 +561,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::replaceChild(IXMLDOMNode 
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::removeChild(IXMLDOMNode *child, IXMLDOMNode * *oldChild)
+IXMLDOMNodeImpl<T,piid,tihclass>::removeChild(IXMLDOMNode *child, IXMLDOMNode * *oldChild)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::removeChild\n"));
 
@@ -606,9 +606,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::removeChild(IXMLDOMNode *
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::appendChild(IXMLDOMNode *newChild, IXMLDOMNode * *outNewChild)
+IXMLDOMNodeImpl<T,piid,tihclass>::appendChild(IXMLDOMNode *newChild, IXMLDOMNode * *outNewChild)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::appendChild\n"));
 	
@@ -650,9 +650,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::appendChild(IXMLDOMNode *
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::hasChildNodes(VARIANT_BOOL *hasChild)
+IXMLDOMNodeImpl<T,piid,tihclass>::hasChildNodes(VARIANT_BOOL *hasChild)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::hasChildNodes\n"));
 
@@ -677,9 +677,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::hasChildNodes(VARIANT_BOO
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_ownerDocument(IXMLDOMDocument **pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_ownerDocument(IXMLDOMDocument **pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_ownerDocument\n"));
 
@@ -696,9 +696,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_ownerDocument(IXMLDOM
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::cloneNode(VARIANT_BOOL deep, IXMLDOMNode **pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::cloneNode(VARIANT_BOOL deep, IXMLDOMNode **pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::cloneNode\n"));
 
@@ -725,9 +725,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::cloneNode(VARIANT_BOOL de
 	return hr;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeTypeString(BSTR *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_nodeTypeString(BSTR *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_nodeTypeString\n"));
 
@@ -741,9 +741,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeTypeString(BSTR *
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_text(BSTR *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_text(BSTR *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_text\n"));
 
@@ -756,9 +756,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_text(BSTR *pVal)
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_text(BSTR newVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::put_text(BSTR newVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::put_text\n"));
 
@@ -804,9 +804,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_text(BSTR newVal)
 }
 
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_specified(VARIANT_BOOL *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_specified(VARIANT_BOOL *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_specified\n"));
 
@@ -814,54 +814,54 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_specified(VARIANT_BOO
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_definition(IXMLDOMNode * *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_definition(IXMLDOMNode * *pVal)
 {	
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_definition\n"));
 
 	return E_NOTIMPL;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeTypedValue(VARIANT *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_nodeTypedValue(VARIANT *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_nodeTypedValue\n"));
 
 	return get_nodeValue(pVal);
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_nodeTypedValue(VARIANT newVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::put_nodeTypedValue(VARIANT newVal)
 {	
 	ATLTRACE(_T("IXMLDOMNodeImpl::put_nodeTypedValue\n"));
 
 	return put_nodeValue(newVal);
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_dataType(VARIANT *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_dataType(VARIANT *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_dataType\n"));
 
 	return E_NOTIMPL;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_dataType(BSTR dataTypeName)
+IXMLDOMNodeImpl<T,piid,tihclass>::put_dataType(BSTR dataTypeName)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::put_dataType\n"));
 
 	return E_NOTIMPL;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_xml(BSTR *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_xml(BSTR *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_xml\n"));
 
@@ -889,36 +889,36 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_xml(BSTR *pVal)
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::transformNode(IXMLDOMNode *stylesheet, BSTR *xmlString)
+IXMLDOMNodeImpl<T,piid,tihclass>::transformNode(IXMLDOMNode *stylesheet, BSTR *xmlString)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::transformNode\n"));
 
 	return E_NOTIMPL;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::selectNodes(BSTR queryString, IXMLDOMNodeList * *resultList)
+IXMLDOMNodeImpl<T,piid,tihclass>::selectNodes(BSTR queryString, IXMLDOMNodeList * *resultList)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::selectNodes\n"));
 
 	return E_NOTIMPL;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::selectSingleNode(BSTR queryString, IXMLDOMNode * *resultNode)
+IXMLDOMNodeImpl<T,piid,tihclass>::selectSingleNode(BSTR queryString, IXMLDOMNode * *resultNode)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::selectSingleNode\n"));
 
 	return E_NOTIMPL;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_parsed(VARIANT_BOOL *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_parsed(VARIANT_BOOL *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_parsed\n"));
 
@@ -929,9 +929,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_parsed(VARIANT_BOOL *
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_namespaceURI(BSTR *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_namespaceURI(BSTR *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_namespaceURI\n"));
 
@@ -956,9 +956,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_namespaceURI(BSTR *pV
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_prefix(BSTR *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_prefix(BSTR *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_prefix\n"));
 	
@@ -983,9 +983,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_prefix(BSTR *pVal)
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_baseName(BSTR *pVal)
+IXMLDOMNodeImpl<T,piid,tihclass>::get_baseName(BSTR *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_baseName\n"));
 
@@ -1010,9 +1010,9 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_baseName(BSTR *pVal)
 	return S_OK;
 }
 
-template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
+template <class T, const IID* piid, class tihclass>
 STDMETHODIMP
-IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::transformNodeToObject(IXMLDOMNode *stylesheet, VARIANT outputObject)
+IXMLDOMNodeImpl<T,piid,tihclass>::transformNodeToObject(IXMLDOMNode *stylesheet, VARIANT outputObject)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::transformNodeToObject\n"));
 

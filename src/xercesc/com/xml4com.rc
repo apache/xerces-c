@@ -130,15 +130,15 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Apache Software Foundation\0"
             VALUE "FileDescription", "Xerces XML Parser for COM\0"
-            VALUE "FileVersion", "1, 4, 0\0"
+            VALUE "FileVersion", "2, 4, 0\0"
             VALUE "InternalName", "Xerces XML Parser for COM \0"
             VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2000 subject to licensing terms\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OLESelfRegister", "\0"
-            VALUE "OriginalFilename", "xerces14-com.dll\0"
+            VALUE "OriginalFilename", "xerces-com.dll\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Xerces XML Parser for COM\0"
-            VALUE "ProductVersion", "1, 4, 0\0"
+            VALUE "ProductVersion", "2, 4, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/21 12:05:48  amassari
+ * Updated version to 2.4
+ *
  * Revision 1.3  2003/10/21 21:21:32  amassari
  * When the COM object is loaded by a late-binding engine (like WSH, or
  * Visual Basic when the type library is not preloaded in the editor), the type
@@ -88,7 +91,7 @@ class ATL_NO_VTABLE CXMLHttpRequest :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CXMLHttpRequest, &CLSID_XMLHTTPRequest>,
 	public IObjectSafetyImpl<CXMLHttpRequest, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
-	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces, 2, 30>,
+	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces, 2, 40>,
 	public IObjectWithSiteImpl<CXMLHttpRequest>,
 	public ISupportErrorInfo,
 	public CWindowImpl<CXMLHttpRequest, CWindow, CWinTraits<0,0> >

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 12:05:48  amassari
+ * Updated version to 2.4
+ *
  * Revision 1.4  2003/10/21 21:21:32  amassari
  * When the COM object is loaded by a late-binding engine (like WSH, or
  * Visual Basic when the type library is not preloaded in the editor), the type
@@ -88,7 +91,7 @@ XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMImplementation : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IXMLDOMImplementation, &IID_IXMLDOMImplementation, &LIBID_Xerces, 2, 30>
+	public IDispatchImpl<IXMLDOMImplementation, &IID_IXMLDOMImplementation, &LIBID_Xerces, 2, 40>
 {
 public:
 	CXMLDOMImplementation()

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 12:05:48  amassari
+ * Updated version to 2.4
+ *
  * Revision 1.4  2003/10/21 21:21:32  amassari
  * When the COM object is loaded by a late-binding engine (like WSH, or
  * Visual Basic when the type library is not preloaded in the editor), the type
@@ -112,11 +115,11 @@ class ATL_NO_VTABLE CXMLDOMDocument :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CXMLDOMDocument, &CLSID_DOMDocument>,
 	public IObjectSafetyImpl<CXMLDOMDocument, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
-	public IXMLDOMNodeImpl<IXMLDOMDocument, &IID_IXMLDOMDocument, &LIBID_Xerces, 2, 30>,
+	public IXMLDOMNodeImpl<IXMLDOMDocument, &IID_IXMLDOMDocument>,
 	public IObjectWithSiteImpl<CXMLDOMDocument>,
 	public CProxyXMLDOMDocumentEvents< CXMLDOMDocument >,
 	public IConnectionPointContainerImpl<CXMLDOMDocument>,
-	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces, 2, 30>,
+	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces, 2, 40>,
 	public CWindowImpl<CXMLDOMDocument, CWindow, CWinTraits<0,0> >,
 	ErrorHandler
 {
