@@ -247,11 +247,13 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     // This is to tell the Validator that this attribute was
                     // faulted-in, was not an attribute in the attdef originally
                     attDef->setCreateReason(XMLAttDef::JustFaultIn);
+                    XMLBufBid bbURI(&fBufMgr);
+                    XMLBuffer& bufURI = bbURI.getBuffer();
 
-                    XMLBuffer bufURI;
                     getURIText(uriId, bufURI);
 
-                    XMLBuffer bufMsg;
+                    XMLBufBid bbMsg(&fBufMgr);
+                    XMLBuffer& bufMsg = bbMsg.getBuffer();
                     bufMsg.append(chOpenCurly);
                     bufMsg.append(bufURI.getRawBuffer());
                     bufMsg.append(chCloseCurly);
@@ -272,10 +274,12 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     && attDef->getCreateReason() == XMLAttDef::JustFaultIn
                     && !attDef->getProvided())
                 {
-                    XMLBuffer bufURI;
+                    XMLBufBid bbURI(&fBufMgr);
+                    XMLBuffer& bufURI = bbURI.getBuffer();
                     getURIText(uriId, bufURI);
 
-                    XMLBuffer bufMsg;
+                    XMLBufBid bbMsg(&fBufMgr);
+                    XMLBuffer& bufMsg = bbMsg.getBuffer();
                     bufMsg.append(chOpenCurly);
                     bufMsg.append(bufURI.getRawBuffer());
                     bufMsg.append(chCloseCurly);
@@ -330,10 +334,12 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
                     {
                         // normalize the attribute according to schema whitespace facet
-                        XMLBuffer toFill;
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
                         DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), toFill);
-                        normBuf.set(toFill.getRawBuffer());
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                        normBuf.set(tempBuf.getRawBuffer());
                     }
 
                     fValidator->validateAttrValue
@@ -1181,7 +1187,8 @@ void XMLScanner::updateNSMap(const  XMLCh* const    attrName
 void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount) {
 
     //  Schema Xsi Type yyyy (e.g. xsi:type="yyyyy")
-    XMLBuffer fXsiType;
+    XMLBufBid bbXsi(&fBufMgr);
+    XMLBuffer& fXsiType = bbXsi.getBuffer();
 
     //
     //  Make an initial pass through the list and find any xmlns attributes or
@@ -1316,7 +1323,8 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         parser.setEntityResolver(fEntityResolver);
 
         // Create a buffer for expanding the system id
-        XMLBuffer expSysId;
+        XMLBufBid bbSys(&fBufMgr);
+        XMLBuffer& expSysId = bbSys.getBuffer();
 
         //
         //  Allow the entity handler to expand the system id if they choose
@@ -2707,7 +2715,8 @@ XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
 
 bool XMLScanner::switchGrammar(int newGrammarNameSpaceIndex)
 {
-    XMLBuffer bufURI;
+    XMLBufBid bbURI(&fBufMgr);
+    XMLBuffer& bufURI = bbURI.getBuffer();
     getURIText(newGrammarNameSpaceIndex, bufURI);
     Grammar* tempGrammar = fGrammarResolver->getGrammar(bufURI.getRawBuffer());
     if (!tempGrammar) {
