@@ -128,34 +128,6 @@ $set 1
 129  Unexpected end of file exception. Message: {0}
 
 
-$set 3
-  2  Unknown element '{0}'
-  3  Attribute '{0}' not defined
-  4  Notation '{0}' was referenced but never declared
-  5  Root element different from DOCTYPE
-  6  Required attribute '{0}' was not provided
-  7  Element '{0}' is not valid for content model: '{1}'
-  8  ID attributes must be #IMPLIED or #REQUIRED
-  9  This type of attribute cannot have an empty value
- 10  Element '{0}' has already been declared
- 11  Element '{0}' has more than one ID attribute
- 12  ID '{0}' has already been used
- 13  ID attribute '{0}' was referenced but never declared
- 14  Attribute '{0}' refers to an unknown notation '{1}'
- 15  Element '{0}' was used in the DOCTYPE but never declared
- 16  Empty content not valid for content model: '{0}'
- 17  Attribute '{0}' is not declared for element '{1}'
- 18  Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity
- 19  Attribute '{0}' refers to an unknown entity '{1}'
- 20  Not enough elements to match content model : '{0}'
- 21  No character data is allowed by content model
- 22  Attribute '{0}' does not match its defined enumeration or notation list
- 23  The values for attribute '{0}' must be names or name tokens
- 24  Attribute '{0}' does not support multiple values
- 25  Attribute '{0}' has a value that does not match its #FIXED value
- 26  Element types cannot be duplicated in Mixed content models
-
-
 $set 2
   2  The index is beyond the array bounds  
   3  The new size is less than the old one
@@ -244,4 +216,31 @@ $set 2
  86  When reusing the validator, no internal subset is allowed
  87  The passed recognizer encoding was not known
 
+$set 3
+  2  Unknown element '{0}'
+  3  Attribute '{0}' not defined
+  4  Notation '{0}' was referenced but never declared
+  5  Root element different from DOCTYPE
+  6  Required attribute '{0}' was not provided
+  7  Element '{0}' is not valid for content model: '{1}'
+  8  ID attributes must be #IMPLIED or #REQUIRED
+  9  This type of attribute cannot have an empty value
+ 10  Element '{0}' has already been declared
+ 11  Element '{0}' has more than one ID attribute
+ 12  ID '{0}' has already been used
+ 13  ID attribute '{0}' was referenced but never declared
+ 14  Attribute '{0}' refers to an unknown notation '{1}'
+ 15  Element '{0}' was used in the DOCTYPE but never declared
+ 16  Empty content not valid for content model: '{0}'
+ 17  Attribute '{0}' is not declared for element '{1}'
+ 18  Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity
+ 19  Attribute '{0}' refers to an unknown entity '{1}'
+ 20  Not enough elements to match content model : '{0}'
+ 21  No character data is allowed by content model
+ 22  Attribute '{0}' does not match its defined enumeration or notation list
+ 23  The values for attribute '{0}' must be names or name tokens
+ 24  Attribute '{0}' does not support multiple values
+ 25  Attribute '{0}' has a value that does not match its #FIXED value
+ 26  Element types cannot be duplicated in Mixed content models  
+ 
 

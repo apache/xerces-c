@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:16  twl
- * Initial revision
+ * Revision 1.2  1999/12/23 01:43:37  aruna1
+ * MsgCatalog support added for solaris
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:16  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:27  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -89,7 +92,13 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain) :
 {
     // Try to get the module handle
 	char* tempLoc = setlocale(LC_ALL, "");
-	fCatalogHandle = catopen("XMLMessages.cat" , 0);
+    char catfile[256];
+    if (XMLPlatformUtils::fgLibLocation) {
+        strcpy(catfile, XMLPlatformUtils::fgLibLocation);
+        strcat(catfile, "/msg/");
+        strcat(catfile, "XMLMessages.cat");
+    }
+	fCatalogHandle = catopen(catfile , 0);
     if ((int)fCatalogHandle == -1)
     {
         // Probably have to call panic here
@@ -121,6 +130,8 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
         msgSet = 1;
     else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
         msgSet = 2;
+    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
+        msgSet = 3;
 
     char msgString[100];
     sprintf(msgString, "Could not find message ID %d from message set %d\n", msgToLoad, msgSet);
