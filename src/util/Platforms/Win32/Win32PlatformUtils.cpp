@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/01/31 23:53:14  roddey
+ * Since all synchronization inside the parser is intraprocess, the Win32 mutex
+ * implementation was changed to use critical sections for speed.
+ *
  * Revision 1.10  2000/01/25 21:34:45  roddey
  * Added support for the two new panic errors.
  *
@@ -550,32 +554,27 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
-    if (!::CloseHandle(mtxHandle))
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotClose);
+    ::DeleteCriticalSection((LPCRITICAL_SECTION)mtxHandle);
 }
 
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-    unsigned int res = ::WaitForSingleObject(mtxHandle, INFINITE);
-    if (res == WAIT_FAILED)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotLock);
+    ::EnterCriticalSection((LPCRITICAL_SECTION)mtxHandle);
 }
 
 
 void* XMLPlatformUtils::makeMutex()
 {
-    HANDLE hRet = ::CreateMutex(0, 0, 0);
-    if (!hRet)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
-    return hRet;
+    CRITICAL_SECTION* newCS = new CRITICAL_SECTION;
+    InitializeCriticalSection(newCS);
+    return newCS;
 }
 
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
-    if (!::ReleaseMutex(mtxHandle))
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotUnlock);
+    ::LeaveCriticalSection((LPCRITICAL_SECTION)mtxHandle);
 }
 
 
