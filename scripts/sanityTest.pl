@@ -156,15 +156,19 @@ system ("CreateDOMDocument");
 #
 
 #  Run DOMMemTest
+print  ("DOMMemTest\n");
 system ("DOMMemTest");
 
 #  Run DOMTest
+print  ("DOMTest\n");
 system ("DOMTest");
 
 #  Run RangeTest
+print  ("RangeTest\n");
 system ("RangeTest");
 
 #  Run DOMTraversalTest
+print  ("DOMTraversalTest\n");
 system ("DOMTraversalTest");
 
 #  Run DeprecatedDOMCount
@@ -183,19 +187,30 @@ system ("XSerializerTest -v=always -f personal-schema.xml");
 
 #  Run InitTestTerm
 system ("InitTermTest");
+print  ("1");
 system ("InitTermTest personal.xml");
+print  ("2");
 system ("InitTermTest -n -s personal-schema.xml");
+print  ("3");
 system ("InitTermTest -n -s -f personal-schema.xml");
 
 #  Run ThreadTest
 system ("ThreadTest");
+print  ("1");
 system ("ThreadTest -parser=sax -quiet -threads 10 -time 20 personal.xml");
+print  ("2");
 system ("ThreadTest -parser=dom -quiet -threads 10 -time 20 personal.xml");
+print  ("3");
 system ("ThreadTest -parser=sax -v -quiet -threads 10 -time 20 personal.xml");
+print  ("4");
 system ("ThreadTest -parser=dom -v -quiet -threads 10 -time 20 personal.xml");
+print  ("5");
 system ("ThreadTest -parser=sax -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
+print  ("6");
 system ("ThreadTest -parser=dom -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
+print  ("7");
 system ("ThreadTest -parser=sax -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+print  ("8");
 system ("ThreadTest -parser=dom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
 
 #  Run MemHandlerTest

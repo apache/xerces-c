@@ -868,9 +868,13 @@ Attributes:
 
 --------------------------------------------
 The tree just created contains: 4 elements.
+DOMMemTest
 Test Run Successfully
+DOMTest
 Test Run Successfully
+RangeTest
 Test Run Successfully
+DOMTraversalTest
 Test Run Successfully
 
 Usage:
@@ -933,9 +937,9 @@ Options:
     -f          Enable full schema constraint checking. Defaults to off.
     -?          Show this help.
 
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
+1Test Run Successfully
+2Test Run Successfully
+3Test Run Successfully
 No input XML file specified on command line.
 usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...
      -v             Use validating parser.  Non-validating is default.
@@ -951,14 +955,14 @@ usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile..
      -dump          Dump DOM tree on error.
      -mem           Read files into memory once only, and parse them from there.
 
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
+1Test Run Successfully
+2Test Run Successfully
+3Test Run Successfully
+4Test Run Successfully
+5Test Run Successfully
+6Test Run Successfully
+7Test Run Successfully
+8Test Run Successfully
 
 Usage:
     MemHandlerTest [options] <XML file | List file>
