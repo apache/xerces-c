@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/06/17 18:53:58  tng
+ * DOM L3: support "datatype-normalization"
+ *
  * Revision 1.11  2002/06/17 18:09:29  tng
  * DOM L3: support "datatype-normalization"
  *
@@ -682,6 +685,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());
     }
 
+    fDatatypeBuffer.reset();
     fTrailing = false;
 }
 
