@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  1999/12/18 00:22:32  roddey
+ * Changes to support the new, completely orthagonal, transcoder architecture.
+ *
  * Revision 1.5  1999/12/14 23:53:35  rahulj
  * Removed the offending Ctrl-M's from the commit message
  * logs which was giving packaging problems.
@@ -128,6 +131,7 @@ IconvTransService::~IconvTransService()
 {
 }
 
+
 // ---------------------------------------------------------------------------
 //  IconvTransService: The virtual transcoding service API
 // ---------------------------------------------------------------------------
@@ -184,21 +188,23 @@ bool IconvTransService::isSpace(const XMLCh toCheck) const
 }
 
 
-XMLTranscoder* IconvTransService::makeNewDefTranscoder()
+XMLTranscoder* IconvTransService::makeNewLCPTranscoder()
 {
     // Just allocate a new transcoder of our type
-    return new IconvTranscoder;
+    return new IconvLCPTranscoder;
 }
 
 
+// ---------------------------------------------------------------------------
+//  IconvTransService: The protected virtual transcoding service API
+// ---------------------------------------------------------------------------
 XMLTranscoder*
-IconvTransService::makeNewTranscoderFor(const   XMLCh* const            encodingName
+IconvTransService::makeNewXMLTranscoder(const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
                                         , const unsigned int            )
 {
     //
     //  NOTE: We don't use the block size here
-    //
     //
     //  This is a minimalist transcoding service, that only supports a local
     //  default transcoder. All named encodings return zero as a failure,
@@ -209,14 +215,16 @@ IconvTransService::makeNewTranscoderFor(const   XMLCh* const            encoding
     return 0;
 }
 
+
+
 // ---------------------------------------------------------------------------
-//  IconvTranscoder: Constructors and Destructor
+//  IconvLCPTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-IconvTranscoder::IconvTranscoder()
+IconvLCPTranscoder::IconvLCPTranscoder()
 {
 }
 
-IconvTranscoder::~IconvTranscoder()
+IconvLCPTranscoder::~IconvLCPTranscoder()
 {
 }
 
@@ -224,7 +232,7 @@ IconvTranscoder::~IconvTranscoder()
 // ---------------------------------------------------------------------------
 //  IconvTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int IconvTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText)
 {
     if (!srcText)
         return 0;
@@ -237,7 +245,7 @@ unsigned int IconvTranscoder::calcRequiredSize(const char* const srcText)
 }
 
 
-unsigned int IconvTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 {
     if (!srcText)
         return 0;
@@ -268,26 +276,7 @@ unsigned int IconvTranscoder::calcRequiredSize(const XMLCh* const srcText)
 
 
 
-XMLCh IconvTranscoder::transcodeOne(const   char* const     srcData
-                                    , const unsigned int    srcBytes
-                                    ,       unsigned int&   bytesEaten)
-{
-    wchar_t  toFill;
-    int eaten = ::mbtowc(&toFill, srcData, srcBytes);
-    if (eaten == -1)
-    {
-        bytesEaten = 0;
-        return 0;
-    }
-
-    // Return the bytes we ate and the resulting char.
-    bytesEaten = eaten;
-    return toFill;
-}
-
-
-
-char* IconvTranscoder::transcode(const XMLCh* const toTranscode)
+char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode)
 {
     if (!toTranscode)
         return 0;
@@ -334,9 +323,9 @@ char* IconvTranscoder::transcode(const XMLCh* const toTranscode)
 }
 
 
-bool IconvTranscoder::transcode(const   XMLCh* const    toTranscode
-                                ,       char* const     toFill
-                                , const unsigned int    maxBytes)
+bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
+                                    ,       char* const     toFill
+                                    , const unsigned int    maxBytes)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes)
@@ -367,8 +356,6 @@ bool IconvTranscoder::transcode(const   XMLCh* const    toTranscode
     wideCharBuf[maxBytes] = 0x00;
 
     // Ok, go ahead and try the transcoding. If it fails, then ...
-    //
-
     if (::wcstombs(toFill, wideCharBuf, maxBytes) == -1)
     {
         delete [] allocatedArray;
@@ -383,7 +370,7 @@ bool IconvTranscoder::transcode(const   XMLCh* const    toTranscode
 
 
 
-XMLCh* IconvTranscoder::transcode(const char* const toTranscode)
+XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode)
 {
     XMLCh* retVal = 0;
     if (toTranscode)
@@ -419,9 +406,9 @@ XMLCh* IconvTranscoder::transcode(const char* const toTranscode)
 }
 
 
-bool IconvTranscoder::transcode(const   char* const     toTranscode
-                                ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars)
+bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
+                                    ,       XMLCh* const    toFill
+                                    , const unsigned int    maxChars)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -461,6 +448,40 @@ bool IconvTranscoder::transcode(const   char* const     toTranscode
 }
 
 
+
+// ---------------------------------------------------------------------------
+//  IconvTranscoder: Constructors and Destructor
+// ---------------------------------------------------------------------------
+IconvTranscoder::IconvTranscoder()
+{
+}
+
+IconvTranscoder::~IconvTranscoder()
+{
+}
+
+
+// ---------------------------------------------------------------------------
+//  IconvTranscoder: Implementation of the virtual transcoder API
+// ---------------------------------------------------------------------------
+XMLCh IconvTranscoder::transcodeOne(const   char* const     srcData
+                                    , const unsigned int    srcBytes
+                                    ,       unsigned int&   bytesEaten)
+{
+    wchar_t  toFill;
+    int eaten = ::mbtowc(&toFill, srcData, srcBytes);
+    if (eaten == -1)
+    {
+        bytesEaten = 0;
+        return 0;
+    }
+
+    // Return the bytes we ate and the resulting char.
+    bytesEaten = eaten;
+    return toFill;
+}
+
+
 unsigned int
 IconvTranscoder::transcodeXML(  const   char* const             srcData
                                 , const unsigned int            srcCount
@@ -492,3 +513,6 @@ IconvTranscoder::transcodeXML(  const   char* const             srcData
     bytesEaten = countIn;
     return countOut;
 }
+
+
+

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  1999/12/18 00:22:32  roddey
+ * Changes to support the new, completely orthagonal, transcoder architecture.
+ *
  * Revision 1.5  1999/12/15 19:43:45  roddey
  * Now implements the new transcoding abstractions, with separate interface
  * classes for XML transcoders and local code page transcoders.
@@ -211,8 +214,23 @@ XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder()
 }
 
 
+void ICUTransService::upperCase(XMLCh* const toUpperCase) const
+{
+    XMLCh* outPtr = toUpperCase;
+    while (*outPtr)
+    {
+        *outPtr = Unicode::toUpperCase(*outPtr);
+        outPtr++;
+    }
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  ICUTransService: The protected virtual transcoding service API
+// ---------------------------------------------------------------------------
 XMLTranscoder*
-ICUTransService::makeNewTranscoderFor(  const   XMLCh* const            encodingName
+ICUTransService::makeNewXMLTranscoder(  const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
                                         , const unsigned int            blockSize)
 {

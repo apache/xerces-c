@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/18 00:22:33  roddey
+ * Changes to support the new, completely orthagonal, transcoder architecture.
+ *
  * Revision 1.3  1999/12/15 19:44:02  roddey
  * Now implements the new transcoding abstractions, with separate interface
  * classes for XML transcoders and local code page transcoders.
@@ -121,8 +124,19 @@ XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder()
     return new Win32LCPTranscoder;
 }
 
+
+void Win32TransService::upperCase(XMLCh* const toUpperCase) const
+{
+    wcsupr(toUpperCase);
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  Win32TransService: The protected virtual transcoding service API
+// ---------------------------------------------------------------------------
 XMLTranscoder*
-Win32TransService::makeNewTranscoderFor(const   XMLCh* const
+Win32TransService::makeNewXMLTranscoder(const   XMLCh* const
                                         ,       XMLTransService::Codes& resValue
                                         , const unsigned int)
 {

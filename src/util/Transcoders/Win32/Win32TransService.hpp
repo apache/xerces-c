@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:22:33  roddey
+ * Changes to support the new, completely orthagonal, transcoder architecture.
+ *
  * Revision 1.2  1999/12/15 19:44:02  roddey
  * Now implements the new transcoding abstractions, with separate interface
  * classes for XML transcoders and local code page transcoders.
@@ -103,7 +106,14 @@ public :
 
     virtual XMLLCPTranscoder* makeNewLCPTranscoder();
 
-    virtual XMLTranscoder* makeNewTranscoderFor
+    virtual void upperCase(XMLCh* const toUpperCase) const;
+
+
+protected :
+    // -----------------------------------------------------------------------
+    //  Protected virtual methods
+    // -----------------------------------------------------------------------
+    virtual XMLTranscoder* makeNewXMLTranscoder
     (
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue

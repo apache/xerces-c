@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:10  twl
- * Initial revision
+ * Revision 1.2  1999/12/18 00:22:32  roddey
+ * Changes to support the new, completely orthagonal, transcoder architecture.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:10  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:34  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -97,9 +100,14 @@ public :
 
     virtual bool isSpace(const XMLCh toCheck) const;
 
-    virtual XMLTranscoder* makeNewDefTranscoder();
+    virtual XMLTranscoder* makeNewLCPTranscoder();
 
-    virtual XMLTranscoder* makeNewTranscoderFor
+
+protected :
+    // -----------------------------------------------------------------------
+    //  Protected virtual methods
+    // -----------------------------------------------------------------------
+    virtual XMLTranscoder* makeNewXMLTranscoder
     (
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
@@ -131,16 +139,49 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
-    virtual unsigned int calcRequiredSize(const char* const srcText);
-
-    virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
-
     virtual XMLCh transcodeOne
     (
         const   char* const     srcData
         , const unsigned int    srcBytes
         ,       unsigned int&   bytesEaten
     );
+
+    virtual unsigned int transcodeXML
+    (
+        const   char* const             srcData
+        , const unsigned int            srcCount
+        ,       XMLCh* const            toFill
+        , const unsigned int            maxChars
+        ,       unsigned int&           bytesEaten
+    );
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    IconvTranscoder(const IconvTranscoder&);
+    void operator=(const IconvTranscoder&);
+};
+
+
+
+class XMLUTIL_EXPORT IconvLCPTranscoder : public XMLLCPTranscoder
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    IconvTranscoder();
+    ~IconvTranscoder();
+
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the virtual transcoder interface
+    // -----------------------------------------------------------------------
+    virtual unsigned int calcRequiredSize(const char* const srcText);
+
+    virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
 
     virtual char* transcode(const XMLCh* const toTranscode);
 
@@ -160,22 +201,13 @@ public :
         , const unsigned int    maxChars
     );
 
-    virtual unsigned int transcodeXML
-    (
-        const   char* const             srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
-    );
-
 
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    IconvTranscoder(const IconvTranscoder&);
-    void operator=(const IconvTranscoder&);
+    IconvLCPTranscoder(const IconvLCPTranscoder&);
+    void operator=(const IconvLCPTranscoder&);
 };
 
 #endif
