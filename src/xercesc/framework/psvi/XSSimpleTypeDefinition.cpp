@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2005/03/17 08:26:39  amassari
+ * Remove variable declaration from 'if' statement (jira# 1379)
+ *
  * Revision 1.11  2004/10/19 11:09:11  cargilld
  * More fixes to derviedFromType.
  *
@@ -103,7 +106,8 @@ XSSimpleTypeDefinition::XSSimpleTypeDefinition
     , fMemberTypes(memberTypes)
     , fXSAnnotationList(0)
 {
-    if (int finalset = fDatatypeValidator->getFinalSet()) 
+    int finalset = fDatatypeValidator->getFinalSet();
+    if (finalset) 
     {
         if (finalset & SchemaSymbols::XSD_EXTENSION)
             fFinal |= XSConstants::DERIVATION_EXTENSION;
