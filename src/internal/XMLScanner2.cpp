@@ -2030,7 +2030,7 @@ bool XMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
             {
                 if (curState == InWhitespace)
                 {
-                    if (!XMLReader::isWhitespace(nextCh))
+                    if ((escaped && nextCh != chSpace) || !XMLReader::isWhitespace(nextCh))
                     {
                         if (firstNonWS)
                             toFill.append(chSpace);
@@ -2044,7 +2044,8 @@ bool XMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                 }
                  else if (curState == InContent)
                 {
-                    if (XMLReader::isWhitespace(nextCh))
+                    if ((nextCh == chSpace) ||
+                        (XMLReader::isWhitespace(nextCh) && !escaped))
                     {
                         curState = InWhitespace;
                         //
