@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/29 19:39:33  knoaman
+ * Typo fix
+ *
  * Revision 1.3  2001/05/11 13:26:45  tng
  * Copyright update.
  *
@@ -96,22 +99,22 @@ const unsigned int RangeToken::INITIALSIZE = 16;
 //  RangeToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
 RangeToken::RangeToken(const unsigned short tokType) : Token(tokType)
-	, fSorted(false)
-	, fCompacted(false)
-	, fNonMapIndex(0)
-	, fElemCount(0)
+    , fSorted(false)
+    , fCompacted(false)
+    , fNonMapIndex(0)
+    , fElemCount(0)
     , fMaxCount(0)
-	, fMap(0)
-	, fRanges(0)
-	, fCaseIToken(0)
+    , fMap(0)
+    , fRanges(0)
+    , fCaseIToken(0)
 {
 
 }
 
 RangeToken::~RangeToken() {
 
-	delete fMap;
-	delete[] fRanges;
+    delete fMap;
+    delete[] fRanges;
 }
 
 
@@ -120,19 +123,19 @@ RangeToken::~RangeToken() {
 // ---------------------------------------------------------------------------
 RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) {
 
-	// REVIST
-	// We will not build a token with case insenstive ranges
-	// For now we will return a copy of ourselves.
-	if (fCaseIToken == 0 && tokFactory) {
-	
-		bool isNRange = (getTokenType() == NRANGE) ? true : false;
-		RangeToken* lwrToken = tokFactory->createRange(isNRange);
+    // REVIST
+    // We will not build a token with case insenstive ranges
+    // For now we will return a copy of ourselves.
+    if (fCaseIToken == 0 && tokFactory) {
 
-		lwrToken->mergeRanges(this);
-		fCaseIToken = lwrToken;
-	}
+        bool isNRange = (getTokenType() == NRANGE) ? true : false;
+        RangeToken* lwrToken = tokFactory->createRange(isNRange);
 
-	return fCaseIToken;
+        lwrToken->mergeRanges(this);
+        fCaseIToken = lwrToken;
+    }
+
+    return fCaseIToken;
 }
 
 // ---------------------------------------------------------------------------
@@ -140,281 +143,282 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
 // ---------------------------------------------------------------------------
 void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
 
-	XMLInt32 val1, val2;
+    XMLInt32 val1, val2;
 
-	fCaseIToken = 0;
+    fCaseIToken = 0;
 
-	if (start <= end) {
+    if (start <= end) {
 
-		val1 = start;
-		val2 = end;
-	}
-	else {
+        val1 = start;
+        val2 = end;
+    }
+    else {
 
-		val1 = end;
-		val2 = start;
-	}
+        val1 = end;
+        val2 = start;
+    }
 
-	if (fRanges == 0) {
+    if (fRanges == 0) {
 
-		fMaxCount = INITIALSIZE;
-		fRanges = new XMLInt32[fMaxCount];
-		fRanges[0] = val1;
-		fRanges[1] = val2;
-		fElemCount = 2;
-		fSorted = true;
-	}
-	else {
+        fMaxCount = INITIALSIZE;
+        fRanges = new XMLInt32[fMaxCount];
+        fRanges[0] = val1;
+        fRanges[1] = val2;
+        fElemCount = 2;
+        fSorted = true;
+    }
+    else {
 
-		if (fRanges[fElemCount-1] + 1 == val1) {
+        if (fRanges[fElemCount-1] + 1 == val1) {
 
-			fRanges[fElemCount-1] = val2;
-			return;
-		}
+            fRanges[fElemCount-1] = val2;
+            return;
+        }
 
-		if (fElemCount + 2 >= fMaxCount) {
-			expand(2);
-		}
+        if (fElemCount + 2 >= fMaxCount) {
+            expand(2);
+        }
 
-		if (fRanges[fElemCount-1] >= val1)
-			fSorted = false;
+        if (fRanges[fElemCount-1] >= val1)
+            fSorted = false;
 
-		fRanges[fElemCount++] = val1;
-		fRanges[fElemCount++] = val2;
+        fRanges[fElemCount++] = val1;
+        fRanges[fElemCount++] = val2;
 
-		if (!fSorted) {
-			sortRanges();
-		}
-	}
+        if (!fSorted) {
+            sortRanges();
+        }
+    }
 }
 
 void RangeToken::sortRanges() {
 
-	if (fSorted || fRanges == 0)
-		return;
+    if (fSorted || fRanges == 0)
+        return;
 
-	for (int i = fElemCount - 4; i >= 0; i -= 2) {
+    for (int i = fElemCount - 4; i >= 0; i -= 2) {
 
-		for (int j = 0; j <= i; j +=2) {
+        for (int j = 0; j <= i; j +=2) {
 
-			if (fRanges[j] > fRanges[j + 2]
-				|| (fRanges[j]==fRanges[j+2] && fRanges[j+1] > fRanges[j+3])) {
+            if (fRanges[j] > fRanges[j + 2]
+                || (fRanges[j]==fRanges[j+2] && fRanges[j+1] > fRanges[j+3])) {
 
-				XMLInt32 tmpVal = fRanges[j+2];
-				fRanges[j+2] = fRanges[j];
-				fRanges[j] = tmpVal;
-				tmpVal = fRanges[j+3];
-				fRanges[j+3] = fRanges[j+1];
-				fRanges[j+1] = tmpVal;
-			}
-		}
-	}
+                XMLInt32 tmpVal = fRanges[j+2];
+                fRanges[j+2] = fRanges[j];
+                fRanges[j] = tmpVal;
+                tmpVal = fRanges[j+3];
+                fRanges[j+3] = fRanges[j+1];
+                fRanges[j+1] = tmpVal;
+            }
+        }
+    }
 
-	fSorted = true;
+    fSorted = true;
 }
 
 void RangeToken::compactRanges() {
 
-	if (fCompacted || fRanges == 0 || fElemCount <= 2)
-		return;
+    if (fCompacted || fRanges == 0 || fElemCount <= 2)
+        return;
 
-	unsigned int base = 0;
-	unsigned int target = 0;
+    unsigned int base = 0;
+    unsigned int target = 0;
 
-	while (target < fElemCount) {
+    while (target < fElemCount) {
 
-		if (base != target) {
+        if (base != target) {
 
-			fRanges[base] = fRanges[target++];
-			fRanges[base+1] = fRanges[target++];
-		}
-		else
-			target += 2;
+            fRanges[base] = fRanges[target++];
+            fRanges[base+1] = fRanges[target++];
+        }
+        else
+            target += 2;
 
-		XMLInt32 baseEnd = fRanges[base + 1];
+        XMLInt32 baseEnd = fRanges[base + 1];
 
-		while (target < fElemCount) {
+        while (target < fElemCount) {
 
-			XMLInt32 startRange = fRanges[target];
+            XMLInt32 startRange = fRanges[target];
 
-			if (baseEnd + 1 < startRange)
-				break;
+            if (baseEnd + 1 < startRange)
+                break;
 
-			XMLInt32 endRange = fRanges[target + 1];
+            XMLInt32 endRange = fRanges[target + 1];
 
-			if (baseEnd + 1 == startRange || baseEnd < endRange) {
+            if (baseEnd + 1 == startRange || baseEnd < endRange) {
 
-				baseEnd = endRange;
-				fRanges[base+1] = baseEnd;
-				target += 2;
-			}
-			else if (baseEnd >= endRange) {
-				target += 2;
-			}
-			else {
-				ThrowXML(RuntimeException, XMLExcepts::Regex_CompactRangesError);
-			}
-		} // inner while
+                baseEnd = endRange;
+                fRanges[base+1] = baseEnd;
+                target += 2;
+            }
+            else if (baseEnd >= endRange) {
+                target += 2;
+            }
+            else {
+                ThrowXML(RuntimeException, XMLExcepts::Regex_CompactRangesError);
+            }
+        } // inner while
 
-		base += 2;
-	}
+        base += 2;
+    }
 
-	if (base != fElemCount) {
+    if (base != fElemCount) {
 
-		while (fElemCount > base) {
-			fRanges[fElemCount--] = 0;
-		}
-	}
+        while (fElemCount > base) {
+            fRanges[fElemCount--] = 0;
+        }
+    }
 
-	fCompacted = true;
+    fCompacted = true;
 }
 
 void RangeToken::mergeRanges(const Token *const tok) {
 
 
-	if (tok->getTokenType() != this->getTokenType())
-		ThrowXML(IllegalArgumentException, XMLExcepts::Regex_MergeRangesTypeMismatch);
+    if (tok->getTokenType() != this->getTokenType())
+        ThrowXML(IllegalArgumentException, XMLExcepts::Regex_MergeRangesTypeMismatch);
 
-	RangeToken* rangeTok = (RangeToken *) tok;
-	
-	if (rangeTok->fRanges == 0)
-		return;
+    RangeToken* rangeTok = (RangeToken *) tok;
 
-	fCaseIToken = 0;
-	sortRanges();
-	rangeTok->sortRanges();
+    if (rangeTok->fRanges == 0)
+        return;
 
-	if (fRanges == 0) {
+    fCaseIToken = 0;
+    sortRanges();
+    rangeTok->sortRanges();
 
-		fMaxCount = rangeTok->fMaxCount;
-		fRanges = new XMLInt32[fMaxCount];
-		for (unsigned int index = 0; index < rangeTok->fElemCount; index++) {
-			fRanges[index] = rangeTok->fRanges[index];
-		}
+    if (fRanges == 0) {
 
-		fElemCount = rangeTok->fElemCount;
-		return;
-	}
+        fMaxCount = rangeTok->fMaxCount;
+        fRanges = new XMLInt32[fMaxCount];
+        for (unsigned int index = 0; index < rangeTok->fElemCount; index++) {
+            fRanges[index] = rangeTok->fRanges[index];
+        }
 
-	unsigned int newMaxCount = (fElemCount + rangeTok->fElemCount >= fMaxCount)
-		                         ? fMaxCount + rangeTok->fMaxCount : fMaxCount;
-	XMLInt32* result = new XMLInt32[newMaxCount];
+        fElemCount = rangeTok->fElemCount;
+        return;
+    }
 
-	for (unsigned int i=0, j=0, k=0; i < fElemCount || j < rangeTok->fElemCount;) {
+    unsigned int newMaxCount = (fElemCount + rangeTok->fElemCount >= fMaxCount)
+                                 ? fMaxCount + rangeTok->fMaxCount : fMaxCount;
+    XMLInt32* result = new XMLInt32[newMaxCount];
 
-		if (i >= fElemCount) {
+    for (unsigned int i=0, j=0, k=0; i < fElemCount || j < rangeTok->fElemCount;) {
 
-			for (int count = 0; count < 2; count++) {
-				result[k++] = rangeTok->fRanges[j++];
-			}
-		}
-		else if (j >= rangeTok->fElemCount) {
+        if (i >= fElemCount) {
 
-			for (int count = 0; count < 2; count++) {
-				result[k++] = fRanges[i++];
-			}
-		}
-		else if (rangeTok->fRanges[j] < fRanges[i]
-			     || (rangeTok->fRanges[j] == fRanges[i]
-				     && rangeTok->fRanges[j+1] < fRanges[i+1])) {
+            for (int count = 0; count < 2; count++) {
+                result[k++] = rangeTok->fRanges[j++];
+            }
+        }
+        else if (j >= rangeTok->fElemCount) {
 
-			for (int count = 0; count < 2; count++) {
-				result[k++] = rangeTok->fRanges[j++];
-			}
-		}
-		else {
+            for (int count = 0; count < 2; count++) {
+                result[k++] = fRanges[i++];
+            }
+        }
+        else if (rangeTok->fRanges[j] < fRanges[i]
+                 || (rangeTok->fRanges[j] == fRanges[i]
+                     && rangeTok->fRanges[j+1] < fRanges[i+1])) {
 
-			for (int count = 0; count < 2; count++) {
+            for (int count = 0; count < 2; count++) {
+                result[k++] = rangeTok->fRanges[j++];
+            }
+        }
+        else {
 
-				result[k++] = fRanges[i++];
-			}
-		}
-	}
+            for (int count = 0; count < 2; count++) {
 
-	delete [] fRanges;
-	fElemCount += rangeTok->fElemCount;
-	fRanges = result;
-	fMaxCount = newMaxCount;
+                result[k++] = fRanges[i++];
+            }
+        }
+    }
+
+    delete [] fRanges;
+    fElemCount += rangeTok->fElemCount;
+    fRanges = result;
+    fMaxCount = newMaxCount;
 }
 
 void RangeToken::subtractRanges(RangeToken* const tok) {
 
-	if (fRanges == 0 || tok->fRanges == 0)
-		return;
+    if (fRanges == 0 || tok->fRanges == 0)
+        return;
 
-	if (tok->getTokenType() == NRANGE) {
+    if (tok->getTokenType() == NRANGE) {
 
-		intersectRanges(tok);
-		return;
-	}
+        intersectRanges(tok);
+        return;
+    }
 
-	fCaseIToken = 0;
-	sortRanges();
-	compactRanges();
-	tok->sortRanges();
-	tok->compactRanges();
+    fCaseIToken = 0;
+    sortRanges();
+    compactRanges();
+    tok->sortRanges();
+    tok->compactRanges();
 
-	unsigned int newMax = (fElemCount + tok->fElemCount >= fMaxCount)
-		                     ? fMaxCount + tok->fMaxCount : fMaxCount;
-	XMLInt32* result = new XMLInt32[newMax];
-	unsigned int newElemCount = 0;
-	unsigned int srcCount = 0;
-	unsigned int subCount = 0;
+    unsigned int newMax = (fElemCount + tok->fElemCount >= fMaxCount)
+                             ? fMaxCount + tok->fMaxCount : fMaxCount;
+    XMLInt32* result = new XMLInt32[newMax];
+    unsigned int newElemCount = 0;
+    unsigned int srcCount = 0;
+    unsigned int subCount = 0;
 
-	while (srcCount < fElemCount && subCount < tok->fElemCount) {
+    while (srcCount < fElemCount && subCount < tok->fElemCount) {
 
-		XMLInt32 srcBegin = fRanges[srcCount];
-		XMLInt32 srcEnd = fRanges[srcCount + 1];
-		XMLInt32 subBegin = tok->fRanges[subCount];
-		XMLInt32 subEnd = tok->fRanges[subCount + 1];
+        XMLInt32 srcBegin = fRanges[srcCount];
+        XMLInt32 srcEnd = fRanges[srcCount + 1];
+        XMLInt32 subBegin = tok->fRanges[subCount];
+        XMLInt32 subEnd = tok->fRanges[subCount + 1];
 
-		if (srcEnd <= subBegin) { // no overlap
+        if (srcEnd < subBegin) { // no overlap
 
-			result[newElemCount++] = fRanges[srcCount++];
-			result[newElemCount++] = fRanges[srcCount++];
-		}
-		else if (srcEnd >= subBegin && srcBegin <= subEnd) {
+            result[newElemCount++] = fRanges[srcCount++];
+            result[newElemCount++] = fRanges[srcCount++];
+        }
+        else if (srcEnd >= subBegin && srcBegin <= subEnd) {
 
-			if (subBegin <= srcBegin && srcEnd <= subEnd) {
-				srcCount += 2;
-			}
-			else if (subBegin <= srcBegin) {
+            if (subBegin <= srcBegin && srcEnd <= subEnd) {
+                srcCount += 2;
+            }
+            else if (subBegin <= srcBegin) {
 
-				fRanges[srcCount] = subEnd + 1;
-				subCount += 2;
-			}
-			else if (srcEnd <= subEnd) {
+                fRanges[srcCount] = subEnd + 1;
+                subCount += 2;
+            }
+            else if (srcEnd <= subEnd) {
 
-				result[newElemCount++] = srcBegin;
-				result[newElemCount++] = subBegin - 1;
-			}
-			else {
+                result[newElemCount++] = srcBegin;
+                result[newElemCount++] = subBegin - 1;
+                srcCount += 2;
+            }
+            else {
 
-				result[newElemCount++] = srcBegin;
-				result[newElemCount++] = subBegin - 1;
-				fRanges[srcCount] = subEnd + 1;
-				subCount += 2;
-			}
-		}
-		else if (subEnd < srcBegin) {
-			subCount += 2;
-		}
-		else {
-			delete [] result;
-			ThrowXML(RuntimeException, XMLExcepts::Regex_SubtractRangesError);
-		}
-	} //end while
+                result[newElemCount++] = srcBegin;
+                result[newElemCount++] = subBegin - 1;
+                fRanges[srcCount] = subEnd + 1;
+                subCount += 2;
+            }
+        }
+        else if (subEnd < srcBegin) {
+            subCount += 2;
+        }
+        else {
+            delete [] result;
+            ThrowXML(RuntimeException, XMLExcepts::Regex_SubtractRangesError);
+        }
+    } //end while
 
-	while (srcCount < fElemCount) {
+    while (srcCount < fElemCount) {
 
-		result[newElemCount++] = fRanges[srcCount++];
-		result[newElemCount++] = fRanges[srcCount++];
-	}
+        result[newElemCount++] = fRanges[srcCount++];
+        result[newElemCount++] = fRanges[srcCount++];
+    }
 
-	delete [] fRanges;
-	fRanges = result;
-	fElemCount = newElemCount;
-	fMaxCount = newMax;
+    delete [] fRanges;
+    fRanges = result;
+    fElemCount = newElemCount;
+    fMaxCount = newMax;
 }
 
 /**
@@ -422,86 +426,86 @@ void RangeToken::subtractRanges(RangeToken* const tok) {
   */
 void RangeToken::intersectRanges(RangeToken* const tok) {
 
-	if (fRanges == 0 || tok->fRanges == 0)
-		return;
+    if (fRanges == 0 || tok->fRanges == 0)
+        return;
 
-	fCaseIToken = 0;
-	sortRanges();
-	compactRanges();
-	tok->sortRanges();
-	tok->compactRanges();
+    fCaseIToken = 0;
+    sortRanges();
+    compactRanges();
+    tok->sortRanges();
+    tok->compactRanges();
 
-	unsigned int newMax = (fElemCount + tok->fElemCount >= fMaxCount)
-		                     ? fMaxCount + tok->fMaxCount : fMaxCount;
-	XMLInt32* result = new XMLInt32[newMax];
-	unsigned int newElemCount = 0;
-	unsigned int srcCount = 0;
-	unsigned int tokCount = 0;
+    unsigned int newMax = (fElemCount + tok->fElemCount >= fMaxCount)
+                             ? fMaxCount + tok->fMaxCount : fMaxCount;
+    XMLInt32* result = new XMLInt32[newMax];
+    unsigned int newElemCount = 0;
+    unsigned int srcCount = 0;
+    unsigned int tokCount = 0;
 
-	while (srcCount < fElemCount && tokCount < tok->fElemCount) {
+    while (srcCount < fElemCount && tokCount < tok->fElemCount) {
 
-		XMLInt32 srcBegin = fRanges[srcCount];
-		XMLInt32 srcEnd = fRanges[srcCount + 1];
-		XMLInt32 tokBegin = tok->fRanges[tokCount];
-		XMLInt32 tokEnd = tok->fRanges[tokCount + 1];
+        XMLInt32 srcBegin = fRanges[srcCount];
+        XMLInt32 srcEnd = fRanges[srcCount + 1];
+        XMLInt32 tokBegin = tok->fRanges[tokCount];
+        XMLInt32 tokEnd = tok->fRanges[tokCount + 1];
 
-		if (srcEnd < tokBegin) {
-			srcCount += 2;
-		}
-		else if (srcEnd >= tokBegin && srcBegin <= tokEnd) {
+        if (srcEnd < tokBegin) {
+            srcCount += 2;
+        }
+        else if (srcEnd >= tokBegin && srcBegin <= tokEnd) {
 
-			if (tokBegin <= srcBegin && srcEnd <= tokEnd) {
+            if (tokBegin <= srcBegin && srcEnd <= tokEnd) {
 
-				result[newElemCount++] = srcBegin;
-				result[newElemCount++] = srcEnd;
-				srcCount += 2;
-			}
-			else if (tokBegin <= srcBegin) {
+                result[newElemCount++] = srcBegin;
+                result[newElemCount++] = srcEnd;
+                srcCount += 2;
+            }
+            else if (tokBegin <= srcBegin) {
 
-				result[newElemCount++] = srcBegin;
-				result[newElemCount++] = tokEnd;
-				tokCount += 2;
+                result[newElemCount++] = srcBegin;
+                result[newElemCount++] = tokEnd;
+                tokCount += 2;
 
-				if (tokCount < tok->fElemCount)
-					fRanges[srcCount] = tokEnd + 1;
-				else
-					srcCount += 2;
-			}
-			else if (srcEnd <= tokEnd) {
+                if (tokCount < tok->fElemCount)
+                    fRanges[srcCount] = tokEnd + 1;
+                else
+                    srcCount += 2;
+            }
+            else if (srcEnd <= tokEnd) {
 
-				result[newElemCount++] = tokBegin;
-				result[newElemCount++] = srcEnd;
-				srcCount += 2;
-			}
-			else {
+                result[newElemCount++] = tokBegin;
+                result[newElemCount++] = srcEnd;
+                srcCount += 2;
+            }
+            else {
 
-				result[newElemCount++] = tokBegin;
-				result[newElemCount++] = tokEnd;
-				tokCount += 2;
+                result[newElemCount++] = tokBegin;
+                result[newElemCount++] = tokEnd;
+                tokCount += 2;
 
-				if (tokCount < tok->fElemCount)
-					fRanges[srcCount] = tokEnd + 1;
-				else
-					srcCount += 2;
-			}
-		}
-		else if (tokEnd < srcBegin) {
-			tokCount += 2;
+                if (tokCount < tok->fElemCount)
+                    fRanges[srcCount] = tokEnd + 1;
+                else
+                    srcCount += 2;
+            }
+        }
+        else if (tokEnd < srcBegin) {
+            tokCount += 2;
 
-			if (tokCount >= tok->fElemCount)
-				srcCount += 2;
-		}
-		else {
+            if (tokCount >= tok->fElemCount)
+                srcCount += 2;
+        }
+        else {
 
-			delete [] result;
-			ThrowXML(RuntimeException, XMLExcepts::Regex_IntersectRangesError);
-		}
-	} //end while
+            delete [] result;
+            ThrowXML(RuntimeException, XMLExcepts::Regex_IntersectRangesError);
+        }
+    } //end while
 
-	delete [] fRanges;
-	fRanges = result;
-	fElemCount = newElemCount;
-	fMaxCount = newMax;
+    delete [] fRanges;
+    fRanges = result;
+    fElemCount = newElemCount;
+    fMaxCount = newMax;
 }
 
 /**
@@ -511,30 +515,30 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
 Token* RangeToken::complementRanges(RangeToken* const tok,
                                     TokenFactory* const tokFactory) {
 
-	if (tok->getTokenType() != RANGE && tok->getTokenType() != NRANGE)
-		ThrowXML(IllegalArgumentException, XMLExcepts::Regex_ComplementRangesInvalidArg);
+    if (tok->getTokenType() != RANGE && tok->getTokenType() != NRANGE)
+        ThrowXML(IllegalArgumentException, XMLExcepts::Regex_ComplementRangesInvalidArg);
 
-	tok->sortRanges();
-	tok->compactRanges();
+    tok->sortRanges();
+    tok->compactRanges();
 
-	XMLInt32 lastElem = tok->fRanges[tok->fElemCount - 1];
-	RangeToken* rangeTok = tokFactory->createRange();
+    XMLInt32 lastElem = tok->fRanges[tok->fElemCount - 1];
+    RangeToken* rangeTok = tokFactory->createRange();
 
-	if (tok->fRanges[0] > 0) {
-		rangeTok->addRange(0, tok->fRanges[0] - 1);
-	}
+    if (tok->fRanges[0] > 0) {
+        rangeTok->addRange(0, tok->fRanges[0] - 1);
+    }
 
-	for (unsigned int i= 1; i< tok->fElemCount - 2; i += 2) {
-		rangeTok->addRange(tok->fRanges[i] + 1, tok->fRanges[i+1] - 1);
-	}
+    for (unsigned int i= 1; i< tok->fElemCount - 2; i += 2) {
+        rangeTok->addRange(tok->fRanges[i] + 1, tok->fRanges[i+1] - 1);
+    }
 
-	if (lastElem != UTF16_MAX) {
-		rangeTok->addRange(lastElem + 1, UTF16_MAX);
-	}
+    if (lastElem != UTF16_MAX) {
+        rangeTok->addRange(lastElem + 1, UTF16_MAX);
+    }
 
-	rangeTok->fCompacted = true;
+    rangeTok->fCompacted = true;
 
-	return rangeTok;
+    return rangeTok;
 }
 
 
@@ -543,39 +547,39 @@ Token* RangeToken::complementRanges(RangeToken* const tok,
 // ---------------------------------------------------------------------------
 bool RangeToken::match(const XMLInt32 ch) {
 
-	if (fMap == 0)
-		createMap();
+    if (fMap == 0)
+        createMap();
 
-	bool ret;
+    bool ret;
 
-	if (getTokenType() == RANGE) {
+    if (getTokenType() == RANGE) {
 
-		if (ch < MAPSIZE)
-			return ((fMap[ch/32] & (1<<(ch&0x1f))) != 0);
+        if (ch < MAPSIZE)
+            return ((fMap[ch/32] & (1<<(ch&0x1f))) != 0);
 
-		ret = false;
+        ret = false;
 
-		for (unsigned int i= fNonMapIndex; i< fElemCount; i +=2) {
+        for (unsigned int i= fNonMapIndex; i< fElemCount; i +=2) {
 
-			if (fRanges[i] <= ch && ch <= fRanges[i+1])
-				return true;
-		}
-	}
-	else {
+            if (fRanges[i] <= ch && ch <= fRanges[i+1])
+                return true;
+        }
+    }
+    else {
 
-		if (ch < MAPSIZE)
-			return ((fMap[ch/32] & (1<<(ch&0x1f))) == 0);
+        if (ch < MAPSIZE)
+            return ((fMap[ch/32] & (1<<(ch&0x1f))) == 0);
 
-		ret = true;
+        ret = true;
 
-		for (unsigned int i= fNonMapIndex; i< fElemCount; i += 2) {
+        for (unsigned int i= fNonMapIndex; i< fElemCount; i += 2) {
 
-			if (fRanges[i] <= ch && ch <= fRanges[i+1])
-				return false;
-		}
-	}
+            if (fRanges[i] <= ch && ch <= fRanges[i+1])
+                return false;
+        }
+    }
 
-	return ret;
+    return ret;
 }
 
 // ---------------------------------------------------------------------------
@@ -583,7 +587,7 @@ bool RangeToken::match(const XMLInt32 ch) {
 // ---------------------------------------------------------------------------
 void RangeToken::expand(const unsigned int length) {
 
-	unsigned int newMax = fElemCount + length;
+    unsigned int newMax = fElemCount + length;
 
     // Avoid too many reallocations by expanding by a percentage
     unsigned int minNewMax = (unsigned int)((double)fElemCount * 1.25);
@@ -601,38 +605,38 @@ void RangeToken::expand(const unsigned int length) {
 
 void RangeToken::createMap() {
 
-	int asize = MAPSIZE/32;
-	fMap = new int[asize];
-	fNonMapIndex = fElemCount;
+    int asize = MAPSIZE/32;
+    fMap = new int[asize];
+    fNonMapIndex = fElemCount;
 
-	for (int i = 0; i < asize; i++) {
-		fMap[i] = 0;
-	}
+    for (int i = 0; i < asize; i++) {
+        fMap[i] = 0;
+    }
 
-	for (unsigned int j= 0; j < fElemCount; j += 2) {
+    for (unsigned int j= 0; j < fElemCount; j += 2) {
 
-		XMLInt32 begin = fRanges[j];
-		XMLInt32 end = fRanges[j+1];
+        XMLInt32 begin = fRanges[j];
+        XMLInt32 end = fRanges[j+1];
 
-		if (begin < MAPSIZE) {
+        if (begin < MAPSIZE) {
 
-			for (int k = begin; k <= end && k < MAPSIZE; k++) {
-				fMap[k/32] |= 1<<(k&0x1F);
-			}
-		}
-		else {
+            for (int k = begin; k <= end && k < MAPSIZE; k++) {
+                fMap[k/32] |= 1<<(k&0x1F);
+            }
+        }
+        else {
 
-			fNonMapIndex = j;
-			break;
-		}
+            fNonMapIndex = j;
+            break;
+        }
 
-		if (end >= MAPSIZE) {
+        if (end >= MAPSIZE) {
 
-			fNonMapIndex = j;
-			break;
-		}
-	}
+            fNonMapIndex = j;
+            break;
+        }
+    }
 }
 /**
-  *	End of file RangeToken.cpp
+  * End of file RangeToken.cpp
   */
