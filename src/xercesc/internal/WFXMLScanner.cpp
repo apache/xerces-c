@@ -1117,6 +1117,8 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
     XMLElementDecl* elemDecl = fElementLookup->get(qnameRawBuf);
 
     if (!elemDecl) {
+        if (!XMLString::compareNString(qnameRawBuf, XMLUni::fgXMLNSColonString, 6))
+            emitError(XMLErrs::NoXMLNSAsElementPrefix, qnameRawBuf);
 
         if (fElementIndex < fElements->size()) {
             elemDecl = fElements->elementAt(fElementIndex);
@@ -1314,30 +1316,51 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             }
 
             // Make sure that the name is basically well formed for namespace
-            //
-            // Map prefix to namespace
-            const XMLCh* attPrefix = curAtt->getPrefix();
-            const XMLCh* attLocalName = curAtt->getName();
-            if (attPrefix && *attPrefix) {
+            //  enabled rules. It either has no colons, or it has one which
+            //  is neither the first or last char.
+            const int colonFirst = XMLString::indexOf(attNameRawBuf, chColon);
+            if (colonFirst != -1)
+            {
+                const int colonLast = XMLString::lastIndexOf(attNameRawBuf, chColon);
 
-                int colonPos = XMLString::indexOf(attLocalName, chColon);
-
-                if (colonPos != -1) {
-
-                    curAttListSize = fAttrList->size();
+                if (colonFirst != colonLast)
+                {
                     emitError(XMLErrs::TooManyColonsInName);
                     continue;
                 }
+                else if ((colonFirst == 0)
+                      ||  (colonLast == (int)fAttNameBuf.getLen() - 1))
+                {
+                    emitError(XMLErrs::InvalidColonPos);
+                    continue;
+                }
+            }
 
+            // Map prefix to namespace
+            const XMLCh* attPrefix = curAtt->getPrefix();
+            const XMLCh* attLocalName = curAtt->getName();
+            const XMLCh* namespaceURI = fAttValueBuf.getRawBuffer();
+
+            if (attPrefix && *attPrefix) {
                 if (XMLString::equals(attPrefix, XMLUni::fgXMLString)) {
                     curAtt->setURIId(fXMLNamespaceId);
                 }
                 else if (XMLString::equals(attPrefix, XMLUni::fgXMLNSString)) {
 
+                    if (XMLString::equals(attLocalName, XMLUni::fgXMLNSString))
+                        emitError(XMLErrs::NoUseOfxmlnsAsPrefix);
+                    else if (XMLString::equals(attLocalName, XMLUni::fgXMLString)) {
+                        if (!XMLString::equals(namespaceURI, XMLUni::fgXMLURIName))
+                            emitError(XMLErrs::PrefixXMLNotMatchXMLURI);
+                    }
+
+                    if (!namespaceURI || !*namespaceURI)
+                        emitError(XMLErrs::NoEmptyStrNamespace, attNameRawBuf);
+
                     fElemStack.addPrefix
                     (
                         attLocalName
-                        , fURIStringPool->addOrFind(fAttValueBuf.getRawBuffer())
+                        , fURIStringPool->addOrFind(namespaceURI)
                     );
                     curAtt->setURIId(fXMLNSNamespaceId);
                 }
@@ -1348,10 +1371,15 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             else {
                 if (XMLString::equals(XMLUni::fgXMLNSString, attLocalName)) {
 
+                    if (XMLString::equals(namespaceURI, XMLUni::fgXMLNSURIName))
+                        emitError(XMLErrs::NoUseOfxmlnsURI);
+                    else if (XMLString::equals(namespaceURI, XMLUni::fgXMLURIName))
+                        emitError(XMLErrs::XMLURINotMatchXMLPrefix);
+
                     fElemStack.addPrefix
                     (
                         XMLUni::fgZeroLenString
-                        , fURIStringPool->addOrFind(fAttValueBuf.getRawBuffer())
+                        , fURIStringPool->addOrFind(namespaceURI)
                     );
                 }
             }

@@ -72,6 +72,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLUri.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -191,6 +192,7 @@ XMLURL::XMLURL() :
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
+    , fHasInvalidChar(false)
 {
 }
 
@@ -206,6 +208,7 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
+    , fHasInvalidChar(false)
 {
 	try
 	{
@@ -230,6 +233,7 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
+    , fHasInvalidChar(false)
 {
     XMLCh* tmpRel = XMLString::transcode(relativeURL);
     ArrayJanitor<XMLCh> janRel(tmpRel);
@@ -256,6 +260,7 @@ XMLURL::XMLURL(const XMLURL&         baseURL
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
+    , fHasInvalidChar(false)
 {
 	try
 	{
@@ -280,6 +285,7 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
+    , fHasInvalidChar(false)
 {
     XMLCh* tmpRel = XMLString::transcode(relativeURL);
     ArrayJanitor<XMLCh> janRel(tmpRel);
@@ -306,6 +312,7 @@ XMLURL::XMLURL(const XMLCh* const urlText) :
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
+    , fHasInvalidChar(false)
 {
 	try
 	{
@@ -329,6 +336,7 @@ XMLURL::XMLURL(const char* const urlText) :
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
+    , fHasInvalidChar(false)
 {
     XMLCh* tmpText = XMLString::transcode(urlText);
     ArrayJanitor<XMLCh> janRel(tmpText);
@@ -354,6 +362,7 @@ XMLURL::XMLURL(const XMLURL& toCopy) :
     , fQuery(XMLString::replicate(toCopy.fQuery))
     , fUser(XMLString::replicate(toCopy.fUser))
     , fURLText(XMLString::replicate(toCopy.fURLText))
+    , fHasInvalidChar(toCopy.fHasInvalidChar)
 {
 }
 
@@ -503,6 +512,11 @@ bool XMLURL::isRelative() const
 }
 
 
+bool XMLURL::hasInvalidChar() const {
+    return fHasInvalidChar;
+}
+
+
 BinInputStream* XMLURL::makeNewStream() const
 {
     //
@@ -514,37 +528,9 @@ BinInputStream* XMLURL::makeNewStream() const
     {
         if (!fHost || !XMLString::compareIString(fHost, XMLUni::fgLocalHostString))
         {
-            //
-            //  We have to play a little trick here. If its really a Windows
-            //  style fully qualified path, we have to toss the leading /
-            //  character.
-            //
+
             XMLCh* realPath = XMLString::replicate(fPath);
             ArrayJanitor<XMLCh> basePathName(realPath);
-
-            if (*fPath == chForwardSlash)
-            {
-                if (XMLString::stringLen(fPath) > 3)
-                {
-                    if (*(fPath + 2) == chColon)
-                    {
-                        const XMLCh chDrive = *(fPath + 1);
-                        if (((chDrive >= chLatin_A) && (chDrive <= chLatin_Z))
-                        ||  ((chDrive >= chLatin_a) && (chDrive <= chLatin_z)))
-                        {
-                            realPath = fPath + 1;
-                        }
-                    }
-
-                    // Similarly for UNC paths
-                    if ( *(fPath + 1) == *(fPath + 2) &&
-                         (*(fPath + 1) == chForwardSlash ||
-                          *(fPath + 1) == chBackSlash) )
-                    {
-                        realPath = fPath + 1;
-                    }
-                }
-            }
 
             //
             // Need to manually replace any character reference %xx first
@@ -835,8 +821,11 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     }
 
     // Its a relative path, so weave them together.
-    if (baseURL.fPath)
-        weavePaths(baseURL.fPath);
+    if (baseURL.fPath) {
+        XMLCh* temp = XMLPlatformUtils::weavePaths(baseURL.fPath, fPath);
+        delete [] fPath;
+        fPath = temp;
+    }
 
     // If we had any original path, then we are done
     if (hadPath)
@@ -859,6 +848,12 @@ void XMLURL::parse(const XMLCh* const urlText)
     // Simplify things by checking for the psycho scenarios first
     if (!*urlText)
         ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
+
+    // Before we start, check if this urlText contains valid uri characters
+    if (!XMLUri::isURIString(urlText))
+        fHasInvalidChar = true;
+    else
+        fHasInvalidChar = false;
 
     //
     //  The first thing we will do is to check for a file name, so that
@@ -988,17 +983,17 @@ void XMLURL::parse(const XMLCh* const urlText)
     }
     else
     {
-	    //
-	    // http protocol requires two forward slashes
-	    // we didn't get them, so throw an exception
-	    //
-	if (fProtocol == HTTP) {
-                ThrowXML
+        //
+        // http protocol requires two forward slashes
+        // we didn't get them, so throw an exception
+        //
+        if (fProtocol == HTTP) {
+            ThrowXML
                 (
                     MalformedURLException
                     , XMLExcepts::URL_ExpectingTwoSlashes
                 );
-	}
+        }
     }
 
     //
@@ -1135,118 +1130,6 @@ void XMLURL::parse(const XMLCh* const urlText)
     }
 }
 
-
-void XMLURL::weavePaths(const XMLCh* const basePart)
-{
-    // Watch for stupid stuff
-    if (!basePart)
-        return;
-    if (!*basePart)
-        return;
-
-    //
-    //  Ok, lets start at the end of the base path and work backwards and
-    //  our path part and work forwards. For each leading . we see, we just
-    //  eat it. For each leading .. we see, we eat it and throw away one
-    //  level in the source URL.
-    //
-    //  If the last character in the base part is a forward slash, back
-    //  up one first before we look for the last slash.
-    //
-    const XMLCh* basePtr = basePart + (XMLString::stringLen(basePart) - 1);
-    if (*basePtr == chForwardSlash)
-        basePtr--;
-
-    while ((basePtr >= basePart)
-    &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
-    {
-        basePtr--;
-    }
-
-    if (basePtr < basePart)
-        return;
-
-    // Create a buffer as large as both parts
-    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(fPath)
-                              + XMLString::stringLen(basePart)
-                              + 2];
-    //
-    //  If we have no path part, then copy the base part up to the
-    //  base pointer
-    //
-    if (!fPath)
-    {
-        XMLCh* bufPtr = tmpBuf;
-        const XMLCh* tmpPtr = basePart;
-        while (tmpPtr <= basePtr)
-            *bufPtr++ = *tmpPtr++;
-        *bufPtr = 0;
-
-        fPath = tmpBuf;
-        return;
-    }
-
-    // After this, make sure the buffer gets handled if we exit early
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
-
-    //
-    //  We have some path part, so we need to check to see if we ahve to
-    //  weave any of the parts together.
-    //
-    XMLCh* pathPtr = fPath;
-    while (true)
-    {
-        // If it does not start with some period, then we are done
-        if (*pathPtr != chPeriod)
-            break;
-
-        unsigned int periodCount = 1;
-        pathPtr++;
-        if (*pathPtr == chPeriod)
-        {
-            pathPtr++;
-            periodCount++;
-        }
-
-        // Has to be followed by a / or \ or the null to mean anything
-        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
-        &&  *pathPtr)
-        {
-            break;
-        }
-        if (*pathPtr)
-            pathPtr++;
-
-        // If its one period, just eat it, else move backwards in the base
-        if (periodCount == 2)
-        {
-            basePtr--;
-            while ((basePtr >= basePart)
-            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
-            {
-                basePtr--;
-            }
-
-            // There are not enough levels to handle all the .. parts
-            if (basePtr < basePart)
-                ThrowXML(MalformedURLException, XMLExcepts::URL_BaseUnderflow);
-        }
-    }
-
-    // Copy the base part up to the base pointer
-    XMLCh* bufPtr = tmpBuf;
-    const XMLCh* tmpPtr = basePart;
-    while (tmpPtr <= basePtr)
-        *bufPtr++ = *tmpPtr++;
-
-    // And then copy on the rest of our path
-    XMLString::copyString(bufPtr, pathPtr);
-
-    // Now delete our path and make the new buffer our path
-    delete [] fPath;
-    janBuf.orphan();
-    fPath = tmpBuf;
-}
 
 XERCES_CPP_NAMESPACE_END
 

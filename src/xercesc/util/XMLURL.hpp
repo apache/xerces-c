@@ -177,6 +177,7 @@ public:
     //  Miscellaneous methods
     // -----------------------------------------------------------------------
     bool isRelative() const;
+    bool hasInvalidChar() const;
     BinInputStream* makeNewStream() const;
     void makeRelativeTo(const XMLCh* const baseURLText);
     void makeRelativeTo(const XMLURL& baseURL);
@@ -193,7 +194,6 @@ private:
     (
         const   XMLCh* const    urlText
     );
-    void weavePaths(const XMLCh* const basePart);
 
 
     // -----------------------------------------------------------------------
@@ -231,6 +231,10 @@ private:
     //      This is a copy of the URL text, after it has been taken apart,
     //      made relative if needed, canonicalized, and then put back
     //      together. Its only created upon demand.
+    //
+    //  fHasInvalidChar
+    //      This indicates if the URL Text contains invalid characters as per
+    //      RFC 2396 standard.
     // -----------------------------------------------------------------------
     XMLCh*          fFragment;
     XMLCh*          fHost;
@@ -241,6 +245,7 @@ private:
     XMLCh*          fQuery;
     XMLCh*          fUser;
     XMLCh*          fURLText;
+    bool            fHasInvalidChar;
 };
 
 

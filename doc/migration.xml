@@ -97,6 +97,7 @@
                   <li>and DOMBuilder/SAX2XMLReader will recognize the feature
                       http://apache.org/xml/features/standard-uri-conformant</li>
                 </ul>
+              <li>Add XMLURL::hasInvalidChar() to indicate if the URL has invalid char as per RFC standard</li>
             </ul>
         </s4>
 
@@ -114,6 +115,7 @@
               a reference as parameter, i.e. QName(const QName&amp; qname).</li>
               <li>To fix [Bug 12232], the QName operator== has been added a const modified.</li>
               <li>Move XMLUri copy constructor and operator = as public.</li>
+              <li>Move XMLUri::isURIString as public.</li>
               <li>For validation purpose, added two more default parameters to
               XMLValidator::validateAttrValue</li>
             </ul>

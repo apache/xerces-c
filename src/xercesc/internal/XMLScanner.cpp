@@ -308,6 +308,17 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
         }
         else
         {
+            if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
+                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                fInException = true;
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , e.getType()
+                    , e.getMessage()
+                );
+                return;
+            }
             srcToUse = new URLInputSource(tmpURL);
         }
 
@@ -414,6 +425,17 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         }
         else
         {
+            if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
+                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                fInException = true;
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , e.getType()
+                    , e.getMessage()
+                );
+                return false;
+            }
             srcToUse = new URLInputSource(tmpURL);
         }
     }
@@ -1535,6 +1557,17 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
             }
             else
             {
+                if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                    fInException = true;
+                    emitError
+                    (
+                        XMLErrs::XMLException_Fatal
+                        , e.getType()
+                        , e.getMessage()
+                    );
+                    return 0;
+                }
                 srcToUse = new URLInputSource(tmpURL);
             }
         }

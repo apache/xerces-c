@@ -260,6 +260,36 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     if (!fileName)
         return 0;
 
+    //
+    //  We have to play a little trick here. If its /x:.....
+    //  style fully qualified path, we have to toss the leading /
+    //  character.
+    //
+    const XMLCh* nameToOpen = fileName;
+    if (*fileName == chForwardSlash)
+    {
+        if (XMLString::stringLen(fileName) > 3)
+        {
+            if (*(fileName + 2) == chColon)
+            {
+                const XMLCh chDrive = *(fileName + 1);
+                if (((chDrive >= chLatin_A) && (chDrive <= chLatin_Z))
+                ||  ((chDrive >= chLatin_a) && (chDrive <= chLatin_z)))
+                {
+                    nameToOpen = fileName + 1;
+                }
+            }
+
+            // Similarly for UNC paths
+            if ( *(fileName + 1) == *(fileName + 2) &&
+                 (*(fileName + 1) == chForwardSlash ||
+                  *(fileName + 1) == chBackSlash) )
+            {
+                nameToOpen = fileName + 1;
+            }
+        }
+    }
+
     //  Ok, this might look stupid but its a semi-expedient way to deal
     //  with a thorny problem. Shift-JIS and some other Asian encodings
     //  are fundamentally broken and map both the backslash and the Yen
@@ -279,9 +309,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     //   transcode correctly back to 8 bit char * form.
     //
     XMLCh *tmpUName = 0;
-    const XMLCh *nameToOpen = fileName;
 
-    const XMLCh* srcPtr = fileName;
+    const XMLCh* srcPtr = nameToOpen;
     while (*srcPtr)
     {
         if (*srcPtr == chYenSign ||
@@ -296,7 +325,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     //
     if (*srcPtr)
     {
-        tmpUName = XMLString::replicate(fileName);
+        tmpUName = XMLString::replicate(nameToOpen);
 
         XMLCh* tmpPtr = tmpUName;
         while (*tmpPtr)

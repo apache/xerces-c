@@ -1270,7 +1270,11 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         , XMLExcepts::URL_NoProtocolPresent
                     );
                 }
-                srcToFill = new URLInputSource(urlTmp);
+                else {
+                    if (fStandardUriConformant && urlTmp.hasInvalidChar())
+                        ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                    srcToFill = new URLInputSource(urlTmp);
+                }
             }
 
             catch(const MalformedURLException& e)
@@ -1423,7 +1427,11 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
                     , XMLExcepts::URL_NoProtocolPresent
                 );
             }
-            srcToFill = new URLInputSource(urlTmp);
+            else {
+                if (fStandardUriConformant && urlTmp.hasInvalidChar())
+                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                srcToFill = new URLInputSource(urlTmp);
+            }
         }
         catch(const MalformedURLException& e)
         {

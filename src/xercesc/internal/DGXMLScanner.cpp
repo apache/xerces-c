@@ -2270,7 +2270,11 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
                     , XMLExcepts::URL_NoProtocolPresent
                 );
             }
-            srcToFill = new URLInputSource(urlTmp);
+            else {
+                if (fStandardUriConformant && urlTmp.hasInvalidChar())
+                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                srcToFill = new URLInputSource(urlTmp);
+            }
         }
         catch(const MalformedURLException& e)
         {

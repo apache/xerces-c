@@ -6130,8 +6130,11 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
                 ThrowXML(MalformedURLException,
                          XMLExcepts::URL_NoProtocolPresent);
             }
-
-            srcToFill = new URLInputSource(urlTmp);
+            else {
+                if (fScanner->getStandardUriConformant() && urlTmp.hasInvalidChar())
+                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                srcToFill = new URLInputSource(urlTmp);
+            }
         }
         catch(const MalformedURLException& e) {
             // Its not a URL, so lets assume its a local file name if non-standard URI is allowed

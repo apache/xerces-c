@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/01/06 19:43:18  tng
+ * New feature StandardUriConformant to force strict standard uri conformance.
+ *
  * Revision 1.6  2002/11/21 15:42:39  gareth
  * Implemented copy constructor and operator =. Patch by Jennifer Schachter.
  *
@@ -317,6 +320,16 @@ public:
     //  Miscellaneous methods
     // -----------------------------------------------------------------------
 
+    /**
+     * Determine whether a given string contains only URI characters (also
+     * called "uric" in RFC 2396). uric consist of all reserved
+     * characters, unreserved characters and escaped characters.
+     *
+     * @return true if the string is comprised of uric, false otherwise
+     */
+    static bool isURIString(const XMLCh* const uric);
+
+
 private:
 
     static const XMLCh RESERVED_CHARACTERS[];
@@ -360,16 +373,6 @@ private:
      * @return true if the scheme is conformant, false otherwise
      */
     static void isConformantUserInfo(const XMLCh* const userInfo);
-
-    /**
-     * Determine whether a given string contains only URI characters (also
-     * called "uric" in RFC 2396). uric consist of all reserved
-     * characters, unreserved characters and escaped characters.
-     *
-     * @return true if the string is comprised of uric, false otherwise
-     */
-    static bool isURIString(const XMLCh* const uric);
-
     /**
      * Determine whether a string is syntactically capable of representing
      * a valid IPv4 address or the domain name of a network host.
