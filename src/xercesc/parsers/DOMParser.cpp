@@ -1072,7 +1072,11 @@ void DOMParser::endAttList
                     insertAttr = new AttrImpl((DocumentImpl*)fDocument.fImpl, attr->getFullName());
                 }
                 insertAttr->setValue(attr->getValue());
-                elem->setAttributeNode(insertAttr);
+                // memory leak here
+                AttrImpl * previousAttr = elem->setAttributeNode(insertAttr);
+				if ( previousAttr != 0 && previousAttr->nodeRefCount ==0)
+					NodeImpl::deleteIf(previousAttr);
+
                 insertAttr->setSpecified(false);
             }
         }
