@@ -62,9 +62,10 @@
 #define XML_BIGDECIMAL_HPP
 
 #include <util/XercesDefs.hpp>
+#include <util/XMLNumber.hpp>
 #include <util/XMLBigInteger.hpp>
 
-class XMLUTIL_EXPORT XMLBigDecimal
+class XMLUTIL_EXPORT XMLBigDecimal : public XMLNumber
 {
 public:
 
@@ -100,15 +101,10 @@ public:
     static void           matchScale(XMLBigDecimal* const lValue
                                    , XMLBigDecimal* const rValue);
 
-	/**
-	 * Returns the sign of this number
-     *
-     * -1   negative
-     *  0   zero
-     *  1   positive
-	 *
-	 */
-    int                   getSign() const;
+
+    virtual XMLCh*        toString() const;
+
+    virtual int           getSign() const;
 
     XMLBigInteger*        getValue() const;
 
@@ -116,13 +112,7 @@ public:
 
     unsigned int          getTotalDigit() const;
 
-	/**
-	 *  Return string representation of the decimal value.
-     *  A decimal point will be included as necessary, 
-     *  the caller of this method is responsible for the 
-     *  de-allocation of the memory.
-	 */
-    XMLCh*                toString() const;
+
 
 	/**
 	 * Compares this object to the specified object.

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/27 14:54:20  peiyongz
+ * DTV Reorganization: derived from XMLNumber
+ *
  * Revision 1.5  2001/08/29 19:03:03  peiyongz
  * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
  *
@@ -78,6 +81,7 @@
 #define XML_DOUBLE_HPP
 
 #include <util/XercesDefs.hpp>
+#include <util/XMLNumber.hpp>
 #include <util/XMLBigDecimal.hpp>
 
 /***
@@ -95,7 +99,7 @@
  *   an exponent value of 0 is assumed. 
 ***/
 
-class XMLUTIL_EXPORT XMLDouble
+class XMLUTIL_EXPORT XMLDouble : public XMLNumber
 {
 public:
 
@@ -126,15 +130,9 @@ public:
 
     XMLDouble(const XMLDouble& toCopy);
    
-    int                   getSign() const;
+    virtual XMLCh*        toString() const;
 
-	/**
-	 *  Return string representation of the decimal value.
-     *  A decimal point will be included as necessary, 
-     *  the caller of this method is responsible for the 
-     *  de-allocation of the memory.
-	 */
-    XMLCh*                toString() const;
+    virtual int           getSign() const;
 
 	/**
 	 * Compares this object to the specified object.
