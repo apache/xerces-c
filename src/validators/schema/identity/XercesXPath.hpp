@@ -206,7 +206,7 @@ public:
     // -----------------------------------------------------------------------
     unsigned int getStepSize() const;
     void addStep(XercesStep* const aStep);
-    XercesStep* getStep(unsigned int index) const;
+    XercesStep* getStep(const unsigned int index) const;
 
 private:
     // -----------------------------------------------------------------------
