@@ -45,7 +45,7 @@ usage()
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'netbsd',
             'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware',
-            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx',
+            'os400', 'os390', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx',
             'interix', 'mingw-msys')
             [required: no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
@@ -195,7 +195,7 @@ echo "Extra link options: $linkeroptions"
 # Now check if the options are correct or not, bail out if incorrect
 #
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx | interix | mingw-msys)
+   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | os390 | irix | ptx | tru64 | macosx | cygwin | qnx | interix | mingw-msys)
        # platform has been recognized
        ;;
    *)
@@ -214,6 +214,8 @@ if test $debug = "off"; then
        debugflag="-w -O2";
     elif test $platform = "aix"; then
        debugflag="-w -O2";
+   	elif test $platform = "os390"; then
+       debugflag="";       
     else
     debugflag="-w -O";
     fi
@@ -305,6 +307,9 @@ else
         THREADS=dce
         threadingLibs="-lcma"
         threadingDefines="-DXML_USE_DCE"
+	elif test $platform = "os390"; then
+        threadingDefines="-D_OPEN_THREADS"
+        threadingLibs=""        
     elif test $platform = "unixware"; then
         threadingLibs=""         ## Linkflags control the use of threads on UnixWare
     elif test $platform = "solaris"; then
