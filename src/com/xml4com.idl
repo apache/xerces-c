@@ -65,7 +65,11 @@ import "oaidl.idl";
 
 [
 	uuid(C4775B62-ECD6-11d4-94B4-00A0CC57CBCB),
-	version(1.5.2),
+	//
+	//  Format for version is major.minor
+	//  no support for additional parts (like 1.5.2)
+	//  Use 1.60 for subsequent release
+	version(1.52),
 	helpstring("Xerces XML Parser 1.5.2")
 ]
 library Xerces
