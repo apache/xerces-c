@@ -56,12 +56,16 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/02/26 21:56:15  tng
+ * Schema: QName can also be constructed with rawName.
+ *
  * Revision 1.1  2001/02/26 19:44:25  tng
  * Schema: add utility class QName, by Pei Yong Zhang.
  *
-  */
+ */
 
 #include <util/QName.hpp>
+#include <util/Janitor.hpp>
 
 // ---------------------------------------------------------------------------
 //  QName: Constructors and Destructor
@@ -77,10 +81,9 @@ QName::QName() :
 {
 }
 
-QName::QName(
-                 const XMLCh* const        prefix
-               , const XMLCh* const        localPart
-               , const int                 uriId
+QName::QName(const XMLCh* const        prefix
+           , const XMLCh* const        localPart
+           , const int                 uriId
             ) :
       fPrefix(0)
     , fPrefixBufSz(0)
@@ -97,6 +100,32 @@ QName::QName(
         //  work is required to replicate that functionality here.
         //
         setName(prefix, localPart, uriId);
+    }
+
+    catch(...)
+    {
+        cleanUp();
+    }
+}
+
+QName::QName(const XMLCh* const        rawName
+           , const int                 uriId
+            ) :
+      fPrefix(0)
+    , fPrefixBufSz(0)
+    , fLocalPart(0)
+    , fLocalPartBufSz(0)
+    , fRawName(0)
+    , fRawNameBufSz(0)
+    , fURIId(0)
+{
+    try
+    {
+        //
+        //  Just call the local setters to set up everything. Too much
+        //  work is required to replicate that functionality here.
+        //
+        setName(rawName, uriId);
     }
 
     catch(...)
@@ -204,33 +233,69 @@ const XMLCh* QName::getRawName() const
 // ---------------------------------------------------------------------------
 //  QName: Setter methods
 // ---------------------------------------------------------------------------
-void QName::setName(      const XMLCh* const    localPart
-                        , const XMLCh* const    prefix
+void QName::setName(const XMLCh* const    prefix
+                  , const XMLCh* const    localPart
 						, const int             uriId)
 {
-    unsigned int newLen;
-
-    newLen = XMLString::stringLen(localPart);
-    if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
-    {
-        delete [] fLocalPart;
-        fLocalPartBufSz = newLen + 8;
-        fLocalPart = new XMLCh[fLocalPartBufSz + 1];
-    }
-    XMLString::moveChars(fLocalPart, localPart, newLen + 1);
-
-    newLen = XMLString::stringLen(prefix);
-    if (!fPrefixBufSz || (newLen > fPrefixBufSz))
-    {
-        delete [] fPrefix;
-        fPrefixBufSz = newLen + 8;
-        fPrefix = new XMLCh[fPrefixBufSz + 1];
-    }
-    XMLString::moveChars(fPrefix, prefix, newLen + 1);
+    setPrefix(prefix);
+    setLocalPart(localPart);
 
     // And clean up any QName and leave it undone until/if asked for again
     if (fRawName)
         *fRawName = 0;
+
+    // And finally store the URI id parameter
+    fURIId = uriId;
+}
+
+void QName::setName(const XMLCh* const    rawName
+						, const int             uriId)
+{
+    //set the rawName
+    unsigned int newLen;
+
+    newLen = XMLString::stringLen(rawName);
+    if (!fRawNameBufSz || (newLen > fRawNameBufSz))
+    {
+        delete [] fRawName;
+        fRawNameBufSz = newLen + 8;
+        fRawName = new XMLCh[fRawNameBufSz + 1];
+    }
+    XMLString::moveChars(fRawName, rawName, newLen + 1);
+
+    //find out the prefix and localPart from the rawName
+    ArrayJanitor<XMLCh> janName(0);
+    XMLCh tempBuffer[100];
+
+    const int colonInd = XMLString::indexOf(rawName, chColon);
+    const XMLCh* prefPtr = XMLUni::fgZeroLenString;
+    const XMLCh* suffPtr = XMLUni::fgZeroLenString;
+    if (colonInd != -1)
+    {
+        // We have to split the string, so make a copy.
+         if (XMLString::stringLen(rawName) < sizeof(tempBuffer) / sizeof(tempBuffer[0]))
+        {
+            XMLString::copyString(tempBuffer, rawName);
+            tempBuffer[colonInd] = chNull;
+            prefPtr = tempBuffer;
+        }
+        else
+        {
+            janName.reset(XMLString::replicate(rawName));
+            janName[colonInd] = chNull;
+            prefPtr = janName.get();
+        }
+
+        suffPtr = prefPtr + colonInd + 1;
+    }
+     else
+    {
+        // No colon, so we just have a name with no prefix
+        suffPtr = rawName;
+    }
+
+    setPrefix(prefPtr);
+    setLocalPart(suffPtr);
 
     // And finally store the URI id parameter
     fURIId = uriId;
@@ -278,11 +343,6 @@ return (XMLString::compareString(fPrefix, qname.getPrefix())==0) &&
        (XMLString::compareString(fLocalPart, qname.getLocalPart())==0) &&
        (fURIId == qname.getURI());
 }
-
-// -----------------------------------------------------------------------
-//  Misc
-// -----------------------------------------------------------------------
-
 
 // ---------------------------------------------------------------------------
 //  QName: Private, helper methods

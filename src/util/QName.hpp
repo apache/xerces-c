@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/02/26 21:56:16  tng
+ * Schema: QName can also be constructed with rawName.
+ *
  * Revision 1.1  2001/02/26 19:44:25  tng
  * Schema: add utility class QName, by Pei Yong Zhang.
  *
@@ -77,10 +80,16 @@ public :
     /** Default constructor. */
     QName();
 
-    /** Constructs a specified qname. */
+    /** Constructs a specified qname using prefix, and localpart. */
     QName
     (   const XMLCh* const        prefix
        ,const XMLCh* const        localPart
+	   ,const int                 uriId = -1
+    );
+
+    /** Constructs a specified qname using rawName. */
+    QName
+    (   const XMLCh* const        rawName
 	   ,const int                 uriId = -1
     );
 
@@ -110,7 +119,13 @@ public :
 	   ,const int                 uriId = -1
     );
 
-    void setPrefix(const XMLCh*) ;
+    void setName
+    (
+        const XMLCh* const        rawName
+	   ,const int                 uriId = -1
+    );
+
+   void setPrefix(const XMLCh*) ;
 
 	void setLocalPart(const XMLCh*) ;
 
