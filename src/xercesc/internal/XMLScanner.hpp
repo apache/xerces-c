@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/27 18:42:14  tng
+ * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+ *
  * Revision 1.3  2002/05/22 20:54:33  knoaman
  * Prepare for DOM L3 :
  * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
@@ -367,8 +370,8 @@ public :
         , const unsigned int    maxSysIdChars
         ,       XMLCh* const    pubIdToFill
         , const unsigned int    maxPubIdChars
-        ,       unsigned int&   lineToFill
-        ,       unsigned int&   colToFill
+        ,       XMLSSize_t&     lineToFill
+        ,       XMLSSize_t&     colToFill
     );
     const Locator* getLocator() const;
     unsigned int getSrcOffset() const;

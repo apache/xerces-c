@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/27 18:28:26  tng
+ * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+ *
  * Revision 1.1  2002/05/23 15:47:24  knoaman
  * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
  *
@@ -108,7 +111,7 @@ public:
     *
     * @see #setLineNumber
     */
-    virtual long getLineNumber() const = 0;
+    virtual XMLSSize_t getLineNumber() const = 0;
 
    /**
     * Get the column number where the error occured. The value is -1 if there
@@ -116,7 +119,7 @@ public:
     *
     * @see #setColumnNumber
     */
-    virtual long getColumnNumber() const = 0;
+    virtual XMLSSize_t getColumnNumber() const = 0;
 
    /**
     * Get the byte or character offset into the input source, if we're parsing
@@ -126,7 +129,7 @@ public:
     *
     * @see #setOffset
     */
-    virtual long getOffset() const = 0;
+    virtual XMLSSize_t getOffset() const = 0;
 
    /**
     * Get the DOM Node where the error occured, or <code>null</code> if there
@@ -157,7 +160,7 @@ public:
     *
     * @see #getLinNumner
     */
-    virtual void setLineNumber(const long lineNumber) = 0;
+    virtual void setLineNumber(const XMLSSize_t lineNumber) = 0;
 
    /**
     * Set the column number of the error
@@ -166,7 +169,7 @@ public:
     *
     * @see #getColumnNumner
     */
-    virtual void setColumnNumber(const long columnNumber) = 0;
+    virtual void setColumnNumber(const XMLSSize_t columnNumber) = 0;
 
    /**
     * Set the byte/character offset.
@@ -175,7 +178,7 @@ public:
     *
     * @see #getOffset
     */
-    virtual void setOffset(const long offset) = 0;
+    virtual void setOffset(const XMLSSize_t offset) = 0;
 
    /**
     * Set the DOM Node where the error occured
@@ -200,7 +203,7 @@ public:
 
 private :
     /* Unimplemented constructors and operators */
-    
+
     /* Copy constructor */
     DOMLocator(const DOMLocator&);
 

@@ -117,22 +117,22 @@ public:
     // -----------------------------------------------------------------------
 
 
-    DOMNodeImpl                  fNode;           // Implements common node functionality.
-    DOMParentNode                fParent;         // Implements common parent node functionality
+    DOMNodeImpl           fNode;           // Implements common node functionality.
+    DOMParentNode         fParent;         // Implements common parent node functionality
 
-    DOMDocumentType           *fDocType;
-    DOMElement                *fDocElement;
-    DOMStringPool                *fNamePool;
-    DOMNodeIDMap                 *fNodeIDMap;     // for use by GetElementsById().
+    DOMDocumentType*      fDocType;
+    DOMElement*           fDocElement;
+    DOMStringPool*        fNamePool;
+    DOMNodeIDMap*         fNodeIDMap;     // for use by GetElementsById().
 
-    NodeIterators               *fIterators;
-    TreeWalkers                 *fTreeWalkers;
-    Ranges                      *fRanges;
+    NodeIterators*        fIterators;
+    TreeWalkers*          fTreeWalkers;
+    Ranges*               fRanges;
 
-    RefHashTableOf<void>        *fUserData;
-    int                          fChanges;
+    RefHashTableOf<void>* fUserData;
+    int                   fChanges;
 
-    bool errorChecking;                          // Bypass error checking.
+    bool                  errorChecking;    // Bypass error checking.
 
 
     // Per-Document heap Variables.
@@ -151,9 +151,9 @@ public:
     //   revisit - this heap should be encapsulated into its own
     //                  class, rather than hanging naked on Document.
     //
-    void                        *fCurrentBlock;
-    char                        *fFreePtr;
-    DOMSize_t                 fFreeBytesRemaining;
+    void*                 fCurrentBlock;
+    char*                 fFreePtr;
+    XMLSize_t             fFreeBytesRemaining;
 
 
 
@@ -262,8 +262,8 @@ public:
                                                   const XMLCh *qualifiedName);
     virtual DOMElement         *createElementNS(const XMLCh *namespaceURI,
                                                   const XMLCh *qualifiedName,
-                                                  const int lineNo,
-                                                  const int columnNo);
+                                                  const XMLSSize_t lineNo,
+                                                  const XMLSSize_t columnNo);
     virtual DOMAttr            *createAttributeNS(const XMLCh *namespaceURI,
 	                                             const XMLCh *qualifiedName);
     virtual DOMNodeList        *getElementsByTagNameNS(const XMLCh *namespaceURI,

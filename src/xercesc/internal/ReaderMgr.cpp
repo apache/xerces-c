@@ -829,7 +829,7 @@ const XMLCh* ReaderMgr::getSystemId() const
     return getLastExtEntity(theEntity)->getSystemId();
 }
 
-int ReaderMgr::getColumnNumber() const
+XMLSSize_t ReaderMgr::getColumnNumber() const
 {
     if (!fReaderStack && !fCurReader)
         return 0;
@@ -838,7 +838,7 @@ int ReaderMgr::getColumnNumber() const
     return getLastExtEntity(theEntity)->getColumnNumber();
 }
 
-int ReaderMgr::getLineNumber() const
+XMLSSize_t ReaderMgr::getLineNumber() const
 {
     if (!fReaderStack && !fCurReader)
         return 0;

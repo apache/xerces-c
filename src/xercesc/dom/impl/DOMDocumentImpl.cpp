@@ -527,7 +527,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep)
                 source->getNodeName());
             DOMNamedNodeMap *srcattr=source->getAttributes();
             if(srcattr!=0)
-                for(DOMSize_t i=0;i<srcattr->getLength();++i)
+                for(XMLSize_t i=0;i<srcattr->getLength();++i)
                 {
                     DOMAttr *attr = (DOMAttr *) srcattr->item(i);
                     if (attr -> getSpecified())	{ // not a default attribute
@@ -594,14 +594,14 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep)
             DOMNamedNodeMap *smap = srcdoctype->getEntities();
             DOMNamedNodeMap *tmap = newdoctype->getEntities();
             if(smap != 0) {
-                for(DOMSize_t i = 0; i < smap->getLength(); i++) {
+                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
                     tmap->setNamedItem(importNode(smap->item(i), true));
                 }
             }
             smap = srcdoctype->getNotations();
             tmap = newdoctype->getNotations();
             if (smap != 0) {
-                for(DOMSize_t i = 0; i < smap->getLength(); i++) {
+                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
                     tmap->setNamedItem(importNode(smap->item(i), true));
                 }
             }
@@ -662,8 +662,8 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
 
 DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
                                               const XMLCh *qualifiedName,
-                                              const int lineNo,
-                                              const int columnNo)
+                                              const XMLSSize_t lineNo,
+                                              const XMLSSize_t columnNo)
 {
     if(!isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
@@ -742,9 +742,9 @@ Ranges* DOMDocumentImpl::getRanges() const
 void DOMDocumentImpl::removeRange(DOMRangeImpl* range)
 {
     if (fRanges != 0) {
-        DOMSize_t sz = fRanges->size();
+        XMLSize_t sz = fRanges->size();
         if (sz !=0) {
-            for (DOMSize_t i =0; i<sz; i++) {
+            for (XMLSize_t i =0; i<sz; i++) {
                 if (fRanges->elementAt(i) == range) {
                     fRanges->removeElementAt(i);
                     break;

@@ -420,8 +420,8 @@ void DOMParser::error(  const   unsigned int                code
                       , const XMLCh* const                errorText
                       , const XMLCh* const                systemId
                       , const XMLCh* const                publicId
-                      , const unsigned int                lineNum
-                      , const unsigned int                colNum)
+                      , const XMLSSize_t                  lineNum
+                      , const XMLSSize_t                  colNum)
 {
     SAXParseException toThrow = SAXParseException
         (

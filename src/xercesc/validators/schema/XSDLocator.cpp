@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.2  2002/05/27 18:44:07  tng
+  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+  *
   * Revision 1.1  2002/03/21 15:34:40  knoaman
   * Add support for reporting line/column numbers of schema errors.
   *
@@ -86,7 +89,7 @@ XSDLocator::XSDLocator() :
 // ---------------------------------------------------------------------------
 void XSDLocator::setValues(const XMLCh* const systemId,
                            const XMLCh* const publicId,
-                           const int lineNo, const int columnNo)
+                           const XMLSSize_t lineNo, const XMLSSize_t columnNo)
 {
     fLineNo = lineNo;
     fColumnNo = columnNo;

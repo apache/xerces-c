@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/27 18:39:21  tng
+ * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+ *
  * Revision 1.3  2002/05/22 20:53:41  knoaman
  * Prepare for DOM L3 :
  * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
@@ -1010,7 +1013,7 @@ void SAX2XMLReaderImpl::attDef( const   DTDElementDecl& elemDecl
 
         fDeclHandler->attributeDecl(elemDecl.getFullName(),
                                     attDef.getFullName(),
-                                    (isEnumeration) ? enumBuf.getRawBuffer() 
+                                    (isEnumeration) ? enumBuf.getRawBuffer()
                                                     : attDef.getAttTypeString(attDef.getType()),
                                     defAttTypeStr,
                                     attDef.getValue());
@@ -1077,7 +1080,7 @@ void SAX2XMLReaderImpl::endIntSubset()
    if (!fHasExternalSubset && fLexicalHandler)
         fLexicalHandler->endDTD();
 
-    // Unused by SAX DTDHandler interface at this time    
+    // Unused by SAX DTDHandler interface at this time
 }
 
 
@@ -1255,8 +1258,8 @@ void SAX2XMLReaderImpl::error(  const   unsigned int                code
                         , const XMLCh* const                errorText
                         , const XMLCh* const                systemId
                         , const XMLCh* const                publicId
-                        , const unsigned int                lineNum
-                        , const unsigned int                colNum)
+                        , const XMLSSize_t                  lineNum
+                        , const XMLSSize_t                  colNum)
 {
     SAXParseException toThrow = SAXParseException
     (

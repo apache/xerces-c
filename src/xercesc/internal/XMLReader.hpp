@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:02  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/27 18:42:14  tng
+ * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:02  peiyongz
+ * sane_include
  *
  * Revision 1.18  2001/12/06 17:47:04  tng
  * Performance Enhancement.  Modify the handling of the fNEL option so that it results in fgCharCharsTable being modified, instead of having all of the low-level routines check the option.  This seemed acceptable because the code appears to only permit the option to be turned on and not turned off again.   By Henry Zongaro.
@@ -283,9 +286,9 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getColumnNumber() const;
+    XMLSSize_t getColumnNumber() const;
     const XMLCh* getEncodingStr() const;
-    unsigned int getLineNumber() const;
+    XMLSSize_t getLineNumber() const;
     bool getNoMoreFlag() const;
     const XMLCh* getPublicId() const;
     unsigned int getReaderNum() const;
@@ -512,8 +515,8 @@ private:
     XMLCh                       fCharBuf[kCharBufSize];
     unsigned int                fCharsAvail;
     unsigned char               fCharSizeBuf[kCharBufSize];
-    unsigned int                fCurCol;
-    unsigned int                fCurLine;
+    XMLSSize_t                  fCurCol;
+    XMLSSize_t                  fCurLine;
     XMLRecognizer::Encodings    fEncoding;
     XMLCh*                      fEncodingStr;
     bool                        fForcedEncoding;
@@ -613,7 +616,7 @@ inline unsigned long XMLReader::charsLeftInBuffer() const
 // ---------------------------------------------------------------------------
 //  XMLReader: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned int XMLReader::getColumnNumber() const
+inline XMLSSize_t XMLReader::getColumnNumber() const
 {
     return fCurCol;
 }
@@ -623,7 +626,7 @@ inline const XMLCh* XMLReader::getEncodingStr() const
     return fEncodingStr;
 }
 
-inline unsigned int XMLReader::getLineNumber() const
+inline XMLSSize_t XMLReader::getLineNumber() const
 {
     return fCurLine;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/27 18:39:21  tng
+ * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+ *
  * Revision 1.2  2002/02/20 18:17:01  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -1396,8 +1399,8 @@ public :
         , const XMLCh* const                errorText
         , const XMLCh* const                systemId
         , const XMLCh* const                publicId
-        , const unsigned int                lineNum
-        , const unsigned int                colNum
+        , const XMLSSize_t                  lineNum
+        , const XMLSSize_t                  colNum
     );
 
     /**

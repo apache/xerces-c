@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:58  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/27 18:42:14  tng
+ * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
+ * sane_include
  *
  * Revision 1.13  2001/07/12 18:50:08  tng
  * Some performance modification regarding standalone check and xml decl check.
@@ -153,8 +156,8 @@ public :
     {
         const   XMLCh*          systemId;
         const   XMLCh*          publicId;
-                unsigned int    lineNumber;
-                unsigned int    colNumber;
+                XMLSSize_t      lineNumber;
+                XMLSSize_t      colNumber;
     };
 
 
@@ -263,8 +266,8 @@ public :
     // -----------------------------------------------------------------------
     virtual const XMLCh* getPublicId() const;
     virtual const XMLCh* getSystemId() const;
-    virtual int getLineNumber() const;
-    virtual int getColumnNumber() const;
+    virtual XMLSSize_t getLineNumber() const;
+    virtual XMLSSize_t getColumnNumber() const;
 
 
 private :

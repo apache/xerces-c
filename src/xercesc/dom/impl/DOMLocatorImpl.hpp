@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/27 18:25:41  tng
+ * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+ *
  * Revision 1.1  2002/05/23 15:47:24  knoaman
  * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
  *
@@ -85,11 +88,11 @@ public:
 
     DOMLocatorImpl
     (
-        const long lineNum
-        , const long columnNum
+        const XMLSSize_t lineNum
+        , const XMLSSize_t columnNum
         , DOMNode* const errorNode
         , const XMLCh* const uri
-        , const long offset = -1
+        , const XMLSSize_t offset = -1
     );
 
     /** Desctructor */
@@ -106,7 +109,7 @@ public:
     *
     * @see #setLineNumber
     */
-    virtual long getLineNumber() const;
+    virtual XMLSSize_t getLineNumber() const;
 
    /**
     * Get the column number where the error occured. The value is -1 if there
@@ -114,7 +117,7 @@ public:
     *
     * @see #setColumnNumber
     */
-    virtual long getColumnNumber() const;
+    virtual XMLSSize_t getColumnNumber() const;
 
    /**
     * Get the byte or character offset into the input source, if we're parsing
@@ -124,7 +127,7 @@ public:
     *
     * @see #setOffset
     */
-    virtual long getOffset() const;
+    virtual XMLSSize_t getOffset() const;
 
    /**
     * Get the DOM Node where the error occured, or <code>null</code> if there
@@ -155,7 +158,7 @@ public:
     *
     * @see #getLinNumner
     */
-    virtual void setLineNumber(const long lineNumber);
+    virtual void setLineNumber(const XMLSSize_t lineNumber);
 
    /**
     * Set the column number of the error
@@ -164,7 +167,7 @@ public:
     *
     * @see #getColumnNumner
     */
-    virtual void setColumnNumber(const long columnNumber);
+    virtual void setColumnNumber(const XMLSSize_t columnNumber);
 
    /**
     * Set the byte/character offset.
@@ -173,7 +176,7 @@ public:
     *
     * @see #getOffset
     */
-    virtual void setOffset(const long offset);
+    virtual void setOffset(const XMLSSize_t offset);
 
    /**
     * Set the DOM Node where the error occured
@@ -198,7 +201,7 @@ public:
 
 private :
     /* Unimplemented constructors and operators */
-    
+
     /* Copy constructor */
     DOMLocatorImpl(const DOMLocatorImpl&);
 
@@ -222,9 +225,9 @@ private :
     //  fURI
     //      The uri where the error occured
     // -----------------------------------------------------------------------
-    long         fLineNum;
-    long         fColumnNum;
-    long         fOffset;
+    XMLSSize_t   fLineNum;
+    XMLSSize_t   fColumnNum;
+    XMLSSize_t   fOffset;
     DOMNode*     fErrorNode;
     const XMLCh* fURI;
 };
@@ -233,17 +236,17 @@ private :
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Getter methods
 // ---------------------------------------------------------------------------
-inline long DOMLocatorImpl::getLineNumber() const
+inline XMLSSize_t DOMLocatorImpl::getLineNumber() const
 {
     return fLineNum;
 }
 
-inline long DOMLocatorImpl::getColumnNumber() const
+inline XMLSSize_t DOMLocatorImpl::getColumnNumber() const
 {
     return fColumnNum;
 }
 
-inline long DOMLocatorImpl::getOffset() const
+inline XMLSSize_t DOMLocatorImpl::getOffset() const
 {
     return fOffset;
 }
@@ -262,17 +265,17 @@ inline const XMLCh* DOMLocatorImpl::getURI() const
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Setter methods
 // ---------------------------------------------------------------------------
-inline void DOMLocatorImpl::setLineNumber(const long lineNumber)
+inline void DOMLocatorImpl::setLineNumber(const XMLSSize_t lineNumber)
 {
     fLineNum = lineNumber;
 }
 
-inline void DOMLocatorImpl::setColumnNumber(const long columnNumber)
+inline void DOMLocatorImpl::setColumnNumber(const XMLSSize_t columnNumber)
 {
     fColumnNum = columnNumber;
 }
 
-inline void DOMLocatorImpl::setOffset(const long offset)
+inline void DOMLocatorImpl::setOffset(const XMLSSize_t offset)
 {
     fOffset = offset;
 }

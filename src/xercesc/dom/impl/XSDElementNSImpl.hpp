@@ -77,8 +77,8 @@
 
 class CDOM_EXPORT XSDElementNSImpl: public DOMElementNSImpl {
 protected:
-    int fLineNo;     //Line number
-    int fColumnNo;   //Column number
+    XMLSSize_t fLineNo;     //Line number
+    XMLSSize_t fColumnNo;   //Column number
 
 
 public:
@@ -86,14 +86,14 @@ public:
     XSDElementNSImpl(DOMDocument *ownerDoc, //DOM Level 2
 	                 const XMLCh *namespaceURI,
                      const XMLCh *qualifiedName,
-                     const int lineNo,
-                     const int columnNo);
+                     const XMLSSize_t lineNo,
+                     const XMLSSize_t columnNo);
     XSDElementNSImpl(const XSDElementNSImpl &other, bool deep=false);
 
     virtual DOMNode * cloneNode(bool deep) const;
 
-    int getLineNo() const   { return fLineNo;   }
-    int getColumnNo() const { return fColumnNo; }
+    XMLSSize_t getLineNo() const   { return fLineNo;   }
+    XMLSSize_t getColumnNo() const { return fColumnNo; }
 };
 
 #endif

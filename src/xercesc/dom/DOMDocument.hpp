@@ -462,8 +462,8 @@ public:
      */
     virtual DOMElement         *createElementNS(const XMLCh *namespaceURI,
                                                   const XMLCh *qualifiedName,
-                                                  const int lineNum,
-                                                  const int columnNum) = 0;
+                                                  const XMLSSize_t lineNum,
+                                                  const XMLSSize_t columnNum) = 0;
 
     /**
      * Creates an attribute of the given qualified name and namespace
