@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.54  2004/07/06 15:16:57  amassari
+ * Fix for jira#1238: DOMWriter was creating an XMLFormatter without propagating the memory manager
+ *
  * Revision 1.53  2004/05/10 08:03:25  amassari
  * Performance: push a new map on the namespace stack only when an element has a xmlns attribute
  *
@@ -648,7 +651,8 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
                                      ,fDocumentVersion
                                      ,destination
                                      ,XMLFormatter::NoEscapes
-                                     ,XMLFormatter::UnRep_CharRef);
+                                     ,XMLFormatter::UnRep_CharRef
+                                     ,fMemoryManager);
     }
     catch (const TranscodingException& e)
     {
