@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/28 19:19:12  knoaman
+ * Performance: remove unnecessary if condition.
+ *
  * Revision 1.6  2002/11/28 18:17:22  knoaman
  * Performance: make getNextChar/peekNextChar inline.
  *
@@ -772,22 +775,15 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
         // Its not the one we want to skip so bump the index
         chGotten = fCharBuf[fCharIndex++];
     }
-     else
+    else
     {
         // If fNoMore is set, then we have nothing else to give
         if (fNoMore)
             return false;
 
-        // If the buffer is empty, then try to refresh
-        if (fCharIndex == fCharsAvail)
-        {
-            if (!refreshCharBuffer())
-            {
-                // If still empty, then return false
-                if (fCharIndex == fCharsAvail)
-                    return false;
-            }
-        }
+        // Try to refresh
+        if (!refreshCharBuffer())
+            return false;
 
         // Check the next char
         if (fCharBuf[fCharIndex] == chNotToGet)
@@ -872,16 +868,9 @@ inline bool XMLReader::getNextChar(XMLCh& chGotten)
         if (fNoMore)
             return false;
 
-        // If the buffer is empty, then try to refresh
-        if (fCharIndex == fCharsAvail)
-        {
-            refreshCharBuffer();
-
-            // If still empty, then return false
-            if (fCharIndex == fCharsAvail)
-                return false;
-        }
-
+        // Try to refresh
+        if (!refreshCharBuffer())
+            return false;
     }
 
     chGotten = fCharBuf[fCharIndex++];
