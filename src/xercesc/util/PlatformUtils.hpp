@@ -171,8 +171,13 @@ public :
       *
       * The default locale is "en_US".
       *
+      * nlsHome: user specified location where MsgLoader retrieves error message files.
+      *          the discussion above with regard to locale, applies to this nlsHome
+      *          as well.
+      *
       */
-    static void Initialize(const char* const locale = XMLUni::fgXercescDefaultLocale);
+    static void Initialize(const char* const locale = XMLUni::fgXercescDefaultLocale
+                         , const char* const nlsHome = 0);
 
     /** Perform per-process parser termination
       *

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/02/17 19:54:47  peiyongz
+ * Allow set user specified error message file location in PlatformUtils::Initialize().
+ *
  * Revision 1.3  2002/11/04 22:24:21  peiyongz
  * Locale setting for message loader
  *
@@ -166,7 +169,7 @@ public :
 
     /** @name Locale Handling  */
     //@{
-	/**
+    /**
       * This function enables set the locale information which
       * all concrete message loaders shall refer to during instantiation.
       *
@@ -175,9 +178,26 @@ public :
     static void           setLocale(const char* const localeToAdopt);
 
     /**
-      * Fr the derived to retrieve locale info during construction
+      * For the derived to retrieve locale info during construction
       */
     static const char*    getLocale();
+
+    //@}
+
+    /** @name NLSHome Handling  */
+    //@{
+    /**
+      * This function enables set the NLSHome information which
+      * all concrete message loaders shall refer to during instantiation.
+      *
+      * Note: for detailed discussion, refer to PlatformUtils::initalize()
+      */
+    static void           setNLSHome(const char* const nlsHomeToAdopt);
+
+    /**
+      * For the derived to retrieve NLSHome info during construction
+      */
+    static const char*    getNLSHome();
 
     //@}
 
@@ -213,8 +233,13 @@ private :
     //      Locale info set through PlatformUtils::init().
     //      The derived class may refer to this for locale information.
     //
+    //  fPath
+    //      NLSHome info set through PlatformUtils::init().
+    //      The derived class may refer to this for NLSHome information.
+    //
     // -----------------------------------------------------------------------
     static char*    fLocale;
+    static char*    fPath;
     static XMLCh    fLanguage[];
 };
 

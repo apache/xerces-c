@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/02/17 19:54:47  peiyongz
+ * Allow set user specified error message file location in PlatformUtils::Initialize().
+ *
  * Revision 1.6  2002/12/20 22:10:20  tng
  * XML 1.1
  *
@@ -196,7 +199,8 @@ XMLTransService*    XMLPlatformUtils::fgTransService = 0;
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::Initialize(const char* const locale)
+void XMLPlatformUtils::Initialize(const char* const locale 
+                                , const char* const nlsHome)
 {
     //
     //  Effects of overflow:
@@ -272,11 +276,13 @@ void XMLPlatformUtils::Initialize(const char* const locale)
     fgNetAccessor = makeNetAccessor();
 
     /***
-     *  Locale setting for Message Loader
+     * Message Loader:
      *
+     *     Locale setting 
+     *     nlsHome setting 
      ***/
     XMLMsgLoader::setLocale(locale);
-
+    XMLMsgLoader::setNLSHome(nlsHome);
 }
 
 
@@ -339,6 +345,7 @@ void XMLPlatformUtils::Terminate()
      *  refer to discussion in the Initialize()
      ***/
     XMLMsgLoader::setLocale(0);
+    XMLMsgLoader::setNLSHome(0);
 
     // And say we are no longer initialized
     gInitFlag = 0;

@@ -57,6 +57,9 @@
 /*
  *  $Id$
  * $Log$
+ * Revision 1.2  2003/02/17 19:54:47  peiyongz
+ * Allow set user specified error message file location in PlatformUtils::Initialize().
+ *
  * Revision 1.1  2002/11/04 22:24:21  peiyongz
  * Locale setting for message loader
  *
@@ -78,6 +81,8 @@ XERCES_CPP_NAMESPACE_BEGIN
  *
  ***/
 char* XMLMsgLoader::fLocale = 0;
+
+char* XMLMsgLoader::fPath = 0;
 
 XMLCh XMLMsgLoader::fLanguage[] = {chLatin_e, chLatin_n, chNull};
 
@@ -116,6 +121,34 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
 const char* XMLMsgLoader::getLocale()
 {
 	return fLocale;
+}
+
+/***
+ *  if nlsHomeToAdopt is 0, that is to release memory for
+ *  the user defined NLSHome string
+ *
+ ***/
+void  XMLMsgLoader::setNLSHome(const char* const nlsHomeToAdopt)
+{
+    /***
+     * Release the current setting's memory, if any
+     ***/
+    if (fPath)
+    {
+        delete [] fPath;
+        fPath = 0;
+    }
+
+    if (nlsHomeToAdopt)
+    {
+        fPath = XMLString::replicate(nlsHomeToAdopt);
+    }
+
+}
+
+const char* XMLMsgLoader::getNLSHome()
+{
+    return fPath;
 }
 
 // ---------------------------------------------------------------------------
