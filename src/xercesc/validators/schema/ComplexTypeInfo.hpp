@@ -210,6 +210,7 @@ private:
     void faultInAttDefList() const;
     XMLContentModel* createChildModel(ContentSpecNode* specNode, const bool isMixed);
     XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* const specNode = 0);
+    XMLContentModel* buildContentModel(ContentSpecNode* const specNode);
     XMLCh* formatContentModel () const ;
     ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const int minOccurs, const int maxOccurs);
     ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, const bool checkUPA = false);

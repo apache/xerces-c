@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/10/29 16:22:58  peiyongz
+ * allow proper recreation of ContentModel from deserialization
+ *
  * Revision 1.15  2003/10/21 10:23:53  amassari
  * When creating a new list of attributes, use the assigned memory manager
  *
@@ -261,6 +264,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fContentModel;
     fMemoryManager->deallocate(fFormattedModel); //delete [] fFormattedModel;
     fMemoryManager->deallocate(fContentSpecOrgURI); //delete [] fContentSpecOrgURI;
+
 }
 
 // ---------------------------------------------------------------------------
@@ -490,7 +494,11 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
         }
     }
 
+    return buildContentModel(aSpecNode);
+}
 
+XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpecNode)
+{
     XMLContentModel* cmRet = 0;
     if (fContentType == SchemaElementDecl::Simple) {
        // just return nothing
@@ -525,8 +533,6 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
 
     return cmRet;
 }
-
-
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Private helper methods
@@ -935,6 +941,13 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
 
         serEng<<fBaseComplexTypeInfo;
         serEng<<fContentSpec;
+        // we need to save a flag to specify
+        // if this content spce has been expanded or not
+        if (fContentModel)
+            serEng<<true;
+        else
+            serEng<<false;
+
         serEng<<fAttWildCard;
         serEng<<fAttList;
 
@@ -946,30 +959,6 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::storeObject(fElements, serEng);
         XTemplateSerializer::storeObject(fAttDefs, serEng);
 
-        /***
-         * 
-         * fContentSpecOrgURI:     start of the array
-         * fContentSpecOrgURISize: size of the array
-         * fUniqueURI:             the current last element in the array
-         ***/
-        if (fContentSpecOrgURI)
-        {
-            serEng<<(int)1;
-            serEng<<fContentSpecOrgURISize;
-            serEng<<fUniqueURI;
-
-            unsigned int* tempURI = fContentSpecOrgURI;
-            for (unsigned int i = 0 ; i < fUniqueURI; i++)
-            {
-                serEng<<*tempURI;
-                tempURI++;
-            }
-        }
-        else
-        {
-            serEng<<(int)0;
-        }
-
          /***
           *   Don't serialize 
           *
@@ -977,6 +966,10 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
           *   fFormattedModel;
           *   fLocator;
           *   fSpecNodesToDelete
+          * 
+          *   fContentSpecOrgURI:     start of the array
+          *   fContentSpecOrgURISize: size of the array
+          *   fUniqueURI:             the current last element in the array
           ***/
     }
     else
@@ -1002,6 +995,18 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
 
         serEng>>fBaseComplexTypeInfo;
         serEng>>fContentSpec;
+
+        //read the expanded flag
+        bool expanded = false;
+        serEng>>expanded;
+        if (expanded)
+        {
+            fContentModel = buildContentModel(fContentSpec);
+        }
+        //else
+        // if contentSpec has NOT been expanded yet,
+        // leave the building to makeContentModel
+
         serEng>>fAttWildCard;
         serEng>>fAttList;
 
@@ -1010,52 +1015,27 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
          * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
          * Deserialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
-        XTemplateSerializer::loadObject(&fElements, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fElements, 8, false, serEng);
         XTemplateSerializer::loadObject(&fAttDefs, 8, true, serEng);
-
-        /***
-         * 
-         * fContentSpecOrgURI:     start of the array
-         * fContentSpecOrgURISize: size of the array
-         * fUniqueURI:             the current last element in the array
-         ***/
-         int i;
-         serEng>>i;
-
-         if (i==1)
-         {
-            serEng>>fContentSpecOrgURISize;
-            serEng>>fUniqueURI;
-
-            if (!fContentSpecOrgURI)
-            {
-                fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
-                    (fContentSpecOrgURISize * sizeof(unsigned int)); 
-            }
-
-            unsigned int* tempURI = fContentSpecOrgURI;
-            for (unsigned int i = 0 ; i < fUniqueURI; i++)
-            {
-                unsigned int val;
-                serEng>>val;
-                *tempURI = val;
-                tempURI++;
-            }
-         }
-         //else do nothing             
 
          /***
           *   Don't deserialize 
           *
-          *   fContentModel;
           *   fFormattedModel;
-          *   fLocator; 
+          *   fLocator;
           *   fSpecNodesToDelete
+          * 
+          *   fContentSpecOrgURI:     start of the array
+          *   fContentSpecOrgURISize: size of the array
+          *   fUniqueURI:             the current last element in the array
           ***/
-         fContentModel   = 0;
+
          fFormattedModel = 0;
          fLocator = 0;
          fSpecNodesToDelete = 0;
+         fContentSpecOrgURI = 0;
+         fContentSpecOrgURISize = 0;
+         fUniqueURI = 0;
     }
 }
 
