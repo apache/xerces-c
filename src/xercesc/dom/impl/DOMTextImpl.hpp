@@ -91,6 +91,12 @@ public:
 
     virtual                ~DOMTextImpl();
     virtual DOMText*        splitText(XMLSize_t offset);
+    // DOM Level 3
+    virtual bool            getIsWhitespaceInElementContent() const;
+    virtual const XMLCh*    getWholeText();
+    virtual DOMText*        replaceWholeText(const XMLCh* content);
+
+    // non-standard extension
     virtual bool            isIgnorableWhitespace() const;
 
     // Declare the functions coming from DOMNode.

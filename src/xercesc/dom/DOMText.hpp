@@ -137,6 +137,64 @@ public:
     virtual DOMText *splitText(XMLSize_t offset) = 0;
     //@}
 
+    /** @name Functions introduced in DOM Level 3 */
+    //@{
+    /**
+     * Returns whether this text node contains whitespace in element content,
+     * often abusively called "ignorable whitespace".  An implementation can
+     * only return <code>true</code> if, one way or another, it has access
+     * to the relevant information (e.g., the DTD or schema).
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * <br> This attribute represents the property [element content
+     * whitespace] defined in .
+     * @since DOM Level 3
+     */
+    virtual bool     getIsWhitespaceInElementContent() const = 0;
+
+    /**
+     * Returns all text of <code>DOMText</code> nodes logically-adjacent text
+     * nodes to this node, concatenated in document order.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh* getWholeText() = 0;
+
+    /**
+     * Substitutes the a specified text for the text of the current node and
+     * all logically-adjacent text nodes.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * <br>This method returns the node in the hierarchy which received the
+     * replacement text, which is null if the text was empty or is the
+     * current node if the current node is not read-only or otherwise is a
+     * new node of the same type as the current node inserted at the site of
+     * the replacement. All logically-adjacent text nodes are removed
+     * including the current node unless it was the recipient of the
+     * replacement text.
+     * <br>Where the nodes to be removed are read-only descendants of an
+     * <code>DOMEntityReference</code>, the <code>DOMEntityReference</code> must
+     * be removed instead of the read-only nodes. If any
+     * <code>DOMEntityReference</code> to be removed has descendants that are
+     * not <code>DOMEntityReference</code>, <code>DOMText</code>, or
+     * <code>DOMCDATASection</code> nodes, the <code>replaceWholeText</code>
+     * method must fail before performing any modification of the document,
+     * raising a <code>DOMException</code> with the code
+     * <code>NO_MODIFICATION_ALLOWED_ERR</code>.
+     * @param content The content of the replacing <code>DOMText</code> node.
+     * @return The <code>DOMText</code> node created with the specified content.
+     * @exception DOMException
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised if one of the <code>DOMText</code>
+     *   nodes being replaced is readonly.
+     * @since DOM Level 3
+     */
+    virtual DOMText* replaceWholeText(const XMLCh* content) = 0;
+    //@}
+
     // -----------------------------------------------------------------------
     // Non-standard extension
     // -----------------------------------------------------------------------
@@ -152,6 +210,7 @@ public:
     //@}
 
 };
+
 
 #endif
 
