@@ -1689,6 +1689,7 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
         ContentSpecNode* firstNode = 0;
         ContentSpecNode* secondNode = 0;
         unsigned int tokensSize = nameSpaceTokens->size();
+        DatatypeValidator* anyURIDV = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_ANYURI);
 
         for (unsigned int i=0; i < tokensSize; i++) {
 
@@ -1701,6 +1702,12 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                     uriIndex = fTargetNSURI;
                 }
                 else {
+                    try {
+                        anyURIDV->validate(tokenElem);
+                    }
+                    catch(const XMLException& excep) {
+                        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+                    }
                     uriIndex = fURIStringPool->addOrFind(tokenElem);
                 }
             }
@@ -3678,6 +3685,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     else {
 
         XMLStringTokenizer tokenizer(nameSpace);
+        DatatypeValidator* anyURIDV = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_ANYURI);
 
         attType = XMLAttDef::Any_List;
 
@@ -3692,6 +3700,13 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
                 uriIndex = fTargetNSURI;
             }
             else {
+
+                try {
+                    anyURIDV->validate(token);
+                }
+                catch(const XMLException& excep) {
+                    reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+                }
                 uriIndex = fURIStringPool->addOrFind(token);
             }
 
