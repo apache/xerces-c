@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.14  2000/01/20 18:37:42  aruna1
+# Added compatible thread libray for AIX
+#
 # Revision 1.13  2000/01/05 20:52:44  abagchi
 # Added a few echo statements to clarify what is actually happening
 # inside runConfigure. There were a few questions on why we need this
@@ -316,7 +319,7 @@ if test $platform = "hp-11"; then
     esac
     fi
 elif test $platform = "aix"; then
-    threadingLibs="-lpthreads"
+    threadingLibs="-lpthreads_compat -lpthreads"
 elif test $platform = "hp-10"; then
     threadingLibs="-lcma"
     threadingDefines="-DXML_USE_DCE"
