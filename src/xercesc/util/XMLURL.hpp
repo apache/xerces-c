@@ -95,7 +95,7 @@ public:
     // -----------------------------------------------------------------------
     //  Public static methods
     // -----------------------------------------------------------------------
-    Protocols lookupByName(const XMLCh* const protoName);
+    static Protocols lookupByName(const XMLCh* const protoName);
 
 
     // -----------------------------------------------------------------------
