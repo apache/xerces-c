@@ -2123,11 +2123,11 @@ void SGXMLScanner::commonInit()
     fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
     fAttDefRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
     (
-        509, false, new (fMemoryManager)HashPtr(), fMemoryManager
+        131, false, new (fMemoryManager)HashPtr(), fMemoryManager
     );
     fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
     (
-        509, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        131, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
     );
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 }
