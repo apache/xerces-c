@@ -63,7 +63,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/NumberFormatException.hpp>
+#include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -308,7 +308,7 @@ XMLUri& XMLUri::operator=(const XMLUri& toAssign)
         throw;
     }
     return *this;
-}  
+}
 
 XMLUri::~XMLUri()
 {
@@ -368,7 +368,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
     if ( !baseURI &&
         (!trimedUriSpec || trimedUriSpecLen == 0))
     {
-        ThrowXML1(NumberFormatException
+        ThrowXML1(MalformedURLException
                , XMLExcepts::XMLNUM_URI_Component_Empty
                , errMsg_PARAMS);
     }
@@ -394,7 +394,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // A standalone base is a valid URI according to spec
         if ( !baseURI && fragmentIdx != 0 )
         {
-            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_URI_No_Scheme);
+            ThrowXML(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme);
         }
     }
 	else
@@ -406,7 +406,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
     // It's an error if we stop here
     if (index == trimedUriSpecLen)
     {
-        ThrowXML1(NumberFormatException
+        ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
                 , errMsg_PATH);
 	}
@@ -724,7 +724,7 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
 
     if ( !tmpPtr )
     {
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_URI_No_Scheme);
+        ThrowXML(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme);
     }
 	else
     {
@@ -740,7 +740,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 {
 	if ( !uriSpec )
     {
-        ThrowXML1(NumberFormatException
+        ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
                 , errMsg_PATH);
 	}
@@ -768,7 +768,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             {
                 XMLString::moveChars(value1, &(uriSpec[index]), 3);
                 value1[3] = chNull;
-                ThrowXML2(NumberFormatException
+                ThrowXML2(MalformedURLException
                         , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                         , errMsg_PATH
                         , value1);
@@ -779,7 +779,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
         {
             value1[0] = testChar;
             value1[1] = chNull;
-            ThrowXML2(NumberFormatException
+            ThrowXML2(MalformedURLException
                     , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                     , errMsg_PATH
                     , value1);
@@ -817,7 +817,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 {
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
-                    ThrowXML2(NumberFormatException
+                    ThrowXML2(MalformedURLException
                             , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                             , errMsg_QUERY
                             , value1);
@@ -828,7 +828,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
-                ThrowXML2(NumberFormatException
+                ThrowXML2(MalformedURLException
                         , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                         , errMsg_QUERY
                         , value1);
@@ -862,7 +862,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 {
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
-                    ThrowXML2(NumberFormatException
+                    ThrowXML2(MalformedURLException
                             , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                             , errMsg_FRAGMENT
                             , value1);
@@ -873,7 +873,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
-                ThrowXML2(NumberFormatException
+                ThrowXML2(MalformedURLException
                         , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                         , errMsg_FRAGMENT
                         , value1);
@@ -914,14 +914,14 @@ void XMLUri::setScheme(const XMLCh* const newScheme)
 {
     if ( !newScheme )
     {
-        ThrowXML1(NumberFormatException
+        ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Set_Null
                 , errMsg_SCHEME);
     }
 
     if (!isConformantSchemeName(newScheme))
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
                 , errMsg_SCHEME
                 , newScheme);
@@ -951,7 +951,7 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
     if ( newUserInfo &&
          !getHost()    )
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_NullHost
                 , errMsg_USERINFO
                 , newUserInfo);
@@ -996,7 +996,7 @@ void XMLUri::setHost(const XMLCh* const newHost)
 
     if (!isWellFormedAddress(newHost))
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
                 , errMsg_HOST
                 , newHost);
@@ -1017,7 +1017,7 @@ void XMLUri::setPort(int newPort)
         if (!getHost())
         {
             XMLString::binToText(newPort, value1, BUF_LEN, 10);
-            ThrowXML2(NumberFormatException
+            ThrowXML2(MalformedURLException
                     , XMLExcepts::XMLNUM_URI_NullHost
                     , errMsg_PORT
                     , value1);
@@ -1026,7 +1026,7 @@ void XMLUri::setPort(int newPort)
     else if (newPort != -1)
     {
         XMLString::binToText(newPort, value1, BUF_LEN, 10);
-        ThrowXML1(NumberFormatException
+        ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_PortNo_Invalid
                 , value1);
     }
@@ -1070,21 +1070,21 @@ void XMLUri::setFragment(const XMLCh* const newFragment)
 	}
 	else if (!isGenericURI())
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
                 , errMsg_FRAGMENT
                 , newFragment);
 	}
 	else if ( !getPath() )
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                , XMLExcepts::XMLNUM_URI_NullPath
                , errMsg_FRAGMENT
                , newFragment);
 	}
 	else if (!isURIString(newFragment))
     {
-        ThrowXML1(NumberFormatException
+        ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                 , errMsg_FRAGMENT);
 	}
@@ -1113,21 +1113,21 @@ void XMLUri::setQueryString(const XMLCh* const newQueryString)
 	}
 	else if (!isGenericURI())
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
                 , errMsg_QUERY
                 , newQueryString);
 	}
 	else if ( !getPath() )
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_NullPath
                 , errMsg_QUERY
                 , newQueryString);
 	}
 	else if (!isURIString(newQueryString))
     {
-        ThrowXML2(NumberFormatException
+        ThrowXML2(MalformedURLException
                , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                , errMsg_QUERY
                , newQueryString);
@@ -1205,7 +1205,7 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
                 value1[2] = *(tmpStr+2);
                 value1[3] = chNull;
 
-                ThrowXML2(NumberFormatException
+                ThrowXML2(MalformedURLException
                         , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                         , errMsg_USERINFO
                         , value1);
@@ -1213,7 +1213,7 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
         }
         else
         {	
-            ThrowXML2(NumberFormatException
+            ThrowXML2(MalformedURLException
                     , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                     , errMsg_USERINFO
                     , userInfo);
