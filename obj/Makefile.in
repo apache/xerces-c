@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.14  2000/04/17 22:25:43  abagchi
+# Follow the SMP/E procedures for the OS/390 BATCH install
+#
 # Revision 1.13  2000/03/17 19:28:28  abagchi
 # Now generates object files in platform-specific directories
 #
@@ -133,7 +136,7 @@ include ../src/Makefile.incl
 LIB=${XERCESCROOT}/lib
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET = "//'${LOADMOD}(XERCES11)'"
+BATCH_TARGET = "//'${LOADMOD}(IXM4C31)'"
 endif
 ifneq (${PLATFORM}, OS400)
 LIBNAME=libxerces-c

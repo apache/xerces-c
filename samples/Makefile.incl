@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2000/04/17 22:25:33  abagchi
+# Follow the SMP/E procedures for the OS/390 BATCH install
+#
 # Revision 1.15  2000/04/04 21:34:50  abagchi
 # Added PTX support
 #
@@ -252,9 +255,10 @@ endif
 # Also,                                                           #
 #                                                                 #
 #   export LOADMOD=USERID.LOAD                                    #
-#   export LOADEXP=USERID.EXP                                     #
+#   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
-# to specify your LOADMOD and the definition sidedeck dataset.    #
+# to specify your LOADMOD and the IXM4C31 definition sidedeck     #
+# dataset.  							  #
 ###################################################################
 
 ifeq (${PLATFORM}, OS390)
@@ -272,7 +276,7 @@ SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-LIBRARY_NAMES="//'${LOADEXP}(XERCES11)'"
+LIBRARY_NAMES="//'${LOADEXP}(IXM4C31)'"
 else
 LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
 endif
