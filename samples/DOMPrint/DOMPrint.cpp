@@ -625,23 +625,33 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             }
             break;
         }
-
-
-        case DOM_Node::ENTITY_REFERENCE_NODE:
-        {
-            DOM_Node child;
-            for (child = toWrite.getFirstChild();
-                 child != 0;
-                 child = child.getNextSibling())
-            {
-                target << child;
-            }
-            break;
-        }
-
         
+        
+        case DOM_Node::ENTITY_REFERENCE_NODE:
+            {
+                DOM_Node child;
+#if 0
+                for (child = toWrite.getFirstChild();
+                child != 0;
+                child = child.getNextSibling())
+                {
+                    target << child;
+                }
+#else
+                //
+                // Instead of printing the refernece tree 
+                // we'd output the actual text as it appeared in the xml file.
+                // This would be the case when -e option was chosen
+                //
+                    *gFormatter << XMLFormatter::NoEscapes << chAmpersand
+                        << nodeName << chSemiColon;
+#endif
+                break;
+            }
+            
+            
         case DOM_Node::CDATA_SECTION_NODE:
-        {
+            {
             *gFormatter << XMLFormatter::NoEscapes << gStartCDATA
                         << nodeValue << gEndCDATA;
             break;
