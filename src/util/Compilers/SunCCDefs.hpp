@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/14 02:52:14  aruna1
+ * XMLCh now mapped to wchar_t
+ *
  * Revision 1.4  1999/11/17 21:49:42  abagchi
  * Added the definitions of XMLUInt16 and XMLUInt32
  * PR:
@@ -91,7 +94,7 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-typedef unsigned short XMLCh;
+typedef wchar_t XMLCh;
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers
