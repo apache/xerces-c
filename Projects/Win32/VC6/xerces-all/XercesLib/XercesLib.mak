@@ -141,6 +141,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMNodeIteratorImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeVector.obj"
+	-@erase "$(INTDIR)\DOMNormalizer.obj"
 	-@erase "$(INTDIR)\DOMNotationImpl.obj"
 	-@erase "$(INTDIR)\DOMParentNode.obj"
 	-@erase "$(INTDIR)\DOMParser.obj"
@@ -618,6 +619,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMNodeIteratorImpl.obj" \
 	"$(INTDIR)\DOMNodeListImpl.obj" \
 	"$(INTDIR)\DOMNodeVector.obj" \
+	"$(INTDIR)\DOMNormalizer.obj" \
 	"$(INTDIR)\DOMNotationImpl.obj" \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
@@ -809,6 +811,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMNodeIteratorImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeVector.obj"
+	-@erase "$(INTDIR)\DOMNormalizer.obj"
 	-@erase "$(INTDIR)\DOMNotationImpl.obj"
 	-@erase "$(INTDIR)\DOMParentNode.obj"
 	-@erase "$(INTDIR)\DOMParser.obj"
@@ -1288,6 +1291,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMNodeIteratorImpl.obj" \
 	"$(INTDIR)\DOMNodeListImpl.obj" \
 	"$(INTDIR)\DOMNodeVector.obj" \
+	"$(INTDIR)\DOMNormalizer.obj" \
 	"$(INTDIR)\DOMNotationImpl.obj" \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
@@ -1479,6 +1483,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMNodeIteratorImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeVector.obj"
+	-@erase "$(INTDIR)\DOMNormalizer.obj"
 	-@erase "$(INTDIR)\DOMNotationImpl.obj"
 	-@erase "$(INTDIR)\DOMParentNode.obj"
 	-@erase "$(INTDIR)\DOMParser.obj"
@@ -1958,6 +1963,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMNodeIteratorImpl.obj" \
 	"$(INTDIR)\DOMNodeListImpl.obj" \
 	"$(INTDIR)\DOMNodeVector.obj" \
+	"$(INTDIR)\DOMNormalizer.obj" \	
 	"$(INTDIR)\DOMNotationImpl.obj" \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
@@ -2149,6 +2155,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMNodeIteratorImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeVector.obj"
+	-@erase "$(INTDIR)\DOMNormalizer.obj"	
 	-@erase "$(INTDIR)\DOMNotationImpl.obj"
 	-@erase "$(INTDIR)\DOMParentNode.obj"
 	-@erase "$(INTDIR)\DOMParser.obj"
@@ -2627,6 +2634,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMNodeIteratorImpl.obj" \
 	"$(INTDIR)\DOMNodeListImpl.obj" \
 	"$(INTDIR)\DOMNodeVector.obj" \
+	"$(INTDIR)\DOMNormalizer.obj" \	
 	"$(INTDIR)\DOMNotationImpl.obj" \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
