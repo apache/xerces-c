@@ -314,7 +314,9 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode)
         if (neededLen == -1)
         {
             delete [] allocatedArray;
-            return 0;
+            retVal = new char[1];
+            retVal[0] = 0;
+            return retVal;
         }
 
         retVal = new char[neededLen + 1];
