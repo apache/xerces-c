@@ -597,8 +597,8 @@ catch (const XMLException&amp; toCatch) {
          transcoder wrappers. You get a transcoder like this:
        </p>
        <ul>
-		 <li>
-         1. Call XMLPlatformUtils::fgTransServer->MakeNewTranscoderFor() and provide
+         <li>
+            Call XMLPlatformUtils::fgTransServer->MakeNewTranscoderFor() and provide
             the name of the encoding you wish to create a transcoder for. This will
             return a transcoder to you, which you own and must delete when you are
             through with it.
@@ -612,35 +612,35 @@ catch (const XMLException&amp; toCatch) {
            ever have to deal with and can set itself up for that internally. In
            general, you should stick to block sizes in the 4 to 64K range.
          </li>
-		 <li>
-         2. The returned transcoder is something derived from XMLTranscoder, so they
+         <li>
+            The returned transcoder is something derived from XMLTranscoder, so they
             are all returned to you via that interface.
          </li>
-		 <li>
-         3. This object is really just a wrapper around the underlying transcoding
+         <li>
+            This object is really just a wrapper around the underlying transcoding
             system actually in use by your version of Xerces, and does whatever is
             necessary to handle differences between the XMLCh representation and the
             representation used by that underlying transcoding system.
          </li>
-		 <li>
-         4. The transcoder object has two primary APIs, transcodeFrom() and
+         <li>
+            The transcoder object has two primary APIs, transcodeFrom() and
             transcodeTo(). These transcode between the XMLCh format and the encoding you
             indicated.
          </li>
-		 <li>
-         5. These APIs will transcode as much of the source data as will fit into the
+         <li>
+            These APIs will transcode as much of the source data as will fit into the
             outgoing buffer you provide. They will tell you how much of the source they
             ate and how much of the target they filled. You can use this information to
             continue the process until all source is consumed.
          </li>
-		 <li>
-         6. char* data is always dealt with in terms of bytes, and XMLCh data is
+         <li>
+            char* data is always dealt with in terms of bytes, and XMLCh data is
             always dealt with in terms of characters. Don't mix up which you are dealing
             with or you will not get the correct results, since many encodings don't
             have a one to one relationship of characters to bytes.
          </li>
-		 <li>
-         7. When transcoding from XMLCh to the target encoding, the transcodeTo()
+         <li>
+            When transcoding from XMLCh to the target encoding, the transcodeTo()
             method provides an 'unrepresentable flag' parameter, which tells the
             transcoder how to deal with an XMLCh code point that cannot be converted
             legally to the target encoding, which can easily happen since XMLCh is
@@ -650,6 +650,19 @@ catch (const XMLException&amp; toCatch) {
             throw an exception.
          </li>
        </ul>
+         <p>Here is an example:</p>
+<source>
+// create an XMLTranscoder that is able to transcode between Unicode and Big5
+// ASSUMPTION: assumes your underlying transcoding utility supports this encoding Big5
+XMLTranscoder* t = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("Big5", failReason, 16*1024);
+
+// source string is in Unicode, wanna to transcode to Big5
+t-&gt;transcodeTo(source_unicode, length, result_Big5, length, charsEaten, XMLTranscoder::UnRep_Throw );
+
+// source string in Big5, wanna to transcode to Unicode
+t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (unsigned char*)charSz);
+</source>
+
     </a>
   </faq>
 
