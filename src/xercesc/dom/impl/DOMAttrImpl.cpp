@@ -103,7 +103,7 @@ DOMAttrImpl::~DOMAttrImpl() {
 
 DOMNode * DOMAttrImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (this->getOwnerDocument()) DOMAttrImpl(*this, deep);
+    DOMNode* newNode = new (this->getOwnerDocument(), DOMDocumentImpl::ATTR_OBJECT) DOMAttrImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -205,7 +205,9 @@ void DOMAttrImpl::setValue(const XMLCh *val)
     DOMNode *kid;
     while ((kid = fParent.fFirstChild) != 0)         // Remove existing kids
     {
-        removeChild(kid);
+        DOMNode* node = removeChild(kid);
+        if (node)
+            node->release();
     }
 
     if (val != 0)              // Create and add the new one
@@ -239,7 +241,21 @@ void DOMAttrImpl::setOwnerElement(DOMElement *ownerElem)
     fNode.isOwned(false);
 }
 
+void DOMAttrImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::ATTR_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 
            DOMNode*         DOMAttrImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };

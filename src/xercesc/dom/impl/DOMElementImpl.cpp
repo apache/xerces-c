@@ -117,7 +117,7 @@ DOMElementImpl::~DOMElementImpl()
 
 DOMNode *DOMElementImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMElementImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ELEMENT_OBJECT) DOMElementImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -189,6 +189,7 @@ void DOMElementImpl::removeAttribute(const XMLCh *nam)
     if (att != 0)
     {
         fAttributes->removeNamedItem(nam);
+        att->release();
     }
 };
 
@@ -286,7 +287,9 @@ void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
     DOMAttr *newAttr =
         this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
     newAttr->setNodeValue(fValue);
-    fAttributes->setNamedItem(newAttr);
+    DOMNode* rem = fAttributes->setNamedItem(newAttr);
+    if (rem)
+        rem->release();
 }
 
 
@@ -302,6 +305,7 @@ void DOMElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
     // Remove it
     if (att != 0) {
         fAttributes->removeNamedItemNS(fNamespaceURI, fLocalName);
+        att->release();
     }
 }
 
@@ -384,7 +388,21 @@ void DOMElementImpl::setupDefaultAttributes()
         fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, defAttrs);
 }
 
+void DOMElementImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::ELEMENT_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 
 //
