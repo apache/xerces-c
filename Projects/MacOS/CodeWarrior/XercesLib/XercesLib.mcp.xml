@@ -604,7 +604,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan&#191;&#255;&#208;&#172;Y&#136;&#190;&#202;&#144;\&#166;d&#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964imjxn64n7jwi64i5tin64i7vj264i5tin64i7un264i5jp264pp4ni64jrcsn&#191;&#255;&#208;&#171;&#217;&#136;^&#189;&#208;Qf&#248;&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -4676,6 +4676,34 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -7328,6 +7356,26 @@
                     <PATH>ENTITYDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -7885,7 +7933,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan&#191;&#255;&#208;&#172;Y&#136;[&#240;j&#218;&#196;&#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964imjxn64n7jwi64i5tin64i7vj264i5tin64i7un264i5jp264pp4ni64jrcsn&#191;&#255;&#208;&#171;&#217;&#136;_&#137;&#192;h&#130;&#200;&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -11374,6 +11422,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -13761,6 +13845,34 @@
                     <PATH>:validators:datatype:ENTITYDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -14318,7 +14430,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964kkjfn64q6jei64k4t2n64k6v3264k4t2n64k6u6264k4j7264rn46i64mqcan&#191;&#255;&#208;&#172;Y&#136;}&#187;&#128;&#174;s&#252;&#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964imjxn64n7jwi64i5tin64i7vj264i5tin64i7un264i5jp264pp4ni64jrcsn&#191;&#255;&#208;&#171;&#217;&#136;`Hxf&#152;&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -18390,6 +18502,34 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -21042,6 +21182,26 @@
                     <PATH>ENTITYDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -21599,7 +21759,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954ujxn58ejwi54ctin54evj254ctin54eun254cjp259w4ni55ycsnX\&#145;&#152;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644vjfn648fjei644dt2n644fv32644dt2n644fu62644dj72649x46i645zcan&#191;&#255;&#208;&#171;&#217;&#136;a&#128;&#130;&#187;&#136;&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -25088,6 +25248,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -27475,6 +27671,34 @@
                     <PATH>:validators:datatype:ENTITYDatatypeValidator.hpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:UnionDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ListDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -27748,7 +27972,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954ujxn58ejwi54ctin54evj254ctin54eun254cjp259w4ni55ycsnX\&#145;&#152;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644vjfn648fjei644dt2n644fv32644dt2n644fu62644dj72649x46i645zcan&#191;&#255;&#208;&#171;&#217;&#136;a&#148;&#224;&#142;#&#144;&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -30981,6 +31205,18 @@
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ListDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ListDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
                             <PATH>NOTATIONDatatypeValidator.hpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
@@ -30988,6 +31224,18 @@
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
                             <PATH>NOTATIONDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>UnionDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>UnionDatatypeValidator.cpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
                     </GROUP>
