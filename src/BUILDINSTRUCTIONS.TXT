@@ -17,17 +17,22 @@ End of warning!
 
 This page has sections on the following topics:
 
-* Building Xerces-C on Windows
-* Building Xerces-C on UNIX
-* Building Xerces-C on Windows using Visual Age
-* Building Xerces-C on OS/2 using Visual Age
-* Building Xerces-C on Macintosh
-* Building ICU
-* Building the User Documentation
+* Building Xerces-C on Windows.
+* Building Xerces-C on UNIX.
+* Building Xerces-C on Windows using Visual Age.
+* Building Xerces-C on OS/2 using Visual Age.
+* Building Xerces-C on AS/400.
+* Building Xerces-C on Macintosh.
+* Building ICU.
+* How to build the User Documentation?.
+* I wish to port Xerces to my favourite platform. Do you have any suggestions?
+* What should I define XMLCh to be?
+* How can I generate Xerces-C binaries which includes the sample NetAccessor implementation using Libwww?
+* Where can I look for more help?
 
 
 Building on Windows NT/98                
-
+ 
 
 Xerces-C comes with Microsoft Visual C++ projects and workspaces to help you build
 Xerces-C. The following describes the steps you need to build Xerces-C.
@@ -83,7 +88,7 @@ sure you have these tools installed on your system before proceeding. If you don
 required tools, ask your system administrator to get them for you. These tools are free under
 the GNU Public Licence and may be obtained from the Free Software Foundation.
 
-DO NOT JUMP INTO THE BUILD DIRECTLY BEFORE READING THIS.
+Do not jump into the build directly before reading this.
 
 Spending some time reading the following instructions will save you a lot of wasted time and
 support-related e-mail communication. The Xerces-C build instructions are a little different
@@ -96,12 +101,12 @@ it yourself.
 Besides having all necessary build tools, you also need to know what compilers we have tested
 Xerces-C on. The following table lists the relevant platforms and compilers.
 
-Operating System                        Compiler
-Redhat Linux 6.0                        egcs-2.91.66 & glibc-2.1.1-6
-AIX 4.1.4 and higher                    xlC 3.1
-Solaris 2.6                             CC version 4.2
-HP-UX B10.2                             aCC and CC
-HP-UX B11                               aCC and CC
+Operating System                                                Compiler
+Redhat Linux 6.1                                                egcs
+AIX 4.3.3 and higher                                            xlC
+Solaris 2.6                                                     CC
+HP-UX 10.2                                                      CC
+HP-UX 11                                                        aCC
 
 If you are not using any of these compilers, you are taking a calculated risk by exploring
 new grounds. Your effort in making Xerces-C work on this new compiler is greatly appreciated
@@ -152,8 +157,8 @@ Building Xerces-C library
  configure) is already in your src directory. If not, type:
 
 
-		cd $XERCESCROOT/src
-		autoconf                                  
+					   cd $XERCESCROOT/src
+				    autoconf                                  
 
 
 
@@ -174,7 +179,7 @@ Building Xerces-C library
 	     Usage: runConfigure "options"
 		    where options may be any of the following:
 		    -p <platform> (accepts 'aix', 'linux', 'solaris',
-					     'hp-10', 'hp-11', 'irix', 'unixware')
+					 'hp-10', 'hp-11', 'irix', 'unixware')
 		    -c <C compiler name> (e.g. gcc, cc, xlc)
 	     -x <C++ compiler name> (e.g. g++, CC, xlC)                       
 		    -d (specifies that you want to build debug version)
@@ -187,14 +192,14 @@ Building Xerces-C library
 		    -h (to get help on the above commands)
 
 
- [Note] Xerces-C builds as a standalone library and also as a library dependent on IBM's
-	International Classes for Unicode (ICU). For simplicity, the following discussion
+ [Note] Xerces-C builds as a standalone library and also as a library dependent on
+	International Components for Unicode (ICU). For simplicity, the following discussion
 	only targets standalone builds.
 
  One of the common ways to build Xerces-C is as follows:
 
 
-	runConfigure -plinux -cgcc -xg++ -minmem -nfileonly -tnative
+		  runConfigure -plinux -cgcc -xg++ -minmem -nfileonly -tnative
 
 
 
@@ -236,7 +241,7 @@ Building Xerces-C library
 	 checking host system type... i686-pc-linux-gnu
 	 updating cache ./config.cache
 	 creating ./config.status
-  	 creating Makefile                                                           
+  creating Makefile                                                           
 	 creating util/Makefile
 	 creating util/Transcoders/ICU/Makefile
 	 creating util/Transcoders/Iconv/Makefile
@@ -283,7 +288,7 @@ Building Xerces-C library
 
 
 
-      gmake                                     
+				    gmake                                     
 
 
 
@@ -296,9 +301,9 @@ Building samples
  samples directory.
 
 
-    cd $XERCESCROOT/samples
-    runConfigure -plinux -cgcc -xg++          
-    gmake
+		       cd $XERCESCROOT/samples
+		runConfigure -plinux -cgcc -xg++          
+		       gmake
 
 
 
@@ -401,6 +406,206 @@ Building Xerces-C library
 	d:\. Replace d with the appropriate drive letter.
 
 
+Building on AS/400                       
+
+The following addresses the requirements and build of Xerces-C natively on the AS/400.
+
+
+Building Xerces-C library              
+
+ Requirements:
+
+    * QSHELL interpreter installed (install base option 30, operating system)
+    * QShell Utilities, PRPQ 5799-XEH
+    * ILE C++ for AS/400, PRPQ 5799-GDW
+    * GNU facilities (the gnu facilities are currently available by request only. Send e-mail to
+      rchasgo400@us.ibm.com)
+
+ Recommendations:
+
+    * There are a couple of options when building the XML4C parser on AS/400. For messaging support, you can
+      use the in memory message option or the message file support. For code page translation, you can use
+      the AS/400 native Iconv400 support or ICU. If you choose ICU, follow the instructions to build the ICU
+      service program with the ICU download. Those instructions are not included here.
+    * Currently we recommend that you take the options of MsgFile and Iconv400 (see below)
+
+ Setup Instructions:
+
+    * Make sure that you have the requirements installed on your AS/400. We highly recommend that you read
+      the writeup that accompanies the gnu facilities download. There are install instructions as well as
+      information about how modules, programs and service programs can be created in Unix-like fashion using
+      gnu utilities. Note that symbolic links are use in the file system to point to actual AS/400 *module,
+      *pgm and *srvpgm objects in libraries.
+    * Download the tar file (unix version) to the AS/400 (using a mapped drive), and decompress and untar the
+      source. We have had difficulty with the tar command on AS/400. This is under investigation. If you have
+      trouble, we recommend the following work around:
+
+
+    qsh:
+    gunzip -d <tar file.gz>                   
+    pax -r -f <uncompressed tar file>
+
+
+
+    * Create AS400 target library. This library will be the target for the resulting modules and Xerces-C
+      service program. You will specify this library on the OUTPUTDIR environment variable in step 4
+    * Set up the following environment variables in your build process (use ADDENVVAR or WRKENVVAR CL
+      commands):
+
+
+		 XERCESCROOT - <the full path to your Xerces-C sources>
+		 PLATFORM  - 'OS400'
+	  MAKE   - '/usr/bin/gmake'                                                           
+		 OUTPUTDIR  - <identifies target as400 library for *module, *pgm and *srvpgm objects>
+		 ICUROOT - (optional if using ICU)  <the path of your ICU includes>
+
+
+
+    * Add QCXXN, to your build process library list. This results in the resolution of CRTCPPMOD used by the
+      icc compiler.
+    * The runConfigure instruction below uses 'egrep'. This is not on the AS/400 but you can create it by
+      doing the following: edtf '/usr/bin/egrep' with the following source:
+
+
+							   #!/usr/bin/sh
+						    /usr/bin/grep -e "$@"                     
+
+
+
+ You may want to put the environment variables and library list setup instructions in a CL program so you
+ will not forget these steps during your build.
+
+ Configure
+
+ To configure the make files for an AS/400 build do the following:
+
+
+					   qsh
+				    cd <full path to Xerces-C>/src                            
+					   runConfigure -p os400 -x icc -c icc -m MsgFile -t Iconv400
+
+
+
+ Troubleshooting:
+
+
+				      error: configure: error: installation or configuration problem:
+			       C compiler cannot create executables.                          
+
+
+
+ If during runConfigure you see the above error message, it can mean one of two things. Either QCXXN is not
+ on your library list OR the runConfigure cannot create the temporary modules (CONFTest1, etc) it uses to
+ test out the compiler options. The second reason happens because the test modules already exist from a
+ previous run of runConfigure. To correct the problem, do the following:
+
+
+							   DLTMOD <your OUTPUTDIR library>/CONFT* and
+						    DLTPGM your <OUTPUTDIR library>/CONFT*    
+
+
+
+ Build
+
+
+							   qsh
+						    gmake -e                                  
+
+
+
+ The above gmake will result in a service program being created in your specified library and a symbolic link
+ to that service program placed in <path to Xerces-C/lib>. You can either bind your XML application programs
+ directly to the parser's service program via the BNDSRVPGM option on the CRTPGM or CRTSRVPGM command or you
+ can specify a binding directory on your icc command. To specify an archive file to bind to, use the -L, -l
+ binding options on icc. An archive file on AS/400 is a binding directory. To create an archive file, use qar
+ command. (see the gnu facilities write up).
+
+ After building the Xerces-C service program, create a binding directory by doing the following (note, this
+ binding directory is used when building the samples):
+
+
+	 qsh
+	 cd <full path to Xerces-C>/lib>
+  qar -cuv libxercesc1_1.a *.o                                                                
+	 command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/Xerces-C/lib/libxercesc1_1.a')
+	 command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )
+
+
+
+ Troubleshooting:
+
+ If you are on a V4R3 system, you will get a bind problem 'descriptor QlgCvtTextDescToDesc not found' using
+ Iconv400. On V4R3 the system doesn't automatically pick up the QSYS/QLGUSR service program for you when
+ resolving this function. This is not the case on V4R4. To fix this, you can either manually create the
+ service program after creating all the resulting modules in your <OUTPUTDIR> library or you can create a
+ symbolic link to a binding directory that points to the QLGUSR service program and then specify an
+ additional -L, -l on the EXTRA_LINK_OPTIONS in Makefile.incl. See the ln and qar function in the gnu
+ utilities.
+
+ To build for transcoder ICU:
+
+   1. Make sure you have an ICUROOT path set up so that you can find the ICU header files (usually
+      /usr/local)
+   2. Make sure you have created a binding directory (symbolic link) in the file system so that you can bind
+      the Xerces-C service program to the ICU service program and specify that on the EXTRA_LINK_OPTIONS in
+      src/Makefile.incl (usually the default is a link in /usr/local/lib).
+
+ Creating AS400 XML parser message file:
+
+ As specified earlier, the -m MsgFile support on the runConfigure enable the parser messages to be pulled
+ from an AS/400 message file. To view the source for creating the message file and the XML parser messages,
+ see the following stream file:
+
+
+
+			   EDTF <full path to Xerces-C>/src/util/MsgLoaders/MsgFile/CrtXMLMsgs
+
+
+
+ In the prolog of CrtXMLMsgs there are instructions to create the message file:
+
+   1. Use the CPYFRMSTMF to copy the CL source to an AS/400 source physical file. Note that the target source
+      file needs to have record length of about 200 bytes to avoid any truncation.
+   2. Create the CL program to create the message file and add the various message descriptions
+   3. Call the CL program, providing the name of the message file (use QXMLMSG as default) and a library
+      (this can be any library, including any product library in which you wish to embed the xml parser)
+
+ Note that the Xerces-C source code for resolving parser messages is using by default message file QXMLMSG,
+ *LIBL. If you want to change either the message file name or explicitly qualify the library to match your
+ product needs, you must edit the following .cpp files prior to your build.
+
+
+			      <full path to Xerces-C>/src/util/MsgLoaders/MsgFile/MsgLoader.cpp
+		       <full path to Xerces-C>/src/util/Platforms/OS400/OS400PlatformUtils.cpp
+
+
+
+ Troubleshooting:
+
+ If you are using the parser and are failing to get any message text for error codes, it may be because of
+ the *LIBL resolution of the message file.
+
+
+Building Samples on AS/400             
+
+
+	  qsh
+	  cd <full path to Xerces-C>/samples
+   runConfigure -p os400 -x icc -c icc        
+	  gmake -e
+
+
+
+ Troubleshooting:
+
+ If you take a 'sed' error, while trying to make the
+ samples. This is an AS400 anomaly having to do with certain
+ new line character and the sed function. A temporary work
+ around is to use EDTF on the configure stream file
+ (../samples/configure) and delete the following line near
+ the bottom: s%@DEFS@%$DEFS%g.
+
+
 Building on Macintosh using CodeWarrior  
 
 
@@ -476,9 +681,9 @@ How to Build ICU
 
 As mentioned earlier, Xerces-C may be built in stand-alone mode using native
 encoding support and also using ICU where you get support for 100's of encodings.
-ICU stands for International Classes for Unicode and is an open source distribution
-from IBM. You can get ICU libraries from IBM's developerWorks site or go to the ICU
-download page directly.
+ICU stands for International Components for Unicode and is an open source
+distribution from IBM. You can get ICU libraries from IBM's developerWorks site or
+go to the ICU download page directly.
 
 
 Buiding ICU for Xerces-C               
@@ -532,8 +737,8 @@ Building ICU on UNIX platforms
  First make sure that you have defined the following environment variables:
 
 
-  export ICUROOT = <icu_installdir>
-  export ICU_DATA = <icu_installdir>/data/  
+				  export ICUROOT = <icu_installdir>
+			   export ICU_DATA = <icu_installdir>/data/  
 
 
 
@@ -541,9 +746,9 @@ Building ICU on UNIX platforms
  'configure':
 
 
-  cd $ICUROOT
-  cd source                                 
-  autoconf
+				  cd $ICUROOT
+			   cd source                                 
+				  autoconf
 
 
 
@@ -574,15 +779,15 @@ Building ICU on UNIX platforms
  For Solaris and Linux:
 
 
-      env CC="cc" CXX="CC" C_FLAGS="-w -O" CXX_FLAGS="-w -O"
-	   ./configure --prefix=$ICUROOT                     
+		      env CC="cc" CXX="CC" C_FLAGS="-w -O" CXX_FLAGS="-w -O"
+		   ./configure --prefix=$ICUROOT                     
 
 
 
  For HP-UX with the aCC compiler:
 
 
-     env CC="cc" CXX="aCC" C_FLAGS="+DAportable -w -O"
+	     env CC="cc" CXX="aCC" C_FLAGS="+DAportable -w -O"
 	  CXX_FLAGS="+DAportable -w -O" ./configure --prefix=$ICUROOT
 
 
@@ -590,69 +795,266 @@ Building ICU on UNIX platforms
  For HP-UX with the CC compiler:
 
 
- env CC="cc" CXX="CC" C_FLAGS="+DAportable -w -O"
+	 env CC="cc" CXX="CC" C_FLAGS="+DAportable -w -O"
       CXX_FLAGS="+eh +DAportable -w -O" ./configure --prefix=$ICUROOT
 
 
 
 
-How to build the User Documentation      
+How to build the User Documentation?     
 
 The user documentation (this very page that you are reading on the browser
-right now), was generated using an XML application called StyleBook. The
-application makes use of Xerces-J and Xalan to create the HTML from the XML
-source files. The XML source files are part of the Xerces-C module. These files
-reside in the doc directory.
+right now), was generated using an XML application called StyleBook. This
+application makes use of Xerces-J and Xalan to create the HTML file from the
+XML source files. The XML source files for the documentation are part of the
+Xerces-C module. These files reside in the doc directory.
+
+Pre-requisites for building the user documentation are:
+
+   * JDK 1.2.2 (or later).
+   * Xerces-J (1.0.0 or later).
+   * Xalan (0.19.3 or later)
+   * Stylebook 1.0-b2
+
+Setup PATH to include the JDK 1.2.2 bin directory. Also setup CLASSPATH
+environment variable as follows:
+
+   * Under Windows (assumes all jars are in '\jars' directory:)
+     CLASSPATH=\jars\stylebook-1.0-b2.jar;\jars\xalan.jar;\jars\xerces.jar
+   * Under Unix's (assumes all jars are in '~/jars' directory):
+     export
+     CLASSPATH="~/jars/stylebook-1.0-b2.jar:~/jars/xalan.jar:~/jars/xerces.jar"
+
+Next, cd to the Xerces-C source drop root directory, and enter
+
+   * Under Windows:
+     createDocs
+   * Under Unix's:
+     sh createDocs.bat
+
+This should generate the .html files in the 'doc/html' directory.
+
+Ok here is where you can get the three jar files that are referred to above.
+
+   * JDK 1.2.2 is available from http://java.sun.com/products/jdk/1.2/
+   * Xerces-J is available from http://xml.apache.org/dist/. Extract the
+     xerces.jar file from the binary drop and store it in the 'jars' directory
+     as mentioned above.
+   * Xalan is also available from http://xml.apache.org/dist/. Extract the
+     xalan.jar file from the 'jar' distribution that you just downloaded and
+     store it in the same 'jars' directory as mentioned above.
+   * Getting to Stylebook is little more involved. You will have to download
+     one of the 'xml-stylebook' tar balls from
+     http://xml.apache.org/from-cvs/xml-stylebook/ and then extract the file:
+     xml-stylebook/bin/stylebook-1.0-b2.jar
+
+     Under Unix's you may enter:
+     gzip -d -c xml-stylebook_20000207231311.tar.gz | tar xf -
+     xml-stylebook/bin/stylebook-1.0-b2.jar
+     to extract this file. Copy it to the 'jars' directory as mentioned above.
+
+     Under Windows you may use 'WinZip' to extract the jar file from the tar
+     ball.
 
 
-       Pre-requisites for building the user
+      I wish to port Xerces to my favourite
 
-       documentation
+      platform. Do you have any suggestions?
 
- Since the user docs make use of Java, you must first have
- JDK1.2.2 (or higher) installed on your machine.
+All platform dependent code in Xerces has been isolated to a
+couple of files, which should ease the porting effort. Here
+are the basic steps that should be followed to port Xerces.
 
- Next you must have Xerces-J (EA2 or better) installed on
- your machine.
+  1. The directory 'src/util/Platforms' contains the
+     platform sensitive files while 'src/util/Compilers'
+     contains all development environment sensitive files.
+     Each operating system has a file of its own and each
+     development environment has another one of its own too.
 
- Finally you must install the StyleBook application. This is
- part of the Xerces Project and the module name is
- xml-stylebook. Details about installing Stylebook are quite
- involved and usually takes some effort to install
- perfectly. Hopefully it will be simplified in future, but
- it a working application now. To make our scripts work
- directly with StyleBook, you must install it at the same
- level as xml-xerces. That is, 'xml-xerces' and
- 'xml-stylebook' must both be at the same level in your
- directory.
+     As an example, the Win32 platform as a Win32Defs.hpp
+     file and the Visual C++ environment has a VCPPDefs.hpp
+     file. These files set up certain define tokens,
+     typedefs, constants, etc... that will drive the rest of
+     the code to do the right thing for that platform and
+     development environment. AIX/CSet have their own
+     AIXDefs.hpp and CSetDefs.hpp files, and so on. You
+     should create new versions of these files for your
+     platform and environment and follow the comments in
+     them to set up your own. Probably the comments in the
+     Win32 and Visual C++ will be the best to follow, since
+     that is where the main development is done.
+  2. Next, edit the file XML4CDefs.hpp , which is where all
+     of the fundamental stuff comes into the system. You
+     will see conditional sections in there where the above
+     per-platform and per-environment headers are brought
+     in. Add the new ones for your platform under the
+     appropriate conditionals.
+  3. Now edit 'AutoSense.hpp'. Here we set canonical Xerces
+     internal #define tokens which indicate the platform and
+     compiler. These definitions are based on known platform
+     and compiler defines.
+     AutoSense.hpp is included in XML4CDefs.hpp and the
+     canonical platform and compiler settings thus defined
+     will make the particular platform and compiler headers
+     to be the included at compilation.
+     It might be a little tricky to decipher this file so be
+     careful. If you are using say another compiler on
+     Win32, probably it will use similar tokens so that the
+     platform will get picked up already using what is
+     already there.
+  4. Once this is done, you will then need to implement a
+     version of the 'platform utilities' for your platform.
+     Each operating system has a file which implements some
+     methods of the XMLPlatformUtils class, specific to that
+     operating system. These are not terribly complex, so it
+     should not be a lot of work. The Win32 verions is
+     called Win32PlatformUtils.cpp, the AIX version is
+     AIXPlatformUtils.cpp and so on. Create one for your
+     platform, with the correct name, and empty out all of
+     the implementation so that just the empty shells of the
+     methods are there (with dummy returns where needed to
+     make the compiler happy.) Once you've done that, you
+     can start to get it to build without any real
+     implementation.
+  5. Once you have the system building, then start
+     implementing your own platform utilties methods. Follow
+     the comments in the Win32 version as to what they do,
+     the comments will be improved in subsequent versions,
+     but they should be fairly obvious now. Once you have
+     these implementations done, you should be able to start
+     debugging the system using the demo programs.
+
+That is the work required in a nutshell!
 
 
-Creating the user documentation        
+What should I define XMLCh to be?        
 
- If you have installed StyleBook properly, the remaining part is very simple.
- In the xerces-c directory there is a batch script called createdocs.bat. This
- is a one line script containing the following command:
+The answer is 'it depends'. We will mention some of the
+quirks that affect this decision. Hopefully, after reading
+whats below, you will be able to best decide what the right
+definition should be. We could not however, resist making a
+suggestion. Some observations first:
+
+   * Xerces-C uses XMLCh as the fundamental type to hold one
+     Unicode character as, all processing inside Xerces-C
+     happens in Unicode.
+   * Most modern C++ compilers today provide 'wchar_t' as a
+     fundamental type representing a 'wide character'. Most
+     of them define it in using a typedef. This typedef
+     definition is not consistent on all the platforms that
+     we have come across.
+   * The size of wchar_t varies among the various compilers.
+     Its either 16-bit or 32-bit. Fortunately, this only
+     affects how much memory you need, to process the XML
+     data, while everything is still in memory.
+   * Again on most platforms wchar_t represents a unicode
+     character. HPUX, is one exception to this, that we
+     know, where wchar_t does not represent a unicode
+     character, rather its a native wide character.
+   * Lastly, most OS's/compilers provide a system library to
+     manipulate wide character strings taking wchar_t and
+     wchar_t* arguments. Most applications which support
+     wide-characters make these system calls.
+Our suggestion is:
+
+If your compiler defines wchar_t to represent a unicode
+character, then define XMLCh to be wchar_t. Such a
+definition will allow you to pass the data returned by the
+parser (all api's return XMLCh, which is wchar_t) directly
+to the wide-character system api's for i/o or manipulation.
+This is most efficient and convenient.
+
+However, if your compiler defines wchar_t to be just a
+wide-character which is not Unicode, then define XMLCh to be
+unsigned short. For the Xerces-C parser, XMLCh is always
+Unicode. By defining it to be unsigned short and not
+wchar_t, the compiler will not let you accidently pass what
+is returned, via the parser API's, directly to the
+wide-character library calls. To use the wide-character
+library of functions, you will have to in your application,
+call some transcoding function which will convert it from
+Unicode to the native wide-character form. Again, if your
+application desires for whatever reason, you may define
+XMLCh to be 'unsigned long'. By doing so, you have just
+doubled the memory required to process the XML file.
+
+Hopefully, you will agree that the answer 'it depends' was
+the right one.
 
 
+      How can I generate Xerces-C binaries
+which includes the sample NetAccessor           
+      implementation using Libwww?
 
- java org.apache.stylebook.StyleBook "targetDirectory=doc/html"
-  doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml    
+This sample implementation has only been minimally tested
+only under Windows NT using Libwww 5.2.8. We have not stress
+tested our implementation can cannot guarantee that there
+are no memory leaks. The error reporting is also not
+adequate. Further, it only handles HTTP style URL's. As you
+can see, this implementation is only for illustrative
+purposes. Much more work is required to have a robust
+cross-platform implementation. We would welcome any
+volunteers who would contribute code to make this happen on
+various platforms.
+
+The software that you need are:
+
+   * You need the Xerces-C source archive for Windows.
+   * LibWWW 5.2.8. Win32 binaries are available at:
+     http://www.idm.ru/libwww.htm. Source archives and other
+     details on LibWWW are available at
+     http://www.w3.org/Library/.
+
+All required changes in Xerces-C are restricted to the
+Project file settings for the XercesLib. To simplify, we
+will make certain assumptions about how LibWWW binaries
+(.lib) and header files are installed on your machine.
+
+  1. First generate all the LibWWW binaries by using the
+     project file supplied. Create a top level (say) \libWWW
+     directory on the same disk drive where you installed
+     the Xerces-C sources. Copy all the .lib files to
+     \libWWW\lib directory. Next, copy all the .dll files to
+     \libWWW\bin directory and all the header (*.h) files to
+     \libWWW\include directory.
+  2. Next make the following changes to the Xerces-C lib
+     project settings. Invoke the project settings dialog
+     box.
+       1. In the 'C/C++ : Preprocessor : Preprocessor
+	  definitions' add XML_USE_NETACCESSOR_LIBWWW
+       2. In the 'C/C++ : Preprocessor : Additional include
+	  directories' add \libWWW\include.
+  3. Next, rather than listing all the 20 some LibWWW .lib
+     files in the link settings, add them as external files
+     to the XercesLib project. Right-Click on 'XercesLib
+     files' and choose the 'Add Files to Project' menu item.
+     Next choose all the *.lib files in \libWWW\lib
+     directory and press 'ok'.
+  4. Next, create a new sub-folder in XercesLib:util folder,
+     by right-clicking on 'util' and choosing 'New Folder'.
+     Call it 'libWWW'.
+  5. Add netaccessor files into this 'libWWW' folder again,
+     by right-clicking on 'libWWW' folder and choosing 'Add
+     Files to Folder'. Choose the four files in
+     <XercesCRoot>\src\util\NetAccessors directory. These
+     files are: BinURLInputStream.[ch]pp and
+     LibWWWNetAccessor.[ch]pp.
+  6. Rebuild the Xerces-C library.
+
+Make sure you have \libWWW\bin in your PATH environment
+variable, before you run the samples and refer to a XML file
+containing HTTP URL's to remote resources.
 
 
-
- All you need to do is run this command. The generated HTML files would reside
- in the doc/html directory.
-
-
-Where to look for more help              
+Where can I look for more help?          
 
 If you have read this page, followed the instructions, and
 still cannot resolve your problem(s), there is more help.
 You can find out if others have solved this same problem
 before you, by checking the Xerces mailing list archives.
 
-If all else fails, you ask for help by joining the Xerces-C
-mailing list.
+If all else fails, you may ask for help by subscribing to
+the Xerces-C mailing list.
 
 
 Copyright © 2000 The Apache Software Foundation. All Rights Reserved.
