@@ -15,4 +15,4 @@
 <!ENTITY XercesCNamespace     "xercesc">                      <!-- C++ namespace name -->
 <!ENTITY XercesCNSVersion     "xercesc_2_3">                  <!-- C++ namespace name with Version -->
 <!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->
-<!ENTITY XercesDistDir        "xml.apache.org/dist/xerces-c"> <!-- download directory -->
+<!ENTITY XercesDistDir        "xml.apache.org/xerces-c/download.cgi"> <!-- download directory -->
