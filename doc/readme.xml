@@ -70,14 +70,14 @@
                    W3C Recommendation of November 13, 2000</li>
                <li><jump href="http://sax.sourceforge.net/">SAX 1.0 and SAX 2.0</jump></li>
                <li><jump href="http://www.w3.org/TR/1999/REC-xml-names-19990114/">
-                   Namespaces in XML</jump>, W3C Recommendation of January 14, 1999</li>               
+                   Namespaces in XML</jump>, W3C Recommendation of January 14, 1999</li>    
+	           <li><jump href="http://www.w3.org/TR/xml-names11/">
+                   Namespaces in XML 1.1</jump>, W3C Recommendation</li>                                             
                <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/">
                    XML Schema Part 1: Structure</jump>, W3C Recommendation 2 May 2001</li>
                <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">
                    XML Schema Part 2: Datatypes</jump>, W3C Recommendation 2 May 2001</li>               
-            </ul>            
-            <li>Full experimental implementation of <jump href="http://www.w3.org/TR/xml-names11/">
-                Namespaces in XML 1.1</jump>, W3C Candidate Recommendation of 18 December 2002</li>                
+            </ul>
             <li>Contains a partial implementation of the
             <jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
             DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Working Draft 26 February 2003 
