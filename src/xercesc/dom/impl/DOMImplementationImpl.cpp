@@ -288,13 +288,13 @@ DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short mode,
     if (mode == DOMImplementationLS::MODE_ASYNCHRONOUS)
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 
-    return new DOMBuilderImpl(0, manager);
+    return new (manager) DOMBuilderImpl(0, manager);
 }
 
 
 DOMWriter* DOMImplementationImpl::createDOMWriter(MemoryManager* const manager)
 {
-    return new DOMWriterImpl(manager);
+    return new (manager) DOMWriterImpl(manager);
 }
 
 DOMInputSource* DOMImplementationImpl::createDOMInputSource()

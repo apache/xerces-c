@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/05/29 18:47:52  knoaman
+ * Apply memory manager.
+ *
  * Revision 1.16  2003/05/22 02:10:51  knoaman
  * Default the memory manager.
  *
@@ -339,7 +342,8 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT DOMWriterImpl:public DOMWriter {
+class CDOM_EXPORT DOMWriterImpl:public XMemory,
+                                public DOMWriter {
 
 public:
 

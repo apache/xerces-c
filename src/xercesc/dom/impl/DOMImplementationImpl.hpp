@@ -77,7 +77,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLMsgLoader;
 
-class DOMImplementationImpl: public DOMImplementation,
+class DOMImplementationImpl: public XMemory,
+                             public DOMImplementation,
                              public DOMImplementationSource
 {
 private:
