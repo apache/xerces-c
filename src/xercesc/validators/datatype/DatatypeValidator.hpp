@@ -64,6 +64,8 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
+#include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -271,6 +273,34 @@ public:
                                            RefArrayVectorOf<XMLCh>* const enums,
                                            const int finalSet) = 0;
 
+    /**
+     * Returns the uri,name of the type this validator is for
+     */
+    const XMLCh* getTypeName() const;
+
+    /**
+     * sets the uri,name that this  validator is for - typeName is uri,name string.
+     * due to the internals of xerces this will set the uri to be the schema uri if
+     * there is no comma in typeName
+     */
+    void setTypeName(const XMLCh* const typeName);
+
+    /**
+     * sets the uri,name that this  validator is for
+     */
+    void setTypeName(const XMLCh* const name, const XMLCh* const uri);
+
+    /**
+     * Returns the uri of the type this validator is for
+     */
+    const XMLCh* getTypeUri() const;
+
+    /**
+     * Returns the name of the type this validator is for
+     */
+    const XMLCh* getTypeLocalName() const;
+
+
 protected:
     // -----------------------------------------------------------------------
     //  Protected Constructors
@@ -371,6 +401,14 @@ private:
     //      {base type definition} cannot specify a value for a specific
     //      facet.
     //
+    //  fTypeName
+    //      the uri,name of the type this validator will validate
+    //  
+    //  fTypeLocalName
+    //      the name of the type this validator will validate
+    //
+    //  fTypeUri
+    //      the uri of the type this validator will validate
     //  fAnonymous
     //      true if this type is anonynous
     //
@@ -383,6 +421,9 @@ private:
 	RefHashTableOf<KVStringPair>* fFacets;
     XMLCh*                        fPattern;
     RegularExpression*            fRegex;
+    XMLCh*                        fTypeLocalName;
+    XMLCh*                        fTypeName;
+    XMLCh*                        fTypeUri;
     bool                          fAnonymous; 
 };
 
@@ -428,6 +469,9 @@ inline void DatatypeValidator::cleanUp() {
 	delete fFacets;
     delete [] fPattern;
     delete fRegex;
+    delete [] fTypeName;
+    delete [] fTypeLocalName;
+    delete [] fTypeUri;
 }
 
 
@@ -504,6 +548,78 @@ inline void DatatypeValidator::setRegex(RegularExpression* const regex)
 inline bool DatatypeValidator::isAtomic() const {
 
     return true;
+}
+
+inline const XMLCh* DatatypeValidator::getTypeName() const {
+    return fTypeName;
+}
+
+inline const XMLCh* DatatypeValidator::getTypeLocalName() const {
+    if(!fTypeLocalName) {
+        int index = XMLString::indexOf(fTypeName, chComma);
+        int length = XMLString::stringLen(fTypeName);
+        XMLCh *tName = new XMLCh[length - index + 1];
+        XMLString::subString(tName, fTypeName, index + 1, length);
+        ((DatatypeValidator *)this)->fTypeLocalName = tName;
+    }
+
+    return fTypeLocalName;
+}
+
+inline const XMLCh* DatatypeValidator::getTypeUri() const {
+    if(!fTypeUri) {
+        int index = XMLString::indexOf(fTypeName, chComma);
+        int length = XMLString::stringLen(fTypeName);
+        XMLCh *uri = new XMLCh[index + 1];
+        XMLString::subString(uri, fTypeName, 0, index);
+        ((DatatypeValidator *)this)->fTypeUri = uri;
+    }
+
+    return fTypeUri;
+}
+
+inline void DatatypeValidator::setTypeName(const XMLCh* const name, const XMLCh* const uri) {
+
+    delete [] fTypeName;
+    delete [] fTypeLocalName;
+    delete [] fTypeUri;
+
+    fTypeUri = XMLString::replicate(uri);
+    fTypeLocalName = XMLString::replicate(name);
+    XMLBuffer buf;
+    buf.set(uri);
+    buf.append(chComma);
+    buf.append(name);
+    fTypeName = XMLString::replicate(buf.getRawBuffer());
+}
+
+inline void DatatypeValidator::setTypeName(const XMLCh* const typeName) {
+
+    delete [] fTypeName;
+    delete [] fTypeLocalName;
+    delete [] fTypeUri;
+
+    //REVISIT this is a lot of work, cant we set this earlier when we have the info?
+    if( XMLString::indexOf( typeName, chComma ) < 0 ) {
+        fTypeLocalName = XMLString::replicate(typeName);
+        fTypeUri = XMLString::replicate(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+        XMLBuffer buf;
+        buf.set(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+        buf.append(chComma);
+        buf.append(typeName);
+        fTypeName = XMLString::replicate(buf.getRawBuffer());
+    }
+    else {
+        int index = XMLString::indexOf(typeName, chComma);
+        int length = XMLString::stringLen(typeName);
+        XMLCh *uri = new XMLCh[index + 1];
+        XMLCh *tName = new XMLCh[length - index + 1];
+        XMLString::subString(uri, typeName, 0, index);
+        XMLString::subString(tName, typeName, index + 1, length);
+        fTypeLocalName = tName;
+        fTypeUri = uri;
+        fTypeName = XMLString::replicate(typeName);
+    }
 }
 
 inline void DatatypeValidator::setAnonymous() {

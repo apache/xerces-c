@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/01/29 19:52:32  gareth
+ * PSVI API additions.
+ *
  * Revision 1.4  2002/12/19 14:03:10  gareth
  * get/set methods to see if the represented type is anonymous. Patch by Peter Volchek.
  *
@@ -96,7 +99,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
-#include <xercesc/validators/schema/SchemaSymbols.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -115,6 +117,9 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
     , fFacets(facets)
     , fPattern(0)
     , fRegex(0)
+    , fTypeLocalName(0)
+    , fTypeName(0)
+    , fTypeUri(0) 
     , fAnonymous(false)
 {
 }
