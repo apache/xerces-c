@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/06/19 20:05:59  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.3  2000/06/03 00:29:02  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -78,28 +82,29 @@
 #include "XMLDOMDocumentType.h"
 #include "XMLDOMDocumentFragment.h"
 #include "XMLDOMNotation.h"
+#include "XMLDOMXMLDecl.h"
 #include "XMLDOMUtil.h"
 #include <util/PlatformUtils.hpp>
 
 
-const TCHAR* g_DomNodeName[] = 
+const OLECHAR* g_DomNodeName[] = 
 {	
-	_T("invalid"),
-	_T("element"),
-	_T("attribute"),
-	_T("text"),
-	_T("cdatasection"),
-	_T("entityreference"),
-	_T("entity"),
-	_T("processinginstruction"),
-	_T("comment"),
-	_T("document"),
-	_T("documenttype"),
-	_T("documentfragment"),
-	_T("notation")
+	OLESTR("invalid"),
+	OLESTR("element"),
+	OLESTR("attribute"),
+	OLESTR("text"),
+	OLESTR("cdatasection"),
+	OLESTR("entityreference"),
+	OLESTR("entity"),
+	OLESTR("processinginstruction"),
+	OLESTR("comment"),
+	OLESTR("document"),
+	OLESTR("documenttype"),
+	OLESTR("documentfragment"),
+	OLESTR("notation")
 };
  
-const int g_DomNodeNameSize = sizeof(g_DomNodeName) / sizeof(TCHAR*);
+const int g_DomNodeNameSize = sizeof(g_DomNodeName) / sizeof(OLECHAR*);
 
 void GetText(const DOM_Node& node, _bstr_t &text)
 {
@@ -637,6 +642,34 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		try
 		{
 			pObj->notation = *(static_cast<DOM_Notation*> (&node));
+		}
+		catch(...)
+		{
+			pObj->Release(); 
+			return E_FAIL;
+		}
+	
+		hr = pObj->QueryInterface(iid, pVal);
+		if (S_OK != hr) 
+			*pVal = NULL;
+
+		pObj->Release();
+		break;
+	}
+
+	case DOM_Node::XML_DECL_NODE:
+	{
+		CXMLDOMXMLDeclObj *pObj = NULL;
+		hr = CXMLDOMXMLDeclObj::CreateInstance(&pObj);
+		if (S_OK != hr) 
+			return hr;
+	
+		pObj->AddRef();
+		pObj->SetOwnerDoc(pDoc);
+
+		try
+		{
+			pObj->xmlDecl = *(static_cast<DOM_XMLDecl*> (&node));
 		}
 		catch(...)
 		{

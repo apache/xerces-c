@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/19 20:05:58  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.2  2000/03/30 02:00:11  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -97,15 +101,17 @@ STDMETHODIMP CXMLDOMElement::getAttribute(BSTR name, VARIANT  *pVal)
 		return E_POINTER;
 
 	::VariantInit(pVal);
+	V_VT(pVal) = VT_EMPTY;
 
-	try
-	{
-		V_VT(pVal)   = VT_BSTR;
-		V_BSTR(pVal) = SysAllocString(element.getAttribute(name).rawBuffer());
-	}
-	catch(...)
-	{
-		return E_FAIL;
+	DOMString a = element.getAttribute(name);
+	if(a.length() > 0) {
+		try {
+			V_VT(pVal)   = VT_BSTR;
+			V_BSTR(pVal) = SysAllocString(a.rawBuffer());
+		}
+		catch(...) {
+			return E_FAIL;
+		}
 	}
 	
 	return S_OK;
@@ -154,19 +160,24 @@ STDMETHODIMP CXMLDOMElement::getAttributeNode(BSTR name, IXMLDOMAttribute  **att
 	if (NULL == attr)
 		return E_POINTER;
 
+	if(*attr) (*attr)->Release();
 	*attr = NULL;
+	DOM_Attr attrNode(element.getAttributeNode(name));
+	if(attrNode.isNull())
+		return S_OK;
+	
 
 	CXMLDOMAttributeObj *pObj = NULL;
 	HRESULT hr = CXMLDOMAttributeObj::CreateInstance(&pObj);
 	if (S_OK != hr) 
 		return hr;
-	
+
 	pObj->AddRef();
 	pObj->SetOwnerDoc(m_pIXMLDOMDocument);
 
 	try
 	{
-		pObj->attr = element.getAttributeNode(name);
+		pObj->attr = attrNode;
 	}
 	catch(...)
 	{
@@ -189,7 +200,27 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 	if (NULL == attr || NULL == attributeNode)
 		return E_POINTER;
 
+	if(*attributeNode) (*attributeNode)->Release();
 	*attributeNode = NULL;
+
+	long id = 0;
+	IIBMXMLDOMNodeIdentity* nodeID = NULL;
+	if(SUCCEEDED(attr->QueryInterface(IID_IIBMXMLDOMNodeIdentity,(void**) &nodeID))) {
+		nodeID->get_NodeId(&id);
+		nodeID->Release();
+	}
+
+	DOM_Attr attrNode;
+	try {
+		attrNode = (element.setAttributeNode(*((DOM_Attr*) id)));
+		if(attrNode.isNull())
+			return S_OK;
+	}
+	catch(...) {
+		return E_FAIL;
+	}
+
+
 
 	CXMLDOMAttributeObj *pObj = NULL;
 	HRESULT hr = CXMLDOMAttributeObj::CreateInstance(&pObj);
@@ -201,7 +232,7 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 
 	try
 	{
-		pObj->attr = element.setAttributeNode(((CXMLDOMAttribute*) attr)->attr);
+		pObj->attr = element.setAttributeNode(attrNode);
 	}
 	catch(...)
 	{
@@ -236,7 +267,13 @@ STDMETHODIMP CXMLDOMElement::removeAttributeNode(IXMLDOMAttribute  *attr, IXMLDO
 
 	try
 	{
-		pObj->attr = element.removeAttributeNode(((CXMLDOMAttribute*) attr)->attr);
+		long id = 0;
+		IIBMXMLDOMNodeIdentity* nodeID = NULL;
+		if(SUCCEEDED(attr->QueryInterface(IID_IIBMXMLDOMNodeIdentity,(void**) &nodeID))) {
+			nodeID->get_NodeId(&id);
+			nodeID->Release();
+		}
+		pObj->attr = element.removeAttributeNode(*((DOM_Attr*) id));
 	}
 	catch(...)
 	{

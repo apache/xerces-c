@@ -74,7 +74,38 @@ library Xerces
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
+	//
+	//   it appears to be necessary to forward declare
+	//      this interface to lure it into the type library
+	interface IXMLDOMNotation;
 
+	//
+	//   might as well insure the rest we use are here
+	//
+	interface IXMLDOMAttribute;
+	interface IXMLDOMCDATASection;
+	interface IXMLDOMComment;
+	interface IXMLDOMDocument;
+	interface IXMLDOMDocumentType;
+	interface IXMLDOMElement;
+	interface IXMLDOMEntity;
+	interface IXMLDOMEntityReference;
+	interface IXMLDOMImplementation;
+	interface IXMLDOMNamedNodeMap;
+	interface IXMLDOMNodeList;
+	interface IXMLDOMParseError;
+	interface IXMLDOMProcessingInstruction;
+	interface IXMLDOMText;
+	interface IXMLHttpRequest;
+
+
+	//
+	//
+	//    if you get an "Cannot open input file" error here
+	//       then you most probably do not have a recent 
+	//        Microsoft Platform SDK in your include path
+	//
+	//    See http://xml.apache.org/xerces-c/build.html#BuildCOM
 	import "xmldom.idl";
 	
 	[

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/06/19 20:05:58  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.3  2000/06/03 00:28:57  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -200,6 +204,7 @@ private:
 	DOM_Document		  m_TmpDocument;
 	bool			      m_bParseError;
 	bool				  m_bThreadValidate;
+	bool                  m_bPreserveWhiteSpace;
 	
 	HRESULT GetBaseURL(_bstr_t &baseURL);
 	

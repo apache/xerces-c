@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/06/19 20:05:57  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.3  2000/06/03 00:28:55  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -96,6 +100,10 @@ BEGIN_COM_MAP(CXMLDOMAttribute)
 	COM_INTERFACE_ENTRY(IDispatch)
 END_COM_MAP()
 	
+	//  IXMLDOMNode method
+	STDMETHOD(get_specified)(VARIANT_BOOL  *pVal);
+
+
 	// IXMLDOMAttribute methods
 	STDMETHOD(get_name)(BSTR  *pVal);
 	STDMETHOD(get_value)(VARIANT  *pVal);

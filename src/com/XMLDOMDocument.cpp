@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/06/19 20:05:57  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.3  2000/06/03 00:28:57  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -131,6 +135,7 @@ CXMLDOMDocument::CXMLDOMDocument()
 	,m_xml						(_T(""))
 	,m_bParseError				(false)
 	,m_bThreadValidate			(false)
+	,m_bPreserveWhiteSpace      (false)
 {
 }
 
@@ -259,7 +264,15 @@ STDMETHODIMP CXMLDOMDocument::get_doctype(IXMLDOMDocumentType  **pVal)
 	if (NULL == pVal)
 		return E_POINTER;
 
+	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
+	DOM_DocumentType doctype = m_Document.getDoctype();
+
+	//
+	//   if the document had no doctype then return a null object
+	//
+	if(doctype.isNull())
+		return S_OK;
 
 	CXMLDOMDocumentTypeObj *pObj = NULL;
 	HRESULT hr = CXMLDOMDocumentTypeObj::CreateInstance(&pObj);
@@ -271,7 +284,7 @@ STDMETHODIMP CXMLDOMDocument::get_doctype(IXMLDOMDocumentType  **pVal)
 
 	try
 	{
-		pObj->documentType = m_Document.getDoctype();
+		pObj->documentType = doctype;
 	}
 	catch(...)
 	{
@@ -732,9 +745,9 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 	if (VT_I4 == V_VT(&type))
 		nodeType = static_cast<DOMNodeType> (V_I4(&type));
 	else {
-		_bstr_t str = V_BSTR(&type);
+		OLECHAR* str = V_BSTR(&type);
 		for (int i = 0; i < g_DomNodeNameSize; ++i) {
-			if (0 == lstrcmpi(str,g_DomNodeName[i])) {
+			if (0 == _wcsicmp(str,g_DomNodeName[i])) {
 				nodeType = static_cast<DOMNodeType> (i);
 				break;
 			}
@@ -1318,6 +1331,20 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 	}
 
 	DOMParser parser;
+
+	//
+	//   If set to true then an node supporting IXMLDOMProcessingInstruction
+	//     is added for the XML declaration.
+	//
+	//   Setting to true in a custom DLL will better mimic
+	//      MSXML.DLL but at a cost of conformance errors
+	//      using David Brownell's suite
+	parser.setToCreateXMLDeclTypeNode(false);
+
+	parser.setIncludeIgnorableWhitespace(pThis->m_bPreserveWhiteSpace);
+
+
+
 	if (!pThis->m_bParseError && !pThis->m_bAbort)
 		parser.setDoValidation(pThis->m_bThreadValidate);
 
@@ -1437,13 +1464,17 @@ STDMETHODIMP CXMLDOMDocument::get_preserveWhiteSpace(VARIANT_BOOL  *pVal)
 	if (NULL == pVal)
 		return E_POINTER;
 
-	return E_NOTIMPL;
+	*pVal = (m_bPreserveWhiteSpace) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 STDMETHODIMP CXMLDOMDocument::put_preserveWhiteSpace(VARIANT_BOOL newVal)
 {	
 	ATLTRACE(_T("CXMLDOMDocument::put_preserveWhiteSpace\n"));
-	return E_NOTIMPL;
+	m_bPreserveWhiteSpace = (VARIANT_TRUE == newVal) ? true : false;
+	return S_OK;
+
 }
 
 STDMETHODIMP CXMLDOMDocument::put_onreadystatechange(VARIANT newVal)

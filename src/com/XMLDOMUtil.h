@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/06/19 20:05:59  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.3  2000/06/03 00:29:03  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -69,7 +73,7 @@
 
 class DOM_Node;
 
-extern const TCHAR* g_DomNodeName[];
+extern const OLECHAR* g_DomNodeName[];
 extern const int	g_DomNodeNameSize;
 
 void GetXML (const DOM_Node &node, _bstr_t &text);

@@ -1,20 +1,20 @@
 HKCR
 {
-	IBMXML.XMLDOMDocument.1 = s 'IBM XML Parser for COM Class'
+	Xerces.DOMDocument.1.2 = s 'Apache Xerces Parser for COM'
 	{
 		CLSID = s '{79516F6F-3AEA-11D3-BC47-0004ACB7DBEB}'
 	}
-	IBMXML.XMLDOMDocument = s 'IBM XML Parser for COM Class'
+	Xerces.DOMDocument = s 'Apache Xerces Parser For COM'
 	{
 		CLSID = s '{79516F6F-3AEA-11D3-BC47-0004ACB7DBEB}'
-		CurVer = s 'IBMXML.XMLDOMDocument.1'
+		CurVer = s 'Xerces.DOMDocument.1.2'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove {79516F6F-3AEA-11D3-BC47-0004ACB7DBEB} = s 'IBM XML Parser for COM Class'
+		ForceRemove {79516F6F-3AEA-11D3-BC47-0004ACB7DBEB} = s 'Apache Xerces Parser for COM'
 		{
-			ProgID = s 'IBMXML.XMLDOMDocument.1'
-			VersionIndependentProgID = s 'IBMXML.XMLDOMDocument'
+			ProgID = s 'Xerces.DOMDocument.1.2'
+			VersionIndependentProgID = s 'Xerces.DOMDocument'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%XMLMODULE%'
 			{

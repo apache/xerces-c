@@ -58,14 +58,14 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1D.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
-TargetDir=\xml-xerces\c\Build\Win32\xml4com\Debug
-TargetPath=\xml-xerces\c\Build\Win32\xml4com\Debug\xerces-com.dll
-InputPath=\xml-xerces\c\Build\Win32\xml4com\Debug\xerces-com.dll
+TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces-com.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2.dll $(TargetDir) 
-	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2.dll $(TargetDir) 
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2D.dll "$(TargetDir)" 
+	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2D.dll "$(TargetDir)" 
 	regsvr32 /s /c "$(TargetPath)" 
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
 	
@@ -96,8 +96,8 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\DebugU
-TargetPath=\xml-xerces\c\Build\Win32\xml4com\DebugU\xerces-com.dll
-InputPath=\xml-xerces\c\Build\Win32\xml4com\DebugU\xerces-com.dll
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\DebugU\xerces-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\DebugU\xerces-com.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -137,9 +137,9 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize
-TargetDir=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinSize
-TargetPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
-InputPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
+TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
@@ -181,9 +181,9 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
-TargetDir=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinDependency
-TargetPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
-InputPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
+TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
@@ -225,9 +225,9 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize
-TargetDir=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinSize
-TargetPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
-InputPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
+TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
@@ -275,9 +275,9 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency
-TargetDir=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinDependency
-TargetPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
-InputPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
+TargetDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency
+TargetPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
+InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
@@ -426,6 +426,10 @@ SOURCE=..\..\..\..\..\src\com\XMLDOMUtil.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\com\XMLDOMXMLDecl.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\com\XMLHTTPRequest.h
 # End Source File
 # End Group
@@ -506,6 +510,10 @@ SOURCE=..\..\..\..\..\src\com\XMLDOMProcessingInstruction.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\com\XMLDOMUtil.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\com\XMLDOMXMLDecl.cpp
 # End Source File
 # Begin Source File
 

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/19 20:05:58  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.2  2000/03/30 01:59:11  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -84,7 +88,9 @@ STDMETHODIMP CXMLDOMNamedNodeMap::getNamedItem(BSTR name, IXMLDOMNode  **pVal)
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.getNamedItem(name),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = m_container.getNamedItem(name);
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -126,7 +132,9 @@ STDMETHODIMP CXMLDOMNamedNodeMap::setNamedItem(IXMLDOMNode  *newItem, IXMLDOMNod
 	{
 		DOMString  name = pNewItemNode->getNodeName();
 		m_container.setNamedItem(*pNewItemNode);
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.getNamedItem(name),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = m_container.getNamedItem(name);
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -151,11 +159,15 @@ STDMETHODIMP CXMLDOMNamedNodeMap::removeNamedItem(BSTR name, IXMLDOMNode  **pVal
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.removeNamedItem(name),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = m_container.removeNamedItem(name);
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
+	//
+	//   if we had a failure, return success anyway
+	//
 	catch(...)
 	{
-		return E_FAIL;
 	}
 	
 	return hr;
@@ -177,10 +189,8 @@ STDMETHODIMP CXMLDOMNamedNodeMap::get_item(long index, IXMLDOMNode  **pVal)
 			return E_INVALIDARG;
 
 		long length =  m_container.getLength();
-		if (index >= length)
-			return E_INVALIDARG;
-
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		if (index < length)
+			hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -230,7 +240,9 @@ STDMETHODIMP CXMLDOMNamedNodeMap::getQualifiedItem(BSTR baseName, BSTR namespace
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.getNamedItemNS(namespaceURI,baseName),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = m_container.getNamedItemNS(namespaceURI,baseName);
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -256,7 +268,9 @@ STDMETHODIMP CXMLDOMNamedNodeMap::removeQualifiedItem(BSTR baseName, BSTR namesp
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.removeNamedItemNS(namespaceURI,baseName),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = m_container.removeNamedItemNS(namespaceURI,baseName);
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -288,7 +302,9 @@ STDMETHODIMP CXMLDOMNamedNodeMap::nextNode(IXMLDOMNode  **pVal)
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = m_container.item(m_NextNodeIndex);
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{

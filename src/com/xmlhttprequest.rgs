@@ -1,20 +1,20 @@
 HKCR
 {
-	IBMXML.XMLHttpRequest.1 = s 'IBM XML Http Request'
+	IBMXML.XMLHttpRequest.1.2 = s 'Apache Xerces XML Http Request'
 	{
 		CLSID = s '{1C598E82-9AB9-456b-9C24-D711F08F3584}'
 	}
-	IBMXML.XMLHttpRequest = s 'IBM XML Http Request'
+	IBMXML.XMLHttpRequest = s 'Apache Xerces XML Http Request'
 	{
 		CLSID = s '{1C598E82-9AB9-456b-9C24-D711F08F3584}'
-		CurVer = s 'IBMXML.XMLHttpRequest.1'
+		CurVer = s 'Xerces.XMLHttpRequest.1.2'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove {1C598E82-9AB9-456b-9C24-D711F08F3584} = s 'IBM XML Http Request'
+		ForceRemove {1C598E82-9AB9-456b-9C24-D711F08F3584} = s 'Apache Xerces XML Http Request'
 		{
-			ProgID = s 'IBMXML.XMLHttpRequest.1'
-			VersionIndependentProgID = s 'IBMXML.XMLHttpRequest'
+			ProgID = s 'Xerces.XMLHttpRequest.1.2'
+			VersionIndependentProgID = s 'Xerces.XMLHttpRequest'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%XMLMODULE%'
 			{

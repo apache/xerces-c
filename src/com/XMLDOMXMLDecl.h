@@ -54,147 +54,47 @@
  * <http://www.apache.org/>.
  */
 
-/*
- * $Log$
- * Revision 1.3  2000/06/19 20:05:58  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.2  2000/03/30 02:00:10  abagchi
- * Initial checkin of working code with Copyright Notice
- *
- */
 
-#include "stdafx.h"
-#include "xml4com.h"
-#include "XMLDOMNodeList.h"
-#include "XMLDOMUtil.h"
+#ifndef ___xmldomxmldecl_h___
+#define ___xmldomxmldecl_h___
 
-typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>,NodeContainerImpl<DOM_NodeList> >
-		CComEnumUnknownOnNodeContainer;
+#include <dom/DOM_XMLDecl.hpp>
+#include "IXMLDOMNodeImpl.h"
 
-STDMETHODIMP CXMLDOMNodeList::get_item(long index, IXMLDOMNode  **pVal)
+class ATL_NO_VTABLE CXMLDOMXMLDecl : 
+	public CComObjectRootEx<CComSingleThreadModel>,
+	public IXMLDOMNodeImpl<IXMLDOMProcessingInstruction, &IID_IXMLDOMProcessingInstruction, &LIBID_Xerces>
 {
-	ATLTRACE(_T("CXMLDOMNodeList::get_item\n"));
-
-	if (NULL == pVal)
-		return E_POINTER;
-
-	if(*pVal) (*pVal)->Release();
-	*pVal = NULL;
-	HRESULT hr = S_OK;
-
-	try
-	{
-		if (m_container == 0 || index < 0)
-			return E_INVALIDARG;
-
-		long length = m_container.getLength(); 
-		//
-		//    if index is beyond end
-		//       return a null object not an exception
-		//
-		if (index < length)
-			hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
-	}
-	catch(...)
-	{
-		return E_FAIL;
-	}
+public:
+	CXMLDOMXMLDecl()
+	{}
 	
-	return hr;
-}
-
-STDMETHODIMP CXMLDOMNodeList::get_length(long  *pVal)
-{
-	ATLTRACE(_T("CXMLDOMNodeList::get_length\n"));
-
-	if (NULL == pVal)
-		return E_POINTER;
-
-	*pVal = 0;
-
-	if (m_container == 0)
-		return S_OK;
-
-	try
+	void	FinalRelease()
 	{
-		*pVal = m_container.getLength();
-	}
-	catch(...)
-	{
-		return E_FAIL;
-	}
-	
-	return S_OK;
-}
-
-STDMETHODIMP CXMLDOMNodeList::nextNode(IXMLDOMNode  **pVal)
-{
-	ATLTRACE(_T("CXMLDOMNodeList::nextNode\n"));
-
-	if (NULL == pVal)
-		return E_POINTER;
-
-	*pVal = NULL;
-
-	if (m_container == 0)
-		return S_OK;
-	
-	int length = m_container.getLength();
-	if (0 == length)
-		return S_OK;
-
-	if (m_NextNodeIndex >= length)
-		return S_OK;
-
-	
-	HRESULT hr = S_OK;
-
-	try
-	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
-	}
-	catch(...)
-	{
-		return E_FAIL;
+		ReleaseOwnerDoc();
 	}
 
-	++m_NextNodeIndex;
-	
-	return hr;
-}
+	virtual DOM_Node& get_DOM_Node()			 { return xmlDecl;} 
+	virtual DOMNodeType get_DOMNodeType() const  { return NODE_PROCESSING_INSTRUCTION; }
 
-STDMETHODIMP CXMLDOMNodeList::reset()
-{
-	ATLTRACE(_T("CXMLDOMNodeList::reset\n"));
-	
-	m_NextNodeIndex = 0;
-	
-	return S_OK;
-}
+DECLARE_NOT_AGGREGATABLE(CXMLDOMXMLDecl)
+DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-STDMETHODIMP CXMLDOMNodeList::get__newEnum(IUnknown  **pVal)
-{
-	ATLTRACE(_T("CXMLDOMNodeList::get__newEnum\n"));
+BEGIN_COM_MAP(CXMLDOMXMLDecl)
+	COM_INTERFACE_ENTRY(IXMLDOMProcessingInstruction)
+	COM_INTERFACE_ENTRY(IXMLDOMNode)
+	COM_INTERFACE_ENTRY(IIBMXMLDOMNodeIdentity)
+	COM_INTERFACE_ENTRY(IDispatch)
+END_COM_MAP()
 
-	if (NULL == pVal)
-		return E_POINTER;
+	// IXMLDOMProcessingInstruction methods
+	STDMETHOD(get_target)(BSTR  *pVal);
+	STDMETHOD(get_data)(BSTR  *pVal);
+	STDMETHOD(put_data)(BSTR newVal);
 
-	*pVal = NULL;
+	DOM_XMLDecl xmlDecl;
+};
 
-	CComObject<CComEnumUnknownOnNodeContainer> *pe = NULL;
-	HRESULT hr = CComObject<CComEnumUnknownOnNodeContainer>::CreateInstance(&pe);
-	if (S_OK != hr)
-		return hr;
+typedef CComObject<CXMLDOMXMLDecl> CXMLDOMXMLDeclObj;
 
-	pe->AddRef();
-
-	hr = pe->Init(GetUnknown(),*this);
-	if (S_OK == hr)
-		hr = pe->QueryInterface(pVal);
-
-	pe->Release();
-
-	return hr;
-}
+#endif // ___xmldomprocessinginstruction_h___

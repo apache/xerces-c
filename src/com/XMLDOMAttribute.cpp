@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/19 20:05:57  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.2  2000/03/30 02:00:12  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -127,4 +131,22 @@ STDMETHODIMP CXMLDOMAttribute::put_value(VARIANT newVal)
 	
 	return S_OK;
 }
+
+	//  IXMLDOMNode method
+STDMETHODIMP CXMLDOMAttribute::get_specified(VARIANT_BOOL  *pVal)
+{
+	ATLTRACE(_T("CXMLDOMAttribute::get_specified\n"));
+
+	try
+	{
+		*pVal = attr.getSpecified() ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	catch(...)
+	{
+		return E_FAIL;
+	}
+	
+	return S_OK;
+}
+
 

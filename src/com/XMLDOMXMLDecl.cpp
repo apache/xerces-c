@@ -54,147 +54,113 @@
  * <http://www.apache.org/>.
  */
 
-/*
- * $Log$
- * Revision 1.3  2000/06/19 20:05:58  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.2  2000/03/30 02:00:10  abagchi
- * Initial checkin of working code with Copyright Notice
- *
- */
 
 #include "stdafx.h"
 #include "xml4com.h"
-#include "XMLDOMNodeList.h"
-#include "XMLDOMUtil.h"
+#include "XMLDOMXMLDecl.h"
 
-typedef CComEnumOnSTL<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>,NodeContainerImpl<DOM_NodeList> >
-		CComEnumUnknownOnNodeContainer;
-
-STDMETHODIMP CXMLDOMNodeList::get_item(long index, IXMLDOMNode  **pVal)
+// IXMLDOMProcessingInstruction methods
+STDMETHODIMP CXMLDOMXMLDecl::get_target(BSTR  *pVal)
 {
-	ATLTRACE(_T("CXMLDOMNodeList::get_item\n"));
+	ATLTRACE(_T("CXMLDOMXMLDecl::get_target\n"));
 
 	if (NULL == pVal)
 		return E_POINTER;
 
-	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
-	HRESULT hr = S_OK;
 
 	try
 	{
-		if (m_container == 0 || index < 0)
-			return E_INVALIDARG;
-
-		long length = m_container.getLength(); 
-		//
-		//    if index is beyond end
-		//       return a null object not an exception
-		//
-		if (index < length)
-			hr = wrapNode(m_pIXMLDOMDocument,m_container.item(index),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		*pVal = SysAllocString(OLESTR("xml"));
 	}
 	catch(...)
 	{
 		return E_FAIL;
 	}
-	
-	return hr;
-}
 
-STDMETHODIMP CXMLDOMNodeList::get_length(long  *pVal)
-{
-	ATLTRACE(_T("CXMLDOMNodeList::get_length\n"));
-
-	if (NULL == pVal)
-		return E_POINTER;
-
-	*pVal = 0;
-
-	if (m_container == 0)
-		return S_OK;
-
-	try
-	{
-		*pVal = m_container.getLength();
-	}
-	catch(...)
-	{
-		return E_FAIL;
-	}
-	
 	return S_OK;
 }
 
-STDMETHODIMP CXMLDOMNodeList::nextNode(IXMLDOMNode  **pVal)
+STDMETHODIMP CXMLDOMXMLDecl::get_data(BSTR  *pVal)
 {
-	ATLTRACE(_T("CXMLDOMNodeList::nextNode\n"));
+	ATLTRACE(_T("CXMLDOMXMLDecl::get_data\n"));
 
 	if (NULL == pVal)
 		return E_POINTER;
 
 	*pVal = NULL;
 
-	if (m_container == 0)
-		return S_OK;
-	
-	int length = m_container.getLength();
-	if (0 == length)
-		return S_OK;
-
-	if (m_NextNodeIndex >= length)
-		return S_OK;
-
-	
-	HRESULT hr = S_OK;
-
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,m_container.item(m_NextNodeIndex),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		unsigned int len= 0;
+		unsigned int totalLen = 0;
+		DOMString version(xmlDecl.getVersion());
+		len = version.length();
+		if(len > 0) totalLen = len + 10;
+
+		DOMString standalone(xmlDecl.getStandalone());
+		len = standalone.length();
+		if(len > 0) {
+			if(totalLen > 0) 
+				totalLen += len + 14;
+			else
+				totalLen = len + 13;
+		}
+
+		DOMString encoding(xmlDecl.getEncoding());
+		len = encoding.length();
+		if(len > 0) {
+			if(totalLen > 0)
+				totalLen += len + 13;
+			else
+				totalLen = len + 12;
+		}
+
+		*pVal = SysAllocStringLen(NULL,totalLen+1);
+		**pVal = 0;
+
+		len = version.length();
+		totalLen = len;
+		if(len > 0) {
+			wcscpy(*pVal,OLESTR("version=\""));
+			wcscat(*pVal,version.rawBuffer());
+			wcscat(*pVal,OLESTR("\""));
+		}
+
+		len = standalone.length();
+		if(len > 0) {
+			if(totalLen > 0)
+				wcscat(*pVal,OLESTR(" standalone=\""));
+			else
+				wcscat(*pVal,OLESTR("standalone=\""));
+			wcscat(*pVal,standalone.rawBuffer());
+			wcscat(*pVal,OLESTR("\""));
+			totalLen += len;
+		}
+
+		len = encoding.length();
+		if(len > 0) {
+			if(totalLen > 0)
+				wcscat(*pVal,OLESTR(" encoding=\""));
+			else
+				wcscat(*pVal,OLESTR("encoding=\""));
+			wcscat(*pVal,encoding.rawBuffer());
+			wcscat(*pVal,OLESTR("\""));
+		}
+
 	}
 	catch(...)
 	{
 		return E_FAIL;
 	}
 
-	++m_NextNodeIndex;
-	
-	return hr;
-}
-
-STDMETHODIMP CXMLDOMNodeList::reset()
-{
-	ATLTRACE(_T("CXMLDOMNodeList::reset\n"));
-	
-	m_NextNodeIndex = 0;
-	
 	return S_OK;
+
 }
 
-STDMETHODIMP CXMLDOMNodeList::get__newEnum(IUnknown  **pVal)
+STDMETHODIMP CXMLDOMXMLDecl::put_data(BSTR newVal)
 {
-	ATLTRACE(_T("CXMLDOMNodeList::get__newEnum\n"));
+	ATLTRACE(_T("CXMLDOMXMLDecl::put_data\n"));
 
-	if (NULL == pVal)
-		return E_POINTER;
-
-	*pVal = NULL;
-
-	CComObject<CComEnumUnknownOnNodeContainer> *pe = NULL;
-	HRESULT hr = CComObject<CComEnumUnknownOnNodeContainer>::CreateInstance(&pe);
-	if (S_OK != hr)
-		return hr;
-
-	pe->AddRef();
-
-	hr = pe->Init(GetUnknown(),*this);
-	if (S_OK == hr)
-		hr = pe->QueryInterface(pVal);
-
-	pe->Release();
-
-	return hr;
+	return E_NOTIMPL;
 }

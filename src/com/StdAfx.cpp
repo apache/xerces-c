@@ -21,6 +21,6 @@
 //      from the Visual Studio IDE.
 //
 #ifndef __IXMLDOMNode_INTERFACE_DEFINED__
-#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See comments for directions to correct this problem."
+#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See http://xml.apache.org/xerces-c/build.html#BuildCOM for directions to correct this problem."
 #endif
 

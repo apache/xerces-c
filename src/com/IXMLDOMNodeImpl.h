@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/06/19 20:05:56  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.3  2000/06/03 00:28:54  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -77,8 +81,9 @@
 //      on the Directories tab on the dialog displayed after selecting Tools Options
 //      from the Visual Studio IDE.
 //
+//   See http://xml.apache.org/xerces-c/build.html#BuildCOM
 #ifndef __IXMLDOMNode_INTERFACE_DEFINED__
-#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See comments for directions to correct this problem."
+#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See http://xml.apache.org/xerces-c/build.html#BuildCOM for directions to correct this problem."
 #endif
 
 

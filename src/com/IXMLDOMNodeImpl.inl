@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/06/19 20:05:56  rahulj
+ * Changes for increased conformance and stability. Submitted by
+ * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
+ *
  * Revision 1.3  2000/06/03 00:28:54  andyh
  * COM Wrapper changes from Curt Arnold
  *
@@ -163,12 +167,16 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_parentNode(IXMLDOMNod
 	if (NULL == pVal)
 		return E_POINTER;
 
+	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 	HRESULT hr = S_OK;
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument, get_DOM_Node().getParentNode(),IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = get_DOM_Node().getParentNode();
+		if(!n.isNull()) {
+			hr = wrapNode(m_pIXMLDOMDocument, n,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
+		}
 	}
 	catch(...)
 	{
@@ -523,7 +531,8 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::removeChild(IXMLDOMNode *
 	try
 	{
 		DOM_Node n = get_DOM_Node().removeChild(*pChildNode);
-		hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (oldChild));
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (oldChild));
 	}
 	catch(...)
 	{
@@ -648,7 +657,7 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeTypeString(BSTR *
 	if (NULL == pVal)
 		return E_POINTER;
 
-	*pVal = ::SysAllocString(T2OLE(g_DomNodeName[get_DOMNodeType()]));
+	*pVal = ::SysAllocString(g_DomNodeName[get_DOMNodeType()]);
 	
 	return S_OK;
 }
@@ -715,13 +724,15 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_text(BSTR newVal)
 	return S_OK;
 }
 
+
 template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
 STDMETHODIMP
 IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_specified(VARIANT_BOOL *pVal)
 {
 	ATLTRACE(_T("IXMLDOMNodeImpl::get_specified\n"));
 
-	return E_NOTIMPL;
+	*pVal = VARIANT_TRUE;
+	return S_OK;
 }
 
 template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
