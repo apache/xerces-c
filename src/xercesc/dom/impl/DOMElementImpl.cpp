@@ -67,6 +67,7 @@
 #include <xercesc/util/XMLUri.hpp>
 
 #include "DOMAttrMapImpl.hpp"
+#include "DOMAttrImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMStringPool.hpp"
@@ -183,7 +184,6 @@ DOMAttr *DOMElementImpl::getAttributeNode(const XMLCh *nam) const
     return  (DOMAttr *)fAttributes->getNamedItem(nam);
 };
 
-#include "stdio.h"
 
 DOMNamedNodeMap *DOMElementImpl::getAttributes() const
 {
@@ -216,6 +216,7 @@ void DOMElementImpl::removeAttribute(const XMLCh *nam)
     if (i >= 0)
     {
         DOMNode *att = fAttributes->removeNamedItemAt(i);
+        ((DOMAttrImpl *)att)->removeAttrFromIDNodeMap();
         att->release();
     }
 };
@@ -241,8 +242,10 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
     if (i >= 0) {
         // If it is in fact the right object, remove it.
         found = fAttributes->item(i);
-        if (found == oldAttr)
+        if (found == oldAttr) {
             fAttributes->removeNamedItemAt(i);
+            ((DOMAttrImpl *)oldAttr)->removeAttrFromIDNodeMap();
+        }
         else
             throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 
@@ -271,6 +274,54 @@ void DOMElementImpl::setAttribute(const XMLCh *nam, const XMLCh *val)
     newAttr->setNodeValue(val);
 };
 
+void DOMElementImpl::setIdAttribute(const XMLCh* name)
+{
+    if (fNode.isReadOnly())
+        throw DOMException(
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+    DOMAttr *attr = getAttributeNode(name);
+
+    if (!attr) 
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+
+    ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+};
+
+void DOMElementImpl::setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName) {
+
+    if (fNode.isReadOnly())
+        throw DOMException(
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+    DOMAttr *attr = getAttributeNodeNS(namespaceURI, localName);
+
+    if (!attr) 
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+
+    ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+
+};
+
+
+void DOMElementImpl::setIdAttributeNode(const DOMAttr *idAttr) {
+
+    if (fNode.isReadOnly())
+        throw DOMException(
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+    DOMAttr *attr;
+    const XMLCh* localName = idAttr->getLocalName();
+    if (localName)
+        attr = getAttributeNodeNS(idAttr->getNamespaceURI(), idAttr->getLocalName());
+    else 
+        attr = getAttributeNode(idAttr->getName());
+    
+    if(!attr) 
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+
+    ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+};
 
 
 DOMAttr * DOMElementImpl::setAttributeNode(DOMAttr *newAttr)

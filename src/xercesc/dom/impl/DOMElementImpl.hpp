@@ -138,6 +138,11 @@ public:
     virtual bool              hasAttributeNS(const XMLCh *namespaceURI,
                                              const XMLCh *localName) const;
 
+    //Introduced in DOM level 3
+    virtual void setIdAttribute(const XMLCh* name);
+    virtual void setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName);
+    virtual void setIdAttributeNode(const DOMAttr *idAttr);
+
     // for handling of default attribute
     virtual DOMAttr*          setDefaultAttributeNode(DOMAttr *newAttr);
     virtual DOMAttr*          setDefaultAttributeNodeNS(DOMAttr *newAttr);

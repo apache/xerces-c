@@ -415,6 +415,70 @@ public:
                                         const XMLCh *localName) const = 0;
     //@}
 
+
+    /** @name Functions introduced in DOM Level 3 */
+    //@{
+
+    /**
+     * Declares the <code>DOMAttr</code> specified by name to be of type ID. If the
+     * value of the specified <code>DOMAttr</code> is unique then this element node
+     * can later be retrieved using getElementById on Document. Note, however,
+     * that this simply affects this node and does not change any grammar that 
+     * may be in use.
+     * To specify an <code>DOMAttr</code> by local name and namespace URI, use the 
+     * setIdAttributeNS method.
+     * @param name The name of the <code>DOMAttr</code>.
+     * @exception DOMException
+     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     *    <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> 
+     * of this element.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void setIdAttribute(const XMLCh* name) = 0;
+
+
+    /**
+     * Declares the <code>DOMAttr</code> specified by local name and namespace 
+     * URI to be of type ID. If the value of the specified <code>DOMAttr</code>
+     * is unique then this <code>DOMElement</code> node can later be retrieved
+     * using getElementById on <code>DOMDocument</code>. Note, however, that 
+     * this simply affects this node and does not change any grammar that may 
+     * be in use.
+     * @param namespaceURI The namespace URI of the <code>DOMAttr</code>.
+     * @param localName The local name of the <code>DOMAttr</code>.
+     * @exception  DOMException
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     *   <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName) = 0;
+
+
+
+    /**
+     * Declares the <code>DOMAttr</code> specified by node to be of type ID.
+     * If the value of the specified <code>DOMAttr</code> is unique then this
+     * <code>DOMElement</code> node can later be retrieved using getElementById 
+     * on <code>DOMDocument</code>. Note, however, that this simply affects this
+     * node and does not change any grammar that may be in use.
+     * @param idAttr The <code>DOMAttr</code> node.
+     * @exception  DOMException
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     *   <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3     
+     */
+    virtual void setIdAttributeNode(const DOMAttr *idAttr) = 0;
+    //@}
+
 };
 
 XERCES_CPP_NAMESPACE_END
