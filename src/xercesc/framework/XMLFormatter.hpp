@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/01/31 00:30:48  jberry
+ * Syntax error in declaration
+ *
  * Revision 1.6  2003/01/28 18:32:33  peiyongz
  * Bug#13694: Allow Xerces to write the BOM to XML files
  *
@@ -311,8 +314,8 @@ public:
         const   XMLCh           toFormat
     );
 
-    void XMLFormatter::writeBOM(const XMLByte* const toFormat
-                              , const unsigned int   count);
+    void writeBOM(const XMLByte* const toFormat
+                , const unsigned int   count);
 
     //@}
 
