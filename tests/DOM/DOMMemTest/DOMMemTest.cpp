@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/20 00:43:00  andyh
+ * no message
+ *
  * Revision 1.6  2000/01/19 21:40:58  andyh
  * Remove a few remaining dependencies on the (now defunct)
  * XML StdOut stream.
@@ -123,18 +126,19 @@ void tassert(bool c, char *file, int line)
     }
 
 
-#define EXCEPTION_TEST(operation, expected_exception) \
-    try {                                \
-    operation;                           \
-    printf(" Error: no exception thrown at line %d\n", __LINE__);                      \
-}                                        \
-catch (DOM_DOMException &e) {            \
-    if (e.ExceptionCode != expectedException) \
-        printf(" Wrong exception code: %d at line %d\n", e.ExceptionCode, __LINE__); \
- };   \
-        \
-    catch (...)   {                      \
-        printf(" Wrong exception thrown at line %d\n", __LINE__); \
+#define EXCEPTION_TEST(operation, expected_exception)               \
+{                                                                   \
+    try {                                                           \
+    operation;                                                      \
+    printf(" Error: no exception thrown at line %d\n", __LINE__);   \
+}                                                                   \
+    catch (DOM_DOMException &e) {                                       \
+    if (e.code != expected_exception)                       \
+    printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
+}                                                                 \
+    catch (...)   {                                                 \
+    printf(" Wrong exception thrown at line %d\n", __LINE__);       \
+}                                                                   \
 }
 
 
@@ -815,7 +819,22 @@ int  main()
 
     //
     // hasFeature.  The set of supported options tested here is for Xerces 1.1
+    //              Note: because the implementation lazily creates some of the comprison
+    //                    strings within the implementation, this test must be pre-flighted
+    //                    outside of the TESPROLOG/TESTEPILOG macros to avoid spurious
+    //                    reports of memory leaks.
     //
+    {
+        DOM_DOMImplementation  impl;
+        TASSERT(impl.hasFeature("XML", "2.0")    == true);
+        TASSERT(impl.hasFeature("XML", "")       == true);
+        //  We also support 1.0
+        TASSERT(impl.hasFeature("XML", "1.0")    == true);
+        TASSERT(impl.hasFeature("XML", "3.0")    == false);
+        TASSERT(impl.hasFeature("Traversal", "") == true);
+    }
+
+    
     TESTPROLOG;
     {
         DOM_DOMImplementation  impl;
@@ -927,6 +946,8 @@ int  main()
 
 
 
+
+
     //
     //  CreateElementNS methods
     //
@@ -977,18 +998,15 @@ int  main()
         TASSERT(elc.getTagName().equals("elc"));
 
         // Badly formed qualified name
-        //EXCEPTION_TEST(doc.createElementNS("http://nsa", "a:a:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "a:a:a"), DOM_DOMException::NAMESPACE_ERR);     
 
         // Prefix == xml, namespace != http://www.w3.org/XML/1998/namespace
-        //EXCEPTION_TEST(doc.createElementNS("http://nsa", "xml:a", DOM_DOMException::NAMESPACE_ERR));     
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);     
 
         // A couple of corner cases that should not fail.
         TASSERT(doc.createElementNS("http://www.w3.org/XML/1998/namespace", "xml:a") != 0);
-        TASSERT(doc.createElementNS("http://www.w3.org/XML/1998/namespace", "")      != 0);
-        TASSERT(doc.createElementNS("http://www.w3.org/XML/1998/namespace", 0)    != 0);
-
-
-
+        TASSERT(doc.createElementNS("", "xml:a")      != 0);
+        TASSERT(doc.createElementNS(0,  "xml:a")      != 0);
 
     }
     TESTEPILOG;
@@ -1045,7 +1063,7 @@ int  main()
 
 
     //
-    //  getElementsByTagNameNS
+    //  getElementsByTagName*
     //
     TESTPROLOG;
     {
@@ -1079,12 +1097,96 @@ int  main()
         rootEl.appendChild(ele);
 
 
+        // 
+        // Access with DOM Level 1 getElementsByTagName
+        //
+
+        DOM_NodeList nl;
+
+        nl = doc.getElementsByTagName("a:ela");
+        TASSERT(nl.getLength() == 1);
+        TASSERT(nl.item(0) == ela);
+
+        nl = doc.getElementsByTagName("elb");
+        TASSERT(nl.getLength() == 2);
+        TASSERT(nl.item(0) == elb);
+        TASSERT(nl.item(1) == ele);
+
+        nl = doc.getElementsByTagName("d:ela");
+        TASSERT(nl.getLength() == 1);
+        TASSERT(nl.item(0) == eld);
+
+        //
+        //  Access with DOM Level 2 getElementsByTagNameNS
+        //
+
+        nl = doc.getElementsByTagNameNS("", "elc");
+        TASSERT(nl.getLength() == 1);
+        TASSERT(nl.item(0) == elc);
+
+        nl = doc.getElementsByTagNameNS(0, "elc");
+        TASSERT(nl.getLength() == 1);
+        TASSERT(nl.item(0) == elc);
+       
+        nl = doc.getElementsByTagNameNS("http://nsa", "ela");
+        TASSERT(nl.getLength() == 2);
+        TASSERT(nl.item(0) == ela);
+        TASSERT(nl.item(1) == eld);
+
+        nl = doc.getElementsByTagNameNS("", "elb");
+        TASSERT(nl.getLength() == 0);
+
+        nl = doc.getElementsByTagNameNS("http://nsb", "elb");
+        TASSERT(nl.getLength() == 1);
+        TASSERT(nl.item(0) == elb);
+
+        nl = doc.getElementsByTagNameNS("*", "elb");
+        TASSERT(nl.getLength() == 2);
+        TASSERT(nl.item(0) == elb);
+        TASSERT(nl.item(1) == ele);
+
+        nl = doc.getElementsByTagNameNS("http://nsa", "*");
+        TASSERT(nl.getLength() == 2);
+        TASSERT(nl.item(0) == ela);
+        TASSERT(nl.item(1) == eld);
+
+        nl = doc.getElementsByTagNameNS("*", "*");
+        TASSERT(nl.getLength() == 6);     // Gets the document root element, plus 5 more
+
+        TASSERT(nl.item(6) == 0);
+        // TASSERT(nl.item(-1) == 0);
+
+        nl = rootEl.getElementsByTagNameNS("*", "*");
+        TASSERT(nl.getLength() == 5);
+
+
+        nl = doc.getElementsByTagNameNS("http://nsa", "d:ela");
+        TASSERT(nl.getLength() == 0);
+
+
+        //
+        // Node lists are Live
+        //
+
+        nl = doc.getElementsByTagNameNS("*", "*");
+        DOM_NodeList nla = ela.getElementsByTagNameNS("*", "*");
+
+        TASSERT(nl.getLength() == 6); 
+        TASSERT(nla.getLength() == 0);
+
+        rootEl.removeChild(elc);
+        TASSERT(nl.getLength() == 5);
+        TASSERT(nla.getLength() == 0);
+
+        ela.appendChild(elc);
+        TASSERT(nl.getLength() == 6);
+        TASSERT(nla.getLength() == 1);
     }
     TESTEPILOG;
 
 
 
-
+ 
     //
     //  Print Final allocation stats for full test
     //
