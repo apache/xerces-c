@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/10/23 13:35:36  tng
+ * Schema fix: Resolve notation prefix to an URI.
+ *
  * Revision 1.20  2001/10/12 20:44:01  tng
  * Schema Fix: Notation Uri Binding.
  *
@@ -428,10 +431,13 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
                 //  the notation pool (after the Grammar is parsed), then obviously
                 //  this value will be legal since it matches one of them.
                 //
+                XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
+                XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
                 XMLBuffer notationBuf;
-                notationBuf.set(fSchemaGrammar->getTargetNamespace());
+                unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Element);
+                notationBuf.set(getScanner()->getURIText(uriId));
                 notationBuf.append(chColon);
-                notationBuf.append(attrValue);
+                notationBuf.append(nameBuf.getRawBuffer());
 
                 attDefDV->validate(notationBuf.getRawBuffer());
             }
