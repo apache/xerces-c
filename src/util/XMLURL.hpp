@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.1  2000/01/15 01:26:17  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
+ *
  * Revision 1.3  2000/01/12 00:16:22  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -71,8 +77,8 @@
  *
  */
 
-#if !defined(URL_HPP)
-#define URL_HPP
+#if !defined(XMLURL_HPP)
+#define XMLURL_HPP
 
 #include <util/XML4CDefs.hpp>
 #include <util/XMLException.hpp>
@@ -97,7 +103,7 @@ MakeXML4CException(MalformedURLException, XMLUTIL_EXPORT)
 //  This class supports file, http, and ftp style URLs. All others are
 //  rejected
 //
-class XMLUTIL_EXPORT URL
+class XMLUTIL_EXPORT XMLURL
 {
 public:
     // -----------------------------------------------------------------------
@@ -126,45 +132,45 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    URL();
-    URL
+    XMLURL();
+    XMLURL
     (
         const   XMLCh* const    baseURL
         , const XMLCh* const    relativeURL
     );
-    URL
+    XMLURL
     (
         const   XMLCh* const    baseURL
         , const char* const     relativeURL
     );
-    URL
+    XMLURL
     (
-        const   URL&            baseURL
+        const   XMLURL&         baseURL
         , const XMLCh* const    relativeURL
     );
-    URL
+    XMLURL
     (
-        const   URL&            baseURL
+        const   XMLURL&         baseURL
         , const char* const     relativeURL
     );
-    URL
+    XMLURL
     (
         const   XMLCh* const    urlText
     );
-    URL
+    XMLURL
     (
         const   char* const     urlText
     );
-    URL(const URL& toCopy);
-    virtual ~URL();
+    XMLURL(const XMLURL& toCopy);
+    virtual ~XMLURL();
 
 
     // -----------------------------------------------------------------------
     //  Operators
     // -----------------------------------------------------------------------
-    URL& operator=(const URL& toAssign);
-    bool operator==(const URL& toCompare) const;
-    bool operator!=(const URL& toCompare) const;
+    XMLURL& operator=(const XMLURL& toAssign);
+    bool operator==(const XMLURL& toCompare) const;
+    bool operator!=(const XMLURL& toCompare) const;
 
 
     // -----------------------------------------------------------------------
@@ -192,7 +198,7 @@ public:
     );
     void setURL
     (
-        const   URL&            baseURL
+        const   XMLURL&         baseURL
         , const XMLCh* const    relativeURL
     );
 
@@ -203,7 +209,7 @@ public:
     bool isRelative() const;
     BinInputStream* makeNewStream() const;
     void makeRelativeTo(const XMLCh* const baseURLText);
-    void makeRelativeTo(const URL& baseURL);
+    void makeRelativeTo(const XMLURL& baseURL);
 
 
 private:
@@ -212,7 +218,7 @@ private:
     // -----------------------------------------------------------------------
     void buildFullText();
     void cleanup();
-    void conglomerateWithBase(const URL& baseURL);
+    void conglomerateWithBase(const XMLURL& baseURL);
     void parse
     (
         const   XMLCh* const    urlText
@@ -264,53 +270,53 @@ private:
 
 
 // ---------------------------------------------------------------------------
-//  URL: Public operators
+//  XMLURL: Public operators
 // ---------------------------------------------------------------------------
-inline bool URL::operator!=(const URL& toCompare) const
+inline bool XMLURL::operator!=(const XMLURL& toCompare) const
 {
     return !operator==(toCompare);
 }
 
 
 // ---------------------------------------------------------------------------
-//  URL: Getter methods
+//  XMLURL: Getter methods
 // ---------------------------------------------------------------------------
-inline const XMLCh* URL::getFragment() const
+inline const XMLCh* XMLURL::getFragment() const
 {
     return fFragment;
 }
 
-inline const XMLCh* URL::getHost() const
+inline const XMLCh* XMLURL::getHost() const
 {
     return fHost;
 }
 
-inline const XMLCh* URL::getPassword() const
+inline const XMLCh* XMLURL::getPassword() const
 {
     return fPassword;
 }
 
-inline const XMLCh* URL::getPath() const
+inline const XMLCh* XMLURL::getPath() const
 {
     return fPath;
 }
 
-inline URL::Protocols URL::getProtocol() const
+inline XMLURL::Protocols XMLURL::getProtocol() const
 {
     return fProtocol;
 }
 
-inline const XMLCh* URL::getQuery() const
+inline const XMLCh* XMLURL::getQuery() const
 {
     return fQuery;
 }
 
-inline const XMLCh* URL::getUser() const
+inline const XMLCh* XMLURL::getUser() const
 {
     return fUser;
 }
 
-inline const XMLCh* URL::getURLText() const
+inline const XMLCh* XMLURL::getURLText() const
 {
     //
     //  Fault it in if not already. Since this is a const method and we
@@ -318,7 +324,7 @@ inline const XMLCh* URL::getURLText() const
     //  we have to cast off the constness.
     //
     if (!fURLText)
-        ((URL*)this)->buildFullText();
+        ((XMLURL*)this)->buildFullText();
 
     return fURLText;
 }

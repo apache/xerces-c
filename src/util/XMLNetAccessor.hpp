@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/15 01:26:17  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
+ *
  * Revision 1.3  2000/01/14 00:52:45  roddey
  * Added a NetAccessorException for use by implementations of the
  * NetAccessor abstraction, if they need to report errors during
@@ -77,6 +83,10 @@
 #define XMLNETACCESSOR_HPP
 
 #include <util/XML4CDefs.hpp>
+#include <util/XMLUni.hpp>
+#include <util/XMLException.hpp>
+#include <util/XMLURL.hpp>
+
 
 class BinInputStream;
 
@@ -123,7 +133,7 @@ public :
     // -----------------------------------------------------------------------
     virtual BinInputStream* makeNew
     (
-        const   URL&                    urlSrc
+        const   XMLURL&                 urlSrc
     ) = 0;
 
 

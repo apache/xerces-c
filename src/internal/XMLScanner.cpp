@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/15 01:26:16  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
+ *
  * Revision 1.6  2000/01/12 23:52:46  roddey
  * These are trivial changes required to get the C++ and Java versions
  * of error messages more into sync. Mostly it was where the Java version
@@ -104,7 +110,7 @@
 #include <util/RefVectorOf.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/UnexpectedEOFException.hpp>
-#include <util/URL.hpp>
+#include <util/XMLURL.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
@@ -233,7 +239,7 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId
         //  it has to be fully qualified. If not, then assume we are just
         //  mistaking a file for a URL.
         //
-        URL tmpURL(systemId);
+        XMLURL tmpURL(systemId);
         if (tmpURL.isRelative())
             ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
         srcToUse = new URLInputSource(tmpURL);

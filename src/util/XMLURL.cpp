@@ -56,9 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.3  2000/01/12 20:44:49  roddey
- * Ooops, I checked in the URL.cpp file with a L"localhost" style string in it. This is not legal for
- * some of our compilers, so a new string was added XMLUni and used in its place.
+ * Revision 1.1  2000/01/15 01:26:17  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
  *
  * Revision 1.2  2000/01/12 00:16:22  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
@@ -81,7 +83,7 @@
 #include <util/PlatformUtils.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/TransService.hpp>
-#include <util/URL.hpp>
+#include <util/XMLURL.hpp>
 #include <util/XMLNetAccessor.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
@@ -97,8 +99,8 @@
 // ---------------------------------------------------------------------------
 struct TypeEntry
 {
-    URL::Protocols  protocol;
-    const XMLCh*    prefix;
+    XMLURL::Protocols  protocol;
+    const XMLCh*       prefix;
 };
 
 
@@ -140,11 +142,11 @@ static const XMLCh gLocalHostString[] =
     ,   chLatin_h, chLatin_o, chLatin_s, chLatin_t, chNull
 };
 
-static TypeEntry gTypeList[URL::Protocols_Count] = 
+static TypeEntry gTypeList[XMLURL::Protocols_Count] = 
 {
-        { URL::File     , gFileString }
-    ,   { URL::HTTP     , gHTTPString }
-    ,   { URL::FTP      , gFTPString  }
+        { XMLURL::File     , gFileString }
+    ,   { XMLURL::HTTP     , gHTTPString }
+    ,   { XMLURL::FTP      , gFTPString  }
 };
 static const unsigned int gTypeListSize = sizeof(gTypeList) / sizeof(gTypeList[0]);
 
@@ -181,44 +183,44 @@ static unsigned int xlatHexDigit(const XMLCh toXlat)
 
 
 // ---------------------------------------------------------------------------
-//  URL: Public, static methods
+//  XMLURL: Public, static methods
 // ---------------------------------------------------------------------------
-URL::Protocols URL::lookupByName(const XMLCh* const protoName)
+XMLURL::Protocols XMLURL::lookupByName(const XMLCh* const protoName)
 {
     for (unsigned int index = 0; index < gTypeListSize; index++)
     {
         if (!XMLString::compareIString(gTypeList[index].prefix, protoName))
             return gTypeList[index].protocol;
     }
-    return URL::Unknown;
+    return XMLURL::Unknown;
 }
 
 
 
 // ---------------------------------------------------------------------------
-//  URL: Constructors and Destructor
+//  XMLURL: Constructors and Destructor
 // ---------------------------------------------------------------------------
-URL::URL() :
+XMLURL::XMLURL() :
 
     fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::Unknown)
+    , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
 {
 }
 
-URL::URL(const  XMLCh* const    baseURL
-        , const XMLCh* const    relativeURL) :
+XMLURL::XMLURL(const XMLCh* const    baseURL
+             , const XMLCh* const    relativeURL) :
 
     fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::Unknown)
+    , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
@@ -226,14 +228,14 @@ URL::URL(const  XMLCh* const    baseURL
     setURL(baseURL, relativeURL);
 }
 
-URL::URL(const  XMLCh* const    baseURL
-        , const char* const     relativeURL) :
+XMLURL::XMLURL(const XMLCh* const    baseURL
+             , const char* const     relativeURL) :
 
     fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::Unknown)
+    , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
@@ -243,14 +245,14 @@ URL::URL(const  XMLCh* const    baseURL
     setURL(baseURL, tmpRel);
 }
 
-URL::URL(const  URL&            baseURL
-        , const XMLCh* const    relativeURL) :
+XMLURL::XMLURL(const XMLURL&         baseURL
+             , const XMLCh* const    relativeURL) :
 
     fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::Unknown)
+    , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
@@ -258,14 +260,14 @@ URL::URL(const  URL&            baseURL
     setURL(baseURL, relativeURL);
 }
 
-URL::URL(const  URL&        baseURL
-        , const char* const relativeURL) :
+XMLURL::XMLURL(const  XMLURL&        baseURL
+             , const char* const     relativeURL) :
 
     fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::Unknown)
+    , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
@@ -275,13 +277,13 @@ URL::URL(const  URL&        baseURL
     setURL(baseURL, tmpRel);
 }
 
-URL::URL(const XMLCh* const urlText) :
+XMLURL::XMLURL(const XMLCh* const urlText) :
 
     fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::Unknown)
+    , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
@@ -289,13 +291,13 @@ URL::URL(const XMLCh* const urlText) :
     setURL(urlText);
 }
 
-URL::URL(const char* const urlText) :
+XMLURL::XMLURL(const char* const urlText) :
 
     fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::Unknown)
+    , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
     , fURLText(0)
@@ -305,7 +307,7 @@ URL::URL(const char* const urlText) :
     setURL(tmpText);
 }
 
-URL::URL(const URL& toCopy) :
+XMLURL::XMLURL(const XMLURL& toCopy) :
 
     fFragment(XMLString::replicate(toCopy.fFragment))
     , fHost(XMLString::replicate(toCopy.fHost))
@@ -318,16 +320,16 @@ URL::URL(const URL& toCopy) :
 {
 }
 
-URL::~URL()
+XMLURL::~XMLURL()
 {
     cleanup();
 }
 
 
 // ---------------------------------------------------------------------------
-//  URL: Public operators
+//  XMLURL: Public operators
 // ---------------------------------------------------------------------------
-URL& URL::operator=(const URL& toAssign)
+XMLURL& XMLURL::operator=(const XMLURL& toAssign)
 {
     if (this == &toAssign)
         return *this;
@@ -348,7 +350,7 @@ URL& URL::operator=(const URL& toAssign)
     return *this;
 }
 
-bool URL::operator==(const URL& toCompare) const
+bool XMLURL::operator==(const XMLURL& toCompare) const
 {
     //
     //  Compare the two complete URLs (which have been processed the same
@@ -364,9 +366,9 @@ bool URL::operator==(const URL& toCompare) const
 
 
 // ---------------------------------------------------------------------------
-//  URL: Getter methods
+//  XMLURL: Getter methods
 // ---------------------------------------------------------------------------
-const XMLCh* URL::getProtocolName() const
+const XMLCh* XMLURL::getProtocolName() const
 {
     // Check to see if its ever been set
     if (fProtocol == Unknown)
@@ -377,9 +379,9 @@ const XMLCh* URL::getProtocolName() const
 
 
 // ---------------------------------------------------------------------------
-//  URL: Setter methods
+//  XMLURL: Setter methods
 // ---------------------------------------------------------------------------
-void URL::setURL(const XMLCh* const urlText)
+void XMLURL::setURL(const XMLCh* const urlText)
 {
     //
     //  Try to parse the URL. If this fails, we just give up, cleanup and
@@ -398,8 +400,8 @@ void URL::setURL(const XMLCh* const urlText)
     }
 }
 
-void URL::setURL(const  XMLCh* const    baseURL
-                , const XMLCh* const    relativeURL)
+void XMLURL::setURL(const XMLCh* const    baseURL
+                  , const XMLCh* const    relativeURL)
 {
     cleanup();
     try
@@ -415,7 +417,7 @@ void URL::setURL(const  XMLCh* const    baseURL
         {
             if (*baseURL)
             {
-                URL basePart(baseURL);
+                XMLURL basePart(baseURL);
                 conglomerateWithBase(basePart);
             }
         }
@@ -428,8 +430,8 @@ void URL::setURL(const  XMLCh* const    baseURL
     }
 }
 
-void URL::setURL(const  URL&            baseURL
-                , const XMLCh* const    relativeURL)
+void XMLURL::setURL(const XMLURL&         baseURL
+                  , const XMLCh* const    relativeURL)
 {
     cleanup();
     try
@@ -451,9 +453,9 @@ void URL::setURL(const  URL&            baseURL
 
 
 // ---------------------------------------------------------------------------
-//  URL: Miscellaneous methods
+//  XMLURL: Miscellaneous methods
 // ---------------------------------------------------------------------------
-bool URL::isRelative() const
+bool XMLURL::isRelative() const
 {
     // If no protocol then relative
     if (fProtocol == Unknown)
@@ -470,16 +472,16 @@ bool URL::isRelative() const
 }
 
 
-BinInputStream* URL::makeNewStream() const
+BinInputStream* XMLURL::makeNewStream() const
 {
     //
     //  If its a local host, then we short circuit it and use our own file
     //  stream support. Otherwise, we just let it fall through and let the
     //  installed network access object provide a stream.
     //
-    if (fProtocol == URL::File)
+    if (fProtocol == XMLURL::File)
     {
-        if (!fHost || !XMLString::compareIString(fHost, XMLUni::fgLocalHostString))
+        if (!fHost || !XMLString::compareIString(fHost, L"localhost"))
         {
             //
             //  We have to play a little trick here. If its really a Windows
@@ -524,17 +526,17 @@ BinInputStream* URL::makeNewStream() const
     return XMLPlatformUtils::fgNetAccessor->makeNew(*this);
 }
 
-void URL::makeRelativeTo(const XMLCh* const baseURLText)
+void XMLURL::makeRelativeTo(const XMLCh* const baseURLText)
 {
     // If this one is not relative, don't bother
     if (!isRelative())
         return;
 
-    URL baseURL(baseURLText);
+    XMLURL baseURL(baseURLText);
     conglomerateWithBase(baseURL);
 }
 
-void URL::makeRelativeTo(const URL& baseURL)
+void XMLURL::makeRelativeTo(const XMLURL& baseURL)
 {
     // If this one is not relative, don't bother
     if (!isRelative())
@@ -546,7 +548,7 @@ void URL::makeRelativeTo(const URL& baseURL)
 
 
 // ---------------------------------------------------------------------------
-//  URL: Private helper methods
+//  XMLURL: Private helper methods
 // ---------------------------------------------------------------------------
 
 //
@@ -554,7 +556,7 @@ void URL::makeRelativeTo(const URL& baseURL)
 //  full text. We don't do this unless someone asks us to, since its often
 //  never required.
 //
-void URL::buildFullText()
+void XMLURL::buildFullText()
 {
     // Calculate the worst case size of the buffer required
     unsigned int bufSize = gMaxProtoLen + 1
@@ -627,7 +629,7 @@ void URL::buildFullText()
 //  Just a central place to handle cleanup, since its done from a number
 //  of different spots.
 //
-void URL::cleanup()
+void XMLURL::cleanup()
 {
     delete [] fFragment;
     delete [] fHost;
@@ -649,7 +651,7 @@ void URL::cleanup()
 }
 
 
-void URL::conglomerateWithBase(const URL& baseURL)
+void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
 {
     // The base URL cannot be relative
     if (baseURL.isRelative())
@@ -718,7 +720,7 @@ void URL::conglomerateWithBase(const URL& baseURL)
 }
 
 
-void URL::parse(const XMLCh* const urlText)
+void XMLURL::parse(const XMLCh* const urlText)
 {
     // Simplify things by checking for the psycho scenarios first
     if (!*urlText)
@@ -967,7 +969,7 @@ void URL::parse(const XMLCh* const urlText)
 }
 
 
-void URL::weavePaths(const XMLCh* const basePart)
+void XMLURL::weavePaths(const XMLCh* const basePart)
 {
     // Watch for stupid stuff
     if (!basePart)

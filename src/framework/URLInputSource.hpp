@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/01/15 01:26:16  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
+ *
  * Revision 1.1  2000/01/12 00:13:26  roddey
  * These were moved from internal/ to framework/, which was something that should have
  * happened long ago. They are really framework type of classes.
@@ -82,7 +88,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    URLInputSource(const URL& urlId);
+    URLInputSource(const XMLURL& urlId);
     URLInputSource
     (
         const   XMLCh* const    baseId
@@ -117,7 +123,7 @@ public :
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    const URL& urlSrc() const;
+    const XMLURL& urlSrc() const;
 
 
 private :
@@ -127,11 +133,11 @@ private :
     //  fURL
     //      This is the URL created from the passed ids.
     // -----------------------------------------------------------------------
-    URL fURL;
+    XMLURL fURL;
 };
 
 
-inline const URL& URLInputSource::urlSrc() const
+inline const XMLURL& URLInputSource::urlSrc() const
 {
     return fURL;
 }

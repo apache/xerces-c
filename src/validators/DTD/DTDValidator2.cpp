@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/15 01:26:18  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
+ *
  * Revision 1.5  2000/01/12 23:52:49  roddey
  * These are trivial changes required to get the C++ and Java versions
  * of error messages more into sync. Mostly it was where the Java version
@@ -92,7 +98,6 @@
 #include <util/Janitor.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/UnexpectedEOFException.hpp>
-#include <util/URL.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
 #include <framework/XMLBufferMgr.hpp>

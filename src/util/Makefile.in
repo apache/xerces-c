@@ -55,6 +55,12 @@
 # 
 #
 # $Log$
+# Revision 1.9  2000/01/15 01:26:17  rahulj
+# Added support for HTTP to the parser using libWWW 5.2.8.
+# Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+# Only tested under NT 4.0 SP 5.
+# Removed URL.hpp from files where it was not used.
+#
 # Revision 1.8  2000/01/12 22:54:22  abagchi
 # Added additional transcoding object files and headers
 #
@@ -155,7 +161,6 @@ UTIL_CPP_PUBHEADERS = \
 	TextOutputStream.hpp \
 	TransService.hpp \
 	TranscodingException.hpp \
-	URL.hpp \
 	UTFDataFormatException.hpp \
 	UnexpectedEOFException.hpp \
 	UnsupportedEncodingException.hpp \
@@ -173,6 +178,7 @@ UTIL_CPP_PUBHEADERS = \
 	XMLNetAccessor.hpp \
 	XMLString.hpp \
 	XMLUCS4Transcoder.hpp \
+	XMLURL.hpp \
 	XMLUTF16Transcoder.hpp \
 	XMLUTF8Transcoder.hpp \
 	XMLUni.hpp
@@ -205,8 +211,8 @@ UTIL_CPP_OBJECTS = \
 	StdOut.o \
 	StringPool.o \
 	TextOutputStream.o \
+	XMLURL.o \
 	TransService.o \
-	URL.o \
 	XML88591Transcoder.o \
 	XMLASCIITranscoder.o \
 	XMLEBCDICTranscoder.o \

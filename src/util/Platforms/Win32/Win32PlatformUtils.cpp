@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/15 01:26:18  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
+ *
  * Revision 1.5  2000/01/14 19:48:34  andyh
  * Update MSVC project files to reflect change in DLL version to 1_1
  * Update dll name in panic message text from XML4C to Xerces
@@ -103,6 +109,11 @@
 	#include <util/MsgLoaders/Win32/Win32MsgLoader.hpp>
 #else
 	#error A message loading service must be chosen
+#endif
+
+
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
+    #include <util/NetAccessors/LibWWWNetAccessor.hpp>
 #endif
 
 
@@ -764,12 +775,14 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 //  during initialization. We have to create the type of net accessor that
 //  we want to use.
 //
-//  <TBD> For now we return zero, but later we will return the desired type
-//  of accessor object.
-//
+
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
+    return new LibWWWNetAccessor();
+#else
     return 0;
+#endif
 }
 
 

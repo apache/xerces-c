@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/15 01:26:16  rahulj
+ * Added support for HTTP to the parser using libWWW 5.2.8.
+ * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
+ * Only tested under NT 4.0 SP 5.
+ * Removed URL.hpp from files where it was not used.
+ *
  * Revision 1.4  2000/01/13 22:50:29  aruna1
  * For unix made additional check for relative url path
  *
@@ -89,7 +95,7 @@
 #include <util/PlatformUtils.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/UnexpectedEOFException.hpp>
-#include <util/URL.hpp>
+#include <util/XMLURL.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
 #include <framework/LocalFileInputSource.hpp>
@@ -560,9 +566,10 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
 
         try
         {
-            URL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
-			if (urlTmp.isRelative())
-				ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+            XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
+            if (urlTmp.isRelative())
+                ThrowXML(MalformedURLException,
+                         XML4CExcepts::URL_NoProtocolPresent);
             srcToFill = new URLInputSource(urlTmp);
         }
 
