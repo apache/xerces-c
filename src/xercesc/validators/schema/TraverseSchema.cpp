@@ -3197,12 +3197,23 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // check that the base isn't a complex type with complex content
     // and that derivation method is not included in 'final'
     ComplexTypeInfo* baseTypeInfo = typeInfo->getBaseComplexTypeInfo();
+    bool simpleTypeRequired = false;
 
     if (baseTypeInfo) {
 
         if (baseTypeInfo->getContentType() != SchemaElementDecl::Simple) {
-            reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContentBase, baseName);
-            throw TraverseSchema::InvalidComplexTypeInfo;
+
+            // Schema Errata: E1-27
+            if (typeInfo->getDerivedBy() == SchemaSymbols::RESTRICTION
+                && ((baseTypeInfo->getContentType() == SchemaElementDecl::Mixed_Simple
+                    || baseTypeInfo->getContentType() == SchemaElementDecl::Mixed_Complex)
+                    && emptiableParticle(baseTypeInfo->getContentSpec()))) {
+                simpleTypeRequired = true;
+            }
+            else {
+                reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContentBase, baseName);
+                throw TraverseSchema::InvalidComplexTypeInfo;
+            }
         }
 
         if ((baseTypeInfo->getFinalSet() & typeInfo->getDerivedBy()) != 0) {
@@ -3258,6 +3269,13 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                 else {
                     throw TraverseSchema::InvalidComplexTypeInfo;
                 }
+            }
+            // Schema Errata E1-27
+            // Complex Type Definition Restriction OK: 2.2
+            else if (simpleTypeRequired) {
+
+                reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::CT_SimpleTypeChildRequired);
+                throw TraverseSchema::InvalidComplexTypeInfo;
             }
 
             // ---------------------------------------------------------------
@@ -3378,6 +3396,15 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             }
         }
         else {
+
+            // Schema Errata E1-27
+            // Complex Type Definition Restriction OK: 2.2
+            if (simpleTypeRequired) {
+
+                reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::CT_SimpleTypeChildRequired);
+                throw TraverseSchema::InvalidComplexTypeInfo;
+            }
+
             typeInfo->setDatatypeValidator(typeInfo->getBaseDatatypeValidator());
         }
     } // end RESTRICTION

@@ -304,6 +304,7 @@
             <Message Id="PrefixXMLNotMatchXMLURI" Text="The prefix 'xml' cannot be bound to any namespace other than its usual namespace."/>
             <Message Id="XMLURINotMatchXMLPrefix" Text="The namespace for 'xml' cannot be bound to any prefix other than 'xml'."/>
             <Message Id="NoXMLNSAsElementPrefix" Text="Element '{0}' cannot have 'xmlns' as its prefix."/>
+            <Message Id="CT_SimpleTypeChildRequired" Text="Complex Type Definition Representation OK - 2.2: &lt;restriction&gt; must have a &lt;simpleType&gt; child."/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">

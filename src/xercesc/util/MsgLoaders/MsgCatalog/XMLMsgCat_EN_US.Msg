@@ -292,6 +292,7 @@ $set 1
 295  The prefix 'xml' cannot be bound to any namespace other than its usual namespace.
 296  The namespace for 'xml' cannot be bound to any prefix other than 'xml'.
 297  Element '{0}' cannot have 'xmlns' as its prefix.
+298  Complex Type Definition Representation OK - 2.2: <restriction> must have a <simpleType> child.
 
 
 $set 2

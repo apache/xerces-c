@@ -4,6 +4,7 @@
 #define ERRHEADER_XMLErrs
 
 #include <xercesc/framework/XMLErrorReporter.hpp>
+#include <xercesc/util/XercesDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -310,7 +311,8 @@ public :
       , PrefixXMLNotMatchXMLURI            = 295
       , XMLURINotMatchXMLPrefix            = 296
       , NoXMLNSAsElementPrefix             = 297
-      , F_HighBounds                       = 298
+      , CT_SimpleTypeChildRequired         = 298
+      , F_HighBounds                       = 299
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)
