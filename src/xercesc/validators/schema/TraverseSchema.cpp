@@ -83,16 +83,15 @@
 #include <xercesc/internal/XMLInternalErrorHandler.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
-//#include <xercesc/parsers/IDOMParser.hpp>
 #include <xercesc/validators/schema/identity/XPathException.hpp>
 #include <xercesc/validators/schema/GeneralAttributeCheck.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
-#include <xercesc/validators/schema/XSDIDOMParser.hpp>
+#include <xercesc/validators/schema/XSDDOMParser.hpp>
 #include <xercesc/util/HashPtr.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
-#include <xercesc/idom/XSDElementNSImpl.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/impl/XSDElementNSImpl.hpp>
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
@@ -179,7 +178,7 @@ const XMLCh* fgIdentityConstraints[] =
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Constructors and Destructor
 // ---------------------------------------------------------------------------
-TraverseSchema::TraverseSchema( IDOM_Element* const    schemaRoot
+TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
                               , XMLStringPool* const   uriStringPool
                               , SchemaGrammar* const   schemaGrammar
                               , GrammarResolver* const grammarResolver
@@ -259,7 +258,7 @@ TraverseSchema::~TraverseSchema()
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Traversal methods
 // ---------------------------------------------------------------------------
-void TraverseSchema::doTraverseSchema(const IDOM_Element* const schemaRoot) {
+void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
 
     // process children nodes
     processChildren(schemaRoot);
@@ -275,7 +274,7 @@ void TraverseSchema::doTraverseSchema(const IDOM_Element* const schemaRoot) {
         for (unsigned int i=0; i < icListSize; i++) {
 
             SchemaElementDecl* curElem = fIC_Elements->elementAt(i);
-            ValueVectorOf<IDOM_Element*>* icNodes =  fIC_NodeListNS->get(curElem);
+            ValueVectorOf<DOMElement*>* icNodes =  fIC_NodeListNS->get(curElem);
             unsigned int icNodesSize = icNodes->size();
             unsigned int scopeDepth = fIC_NamespaceDepth->elementAt(i);
 
@@ -286,7 +285,7 @@ void TraverseSchema::doTraverseSchema(const IDOM_Element* const schemaRoot) {
     }
 }
 
-void TraverseSchema::preprocessSchema(IDOM_Element* const schemaRoot,
+void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
                                       const XMLCh* const schemaURL) {
 
     // Make sure namespace binding is defaulted
@@ -391,7 +390,7 @@ void TraverseSchema::preprocessSchema(IDOM_Element* const schemaRoot,
 }
 
 
-void TraverseSchema::traverseSchemaHeader(const IDOM_Element* const schemaRoot) {
+void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
 
     // -----------------------------------------------------------------------
     // Check Attributes
@@ -407,18 +406,18 @@ void TraverseSchema::traverseSchemaHeader(const IDOM_Element* const schemaRoot) 
         elemAttrDefaultQualified |= Elem_Def_Qualified;
     }
 
-    if (!XMLString::compareString(schemaRoot->getAttribute(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT), 
+    if (!XMLString::compareString(schemaRoot->getAttribute(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT),
                                   SchemaSymbols::fgATTVAL_QUALIFIED)) {
         elemAttrDefaultQualified |= Attr_Def_Qualified;
     }
 
-    fSchemaInfo->setElemAttrDefaultQualified(elemAttrDefaultQualified);    
+    fSchemaInfo->setElemAttrDefaultQualified(elemAttrDefaultQualified);
     fSchemaInfo->setBlockDefault(parseBlockSet(schemaRoot, ES_Block, true));
     fSchemaInfo->setFinalDefault(parseFinalSet(schemaRoot, ECS_Final, true));
 }
 
 
-void TraverseSchema::traverseAnnotationDecl(const IDOM_Element* const annotationElem,
+void TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
                                             const bool topLevel) {
 
     // -----------------------------------------------------------------------
@@ -429,7 +428,7 @@ void TraverseSchema::traverseAnnotationDecl(const IDOM_Element* const annotation
 
     fAttributeCheck.checkAttributes(annotationElem, scope, this);
 
-    for (IDOM_Element* child = XUtil::getFirstChildElement(annotationElem);
+    for (DOMElement* child = XUtil::getFirstChildElement(annotationElem);
          child != 0;
          child = XUtil::getNextSiblingElement(child)) {
 
@@ -456,7 +455,7 @@ void TraverseSchema::traverseAnnotationDecl(const IDOM_Element* const annotation
   *        Content: (annotation?)
   *    </include>
   */
-void TraverseSchema::preprocessInclude(const IDOM_Element* const elem) {
+void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
     // ------------------------------------------------------------------
     // Check attributes
@@ -507,9 +506,9 @@ void TraverseSchema::preprocessInclude(const IDOM_Element* const elem) {
     XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
 
     if (!fParser)
-        fParser = new XSDIDOMParser;
+        fParser = new XSDDOMParser;
 
-    fParser->setValidationScheme(IDOMParser::Val_Never);
+    fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
     fParser->setErrorHandler((ErrorHandler*) &internalErrorHandler);
     fParser->setEntityResolver(fEntityResolver);
@@ -529,11 +528,11 @@ void TraverseSchema::preprocessInclude(const IDOM_Element* const elem) {
     // ------------------------------------------------------------------
     // Get root element
     // ------------------------------------------------------------------
-    IDOM_Document* document = fParser->getDocument();
+    DOMDocument* document = fParser->getDocument();
 
     if (document) {
 
-        IDOM_Element* root = document->getDocumentElement();
+        DOMElement* root = document->getDocumentElement();
 
         if (root) {
 
@@ -577,7 +576,7 @@ void TraverseSchema::preprocessInclude(const IDOM_Element* const elem) {
 }
 
 
-void TraverseSchema::traverseInclude(const IDOM_Element* const elem) {
+void TraverseSchema::traverseInclude(const DOMElement* const elem) {
 
     SchemaInfo* includeInfo = fPreprocessedNodes->get(elem);
 
@@ -603,7 +602,7 @@ void TraverseSchema::traverseInclude(const IDOM_Element* const elem) {
   *        Content: (annotation?)
   *    </import>
   */
-void TraverseSchema::preprocessImport(const IDOM_Element* const elem) {
+void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
     // ------------------------------------------------------------------
     // Check attributes
@@ -689,9 +688,9 @@ void TraverseSchema::preprocessImport(const IDOM_Element* const elem) {
     XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
 
     if (!fParser)
-        fParser = new XSDIDOMParser;
+        fParser = new XSDDOMParser;
 
-    fParser->setValidationScheme(IDOMParser::Val_Never);
+    fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
     fParser->setErrorHandler((ErrorHandler*) &internalErrorHandler);
     fParser->setEntityResolver(fEntityResolver);
@@ -711,11 +710,11 @@ void TraverseSchema::preprocessImport(const IDOM_Element* const elem) {
     // ------------------------------------------------------------------
     // Get root element
     // ------------------------------------------------------------------
-    IDOM_Document* document = fParser->getDocument();
+    DOMDocument* document = fParser->getDocument();
 
     if (document) {
 
-        IDOM_Element* root = document->getDocumentElement();
+        DOMElement* root = document->getDocumentElement();
 
         if (!root) {
             return;
@@ -746,7 +745,7 @@ void TraverseSchema::preprocessImport(const IDOM_Element* const elem) {
 }
 
 
-void TraverseSchema::traverseImport(const IDOM_Element* const elem) {
+void TraverseSchema::traverseImport(const DOMElement* const elem) {
 
     SchemaInfo* importInfo = fPreprocessedNodes->get(elem);
 
@@ -778,7 +777,7 @@ void TraverseSchema::traverseImport(const IDOM_Element* const elem) {
   *            attributeGroup | complexType | group | simpleType))*
   *    </redefine>
   */
-void TraverseSchema::preprocessRedefine(const IDOM_Element* const redefineElem) {
+void TraverseSchema::preprocessRedefine(const DOMElement* const redefineElem) {
 
     // ------------------------------------------------------------------
     // Check attributes
@@ -819,7 +818,7 @@ void TraverseSchema::preprocessRedefine(const IDOM_Element* const redefineElem) 
     fSchemaInfo = redefiningInfo;
 }
 
-void TraverseSchema::traverseRedefine(const IDOM_Element* const redefineElem) {
+void TraverseSchema::traverseRedefine(const DOMElement* const redefineElem) {
 
     SchemaInfo* saveInfo = fSchemaInfo;
     SchemaInfo* redefinedInfo = fPreprocessedNodes->get(redefineElem);
@@ -850,7 +849,7 @@ void TraverseSchema::traverseRedefine(const IDOM_Element* const redefineElem) {
   *    </choice-sequence>
   */
 ContentSpecNode*
-TraverseSchema::traverseChoiceSequence(const IDOM_Element* const elem,
+TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
                                        const int modelGroupType)
 {
 
@@ -863,7 +862,7 @@ TraverseSchema::traverseChoiceSequence(const IDOM_Element* const elem,
     // ------------------------------------------------------------------
     // Process contents
     // ------------------------------------------------------------------
-    IDOM_Element* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOMElement* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
     ContentSpecNode* left = 0;
     ContentSpecNode* right = 0;
     bool hadContent = false;
@@ -964,14 +963,14 @@ TraverseSchema::traverseChoiceSequence(const IDOM_Element* const elem,
   *
   * traverse <list>|<restriction>|<union>
   */
-int TraverseSchema::traverseSimpleTypeDecl(const IDOM_Element* const childElem,
+int TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
                                            const bool topLevel, int baseRefContext)
 {
     // ------------------------------------------------------------------
     // Process contents
     // ------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(childElem,SchemaSymbols::fgATT_NAME);
-    bool nameEmpty = (XMLString::stringLen(name) == 0); 
+    bool nameEmpty = (XMLString::stringLen(name) == 0);
 
     if (topLevel && nameEmpty) {
         reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameGlobalElement,
@@ -1022,7 +1021,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const IDOM_Element* const childElem,
     int finalSet = parseFinalSet(childElem, S_Final);
 
     // annotation?,(list|restriction|union)
-    IDOM_Element* content= checkContent(childElem,
+    DOMElement* content= checkContent(childElem,
                                       XUtil::getFirstChildElement(childElem),
                                       false);
 
@@ -1079,7 +1078,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const IDOM_Element* const childElem,
   *                   ( (attribute | attributeGroup)* , anyAttribute?))))
   *     </complexType>
   */
-int TraverseSchema::traverseComplexTypeDecl(const IDOM_Element* const elem,
+int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
                                             const bool topLevel,
                                             const XMLCh* const recursingTypeName) {
 
@@ -1175,7 +1174,7 @@ int TraverseSchema::traverseComplexTypeDecl(const IDOM_Element* const elem,
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration and get next child
     // ------------------------------------------------------------------
-    IDOM_Element* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOMElement* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     // ------------------------------------------------------------------
     // Process the content of the complex type declaration
@@ -1280,7 +1279,7 @@ int TraverseSchema::traverseComplexTypeDecl(const IDOM_Element* const elem,
   *
   */
 XercesGroupInfo*
-TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem,
+TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
                                   const bool topLevel) {
 
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
@@ -1309,7 +1308,7 @@ TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem,
     // ------------------------------------------------------------------
     // Check for annotations
     // ------------------------------------------------------------------
-    IDOM_Element* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     // ------------------------------------------------------------------
     // Handle "ref="
@@ -1417,7 +1416,7 @@ TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem,
 
             fBuffer.set(fullName);
             fBuffer.append(SchemaSymbols::fgRedefIdentifier);
-            groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));            
+            groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));
         }
     }
 
@@ -1437,7 +1436,7 @@ TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem,
   *
   */
 XercesAttGroupInfo*
-TraverseSchema::traverseAttributeGroupDecl(const IDOM_Element* const elem,
+TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
                                            ComplexTypeInfo* const typeInfo,
                                            const bool topLevel) {
 
@@ -1489,7 +1488,7 @@ TraverseSchema::traverseAttributeGroupDecl(const IDOM_Element* const elem,
     // ------------------------------------------------------------------
     // Check for annotations
     // ------------------------------------------------------------------
-    IDOM_Element* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     // ------------------------------------------------------------------
     // Process contents of global attributeGroups
@@ -1562,7 +1561,7 @@ TraverseSchema::traverseAttributeGroupDecl(const IDOM_Element* const elem,
 
 
 inline XercesAttGroupInfo*
-TraverseSchema::traverseAttributeGroupDeclNS(const IDOM_Element* const elem,
+TraverseSchema::traverseAttributeGroupDeclNS(const DOMElement* const elem,
                                              const XMLCh* const uriStr,
                                              const XMLCh* const name) {
 
@@ -1597,7 +1596,7 @@ TraverseSchema::traverseAttributeGroupDeclNS(const IDOM_Element* const elem,
   *     </any>
   */
 ContentSpecNode*
-TraverseSchema::traverseAny(const IDOM_Element* const elem) {
+TraverseSchema::traverseAny(const DOMElement* const elem) {
 
     // -----------------------------------------------------------------------
     // Check Attributes
@@ -1725,7 +1724,7 @@ TraverseSchema::traverseAny(const IDOM_Element* const elem) {
   *     </all>
   */
 ContentSpecNode*
-TraverseSchema::traverseAll(const IDOM_Element* const elem) {
+TraverseSchema::traverseAll(const DOMElement* const elem) {
 
     // ------------------------------------------------------------------
     // Check attributes
@@ -1736,7 +1735,7 @@ TraverseSchema::traverseAll(const IDOM_Element* const elem) {
     // ------------------------------------------------------------------
     // Process contents
     // ------------------------------------------------------------------
-    IDOM_Element* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOMElement* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     if (child == 0) {
         return 0;
@@ -1811,7 +1810,7 @@ TraverseSchema::traverseAll(const IDOM_Element* const elem) {
   *                     the attribute declaration is attached.
   *
   */
-void TraverseSchema::traverseAttributeDecl(const IDOM_Element* const elem,
+void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                                            ComplexTypeInfo* const typeInfo,
                                            const bool topLevel) {
 
@@ -1843,7 +1842,7 @@ void TraverseSchema::traverseAttributeDecl(const IDOM_Element* const elem,
     const XMLCh* useVal = getElementAttValue(elem, SchemaSymbols::fgATT_USE);
     const XMLCh* attForm = getElementAttValue(elem, SchemaSymbols::fgATT_FORM);
     const XMLCh* dvType = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE);
-    IDOM_Element* simpleType = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOMElement* simpleType = checkContent(elem, XUtil::getFirstChildElement(elem), true);
     bool         badContent = false;
 
     while (simpleType != 0) {
@@ -1988,7 +1987,7 @@ void TraverseSchema::traverseAttributeDecl(const IDOM_Element* const elem,
 
                 if (dv == 0 && XMLString::stringLen(typeURI) == 0) {
 
-                    IDOM_Element* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+                    DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
                     if (topLevelType != 0) {
 
@@ -2009,7 +2008,7 @@ void TraverseSchema::traverseAttributeDecl(const IDOM_Element* const elem,
 
             if (dv == 0 && !XMLString::compareString(typeURI, fTargetNSURIString)) {
 
-                IDOM_Element* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+                DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
                 if (topLevelType != 0) {
 
@@ -2169,7 +2168,7 @@ void TraverseSchema::traverseAttributeDecl(const IDOM_Element* const elem,
   *
   * @param elem:  the declaration of the element under consideration
   */
-QName* TraverseSchema::traverseElementDecl(const IDOM_Element* const elem,
+QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                                            const bool topLevel) {
 
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
@@ -2271,7 +2270,7 @@ QName* TraverseSchema::traverseElementDecl(const IDOM_Element* const elem,
     }
 
     // Resolve the type for the element
-    const IDOM_Element*  content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    const DOMElement*  content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     if (content != 0) {
 
@@ -2570,9 +2569,9 @@ QName* TraverseSchema::traverseElementDecl(const IDOM_Element* const elem,
         }
 
         // key/keyref/unique processing
-        IDOM_Element* ic = XUtil::getFirstChildElementNS(elem, fgIdentityConstraints,
+        DOMElement* ic = XUtil::getFirstChildElementNS(elem, fgIdentityConstraints,
                                                          SchemaSymbols::fgURI_SCHEMAFORSCHEMA, 3);
-        ValueVectorOf<IDOM_Element*>* icNodes = 0;
+        ValueVectorOf<DOMElement*>* icNodes = 0;
 
         while (ic != 0) {
 
@@ -2585,7 +2584,7 @@ QName* TraverseSchema::traverseElementDecl(const IDOM_Element* const elem,
             else {
 
                 if (!icNodes) {
-                    icNodes = new ValueVectorOf<IDOM_Element*>(8);
+                    icNodes = new ValueVectorOf<DOMElement*>(8);
                 }
 
                 icNodes->addElement(ic);
@@ -2601,7 +2600,7 @@ QName* TraverseSchema::traverseElementDecl(const IDOM_Element* const elem,
 
                 fIC_ElementsNS = new RefHashTableOf<ElemVector>(13);
                 fIC_NamespaceDepthNS = new RefHashTableOf<ValueVectorOf<unsigned int> >(13);
-                fIC_NodeListNS = new RefHashTableOf<ValueVectorOf<IDOM_Element*> >(29, true, new HashPtr());
+                fIC_NodeListNS = new RefHashTableOf<ValueVectorOf<DOMElement*> >(29, true, new HashPtr());
             }
 
             if (fIC_ElementsNS->containsKey(fTargetNSURIString)) {
@@ -2627,7 +2626,7 @@ QName* TraverseSchema::traverseElementDecl(const IDOM_Element* const elem,
     return new QName(elemDecl->getElementName());
 }
 
-const XMLCh* TraverseSchema::traverseNotationDecl(const IDOM_Element* const elem) {
+const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) {
 
     // ------------------------------------------------------------------
     // Check attributes
@@ -2657,7 +2656,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const IDOM_Element* const elem
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Notation_InvalidDecl, name);
     }
 
-    fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), 
+    fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)),
                            fTargetNSURI, 0);
 
     //we don't really care if something inside <notation> is wrong..
@@ -2666,7 +2665,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const IDOM_Element* const elem
     return name;
 }
 
-const XMLCh* TraverseSchema::traverseNotationDecl(const IDOM_Element* const elem,
+const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem,
                                                   const XMLCh* const name,
                                                   const XMLCh* const uriStr) {
 
@@ -2706,7 +2705,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const IDOM_Element* const elem
         fTargetNSURI = fSchemaInfo->getTargetNSURI();
     }
 
-    IDOM_Element* notationElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_NOTATION, name, &fSchemaInfo);
+    DOMElement* notationElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_NOTATION, name, &fSchemaInfo);
 
     if (notationElem == 0) {
 
@@ -2722,8 +2721,8 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const IDOM_Element* const elem
     return notationName;
 }
 
-int TraverseSchema::traverseByList(const IDOM_Element* const rootElem,
-                                   const IDOM_Element* const contentElem,
+int TraverseSchema::traverseByList(const DOMElement* const rootElem,
+                                   const DOMElement* const contentElem,
                                    const int typeNameIndex,
                                    const int finalSet) {
 
@@ -2735,7 +2734,7 @@ int TraverseSchema::traverseByList(const IDOM_Element* const rootElem,
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
     }
 
-    IDOM_Element*      content = 0;
+    DOMElement*      content = 0;
 
     if (XMLString::stringLen(baseTypeName) == 0) { // must 'see' <simpleType>
 
@@ -2808,8 +2807,8 @@ int TraverseSchema::traverseByList(const IDOM_Element* const rootElem,
     return resetCurrentTypeNameStack(strId);
 }
 
-int TraverseSchema::traverseByRestriction(const IDOM_Element* const rootElem,
-                                          const IDOM_Element* const contentElem,
+int TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
+                                          const DOMElement* const contentElem,
                                           const int typeNameIndex,
                                           const int finalSet) {
 
@@ -2821,7 +2820,7 @@ int TraverseSchema::traverseByRestriction(const IDOM_Element* const rootElem,
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
     }
 
-    IDOM_Element* content = 0;
+    DOMElement* content = 0;
 
     if (XMLString::stringLen(baseTypeName) == 0) { // must 'see' <simpleType>
 
@@ -2864,7 +2863,7 @@ int TraverseSchema::traverseByRestriction(const IDOM_Element* const rootElem,
 
     while (content != 0) {
 
-        if (content->getNodeType() == IDOM_Node::ELEMENT_NODE) {
+        if (content->getNodeType() == DOMNode::ELEMENT_NODE) {
 
             const XMLCh* facetName = content->getLocalName();
             const XMLCh* attValue = content->getAttribute(SchemaSymbols::fgATT_VALUE);
@@ -2988,8 +2987,8 @@ int TraverseSchema::traverseByRestriction(const IDOM_Element* const rootElem,
 }
 
 
-int TraverseSchema::traverseByUnion(const IDOM_Element* const rootElem,
-                                    const IDOM_Element* const contentElem,
+int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
+                                    const DOMElement* const contentElem,
                                     const int typeNameIndex,
                                     const int finalSet,
                                     int baseRefContext) {
@@ -3004,7 +3003,7 @@ int TraverseSchema::traverseByUnion(const IDOM_Element* const rootElem,
     DatatypeValidator*              baseValidator = 0;
     RefVectorOf<DatatypeValidator>* validators = new RefVectorOf<DatatypeValidator>(4, false);
     Janitor<DVRefVector>            janValidators(validators);
-    IDOM_Element*                   content = 0;
+    DOMElement*                   content = 0;
 
     if (XMLString::stringLen(baseTypeName)) { //base was provided - get proper validator.
 
@@ -3123,7 +3122,7 @@ int TraverseSchema::traverseByUnion(const IDOM_Element* const rootElem,
   *
   */
 void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
-                                               const IDOM_Element* const contentDecl,
+                                               const DOMElement* const contentDecl,
                                                ComplexTypeInfo* const typeInfo)
 {
     // -----------------------------------------------------------------------
@@ -3137,7 +3136,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     typeInfo->setContentType(SchemaElementDecl::Simple);
 
-    IDOM_Element* simpleContent = checkContent(contentDecl, XUtil::getFirstChildElement(contentDecl), false);
+    DOMElement* simpleContent = checkContent(contentDecl, XUtil::getFirstChildElement(contentDecl), false);
 
     // If there are no children, return
     if (simpleContent == 0) {
@@ -3227,7 +3226,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // Process the content of the derivation
     // -----------------------------------------------------------------------
     //Skip over any annotations in the restriction or extension elements
-    IDOM_Element* content = checkContent(simpleContent, XUtil::getFirstChildElement(simpleContent), true);
+    DOMElement* content = checkContent(simpleContent, XUtil::getFirstChildElement(simpleContent), true);
 
     if (typeInfo->getDerivedBy() == SchemaSymbols::RESTRICTION) {
 
@@ -3294,7 +3293,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     break;
                 }
 
-                if (content->getNodeType() == IDOM_Node::ELEMENT_NODE) {
+                if (content->getNodeType() == DOMNode::ELEMENT_NODE) {
 
                     fAttributeCheck.checkAttributes(content, scope, this);
 
@@ -3332,7 +3331,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         }
                         else {
 
-                            const XMLCh* facetNameStr = 
+                            const XMLCh* facetNameStr =
                                 fStringPool->getValueForId(fStringPool->addOrFind(facetName));
 
                             facets->put((void*) facetNameStr, new KVStringPair(facetNameStr, attValue));
@@ -3447,7 +3446,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
   *   </extension>
   */
 void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
-                                                const IDOM_Element* const contentDecl,
+                                                const DOMElement* const contentDecl,
                                                 ComplexTypeInfo* const typeInfo,
                                                 const bool isMixed)
 {
@@ -3482,7 +3481,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     typeInfo->setDatatypeValidator(0);
     typeInfo->setBaseDatatypeValidator(0);
 
-    IDOM_Element* complexContent = checkContent(contentDecl,XUtil::getFirstChildElement(contentDecl),false);
+    DOMElement* complexContent = checkContent(contentDecl,XUtil::getFirstChildElement(contentDecl),false);
 
     // If there are no children, return
     if (complexContent == 0) {
@@ -3548,7 +3547,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // Process the content of the derivation
     // -----------------------------------------------------------------------
     //Skip over any annotations in the restriction or extension elements
-    IDOM_Element* content = checkContent(complexContent, XUtil::getFirstChildElement(complexContent), true);
+    DOMElement* content = checkContent(complexContent, XUtil::getFirstChildElement(complexContent), true);
 
     processComplexContent(complexContent, typeName, content, typeInfo, baseName, localPart,
                           uri, mixedContent, isBaseAnyType);
@@ -3567,7 +3566,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
   *   Content: (annotation?)
   * </anyAttribute>
   */
-SchemaAttDef* TraverseSchema::traverseAnyAttribute(const IDOM_Element* const elem) {
+SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem) {
 
     // -----------------------------------------------------------------------
     // Check Attributes
@@ -3674,7 +3673,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const IDOM_Element* const ele
   *   Content: (annotation?, (selector, field+))
   * </key>
   */
-void TraverseSchema::traverseKey(const IDOM_Element* const icElem,
+void TraverseSchema::traverseKey(const DOMElement* const icElem,
                                  SchemaElementDecl* const elemDecl) {
 
     // -----------------------------------------------------------------------
@@ -3737,7 +3736,7 @@ void TraverseSchema::traverseKey(const IDOM_Element* const icElem,
   *   Content: (annotation?, (selector, field+))
   * </unique>
   */
-void TraverseSchema::traverseUnique(const IDOM_Element* const icElem,
+void TraverseSchema::traverseUnique(const DOMElement* const icElem,
                                     SchemaElementDecl* const elemDecl) {
 
     // -----------------------------------------------------------------------
@@ -3800,7 +3799,7 @@ void TraverseSchema::traverseUnique(const IDOM_Element* const icElem,
   *   Content: (annotation?, (selector, field+))
   * </keyref>
   */
-void TraverseSchema::traverseKeyRef(const IDOM_Element* const icElem,
+void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
                                     SchemaElementDecl* const elemDecl,
                                     const unsigned int namespaceDepth) {
 
@@ -3878,13 +3877,13 @@ void TraverseSchema::traverseKeyRef(const IDOM_Element* const icElem,
 
 
 bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
-                                                const IDOM_Element* const icElem) {
+                                                const DOMElement* const icElem) {
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
     // ------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    IDOM_Element* elem = checkContent(icElem, XUtil::getFirstChildElement(icElem), false);
+    DOMElement* elem = checkContent(icElem, XUtil::getFirstChildElement(icElem), false);
 
     // ------------------------------------------------------------------
     // Get selector
@@ -3919,7 +3918,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     fBuffer.reset();
 
     unsigned int startIndex = 0;
-    	 
+    	
     while (startIndex < xpathLen) {
 
         if (!XMLString::startsWith(xpathExpr + startIndex, fgForwardSlash)
@@ -3933,7 +3932,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
             break;
 
         fBuffer.append(xpathExpr + startIndex, chOffset + 1 - startIndex);
-        startIndex = chOffset + 1;    
+        startIndex = chOffset + 1;
     }
 
     if (startIndex < xpathLen)
@@ -4020,15 +4019,15 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Helper methods
 // ---------------------------------------------------------------------------
-void TraverseSchema::retrieveNamespaceMapping(const IDOM_Element* const schemaRoot) {
+void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot) {
 
-    IDOM_NamedNodeMap* schemaEltAttrs = schemaRoot->getAttributes();
+    DOMNamedNodeMap* schemaEltAttrs = schemaRoot->getAttributes();
     bool seenXMLNS = false;
     int attrCount = schemaEltAttrs->getLength();
 
     for (int i = 0; i < attrCount; i++) {
 
-        IDOM_Node* attribute = schemaEltAttrs->item(i);
+        DOMNode* attribute = schemaEltAttrs->item(i);
 
         if (!attribute) {
             break;
@@ -4057,10 +4056,10 @@ void TraverseSchema::retrieveNamespaceMapping(const IDOM_Element* const schemaRo
     }
 }
 
-void TraverseSchema::processChildren(const IDOM_Element* const root) {
+void TraverseSchema::processChildren(const DOMElement* const root) {
 
     // process <redefine>, <include> and <import> info items.
-    IDOM_Element* child = XUtil::getFirstChildElement(root);
+    DOMElement* child = XUtil::getFirstChildElement(root);
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
@@ -4214,7 +4213,7 @@ void TraverseSchema::processChildren(const IDOM_Element* const root) {
     } // for each child node
 
     // Handle recursing elements - if any
-    ValueVectorOf<const IDOM_Element*>* recursingAnonTypes = fSchemaInfo->getRecursingAnonTypes();
+    ValueVectorOf<const DOMElement*>* recursingAnonTypes = fSchemaInfo->getRecursingAnonTypes();
 
     if (recursingAnonTypes) {
 
@@ -4231,10 +4230,10 @@ void TraverseSchema::processChildren(const IDOM_Element* const root) {
     }
 }
 
-void TraverseSchema::preprocessChildren(const IDOM_Element* const root) {
+void TraverseSchema::preprocessChildren(const DOMElement* const root) {
 
     // process <redefine>, <include> and <import> info items.
-    IDOM_Element* child = XUtil::getFirstChildElement(root);
+    DOMElement* child = XUtil::getFirstChildElement(root);
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
@@ -4258,11 +4257,11 @@ void TraverseSchema::preprocessChildren(const IDOM_Element* const root) {
 }
 
 
-IDOM_Element* TraverseSchema::checkContent(const IDOM_Element* const rootElem,
-                                           IDOM_Element* const contentElem,
+DOMElement* TraverseSchema::checkContent(const DOMElement* const rootElem,
+                                           DOMElement* const contentElem,
                                            const bool isEmpty) {
 
-    IDOM_Element* content = contentElem;
+    DOMElement* content = contentElem;
     const XMLCh* name = getElementAttValue(rootElem,SchemaSymbols::fgATT_NAME);
 
     if (!content) {
@@ -4333,7 +4332,7 @@ XMLCh* TraverseSchema::getQualifiedName(const int typeNameIndex) {
 
 
 DatatypeValidator*
-TraverseSchema::checkForSimpleTypeValidator(const IDOM_Element* const content,
+TraverseSchema::checkForSimpleTypeValidator(const DOMElement* const content,
                                             int baseRefContext) {
 
     int typeNameIndex = traverseSimpleTypeDecl(content, false, baseRefContext);
@@ -4353,7 +4352,7 @@ TraverseSchema::checkForSimpleTypeValidator(const IDOM_Element* const content,
 }
 
 ComplexTypeInfo*
-TraverseSchema::checkForComplexTypeInfo(const IDOM_Element* const content) {
+TraverseSchema::checkForComplexTypeInfo(const DOMElement* const content) {
 
     int typeNameIndex = traverseComplexTypeDecl(content, false);
     ComplexTypeInfo* baseTypeInfo = 0;
@@ -4372,7 +4371,7 @@ TraverseSchema::checkForComplexTypeInfo(const IDOM_Element* const content) {
 }
 
 DatatypeValidator*
-TraverseSchema::findDTValidator(const IDOM_Element* const elem,
+TraverseSchema::findDTValidator(const DOMElement* const elem,
                                 const XMLCh* const derivedTypeName,
                                 const XMLCh* const baseTypeName,
                                 const int baseRefContext) {
@@ -4385,7 +4384,7 @@ TraverseSchema::findDTValidator(const IDOM_Element* const elem,
     if (baseValidator == 0) {
 
         SchemaInfo* saveInfo = fSchemaInfo;
-        IDOM_Element* baseTypeNode =
+        DOMElement* baseTypeNode =
             fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
         if (baseTypeNode != 0) {
@@ -4416,7 +4415,7 @@ TraverseSchema::findDTValidator(const IDOM_Element* const elem,
 }
 
 
-const XMLCh* TraverseSchema::resolvePrefixToURI(const IDOM_Element* const elem,
+const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
                                                 const XMLCh* const prefix) {
 
     int nameSpaceIndex = fNamespaceScope->getNamespaceForPrefix(prefix, fSchemaInfo->getNamespaceScopeLevel());
@@ -4430,7 +4429,7 @@ const XMLCh* TraverseSchema::resolvePrefixToURI(const IDOM_Element* const elem,
     return uriStr;
 }
 
-const XMLCh* TraverseSchema::resolvePrefixToURI(const IDOM_Element* const elem,
+const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
                                                 const XMLCh* const prefix,
                                                 const unsigned int namespaceDepth) {
 
@@ -4446,10 +4445,10 @@ const XMLCh* TraverseSchema::resolvePrefixToURI(const IDOM_Element* const elem,
 }
 
 
-QName* TraverseSchema::processElementDeclRef(const IDOM_Element* const elem,
+QName* TraverseSchema::processElementDeclRef(const DOMElement* const elem,
                                              const XMLCh* const refName) {
 
-    IDOM_Element* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     if (content != 0) {
         reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::NoContentForRef, SchemaSymbols::fgELT_ELEMENT);
@@ -4475,7 +4474,7 @@ QName* TraverseSchema::processElementDeclRef(const IDOM_Element* const elem,
     if (!refElemDecl) {
 
         SchemaInfo* saveInfo = fSchemaInfo;
-        IDOM_Element* targetElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ELEMENT, localPart, &fSchemaInfo);
+        DOMElement* targetElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ELEMENT, localPart, &fSchemaInfo);
 
         if (targetElem == 0)  {
 
@@ -4507,7 +4506,7 @@ QName* TraverseSchema::processElementDeclRef(const IDOM_Element* const elem,
     return eltName;
 }
 
-int TraverseSchema::parseBlockSet(const IDOM_Element* const elem,
+int TraverseSchema::parseBlockSet(const DOMElement* const elem,
                                   const int blockType, const bool isRoot) {
 
     const XMLCh* blockVal = (isRoot) ? getElementAttValue(elem, SchemaSymbols::fgATT_BLOCKDEFAULT)
@@ -4567,7 +4566,7 @@ int TraverseSchema::parseBlockSet(const IDOM_Element* const elem,
     return (blockSet == 0 ? fSchemaInfo->getBlockDefault() : blockSet);
 }
 
-int TraverseSchema::parseFinalSet(const IDOM_Element* const elem,
+int TraverseSchema::parseFinalSet(const DOMElement* const elem,
                                   const int finalType, const bool isRoot) {
 
     const XMLCh* finalVal = (isRoot) ? getElementAttValue(elem, SchemaSymbols::fgATT_FINALDEFAULT)
@@ -4640,10 +4639,10 @@ int TraverseSchema::parseFinalSet(const IDOM_Element* const elem,
 }
 
 
-const IDOM_Element*
-TraverseSchema::checkIdentityConstraintContent(const IDOM_Element* const content) {
+const DOMElement*
+TraverseSchema::checkIdentityConstraintContent(const DOMElement* const content) {
 
-    const IDOM_Element* child = content;
+    const DOMElement* child = content;
 
     if (child != 0) {
 
@@ -4669,7 +4668,7 @@ bool TraverseSchema::isIdentityConstraintName(const XMLCh* const name) {
 }
 
 const XMLCh*
-TraverseSchema::checkTypeFromAnotherSchema(const IDOM_Element* const elem,
+TraverseSchema::checkTypeFromAnotherSchema(const DOMElement* const elem,
 										   const XMLCh* const typeStr) {
 
     const XMLCh* prefix = getPrefix(typeStr);
@@ -4685,7 +4684,7 @@ TraverseSchema::checkTypeFromAnotherSchema(const IDOM_Element* const elem,
 }
 
 DatatypeValidator*
-TraverseSchema::getElementTypeValidator(const IDOM_Element* const elem,
+TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
                                         const XMLCh* const typeStr,
                                         bool& noErrorDetected,
                                         const XMLCh* const otherSchemaURI)
@@ -4740,7 +4739,7 @@ TraverseSchema::getElementTypeValidator(const IDOM_Element* const elem,
             || XMLString::compareString(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
 
             SchemaInfo* saveInfo = fSchemaInfo;
-            IDOM_Element* typeElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+            DOMElement* typeElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
             if (typeElem != 0 && traverseSimpleTypeDecl(typeElem) != -1) {
                 dv = getDatatypeValidator(typeURI, localPart);
@@ -4764,7 +4763,7 @@ TraverseSchema::getElementTypeValidator(const IDOM_Element* const elem,
 
 
 ComplexTypeInfo*
-TraverseSchema::getElementComplexTypeInfo(const IDOM_Element* const elem,
+TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
                                           const XMLCh* const typeStr,
                                           bool& noErrorDetected,
                                           const XMLCh* const otherSchemaURI)
@@ -4821,7 +4820,7 @@ TraverseSchema::getElementComplexTypeInfo(const IDOM_Element* const elem,
         if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0 ||
             XMLString::compareString(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
 
-            IDOM_Element* typeNode = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
+            DOMElement* typeNode = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
 
             if (typeNode) {
 
@@ -4839,7 +4838,7 @@ TraverseSchema::getElementComplexTypeInfo(const IDOM_Element* const elem,
 
 
 SchemaElementDecl*
-TraverseSchema::getSubstituteGroupElemDecl(const IDOM_Element* const elem,
+TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
                                            const XMLCh* const name,
                                            bool& noErrorDetected) {
 
@@ -4896,7 +4895,7 @@ TraverseSchema::getSubstituteGroupElemDecl(const IDOM_Element* const elem,
 
     if (!elemDecl) {
 
-        IDOM_Element* subsGroupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ELEMENT,localPart, &fSchemaInfo);
+        DOMElement* subsGroupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ELEMENT,localPart, &fSchemaInfo);
 
         if (subsGroupElem != 0) {
 
@@ -4928,7 +4927,7 @@ TraverseSchema::getSubstituteGroupElemDecl(const IDOM_Element* const elem,
 }
 
 bool
-TraverseSchema::isSubstitutionGroupValid(const IDOM_Element* const elem,
+TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
                                          const SchemaElementDecl* const subsElemDecl,
                                          const ComplexTypeInfo* const typeInfo,
                                          const DatatypeValidator* const validator,
@@ -5020,7 +5019,7 @@ TraverseSchema::isSubstitutionGroupValid(const IDOM_Element* const elem,
 
 
 SchemaElementDecl*
-TraverseSchema::createSchemaElementDecl(const IDOM_Element* const elem,
+TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
                                         const bool topLevel,
                                         const unsigned short elemType,
                                         bool& isDuplicate,
@@ -5095,7 +5094,7 @@ TraverseSchema::createSchemaElementDecl(const IDOM_Element* const elem,
 }
 
 
-void TraverseSchema::processAttributeDeclRef(const IDOM_Element* const elem,
+void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                                              ComplexTypeInfo* const typeInfo,
                                              const XMLCh* const refName,
                                              const XMLCh* const useAttr,
@@ -5173,7 +5172,7 @@ void TraverseSchema::processAttributeDeclRef(const IDOM_Element* const elem,
 		
         if (fAttributeDeclRegistry->containsKey(localPart) == false) {
 
-            IDOM_Element* referredAttribute =
+            DOMElement* referredAttribute =
                 fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ATTRIBUTE, localPart, &fSchemaInfo);
 
             if (referredAttribute != 0) {
@@ -5313,7 +5312,7 @@ void TraverseSchema::processAttributeDeclRef(const IDOM_Element* const elem,
 
 
 void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
-                                 const IDOM_Element* const elem,
+                                 const DOMElement* const elem,
                                  const int allContextFlag) {
 
     int minOccurs = 1;
@@ -5421,9 +5420,9 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
 }
 
 
-void TraverseSchema::processComplexContent(const IDOM_Element* const ctElem,
+void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                                            const XMLCh* const typeName,
-                                           const IDOM_Element* const childElem,
+                                           const DOMElement* const childElem,
                                            ComplexTypeInfo* const typeInfo,
                                            const XMLCh* const baseRawName,
                                            const XMLCh* const baseLocalPart,
@@ -5432,7 +5431,7 @@ void TraverseSchema::processComplexContent(const IDOM_Element* const ctElem,
                                            const bool isBaseAnyType) {
 
     ContentSpecNode*    specNode = 0;
-    const IDOM_Element* attrNode = 0;
+    const DOMElement* attrNode = 0;
     int                 typeDerivedBy = typeInfo->getDerivedBy();
     ComplexTypeInfo*    baseTypeInfo = typeInfo->getBaseComplexTypeInfo();
     int baseContentType = (baseTypeInfo) ? baseTypeInfo->getContentType() : SchemaElementDecl::Empty;
@@ -5459,7 +5458,7 @@ void TraverseSchema::processComplexContent(const IDOM_Element* const ctElem,
             }
 
             // Check for derivation valid (extension) - 1.4.2.2
-            if (baseContentType != SchemaElementDecl::Empty 
+            if (baseContentType != SchemaElementDecl::Empty
                 && baseContentType != SchemaElementDecl::Simple) {
                 if ((isMixed && baseContentType == SchemaElementDecl::Children)
                     || (!isMixed && baseContentType != SchemaElementDecl::Children)) {
@@ -5674,7 +5673,7 @@ void TraverseSchema::processComplexContent(const IDOM_Element* const ctElem,
 }
 
 
-void TraverseSchema::processBaseTypeInfo(const IDOM_Element* const elem,
+void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
                                          const XMLCh* const baseName,
                                          const XMLCh* const localPart,
                                          const XMLCh* const uriStr,
@@ -5755,7 +5754,7 @@ void TraverseSchema::processBaseTypeInfo(const IDOM_Element* const elem,
 
         if (baseDTValidator == 0) {
 
-            IDOM_Element* baseTypeNode =
+            DOMElement* baseTypeNode =
                 fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
 
             if (baseTypeNode != 0) {
@@ -5806,7 +5805,7 @@ void TraverseSchema::processBaseTypeInfo(const IDOM_Element* const elem,
 }
 
 
-ComplexTypeInfo* TraverseSchema::getTypeInfoFromNS(const IDOM_Element* const elem,
+ComplexTypeInfo* TraverseSchema::getTypeInfoFromNS(const DOMElement* const elem,
                                                    const XMLCh* const uriStr,
                                                    const XMLCh* const localPart)
 {
@@ -5854,8 +5853,8 @@ bool TraverseSchema::isValidFacet(const XMLCh* const component,
 }
 
 
-void TraverseSchema::processAttributes(const IDOM_Element* const elem,
-                                       const IDOM_Element* const attElem,
+void TraverseSchema::processAttributes(const DOMElement* const elem,
+                                       const DOMElement* const attElem,
                                        const XMLCh* const baseRawName,
                                        const XMLCh* const baseLocalPart,
                                        const XMLCh* const baseURI,
@@ -5868,7 +5867,7 @@ void TraverseSchema::processAttributes(const IDOM_Element* const elem,
         return;
     }
 
-    const IDOM_Element* child = attElem;
+    const DOMElement* child = attElem;
     SchemaAttDef* attWildCard = 0;
     Janitor<SchemaAttDef> janAttWildCard(0);
     XercesAttGroupInfo* attGroupInfo = 0;
@@ -6164,7 +6163,7 @@ TraverseSchema::emptiableParticle(const ContentSpecNode* const specNode) {
     return false;
 }
 
-void TraverseSchema::checkFixedFacet(const IDOM_Element* const elem,
+void TraverseSchema::checkFixedFacet(const DOMElement* const elem,
                                      const XMLCh* const facetName,
                                      const DatatypeValidator* const baseDV,
                                      unsigned int& flags)
@@ -6207,7 +6206,7 @@ void TraverseSchema::checkFixedFacet(const IDOM_Element* const elem,
 }
 
 void
-TraverseSchema::buildValidSubstitutionListB(const IDOM_Element* const elem,
+TraverseSchema::buildValidSubstitutionListB(const DOMElement* const elem,
                                             SchemaElementDecl* const elemDecl,
                                             SchemaElementDecl* const subsElemDecl) {
 
@@ -6276,7 +6275,7 @@ TraverseSchema::buildValidSubstitutionListB(const IDOM_Element* const elem,
 }
 
 void
-TraverseSchema::buildValidSubstitutionListF(const IDOM_Element* const elem,
+TraverseSchema::buildValidSubstitutionListF(const DOMElement* const elem,
                                             SchemaElementDecl* const elemDecl,
                                             SchemaElementDecl* const subsElemDecl) {
 
@@ -6331,7 +6330,7 @@ TraverseSchema::buildValidSubstitutionListF(const IDOM_Element* const elem,
     }
 }
 
-void TraverseSchema::checkEnumerationRequiredNotation(const IDOM_Element* const elem,
+void TraverseSchema::checkEnumerationRequiredNotation(const DOMElement* const elem,
                                                       const XMLCh* const name,
                                                       const XMLCh* const type) {
 
@@ -6342,7 +6341,7 @@ void TraverseSchema::checkEnumerationRequiredNotation(const IDOM_Element* const 
     }
 }
 
-XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
+XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
                                                  const XMLCh* const refName) {
 
     if (XUtil::getFirstChildElement(elem) != 0) {
@@ -6415,7 +6414,7 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
 
     if (!groupInfo) {
 
-        IDOM_Element* groupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_GROUP, localPart, &fSchemaInfo);
+        DOMElement* groupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_GROUP, localPart, &fSchemaInfo);
 
         if (groupElem != 0) {
 
@@ -6450,7 +6449,7 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
 
 
 XercesAttGroupInfo*
-TraverseSchema::processAttributeGroupRef(const IDOM_Element* const elem,
+TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
                                          const XMLCh* const refName,
                                          ComplexTypeInfo* const typeInfo) {
 
@@ -6498,10 +6497,10 @@ TraverseSchema::processAttributeGroupRef(const IDOM_Element* const elem,
     else {
 
         // circular check
-        IDOM_Node* parentElem = elem->getParentNode();
+        DOMNode* parentElem = elem->getParentNode();
 
         if (XMLString::compareString(parentElem->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP) == 0
-            && !XMLString::compareString(((IDOM_Element*) parentElem)->getAttribute(SchemaSymbols::fgATT_NAME), localPart)
+            && !XMLString::compareString(((DOMElement*) parentElem)->getAttribute(SchemaSymbols::fgATT_NAME), localPart)
             && XMLString::compareString(parentElem->getParentNode()->getLocalName(), SchemaSymbols::fgELT_REDEFINE)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularAttGroup);
@@ -6514,7 +6513,7 @@ TraverseSchema::processAttributeGroupRef(const IDOM_Element* const elem,
     if (!attGroupInfo) {
 
         // traverse top level attributeGroup - if found
-        IDOM_Element* attGroupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ATTRIBUTEGROUP, localPart, &fSchemaInfo);
+        DOMElement* attGroupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ATTRIBUTEGROUP, localPart, &fSchemaInfo);
 
         if (attGroupElem != 0) {
 
@@ -6549,7 +6548,7 @@ TraverseSchema::processAttributeGroupRef(const IDOM_Element* const elem,
     return attGroupInfo;
 }
 
-void TraverseSchema::processElements(const IDOM_Element* const elem,
+void TraverseSchema::processElements(const DOMElement* const elem,
                                      ComplexTypeInfo* const baseTypeInfo,
                                      ComplexTypeInfo* const newTypeInfo) {
 
@@ -6603,7 +6602,7 @@ void TraverseSchema::processElements(const IDOM_Element* const elem,
 }
 
 
-void TraverseSchema::copyGroupElements(const IDOM_Element* const elem,
+void TraverseSchema::copyGroupElements(const DOMElement* const elem,
                                        XercesGroupInfo* const fromGroup,
                                        XercesGroupInfo* const toGroup,
                                        ComplexTypeInfo* const typeInfo) {
@@ -6653,7 +6652,7 @@ void TraverseSchema::copyGroupElements(const IDOM_Element* const elem,
     }
 }
 
-void TraverseSchema::copyAttGroupAttributes(const IDOM_Element* const elem,
+void TraverseSchema::copyAttGroupAttributes(const DOMElement* const elem,
                                             XercesAttGroupInfo* const fromAttGroup,
                                             XercesAttGroupInfo* const toAttGroup,
                                             ComplexTypeInfo* const typeInfo) {
@@ -6944,7 +6943,7 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
 }
 
 
-void TraverseSchema::checkAttDerivationOK(const IDOM_Element* const elem,
+void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
                                           const ComplexTypeInfo* const baseTypeInfo,
                                           const ComplexTypeInfo* const childTypeInfo) {
 
@@ -7009,7 +7008,7 @@ void TraverseSchema::checkAttDerivationOK(const IDOM_Element* const elem,
     }
 }
 
-void TraverseSchema::checkAttDerivationOK(const IDOM_Element* const elem,
+void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
                                           const XercesAttGroupInfo* const baseAttGrpInfo,
                                           const XercesAttGroupInfo* const childAttGrpInfo) {
 
@@ -7173,7 +7172,7 @@ bool TraverseSchema::isWildCardSubset(const SchemaAttDef* const baseAttWildCard,
     return false;
 }
 
-bool TraverseSchema::openRedefinedSchema(const IDOM_Element* const redefineElem) {
+bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
 
     if (fPreprocessedNodes->containsKey(redefineElem)) {
 
@@ -7222,9 +7221,9 @@ bool TraverseSchema::openRedefinedSchema(const IDOM_Element* const redefineElem)
     XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
 
     if (!fParser)
-        fParser = new XSDIDOMParser;
+        fParser = new XSDDOMParser;
 
-    fParser->setValidationScheme(IDOMParser::Val_Never);
+    fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
     fParser->setErrorHandler((ErrorHandler*) &internalErrorHandler);
     fParser->setEntityResolver(fEntityResolver);
@@ -7244,14 +7243,14 @@ bool TraverseSchema::openRedefinedSchema(const IDOM_Element* const redefineElem)
     // ------------------------------------------------------------------
     // Get root element
     // ------------------------------------------------------------------
-    IDOM_Document* document = fParser->getDocument();
+    DOMDocument* document = fParser->getDocument();
 
     if (!document) {
         return false;
     }
     else {
 
-        IDOM_Element* root = document->getDocumentElement();
+        DOMElement* root = document->getDocumentElement();
 
         if (root == 0) {
             return false;
@@ -7293,11 +7292,11 @@ bool TraverseSchema::openRedefinedSchema(const IDOM_Element* const redefineElem)
     return true;
 }
 
-void TraverseSchema::renameRedefinedComponents(const IDOM_Element* const redefineElem,
+void TraverseSchema::renameRedefinedComponents(const DOMElement* const redefineElem,
                                                SchemaInfo* const redefiningSchemaInfo,
                                                SchemaInfo* const redefinedSchemaInfo) {
 
-    IDOM_Element* child = XUtil::getFirstChildElement(redefineElem);
+    DOMElement* child = XUtil::getFirstChildElement(redefineElem);
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
@@ -7330,7 +7329,7 @@ void TraverseSchema::renameRedefinedComponents(const IDOM_Element* const redefin
     }
 }
 
-bool TraverseSchema::validateRedefineNameChange(const IDOM_Element* const redefineChildElem,
+bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefineChildElem,
                                                 const XMLCh* const redefineChildComponentName,
                                                 const XMLCh* const redefineChildTypeName,
                                                 const int redefineNameCounter,
@@ -7354,7 +7353,7 @@ bool TraverseSchema::validateRedefineNameChange(const IDOM_Element* const redefi
             return false;
         }
 
-        IDOM_Element* grandKid = XUtil::getFirstChildElement(redefineChildElem);
+        DOMElement* grandKid = XUtil::getFirstChildElement(redefineChildElem);
 
         if (grandKid && !XMLString::compareString(grandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
             grandKid = XUtil::getNextSiblingElement(grandKid);
@@ -7394,7 +7393,7 @@ bool TraverseSchema::validateRedefineNameChange(const IDOM_Element* const redefi
             return false;
         }
 
-        IDOM_Element* grandKid = XUtil::getFirstChildElement(redefineChildElem);
+        DOMElement* grandKid = XUtil::getFirstChildElement(redefineChildElem);
 
         if (grandKid && !XMLString::compareString(grandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
             grandKid = XUtil::getNextSiblingElement(grandKid);
@@ -7406,7 +7405,7 @@ bool TraverseSchema::validateRedefineNameChange(const IDOM_Element* const redefi
         } else {
 
             // have to go one more level down; let another pass worry whether complexType is valid.
-            IDOM_Element* greatGrandKid = XUtil::getFirstChildElement(grandKid);
+            DOMElement* greatGrandKid = XUtil::getFirstChildElement(grandKid);
 
             if (greatGrandKid != 0 &&
                 !XMLString::compareString(greatGrandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
@@ -7502,12 +7501,12 @@ bool TraverseSchema::validateRedefineNameChange(const IDOM_Element* const redefi
     return true;
 }
 
-int TraverseSchema::changeRedefineGroup(const IDOM_Element* const redefineChildElem,
+int TraverseSchema::changeRedefineGroup(const DOMElement* const redefineChildElem,
                                         const XMLCh* const redefineChildComponentName,
                                         const XMLCh* const redefineChildTypeName,
                                         const int redefineNameCounter) {
     int result = 0;
-    IDOM_Element* child = XUtil::getFirstChildElement(redefineChildElem);
+    DOMElement* child = XUtil::getFirstChildElement(redefineChildElem);
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
@@ -7555,14 +7554,14 @@ int TraverseSchema::changeRedefineGroup(const IDOM_Element* const redefineChildE
 }
 
 
-void TraverseSchema::fixRedefinedSchema(const IDOM_Element* const elem,
+void TraverseSchema::fixRedefinedSchema(const DOMElement* const elem,
                                         SchemaInfo* const redefinedSchemaInfo,
                                         const XMLCh* const redefineChildComponentName,
                                         const XMLCh* const redefineChildTypeName,
                                         const int redefineNameCounter) {
 
     bool foundIt = false;
-    IDOM_Element* child = XUtil::getFirstChildElement(redefinedSchemaInfo->getRoot());
+    DOMElement* child = XUtil::getFirstChildElement(redefinedSchemaInfo->getRoot());
 
     restoreSchemaInfo(redefinedSchemaInfo);
 
@@ -7588,7 +7587,7 @@ void TraverseSchema::fixRedefinedSchema(const IDOM_Element* const elem,
         }
         else if (!XMLString::compareString(name, SchemaSymbols::fgELT_REDEFINE)) { // need to search the redefine decl...
 
-            for (IDOM_Element* redefChild = XUtil::getFirstChildElement(child);
+            for (DOMElement* redefChild = XUtil::getFirstChildElement(child);
 				 redefChild != 0;
 				 redefChild = XUtil::getNextSiblingElement(redefChild)) {
 
@@ -7681,7 +7680,7 @@ void TraverseSchema::reportSchemaError(const XSDLocator* const aLocator,
     fErrorReporter.emitError(errorCode, msgDomain, aLocator, text1, text2, text3, text4);
 }
 
-void TraverseSchema::reportSchemaError(const IDOM_Element* const elem,
+void TraverseSchema::reportSchemaError(const DOMElement* const elem,
                                        const XMLCh* const msgDomain,
                                        const int errorCode) {
 
@@ -7692,7 +7691,7 @@ void TraverseSchema::reportSchemaError(const IDOM_Element* const elem,
     fErrorReporter.emitError(errorCode, msgDomain, fLocator);
 }
 
-void TraverseSchema::reportSchemaError(const IDOM_Element* const elem,
+void TraverseSchema::reportSchemaError(const DOMElement* const elem,
                                        const XMLCh* const msgDomain,
                                        const int errorCode,
                                        const XMLCh* const text1,

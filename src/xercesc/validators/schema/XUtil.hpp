@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/21 19:31:45  tng
+ * DOM Reorganization: modify to use the new DOM interface and remove obsolete code in XUtil.
+ *
  * Revision 1.2  2002/02/06 22:21:49  knoaman
  * Use IDOM for schema processing.
  *
@@ -76,13 +79,13 @@
 #if !defined(XUTIL_HPP)
 #define XUTIL_HPP
 
-#include <xercesc/dom/DOM_Element.hpp>
-#include <xercesc/dom/DOM_Document.hpp>
-#include <xercesc/dom/DOM_NamedNodeMap.hpp>
-#include <xercesc/dom/DOM_Node.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 
-class IDOM_Node;
-class IDOM_Element;
+class DOMNode;
+class DOMElement;
 
 /**
  * Some useful utility methods.
@@ -91,95 +94,19 @@ class VALIDATORS_EXPORT XUtil
 {
 public:
 
-    //
-    // Copies the source tree into the specified place in a destination
-    // tree. The source node and its children are appended as children
-    // of the destination node.
-    // <p>
-    // <em>Note:</em> This is an iterative implementation.
-    //
-    static void copyInto(const DOM_Node &src, DOM_Node &dest);
-
-    /*
-     * Returns the concatenated child text of the specified node.
-     * This method only looks at the immediate children of type
-     * <code>Node.TEXT_NODE</code> or the children of any child
-     * node that is of type <code>Node.CDATA_SECTION_NODE</code>
-     * for the concatenation.
-     *
-     * @param node The node to look at.
-     */
-    static DOMString getChildText(const DOM_Node &node);
-
     // Finds and returns the first child element node.
-    static DOM_Element getFirstChildElement(const DOM_Node &parent);
-    static IDOM_Element* getFirstChildElement(const IDOM_Node* const parent);
-
-    // Finds and returns the first child element node with the given name.
-    static DOM_Element getFirstChildElement(const DOM_Node    &parent
-		                                  , const XMLCh* const elemName);
-    // Finds and returns the first child node with the given name.
-    static DOM_Element getFirstChildElement(const DOM_Node     &parent
-		                                  , const XMLCh** const elemNames
-										  , unsigned int        length);
-    // Finds and returns the first child node with the given name and
-    // attribute name, value pair.
-    static DOM_Element getFirstChildElement(const DOM_Node    &parent
-		                                  , const XMLCh* const elemName
-                                          , const XMLCh* const attrName
-                                          , const XMLCh* const attrValue);
+    static DOMElement* getFirstChildElement(const DOMNode* const parent);
 
     // Finds and returns the first child node with the given qualifiedname.
-    static DOM_Element getFirstChildElementNS(const DOM_Node     &parent
-                                            , const XMLCh** const elemNames
-                                            , const XMLCh* const uriStr
-                                            , unsigned int        length);
-    static IDOM_Element* getFirstChildElementNS(const IDOM_Node* const parent
+    static DOMElement* getFirstChildElementNS(const DOMNode* const parent
                                               , const XMLCh** const elemNames
                                               , const XMLCh* const uriStr
                                               , unsigned int       length);
 
-    // Finds and returns the last child element node.
-    static DOM_Element getLastChildElement(const DOM_Node &parent);
-    // Finds and returns the last child element node with the given name.
-    static DOM_Element getLastChildElement(const DOM_Node    &parent
-                                         , const XMLCh* const elemName);
-    // Finds and returns the last child node with the given name.
-    static DOM_Element getLastChildElement(const DOM_Node     &parent
-                                         , const XMLCh** const elemNames
-	                                     , unsigned int        length);
-    // Finds and returns the last child node with the given name and
-    // attribute name, value pair.
-    static DOM_Element getLastChildElement(const DOM_Node    &parent
-                                         , const XMLCh* const elemName
-                                         , const XMLCh* const attrName
-                                         , const XMLCh* const attrValue);
-
     // Finds and returns the next sibling element node.
-    static DOM_Element getNextSiblingElement(const DOM_Node &node);
-    static IDOM_Element* getNextSiblingElement(const IDOM_Node* const node);
+    static DOMElement* getNextSiblingElement(const DOMNode* const node);
 
-    // Finds and returns the next sibling element node with the given name.
-    static DOM_Element getNextSiblingElement(const DOM_Node    &node
-		                                   , const XMLCh* const elemName);
-    // Finds and returns the next sibling node with the given name.
-    static DOM_Element getNextSiblingElement(const DOM_Node     &node
-		                                   , const XMLCh** const elemNames
-										   , unsigned int        length);
-    // Finds and returns the next sibling node with the given name and
-    // attribute name, value pair. Since only elements have attributes,
-    // the node returned will be of type Node.ELEMENT_NODE.
-    static DOM_Element getNextSiblingElement(const DOM_Node    &parent
-		                                   , const XMLCh* const elemName
-                                           , const XMLCh* const attrName
-                                           , const XMLCh* const attrValue);
-
-    // Finds and returns the next sibling node with the given qualified name.
-    static DOM_Element getNextSiblingElementNS(const DOM_Node     &node
-                                             , const XMLCh** const elemNames
-                                             , const XMLCh* const uriStr
-                                             , unsigned int        length);
-    static IDOM_Element* getNextSiblingElementNS(const IDOM_Node* const node
+    static DOMElement* getNextSiblingElementNS(const DOMNode* const node
                                                , const XMLCh** const elemNames
                                                , const XMLCh* const uriStr
                                                , unsigned int        length);

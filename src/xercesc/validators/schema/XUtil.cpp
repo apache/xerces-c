@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/21 19:31:45  tng
+ * DOM Reorganization: modify to use the new DOM interface and remove obsolete code in XUtil.
+ *
  * Revision 1.2  2002/02/06 22:21:49  knoaman
  * Use IDOM for schema processing.
  *
@@ -89,172 +92,22 @@
 #include <xercesc/validators/schema/XUtil.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
-#include <xercesc/dom/AttrImpl.hpp>
-#include <xercesc/dom/ElementImpl.hpp>
-#include <xercesc/dom/DocumentImpl.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
-#include <xercesc/idom/IDOM_Element.hpp>
-#include <xercesc/idom/IDOM_Document.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
-#include <xercesc/idom/IDOM_Node.hpp>
-
-void XUtil::copyInto(const DOM_Node &src, DOM_Node &dest)
-{
-    // get node factory
-    DOM_Document factory = dest.getOwnerDocument();
-
-    // placement variables
-    DOM_Node start  = src;
-    DOM_Node parent = src;
-    DOM_Node place  = src;
-
-    // traverse source tree
-    while (place != 0)
-    {
-        // copy this node
-        DOM_Node node;
-        short  type = place.getNodeType();
-        switch (type)
-		{
-		case DOM_Node::CDATA_SECTION_NODE:
-			{
-                node = factory.createCDATASection(place.getNodeValue());
-                break;
-			}
-		case DOM_Node::COMMENT_NODE:
-			{
-				node = factory.createComment(place.getNodeValue());
-				break;
-			}
-		case DOM_Node::ELEMENT_NODE:
-			{
-				DOM_Element element = factory.createElement(place.getNodeName());
-				node = element;
-			    ElementImpl *elemImpl = (ElementImpl*)element.fImpl;
-				DOM_NamedNodeMap attrs  = place.getAttributes();
-                unsigned int attrCount = attrs.getLength();
-				for (unsigned int i = 0; i < attrCount; i++)
-				{
-                    if (attrs.item(i).getNodeType() == DOM_Node::ATTRIBUTE_NODE)
-                    {
-    				    DOM_Node tmpNode = attrs.item(i);
-					    DOM_Attr attr = (DOM_Attr&)tmpNode;
-					    AttrImpl *attrImpl = elemImpl->setAttribute(attr.getNodeName(), attr.getNodeValue());
-                        if ((factory.getNodeType() == DOM_Node::DOCUMENT_NODE) && !attr.getSpecified())
-                            attrImpl->setSpecified(false);
-                    }
-				}//for
-				break;
-			}
-		case DOM_Node::ENTITY_REFERENCE_NODE:
-			{
-				node = factory.createEntityReference(place.getNodeName());
-				break;
-			}
-		case DOM_Node::PROCESSING_INSTRUCTION_NODE:
-			{
-				node = factory.createProcessingInstruction(place.getNodeName(), place.getNodeValue());
-				break;
-			}
-		case DOM_Node::TEXT_NODE:
-			{
-				node = factory.createTextNode(place.getNodeValue());
-				break;
-			}
-		default:
-			{
-                ThrowXML1(IllegalArgumentException
-				        , XMLExcepts::XUTIL_UnCopyableNodeType
-                        , node.getNodeName().rawBuffer());
-            }
-		}//switch
-
-		dest.appendChild(node);
-
-        // iterate over children
-        if (place.hasChildNodes())
-		{
-			parent = place;
-			place  = place.getFirstChild();
-			dest   = node;
-		}
-            // advance
-        else
-		{
-			place = place.getNextSibling();
-			while (place == null && parent != start)
-			{
-				place  = parent.getNextSibling();
-				parent = parent.getParentNode();
-				dest   = dest.getParentNode();
-			}
-		}
-	}//while
-
-}
-
-
-/*
-     * Returns the concatenated child text of the specified node.
-     * This method only looks at the immediate children of type
-     * <code>Node.TEXT_NODE</code> or the children of any child
-     * node that is of type <code>Node.CDATA_SECTION_NODE</code>
-     * for the concatenation.
-     *
-     * @param node The node to look at.
-*/
-
-DOMString XUtil::getChildText(const DOM_Node &node)
-{
-    // is there anything to do?
-    if (node == 0)
-        return 0;
-
-    // concatenate children text
-    DOMString bufToFill;
-    DOM_Node child = node.getFirstChild();
-    while (child != 0)
-	{
-		short type = child.getNodeType();
-        if (type == DOM_Node::TEXT_NODE)
-            bufToFill.appendData(child.getNodeValue());
-        else if (type == DOM_Node::CDATA_SECTION_NODE)
-            bufToFill.appendData(getChildText(child));
-
-        child = child.getNextSibling();
-    }
-
-    // return text value
-    return bufToFill;
-}
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 
 // Finds and returns the first child element node.
-DOM_Element XUtil::getFirstChildElement(const DOM_Node &parent)
+DOMElement* XUtil::getFirstChildElement(const DOMNode* const parent)
 {
     // search for node
-    DOM_Node child = parent.getFirstChild();
-    while (child != 0)
-	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
-            return (DOM_Element&)child;
-
-        child = child.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the first child element node.
-IDOM_Element* XUtil::getFirstChildElement(const IDOM_Node* const parent)
-{
-    // search for node
-    IDOM_Node* child = parent->getFirstChild();
+    DOMNode* child = parent->getFirstChild();
 
     while (child != 0)
 	{
-        if (child->getNodeType() == IDOM_Node::ELEMENT_NODE)
-            return (IDOM_Element*)child;
+        if (child->getNodeType() == DOMNode::ELEMENT_NODE)
+            return (DOMElement*)child;
 
         child = child->getNextSibling();
     }
@@ -264,116 +117,22 @@ IDOM_Element* XUtil::getFirstChildElement(const IDOM_Node* const parent)
 }
 
 // Finds and returns the first child node with the given name.
-DOM_Element XUtil::getFirstChildElement(const DOM_Node    &parent
-                                      , const XMLCh* const elemName)
-{
-    // search for node
-    DOM_Node child = parent.getFirstChild();
-    while (child != 0)
-	{
-        if ((child.getNodeType() == DOM_Node::ELEMENT_NODE) &&
-            (XMLString::compareString(child.getNodeName().rawBuffer(), elemName) ==0))
-            return (DOM_Element&)child;
-
-        child = child.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the first child node with the given name.
-DOM_Element XUtil::getFirstChildElement(const DOM_Node     &parent
-                                      , const XMLCh** const elemNames
-									  , unsigned int        length)
-{
-    // search for node
-    DOM_Node child = parent.getFirstChild();
-    while (child != 0)
-	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-            for (unsigned int i = 0; i < length; i++)
-			{
-                if (XMLString::compareString(child.getNodeName().rawBuffer(), elemNames[i]) ==0)
-                    return (DOM_Element&)child;
-			}
-		}
-        child = child.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the first child node with the given name and
-// attribute name, value pair.
-DOM_Element XUtil::getFirstChildElement(const DOM_Node    &parent
-                                      , const XMLCh* const elemName
-                                      , const XMLCh* const attrName
-                                      , const XMLCh* const attrValue)
-{
-    // search for node
-    DOM_Node child = parent.getFirstChild();
-    while (child != 0)
-	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-			DOM_Element element = (DOM_Element&)child;
-            if ((XMLString::compareString(element.getNodeName().rawBuffer(), elemName) ==0) &&
-                (XMLString::compareString(element.getAttribute(attrName).rawBuffer(), attrValue) ==0))
-				return element;
-        }
-        child = child.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-
-// Finds and returns the first child node with the given qualified name.
-DOM_Element XUtil::getFirstChildElementNS(const DOM_Node     &parent
-                                        , const XMLCh** const elemNames
-                                        , const XMLCh* const uriStr
-									    , unsigned int        length)
-{
-    // search for node
-    DOM_Node child = parent.getFirstChild();
-    while (child != 0)
-	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-            for (unsigned int i = 0; i < length; i++)
-			{
-                if (child.getNamespaceURI().equals(uriStr) &&
-                    XMLString::compareString(child.getLocalName().rawBuffer(), elemNames[i]) ==0)
-                    return (DOM_Element&)child;
-			}
-		}
-        child = child.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-IDOM_Element* XUtil::getFirstChildElementNS(const IDOM_Node* const parent
+DOMElement* XUtil::getFirstChildElementNS(const DOMNode* const parent
                                           , const XMLCh** const elemNames
                                           , const XMLCh* const uriStr
                                           , unsigned int        length)
 {
     // search for node
-    IDOM_Node* child = parent->getFirstChild();
+    DOMNode* child = parent->getFirstChild();
     while (child != 0)
 	{
-        if (child->getNodeType() == IDOM_Node::ELEMENT_NODE)
+        if (child->getNodeType() == DOMNode::ELEMENT_NODE)
 		{
             for (unsigned int i = 0; i < length; i++)
 			{
                 if (!XMLString::compareString(child->getNamespaceURI(), uriStr) &&
                     !XMLString::compareString(child->getLocalName(), elemNames[i]))
-                    return (IDOM_Element*)child;
+                    return (DOMElement*)child;
 			}
 		}
         child = child->getNextSibling();
@@ -384,117 +143,15 @@ IDOM_Element* XUtil::getFirstChildElementNS(const IDOM_Node* const parent
 }
 
 // Finds and returns the last child element node.
-DOM_Element XUtil::getLastChildElement(const DOM_Node &parent) {
-
-    // search for node
-    DOM_Node child = parent.getLastChild();
-    while (child != 0)
-	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
-            return (DOM_Element&)child;
-
-        child = child.getPreviousSibling();
-    }
-
-    // not found
-    return DOM_Element();
-
-} // getLastChildElement(Node):Element
-
-// Finds and returns the last child node with the given name.
-DOM_Element XUtil::getLastChildElement(const DOM_Node    &parent
-                                     , const XMLCh* const elemName)
+DOMElement* XUtil::getNextSiblingElement(const DOMNode* const node)
 {
     // search for node
-    DOM_Node child = parent.getLastChild();
-    while (child != 0)
-	{
-        if ((child.getNodeType() == DOM_Node::ELEMENT_NODE) &&
-            (XMLString::compareString(child.getNodeName().rawBuffer(), elemName) ==0))
-                return (DOM_Element&)child;
-
-        child = child.getPreviousSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the last child node with the given name.
-DOM_Element XUtil::getLastChildElement(const DOM_Node     &parent
-                                     , const XMLCh** const elemNames
-									 , unsigned int        length)
-{
-    // search for node
-    DOM_Node child = parent.getLastChild();
-    while (child != 0)
-	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-            for (unsigned int i = 0; i < length; i++)
-			{
-                if (XMLString::compareString(child.getNodeName().rawBuffer(), elemNames[i]) ==0)
-                    return (DOM_Element&)child;
-			}
-		}
-        child = child.getPreviousSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the last child node with the given name and
-// attribute name, value pair.
-DOM_Element XUtil::getLastChildElement(const DOM_Node    &parent
-                                     , const XMLCh* const elemName
-                                     , const XMLCh* const attrName
-                                     , const XMLCh* const attrValue)
-{
-    // search for node
-    DOM_Node child = parent.getLastChild();
-    while (child != 0)
-	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-			DOM_Element element = (DOM_Element&)child;
-            if ((XMLString::compareString(element.getNodeName().rawBuffer(), elemName) ==0) &&
-                (XMLString::compareString(element.getAttribute(attrName).rawBuffer(), attrValue) ==0))
-				return element;
-        }
-        child = child.getPreviousSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the next sibling element node.
-DOM_Element XUtil::getNextSiblingElement(const DOM_Node &node)
-{
-    // search for node
-    DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0)
-	{
-        if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
-            return (DOM_Element&)sibling;
-
-        sibling = sibling.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-IDOM_Element* XUtil::getNextSiblingElement(const IDOM_Node* const node)
-{
-    // search for node
-    IDOM_Node* sibling = node->getNextSibling();
+    DOMNode* sibling = node->getNextSibling();
 
     while (sibling != 0)
 	{
-        if (sibling->getNodeType() == IDOM_Node::ELEMENT_NODE)
-            return (IDOM_Element*)sibling;
+        if (sibling->getNodeType() == DOMNode::ELEMENT_NODE)
+            return (DOMElement*)sibling;
 
         sibling = sibling->getNextSibling();
     }
@@ -504,115 +161,22 @@ IDOM_Element* XUtil::getNextSiblingElement(const IDOM_Node* const node)
 }
 
 // Finds and returns the next sibling element node with the give name.
-DOM_Element XUtil::getNextSiblingElement(const DOM_Node    &node
-                                       , const XMLCh* const elemName)
-{
-    // search for node
-    DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0)
-	{
-        if ((sibling.getNodeType() == DOM_Node::ELEMENT_NODE) &&
-            (XMLString::compareString(sibling.getNodeName().rawBuffer(), elemName) ==0))
-            return (DOM_Element&)sibling;
-
-        sibling = sibling.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the next sibling element node with the give name.
-DOM_Element XUtil::getNextSiblingElement(const DOM_Node     &node
-                                       , const XMLCh** const elemNames
-									   , unsigned int        length)
-{
-    // search for node
-    DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0)
-	{
-        if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-            for (unsigned int i = 0; i < length; i++)
-			{
-                if (XMLString::compareString(sibling.getNodeName().rawBuffer(), elemNames[i]) ==0)
-                    return (DOM_Element&)sibling;
-			}
-		}
-        sibling = sibling.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the next sibling element node with the given name and
-// attribute name, value pair.
-DOM_Element XUtil::getNextSiblingElement(const DOM_Node    &node
-                                       , const XMLCh* const elemName
-                                       , const XMLCh* const attrName
-                                       , const XMLCh* const attrValue)
-{
-    // search for node
-    DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0)
-	{
-        if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-			DOM_Element element = (DOM_Element&)sibling;
-            if ((XMLString::compareString(element.getNodeName().rawBuffer(), elemName) ==0) &&
-                (XMLString::compareString(element.getAttribute(attrName).rawBuffer(), attrValue) ==0))
-				return element;
-        }
-        sibling = sibling.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-// Finds and returns the next sibling element node with the qualified name.
-DOM_Element XUtil::getNextSiblingElementNS(const DOM_Node     &node
-                                         , const XMLCh** const elemNames
-                                         , const XMLCh* const uriStr
-									     , unsigned int        length)
-{
-    // search for node
-    DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0)
-	{
-        if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
-		{
-            for (unsigned int i = 0; i < length; i++)
-			{
-                if (sibling.getNamespaceURI().equals(uriStr) &&
-                    XMLString::compareString(sibling.getLocalName().rawBuffer(), elemNames[i]) ==0)
-                    return (DOM_Element&)sibling;
-			}
-		}
-        sibling = sibling.getNextSibling();
-    }
-
-    // not found
-    return DOM_Element();
-}
-
-IDOM_Element* XUtil::getNextSiblingElementNS(const IDOM_Node* const node
+DOMElement* XUtil::getNextSiblingElementNS(const DOMNode* const node
                                            , const XMLCh** const elemNames
                                            , const XMLCh* const uriStr
 									       , unsigned int        length)
 {
     // search for node
-    IDOM_Node* sibling = node->getNextSibling();
+    DOMNode* sibling = node->getNextSibling();
     while (sibling != 0)
 	{
-        if (sibling->getNodeType() == IDOM_Node::ELEMENT_NODE)
+        if (sibling->getNodeType() == DOMNode::ELEMENT_NODE)
 		{
             for (unsigned int i = 0; i < length; i++)
 			{
                 if (!XMLString::compareString(sibling->getNamespaceURI(), uriStr) &&
                     !XMLString::compareString(sibling->getLocalName(), elemNames[i]))
-                    return (IDOM_Element*)sibling;
+                    return (DOMElement*)sibling;
 			}
 		}
         sibling = sibling->getNextSibling();
