@@ -77,6 +77,7 @@
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMAttr.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+#include "DOMNodeIDMap.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -110,9 +111,36 @@ public:
    // helper function for DOM Level 3 renameNode
    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
 
+   // helper method that sets this attr to an idnode and places it into the document map
+   virtual void addAttrToIDNodeMap();
+
+   // helper to remove this attr from from the id map if it is in there
+   virtual void removeAttrFromIDNodeMap();
 private:
     void getTextValue(DOMNode* node, XMLBuffer& buf) const;
 };
+
+inline void DOMAttrImpl::removeAttrFromIDNodeMap()
+{
+    if (fNode.isIdAttr()) {
+        ((DOMDocumentImpl *)getOwnerDocument())->getNodeIDMap()->remove(this);
+        fNode.isIdAttr(false);
+    }
+}
+
+inline void DOMAttrImpl::addAttrToIDNodeMap()
+{
+    fNode.isIdAttr(true);
+
+    // REVIST For now, we don't worry about what happens if the new
+    // name conflicts as per setValue
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)(fParent.fOwnerDocument);
+
+    if (doc->fNodeIDMap == 0)
+        doc->fNodeIDMap = new (doc) DOMNodeIDMap(500, doc);
+
+    doc->getNodeIDMap()->add(this);
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -65,7 +65,6 @@
 #include "DOMStringPool.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMCasts.hpp"
-#include "DOMNodeIDMap.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
