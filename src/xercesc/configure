@@ -1541,6 +1541,7 @@ validators/DTD/Makefile \
 validators/schema/Makefile \
 validators/schema/identity/Makefile \
 framework/Makefile \
+framework/psvi/Makefile \
 dom/Makefile \
 dom/impl/Makefile \
 dom/deprecated/Makefile \
@@ -1697,6 +1698,7 @@ validators/DTD/Makefile \
 validators/schema/Makefile \
 validators/schema/identity/Makefile \
 framework/Makefile \
+framework/psvi/Makefile \
 dom/Makefile \
 dom/impl/Makefile \
 dom/deprecated/Makefile \
