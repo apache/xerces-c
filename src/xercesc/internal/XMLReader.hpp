@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/09/29 00:24:01  knoaman
+ * Performance: improve src offset calculation. Patch by Anthony O'Dowd.
+ *
  * Revision 1.19  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -424,6 +427,11 @@ private:
     //      to make the internalized char fCharBuf[x]. This only contains
     //      useful data if fSrcOfsSupported is true.
     //
+    //  fCharOfsBuf
+    //      This buffer is an array that contains the offset in the
+    //      fRawByteBuf buffer of each char in the fCharBuf buffer. It
+    //      only contains useful data if fSrcOfsSupported is true.
+    //
     //  fCurCol
     //  fCurLine
     //      The current line and column that we are in within this reader's
@@ -548,6 +556,7 @@ private:
     XMLCh                       fCharBuf[kCharBufSize];
     unsigned int                fCharsAvail;
     unsigned char               fCharSizeBuf[kCharBufSize];
+    unsigned int                fCharOfsBuf[kCharBufSize];
     XMLSSize_t                  fCurCol;
     XMLSSize_t                  fCurLine;
     XMLRecognizer::Encodings    fEncoding;

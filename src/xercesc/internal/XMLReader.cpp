@@ -279,6 +279,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     {
         // This represents no data from the source
         fCharSizeBuf[fCharsAvail] = 0;
+        fCharOfsBuf[fCharsAvail] = 0;
         fCharBuf[fCharsAvail++] = chSpace;
     }
 }
@@ -374,6 +375,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     {
         // This represents no data from the source
         fCharSizeBuf[fCharsAvail] = 0;
+        fCharOfsBuf[fCharsAvail] = 0;
         fCharBuf[fCharsAvail++] = chSpace;
     }
 }
@@ -401,11 +403,15 @@ unsigned int XMLReader::getSrcOffset() const
     //  Take the current source offset and add in the sizes that we've
     //  eaten from the source so far.
     //
-    unsigned int offset = fSrcOfsBase;
-    for (unsigned int index = 0; index < fCharIndex; index++)
-        offset += fCharSizeBuf[index];
+    if( fCharIndex == 0 ) {
+        return fSrcOfsBase;
+    }
 
-    return offset;
+    if( fCharIndex < fCharsAvail ) {
+        return (fSrcOfsBase + fCharOfsBuf[fCharIndex]);
+    }
+
+    return (fSrcOfsBase + fCharOfsBuf[fCharIndex-1] + fCharSizeBuf[fCharIndex-1]);
 }
 
 
@@ -536,6 +542,17 @@ bool XMLReader::refreshCharBuffer()
                     fCharIndex++;
                 }
             }
+            // If there's a utf-8 BOM  (0xEF 0xBB 0xBF), skip past it.
+            else {
+                const char* asChars = (const char*)fRawByteBuf;
+                if ((fRawBytesAvail > XMLRecognizer::fgUTF8BOMLen )&&
+                    (XMLString::compareNString(  asChars
+                    , XMLRecognizer::fgUTF8BOM
+                    , XMLRecognizer::fgUTF8BOMLen) == 0) && !startInd)
+                {
+                    fCharIndex += XMLRecognizer::fgUTF8BOMLen;
+                }
+            }
         }
     }
 
@@ -546,6 +563,15 @@ bool XMLReader::refreshCharBuffer()
     //
     if (!fCharsAvail)
         fNoMore = true;
+
+    //  Calculate fCharOfsBuf using the elements from fCharBufSize
+    if (fCalculateSrcOfs)
+    {
+        fCharOfsBuf[0] = 0;
+        for (unsigned int index = 1; index < fCharsAvail; ++index) {
+            fCharOfsBuf[index] = fCharOfsBuf[index-1]+fCharSizeBuf[index-1];
+        }
+    }
 
     return (fCharsAvail != 0);
 }
@@ -1263,11 +1289,13 @@ void XMLReader::doInitDecode()
             if (fRawBytesAvail < 2)
                 break;
 
+            unsigned int postBOMIndex = 0;
             const UTF16Ch* asUTF16 = (const UTF16Ch*)&fRawByteBuf[fRawBufIndex];
             if ((*asUTF16 == chUnicodeMarker) || (*asUTF16 == chSwappedUnicodeMarker))
             {
                 fRawBufIndex += sizeof(UTF16Ch);
                 asUTF16++;
+                postBOMIndex = fRawBufIndex;
             }
 
             //  First check that there are enough raw bytes for there to even
@@ -1275,7 +1303,7 @@ void XMLReader::doInitDecode()
             //
             if (fRawBytesAvail - fRawBufIndex < XMLRecognizer::fgUTF16PreLen)
             {
-                fRawBufIndex = 0;
+                fRawBufIndex = postBOMIndex;
                 break;
             }
 
@@ -1287,7 +1315,7 @@ void XMLReader::doInitDecode()
             {
                 if (memcmp(asUTF16, XMLRecognizer::fgUTF16BPre, XMLRecognizer::fgUTF16PreLen))
                 {
-                    fRawBufIndex = 0;
+                    fRawBufIndex = postBOMIndex;
                     break;
                 }
             }
@@ -1295,7 +1323,7 @@ void XMLReader::doInitDecode()
             {
                 if (memcmp(asUTF16, XMLRecognizer::fgUTF16LPre, XMLRecognizer::fgUTF16PreLen))
                 {
-                    fRawBufIndex = 0;
+                    fRawBufIndex = postBOMIndex;
                     break;
                 }
             }
@@ -1372,6 +1400,15 @@ void XMLReader::doInitDecode()
     //
     if ((fType == Type_PE) && (fRefFrom == RefFrom_NonLiteral))
         fCharBuf[fCharsAvail++] = chSpace;
+    
+    //  Calculate fCharOfsBuf buffer using the elements from fCharBufSize
+    if (fCalculateSrcOfs)
+    {
+        fCharOfsBuf[0] = 0;
+        for (unsigned int index = 1; index < fCharsAvail; ++index) {
+            fCharOfsBuf[index] = fCharOfsBuf[index-1]+fCharSizeBuf[index-1];
+        }
+    }
 }
 
 
