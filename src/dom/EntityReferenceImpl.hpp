@@ -86,8 +86,6 @@ public:
     virtual NodeImpl * cloneNode(bool deep);
     virtual DOMString getNodeName();
     virtual short getNodeType();
-    virtual unsigned int getLength();
-    virtual bool hasChildNodes();
     virtual bool isEntityReference();
     virtual void setNodeValue(const DOMString &);
     virtual void setReadOnly(bool readOnly,bool deep);

@@ -168,64 +168,6 @@ short EntityReferenceImpl::getNodeType() {
 };
 
 
-/**
-* Query the number of children in the entity definition.
-* (A bit more work than asking locally, but may be able to avoid
-* or defer building the clone subtree.)
-*
-* @return org.w3c.dom.NodeList
-*/
-unsigned int EntityReferenceImpl::getLength()
-{
-    unsigned int length = ChildAndParentNode::getLength();
-    
-#if (0)                 // Till we add entity nodes to the doc root element.
-    
-    DocumentTypeImpl *doctype;
-    NamedNodeMapImpl *entities;
-    EntityImpl *entDef;
-    if (null != (doctype = ownerDocument->getDoctype()) && 
-        null != (entities = doctype->getEntities()) &&
-        null != (entDef = (EntityImpl *)entities->getNamedItem(name))
-        )
-        length=entDef->getChildNodes()->getLength();
-#endif
-    
-    return length;
-}
-
-
-/**
-* Query the presence of children in the entity definition.
-* (A bit more work than asking locally, but may be able to avoid
-* or defer building the clone subtree.)
-*
-* @return boolean
-*/
-bool EntityReferenceImpl::hasChildNodes()
-{
-#if 0
-    // defer this query for now. 
-    //There's lot of work to be done here before it can return the actual value.
-    bool haskids=false;
-    
-    DocumentTypeImpl *doctype;
-    NamedNodeMapImpl *entities;
-    EntityImpl *entDef;
-    if (null != (doctype = ownerDocument->getDoctype()) && 
-        null != (entities = doctype->getEntities()) &&
-        null != (entDef = (EntityImpl *)entities->getNamedItem(name))
-        )
-        haskids=entDef->hasChildNodes();
-    
-    return haskids;
-#endif
-
-    return firstChild!=null;
-}
-
-
-
 bool EntityReferenceImpl::isEntityReference()
 {
     return true;
