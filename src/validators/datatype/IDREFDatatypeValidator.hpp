@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/25 17:58:08  tng
+ * Fix compilation errors.
+ *
  * Revision 1.2  2001/07/24 21:23:40  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -162,7 +165,7 @@ inline DatatypeValidator* IDREFDatatypeValidator::newInstance(
 // -----------------------------------------------------------------------
 // Validation methods
 // -----------------------------------------------------------------------
-inline void IDREFDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* const newIDRefList)
+inline void IDREFDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
 {
     fIDRefList = newIDRefList;
 }
