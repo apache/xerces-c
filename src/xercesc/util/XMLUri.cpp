@@ -247,6 +247,7 @@ XMLUri::XMLUri(const XMLCh* const uriSpec)
 ,fPath(0)
 ,fQueryString(0)
 ,fFragment(0)
+,fURIText(0)
 {
     try {
         initialize((XMLUri *)0, uriSpec);
@@ -268,6 +269,7 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
 ,fPath(0)
 ,fQueryString(0)
 ,fFragment(0)
+,fURIText(0)
 {
     try {
         initialize(baseURI, uriSpec);
@@ -303,6 +305,8 @@ void XMLUri::cleanUp()
 
     if (getFragment())
         delete[] fFragment;
+
+    delete[] fURIText;
 }
 
 void XMLUri::initialize(const XMLUri& toCopy)
@@ -327,7 +331,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
     // get a trimmed version of uriSpec
     // uriSpec will NO LONGER be used in this function.
     //
-    XMLCh* const trimedUriSpec = XMLString::replicate(uriSpec);
+    XMLCh* trimedUriSpec = XMLString::replicate(uriSpec);
     XMLString::trim(trimedUriSpec);
     ArrayJanitor<XMLCh> janName(trimedUriSpec);
     int trimedUriSpecLen = XMLString::stringLen(trimedUriSpec);
@@ -353,6 +357,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	// DOS drive letters ('D:'), so 1-character schemes are not allowed.
     int colonIdx = XMLString::indexOf(trimedUriSpec, chColon);
     int slashIdx = XMLString::indexOf(trimedUriSpec, chForwardSlash);
+
 	if ((colonIdx < 2)                         ||
         (colonIdx > slashIdx && slashIdx != -1) )
     {
@@ -486,6 +491,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // if we get to this point, we need to resolve relative path
         // RFC 2396 5.2 #6
+
         XMLCh* basePath = XMLString::replicate(baseURI->getPath());
         ArrayJanitor<XMLCh> basePathName(basePath);
 
@@ -576,6 +582,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
             delete [] fPath;
 
         fPath = XMLString::replicate(path);
+
     }
 }
 
@@ -890,7 +897,6 @@ void XMLUri::setScheme(const XMLCh* const newScheme)
 
     fScheme = XMLString::replicate(newScheme);
     XMLString::lowerCase(fScheme);
-
 }
 
 //
@@ -928,7 +934,11 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
         delete [] fUserInfo;
     }
 
-    fUserInfo = XMLString::replicate(newUserInfo);
+    //sometimes we get passed a empty string rather than a null.
+    //Other procedures rely on it being null
+    if(XMLString::stringLen(newUserInfo) > 0) {
+        fUserInfo = XMLString::replicate(newUserInfo);
+    }
 
 }
 
@@ -1338,4 +1348,96 @@ bool XMLUri::isGenericURI()
     return (getHost() != 0);
 }
 
+
+//
+//  This method will take the broken out parts of the URI and build up the
+//  full text. We don't do this unless someone asks us to, since its often
+//  never required.
+//
+void XMLUri::buildFullText()
+{
+    // Calculate the worst case size of the buffer required
+    unsigned int bufSize = XMLString::stringLen(fScheme) + 1
+                           + XMLString::stringLen(fFragment) + 1
+                           + XMLString::stringLen(fHost) + 2
+                           + XMLString::stringLen(fPath)
+                           + XMLString::stringLen(fQueryString) + 1
+                           + XMLString::stringLen(fUserInfo) + 1
+                           + 32;
+
+    // Clean up the existing buffer and allocate another
+    delete [] fURIText;
+    fURIText = new XMLCh[bufSize];
+    *fURIText = 0;
+
+    XMLCh* outPtr = fURIText;
+    if (fScheme != 0)
+    {
+        XMLString::catString(fURIText, getScheme());
+        outPtr += XMLString::stringLen(fURIText);
+        *outPtr++ = chColon;
+        *outPtr++ = chForwardSlash;
+        *outPtr++ = chForwardSlash;
+    }
+
+    if (fUserInfo)
+    {
+        XMLString::copyString(outPtr, fUserInfo);
+        outPtr += XMLString::stringLen(fUserInfo);
+
+
+        /*REVISIT dont have password field in uri - is this right??
+        if (fPassword)
+        {
+            *outPtr++ = chColon;
+            XMLString::copyString(outPtr, fPassword);
+            outPtr += XMLString::stringLen(fPassword);
+        }
+        */
+        *outPtr++ = chAt;
+    }
+
+    if (fHost)
+    {
+        XMLString::copyString(outPtr, fHost);
+        outPtr += XMLString::stringLen(fHost);
+
+        //
+        //  If the port is -1, then we don't put it in. Else we need
+        //  to because it was explicitly provided.
+        //
+        if (fPort != -1)
+        {
+            *outPtr++ = chColon;
+
+            XMLCh tmpBuf[16];
+            XMLString::binToText(fPort, tmpBuf, 16, 10);
+            XMLString::copyString(outPtr, tmpBuf);
+            outPtr += XMLString::stringLen(tmpBuf);
+        }
+    }
+
+    if (fPath)
+    {
+        XMLString::copyString(outPtr, fPath);
+        outPtr += XMLString::stringLen(fPath);
+    }
+
+    if (fQueryString)
+    {
+        *outPtr++ = chQuestion;
+        XMLString::copyString(outPtr, fQueryString);
+        outPtr += XMLString::stringLen(fQueryString);
+    }
+
+    if (fFragment)
+    {
+        *outPtr++ = chPound;
+        XMLString::copyString(outPtr, fFragment);
+        outPtr += XMLString::stringLen(fFragment);
+    }
+
+    // Cap it off in case the last op was not a string copy
+    *outPtr = 0;
+}
 

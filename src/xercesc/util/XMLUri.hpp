@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/09/23 18:41:00  tng
+ * DOM L3: Support baseURI.   Add fURIText to XMLUri.   Added by Gareth Reakes and Thomas Ford.
+ *
  * Revision 1.3  2002/08/23 20:45:24  tng
  * .Memory leak fix: XMLUri data not deleted if constructor failed.
  *
@@ -148,13 +151,14 @@ public:
     virtual ~XMLUri();
 
     // -----------------------------------------------------------------------
-    //  Operators
-    // -----------------------------------------------------------------------
-
-
-    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    /**
+     * Get the URI as a string specification. See RFC 2396 Section 5.2.
+     *
+     * @return the URI string specification
+     */
+    const XMLCh* getUriText() const;
 
     /**
      * Get the scheme for this URI.
@@ -306,6 +310,9 @@ private:
     static const XMLCh SCHEME_CHARACTERS[];
     static const XMLCh USERINFO_CHARACTERS[];
 
+    //helper method for getUriText
+    void buildFullText();
+
     /**
      * Unimplemented copy ctor
      */
@@ -455,6 +462,7 @@ private:
     XMLCh*          fPath;
     XMLCh*          fQueryString;
     XMLCh*          fFragment;
+    XMLCh*          fURIText;
 
 };
 
@@ -494,6 +502,19 @@ inline const XMLCh* XMLUri::getQueryString() const
 inline const XMLCh* XMLUri::getFragment() const
 {
 	return fFragment;
+}
+
+inline const XMLCh* XMLUri::getUriText() const
+{
+    //
+    //  Fault it in if not already. Since this is a const method and we
+    //  can't use mutable members due the compilers we have to support,
+    //  we have to cast off the constness.
+    //
+    if (!fURIText)
+        ((XMLUri*)this)->buildFullText();
+
+    return fURIText;
 }
 
 // ---------------------------------------------------------------------------
