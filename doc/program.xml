@@ -333,6 +333,17 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
         <p/>
 
         <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/schema-full-checking</em></td></tr>
+            <tr><td><em>true:</em></td><td> Enable full schema constraint checking, including checking
+                         which may be time-consuming or memory intensive. Currently, particle unique
+                         attribution constraint checking and particle derivation resriction checking
+                         are controlled by this option. </td></tr>
+            <tr><td><em>false:</em></td><td> Disable full schema constraint checking (default). </td></tr>
+        </table>
+
+        <p/>
+
+        <table>
             <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-grammar</em></td></tr>
             <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parses in subsequent parses. </td></tr>
             <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. (default)</td></tr>
