@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/14 22:02:25  peiyongz
+ * rethrow exception with original error message.
+ *
  * Revision 1.1  2001/11/07 19:18:52  peiyongz
  * DateTime Port
  *
@@ -66,6 +69,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/DayDatatypeValidator.hpp>
+#include <util/SchemaDateTimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -105,6 +109,11 @@ XMLDateTime* DayDatatypeValidator::parse(const XMLCh* const content)
     try
     {
         pRetDate->parseDay();
+    }
+    catch (const XMLException &e)
+    {
+        delete pRetDate;
+        ThrowXML1(SchemaDateTimeException, XMLExcepts::RethrowError, e.getMessage());
     }
     catch (...)
     {
