@@ -5,13 +5,13 @@
 
   <p>This page answers the following questions:</p>
   <ul>
-    <li><link anchor="BuildWinNT">Building &XercesCName; on Windows</link></li>
-    <li><link anchor="BuildUNIX">Building &XercesCName; on UNIX</link></li>
-    <li><link anchor="BuildWinVisualAge">Building &XercesCName; on Windows using Visual Age</link></li>
-    <li><link anchor="BuildOS2VisualAge">Building &XercesCName; on OS/2 using Visual Age</link></li>
-    <li><link anchor="BuildMac">Building &XercesCName; on Macintosh</link></li>
-    <li><link anchor="BuildICU">Building ICU</link></li>
-    <li><link anchor="BuildDocs">Building the User Documentation</link></li>
+    <li><link anchor="BuildWinNT">Building &XercesCName; on Windows.</link></li>
+    <li><link anchor="BuildUNIX">Building &XercesCName; on UNIX.</link></li>
+    <li><link anchor="BuildWinVisualAge">Building &XercesCName; on Windows using Visual Age.</link></li>
+    <li><link anchor="BuildOS2VisualAge">Building &XercesCName; on OS/2 using Visual Age.</link></li>
+    <li><link anchor="BuildMac">Building &XercesCName; on Macintosh.</link></li>
+    <li><link anchor="BuildICU">Building ICU.</link></li>
+    <li><link anchor="BuildDocs">How to build the User Documentation?.</link></li>
     <li><link anchor="PortingGuide">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</link></li>
     <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
     <li><link anchor="BuildUsingLibWWW">How can I generate Xerces-C binaries which includes the
@@ -568,50 +568,85 @@ gmake</source>
     </s2>
 
     <anchor name="BuildDocs"/>
-    <s2 title="How to build the User Documentation">
+    <s2 title="How to build the User Documentation?">
 
         <p>The user documentation (this very page that you are reading
         on the browser right now), was generated using an XML
-        application called StyleBook. The application makes use of
+        application called StyleBook. This application makes use of
         Xerces-J and Xalan to create the HTML file from the XML source
-        files. The XML source files are part of the &XercesCName;
-        module. These files reside in the <code>doc</code>
+        files. The XML source files for the documentation are part of
+        the &XercesCName; module. These files reside in the
+        <code>doc</code> directory.</p>
+
+        <p><em>Pre-requisites for building the user
+        documentation are:</em></p>
+
+        <ul>
+          <li>JDK 1.2.2 (or later).</li>
+          <li>Xerces-J (1.0.0 or later).</li>
+          <li>Xalan (0.19.3 or later)</li>
+          <li>Stylebook 1.0-b2</li>
+        </ul>
+
+        <p>Setup PATH to include the JDK 1.2.2 bin directory. Also setup
+        CLASSPATH environment variable as follows:</p>
+
+        <ul>
+
+          <li>Under Windows (assumes all jars are in '\jars'
+          directory:)<br/>
+          <code>CLASSPATH=\jars\stylebook-1.0-b2.jar;\jars\xalan.jar;\jars\xerces.jar</code></li>
+
+          <li>Under Unix's (assumes all jars are in '~/jars' directory):<br/>
+          <code>export CLASSPATH="~/jars/stylebook-1.0-b2.jar:~/jars/xalan.jar:~/jars/xerces.jar"</code></li>
+        </ul>
+
+        <p>Next, cd to the &XercesCName; source drop root directory,
+        and enter</p>
+
+        <ul>
+          <li>Under Windows:<br/>
+          <code>createDocs</code></li>
+          <li>Under Unix's:<br/>
+          <code>sh createDocs.bat</code></li>
+        </ul>
+
+        <p>This should generate the .html files in the 'doc/html'
         directory.</p>
 
-        <s3 title="Pre-requisites for building the user documentation">
+        <p><em>Ok here is where you can get the three jar files that are
+        referred to above.</em></p>
 
-        <p>JDK 1.2.2 (or later).<br/>
-        Xerces-J (1.0.0 or later).<br/>
-        Xalan-J (0.19.3 or later).</p>
+        <ul>
 
-        <p>Finally you must install the StyleBook application. This is
-        part of the Xerces Project and the module name is
-        <code>xml-stylebook</code>. Details about installing Stylebook
-        are quite involved and usually takes some effort to install
-        perfectly. Hopefully it will be simplified in future, but it a
-        working application now. To make our scripts work directly
-        with StyleBook, you must install it at the same level as
-        <code>xml-xerces</code>. That is, <code>'xml-xerces'</code>
-        and <code>'xml-stylebook'</code> must both be at the same
-        level in your directory.</p>
+          <li>JDK 1.2.2 is available from <jump
+          href="http://java.sun.com/products/jdk/1.2/">http://java.sun.com/products/jdk/1.2/</jump></li>
 
-        </s3>
+          <li>Xerces-J is available from <jump
+          href="http://xml.apache.org/dist/">http://xml.apache.org/dist/</jump>. Extract
+          the xerces.jar file from the binary drop and store it in the
+          'jars' directory as mentioned above.</li>
 
-        <s3 title="Creating the user documentation">
+          <li>Xalan is also available from <jump
+          href="http://xml.apache.org/dist/">http://xml.apache.org/dist/</jump>. Extract
+          the xalan.jar file from the 'jar' distribution that you just downloaded and
+          store it in the same 'jars' directory as mentioned above.</li>
 
-        <p>If you have installed StyleBook properly, the remaining
-        part is very simple.  In the <code>xerces-c</code> directory
-        there is a batch script called
-        <code>createdocs.bat</code>. This is a one line script
-        containing the following command:</p>
+          <li>Getting to Stylebook is little more involved. You will
+          have to download one of the 'xml-stylebook' tar balls from
+          <jump
+          href="http://xml.apache.org/from-cvs/xml-stylebook">http://xml.apache.org/from-cvs/xml-stylebook/</jump>
+          and then extract the file:<br/>
+          <code>xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/><br/>
 
-<source>java org.apache.stylebook.StyleBook "targetDirectory=doc/html"
-doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml</source>
+          Under Unix's you may enter:<br/> <code>gzip -d -c
+          xml-stylebook_20000207231311.tar.gz | tar xf -
+          xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/>to extract
+          this file. Copy it to the 'jars' directory as mentioned
+          above.<br/><br/>Under Windows you may use 'WinZip' to
+          extract the jar file from the tar ball.</li>
 
-        <p>All you need to do is run this command. The generated HTML
-        files would reside in the <code>doc/html</code> directory.</p>
-
-        </s3>
+        </ul>
 
     </s2>
 
@@ -762,7 +797,7 @@ doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml</source>
     <s2 title="How can I generate Xerces-C binaries which includes the
                sample NetAccessor implementation using Libwww?">
 
-	  <p>This sample implementation has only been minimally tested
+      <p>This sample implementation has only been minimally tested
       only under Windows NT using Libwww 5.2.8. We have not stress
       tested our implementation can cannot guarantee that there are no
       memory leaks. The error reporting is also not adequate. Further,
@@ -772,11 +807,67 @@ doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml</source>
       would welcome any volunteers who would contribute code to make
       this happen on various platforms.</p>
 
-	  <p>You need the &XercesCName; source archive for Windows for
-	  doing this build.</p>
+      <p>The software that you need are:</p>
+      <ul>
+        <li>You need the &XercesCName; source archive for Windows.</li>
+        <li>LibWWW 5.2.8. Win32 binaries are available at: <jump
+        href="http://www.idm.ru/libwww.htm">http://www.idm.ru/libwww.htm</jump>.
+        Source archives and other details on LibWWW are available at <jump
+        href="http://www.w3.org/Library/">http://www.w3.org/Library/</jump>.</li>
+      </ul>
 
-	  <p>All required changes are restricted to the Project file
-	  settings for the XercesLib. </p>
+      <p>All required changes in Xerces-C are restricted to the Project file
+      settings for the XercesLib. To simplify, we will make certain assumptions
+      about how LibWWW binaries (.lib) and header files are installed on your
+      machine.</p>
+
+     <ol>
+
+       <li>First generate all the LibWWW binaries by using the project
+       file supplied. Create a top level (say) <code>\libWWW</code>
+       directory on the same disk drive where you installed the
+       Xerces-C sources.  Copy all the <code>.lib</code> files to
+       <code>\libWWW\lib</code> directory. Next, copy all the
+       <code>.dll</code> files to <code>\libWWW\bin</code> directory
+       and all the header (<code>*.h</code>) files to
+       <code>\libWWW\include</code> directory.</li>
+
+       <li>Next make the following changes to the Xerces-C lib project
+       settings. Invoke the project settings dialog box.</li>
+
+       <ol>
+         <li>In the 'C/C++ : Preprocessor : Preprocessor definitions' add
+         <code>XML_USE_NETACCESSOR_LIBWWW</code></li>
+
+         <li>In the 'C/C++ : Preprocessor : Additional include directories' add
+         <code>\libWWW\include</code>.</li>
+
+       </ol>
+
+       <li>Next, rather than listing all the 20 some LibWWW .lib files in the
+       link settings, add them as external files to the XercesLib project.
+       Right-Click on 'XercesLib files' and choose the 'Add Files to Project'
+       menu item. Next choose all the *.lib files in \libWWW\lib directory and
+       press 'ok'.</li>
+
+       <li>Next, create a new sub-folder in XercesLib:util folder, by
+       right-clicking on 'util' and choosing 'New Folder'. Call it 'libWWW'.</li>
+
+       <li>Add netaccessor files into this 'libWWW' folder again, by
+       right-clicking on 'libWWW' folder and choosing 'Add Files to
+       Folder'.  Choose the four files in
+       <code>&lt;XercesCRoot&gt;\src\util\NetAccessors</code>
+       directory.  These files are: <code>BinURLInputStream.[ch]pp and
+       LibWWWNetAccessor.[ch]pp</code>.</li>
+
+       <li>Rebuild the Xerces-C library.</li>
+
+     </ol>
+
+     <p>Make sure you have <code>\libWWW\bin</code> in your
+     <code>PATH</code> environment variable, before you run the
+     samples and refer to a XML file containing HTTP URL's to remote
+     resources.</p>
 
     </s2>
 
