@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.5  2001/09/25 14:23:42  peiyongz
  * DTV Reorganization: checkValueSpace()
  *
@@ -131,9 +134,21 @@ public:
 
     //@}
 
-	void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
+	inline void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
 
 protected:
+
+    //
+    // ctor provided to be used by derived classes
+    //
+    IDDatatypeValidator(DatatypeValidator*            const baseValidator
+                      , RefHashTableOf<KVStringPair>* const facets
+                      , const int                           finalSet
+                      , const ValidatorType                 type);
+
+    inline void init(DatatypeValidator*            const baseValidator
+                   , RefHashTableOf<KVStringPair>* const facets
+                   , RefVectorOf<XMLCh>*           const enums);
 
     virtual void checkValueSpace(const XMLCh* const content);
 
@@ -151,9 +166,17 @@ private:
     RefHashTableOf<XMLRefInfo>* fIDRefList;
 };
 
-inline void IDDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
+void IDDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
 {
     fIDRefList = newIDRefList;
+}
+
+void IDDatatypeValidator::init(
+                               DatatypeValidator*            const baseValidator
+                             , RefHashTableOf<KVStringPair>* const facets
+                             , RefVectorOf<XMLCh>*           const enums)
+{
+    StringDatatypeValidator::init(baseValidator, facets, enums);
 }
 
 /**

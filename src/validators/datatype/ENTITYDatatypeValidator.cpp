@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.4  2001/09/24 21:39:29  peiyongz
  * DTV Reorganization: checkValueSpace()
  *
@@ -82,13 +85,8 @@
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 ENTITYDatatypeValidator::ENTITYDatatypeValidator()
-:StringDatatypeValidator()
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::ENTITY)
 ,fEntityDeclPool(0)
-{
-    DatatypeValidator::setType(DatatypeValidator::ENTITY);
-}
-
-ENTITYDatatypeValidator::~ENTITYDatatypeValidator()
 {}
 
 ENTITYDatatypeValidator::ENTITYDatatypeValidator(
@@ -96,30 +94,21 @@ ENTITYDatatypeValidator::ENTITYDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, enums, finalSet)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ENTITY)
 ,fEntityDeclPool(0)
 {
-    //
-    // the StringDatatypeValidator has the same set of
-    // constrainning facets as the ENTITYDatatypeValidator
-    // and the StringDatatypeValidator(...) would do
-    // all the jobs there.
+    init(baseValidator, facets, enums);
+}
 
-    //
-    // if enumeration is provided, make sure that they
-    // are all valid NCName(s).
-    //
-    if (enums)
-    {
-        int enumLength = enums->size();
-        for ( int i = 0; i < enumLength; i++)
-        {
-            checkValueSpace(enums->elementAt(i));
-        }
-    }
+ENTITYDatatypeValidator::~ENTITYDatatypeValidator()
+{}
 
-    DatatypeValidator::setType(DatatypeValidator::ENTITY);
-
+DatatypeValidator* ENTITYDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new ENTITYDatatypeValidator(this, facets, enums, finalSet);
 }
 
 // -----------------------------------------------------------------------
@@ -131,14 +120,6 @@ int ENTITYDatatypeValidator::compare(const XMLCh* const lValue
     return ( XMLString::compareString(lValue, rValue)==0 ? 0 : -1);
 }
 
-DatatypeValidator* ENTITYDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new ENTITYDatatypeValidator(this, facets, enums, finalSet);
-}
-
 void ENTITYDatatypeValidator::validate(const XMLCh* const content)
 {
     // use StringDatatypeValidator (which in turn, invoke
@@ -146,8 +127,6 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
     // facets if any.
     //
     StringDatatypeValidator::validate(content);
-
-    checkValueSpace(content);
 
     //
     // parse the entity iff an EntityDeclPool is provided

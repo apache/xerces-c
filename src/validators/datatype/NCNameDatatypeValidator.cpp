@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.1  2001/09/25 15:58:45  peiyongz
  * DTV Reorganization: new class
  *
@@ -72,10 +75,8 @@
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 NCNameDatatypeValidator::NCNameDatatypeValidator()
-:StringDatatypeValidator()
-{
-    DatatypeValidator::setType(DatatypeValidator::NCName);
-}
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::NCName)
+{}
 
 NCNameDatatypeValidator::~NCNameDatatypeValidator()
 {}
@@ -85,29 +86,27 @@ NCNameDatatypeValidator::NCNameDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, enums, finalSet)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::NCName)
 {
-    //
-    // the StringDatatypeValidator has the same set of
-    // constrainning facets as the NCNameDatatypeValidator
-    // and the StringDatatypeValidator(...) would do
-    // all the jobs there.
+    init(baseValidator, facets, enums);
+}
 
-    //
-    // if enumeration is provided, make sure that they
-    // are all valid NCName(s).
-    //
-    if (enums)
-    {
-        int enumLength = enums->size();
-        for ( int i = 0; i < enumLength; i++)
-        {
-            checkValueSpace(enums->elementAt(i));
-        }
-    }
+DatatypeValidator* NCNameDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new NCNameDatatypeValidator(this, facets, enums, finalSet);
+}
 
-    DatatypeValidator::setType(DatatypeValidator::NCName);
-
+NCNameDatatypeValidator::NCNameDatatypeValidator(
+                          DatatypeValidator*            const baseValidator
+                        , RefHashTableOf<KVStringPair>* const facets
+                        , const int                           finalSet
+                        , const ValidatorType                 type)
+:StringDatatypeValidator(baseValidator, facets, finalSet, type)
+{
+    // do not invoke init() here!!!
 }
 
 // -----------------------------------------------------------------------
@@ -119,14 +118,6 @@ int NCNameDatatypeValidator::compare(const XMLCh* const lValue
     return ( XMLString::compareString(lValue, rValue)==0 ? 0 : -1);
 }
 
-DatatypeValidator* NCNameDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new NCNameDatatypeValidator(this, facets, enums, finalSet);
-}
-
 void NCNameDatatypeValidator::validate(const XMLCh* const content)
 {
     // use StringDatatypeValidator (which in turn, invoke
@@ -134,8 +125,6 @@ void NCNameDatatypeValidator::validate(const XMLCh* const content)
     // facets if any.
     //
     StringDatatypeValidator::validate(content);
-
-    checkValueSpace(content);
 
     return;
 }

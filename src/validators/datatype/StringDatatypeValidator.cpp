@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.15  2001/09/25 15:58:14  peiyongz
  * Check baseValidator in assignAdditinoalFacet() and inheritAdditionalFacet()
  *
@@ -121,9 +124,6 @@ StringDatatypeValidator::StringDatatypeValidator()
 ,fWhiteSpace(DatatypeValidator::PRESERVE)
 {}
 
-StringDatatypeValidator::~StringDatatypeValidator()
-{}
-
 StringDatatypeValidator::StringDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
@@ -135,12 +135,26 @@ StringDatatypeValidator::StringDatatypeValidator(
     init(baseValidator, facets, enums);
 }
 
+StringDatatypeValidator::~StringDatatypeValidator()
+{}
+
 DatatypeValidator* StringDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
     return (DatatypeValidator*) new StringDatatypeValidator(this, facets, enums, finalSet);
+}
+
+StringDatatypeValidator::StringDatatypeValidator(
+                          DatatypeValidator*            const baseValidator
+                        , RefHashTableOf<KVStringPair>* const facets
+                        , const int                           finalSet
+                        , const ValidatorType                 type)
+:AbstractStringValidator(baseValidator, facets, finalSet, type)
+,fWhiteSpace(DatatypeValidator::PRESERVE)
+{
+    // do not invoke init() here!!!
 }
 
 short StringDatatypeValidator::getWSFacet() const 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.7  2001/09/24 21:39:12  peiyongz
  * DTV Reorganization:
  *
@@ -111,6 +114,18 @@ public:
 
 protected:
 
+    //
+    // ctor provided to be used by derived classes
+    //
+    StringDatatypeValidator(DatatypeValidator*            const baseValidator
+                          , RefHashTableOf<KVStringPair>* const facets
+                          , const int                           finalSet
+                          , const ValidatorType                 type);
+
+    inline void init(DatatypeValidator*            const baseValidator
+                   , RefHashTableOf<KVStringPair>* const facets
+                   , RefVectorOf<XMLCh>*           const enums);
+
     virtual void assignAdditionalFacet(const XMLCh* const key
                                      , const XMLCh* const value);
 
@@ -142,6 +157,14 @@ private:
 void StringDatatypeValidator::setWhiteSpace(short newValue)
 {
     fWhiteSpace = newValue;
+}
+
+void StringDatatypeValidator::init(
+                          DatatypeValidator*            const baseValidator
+                        , RefHashTableOf<KVStringPair>* const facets
+                        , RefVectorOf<XMLCh>*           const enums)
+{
+    AbstractStringValidator::init(baseValidator, facets, enums);
 }
 
 /**

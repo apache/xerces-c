@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.1  2001/09/25 15:58:45  peiyongz
  * DTV Reorganization: new class
  *
@@ -72,10 +75,8 @@
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 NameDatatypeValidator::NameDatatypeValidator()
-:StringDatatypeValidator()
-{
-    DatatypeValidator::setType(DatatypeValidator::Name);
-}
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::Name)
+{}
 
 NameDatatypeValidator::~NameDatatypeValidator()
 {}
@@ -85,38 +86,9 @@ NameDatatypeValidator::NameDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, enums, finalSet)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Name)
 {
-    //
-    // the StringDatatypeValidator has the same set of
-    // constrainning facets as the NameDatatypeValidator
-    // and the StringDatatypeValidator(...) would do
-    // all the jobs there.
-
-    //
-    // if enumeration is provided, make sure that they
-    // are all valid NCName(s).
-    //
-    if (enums)
-    {
-        int enumLength = enums->size();
-        for ( int i = 0; i < enumLength; i++)
-        {
-            checkValueSpace(enums->elementAt(i));
-        }
-    }
-
-    DatatypeValidator::setType(DatatypeValidator::Name);
-
-}
-
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-int NameDatatypeValidator::compare(const XMLCh* const lValue
-                                   , const XMLCh* const rValue)
-{
-    return ( XMLString::compareString(lValue, rValue)==0 ? 0 : -1);
+    init(baseValidator, facets, enums);
 }
 
 DatatypeValidator* NameDatatypeValidator::newInstance(
@@ -127,6 +99,24 @@ DatatypeValidator* NameDatatypeValidator::newInstance(
     return (DatatypeValidator*) new NameDatatypeValidator(this, facets, enums, finalSet);
 }
 
+NameDatatypeValidator::NameDatatypeValidator(
+                          DatatypeValidator*            const baseValidator
+                        , RefHashTableOf<KVStringPair>* const facets
+                        , const int                           finalSet
+                        , const ValidatorType                 type)
+:StringDatatypeValidator(baseValidator, facets, finalSet, type)
+{
+    // do not invoke init() here!!!
+}
+// -----------------------------------------------------------------------
+// Compare methods
+// -----------------------------------------------------------------------
+int NameDatatypeValidator::compare(const XMLCh* const lValue
+                                   , const XMLCh* const rValue)
+{
+    return ( XMLString::compareString(lValue, rValue)==0 ? 0 : -1);
+}
+
 void NameDatatypeValidator::validate(const XMLCh* const content)
 {
     // use StringDatatypeValidator (which in turn, invoke
@@ -135,15 +125,13 @@ void NameDatatypeValidator::validate(const XMLCh* const content)
     //
     StringDatatypeValidator::validate(content);
 
-    checkValueSpace(content);
-
     return;
 }
 
 void NameDatatypeValidator::checkValueSpace(const XMLCh* const content)
 {
     //
-    // 3.3.7 check must: "NCName"
+    // 3.3.6 check must: "Name"
     //
     if ( !XMLString::isValidName(content))
     {

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.4  2001/09/25 14:23:42  peiyongz
  * DTV Reorganization: checkValueSpace()
  *
@@ -83,10 +86,19 @@
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 IDDatatypeValidator::IDDatatypeValidator()
-:StringDatatypeValidator()
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::ID)
+,fIDRefList(0)
+{}
+
+IDDatatypeValidator::IDDatatypeValidator(
+                          DatatypeValidator*            const baseValidator
+                        , RefHashTableOf<KVStringPair>* const facets
+                        , RefVectorOf<XMLCh>*           const enums
+                        , const int                           finalSet)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ID)
 ,fIDRefList(0)
 {
-    DatatypeValidator::setType(DatatypeValidator::ID);
+    init(baseValidator, facets, enums);
 }
 
 IDDatatypeValidator::~IDDatatypeValidator()
@@ -103,31 +115,12 @@ DatatypeValidator* IDDatatypeValidator::newInstance(
 IDDatatypeValidator::IDDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, enums, finalSet)
+                        , const int                           finalSet
+                        , const ValidatorType                 type)
+:StringDatatypeValidator(baseValidator, facets, finalSet, type)
 ,fIDRefList(0)
 {
-    //
-    // the StringDatatypeValidator has the same set of
-    // constrainning facets as the IDDatatypeValidator
-    // and the StringDatatypeValidator(...) would do
-    // all the jobs there.
-
-    //
-    // if enumeration is provided, make sure that they
-    // are all valid NCName(s).
-    //
-    if (enums)
-    {
-        int enumLength = enums->size();
-        for ( int i = 0; i < enumLength; i++)
-        {
-            checkValueSpace(enums->elementAt(i));
-        }
-    }
-
-    DatatypeValidator::setType(DatatypeValidator::ID);
+    // do not invoke init() here!!!
 }
 
 void IDDatatypeValidator::validate(const XMLCh* const content)
@@ -137,8 +130,6 @@ void IDDatatypeValidator::validate(const XMLCh* const content)
     // facets if any.
     //
     StringDatatypeValidator::validate(content);
-
-    checkValueSpace(content);
 
     // storing IDs to the global ID table
     if (fIDRefList)

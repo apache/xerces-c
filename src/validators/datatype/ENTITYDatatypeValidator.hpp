@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.4  2001/09/24 21:39:29  peiyongz
  * DTV Reorganization: checkValueSpace()
  *
@@ -148,11 +151,23 @@ public:
     /** @name Setter Functions */
     //@{
 
-    void    setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool);
+    inline void    setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool);
 
     //@}
 
 protected:
+
+    //
+    // ctor provided to be used by derived classes
+    //
+    ENTITYDatatypeValidator(DatatypeValidator*            const baseValidator
+                          , RefHashTableOf<KVStringPair>* const facets
+                          , const int                           finalSet
+                          , const ValidatorType                 type);
+
+    inline void init(DatatypeValidator*            const baseValidator
+                   , RefHashTableOf<KVStringPair>* const facets
+                   , RefVectorOf<XMLCh>*           const enums);
 
     virtual void checkValueSpace(const XMLCh* const content);
 
@@ -172,9 +187,17 @@ private:
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
-inline void ENTITYDatatypeValidator::setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool)
+void ENTITYDatatypeValidator::setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool)
 {
     fEntityDeclPool = entityDeclPool;
+}
+
+void ENTITYDatatypeValidator::init(
+                               DatatypeValidator*            const baseValidator
+                             , RefHashTableOf<KVStringPair>* const facets
+                             , RefVectorOf<XMLCh>*           const enums)
+{
+    StringDatatypeValidator::init(baseValidator, facets, enums);
 }
 
 /**

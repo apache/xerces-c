@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/27 13:51:25  peiyongz
+ * DTV Reorganization: ctor/init created to be used by derived class
+ *
  * Revision 1.3  2001/09/24 15:30:16  peiyongz
  * DTV Reorganization: init() to be invoked from derived class' ctor to allow
  *        correct resolution of virtual methods like assignAdditionalFacet(),
@@ -125,6 +128,10 @@ protected:
                           , const int                           finalSet
                           , const ValidatorType                 type);
 
+    void init(DatatypeValidator*            const baseValidator
+            , RefHashTableOf<KVStringPair>* const facets
+            , RefVectorOf<XMLCh>*           const enums);
+
     //
     // Abstract interface
     //
@@ -164,14 +171,6 @@ protected:
     inline void                 setMinLength(unsigned int);
 
     inline void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
-
-// -----------------------------------------------------------------------
-// Misc
-// -----------------------------------------------------------------------
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
 
 private:
 
