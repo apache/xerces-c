@@ -233,11 +233,24 @@ DocumentImpl *NodeImpl::getOwnerDocument()
     // if we have an owner simply forward the request
     // otherwise ownerNode is our ownerDocument
     if (owned()) {
-        return ownerNode->getOwnerDocument();
+        return ownerNode->getDocument();
     } else {
         return (DocumentImpl *) ownerNode;
     }
 };  
+
+// unlike getOwnerDocument this is not overriden by DocumentImpl to return null
+DocumentImpl *NodeImpl::getDocument()
+{
+    // if we have an owner simply forward the request
+    // otherwise ownerNode is our ownerDocument
+    if (owned()) {
+        return ownerNode->getDocument();
+    } else {
+        return (DocumentImpl *) ownerNode;
+    }
+};  
+
 
 void NodeImpl::setOwnerDocument(DocumentImpl *doc) {
     // if we have an owner we rely on it to have it right

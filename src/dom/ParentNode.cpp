@@ -112,6 +112,11 @@ DocumentImpl * THIS_CLASS::getOwnerDocument() {
     return ownerDocument;
 }
 
+// unlike getOwnerDocument this is not overriden by DocumentImpl to return null
+DocumentImpl * THIS_CLASS::getDocument() {
+    return ownerDocument;
+}
+
 void THIS_CLASS::setOwnerDocument(DocumentImpl *doc) {
     ownerDocument = doc;
     for (NodeImpl *child = firstChild;

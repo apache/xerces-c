@@ -125,6 +125,9 @@ public:
     //Introduced in DOM Level 2
     virtual void	normalize();
 
+    // NON-DOM
+    // unlike getOwnerDocument this never returns null, even for Document nodes
+    virtual DocumentImpl * getDocument();
 protected:
     void cloneChildren(const NodeImpl &other);
     ChildNode * lastChild();

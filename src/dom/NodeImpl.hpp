@@ -198,6 +198,9 @@ protected:
 public: // should really be protected - ALH
 
     virtual void setOwnerDocument(DocumentImpl *doc);
+    // NON-DOM
+    // unlike getOwnerDocument this never returns null, even for Document nodes
+    virtual DocumentImpl * getDocument();
 
     /*
      * Flags setters and getters
