@@ -73,7 +73,6 @@
 #include <util/TransENameMap.hpp>
 
 
-
 // ---------------------------------------------------------------------------
 //  Local, static data
 //
@@ -146,6 +145,8 @@ XMLTransService::XMLTransService()
 
 XMLTransService::~XMLTransService()
 {
+    delete gMappings;    // The contents of the gMappings hash table are owned by
+    gMappings = 0;       //   the it, and so will be deleted by gMapping's destructor.
 }
 
 
