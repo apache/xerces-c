@@ -6,8 +6,9 @@
     <s2 title="Building &XercesCName; with ICU">
         <p>&XercesCName; may be built in stand-alone mode using
         native encoding support and also using ICU where you get support over 180
-        different encodings. ICU stands for International Components for Unicode and is an
-        open source distribution from IBM. You can get
+        different encodings and/or locale specific message support. ICU stands for 
+        International Components for Unicode and is an open source distribution from 
+        IBM. You can get        
         <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
         <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
         or go to the ICU
@@ -55,7 +56,19 @@
 <source>set XERCESCROOT=x:\&XercesCSrcInstallDir;
 set ICUROOT=x:\icu
 cd x:\&XercesCSrcInstallDir;\scripts
-perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -t icu</source>
+</source>
+
+        <p>To build with ICU, either specify using ICU transcoding service,</p>
+         
+<source>         
+perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -t icu
+</source>
+        
+        <p> or specify using ICU message loader service</p>
+        
+<source>         
+perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -m icu
+</source>
 
         <p>(Match the source directory to your system; the target directory can be
         anything you want.)</p>
@@ -95,8 +108,25 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
 <source>export XERCESCROOT=$HOME/&XercesCSrcInstallDir;
 export ICUROOT=$HOME/icu
 cd $HOME/&XercesCSrcInstallDir;/scripts
-perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCInstallDir;-aix -t icu</source>
+</source>
 
+        <p>To build with ICU, either specify using ICU transcoding service,</p>
+        
+<source>
+perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCInstallDir;-aix -t icu
+</source>
+
+        <p> or specify using ICU message loader service</p>
+               
+<source>        
+perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCInstallDir;-aix -m icu
+</source>
+                             
+        <p>To use ICU message loader, it is highly recommended to use packageBinaries.pl to build &XercesCName;,
+        otherwise, the two-step build, requires set extra environment variable in between the ICU build and 
+        the &XercesCName; build.
+        </p>
+        
         </s3>
     </s2>
 
