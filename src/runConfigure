@@ -132,7 +132,7 @@ fi
 debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
 msgloader=inmem          # by default use native transcoder
-netaccessor=fileonly     # by default use fileonly
+netaccessor=socket       # by default use socket (can do HTTP URL's)
 configureoptions=""
 
 for i in $*
@@ -356,7 +356,7 @@ export MESSAGELOADER
 # Check for the type of net accessor
 #
 
-NETACCESSOR=FileOnly               # By default use file-only
+NETACCESSOR=Socket               # By default use socket (does HTTP URL's)
 if test $netaccessor ; then
 case $netaccessor in
    fileonly)
