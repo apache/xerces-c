@@ -1878,7 +1878,8 @@ void SGXMLScanner::commonInit()
     fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
 
     // Create dummy schema grammar
-    fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+    //fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+    fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
 
     //  Create the Validator and init them
     fSchemaValidator = new (fMemoryManager) SchemaValidator(0, fMemoryManager);
@@ -3180,7 +3181,8 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         fElemStack.setValidationFlag(fValidate);
                     }
 
-                    grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+                    //grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+                    grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
 
                     TraverseSchema traverseSchema
                     (
@@ -3333,7 +3335,8 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+            //SchemaGrammar* grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+            SchemaGrammar* grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
             TraverseSchema traverseSchema
             (
                 root

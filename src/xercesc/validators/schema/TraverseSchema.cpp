@@ -753,7 +753,8 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
             // Preprocess new schema
             // --------------------------------------------------------
             SchemaInfo* saveInfo = fSchemaInfo;
-            fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();
+            //fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();
+            fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
             preprocessSchema(root, importURL);
             fPreprocessedNodes->put((void*) elem, fSchemaInfo);
 

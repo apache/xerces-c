@@ -2851,7 +2851,8 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         }
     }
 
-    fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
+    //fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
+    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
     XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
     fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;

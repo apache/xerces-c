@@ -1681,7 +1681,8 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fValidatorFromUser)
         fValidator->reset();
 
-    fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();   
+    //fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();   
+    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
     XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
     fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
@@ -2038,7 +2039,8 @@ void DGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
+    //fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
+    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
     XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
     fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
