@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.30  2003/02/25 16:07:37  tng
+ * [Bug 13493] Use const on static data in DOMWriterImpl.cpp.
+ *
  * Revision 1.29  2003/01/28 18:31:47  peiyongz
  * Bug#13694: Allow Xerces to write the BOM to XML files
  *
@@ -203,7 +206,7 @@ static const int BYTE_ORDER_MARK_ID               = 0x8;
 // the first for "true",
 // the second for "false".
 //
-static bool  featuresSupported[] = {
+static const bool  featuresSupported[] = {
     false, true,  // canonical-form
     true,  true,  // discard-default-content
     true,  true,  // entity
