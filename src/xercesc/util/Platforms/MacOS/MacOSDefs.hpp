@@ -59,15 +59,6 @@
  */
 
 
-// ---------------------------------------------------------------------------
-// NOTE:
-//
-//    Xerces is not officially supported on Macintosh. This file was sent
-//    in by one of the Macintosh users and is included in the distribution
-//    just for convenience. Please send any defects / modification
-//    reports to xml4c@us.ibm.com
-// ---------------------------------------------------------------------------
-
 
 #ifndef MACOS_DEFS_HPP
 #define MACOS_DEFS_HPP

@@ -111,40 +111,9 @@
 
 
 
-
 // ---------------------------------------------------------------------------
-//  Local Methods
+//  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-    if (fputs(toWrite, stream) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stderr) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stdout) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdOutWriteFailure);
-    }
-}
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
@@ -156,10 +125,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 }
 
 
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Private Static Methods
-// ---------------------------------------------------------------------------
 
 //
 //  This method is called by the platform independent part of this class
@@ -332,24 +297,9 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 }
 
 
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-
-#if defined (SOLARIS)
-extern "C" int ftime(struct timeb *); // Solaris headers missing this decl
-#endif
-
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
-    timeb aTime;
-    ftime(&aTime);
-    return (unsigned long)(aTime.time*1000 + aTime.millitm);
-}
-
-
-
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
     //
@@ -499,6 +449,23 @@ XMLCh* XMLPlatformUtils::weavePaths
     return tmpBuf;
 }
 
+
+
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+
+#if defined (SOLARIS)
+extern "C" int ftime(struct timeb *); // Solaris headers missing this decl
+#endif
+
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+    timeb aTime;
+    ftime(&aTime);
+    return (unsigned long)(aTime.time*1000 + aTime.millitm);
+}
 
 
 // -----------------------------------------------------------------------

@@ -108,48 +108,6 @@
 
 
 // ---------------------------------------------------------------------------
-//  Local Methods
-// ---------------------------------------------------------------------------
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-    if (fputs(toWrite, stream) == EOF)
-	    {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-        ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stderr) == EOF)
-	    {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-        ArrayJanitor<char> janText(tmpVal);
-
-    if (fputs(tmpVal, stdout) == EOF)
-	    {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-
-XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
-{
-#if defined (XML_USE_NETACCESSOR_SOCKET)
-    return new SocketNetAccessor();
-#else
-    return 0;
-#endif
-}
-
-// ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 
@@ -166,6 +124,15 @@ void XMLPlatformUtils::platformInit()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
+
+XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
+{
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
+    return 0;
+#endif
+}
 
 //
 //  This method is called by the platform independent part of this class
@@ -361,16 +328,16 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     }
 #endif
 
-    // fix for file:// protocol                                          
-    // the tmpFileName has a prefix of //absolute path                   
-    // for example, file:////u/.... instead of file:///u/....           
-    // the fopen() on OS/390 cannot open a //u/... POSIX file            
-    if (retVal == NULL) {                                                
-	if ((tmpFileName[0] == '/') && (tmpFileName[1] == '/')) {        
+    // fix for file:// protocol
+    // the tmpFileName has a prefix of //absolute path
+    // for example, file:////u/.... instead of file:///u/....
+    // the fopen() on OS/390 cannot open a //u/... POSIX file
+    if (retVal == NULL) {
+	if ((tmpFileName[0] == '/') && (tmpFileName[1] == '/')) {
 	    char *srcName = tmpFileName + 1; // points past the first '/'
-	    retVal = (FILE*)fopen( srcName , "rb" );                     
-	}                                                                
-    }                                                                     
+	    retVal = (FILE*)fopen( srcName , "rb" );
+	}
+    }
 
     if( retVal == NULL )
 	return 0;
@@ -455,17 +422,17 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     }
 #endif
 
-    // fix for file:// protocol                                          
-    // the fileName has a prefix of //absolute path                   
-    // for example, file:////u/.... instead of file:///u/....           
-    // the fopen() on OS/390 cannot open a //u/... POSIX file            
-    if (retVal == NULL) {                                                   
-	if ((fileName[0] == '/') && (fileName[1] == '/')) {                 
+    // fix for file:// protocol
+    // the fileName has a prefix of //absolute path
+    // for example, file:////u/.... instead of file:///u/....
+    // the fopen() on OS/390 cannot open a //u/... POSIX file
+    if (retVal == NULL) {
+	if ((fileName[0] == '/') && (fileName[1] == '/')) {
 	    const char *srcName = fileName + 1; // points past the first '/'
-	    retVal = (FILE*)fopen( srcName , "rb" );                        
-	}          	                                                         
-    }                                                                       
-  
+	    retVal = (FILE*)fopen( srcName , "rb" );
+	}          	
+    }
+
     if( retVal == NULL )
         return 0;
     return retVal;
@@ -495,18 +462,9 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 }
 
 
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
-    timeb aTime;
-    ftime(&aTime);
-    return (unsigned long)(aTime.time*1000 + aTime.millitm);
-
-}
-
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
@@ -673,6 +631,17 @@ XMLCh* XMLPlatformUtils::weavePaths
     // Orphan the buffer and return it
     janBuf.orphan();
         return tmpBuf;
+}
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+    timeb aTime;
+    ftime(&aTime);
+    return (unsigned long)(aTime.time*1000 + aTime.millitm);
+
 }
 
 // -----------------------------------------------------------------------

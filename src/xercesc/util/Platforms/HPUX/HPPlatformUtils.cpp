@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:24  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/21 20:31:47  tng
+ * Minor update: Remove obsolete code
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:24  peiyongz
+ * sane_include
  *
  * Revision 1.17  2001/10/25 15:20:31  tng
  * Need to guard with NO_APP_THREADS when destroying the mutex.
@@ -188,40 +191,11 @@
 
 
 
+
+
 // ---------------------------------------------------------------------------
-//  Local Methods
+//  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
-static void WriteCharStr(FILE* stream, const char* const toWrite)
-{
-    if (fputs(toWrite, stream) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdErr(const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stderr) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdOut(const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stdout) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdOutWriteFailure);
-    }
-}
-
 
 //
 //  This method is called by the platform independent part of this class
@@ -239,12 +213,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 }
 
 
-
-
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Private Static Methods
-// ---------------------------------------------------------------------------
 
 //
 //  This method is called by the platform independent part of this class
@@ -422,25 +390,9 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 }
 
 
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
-#if defined(XML_HPUX_KAICC)         // should be reimplemented by someone with
-                                    // HP/UX and KAI knowledge.
-    return (unsigned long) 0;
-#else
-    timeb aTime;
-    ftime(&aTime);
-    return (unsigned long)(aTime.time*1000 + aTime.millitm);
-#endif
-}
-
-
-
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
@@ -591,6 +543,24 @@ XMLCh* XMLPlatformUtils::weavePaths
     janBuf.orphan();
     return tmpBuf;
 }
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+#if defined(XML_HPUX_KAICC)         // should be reimplemented by someone with
+                                    // HP/UX and KAI knowledge.
+    return (unsigned long) 0;
+#else
+    timeb aTime;
+    ftime(&aTime);
+    return (unsigned long)(aTime.time*1000 + aTime.millitm);
+#endif
+}
+
+
 
 // -----------------------------------------------------------------------
 //  Mutex methods

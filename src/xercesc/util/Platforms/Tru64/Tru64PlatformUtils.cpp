@@ -113,38 +113,8 @@
 #endif
 
 // ---------------------------------------------------------------------------
-//  Local Methods
+//  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-  if (fputs(toWrite, stream) == EOF)
-  {
-    ThrowXML(XMLPlatformUtilsException,
-	     XMLExcepts::Strm_StdErrWriteFailure);
-  }
-}
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-  char* tmpVal = XMLString::transcode(toWrite);
-  ArrayJanitor<char> janText(tmpVal);
-  if (fputs(tmpVal, stderr) == EOF)
-  {
-    ThrowXML(XMLPlatformUtilsException,
-	     XMLExcepts::Strm_StdErrWriteFailure);
-  }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-  char* tmpVal = XMLString::transcode(toWrite);
-  ArrayJanitor<char> janText(tmpVal);
-  if (fputs(tmpVal, stdout) == EOF)
-  {
-    ThrowXML(XMLPlatformUtilsException,
-	     XMLExcepts::Strm_StdOutWriteFailure);
-  }
-}
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
@@ -160,10 +130,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
     return 0;
 }
 #endif
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Private Static Methods
-// ---------------------------------------------------------------------------
 
 //
 //  This method is called by the platform independent part of this class
@@ -331,18 +297,9 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 }
 
 
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
-  timespec ts;
-  clock_gettime (CLOCK_REALTIME, &ts);
-  return (unsigned long) ((ts.tv_sec * 1000) + (ts.tv_nsec / 1000000));
-}
-
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
   //
@@ -490,6 +447,18 @@ XMLCh* XMLPlatformUtils::weavePaths (
   // Orphan the buffer and return it
   janBuf.orphan();
   return tmpBuf;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+  timespec ts;
+  clock_gettime (CLOCK_REALTIME, &ts);
+  return (unsigned long) ((ts.tv_sec * 1000) + (ts.tv_nsec / 1000000));
 }
 
 

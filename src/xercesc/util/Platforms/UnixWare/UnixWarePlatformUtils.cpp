@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/21 20:31:48  tng
+ * Minor update: Remove obsolete code
+ *
  * Revision 1.2  2002/05/01 21:13:32  tng
  * [Bug 7265] UnixWare port broken in platformTerm() since rev 1.10.
  *
@@ -154,38 +157,8 @@
 
 
 // ---------------------------------------------------------------------------
-//  Local Methods
+//  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-    if (fputs(toWrite, stream) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stderr) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stdout) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdOutWriteFailure);
-    }
-}
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
@@ -199,10 +172,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 }
 
 
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Private Static Methods
-// ---------------------------------------------------------------------------
 
 //
 //  This method is called by the platform independent part of this class
@@ -378,6 +347,51 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 }
 
 
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: File system methods
+// ---------------------------------------------------------------------------
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+{
+    //
+    //  NOTE: The path provided has always already been opened successfully,
+    //  so we know that its not some pathological freaky path. It comes in
+    //  in native format, and goes out as Unicode always
+    //
+    char* newSrc = XMLString::transcode(srcPath);
+    ArrayJanitor<char> janText(newSrc);
+
+    // Use a local buffer that is big enough for the largest legal path
+    char *absPath = new char[PATH_MAX];
+    ArrayJanitor<char> janText2(absPath);
+    //get the absolute path
+    char* retPath = realpath(newSrc, absPath);
+
+    if (!retPath)
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::File_CouldNotGetBasePathName);
+    }
+    return XMLString::transcode(absPath);
+}
+
+bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+{
+    // Check for pathological case of empty path
+    if (!toCheck[0])
+        return false;
+
+    //
+    //  If it starts with a slash, then it cannot be relative. This covers
+    //  both something like "\Test\File.xml" and an NT Lan type remote path
+    //  that starts with a node like "\\MyNode\Test\File.xml".
+    //
+    if (toCheck[0] == XMLCh('/'))
+        return false;
+
+    // Else assume its a relative path
+    return true;
+}
+
 XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
                                     , const XMLCh* const    relativePath)
 
@@ -482,48 +496,6 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     // Orphan the buffer and return it
     janBuf.orphan();
     return tmpBuf;
-}
-
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
-{
-    //
-    //  NOTE: The path provided has always already been opened successfully,
-    //  so we know that its not some pathological freaky path. It comes in
-    //  in native format, and goes out as Unicode always
-    //
-    char* newSrc = XMLString::transcode(srcPath);
-    ArrayJanitor<char> janText(newSrc);
-
-    // Use a local buffer that is big enough for the largest legal path
-    char *absPath = new char[PATH_MAX];
-    ArrayJanitor<char> janText2(absPath);
-    //get the absolute path
-    char* retPath = realpath(newSrc, absPath);
-
-    if (!retPath)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::File_CouldNotGetBasePathName);
-    }
-    return XMLString::transcode(absPath);
-}
-
-bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
-{
-    // Check for pathological case of empty path
-    if (!toCheck[0])
-        return false;
-
-    //
-    //  If it starts with a slash, then it cannot be relative. This covers
-    //  both something like "\Test\File.xml" and an NT Lan type remote path
-    //  that starts with a node like "\\MyNode\Test\File.xml".
-    //
-    if (toCheck[0] == XMLCh('/'))
-        return false;
-
-    // Else assume its a relative path
-    return true;
 }
 
 

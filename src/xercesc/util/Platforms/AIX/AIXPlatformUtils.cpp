@@ -106,38 +106,12 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
-
 // ---------------------------------------------------------------------------
-//  Local Methods
+//  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-static void WriteCharStr( FILE* stream, const char* const toWrite)
+void XMLPlatformUtils::platformInit()
 {
-    if (fputs(toWrite, stream) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-    }
 }
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stderr) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stdout) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdOutWriteFailure);
-    }
-}
-
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
@@ -146,13 +120,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 #else
     return 0;
 #endif
-}
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform init method
-// ---------------------------------------------------------------------------
-void XMLPlatformUtils::platformInit()
-{
 }
 
 //
@@ -309,18 +276,9 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
 }
 
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
-    timeb aTime;
-    ftime(&aTime);
-    return (unsigned long)(aTime.time*1000 + aTime.millitm);
-
-}
-
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
@@ -472,6 +430,17 @@ XMLCh* XMLPlatformUtils::weavePaths
     return tmpBuf;
 }
 
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+    timeb aTime;
+    ftime(&aTime);
+    return (unsigned long)(aTime.time*1000 + aTime.millitm);
+
+}
 
 // -----------------------------------------------------------------------
 //  Mutex methods

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/21 20:31:47  tng
+ * Minor update: Remove obsolete code
+ *
  * Revision 1.1  2002/02/27 22:57:59  peiyongz
  * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
  *
@@ -191,7 +194,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
         reasonStr = "Cannot initialize the system or mutex";
 
     fprintf(stderr, "%s\n", reasonStr);
-    
+
     exit(-1);
 }
 
@@ -289,6 +292,51 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
     if (fseek((FILE*)theFile, 0, SEEK_SET))
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotResetFile);
+}
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: File system methods
+// ---------------------------------------------------------------------------
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+{
+    //
+    //  NOTE: The path provided has always already been opened successfully,
+    //  so we know that its not some pathological freaky path. It comes in
+    //  in native format, and goes out as Unicode always
+    //
+    char* newSrc = XMLString::transcode(srcPath);
+    ArrayJanitor<char> janText(newSrc);
+
+    // Use a local buffer that is big enough for the largest legal path
+    char *absPath = new char[pathconf(newSrc, _PC_PATH_MAX)];
+    ArrayJanitor<char> janText2(absPath);
+    // Get the absolute path
+    char* retPath = realpath(newSrc, absPath);
+
+    if (!retPath)
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::File_CouldNotGetBasePathName);
+    }
+    return XMLString::transcode(absPath);
+}
+
+bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+{
+    // Check for pathological case of empty path
+    if (!toCheck[0])
+        return false;
+
+    //
+    //  If it starts with a slash, then it cannot be relative. This covers
+    //  both something like "\Test\File.xml" and an NT Lan type remote path
+    //  that starts with a node like "\\MyNode\Test\File.xml".
+    //
+    if (toCheck[0] == XMLCh('/'))
+        return false;
+
+    // Else assume its a relative path
+    return true;
 }
 
 XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const   basePath,
@@ -390,48 +438,6 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const   basePath,
     // Orphan the buffer and return it
     janBuf.orphan();
     return tmpBuf;
-}
-
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
-{
-    //
-    //  NOTE: The path provided has always already been opened successfully,
-    //  so we know that its not some pathological freaky path. It comes in
-    //  in native format, and goes out as Unicode always
-    //
-    char* newSrc = XMLString::transcode(srcPath);
-    ArrayJanitor<char> janText(newSrc);
-
-    // Use a local buffer that is big enough for the largest legal path
-    char *absPath = new char[pathconf(newSrc, _PC_PATH_MAX)];
-    ArrayJanitor<char> janText2(absPath);
-    // Get the absolute path
-    char* retPath = realpath(newSrc, absPath);
-
-    if (!retPath)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::File_CouldNotGetBasePathName);
-    }
-    return XMLString::transcode(absPath);
-}
-
-bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
-{
-    // Check for pathological case of empty path
-    if (!toCheck[0])
-        return false;
-
-    //
-    //  If it starts with a slash, then it cannot be relative. This covers
-    //  both something like "\Test\File.xml" and an NT Lan type remote path
-    //  that starts with a node like "\\MyNode\Test\File.xml".
-    //
-    if (toCheck[0] == XMLCh('/'))
-        return false;
-
-    // Else assume its a relative path
-    return true;
 }
 
 
@@ -558,11 +564,11 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 //  Miscellaneous synchronization methods
 // -----------------------------------------------------------------------
 // Atomic system calls in OpenServe is restricted to kernel libraries.
-// To make operations thread safe, we implement static mutex and lock 
+// To make operations thread safe, we implement static mutex and lock
 // the atomic operations.
 
 void* XMLPlatformUtils::compareAndSwap(void**              toFill,
-									   const void* const   newValue, 
+									   const void* const   newValue,
 									   const void* const   toCompare)
 {
 	if (pthread_mutex_lock(gAtomicOpMutex))

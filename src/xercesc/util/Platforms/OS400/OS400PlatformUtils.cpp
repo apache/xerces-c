@@ -104,38 +104,8 @@ char* PackingRepText(const char * const repText1,
 		     const char * const repText3,
 		     const char * const repText4);
 // ---------------------------------------------------------------------------
-//  Local Methods
+//  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-    if (fputs(toWrite, stream) == EOF)
-    {
-	ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stderr) == EOF)
-    {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-
-	char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stdout) == EOF)
-    {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdOutWriteFailure);
-    }
-}
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
     return 0;
@@ -143,9 +113,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 
 
 
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform init method
-// ---------------------------------------------------------------------------
 //
 //  This method is called very early in the bootstrapping process. This guy
 //  must create a transcoding service and return it. It cannot use any string
@@ -320,21 +287,9 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 
 
 
-
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
- _MI_Time mt;
-         struct timeval tv;
-         int rc;
-
-         mattod(mt);
-   rc = Qp0zCvtToTimeval(&tv, mt, QP0Z_CVTTIME_TO_TIMESTAMP);
-   return((tv.tv_sec*1000 )+ (tv.tv_usec/1000));
-}
 /* since we do not have the realpath function on AS/400 and it appears
 to no be important that we convert the name to the real path we will
 only verify that the path exists  - note that this may make AS/400 output a different error for the pathname but customer should
@@ -601,6 +556,20 @@ void send_message (char * text, char * messageid, char type)
 void abnormal_termination(int termcode)
 {
    send_message(NULL,"CPF9899",'e'); /* send final exception that we have terminated*/
+}
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+ _MI_Time mt;
+         struct timeval tv;
+         int rc;
+
+         mattod(mt);
+   rc = Qp0zCvtToTimeval(&tv, mt, QP0Z_CVTTIME_TO_TIMESTAMP);
+   return((tv.tv_sec*1000 )+ (tv.tv_usec/1000));
 }
 
 // -----------------------------------------------------------------------

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:26  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/21 20:31:48  tng
+ * Minor update: Remove obsolete code
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:26  peiyongz
+ * sane_include
  *
  * Revision 1.4  2000/03/02 21:10:38  abagchi
  * Added empty function platformTerm()
@@ -80,17 +83,6 @@
 
 
 // ---------------------------------------------------------------------------
-// NOTE:
-//
-//  Xerces is not officially supported on Tandem. This file was sent
-//  in by one of the Tandem users and is included in the distribution
-//  just for convenience. Please send any defects / modification
-//  reports to xml4c@us.ibm.com
-// ---------------------------------------------------------------------------
-
-
-
-// ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
 // XXX #include    <pthread.h>
@@ -108,142 +100,10 @@
 
 
 // ---------------------------------------------------------------------------
-//  Local Methods
-// ---------------------------------------------------------------------------
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-    if (!fputs(toWrite, stream))
-    {
-        throw XMLPlatformUtilsException("Could not write to standard out/err");
-    }
-}
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    if (!fputs(tmpVal, stderr))
-    {
-        throw XMLPlatformUtilsException("Could not write to standard error file");
-    }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    if (!fputs(tmpVal, stdout))
-    {
-        throw XMLPlatformUtilsException("Could not write to standard out file");
-    }
-}
-
-
-// ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::platformInit()
 {
-}
-
-
-void XMLPlatformUtils::setupIntlPath()
-{
-    //
-    //  We need to figure out the path to the Intl classes. They will be
-    //  in the .\Intl subdirectory under this DLL.
-    //
-    char* tmpBuf = getenv("XML4C2INTLDIR");
-    //check if environment variable is set
-    if (tmpBuf !=0) { 
-        // Store this string in the static member
-        char    cBuf[1024];
-
-        strcpy(cBuf, tmpBuf);
-        unsigned int pathLen = strlen(tmpBuf);
-    
-        if (*(tmpBuf + pathLen - 1) != '/')
-            strcpy((tmpBuf + pathLen), "/");
-
-        fgIntlPath = new char[strlen(tmpBuf)+1 ]; 
-        strcpy((char*)fgIntlPath, tmpBuf);
-        return;
-    }
-
-    //
-    //  If we did not find the environment var, so lets try to go the auto
-    //  search route.
-    //
-
-    static const char* const pubDLLNameBase = Xerces_DLLName;
-    char pubDLLNameReal[256];
-    strcpy(pubDLLNameReal, pubDLLNameBase);
-    strcat(pubDLLNameReal, gXML4C2VersionStr);
-    strcat(pubDLLNameReal, ".a");
-
-    char* libName = new char[ strlen(pubDLLNameReal)];
-    strcpy(libName, pubDLLNameReal);
-    char* libPath = getenv("LIBPATH");
-
-    //Now create an array of the directory listing in this path
-
-    //First do the searching process for the first directory listing
-    char*  libPathName = strtok(libPath, ":");
-
-    char* libfile = new char[ strlen(libPathName) + strlen(libName) +2];
-    strcpy(libfile, libPathName);
-    strcat(libfile, "/");
-    strcat(libfile, libName);
-
-    if ((FILE*)fopen(libfile, "rb"))
-    {
-        delete libfile;
-        libfile=0;
-        if (tmpBuf) {
-            delete tmpBuf;
-            tmpBuf =0;
-        }
-        tmpBuf = new char[strlen(libPathName)+ strlen("/intlFiles/locales/")+1];
-        strcpy(tmpBuf, libPathName);
-        strcat(tmpBuf, "/intlFiles/locales/");
-        fgIntlPath = new char[strlen(tmpBuf)+1 ];
-        strcpy((char*)fgIntlPath, tmpBuf);
-                return;
-    }
-
-    //do the searching process for the rest directory listings
-    while  (libPathName != NULL)
-    {
-        libPathName = strtok(0, ":");
-
-        if (libPathName == NULL)
-                break;
-
-        libfile = new char[ strlen(libPathName) + strlen(libName) +2];
-        strcpy(libfile, libPathName);
-        strcat(libfile, "/");
-        strcat(libfile, libName);
-
-        if ((FILE*)fopen(libfile, "rb"))
-        {
-                delete libfile;
-                libfile=0;
-                if (tmpBuf) {
-                        delete tmpBuf;
-                        tmpBuf =0;
-                }
-                tmpBuf = new char[strlen(libPathName)+ strlen("/intlFiles/locales/")+1];
-                strcpy(tmpBuf, libPathName);
-                strcat(tmpBuf, "/intlFiles/locales/");
-                fgIntlPath = new char[strlen(tmpBuf)+1 ];
-                strcpy((char*)fgIntlPath, tmpBuf);
-                return;
-        }
-    }
-    if (fgIntlPath == NULL) {
-    printf("Environment variable 'XML4C2INTLDIR' not defined \n");
-    throw RuntimeException(
-            "Environment variable 'XML4C2INTLDIR' not defined."
-                          );
-    }
 }
 
 
@@ -322,21 +182,10 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 }
 
 
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
-    timeb aTime;
-    ftime(&aTime);
-    return (unsigned long)(aTime.time*1000 + aTime.millitm);
-
-}
-
-
-
-XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
     //
@@ -378,30 +227,22 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
 
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+unsigned long XMLPlatformUtils::getCurrentMillis()
 {
-    WriteCharStr(stderr, toWrite);
+    timeb aTime;
+    ftime(&aTime);
+    return (unsigned long)(aTime.time*1000 + aTime.millitm);
+
 }
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    WriteUStrStdErr(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    WriteUStrStdOut(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    WriteCharStr(stdout, toWrite);
-}
+
 
 #ifndef __TANDEM
 // -----------------------------------------------------------------------
-//  Mutex methods 
+//  Mutex methods
 // -----------------------------------------------------------------------
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
@@ -427,7 +268,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 void* XMLPlatformUtils::makeMutex()
 {
     pthread_mutex_t* mutex = new pthread_mutex_t;
-    if (mutex == NULL) 
+    if (mutex == NULL)
     {
         throw XMLPlatformUtilsException("Could not initialize a mutex");
     }
@@ -453,8 +294,8 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 // -----------------------------------------------------------------------
 //  Miscellaneous synchronization methods
 // -----------------------------------------------------------------------
-void* XMLPlatformUtils::compareAndSwap ( void**      toFill , 
-                    const void* const newValue , 
+void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
+                    const void* const newValue ,
                     const void* const toCompare)
 {
     boolean_t boolVar = compare_and_swap((atomic_p)toFill, (int *)&toCompare, (int)newValue );

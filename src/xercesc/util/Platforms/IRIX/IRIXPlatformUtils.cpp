@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:24  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/21 20:31:47  tng
+ * Minor update: Remove obsolete code
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:24  peiyongz
+ * sane_include
  *
  * Revision 1.14  2001/12/11 14:46:39  tng
  * [Bug 5320] 1.5.2 Build fails on IRIX.  The variable "atomicOpsMutex" has been defined twice.  Fixed by Christopher Just.
@@ -160,41 +163,9 @@
 #endif
 
 
-
 // ---------------------------------------------------------------------------
-//  Local Methods
+//  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
-
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-    if (fputs(toWrite, stream) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stderr) == EOF)
-    {
-       ThrowXML(XMLPlatformUtilsException,
-                XMLExcepts::Strm_StdErrWriteFailure);
-   }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
- {
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
-    if (fputs(tmpVal, stdout) == EOF)
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::Strm_StdOutWriteFailure);
-    }
-}
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
@@ -204,117 +175,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
     return 0;
 #endif
 }
-
-XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
-                                    , const XMLCh* const    relativePath)
-
-{
-    // Create a buffer as large as both parts and empty it
-    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
-                              + XMLString::stringLen(relativePath)
-                              + 2];
-    *tmpBuf = 0;
-
-    //
-    //  If we have no base path, then just take the relative path as
-    //  is.
-    //
-    if (!basePath)
-    {
-        XMLString::copyString(tmpBuf, relativePath);
-        return tmpBuf;
-    }
-
-    if (!*basePath)
-    {
-        XMLString::copyString(tmpBuf, relativePath);
-        return tmpBuf;
-    }
-
-    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
-    if ((*basePtr != chForwardSlash)
-    &&  (*basePtr != chBackSlash))
-    {
-        while ((basePtr >= basePath)
-        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
-        {
-            basePtr--;
-        }
-    }
-
-    // There is no relevant base path, so just take the relative part
-    if (basePtr < basePath)
-    {
-        XMLString::copyString(tmpBuf, relativePath);
-        return tmpBuf;
-    }
-
-    // After this, make sure the buffer gets handled if we exit early
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
-
-    //
-    //  We have some path part, so we need to check to see if we ahve to
-    //  weave any of the parts together.
-    //
-    const XMLCh* pathPtr = relativePath;
-    while (true)
-    {
-        // If it does not start with some period, then we are done
-        if (*pathPtr != chPeriod)
-            break;
-
-        unsigned int periodCount = 1;
-        pathPtr++;
-        if (*pathPtr == chPeriod)
-        {
-            pathPtr++;
-            periodCount++;
-        }
-
-        // Has to be followed by a \ or / or the null to mean anything
-        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
-        &&  *pathPtr)
-        {
-            break;
-        }
-        if (*pathPtr)
-            pathPtr++;
-
-        // If its one period, just eat it, else move backwards in the base
-        if (periodCount == 2)
-        {
-            basePtr--;
-            while ((basePtr >= basePath)
-            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
-            {
-                basePtr--;
-            }
-
-            // The base cannot provide enough levels, so its in error/
-            if (basePtr < basePath)
-                ThrowXML(XMLPlatformUtilsException,
-                         XMLExcepts::File_BasePathUnderflow);
-        }
-    }
-
-    // Copy the base part up to the base pointer
-    XMLCh* bufPtr = tmpBuf;
-    const XMLCh* tmpPtr = basePath;
-    while (tmpPtr <= basePtr)
-        *bufPtr++ = *tmpPtr++;
-
-    // And then copy on the rest of our path
-    XMLString::copyString(bufPtr, pathPtr);
-
-    // Orphan the buffer and return it
-    janBuf.orphan();
-    return tmpBuf;
-}
-
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Private Static Methods
-// ---------------------------------------------------------------------------
 
 //
 //  This method is called by the platform independent part of this class
@@ -493,17 +353,8 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 
 
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
+//  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-
-unsigned long XMLPlatformUtils::getCurrentMillis()
-{
-    timeb aTime;
-    ftime(&aTime);
-    return (unsigned long)(aTime.time*1000 + aTime.millitm);
-
-}
-
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
@@ -546,6 +397,125 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
+
+XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
+                                    , const XMLCh* const    relativePath)
+
+{
+    // Create a buffer as large as both parts and empty it
+    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
+                              + XMLString::stringLen(relativePath)
+                              + 2];
+    *tmpBuf = 0;
+
+    //
+    //  If we have no base path, then just take the relative path as
+    //  is.
+    //
+    if (!basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    if (!*basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
+    if ((*basePtr != chForwardSlash)
+    &&  (*basePtr != chBackSlash))
+    {
+        while ((basePtr >= basePath)
+        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+        {
+            basePtr--;
+        }
+    }
+
+    // There is no relevant base path, so just take the relative part
+    if (basePtr < basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    // After this, make sure the buffer gets handled if we exit early
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+
+    //
+    //  We have some path part, so we need to check to see if we ahve to
+    //  weave any of the parts together.
+    //
+    const XMLCh* pathPtr = relativePath;
+    while (true)
+    {
+        // If it does not start with some period, then we are done
+        if (*pathPtr != chPeriod)
+            break;
+
+        unsigned int periodCount = 1;
+        pathPtr++;
+        if (*pathPtr == chPeriod)
+        {
+            pathPtr++;
+            periodCount++;
+        }
+
+        // Has to be followed by a \ or / or the null to mean anything
+        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
+        &&  *pathPtr)
+        {
+            break;
+        }
+        if (*pathPtr)
+            pathPtr++;
+
+        // If its one period, just eat it, else move backwards in the base
+        if (periodCount == 2)
+        {
+            basePtr--;
+            while ((basePtr >= basePath)
+            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            {
+                basePtr--;
+            }
+
+            // The base cannot provide enough levels, so its in error/
+            if (basePtr < basePath)
+                ThrowXML(XMLPlatformUtilsException,
+                         XMLExcepts::File_BasePathUnderflow);
+        }
+    }
+
+    // Copy the base part up to the base pointer
+    XMLCh* bufPtr = tmpBuf;
+    const XMLCh* tmpPtr = basePath;
+    while (tmpPtr <= basePtr)
+        *bufPtr++ = *tmpPtr++;
+
+    // And then copy on the rest of our path
+    XMLString::copyString(bufPtr, pathPtr);
+
+    // Orphan the buffer and return it
+    janBuf.orphan();
+    return tmpBuf;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Timing Methods
+// ---------------------------------------------------------------------------
+
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+    timeb aTime;
+    ftime(&aTime);
+    return (unsigned long)(aTime.time*1000 + aTime.millitm);
+
+}
 
 // -----------------------------------------------------------------------
 //  Mutex methods
