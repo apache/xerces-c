@@ -1177,6 +1177,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     XMLElementDecl* elemDecl = 0;
     bool wasAdded = false;
     const XMLCh* nameRawBuf = &qnameRawBuf[prefixColonPos + 1];
+    const XMLCh* original_uriStr = fGrammar->getTargetNamespace();
+    unsigned orgGrammarUri = fURIStringPool->getId(original_uriStr);
 
     if (uriId != fEmptyNamespaceId) {
 
@@ -1189,7 +1191,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
           , currentScope
         );
 
-        if (!elemDecl && (fURIStringPool->getId(fGrammar->getTargetNamespace()) != uriId)) {
+        if (!elemDecl && (orgGrammarUri != uriId)) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
             if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
@@ -1243,6 +1245,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         if (!elemDecl) {
             // still not found, fault this in and issue error later
+            // switch back to original grammar first
+            switchGrammar(original_uriStr);
             elemDecl = fGrammar->putElemDecl(uriId
                         , nameRawBuf
                         , fPrefixBuf.getRawBuffer()
@@ -1266,8 +1270,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     , qnameRawBuf
                     , currentScope
                     );
-
-        unsigned orgGrammarUri = fURIStringPool->getId(fGrammar->getTargetNamespace());
 
         if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
             //not found, switch grammar and try globalNS
@@ -1302,13 +1304,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
                 // still Not found in specified uri
                 // go to original Grammar again to see if element needs to be fully qualified.
-                const XMLCh* uriStr = getURIText(orgGrammarUri);
-                if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
+                if (!switchGrammar(original_uriStr) && fValidate && !laxThisOne)
                 {
                     fValidator->emitError
                     (
                         XMLValid::GrammarNotFound
-                        ,uriStr
+                        ,original_uriStr
                     );
                 }
 
@@ -1332,6 +1333,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         if (!elemDecl) {
             // still not found, fault this in and issue error later
+            // switch back to original grammar first
+            switchGrammar(original_uriStr);
             elemDecl = fGrammar->putElemDecl(uriId
                         , nameRawBuf
                         , fPrefixBuf.getRawBuffer()
