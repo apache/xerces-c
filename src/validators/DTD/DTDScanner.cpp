@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/07/05 14:05:29  tng
+ * Encoding String must present for external entity text decl.
+ *
  * Revision 1.12  2001/07/05 13:12:19  tng
  * Standalone checking is validity constraint and thus should be just error, not fatal error:
  *
@@ -3700,6 +3703,7 @@ bool DTDScanner::scanSystemLiteral(XMLBuffer& toFill)
 //
 //  On entry the <? has been scanned, and next should be 'xml' followed by
 //  some whitespace, version string, etc...
+//    [77] TextDecl::= '<?xml' VersionInfo? EncodingDecl S? '?>'
 //
 void DTDScanner::scanTextDecl()
 {
@@ -3733,7 +3737,7 @@ void DTDScanner::scanTextDecl()
             fScanner->emitError(XMLErrs::UnsupportedXMLVersion, bbVersion.getRawBuffer());
     }
 
-    // Ok, now we can have an encoding string, but we don't have to
+    // Ok, now we must have an encoding string
     XMLBufBid bbEncoding(fBufMgr);
     fReaderMgr->skipPastSpaces();
     bool gotEncoding = false;
@@ -3761,12 +3765,12 @@ void DTDScanner::scanTextDecl()
     }
 
     //
-    // [78] Encoding declarations are required in the external entity
+    // Encoding declarations are required in the external entity
     // if there is a text declaration present
     //
-    if (!fInternalSubset && !gotEncoding)
+    if (!gotEncoding)
     {
-      fScanner->emitError(XMLErrs::BadXMLEncoding);
+      fScanner->emitError(XMLErrs::EncodingRequired);
       fReaderMgr->skipPastChar(chCloseAngle);
       return;
 

@@ -2562,6 +2562,11 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         if (fDocHandler && !inAttVal)
             fDocHandler->startEntityReference(*decl);
 
+        // If it starts with the XML string, then it's an error
+        if (checkXMLDecl(true)) {
+            emitError(XMLErrs::TextDeclNotLegalHere);
+            fReaderMgr.skipPastChar(chCloseAngle);
+        }
     }
     return EntityExp_Pushed;
 }

@@ -3122,6 +3122,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
 //  though we'll issue errors.
 //
 //  The parameter tells us which type of decl we should expect, Text or XML.
+//    [23] XMLDecl ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
+//    [77] TextDecl::= '<?xml' VersionInfo? EncodingDecl S? '?>'
 //
 void XMLScanner::scanXMLDecl(const DeclTypes type)
 {
@@ -3269,13 +3271,17 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     }
 
     //
-    //  If its an XML decl, the version must be present. If its a Text decl
-    //  then standalone must not be present.
+    //  If its an XML decl, the version must be present.
+    //  If its a Text decl, then encoding must be present AND standalone must not be present.
     //
     if ((type == Decl_XML) && (flags[VersionString] == -1))
         emitError(XMLErrs::XMLVersionRequired);
-    else if ((type == Decl_Text) && (flags[StandaloneString] != -1))
-        emitError(XMLErrs::StandaloneNotLegal);
+    else if (type == Decl_Text) {
+        if (flags[StandaloneString] != -1)
+            emitError(XMLErrs::StandaloneNotLegal);
+        if (flags[EncodingString] == -1)
+            emitError(XMLErrs::EncodingRequired);
+    }
 
     if (!fReaderMgr.skippedChar(chQuestion))
     {

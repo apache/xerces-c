@@ -230,16 +230,17 @@ public :
       , XMLDeclMustBeFirst                 = 217
       , XMLVersionRequired                 = 218
       , StandaloneNotLegal                 = 219
-      , TooManyColonsInName                = 220
-      , InvalidColonPos                    = 221
-      , ColonNotLegalWithNS                = 222
-      , SysException                       = 223
-      , XMLException                       = 224
-      , UnexpectedEOF                      = 225
-      , UnexpectedError                    = 226
-      , BadSchemaLocation                  = 227
-      , NoGrammarResolver                  = 228
-      , F_HighBounds                       = 229
+      , EncodingRequired                   = 220
+      , TooManyColonsInName                = 221
+      , InvalidColonPos                    = 222
+      , ColonNotLegalWithNS                = 223
+      , SysException                       = 224
+      , XMLException                       = 225
+      , UnexpectedEOF                      = 226
+      , UnexpectedError                    = 227
+      , BadSchemaLocation                  = 228
+      , NoGrammarResolver                  = 229
+      , F_HighBounds                       = 230
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

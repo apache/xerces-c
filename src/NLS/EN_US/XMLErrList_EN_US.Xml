@@ -226,6 +226,7 @@
             <Message Id="XMLDeclMustBeFirst" Text="The XML or Text declaration must start at line/column 1/1"/>
             <Message Id="XMLVersionRequired" Text="The 'version=' string is required in an XMLDecl"/>
             <Message Id="StandaloneNotLegal" Text="The 'standalone=' string is only allowed in the main XML entity"/>
+            <Message Id="EncodingRequired" Text="The 'encoding=' string is required in an Text Decl"/>
             <Message Id="TooManyColonsInName" Text="When namespaces are enabled, a name can have only one colon character"/>
             <Message Id="InvalidColonPos" Text="When namespaces are enabled, the colon cannot be the first or last character"/>
             <Message Id="ColonNotLegalWithNS" Text="Colons are not allowed in this name when namespaces are enabled"/>

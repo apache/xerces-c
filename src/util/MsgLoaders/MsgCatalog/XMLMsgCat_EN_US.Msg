@@ -214,15 +214,16 @@ $set 1
 217  The XML or Text declaration must start at line/column 1/1
 218  The 'version=' string is required in an XMLDecl
 219  The 'standalone=' string is only allowed in the main XML entity
-220  When namespaces are enabled, a name can have only one colon character
-221  When namespaces are enabled, the colon cannot be the first or last character
-222  Colons are not allowed in this name when namespaces are enabled
-223  A system exception occured during processing
-224  An exception occured! Type:{0}, Message:{1}
-225  Unexpected end of file exception. Message: {0}
-226  UnexpectedError
-227  The schemaLocation attribute does not contain pairs of values.
-228  Internal error: don't have a GrammarResolver for TraverseSchema
+220  The 'encoding=' string is required in an Text Decl
+221  When namespaces are enabled, a name can have only one colon character
+222  When namespaces are enabled, the colon cannot be the first or last character
+223  Colons are not allowed in this name when namespaces are enabled
+224  A system exception occured during processing
+225  An exception occured! Type:{0}, Message:{1}
+226  Unexpected end of file exception. Message: {0}
+227  UnexpectedError
+228  The schemaLocation attribute does not contain pairs of values.
+229  Internal error: don't have a GrammarResolver for TraverseSchema
 
 
 $set 2
