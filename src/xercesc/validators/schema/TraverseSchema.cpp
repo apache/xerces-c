@@ -2599,7 +2599,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
             elemDecl->setAttWildCard(new SchemaAttDef(XMLUni::fgZeroLenString,
                                                       XMLUni::fgZeroLenString,
                                                       fEmptyNamespaceURI, XMLAttDef::Any_Any,
-                                                      XMLAttDef::ProcessContents_Strict));
+                                                      XMLAttDef::ProcessContents_Lax));
         }
 
         // key/keyref/unique processing
@@ -5656,7 +5656,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                                                                      fEmptyNamespaceURI),
                                                            false);
 
-        anySpecNode->setType(ContentSpecNode::Any);
+        anySpecNode->setType(ContentSpecNode::Any_Lax);
         anySpecNode->setMinOccurs(0);
         anySpecNode->setMaxOccurs(SchemaSymbols::UNBOUNDED);
 
@@ -5995,7 +5995,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
             baseAttWildCard = new SchemaAttDef(XMLUni::fgZeroLenString,
                                                XMLUni::fgZeroLenString,
                                                fEmptyNamespaceURI, XMLAttDef::Any_Any,
-                                               XMLAttDef::ProcessContents_Strict);
+                                               XMLAttDef::ProcessContents_Lax);
             janBaseAttWildCard.reset(baseAttWildCard);
         }
 		

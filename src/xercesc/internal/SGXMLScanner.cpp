@@ -1110,6 +1110,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     ContentLeafNameTypeVector* cv = 0;
     XMLContentModel* cm = 0;
     int currentScope = Grammar::TOP_LEVEL_SCOPE;
+    bool laxThisOne = false;
     if (!isRoot) {
 
         SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
@@ -1122,6 +1123,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             cm = tempElement->getContentModel();
             cv = cm->getContentLeafNameTypeVector();
             currentScope = fElemStack.getCurrentScope();
+        }
+        else if (modelType == SchemaElementDecl::Any) {
+            laxThisOne = true;
         }
     }
 
@@ -1162,7 +1166,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     //if schema, check if we should lax or skip the validation of this element
     bool parentValidation = fValidate;
-    bool laxThisOne = false;
     if (cv) {
         QName element(fPrefixBuf.getRawBuffer(), &qnameRawBuf[prefixColonPos + 1], uriId);
         // elementDepth will be > 0, as cv is only constructed if element is not
@@ -1851,7 +1854,7 @@ void SGXMLScanner::resizeElemState() {
     fElemStateSize = newSize;
 }
 
-//  This method is called from scanStartTagNS() to build up the list of
+//  This method is called from scanStartTag() to build up the list of
 //  XMLAttr objects that will be passed out in the start tag callout. We
 //  get the key/value pairs from the raw scan of explicitly provided attrs,
 //  which have not been normalized. And we get the element declaration from

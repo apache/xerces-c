@@ -1956,6 +1956,8 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     ContentLeafNameTypeVector* cv = 0;
     XMLContentModel* cm = 0;
     int currentScope = Grammar::TOP_LEVEL_SCOPE;
+    bool laxThisOne = false;
+
     if (!isRoot && fGrammarType == Grammar::SchemaGrammarType) {
         SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
         SchemaElementDecl::ModelTypes modelType = tempElement->getModelType();
@@ -1967,6 +1969,9 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             cm = tempElement->getContentModel();
             cv = cm->getContentLeafNameTypeVector();
             currentScope = fElemStack.getCurrentScope();
+        }
+        else if (modelType == SchemaElementDecl::Any) {
+            laxThisOne = true;
         }
     }
 
@@ -2042,7 +2047,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     //if schema, check if we should lax or skip the validation of this element
     bool parentValidation = fValidate;
-    bool laxThisOne = false;
     if (cv) {
         QName element(fPrefixBuf.getRawBuffer(), &qnameRawBuf[prefixColonPos + 1], uriId);
         // elementDepth will be > 0, as cv is only constructed if element is not
