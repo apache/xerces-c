@@ -898,11 +898,6 @@ void XMLScanner::initValidator(XMLValidator* theValidator) {
     theValidator->setScannerInfo(this, &fReaderMgr, &fBufMgr);
     theValidator->setErrorReporter(fErrorReporter);
 
-    //  So lets ask the validator whether it requires namespaces or not. If it
-    //  does, we have to override the namespace enablement flag.
-    if (theValidator->requiresNamespaces() && !fDoNamespaces)
-        setDoNamespaces(true);
-
     if (theValidator->handlesSchema())
         ((SchemaValidator*) theValidator)->setGrammarResolver(fGrammarResolver);
 }
@@ -1000,7 +995,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
 {
     //	Bump the error count
     incrementErrorCount();
-    
+
     if (fErrorReporter)
     {
         //
