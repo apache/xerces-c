@@ -23,7 +23,7 @@
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
  * 
- * 4. The names "[PRODUCT NAME]" and "Apache Software Foundation" must
+ * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
  *    software without prior written permission. For written 
  *    permission, please contact apache\@apache.org.
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/02/26 07:56:36  rahulj
+ * Fixed the license header as pointed out by Bill Schindler <developer@bitranch.com>
+ *
  * Revision 1.1  2000/02/17 22:06:19  rahulj
  * Moved the four LibWWW files to its own sub-directory in the
  * NetAccessor directory.
