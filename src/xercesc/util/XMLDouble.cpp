@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/10/15 14:50:01  peiyongz
+ * Bugzilla#22821: locale-sensitive function used to validate 'double' type, patch
+ * from jsweeney@spss.com (Jeff Sweeney)
+ *
  * Revision 1.11  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -171,6 +175,9 @@ XMLDouble::~XMLDouble()
 void XMLDouble::checkBoundary(const XMLCh* const strValue)
 {
     char *nptr = XMLString::transcode(strValue, getMemoryManager());
+
+    normalizeDecimalPoint(nptr);
+
     ArrayJanitor<char> jan1(nptr, getMemoryManager());
     int   strLen = strlen(nptr);
     char *endptr = 0;

@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/10/15 14:50:01  peiyongz
+ * Bugzilla#22821: locale-sensitive function used to validate 'double' type, patch
+ * from jsweeney@spss.com (Jeff Sweeney)
+ *
  * Revision 1.14  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -181,6 +185,16 @@ public:
     virtual int           getSign() const;
 
     MemoryManager*        getMemoryManager() const;
+
+    /***
+     *
+     * The decimal point delimiter for the schema double/float type is
+     * defined to be a period and is not locale-specific. So, it must
+     * be replaced with the local-specific delimiter before converting
+     * from string to double/float.
+     *
+     ***/
+    void                  normalizeDecimalPoint(char* const toNormal);
 
     /***
      * Support for Serialization/De-serialization

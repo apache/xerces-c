@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/10/15 14:50:01  peiyongz
+ * Bugzilla#22821: locale-sensitive function used to validate 'double' type, patch
+ * from jsweeney@spss.com (Jeff Sweeney)
+ *
  * Revision 1.16  2003/09/25 22:24:28  peiyongz
  * Using writeString/readString
  *
@@ -123,6 +127,8 @@
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
+
+#include <locale.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -432,6 +438,23 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 
     return;
 } 
+
+void XMLAbstractDoubleFloat::normalizeDecimalPoint(char* const toNormal)
+{
+    // find the locale-specific decimal point delimiter
+    lconv* lc = localeconv();
+    char delimiter = *lc->decimal_point;
+
+    // replace '.' with the locale-specific decimal point delimiter
+    if ( delimiter != '.' )
+    {
+        char* period = strchr( toNormal, '.' );
+        if ( period )
+        {
+            *period = delimiter;
+        }
+    }
+}
 
 /***
  * Support for Serialization/De-serialization
