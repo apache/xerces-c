@@ -413,7 +413,7 @@ Usage:
     DOMPrint [options] <XML file>
 
 This program invokes the DOM parser, and builds the DOM tree.
-It then asks the DOMWriter to serialize the DOM tree 
+It then asks the DOMWriter to serialize the DOM tree
 Options:
     -e          create entity reference nodes. Default is no expansion.
     -v=xxx      Validation scheme [always | never | auto*].
@@ -424,10 +424,11 @@ Options:
                 the same encoding as the input XML file. UTF-8 if
                 input XML file has not XML declaration.
     -weol=xxx   Set the end of line sequence. Default set by DOMWriter
-    -wscs=xxx   Enable/Disable split-cdata-sections.      Default on  
-    -wddc=xxx   Enable/Disable discard-default-content.   Default on  
-    -wflt=xxx   Enable/Disable filtering.                 Default off 
-    -wfpp=xxx   Enable/Disable format-pretty-print.       Default off 
+    -wfile=xxx  Write to a file instead of stdout.
+    -wscs=xxx   Enable/Disable split-cdata-sections.      Default on
+    -wddc=xxx   Enable/Disable discard-default-content.   Default on
+    -wflt=xxx   Enable/Disable filtering.                 Default off
+    -wfpp=xxx   Enable/Disable format-pretty-print.       Default off
     -?          Show this help.
 
   * = Default if not provided explicitly.
