@@ -496,6 +496,8 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
 
     if (contents)
     {
+        XSAnnotation* theAnnotation = 0;
+
         unsigned int nonXSAttSize = nonXSAttList->size();
 
         if (nonXSAttSize)
@@ -533,12 +535,23 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
             // add remaining annotation content
             fBuffer.append(contents + annotTokenStart + 10);
 
-            return new (fGrammarPoolMemoryManager) XSAnnotation(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager);
+            theAnnotation = new (fGrammarPoolMemoryManager) XSAnnotation(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager);
         }
         else
         {
-            return new (fGrammarPoolMemoryManager) XSAnnotation(contents, fGrammarPoolMemoryManager);
+            theAnnotation = new (fGrammarPoolMemoryManager) XSAnnotation(contents, fGrammarPoolMemoryManager);
         }
+
+        /***
+         * set line, col and systemId info
+        ***/
+        theAnnotation->setLineCol(
+                                  ((XSDElementNSImpl*)annotationElem)->getLineNo()
+                                , ((XSDElementNSImpl*)annotationElem)->getColumnNo()
+                                 );
+        theAnnotation->setSystemId(fSchemaInfo->getCurrentSchemaURL());
+
+        return theAnnotation;
     }
 
     return 0;
