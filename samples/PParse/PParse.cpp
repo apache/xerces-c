@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:45  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:27:00  roddey
+ * Updates to work with the new URL and input source scheme.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:45  twl
+ * Initial checkin
  *
  * Revision 1.5  1999/11/08 20:43:38  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -87,7 +90,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/PlatformUtils.hpp>
-#include <internal/URLInputSource.hpp>
 #include <framework/XMLPScanToken.hpp>
 #include <parsers/SAXParser.hpp>
 #include "PParse.hpp"

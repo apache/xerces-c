@@ -64,6 +64,9 @@
  * on parameters to the constructor.
  *
  * $Log$
+ * Revision 1.3  2000/01/12 00:27:00  roddey
+ * Updates to work with the new URL and input source scheme.
+ *
  * Revision 1.2  1999/11/20 01:09:55  rahulj
  * Fixed usage message.
  *
@@ -80,7 +83,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <parsers/SAXParser.hpp>
-#include <internal/MemBufInputSource.hpp>
+#include <framework/MemBufInputSource.hpp>
 #include "MemParse.hpp"
 
 

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:38  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:27:00  roddey
+ * Updates to work with the new URL and input source scheme.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:38  twl
+ * Initial checkin
  *
  * Revision 1.6  1999/11/08 20:43:39  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -70,12 +73,12 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/XMLUni.hpp>
-#include <internal/URLInputSource.hpp>
 #include <sax/AttributeList.hpp>
 #include <sax/SAXParseException.hpp>
 #include <sax/SAXException.hpp>
-#include <memory.h>
+#include <framework/LocalFileInputSource.hpp>
 #include "Redirect.hpp"
+#include <memory.h>
 
 
 // ---------------------------------------------------------------------------
@@ -210,5 +213,5 @@ InputSource* RedirectHandlers::resolveEntity(const   XMLCh* const    publicId
     }
 
     // They were equal, so redirect to our other file
-    return new URLInputSource(gRedirectToFile);
+    return new LocalFileInputSource(gRedirectToFile);
 }
