@@ -266,8 +266,8 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         psystem("cp -fv $ICUROOT/bin/icuuc18.dll $targetdir/bin");
         psystem("cp -fv $ICUROOT/bin/icuuc18d.dll $targetdir/bin");
 
-        // it seems icudt18*.DLL is generated (upper case dll)
-        // but just case, try lower case .dll as well
+        # it seems icudt18*.DLL is generated (upper case dll)
+        # but just case, try lower case .dll as well
         psystem("cp -fv $ICUROOT/source/data/icudt18*.DLL $targetdir/bin");
         psystem("cp -fv $ICUROOT/source/data/icudt18*.dll $targetdir/bin");
 
