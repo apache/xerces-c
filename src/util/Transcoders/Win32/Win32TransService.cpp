@@ -55,72 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.16  2000/07/21 18:04:29  jpolast
- * more fixes for the put() change
- * pointed out by Erik Schroeder
- *
- * Revision 1.15  2000/07/10 21:20:15  jpolast
- * bug fix for new put(key,value) function.
- *
- * Revision 1.14  2000/07/07 22:16:56  jpolast
- * remove old put(value) function.  use put(key,value) instead.
- *
- * Revision 1.13  2000/05/09 00:22:44  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.12  2000/03/20 19:13:04  roddey
- * Fixed a compilation bug in one of the exception throwing calls.
- *
- * Revision 1.11  2000/03/18 00:00:04  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.10  2000/03/07 23:45:36  roddey
- * First cut for additions to Win32 xcode. Based very loosely on a
- * prototype from Eric Ulevik.
- *
- * Revision 1.9  2000/03/02 19:55:36  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/06 07:48:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/01/25 23:14:19  roddey
- * Borland does not support wcsupr(), but does support _wcsupr(). Since VC++ does also,
- * _wcsupr() was used in order to have the both work with the same transcoding code.
- *
- * Revision 1.6  2000/01/25 22:49:58  roddey
- * Moved the supportsSrcOfs() method from the individual transcoder to the
- * transcoding service, where it should have been to begin with.
- *
- * Revision 1.5  2000/01/25 19:19:09  roddey
- * Simple addition of a getId() method to the xcode and netacess abstractions to
- * allow each impl to give back an id string.
- *
- * Revision 1.4  1999/12/18 00:22:33  roddey
- * Changes to support the new, completely orthagonal, transcoder architecture.
- *
- * Revision 1.3  1999/12/15 19:44:02  roddey
- * Now implements the new transcoding abstractions, with separate interface
- * classes for XML transcoders and local code page transcoders.
- *
- * Revision 1.2  1999/12/01 18:54:26  roddey
- * Small syntactical change to make it compile under Borland's compiler.
- * It does not make it worse under other compilers, so why not. Basically
- * it was just changing ::iswspace() to iswspace(), i.e. get rid of the ::
- * prefix, which freaked out Borland for some reason.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:04  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -237,7 +172,7 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
     //  Upper case it because we are using a hash table and need to be
     //  sure that we find all case combinations.
     //
-    ::wcsupr(fEncodingName);
+    _wcsupr(fEncodingName);
 }
 
 CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
@@ -254,7 +189,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
     //  Upper case it because we are using a hash table and need to be
     //  sure that we find all case combinations.
     //
-    ::wcsupr(fEncodingName);
+    _wcsupr(fEncodingName);
 }
 
 CPMapEntry::~CPMapEntry()
@@ -464,7 +399,7 @@ Win32TransService::Win32TransService()
             XMLCh* uniAlias = new XMLCh[targetLen + 1];
             ::mbstowcs(uniAlias, aliasBuf, srcLen);
             uniAlias[targetLen] = 0;
-            ::wcsupr(uniAlias);
+            _wcsupr(uniAlias);
 
             // Look up the alias name
             CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
@@ -586,7 +521,7 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     //
     ::wcsncpy(upEncoding, encodingName, upLen);
     upEncoding[upLen] = 0;
-    ::wcsupr(upEncoding);
+    _wcsupr(upEncoding);
 
     // Now to try to find this guy in the CP map
     CPMapEntry* theEntry = fCPMap->get(upEncoding);
