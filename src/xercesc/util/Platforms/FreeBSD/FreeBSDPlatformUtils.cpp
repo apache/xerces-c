@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/07/05 21:29:58  peiyongz
+ * Bug# 10250: patch from James Berry
+ *
  * Revision 1.3  2002/07/05 21:25:20  peiyongz
  * Bug# 10250: Implementation of new platform methods,
  *                      patch from max@cca.usart.ru (Max Gotlib)
@@ -347,7 +350,7 @@ void XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
     if ( !theFile || !toFlush )
 	ThrowXML(XMLPlatformUtilsException,
 		 XMLExcepts::CPtr_PointerIsZero);
-    if ( (toWrite <= 0 ) || !*toFlush )
+    if ( toWrite <= 0 )
 	return;
 
     const XMLByte* tmpFlush = (const XMLByte*) toFlush;
