@@ -204,9 +204,9 @@ NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     if (refChild!=null && refChild->getParentNode() != this)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
     
-    // refChild cannot be same as newChild
-    if(refChild==newInternal)
-        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+    // it's a no-op if refChild is the same as newChild
+    if(refChild==newChild)
+        return newChild;
 
     if (newInternal->isDocumentFragmentImpl())
     {
