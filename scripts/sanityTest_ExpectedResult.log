@@ -122,7 +122,7 @@ The parser has intrinsic support for the following encodings:
   </person>
 
 </personnel><?xml version="1.0" encoding="LATIN1"?>
-<personnel xsi="http://www.w3.org/2001/XMLSchema-instance" noNamespaceSchemaLocation="personal.xsd">
+<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
 
   <person id="Big.Boss" contr="false">
     <name><family>Boss</family> <given>Big</given></name>
