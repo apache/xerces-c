@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/03/01 23:19:03  peiyongz
+ * Grant XSerializeEngine access to GrammarPool
+ *
  * Revision 1.15  2004/02/20 20:57:39  peiyongz
  * Bug#27046: path from David Bertoni
  *
@@ -108,12 +111,11 @@
 #if !defined(XSERIALIZE_ENGINE_HPP)
 #define XSERIALIZE_ENGINE_HPP
 
-#include <xercesc/framework/BinOutputStream.hpp>
-#include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
-#include <xercesc/internal/XSerializationException.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
+
+#include <xercesc/internal/XSerializationException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -121,6 +123,10 @@ class XSerializable;
 class XProtoType;
 class MemoryManager;
 class XSerializedObjectId;
+class BinOutputStream;
+class BinInputStream;
+class XMLGrammarPool;
+class XMLStringPool;
 
 class XMLUTIL_EXPORT XSerializeEngine
 {
@@ -152,6 +158,46 @@ public:
       *
       *  Param
       *     inStream         input stream
+      *     gramPool         Grammar Pool
+      *     bufSize          the size of the internal buffer
+      *
+      ***/
+    XSerializeEngine(BinInputStream*         inStream
+                   , XMLGrammarPool* const   gramPool
+                   , unsigned long           bufSize = 8192 );
+
+
+    /***
+      *
+      *  Constructor for serialization(storing)
+      *
+      *  Application needs to make sure that the instance of
+      *  BinOutputStream, persists beyond the life of this
+      *  SerializeEngine.
+      *
+      *  Param
+      *     outStream        output stream
+      *     gramPool         Grammar Pool
+      *     bufSize          the size of the internal buffer
+      *
+      ***/
+    XSerializeEngine(BinOutputStream*        outStream
+                   , XMLGrammarPool* const   gramPool
+                   , unsigned long           bufSize = 8192 );
+
+
+    /***
+      *
+      *  Deprecated
+      *
+      *  Constructor for de-serialization(loading)
+      *
+      *  Application needs to make sure that the instance of
+      *  BinInputStream, persists beyond the life of this
+      *  SerializeEngine.
+      *
+      *  Param
+      *     inStream         input stream
       *     manager          MemoryManager
       *     bufSize          the size of the internal buffer
       *
@@ -160,7 +206,10 @@ public:
                    , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
                    , unsigned long           bufSize = 8192 );
 
+    
     /***
+      *
+      *  Deprecated
       *
       *  Constructor for serialization(storing)
       *
@@ -209,12 +258,30 @@ public:
 
     /***
       *
+      *  Get the GrammarPool
+      *
+      *  Return: XMLGrammarPool
+      *
+      ***/
+    XMLGrammarPool* getGrammarPool() const;
+
+    /***
+      *
+      *  Get the StringPool
+      *
+      *  Return: XMLStringPool
+      *
+      ***/
+    XMLStringPool* getStringPool() const;
+
+    /***
+      *
       *  Get the embeded Memory Manager
       *
       *  Return: MemoryManager
       *
       ***/
-    inline MemoryManager* getMemoryManager() const;
+    MemoryManager* getMemoryManager() const;
 
     /***
       *
@@ -634,9 +701,9 @@ private:
     //  fStoreLoad: 
     //               Indicator: storing(serialization) or loading(de-serialization)
     //
-    //  fMemoryManager:
-    //               used to allocate memory for internal consumption and/or
-    //               allocate memory for object created in de-serialization.
+    //  fGrammarPool:
+    //               Thw owning GrammarPool which instantiate this SerializeEngine 
+    //               instance
     //
     //  fInputStream:
     //               Binary stream to read from (de-serialization), provided
@@ -670,8 +737,8 @@ private:
     //
     //  fMapCount:
     // -------------------------------------------------------------------------------
-    const short                            fStoreLoad;   
-    MemoryManager*   const                 fMemoryManager;
+    const short                            fStoreLoad;  
+    XMLGrammarPool*  const                 fGrammarPool;
     BinInputStream*  const                 fInputStream;
     BinOutputStream* const                 fOutputStream;
 
@@ -718,11 +785,6 @@ inline bool XSerializeEngine::isLoading() const
     return (fStoreLoad == mode_Load);
 }
 
-inline MemoryManager* XSerializeEngine::getMemoryManager() const
-{
-    return fMemoryManager;
-}
-
 inline XSerializeEngine& operator<<(XSerializeEngine&       serEng
                                   , XSerializable* const    serObj)
 {
@@ -747,7 +809,7 @@ inline void XSerializeEngine::Assert(bool toEval
 {
     if (!toEval)
     {
-        ThrowXMLwithMemMgr(XSerializationException, toThrow, fMemoryManager);  
+        ThrowXMLwithMemMgr(XSerializationException, toThrow, getMemoryManager());  
     }
 
 }

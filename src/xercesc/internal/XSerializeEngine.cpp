@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2004/03/01 23:19:03  peiyongz
+ * Grant XSerializeEngine access to GrammarPool
+ *
  * Revision 1.15  2004/02/20 20:57:39  peiyongz
  * Bug#27046: path from David Bertoni
  *
@@ -113,6 +116,10 @@
 
 #include <xercesc/util/HashPtr.hpp>
 
+#include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/BinOutputStream.hpp>
+#include <xercesc/util/BinInputStream.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 const bool XSerializeEngine::toWriteBufferLen = true;
@@ -130,11 +137,11 @@ static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFF
 if (condition) \
 { \
     XMLCh value1[17]; \
-    XMLString::binToText(data, value1, 16, 10, fMemoryManager); \
+    XMLString::binToText(data, value1, 16, 10, getMemoryManager()); \
     ThrowXMLwithMemMgr1(XSerializationException \
             , err_msg  \
             , value1 \
-            , fMemoryManager); \
+            , getMemoryManager()); \
 }
 
 #define TEST_THROW_ARG2(condition, data1, data2, err_msg) \
@@ -142,32 +149,95 @@ if (condition) \
 { \
     XMLCh value1[17]; \
     XMLCh value2[17]; \
-    XMLString::binToText(data1, value1, 16, 10, fMemoryManager); \
-    XMLString::binToText(data2, value2, 16, 10, fMemoryManager); \
+    XMLString::binToText(data1, value1, 16, 10, getMemoryManager()); \
+    XMLString::binToText(data2, value2, 16, 10, getMemoryManager()); \
     ThrowXMLwithMemMgr2(XSerializationException \
             , err_msg  \
             , value1   \
             , value2 \
-            , fMemoryManager); \
+            , getMemoryManager()); \
 }
 
 // ---------------------------------------------------------------------------
 //  Constructor and Destructor
 // ---------------------------------------------------------------------------
+XSerializeEngine::~XSerializeEngine()
+{
+    if (isStoring())
+    {
+        flush();
+        delete fStorePool;
+    }
+    else
+    {
+        delete fLoadPool;
+    }
+
+    getMemoryManager()->deallocate(fBufStart);
+
+}
+
 XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
-                                 , MemoryManager* const    manager
+                                 , XMLGrammarPool* const   gramPool
                                  , unsigned long           bufSize)
 :fStoreLoad(mode_Load)
-,fMemoryManager(manager)
+,fGrammarPool(gramPool)
 ,fInputStream(inStream)
 ,fOutputStream(0)
 ,fBufSize(bufSize)
-,fBufStart( (XMLByte*) fMemoryManager->allocate(bufSize))
+,fBufStart( (XMLByte*) gramPool->getMemoryManager()->allocate(bufSize))
 ,fBufEnd(0)
 ,fBufCur(fBufStart)
 ,fBufLoadMax(fBufStart)
 ,fStorePool(0)
-,fLoadPool( new (fMemoryManager) ValueVectorOf<void*>(29, fMemoryManager, false))
+,fLoadPool( new (gramPool->getMemoryManager()) ValueVectorOf<void*>(29, gramPool->getMemoryManager(), false))
+,fObjectCount(0)
+{
+    /*** 
+     *  initialize buffer from the inStream
+     ***/
+    fillBuffer(1);
+
+}
+
+XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
+                                 , XMLGrammarPool* const   gramPool
+                                 , unsigned long           bufSize)
+:fStoreLoad(mode_Store)
+,fGrammarPool(gramPool)
+,fInputStream(0)
+,fOutputStream(outStream)
+,fBufSize(bufSize)
+,fBufStart((XMLByte*) gramPool->getMemoryManager()->allocate(bufSize))
+,fBufEnd(fBufStart+bufSize)
+,fBufCur(fBufStart)
+,fBufLoadMax(0)
+,fStorePool( new (gramPool->getMemoryManager()) RefHashTableOf<XSerializedObjectId>(29, true, new HashPtr(), gramPool->getMemoryManager()) )
+,fLoadPool(0)
+,fObjectCount(0)
+{
+    //initialize store pool
+    fStorePool->put(0, new (gramPool->getMemoryManager()) XSerializedObjectId(fgNullObjectTag));
+
+}
+
+// ---------------------------------------------------------------------------
+// Deprecated Constructor 
+// ---------------------------------------------------------------------------
+XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
+                                 , MemoryManager* const    manager
+                                 , unsigned long           bufSize)
+:fStoreLoad(mode_Load)
+,fGrammarPool(0)
+,fInputStream(inStream)
+,fOutputStream(0)
+,fBufSize(bufSize)
+,fBufStart( (XMLByte*) manager->allocate(bufSize))
+,fBufEnd(0)
+,fBufCur(fBufStart)
+,fBufLoadMax(fBufStart)
+,fStorePool(0)
+,fLoadPool( new (manager) ValueVectorOf<void*>(29, manager, false))
 ,fObjectCount(0)
 {
     /*** 
@@ -181,36 +251,20 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
                                  , MemoryManager* const    manager
                                  , unsigned long           bufSize)
 :fStoreLoad(mode_Store)
-,fMemoryManager(manager)
+,fGrammarPool(0)
 ,fInputStream(0)
 ,fOutputStream(outStream)
 ,fBufSize(bufSize)
-,fBufStart((XMLByte*) fMemoryManager->allocate(bufSize))
+,fBufStart((XMLByte*) manager->allocate(bufSize))
 ,fBufEnd(fBufStart+bufSize)
 ,fBufCur(fBufStart)
 ,fBufLoadMax(0)
-,fStorePool( new (fMemoryManager) RefHashTableOf<XSerializedObjectId>(29, true, new HashPtr(), fMemoryManager) )
+,fStorePool( new (manager) RefHashTableOf<XSerializedObjectId>(29, true, new HashPtr(), manager) )
 ,fLoadPool(0)
 ,fObjectCount(0)
 {
     //initialize store pool
-    fStorePool->put(0, new (fMemoryManager) XSerializedObjectId(fgNullObjectTag));
-
-}
-
-XSerializeEngine::~XSerializeEngine()
-{
-    if (isStoring())
-    {
-        flush();
-        delete fStorePool;
-    }
-    else
-    {
-        delete fLoadPool;
-    }
-
-    fMemoryManager->deallocate(fBufStart);
+    fStorePool->put(0, new (manager) XSerializedObjectId(fgNullObjectTag));
 
 }
 
@@ -418,7 +472,7 @@ XSerializable* XSerializeEngine::read(XProtoType* const protoType)
 	else
 	{
 		// create the object from the prototype
-		objRet = protoType->fCreateObject(fMemoryManager);
+		objRet = protoType->fCreateObject(getMemoryManager());
         Assert((objRet != 0), XMLExcepts::XSer_CreateObject_Fail);  
  
         // put it into load pool 
@@ -453,7 +507,7 @@ bool XSerializeEngine::read(XProtoType*            const    protoType
 	{
         // what follows fgNewClassTag is the prototype object info
         // for the object anticipated, go and verify the info
-        XProtoType::load(*this, protoType->fClassName, fMemoryManager);
+        XProtoType::load(*this, protoType->fClassName, getMemoryManager());
 
         addLoadPool((void*)protoType);
 	}
@@ -575,7 +629,7 @@ void XSerializeEngine::readString(XMLCh*&  toRead
         dataLen = bufferLen++;        
     }
 
-    toRead = (XMLCh*) fMemoryManager->allocate(bufferLen * sizeof(XMLCh));
+    toRead = (XMLCh*) getMemoryManager()->allocate(bufferLen * sizeof(XMLCh));
     read(toRead, dataLen);
     toRead[dataLen] = 0;
 }
@@ -606,7 +660,7 @@ void XSerializeEngine::readString(XMLByte*&  toRead
         dataLen = bufferLen++;
     }
 
-    toRead = (XMLByte*) fMemoryManager->allocate(bufferLen * sizeof(XMLByte));
+    toRead = (XMLByte*) getMemoryManager()->allocate(bufferLen * sizeof(XMLByte));
     read(toRead, dataLen);
     toRead[dataLen] = 0;
 
@@ -1105,6 +1159,22 @@ void XSerializeEngine::registerObject(void*  const templateObjectToRegister)
 {
     ensureLoading();
     addLoadPool(templateObjectToRegister);
+}
+
+XMLGrammarPool* XSerializeEngine::getGrammarPool() const
+{
+    return fGrammarPool;
+}
+
+XMLStringPool* XSerializeEngine::getStringPool() const
+{
+    return fGrammarPool->getURIStringPool();
+}
+
+MemoryManager* XSerializeEngine::getMemoryManager() const
+{
+    //todo: changed to return fGrammarPool->getMemoryManager()
+    return fGrammarPool ? fGrammarPool->getMemoryManager() : XMLPlatformUtils::fgMemoryManager;
 }
 
 XERCES_CPP_NAMESPACE_END
