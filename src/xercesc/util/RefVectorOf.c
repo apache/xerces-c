@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2003/05/30 16:11:45  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.9  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -136,7 +139,7 @@ template <class TElem> RefVectorOf<TElem>::~RefVectorOf()
        for (unsigned int index = 0; index < this->fCurCount; index++)
         delete this->fElemList[index];
     }
-    fMemoryManager->deallocate(this->fElemList);//delete [] this->fElemList;
+      BaseRefVectorOf<TElem>::fMemoryManager->deallocate(this->fElemList);//delete [] this->fElemList;
 }
 
 

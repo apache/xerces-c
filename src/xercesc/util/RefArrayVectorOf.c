@@ -22,85 +22,85 @@ RefArrayVectorOf<TElem>::RefArrayVectorOf( const unsigned int maxElems
 
 template <class TElem> RefArrayVectorOf<TElem>::~RefArrayVectorOf()
 {
-    if (fAdoptedElems)
+    if (BaseRefVectorOf<TElem>::fAdoptedElems)
     {
-      for (unsigned int index = 0; index < fCurCount; index++)
-            fMemoryManager->deallocate(fElemList[index]);//delete[] fElemList[index];
+      for (unsigned int index = 0; index < BaseRefVectorOf<TElem>::fCurCount; index++)
+            BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList[index]);//delete[] fElemList[index];
     }
-    fMemoryManager->deallocate(fElemList);//delete [] fElemList;
+    BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList);//delete [] fElemList;
 }
 
 template <class TElem> void
 RefArrayVectorOf<TElem>::setElementAt(TElem* const toSet, const unsigned int setAt)
 {
-    if (setAt >= fCurCount)
+    if (setAt >= BaseRefVectorOf<TElem>::fCurCount)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
-    if (fAdoptedElems)
-        fMemoryManager->deallocate(fElemList[setAt]);
+    if (BaseRefVectorOf<TElem>::fAdoptedElems)
+        BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList[setAt]);
 
-    fElemList[setAt] = toSet;
+    BaseRefVectorOf<TElem>::fElemList[setAt] = toSet;
 }
 
 template <class TElem> void RefArrayVectorOf<TElem>::removeAllElements()
 {
-    for (unsigned int index = 0; index < fCurCount; index++)
+    for (unsigned int index = 0; index < BaseRefVectorOf<TElem>::fCurCount; index++)
     {
-        if (fAdoptedElems)
-          fMemoryManager->deallocate(fElemList[index]);
+        if (BaseRefVectorOf<TElem>::fAdoptedElems)
+          BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList[index]);
 
         // Keep unused elements zero for sanity's sake
-        fElemList[index] = 0;
+        BaseRefVectorOf<TElem>::fElemList[index] = 0;
     }
-    fCurCount = 0;
+    BaseRefVectorOf<TElem>::fCurCount = 0;
 }
 
 template <class TElem> void RefArrayVectorOf<TElem>::
 removeElementAt(const unsigned int removeAt)
 {
-    if (removeAt >= fCurCount)
+    if (removeAt >= BaseRefVectorOf<TElem>::fCurCount)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
-    if (fAdoptedElems)
-        fMemoryManager->deallocate(fElemList[removeAt]);
+    if (BaseRefVectorOf<TElem>::fAdoptedElems)
+        BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList[removeAt]);
 
     // Optimize if its the last element
-    if (removeAt == fCurCount-1)
+    if (removeAt == BaseRefVectorOf<TElem>::fCurCount-1)
     {
-        fElemList[removeAt] = 0;
-        fCurCount--;
+        BaseRefVectorOf<TElem>::fElemList[removeAt] = 0;
+        BaseRefVectorOf<TElem>::fCurCount--;
         return;
     }
 
     // Copy down every element above remove point
-    for (unsigned int index = removeAt; index < fCurCount-1; index++)
-        fElemList[index] = fElemList[index+1];
+    for (unsigned int index = removeAt; index < BaseRefVectorOf<TElem>::fCurCount-1; index++)
+        BaseRefVectorOf<TElem>::fElemList[index] = BaseRefVectorOf<TElem>::fElemList[index+1];
 
     // Keep unused elements zero for sanity's sake
-    fElemList[fCurCount-1] = 0;
+    BaseRefVectorOf<TElem>::fElemList[BaseRefVectorOf<TElem>::fCurCount-1] = 0;
 
     // And bump down count
-    fCurCount--;
+    BaseRefVectorOf<TElem>::fCurCount--;
 }
 
 template <class TElem> void RefArrayVectorOf<TElem>::removeLastElement()
 {
-    if (!fCurCount)
+    if (!BaseRefVectorOf<TElem>::fCurCount)
         return;
-    fCurCount--;
+    BaseRefVectorOf<TElem>::fCurCount--;
 
-    if (fAdoptedElems)
-        fMemoryManager->deallocate(fElemList[fCurCount]);
+    if (BaseRefVectorOf<TElem>::fAdoptedElems)
+        BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList[BaseRefVectorOf<TElem>::fCurCount]);
 }
 
 template <class TElem> void RefArrayVectorOf<TElem>::cleanup()
 {
-    if (fAdoptedElems)
+    if (BaseRefVectorOf<TElem>::fAdoptedElems)
     {
-        for (unsigned int index = 0; index < fCurCount; index++)
-            fMemoryManager->deallocate(fElemList[index]);
+        for (unsigned int index = 0; index < BaseRefVectorOf<TElem>::fCurCount; index++)
+            BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList[index]);
     }
-    fMemoryManager->deallocate(fElemList);//delete [] fElemList;
+    BaseRefVectorOf<TElem>::fMemoryManager->deallocate(BaseRefVectorOf<TElem>::fElemList);//delete [] fElemList;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/30 16:11:44  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.3  2003/03/07 18:10:06  tng
  * Return a reference instead of void for operator=
  *
@@ -162,7 +165,7 @@ public:
     *            wrapping another exception.
     * @see SAXParseException#SAXParseException
     */
-    virtual void warning(const SAXParseException& exception) = 0;
+    virtual void warning(const SAXParseException& exc) = 0;
 
   /**
     * Receive notification of a recoverable error.
@@ -186,7 +189,7 @@ public:
     *            wrapping another exception.
     * @see SAXParseException#SAXParseException
     */
-    virtual void error(const SAXParseException& exception) = 0;
+    virtual void error(const SAXParseException& exc) = 0;
 
   /**
     * Receive notification of a non-recoverable error.
@@ -208,7 +211,7 @@ public:
     *            wrapping another exception.
     * @see SAXParseException#SAXParseException
     */
-    virtual void fatalError(const SAXParseException& exception) = 0;
+    virtual void fatalError(const SAXParseException& exc) = 0;
 
     /**
     * Reset the Error handler object on its reuse

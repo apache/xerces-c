@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/30 16:11:43  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.9  2003/05/14 18:06:53  gareth
  * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
  *
@@ -279,7 +282,7 @@ public:
      * @see   getRelatedException
      * @since DOM Level 3
      */
-    virtual void setRelatedException(void* exception) const = 0;
+    virtual void setRelatedException(void* exc) const = 0;
 
     /**
      * A <code>XMLCh*</code> indicating which related data is expected in 

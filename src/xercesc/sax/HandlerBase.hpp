@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/30 16:11:44  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.5  2002/11/04 14:56:25  tng
  * C++ Namespace Support.
  *
@@ -339,7 +342,7 @@ public:
     * @see ErrorHandler#warning
     * @see SAXParseException#SAXParseException
     */
-    virtual void error(const SAXParseException& exception);
+    virtual void error(const SAXParseException& exc);
 
   /**
     * Report a fatal XML parsing error.
@@ -358,7 +361,7 @@ public:
     * @see ErrorHandler#fatalError
     * @see SAXParseException#SAXParseException
     */
-    virtual void fatalError(const SAXParseException& exception);
+    virtual void fatalError(const SAXParseException& exc);
 
   /**
     * Receive notification of a parser warning.
@@ -374,7 +377,7 @@ public:
     * @see ErrorHandler#warning
     * @see SAXParseException#SAXParseException
     */
-    virtual void warning(const SAXParseException& exception);
+    virtual void warning(const SAXParseException& exc);
 
     /**
     * Reset the Error handler object on its reuse
@@ -461,9 +464,9 @@ inline void HandlerBase::error(const SAXParseException&)
 {
 }
 
-inline void HandlerBase::fatalError(const SAXParseException& exception)
+inline void HandlerBase::fatalError(const SAXParseException& exc)
 {
-    throw exception;
+    throw exc;
 }
 
 inline void

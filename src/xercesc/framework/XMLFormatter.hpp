@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/05/30 16:11:43  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.14  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -428,7 +431,7 @@ private :
                               XMLByte*      &ref, 
                               const XMLCh *  stdRef);  
  
-    const void writeCharRef(const XMLCh &toWrite);
+    void writeCharRef(const XMLCh &toWrite);
 
     bool inEscapeList(const XMLFormatter::EscapeFlags escStyle
                     , const XMLCh                     toCheck);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/30 16:11:43  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.4  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -105,7 +108,7 @@ Wrapper4DOMInputSource::~Wrapper4DOMInputSource()
 // ---------------------------------------------------------------------------
 //  Wrapper4DOMInputSource: Getter methods
 // ---------------------------------------------------------------------------
-const bool Wrapper4DOMInputSource::getIssueFatalErrorIfNotFound() const
+bool Wrapper4DOMInputSource::getIssueFatalErrorIfNotFound() const
 {
     return fInputSource->getIssueFatalErrorIfNotFound();
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/30 16:11:45  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.7  2003/05/16 21:36:59  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -232,7 +235,7 @@ public:
     *         False if the parser issue warning message instead.
     * @see #setIssueFatalErrorIfNotFound
     */
-    virtual const bool getIssueFatalErrorIfNotFound() const;
+    virtual bool getIssueFatalErrorIfNotFound() const;
 
     MemoryManager* getMemoryManager() const;
 
@@ -403,7 +406,7 @@ inline const XMLCh* InputSource::getSystemId() const
     return fSystemId;
 }
 
-inline const bool InputSource::getIssueFatalErrorIfNotFound() const
+inline bool InputSource::getIssueFatalErrorIfNotFound() const
 {
     return fFatalErrorIfNotFound;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/30 16:11:43  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.4  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -103,7 +106,7 @@ Wrapper4InputSource::~Wrapper4InputSource()
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Getter methods
 // ---------------------------------------------------------------------------
-const bool Wrapper4InputSource::getIssueFatalErrorIfNotFound() const
+bool Wrapper4InputSource::getIssueFatalErrorIfNotFound() const
 {
     return fInputSource->getIssueFatalErrorIfNotFound();
 }

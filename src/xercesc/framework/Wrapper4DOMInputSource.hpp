@@ -175,7 +175,7 @@ public:
     *         False if the parser issue warning message instead.
     * @see #setIssueFatalErrorIfNotFound
     */
-    const bool getIssueFatalErrorIfNotFound() const;
+    bool getIssueFatalErrorIfNotFound() const;
 
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/30 16:11:45  gareth
+ * Fixes so we compile under VC7.1. Patch by Alberto Massari.
+ *
  * Revision 1.5  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -142,7 +145,7 @@ public :
     CMLeaf
     (
           QName* const         element
-        , const unsigned int   position = ~0
+        , const unsigned int   position = (~0)
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     CMLeaf

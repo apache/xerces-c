@@ -526,7 +526,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     fParser->setUserErrorReporter(fErrorReporter);
 
     // Should just issue warning if the schema is not found
-    const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
+    bool flag = srcToFill->getIssueFatalErrorIfNotFound();
     srcToFill->setIssueFatalErrorIfNotFound(false);
 
     fParser->parse(*srcToFill);
@@ -705,7 +705,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     fParser->setUserErrorReporter(fErrorReporter);
 
     // Should just issue warning if the schema is not found
-    const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
+    bool flag = srcToFill->getIssueFatalErrorIfNotFound();
     srcToFill->setIssueFatalErrorIfNotFound(false);
 
     fParser->parse(*srcToFill) ;
@@ -7535,7 +7535,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     fParser->setUserErrorReporter(fErrorReporter);
 
     // Should just issue warning if the schema is not found
-    const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
+    bool flag = srcToFill->getIssueFatalErrorIfNotFound();
     srcToFill->setIssueFatalErrorIfNotFound(false);
 
     fParser->parse(*srcToFill) ;

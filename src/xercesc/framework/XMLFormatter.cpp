@@ -488,7 +488,7 @@ void XMLFormatter::writeBOM(const XMLByte* const toFormat
 // ---------------------------------------------------------------------------
 //  XMLFormatter: Private helper methods
 // ---------------------------------------------------------------------------
-const void XMLFormatter::writeCharRef(const XMLCh &toWrite)
+void XMLFormatter::writeCharRef(const XMLCh &toWrite)
 {
     XMLCh tmpBuf[32];
     tmpBuf[0] = chAmpersand;

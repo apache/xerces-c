@@ -3136,7 +3136,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         Janitor<InputSource> janSrc(srcToFill);
 
         // Should just issue warning if the schema is not found
-        const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
+        bool flag = srcToFill->getIssueFatalErrorIfNotFound();
         srcToFill->setIssueFatalErrorIfNotFound(false);
 
         parser.parse(*srcToFill);
@@ -3306,7 +3306,7 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
     parser.setUserErrorReporter(fErrorReporter);
 
     // Should just issue warning if the schema is not found
-    const bool flag = src.getIssueFatalErrorIfNotFound();
+    bool flag = src.getIssueFatalErrorIfNotFound();
     ((InputSource&) src).setIssueFatalErrorIfNotFound(false);
 
     parser.parse(src);
