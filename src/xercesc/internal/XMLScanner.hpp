@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.47  2004/12/14 16:16:36  cargilld
+ * Fix for xercesc-684: Add accessor to XMLScanner to get the current grammar type.
+ *
  * Revision 1.46  2004/12/09 20:31:39  knoaman
  * DOM L3: pass schema normalized value only when datatype-normalization feature
  * is enabled.
@@ -464,6 +467,8 @@ public :
         sendCharData(toSend);
         return true;
     }
+
+    virtual Grammar::GrammarType getCurrentGrammarType() const;
 
     // -----------------------------------------------------------------------
     //  Public pure virtual methods
@@ -1610,6 +1615,11 @@ inline void XMLScanner::setAttrDupChkRegistry(const unsigned int &attrNumber
         }
     }
 
+}
+
+inline Grammar::GrammarType XMLScanner::getCurrentGrammarType() const
+{
+    return Grammar::UnKnown;
 }
 
 XERCES_CPP_NAMESPACE_END

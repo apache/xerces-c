@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/12/14 16:16:36  cargilld
+ * Fix for xercesc-684: Add accessor to XMLScanner to get the current grammar type.
+ *
  * Revision 1.22  2004/12/03 19:40:30  cargilld
  * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
  *
@@ -161,6 +164,7 @@ public :
         , const short           grammarType
         , const bool            toCache = false
     );
+    virtual Grammar::GrammarType getCurrentGrammarType() const;
 
 protected:
     // -----------------------------------------------------------------------
@@ -361,6 +365,11 @@ inline const XMLCh* SGXMLScanner::getName() const
 inline bool SGXMLScanner::toCheckIdentityConstraint()  const
 {
     return fValidate && fIdentityConstraintChecking && fICHandler;
+}
+
+inline Grammar::GrammarType SGXMLScanner::getCurrentGrammarType() const
+{
+    return fGrammarType;
 }
 
 XERCES_CPP_NAMESPACE_END
