@@ -81,10 +81,19 @@
 #include <cstddef>
 #include <cstring>
 
-#if TARGET_API_MAC_CARBON
-	#include <Carbon.h>
+#if defined(XML_MACOSX)
+    //	Framework includes from ProjectBuilder
+	#include <CarbonCore/MacErrors.h>
+	#include <CarbonCore/Script.h>
+	#include <CarbonCore/TextUtils.h>
+	#include <CarbonCore/TextEncodingConverter.h>
+	#include <CarbonCore/TextCommon.h>
+	#include <CarbonCore/CodeFragments.h>
+	#include <CarbonCore/UnicodeConverter.h>
+	#include <CarbonCore/UnicodeUtilities.h>
 #else
-	#include <Errors.h>
+    //	Classic includes otherwise
+	#include <MacErrors.h>
 	#include <Script.h>
 	#include <TextUtils.h>
 	#include <TextEncodingConverter.h>

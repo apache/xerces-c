@@ -64,9 +64,11 @@
 #include <util/TransService.hpp>
 #include <cstddef>
 
-#if TARGET_API_MAC_CARBON
-	#include <Carbon.h>
+#if defined(XML_MACOSX)
+    //	Framework includes from ProjectBuilder
+	#include <CarbonCore/UnicodeConverter.h>
 #else
+    //	Classic includes otherwise
 	#include <UnicodeConverter.h>
 #endif
 
