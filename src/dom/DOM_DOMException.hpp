@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/10 19:52:08  abagchi
+ * Added docs for enum
+ *
  * Revision 1.4  2000/02/06 07:47:28  rahulj
  * Year 2K copyright swat.
  *
@@ -99,6 +102,8 @@
   */
 class CDOM_EXPORT DOM_DOMException  {
 public:
+    /** @name Enumerators for DOM Exceptions */
+    //@{
         enum ExceptionCode {
                 INDEX_SIZE_ERR       = 1,
                 DOMSTRING_SIZE_ERR   = 2,
@@ -111,11 +116,12 @@ public:
                 NOT_SUPPORTED_ERR    = 9,
                 INUSE_ATTRIBUTE_ERR  = 10,
                 INVALID_STATE_ERR    = 11,
-	        	SYNTAX_ERR	     = 12,
-        		INVALID_MODIFICATION_ERR    = 13,
-        		NAMESPACE_ERR	     = 14,
-        		INVALID_ACCESS_ERR   = 15
+	       	SYNTAX_ERR	     = 12,
+        	INVALID_MODIFICATION_ERR    = 13,
+        	NAMESPACE_ERR	     = 14,
+        	INVALID_ACCESS_ERR   = 15
         };
+    //@}
 public:
     /** @name Constructors and assignment operator */
     //@{
