@@ -1570,41 +1570,10 @@
 		};
 		02058DFAFF8AF8CD7F000001 = {
 			children = (
-				02058E00FF8AF8CD7F000001,
+				F5020B73022092AC01A80067,
 			);
 			isa = PBXGroup;
 			path = NetAccessors;
-			refType = 4;
-		};
-		02058E00FF8AF8CD7F000001 = {
-			children = (
-				02058E01FF8AF8CD7F000001,
-				02058E02FF8AF8CD7F000001,
-				02058E03FF8AF8CD7F000001,
-				02058E04FF8AF8CD7F000001,
-			);
-			isa = PBXGroup;
-			path = MacOSURLAccess;
-			refType = 4;
-		};
-		02058E01FF8AF8CD7F000001 = {
-			isa = PBXFileReference;
-			path = MacOSURLAccess.cpp;
-			refType = 4;
-		};
-		02058E02FF8AF8CD7F000001 = {
-			isa = PBXFileReference;
-			path = MacOSURLAccess.hpp;
-			refType = 4;
-		};
-		02058E03FF8AF8CD7F000001 = {
-			isa = PBXFileReference;
-			path = URLAccessBinInputStream.cpp;
-			refType = 4;
-		};
-		02058E04FF8AF8CD7F000001 = {
-			isa = PBXFileReference;
-			path = URLAccessBinInputStream.hpp;
 			refType = 4;
 		};
 		02058E11FF8AF8CD7F000001 = {
@@ -3043,22 +3012,6 @@
 				);
 			};
 		};
-		02058F54FF8AF8CD7F000001 = {
-			fileRef = 02058E02FF8AF8CD7F000001;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
-		02058F55FF8AF8CD7F000001 = {
-			fileRef = 02058E04FF8AF8CD7F000001;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
 		02058F5AFF8AF8CD7F000001 = {
 			fileRef = 02058E11FF8AF8CD7F000001;
 			isa = PBXBuildFile;
@@ -4179,22 +4132,6 @@
 				);
 			};
 		};
-		02059033FF8AF8CD7F000001 = {
-			fileRef = 02058E01FF8AF8CD7F000001;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
-		02059034FF8AF8CD7F000001 = {
-			fileRef = 02058E03FF8AF8CD7F000001;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
 		0205903DFF8AF8CD7F000001 = {
 			fileRef = 02058E27FF8AF8CD7F000001;
 			isa = PBXBuildFile;
@@ -4416,7 +4353,7 @@
 		};
 		0867D69AFE84028FC02AAC07 = {
 			children = (
-				1A7E46A7008102C97F000001,
+				F5020B800220B42701A80067,
 			);
 			isa = PBXGroup;
 			name = "External Frameworks and Libraries";
@@ -4437,8 +4374,9 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				FRAMEWORK_VERSION = A;
 				HEADER_SEARCH_PATHS = "../../../../src /System/Library/Frameworks/Carbon.framework/Headers";
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "-DTARGET_API_MAC_CARBON -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_MACOS_UNICODECONVERTER -DXML_USE_NETACCESSOR_URLACCESS";
+				OTHER_CFLAGS = "-DTARGET_API_MAC_CARBON -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_MACOS_UNICODECONVERTER -DXML_USE_NETACCESSOR_URLACCESSCF";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Xerces;
 				SECTORDER_FLAGS = "";
@@ -4449,6 +4387,7 @@
 			);
 			isa = PBXFrameworkTarget;
 			name = XercesLib;
+			productInstallPath = "";
 			productName = Xerces;
 			productReference = 034768DEFF38A45A11DB9C8B;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -4616,8 +4555,6 @@
 				02058F4FFF8AF8CD7F000001,
 				02058F50FF8AF8CD7F000001,
 				02058F51FF8AF8CD7F000001,
-				02058F54FF8AF8CD7F000001,
-				02058F55FF8AF8CD7F000001,
 				02058F5AFF8AF8CD7F000001,
 				02058F5BFF8AF8CD7F000001,
 				02058F5CFF8AF8CD7F000001,
@@ -4849,6 +4786,8 @@
 				F5A6C94201B968C801000102,
 				F5A6C94301B968C801000102,
 				F5A6C94401B968C801000102,
+				F5020B78022092AD01A80067,
+				F5020B79022092AD01A80067,
 			);
 			isa = PBXHeadersBuildPhase;
 			name = Headers;
@@ -4961,8 +4900,6 @@
 				0205902DFF8AF8CD7F000001,
 				0205902EFF8AF8CD7F000001,
 				0205902FFF8AF8CD7F000001,
-				02059033FF8AF8CD7F000001,
-				02059034FF8AF8CD7F000001,
 				0205903DFF8AF8CD7F000001,
 				02059047FF8AF8CD7F000001,
 				0205904CFF8AF8CD7F000001,
@@ -5132,6 +5069,8 @@
 				F5A6C93601B9677A01000102,
 				F5A6C94501B968C801000102,
 				F5A6C94601B968C801000102,
+				F5020B7A022092AD01A80067,
+				F5020B7B022092AD01A80067,
 			);
 			isa = PBXSourcesBuildPhase;
 			name = Sources;
@@ -5139,7 +5078,7 @@
 		0867D6A0FE84028FC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
-				1A7E46A8008102C97F000001,
+				F5020B810220B42801A80067,
 			);
 			isa = PBXFrameworksBuildPhase;
 			name = "Frameworks & Libraries";
@@ -5235,18 +5174,6 @@
 			};
 			isa = PBXBuildStyle;
 			name = Deployment;
-		};
-		1A7E46A7008102C97F000001 = {
-			isa = PBXFrameworkReference;
-			name = Carbon.framework;
-			path = /System/Library/Frameworks/Carbon.framework;
-			refType = 0;
-		};
-		1A7E46A8008102C97F000001 = {
-			fileRef = 1A7E46A7008102C97F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //1A0
 //1A1
@@ -5919,6 +5846,73 @@
 //F52
 //F53
 //F54
+		F5020B73022092AC01A80067 = {
+			children = (
+				F5020B74022092AC01A80067,
+				F5020B75022092AC01A80067,
+				F5020B76022092AC01A80067,
+				F5020B77022092AC01A80067,
+			);
+			isa = PBXGroup;
+			path = MacOSURLAccessCF;
+			refType = 4;
+		};
+		F5020B74022092AC01A80067 = {
+			isa = PBXFileReference;
+			path = MacOSURLAccessCF.cpp;
+			refType = 4;
+		};
+		F5020B75022092AC01A80067 = {
+			isa = PBXFileReference;
+			path = MacOSURLAccessCF.hpp;
+			refType = 4;
+		};
+		F5020B76022092AC01A80067 = {
+			isa = PBXFileReference;
+			path = URLAccessCFBinInputStream.cpp;
+			refType = 4;
+		};
+		F5020B77022092AC01A80067 = {
+			isa = PBXFileReference;
+			path = URLAccessCFBinInputStream.hpp;
+			refType = 4;
+		};
+		F5020B78022092AD01A80067 = {
+			fileRef = F5020B75022092AC01A80067;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5020B79022092AD01A80067 = {
+			fileRef = F5020B77022092AC01A80067;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5020B7A022092AD01A80067 = {
+			fileRef = F5020B74022092AC01A80067;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5020B7B022092AD01A80067 = {
+			fileRef = F5020B76022092AC01A80067;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5020B800220B42701A80067 = {
+			isa = PBXFrameworkReference;
+			name = CoreServices.framework;
+			path = ../../../../../../../../System/Library/Frameworks/CoreServices.framework;
+			refType = 4;
+		};
+		F5020B810220B42801A80067 = {
+			fileRef = F5020B800220B42701A80067;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F50CFBF000B9CF4801000001 = {
 			isa = PBXFileReference;
 			path = ComplexTypeInfo.cpp;
