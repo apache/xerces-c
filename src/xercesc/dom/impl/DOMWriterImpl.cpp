@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.24  2002/12/10 18:59:14  tng
+ * pretty format print: consistent newline
+ *
  * Revision 1.23  2002/12/10 13:34:07  tng
  * Pretty-format print: also indent PI/comment that appear inside the root element.
  *
@@ -757,6 +760,9 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
+            if(level == 1)
+                printNewLine();
+
             printNewLine();
             printIndent(level);
 
@@ -803,6 +809,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 processNode(child, level);
                 child = child->getNextSibling();
             }
+            printNewLine();
             break;
         }
 
@@ -812,6 +819,9 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
             if ( filterAction == DOMNodeFilter::FILTER_REJECT)
                 break;
+
+            if(level == 1)
+                printNewLine();
 
             printNewLine();
             printIndent(level);
@@ -897,9 +907,6 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
                     *fFormatter << XMLFormatter::NoEscapes << chCloseAngle;
 
-                if(level == 1)
-                    printNewLine();
-
                 while( child != 0)
                 {
                     processNode(child, level);
@@ -915,6 +922,10 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     if(nodeLine != fCurrentLine)
                     {
                         printNewLine();
+
+                        if(nodeLine != fCurrentLine && level == 0)
+                            printNewLine();
+
                         printIndent(level);
                     }
                     TRY_CATCH_THROW
@@ -923,10 +934,6 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                                      << nodeName << chCloseAngle;
                         ,true
                     )
-
-                    //for level 1 nodes that span multiple lines, add an extra blank line
-                    if(nodeLine != fCurrentLine && (level == 1 || level==0) )
-                        printNewLine();
 
                 }
             }
@@ -1044,8 +1051,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
-        printNewLine();
-        printIndent(level);
+            if(level == 1)
+                printNewLine();
+
+            printNewLine();
+            printIndent(level);
 
             TRY_CATCH_THROW
             (
@@ -1064,6 +1074,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
             printNewLine();
             printIndent(level);
+
             TRY_CATCH_THROW
             (
                 *fFormatter << gStartDoctype << nodeName;
@@ -1124,6 +1135,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             //
             printNewLine();
             printIndent(level);
+
             fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
             *fFormatter << gStartEntity    << nodeName;
 
