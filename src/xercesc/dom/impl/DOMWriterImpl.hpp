@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/06/14 15:39:02  peiyongz
+ * Fix: Compilation error from ForteC on Solaris2.6
+ *
  * Revision 1.3  2002/06/10 16:02:21  peiyongz
  * format-pretty-print partially supported
  * resolve encoding from DOMDocument Interface
@@ -352,8 +355,8 @@ private:
 	void                          processNode(const DOMNode* const);
     DOMNodeFilter::FilterAction   checkFilter(const DOMNode* const) const;
 
-    void                          printNewLine() const;
-    void                          setFeature(const XMLCh* const
+    inline void                   printNewLine() const;
+    inline void                   setFeature(const XMLCh* const
                                            , const XMLCh* const); 
 
 	inline void                   setURCharRef();
