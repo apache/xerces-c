@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/11/28 21:15:08  tng
+ * Fix broken ParserTest.
+ *
  * Revision 1.9  2000/06/22 04:31:27  roddey
  * Another do nothing change to make sure I can still commit
  * from home after changing my password.
@@ -175,13 +178,13 @@ int main(int argC, char** argV)
     //
     XMLValidator* validator = 0;
     DTDValidator* dtdVal = new DTDValidator(&parserTest);
-    dtdVal->setDocTypeHandler(&parserTest);
     validator = dtdVal;
 
     // And now create the scanner and give it all the handlers
     XMLScanner scanner
     (
         &parserTest
+        , &parserTest
         , 0
         , &parserTest
         , validator
