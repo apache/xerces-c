@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/01/25 16:33:25  peiyongz
+ * wrong error code.
+ *
  * Revision 1.7  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -586,7 +589,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(baseMinInclusive
                                  , thisMaxExclusive
-                                 , XMLExcepts::FACET_maxExcl_base_minExcl)
+                                 , XMLExcepts::FACET_maxExcl_base_minIncl)
             }
         }
     }
