@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.2  2000/02/18 22:56:31  abagchi
+# Changed target directory
+#
 # Revision 1.1  2000/02/17 20:21:31  abagchi
 # Initial checkin
 #
@@ -82,7 +85,7 @@ APP_NAME=EncodingTest
 APP_DIR=EncodingTest
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
-EXEC=	${XERCESCROOT}/tests/${APP_DIR}
+EXEC=	${XERCESCROOT}/bin
 OBJS=	${OUTDIR}/EncodingTest.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
 HEADER_FILES=
