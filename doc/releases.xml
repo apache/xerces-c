@@ -12,9 +12,31 @@
     </tr>
 
     <tr>
+        <td>2001-11-13</td>
+        <td>Tinny Ng</td>
+        <td>Move root element check from XMLValidator to XMLScanner
+            and deprecate XMLValidator::checkRootElement().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-13</td>
+        <td>Tinny Ng</td>
+        <td>Update documentation for DefaultHandler and DOMParser.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-09</td>
+        <td>Tinny Ng</td>
+        <td>Regular Expression: Update the Block Names and Block Range to comply to the latest standard.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-11-09</td>
         <td>Carolyn Weiss</td>
-        <td>DOMIdTest/MemParse fix: Pulled the hardcoded encoding out of the document
+        <td>DOMIDTest/MemParse fix: Pulled the hardcoded encoding out of the document
             itself and made it a #define to make it easier to support other encodings.
         </td>
     </tr>
@@ -23,21 +45,21 @@
         <td>2001-11-09</td>
         <td>Carolyn Weiss</td>
         <td>DOMMemTest fix: Changed some literal values to their equivalent hex values
-            so they work correctly on both ascii and EBCDIC systems.
+            so they work correctly on both ASCII and EBCDIC systems.
         </td>
     </tr>
 
     <tr>
         <td>2001-11-09</td>
         <td>Linda Swan</td>
-        <td>Bug Fix: maxChars in copyNString is more related to the target than the src.
+        <td>Bug Fix: maxChars in XMLString::copyNString is more related to the target than the src.
         </td>
     </tr>
 
     <tr>
         <td>2001-11-07</td>
         <td>Tinny Ng</td>
-        <td>Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+        <td>Performance: Create QName in ContentSpecNode only if it is a leaf/Any/PCDataNode.
         </td>
     </tr>
 
@@ -63,7 +85,8 @@
              YearDatatypeValidator, <br/>
              YearMonthDatatypeValidator, <br/>
              DurationDatatypeValidator. <br/>
-             Add XMLDateTime.
+             Add SchemaDataTimeException, <br/>
+             XMLDateTime.
         </td>
     </tr>
 
@@ -125,7 +148,7 @@
     </tr>
 
     <tr>
-        <td>2001-10-29</td>
+        <td>2001/10/29</td>
         <td>Tinny Ng</td>
         <td>Update samples doc to reflect the latest changes.  Also update runConfigure usage
             in build doc to reflect the latest changes.
