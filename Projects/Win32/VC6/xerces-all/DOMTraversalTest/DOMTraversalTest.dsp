@@ -89,7 +89,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\tests\DOM\Travesal\Traversal.cpp
+SOURCE=..\..\..\..\..\tests\DOM\Traversal\Traversal.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
