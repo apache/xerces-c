@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/10 20:20:42  abagchi
+ * Added docs for assignment operators
+ *
  * Revision 1.6  2000/02/10 20:19:24  abagchi
  * Added docs for equality operators
  *
@@ -129,6 +132,12 @@ public:
       * @param other The object to be copied.
       */
     DOM_NamedNodeMap & operator = (const DOM_NamedNodeMap &other);
+
+    /**
+      * Assignment operator.
+      *
+      * @param other The object to be copied.
+      */
     DOM_NamedNodeMap & operator = (const DOM_NullPtr *other);
 
     //@}
