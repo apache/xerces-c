@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:44  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 19:57:15  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:44  peiyongz
+ * sane_include
  *
  * Revision 1.7  2000/03/11 02:58:38  chchou
  * Fix bug # 18, remove set method of readonly attributes
@@ -101,28 +104,28 @@ class AttrImpl;
 /**
 * The <code>DOM_Attr</code> class refers to an attribute of an XML element.
 *
-* Typically the allowable values for the 
+* Typically the allowable values for the
 * attribute are defined in a documenttype definition.
-* <p><code>DOM_Attr</code> objects inherit the <code>DOM_Node</code>  interface, but 
-* since attributes are not actually child nodes of the elements they are associated with, the 
-* DOM does not consider them part of the document  tree.  Thus, the 
-* <code>DOM_Node</code> attributes <code>parentNode</code>,  
-* <code>previousSibling</code>, and <code>nextSibling</code> have a  null 
-* value for <code>DOM_Attr</code> objects. The DOM takes the  view that 
-* attributes are properties of elements rather than having a  separate 
-* identity from the elements they are associated with;  this should make it 
-* more efficient to implement such features as default attributes associated 
-* with all elements of a  given type.  Furthermore, attribute nodes 
-* may not be immediate children of a <code>DocumentFragment</code>. However, 
-* they can be associated with <code>Element</code> nodes contained within a 
-* <code>DocumentFragment</code>. In short, users of the DOM 
-* need to be aware that  <code>Attr</code> nodes have some things in  common 
-* with other objects inheriting the <code>Node</code> interface, but they 
+* <p><code>DOM_Attr</code> objects inherit the <code>DOM_Node</code>  interface, but
+* since attributes are not actually child nodes of the elements they are associated with, the
+* DOM does not consider them part of the document  tree.  Thus, the
+* <code>DOM_Node</code> attributes <code>parentNode</code>,
+* <code>previousSibling</code>, and <code>nextSibling</code> have a  null
+* value for <code>DOM_Attr</code> objects. The DOM takes the  view that
+* attributes are properties of elements rather than having a  separate
+* identity from the elements they are associated with;  this should make it
+* more efficient to implement such features as default attributes associated
+* with all elements of a  given type.  Furthermore, attribute nodes
+* may not be immediate children of a <code>DocumentFragment</code>. However,
+* they can be associated with <code>Element</code> nodes contained within a
+* <code>DocumentFragment</code>. In short, users of the DOM
+* need to be aware that  <code>Attr</code> nodes have some things in  common
+* with other objects inheriting the <code>Node</code> interface, but they
 * also are quite distinct.
-*  
+*
 */
 class CDOM_EXPORT DOM_Attr: public DOM_Node {
-    
+
 public:
   /** @name Constructors and assignment operators */
   //@{
@@ -152,7 +155,7 @@ public:
     * @param other The source attribute object
     */
     DOM_Attr & operator = (const DOM_Attr &other);
-    
+
     /**
       * Assignment operator.  This overloaded variant is provided for
       *   the sole purpose of setting a DOM_Node reference variable to
@@ -173,7 +176,7 @@ public:
 	//@}
   /** @name Destructor */
   //@{
-	    
+	
   /**
     * Destructor.  The object being destroyed is a reference to the Attribute
     * "node", not the underlying attribute itself.
@@ -181,11 +184,11 @@ public:
     */
     ~DOM_Attr();
 	//@}
-    
+
   /** @name Getter functions */
   //@{
     /**
-    * Returns the name of this attribute. 
+    * Returns the name of this attribute.
     */
     DOMString       getName() const;
 
@@ -193,7 +196,7 @@ public:
     *
     * Returns true if the attribute received its value explicitly in the
     * XML document, or if a value was assigned programatically with
-    * the setValue function.  Returns false if the attribute value 
+    * the setValue function.  Returns false if the attribute value
     * came from the default value declared in the document's DTD.
     */
     bool            getSpecified() const;
@@ -201,11 +204,11 @@ public:
     /**
 	* Returns the value of the attribute.
 	*
-    * The value of the attribute is returned as a string. 
+    * The value of the attribute is returned as a string.
     * Character and general entity references are replaced with their values.
     */
     DOMString       getValue() const;
-    
+
 	//@}
   /** @name Setter functions */
   //@{
@@ -223,8 +226,6 @@ public:
     /**
      * The <code>DOM_Element</code> node this attribute is attached to or
      * <code>null</code> if this attribute is not in use.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      */
     DOM_Element     getOwnerElement() const;

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 19:57:15  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:45  peiyongz
+ * sane_include
  *
  * Revision 1.13  2000/06/07 22:49:40  andyh
  * Memory usage reduction:  DOM NamedNodeMaps for attributes are allocated
@@ -119,15 +122,15 @@
 class NamedNodeMapImpl;
 
 /**
-*  <code>NamedNodeMap</code>s  are used to 
+*  <code>NamedNodeMap</code>s  are used to
 * represent collections of nodes that can be accessed by name.
 *
-* Note that <code>NamedNodeMap</code> does not inherit from <code>NodeList</code>; 
-* <code>NamedNodeMap</code>s are not maintained in any particular order. 
-* Nodes contained in a <code>NamedNodeMap</code> may 
-* also be accessed by an ordinal index, but this is simply to allow 
-* convenient enumeration of the contents, and 
-* does not imply that the DOM specifies an order to these Nodes. 
+* Note that <code>NamedNodeMap</code> does not inherit from <code>NodeList</code>;
+* <code>NamedNodeMap</code>s are not maintained in any particular order.
+* Nodes contained in a <code>NamedNodeMap</code> may
+* also be accessed by an ordinal index, but this is simply to allow
+* convenient enumeration of the contents, and
+* does not imply that the DOM specifies an order to these Nodes.
 */
 class CDOM_EXPORT DOM_NamedNodeMap {
 private:
@@ -136,7 +139,7 @@ private:
 
 	static const unsigned short NNM_ELEMENT;
 	static const unsigned short NNM_OTHER;	
-    
+
 public:
     /** @name Constructors and assignment operator */
     //@{
@@ -151,8 +154,8 @@ public:
     DOM_NamedNodeMap();
 
     /**
-      * Copy constructor.  Creates a new <code>DOM_NamedNodeMap</code> reference object 
-      * that refers to the same underlying NamedNodeMap as the original.  
+      * Copy constructor.  Creates a new <code>DOM_NamedNodeMap</code> reference object
+      * that refers to the same underlying NamedNodeMap as the original.
       *
       * @param other The object to be copied.
       */
@@ -187,7 +190,7 @@ public:
 	  *
 	  */
     ~DOM_NamedNodeMap();
-    
+
     //@}
 
     /** @Comparisons. */
@@ -237,28 +240,28 @@ public:
     //@{
 
     /**
-    * Adds a node using its <code>nodeName</code> attribute. 
+    * Adds a node using its <code>nodeName</code> attribute.
     *
-    * <br>As the <code>nodeName</code> attribute is used to derive the name 
-    * which the node must be stored under, multiple nodes of certain types 
-    * (those that have a "special" string value) cannot be stored as the names 
+    * <br>As the <code>nodeName</code> attribute is used to derive the name
+    * which the node must be stored under, multiple nodes of certain types
+    * (those that have a "special" string value) cannot be stored as the names
     * would clash. This is seen as preferable to allowing nodes to be aliased.
-    * @param arg A node to store in a named node map. The node will later be 
-    *   accessible using the value of the <code>nodeName</code> attribute of 
-    *   the node. If a node with that name is already present in the map, it 
+    * @param arg A node to store in a named node map. The node will later be
+    *   accessible using the value of the <code>nodeName</code> attribute of
+    *   the node. If a node with that name is already present in the map, it
     *   is replaced by the new one.
     * @return If the new <code>Node</code> replaces an existing node the
-    *   replaced <code>Node</code> is returned, 
+    *   replaced <code>Node</code> is returned,
     *   otherwise <code>null</code> is returned.
     * @exception DOMException
-    *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a 
-    *   different document than the one that created the 
+    *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a
+    *   different document than the one that created the
     *   <code>NamedNodeMap</code>.
-    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this 
+    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this
     *   <code>NamedNodeMap</code> is readonly.
-    *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>arg</code> is an 
-    *   <code>Attr</code> that is already an attribute of another 
-    *   <code>Element</code> object. The DOM user must explicitly clone 
+    *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>arg</code> is an
+    *   <code>Attr</code> that is already an attribute of another
+    *   <code>Element</code> object. The DOM user must explicitly clone
     *   <code>Attr</code> nodes to re-use them in other elements.
     */
     DOM_Node               setNamedItem(DOM_Node arg);
@@ -268,14 +271,14 @@ public:
     //@{
 
     /**
-    * Returns the <code>index</code>th item in the map. 
+    * Returns the <code>index</code>th item in the map.
     *
-    * If <code>index</code> 
-    * is greater than or equal to the number of nodes in the map, this returns 
+    * If <code>index</code>
+    * is greater than or equal to the number of nodes in the map, this returns
     * <code>null</code>.
     * @param index Index into the map.
-    * @return The node at the <code>index</code>th position in the 
-    *   <code>NamedNodeMap</code>, or <code>null</code> if that is not a valid 
+    * @return The node at the <code>index</code>th position in the
+    *   <code>NamedNodeMap</code>, or <code>null</code> if that is not a valid
     *   index.
     */
     DOM_Node               item(unsigned int index) const;
@@ -284,17 +287,17 @@ public:
     * Retrieves a node specified by name.
     *
     * @param name The <code>nodeName</code> of a node to retrieve.
-    * @return A <code>DOM_Node</code> (of any type) with the specified <code>nodeName</code>, or 
-    *   <code>null</code> if it does not identify any node in 
-    *   the map. 
+    * @return A <code>DOM_Node</code> (of any type) with the specified <code>nodeName</code>, or
+    *   <code>null</code> if it does not identify any node in
+    *   the map.
     */
     DOM_Node               getNamedItem(const DOMString &name) const;
 
     /**
-    * The number of nodes in the map. 
+    * The number of nodes in the map.
     *
-    * The range of valid child node indices is 
-    * 0 to <code>length-1</code> inclusive. 
+    * The range of valid child node indices is
+    * 0 to <code>length-1</code> inclusive.
     */
     unsigned int           getLength() const;
 
@@ -305,13 +308,13 @@ public:
     /**
     * Removes a node specified by name.
     *
-    * If the removed node is an 
+    * If the removed node is an
     * <code>Attr</code> with a default value it is immediately replaced.
     * @param name The <code>nodeName</code> of a node to remove.
-    * @return The node removed from the map or <code>null</code> if no node 
+    * @return The node removed from the map or <code>null</code> if no node
     *   with such a name exists.
     * @exception DOMException
-    *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in 
+    *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in
     *   the map.
     * <br>
     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>NamedNodeMap</code>
@@ -326,8 +329,6 @@ public:
     /**
      * Retrieves a node specified by local name and namespace URI.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to retrieve.
      * @param localName The <em>local name</em> of the node to retrieve.
@@ -341,33 +342,29 @@ public:
     /**
      * Adds a node using its <CODE>namespaceURI</CODE> and <CODE>localName</CODE>.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param arg A node to store in a named node map. The node will later be 
-     *       accessible using the value of the <CODE>namespaceURI</CODE> and 
-     *       <CODE>localName</CODE> attribute of the node. If a node with those 
-     *       namespace URI and local name is already present in the map, it is 
+     * @param arg A node to store in a named node map. The node will later be
+     *       accessible using the value of the <CODE>namespaceURI</CODE> and
+     *       <CODE>localName</CODE> attribute of the node. If a node with those
+     *       namespace URI and local name is already present in the map, it is
      *       replaced by the new one.
      * @return If the new <code>DOM_Node</code> replaces an existing node the
-     *   replaced <code>DOM_Node</code> is returned, 
+     *   replaced <code>DOM_Node</code> is returned,
      *   otherwise <code>null</code> is returned.
      * @exception DOMException
-     *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a 
-     *   different document than the one that created the 
+     *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a
+     *   different document than the one that created the
      *   <code>DOM_NamedNodeMap</code>.
-     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this 
+     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this
      *   <code>vNamedNodeMap</code> is readonly.
-     *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>arg</code> is an 
-     *   <code>DOM_Attr</code> that is already an attribute of another 
-     *   <code>DOM_Element</code> object. The DOM user must explicitly clone 
+     *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>arg</code> is an
+     *   <code>DOM_Attr</code> that is already an attribute of another
+     *   <code>DOM_Element</code> object. The DOM user must explicitly clone
      *   <code>DOM_Attr</code> nodes to re-use them in other elements.
      */
     DOM_Node               setNamedItemNS(DOM_Node arg);
 
     /**
      * Removes a node specified by local name and namespace URI.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to remove.
@@ -381,7 +378,7 @@ public:
      * @return The node removed from the map if a node with such a local name
      *    and namespace URI exists.
      * @exception DOMException
-     *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in 
+     *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in
      *   the map.
      * <br>
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>DOM_NamedNodeMap</code>

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 19:57:15  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:45  peiyongz
+ * sane_include
  *
  * Revision 1.8  2000/03/10 02:14:39  chchou
  * add null DOM_DocumentType constructor
@@ -103,8 +106,8 @@ class DOM_NamedNodeMap;
 class DocumentTypeImpl;
 
 /**
- * Each <code>Document</code> has a <code>doctype</code> whose value 
- * is either <code>null</code> or a <code>DocumentType</code> object. 
+ * Each <code>Document</code> has a <code>doctype</code> whose value
+ * is either <code>null</code> or a <code>DocumentType</code> object.
  *
  * The <code>DOM_DocumentType</code> class provides access
  *  to the list of entities and notations that are defined for the document.
@@ -122,7 +125,7 @@ public:
       * assigned to refer to the actual DocumentType node.
       * <p>
       * A new DocumentType node for a document that does not already have one
-      * can be created by DOM_Document::createDocumentType().     
+      * can be created by DOM_Document::createDocumentType().
       *
       */
     DOM_DocumentType();
@@ -138,7 +141,7 @@ public:
 
     /**
       * Copy constructor.  Creates a new <code>DOM_Comment</code> that refers to the
-      * same underlying node as the original.  
+      * same underlying node as the original.
       *
       *
       * @param other The object to be copied.
@@ -182,15 +185,15 @@ public:
     /** @name Getter functions. */
     //@{
   /**
-   * The name of DTD; i.e., the name immediately following the 
+   * The name of DTD; i.e., the name immediately following the
    * <code>DOCTYPE</code> keyword in an XML source document.
    */
   DOMString       getName() const;
 
   /**
-   * This function returns a  <code>NamedNodeMap</code> containing the general entities, both 
+   * This function returns a  <code>NamedNodeMap</code> containing the general entities, both
    * external and internal, declared in the DTD. Parameter entities are not contained.
-   * Duplicates are discarded. 
+   * Duplicates are discarded.
    * <p>
    * Note: this functionality is not implemented in the initial release
    * of the parser, and the returned NamedNodeMap will be empty.
@@ -214,8 +217,6 @@ public:
     /**
      * Get the public identifier of the external subset.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @return The public identifier of the external subset.
      */
     DOMString     getPublicId() const;
@@ -223,16 +224,12 @@ public:
     /**
      * Get the system identifier of the external subset.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @return The system identifier of the external subset.
      */
     DOMString     getSystemId() const;
 
     /**
      * Get the internal subset as a string.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @return The internal subset as a string.
      */
