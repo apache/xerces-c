@@ -15,9 +15,6 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/10/26 14:50:49  peiyongz
- * net getter
  *
  * Revision 1.5  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
@@ -94,15 +91,14 @@ public :
     // -----------------------------------------------------------------------
     virtual unsigned int curPos() const;
 
-    unsigned int getSize() const;
-
     virtual unsigned int readBytes
     (
                 XMLByte* const  toFill
         , const unsigned int    maxToRead
     );
 
-
+    inline unsigned int getSize() const;
+    
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
