@@ -442,6 +442,8 @@
 			children = (
 				90E140600541861300C60A69,
 				90E140610541861300C60A69,
+				906C9B3F06FF69AA00D1DCE1,
+				906C9B4006FF69AA00D1DCE1,
 				02058D98FF8AF8CD7F000001,
 				F52345E203AE522201A80065,
 				F52345E303AE522201A80065,
@@ -2649,6 +2651,8 @@
 				900A9B3D055B053D002E6943,
 				900A9B3E055B053D002E6943,
 				900A9B3F055B053D002E6943,
+				906C9B4906FF69E900D1DCE1,
+				906C9B4A06FF69E900D1DCE1,
 				900A9B40055B053D002E6943,
 				900A9B41055B053D002E6943,
 			);
@@ -4060,6 +4064,8 @@
 				909229770573B0C400C9F477,
 				9003BCCC05C456BB003A34FC,
 				902D87FE062EE279003C92EB,
+				906C9B4206FF69AA00D1DCE1,
+				906C9B4C06FF69E900D1DCE1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7282,6 +7288,8 @@
 				9003BCCB05C456BB003A34FC,
 				9019C4BD05EDC7A5007EE4FE,
 				902D87FD062EE279003C92EB,
+				906C9B4106FF69AA00D1DCE1,
+				906C9B4B06FF69E900D1DCE1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9285,6 +9293,62 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		906C9B3F06FF69AA00D1DCE1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = BinMemOutputStream.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		906C9B4006FF69AA00D1DCE1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = BinMemOutputStream.hpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		906C9B4106FF69AA00D1DCE1 = {
+			fileRef = 906C9B3F06FF69AA00D1DCE1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		906C9B4206FF69AA00D1DCE1 = {
+			fileRef = 906C9B4006FF69AA00D1DCE1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		906C9B4906FF69E900D1DCE1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = XSValue.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		906C9B4A06FF69E900D1DCE1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = XSValue.hpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		906C9B4B06FF69E900D1DCE1 = {
+			fileRef = 906C9B4906FF69E900D1DCE1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		906C9B4C06FF69E900D1DCE1 = {
+			fileRef = 906C9B4A06FF69E900D1DCE1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		90796E490407DAAC0095DDBF = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -10114,8 +10178,7 @@
 			sourceTree = "<group>";
 		};
 		F5020B800220B42701A80067 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = CoreServices.framework;
 			path = /System/Library/Frameworks/CoreServices.framework;
@@ -12442,8 +12505,6 @@
 			sourceTree = "<group>";
 		};
 		F58B302202DE22220195DDC8 = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
@@ -12453,8 +12514,6 @@
 			name = "Development GCC3";
 		};
 		F58B302402DE22660195DDC8 = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
