@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/19 16:06:56  amassari
+ * WideCharToMultiByte and MultiByteToWideChar return 0 on failure, not -1
+ *
  * Revision 1.11  2004/01/13 16:34:22  cargilld
  * Misc memory management changes.
  *
@@ -1015,10 +1018,7 @@ unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText
     if (!srcText)
         return 0;
 
-    const unsigned int retVal = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, srcText, -1, NULL, 0);
-    if (retVal == (unsigned int)-1)
-        return 0;
-    return retVal;
+    return ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, srcText, -1, NULL, 0);
 }
 
 
@@ -1028,10 +1028,7 @@ unsigned int CygwinLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     if (!srcText)
         return 0;
 
-    const unsigned int retVal = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)srcText, -1, NULL, 0, NULL, NULL);
-    if (retVal == (unsigned int)-1)
-        return 0;
-    return retVal;
+    return ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)srcText, -1, NULL, 0, NULL, NULL);
 }
 
 
@@ -1045,7 +1042,7 @@ char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode)
     {
         // Calc the needed size
         const unsigned int neededLen = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, NULL, 0, NULL, NULL);
-        if (neededLen == (unsigned int)-1)
+        if (neededLen == 0)
             return 0;
 
         // Allocate a buffer of that size plus one for the null and transcode
@@ -1075,7 +1072,7 @@ char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode,
     {
         // Calc the needed size
         const unsigned int neededLen = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, NULL, 0, NULL, NULL);
-        if (neededLen == (unsigned int)-1)
+        if (neededLen == 0)
             return 0;
 
         // Allocate a buffer of that size plus one for the null and transcode
@@ -1105,7 +1102,7 @@ XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode)
     {
         // Calculate the buffer size required
         const unsigned int neededLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, NULL, 0);
-        if (neededLen == (unsigned int)-1)
+        if (neededLen == 0)
             return 0;
 
         // Allocate a buffer of that size plus one for the null and transcode
@@ -1134,7 +1131,7 @@ XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode,
     {
         // Calculate the buffer size required
         const unsigned int neededLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, NULL, 0);
-        if (neededLen == (unsigned int)-1)
+        if (neededLen == 0)
             return 0;
 
         // Allocate a buffer of that size plus one for the null and transcode
@@ -1172,7 +1169,7 @@ bool CygwinLCPTranscoder::transcode( const   char* const    toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if ( size_t(-1) == ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)toFill, maxChars + 1) )
+    if ( 0 == ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)toFill, maxChars + 1) )
         return false;
     return true;
 }
@@ -1197,7 +1194,7 @@ bool CygwinLCPTranscoder::transcode( const  XMLCh* const    toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if ( size_t(-1) == ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, toFill, maxBytes + 1, NULL, NULL) )
+    if ( 0 == ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, toFill, maxBytes + 1, NULL, NULL) )
         return false;
 
     // Cap it off just in case

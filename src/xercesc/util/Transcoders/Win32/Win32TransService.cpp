@@ -849,10 +849,7 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText
     if (!srcText)
         return 0;
 
-    int retVal = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, srcText, -1, NULL, 0);
-    if (retVal == -1)
-        return 0;
-    return retVal;
+    return ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, srcText, -1, NULL, 0);
 }
 
 
@@ -862,10 +859,7 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     if (!srcText)
         return 0;
 
-    int retVal = ::WideCharToMultiByte(CP_ACP, 0, srcText, -1, NULL, 0, NULL, NULL);
-    if (retVal == -1)
-        return 0;
-    return retVal;
+    return ::WideCharToMultiByte(CP_ACP, 0, srcText, -1, NULL, 0, NULL, NULL);
 }
 
 // Return value using global operator new
@@ -1010,7 +1004,7 @@ bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if ( size_t(-1) == ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)toFill, maxChars + 1) )
+    if ( 0 == ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)toFill, maxChars + 1) )
         return false;
     return true;
 }
@@ -1035,7 +1029,7 @@ bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if ( size_t(-1) == ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, toFill, maxBytes + 1, NULL, NULL) )
+    if ( 0 == ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, toFill, maxBytes + 1, NULL, NULL) )
         return false;
 
     // Cap it off just in case
