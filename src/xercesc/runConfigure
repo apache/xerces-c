@@ -126,9 +126,9 @@ fi
 
 # Check the command line parameters
 if test -x /usr/bin/getopt; then
-getoptErr=`getopt p:c:x:d:m:n:t:r:b:l:z:P:C:h $*`
+getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
 else
-getoptErr=`getopts p:c:x:d:m:n:t:r:b:l:z:P:C:h `$*``
+getoptErr=`getopts p:c:x:dm:n:t:r:b:l:z:P:C:h `$*``
 fi
 if [ $? != 0 ]
    then
