@@ -76,10 +76,17 @@ class XMLUTIL_EXPORT Match {
 public:
 
 	// -----------------------------------------------------------------------
-    //  Public Constructors and Destructor
-    // -----------------------------------------------------------------------
+  //  Public Constructors and Destructor
+  // -----------------------------------------------------------------------
 	Match();
-	~Match();
+	
+  /**
+  * Copy constructor
+  */
+  Match(const Match& toCopy);
+  Match& operator=(const Match& toAssign);
+
+	virtual ~Match();
 
 	// -----------------------------------------------------------------------
 	// Getter functions
@@ -99,16 +106,17 @@ private:
 	// -----------------------------------------------------------------------
 	// Initialize/Clean up methods
 	// -----------------------------------------------------------------------
+  void initialize(const Match& toCopy);
 	void cleanUp();
 
 	// -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fNoGroups
-    //      Represents no of regular expression groups
+  //  Private data members
+  //
+  //  fNoGroups
+  //      Represents no of regular expression groups
 	//		
-    //  fStartPositions
-    //      Array of start positions in the target text matched to specific
+  //  fStartPositions
+  //      Array of start positions in the target text matched to specific
 	//		regular expression group
 	//
 	//	fEndPositions
@@ -117,7 +125,7 @@ private:
 	//
 	//	fPositionsSize
 	//		Actual size of Start/EndPositions array.
-    // -----------------------------------------------------------------------
+  // -----------------------------------------------------------------------
 	int fNoGroups;
 	int fPositionsSize;
 	int* fStartPositions;

@@ -65,6 +65,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/RefArrayVectorOf.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/regx/Op.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/BMPattern.hpp>
@@ -135,6 +137,32 @@ public:
     bool matches(const XMLCh* const matchString, Match* const pMatch);
     bool matches(const XMLCh* const matchString, const int start,
                  const int end, Match* const pMatch);
+
+    // -----------------------------------------------------------------------
+    //  Tokenize methods
+    // -----------------------------------------------------------------------
+    // Note: The caller owns the string vector that is returned, and is responsible
+    //       for deleting it. 
+    RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString);
+    RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString, const int start,
+                                      const int end);
+
+    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString);
+    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString, 
+                                      const int start, const int end);
+
+    // -----------------------------------------------------------------------
+    //  Replace methods
+    // -----------------------------------------------------------------------
+    // Note: The caller owns the XMLCh* that is returned, and is responsible for 
+    //       deleting it. 
+    XMLCh *replace(const char* const matchString, const char* const replaceString);
+    XMLCh *replace(const char* const matchString, const char* const replaceString,
+                   const int start, const int end);
+
+    XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString);
+    XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString, 
+                   const int start, const int end);
 
 private:
     // -----------------------------------------------------------------------
@@ -225,8 +253,29 @@ private:
                       const short direction);
 
     /**
-      *    Converts a token tree into an operation tree
-      */
+     *    Tokenize helper
+     * 
+     *    This overloaded tokenize is for internal use only. It provides a way to
+     *    keep track of the sub-expressions in each match of the pattern.
+     *    
+     *    It is called by the other tokenize methods, and by the replace method.
+     *    The caller is responsible for the deletion of the returned 
+     *    RefArrayVectorOf<XMLCh*>
+     */
+    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString, 
+                                      const int start, const int end, 
+                                      RefVectorOf<Match> *subEx);
+    /**
+     *    Replace helpers
+     *
+     *    Note: the caller owns the XMLCh* that is returned
+     */
+    const XMLCh *subInExp(const XMLCh* const repString,
+                          const XMLCh* const origString, 
+                          const Match* subEx);
+    /**
+     *    Converts a token tree into an operation tree
+     */
     void compile(const Token* const token);
     Op*  compile(const Token* const token, Op* const next,
                  const bool reverse);
@@ -271,309 +320,309 @@ private:
 };
 
 
-// ---------------------------------------------------------------------------
-//  RegularExpression: Cleanup methods
-// ---------------------------------------------------------------------------
-inline void RegularExpression::cleanUp() {
+  // ---------------------------------------------------------------------------
+  //  RegularExpression: Cleanup methods
+  // ---------------------------------------------------------------------------
+  inline void RegularExpression::cleanUp() {
 
-    delete [] fPattern;
-    delete [] fFixedString;
-    delete fContext;
-    delete fBMPattern;
-    delete fTokenFactory;
-}
+      delete [] fPattern;
+      delete [] fFixedString;
+      delete fContext;
+      delete fBMPattern;
+      delete fTokenFactory;
+  }
 
-// ---------------------------------------------------------------------------
-//  RegularExpression: Helper methods
-// ---------------------------------------------------------------------------
-inline bool RegularExpression::isSet(const int options, const int flag) {
+  // ---------------------------------------------------------------------------
+  //  RegularExpression: Helper methods
+  // ---------------------------------------------------------------------------
+  inline bool RegularExpression::isSet(const int options, const int flag) {
 
-    return (options & flag) == flag;
-}
+      return (options & flag) == flag;
+  }
 
-inline Op* RegularExpression::compileLook(const Token* const token,
-                                          const Op* const next,
-                                          const bool reverse,
-                                          const unsigned short tokType) {
-
-    Op*    ret = 0;
-    Op*    result = compile(token->getChild(0), 0, reverse);
-
-    switch(tokType) {
-    case Token::T_LOOKAHEAD:
-        ret = fOpFactory.createLookOp(Op::O_LOOKAHEAD, next, result);
-        break;
-    case Token::T_NEGATIVELOOKAHEAD:
-        ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKAHEAD, next, result);
-        break;
-    case Token::T_LOOKBEHIND:
-        ret = fOpFactory.createLookOp(Op::O_LOOKBEHIND, next, result);
-        break;
-    case Token::T_NEGATIVELOOKBEHIND:
-        ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKBEHIND, next, result);
-        break;
-    case Token::T_INDEPENDENT:
-        ret = fOpFactory.createIndependentOp(next, result);
-        break;
-    case Token::T_MODIFIERGROUP:
-        ret = fOpFactory.createModifierOp(next, result,
-                                   ((ModifierToken *) token)->getOptions(),
-                                   ((ModifierToken *) token)->getOptionsMask());
-        break;
-    }
-
-
-    return ret;
-}
-
-inline Op* RegularExpression::compileSingle(const Token* const token,
-                                            Op* const next,
+  inline Op* RegularExpression::compileLook(const Token* const token,
+                                            const Op* const next,
+                                            const bool reverse,
                                             const unsigned short tokType) {
 
-    Op* ret = 0;
+      Op*    ret = 0;
+      Op*    result = compile(token->getChild(0), 0, reverse);
 
-    switch (tokType) {
-    case Token::T_DOT:
-        ret = fOpFactory.createDotOp();
-        break;
-    case Token::T_CHAR:
-        ret = fOpFactory.createCharOp(token->getChar());
-        break;
-    case Token::T_ANCHOR:
-        ret = fOpFactory.createAnchorOp(token->getChar());
-        break;
-    case Token::T_RANGE:
-    case Token::T_NRANGE:
-        ret = fOpFactory.createRangeOp(token);
-        break;
-    case Token::T_EMPTY:
-        ret = next;
-        break;
-    case Token::T_STRING:
-        ret = fOpFactory.createStringOp(token->getString());
-        break;
-    case Token::T_BACKREFERENCE:
-        ret = fOpFactory.createBackReferenceOp(token->getReferenceNo());
-        break;
-    }
-
-    if (tokType != Token::T_EMPTY)
-        ret->setNextOp(next);
-
-    return ret;
-}
+      switch(tokType) {
+      case Token::T_LOOKAHEAD:
+          ret = fOpFactory.createLookOp(Op::O_LOOKAHEAD, next, result);
+          break;
+      case Token::T_NEGATIVELOOKAHEAD:
+          ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKAHEAD, next, result);
+          break;
+      case Token::T_LOOKBEHIND:
+          ret = fOpFactory.createLookOp(Op::O_LOOKBEHIND, next, result);
+          break;
+      case Token::T_NEGATIVELOOKBEHIND:
+          ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKBEHIND, next, result);
+          break;
+      case Token::T_INDEPENDENT:
+          ret = fOpFactory.createIndependentOp(next, result);
+          break;
+      case Token::T_MODIFIERGROUP:
+          ret = fOpFactory.createModifierOp(next, result,
+                                     ((ModifierToken *) token)->getOptions(),
+                                     ((ModifierToken *) token)->getOptionsMask());
+          break;
+      }
 
 
-inline Op* RegularExpression::compileUnion(const Token* const token,
-                                           Op* const next,
-                                           const bool reverse) {
+      return ret;
+  }
 
-    int tokSize = token->size();
-    UnionOp* uniOp = fOpFactory.createUnionOp(tokSize);
+  inline Op* RegularExpression::compileSingle(const Token* const token,
+                                              Op* const next,
+                                              const unsigned short tokType) {
 
-    for (int i=0; i<tokSize; i++) {
+      Op* ret = 0;
 
-        uniOp->addElement(compile(token->getChild(i), next, reverse));
-    }
+      switch (tokType) {
+      case Token::T_DOT:
+          ret = fOpFactory.createDotOp();
+          break;
+      case Token::T_CHAR:
+          ret = fOpFactory.createCharOp(token->getChar());
+          break;
+      case Token::T_ANCHOR:
+          ret = fOpFactory.createAnchorOp(token->getChar());
+          break;
+      case Token::T_RANGE:
+      case Token::T_NRANGE:
+          ret = fOpFactory.createRangeOp(token);
+          break;
+      case Token::T_EMPTY:
+          ret = next;
+          break;
+      case Token::T_STRING:
+          ret = fOpFactory.createStringOp(token->getString());
+          break;
+      case Token::T_BACKREFERENCE:
+          ret = fOpFactory.createBackReferenceOp(token->getReferenceNo());
+          break;
+      }
 
-    return uniOp;
-}
+      if (tokType != Token::T_EMPTY)
+          ret->setNextOp(next);
+
+      return ret;
+  }
 
 
-inline Op* RegularExpression::compileCondition(const Token* const token,
-                                               Op* const next,
-                                               const bool reverse) {
+  inline Op* RegularExpression::compileUnion(const Token* const token,
+                                             Op* const next,
+                                             const bool reverse) {
 
-    Token* condTok = ((ConditionToken*) token)->getConditionToken();
-    Token* yesTok  = token->getChild(0);
-    Token* noTok   = token->getChild(1);
-    int    refNo   = token->getReferenceNo();
-    Op*    condOp  = (condTok == 0) ? 0 : compile(condTok, 0, reverse);
-    Op*    yesOp   = compile(yesTok, next, reverse);
-    Op*    noOp    = (noTok == 0) ? 0 : compile(noTok, next, reverse);
+      int tokSize = token->size();
+      UnionOp* uniOp = fOpFactory.createUnionOp(tokSize);
 
-    return fOpFactory.createConditionOp(next, refNo, condOp, yesOp, noOp);
-}
+      for (int i=0; i<tokSize; i++) {
+
+          uniOp->addElement(compile(token->getChild(i), next, reverse));
+      }
+
+      return uniOp;
+  }
 
 
-inline Op* RegularExpression::compileParenthesis(const Token* const token,
+  inline Op* RegularExpression::compileCondition(const Token* const token,
                                                  Op* const next,
                                                  const bool reverse) {
 
-    if (token->getNoParen() == 0)
-        return compile(token->getChild(0), next, reverse);
+      Token* condTok = ((ConditionToken*) token)->getConditionToken();
+      Token* yesTok  = token->getChild(0);
+      Token* noTok   = token->getChild(1);
+      int    refNo   = token->getReferenceNo();
+      Op*    condOp  = (condTok == 0) ? 0 : compile(condTok, 0, reverse);
+      Op*    yesOp   = compile(yesTok, next, reverse);
+      Op*    noOp    = (noTok == 0) ? 0 : compile(noTok, next, reverse);
 
-    Op* captureOp    = 0;
+      return fOpFactory.createConditionOp(next, refNo, condOp, yesOp, noOp);
+  }
 
-    if (reverse) {
 
-        captureOp = fOpFactory.createCaptureOp(token->getNoParen(), next);
-        captureOp = compile(token->getChild(0), captureOp, reverse);
+  inline Op* RegularExpression::compileParenthesis(const Token* const token,
+                                                   Op* const next,
+                                                   const bool reverse) {
 
-        return fOpFactory.createCaptureOp(-token->getNoParen(), captureOp);
-    }
+      if (token->getNoParen() == 0)
+          return compile(token->getChild(0), next, reverse);
 
-    captureOp = fOpFactory.createCaptureOp(-token->getNoParen(), next);
-    captureOp = compile(token->getChild(0), captureOp, reverse);
+      Op* captureOp    = 0;
 
-    return fOpFactory.createCaptureOp(token->getNoParen(), captureOp);
-}
+      if (reverse) {
 
-inline Op* RegularExpression::compileConcat(const Token* const token,
-                                            Op*  const next,
-                                            const bool reverse) {
+          captureOp = fOpFactory.createCaptureOp(token->getNoParen(), next);
+          captureOp = compile(token->getChild(0), captureOp, reverse);
 
-    Op* ret = next;
-    int tokSize = token->size();
+          return fOpFactory.createCaptureOp(-token->getNoParen(), captureOp);
+      }
 
-    if (!reverse) {
+      captureOp = fOpFactory.createCaptureOp(-token->getNoParen(), next);
+      captureOp = compile(token->getChild(0), captureOp, reverse);
 
-        for (int i= tokSize - 1; i>=0; i--) {
-            ret = compile(token->getChild(i), ret, false);
-        }
-    }
-    else {
+      return fOpFactory.createCaptureOp(token->getNoParen(), captureOp);
+  }
 
-        for (int i= 0; i< tokSize; i++) {
-            ret = compile(token->getChild(i), ret, true);
-        }
-    }
+  inline Op* RegularExpression::compileConcat(const Token* const token,
+                                              Op*  const next,
+                                              const bool reverse) {
 
-    return ret;
-}
+      Op* ret = next;
+      int tokSize = token->size();
 
-inline Op* RegularExpression::compileClosure(const Token* const token,
-                                             Op* const next,
-                                             const bool reverse,
-                                             const unsigned short tokType) {
+      if (!reverse) {
 
-    Op*    ret      = 0;
-    Token* childTok = token->getChild(0);
-    int    min      = token->getMin();
-    int    max      = token->getMax();
+          for (int i= tokSize - 1; i>=0; i--) {
+              ret = compile(token->getChild(i), ret, false);
+          }
+      }
+      else {
 
-    if (min >= 0 && min == max) {
+          for (int i= 0; i< tokSize; i++) {
+              ret = compile(token->getChild(i), ret, true);
+          }
+      }
 
-        ret = next;
-        for (int i=0; i< min; i++) {
-            ret = compile(childTok, ret, reverse);
-        }
+      return ret;
+  }
 
-        return ret;
-    }
+  inline Op* RegularExpression::compileClosure(const Token* const token,
+                                               Op* const next,
+                                               const bool reverse,
+                                               const unsigned short tokType) {
 
-    if (min > 0 && max > 0)
-        max -= min;
+      Op*    ret      = 0;
+      Token* childTok = token->getChild(0);
+      int    min      = token->getMin();
+      int    max      = token->getMax();
 
-    if (max > 0) {
+      if (min >= 0 && min == max) {
 
-        ret = next;
-        for (int i=0; i<max; i++) {
+          ret = next;
+          for (int i=0; i< min; i++) {
+              ret = compile(childTok, ret, reverse);
+          }
 
-            ChildOp* childOp = fOpFactory.createQuestionOp(
-                tokType == Token::T_NONGREEDYCLOSURE);
+          return ret;
+      }
 
-            childOp->setNextOp(next);
-            childOp->setChild(compile(childTok, ret, reverse));
-            ret = childOp;
-        }
-    }
-    else {
+      if (min > 0 && max > 0)
+          max -= min;
 
-        ChildOp* childOp = 0;
+      if (max > 0) {
 
-        if (tokType == Token::T_NONGREEDYCLOSURE) {
-            childOp = fOpFactory.createNonGreedyClosureOp();
-        }
-        else {
+          ret = next;
+          for (int i=0; i<max; i++) {
 
-            if (childTok->getMinLength() == 0)
-                childOp = fOpFactory.createClosureOp(fNoClosures++);
-            else
-                childOp = fOpFactory.createClosureOp(-1);
-        }
+              ChildOp* childOp = fOpFactory.createQuestionOp(
+                  tokType == Token::T_NONGREEDYCLOSURE);
 
-        childOp->setNextOp(next);
-        childOp->setChild(compile(childTok, childOp, reverse));
-        ret = childOp;
-    }
+              childOp->setNextOp(next);
+              childOp->setChild(compile(childTok, ret, reverse));
+              ret = childOp;
+          }
+      }
+      else {
 
-    if (min > 0) {
+          ChildOp* childOp = 0;
 
-        for (int i=0; i< min; i++) {
-            ret = compile(childTok, ret, reverse);
-        }
-    }
+          if (tokType == Token::T_NONGREEDYCLOSURE) {
+              childOp = fOpFactory.createNonGreedyClosureOp();
+          }
+          else {
 
-    return ret;
-}
+              if (childTok->getMinLength() == 0)
+                  childOp = fOpFactory.createClosureOp(fNoClosures++);
+              else
+                  childOp = fOpFactory.createClosureOp(-1);
+          }
 
-inline int RegularExpression::matchUnion(Context* const context,
-                                         const Op* const op, int offset,
-                                         const short direction)
-{
-    unsigned int opSize = op->getSize();
-    int ret = -1;
+          childOp->setNextOp(next);
+          childOp->setChild(compile(childTok, childOp, reverse));
+          ret = childOp;
+      }
 
-    for (unsigned int i=0; i < opSize; i++) {
+      if (min > 0) {
 
-        ret = match(context, op->elementAt(i), offset, direction);
+          for (int i=0; i< min; i++) {
+              ret = compile(childTok, ret, reverse);
+          }
+      }
 
-        if (ret == context->fLimit)
-            return ret;
-    }
+      return ret;
+  }
 
-    return -1;
-}
+  inline int RegularExpression::matchUnion(Context* const context,
+                                           const Op* const op, int offset,
+                                           const short direction)
+  {
+      unsigned int opSize = op->getSize();
+      int ret = -1;
 
-inline int RegularExpression::matchModifier(Context* const context,
-                                            const Op* const op, int offset,
-                                            const short direction)
-{
-    int saveOptions = fOptions;
-    fOptions |= (int) op->getData();
-    fOptions &= (int) ~op->getData2();
+      for (unsigned int i=0; i < opSize; i++) {
 
-    int ret = match(context, op->getChild(), offset, direction);
+          ret = match(context, op->elementAt(i), offset, direction);
 
-    fOptions = saveOptions;
+          if (ret == context->fLimit)
+              return ret;
+      }
 
-    return ret;
-}
+      return -1;
+  }
 
-inline unsigned short RegularExpression::getWordType(const XMLCh* const target
-                                                     , const int begin
-                                                     , const int end
-                                                     , const int offset)
-{
-    if (offset < begin || offset >= end)
-        return WT_OTHER;
+  inline int RegularExpression::matchModifier(Context* const context,
+                                              const Op* const op, int offset,
+                                              const short direction)
+  {
+      int saveOptions = fOptions;
+      fOptions |= (int) op->getData();
+      fOptions &= (int) ~op->getData2();
 
-    return getCharType(target[offset]);
-}
+      int ret = match(context, op->getChild(), offset, direction);
 
-inline
-unsigned short RegularExpression::getPreviousWordType(const XMLCh* const target
-                                                      , const int start
-                                                      , const int end
-                                                      , int offset)
-{
-    unsigned short ret = getWordType(target, start, end, --offset);
+      fOptions = saveOptions;
 
-    while (ret == WT_IGNORE) {
-        ret = getWordType(target, start, end, --offset);
-    }
+      return ret;
+  }
 
-    return ret;
-}
+  inline unsigned short RegularExpression::getWordType(const XMLCh* const target
+                                                       , const int begin
+                                                       , const int end
+                                                       , const int offset)
+  {
+      if (offset < begin || offset >= end)
+          return WT_OTHER;
 
-inline bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
+      return getCharType(target[offset]);
+  }
+
+  inline
+  unsigned short RegularExpression::getPreviousWordType(const XMLCh* const target
+                                                        , const int start
+                                                        , const int end
+                                                        , int offset)
+  {
+      unsigned short ret = getWordType(target, start, end, --offset);
+
+      while (ret == WT_IGNORE) {
+          ret = getWordType(target, start, end, --offset);
+      }
+
+      return ret;
+  }
+
+  inline bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
                                                const XMLInt32 ch2)
 {
 
-    //REVISIT - for now we will return a case sensitive match
-    return (ch1 == ch2);
+    return (0==XMLString::compareNIString((XMLCh*)&ch1,(XMLCh*)&ch2, 1));
 }
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/18 13:01:02  gareth
+ * New functionality - tokenize and replace. Fixed REVISIT for case insensitive match. Patch by Jennifer Schachter.
+ *
  * Revision 1.2  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -87,6 +90,20 @@ Match::Match() : fNoGroups(0),
 
 }
 
+Match::Match(const Match& toCopy) : fNoGroups(0),
+				                            fPositionsSize(0),
+				                            fStartPositions(0),
+				                            fEndPositions(0){
+  initialize(toCopy);
+}
+
+Match& Match::operator=(const Match& toAssign){
+  
+  initialize(toAssign);
+  return *this;
+}
+
+
 Match::~Match() {
 
 	cleanUp();
@@ -117,6 +134,21 @@ void Match::setNoGroups(const int n) {
 // ---------------------------------------------------------------------------
 //  Match: private helpers methods
 // ---------------------------------------------------------------------------
+void Match::initialize(const Match &toCopy){
+
+  //do not copy over value of fPositionSize as it is irrelevant to the 
+  //state of the Match
+   
+  int toCopySize = toCopy.getNoGroups();
+  setNoGroups(toCopySize);
+
+  for (int i=0; i<toCopySize; i++){
+    setStartPos(i, toCopy.getStartPos(i));
+    setEndPos(i, toCopy.getEndPos(i));
+  }           
+
+}
+
 void Match::cleanUp() {
 
 	delete [] fStartPositions;

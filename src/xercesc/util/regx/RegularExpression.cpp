@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/12/18 13:01:02  gareth
+ * New functionality - tokenize and replace. Fixed REVISIT for case insensitive match. Patch by Jennifer Schachter.
+ *
  * Revision 1.4  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -104,7 +107,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RegularExpression.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/regx/RegxUtil.hpp>
 #include <xercesc/util/regx/Match.hpp>
@@ -114,6 +116,7 @@
 #include <xercesc/util/regx/ParserForXMLSchema.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/ParseException.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -620,6 +623,253 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 }
 
 // ---------------------------------------------------------------------------
+//  RegularExpression: Tokenize methods
+// ---------------------------------------------------------------------------
+RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expression) {
+
+  XMLCh* tmpBuf = XMLString::transcode(expression);
+  ArrayJanitor<XMLCh> janBuf(tmpBuf);
+  return tokenize(tmpBuf, 0, XMLString::stringLen(tmpBuf));
+}
+
+RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expression,
+								const int start, const int end) {
+
+  XMLCh* tmpBuf = XMLString::transcode(expression);
+  ArrayJanitor<XMLCh> janBuf(tmpBuf);
+  return tokenize(tmpBuf, start, end);
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  RegularExpression: Tokenize methods - Wide char version
+// ---------------------------------------------------------------------------
+RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expression) {
+  return tokenize(expression, 0, XMLString::stringLen(expression), 0);
+}
+
+RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expression,
+								                                     const int start, const int end)
+{
+  return tokenize(expression, start, end, 0);
+}
+
+RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expression, 
+                                                     const int start, const int end,
+                                                     RefVectorOf<Match> *subEx){
+  
+  if (fOperations == 0)
+	  prepare();
+
+  Match* pMatch = 0;
+
+  if (subEx){
+    pMatch = new Match();
+  }
+
+  RefArrayVectorOf<XMLCh>* tokenStack = new RefArrayVectorOf<XMLCh>(16, true);
+
+  Context* context = 0;
+  Context* tmpContext = 0;
+
+  int		 strLength = XMLString::stringLen(expression);
+ 
+  {
+ 	   XMLMutexLock lockInit(&fMutex);
+
+ 	   if (fContext == 0)
+ 	     fContext = new Context();
+
+ 	   if (fContext->fInUse) {
+ 	     context = new Context();
+ 	     tmpContext = context;
+ 	   }
+ 	   else {
+ 	     context = fContext;
+ 	   }
+
+ 	   context->reset(expression, start, end, fNoClosures);
+  }
+
+  Janitor<Context> janContext(tmpContext);
+
+  bool adoptMatch = false;
+  Match* lMatch = pMatch;
+
+  if (lMatch != 0) {
+ 	  lMatch->setNoGroups(fNoGroups);
+  }
+  else if (fHasBackReferences) {
+
+ 	  lMatch = new Match();
+ 	  lMatch->setNoGroups(fNoGroups);
+ 	  adoptMatch = true;
+  }
+
+  if (context->fAdoptMatch)
+ 	  delete context->fMatch;
+  
+  context->fMatch = lMatch;
+  context->fAdoptMatch = adoptMatch;
+
+  int tokStart = start;
+  int matchStart = start;
+
+  for (; matchStart <= end; matchStart++) { 
+  
+ 	  int matchEnd = match(context, fOperations, matchStart, 1);
+  
+ 	  if (matchEnd != -1) {
+
+ 	    if (context->fMatch != 0) {
+ 	      context->fMatch->setStartPos(0, context->fStart);
+ 	      context->fMatch->setEndPos(0, matchEnd);
+ 	    }
+
+      if (subEx){
+        subEx->addElement(lMatch);
+        lMatch = new Match(*(context->fMatch));
+        context->fMatch = lMatch;
+      }
+  
+ 	    context->fInUse = false;
+
+      XMLCh* token;
+      if (tokStart == matchStart){
+  
+        if (tokStart == strLength){
+          tokStart--;
+          break;  
+        }
+
+        token = new XMLCh[1];
+        token[0] = chNull;
+
+        // When you tokenize using zero string, will return each
+        // token in the string. Since the zero string will also 
+        // match the start/end characters, resulting in empty 
+        // tokens, we ignore them and do not add them to the stack. 
+        if (!XMLString::equals(fPattern, &chNull)) 
+          tokenStack->addElement(token); 
+  
+      } else {
+        token = new XMLCh[matchStart + 1 - tokStart];
+        XMLString::subString(token, expression, tokStart, matchStart);
+        tokenStack->addElement(token);
+      } 
+
+      tokStart = matchEnd;
+
+      //decrement matchStart as will increment it at the top of the loop
+      if (matchStart < matchEnd - 1) 
+        matchStart = matchEnd - 1; 	    
+    }
+  }
+ 
+  XMLCh* token;
+ 
+  if (matchStart == tokStart + 1){
+    token = new XMLCh[1];
+    token[0] = chNull;
+  
+  } else {
+    token = new XMLCh[strLength + 1 - tokStart];
+    XMLString::subString(token, expression, tokStart, strLength);
+  }  
+
+  if (!XMLString::equals(fPattern, &chNull)) 
+    tokenStack->addElement(token);
+
+  return tokenStack;
+
+}
+
+
+// -----------------------------------------------------------------------
+//  RegularExpression: Replace methods
+// -----------------------------------------------------------------------
+XMLCh* RegularExpression::replace(const char* const matchString, 
+                                  const char* const replaceString){
+
+	XMLCh* tmpBuf = XMLString::transcode(matchString);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+	XMLCh* tmpBuf2 = XMLString::transcode(replaceString);
+    ArrayJanitor<XMLCh> janBuf2(tmpBuf2);
+
+	return replace(tmpBuf, tmpBuf2, 0, XMLString::stringLen(tmpBuf));
+}
+
+XMLCh* RegularExpression::replace(const char* const matchString, 
+                                  const char* const replaceString,
+                                  const int start, const int end){
+
+ 	XMLCh* tmpBuf = XMLString::transcode(matchString);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+ 	XMLCh* tmpBuf2 = XMLString::transcode(replaceString);
+    ArrayJanitor<XMLCh> janBuf2(tmpBuf2);
+  
+  return replace(tmpBuf, tmpBuf2, start, end);
+}
+
+
+// ---------------------------------------------------------------------------
+//  RegularExpression: Replace methods - Wide char version
+// ---------------------------------------------------------------------------
+XMLCh* RegularExpression::replace(const XMLCh* const matchString, 
+                                  const XMLCh* const replaceString){
+
+  return replace(matchString, replaceString, 0, 
+                 XMLString::stringLen(matchString));
+}
+
+XMLCh* RegularExpression::replace(const XMLCh* const matchString,  
+                                  const XMLCh* const replaceString,
+                                  const int start, const int end)
+{
+  //check if matches zero length string - throw error if so
+  if (matches(XMLUni::fgZeroLenString)){
+		ThrowXML(RuntimeException, XMLExcepts::Regex_RepPatMatchesZeroString);
+  }
+      
+  RefVectorOf<Match> *subEx = new RefVectorOf<Match>(10, true);
+	  Janitor<RefVectorOf<Match> > janSubEx(subEx);
+
+  //Call to tokenize with Match vector so that we keep track of the locations
+  //of the subExpression within each of the matches
+  RefArrayVectorOf<XMLCh>* tokenStack = tokenize(matchString, start, end, subEx);
+	  Janitor<RefArrayVectorOf<XMLCh> > janTokStack(tokenStack);
+    
+  XMLBuffer result;
+  
+  int numSubEx = 0;
+  
+  if (subEx && subEx->size() > 0)
+    numSubEx = subEx->elementAt(0)->getNoGroups() - 1;
+  
+  int tokStackSize = tokenStack->size();
+  const XMLCh* curRepString = XMLString::replicate(replaceString);
+    
+  for (int i = 0; i < tokStackSize; i++){
+      
+    result.append(tokenStack->elementAt(i));
+  
+    if (i != tokStackSize - 1) {
+       
+      //if there are subExpressions, then determine the string we want to 
+      //substitute in.
+      if (numSubEx != 0)
+        curRepString = subInExp(replaceString, matchString, subEx->elementAt(i)); 
+    
+      result.append(curRepString);
+    }
+  }  
+    
+  return XMLString::replicate(result.getRawBuffer()); 
+    
+}
+
+// ---------------------------------------------------------------------------
 //  RegularExpression: Helpers methods
 // ---------------------------------------------------------------------------
 int RegularExpression::getOptionValue(const XMLCh ch) {
@@ -664,6 +914,7 @@ int RegularExpression::getOptionValue(const XMLCh ch) {
 
 	return ret;
 }
+
 
 int RegularExpression::match(Context* const context, const Op* const operations
 							 , int offset, const short direction)
@@ -815,7 +1066,6 @@ int RegularExpression::match(Context* const context, const Op* const operations
 	
 	return offset;
 }
-
 bool RegularExpression::matchChar(Context* const context,
 								  const XMLInt32 ch, int& offset,
 								  const short direction, const bool ignoreCase)
@@ -832,7 +1082,6 @@ bool RegularExpression::matchChar(Context* const context,
 
 	bool match = ignoreCase ? matchIgnoreCase(ch, strCh)
 		                    : (ch == strCh);
-	
 	if (!match)
 		return false;
 
@@ -1183,6 +1432,87 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
 }
 
 /*
+ * Helper for Replace. This method prepares the replacement string by substituting
+ * in actual values for parenthesized sub expressions. 
+ *
+ * An error will be thrown if:
+ *  1) repString references an undefined subExpression
+ *  2) there is an unescaped chDollar which is not followed by a digit
+ *
+ */
+const XMLCh* RegularExpression::subInExp(const XMLCh* const repString, 
+                                         const XMLCh* const origString, 
+                                         const Match* subEx){
+
+  int numSubExp = subEx->getNoGroups() - 1;
+
+  if (numSubExp == 0)
+    return XMLString::replicate(repString);
+  
+  bool notEscaped = true;                 
+  
+  XMLBuffer newString;                   
+  
+  XMLCh *indexStr = new XMLCh[2];                   //holds the string rep of a 
+        ArrayJanitor<XMLCh> indexJan(indexStr);     //digit
+
+  indexStr[1] = chNull;
+  int index = -1;
+
+  for (const XMLCh* ptr = repString; *ptr != chNull; ptr++){
+
+    if ((*ptr == chDollarSign) && notEscaped) {
+      
+      ptr++;
+      
+      //check that after the $ is a digit 
+      if (!XMLString::isDigit(*ptr)){
+       
+        //invalid replace string - $ must be followed by a digit
+				ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidRepPattern);
+      }
+        
+      indexStr[0] = *ptr;                     //get the digit 
+      index = XMLString::parseInt(indexStr);  //convert it to an int
+
+      //now check that the index is legal
+      if (index > numSubExp){
+				ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidRepPattern);
+      }
+        
+      int start = subEx->getStartPos(index);
+      int end = subEx->getEndPos(index);
+
+      //now copy the substring into the new string
+      for (int i=start; i<end; i++){
+        newString.append(origString[i]);
+      }
+          
+    } else {
+ 
+      //if you have a slash and then a character that's not a $ or /, 
+      //then it's an invalid replace string  
+      if (!notEscaped && (*ptr != chDollarSign && *ptr != chBackSlash)){
+				ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidRepPattern);
+      }
+      
+      if (*ptr == chBackSlash){
+        notEscaped = false;
+        continue;
+        
+      }else   
+        notEscaped = true;  
+
+      newString.append(*ptr);
+    }
+  }
+
+  return XMLString::replicate(newString.getRawBuffer());
+       
+}
+
+
+/*
  * Prepares for matching. This method is called just before starting matching
  */
 void RegularExpression::prepare() {
@@ -1312,6 +1642,7 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 
     return WT_OTHER;
 }
+
 
 XERCES_CPP_NAMESPACE_END
 
