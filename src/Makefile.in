@@ -55,8 +55,11 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:02:54  twl
-# Initial revision
+# Revision 1.2  1999/11/12 00:08:27  abagchi
+# Changed XML4CROOT to XERCESCROOT
+#
+# Revision 1.1.1.1  1999/11/09 01:02:54  twl
+# Initial checkin
 #
 # Revision 1.4  1999/11/08 22:36:39  anupam
 # Removed the overrided definition of XML4CROOT
@@ -72,13 +75,9 @@
 # Before you try to run the Makefile, make sure you have two      #
 # environment variables set.                                      #
 #                                                                 #
-#   export XML4CROOT=<the directory where you installed XML4C>    #
-#   export ICUROOT=<the directory where you installed ICU>        #
+# export XERCESCROOT=<the directory where you installed XERCES-C> #
+#     export ICUROOT=<the directory where you installed ICU>      #
 #                                                                 #
-# Also, to enable debugging, you must type:                       #
-#   export DEBUG=1                                                #
-# To disable debugging, you must type:                            #
-#   unset DEBUG                                                   #
 ###################################################################
 #MACROS defining commands
 MKDIR=mkdir
@@ -94,11 +93,11 @@ FRAMEWORK_DIR = framework
 DOM_DIR = dom
 PARSERS_DIR = parsers
 VALIDATORS_DTD_DIR = validators/DTD
-ALL_OBJECTS_DIR = ${XML4CROOT}/obj
-LIB_DIR = ${XML4CROOT}/lib
+ALL_OBJECTS_DIR = ${XERCESCROOT}/obj
+LIB_DIR = ${XERCESCROOT}/lib
 
-LIB = ${XML4CROOT}/lib
-LIBNAME = libIXXML4C
+LIB = ${XERCESCROOT}/lib
+LIBNAME = libxerces-c
 THISLIB = ${LIB}/${LIBNAME}
 VER = 3_0
 
@@ -236,24 +235,24 @@ endif
 
 	@echo Populate the include output directory
 	@echo Copying headers files ...
-	-${CP} -Rf ${XML4CROOT}/src/sax/*.hpp ${BINTARGETDIR}/include/sax
-	-${CP} -Rf ${XML4CROOT}/src/framework/*.hpp ${BINTARGETDIR}/include/framework
-	-${CP} -Rf ${XML4CROOT}/src/dom/DOM*.hpp ${BINTARGETDIR}/include/dom
-	-${CP} -Rf ${XML4CROOT}/src/internal/*.hpp ${BINTARGETDIR}/include/internal
-	-${CP} -Rf ${XML4CROOT}/src/internal/*.c ${BINTARGETDIR}/include/internal
-	-${CP} -Rf ${XML4CROOT}/src/parsers/*.hpp ${BINTARGETDIR}/include/parsers
-	-${CP} -Rf ${XML4CROOT}/src/util/*.hpp ${BINTARGETDIR}/include/util
-	-${CP} -Rf ${XML4CROOT}/src/util/*.c ${BINTARGETDIR}/include/util
+	-${CP} -Rf ${XERCESCROOT}/src/sax/*.hpp ${BINTARGETDIR}/include/sax
+	-${CP} -Rf ${XERCESCROOT}/src/framework/*.hpp ${BINTARGETDIR}/include/framework
+	-${CP} -Rf ${XERCESCROOT}/src/dom/DOM*.hpp ${BINTARGETDIR}/include/dom
+	-${CP} -Rf ${XERCESCROOT}/src/internal/*.hpp ${BINTARGETDIR}/include/internal
+	-${CP} -Rf ${XERCESCROOT}/src/internal/*.c ${BINTARGETDIR}/include/internal
+	-${CP} -Rf ${XERCESCROOT}/src/parsers/*.hpp ${BINTARGETDIR}/include/parsers
+	-${CP} -Rf ${XERCESCROOT}/src/util/*.hpp ${BINTARGETDIR}/include/util
+	-${CP} -Rf ${XERCESCROOT}/src/util/*.c ${BINTARGETDIR}/include/util
 	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include/icu
 
 	@echo Populate the binary output directory
 	@echo Copying binary outputs ...
-	-${CP} -Rf ${XML4CROOT}/bin/* ${BINTARGETDIR}/bin
+	-${CP} -Rf ${XERCESCROOT}/bin/* ${BINTARGETDIR}/bin
 	-${CP} -f ${ICUROOT}/source/tools/makeconv/makeconv ${BINTARGETDIR}/bin
 	-${CP} -f ${ICUROOT}/lib/libicu-uc.* ${BINTARGETDIR}/lib
-	-${CP} -f ${XML4CROOT}/lib/*.a ${BINTARGETDIR}/lib
-	-${CP} -f ${XML4CROOT}/lib/*.so ${BINTARGETDIR}/lib
-	-${CP} -f ${XML4CROOT}/lib/*.sl ${BINTARGETDIR}/lib
+	-${CP} -f ${XERCESCROOT}/lib/*.a ${BINTARGETDIR}/lib
+	-${CP} -f ${XERCESCROOT}/lib/*.so ${BINTARGETDIR}/lib
+	-${CP} -f ${XERCESCROOT}/lib/*.sl ${BINTARGETDIR}/lib
 
 	-{RM} -rf ${BINTARGETDIR}/bin/obj
 
@@ -263,31 +262,31 @@ endif
 
 	@echo Populate the samples directory
 	@echo Copying sample files ...
-	-${CP} -f ${XML4CROOT}/samples/config.guess 	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/config.h.in 	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/config.sub 	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/configure	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/configure.in	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/install-sh	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/runConfigure 	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/Makefile.in	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/Makefile.incl 	${BINTARGETDIR}/samples
-	-${CP} -f ${XML4CROOT}/samples/Maefile	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/config.guess 	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/config.h.in 	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/config.sub 	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/configure	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/configure.in	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/install-sh	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/runConfigure 	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/Makefile.in	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/Makefile.incl 	${BINTARGETDIR}/samples
+	-${CP} -f ${XERCESCROOT}/samples/Maefile	${BINTARGETDIR}/samples
 
-	-${CP} -Rf ${XML4CROOT}/samples/data/* ${BINTARGETDIR}/samples/data
-	-${CP} -Rf ${XML4CROOT}/samples/SAXCount/* ${BINTARGETDIR}/samples/SAXCount
-	-${CP} -Rf ${XML4CROOT}/samples/SAXPrint/* ${BINTARGETDIR}/samples/SAXPrint
-	-${CP} -Rf ${XML4CROOT}/samples/DOMCount/* ${BINTARGETDIR}/samples/DOMCount
-	-${CP} -Rf ${XML4CROOT}/samples/DOMPrint/* ${BINTARGETDIR}/samples/DOMPrint
-	-${CP} -Rf ${XML4CROOT}/samples/Redirect/* ${BINTARGETDIR}/samples/Redirect
-	-${CP} -Rf ${XML4CROOT}/samples/MemParse/* ${BINTARGETDIR}/samples/MemParse
+	-${CP} -Rf ${XERCESCROOT}/samples/data/* ${BINTARGETDIR}/samples/data
+	-${CP} -Rf ${XERCESCROOT}/samples/SAXCount/* ${BINTARGETDIR}/samples/SAXCount
+	-${CP} -Rf ${XERCESCROOT}/samples/SAXPrint/* ${BINTARGETDIR}/samples/SAXPrint
+	-${CP} -Rf ${XERCESCROOT}/samples/DOMCount/* ${BINTARGETDIR}/samples/DOMCount
+	-${CP} -Rf ${XERCESCROOT}/samples/DOMPrint/* ${BINTARGETDIR}/samples/DOMPrint
+	-${CP} -Rf ${XERCESCROOT}/samples/Redirect/* ${BINTARGETDIR}/samples/Redirect
+	-${CP} -Rf ${XERCESCROOT}/samples/MemParse/* ${BINTARGETDIR}/samples/MemParse
 
 	@echo Populate the docs directory
 	@echo Copying documentation ..
-	-${CP} -Rf ${XML4CROOT}/doc/* ${BINTARGETDIR}/doc
-	-${CP} -Rf ${XML4CROOT}/doc/apiDocs/* ${BINTARGETDIR}/doc/apiDocs
-	-${CP} ${XML4CROOT}/Readme.html ${BINTARGETDIR}
-	-${CP} ${XML4CROOT}/doc/license.html ${BINTARGETDIR}
+	-${CP} -Rf ${XERCESCROOT}/doc/* ${BINTARGETDIR}/doc
+	-${CP} -Rf ${XERCESCROOT}/doc/apiDocs/* ${BINTARGETDIR}/doc/apiDocs
+	-${CP} ${XERCESCROOT}/Readme.html ${BINTARGETDIR}
+	-${CP} ${XERCESCROOT}/doc/license.html ${BINTARGETDIR}
 
 	@echo Change the directory permissions
 	-{CHMODE} 644 `find ${BINTARGETDIR} -type f`
