@@ -1,8 +1,8 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="&XercesCName; Sample 2">
-		
+
     <s2 title="SAXPrint">
         <p>SAXPrint uses the SAX APIs to parse an XML file and print
 		it back. Do note that the output of this sample is not
@@ -17,7 +17,7 @@
 	        build the project marked SAXPrint.
 	        </p>
         </s3>
-		
+
         <s3 title="Building on UNIX">
 
 <source>cd &XercesCInstallDir;-linux/samples
@@ -51,7 +51,7 @@ SAXPrint -v personal.xml
   &lt;person id="Big.Boss"&gt;
     &lt;name&gt;&lt;family&gt;Boss&lt;/family&gt; &lt;given&gt;Big&lt;/given&gt;&lt;/name&gt;
     &lt;email&gt;chief@foo.com&lt;/email&gt;
-    &lt;link subordinates="one.worker two.worker three.worker 
+    &lt;link subordinates="one.worker two.worker three.worker
 	                       four.worker five.worker"&gt;&lt;/link&gt;
   &lt;/person&gt;
 
@@ -86,8 +86,8 @@ SAXPrint -v personal.xml
   &lt;/person&gt;
 
 &lt;/personnel&gt;</source>
-          <note>SAXPrint does not reproduce the original XML file. 
-		  Also SAXPrint and DOMPrint produce different results because of 
+          <note>SAXPrint does not reproduce the original XML file.
+		  Also SAXPrint and DOMPrint produce different results because of
 		  the way the two APIs store data and capture events.</note>
         </s3>
 

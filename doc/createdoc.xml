@@ -1,10 +1,10 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="&XercesCName; Sample 10">
-	
+
     <s2 title="CreateDOMDocument">
-        <p> CreateDOMDocument, illustrates how you can create a DOM tree in 
+        <p> CreateDOMDocument, illustrates how you can create a DOM tree in
             memory from scratch. It then reports the elements in the tree that
             was just created.</p>
 
@@ -13,7 +13,7 @@
 	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
 	        build the project marked DOMCount.</p>
         </s3>
-		
+
         <s3 title="Building on UNIX">
 <source>cd &XercesCInstallDir;-linux/samples
 ./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
@@ -21,7 +21,7 @@ cd CreateDOMDocument
 gmake</source>
 	        <p>This will create the object files in the current directory and the executable named
 	        CreateDOMDocument in ' &XercesCInstallDir;-linux/bin' directory.</p>
-	
+
 	        <p>To delete all the generated object files and executables, type</p>
 <source>gmake clean</source>
         </s3>
@@ -37,5 +37,5 @@ CreateDOMDocument
 The tree just created contains: 4 elements.</source>
 
         </s3>
-    </s2>  
+    </s2>
 </s1>

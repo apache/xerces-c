@@ -1,12 +1,12 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="&XercesCName; Sample 6">
 
     <s2 title="Redirect">
-        <p>Redirect uses the SAX EntityResolver handler to redirect the 
-		input stream for external entities. It installs an entity 
-		resolver, traps the call to the external DTD file and redirects 
+        <p>Redirect uses the SAX EntityResolver handler to redirect the
+		input stream for external entities. It installs an entity
+		resolver, traps the call to the external DTD file and redirects
 		it to another specific file which contains the actual DTD.</p>
 
         <s3 title="Building on Windows">

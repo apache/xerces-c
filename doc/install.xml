@@ -1,37 +1,37 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Installation">
 
 
     <s2 title="Window NT/98">
-        <p>Install the binary &XercesCName; release by using <code>unzip</code> 
-		on the <ref>file</ref>-win32.zip archive in the Windows environment. You can 
+        <p>Install the binary &XercesCName; release by using <code>unzip</code>
+		on the <ref>file</ref>-win32.zip archive in the Windows environment. You can
 		use WinZip, or any other UnZip utility.</p>
 <source>unzip &XercesCInstallDir;-win32.zip</source>
-        <p>This creates a &apos;&XercesCInstallDir;-win32&apos; sub-directory 
+        <p>This creates a &apos;&XercesCInstallDir;-win32&apos; sub-directory
 		containing the &XercesCName; distribution. </p>
 
-        <p>You need to add the &apos;&XercesCInstallDir;-win32\bin&apos; 
+        <p>You need to add the &apos;&XercesCInstallDir;-win32\bin&apos;
 		directory to your path: </p>
 
-        <p>To do this under Windows NT, go to the start menu, click the 
-		settings menu and select control panel. When the control panel opens, 
-		double click on System and select the &apos;Environment&apos; tab. 
+        <p>To do this under Windows NT, go to the start menu, click the
+		settings menu and select control panel. When the control panel opens,
+		double click on System and select the &apos;Environment&apos; tab.
 		Locate the PATH variable under system variables
-        and add &lt;full_path_to_&XercesCInstallDir;>\bin to the PATH variable.  
+        and add &lt;full_path_to_&XercesCInstallDir;>\bin to the PATH variable.
 		To do this under Windows 95/98 add this line to your AUTOEXEC.BAT file:</p>
-<source>SET PATH=&lt;full_path_to_&XercesCInstallDir;>\bin;%PATH%</source> 
+<source>SET PATH=&lt;full_path_to_&XercesCInstallDir;>\bin;%PATH%</source>
 		<p>or run the <code>SET PATH</code> command in your shell window.</p>
     </s2>
 
     <s2 title="UNIX">
-        <p>Binary installation of this release is to extract the files from the 
+        <p>Binary installation of this release is to extract the files from the
 		compressed .tar archive (using 'tar').</p>
 <source>cd $HOME
 gunzip &XercesCInstallDir;-linux.tar.gz
 tar -xvf &XercesCInstallDir;-linux.tar</source>
-        <p>This will create an '&XercesCInstallDir;-linux' sub-directory 
+        <p>This will create an '&XercesCInstallDir;-linux' sub-directory
 		(in the home directory)
         which contains the &XercesCName; distribution. You will need to add the
         &XercesCInstallDir;-linux/bin directory to your PATH environment variable:</p>
@@ -41,7 +41,7 @@ tar -xvf &XercesCInstallDir;-linux.tar</source>
 		<p>For C Shell, type:</p>
 <source>setenv PATH "$PATH:$HOME/&XercesCInstallDir;-linux/bin"</source>
 
-        <p>If you wish to make this setting permanent, you need to change 
+        <p>If you wish to make this setting permanent, you need to change
 		your profile by changing your setup files which can be either .profile or .kshrc.</p>
 
         <p>In addition, you will also need to set the environment variables XERCESCROOT,
@@ -67,7 +67,7 @@ setenv LD_LIBRARY_PATH "$XERCESCROOT/lib:$LD_LIBRARY_PATH" (on Solaris, Linux)
 setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)</source>
 
         <note>If you need to build the samples after installation,
-        make sure you read and follow the build instructions given in the 
+        make sure you read and follow the build instructions given in the
 		<jump href="build.html">FAQ</jump>.</note>
 
    </s2>

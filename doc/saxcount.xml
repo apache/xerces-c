@@ -1,8 +1,8 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="&XercesCName; Sample 1">
-		
+
     <s2 title="SAXCount">
         <p>SAXCount is the simplest application that counts the elements and characters of
         a given XML file using the (event based) SAX API.</p>
@@ -12,16 +12,16 @@
 	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
 	        build the project marked SAXCount.</p>
         </s3>
-		
+
         <s3 title="Building on UNIX">
 <source>cd &XercesCInstallDir;-linux/samples
 ./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
 cd SAXCount
 gmake</source>
-	        <p>This will create the object files in the current directory 
+	        <p>This will create the object files in the current directory
 			and the executable named
 	        SAXCount in '&XercesCInstallDir;-linux/bin' directory.</p>
-	
+
 	        <p>To delete all the generated object files and executables, type</p>
 <source>gmake clean</source>
         </s3>

@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
+<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
 <faqs title="Parsing with &XercesCName;">
     <faq title="Why does my application crash on AIX when I run it under a

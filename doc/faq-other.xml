@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
+<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
 <faqs title="Other &XercesCName; Questions">
 
@@ -14,7 +14,7 @@
         </a>
     </faq>
 
-    
+
     <faq title="I found a defect - whom do I report it to?">
         <q>I found a defect - whom do I report it to?</q>
         <a>
@@ -31,7 +31,7 @@
 
         </a>
     </faq>
-    
+
 
     <faq title="Is there any kind of support available for Xerces-C/XML4C?">
         <q>Is there any kind of support available for Xerces-C/XML4C?</q>
@@ -56,7 +56,7 @@
         </a>
     </faq>
 
-    
+
     <faq title="I have a question not covered here -- who may I contact?">
         <q>I have a question not covered here -- who may I contact?</q>
         <a>

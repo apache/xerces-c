@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
+<!DOCTYPE book SYSTEM "./dtd/book.dtd">
 
 <book title="Xerces-C documentation" copyright="2000 The Apache Software Foundation">
   <external href="../index.html"  label="Home"/>
@@ -26,7 +26,7 @@
   <document id="program"     label="Programming"  source="program.xml"    />
   <document id="migrate"     label="Migration"    source="migration.xml"  />
 
-  <group    id="faqs"        label="FAQs">
+  <group    id="faqs"        title="Frequently Asked Questions" label="FAQs">
     <entry  id="faq-distrib"                      source="faq-distrib.xml"/>
     <entry  id="faq-parse"                        source="faq-parse.xml"  />
     <entry  id="faq-other"                        source="faq-other.xml"  />
