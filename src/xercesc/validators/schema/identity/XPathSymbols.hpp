@@ -58,8 +58,8 @@
  * $Id$
  */
 
-#if !defined(SCHEMASYMBOLS_HPP)
-#define SCHEMASYMBOLS_HPP
+#if !defined(XPATHSYMBOLS_HPP)
+#define XPATHSYMBOLS_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 
