@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/02 17:37:03  neilg
+ * fix compilation problem
+ *
  * Revision 1.6  2003/12/02 17:31:42  neilg
  * since there are certain things, such as schemaLocation attributes, that have a datatype and which we nonetheless do not validate, make canonical-value production dependent on validity being valid
  *
@@ -108,7 +111,7 @@ void PSVIAttribute::reset(
     fDefaultValue = defaultValue;
     fIsSpecified = isSpecified;
     fMemoryManager->deallocate((void *)fCanonicalValue);
-    if(normalizedValue && dv && fValidityState == VALIDITY_STATE::VALID)
+    if(normalizedValue && dv && fValidityState == PSVIItem::VALIDITY_VALID)
         fCanonicalValue = (XMLCh *)dv->getCanonicalRepresentation(normalizedValue, fMemoryManager);
     else
         fCanonicalValue = 0;
