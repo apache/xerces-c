@@ -431,7 +431,7 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
 
         case DOM_Node::DOCUMENT_TYPE_NODE:
         {
-			DOM_DocumentType doctype = toWrite.getOwnerDocument().getDoctype();
+			DOM_DocumentType doctype = (DOM_DocumentType &)toWrite;;
 
 			target << "<!DOCTYPE " << nodeName ;
 			DOMString id = doctype.getPublicId();
