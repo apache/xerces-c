@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/30 16:48:16  neilg
+ * some indices in the PSVIAttributeList were 1 off
+ *
  * Revision 1.5  2003/12/20 06:19:38  neilg
  * store name/namespace of corresponding attribute in PSVIAttributeList; not all PSVIAttributes have XSAttributeDeclarations
  *
@@ -94,7 +97,7 @@ PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):
  */
 const unsigned int PSVIAttributeList::getLength() const
 {
-    return fAttrPos+1;
+    return fAttrPos;
 }
 
 /*
@@ -153,7 +156,7 @@ const XMLCh *PSVIAttributeList::getAttributeNamespaceAtIndex(const unsigned int 
 PSVIAttribute *PSVIAttributeList::getAttributePSVIByName(const XMLCh *attrName
                 , const XMLCh * attrNamespace)
 {
-    for (unsigned int index=0; index <= fAttrPos; index++) {
+    for (unsigned int index=0; index < fAttrPos; index++) {
         if (XMLString::equals(attrName,fAttrNameList->elementAt(index))
                 && XMLString::equals(attrNamespace,fAttrNSList->elementAt(index)))
             return fAttrList->elementAt(index);
