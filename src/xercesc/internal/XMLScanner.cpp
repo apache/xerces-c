@@ -207,6 +207,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
     , fStandardUriConformant(false)
+    , fSecurityManager(0)
     , fXMLVersion(XMLReader::XMLV1_0)
 {
    commonInit();
@@ -263,6 +264,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
     , fStandardUriConformant(false)
+    , fSecurityManager(0)
     , fXMLVersion(XMLReader::XMLV1_0)
 {
    commonInit();

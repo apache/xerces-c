@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/04/22 14:52:37  knoaman
+ * Initialize security manager in constructor.
+ *
  * Revision 1.19  2003/04/17 22:00:46  neilg
  * This commit implements detection of exponential entity
  * expansions inside the scanner code.  This is only done when a
@@ -916,7 +919,7 @@ protected:
     XMLCh*                      fRootElemName;
     XMLCh*                      fExternalSchemaLocation;
     XMLCh*                      fExternalNoNamespaceSchemaLocation;
-    SecurityManager const*      fSecurityManager;
+    SecurityManager*            fSecurityManager;
     XMLReader::XMLVersion       fXMLVersion;    
 
 private :
@@ -1128,7 +1131,7 @@ inline XMLCh* XMLScanner::getExternalNoNamespaceSchemaLocation() const
 
 inline SecurityManager* XMLScanner::getSecurityManager() const
 {
-    return (SecurityManager *)fSecurityManager;
+    return fSecurityManager;
 }
 
 inline bool XMLScanner::getLoadExternalDTD() const
