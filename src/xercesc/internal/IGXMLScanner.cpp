@@ -2335,11 +2335,17 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
         // If its not marked declared and validating, then emit an error
         if (!elemDecl->isDeclared()) {
+            if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
+                if(fGrammarType == Grammar::SchemaGrammarType) {
+                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+                    ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+                }
+            }
+            
             if (laxThisOne) {
                 fValidate = false;
                 fElemStack.setValidationFlag(fValidate);
             }
-
             if (fValidate)
             {
                 fValidator->emitError
@@ -2347,11 +2353,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     XMLValid::ElementNotDefined
                     , elemDecl->getFullName()
                 );
-
-                if(fGrammarType == Grammar::SchemaGrammarType) {
-                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-                    ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
-                }
             }
         }
 

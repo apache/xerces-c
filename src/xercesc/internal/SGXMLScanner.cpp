@@ -1421,6 +1421,10 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         // If its not marked declared and validating, then emit an error
         if (!elemDecl->isDeclared()) {
+            if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+            }
             if (laxThisOne) {
                 fValidate = false;
                 fElemStack.setValidationFlag(fValidate);                
@@ -1433,8 +1437,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     XMLValid::ElementNotDefined
                     , elemDecl->getFullName()
                 );
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
             }
         }
 

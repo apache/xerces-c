@@ -160,7 +160,7 @@ xsi:noNamespaceSchemaLocation="hello"
     <b >b</b>
   </complexXsi>
   <unionTest >hello1</unionTest>
-  <empty ><a /></empty>
+  <empty ><a /><a /></empty>
   <invalidAttrTest attr="lala" />
   <missingAttrTest />
   <prohibitedAttrTest attr="lala" />

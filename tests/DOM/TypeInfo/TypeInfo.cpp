@@ -725,6 +725,9 @@ bool TypeInfo::testInvaild() {
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
+    DOMElement *testEle2 = (DOMElement *)testEle->getFirstChild()->getNextSibling();
+    DOMTYPEINFOTEST(testEle2->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
