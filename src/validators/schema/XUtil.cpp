@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/03 21:02:40  tng
+ * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/04/04 18:02:04  tng
  * Schema: include failure on Unix for XUtil.cpp.  Fixed by Pei Yong Zhang.
  *
@@ -141,15 +144,10 @@ void XUtil::copyInto(const DOM_Node &src, DOM_Node &dest)
 			}
 		default: 
 			{
-                ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-                // later on, 
-                /***
-				   ThrowXML2(IllegalArgumentException
-				           , XMLExcepts::Str_ZeroSizedTargetBuf
-                           , "can't copy node type"
-						   , node.getNodeName());
-                ***/
-			}
+                ThrowXML1(IllegalArgumentException
+				        , XMLExcepts::XUTIL_UnCopyableNodeType
+                        , node.getNodeName().rawBuffer());
+            }
 		}//switch
 
 		dest.appendChild(node);

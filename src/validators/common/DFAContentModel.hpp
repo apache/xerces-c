@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/03 21:02:30  tng
+ * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
+ *
  * Revision 1.6  2001/04/19 18:17:30  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -140,17 +143,16 @@ public:
       , const unsigned int    emptyNamespaceId
     ) const;
 
-    virtual int validateContentSpecial
+	virtual int validateContentSpecial
     (
-        QName** const         children
-      , const unsigned int    childCount
-      , const unsigned int    emptyNamespaceId
+        QName** const           children
+      , const unsigned int      childCount
+      , const unsigned int      emptyNamespaceId
+      , GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
     ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
-
-//  Onhold, until EquivClassComparator is defined
-//  void setEquivClassComparator(EquivClassComparator comparator);
 
 private :
     // -----------------------------------------------------------------------

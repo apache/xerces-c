@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/05/03 21:02:23  tng
+ * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
+ *
  * Revision 1.8  2001/04/19 18:16:50  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -96,6 +99,8 @@
 #include <util/QName.hpp>
 
 class ContentLeafNameTypeVector;
+class GrammarResolver;
+class XMLStringPool;
 
 /**
  *  This class defines the abstract interface for all content models. All
@@ -132,19 +137,15 @@ public:
 
 	virtual int validateContentSpecial
     (
-        QName** const         children
-      , const unsigned int    childCount
-      , const unsigned int    emptyNamespaceId
-    ) const = 0;
+        QName** const           children
+      , const unsigned int      childCount
+      , const unsigned int      emptyNamespaceId
+      , GrammarResolver*  const pGrammarResolver
+      , XMLStringPool*    const pStringPool
+    ) const =0;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector()
 	  const = 0;
-
-//  Onhold, until EquivClassComparator is defined
-//  void setEquivClassComparator(EquivClassComparator comparator) = 0;
-
-//  Do not implement, it is NOT used in XercesJ.
-//  int whatCanGoHere(bool, InsertableElementsInfo info) = 0;
 
 protected :
     // -----------------------------------------------------------------------

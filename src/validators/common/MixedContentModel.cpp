@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/03 21:02:30  tng
+ * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
+ *
  * Revision 1.7  2001/04/19 18:17:32  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -370,14 +373,12 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
     }
 }
 
-int MixedContentModel::validateContentSpecial(QName** const         children
-                                            , const unsigned int    childCount
-                                            , const unsigned int    emptyNamespaceId) const
+int MixedContentModel::validateContentSpecial(QName** const          children
+                                            , const unsigned int      childCount
+                                            , const unsigned int      emptyNamespaceId
+                                            , GrammarResolver*  const pGrammarResolver
+                                            , XMLStringPool*    const pStringPool) const
 {
     return validateContent(children, childCount, emptyNamespaceId);
-};
+}
 
-ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVector() const
-{
-	return 0;
-};

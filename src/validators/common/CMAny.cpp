@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 21:02:27  tng
+ * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
+ *
  * Revision 1.1  2001/02/27 14:48:45  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -83,12 +86,9 @@ CMAny::CMAny( const   ContentSpecNode::NodeTypes  type
     &&  (type != ContentSpecNode::Any_Other)
     &&  (type != ContentSpecNode::Any_Local))
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_BinOpHadUnaryType);
-		/***
 		ThrowXML1(RuntimeException,
 		          XMLExcepts::CM_NotValidSpecTypeForNode,
 				  "CMAny");
-        ***/
     }
 
 }

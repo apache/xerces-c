@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/03 21:02:29  tng
+ * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
+ *
  * Revision 1.7  2001/04/19 18:17:30  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -117,6 +120,7 @@
 #include <validators/common/DFAContentModel.hpp>
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/common/Grammar.hpp>
+#include <validators/schema/SubstitutionGroupComparator.hpp>
 #include <util/RefHashTableOf.hpp>
 
 // ---------------------------------------------------------------------------
@@ -261,6 +265,102 @@ DFAContentModel::validateContent( QName** const        children
                         if (nextState != gInvalidTrans)
                             break;
                     }
+                }
+            }
+        }//for elemIndex
+
+        // If "nextState" is -1, we found a match, but the transition is invalid
+        if (nextState == gInvalidTrans)
+            return childIndex;
+
+        // If we didn't find it, then obviously not valid
+        if (elemIndex == fElemMapSize)
+            return childIndex;
+
+        curState = nextState;
+        nextState = 0;
+
+    }//for childIndex
+
+    //
+    //  We transitioned all the way through the input list. However, that
+    //  does not mean that we ended in a final state. So check whether
+    //  our ending state is a final state.
+    //
+    if (!fFinalStateFlags[curState])
+        return childIndex;
+
+    //success
+    return -1;
+}
+
+int DFAContentModel::validateContentSpecial(QName** const          children
+                                            , const unsigned int      childCount
+                                            , const unsigned int      emptyNamespaceId
+                                            , GrammarResolver*  const pGrammarResolver
+                                            , XMLStringPool*    const pStringPool) const
+{
+
+    SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
+
+    if (childCount == 0)
+        return fEmptyOk ? -1 : 0;
+
+    //
+    //  Lets loop through the children in the array and move our way
+    //  through the states. Note that we use the fElemMap array to map
+    //  an element index to a state index.
+    //
+    unsigned int curState = 0;
+    unsigned int nextState = 0;
+    unsigned int childIndex = 0;
+    for (; childIndex < childCount; childIndex++)
+    {
+        // Get the current element index out
+        QName* curElem = children[childIndex];
+
+        // Look up this child in our element map
+        unsigned int elemIndex = 0;
+        for (; elemIndex < fElemMapSize; elemIndex++)
+        {
+            QName* inElem  = fElemMap[elemIndex];
+            ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
+            if (type == ContentSpecNode::Leaf)
+            {
+                if (comparator.isEquivalentTo(inElem, curElem) )
+                {
+                    nextState = fTransTable[curState][elemIndex];
+                    if (nextState != gInvalidTrans)
+                        break;
+                }
+
+            }
+            else if ((type & 0x0f)== ContentSpecNode::Any)
+            {
+                unsigned int uri = inElem->getURI();
+                if ((uri == emptyNamespaceId) || (uri == curElem->getURI()))
+                {
+                    nextState = fTransTable[curState][elemIndex];
+                    if (nextState != gInvalidTrans)
+                        break;
+                }
+            }
+            else if ((type & 0x0f) == ContentSpecNode::Any_Local)
+            {
+                if (curElem->getURI() == emptyNamespaceId)
+                {
+                    nextState = fTransTable[curState][elemIndex];
+                    if (nextState != gInvalidTrans)
+                        break;
+                }
+            }
+            else if ((type & 0x0f) == ContentSpecNode::Any_Other)
+            {
+                if (inElem->getURI() != curElem->getURI())
+                {
+                    nextState = fTransTable[curState][elemIndex];
+                    if (nextState != gInvalidTrans)
+                        break;
                 }
             }
         }//for elemIndex
@@ -839,7 +939,6 @@ void DFAContentModel::calcFollowList(CMNode* const curNode)
     {
         // Recurse only
         calcFollowList(((CMUnaryOp*)curNode)->getChild());
-        //ThrowXML1(RuntimeException, XMLExcepts::CM_NotValidForSpecType, "CalcFollowList");
     }
 }
 
@@ -913,13 +1012,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
     return newIndex;
 }
 
-int
-DFAContentModel::validateContentSpecial( QName** const       children
-                                       , const unsigned int  childCount
-                                       , const unsigned int  emptyNamespaceId) const
-{
-	return 0;
-};
+
 
 ContentLeafNameTypeVector* DFAContentModel::getContentLeafNameTypeVector() const
 {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/03 21:02:28  tng
+ * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/02/27 14:48:46  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -229,7 +232,7 @@ public :
 
         // They have to be the same size
         if (fBitCount != srcSet.fBitCount)
-            ThrowXML(RuntimeException, XMLExcepts::Bitset_BadIndex); // later BitSet_NotEqualSize
+            ThrowXML(RuntimeException, XMLExcepts::Bitset_NotEqualSize); 
 
         if (fBitCount < 65)
         {
