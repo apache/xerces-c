@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/03 00:14:52  andyh
+ * Removed transcoding stuff, replaced with DOMString::transcode.
+ *
+ * Tweaked xml encoding= declaration to say ISO-8859-1.  Still wrong,
+ * but not as wrong as utf-8
+ *
  * Revision 1.2  1999/11/12 02:14:05  rahulj
  * It now validates when the -v option is specified.
  *
@@ -81,6 +87,13 @@
 //      filename        - The path to the XML file to parse
 //
 //  These are non-case sensitive
+//
+//   Limitations:
+//     1.  The encoding="xxx" clause in the XML header should reflect
+//         the system local code page, but does not.
+//     2.  Cases where the XML data contains characters that can not
+//         be represented in the system local code page are not handled.
+//
 // ---------------------------------------------------------------------------
 
 
@@ -141,9 +154,9 @@ int main(int argC, char* argV[])
 
     catch(const XMLException& toCatch)
     {
-        cerr << "Error during XML4C2 Initialization.\n"
+        cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
-             << StrX(toCatch.getMessage()) << endl;
+             << DOMString(toCatch.getMessage()) << endl;
         return 1;
     }
 
@@ -219,7 +232,8 @@ int main(int argC, char* argV[])
     catch (const XMLException& e)
     {
         cerr << "An error occured during parsing\n   Message: "
-             << StrX(e.getMessage()) << endl;
+            << DOMString(e.getMessage()) << endl;
+ //           << StrX(e.getMessage()) << endl;
         errorsOccured = true;
     }
 
@@ -302,7 +316,11 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
 
         case DOM_Node::DOCUMENT_NODE :
         {
-            target << "<?xml version='1.0' encoding='utf-8' ?>\n";
+            // Bug here:  we need to find a way to get the encoding name
+            //   for the default code page on the system where the
+            //   program is running, and plug that in for the encoding
+            //   name.  
+            target << "<?xml version='1.0' encoding='ISO-8859-1' ?>\n";
             DOM_Node child = toWrite.getFirstChild();
             while( child != 0)
             {
@@ -431,7 +449,8 @@ void outputContent(ostream& target, const DOMString &toWrite)
                 
             default:
                 // If it is none of the special characters, print it as such
-                target << StrX(&chars[index], 1);
+                // target << StrX(&chars[index], 1);
+                target << toWrite.substringData(index, 1);
                 break;
             }
         }
@@ -443,12 +462,18 @@ void outputContent(ostream& target, const DOMString &toWrite)
 
 // ---------------------------------------------------------------------------
 //
-//  ostream << DOMString      Stream out a DOM string.
+//  ostream << DOMString    Stream out a DOM string.
+//                          Doing this requires that we first transcode
+//                          to char * form in the default code page
+//                          for the system
 //
 // ---------------------------------------------------------------------------
 ostream& operator<<(ostream& target, const DOMString& s)
 {
-    if (s.length() > 0)
-        target << StrX(s.rawBuffer(), s.length());
+    //if (s.length() > 0)
+    //    target << StrX(s.rawBuffer(), s.length());
+    char *p = s.transcode();
+    target << p;
+    delete p;
     return target;
 }

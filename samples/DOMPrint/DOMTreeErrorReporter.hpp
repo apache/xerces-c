@@ -56,8 +56,14 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:51  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:14:53  andyh
+ * Removed transcoding stuff, replaced with DOMString::transcode.
+ *
+ * Tweaked xml encoding= declaration to say ISO-8859-1.  Still wrong,
+ * but not as wrong as utf-8
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:51  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:43:36  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -92,58 +98,3 @@ public:
     void resetErrors();
 };
 
-
-// ---------------------------------------------------------------------------
-//  This is a simple class that lets us do easy (though not terribly efficient)
-//  trancoding of XMLCh data to local code page for display.
-// ---------------------------------------------------------------------------
-class StrX
-{
-public :
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-	StrX(const XMLCh* const toTranscode, const unsigned int len = 0) :
-
-        fLocalForm(0)
-    {
-        // Call the private transcoding method
-        transcode(toTranscode, len);
-    }
-
-    ~StrX()
-    {
-        delete [] fLocalForm;
-    }
-
-
-    // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-    const char* localForm() const
-    {
-        return fLocalForm;
-    }
-
-
-private :
-    // -----------------------------------------------------------------------
-    //  Private helper methods
-    // -----------------------------------------------------------------------
-	void transcode (const XMLCh* const toTranscode, const unsigned int len);
-
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fLocalForm
-    //      This is the local code page form of the string.
-    // -----------------------------------------------------------------------
-    char*   fLocalForm;
-};
-
-inline ostream& operator<<(ostream& target, const StrX& toDump)
-{
-    target << toDump.localForm();
-    return target;
-}

@@ -56,8 +56,14 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:51  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:14:53  andyh
+ * Removed transcoding stuff, replaced with DOMString::transcode.
+ *
+ * Tweaked xml encoding= declaration to say ISO-8859-1.  Still wrong,
+ * but not as wrong as utf-8
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:51  twl
+ * Initial checkin
  *
  * Revision 1.6  1999/11/08 20:43:35  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -72,6 +78,10 @@
 #include <iostream.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <dom/DOMString.hpp>
+
+// Global streaming operator for DOMString is defined in DOMPrint.cpp
+extern ostream& operator<<(ostream& target, const DOMString& s);
 
 
 void DOMTreeErrorReporter::warning(const SAXParseException&)
@@ -83,18 +93,18 @@ void DOMTreeErrorReporter::warning(const SAXParseException&)
 
 void DOMTreeErrorReporter::error(const SAXParseException& toCatch)
 {
-    cerr << "Error at file \"" << StrX(toCatch.getSystemId())
+    cerr << "Error at file \"" << DOMString(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << StrX(toCatch.getMessage()) << endl;
+         << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
 }
 
 void DOMTreeErrorReporter::fatalError(const SAXParseException& toCatch)
 {
-    cerr << "Fatal Error at file \"" << StrX(toCatch.getSystemId())
+    cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << StrX(toCatch.getMessage()) << endl;
+         << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
 }
 
 void DOMTreeErrorReporter::resetErrors()
@@ -103,70 +113,3 @@ void DOMTreeErrorReporter::resetErrors()
 }
 
 
-
-// ---------------------------------------------------------------------------
-//  StrX: Private helper methods
-// ---------------------------------------------------------------------------
-void StrX::transcode(const XMLCh* const toTranscode, const unsigned int len)
-{
-    // Short circuit if its a null pointer
-    if (!toTranscode || (!toTranscode[0]))
-    {
-        fLocalForm = new char[1];
-        fLocalForm[0] = 0;
-        return;
-	}
-
-    // See if our XMLCh and wchar_t as the same on this platform
-    const bool isSameSize = (sizeof(XMLCh) == sizeof(wchar_t));
-
-    //
-    //  Get the actual number of chars. If the passed len is zero, its null
-    //  terminated. Else we have to use the len.
-    //
-    wchar_t realLen = (wchar_t)len;
-    if (!realLen)
-    {
-        //
-        //  We cannot just assume we can use wcslen() because we don't know
-        //  if our XMLCh is the same as wchar_t on this platform.
-        //
-        const XMLCh* tmpPtr = toTranscode;
-        while (*(tmpPtr++))
-            realLen++;
-    }
-
-    //
-    //  If either the passed length was non-zero or our char sizes are not 
-    //  same, we have to use a temp buffer. Since this is common in these
-    //  samples, we just do it anyway.
-    //
-    wchar_t* tmpSource = new wchar_t[realLen + 1];
-    if (isSameSize)
-    {
-        memcpy(tmpSource, toTranscode, realLen * sizeof(wchar_t));
-    }
-     else
-    {
-        for (unsigned int index = 0; index < realLen; index++)
-            tmpSource[index] = (wchar_t)toTranscode[index];
-    }
-    tmpSource[realLen] = 0;
-
-    // See now many chars we need to transcode this guy
-    const unsigned int targetLen = ::wcstombs(0, tmpSource, 0);
-
-    // Allocate out storage member
-    fLocalForm = new char[targetLen + 1];
-
-    //
-    //  And transcode our temp source buffer to the local buffer. Cap it
-    //  off since the converter won't do it (because the null is beyond
-    //  where the target will fill up.)
-    //
-    ::wcstombs(fLocalForm, tmpSource, targetLen);
-    fLocalForm[targetLen] = 0;
-
-    // Don't forget to delete our temp buffer
-    delete [] tmpSource;
-}
