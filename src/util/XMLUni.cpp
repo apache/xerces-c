@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2000/06/13 19:38:07  aruna1
+ * Added functionality to recognize UTF_8 encodings in intrinsic trascoders
+ *
  * Revision 1.17  2000/05/04 02:43:45  aruna1
  * solaris : instance=static related changes
  *
@@ -461,6 +464,11 @@ const XMLCh XMLUni::fgUTF8EncodingString[] =
 const XMLCh XMLUni::fgUTF8EncodingString2[] =
 {
     chLatin_U, chLatin_T, chLatin_F, chDigit_8, chNull
+};
+
+const XMLCh XMLUni::fgUTF8EncodingString3[] =
+{
+    chLatin_U, chLatin_T, chLatin_F, chUnderscore , chDigit_8, chNull
 };
 
 const XMLCh XMLUni::fgUTF16EncodingString[] =
