@@ -731,13 +731,25 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&     elemDecl
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fNodeStack->pop();
 
-    //validation is performed after the startElement event so we have to associate the info here
+    // REVISIT:  delete when elementTypeInfo callback
+    // is implemented
     ((DOMElementImpl *)(fCurrentNode))->setTypeInfo(elemDecl.getDOMTypeInfoName(), elemDecl.getDOMTypeInfoUri());
-
-
     // If we've hit the end of content, clear the flag
     if (fNodeStack->empty())
         fWithinElement = false;
+}
+
+void AbstractDOMParser::elementTypeInfo( const   XMLCh * const  typeName
+                           , const XMLCh *const                 typeURI)
+{
+    /**** REVISIT:  enable when callback is implemented in scanners
+    // very tightly coupled to endElement().  The state of the
+    // object must not have changed between these calls!
+
+    //validation is performed after the startElement event so we have to associate the info here
+    ((DOMElementImpl *)(fCurrentNode))->setTypeInfo(typeName, typeURI);
+    *******/
+
 }
 
 
