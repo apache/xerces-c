@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.7  2004/01/14 18:58:57  peiyongz
+* XSerializerTest documentation updated
+*
 * Revision 1.6  2003/12/17 00:02:41  peiyongz
 * Always display Serialization/Deserialization error
 *
@@ -125,10 +128,14 @@ static const int                BufSize     = 1024;
 *
 *   This program is a variation of SAXCount.
 *
-*   Whenever a file is served, it parses the file and catch the grammar without
-*   issue any error message with regards to the parsing, and serialize the grammar
-*   and deserialize the grammar, and parse the instance document a second time 
-*   and validate the instance against the serialized grammar if validation is on.
+*   Whenever a file is served, it does the following:
+*
+*   . parses the file 
+*   . caches the grammar without issuing any error message with regards to the parsing
+*   . serializes(store) the grammar cached to a BinOutputStream
+*   . deserialize(load) the grammar from the BinInputStream
+*   . parses the instance document a second time 
+*   . validates the instance against the deserialized grammar if validation is on.
 *
 ***/
 
@@ -275,7 +282,6 @@ static bool getAndSaveGrammar(const char* const xmlFile)
     bool    retVal = true;
     getParser(false);  //don't emit error
 
-//    parser->cacheGrammarFromParse(true);
     parser->setFeature(XMLUni::fgXercesCacheGrammarFromParse, true);
 
     try
