@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/06 16:29:17  peiyongz
+ * $XERCESCROOT/msg created as home directory for message files, and
+ * set default locale.
+ *
  * Revision 1.9  2002/12/04 18:11:23  peiyongz
  * use $XERCESCROOT to search for icu resource bundle if XERCESC_NLS_HOME
  * undefined
@@ -127,7 +131,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include "ICUMsgLoader.hpp"
-
+#include "unicode/uloc.h"
 #include "string.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -156,20 +160,19 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
 
-	/***
-	     Resolve domainName
-	***/
-	int          index = XMLString::lastIndexOf(msgDomain, chForwardSlash);
-	char*   domainName = XMLString::transcode(&(msgDomain[index + 1]));
+    /***
+	Resolve domainName
+    ***/
+    int     index = XMLString::lastIndexOf(msgDomain, chForwardSlash);
+    char*   domainName = XMLString::transcode(&(msgDomain[index + 1]));
     ArrayJanitor<char> jan1(domainName);
 
     /***
-	     Resolve location
+	Resolve location
 
-	     REVISIT: another approach would be: through some system API
-		          which returns the directory of the XercescLib and
-		          that directory would be used to locate the
-		 		  resource bundle
+	REVISIT: another approach would be: through some system API
+	         which returns the directory of the XercescLib and
+	         that directory would be used to locate the resource bundle
     ***/
     char locationBuf[1024];
     memset(locationBuf, 0, sizeof locationBuf);
@@ -187,34 +190,34 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
         {
             strcpy(locationBuf, altHome);
             strcat(locationBuf, U_FILE_SEP_STRING);
-            strcat(locationBuf, "lib");
+            strcat(locationBuf, "msg");
             strcat(locationBuf, U_FILE_SEP_STRING);                    
         }
     }    
 
+    /***
+	Open the locale-specific resource bundle
+    ***/
     strcat(locationBuf, "XercescErrMsg");
-
-	/***
-	    Open the locale-specific resource bundle
-	***/
     UErrorCode err = U_ZERO_ERROR;
+    uloc_setDefault("en_US", &err);   // in case user-specified locale unavailable
+    err = U_ZERO_ERROR;
     fLocaleBundle = ures_open(locationBuf, XMLMsgLoader::getLocale(), &err);
     if (!U_SUCCESS(err) || fLocaleBundle == NULL)
     {
          XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
 
-	/***
-	    Open the domain specific resource bundle within
-		the locale-specific resource bundle
-	***/
-	err = U_ZERO_ERROR;
-	fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
-
-	if (!U_SUCCESS(err) || fDomainBundle == NULL)
-	{
-         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-	}
+    /***
+	Open the domain specific resource bundle within
+	the locale-specific resource bundle
+    ***/
+    err = U_ZERO_ERROR;
+    fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
+    if (!U_SUCCESS(err) || fDomainBundle == NULL)
+    {
+        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+    }
 
 }
 
