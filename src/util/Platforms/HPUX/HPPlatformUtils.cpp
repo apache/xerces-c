@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/10/25 15:20:31  tng
+ * Need to guard with NO_APP_THREADS when destroying the mutex.
+ *
  * Revision 1.16  2001/10/23 23:10:00  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -751,8 +754,10 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 void XMLPlatformUtils::platformTerm()
 {
+#if !defined(APP_NO_THREADS)
     // delete the mutex we created
 	closeMutex(atomicOpsMutex.fHandle);
 	atomicOpsMutex.fHandle = 0;
+#endif
 }
 
