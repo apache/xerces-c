@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/31 10:38:00  amassari
+ * Made virtual function checkAdditionalFacet 'const', so that it matches the declaration in a derived class
+ *
  * Revision 1.17  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -792,7 +795,7 @@ void AbstractStringValidator::checkAdditionalFacetConstraints(MemoryManager* con
 }
 
 void AbstractStringValidator::checkAdditionalFacet(const XMLCh* const content
-                                    , MemoryManager* const manager)
+                                    , MemoryManager* const manager) const
 {
     return;
 }
