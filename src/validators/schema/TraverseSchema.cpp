@@ -92,6 +92,7 @@
 #include <validators/schema/XercesGroupInfo.hpp>
 #include <validators/schema/XercesAttGroupInfo.hpp>
 #include <util/HashPtr.hpp>
+#include <util/SchemaDateTimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
@@ -2657,6 +2658,10 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
                   qualifiedName, baseValidator, 0, 0, true, finalSet);
         }
     }
+    catch(const SchemaDateTimeException& idtve) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idtve.getMessage());
+    }
     catch(const InvalidDatatypeValueException& idve) {
         reportSchemaError(XMLUni::fgValidityDomain,
                           XMLValid::DisplayErrorMessage, idve.getMessage());
@@ -2858,6 +2863,10 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                    (qualifiedName, baseValidator, facets, enums, false, finalSet);
         }
     }
+    catch(const SchemaDateTimeException& idtve) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idtve.getMessage());
+    }
     catch(const InvalidDatatypeValueException& idve) {
         reportSchemaError(XMLUni::fgValidityDomain,
                           XMLValid::DisplayErrorMessage, idve.getMessage());
@@ -2969,6 +2978,10 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
                 janValidators.orphan();
             }
         }
+    }
+    catch(const SchemaDateTimeException& idtve) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idtve.getMessage());
     }
     catch(const InvalidDatatypeValueException& idve) {
         janValidators.orphan();
