@@ -179,6 +179,7 @@ system ("XSerializerTest -v=never  personal.xml");
 system ("XSerializerTest -v=always personal.xml");
 system ("XSerializerTest -v=never  personal-schema.xml");
 system ("XSerializerTest -v=always personal-schema.xml");
+system ("XSerializerTest -v=always -f personal-schema.xml");
 
 #  Run InitTestTerm
 system ("InitTermTest");
