@@ -614,23 +614,24 @@ $set 3
 253   Value '{0}' shall be less than the max Negative value '{1}' 
 254   Value '{0}' shall be in the range of '{1}', '{2}' 
 255   Type '{0}' is invalid: internal error 
-256  A result is not set.
-257  CompactRanges - Internal Error
-258  Merge Ranges - Mismatched type
-259  SubtractRanges - Internal Error
-260  IntersectRanges - Internal Error
-261  ComplementRanges - Argument must be a RangeToken
-262  Invalid category name: {0}
-263  Keyword '{0}' not found
-264  Reference no must be more than zero
-265  Unknown option: {0}
-266  Unknown token type
-267  Failed to get RangeToken for: {0}
-268  Not supported
-269  Invalid child index
-270  Enabling the NEL option can only be called once per process.
-271  {0}
-272  operator new fails.  Possibly running Of memory
-273  Operation is not allowed
+256   Value '{0}' shall have exponent. 
+257  A result is not set.
+258  CompactRanges - Internal Error
+259  Merge Ranges - Mismatched type
+260  SubtractRanges - Internal Error
+261  IntersectRanges - Internal Error
+262  ComplementRanges - Argument must be a RangeToken
+263  Invalid category name: {0}
+264  Keyword '{0}' not found
+265  Reference no must be more than zero
+266  Unknown option: {0}
+267  Unknown token type
+268  Failed to get RangeToken for: {0}
+269  Not supported
+270  Invalid child index
+271  Enabling the NEL option can only be called once per process.
+272  {0}
+273  operator new fails.  Possibly running Of memory
+274  Operation is not allowed
 
 
