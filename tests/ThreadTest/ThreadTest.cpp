@@ -97,10 +97,10 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
         fprintf(stderr, "Error starting thread.  Errno = %d\n", errno);
         exit(-1);
     }
-};
+}
 
 
-#elif defined (AIX) || (SOLARIS) || (LINUX) || (HPUX)
+#elif defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX)
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
@@ -128,27 +128,31 @@ void ThreadFuncs::Sleep(int millis)
    int seconds = millis/1000;
    if (seconds <= 0) seconds = 1;
    ::sleep(seconds);
-};
+}
 
 
 void ThreadFuncs::startThread(ThreadFunc func, void *param)
 {
     unsigned long x;
 
-	pthread_attr_t attr;
-	pthread_t tId;
-	//thread_t tId;
+    pthread_t tId;
+    //thread_t tId;
+#if defined(HPUX) && defined(XML_USE_DCE)
+    x = pthread_create( &tId, pthread_attr_default,  (pthreadfunc)func,  param);
+#else
+    pthread_attr_t attr;
     pthread_attr_init(&attr); 
     x = pthread_create( &tId, &attr,  (pthreadfunc)func,  param);
+#endif
     //x = thr_create( NULL, NULL,  (pthreadfunc)func,  param, NULL, &tId);
     if (x == -1)
     {
         fprintf(stderr, "Error starting thread.  Errno = %d\n", errno);
         exit(-1);
     }
-	
-	//pthread_join(tId, NULL);
-};    
+    
+    //pthread_join(tId, NULL);
+}    
 #else
 #error This platform is not supported
 #endif
@@ -193,7 +197,7 @@ struct RunInfo
     bool        validating;
     bool        dom;
     bool        reuseParser;
-	bool	    inMemory;
+    bool        inMemory;
     bool        dumpOnErr;
     int         totalTime;
     int         numInputFiles;
@@ -248,7 +252,7 @@ class ThreadParser: public HandlerBase
 {
 private:
     int           fCheckSum;
-	SAXParser*    fSAXParser;
+    SAXParser*    fSAXParser;
     DOMParser*    fDOMParser;
 
 
@@ -280,7 +284,7 @@ private:
 public:                               // Not really public,
                                       //  These are the SAX call-back functions
                                       //  that this class implements.
-	void startElement(const XMLCh* const name, AttributeList& attributes);
+    void startElement(const XMLCh* const name, AttributeList& attributes);
     void characters(const XMLCh* const chars, const unsigned int length) {
         addToCheckSum(chars, length);};
     void ignorableWhitespace(const XMLCh* const chars, const unsigned int length) {
@@ -288,16 +292,16 @@ public:                               // Not really public,
     void resetDocument() {};
 
     void warning(const SAXParseException& exception)     {
-		fprintf(stderr, "*** Warning ");
-		throw;};
+        fprintf(stderr, "*** Warning ");
+        throw;};
 
     void error(const SAXParseException& exception)       {
-		fprintf(stderr, "*** Error ");
-		throw;};
+        fprintf(stderr, "*** Error ");
+        throw;};
 
     void fatalError(const SAXParseException& exception)  {
-		fprintf(stderr, "***** Fatal error ");
-		throw;};
+        fprintf(stderr, "***** Fatal error ");
+        throw;};
 };
 
 
@@ -325,15 +329,15 @@ ThreadParser::ThreadParser()
         fSAXParser->setErrorHandler(this);
     }
     
-};
+}
 
 
 
 ThreadParser::~ThreadParser()
 {
-     delete fSAXParser;	
+     delete fSAXParser; 
      delete fDOMParser;
-};
+}
 
 //------------------------------------------------------------------------
 //
@@ -386,7 +390,7 @@ int ThreadParser::parse(int fileNum)
     
     delete mbis;
     return fCheckSum;
-};
+}
 
 
 //
@@ -416,7 +420,7 @@ void ThreadParser::addToCheckSum(const XMLCh *chars, int len)
         for (i=0; i<len; i++)
             fCheckSum = fCheckSum*5 + chars[i];
     }
-};
+}
 
 
 //
@@ -436,7 +440,7 @@ void ThreadParser::startElement(const XMLCh *const name, AttributeList &attribut
         addToCheckSum(attNam);
         const XMLCh *attVal = attributes.getValue(i);
         addToCheckSum(attVal);
-    };
+    }
 }
 
 
@@ -528,7 +532,7 @@ void ThreadParser::domPrint()
     if (gRunInfo.dom)
         domPrint(fDOMParser->getDocument());
     DOMString("End DOMPrint\n").print();
-};
+}
 
 void ThreadParser::domPrint(const DOM_Node &node)
 {
@@ -616,7 +620,7 @@ void parseCommandLine(int argc, char **argv)
     gRunInfo.validating = false;
     gRunInfo.dom = false;
     gRunInfo.reuseParser = false;
-	gRunInfo.inMemory = false;
+    gRunInfo.inMemory = false;
     gRunInfo.dumpOnErr = false;
     gRunInfo.totalTime = 0;
     gRunInfo.numInputFiles = 0;
@@ -638,8 +642,8 @@ void parseCommandLine(int argc, char **argv)
                 gRunInfo.reuseParser = true;
             else if (strcmp(argv[argnum], "-dump") == 0)
                 gRunInfo.dumpOnErr = true;
-			else if (strcmp(argv[argnum], "-mem") == 0) 
-				gRunInfo.inMemory = true;
+            else if (strcmp(argv[argnum], "-mem") == 0) 
+                gRunInfo.inMemory = true;
             else if (strcmp(argv[argnum], "-threads") == 0)
             {
                 ++argnum;
@@ -698,11 +702,11 @@ void parseCommandLine(int argc, char **argv)
             "     -threads nnn   Number of threads.  Default is 2. \n"
             "     -time nnn      Total time to run, in seconds.  Default is forever.\n"
             "     -dump          Dump DOM tree on error.\n"
-			"     -mem           Read files into memory once only, and parse them from there.\n"
+            "     -mem           Read files into memory once only, and parse them from there.\n"
             );
         exit(1);
     }
-};
+}
 
 
 //---------------------------------------------------------------------------
@@ -764,7 +768,7 @@ void ReadFilesIntoMemory()
 
 void threadMain (void *param)
 {
-	ThreadInfo   *thInfo = (ThreadInfo *)param;
+    ThreadInfo   *thInfo = (ThreadInfo *)param;
     ThreadParser *thParser = 0;
 
     if (gRunInfo.verbose)
@@ -831,8 +835,8 @@ void threadMain (void *param)
 //----------------------------------------------------------------------
 
 int main (int argc, char **argv)
-{	
-	
+{   
+    
 
     parseCommandLine(argc, argv);
 
@@ -874,7 +878,7 @@ int main (int argc, char **argv)
         if (gRunInfo.verbose)
             printf("%s checksum is ", fileName);
 
-        cksum =	mainParser->parse(n);
+        cksum = mainParser->parse(n);
 
         if (cksum == 0)
         {
@@ -899,7 +903,7 @@ int main (int argc, char **argv)
 
     if (gRunInfo.numThreads == 0)
         exit(0);
-	
+    
     gThreadInfo = new ThreadInfo[gRunInfo.numThreads];
     
     int threadNum;
@@ -946,6 +950,6 @@ int main (int argc, char **argv)
     //   and leave it to the operating sytem to kill them.
     //
     return 0;
-};
+}
 
 
