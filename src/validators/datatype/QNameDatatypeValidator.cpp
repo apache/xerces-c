@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/06 21:34:48  peiyongz
+ * Fix:improper loop in enumeration checking
+ *
  * Revision 1.3  2001/08/21 18:42:53  peiyongz
  * Bugzilla# 2816: cleanUp() declared with external linkage and called
  *                          before defined as inline
@@ -422,10 +425,12 @@ void QNameDatatypeValidator::init(DatatypeValidator*            const baseValida
                 try
                 {
                     for ( ; i < enumLength; i++)
+                    {
                         // ask parent do a complete check
                         pBaseValidator->checkContent(getEnumeration()->elementAt(i), false);
                         // REVISIT: enum shall pass this->checkContent() as well.
                         checkContent(getEnumeration()->elementAt(i), false);
+                    }
                 }
 
                 catch ( XMLException& )
