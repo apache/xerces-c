@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/25 21:47:58  peiyongz
+ * Unused XMLDeleterFor removed.
+ *
  * Revision 1.10  2001/08/07 15:34:54  tng
  * IDOM: Unaligned Access warnings in IDOM samples.  Fixed by Kari Whitcomb.
  *
@@ -93,7 +96,7 @@
 //
 
 #include "IDStringPool.hpp"
-#include <util/XMLDeleterFor.hpp>
+//#include <util/XMLDeleterFor.hpp>
 #include <util/XMLString.hpp>
 #include <util/PlatformUtils.hpp>
 
