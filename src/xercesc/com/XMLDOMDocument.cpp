@@ -967,6 +967,11 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 				}
 				m_FileName = baseURL + _T("/") + m_FileName;
 			}
+			else {
+				TCHAR szCurDir[MAX_PATH];
+				GetCurrentDirectory(MAX_PATH,szCurDir);
+				m_FileName=_bstr_t(szCurDir) + _T("\\") + m_FileName;
+			}
 		}
 	}
 	else
@@ -1466,7 +1471,9 @@ STDMETHODIMP CXMLDOMDocument::save(VARIANT location)
 		int length = childs.getLength();
 		for (int i=0; i < length; ++i) {
 			DOM_Node child = childs.item(i);
-			GetXML(child,text);
+			_bstr_t nodeText;
+			GetXML(child,nodeText);
+			text += nodeText;
 		}
 	}
 	catch(DOM_DOMException& ex)
@@ -1482,8 +1489,9 @@ STDMETHODIMP CXMLDOMDocument::save(VARIANT location)
 	if ((fp = _tfopen(file, "wt")) == NULL) {
 		return E_FAIL;
 	}
-	
-	_ftprintf(fp, text);
+
+	if(text.length()>0)
+		_fputts(text, fp);
 	
 	fclose(fp);
 
