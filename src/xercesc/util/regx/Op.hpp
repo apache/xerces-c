@@ -182,7 +182,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	UnionOp(const short type, const int size, MemoryManager* const manager);
+	UnionOp(const short type, const int size,
+            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~UnionOp() { delete fBranches; }
 
 	// -----------------------------------------------------------------------

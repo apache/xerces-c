@@ -149,7 +149,7 @@ private:
                     IC_Selector* const selector,
                     FieldActivator* const fieldActivator,
                     const int initialDepth,
-                    MemoryManager* const manager);
+                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators

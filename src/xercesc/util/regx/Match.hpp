@@ -64,6 +64,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
@@ -79,7 +80,7 @@ public:
 	// -----------------------------------------------------------------------
   //  Public Constructors and Destructor
   // -----------------------------------------------------------------------
-	Match(MemoryManager* const manager);
+	Match(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	
   /**
   * Copy constructor

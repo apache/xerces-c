@@ -186,7 +186,7 @@ private:
     class XMLUTIL_EXPORT Context : public XMemory
     {
         public :
-            Context(MemoryManager* const manager);
+            Context(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
             ~Context();
 
             inline const XMLCh* getString() const { return fString; }

@@ -104,7 +104,7 @@ struct DOMDeepNodeListPoolTableBucketElem : public XMemory
         , XMLCh* key3
         , TVal* const value
         , DOMDeepNodeListPoolTableBucketElem<TVal>* next
-        , MemoryManager* const manager
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     ) :
     fData(value)
     , fNext(next)

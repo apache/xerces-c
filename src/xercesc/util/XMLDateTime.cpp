@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/05/22 02:10:52  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.11  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -497,7 +500,7 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString,
 
 XMLDateTime::XMLDateTime(const XMLDateTime &toCopy)
 : fBuffer(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(toCopy.fMemoryManager)
 {
     copy(toCopy);
 }

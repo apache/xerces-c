@@ -136,7 +136,7 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     try
     {

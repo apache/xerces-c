@@ -64,6 +64,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/regx/Token.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -80,7 +81,7 @@ public:
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
     RangeToken(const unsigned short tokType,
-               MemoryManager* const manager);
+               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~RangeToken();
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/22 02:10:52  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.5  2003/05/18 14:02:09  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -98,7 +101,7 @@ FieldValueMap::FieldValueMap(const FieldValueMap& other)
     : fFields(0)
     , fValidators(0)
     , fValues(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(other.fMemoryManager)
 {
     try {
         if (other.fFields) {

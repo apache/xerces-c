@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/22 02:10:52  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.5  2003/05/16 06:01:53  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -253,7 +256,7 @@ XMLBigInteger::XMLBigInteger(const XMLBigInteger& toCopy)
 : fSign(toCopy.fSign)
 , fMagnitude(0)
 , fRawData(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(toCopy.fMemoryManager)
 {
     fMagnitude = XMLString::replicate(toCopy.fMagnitude, fMemoryManager);
 	fRawData = XMLString::replicate(toCopy.fRawData, fMemoryManager);

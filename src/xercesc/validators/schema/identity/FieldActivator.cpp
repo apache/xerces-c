@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/22 02:10:52  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -98,7 +101,7 @@ FieldActivator::FieldActivator(ValueStoreCache* const valueStoreCache,
 FieldActivator::FieldActivator(const FieldActivator& other)
     : fValueStoreCache(other.fValueStoreCache)
     , fMatcherStack(other.fMatcherStack)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(other.fMemoryManager)
 {
 }
 

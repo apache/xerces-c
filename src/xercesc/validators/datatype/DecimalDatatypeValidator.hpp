@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/22 02:10:52  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -160,7 +163,7 @@ protected:
         , RefHashTableOf<KVStringPair>* const facets
         , const int finalSet
         , const ValidatorType type
-        , MemoryManager* const manager
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
 // -----------------------------------------------------------------------

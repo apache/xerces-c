@@ -96,7 +96,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Constructors and destructors
     // -----------------------------------------------------------------------
-	OpFactory(MemoryManager* const manager);
+	OpFactory(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~OpFactory();
 
     // -----------------------------------------------------------------------

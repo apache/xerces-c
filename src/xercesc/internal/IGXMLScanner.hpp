@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/22 02:10:51  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -110,7 +113,7 @@ public :
     IGXMLScanner
     (
         XMLValidator* const valToAdopt
-        , MemoryManager* const manager
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     IGXMLScanner
     (
@@ -119,7 +122,7 @@ public :
         , XMLEntityHandler* const   entityHandler
         , XMLErrorReporter* const   errReporter
         , XMLValidator* const       valToAdopt
-        , MemoryManager* const      manager
+        , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~IGXMLScanner();
 

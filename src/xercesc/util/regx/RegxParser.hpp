@@ -123,7 +123,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	RegxParser(MemoryManager* const manager);
+	RegxParser(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	virtual ~RegxParser();
 
     // -----------------------------------------------------------------------

@@ -98,7 +98,7 @@ public:
                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     XercesNodeTest(const QName* const qName);
     XercesNodeTest(const XMLCh* const prefix, const unsigned int uriId,
-                   MemoryManager* const manager/* = XMLPlatformUtils::fgMemoryManager*/);
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     XercesNodeTest(const XercesNodeTest& other);
     ~XercesNodeTest() { delete fName; }
 

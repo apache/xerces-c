@@ -75,7 +75,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    XPathMatcherStack(MemoryManager* const manager);
+    XPathMatcherStack(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~XPathMatcherStack();
 
 	// -----------------------------------------------------------------------

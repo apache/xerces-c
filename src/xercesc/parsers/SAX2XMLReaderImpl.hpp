@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/05/22 02:10:51  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.20  2003/05/15 18:26:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -270,7 +273,7 @@ public :
     /** @name Constructors and Destructor */
     //@{
     /** The default constructor */
-	SAX2XMLReaderImpl(MemoryManager* const manager) ;
+	SAX2XMLReaderImpl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** The destructor */	
 	~SAX2XMLReaderImpl() ;

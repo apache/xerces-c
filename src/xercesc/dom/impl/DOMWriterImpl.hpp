@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/05/22 02:10:51  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.15  2003/05/15 18:25:54  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -346,7 +349,7 @@ public:
     /**
      * Constructor.
      */
-    DOMWriterImpl(MemoryManager* const manager);
+    DOMWriterImpl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
      * Destructor.

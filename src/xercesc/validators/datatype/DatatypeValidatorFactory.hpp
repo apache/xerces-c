@@ -109,7 +109,7 @@ public:
 
     DatatypeValidatorFactory
     (
-        MemoryManager* const manager// = XMLPlatformUtils::fgMemoryManager
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}

@@ -87,7 +87,7 @@ public :
     virtual XMLTranscoder* makeNew
     (
         const   unsigned int    blockSize
-        , MemoryManager*  const manager
+        , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     )   const = 0;
 
 
@@ -145,7 +145,7 @@ public :
     //  Implementation of virtual factory method
     // -----------------------------------------------------------------------
     virtual XMLTranscoder* makeNew(const unsigned int blockSize,
-                                   MemoryManager* const manager) const;
+                                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
 
 private :
@@ -172,7 +172,7 @@ public :
     //  Implementation of virtual factory method
     // -----------------------------------------------------------------------
     virtual XMLTranscoder* makeNew(const unsigned int blockSize,
-                                   MemoryManager* const manager) const;
+                                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
 
 private :

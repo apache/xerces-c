@@ -144,11 +144,11 @@ public:
     DOMNodeIDMap*         fNodeIDMap;     // for use by GetElementsById().
 
 public:
-    DOMDocumentImpl(MemoryManager* const manager);
+    DOMDocumentImpl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     DOMDocumentImpl(const XMLCh*     namespaceURI,     //DOM Level 2
                     const XMLCh*     qualifiedName,
                     DOMDocumentType* doctype,
-                    MemoryManager* const manager);
+                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~DOMDocumentImpl();
 
     void                         setDocumentType(DOMDocumentType *doctype);

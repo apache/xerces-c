@@ -79,7 +79,7 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-    ParserForXMLSchema(MemoryManager* const manager);
+    ParserForXMLSchema(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ParserForXMLSchema();
 
     // -----------------------------------------------------------------------

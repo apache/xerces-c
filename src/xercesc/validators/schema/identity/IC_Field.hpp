@@ -107,7 +107,7 @@ public:
     //  Factory methods
     // -----------------------------------------------------------------------
     XPathMatcher* createMatcher(ValueStore* const valueStore,
-                                MemoryManager* const manager);
+                                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
     // -----------------------------------------------------------------------
@@ -152,7 +152,7 @@ private:
     FieldMatcher(XercesXPath* const anXPath,
                  IC_Field* const aField,
                  ValueStore* const valueStore,
-                 MemoryManager* const manager);
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators

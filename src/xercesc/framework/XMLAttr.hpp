@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/22 02:10:51  knoaman
+ * Default the memory manager.
+ *
  * Revision 1.6  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -155,7 +158,7 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XMLAttr(MemoryManager* const manager);
+    XMLAttr(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
       * This is the primary constructor which takes all of the information
