@@ -2246,7 +2246,6 @@ void DGXMLScanner::scanReset(const InputSource& src)
     if(fUIntPoolRowTotal >= 32) 
     { // 8 KB tied up with validating attributes...
         fAttDefRegistry->removeAll();
-        fUndeclaredAttrRegistry->removeAll();
         recreateUIntPool();
     }
     else
@@ -2255,6 +2254,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
         // though their buckets will still be tied up
         resetUIntPool();
     }
+    fUndeclaredAttrRegistry->removeAll();
 }
 
 

@@ -582,7 +582,6 @@ void XSAXMLScanner::scanReset(const InputSource& src)
     if (fUIntPoolRowTotal >= 32) 
     { // 8 KB tied up with validating attributes...
         fAttDefRegistry->removeAll();
-        fUndeclaredAttrRegistryNS->removeAll();
         recreateUIntPool();
     }
     else
@@ -591,6 +590,7 @@ void XSAXMLScanner::scanReset(const InputSource& src)
         // though their buckets will still be tied up
         resetUIntPool();
     }
+    fUndeclaredAttrRegistryNS->removeAll();
 }
 
 
