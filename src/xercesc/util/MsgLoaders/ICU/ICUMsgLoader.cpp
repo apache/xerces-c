@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/11/19 23:08:02  peiyongz
+ * build xercesc2_4_0
+ *
  * Revision 1.17  2003/05/15 18:29:48  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -171,7 +174,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  */
 
 #if defined(_WIN32) || defined(WIN32)
-extern "C" void U_IMPORT *XercesMessages2_3_0_dat;
+extern "C" void U_IMPORT *XercesMessages2_4_0_dat;
 #else
 extern "C" void U_IMPORT *XercesMessages_dat;
 #endif
@@ -195,7 +198,7 @@ static void setAppData()
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
 #if defined(_WIN32) || defined(WIN32)
-        udata_setAppData("XercesMessages", &XercesMessages2_3_0_dat, &err);
+        udata_setAppData("XercesMessages", &XercesMessages2_4_0_dat, &err);
 #else
         udata_setAppData("XercesMessages", &XercesMessages_dat, &err);
 #endif        
