@@ -599,10 +599,9 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     DocumentImpl    *docImpl = (DocumentImpl *)fDocument.fImpl;
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
-        unsigned int globalNSid = fValidator -> getGlobalNamespaceId();
         XMLBuffer buf;
         DOMString namespaceURI = 0;
-        if (urlId != globalNSid) {  //TagName has a prefix
+        if (urlId != fValidator -> getGlobalNamespaceId()) {  //TagName has a prefix
             fValidator -> getURIText(urlId, buf);   //get namespaceURI
             namespaceURI = DOMString(buf.getRawBuffer());
         }
@@ -617,7 +616,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             namespaceURI = 0;
             if (!XMLString::compareString(oneAttrib -> getName(), XMLNS))    //for xmlns=...
                 attrURIId = fValidator -> getXMLNSNamespaceId();
-            if (attrURIId != globalNSid) {	//TagName has a prefix
+            if (attrURIId != fValidator -> getEmptyNamespaceId()) {  //TagName has a prefix
                 fValidator -> getURIText(attrURIId, buf);   //get namespaceURI
                 namespaceURI = DOMString(buf.getRawBuffer());
             }

@@ -2331,7 +2331,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             {
                 curAtt = new XMLAttr
                 (
-                    fValidator->getGlobalNamespaceId()
+                    fValidator->getEmptyNamespaceId()
                     , fAttNameBuf.getRawBuffer()
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
@@ -2345,7 +2345,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 curAtt = fAttrList->elementAt(attCount);
                 curAtt->set
                 (
-                    fValidator->getGlobalNamespaceId()
+                    fValidator->getEmptyNamespaceId()
                     , fAttNameBuf.getRawBuffer()
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
@@ -2457,7 +2457,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                     {
                         curAtt = new XMLAttr
                         (
-                            fValidator->getGlobalNamespaceId()
+                            fValidator->getEmptyNamespaceId()
                             , curDef.getFullName()
                             , XMLUni::fgZeroLenString
                             , curDef.getValue()
@@ -2472,7 +2472,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                         curAtt = fAttrList->elementAt(attCount);
                         curAtt->set
                         (
-                            fValidator->getGlobalNamespaceId()
+                            fValidator->getEmptyNamespaceId()
                             , curDef.getFullName()
                             , XMLUni::fgZeroLenString
                             , curDef.getValue()

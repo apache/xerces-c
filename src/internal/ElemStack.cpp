@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/02/16 17:58:02  tng
+ * use EmptyNamespaceId for attribute, GlobalNamespaceId for element.
+ *
  * Revision 1.7  2000/07/05 05:20:17  roddey
  * Fixed a memory leak when namespaces are enabled.
  *
@@ -368,11 +371,11 @@ unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
 
     //
     //  If the prefix is empty, and we are in attribute mode, then we assign
-    //  it to the global namespace because the default namespace does not
+    //  it to the empty namespace because the default namespace does not
     //  apply to attributes.
     //
     if (!*prefixToMap && (mode == Mode_Attribute))
-        return fGlobalNamespaceId;
+        return fEmptyNamespaceId;
 
     //
     //  Check for the special prefixes 'xml' and 'xmlns' since they cannot
