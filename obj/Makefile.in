@@ -104,7 +104,11 @@ LIBDEPDOM=libxercesdepdom
 endif
 
 ALL_OBJECTS=$(wildcard $(PLATFORM)/*.o)
+# obj/<platform>/depdom/*.o
 DEPDOM_OBJECTS=$(wildcard $(PLATFORM)/depdom/*.o)
+DEPDOM_OBJS_REF=${DEPDOM_OBJECTS} 
+# obj/<platform>/*.o
+DEPDOM_OBJS=$(subst depdom/,,${DEPDOM_OBJS_REF}) 
 
 #######################################################
 #  HP-UX with CC compiler is awkward since it does    #
@@ -192,8 +196,14 @@ ${FQ_REAL_NAME}: $(ALL_OBJECTS)
 ## DepDOM ##
 ${FQ_REAL_DEPDOM}: $(DEPDOM_OBJECTS)
 	@echo Building ${FQ_REAL_DEPDOM}
+ifeq (${PLATFORM},SOLARIS)
+	cp $(DEPDOM_OBJECTS) $(PLATFORM)
+	${MAKE_SHARED} ${LD_SODEPDOM} -o ${@} ${DEPDOM_OBJS} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(DEPDOM_LINK_OPTIONS) $(ALLLIBS) -L${LIB} -l${LINK_LIBNAME}
+	rm ${DEPDOM_OBJS}
+else
 	${MAKE_SHARED} ${LD_SODEPDOM} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(DEPDOM_LINK_OPTIONS) $(ALLLIBS) -L${LIB} -l${LINK_LIBNAME}
-    ifneq (${FQ_SO_DEPDOM},${FQ_REAL_DEPDOM})
+endif
+    ifneq (${FQ_SO_DEPDOM},${FQ_REAL_DEPDOM})   
 	@echo symlink ${FQ_SO_DEPDOM} 
 	rm -rf ${FQ_SO_DEPDOM}   && ln -s ${FQ_REAL_DEPDOM} ${FQ_SO_DEPDOM}
     endif
