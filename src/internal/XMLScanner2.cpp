@@ -769,7 +769,7 @@ bool XMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                     //
                     if (fStandalone && fValidate && isAttExternal)
                     {
-                        if (!firstNonWS || (nextCh != chSpace) || (fReaderMgr.lookingAtSpace()))
+                        if (!firstNonWS || (nextCh != chSpace) || (!*srcPtr) || XMLReader::isWhitespace(*srcPtr))
                         {
                              //
                              // Can't have a standalone document declaration of "yes" if  attribute
