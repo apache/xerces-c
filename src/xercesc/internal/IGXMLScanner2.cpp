@@ -1280,6 +1280,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     }
     fUndeclaredAttrRegistry->removeAll();
     fUndeclaredAttrRegistryNS->removeAll();
+    fDTDElemNonDeclPool->removeAll();
 }
 
 
