@@ -1070,7 +1070,7 @@ gmake</source>
        <li>Add netaccessor files into this 'libWWW' folder again, by
        right-clicking on 'libWWW' folder and choosing 'Add Files to
        Folder'.  Choose the four files in
-       <code>&lt;XercesCRoot&gt;\src\util\NetAccessors</code>
+       <code>&lt;XercesCRoot&gt;\src\util\NetAccessors\libWWW</code>
        directory.  These files are: <code>BinURLInputStream.[ch]pp and
        LibWWWNetAccessor.[ch]pp</code>.</li>
 
