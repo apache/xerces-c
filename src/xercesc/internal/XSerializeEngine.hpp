@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/14 15:18:20  peiyongz
+ * getMemoryManager()
+ *
  * Revision 1.5  2003/10/09 19:11:53  peiyongz
  * Fix to linkage error on Solaris
  *
@@ -173,6 +176,15 @@ public:
       *
       ***/
     inline bool isLoading() const;
+
+    /***
+      *
+      *  Get the embeded Memory Manager
+      *
+      *  Return: MemoryManager
+      *
+      ***/
+    inline MemoryManager* getMemoryManager() const;
 
     /***
       *
@@ -607,6 +619,11 @@ inline bool XSerializeEngine::isStoring() const
 inline bool XSerializeEngine::isLoading() const
 {
     return (fStoreLoad == mode_Load);
+}
+
+inline MemoryManager* XSerializeEngine::getMemoryManager() const
+{
+    return fMemoryManager;
 }
 
 inline XSerializeEngine& operator<<(XSerializeEngine&       serEng
