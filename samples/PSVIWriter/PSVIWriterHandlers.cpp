@@ -31,7 +31,10 @@
 #include <xercesc/dom/DOMTypeInfo.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/framework/psvi/XSValue.hpp>
+
 #include <string.h>
+#include <stdio.h>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -74,7 +77,16 @@ static const XMLCh gAngleFeed[] = { chCloseAngle, chLF, chNull };
 static const XMLCh gSlashAngleFeed[] = { chForwardSlash, chCloseAngle, chLF, chNull };
 static const XMLCh gQuoteAngleFeed[] = { chDoubleQuote, chCloseAngle, chLF, chNull };
 
+static const XMLCh gActualValue[] = { chLatin_a, chLatin_c, chLatin_t, chLatin_u, chLatin_a,
+                                      chLatin_l, chLatin_V, chLatin_a, chLatin_l, chLatin_u,
+                                      chLatin_e, chNull };
 
+static const XMLCh gDataType[] = { chLatin_d, chLatin_a, chLatin_t, chLatin_a, chLatin_T,
+                                   chLatin_y, chLatin_p, chLatin_e, chNull };
+static const XMLCh gDataValue[] = { chLatin_d, chLatin_a, chLatin_t, chLatin_a, chLatin_V,
+                                   chLatin_a, chLatin_l,  chLatin_u, chLatin_e, chNull };
+static const XMLCh gCommentStart[] = { chOpenAngle, chBang, chDash, chDash, chLF, chNull};
+static const XMLCh gCommentEnd[] = { chDash, chDash, chCloseAngle, chLF, chNull};
 // ---------------------------------------------------------------------------
 //  PSVIWriterHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -341,6 +353,8 @@ void PSVIWriterHandlers::handleAttributesPSVI(	const XMLCh* const localName,
 void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const localName, 
 											const XMLCh* const uri,
 											PSVIElement* elementInfo ) {
+
+    processActualValue(elementInfo);
 	processChildrenEnd();
 	processSchemaInformation(elementInfo->getSchemaInformation());
 	sendElementValue( PSVIUni::fgValidationAttempted,
@@ -362,6 +376,7 @@ void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const localName,
 	sendElementEmpty(PSVIUni::fgIdIdrefTable);
 	sendElementEmpty(PSVIUni::fgIdentityConstraintTable);
 	sendUnindentedElement(PSVIUni::fgElement);
+
 }
 
 // ---------------------------------------------------------------------------
@@ -454,6 +469,8 @@ void PSVIWriterHandlers::processAttributePSVI(PSVIAttribute* attrPSVI) {
 		processTypeDefinitionRef(PSVIUni::fgTypeDefinition, attrPSVI->getTypeDefinition());
 		processTypeDefinitionOrRef(PSVIUni::fgMemberTypeDefinition, attrPSVI->getMemberTypeDefinition());
 		processAttributeDeclarationRef(PSVIUni::fgDeclaration, attrPSVI->getAttributeDeclaration());
+
+        processActualValue(attrPSVI);
 	}
 }
 
@@ -1241,6 +1258,11 @@ void PSVIWriterHandlers::writeEmpty(const XMLCh* const elementName) {
 		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName << gSlashAngleFeed ;
 }
 
+void PSVIWriterHandlers::writeString(const XMLCh* const string) {
+	*fFormatter 
+		<< XMLFormatter::NoEscapes << fIndentChars << string;
+}
+
 const XMLCh* PSVIWriterHandlers::translateScope(XSConstants::SCOPE scope) {
 	switch (scope) {
 		case XSConstants::SCOPE_ABSENT :
@@ -1551,3 +1573,294 @@ void PSVIWriterHandlers::decIndent() {
 	fIndent--;
 }
 
+/***
+ *    yyyy-mm-ddThh:mm:ss.sssss
+ ***/
+void PSVIWriterHandlers::formDateTime(XSValue* obj)
+{
+    
+    char buffer[1024];
+    memset(buffer, 0, sizeof buffer);
+    sprintf(buffer, "%d-%d-%dT%d:%d:%f", obj->fData.fValue.f_datetime.f_year
+                                       , obj->fData.fValue.f_datetime.f_month
+                                       , obj->fData.fValue.f_datetime.f_day
+                                       , obj->fData.fValue.f_datetime.f_hour
+                                       , obj->fData.fValue.f_datetime.f_min
+                                       , obj->fData.fValue.f_datetime.f_second 
+                                       + obj->fData.fValue.f_datetime.f_milisec);
+
+    XMLCh *value = XMLString::transcode(buffer);
+    ArrayJanitor<XMLCh> jan(value);
+    writeValue(gDataValue, value);
+}
+
+/***
+ *  <actualValue>
+ *       <dataType>unsignedShort</dataType>
+ *	     <dataValue>0</dataValue>
+ *	</actualValue>
+ ***/
+void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
+{
+    if (!item) return;
+
+    XSValue* obj = item->getActualValue();
+
+    if (obj)
+    {
+        char buffer[1024];
+
+        writeString(gCommentStart);
+        incIndent();
+        writeOpen(gActualValue);
+        incIndent();
+
+        switch (obj->fData.f_datatype)
+        { 
+        case XSValue::dt_boolean:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_BOOLEAN);
+                writeValue(gDataValue, XMLUni::fgBooleanValueSpace[obj->fData.fValue.f_bool? 0: 1]);
+            }
+            break;
+        case XSValue::dt_decimal:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_DECIMAL);
+                sprintf( buffer,"%f", obj->fData.fValue.f_decimal.f_dvalue);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_float:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_FLOAT);
+                sprintf( buffer,"%f", obj->fData.fValue.f_float);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_double:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_DOUBLE);
+                sprintf( buffer,"%f", obj->fData.fValue.f_double);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_duration:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_DURATION);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_dateTime:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_DATETIME);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_time:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_TIME);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_date:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_DATE);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_gYearMonth:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_YEARMONTH);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_gYear:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_YEAR);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_gMonthDay:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_MONTHDAY);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_gDay:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_DAY);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_gMonth:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_MONTH);
+                formDateTime(obj);
+            }
+            break;
+        case XSValue::dt_hexBinary:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_HEXBINARY);
+                writeValue(gDataValue, obj->fData.fValue.f_strVal);
+            }
+            break;
+        case XSValue::dt_base64Binary:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_BASE64BINARY);
+                writeValue(gDataValue, obj->fData.fValue.f_strVal);
+            }
+            break;
+
+        case XSValue::dt_integer:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_INTEGER);
+                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_nonPositiveInteger:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_NONPOSITIVEINTEGER);
+                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_negativeInteger:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_NEGATIVEINTEGER);
+                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_long:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_LONG);
+                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_int:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_INT);
+                sprintf( buffer,"%d", obj->fData.fValue.f_int);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_short:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_SHORT);
+                sprintf( buffer,"%d", obj->fData.fValue.f_short);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_byte:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_BYTE);
+                sprintf( buffer,"%d", obj->fData.fValue.f_char);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_nonNegativeInteger:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_NONNEGATIVEINTEGER);
+                sprintf( buffer,"%u", obj->fData.fValue.f_long);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_unsignedLong:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_ULONG);
+                sprintf( buffer,"%u", obj->fData.fValue.f_ulong);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_unsignedInt:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_UINT);
+                sprintf( buffer,"%u", obj->fData.fValue.f_uint);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_unsignedShort:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_USHORT);
+                sprintf( buffer,"%u", obj->fData.fValue.f_ushort);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_unsignedByte:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_UBYTE);
+                sprintf( buffer,"%u", obj->fData.fValue.f_uchar);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_positiveInteger:
+            {
+                writeValue(gDataType, SchemaSymbols::fgDT_POSITIVEINTEGER);
+                sprintf( buffer,"%u", obj->fData.fValue.f_long);
+                XMLCh *value = XMLString::transcode(buffer);
+                ArrayJanitor<XMLCh> jan(value);
+                writeValue(gDataValue, value);
+            }
+            break;
+        case XSValue::dt_string:
+        case XSValue::dt_anyURI:
+        case XSValue::dt_QName:
+        case XSValue::dt_NOTATION:
+        case XSValue::dt_normalizedString:
+        case XSValue::dt_token:
+        case XSValue::dt_language:
+        case XSValue::dt_NMTOKEN:
+        case XSValue::dt_NMTOKENS:
+        case XSValue::dt_Name:
+        case XSValue::dt_NCName:
+        case XSValue::dt_ID:
+        case XSValue::dt_IDREF:
+        case XSValue::dt_IDREFS:
+        case XSValue::dt_ENTITY:
+        case XSValue::dt_ENTITIES:
+            break; //we shouldn't see them
+        default:
+            break;
+        }
+
+        decIndent();
+        writeClose(gActualValue);
+        decIndent();
+        writeString(gCommentEnd);
+    }
+
+    delete obj;
+
+}

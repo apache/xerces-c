@@ -156,7 +156,9 @@ private:
     void processNamespaceAttributes(PSVIAttributeList* psviAttributes, const RefVectorOf<AttrInfo>* attributes);
     void processAttributePSVI(PSVIAttribute* attribute);
     void processInScopeNamespaces();
-   
+    void processActualValue(PSVIItem*);
+    void formDateTime(XSValue*);
+
     void processSchemaInformation(XSModel* model);
     void processNamespaceItem(XSNamespaceItem* namespaceItem);
     void processSchemaComponents(XSNamespaceItem* namespaceItem);
@@ -223,7 +225,8 @@ private:
 	void writeValue(const XMLCh* const elementName, const StringList* const values);
 	void writeEmpty(const XMLCh* const elementName, const StringList* const attrs);
 	void writeEmpty(const XMLCh* const elementName);
-    
+    void writeString(const XMLCh* const string);
+
     const XMLCh* translateScope(XSConstants::SCOPE scope);
     const XMLCh* translateValueConstraint(XSConstants::VALUE_CONSTRAINT constraintKind);
     const XMLCh* translateBlockOrFinal(short val);
