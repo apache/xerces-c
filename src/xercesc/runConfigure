@@ -566,6 +566,6 @@ echo configure $configureoptions
 
 echo
 echo If the result of the above commands look OK to you, go to the directory
-echo ${XERCESCROOT}/src and type \"gmake\" to make the XERCES-C system.
+echo ${XERCESCROOT}/src/xercesc and type \"gmake\" to make the XERCES-C system.
 
 exit  0;
