@@ -12,6 +12,7 @@
     <li><link anchor="BuildAS400">Building &XercesCName; on AS/400.</link></li>
     <li><link anchor="BuildMac">Building &XercesCName; on Macintosh.</link></li>
     <li><link anchor="BuildICU">Building ICU.</link></li>
+    <li><link anchor="BuildCOM">Building COM module on Windows 98/NT/2000.</link></li>
     <li><link anchor="BuildDocs">How to build the User Documentation?.</link></li>
     <li><link anchor="PortingGuide">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</link></li>
     <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
@@ -771,6 +772,62 @@ gmake install</source>
         </s3>
 
     </s2>
+
+    <anchor name="BuildCOM"/>
+    <s2 title="How to build XML for COM on Windows">
+
+        <p>To build the COM module for use with XML on Windows platforms, you
+        must first set up your machine appropriately with necessary tools and
+        software modules and then try to compile it. The end result is an additional
+        library that you can use along with the standard &XercesCName; for writing
+        VB templates or for use with IE 5.0 using JavaScript.</p>
+
+		<s3 title="Setting up your machine for COM">
+		<p>To build the COM project you will need to install the MS PlatformSDK.
+		Some of the header files we use don't come with Visual C++ 6.0. You may
+		download it from Microsoft's Website at <jump href="http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm">http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm</jump>
+		or directly FTP it from <jump href="ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe">ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe</jump>.</p>
+
+		<p>The installation is huge, but you don't need most of it. So you
+		may do a <em>custom install</em> by just selecting "Build Environment" and
+		choosing the required components. First select the top level Platform SDK.
+		Then click the down arrow and make all of the components unavailable. Next open the
+		"Build Environment" branch and select only the following items:</p>
+		<ul>
+		<li>Win32 Build Environment</li>
+		<li>COM Headers and Libraries</li>
+		<li>Internet Explorer Headers and Libraries</li>
+		</ul>
+
+		<p><em>Important:</em> When the installation is complete you need to update VC6's
+		include path to include <code>..\platformsdk\include\atl30</code>. You do this by
+		choosing "Tools -> Options -> Directories". This path
+		should be placed <ref>second</ref> after the normal PlatformSDK include.
+		You change the order of the paths by clicking the up and down arrows.</p>
+
+		<note>The order in which the directories appear on your path is important. Your
+		first include path should be <code>..\platformsdk\include</code>. The second one
+		should be <code>..\platformsdk\include\atl30</code>.</note>
+		</s3>
+
+		<s3 title="Building COM module for &XercesCName;">
+		<p>Once you have set up your machine, build &XercesCName; COM module
+		by choosing the project named 'xml4com' inside the workspace. Then select your
+		build mode to be <em>xml4com - Win32 Release MinDependency</em>. Finally build the
+		project. This will produce a DLL named <code>xerces-com.dll</code> which needs
+		to be present in your path (on local machine) before you can use it.</p>
+		</s3>
+
+		<s3 title="Testing the COM module">
+		<p>There are some sample test programs in the <code>test/COMTest</code>
+		directory which show examples of navigating and searching an XML tree
+		using DOM. You need to browse the HTML files in this directory using
+		IE 5.0. Make sure that your build has worked properly, specially the
+		registration of the ActiveX controls that happens in the final step.</p>
+		</s3>
+
+    </s2>
+
 
     <anchor name="BuildDocs"/>
     <s2 title="How to build the User Documentation?">
