@@ -600,8 +600,8 @@ ifeq (${PLATFORM}, MACOSX)
     endif
     SHLIBSUFFIX=.dylib
     ICUSHLIBSUFFIX=.dylib
-    LD_SONAME = -install_name ${SO_NAME}
-    LD_SODEPDOM = -install_name ${SO_DEPDOM}    
+    LD_SONAME = -install_name ${PREFIX}/lib/${SO_NAME}
+    LD_SODEPDOM = -install_name ${PREFIX}/lib/${SO_DEPDOM}    
 endif
 
 #=============== CygWin SPECIFIC OPTIONS =========================
