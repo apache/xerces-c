@@ -222,7 +222,6 @@
             <Message Id="Reader_CantCreateCvtrFor" Text="Could not create a converter for encoding: {0}"/>
             <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
             <Message Id="Reader_EOIInMultiSeq" Text="End of input was hit in the middle of a multibyte sequence"/>
-            <Message Id="Reader_EncodingNeedsCvtr" Text="This encoding ({0})should have had a transcoder"/>
             <Message Id="Reader_BadUTF8Seq" Text="Invalid second byte of a UTF-8 character sequence"/>
             <Message Id="Reader_BadSurrogateInUTF8" Text="Invalid surrogate character found in UTF-8 data"/>
             <Message Id="Reader_SrcOfsNotSupported" Text="The current transcoding service does not support source offset information"/>
