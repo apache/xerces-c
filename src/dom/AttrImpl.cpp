@@ -79,7 +79,11 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
 {
     name = other.name.clone();
 	
-    specified(true);
+	if (other.specified())
+		specified(true);
+	else
+		specified(false);
+
     if (other.idAttr())
     {
         idAttr(true);
