@@ -244,6 +244,14 @@ DTDElementDecl::setContentSpec(ContentSpecNode* toAdopt)
 {
     delete fContentSpec;
     fContentSpec = toAdopt;
+
+    // reset formattedModel
+    if (fFormattedModel)
+    {
+        getMemoryManager()->deallocate(fFormattedModel);
+        fFormattedModel = 0;
+    }
+
 }
 
 const XMLCh*

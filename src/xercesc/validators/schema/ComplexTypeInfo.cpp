@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/09/26 18:31:05  peiyongz
+ * Synchronize ContentSpecNode and formattedModel
+ *
  * Revision 1.9  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -266,6 +269,13 @@ void ComplexTypeInfo::setContentSpec(ContentSpecNode* const toAdopt) {
     }
 
     fContentSpec = toAdopt;
+
+    // reset formattedModel
+    if (fFormattedModel)
+    {
+        fMemoryManager->deallocate(fFormattedModel);
+        fFormattedModel = 0;
+    }
 }
 
 void ComplexTypeInfo::setLocator(XSDLocator* const aLocator) {
