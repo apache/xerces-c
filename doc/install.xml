@@ -96,19 +96,22 @@ tar -xvf &XercesCInstallDir;-linux.tar
 		your profile by changing your setup files which can be either .profile or .kshrc.</p>
 
         <p>In addition, you will also need to set the library search path.
-        (LIBPATH on AIX, LD_LIBRARY_PATH on Solaris and Linux, SHLIB_PATH on HP-UX).</p>
+        (LIBPATH on AIX, LD_LIBRARY_PATH on Solaris and Linux, SHLIB_PATH on HP-UX,
+        and DYLD_LIBRARY_PATH on Mac OS X).</p>
 
         <p>For Bourne Shell, K Shell or Bash, type:</p>
 <source>
 export LIBPATH=$XERCESCROOT/lib:$LIBPATH (on AIX)
 export LD_LIBRARY_PATH=$XERCESCROOT/lib:$LD_LIBRARY_PATH (on Solaris, Linux)
-export SHLIB_PATH=$XERCESCROOT/lib:$SHLIB_PATH (on HP-UX)</source>
+export SHLIB_PATH=$XERCESCROOT/lib:$SHLIB_PATH (on HP-UX)
+export DYLD_LIBRARY_PATH=$XERCESCROOT/lib:$DYLD_LIBRARY_PATH (on Mac OS X)</source>
 
     	<p>For C Shell, type:</p>
 <source>
 setenv LIBPATH "$XERCESCROOT/lib:$LIBPATH" (on AIX)
 setenv LD_LIBRARY_PATH "$XERCESCROOT/lib:$LD_LIBRARY_PATH" (on Solaris, Linux)
-setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)</source>
+setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)
+setenv DYLD_LIBRARY_PATH "$XERCESCROOT/lib:$DYLD_LIBRARY_PATH" (Mac OS X)</source>
 
         <p>Besides, if the parser is built with icu message loader (like IBM XML4C binaries),
         or message catalog loader, then you need to create a new environment variable, XERCESC_NLS_HOME
