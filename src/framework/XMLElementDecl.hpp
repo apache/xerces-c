@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/02/26 19:29:13  tng
+ * Schema: add virtual method getURI(), getContentSpec and setContenSpec in XMLElementDecl, and DTDElementDecl.
+ *
  * Revision 1.9  2001/02/26 19:21:30  tng
  * Schema: add parameter prefix in findElem and findAttr.
  *
@@ -100,6 +103,7 @@
 #include <framework/XMLContentModel.hpp>
 
 class XMLValidator;
+class ContentSpecNode;
 
 /**
  *  This class defines the core information of an element declaration. Each
@@ -262,6 +266,14 @@ class XMLPARSER_EXPORT XMLElementDecl
       */
     virtual const XMLCh* getBaseName() const = 0;
 
+    /** Get the URI id of this element type.
+      *
+      * The derived class should return the URI Id of this element.
+      *
+      * @return The URI Id of the element decl, -1 is not applicable.
+      */
+    virtual const int getURI() const = 0;
+
     /** The character data options for this element type
       *
       * The derived class should return an appropriate character data opts value
@@ -297,6 +309,34 @@ class XMLPARSER_EXPORT XMLElementDecl
       * one as declared yet or not.
       */
     virtual bool resetDefs() = 0;
+
+
+    /** Get a pointer to the content spec node
+      *
+      * This method will return a const pointer to the content spec node object
+      * of this element.
+      *
+      * @return A const pointer to the element's content spec node
+      */
+    virtual const ContentSpecNode* getContentSpec() const = 0;
+
+    /** Get a pointer to the content spec node
+      *
+      * This method is identical to the previous one, except that it is non
+      * const.
+      */
+    virtual ContentSpecNode* getContentSpec() = 0;
+
+    /** Set the content spec node object for this element type
+      *
+      * This method will adopt the based content spec node object. This is called
+      * by the actual validator which is parsing its DTD or Schema or whatever
+      * and store it on the element decl object via this method.
+      *
+      * @param  toAdopt This method will adopt the passed content node spec
+      *         object. Any previous object is destroyed.
+      */
+    virtual void setContentSpec(ContentSpecNode* toAdopt) = 0;
 
     //@}
 
@@ -338,6 +378,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @return An enumerated value that indicates the reason why this element
       * was added to the element decl pool.
       */
+
     CreateReasons getCreateReason() const;
 
     /** Get the element decl pool id for this element type
@@ -390,7 +431,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       * content model type object and store it on the element decl object via
       * this method.
       *
-      * @param  newModelToAdopt This method will adop the passed content model
+      * @param  newModelToAdopt This method will adopt the passed content model
       *         object. Any previous object is destroyed.
       */
     void setContentModel(XMLContentModel* const newModelToAdopt);

@@ -66,12 +66,12 @@
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <framework/XMLBuffer.hpp>
-#include <validators/DTD/DTDAttDefList.hpp>
 #include <validators/common/DFAContentModel.hpp>
-#include <validators/DTD/DTDElementDecl.hpp>
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/common/MixedContentModel.hpp>
 #include <validators/common/SimpleContentModel.hpp>
+#include <validators/DTD/DTDAttDefList.hpp>
+#include <validators/DTD/DTDElementDecl.hpp>
 
 
 
@@ -83,8 +83,8 @@ DTDElementDecl::~DTDElementDecl()
 {
     delete fAttDefs;
     delete fAttList;
-    delete [] fBaseName;
     delete fContentSpec;
+    delete [] fBaseName;
     delete [] fQName;
 }
 
@@ -215,6 +215,13 @@ bool DTDElementDecl::resetDefs()
     return true;
 }
 
+void
+DTDElementDecl::setContentSpec(ContentSpecNode* toAdopt)
+{
+    delete fContentSpec;
+    fContentSpec = toAdopt;
+}
+
 
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Getter methods
@@ -236,16 +243,6 @@ DTDAttDef* DTDElementDecl::getAttDef(const XMLCh* const attName)
         return 0;
 
     return fAttDefs->get(attName);
-}
-
-
-// ---------------------------------------------------------------------------
-//  DTDElementDecl: Setter methods
-// ---------------------------------------------------------------------------
-void DTDElementDecl::setContentSpec(ContentSpecNode* toAdopt)
-{
-    delete fContentSpec;
-    fContentSpec = toAdopt;
 }
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/02/26 19:29:21  tng
+ * Schema: add virtual method getURI(), getContentSpec and setContenSpec in XMLElementDecl, and DTDElementDecl.
+ *
  * Revision 1.5  2001/02/26 19:22:02  tng
  * Schema: add parameter prefix in findElem and findAttr.
  *
@@ -144,10 +147,14 @@ public :
     )   const;
     virtual XMLAttDefList& getAttDefList() const;
     virtual const XMLCh* getBaseName() const;
+    virtual const int getURI() const;
     virtual CharDataOpts getCharDataOpts() const;
     virtual const XMLCh* getFullName() const;
     virtual bool hasAttDefs() const;
     virtual bool resetDefs();
+    virtual const ContentSpecNode* getContentSpec() const;
+    virtual ContentSpecNode* getContentSpec();
+    virtual void setContentSpec(ContentSpecNode* toAdopt);
 
 
     // -----------------------------------------------------------------------
@@ -155,8 +162,6 @@ public :
     // -----------------------------------------------------------------------
     const DTDAttDef* getAttDef(const XMLCh* const attName) const;
     DTDAttDef* getAttDef(const XMLCh* const attName);
-    ContentSpecNode* getContentSpec();
-    const ContentSpecNode* getContentSpec() const;
     ModelTypes getModelType() const;
 
 
@@ -164,7 +169,6 @@ public :
     //  Setter methods
     // -----------------------------------------------------------------------
     void addAttDef(DTDAttDef* const toAdd);
-    void setContentSpec(ContentSpecNode* toAdopt);
     void setModelType(const DTDElementDecl::ModelTypes toSet);
     void setName(const XMLCh* const newName);
 
@@ -224,8 +228,8 @@ private :
     RefHashTableOf<DTDAttDef>*  fAttDefs;
     DTDAttDefList*              fAttList;
     XMLCh*                      fBaseName;
-    ContentSpecNode*            fContentSpec;
     XMLCh*                      fQName;
+    ContentSpecNode*            fContentSpec;
     ModelTypes                  fModelType;
 };
 
@@ -260,16 +264,17 @@ DTDElementDecl::DTDElementDecl( const   XMLCh* const                elemName
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: XMLElementDecl virtual interface implementation
 // ---------------------------------------------------------------------------
+inline const int DTDElementDecl::getURI() const
+{
+   return -1;
+}
+
 inline const XMLCh* DTDElementDecl::getFullName() const
 {
     // Just return our QName
     return fQName;
 }
 
-
-// ---------------------------------------------------------------------------
-//  DTDElementDecl: Getter methods
-// ---------------------------------------------------------------------------
 inline ContentSpecNode* DTDElementDecl::getContentSpec()
 {
     return fContentSpec;
@@ -280,6 +285,10 @@ inline const ContentSpecNode* DTDElementDecl::getContentSpec() const
     return fContentSpec;
 }
 
+
+// ---------------------------------------------------------------------------
+//  DTDElementDecl: Getter methods
+// ---------------------------------------------------------------------------
 inline DTDElementDecl::ModelTypes DTDElementDecl::getModelType() const
 {
     return fModelType;
