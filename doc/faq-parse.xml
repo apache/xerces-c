@@ -432,8 +432,8 @@ catch (const XMLException&amp; toCatch) {
       aren't really leaks in most application, in that the memory usage does not grow over
       time as the XML parser is used and re-used.</p>
 
-      <p>What you are seeing as leaks are infact lazily evaluated data allocated into
-      static variables. It gets relesed when the application ends. Now you can  make a call
+      <p>What you are seeing as leaks are actually lazily evaluated data allocated into
+      static variables. It gets released when the application ends. Now you can  make a call
       to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated
       variables before you exit your program.</p>
     </a>

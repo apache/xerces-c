@@ -19,7 +19,7 @@
     <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
     <li><link anchor="BuildUsingLibWWW">How can I generate Xerces-C binaries which includes the
                sample NetAccessor implementation using Libwww?</link></li>
-    <li><link anchor="BuildSingleThreadedLibrary">How do build a single threaded library on
+    <li><link anchor="BuildSingleThreadedLibrary">How do I build a single threaded library on
     		Unix platforms?</link></li>
     <li><link anchor="LookForHelp">Where can I look for more help?</link></li>
   </ul>
@@ -1174,12 +1174,11 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
     </s2>
 
     <anchor name="BuildSingleThreadedLibrary"/>
-        <s2 title="How do build a single threaded library on Unix platforms?">
+        <s2 title="How do I build a single-threaded library on Unix platforms?">
 
-         <p>To make a single threaded library on Unix platforms you might have to update
-         one or more of <code>Makefile.incl, Makefile.in, runConfigure</code> scripts.
-         The following steps for each platform guides you to create a single threaded
-         library for Xerces project:</p>
+         <p>To build a single-threaded library on Unix platforms you have to update
+         one or more of the following files <code>Makefile.incl, Makefile.in, runConfigure</code>.
+         The following steps guide you to create a single-threaded library for each platform:</p>
 
          <p>For Aix - </p>
          <ul>
@@ -1187,36 +1186,37 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
          	<code>xlc</code> and <code>xlC</code> respectively</li>
          <li>Replace <code>makeC++SharedLib_r</code> with <code>makeC++SharedLib</code></li>
          <li>Remove the flag <code>-D_THREAD_SAFE</code></li>
-         <li>Remove inclusion to any threaded libarries from the <code>LIBPATH</code></li>
+         <li>Remove inclusion of any threaded library directories from the <code>LIBPATH</code></li>
          <li>Remove inclusion of <code>-lpthreads</code> and <code>-lpthread_compat</code></li>
-         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under AIX specific options
+         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under AIX specific options
                   in <code>Makefile.incl</code></li>
          </ul>
 
         <p>For Solaris -</p>
          <ul>
-          <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under SOLARIS
+          <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under SOLARIS
           	specific options in <code>Makefile.incl</code></li>
-          <li>Remove compiler switches like <code>-mt</code></li>
-          <li>Remove <code>-D_REENTRANT</code> flag from compile options</li>
+          <li>Remove compiler switch <code>-mt</code></li>
+          <li>Remove <code>-D_REENTRANT</code> flag from the 'compile' options</li>
 	  <li>Remove inclusion of <code>-lpthread</code></li>
 	</ul>
 
 	<p>For Linux -</p>
         <ul>
-        <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under LINUX
+         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under LINUX
         	specific options in <code>Makefile.incl</code></li>
-	 <li>Remove <code>-D_REENTRANT</code> flag from compile options</li>
+	 <li>Remove <code>-D_REENTRANT</code> flag from the 'compile' options</li>
 	 <li>Remove inclusion of <code>-lpthread</code></li>
 	</ul>
 
 
 	<p>For HPUX -</p>
         <ul>
-        <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under HP
+         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under HP
         	specific options in <code>Makefile.incl</code></li>
-	<li>Remove inclusion of <code>-lpthread</code> and <code>-lcma</code></li>
-	 <li>Remove threading defines like <code>-D_PTHREADS_DRAFT4 -DXML_USE_DCE</code></li>
+	 <li>Remove inclusion of <code>-lpthread</code> and <code>-lcma</code></li>
+	 <li>Remove threading defines like <code>-D_PTHREADS_DRAFT4 ,
+	 	-DXML_USE_DCE</code></li>
 	</ul>
 
          </s2>
