@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/05/15 16:32:19  gareth
+ * We did not allow dateTimes with a timezone due to the last seconds fix.
+ *
  * Revision 1.8  2003/03/23 22:54:49  peiyongz
  * invalid second values
  *
@@ -1047,7 +1050,7 @@ void XMLDateTime::getTime()
             fValue[MiliSecond] = parseInt(fStart, sign);  //get ms between UTC sign and fEnd
         }
 	}
-    else
+    else if(sign == 0 || sign != fStart)
     {
         // seconds has more than 2 digits
         ThrowXML1(SchemaDateTimeException
