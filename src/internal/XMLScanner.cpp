@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/19 00:55:45  roddey
+ * Changes to get rid of dependence on old utils standard streams classes
+ * and a small fix in the progressive parseFirst() call.
+ *
  * Revision 1.7  2000/01/15 01:26:16  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -127,10 +131,6 @@
 #include <framework/XMLValidityCodes.hpp>
 #include <internal/XMLScanner.hpp>
 #include <internal/EndOfEntityException.hpp>
-
-#if defined(XML4C_DEBUG)
-#include <util/StdOut.hpp>
-#endif
 
 
 
@@ -436,7 +436,15 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
     InputSource* srcToUse = 0;
     try
     {
-        srcToUse = new URLInputSource(XMLUni::fgZeroLenString, systemId);
+        //
+        //  Create a temporary URL. Since this is the primary document,
+        //  it has to be fully qualified. If not, then assume we are just
+        //  mistaking a file for a URL.
+        //
+        XMLURL tmpURL(systemId);
+        if (tmpURL.isRelative())
+            ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+        srcToUse = new URLInputSource(tmpURL);
     }
 
     catch(const MalformedURLException&)

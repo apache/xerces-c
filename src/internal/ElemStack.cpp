@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:04  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:55:45  roddey
+ * Changes to get rid of dependence on old utils standard streams classes
+ * and a small fix in the progressive parseFirst() call.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:04  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:44:41  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -73,11 +77,6 @@
 #include <util/NoSuchElementException.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <internal/ElemStack.hpp>
-
-#if defined(XML4C_DEBUG)
-#include <util/TextOutputStream.hpp>
-#include <framework/XMLValidator.hpp>
-#endif
 
 
 // ---------------------------------------------------------------------------
@@ -430,56 +429,6 @@ void ElemStack::reset(  const   unsigned int    emptyId
     fXMLNamespaceId = xmlId;
     fXMLNSNamespaceId = xmlNSId;
 }
-
-
-
-// ---------------------------------------------------------------------------
-//  ElemStack: Debug only stuff
-// ---------------------------------------------------------------------------
-#if defined(XML4C_DEBUG)
-
-void ElemStack::dumpStacks(TextOutputStream& target, const XMLValidator& srcPools)
-{
-    // Display a simple header
-    target  << "\nElement stack dump:\n"
-            << "-------------------------------------------\n\n";
-
-    //
-    //  Display the stack by nested elements, and the associated namespace
-    //  map for each level. Note that we are only ever tracing a single
-    //  path down through the content, so we don't even bother actually
-    //  indenting them (because the nesting is implicit.)
-    //
-    if (!fStack)
-    {
-        target << "<<Stack is empty>>\n";
-        return;
-    }
-
-    for (int index = fStackTop - 1; index > 0; index--)
-    {
-        // Get the next stack element up the chain
-        const StackElem* curElem = fStack[index];
-
-        target  << "ELEMENT: " << curElem->fThisElement->getFullName() << "\n";
-
-        target  << "    CHILDREN: \n";
-        for (unsigned int childInd = 0; childInd < curElem->fChildCount; childInd++)
-        {
-            // Get the elem decl for this child
-            const XMLElementDecl* child
-                            = srcPools.getElemDecl(curElem->fChildIds[childInd]);
-            target  << "       " << child->getFullName() << "\n";
-        }
-
-        target  << "END ELEMENT\n";
-    }
-
-    target << EndLn;
-}
-
-#endif
-
 
 
 // ---------------------------------------------------------------------------
