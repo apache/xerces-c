@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/01/20 19:28:52  tng
+ * 390: turn on C++ namespace.  Patch from Stephen Dulin.
+ *
  * Revision 1.6  2002/11/04 14:45:20  tng
  * C++ Namespace Support.
  *
@@ -154,7 +157,7 @@
 //  Indicate that we support C++ namespace
 //  Do not define it if the compile cannot handle C++ namespace
 // ---------------------------------------------------------------------------
-// #define XERCES_HAS_CPP_NAMESPACE
+#define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
