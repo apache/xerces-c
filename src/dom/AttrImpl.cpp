@@ -252,7 +252,7 @@ void AttrImpl::setSpecified(bool arg)
 
 
 
-void AttrImpl::setValue(const DOMString &val)
+void AttrImpl::setValue(const DOMString &newvalue)
 {
     if (isReadOnly())
     {
@@ -278,13 +278,16 @@ void AttrImpl::setValue(const DOMString &val)
         }
     }
 
-    if (val != null) {
-        // directly store the string as the value by changing the value field
-        // into a DOMString
-        DOMString *x = (DOMString *) &value;
-        *x = val.clone();
-        hasStringValue(true);
+    // directly store the string as the value by changing the value field
+    // into a DOMString
+    DOMString *x = (DOMString *) &value;
+    if (newvalue != null) {
+        *x = newvalue.clone();
     }
+    else {
+        *x = null;
+    }
+    hasStringValue(true);
     isSpecified(true);
     changed();
     
