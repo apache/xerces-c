@@ -275,7 +275,10 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             # clean up intermediate files to make it rebuildable
             psystem ("del /s /f *.DLL *.dll *.res *.DAT *.lib *.obj");            
             psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
-            system("type buildlog.txt");              
+            system("type buildlog.txt");
+            # to follow 2 digits convention
+            psystem("cp XercesMessages2_6_0.DLL XercesMessages2_6.DLL");
+            psystem("cp XercesMessages2_6_0.lib XercesMessages2_6.lib");            
         }
 
         #
@@ -1187,7 +1190,7 @@ sub change_windows_project_for_ICU() {
        
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1236,7 +1239,7 @@ sub change_windows_makefile_for_ICU() {
 
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1283,7 +1286,7 @@ sub change_windows_project_for_ICU_VC7() {
         
         if ($MsgLoader)
         {
-            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages2_6_0.lib $1/;
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages2_6.lib $1/;
         }        
         elsif ($Transcoder)
         {
