@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/10/15 19:42:16  knoaman
+ * Null-terminate base64Alphabet.
+ *
  * Revision 1.5  2001/10/10 19:14:08  peiyongz
  * Patch from Petr Gotthard : encode() provided and some other changes
  *
@@ -93,7 +96,7 @@ static const int FOURBYTE   = 4;
 // ---------------------------------------------------------------------------
 
 // the base64 alphabet according to definition in RFC 2045
-const XMLCh Base64::base64Alphabet[64] = {
+const XMLCh Base64::base64Alphabet[] = {
     chLatin_A, chLatin_B, chLatin_C, chLatin_D, chLatin_E,
     chLatin_F, chLatin_G, chLatin_H, chLatin_I, chLatin_J,
     chLatin_K, chLatin_L, chLatin_M, chLatin_N, chLatin_O,
@@ -106,7 +109,7 @@ const XMLCh Base64::base64Alphabet[64] = {
     chLatin_t, chLatin_u, chLatin_v, chLatin_w, chLatin_x,
     chLatin_y, chLatin_z, chDigit_0, chDigit_1, chDigit_2,
     chDigit_3, chDigit_4, chDigit_5, chDigit_6, chDigit_7,
-    chDigit_8, chDigit_9, chPlus, chForwardSlash
+    chDigit_8, chDigit_9, chPlus, chForwardSlash, chNull
 };
 const XMLCh Base64::base64Padding = chEqual;
 
