@@ -4459,15 +4459,10 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
     if (baseValidator == 0) {
         reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::UnknownBaseDatatype, baseTypeName, derivedTypeName);
     }
-    else {
+    else if ((baseValidator->getFinalSet() & baseRefContext) != 0) {
 
-        int finalSet = baseValidator->getFinalSet();
-
-        if (finalSet !=0  && ((finalSet & baseRefContext) != 0)) {
-
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisallowedBaseDerivation, baseTypeName);
-            return 0;
-        }
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisallowedBaseDerivation, baseTypeName);
+        return 0;
     }
 
     return baseValidator;
