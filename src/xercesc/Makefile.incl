@@ -508,14 +508,25 @@ else
         SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
         REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
     else
-        #
-        # LINK_NAME=libxerces-c.so
-        # SO_NAME  =libxerces-c.so.20
-        # REAL_NAME=libxerces-c.so.20.0
-        #
-        LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-        SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
-        REAL_NAME=${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
+		ifeq (${PLATFORM}, CYGWIN)
+			#
+			# LINK_NAME=libxerces-c.dll
+			# SO_NAME  =libxerces-c20.dll
+			# REAL_NAME=libxerces-c2_0_0.dll
+			#
+			LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+			SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+			REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
+		else
+			#
+			# LINK_NAME=libxerces-c.so
+			# SO_NAME  =libxerces-c.so.20
+			# REAL_NAME=libxerces-c.so.20.0
+			#
+			LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+			SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+			REAL_NAME=${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
+		endif
     endif
 endif
 

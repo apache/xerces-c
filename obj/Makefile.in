@@ -192,7 +192,14 @@ ifeq (${OS390BATCH},1)
 	@echo "Nothing to do for OS390BATCH ..."
 else
 	-mkdir -p ${PREFIX}/lib
+ifeq (${PLATFORM}, CYGWIN)
+	-mkdir -p ${PREFIX}/bin
+	$(CP) ${FQ_LINK_NAME} ${PREFIX}/bin
+	rm -rf ${PREFIX}/lib/${LINK_NAME} && \
+	ln -s ${PREFIX}/bin/${LINK_NAME} ${PREFIX}/lib/${LINK_NAME}
+else
 	$(CP) ${FQ_REAL_NAME} $(PREFIX)/lib
+endif
 ifeq (${PLATFORM},OS390)
 	$(CP) ${LIBNAME}${VER}${OS390SIDEDECK} $(PREFIX)/lib
 endif
