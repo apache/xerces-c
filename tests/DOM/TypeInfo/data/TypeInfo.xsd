@@ -213,10 +213,12 @@
     <xs:element name="level1unsignedShort" type="xs:unsignedShort" />
     <xs:element name="level1unsignedByte" type="xs:unsignedByte" />
     <xs:element name="level1positiveInteger" type="xs:positiveInteger" />
+    <xs:element name="level1anyType" type="xs:anyType" />
   </xs:sequence>
 </xs:complexType>
 
 <xs:complexType name="attrTestType" >
+  <xs:attribute name="anySimpleType" type="xs:anySimpleType" />
   <xs:attribute name="string" type="xs:string" />
   <xs:attribute name="boolean" type="xs:boolean" />
   <xs:attribute name="decimal" type="xs:decimal" />

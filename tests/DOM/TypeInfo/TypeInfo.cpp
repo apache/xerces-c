@@ -192,6 +192,9 @@ bool TypeInfo::testInBuiltTypesOnAttributes(bool DTDPresent) {
 
     DOMAttr *testAttr;
 
+    testAttr = testEle->getAttributeNodeNS(0, X("anySimpleType"));
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+
     testAttr = testEle->getAttributeNodeNS(0, X("string"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
@@ -463,6 +466,9 @@ bool TypeInfo::testInBuiltTypesOnElements() {
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_POSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+
+    testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
+    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     return passed;
 }

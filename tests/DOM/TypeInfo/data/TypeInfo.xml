@@ -1,6 +1,7 @@
 <!DOCTYPE root SYSTEM "TypeInfo.dtd" >
 <root xsi:noNamespaceSchemaLocation="TypeInfo.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:ss="http://www.secondSchema" >
 <attrTest 
+anySimpleType="asdas"
 string="string"
 boolean="true"
 decimal="2.0"
@@ -87,6 +88,7 @@ xsi:noNamespaceSchemaLocation="hello"
   <level1unsignedShort >1</level1unsignedShort>
   <level1unsignedByte >1</level1unsignedByte>
   <level1positiveInteger >1</level1positiveInteger>
+  <level1anyType />
 </eleTest>
 <simpleDerTest decimalDerived="50" stringDerived="hello" >
   <decimalDerived >20</decimalDerived>

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/08/29 11:44:18  gareth
+ * If a type was explicitly declared as anyType that now gets set in DOMTypeInfo. Added test cases.
+ *
  * Revision 1.11  2003/05/18 14:02:08  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -616,12 +619,8 @@ inline const XMLCh* SchemaElementDecl::getTypeName() const {
     else if(fDatatypeValidator)
         return fDatatypeValidator->getTypeLocalName();
 
-    //its anyType if we have not done validation on it
-    if(getValidationAttempted() == PSVIDefs::NONE)
-        return SchemaSymbols::fgATTVAL_ANYTYPE;
-
-
-    return 0;
+    //its anyType if we have not done validation on it or none of the above exist
+    return SchemaSymbols::fgATTVAL_ANYTYPE;
 }
 
 inline PSVIDefs::Complexity SchemaElementDecl::getTypeType() const {
@@ -644,12 +643,8 @@ inline const XMLCh* SchemaElementDecl::getTypeUri() const {
     else if(fDatatypeValidator)
         return fDatatypeValidator->getTypeUri();
 
-    //its anyType if we have not done validation on it
-    if(getValidationAttempted() == PSVIDefs::NONE)
-        return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
-
-
-    return 0;
+    //its anyType if we have not done validation on it or none of the above exist
+    return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
 }
 
 inline const XMLCh* SchemaElementDecl::getMemberTypeName() const {
@@ -718,7 +713,7 @@ inline bool SchemaElementDecl::getTypeAnonymous() const {
         return fDatatypeValidator->getAnonymous();
     }
 
-    return true;
+    return false;
 }
 
 inline const XMLCh* SchemaElementDecl::getDOMTypeInfoName() const {
