@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 const XMLCh XMLUri::RESERVED_CHARACTERS[] =
 {
     chSemiColon, chForwardSlash, chQuestion, chColon, chAt,
-    chAmpersand, chEqual, chPlus, chDollarSign, chComma, chNull
+    chAmpersand, chEqual, chPlus, chDollarSign, chComma, chOpenSquare,
+    chCloseSquare, chNull
 };
 
 //
@@ -112,6 +113,16 @@ const XMLCh XMLUri::USERINFO_CHARACTERS[] =
     chSemiColon, chColon, chAmpersand, chEqual, chPlus,
     chDollarSign, chPeriod, chNull
 };
+
+//      pchar plus ';' and '/'.
+//      pchar         = unreserved | escaped |
+//                      ":" | "@" | "&" | "=" | "+" | "$" | ","
+const XMLCh XMLUri::PATH_CHARACTERS[] =
+{
+    chSemiColon, chForwardSlash, chColon, chAt, chAmpersand, 
+    chEqual, chPlus, chDollarSign, chComma, chNull
+};
+
 
 // ---------------------------------------------------------------------------
 //  Local methods and data
@@ -397,27 +408,31 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	int index = 0;
 	bool foundScheme = false;
 
-	// Check for scheme, which must be before `/'. Also handle names with
-	// DOS drive letters ('D:'), so 1-character schemes are not allowed.
-    int colonIdx = XMLString::indexOf(trimedUriSpec, chColon);
-    int slashIdx = XMLString::indexOf(trimedUriSpec, chForwardSlash);
+	// Check for scheme, which must be before `/', '?' or '#'. 
+	// Also handle names with DOS drive letters ('D:'), 
+	// so 1-character schemes are not allowed.
+        int colonIdx = XMLString::indexOf(trimedUriSpec, chColon);
+        int slashIdx = XMLString::indexOf(trimedUriSpec, chForwardSlash);
+        int queryIdx = XMLString::indexOf(trimedUriSpec, chQuestion);
+        int fragmentIdx = XMLString::indexOf(trimedUriSpec, chPound);
 
-	if ((colonIdx < 2)                         ||
-        (colonIdx > slashIdx && slashIdx != -1) )
-    {
-        int fragmentIdx = XMLString::indexOf(trimedUriSpec, chPound);  //'#'
-        // A standalone base is a valid URI according to spec
-        if ( !baseURI && fragmentIdx != 0 )
+        if ((colonIdx < 2) ||
+            (colonIdx > slashIdx && slashIdx != -1) ||
+            (colonIdx > queryIdx && queryIdx != -1) ||
+            (colonIdx > fragmentIdx && fragmentIdx != -1))
         {
-            ThrowXML(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme);
+            // A standalone base is a valid URI according to spec
+            if ( colonIdx == 0 || (!baseURI && fragmentIdx != 0) )
+            {
+                ThrowXML(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme);
+            }
         }
-    }
-	else
-    {
-        foundScheme = true;
-	initializeScheme(trimedUriSpec);
-        index = XMLString::stringLen(fScheme)+1;
-    }
+        else
+        {
+            foundScheme = true;
+            initializeScheme(trimedUriSpec);
+            index = XMLString::stringLen(fScheme)+1;
+        }
 
     // It's an error if we stop here
     if (index == trimedUriSpecLen || (foundScheme && (trimedUriSpec[index] == chPound)))
@@ -678,12 +693,12 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 {
 
     int index = 0;
-	int start = 0;
+    int start = 0;
     const int end = XMLString::stringLen(uriSpec);
 
     //
     // server = [ [ userinfo "@" ] hostport ]
-	// userinfo is everything up @,
+    // userinfo is everything up @,
     //
     XMLCh* userinfo = (XMLCh*) fMemoryManager->allocate
     (
@@ -696,7 +711,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     {
         XMLString::subString(userinfo, &(uriSpec[start]), 0, index);
         index++; // skip the @
-		start += index;
+        start += index;
     }
     else
     {
@@ -705,25 +720,41 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
     //
     // hostport = host [ ":" port ]
-	// host is everything up to ':'
+    // host is everything up to ':', or up to 
+    // and including ']' if followed by ':'.
     //
-	XMLCh* host = (XMLCh*) fMemoryManager->allocate
+    XMLCh* host = (XMLCh*) fMemoryManager->allocate
     (
         (end+1) * sizeof(XMLCh)
     );//new XMLCh[end+1];
     ArrayJanitor<XMLCh> hostName(host, fMemoryManager);
-    index = XMLString::indexOf(&(uriSpec[start]), chColon);
+    
+    // Search for port boundary.
+    if (start < end && uriSpec[start] == chOpenSquare)
+    {
+    	index = XMLString::indexOf(&(uriSpec[start]), chCloseSquare);
+    	if (index != -1)
+    	{
+            // skip the ']'
+            index = ((start + index + 1) < end 
+              && uriSpec[start + index + 1] == chColon) ? index+1 : -1;
+    	}
+    }
+    else
+    {
+        index = XMLString::indexOf(&(uriSpec[start]), chColon);
+    }
 
-    if ( index != -1)
+    if ( index != -1 )
     {
         XMLString::subString(host, &(uriSpec[start]), 0, index);
         index++;  // skip the :
-		start +=index;
+        start +=index;
     }
     else
     {
         XMLString::subString(host, &(uriSpec[start]), 0, end-start);
-		start=end;
+        start = end;
     }
 
     // port is everything after ":"
@@ -758,7 +789,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     //
     setHost(host);
     setPort(port);
-	setUserInfo(userinfo);
+    setUserInfo(userinfo);
 }
 
 // scheme = alpha *( alpha | digit | "+" | "-" | "." )
@@ -785,55 +816,111 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
 
 void XMLUri::initializePath(const XMLCh* const uriSpec)
 {
-	if ( !uriSpec )
+    if ( !uriSpec )
     {
         ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
                 , errMsg_PATH);
-	}
+    }
 
-	int index = 0;
-	int start = 0;
+    int index = 0;
+    int start = 0;
     int end = XMLString::stringLen(uriSpec);
-	XMLCh testChar;
+    XMLCh testChar;
 
-	// path - everything up to query string or fragment
-	while (index < end)
+    // path - everything up to query string or fragment
+    if (start < end)
     {
-        testChar = uriSpec[index];
-        if (testChar == chQuestion || testChar == chPound)
+        // RFC 2732 only allows '[' and ']' to appear in the opaque part.
+        if (!getScheme() || uriSpec[start] == chForwardSlash)
         {
-            break;
-        }
-
-        // check for valid escape sequence
-        if (testChar == chPercent)
-        {
-            if (index+2 >= end ||
-                !XMLString::isHex(uriSpec[index+1]) ||
-                !XMLString::isHex(uriSpec[index+2]))
+            // Scan path.
+            // abs_path = "/"  path_segments
+            // rel_path = rel_segment [ abs_path ]
+            while (index < end)
             {
-                XMLString::moveChars(value1, &(uriSpec[index]), 3);
-                value1[3] = chNull;
-                ThrowXML2(MalformedURLException
-                        , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
-                        , errMsg_PATH
-                        , value1);
-            }
-        }
-        else if (!isReservedCharacter(testChar) &&
-                 !isUnreservedCharacter(testChar))
-        {
-            value1[0] = testChar;
-            value1[1] = chNull;
-            ThrowXML2(MalformedURLException
-                    , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
-                    , errMsg_PATH
-                    , value1);
-        }
+                testChar = uriSpec[index];
+                if (testChar == chQuestion || testChar == chPound)
+                {
+                    break;
+                }
 
-        index++;
-    }//while (index < end)
+                // check for valid escape sequence
+                if (testChar == chPercent)
+                {
+                    if (index+2 >= end ||
+                        !XMLString::isHex(uriSpec[index+1]) ||
+                        !XMLString::isHex(uriSpec[index+2]))
+                    {
+                        XMLString::moveChars(value1, &(uriSpec[index]), 3);
+                        value1[3] = chNull;
+                        ThrowXML2(MalformedURLException
+                                , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                                , errMsg_PATH
+                                , value1);
+                    }
+                }
+                else if (!isUnreservedCharacter(testChar) &&
+                         !isPathCharacter(testChar))
+                {
+                    value1[0] = testChar;
+                    value1[1] = chNull;
+                    ThrowXML2(MalformedURLException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+                            , errMsg_PATH
+                            , value1);
+                }
+
+                index++;
+            }//while (index < end)
+        }
+        else
+        {
+            // Scan opaque part.
+            // opaque_part = uric_no_slash *uric
+            while (index < end)
+            {
+                testChar = uriSpec[index];
+                if (testChar == chQuestion || testChar == chPound)
+                {
+                    break;
+                }
+
+                // check for valid escape sequence
+                if (testChar == chPercent)
+                {
+                    if (index+2 >= end ||
+                        !XMLString::isHex(uriSpec[index+1]) ||
+                        !XMLString::isHex(uriSpec[index+2]))
+                    {
+                        XMLString::moveChars(value1, &(uriSpec[index]), 3);
+                        value1[3] = chNull;
+                        ThrowXML2(MalformedURLException
+                                , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                                , errMsg_PATH
+                                , value1);
+                    }
+                }
+                // If the scheme specific part is opaque, it can contain '['
+                // and ']'. uric_no_slash wasn't modified by RFC 2732, which
+                // I've interpreted as an error in the spec, since the 
+                // production should be equivalent to (uric - '/'), and uric
+                // contains '[' and ']'.
+                else if (!isUnreservedCharacter(testChar) &&
+                         !isReservedCharacter(testChar))
+                {
+                    value1[0] = testChar;
+                    value1[1] = chNull;
+                    ThrowXML2(MalformedURLException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+                            , errMsg_PATH
+                            , value1);
+                }
+
+                index++;
+            }//while (index < end)     	
+        }
+    } //if (start < end)
 
     if (getPath())
     {
@@ -843,8 +930,8 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
     fPath = (XMLCh*) fMemoryManager->allocate((index+1) * sizeof(XMLCh));//new XMLCh[index+1];
     XMLString::subString(fPath, uriSpec, start, index);
 
-	// query - starts with ? and up to fragment or end
-	if (testChar == chQuestion)
+    // query - starts with ? and up to fragment or end
+    if (testChar == chQuestion)
     {
         index++;
         start = index;
@@ -870,8 +957,8 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                             , value1);
                 }
             }
-            else if (!isReservedCharacter(testChar) &&
-                     !isUnreservedCharacter(testChar))
+            else if (!isUnreservedCharacter(testChar) &&
+                     !isReservedCharacter(testChar))
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
@@ -895,8 +982,8 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
         XMLString::subString(fQueryString, uriSpec, start, index);
     }
 
-	// fragment - starts with #
-	if (testChar == chPound)
+    // fragment - starts with #
+    if (testChar == chPound)
     {
         index++;
         start = index;
@@ -918,8 +1005,8 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                             , value1);
                 }
             }
-            else if (!isReservedCharacter(testChar) &&
-                     !isUnreservedCharacter(testChar))
+            else if (!isUnreservedCharacter(testChar) &&
+                     !isReservedCharacter(testChar))
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
@@ -1034,8 +1121,7 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
 
 void XMLUri::setHost(const XMLCh* const newHost)
 {
-    if ( !newHost ||
-        XMLString::isAllWhiteSpace(newHost))
+    if ( !newHost )
     {
         if (getHost())
             fMemoryManager->deallocate(fHost);//delete [] fHost;
@@ -1323,34 +1409,35 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
 //  domainlabel   = alphanum | alphanum *( alphanum | "-" ) alphanum
 //  toplabel      = alpha | alpha *( alphanum | "-" ) alphanum
 //
-//  IPv4address   = 1*digit "." 1*digit "." 1*digit "." 1*digit
+//  IPv4address   = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
 //
 bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
 {
-	if (!addrString)
+    // Check that we have a non-zero length string.
+    if (!addrString || !*addrString)
         return false;
-
-    //
-    // check length
-    //
-    XMLCh* tmpAddr = XMLString::replicate(addrString, XMLPlatformUtils::fgMemoryManager);
-    ArrayJanitor<XMLCh>  janName(tmpAddr, XMLPlatformUtils::fgMemoryManager);
-    XMLString::trim(tmpAddr);
-    if ((!tmpAddr || !*tmpAddr) ||
-        (XMLString::stringLen(tmpAddr) > 255) )
-        return false;
-
-    //
-    // the frist letter shall NOT be "." or "-"
-    //
-	if (*addrString == chPeriod ||
-        *addrString == chDash    )
-        return false;
-
-	// rightmost domain label starting with digit indicates IP address
-	// since top level domain label can only start with an alpha
-	// see RFC 2396 Section 3.2.2
+        
+    // Get address length.
     int addrStrLen = XMLString::stringLen(addrString);
+    
+    // Check if the host is a valid IPv6reference.
+    if (*addrString == chOpenSquare)
+    {
+        return isWellFormedIPv6Reference(addrString, addrStrLen);
+    }
+
+    //
+    // Cannot start with a '.', '-', or end with a '-'.
+    //
+    if (*addrString == chPeriod ||
+        *addrString == chDash ||
+        addrString[addrStrLen-1] == chDash)
+        return false;
+
+    // rightmost domain label starting with digit indicates IP address
+    // since top level domain label can only start with an alpha
+    // see RFC 2396 Section 3.2.2
+    
     int lastPeriodPos = XMLString::lastIndexOf(addrString, chPeriod);
 
     // if the string ends with "."
@@ -1369,48 +1456,26 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
 			return false;
     }
 
-	if (XMLString::isDigit(addrString[lastPeriodPos + 1]))
+    if (XMLString::isDigit(addrString[lastPeriodPos + 1]))
     {
-        //
-        // IPv4address   = 1*digit "." 1*digit "." 1*digit "." 1*digit
-        //
-        // make sure that
-        // 1) we see only digits and dot separators,
-        // 2) that any dot separator is preceded and followed by a digit
-        // 3) that we find 3 dots
-
-        int numDots = 0;
-        for (int i = 0; i < addrStrLen; i++)
-        {
-            if (addrString[i] == chPeriod)
-            {
-                if (((i > 0)  &&
-                    (!XMLString::isDigit(addrString[i-1]))) ||
-                    ((i + 1 < addrStrLen) &&
-                    (!XMLString::isDigit(addrString[i+1])))  )
-                {
-                    return false;
-                }
-                numDots++;
-            }
-            else if (!XMLString::isDigit(addrString[i]))
-            {
-                return false;
-            }
-        } //for
-
-        if (numDots != 3)
-        {
-            return false;
-        }
+        return isWellFormedIPv4Address(addrString, addrStrLen);
     } // end of IPv4address
-	else
+    else
     {
         //
         //  hostname      = *( domainlabel "." ) toplabel [ "." ]
         //  domainlabel   = alphanum | alphanum *( alphanum | "-" ) alphanum
         //  toplabel      = alpha | alpha *( alphanum | "-" ) alphanum
-        //
+        
+        // RFC 2396 states that hostnames take the form described in 
+        // RFC 1034 (Section 3) and RFC 1123 (Section 2.1). According
+        // to RFC 1034, hostnames are limited to 255 characters.
+        if (addrStrLen > 255) {
+            return false;
+        }
+        
+        unsigned int labelCharCount = 0;
+        
         // domain labels can contain alphanumerics and '-"
         // but must start and end with an alphanumeric
         for (int i = 0; i < addrStrLen; i++)
@@ -1424,16 +1489,230 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
                 {
                     return false;
                 }
+                labelCharCount = 0;
             }
             else if (!XMLString::isAlphaNum(addrString[i]) &&
                       addrString[i] != chDash)
             {
                 return false;
             }
+            // RFC 1034: Labels must be 63 characters or less.
+            else if (++labelCharCount > 63) {
+                return false;
+            }
         } //for
     }
 
     return true;
+}
+
+//
+//  RFC 2732 amended RFC 2396 by replacing the definition 
+//  of IPv4address with the one defined by RFC 2373.
+//
+//  IPv4address   = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
+//
+bool XMLUri::isWellFormedIPv4Address(const XMLCh* const addr, const int& length)
+{
+    int numDots = 0;
+    int numDigits = 0;
+    
+    //
+    // IPv4address = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
+    //
+    // make sure that
+    // 1) we see only digits and dot separators,
+    // 2) that any dot separator is preceded and followed by a digit
+    // 3) that we find 3 dots
+    // 4) that each segment contains 1 to 3 digits.
+    // 5) that each segment is not greater than 255.
+    
+    for (int i = 0; i < length; ++i)
+    {
+        if (addr[i] == chPeriod)
+        {
+            if (((i > 0)  &&
+                (!XMLString::isDigit(addr[i-1]))) ||
+                ((i + 1 < length) &&
+                (!XMLString::isDigit(addr[i+1])))  )
+            {
+               return false;
+            }
+            numDigits = 0;
+            if (++numDots > 3)
+            {
+                return false;
+            }
+        }
+        else if (!XMLString::isDigit(addr[i]))
+        {
+            return false;
+        }
+        // Check that that there are no more than three digits
+        // in this segment.
+        else if (++numDigits > 3)
+        {
+            return false;
+        }
+        // Check that this segment is not greater than 255.
+        else if (numDigits == 3)
+        {
+            XMLCh first = addr[i-2];
+            XMLCh second = addr[i-1];
+            XMLCh last = addr[i];
+            if (!(first < chDigit_2 || 
+                 (first == chDigit_2 && 
+                 (second < chDigit_5 || 
+                 (second == chDigit_5 && last <= chDigit_5)))))
+            {
+                return false;
+            }
+        }
+    } //for
+    return (numDots == 3);
+}
+
+//
+//  IPv6reference = "[" IPv6address "]"
+//
+bool XMLUri::isWellFormedIPv6Reference(const XMLCh* const addr, const int& length)
+{
+    int index = 1;
+    int end = length-1;
+    
+    // Check if string is a potential match for IPv6reference.
+    if (!(length > 2 && addr[0] == chOpenSquare && addr[end] == chCloseSquare))
+    {
+        return false;
+    }
+    
+    // Counter for the number of 16-bit sections read in the address.
+    int counter = 0;
+      
+    // Scan hex sequence before possible '::' or IPv4 address.
+    index = scanHexSequence(addr, index, end, counter);
+    if (index == -1) 
+    {
+        return false;
+    }
+    // Address must contain 128-bits of information.
+    else if (index == end) 
+    {
+       return (counter == 8);
+    }
+      
+    if (index+1 < end && addr[index] == chColon) 
+    {
+        if (addr[index+1] == chColon) 
+        {
+            // '::' represents at least one 16-bit group of zeros.
+            if (++counter > 8) 
+            {
+                return false;
+            }
+            index += 2;
+            // Trailing zeros will fill out the rest of the address.
+            if (index == end)
+            {
+                return true;
+            }
+        }
+        // If the second character wasn't ':', in order to be valid,
+        // the remainder of the string must match IPv4Address, 
+        // and we must have read exactly 6 16-bit groups.
+        else 
+        {
+            if (counter == 6)
+            {
+                XMLCh* ipVfour = (XMLCh*) 
+                  XMLPlatformUtils::fgMemoryManager->allocate((length+1) * sizeof(XMLCh));
+                XMLString::subString(ipVfour, addr, index+1, end);
+                ArrayJanitor<XMLCh> janitor(ipVfour, XMLPlatformUtils::fgMemoryManager);
+                int newLength = XMLString::stringLen(ipVfour);
+                return isWellFormedIPv4Address(ipVfour, newLength);
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    else 
+    {
+       return false;
+    }
+      
+    // 3. Scan hex sequence after '::'.
+    int prevCount = counter;
+    index = scanHexSequence(addr, index, end, counter);
+    if (index == -1) 
+    {
+        return false;
+    }
+    // If this is the end of the address then
+    // we've got 128-bits of information.
+    else if (index == end) 
+    {
+        return true;
+    }
+
+    // The address ends in an IPv4 address, or it is invalid. 
+    // scanHexSequence has already made sure that we have the right number of bits. 
+    XMLCh* ipVfour = 
+      (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate((length+1) * sizeof(XMLCh));
+    XMLString::subString(ipVfour, addr, (counter > prevCount) ? index+1 : index, end);
+    ArrayJanitor<XMLCh> janitor(ipVfour, XMLPlatformUtils::fgMemoryManager);
+    int newLength = XMLString::stringLen(ipVfour);
+    return isWellFormedIPv4Address(ipVfour, newLength);
+}
+
+//
+//  For use with isWellFormedIPv6Reference only.
+//
+int XMLUri::scanHexSequence (const XMLCh* const addr, int index, int end, int& counter)
+{
+    XMLCh testChar = chNull;
+    int numDigits = 0;
+    int start = index;
+      
+    // Trying to match the following productions:
+    // hexseq = hex4 *( ":" hex4)
+    // hex4   = 1*4HEXDIG
+    for (; index < end; ++index)
+    {
+      	testChar = addr[index];
+      	if (testChar == chColon)
+      	{
+      	    // IPv6 addresses are 128-bit, so there can be at most eight sections.
+      	    if (numDigits > 0 && ++counter > 8)
+      	    {
+      	        return -1;
+      	    }
+      	    // This could be '::'.
+      	    if (numDigits == 0 || ((index+1 < end) && addr[index+1] == chColon))
+      	    {
+      	        return index;
+      	    }
+      	    numDigits = 0;
+        }
+        // This might be invalid or an IPv4address. If it's potentially an IPv4address,
+        // backup to just after the last valid character that matches hexseq.
+        else if (!XMLString::isHex(testChar))
+        {
+            if (testChar == chPeriod && numDigits < 4 && numDigits > 0 && counter <= 6)
+            {
+                int back = index - numDigits - 1;
+                return (back >= start) ? back : start;
+            }
+            return -1;
+        }
+        // There can be at most 4 hex digits per group.
+        else if (++numDigits > 4)
+        {
+            return -1;
+        }
+    }
+    return (numDigits > 0 && ++counter <= 8) ? end : -1;
 }
 
 bool XMLUri::isGenericURI()

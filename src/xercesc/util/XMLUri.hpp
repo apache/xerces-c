@@ -57,6 +57,32 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/07/25 10:15:16  gareth
+ * Patch by Michael Glavassevich
+ *
+ * The patch fixes Bugzilla #19787, #20006, #20009, #20010 and #20287, and
+ * several other issues. A summary of the changes is listed below:
+ *
+ * 1. Added '[' and ']' to reserved characters as per RFC 2732.
+ * 2. '[' and ']' added in RFC 2732, are not allowed in path segments, but
+ * may appear in the opaque part.
+ * 3. No URI can begin with a ':'.
+ * 4. URI has no scheme if ':' occurs in a URI after '?' or '#', it's part of
+ * the query string or fragment.
+ * 5. Whitespace (even escaped as %20) is not permitted in the authority
+ * portion of a URI.
+ * 6. IPv4 addresses must match 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "."
+ * 1*3DIGIT. Since RFC 2732.
+ * 7. IPv4 addresses are 32-bit, therefore no segment may be larger than 255.
+ * This isn't expressed by the grammar.
+ * 8. Hostnames cannot end with a '-'.
+ * 9. Labels in a hostname must be 63 bytes or less [RFC 1034].
+ * 10. Hostnames may be no longer than 255 bytes [RFC 1034]. (That
+ * restriction was already there. I just moved it inwards.
+ * 11. Added support for IPv6 references added in RFC 2732. URIs such as
+ * http://[::ffff:1.2.3.4] are valid. The BNF in RFC 2373 isn't correct. IPv6
+ * addresses are read according to section 2.2 of RFC 2373.
+ *
  * Revision 1.9  2003/05/16 06:01:53  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -342,6 +368,7 @@ private:
     static const XMLCh MARK_CHARACTERS[];
     static const XMLCh SCHEME_CHARACTERS[];
     static const XMLCh USERINFO_CHARACTERS[];
+    static const XMLCh PATH_CHARACTERS[];
 
     //helper method for getUriText
     void buildFullText();
@@ -356,6 +383,13 @@ private:
      * @return true if the string contains any reserved characters
      */
     static bool isReservedCharacter(const XMLCh theChar);
+    
+    /**
+     * Determine whether a character is a path character:
+     *
+     * @return true if the character is path character
+     */
+    static bool isPathCharacter(const XMLCh theChar);
 
     /**
      * Determine whether a char is an unreserved character.
@@ -381,10 +415,13 @@ private:
     static void isConformantUserInfo(const XMLCh* const userInfo);
     /**
      * Determine whether a string is syntactically capable of representing
-     * a valid IPv4 address or the domain name of a network host.
+     * a valid IPv4 address, IPv6 reference or the domain name of a network host.
      *
      * A valid IPv4 address consists of four decimal digit groups
      * separated by a '.'.
+     *
+     * See RFC 2732 Section 3, and RFC 2373 Section 2.2, for the 
+     * definition of IPv6 references.
      *
      * A hostname consists of domain labels (each of which must begin and
      * end with an alphanumeric but may contain '-') separated by a '.'.
@@ -394,6 +431,49 @@ private:
      *              or hostname
      */
      static bool isWellFormedAddress(const XMLCh* const addr);
+     
+    /**
+     * Determines whether a string is an IPv4 address as defined by 
+     * RFC 2373, and under the further constraint that it must be a 32-bit
+     * address. Though not expressed in the grammar, in order to satisfy 
+     * the 32-bit address constraint, each segment of the address cannot 
+     * be greater than 255 (8 bits of information).
+     *
+     * @return true if the string is a syntactically valid IPv4 address
+     */
+     static bool isWellFormedIPv4Address(const XMLCh* const addr, const int& length);
+     
+    /**
+     * Determines whether a string is an IPv6 reference as defined
+     * by RFC 2732, where IPv6address is defined in RFC 2373. The 
+     * IPv6 address is parsed according to Section 2.2 of RFC 2373,
+     * with the additional constraint that the address be composed of
+     * 128 bits of information.
+     *
+     * Note: The BNF expressed in RFC 2373 Appendix B does not 
+     * accurately describe section 2.2, and was in fact removed from
+     * RFC 3513, the successor of RFC 2373.
+     *
+     * @return true if the string is a syntactically valid IPv6 reference
+     */
+     static bool isWellFormedIPv6Reference(const XMLCh* const addr, const int& length);
+     
+    /**
+     * Helper function for isWellFormedIPv6Reference which scans the 
+     * hex sequences of an IPv6 address. It returns the index of the 
+     * next character to scan in the address, or -1 if the string 
+     * cannot match a valid IPv6 address. 
+     *
+     * @param address the string to be scanned
+     * @param index the beginning index (inclusive)
+     * @param end the ending index (exclusive)
+     * @param counter a counter for the number of 16-bit sections read
+     * in the address
+     *
+     * @return the index of the next character to scan, or -1 if the
+     * string cannot match a valid IPv6 address
+     */
+     static int scanHexSequence (const XMLCh* const addr, int index, int end, int& counter);
 
     /**
      * Get the indicator as to whether this URI uses the "generic URI"
@@ -539,6 +619,11 @@ inline const XMLCh* XMLUri::getUriText() const
 inline bool XMLUri::isReservedCharacter(const XMLCh theChar)
 {
     return (XMLString::indexOf(RESERVED_CHARACTERS, theChar) != -1);
+}
+
+inline bool XMLUri::isPathCharacter(const XMLCh theChar)
+{
+    return (XMLString::indexOf(PATH_CHARACTERS, theChar) != -1);
 }
 
 inline bool XMLUri::isUnreservedCharacter(const XMLCh theChar)
