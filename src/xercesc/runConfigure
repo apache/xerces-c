@@ -81,20 +81,31 @@
 
 usage()
 {
-    echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
+    echo "runConfigure: Helper script to run \"configure\" for one of the 
+              supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'netbsd', 'solaris',
-            'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
-            'ptx', 'tru64', 'macosx', 'cygwin', 'qnx')"
-    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc)"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, , QCC, icc or ecc)"
-    echo "       -d (specifies that you want to build debug version)"
-    echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
-    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 'Uniconv390', 'IconvFBSD', 'IconvGNU' or 'native'"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'"
-    echo "       -b <bitsToBuild> (accepts '64', '32')"
+    echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 
+            'netbsd', 'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware', 
+            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx')
+            [required; no default]"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc) 
+            [default is make default; cc for gnu make]"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, QCC, 
+            icc or ecc) [default is make default; g++ for gnu make]"
+    echo "       -d (specifies that you want to build debug version)
+            [default: no debug]"
+    echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 
+            'iconv' [default: inmem]"
+    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 
+            'native' [default: socket]"
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 
+             'Uniconv390', 'IconvFBSD', 'IconvGNU' or 'native'
+             [default: native]"
+    echo "       -r <thread option> can be 'pthread' or 'dce' 
+             (AIX, HP-11, and Solaris) or  'sproc' (IRIX) or 'none'
+             [default: pthread]"
+    echo "       -b <bitsToBuild> (accepts '64', '32')"   [default: 32]
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
@@ -111,12 +122,16 @@ fi
 
 if test ${XERCESCROOT}o = "o"; then
    echo ERROR : You have not set your XERCESCROOT environment variable
-   echo Though this environment variable has nothing to do with creating makefiles,
-   echo this is just a general warning to prevent you from pitfalls in future. Please
-   echo set an environment variable called XERCESCROOT to indicate where you installed
-   echo the XERCES-C files, and run this command again to proceed. See the documentation
-   echo for an example if you are still confused.
-   exit ${ERROR_EXIT_CODE}
+   echo Though this environment variable has nothing to do with creating 
+   echo makefiles, this is just a general warning to prevent you from 
+   echo pitfalls in future. To use this script other than for -h output please
+   echo set an environment variable called XERCESCROOT to indicate where you 
+   echo installed the XERCES-C files, and run this command again to proceed. 
+   echo See the documentation for an example if you are still confused.
+   if test $1 != "-h"; then
+     exit ${ERROR_EXIT_CODE}
+   fi
+   echo 
 fi
 
 if test $1 = "-h"; then

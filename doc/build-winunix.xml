@@ -139,7 +139,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 		couple of notable exceptions, &XercesCName; on Cygwin is built using
 		the same instructions as the UNIX platforms.  The build environment
 		variable XERCESCROOT must be set to the proper path containing the
-		&XercesCName; sources and runConfigure must be run with the
+		&XercesCName; sources and <em>runConfigure</em> must be run with the
 		"-pcygwin -cgcc -xg++" arguments.</p>
 	
 		<p>Note that Cygwin is different from the UNIX platforms in the way
@@ -178,8 +178,9 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
         not to use these scripts and use
         <jump href="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</jump> and
         <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump>
-        directly, but we want to make sure you know what you are by-passing and
-        what risks you are taking. So read the following instructions
+        directly, but we want to make sure you 
+        <jump href="#runConfigure-example">know what you are by-passing</jump>
+        and what risks you are taking. So read the following instructions
         carefully before attempting to build it yourself.</p>
 
         <p>Besides having all necessary build tools, you also need to know what
@@ -248,7 +249,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
         within the various UNIX flavors the world has been bestowed with.
         The one difference that you need to watch out in the discussion below,
         pertains to the system environment variable for finding libraries.
-        On <em>Linux and Solaris</em>, the environment variable name is called
+        On <em>Linux</em> and <em>Solaris</em>, the environment variable name is called
         <code>LD_LIBRARY_PATH</code>, on <em>AIX</em> it is <code>LIBPATH</code>,
         on <em>Mac OS X</em> it is <code>DYLD_LIBRARY_PATH</code>,
         while on <em>HP-UX</em> it is <code>SHLIB_PATH</code>. The following
@@ -291,11 +292,12 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 autoconf</source>
 
             <p>This generates a shell-script called <code>configure</code>. It is tempting to run
-            this script directly as is normally the case, but wait a minute. If you are
+            this script directly as is normally the case, but wait a minute. 
+Even if you are
             using the default compilers like
             <jump href="http://www.gnu.org/software/gcc/gcc.html">gcc</jump> and
-            <jump href="http://www.gnu.org/software/gcc/gcc.html">g++</jump> you do not have a problem. But
-            if you are not on the standard GNU compilers, you need to export a few more
+            <jump href="http://www.gnu.org/software/gcc/gcc.html">g++</jump> 
+            you need to export a few more
             environment variables before you can invoke configure.</p>
 
             <p>Rather than make you to figure out what strange environment
@@ -309,17 +311,27 @@ autoconf</source>
 runConfigure: Helper script to run "configure" for one of the supported platforms
 Usage: runConfigure "options"
        where options may be any of the following:
-       -p &lt;platform&gt; (accepts 'aix', 'linux', 'freebsd', 'solaris',
-            'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
-            'ptx', 'tru64', 'macosx')
+       -p &lt;platform&gt; (accepts 'aix', 'linux', 'freebsd', 
+            'netbsd', 'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware', 
+            'os400', 'irix', 'ptx', 'tru64', 'macosx, 'cygwin', 'qnx') 
+            [required: no default]
        -c &lt;C compiler name&gt; (e.g. gcc, cc, xlc_r, icc or ecc)
-       -x &lt;C++ compiler name&gt; (e.g. g++, CC, xlC_r, icc or ecc)
+            [default is make default; cc for gnu make]
+       -x &lt;C++ compiler name&gt; (e.g. g++, CC, aCC, xlC_r, QCC
+            icc or ecc) [default is make default; g++ for gnu make]
        -d (specifies that you want to build debug version)
-       -m &lt;message loader&gt; can be 'inmem', 'icu', 'MsgFile' or 'iconv'
-       -n &lt;net accessor&gt; can be 'fileonly', 'libwww', 'socket' or 'native'
-       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390', 'Uniconv390', 'IconvFBSD' or 'native'
-       -r &lt;thread option&gt; can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'
-       -b &lt;bitsToBuild&gt; (accepts '64', '32')
+            [default: no debug]
+       -m &lt;message loader&gt; can be 'inmem', 'icu', 'MsgFile' or 
+            'iconv' [default: inmem]
+       -n &lt;net accessor&gt; can be 'fileonly', 'libwww', 'socket' or 
+            'native' [default: socket]
+       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390', 
+             'Uniconv390', 'IconvFBSD', 'IconvGNU' or 'native'
+             [default: native]
+       -r &lt;thread option&gt;  can be 'pthread' or 'dce' 
+             (AIX, HP-11, and Solaris) or  'sproc' (IRIX) or 'none'
+             [default: pthread]
+       -b &lt;bitsToBuild&gt; (accepts '64', '32') [default: 32]
        -l &lt;extra linker options&gt;
        -z &lt;extra compiler options&gt;
        -P &lt;install-prefix&gt;
@@ -331,11 +343,24 @@ Usage: runConfigure "options"
             dependent on International Components for Unicode (ICU). For simplicity,
             the following discussion only explains standalone builds.</note>
 
+            <anchor name="runConfigure-example"/>
+            <p>Some additional explanation may be helpful for some of the options:</p>
+           <ul><li><em>-m &lt;message loader&gt;, -t &lt;transcoder&gt; </em>
+               <br />If you specify <code>icu</code> as the value for either of
+                   these options, you must already have set the
+                  environment variable ICUROOT</li>
+               <li><em>-n &lt;net accessor&gt;</em>
+               <br />The default value <code>socket</code> handles HTTP URL's.
+               The value <code>native</code> is only supported for macosx.
+               </li>
+            </ul>
             <p>One of the common ways to build &XercesCName; is as follows:</p>
 
 <source>runConfigure -plinux -cgcc -xg++ -minmem -nsocket -tnative -rpthread</source>
 
-            <p>The response will be something like this:</p>
+            <p>The response will be something like the following (extra line 
+             breaks have been added for readability).  See especially the end,
+             which tells you how <em>configure</em> was invoked.</p>
 <source>
 Generating makefiles with the following options ...
 Platform: linux
@@ -353,13 +378,21 @@ Debug is OFF
 
 creating cache ./config.cache
 checking for gcc... gcc
-checking whether the C compiler (gcc   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET       ) works... yes
-checking whether the C compiler (gcc   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET       ) is a cross-compiler... no
+checking whether the C compiler 
+  (gcc   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS 
+         -DXML_USE_NETACCESSOR_SOCKET       ) works... yes
+checking whether the C compiler 
+  (gcc   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS 
+         -DXML_USE_NETACCESSOR_SOCKET       ) is a cross-compiler... no
 checking whether we are using GNU C... yes
 checking whether gcc accepts -g... yes
 checking for c++... g++
-checking whether the C++ compiler (g++   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET      ) works... yes
-checking whether the C++ compiler (g++   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET      ) is a cross-compiler... yes
+checking whether the C++ compiler 
+  (g++   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS 
+         -DXML_USE_NETACCESSOR_SOCKET      ) works... yes
+checking whether the C++ compiler 
+  (g++   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS 
+         -DXML_USE_NETACCESSOR_SOCKET      ) is a cross-compiler... yes
 checking whether we are using GNU C++... yes
 checking whether g++ accepts -g... yes
 checking for a BSD compatible install... /usr/bin/install -c
@@ -433,8 +466,10 @@ export THREADS="pthread"
 export BITSTOBUILD="32"
 export CC="gcc"
 export CXX="g++"
-export CXXFLAGS=" -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET "
-export CFLAGS=" -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET "
+export CXXFLAGS=" -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER 
+                  -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET "
+export CFLAGS=" -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER 
+                -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET "
 export LDFLAGS=" "
 export LIBS=" -lpthread "
 configure
@@ -479,14 +514,19 @@ gmake</source>
 runConfigure: Helper script to run "configure" for one of the supported platforms
 Usage: runConfigure "options"
        where options may be any of the following:
-       -p &lt;platform&gt; (accepts 'aix', 'linux', 'freebsd', 'solaris',
-                 'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
-                 'ptx', 'tru64', 'macosx')
+       -p &lt;platform&gt; (accepts 'aix', 'beos', 'linux', 'freebsd', 'netbsd',
+                 'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware', 
+                 'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin')
+                 [required; no default]
        -c &lt;C compiler name&gt; (e.g. gcc, cc, xlc_r, icc or ecc)
-       -x &lt;C++ compiler name&gt; (e.g. g++, CC, xlC_r, icc or ecc)
-       -d (specifies that you want to build debug version)
-       -r &lt;thread option&gt; can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'
-       -b &lt;bitsToBuild&gt; (accepts '64', '32')
+                 [default is make default; cc for gnu make]
+       -x &lt;C++ compiler name&gt; (e.g. g++, CC, aCC, xlC_r, QCC, 
+                 icc or ecc)  [default is make default; g++ for gnu make]
+       -d (specifies that you want to build debug version) [default: not debug]
+       -r &lt;thread option&gt; can be 'pthread' or 'dce' 
+             (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'
+             [default: pthread]
+       -b &lt;bitsToBuild&gt; (accepts '64', '32') [default: 32]
        -l &lt;extra linker options&gt;
        -z &lt;extra compiler options&gt;
        -h (get help on the above commands)
@@ -546,5 +586,4 @@ Usage: runConfigure "options"
         -DXML_USE_DCE</code></li>
     </ul>
    </s2>
-
 </s1>

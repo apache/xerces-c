@@ -82,14 +82,19 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'netbsd', 'solaris',
-                 'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
-                 'ptx', 'tru64', 'macosx', 'cygwin')"
+    echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'netbsd',
+            'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware',
+            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin')
+            [required: no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
+    echo "            [default is make default; cc for gnu make]"
     echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, icc or ecc)"
-    echo "       -d (specifies that you want to build debug version)"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'"
-    echo "       -b <bitsToBuild> (accepts '64', '32')"
+    echo "            [default is make default; g++ for gnu make]"
+    echo "       -d (specifies that you want to build debug version) [default: not debug]"
+    echo "       -r <thread option> can be 'pthread' or 'dce'
+            (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'
+            [default: pthread]"
+    echo "       -b <bitsToBuild> (accepts '64', '32') [default: 32]"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -h (get help on the above commands)"
@@ -109,7 +114,10 @@ if test ${XERCESCROOT}o = "o"; then
    echo set an environment variable called XERCESCROOT to indicate where you installed
    echo the XERCES-C files, and run this command again to proceed. See the documentation
    echo for an example if you are still confused.
-   exit ${ERROR_EXIT_CODE}
+   if test $1 != "-h"; then
+     exit ${ERROR_EXIT_CODE}
+   fi
+   echo
 fi
 
 if test $1 = "-h"; then
