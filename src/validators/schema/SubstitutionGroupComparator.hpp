@@ -149,3 +149,4 @@ inline SubstitutionGroupComparator::~SubstitutionGroupComparator()
 /**
   * End of file SubstitutionGroupComparator.hpp
   */
+

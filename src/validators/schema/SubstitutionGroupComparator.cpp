@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/28 20:55:42  tng
+ * Schema: Null pointer checking in SubsitutionGropuComparator
+ *
  * Revision 1.3  2001/05/11 13:27:37  tng
  * Copyright update.
  *
@@ -89,6 +92,9 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
     }
 
     unsigned int uriId = anElement.getURI();
+    if (uriId == XMLContentModel::gEOCFakeId || uriId == XMLContentModel::gEpsilonFakeId)
+        return false;
+
     const XMLCh* uri = fStringPool->getValueForId(uriId);
     const XMLCh* localpart = anElement.getLocalPart();
 
@@ -103,10 +109,13 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
         return false;
 
     SchemaGrammar *sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
-    if (!sGrammar)
+    if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
         return false;
 
     SchemaElementDecl* pElemDecl = (SchemaElementDecl*) sGrammar->getElemDecl(uriId, localpart, 0, Grammar::TOP_LEVEL_SCOPE);
+    if (!pElemDecl)
+        return false;
+
     SchemaElementDecl* anElementDecl = pElemDecl;     // to preserve the ElementDecl for anElement
     XMLCh* substitutionGroupFullName = pElemDecl->getSubstitutionGroupName();
     bool foundIt = false;
@@ -128,7 +137,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
             return false;
 
         sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(tmpURI);
-        if (!sGrammar)
+        if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
             return false;
 
         uriId = fStringPool->addOrFind(tmpURI);
@@ -190,3 +199,4 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
 /**
   * End of file SubstitutionGroupComparator.cpp
   */
+
