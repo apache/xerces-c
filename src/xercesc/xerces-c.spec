@@ -10,7 +10,6 @@ Version:	2.1.0
 Release:	2
 URL:		http://xml.apache.org/xerces-c/
 Source0:	%{name}-src%{tarversion}.tar.gz
-Patch:		%{name}-src%{tarversion}-make.patch
 Copyright:	Apache
 Group:		Libraries
 BuildRoot:	%{_tmppath}/%{name}-root
@@ -44,7 +43,6 @@ manipulating, and validating XML documents.
 
 %prep
 %setup -q -n %{name}-src%{tarversion}
-%patch -p1
 
 %build
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src%{tarversion}
