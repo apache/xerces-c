@@ -137,13 +137,13 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XML_OBJ_DIR) ${LDFLAGS}
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = -mt -licuuc -licudata ${LIBS}
+        ALLLIBS = -mt ${LIBS} -licuuc -licudata
     else
         ALLLIBS = -mt ${LIBS}
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
-        ALLLIBS = -mt -licuuc -licudata -lXercesMessages ${LIBS}
+        ALLLIBS = -mt ${LIBS} -licuuc -licudata -lXercesMessages
     endif
 
   endif
@@ -203,7 +203,7 @@ ifeq (${PLATFORM}, OPENSERVER)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -belf -G ${LDFLAGS}
   endif
   ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -licu-uc -licudata
+    ALLLIBS = ${LIBS} -licuuc -licudata
   else
     ALLLIBS = ${LIBS}
   endif
@@ -421,7 +421,7 @@ MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
 ifeq (${TRANSCODER}, ICU)
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -I/usr/local/include
-    ALLLIBS = ${LIBS} -L/usr/local/lib -licuuc -L${ICUROOT} -licudata -lgcc
+    ALLLIBS = ${LIBS} -L/usr/local/lib -L${ICUROOT} -licuuc -licudata -lgcc
 else
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM}
     ALLLIBS = ${LIBS}
@@ -439,7 +439,7 @@ MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
 ifeq (${TRANSCODER}, ICU)
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -I/usr/local/include
-    ALLLIBS = ${LIBS} -L/usr/local/lib -licuuc -L${ICUROOT} -licudata -lgcc
+    ALLLIBS = ${LIBS} -L/usr/local/lib -L${ICUROOT} -licuuc -licudata -lgcc
 else
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM}
     ALLLIBS = ${LIBS}
@@ -629,7 +629,7 @@ ifeq (${PLATFORM}, MACOSX)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -dynamiclib ${LDFLAGS}
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -dynamiclib ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licud ata -lc
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lc
     else
         ALLLIBS = ${LIBS} -L/usr/lib
     endif
@@ -648,7 +648,7 @@ ifeq (${PLATFORM}, CYGWIN)
       MAKE_SHARED = ${CXX} -shared ${LDFLAGS}
       MAKE_SHARED_C = ${CC} -shared ${LDFLAGS}
       ifeq (${TRANSCODER}, ICU)
-              ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc
+              ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lc
       else
               ALLLIBS = ${LIBS} -L/usr/lib
       endif
