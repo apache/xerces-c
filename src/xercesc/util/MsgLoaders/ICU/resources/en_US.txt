@@ -169,6 +169,8 @@ en_US {
 		"For '{0}' to be a member of the substitution group set of '{1}', its {abstract} must be false. " ,
 		"The namespace of element '{0}' must be from the schema namespace. " ,
 		"The {target namespace} of '{0}' must not match 'http://www.w3.org/2001/XMLSchema-instance'. " ,
+		"The namespace declaration is invalid. " ,
+		"Namespace fixup cannot be performed on a DOM Level 1 Node. " ,
 		"E_ End " ,
 		"F_ Start " , 
 		"The parser has encountered more than '{0}' entity expansions in this document; this is the limit imposed by the application. " ,

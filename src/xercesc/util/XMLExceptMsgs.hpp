@@ -4,6 +4,7 @@
 #define ERRHEADER_XMLExcepts
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/DOMError.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
