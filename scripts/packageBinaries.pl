@@ -1530,7 +1530,15 @@ sub change_windows_project_for_ICU() {
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
         $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];
         $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];       
-        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_3_0.lib/g;
+       
+        if ($msgloader)
+        {
+            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_3_0.lib/g;
+        }        
+        elsif ($transcoder)
+        {
+            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
+        }
         
         if ($transcoder)
         {
@@ -1571,7 +1579,15 @@ sub change_windows_makefile_for_ICU() {
 
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
         $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources" /machine:IA64];
-        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_3_0.lib/g;
+
+        if ($msgloader)
+        {
+            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_3_0.lib/g;
+        }        
+        elsif ($transcoder)
+        {
+            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
+        }
             
         if ($transcoder) {
             $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
@@ -1610,7 +1626,15 @@ sub change_windows_project_for_ICU_VC7() {
             }
         $line =~ s/AdditionalIncludeDirectories=\"([^"]*)/AdditionalIncludeDirectories=\"$ICUROOT\\include;$1/;
         $line =~ s/AdditionalLibraryDirectories=\"([^"]*)/AdditionalLibraryDirectories=\"$ICUROOT\\lib;$ICUROOT\\source\\data;$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources;$1/;
-        $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages2_3_0.lib $1/;
+        
+        if ($msgloader)
+        {
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages2_3_0.lib $1/;
+        }        
+        elsif ($transcoder)
+        {
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib $1/;
+        }
 
         if ($transcoder) {
             $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
