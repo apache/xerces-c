@@ -56,9 +56,9 @@
 
 /*
  * $Log$
- * Revision 1.8  2000/06/22 04:20:59  roddey
- * 'Do nothing' comment change to test my ability to commit
- * from home.
+ * Revision 1.9  2000/06/22 04:31:27  roddey
+ * Another do nothing change to make sure I can still commit
+ * from home after changing my password.
  *
  * Revision 1.7  2000/03/02 19:55:46  roddey
  * This checkin includes many changes done while waiting for the
