@@ -439,8 +439,8 @@ else
         esac
         fi
     elif test $platform = "mingw-msys"; then
-        threadingLibs=""
-        threadingDefines=""
+        threadingLibs="-mthreads"
+        threadingDefines="-mthreads"
     fi
 fi
 
