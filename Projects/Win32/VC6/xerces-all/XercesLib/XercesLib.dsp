@@ -1014,14 +1014,6 @@ SOURCE=..\..\..\..\..\src\dom\NameNodeFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeFilterImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\dom\NodeFilterImpl.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\dom\NodeImpl.cpp
 # End Source File
 # Begin Source File
