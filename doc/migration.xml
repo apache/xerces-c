@@ -2,93 +2,54 @@
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Migration">
-    <s2 title="Migrating from &XercesCName; &XercesCVersion152; to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; &XercesCVersion; to &XercesCName; latest code base">
       <p>This document is a discussion of the technical differences between
-      &XercesCName; &XercesCVersion152; code base and the &XercesCName; &XercesCVersion; code base.</p>
+      &XercesCName; &XercesCVersion; code base and the &XercesCName; latest code base.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
-        <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="NewFeatures">New features in &XercesCName; latest code base</link></li>
+        <li><link anchor="API">Public API Changes in &XercesCName; latest code base</link></li>
         <ul>
             <li><link anchor="NewAPI">New Public API</link></li>
-            <li><link anchor="ModifiedAPI">Public API Modified</link></li>
+            <li><link anchor="ModifiedAPI">Modified Public API</link></li>
             <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
         </ul>
       </ul>
     </s2>
 
     <anchor name="NewFeatures"/>
-    <s2 title="New features in &XercesCName; &XercesCVersion;">
+    <s2 title="New features in &XercesCName; latest code base">
       <ul>
-        <li>Full Schema support is available in this release.
-            See <jump href="schema.html">the Schema page</jump> for details.</li>
-        <li>New sample SEnumVal to show how to enumerate the markup decls in a Schema Grammar is added.</li>
+        <li></li>
       </ul>
     </s2>
 
     <anchor name="API"/>
-    <s2 title="Public API Changes in &XercesCName; &XercesCVersion;">
+    <s2 title="Public API Changes in &XercesCName; latest code base">
 
         <p>The following lists the public API changes between the &XercesCName;
-           &XercesCVersion152; and the &XercesCName; &XercesCVersion; releases
+           &XercesCVersion; and the &XercesCName; latest code base releases
            of the parser. </p>
 
         <anchor name="NewAPI"/>
         <s3 title="New Public API">
             <ul>
-              <li>It should not be a fatal error if a schema InputSource is not found.
-                  Add the following new methods:</li>
-                <ul>
-                   <li>const bool InputSource::getIssueFatalErrorIfNotFound() const</li>
-                   <li>void InputSource::setIssueFatalErrorIfNotFound(const bool flag</li>
-                </ul>
-              <li>Allow code to take advantage of the fact that the length of the prefix and
-                  local name are known when constructing the QName.
-                  Add the following new methods:</li>
-                <ul>
-                   <li>void QName::setNPrefix(const XMLCh*, const unsigned int)</li>
-                   <li>void QName::setNLocalPart(const XMLCh*, const unsigned int)</li>
-                </ul>
-              <li>To support schemaLocation and noNamespaceSchemaLocation to be specified outside the
-                  instance document, the following new methods are added:</li>
-              <ul>
-                <li>XMLCh* DOMParser::getExternalSchemaLocation() const</li>
-                <li>XMLCh* DOMParser::getExternalNoNamespaceSchemaLocation() const</li>
-                <li>void DOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)</li>
-                <li>void DOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)</li>
-                <li>XMLCh* IDOMParser::getExternalSchemaLocation() const</li>
-                <li>XMLCh* IDOMParser::getExternalNoNamespaceSchemaLocation() const</li>
-                <li>void IDOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)</li>
-                <li>void IDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)</li>
-                <li>XMLCh* SAXParser::getExternalSchemaLocation() const</li>
-                <li>XMLCh* SAXParser::getExternalNoNamespaceSchemaLocation() const</li>
-                <li>void SAXParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)</li>
-                <li>void SAXParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)</li>
-                <li>and the following properties are recognized by SAX2XMLReader:</li>
-                <ul>
-                   <li>http://apache.org/xml/properties/schema/external-schemaLocation</li>
-                   <li>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation</li>
-                </ul>
-              </ul>
-              <li>To support identity constraints, the following new method is added:</li>
-              <ul>
-                <li>QName* XMLAttr::getAttName() const</li>
-              </ul>
+              <li></li>
             </ul>
         </s3>
 
         <anchor name="ModifiedAPI"/>
-        <s3 title="Pulic API Modified">
+        <s3 title="Modified Public API">
             <ul>
-              <li>To support attribute constraint checking, the constant values in XMLAttDef::DefAttTypes have been re-ordered.</li>
+              <li></li>
             </ul>
         </s3>
 
         <anchor name="DeprecatedAPI"/>
-        <s3 title="Deprecated Pulic API">
+        <s3 title="Deprecated Public API">
             <ul>
-              <li>Root Element check is moved from XMLValidator to XMLScanner.  Thus XMLValidator::checkRootElement() is deprecated.</li>
+              <li></li>
             </ul>
         </s3>
 
@@ -96,7 +57,7 @@
 
     <s2 title="Migration Archive">
 
-       <p>For migration information to &XercesCName; &XercesCVersion152; or earlier,
+       <p>For migration information to &XercesCName; &XercesCVersion; or earlier,
           please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>
