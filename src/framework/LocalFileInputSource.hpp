@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/13 04:21:53  jasons
+ * This patch resolves bug #2409: undocumented XMLException in LocalFileInputSource::new()
+ *
  * Revision 1.6  2000/12/14 18:49:53  tng
  * Fix API document generation warning: "Warning: end of member group without matching begin"
  *
@@ -141,6 +144,8 @@ public :
       * @param  relativePath    The relative part of the path. It can actually
       *                         be fully qualified, in which case it is taken
       *                         as is.
+      * @exception XMLException If the path is relative and doesn't properly
+      *            resolve to a file.
       */
     LocalFileInputSource
     (
@@ -159,6 +164,9 @@ public :
       * still set them via the parent class' setPublicId() method of course.
       *
       * @param  filePath    The relative or fully qualified path.
+      *
+      * @exception XMLException If the path is relative and doesn't properly
+      *            resolve to a file.
       */
     LocalFileInputSource
     (
