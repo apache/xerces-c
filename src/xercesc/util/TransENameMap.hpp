@@ -152,7 +152,7 @@ private :
     // -----------------------------------------------------------------------
     ENameMapFor();
     ENameMapFor(const ENameMapFor<TType>&);
-    ENameMapFor& operator=(const ENameMapFor<TType>&);
+    ENameMapFor<TType>& operator=(const ENameMapFor<TType>&);
 };
 
 
