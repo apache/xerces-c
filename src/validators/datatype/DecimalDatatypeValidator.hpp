@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/10/01 21:04:40  peiyongz
+ * DTV Reorganization:fix to memory leak in compare() method.
+ *
  * Revision 1.7  2001/10/01 16:16:38  peiyongz
  * DTV Reorganization:derived from AbstractNumericValidator
  *
@@ -111,9 +114,9 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
 protected:
 

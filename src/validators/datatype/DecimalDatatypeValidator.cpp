@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/10/01 21:04:40  peiyongz
+ * DTV Reorganization:fix to memory leak in compare() method.
+ *
  * Revision 1.16  2001/10/01 16:16:38  peiyongz
  * DTV Reorganization:derived from AbstractNumericValidator
  *
@@ -145,10 +148,14 @@ DecimalDatatypeValidator::~DecimalDatatypeValidator()
 // Compare methods
 // -----------------------------------------------------------------------
 int DecimalDatatypeValidator::compare(const XMLCh* const lValue
-                                           , const XMLCh* const rValue)
+                                    , const XMLCh* const rValue)
 {
-    return XMLBigDecimal::compareValues(new XMLBigDecimal(lValue)
-                                      , new XMLBigDecimal(rValue));
+    XMLBigDecimal * lObj = new XMLBigDecimal(lValue);
+    Janitor<XMLBigDecimal> jname1(lObj);
+    XMLBigDecimal * rObj = new XMLBigDecimal(rValue);
+    Janitor<XMLBigDecimal> jname2(rObj);
+
+    return compareValues(lObj, rObj);
 }
 
 DatatypeValidator* DecimalDatatypeValidator::newInstance(
@@ -376,8 +383,7 @@ void DecimalDatatypeValidator::setEnumeration()
     // check 4.3.5.c0 must: enumeration values from the value space of base
     //
     // 1. shall be from base value space
-    // 2. shall be from current value space as well
-    //    ( **shall go through boundsCheck() )
+    // 2. shall be from current value space as well ( shall go through boundsCheck() )
     //
     if (!fStrEnumeration)
         return;
@@ -398,9 +404,8 @@ void DecimalDatatypeValidator::setEnumeration()
         catch (XMLException&)
         {
             ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::FACET_enum_base
-                , fStrEnumeration->elementAt(i));
-
+                    , XMLExcepts::FACET_enum_base
+                    , fStrEnumeration->elementAt(i));
         }
     }
 
@@ -422,6 +427,9 @@ void DecimalDatatypeValidator::setEnumeration()
 
 }
 
+// -----------------------------------------------------------------------
+// Abstract interface from AbstractNumericValidator
+// -----------------------------------------------------------------------
 void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
 {
 
@@ -468,7 +476,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             int enumLength = getEnumeration()->size();
             for ( ; i < enumLength; i++)
             {
-                if (XMLBigDecimal::compareValues(theData, (XMLBigDecimal*) getEnumeration()->elementAt(i))==0)
+                if (compareValues(theData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )
                     break;
             }
 
@@ -518,14 +526,6 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
 
 }
 
-
-
-// ---------------------------------------------------------------------------
-//  Whitespace handling methods
-// ---------------------------------------------------------------------------
-
-
 /**
   * End of file DecimalDatatypeValidator::cpp
   */
-
