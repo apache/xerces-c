@@ -1029,8 +1029,53 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int& rnBuf
 
 }
 
-void DOMNodeImpl::setTextContent(const XMLCh*){
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+void DOMNodeImpl::setTextContent(const XMLCh* textContent){
+    DOMNode *thisNode = castToNode(this);
+    switch (thisNode->getNodeType()) 
+    {
+        case DOMNode::ELEMENT_NODE:
+        case DOMNode::ENTITY_NODE:
+        case DOMNode::ENTITY_REFERENCE_NODE:
+        case DOMNode::DOCUMENT_FRAGMENT_NODE:
+            {
+                if (isReadOnly())
+                  throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+                // Remove all childs
+                DOMNode* current = thisNode->getFirstChild();
+                while (current != NULL) 
+                {
+                    thisNode->removeChild(current);
+                    current = thisNode->getFirstChild();
+                }
+                if (textContent != NULL) 
+                {
+                    // Add textnode containing data
+                    current = ((DOMDocumentImpl*)thisNode->getOwnerDocument())->createTextNode(textContent);
+                    thisNode->appendChild(current);
+                }
+            }
+            break;
+
+        case DOMNode::ATTRIBUTE_NODE:
+        case DOMNode::TEXT_NODE:
+        case DOMNode::CDATA_SECTION_NODE:
+        case DOMNode::COMMENT_NODE:
+        case DOMNode::PROCESSING_INSTRUCTION_NODE:
+            if (isReadOnly())
+                throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+            thisNode->setNodeValue(textContent);
+            break;
+
+        case DOMNode::DOCUMENT_NODE:
+        case DOMNode::DOCUMENT_TYPE_NODE:
+        case DOMNode::NOTATION_NODE:
+            break;
+
+        default:
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    }
 }
 
 
