@@ -987,6 +987,7 @@ usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile..
      -v             Use validating parser.  Non-validating is default.
      -n             Enable namespace processing. Defaults to off.
      -s             Enable schema processing. Defaults to off.
+     -f             Enable full schema constraint checking. Defaults to off.
      -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX.
      -quiet         Suppress periodic status display.
      -verbose       Display extra messages.
@@ -995,6 +996,7 @@ usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile..
      -time nnn      Total time to run, in seconds.  Default is forever.
      -dump          Dump DOM tree on error.
      -mem           Read files into memory once only, and parse them from there.
+
 Test Run Successfully
 Test Run Successfully
 Test Run Successfully
