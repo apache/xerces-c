@@ -330,7 +330,8 @@ const DOMTypeInfo *DOMAttrImpl::getTypeInfo() const
 
 void DOMAttrImpl::setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI) 
 {
-    fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(typeName, typeURI, (DOMDocumentImpl *)getOwnerDocument());
+    if(typeName || typeURI)
+        fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(typeName, typeURI, (DOMDocumentImpl *)getOwnerDocument());
 }
 
 

@@ -693,7 +693,8 @@ const DOMTypeInfo *DOMElementImpl::getTypeInfo() const
 
 void DOMElementImpl::setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI) 
 {
-    fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(typeName, typeURI, (DOMDocumentImpl *)getOwnerDocument());
+    if(typeName || typeURI)
+        fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(typeName, typeURI, (DOMDocumentImpl *)getOwnerDocument());
 }
 
 XERCES_CPP_NAMESPACE_END
