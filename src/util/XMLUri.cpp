@@ -238,29 +238,6 @@ static const XMLCh PATH_SEPARATORS[] =
 // ---------------------------------------------------------------------------
 //  XMLUri: Constructors and initialization methods
 // ---------------------------------------------------------------------------
-// ctor #3
-XMLUri::XMLUri(const XMLCh* const scheme
-             , const XMLCh* const schemeSpecificPart)
-{
-	if ( !scheme                           || 
-         XMLString::isAllWhiteSpace(scheme) ) 
-    {
-        ThrowXML1(NumberFormatException
-               , XMLExcepts::XMLNUM_URI_Component_Empty
-               , errMsg_SCHEME);
-    }
-
-    if ( !schemeSpecificPart                           ||
-         XMLString::isAllWhiteSpace(schemeSpecificPart) )
-    {
-        ThrowXML1(NumberFormatException
-               , XMLExcepts::XMLNUM_URI_Component_Empty
-               , errMsg_SCHEMESPART);
-	}
-
-    setScheme(scheme);
-	setPath(schemeSpecificPart);
-}  
 
 void XMLUri::initialize(const XMLUri& toCopy)
 {
@@ -534,73 +511,6 @@ void XMLUri::initialize(const XMLUri* const baseURI
         fPath = path;
     }
 }  
-
-void XMLUri::initialize(const XMLCh* const    scheme
-                      , const XMLCh* const    userInfo
-                      , const XMLCh* const    host
-                      , const int             port
-                      , const XMLCh* const    path
-                      , const XMLCh* const    queryString
-                      , const XMLCh* const    fragment)
-{
-    if ( !scheme                          || 
-        XMLString::isAllWhiteSpace(scheme) ) 
-    {
-        ThrowXML1(NumberFormatException
-                , XMLExcepts::XMLNUM_URI_Component_Empty
-                , errMsg_SCHEME);
-    }
-
-	if ( !host ) 
-    {
-        if ( userInfo ) 
-        {
-            ThrowXML2(NumberFormatException
-                    , XMLExcepts::XMLNUM_URI_NullHost
-                    , errMsg_USERINFO
-                    , userInfo);
-        }
-
-        if ( port != -1) 
-        {
-            XMLString::binToText(port, value1, BUF_LEN, 10);
-            ThrowXML2(NumberFormatException
-                    , XMLExcepts::XMLNUM_URI_NullHost
-                    , errMsg_PORT
-                    , value1);
-        }
-	}
-
-	if ( path ) 
-    {
-        if ( XMLString::indexOf(path, chQuestion) != -1 && 
-             queryString                                 ) 
-        {
-            ThrowXML2(NumberFormatException
-                    , XMLExcepts::XMLNUM_URI_Component_inPath
-                    , errMsg_QUERY
-                    , queryString);
-        }
-
-        if ( XMLString::indexOf(path, chPound) != -1 && 
-             fragment                                 ) 
-        {
-            ThrowXML2(NumberFormatException
-                    , XMLExcepts::XMLNUM_URI_Component_inPath
-                    , errMsg_FRAGMENT
-                    , fragment);
-        }
-    }
-
-
-	setScheme(scheme);
-	setHost(host);
-	setPort(port);
-	setUserInfo(userInfo);
-	setPath(path);
-	setQueryString(queryString);
-	setFragment(fragment);
-  }  
 
 // ---------------------------------------------------------------------------
 //  Components initialization 

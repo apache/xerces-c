@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/16 14:09:44  peiyongz
+ * Removed unused ctors and methods
+ *
  * Revision 1.1  2001/08/10 16:23:41  peiyongz
  * XMLUri: creation
  *
@@ -87,12 +90,6 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    /**
-     * Construct a new and initialized URI.
-     *
-     * ctor# 1
-     */
-    XMLUri();
 
     /**
      * Construct a new URI from a URI specification string. 
@@ -120,92 +117,6 @@ public:
      *
      */
     XMLUri(const XMLCh* const    uriSpec);
-
-    /**
-     * Construct a new URI that does not follow the generic URI syntax.
-     * Only the scheme and scheme-specific part (stored as the path) are
-     * initialized.
-     *
-     * @param scheme the URI scheme (cannot be null or empty)
-     * @param schemeSpecificPart the scheme-specific part (cannot be
-     *                             null or empty)
-     *
-     * ctor# 3
-     *
-     */    
-    XMLUri(const XMLCh* const    scheme
-         , const XMLCh* const    schemeSpecificPart);
-
-    /**
-     * Construct a new URI that follows the generic URI syntax from its
-     * component parts. Each component is validated for syntax and some
-     * basic semantic checks are performed as well.  See the individual
-     * setter methods for specifics.
-     *
-     * @param scheme the URI scheme (cannot be null or empty)
-     * @param userinfo the URI userinfo (cannot be specified if host
-     *                   is null)
-     * @param host the hostname or IPv4 address for the URI
-     * @param port the URI port (may be -1 for "unspecified"; cannot
-     *               be specified if host is null)
-     * @param path the URI path - if the path contains '?' or '#',
-     *               then the query string and/or fragment will be
-     *               set from the path; however, if the query and
-     *               fragment are specified both in the path and as
-     *               separate parameters, an exception is thrown
-     * @param queryString the URI query string (cannot be specified
-     *                      if path is null)
-     * @param fragment the URI fragment (cannot be specified if path
-     *                   is null)
-     *
-     * ctor# 4
-     *
-     */
-    XMLUri(const XMLCh* const    scheme
-         , const XMLCh* const    userInfo
-         , const XMLCh* const    host
-         , const int             port
-         , const XMLCh* const    path
-         , const XMLCh* const    queryString
-         , const XMLCh* const    fragment);
-
-    /**
-     * Construct a new URI that follows the generic URI syntax from its
-     * component parts. Each component is validated for syntax and some
-     * basic semantic checks are performed as well.  See the individual
-     * setter methods for specifics.
-     *
-     * @param scheme the URI scheme (cannot be null or empty)
-     * @param host the hostname or IPv4 address for the URI
-     * @param path the URI path - if the path contains '?' or '#',
-     *               then the query string and/or fragment will be
-     *               set from the path; however, if the query and
-     *               fragment are specified both in the path and as
-     *               separate parameters, an exception is thrown
-     * @param queryString the URI query string (cannot be specified
-     *                      if path is null)
-     * @param fragment the URI fragment (cannot be specified if path
-     *                   is null)
-     *
-     * ctor# 5
-     *
-     */
-    XMLUri(const XMLCh* const    scheme
-         , const XMLCh* const    host
-         , const XMLCh* const    path
-         , const XMLCh* const    queryString
-         , const XMLCh* const    fragment);
-
-    /**
-     * Construct a new URI from another URI. All fields for this URI are
-     * set equal to the fields of the URI passed in.
-     *
-     * @param toCopy the URI to copy (cannot be null)
-     *
-     * ctor# 6 copy ctor
-     *
-     */
-    XMLUri(const XMLUri& toCopy);
 
     /**
      * Construct a new URI from a base URI and a URI specification string.
@@ -239,7 +150,6 @@ public:
      * @return the scheme for this URI
      */
      const XMLCh* getScheme() const;
-
  
     /**
      * Get the userinfo for this URI.
@@ -383,7 +293,13 @@ private:
     static const XMLCh MARK_CHARACTERS[];
     static const XMLCh SCHEME_CHARACTERS[];
     static const XMLCh USERINFO_CHARACTERS[];
-  
+
+    /**
+     * Unimplemented copy ctor
+     */
+    XMLUri(const XMLUri& toCopy);    
+    XMLUri& operator=(const XMLUri& toAssign);
+
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
@@ -480,14 +396,6 @@ private:
      void initialize(const XMLUri* const baseURI
                    , const XMLCh*  const uriSpec);
 
-     void initialize(const XMLCh* const    scheme
-                   , const XMLCh* const    userInfo
-                   , const XMLCh* const    host
-                   , const int             port
-                   , const XMLCh* const    path
-                   , const XMLCh* const    queryString
-                   , const XMLCh* const    fragment);
-
     /**
      * Initialize the scheme for this URI from a URI string spec.
      *
@@ -535,17 +443,6 @@ private:
 // ---------------------------------------------------------------------------
 //  XMLUri: Public operators
 // ---------------------------------------------------------------------------
-// ctor# 1
-inline XMLUri::XMLUri()
-:fScheme(0)
-,fUserInfo(0)
-,fHost(0)
-,fPort(-1)
-,fPath(0)
-,fQueryString(0)
-,fFragment(0)
-{
-}
 
 // ctor# 2
 inline XMLUri::XMLUri(const XMLCh* const uriSpec)
@@ -558,49 +455,6 @@ inline XMLUri::XMLUri(const XMLCh* const uriSpec)
 ,fFragment(0)
 {
     initialize((XMLUri *)0, uriSpec);
-}
-
-// ctor# 3
-inline XMLUri::XMLUri(const XMLCh* const    scheme
-                    , const XMLCh* const    userInfo
-                    , const XMLCh* const    host
-                    , const int             port
-                    , const XMLCh* const    path
-                    , const XMLCh* const    queryString
-                    , const XMLCh* const    fragment)
-{
-	initialize(scheme, userInfo, host, port, path, queryString, fragment);
-}
-
-// ctor# 5
-inline XMLUri:: XMLUri(const XMLCh* const    scheme
-                     , const XMLCh* const    host
-                     , const XMLCh* const    path
-                     , const XMLCh* const    queryString
-                     , const XMLCh* const    fragment
-                     )
-:fScheme(0)
-,fUserInfo(0)
-,fHost(0)
-,fPort(-1)
-,fPath(0)
-,fQueryString(0)
-,fFragment(0)
-{
-	initialize(scheme, 0, host, -1, path, queryString, fragment);
-}  
-
-// ctor# 6 copy ctor
-inline XMLUri::XMLUri(const XMLUri& toCopy)
-:fScheme(0)
-,fUserInfo(0)
-,fHost(0)
-,fPort(-1)
-,fPath(0)
-,fQueryString(0)
-,fFragment(0)
-{
-    initialize(toCopy);
 }
 
 // ctor# 7 relative ctor
