@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.6  2003/05/12 09:53:54  gareth
- * Memory leak fixes. Patch by Steven White.
+ * Revision 1.7  2003/05/12 10:08:22  gareth
+ * The correct file this time.
  *
  * Revision 1.5  2002/12/18 13:01:02  gareth
  * New functionality - tokenize and replace. Fixed REVISIT for case insensitive match. Patch by Jennifer Schachter.
@@ -665,12 +665,6 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
   if (fOperations == 0)
 	  prepare();
 
-  Match* pMatch = 0;
-
-  if (subEx){
-    pMatch = new Match();
-  }
-
   RefArrayVectorOf<XMLCh>* tokenStack = new RefArrayVectorOf<XMLCh>(16, true);
 
   Context* context = 0;
@@ -697,16 +691,13 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
 
   Janitor<Context> janContext(tmpContext);
 
+  Match* lMatch = 0;
   bool adoptMatch = false;
-  Match* lMatch = pMatch;
 
-  if (lMatch != 0) {
- 	  lMatch->setNoGroups(fNoGroups);
-  }
-  else if (fHasBackReferences) {
- 	  lMatch = new Match();
- 	  lMatch->setNoGroups(fNoGroups);
- 	  adoptMatch = true;
+  if (subEx || fHasBackReferences) {
+    lMatch = new Match();
+    adoptMatch = true;
+    lMatch->setNoGroups(fNoGroups);
   }
 
   if (context->fAdoptMatch)
@@ -732,11 +723,9 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
       if (subEx){
         subEx->addElement(lMatch);
         lMatch = new Match(*(context->fMatch));
-
-        //is this correct???
-        if (context->fAdoptMatch)
-          delete context->fMatch;
-
+        adoptMatch = true;
+        
+        context->fAdoptMatch = adoptMatch;
         context->fMatch = lMatch;
       }
   
