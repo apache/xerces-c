@@ -2183,7 +2183,10 @@ bool IGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                 toFill.append(nextCh);
 
                 if (secondCh)
+                {
                     toFill.append(secondCh);
+                    secondCh=0;
+                }
             }
         }
         catch(const EndOfEntityException&)
@@ -2401,8 +2404,10 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
             toFill.append(nextCh);
 
             if (secondCh)
-               toFill.append(secondCh);
-
+            {
+                toFill.append(secondCh);
+                secondCh=0;
+            }
 
             if(fGrammarType == Grammar::SchemaGrammarType)
                 ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromAttribute((SchemaAttDef *)attDef);
@@ -2793,7 +2798,10 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
                 toUse.append(nextCh);
 
                 if (secondCh)
+                {
                     toUse.append(secondCh);
+                    secondCh=0;
+                }
             }
         }
         catch(const EndOfEntityException& toCatch)

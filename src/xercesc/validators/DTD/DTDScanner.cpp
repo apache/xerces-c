@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2004/07/06 15:57:55  amassari
+ * Fix for jira#1226: when a 32 bit entity is encountered, reset the secondCh variable after using it
+ *
  * Revision 1.32  2004/01/29 11:52:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -1126,7 +1129,10 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
             toFill.append(nextCh);
 
             if (secondCh)
-               toFill.append(secondCh);
+            {
+                toFill.append(secondCh);
+                secondCh=0;
+            }
         }
     }
 
@@ -2431,7 +2437,10 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill)
         toFill.append(nextCh);
 
         if (secondCh)
+        {
             toFill.append(secondCh);
+            secondCh=0;
+        }
     }
 
     //

@@ -4078,7 +4078,10 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                 toFill.append(nextCh);
 
                 if (secondCh)
+                {
                     toFill.append(secondCh);
+                    secondCh=0;
+                }
             }
         }
         catch(const EndOfEntityException&)
@@ -4442,7 +4445,10 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
                 toUse.append(nextCh);
 
                 if (secondCh)
+                {
                     toUse.append(secondCh);
+                    secondCh=0;
+                }
             }
         }
         catch(const EndOfEntityException& toCatch)

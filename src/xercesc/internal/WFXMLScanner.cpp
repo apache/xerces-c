@@ -1752,7 +1752,10 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
             toFill.append(nextCh);
 
             if (secondCh)
-               toFill.append(secondCh);
+            {
+                toFill.append(secondCh);
+                secondCh=0;
+            }
         }
     }
     catch(const EndOfEntityException&)
@@ -2043,7 +2046,10 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
                 toUse.append(nextCh);
 
                 if (secondCh)
+                {
                     toUse.append(secondCh);
+                    secondCh=0;
+                }
             }
         }
         catch(const EndOfEntityException& toCatch)

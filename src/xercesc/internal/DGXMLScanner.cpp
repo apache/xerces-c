@@ -2745,7 +2745,10 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
             toFill.append(nextCh);
 
             if (secondCh)
+            {
                 toFill.append(secondCh);
+                secondCh=0;
+            }
         }
     }
     catch(const EndOfEntityException&)
@@ -3064,7 +3067,10 @@ void DGXMLScanner::scanCharData(XMLBuffer& toUse)
                 toUse.append(nextCh);
 
                 if (secondCh)
+                {
                     toUse.append(secondCh);
+                    secondCh=0;
+                }
             }
         }
         catch(const EndOfEntityException& toCatch)
