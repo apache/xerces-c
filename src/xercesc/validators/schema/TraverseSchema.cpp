@@ -1984,11 +1984,26 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         const XMLCh* localPart = getLocalPart(dvType);
         const XMLCh* prefix = getPrefix(dvType);
         const XMLCh* typeURI = resolvePrefixToURI(elem, prefix);
+        DatatypeValidator*  dvBack = 0;
 
         if (XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
-
             dv = fDatatypeRegistry->getDatatypeValidator(localPart);
+            dvBack = dv;
+        }
+        else { //isn't of the schema for schemas namespace...
 
+            dv = getAttrDatatypeValidatorNS(elem, localPart, typeURI);
+            dvBack = dv;
+
+            while(dv != 0 && !XMLString::equals(dv->getTypeUri(), SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
+                dv = dv->getBaseValidator();
+            }
+
+            if(dv)
+                localPart = dv->getTypeLocalName();
+        }
+
+        if(dv) {
             if (XMLString::equals(localPart,XMLUni::fgIDString)) {
                 attType = XMLAttDef::ID;
             }
@@ -2017,11 +2032,10 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                 attType = XMLAttDef::Simple;
             }
         }
-        else { //isn't of the schema for schemas namespace...
-
-            dv = getAttrDatatypeValidatorNS(elem, localPart, typeURI);
+        else 
             attType = XMLAttDef::Simple;
-        }
+
+        dv = dvBack;
 
         if (!dv) {
             reportSchemaError
