@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/04/14 08:41:00  gareth
+ * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
+ *
  * Revision 1.5  2002/11/12 17:24:58  tng
  * DOM Message: add new domain for DOM Messages.
  *
@@ -100,6 +103,7 @@ Win32RCFormatter::Win32RCFormatter() :
 
 Win32RCFormatter::~Win32RCFormatter()
 {
+	XMLString::release(&fCurDomainName);
 }
 
 
@@ -155,24 +159,25 @@ void Win32RCFormatter::startDomain( const   XMLCh* const    domainName
     //  We have a different array name for each domain, so store that for
     //  later use and for use below.
     //
+    XMLString::release(&fCurDomainName);    
     if (!XMLString::compareString(XMLUni::fgXMLErrDomain, domainName))
-    {
-        fCurDomainName = L"gXMLErrArray";
+    {    	
+        fCurDomainName = XMLString::transcode("gXMLErrArray");
         fMsgOffset = 0;
     }
      else if (!XMLString::compareString(XMLUni::fgExceptDomain, domainName))
     {
-        fCurDomainName = L"gXMLExceptArray";
+        fCurDomainName = XMLString::transcode("gXMLExceptArray");
         fMsgOffset = 0x2000;
     }
      else if (!XMLString::compareString(XMLUni::fgValidityDomain, domainName))
     {
-        fCurDomainName = L"gXMLValidityArray";
+        fCurDomainName = XMLString::transcode("gXMLValidityArray");
         fMsgOffset = 0x4000;
     }
      else if (!XMLString::compareString(XMLUni::fgXMLDOMMsgDomain, domainName))
     {
-        fCurDomainName = L"gXMLDOMMsgArray";
+        fCurDomainName = XMLString::transcode("gXMLDOMMsgArray");
         fMsgOffset = 0x6000;
     }
      else
@@ -213,12 +218,25 @@ void Win32RCFormatter::startOutput(  const  XMLCh* const locale
     //
     const unsigned int bufSize = 4095;
     XMLCh tmpBuf[bufSize + 1];
+    // make sure the append will work
+    tmpBuf[0] = 0;
+    XMLCh *tmpXMLStr = XMLString::transcode("CppErrMsgs_");
+    XMLCh *tmpXMLStr2 = XMLString::transcode(".RC");
 
-    swprintf(tmpBuf, L"%s/%s_%s.RC", outPath, L"CppErrMsgs", locale);
-    fOutFl = _wfopen(tmpBuf, L"wt");
-    if (!fOutFl)
+    XMLString::catString(tmpBuf, outPath);
+    XMLString::catString(tmpBuf, tmpXMLStr );
+    XMLString::catString(tmpBuf, locale);
+    XMLString::catString(tmpBuf, tmpXMLStr2 );
+    XMLString::release(&tmpXMLStr);
+    XMLString::release(&tmpXMLStr2);
+    char *tmpStr = XMLString::transcode(tmpBuf);    
+    fOutFl = fopen(tmpStr, "wt");
+    XMLString::release(&tmpStr);
+    if ((!fOutFl) || (fwide(fOutFl,1) < 0))
     {
-        wprintf(L"Could not open the output file: %s\n\n", tmpBuf);
+
+        wprintf(L"Could not open the output file: %s\n\n", xmlStrToPrintable(tmpBuf) );
+        releasePrintableStr
         throw ErrReturn_OutFileOpenFailed;
     }
 

@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/04/14 08:41:00  gareth
+ * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
+ *
  * Revision 1.16  2002/12/12 23:40:39  peiyongz
  * normlize locale string.
  *
@@ -141,7 +144,6 @@
 #include "Xlat.hpp"
 
 
-
 // ---------------------------------------------------------------------------
 //  Static data
 //
@@ -149,19 +151,23 @@
 //      This is the path, relative to the given input source root, to the
 //      input file. The given local suffix must also be added to it.
 // ---------------------------------------------------------------------------
-static XMLCh* const     gRelativeInputPath  = L"src/xercesc/NLS/";
+XMLCh*      gRelativeInputPath = 0;
 
 
 // ---------------------------------------------------------------------------
 //  Global data
 // ---------------------------------------------------------------------------
-const XMLCh* typePrefixes[MsgTypes_Count] =
-{
-    L"W_"
-    , L"E_"
-    , L"F_"
-};
+XMLCh* typePrefixes[MsgTypes_Count];
 
+// ---------------------------------------------------------------------------
+//  temporary variables/conversion utility functions
+//  We need different temps depending on treatment of wide characters
+// ---------------------------------------------------------------------------
+#ifdef longChars
+    char* fTmpStr = 0;
+#else 
+    wchar_t fTmpWStr[256];
+#endif 
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -194,6 +200,25 @@ const XMLCh*    gSrcRoot = 0;
 // ---------------------------------------------------------------------------
 //  Local utility methods
 // ---------------------------------------------------------------------------
+  
+// Initialize the global "constants" (that really require use of the transcoder)
+void init_Globals(void) 
+{
+    typePrefixes[0] = XMLString::transcode("W_");
+    typePrefixes[1] = XMLString::transcode("E_");
+    typePrefixes[2] = XMLString::transcode("F_");
+    gRelativeInputPath  = XMLString::transcode("src/xercesc/NLS/");
+}
+
+// Release the global "constants" (that really require use of the transcoder)
+void release_Globals(void) 
+{
+    for(int i=0; i<3; i++) 
+    {
+        XMLString::release(&typePrefixes[i]);
+    }
+    XMLString::release(&gRelativeInputPath);
+}
 
 //
 //  This method is called to parse the parameters. They must be in this
@@ -201,75 +226,100 @@ const XMLCh*    gSrcRoot = 0;
 //
 //  /SrcRoot=xxx /OutPath=xxx /OutFmt=xxx /Locale=xxx
 //
-static bool parseParms(const int argC, XMLCh** argV)
+//static bool parseParms(const int argC, XMLCh** argV)
+bool parseParms(const int argC, XMLCh** argV)
 {
     if (argC < 5)
         return false;
 
     unsigned int curParm = 1;
-
-    if (XMLString::startsWith(argV[curParm], L"/SrcRoot="))
+    XMLCh *tmpXMLStr = XMLString::transcode("/SrcRoot=");
+    if (XMLString::startsWith(argV[curParm], tmpXMLStr))
     {
         gSrcRoot = &argV[curParm][9];
     }
      else
     {
         wprintf(L"\nExpected /SrcRoot=xxx. Got: %s\n", argV[curParm]);
+        XMLString::release(&tmpXMLStr);
         return false;
     }
+    XMLString::release(&tmpXMLStr);
 
     curParm++;
-    if (XMLString::startsWith(argV[curParm], L"/OutPath="))
+    tmpXMLStr = XMLString::transcode("/OutPath=");
+    if (XMLString::startsWith(argV[curParm], tmpXMLStr ))
     {
         gOutPath = &argV[curParm][9];
     }
      else
     {
         wprintf(L"\nExpected /OutPath=xxx. Got: %s\n", argV[curParm]);
+        XMLString::release(&tmpXMLStr);
         return false;
     }
+    XMLString::release(&tmpXMLStr);
 
 
     curParm++;
-    if (XMLString::startsWith(argV[curParm], L"/OutFmt="))
+    tmpXMLStr = XMLString::transcode("/OutFmt=");
+    if (XMLString::startsWith(argV[curParm], tmpXMLStr ))
     {
+        XMLString::release(&tmpXMLStr);
         const XMLCh* tmpFmt = &argV[curParm][8];
-        if (!XMLString::compareIString(tmpFmt, L"ResBundle"))
+        tmpXMLStr = XMLString::transcode("ResBundle");
+        XMLCh *tmpXMLStr2 = XMLString::transcode("Win32RC");
+        XMLCh *tmpXMLStr3 = XMLString::transcode("CppSrc");
+        XMLCh *tmpXMLStr4 = XMLString::transcode("MsgCat");
+        if (!XMLString::compareIString(tmpFmt, tmpXMLStr ))
             gOutFormat = OutFormat_ResBundle;
-        else if (!XMLString::compareIString(tmpFmt, L"Win32RC"))
+        else if (!XMLString::compareIString(tmpFmt, tmpXMLStr2 ))
             gOutFormat = OutFormat_Win32RC;
-        else if (!XMLString::compareIString(tmpFmt, L"CppSrc"))
+        else if (!XMLString::compareIString(tmpFmt, tmpXMLStr3 ))
             gOutFormat = OutFormat_CppSrc;
-        else if (!XMLString::compareIString(tmpFmt, L"MsgCat"))
+        else if (!XMLString::compareIString(tmpFmt, tmpXMLStr4 ))
             gOutFormat = OutFormat_MsgCatalog;
         else
         {
             wprintf(L"\n'%s' is not a legal output format\n", tmpFmt);
+            XMLString::release(&tmpXMLStr);
+            XMLString::release(&tmpXMLStr2);
+            XMLString::release(&tmpXMLStr3);
+            XMLString::release(&tmpXMLStr4);
             return false;
         }
+        XMLString::release(&tmpXMLStr);
+        XMLString::release(&tmpXMLStr2);
+        XMLString::release(&tmpXMLStr3);
+        XMLString::release(&tmpXMLStr4);
     }
      else
     {
         wprintf(L"\nExpected /OutFmt=xxx. Got: %s\n", argV[curParm]);
+        XMLString::release(&tmpXMLStr);
         return false;
     }
 
     curParm++;
-    if (XMLString::startsWith(argV[curParm], L"/Locale="))
+    tmpXMLStr = XMLString::transcode("/Locale=");
+    if (XMLString::startsWith(argV[curParm], tmpXMLStr ))
     {
         gLocale = &argV[curParm][8];
     }
      else
     {
         wprintf(L"\nExpected /Locale=xxx. Got: %s\n", argV[curParm]);
+        XMLString::release(&tmpXMLStr);
         return false;
     }
+    XMLString::release(&tmpXMLStr);
 
     return true;
 }
 
 
-static void parseError(const XMLException& toCatch)
+//static void parseError(const XMLException& toCatch)
+void parseError(const XMLException& toCatch)
 {
     wprintf
     (
@@ -282,7 +332,8 @@ static void parseError(const XMLException& toCatch)
 }
 
 
-static void parseError(const SAXParseException& toCatch)
+//static void parseError(const SAXParseException& toCatch)
+void parseError(const SAXParseException& toCatch)
 {
     wprintf
     (
@@ -296,7 +347,8 @@ static void parseError(const SAXParseException& toCatch)
 }
 
 
-static void
+//static void
+void
 enumMessages(   const   DOMElement*             srcElem
                 ,       XlatFormatter* const    toCall
                 ,       FILE* const             headerFl
@@ -307,10 +359,11 @@ enumMessages(   const   DOMElement*             srcElem
     (
         headerFl
         , L"      , %s%-30s   = %d\n"
-        , typePrefixes[msgType]
-        , L"LowBounds"
+        , xmlStrToPrintable(typePrefixes[msgType]) 
+        , longChars("LowBounds")
         , count++
     );
+    releasePrintableStr
 
     //
     //  We just run through each of the child elements, each of which is
@@ -331,25 +384,33 @@ enumMessages(   const   DOMElement*             srcElem
         const DOMElement* curElem = (const DOMElement*)curNode;
 
         // Ok, this should be a Message node
-        if (XMLString::compareString(curElem->getTagName(), L"Message"))
+        XMLCh *tmpXMLStr = XMLString::transcode("Message");
+        if (XMLString::compareString(curElem->getTagName(), tmpXMLStr ))
         {
             wprintf(L"Expected a Message node\n\n");
+            XMLString::release(&tmpXMLStr);
             throw ErrReturn_SrcFmtError;
         }
+        XMLString::release(&tmpXMLStr);
 
         //
         //  Ok, lets pull out the id, text value, and message type. These are
         //  to be passed to the formatter. We have to translate the message
         //  type into one of the offical enum values.
         //
-        const XMLCh* msgText = curElem->getAttribute(L"Text");
-        const XMLCh* msgId   = curElem->getAttribute(L"Id");
+        tmpXMLStr = XMLString::transcode("Text");
+        const XMLCh* msgText = curElem->getAttribute(tmpXMLStr );
+        XMLString::release(&tmpXMLStr);
+        tmpXMLStr = XMLString::transcode("Id");
+        const XMLCh* msgId   = curElem->getAttribute(tmpXMLStr );
+        XMLString::release(&tmpXMLStr);
 
         //
         //  Write out an entry to the target header file. These are enums, so
         //  we use the id as the enum name.
         //
-        fwprintf(headerFl, L"      , %-32s   = %d\n", msgId, count);
+        fwprintf(headerFl, L"      , %-32s   = %d\n", xmlStrToPrintable(msgId), count);
+        releasePrintableStr
 
         // And tell the formatter about this one
         toCall->nextMessage
@@ -372,10 +433,11 @@ enumMessages(   const   DOMElement*             srcElem
     (
         headerFl
         , L"      , %s%-30s   = %d\n"
-        , typePrefixes[msgType]
-        , L"HighBounds"
+        , xmlStrToPrintable(typePrefixes[msgType])
+        , longChars("HighBounds")
         , count++
     );
+    releasePrintableStr
 }
 
 
@@ -389,8 +451,8 @@ enumMessages(   const   DOMElement*             srcElem
 //  file to get a DOM tree, then passes the DOM tree to the appropriate
 //  output method to output the info in a particular format.
 //
-extern "C" int wmain(int argC, XMLCh** argV)
-{
+int Xlat_main(int argC, XMLCh** argV);
+int main (int argC, char** argV) {
     try
     {
         XMLPlatformUtils::Initialize();
@@ -401,6 +463,24 @@ extern "C" int wmain(int argC, XMLCh** argV)
         wprintf(L"Parser init error.\n  ERROR: %s\n\n", toCatch.getMessage());
         return ErrReturn_ParserInit;
     }
+    	
+    XMLCh** newArgV = new XMLCh*[argC];
+    for(int i=0;i<argC; i++) 
+    {
+        newArgV[i] = XMLString::transcode(argV[i]);
+    }
+    int toReturn = (Xlat_main(argC,newArgV));
+    for (int i=0; i<argC; i++) 
+    {
+        delete [] newArgV[i];
+    }
+    delete [] newArgV;
+    return toReturn;
+}
+
+int Xlat_main(int argC, XMLCh** argV)
+{
+    init_Globals();
 
     //
     //  Lets check the parameters and save them away in globals for use by
@@ -417,21 +497,23 @@ extern "C" int wmain(int argC, XMLCh** argV)
 
         DOMDocument* srcDoc;
         const unsigned int bufSize = 4095;
-        XMLCh tmpFileBuf[bufSize + 1];
+        XMLCh *tmpFileBuf = new XMLCh [bufSize + 1];
+        tmpFileBuf[0] = 0;
+        XMLCh *tmpXMLStr = XMLString::transcode("/XMLErrList_");
+        XMLCh *tmpXMLStr2 = XMLString::transcode(".Xml");
         try
         {
             try
             {
                 // Build the input file name
-                swprintf
-                (
-                    tmpFileBuf
-                    , L"%s%s%s/XMLErrList_%s.Xml"
-                    , gSrcRoot
-                    , gRelativeInputPath
-                    , gLocale
-                    , gLocale
-                );
+                XMLString::catString(tmpFileBuf, gSrcRoot);
+                XMLString::catString(tmpFileBuf, gRelativeInputPath);
+                XMLString::catString(tmpFileBuf, gLocale);
+                XMLString::catString(tmpFileBuf, tmpXMLStr );
+                XMLString::catString(tmpFileBuf, gLocale);
+                XMLString::catString(tmpFileBuf, tmpXMLStr2 );
+                XMLString::release(&tmpXMLStr);
+                XMLString::release(&tmpXMLStr2);
 
                 //
                 //  Ok, lets invoke the DOM parser on the input file and build
@@ -449,6 +531,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
             {
                 parseError(toCatch);
             }
+            XMLString::release(&tmpFileBuf);
 
             //
             //  Use the output format parm to create the correct kind of output
@@ -483,7 +566,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
             //  all information.
             //
             DOMElement* rootElem = srcDoc->getDocumentElement();
-            const XMLCh* localeStr = rootElem->getAttribute(L"Locale");
+            tmpXMLStr = XMLString::transcode("Locale");
+            const XMLCh* localeStr = rootElem->getAttribute(tmpXMLStr);
+            XMLString::release(&tmpXMLStr);
 
             // Make sure that the locale matches what we were given
             if (XMLString::compareString(localeStr, gLocale))
@@ -497,7 +582,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
             //  the sets of (potentially separately) loadable messages. More
             //  importantly they all have their own error id space.
             //
-            DOMNodeList* msgSetList = rootElem->getElementsByTagName(L"MsgDomain");
+            tmpXMLStr = XMLString::transcode("MsgDomain");
+            DOMNodeList* msgSetList = rootElem->getElementsByTagName(tmpXMLStr);
+            XMLString::release(&tmpXMLStr);
 
             //
             //  Loop through them and look for the domains that we know are
@@ -551,7 +638,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //  Get some of  the attribute strings that we need, and transcode
                 //  couple that need to be in local format.
                 //
-                const XMLCh* domainStr = curElem->getAttribute(L"Domain");
+                tmpXMLStr = XMLString::transcode("Domain");
+                const XMLCh* domainStr = curElem->getAttribute(tmpXMLStr );
+                XMLString::release(&tmpXMLStr);
 
                 //
                 //  Look at the domain and set up our application specific info
@@ -559,27 +648,27 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //  name of the header is and what the namespace is that they
                 //  codes will go into
                 //
-                const XMLCh* headerName = 0;
-                const XMLCh* errNameSpace = 0;
+                XMLCh* headerName = 0;
+                XMLCh* errNameSpace = 0;
                 if (!XMLString::compareString(domainStr, XMLUni::fgXMLErrDomain))
                 {
-                    headerName = L"XMLErrorCodes.hpp";
-                    errNameSpace = L"XMLErrs";
+                    headerName = XMLString::transcode("XMLErrorCodes.hpp");
+                    errNameSpace = XMLString::transcode("XMLErrs");
                 }
                  else if (!XMLString::compareString(domainStr, XMLUni::fgValidityDomain))
                 {
-                    headerName = L"XMLValidityCodes.hpp";
-                    errNameSpace = L"XMLValid";
+                    headerName = XMLString::transcode("XMLValidityCodes.hpp");
+                    errNameSpace = XMLString::transcode("XMLValid");
                 }
                  else if (!XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
                 {
-                    headerName = L"XMLExceptMsgs.hpp";
-                    errNameSpace = L"XMLExcepts";
+                    headerName = XMLString::transcode("XMLExceptMsgs.hpp");
+                    errNameSpace = XMLString::transcode("XMLExcepts");
                 }
                  else if (!XMLString::compareString(domainStr, XMLUni::fgXMLDOMMsgDomain))
                 {
-                    headerName = L"XMLDOMMsg.hpp";
-                    errNameSpace = L"XMLDOMMsg";
+                    headerName = XMLString::transcode("XMLDOMMsg.hpp");
+                    errNameSpace = XMLString::transcode("XMLDOMMsg");
                 }
                  else
                 {
@@ -591,27 +680,32 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //  Lets try to create the header file that was indicated for
                 //  this domain.
                 //
-                swprintf
-                (
-                    tmpFileBuf
-                    , L"%s%s"
-                    , gOutPath
-                    , headerName
-                );
-                FILE* outHeader = _wfopen(tmpFileBuf, L"wt+");
-                if (!outHeader)
+                tmpFileBuf = new XMLCh [bufSize + 1];
+                tmpFileBuf[0] = 0;
+                XMLString::catString(tmpFileBuf, gOutPath);
+                XMLString::catString(tmpFileBuf, headerName);
+                char *tmpFileBufCh = XMLString::transcode(tmpFileBuf);                
+                FILE* outHeader = fopen(tmpFileBufCh, "wt+");
+                XMLString::release(&tmpFileBufCh);
+                if ((!outHeader) || (fwide(outHeader, 1) < 0)) 
                 {
-                    wprintf(L"Could not open domain header file: %s\n\n", tmpFileBuf);
+                    wprintf(L"Could not open domain header file: %s\n\n", xmlStrToPrintable(tmpFileBuf));
+                    releasePrintableStr
+                    XMLString::release(&tmpFileBuf);
+                    XMLString::release(&headerName);
+                    XMLString::release(&errNameSpace);
                     throw ErrReturn_OutFileOpenFailed;
                 }
+                XMLString::release(&tmpFileBuf);                
 
                 //
                 //  Write out the opening of the class they are nested within, and
                 //  the header protection define.
-                //
+                //                
                 fwprintf(outHeader, L"// This file is generated, don't edit it!!\n\n");
-                fwprintf(outHeader, L"#if !defined(ERRHEADER_%s)\n", errNameSpace);
-                fwprintf(outHeader, L"#define ERRHEADER_%s\n\n", errNameSpace);
+                fwprintf(outHeader, L"#if !defined(ERRHEADER_%s)\n", xmlStrToPrintable(errNameSpace) );
+                fwprintf(outHeader, L"#define ERRHEADER_%s\n\n", xmlStrToPrintable(errNameSpace) );
+                releasePrintableStr
 
                 // If its not the exception domain, then we need a header included
                 if (XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
@@ -622,7 +716,8 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_BEGIN\n\n");
 
                 //  Now the message codes
-                fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", errNameSpace);
+                fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", xmlStrToPrintable(errNameSpace) );
+                releasePrintableStr
 
                 // Tell the formatter that a new domain is starting
                 formatter->startDomain
@@ -636,7 +731,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //  the 'no error' entry for that domain.
                 //
                 unsigned int count = 0;
-                fwprintf(outHeader, L"        %-32s   = %d\n", L"NoError", count++);
+                fwprintf(outHeader, L"        %-32s   = %d\n", longChars("NoError"), count++);
 
                 //
                 //  Loop through the children of this node, which should take us
@@ -660,17 +755,20 @@ extern "C" int wmain(int argC, XMLCh** argV)
                     const XMLCh* typeName = typeElem->getTagName();
 
                     MsgTypes type;
-                    if (!XMLString::compareString(typeName, L"Warning"))
+                    tmpXMLStr = XMLString::transcode("Warning");
+                    XMLCh* tmpXMLStr2 = XMLString::transcode("Error");
+                    XMLCh* tmpXMLStr3 =XMLString::transcode("FatalError");
+                    if (!XMLString::compareString(typeName, tmpXMLStr ))
                     {
                         type = MsgType_Warning;
                         typeGotten[0] = true;
                     }
-                     else if (!XMLString::compareString(typeName, L"Error"))
+                     else if (!XMLString::compareString(typeName, tmpXMLStr2 ))
                     {
                         type = MsgType_Error;
                         typeGotten[1] = true;
                     }
-                     else if (!XMLString::compareString(typeName, L"FatalError"))
+                     else if (!XMLString::compareString(typeName, tmpXMLStr3 ))
                     {
                         type = MsgType_FatalError;
                         typeGotten[2] = true;
@@ -678,8 +776,14 @@ extern "C" int wmain(int argC, XMLCh** argV)
                      else
                     {
                         wprintf(L"Expected a Warning, Error, or FatalError node\n\n");
+                        XMLString::release(&tmpXMLStr);
+                        XMLString::release(&tmpXMLStr2);
+                        XMLString::release(&tmpXMLStr3);
                         throw ErrReturn_SrcFmtError;
                     }
+                    XMLString::release(&tmpXMLStr);
+                    XMLString::release(&tmpXMLStr2);
+                    XMLString::release(&tmpXMLStr3);
 
                     // Call the start message type event
                     formatter->startMsgType(type);
@@ -713,18 +817,20 @@ extern "C" int wmain(int argC, XMLCh** argV)
                         (
                             outHeader
                             , L"      , %s%-30s   = %d\n"
-                            , typePrefixes[subIndex]
-                            , L"LowBounds"
+                            , xmlStrToPrintable(typePrefixes[subIndex]) 
+                            , longChars("LowBounds")
                             , count++
                         );
+                        releasePrintableStr
                         fwprintf
                         (
                             outHeader
                             , L"      , %s%-30s   = %d\n"
-                            , typePrefixes[subIndex]
-                            , L"HighBounds"
+                            , xmlStrToPrintable(typePrefixes[subIndex]) 
+                            , longChars("HighBounds")
                             , count++
                         );
+                        releasePrintableStr
                     }
                 }
 
@@ -748,8 +854,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
                           L"    {\n"
                           L"        return ((toCheck >= F_LowBounds) && (toCheck <= F_HighBounds));\n"
                           L"    }\n\n"
-                        , errNameSpace
+                        , xmlStrToPrintable(errNameSpace) 
                     );
+                    releasePrintableStr
 
                     fwprintf
                     (
@@ -758,8 +865,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
                           L"    {\n"
                           L"        return ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds));\n"
                           L"    }\n\n"
-                        , errNameSpace
+                        , xmlStrToPrintable(errNameSpace) 
                     );
+                    releasePrintableStr
 
                     fwprintf
                     (
@@ -768,8 +876,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
                           L"    {\n"
                           L"        return ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds));\n"
                           L"    }\n\n"
-                        , errNameSpace
+                        , xmlStrToPrintable(errNameSpace) 
                     );
+                    releasePrintableStr
 
                     fwprintf
                     (
@@ -784,8 +893,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
                           L"            return XMLErrorReporter::ErrType_Error;\n"
                           L"       return XMLErrorReporter::ErrTypes_Unknown;\n"
                           L"    }\n"
-                        , errNameSpace
+                        , xmlStrToPrintable(errNameSpace)
                     );
+                    releasePrintableStr
                 }
 
 
@@ -794,6 +904,8 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_END\n\n");
                 fwprintf(outHeader, L"#endif\n\n");
                 fclose(outHeader);
+                XMLString::release(&headerName);
+                XMLString::release(&errNameSpace);
             }
 
             // Ok, we are done so call the end output method
@@ -806,7 +918,8 @@ extern "C" int wmain(int argC, XMLCh** argV)
         catch(const ErrReturns retVal)
         {
             // And call the termination method
-            delete srcDoc;
+            if(srcDoc)
+                delete srcDoc;
             XMLPlatformUtils::Terminate();
             return retVal;
         }
@@ -815,6 +928,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
     }
 
     // And call the termination method
+    release_Globals();
     XMLPlatformUtils::Terminate();
 
     // Went ok, so return success
@@ -844,3 +958,13 @@ void XlatErrHandler::fatalError(const SAXParseException& toCatch)
 void XlatErrHandler::resetErrors()
 {
 }
+
+// if longChars is a macro, don't bother
+#ifndef longChars
+    wchar_t* longChars(const char *str) 
+    {
+        mbstowcs(fTmpWStr, str, 255);
+        return (fTmpWStr);
+    }
+#endif
+

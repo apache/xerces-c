@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/04/14 08:41:00  gareth
+ * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
+ *
  * Revision 1.4  2000/03/02 19:55:53  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -94,6 +97,7 @@ public :
 
     virtual ~CppSrcFormatter()
     {
+    	XMLString::release(&fCurDomainName);
     }
 
 

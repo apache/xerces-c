@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/04/14 08:41:00  gareth
+ * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
+ *
  * Revision 1.8  2002/11/05 22:10:06  tng
  * Explicit code using namespace in application.
  *
@@ -106,6 +109,8 @@ enum MsgTypes
 //  Includes
 // ---------------------------------------------------------------------------
 #include <stdio.h>
+#include <wchar.h>
+#include <stdlib.h>
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -127,4 +132,27 @@ XERCES_CPP_NAMESPACE_USE
 // ---------------------------------------------------------------------------
 //  Some const global data
 // ---------------------------------------------------------------------------
-extern const XMLCh* typePrefixes[MsgTypes_Count];
+extern XMLCh* typePrefixes[MsgTypes_Count];
+
+
+// this ugly hack is needed because cygwin/linux and Windows (MSVC++) 
+// have irreconcileable differences about what to do with chars, wchar_t and XMLCh
+// in wfprintf.  Windows thinks that XMLCh * is fine here whereas 
+// char * is not; gcc will allow XMLCh to be cast to wchar_t but happily
+// prints out gobbledygook in this case; it only seems happy when 
+// the native transcoder is used to convert the XMLCh to a char *
+#if defined(__linux__) || defined(__CYGWIN__)
+    extern char *fTmpStr;
+    #define xmlStrToPrintable(xmlStr) \
+        (fTmpStr = XMLString::transcode(xmlStr))
+    #define releasePrintableStr \
+        XMLString::release(&fTmpStr);
+    #define longChars(str) str
+#elif defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__)
+    extern wchar_t *longChars(const char *str);
+    #define xmlStrToPrintable(xmlStr) xmlStr
+    #define releasePrintableStr 
+#else
+    #error Code requires port to host OS!
+#endif
+

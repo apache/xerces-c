@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/04/14 08:41:00  gareth
+ * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
+ *
  * Revision 1.8  2002/12/12 19:30:48  peiyongz
  * Message file name changed.
  *
@@ -106,7 +109,8 @@ void CppSrcFormatter::endDomain(const   XMLCh* const    domainName
     fwprintf(fOutFl, L"\n};\n");
 
     // Output the const size value
-    fwprintf(fOutFl, L"const unsigned int %s%s = %d;\n\n", fCurDomainName, L"Size", msgCount);
+    fwprintf(fOutFl, L"const unsigned int %s%s = %d;\n\n", xmlStrToPrintable(fCurDomainName), longChars("Size"), msgCount);
+    releasePrintableStr
 }
 
 
@@ -122,14 +126,14 @@ void CppSrcFormatter::endMsgType(const MsgTypes type)
         fwprintf(fOutFl, L"  , { ");
     }
 
-    const XMLCh* rawData = typePrefixes[type];
+    XMLCh* rawData = typePrefixes[type];
     while (*rawData)
         fwprintf(fOutFl, L"0x%04lX,", *rawData++);
 
-    rawData = L"End";
+    XMLCh* tmpXMLStr = rawData = XMLString::transcode("End");
     while (*rawData)
         fwprintf(fOutFl, L"0x%04lX,", *rawData++);
-
+    XMLString::release(&tmpXMLStr);
     fwprintf(fOutFl, L"0x00 }\n");
 }
 
@@ -188,21 +192,22 @@ void CppSrcFormatter::startDomain(  const   XMLCh* const    domainName
     //  We have a different array name for each domain, so store that for
     //  later use and for use below.
     //
+    XMLString::release(&fCurDomainName);
     if (!XMLString::compareString(XMLUni::fgXMLErrDomain, domainName))
     {
-        fCurDomainName = L"gXMLErrArray";
+        fCurDomainName = XMLString::transcode("gXMLErrArray");
     }
      else if (!XMLString::compareString(XMLUni::fgExceptDomain, domainName))
     {
-        fCurDomainName = L"gXMLExceptArray";
+        fCurDomainName = XMLString::transcode("gXMLExceptArray");
     }
      else if (!XMLString::compareString(XMLUni::fgValidityDomain, domainName))
     {
-        fCurDomainName = L"gXMLValidityArray";
+        fCurDomainName = XMLString::transcode("gXMLValidityArray");
     }
      else if (!XMLString::compareString(XMLUni::fgXMLDOMMsgDomain, domainName))
     {
-        fCurDomainName = L"gXMLDOMMsgArray";
+        fCurDomainName = XMLString::transcode("gXMLDOMMsgArray");
     }
      else
     {
@@ -214,7 +219,8 @@ void CppSrcFormatter::startDomain(  const   XMLCh* const    domainName
     //  Output the leading part of the array declaration. Its just an
     //  array of pointers to Unicode chars.
     //
-    fwprintf(fOutFl, L"const XMLCh %s[][128] = \n{\n", fCurDomainName);
+    fwprintf(fOutFl, L"const XMLCh %s[][128] = \n{\n", xmlStrToPrintable(fCurDomainName));
+    releasePrintableStr
 
     // Reset the first message trigger
     fFirst = true;
@@ -233,13 +239,14 @@ void CppSrcFormatter::startMsgType(const MsgTypes type)
         fwprintf(fOutFl, L"  , { ");
     }
 
-    const XMLCh* rawData = typePrefixes[type];
+    XMLCh* rawData = typePrefixes[type];
     while (*rawData)
         fwprintf(fOutFl, L"0x%04lX,", *rawData++);
 
-    rawData = L"Start";
+    XMLCh *tmpXMLStr = rawData = XMLString::transcode("Start");
     while (*rawData)
         fwprintf(fOutFl, L"0x%04lX,", *rawData++);
+    XMLString::release(&tmpXMLStr);
 
     fwprintf(fOutFl, L"0x00 }\n");
 }
@@ -259,10 +266,20 @@ void CppSrcFormatter::startOutput(  const   XMLCh* const    locale
     //
     const unsigned int bufSize = 4095;
     XMLCh tmpBuf[bufSize + 1];
+    tmpBuf[0] = 0;
+    XMLCh *tmpXMLStr = XMLString::transcode("XercesMessages_");
+    XMLCh *tmpXMLStr2 = XMLString::transcode(".hpp");
 
-    swprintf(tmpBuf, L"%s/%s_%s.hpp", outPath, L"XercesMessages", locale);
-    fOutFl = _wfopen(tmpBuf, L"wt");
-    if (!fOutFl)
+    XMLString::catString(tmpBuf, outPath); 
+    XMLString::catString(tmpBuf, tmpXMLStr );
+    XMLString::catString(tmpBuf, locale);
+    XMLString::catString(tmpBuf, tmpXMLStr2 );
+    XMLString::release(&tmpXMLStr);
+    XMLString::release(&tmpXMLStr2);
+    char *tmpStr = XMLString::transcode(tmpBuf);
+    fOutFl = fopen(tmpStr, "wt");
+    XMLString::release(&tmpStr);
+    if ((!fOutFl) || (fwide(fOutFl, 1) <  0))
     {
         wprintf(L"Could not open the output file: %s\n\n", tmpBuf);
         throw ErrReturn_OutFileOpenFailed;

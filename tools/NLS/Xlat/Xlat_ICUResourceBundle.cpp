@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/04/14 08:41:00  gareth
+ * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
+ *
  * Revision 1.4  2002/12/17 17:39:09  tng
  * Xlat: generate icu message file with array format as default.
  *
@@ -102,6 +105,7 @@ ICUResBundFormatter::ICUResBundFormatter()
 
 ICUResBundFormatter::~ICUResBundFormatter()
 {
+	delete fTranscoder;
 }
 
 // ---------------------------------------------------------------------------
@@ -117,7 +121,8 @@ void ICUResBundFormatter::endDomain(const   XMLCh*        const    domainName
 void ICUResBundFormatter::endMsgType(const MsgTypes type)
 {
 #ifndef ICU_RESBUNDLE_IN_TABLE_FORM
-     fwprintf(fOutFl, L"\t\t\"%S End \" ,\n", typePrefixes[type]);
+     fwprintf(fOutFl, L"\t\t\"%s End \" ,\n", xmlStrToPrintable(typePrefixes[type]) );
+     releasePrintableStr
 #endif
 }
 
@@ -142,8 +147,6 @@ ICUResBundFormatter::nextMessage(const  XMLCh* const            msgText
     //  bother checking, just do it simple and stupid.
     //
 
-	char* outData = fTranscoder->transcode(msgText);
-
     //
 	//  array_name {
 	//               "xxx" ,
@@ -158,14 +161,15 @@ ICUResBundFormatter::nextMessage(const  XMLCh* const            msgText
 	//
 
 #ifdef ICU_RESBUNDLE_IN_TABLE_FORM
-    fwprintf(fOutFl, L"\t\t %3d { \"%S \" } \n", curId, outData);
+    fwprintf(fOutFl, L"\t\t %3d { \"%s \" } \n", curId, xmlStrToPrintable(msgText));
+    releasePrintableStr
 	// need to print leading 0 if less than 100, not tested yet
 #else
-    fwprintf(fOutFl, L"\t\t\"%S \" ,\n", outData);
+    fwprintf(fOutFl, L"\t\t\"%s \" ,\n", xmlStrToPrintable(msgText));
+    releasePrintableStr
 	// need a space between the last character and the closing "
 #endif
 
-    delete [] outData;
 }
 
 
@@ -178,7 +182,6 @@ void ICUResBundFormatter::startDomain(const   XMLCh* const    domainName
     //           domainName {
 	//
 	int index = XMLString::lastIndexOf(domainName, chForwardSlash);
-	char *tmpDomainName = fTranscoder->transcode(&(domainName[index+1]));
 
 #ifdef ICU_RESBUNDLE_IN_TABLE_FORM
     fwprintf(fOutFl, L"\n\t // a table \n");
@@ -186,9 +189,8 @@ void ICUResBundFormatter::startDomain(const   XMLCh* const    domainName
     fwprintf(fOutFl, L"\n\t // an array \n");
 #endif
 
-    fwprintf(fOutFl, L"\t%S { \n" , tmpDomainName);
-
-	delete [] tmpDomainName;
+    fwprintf(fOutFl, L"\t%s { \n" , xmlStrToPrintable(&(domainName[index+1])));
+    releasePrintableStr
 
 }
 
@@ -196,7 +198,8 @@ void ICUResBundFormatter::startDomain(const   XMLCh* const    domainName
 void ICUResBundFormatter::startMsgType(const MsgTypes type)
 {
 #ifndef ICU_RESBUNDLE_IN_TABLE_FORM
-    fwprintf(fOutFl, L"\t\t\"%S Start \" , \n", typePrefixes[type]);
+    fwprintf(fOutFl, L"\t\t\"%s Start \" , \n", xmlStrToPrintable(typePrefixes[type]) );
+    releasePrintableStr
 #endif
 }
 
@@ -215,18 +218,27 @@ void ICUResBundFormatter::startOutput(const   XMLCh* const    locale
     //
     const unsigned int bufSize = 4095;
     XMLCh tmpBuf[bufSize + 1];
+    tmpBuf[0] = 0;
+    XMLCh *tmpXMLStr = XMLString::transcode(".txt");
 
 
 
-    swprintf(tmpBuf, L"%s/%s.txt", outPath, locale);
-    fOutFl = _wfopen(tmpBuf, L"wt");
-    if (!fOutFl)
-    {
-        wprintf(L"Could not open the output file: %s\n\n", tmpBuf);
+    XMLString::catString(tmpBuf, outPath);
+    XMLString::catString(tmpBuf, locale);
+    XMLString::catString(tmpBuf, tmpXMLStr );
+    XMLString::release(&tmpXMLStr);
+    char *tmpStr = XMLString::transcode(tmpBuf);
+    fOutFl = fopen(tmpStr, "wt");
+    XMLString::release(&tmpStr);
+    if ((!fOutFl) || (fwide(fOutFl, 1) < 0))
+    {        
+        wprintf(L"Could not open the output file: %s\n\n", xmlStrToPrintable(tmpBuf) );        
+        releasePrintableStr
         throw ErrReturn_OutFileOpenFailed;
     }
 
     // Set the message delimiter
-    fwprintf(fOutFl, L"%s { \n", locale);
+    fwprintf(fOutFl, L"%s { \n", xmlStrToPrintable(locale) );
+    releasePrintableStr
 
 }
