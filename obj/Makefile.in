@@ -87,17 +87,24 @@ LIB=${XERCESCROOT}/lib
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
 BATCH_TARGET = "//'${LOADMOD}(IXM4C54)'"
+DEPDOM_TARGET = "//'${LOADMOD}(DDOM54)'"
 endif
 ifneq (${PLATFORM}, OS400)
 ifeq (${PLATFORM}, CYGWIN)
 CYGNAME=cygxerces-c
+CYGDEPDOM=cygxerces-depdom
 endif
 LIBNAME=libxerces-c
+LINK_LIBNAME=xerces-c
+LIBDEPDOM=libxerces-depdom
 else
 LIBNAME=libxercesc
+LINK_LIBNAME=xercesc
+LIBDEPDOM=libxercesdepdom
 endif
 
 ALL_OBJECTS=$(wildcard $(PLATFORM)/*.o)
+DEPDOM_OBJECTS=$(wildcard $(PLATFORM)/depdom/*.o)
 
 #######################################################
 #  HP-UX with CC compiler is awkward since it does    #
@@ -117,7 +124,7 @@ ifeq (${PLATFORM},HPUX)
     DUMMYEXE=$(XML_LIB_DIR)/dummyExe
     TEMPLATESOBJS=$(wildcard $(TEMPLATESREPOSITORY)/*.o)
 
-    all: $(DUMMYEXE) ${FQ_REAL_NAME}
+    all: $(DUMMYEXE) ${FQ_REAL_NAME} ${FQ_REAL_DEPDOM}
 	\rm -f $(DUMMYEXE)
 
     $(DUMMYEXE): $(ALL_OBJECTS)
@@ -125,18 +132,18 @@ ifeq (${PLATFORM},HPUX)
 
     ######  End HP-UX  CC compiler specific stuff #######
   else
-    all: ${FQ_REAL_NAME}
+    all: ${FQ_REAL_NAME} ${FQ_REAL_DEPDOM}
   endif
 else
    ## Start OS390BATCH ##
   ifeq (${OS390BATCH},1)
-all: ${BATCH_TARGET}
+all: ${BATCH_TARGET} ${DEPDOM_TARGET}
    ## End OS390BATCH ##
   else
     ifeq (${PLATFORM},CYGWIN)
-all: ${FQ_SO_NAME}
+all: ${FQ_SO_NAME} ${FQ_SO_DEPDOM}
     else
-all: ${FQ_REAL_NAME}
+all: ${FQ_REAL_NAME} ${FQ_REAL_DEPDOM}
     endif
   endif
 endif
@@ -161,9 +168,18 @@ ${FQ_SO_NAME}:	$(ALL_OBJECTS)
 	rm -rf ${FQ_REAL_NAME}.a   && ln -s ${XML_LIB_DIR}/${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a ${FQ_REAL_NAME}.a
 	@echo symlink ${FQ_LINK_NAME}.a
 	rm -rf ${FQ_LINK_NAME}.a && ln -s ${FQ_REAL_NAME}.a ${FQ_LINK_NAME}.a
+
+## DepDOM ##
+${FQ_SO_DEPDOM}: $(DEPDOM_OBJECTS)
+	@echo Building ${FQ_SO_DEPDOM}
+	${MAKE_SHARED} ${LD_SODEPDOM} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) -L${LIB} -l${LINK_LIBNAME}
+	@echo symlink ${FQ_REAL_DEPDOM}.a
+	rm -rf ${FQ_REAL_DEPDOM}.a   && ln -s ${XML_LIB_DIR}/${LIBDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a ${FQ_REAL_DEPDOM}.a
+	@echo symlink ${FQ_LINK_DEPDOM}.a
+	rm -rf ${FQ_LINK_DEPDOM}.a && ln -s ${FQ_REAL_DEPDOM}.a ${FQ_LINK_DEPDOM}.a
 endif
 
-${FQ_REAL_NAME}:	$(ALL_OBJECTS)
+${FQ_REAL_NAME}: $(ALL_OBJECTS)
 	@echo Building ${FQ_REAL_NAME}
 	${MAKE_SHARED} ${LD_SONAME} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
     ifneq (${FQ_SO_NAME},${FQ_REAL_NAME})
@@ -173,6 +189,17 @@ ${FQ_REAL_NAME}:	$(ALL_OBJECTS)
 	@echo symlink ${FQ_LINK_NAME}
 	rm -rf ${FQ_LINK_NAME} && ln -s ${FQ_SO_NAME} ${FQ_LINK_NAME}
 
+## DepDOM ##
+${FQ_REAL_DEPDOM}: $(DEPDOM_OBJECTS)
+	@echo Building ${FQ_REAL_DEPDOM}
+	${MAKE_SHARED} ${LD_SODEPDOM} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) -L${LIB} -l${LINK_LIBNAME}
+    ifneq (${FQ_SO_DEPDOM},${FQ_REAL_DEPDOM})
+	@echo symlink ${FQ_SO_DEPDOM} 
+	rm -rf ${FQ_SO_DEPDOM}   && ln -s ${FQ_REAL_DEPDOM} ${FQ_SO_DEPDOM}
+    endif
+	@echo symlink ${FQ_LINK_DEPDOM}
+	rm -rf ${FQ_LINK_DEPDOM} && ln -s ${FQ_SO_DEPDOM} ${FQ_LINK_DEPDOM}
+	
 ## Start OS390 ##
 ifeq (${PLATFORM},OS390)
 ## Start OS390BATCH ##
@@ -180,6 +207,9 @@ ifeq (${OS390BATCH},1)
 ${BATCH_TARGET}:        $(ALL_OBJECTS)
 	@echo Building ${BATCH_TARGET}
 	${MAKE_SHARED} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
+${DEPDOM_TARGET}:        $(DEPDOM_OBJECTS)
+	@echo Building ${DEPDOM_TARGET}
+	${MAKE_SHARED} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) -L${LIB} -l${LINK_LIBNAME}
 else
 	$(CP) ${LIBNAME}${VER}${OS390SIDEDECK} ${LIB}
 endif
@@ -190,7 +220,7 @@ endif
 
 clean:
 	@echo "Making clean in obj ..."
-	-rm -f $(ALL_OBJECTS) ${FQ_REAL_NAME}
+	-rm -f $(ALL_OBJECTS) ${FQ_REAL_NAME} ${FQ_REAL_DEPDOM}
 ifneq ($(strip $(TEMPLATESREPOSITORY)),)
 	-rm -f $(TEMPLATESREPOSITORY)/*.o
 	-rm -f $(TEMPLATESREPOSITORY)/*.c
@@ -201,9 +231,16 @@ ifeq (${PLATFORM}, CYGWIN)
 	-rm -f ${XML_LIB_DIR}/${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a
 	-rm -f ${FQ_LINK_NAME}.a
 	-rm -f ${FQ_REAL_NAME}.a
+
+	-rm -f ${XML_LIB_DIR}/${LIBDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a
+	-rm -f ${FQ_LINK_DEPDOM}.a
+	-rm -f ${FQ_REAL_DEPDOM}.a	
 else
 	-rm -f ${FQ_SO_NAME}
 	-rm -f ${FQ_LINK_NAME}
+	
+	-rm -f ${FQ_SO_DEPDOM}
+	-rm -f ${FQ_LINK_DEPDOM}	
 endif
 
 
@@ -225,12 +262,20 @@ ifeq (${PLATFORM}, CYGWIN)
 	$(CP) ${FQ_SO_NAME} ${DESTDIR}${PREFIX}/bin
 	$(CP) $(XML_LIB_DIR)/${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a ${DESTDIR}${PREFIX}/lib
 	(cd ${DESTDIR}$(PREFIX)/lib; rm -f ${LINK_NAME}.a libxerces.dll.a; ln -s ${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a ${LINK_NAME}.a; ln -s ${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a libxerces.dll.a)
+
+	$(CP) ${FQ_SO_DEPDOM} ${DESTDIR}${PREFIX}/bin
+	$(CP) $(XML_LIB_DIR)/${LIBDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a ${DESTDIR}${PREFIX}/lib
+	(cd ${DESTDIR}$(PREFIX)/lib; rm -f ${LINK_DEPDOM}.a libxercesdepdom.dll.a; ln -s ${LIBDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a ${LINK_NAME}.a; ln -s ${LIBDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}.a libxercesdepdom.dll.a)
 else
 	$(CP) ${FQ_REAL_NAME} ${DESTDIR}$(PREFIX)/lib
 	(cd ${DESTDIR}$(PREFIX)/lib; ln -s ${REAL_NAME} ${SO_NAME}; ln -s ${REAL_NAME} ${LINK_NAME})
+	
+	$(CP) ${FQ_REAL_DEPDOM} ${DESTDIR}$(PREFIX)/lib
+	(cd ${DESTDIR}$(PREFIX)/lib; ln -s ${REAL_DEPDOM} ${SO_DEPDOM}; ln -s ${REAL_DEPDOM} ${LINK_DEPDOM})	
 endif
 ifeq (${PLATFORM},OS390)
 	$(CP) ${LIBNAME}${VER}${OS390SIDEDECK} ${DESTDIR}$(PREFIX)/lib
+	$(CP) ${LIBDEPDOM}${VER}${OS390SIDEDECK} ${DESTDIR}$(PREFIX)/lib	
 endif
 endif
 

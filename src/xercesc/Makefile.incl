@@ -97,6 +97,7 @@ XML_BUILD_OPTIONS = ${CXXFLAGS}
 XML_LIB_DIR = $(XERCESCROOT)/lib
 XML_INC_DIR = $(XERCESCROOT)/include/xercesc
 XML_OBJ_DIR = ${XERCESCROOT}/obj/${PLATFORM}
+XML_OBJ_DEPDOM_DIR = ${XERCESCROOT}/obj/${PLATFORM}/depdom
 XML_OBJ        = ${XERCESCROOT}/obj
 XML_INCL = -I$(XERCESCROOT)/include
 ifeq (${SYSOVR},OS400)
@@ -104,6 +105,7 @@ PLATFORM = OS400
 endif
 TO = o
 RM2 = rm -f
+MV   = mv
 ## Compiler switch to embed a library name
 ## default value empty
 LD_SONAME =
@@ -149,6 +151,7 @@ ifeq (${PLATFORM}, SOLARIS)
   ICUSHLIBSUFFIX=.so
   ## Compiler switch to embed a library name
   LD_SONAME = -h ${SO_NAME}
+  LD_SODEPDOM = -h ${SO_DEPDOM}  
 endif
 
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
@@ -303,6 +306,7 @@ EXTRA_COMPILE_OPTIONS = -I. -g
 EXTRA_LINK_OPTIONS = -q OPTION='*DUPVAR *DUPPROC'
 
 RM2 = -del
+MV  = mv
 
 endif
 
@@ -321,6 +325,7 @@ SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
+LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}
 endif
 
 #=============== INTERIX SPECIFIC OPTIONS =========================
@@ -374,6 +379,7 @@ SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
+LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}
 endif
 
 #=============== QNX SPECIFIC OPTIONS =========================
@@ -396,6 +402,7 @@ SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
+LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}
 endif
 
 #=============== FREEBSD SPECIFIC OPTIONS =========================
@@ -413,6 +420,7 @@ SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
+LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}
 endif
 
 #=============== NETBSD SPECIFIC OPTIONS =========================
@@ -430,6 +438,7 @@ SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME = -Wl,-soname,${SO_NAME}
+LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}
 endif
 
 #=============== IRIX SPECIFIC OPTIONS ============================
@@ -519,6 +528,7 @@ ifeq (${PLATFORM}, HPUX)
   endif
   ## Compiler switch to embed a library name
   LD_SONAME = -Wl,+h,${SO_NAME}
+  LD_SODEPDOM = -Wl,+h,${SO_DEPDOM}  
 endif
 
 
@@ -601,7 +611,8 @@ ifeq (${PLATFORM}, MACOSX)
     endif
     SHLIBSUFFIX=.dylib
     ICUSHLIBSUFFIX=.dylib
-	LD_SONAME = -install_name ${SO_NAME}
+    LD_SONAME = -install_name ${SO_NAME}
+    LD_SODEPDOM = -install_name ${SO_DEPDOM}    
 endif
 
 #=============== CygWin SPECIFIC OPTIONS =========================
@@ -643,45 +654,48 @@ ifeq (${PLATFORM}, AIX)
     SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
     REAL_NAME=${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
     
+    LINK_DEPDOM=${LIBDEPDOM}${SHLIBSUFFIX}
+    SO_DEPDOM  =${LIBDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+    REAL_DEPDOM=${LIBDEPDOM}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
+        
     RESLIB_LINK_NAME=${RESLIBNAME}${SHLIBSUFFIX}
     RESLIB_SO_NAME  =${RESLIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
     RESLIB_REAL_NAME=${RESLIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
     
 endif
 ifeq (${PLATFORM}, OS390)
-	#
-	# LINK_NAME=libxerces-c.dll
-	# SO_NAME  =libxerces-c20.dll
-	# REAL_NAME=libxerces-c2_0_0.dll
-	#
-	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-	SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
-	REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
+    #
+    # LINK_NAME=libxerces-c.dll
+    # SO_NAME  =libxerces-c20.dll
+    # REAL_NAME=libxerces-c2_0_0.dll
+    #
+    LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+    SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+    REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
 	
+    LINK_DEPDOM=${LIBDEPDOM}${SHLIBSUFFIX}
+    SO_DEPDOM  =${LIBDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+    REAL_DEPDOM=${LIBDEPDOM}${VER}${SHLIBSUFFIX}
+    	
     RESLIB_LINK_NAME=${RESLIBNAME}${SHLIBSUFFIX}
     RESLIB_SO_NAME  =${RESLIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
     RESLIB_REAL_NAME=${RESLIBNAME}${VER}${SHLIBSUFFIX}	
 
 endif
 ifeq (${PLATFORM}, CYGWIN)
-	#
-	# LINK_NAME=libxerces-c.dll
-	# SO_NAME  =cygxerces-c20.dll
-	# REAL_NAME=libxerces-c2_0_0.dll
-	#
-	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-	SO_NAME  =${CYGNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
-	REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
-endif
-ifeq (${PLATFORM}, MINGW)
-	#
-	# LINK_NAME=libxerces-c.dll
-	# SO_NAME  =libxerces-c20.dll
-	# REAL_NAME=libxerces-c2_0_0.dll
-	#
-	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-	SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
-	REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
+    #
+    # LINK_NAME=libxerces-c.dll
+    # SO_NAME  =cygxerces-c20.dll
+    # REAL_NAME=libxerces-c2_0_0.dll
+    #
+    LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+    SO_NAME  =${CYGNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+    REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
+    
+    LINK_DEPDOM=${LIBDEPDOM}${SHLIBSUFFIX}
+    SO_DEPDOM  =${CYGDEPDOM}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+    REAL_DEPDOM=${LIBDEPDOM}${VER}${SHLIBSUFFIX}
+        
 endif
 ifeq (${PLATFORM}, MACOSX)
     #
@@ -692,6 +706,11 @@ ifeq (${PLATFORM}, MACOSX)
     LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
     SO_NAME  =${LIBNAME}.${SO_TARGET_VERSION}${SHLIBSUFFIX}
     REAL_NAME=${LIBNAME}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
+    
+    LINK_DEPDOM=${LIBDEPDOM}${SHLIBSUFFIX}
+    SO_DEPDOM  =${LIBDEPDOM}.${SO_TARGET_VERSION}${SHLIBSUFFIX}
+    REAL_DEPDOM=${LIBDEPDOM}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
+        
 endif
 ifeq (${PLATFORM}, QNX)
     #
@@ -699,22 +718,31 @@ ifeq (${PLATFORM}, QNX)
     # SO_NAME  =libxerces-c.20.{suffix}
     # REAL_NAME=libxerces-c.20.{suffix}
     #
-	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-	SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
-	REAL_NAME=$(SO_NAME)
+    LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+    SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+    REAL_NAME=$(SO_NAME)
+    
+    LINK_DEPDOM=${LIBDEPDOM}${SHLIBSUFFIX}
+    SO_DEPDOM  =${LIBDEPDOM}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+    REAL_DEPDOM=$(SO_DEPDOM)
+        
 endif
 
 # Default naming (if no special cases above)
 ifeq ($(SO_NAME),) 
-	#
-	# LINK_NAME=libxerces-c.so
-	# SO_NAME  =libxerces-c.so.20
-	# REAL_NAME=libxerces-c.so.20.0
-	#
-	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-	SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
-	REAL_NAME=${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
+    #
+    # LINK_NAME=libxerces-c.so
+    # SO_NAME  =libxerces-c.so.20
+    # REAL_NAME=libxerces-c.so.20.0
+    #
+    LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+    SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+    REAL_NAME=${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
 	
+    LINK_DEPDOM=${LIBDEPDOM}${SHLIBSUFFIX}
+    SO_DEPDOM  =${LIBDEPDOM}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+    REAL_DEPDOM=${LIBDEPDOM}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
+    	
     RESLIB_LINK_NAME=${RESLIBNAME}${SHLIBSUFFIX}
     RESLIB_SO_NAME  =${RESLIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
     RESLIB_REAL_NAME=${RESLIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}	
@@ -725,6 +753,10 @@ endif
 FQ_LINK_NAME=${XML_LIB_DIR}/${LINK_NAME}
 FQ_SO_NAME  =${XML_LIB_DIR}/${SO_NAME}
 FQ_REAL_NAME=${XML_LIB_DIR}/${REAL_NAME}
+
+FQ_LINK_DEPDOM=${XML_LIB_DIR}/${LINK_DEPDOM}
+FQ_SO_DEPDOM  =${XML_LIB_DIR}/${SO_DEPDOM}
+FQ_REAL_DEPDOM=${XML_LIB_DIR}/${REAL_DEPDOM}
 
 FQ_RESLIB_LINK_NAME=${XML_LIB_DIR}/${RESLIB_LINK_NAME}
 FQ_RESLIB_SO_NAME  =${XML_LIB_DIR}/${RESLIB_SO_NAME}

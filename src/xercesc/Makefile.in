@@ -120,6 +120,7 @@ endif
 Prepare::
 	@echo Preparing the directory structure for a build ...
 	-${MKDIR} -p ${XML_OBJ_DIR}
+	-${MKDIR} -p ${XML_OBJ_DEPDOM_DIR}
 	-${MKDIR} -p ${XML_LIB_DIR}
 	${MAKE} -C $(UTIL_DIR) includes
 	${MAKE} -C $(SAX_DIR) includes
@@ -183,7 +184,7 @@ install::
 	${MAKE} -C $(DOM_DIR) $@
 	${MAKE} -C $(VALIDATORS_DIR) $@
 	${MAKE} -C $(XML_OBJ) $@
-
+	
 clean::
 	${MAKE} -C $(UTIL_DIR) $@
 	${MAKE} -C $(SAX_DIR) $@
@@ -194,7 +195,7 @@ clean::
 	${MAKE} -C $(DOM_DIR) $@
 	${MAKE} -C $(VALIDATORS_DIR) $@
 	${MAKE} -C $(XML_OBJ) $@
-
+	
 distclean::
 	${MAKE} -C $(UTIL_DIR) $@
 	${MAKE} -C $(SAX_DIR) $@

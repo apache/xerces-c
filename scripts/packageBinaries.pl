@@ -402,10 +402,12 @@ if ($platform eq "win64bit" )
     }
 
     psystem("copy /y $BUILDDIR\\xerces-c_*.lib $targetdir\\lib");
-
+    psystem("copy /y $BUILDDIR\\xerces-depdom_*.lib $targetdir\\lib");
+    
     if ($buildmode ne "Debug") {
         $DEBUGBUILDDIR = "$XERCESCROOT\\Build\\Win64\\VC6\\Debug";
         psystem("copy /y $DEBUGBUILDDIR\\xerces-c_*D.lib $targetdir\\lib");
+        psystem("copy /y $DEBUGBUILDDIR\\xerces-depdom_*D.lib $targetdir\\lib");        
         psystem("copy /y $DEBUGBUILDDIR\\xerces*D.dll $targetdir\\bin");
     }
 
@@ -816,9 +818,12 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
 
     }
     psystem("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
+    psystem("cp -fv $BUILDDIR/xerces-depdom_*.lib $targetdir/lib");
+        
     if ($buildmode ne "Debug") {
         $DEBUGBUILDDIR = "$XERCESCROOT/Build/Win32/$VCBuildDir/Debug";
         psystem("cp -fv $DEBUGBUILDDIR/xerces-c_*D.lib $targetdir/lib");
+        psystem("cp -fv $DEBUGBUILDDIR/xerces-depdom_*D.lib $targetdir/lib");        
         psystem("cp -fv $DEBUGBUILDDIR/xerces-c*D.dll $targetdir/bin");
     }
 
@@ -1340,27 +1345,50 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     if ((-e "$XERCESCROOT/lib/libxerces-c.so.25.0" )) {
         psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.25.0 .");
         psystem("ln -s libxerces-c.so.25.0 libxerces-c.so.25 ");
-        psystem("ln -s libxerces-c.so.25   libxerces-c.so    ");
+        psystem("ln -s libxerces-c.so.25   libxerces-c.so    ");     
+    }
+
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom.so.25.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.so.25.0 .");
+        psystem("ln -s libxerces-depdom.so.25.0 libxerces-depdom.so.25 ");
+        psystem("ln -s libxerces-depdom.so.25   libxerces-depdom.so    ");        
     }
 
     if ((-e "$XERCESCROOT/lib/libxerces-c.sl.25.0" )) {
         psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.25.0 .");
         psystem("ln -s libxerces-c.sl.25.0 libxerces-c.sl.25 ");
-        psystem("ln -s libxerces-c.sl.25   libxerces-c.sl    ");
+        psystem("ln -s libxerces-c.sl.25   libxerces-c.sl    ");               
     }
 
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom.sl.25.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.sl.25.0 .");
+        psystem("ln -s libxerces-depdom.sl.25.0 libxerces-depdom.sl.25 ");
+        psystem("ln -s libxerces-depdom.sl.25   libxerces-depdom.sl    ");
+    }
+                
     if ((-e "$XERCESCROOT/lib/libxerces-c25.0.so" )) {
         psystem("cp -f $XERCESCROOT/lib/libxerces-c25.0.so .");
         psystem("ln -s libxerces-c25.0.so libxerces-c25.so  ");
         psystem("ln -s libxerces-c25.so   libxerces-c.so    ");
     }
 
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom25.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom25.0.so .");
+        psystem("ln -s libxerces-depdom25.0.so libxerces-depdom25.so  ");
+        psystem("ln -s libxerces-depdom25.so   libxerces-depdom.so    ");
+    }
+    
     if ((-e "$XERCESCROOT/lib/libxerces-c25.0.a" )) {
         psystem("cp -f $XERCESCROOT/lib/libxerces-c25.0.a . ");
         psystem("ln -s libxerces-c25.0.a  libxerces-c25.a ");
         psystem("ln -s libxerces-c25.a    libxerces-c.a ");         
     }
         
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom25.0.a" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom25.0.a . ");
+        psystem("ln -s libxerces-depdom25.0.a  libxerces-depdom25.a ");
+        psystem("ln -s libxerces-depdom25.a    libxerces-depdom.a ");         
+    }        
 	# Mac OS X
     if ((-e "$XERCESCROOT/lib/libxerces-c.25.0.dylib" )) {
         psystem("cp -f $XERCESCROOT/lib/libxerces-c.25.0.dylib .");
