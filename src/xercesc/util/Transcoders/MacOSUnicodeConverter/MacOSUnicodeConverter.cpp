@@ -71,9 +71,9 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
 
-#if defined(XML_METROWERKS)
+#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
 	// Only used under metrowerks.
-	// In MacOS X Public Beta, the system wchar.h header is missing, which causes this to fail.
+	// In ProjectBuilder, the system wchar.h header is missing, which causes this to fail.
 	#include <cwctype>
 #endif
 
@@ -81,7 +81,7 @@
 #include <cstddef>
 #include <cstring>
 
-#if defined(XML_MACOSX)
+#if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
     #include <CoreServices/CoreServices.h>
 #else
@@ -392,11 +392,11 @@ const XMLCh* MacOSUnicodeConverter::getId() const
 
 bool MacOSUnicodeConverter::isSpace(const XMLCh toCheck) const
 {
-#if defined(XML_METROWERKS)
+#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
 	// Use this if there's a reasonable c library available.
 	// ProjectBuilder currently has no support for iswspace ;(
     return (std::iswspace(toCheck) != 0);
-#elif defined(XML_MACOSX) || true
+#elif defined(__APPLE__) || true
 	// This looks fairly good, assuming we're on an ascii compiler.
 	// We'll use this under ProjectBuilder for now.
 	return (toCheck == L' ');
@@ -464,14 +464,13 @@ bool MacOSUnicodeConverter::supportsSrcOfs() const
 
 void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
 {
-	//	еее TODO: Support CFString for this conversion
-#if defined(XML_METROWERKS)
+#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
 	// Use this if there's a reasonable c library available.
 	// Metrowerks does this reasonably
 	wchar_t c;
 	for (XMLCh* p = (XMLCh*)toUpperCase; ((c = *p) != 0); )
 		*p++ = std::towupper(c);
-#elif defined(XML_MACOSX) || true
+#elif defined(__APPLE__) || true
 	// This might work, assuming we're on an ascii compiler.
 	// We'll use this under ProjectBuilder for now.
 	// Note that this only handles the ascii portion of the
@@ -491,14 +490,13 @@ void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
 
 void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase) const
 {
-	//	еее TODO: Support CFString for this conversion
-#if defined(XML_METROWERKS)
+#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
 	// Use this if there's a reasonable c library available.
 	// Metrowerks does this reasonably
 	wchar_t c;
 	for (XMLCh* p = (XMLCh*)toLowerCase; ((c = *p) != 0); )
 		*p++ = std::towlower(c);
-#elif defined(XML_MACOSX) || true
+#elif defined(__APPLE__) || true
 	// This might work, assuming we're on an ascii compiler.
 	// We'll use this under ProjectBuilder for now.
 	// Note that this only handles the ascii portion of the

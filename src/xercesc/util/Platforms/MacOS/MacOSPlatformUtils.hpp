@@ -63,7 +63,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <cstdlib>
 
-#if defined(XML_MACOSX)
+#if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
     #include <CoreServices/CoreServices.h>
 #else

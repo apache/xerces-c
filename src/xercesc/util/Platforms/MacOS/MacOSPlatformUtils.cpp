@@ -99,7 +99,7 @@
 #include <memory>
 #include <algorithm>
 
-#if defined(XML_MACOSX)
+#if defined(__APPLE__)
     //	Include from Frameworks Headers under ProjectBuilder
     #include <Carbon/Carbon.h>
 #else
@@ -530,9 +530,6 @@ XMLPlatformUtils::panic(const PanicReasons reason)
     else
         reasonStr = "Unknown error source";
 
-    char text[256];
-    std::snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
-
     //
     //  The default handling of panics is not very friendly.
     //	To replace it with something more friendly, you'll need to:
@@ -543,6 +540,14 @@ XMLPlatformUtils::panic(const PanicReasons reason)
 #if defined(XML_USE_CUSTOM_PANIC_PROC)
     XMLCustomPanicProc(reason, reasonStr);
 #else
+    char text[256];
+    
+    #if defined(XML_METROWERKS) || defined(_GLIBCPP_USE_C99)
+    std::snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
+    #else
+    std::sprintf(text, "Xerces Panic Error: %s", reasonStr);
+    #endif
+
     Str255 pasText;
     CopyCStringToPascal(text, pasText);
     DebugStr(pasText);

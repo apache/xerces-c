@@ -64,7 +64,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <cstddef>
 
-#if defined(XML_MACOSX)
+#if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
     #include <CoreServices/CoreServices.h>
 #else

@@ -69,7 +69,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/BinInputStream.hpp>
 
-#if defined(XML_MACOSX)
+#if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
 	#include <Carbon/Carbon.h>
 #else

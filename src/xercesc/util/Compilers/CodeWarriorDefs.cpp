@@ -62,7 +62,9 @@
 #include <ctype.h>
 
 // These functions are needed because MacOS doesn't define them
+//	(these routines are defined in CW 8 by extras.h)
 
+#if 0
 // Compare lexigraphically two strings
 int stricmp(const char *s1, const char *s2)
 {
@@ -92,4 +94,5 @@ int strnicmp(const char *s1, const char *s2, const unsigned int n)
     }
     return 0;
 }
+#endif
 

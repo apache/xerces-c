@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 //#include <sys/types.h>  // for size_t and ssize_t
 //#include <limits.h>  // for MAX of size_t and ssize_t
+//#include <extras.h>
 
 
 // ---------------------------------------------------------------------------
@@ -136,9 +137,12 @@ typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Provide some common string ops that are different/notavail for CodeWarrior.
+//	(these routines are defined in CW 8 by extras.h)
 // ---------------------------------------------------------------------------
+#if 0
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
+#endif
 
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the Codewarrior version of the

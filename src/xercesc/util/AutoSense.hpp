@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/07/12 16:48:49  jberry
+ * Remove reliance on XML_MACOSX. XML_MACOS is used solely. Where qualification
+ * by compiler is required, look for the compiler explicitly such as with
+ * XML_METROWERKS or __APPLE__ (for the Apple GCC compiler).
+ *
+ * Add a few tweaks for compatibility with GCC3.1.
+ *
+ * This change may address Bug 10649.
+ *
  * Revision 1.3  2002/03/04 20:31:14  tng
  * [Bug 2868] AIX 4.3.3 mutex/atomic-operation changes for build.
  *
@@ -213,10 +222,8 @@
 #elif defined(__MSDXML__)
     #define XML_DOS
 
-#elif defined(macintosh)
+#elif defined(macintosh) || (defined(__APPLE__) && defined(__MACH__))
     #define XML_MACOS
-#elif defined(__APPLE__) && defined(__MACH__)
-    #define XML_MACOSX
 #elif defined(__alpha) && defined(__osf__)
     #define XML_TRU64
 #else

@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/07/12 16:48:49  jberry
+ * Remove reliance on XML_MACOSX. XML_MACOS is used solely. Where qualification
+ * by compiler is required, look for the compiler explicitly such as with
+ * XML_METROWERKS or __APPLE__ (for the Apple GCC compiler).
+ *
+ * Add a few tweaks for compatibility with GCC3.1.
+ *
+ * This change may address Bug 10649.
+ *
  * Revision 1.6  2002/07/10 12:56:45  tng
  * [Bug 9154] Requesting Xerces Version Macro.
  *
@@ -258,7 +267,7 @@
 #include    <xercesc/util/Platforms/OS2/OS2Defs.hpp>
 #endif
 
-#if defined(XML_MACOS) || defined(XML_MACOSX)
+#if defined(XML_MACOS)
 #include	<xercesc/util/Platforms/MacOS/MacOSDefs.hpp>
 #endif
 
