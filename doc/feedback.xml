@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0"  encoding="iso-8859-1" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Feedback Procedures">
@@ -38,32 +38,61 @@
         we would like to give special thanks. </p>
 
         <ul>
+            <li>Curt Arnold</li>
             <li>Anupam Bagchi</li>
+            <li>Torbjörn Bäckström</li>
             <li>Matthew Baker</li>
-            <li>Sumit Chawla</li>
+            <li>James Berry</li>
+            <li>David Bertoni</li>
+            <li>Arundhati Bhowmick</li>
             <li>John Bellardo</li>
             <li>Arundhati Bhowmick</li>
+            <li>Sumit Chawla</li>
+            <li>Chih Hsiang Chou</li>
+            <li>Radovan Chytracek</li>
+            <li>Todd Collins</li>
+            <li>Michael Crawford</li>
+            <li>Murray Cumming</li>
+            <li>Helmut Eiken</li>
             <li>Simon Fell</li>
             <li>Paul Ferguson</li>
             <li>Pierpaolo Fumagalli</li>
+            <li>Gary Gale</li>
             <li>Susan Hardenbrook</li>
             <li>Andy Heninger</li>
+            <li>William L. Hopper</li>
             <li>Rahul Jain</li>
+            <li>Tom Jordahl</li>
+            <li>Joe Kesselman</li>
+            <li>Bob Kline</li>
             <li>Richard Ko</li>
             <li>Paul Kramer</li>
+            <li>Arnaud LeHors</li>
             <li>Andy Levine</li>
+            <li>Jeff Lewis</li>
+            <li>Sean MacRoibeaird</li>
             <li>David Nickerson</li>
             <li>Michael Ottati</li>
             <li>Mike Pogue</li>
             <li>Joe Polastre</li>
             <li>John Ponzo</li>
+            <li>Shengkai Qu</li>
+            <li>Jim Reitz</li>
             <li>Dean Roddey</li>
+            <li>John Roper</li>
             <li>Steven Rosenthal</li>
+            <li>Bill Schindler</li>
+            <li>Erik Schroeder</li>
+            <li>John Smirl</li>
             <li>Gereon Steffens</li>
             <li>Rick J. Stevens</li>
             <li>Linda M. Swan</li>
             <li>Tom Watson</li>
             <li>Roger Webster</li>
+            <li>Robert Weir</li>
+            <li>Dietrich Wolf</li>
+            <li>Kirk Wylie</li>
+            <li>Grace Yan</li>
         </ul>
     </s2>
 </s1>

@@ -15,18 +15,12 @@
         <jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM 1.0</jump>,
         <jump href="http://www.megginson.com/SAX/SAX1/index.html">SAX 1.0</jump>,
         <jump href="http://www.megginson.com/SAX/index.html">SAX 2.0</jump>,
-        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>). It also provides
-        early implementations of
-        <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2 version 1.0</jump>
-        and soon it will support
-        <jump href="http://www.w3.org/XML/Group/Schemas.html">XMLSchema</jump>, both the
-        <jump href="http://www.w3.org/TR/xmlschema-1/structures.html">Structures</jump> and the
-        <jump href="http://www.w3.org/TR/xmlschema-2/datatypes.html">Datatypes</jump>.
+        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>),
+        <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2 version 1.0</jump>.
         The parser provides high performance, modularity, and scalability.
         Source code, samples and API documentation are provided with the parser. For
         portability, care has been taken to make minimal use of templates,
-        no RTTI, no C++ namespaces, limited use of exceptions and minimal
-        use of #ifdefs.</p>
+        no RTTI, no C++ namespaces and minimal use of #ifdefs.</p>
 
     </s2>
 
@@ -67,7 +61,7 @@
             <li>Linux (RedHat 6.1) using egcs-2.91.66 and glibc-2.1.2-11</li>
             <li>Solaris 2.6 using Sun Workshop 4.2</li>
             <li>AIX 4.2.1 using xlC 3.6.4</li>
-            <li>HP-UX 11 using aCC A.03.13 with pthreads <em>XML4C only</em></li>
+            <li>HP-UX 11 using aCC A.03.13 with pthreads</li>
         </ul>
     </s2>
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0"  encoding="iso-8859-1" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Releases">
@@ -10,6 +10,16 @@
         <td >Date</td>
         <td >Contributor</td>
         <td >Description</td>
+    </tr>
+    <tr>
+        <td >2000-09-21</td>
+        <td >Torbjörn Bäckström</td>
+        <td >HPUX - Incorrect use of Array Janitor in Platform Utils removed.</td>
+    </tr>
+    <tr>
+        <td >2000/09/21</td>
+        <td >Arundhati Bhowmick</td>
+        <td >DOMPrint - DTD internal subset, printing of attribute value enumerations was broken.</td>
     </tr>
     <tr>
         <td >2000/09/19</td>
