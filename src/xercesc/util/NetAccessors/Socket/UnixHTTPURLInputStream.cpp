@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/29 14:30:50  peiyongz
+ * Bug9489: Malformed HTTP GET Requests in UnixHTTPUrlInputStream ,
+ *                 patch from Gereon Steffens (gereon.steffens@web.de)
+ *
  * Revision 1.3  2002/05/07 14:36:44  tng
  * [Bug 8852] UnixHTTPURLInputStream.cpp includes unneeded file.
  *
@@ -219,7 +223,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     if (portNumber != 80)
     {
         int i = strlen(fBuffer);
-		sprintf(fBuffer+i, "%d", portNumber);
+		sprintf(fBuffer+i, ":%d", portNumber);
         // _itoa(portNumber, fBuffer+i, 10);
     }
     strcat(fBuffer, "\r\n\r\n");
