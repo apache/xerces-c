@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/15 16:02:49  peiyongz
+ * Solve Linkage error on Solaris
+ *
  * Revision 1.3  2003/10/10 18:37:51  neilg
  * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components
  *
@@ -104,7 +107,7 @@ XSNamespaceItem *XSObject::getNamespaceItem()
   * @return id unique for this type of component within this XSModel
   * or 0 to indicate that this is unsupported for this type of component.
   */
-inline unsigned int XSObject::getId() const
+unsigned int XSObject::getId() const
 {
     return 0;
 }
