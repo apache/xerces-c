@@ -142,7 +142,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fEncodingStr(0)
     , fForcedEncoding(false)
     , fNoMore(false)
-    , fPublicId(XMLString::replicate(pubId))
+    , fPublicId(XMLString::replicate(pubId, manager))
     , fRawBufIndex(0)
     , fRawBytesAvail(0)
     , fReaderNum(0xFFFFFFFF)
@@ -153,7 +153,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fSrcOfsSupported(false)
     , fCalculateSrcOfs(calculateSrcOfs)
     , fStream(streamToAdopt)
-    , fSystemId(XMLString::replicate(sysId))
+    , fSystemId(XMLString::replicate(sysId, manager))
     , fSwapped(false)
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
@@ -183,7 +183,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     }
     #endif
 
-    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding));
+    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding), fMemoryManager);
 
     // Check whether the fSwapped flag should be set or not
     checkForSwapped();
@@ -223,7 +223,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fEncodingStr(0)
     , fForcedEncoding(true)
     , fNoMore(false)
-    , fPublicId(XMLString::replicate(pubId))
+    , fPublicId(XMLString::replicate(pubId, manager))
     , fRawBufIndex(0)
     , fRawBytesAvail(0)
     , fReaderNum(0xFFFFFFFF)
@@ -234,7 +234,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fSrcOfsSupported(false)
     , fCalculateSrcOfs(calculateSrcOfs)
     , fStream(streamToAdopt)
-    , fSystemId(XMLString::replicate(sysId))
+    , fSystemId(XMLString::replicate(sysId, manager))
     , fSwapped(false)
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
@@ -247,7 +247,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     refreshRawBuffer();
 
     // Copy the encoding string to our member
-    fEncodingStr = XMLString::replicate(encodingStr);
+    fEncodingStr = XMLString::replicate(encodingStr, fMemoryManager);
     XMLString::upperCase(fEncodingStr);
 
     // Ask the transcoding service if it supports src offset info
@@ -343,7 +343,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fEncodingStr(0)
     , fForcedEncoding(true)
     , fNoMore(false)
-    , fPublicId(XMLString::replicate(pubId))
+    , fPublicId(XMLString::replicate(pubId, manager))
     , fRawBufIndex(0)
     , fRawBytesAvail(0)
     , fReaderNum(0xFFFFFFFF)
@@ -354,7 +354,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fSrcOfsSupported(false)
     , fCalculateSrcOfs(calculateSrcOfs)
     , fStream(streamToAdopt)
-    , fSystemId(XMLString::replicate(sysId))
+    , fSystemId(XMLString::replicate(sysId, manager))
     , fSwapped(false)
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
@@ -373,7 +373,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     //  Use the passed encoding code
     //
     fEncoding = encodingEnum;
-    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding));
+    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding), fMemoryManager);
 
     // Check whether the fSwapped flag should be set or not
     checkForSwapped();
@@ -420,9 +420,9 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 
 XMLReader::~XMLReader()
 {
-    XMLString::release(&fEncodingStr);
-    XMLString::release(&fPublicId);
-    XMLString::release(&fSystemId);
+    fMemoryManager->deallocate(fEncodingStr);
+    fMemoryManager->deallocate(fPublicId);
+    fMemoryManager->deallocate(fSystemId);
     delete fStream;
     delete fTranscoder;
 }
@@ -1111,7 +1111,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     //
     // upperCase the newEncoding first for better performance
     //
-    XMLCh* inputEncoding = XMLString::replicate(newEncoding);
+    XMLCh* inputEncoding = XMLString::replicate(newEncoding, fMemoryManager);
     XMLString::upperCase(inputEncoding);
 
     //
@@ -1142,7 +1142,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString4)
         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5))
         {
-            XMLString::release(&inputEncoding);
+            fMemoryManager->deallocate(inputEncoding);
 
             if ((fEncoding != XMLRecognizer::UTF_16L)
             &&  (fEncoding != XMLRecognizer::UTF_16B))
@@ -1154,19 +1154,19 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             newBaseEncoding = fEncoding;
 
             if (fEncoding == XMLRecognizer::UTF_16L) {
-                XMLString::release(&fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString);
+                fMemoryManager->deallocate(fEncodingStr);
+                fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString, fMemoryManager);
             }
             else {
-                XMLString::release(&fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString);
+                fMemoryManager->deallocate(fEncodingStr);
+                fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString, fMemoryManager);
             }
         }
         else if (!XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString)
              ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString2)
              ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3))
         {
-            XMLString::release(&inputEncoding);
+            fMemoryManager->deallocate(inputEncoding);
 
             if ((fEncoding != XMLRecognizer::UCS_4L)
             &&  (fEncoding != XMLRecognizer::UCS_4B))
@@ -1179,13 +1179,13 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
 
             if (fEncoding == XMLRecognizer::UCS_4L) {
 
-                XMLString::release(&fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString);
+                fMemoryManager->deallocate(fEncodingStr);
+                fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString, fMemoryManager);
             }
             else {
 
-                XMLString::release(&fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString);
+                fMemoryManager->deallocate(fEncodingStr);
+                fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString, fMemoryManager);
             }
         }
          else
@@ -1194,7 +1194,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             // None of those special cases, so just replicate the new name
             // and use it directly to create the transcoder
             //
-            XMLString::release(&fEncodingStr);
+            fMemoryManager->deallocate(fEncodingStr);
             fEncodingStr = inputEncoding;
 
             XMLTransService::Codes failReason;
@@ -1210,7 +1210,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
      else
     {
         // Store the new encoding string since it is just an intrinsic
-        XMLString::release(&fEncodingStr);
+        fMemoryManager->deallocate(fEncodingStr);
         fEncodingStr = inputEncoding;
     }
 
