@@ -55,24 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/03/02 19:54:48  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:05:26  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:48:05  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:42  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:45:20  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(EXCEPTION_HPP)
@@ -80,6 +63,7 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/XMLExceptMsgs.hpp>
+#include <util/XMLUni.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -272,7 +256,7 @@ public: \
  \
     virtual const XMLCh* getType() const \
     { \
-        return g##theType##_Name; \
+        return XMLUni::fg##theType##_Name; \
     } \
  \
 private : \

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/05/04 02:43:45  aruna1
+ * solaris : instance=static related changes
+ *
  * Revision 1.16  2000/04/19 18:06:20  aruna1
  * Changes for duplicate strings
  *
@@ -601,3 +604,127 @@ const XMLCh XMLUni::fgYesString[] =
 
 const XMLCh XMLUni::fgZeroLenString[] = { chNull };
 
+//Exception strings
+const XMLCh XMLUni::fgArrayIndexOutOfBoundsException_Name[] =
+{
+        chLatin_A, chLatin_r, chLatin_r, chLatin_a, chLatin_y, chLatin_I
+    ,   chLatin_n, chLatin_d, chLatin_e, chLatin_x, chLatin_O, chLatin_u
+    ,   chLatin_t, chLatin_o, chLatin_f, chLatin_B, chLatin_o, chLatin_u
+    ,   chLatin_n, chLatin_d, chLatin_s, chLatin_E, chLatin_x, chLatin_c
+    ,   chLatin_e, chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n
+    ,   chNull
+};
+
+const XMLCh XMLUni::fgEmptyStackException_Name[] =
+{
+        chLatin_E, chLatin_m, chLatin_p, chLatin_t, chLatin_y, chLatin_S
+    ,   chLatin_t, chLatin_a, chLatin_c, chLatin_k, chLatin_E, chLatin_x
+    ,   chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i, chLatin_o
+    ,   chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgIllegalArgumentException_Name[] =
+{
+        chLatin_I, chLatin_l, chLatin_l, chLatin_e, chLatin_g, chLatin_a
+    ,   chLatin_l, chLatin_A, chLatin_r, chLatin_g, chLatin_u, chLatin_m
+    ,   chLatin_e, chLatin_n, chLatin_t, chLatin_E, chLatin_x, chLatin_c
+    ,   chLatin_e, chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n
+    ,   chNull
+};
+
+const XMLCh XMLUni::fgInvalidCastException_Name[] =
+{
+        chLatin_I, chLatin_n, chLatin_v, chLatin_a, chLatin_l, chLatin_i
+    ,   chLatin_d, chLatin_C, chLatin_a, chLatin_s, chLatin_t, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgIOException_Name[] =
+{
+        chLatin_I, chLatin_O, chLatin_E, chLatin_x, chLatin_c, chLatin_e
+    ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgNoSuchElementException_Name[] =
+{
+        chLatin_N, chLatin_o, chLatin_S, chLatin_u, chLatin_h, chLatin_h
+    ,   chLatin_E, chLatin_l, chLatin_e, chLatin_e, chLatin_m, chLatin_e
+    ,   chLatin_n, chLatin_t, chLatin_E, chLatin_x, chLatin_c, chLatin_e
+    ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgNullPointerException_Name[] =
+{
+        chLatin_N, chLatin_u, chLatin_l, chLatin_l, chLatin_P, chLatin_o
+    ,   chLatin_i, chLatin_n, chLatin_t, chLatin_e, chLatin_r, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgXMLPlatformUtilsException_Name[] =
+{
+        chLatin_X, chLatin_M, chLatin_L, chLatin_P, chLatin_l, chLatin_a
+    ,   chLatin_t, chLatin_f, chLatin_o, chLatin_r, chLatin_m, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgRuntimeException_Name[] =
+{
+        chLatin_R, chLatin_u, chLatin_n, chLatin_t, chLatin_i
+    ,   chLatin_m, chLatin_e, chLatin_E, chLatin_x, chLatin_c
+    ,   chLatin_e, chLatin_p, chLatin_t, chLatin_i, chLatin_o
+    ,   chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgTranscodingException_Name[] =
+{
+        chLatin_T, chLatin_r, chLatin_a, chLatin_n, chLatin_s, chLatin_c
+    ,   chLatin_o, chLatin_d, chLatin_i, chLatin_n, chLatin_g, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgUnexpectedEOFException_Name[] =
+{
+        chLatin_U, chLatin_n, chLatin_e, chLatin_x, chLatin_p, chLatin_e
+    ,   chLatin_c, chLatin_t, chLatin_e, chLatin_d, chLatin_E, chLatin_O
+    ,   chLatin_F, chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p
+    ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgUnsupportedEncodingException_Name[] =
+{
+        chLatin_U, chLatin_n, chLatin_s, chLatin_u, chLatin_p, chLatin_p
+    ,   chLatin_o, chLatin_r, chLatin_t, chLatin_e, chLatin_d, chLatin_E
+    ,   chLatin_n, chLatin_c, chLatin_o, chLatin_d, chLatin_i, chLatin_n
+    ,   chLatin_g, chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p
+    ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh XMLUni::fgUTFDataFormatException_Name[] =
+{
+        chLatin_U, chLatin_T, chLatin_F, chLatin_D, chLatin_a, chLatin_t
+    ,   chLatin_a, chLatin_F, chLatin_o, chLatin_r, chLatin_m, chLatin_a
+    ,   chLatin_t, chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p
+    ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+
+const XMLCh XMLUni::fgNetAccessorException_Name[] =
+{
+        chLatin_N, chLatin_e, chLatin_t, chLatin_A, chLatin_c, chLatin_c
+    ,   chLatin_e, chLatin_s, chLatin_s, chLatin_o, chLatin_r, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
+
+const XMLCh XMLUni::fgMalformedURLException_Name[] =
+{
+        chLatin_M, chLatin_a, chLatin_l, chLatin_f, chLatin_o, chLatin_r
+    ,   chLatin_m, chLatin_e, chLatin_d, chLatin_U, chLatin_R, chLatin_L
+    ,   chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t
+    ,   chLatin_i, chLatin_o, chLatin_n, chNull
+};

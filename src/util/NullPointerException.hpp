@@ -55,24 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/03/02 19:54:43  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:05:25  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:48:03  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:04:51  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:11  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(NULLPOINTEREXCEPTION_HPP)
@@ -81,16 +64,6 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/XMLException.hpp>
-
-
-// Hard coded Unicode text for "NullPointerException"
-static const XMLCh gNullPointerException_Name[] =
-{
-        chLatin_N, chLatin_u, chLatin_l, chLatin_l, chLatin_P, chLatin_o
-    ,   chLatin_i, chLatin_n, chLatin_t, chLatin_e, chLatin_r, chLatin_E
-    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
-    ,   chLatin_o, chLatin_n, chNull
-};
 
 MakeXMLException(NullPointerException, XMLUTIL_EXPORT)
 

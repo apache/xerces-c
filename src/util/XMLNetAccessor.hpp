@@ -55,65 +55,19 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2000/03/02 19:54:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.7  2000/02/24 20:05:26  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.6  2000/02/06 07:48:06  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/01/25 19:19:07  roddey
- * Simple addition of a getId() method to the xcode and netacess abstractions to
- * allow each impl to give back an id string.
- *
- * Revision 1.4  2000/01/15 01:26:17  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.3  2000/01/14 00:52:45  roddey
- * Added a NetAccessorException for use by implementations of the
- * NetAccessor abstraction, if they need to report errors during
- * processing.
- *
- * Revision 1.2  2000/01/12 00:16:23  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:50  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:20  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(XMLNETACCESSOR_HPP)
 #define XMLNETACCESSOR_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/XMLUni.hpp>
-#include <util/XMLException.hpp>
 #include <util/XMLURL.hpp>
+#include <util/XMLException.hpp>
 
 
 class BinInputStream;
 
-
-// Hard coded Unicode text for "NetAccessorException"
-static const XMLCh gNetAccessorException_Name[] =
-{
-        chLatin_N, chLatin_e, chLatin_t, chLatin_A, chLatin_c, chLatin_c
-    ,   chLatin_e, chLatin_s, chLatin_s, chLatin_o, chLatin_r, chLatin_E
-    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
-    ,   chLatin_o, chLatin_n, chNull
-};
 
 MakeXMLException(NetAccessorException, XMLUTIL_EXPORT)
 

@@ -54,68 +54,7 @@
 # <http://www.apache.org/>.
 #
 #
-# $Log$
-# Revision 1.16  2000/03/17 19:28:49  abagchi
-# Now generates object files in platform-specific directories
-#
-# Revision 1.15  2000/03/01 22:30:00  abagchi
-# Object files are now created directly under obj directory
-#
-# Revision 1.14  2000/02/06 07:47:26  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.13  2000/02/04 23:48:15  abagchi
-# Made sure all targets are appended with :: not single :
-#
-# Revision 1.12  2000/02/01 23:42:45  abagchi
-# AS/400 related change
-#
-# Revision 1.11  2000/01/18 00:01:02  aruna1
-# Changed version number
-#
-# Revision 1.10  2000/01/12 20:31:31  aruna1
-# Msg Catalog support for AIX
-#
-# Revision 1.9  1999/12/23 01:43:01  aruna1
-# MsgCatalog support added for solaris
-#
-# Revision 1.8  1999/12/17 01:28:52  rahulj
-# Merged in changes submitted for UnixWare 7 port. Platform
-# specific files are still missing.
-#
-# Revision 1.7  1999/12/14 23:53:18  rahulj
-# Removed the offending Ctrl-M's from the commit message
-# logs which was giving packaging problems.
-#
-# PR:
-# Obtained from:
-# Submitted by:
-# Reviewed by:
-#
-# Revision 1.6  1999/11/24 23:21:42  rahulj
-# Now works under HPUX 10.20 with CC and aCC, with ICU and native
-# distclean target now remove and remaining Makefile(s)
-# clean target now removes the template repository directory
-#
-# Revision 1.5  1999/11/23 01:59:25  rahulj
-# Code now works under HPUX 11. Tested inmemory message loader.
-# Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
-#
-# Revision 1.4  1999/11/12 21:14:32  rahulj
-# fixed ver number.
-#
-# Revision 1.3  1999/11/12 20:38:48  rahulj
-# Replaced XML4CROOT with XERCESCROOT.
-#
-# Revision 1.1.1.1  1999/11/09 01:02:54  twl
-# Initial checkin
-#
-# Revision 1.4  1999/11/08 22:36:39  anupam
-# Removed the overrided definition of XML4CROOT
-#
-# Revision 1.3  1999/11/08 20:44:09  rahul
-# Swat for adding in Product name and CVS comment log variable.
-#
+# $Id$
 #
 
 ###################################################################

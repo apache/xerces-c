@@ -55,42 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/03/23 01:02:38  roddey
- * Updates to the XMLURL class to correct a lot of parsing problems
- * and to add support for the port number. Updated the URL tests
- * to test some of this new stuff.
- *
- * Revision 1.4  2000/03/02 19:54:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:05:26  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:48:06  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1  2000/01/15 01:26:17  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.3  2000/01/12 00:16:22  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.2  1999/11/23 01:49:56  rahulj
- * Cannot use class qualifier in class defn. CC under HPUX is happy.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:22  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:16  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(XMLURL_HPP)
@@ -98,19 +63,8 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/XMLException.hpp>
-#include <util/XMLUni.hpp>
 
 class BinInputStream;
-
-
-// Hard coded Unicode text for "MalformedURLException"
-static const XMLCh gMalformedURLException_Name[] =
-{
-        chLatin_M, chLatin_a, chLatin_l, chLatin_f, chLatin_o, chLatin_r
-    ,   chLatin_m, chLatin_e, chLatin_d, chLatin_U, chLatin_R, chLatin_L
-    ,   chLatin_E, chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t
-    ,   chLatin_i, chLatin_o, chLatin_n, chNull
-};
 
 MakeXMLException(MalformedURLException, XMLUTIL_EXPORT)
 

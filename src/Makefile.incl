@@ -54,88 +54,7 @@
 # <http://www.apache.org/>.
 #
 #
-# $Log$
-# Revision 1.24  2000/04/17 22:25:17  abagchi
-# Follow the SMP/E procedures for the OS/390 BATCH install
-#
-# Revision 1.23  2000/04/04 20:09:56  abagchi
-# Added PTX support
-#
-# Revision 1.22  2000/04/03 19:26:54  abagchi
-# Included changes for SGI IRIX 6.5
-#
-# Revision 1.21  2000/03/17 19:28:49  abagchi
-# Now generates object files in platform-specific directories
-#
-# Revision 1.20  2000/03/02 01:51:15  aruna1
-# Sun CC 5.0 related changes
-#
-# Revision 1.19  2000/03/01 22:30:00  abagchi
-# Object files are now created directly under obj directory
-#
-# Revision 1.18  2000/02/23 00:35:48  abagchi
-# Added OS/390 changes to comply with new ICUDATA library
-#
-# Revision 1.17  2000/02/16 22:49:01  abagchi
-# Changed OS/390 compile options
-#
-# Revision 1.16  2000/02/10 21:30:58  abagchi
-# Fixed OS/390 icudata path
-#
-# Revision 1.15  2000/02/10 21:28:02  abagchi
-# Added libicudata library
-#
-# Revision 1.14  2000/02/09 22:14:15  abagchi
-# AS/400 changes
-#
-# Revision 1.13  2000/02/06 07:47:26  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.12  2000/02/01 23:42:48  abagchi
-# AS/400 related change
-#
-# Revision 1.11  2000/01/21 22:10:42  abagchi
-# OS390 Change
-#
-# Revision 1.10  2000/01/20 01:57:57  rahulj
-# Reported by marc@ist.de
-# Merged in changes for SGI IRIX platform.
-#
-# Revision 1.9  1999/12/17 01:28:52  rahulj
-# Merged in changes submitted for UnixWare 7 port. Platform
-# specific files are still missing.
-#
-# Revision 1.8  1999/12/14 23:53:18  rahulj
-# Removed the offending Ctrl-M's from the commit message
-# logs which was giving packaging problems.
-#
-# PR:
-# Obtained from:
-# Submitted by:
-# Reviewed by:
-#
-# Revision 1.7  1999/12/09 00:48:19  aruna1
-# ICU library inclusion in ALLLIBS due to solaris failure
-#
-# Revision 1.6  1999/12/01 17:16:15  rahulj
-# Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
-#
-# Revision 1.5  1999/11/23 01:59:28  rahulj
-# Code now works under HPUX 11. Tested inmemory message loader.
-# Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
-#
-# Revision 1.4  1999/11/17 22:36:31  rahulj
-# Code works with ICU transcoding service
-#
-# Revision 1.3  1999/11/12 20:38:49  rahulj
-# Replaced XML4CROOT with XERCESCROOT.
-#
-# Revision 1.1.1.1  1999/11/09 01:02:55  twl
-# Initial checkin
-#
-# Revision 1.4  1999/11/08 20:44:09  rahul
-# Swat for adding in Product name and CVS comment log variable.
-#
+# $Id$
 #
 
 ###################################################################
@@ -200,9 +119,9 @@ ifeq (${PLATFORM}, SOLARIS)
                   -lm -lw -lgen
     endif
   else
-    PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -instances=static \
+	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XML_OBJ_DIR) \
                                -features=rtti -D${PLATFORM} -D_REENTRANT
-    MAKE_SHARED = ${CXX} -D${PLATFORM} -G
+	MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XML_OBJ_DIR)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
