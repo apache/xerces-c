@@ -590,21 +590,6 @@ public:
 
     //@}
 
-    /** @name Non-standard accessory functions */
-    //@{
-
-	/**
-	 * Registers an identifier name with a specified element node.
-	 * If the identifier is already registered, the new element
-	 * node replaces the previous node. If the specified element
-	 * node is null, removeIdentifier() is called.
-	 *
-     * @param elementId The unique <code>id</code> value for an element.
-     * @param ele The <code>Element</code> unique <code>id</code> value for an element.
-     */
-    void		         putIdentifier(const DOMString &elementId, const DOM_Element &ele);
-
-	//@}
 protected:
     DOM_Document (DocumentImpl *impl);
 
