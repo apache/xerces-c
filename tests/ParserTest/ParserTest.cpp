@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/19 00:59:20  roddey
+ * Get rid of dependence on old utils output streams.
+ *
  * Revision 1.2  2000/01/12 00:29:49  roddey
  * Changes for the new URL and InputSource changes.
  *
@@ -73,31 +76,15 @@
 // ---------------------------------------------------------------------------
 #include    <util/PlatformUtils.hpp>
 #include    <util/XMLString.hpp>
-#include    <util/URL.hpp>
 #include    <internal/XMLScanner.hpp>
 #include    <validators/DTD/DTDValidator.hpp>
 #include    "ParserTest.hpp"
 
 
 // ---------------------------------------------------------------------------
-//  Global data
-//
-//  errStrm
-//  outStrm
-//      The streams we use to output our test data and error info. These are
-//      simple classes used just for XML4C2 samples and debug. They are not
-//      sufficient for real applications, nor are they supported for
-//      production code use. They merely provide a simple and portable means
-//      to output the Unicode data from the parser on the local host.
-// ---------------------------------------------------------------------------
-XMLStdErr   errStrm;
-XMLStdOut   outStrm;
-
-
-// ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
-int main(int argC, char** argV)
+extern "C" int wmain(int argC, wchar_t** argV)
 {
     // Init the XML platform
     try
@@ -107,8 +94,8 @@ int main(int argC, char** argV)
 
     catch(const XMLException& toCatch)
     {
-        errStrm << "Error during platform init! Message:\n"
-                << toCatch.getMessage() << EndLn;
+        std::wcerr  << L"Error during platform init! Message:\n"
+                    << toCatch.getMessage() << std::endl;
         return 1;
     }
 
@@ -125,39 +112,40 @@ int main(int argC, char** argV)
     XMLCh*  urlPath = 0;
     for (int index = 1; index < argC; index++)
     {
-        if (!XMLString::compareIString(argV[index], "/Debug"))
+        if (!XMLString::compareIString(argV[index], L"/Debug"))
             parserTest.setOutputType(OutputType_Debug);
-        else if (!XMLString::compareIString(argV[index], "/Validate"))
+        else if (!XMLString::compareIString(argV[index], L"/Validate"))
             doValidation = true;
-        else if (!XMLString::compareIString(argV[index], "/Namespaces"))
+        else if (!XMLString::compareIString(argV[index], L"/Namespaces"))
         {
             doNamespaces = true;
             parserTest.setDoNamespaces(true);
         }
-        else if (!XMLString::compareIString(argV[index], "/XML"))
+        else if (!XMLString::compareIString(argV[index], L"/XML"))
             parserTest.setOutputType(OutputType_XML);
-        else if (!XMLString::compareIString(argV[index], "/IntDTD"))
+        else if (!XMLString::compareIString(argV[index], L"/IntDTD"))
             parserTest.setShowIntDTD(true);
-        else if (!XMLString::compareIString(argV[index], "/ShowWarnings"))
+        else if (!XMLString::compareIString(argV[index], L"/ShowWarnings"))
             parserTest.setShowWarnings(true);
-        else if (!XMLString::compareIString(argV[index], "/ShowErrLoc"))
+        else if (!XMLString::compareIString(argV[index], L"/ShowErrLoc"))
             parserTest.setShowErrLoc(true);
-        else if (!XMLString::compareIString(argV[index], "/JCCanon"))
+        else if (!XMLString::compareIString(argV[index], L"/JCCanon"))
             parserTest.setOutputType(OutputType_JCCanon);
-        else if (!XMLString::compareIString(argV[index], "/SunCanon"))
+        else if (!XMLString::compareIString(argV[index], L"/SunCanon"))
             parserTest.setOutputType(OutputType_SunCanon);
-        else if (!XMLString::compareIString(argV[index], "/KeepGoing"))
+        else if (!XMLString::compareIString(argV[index], L"/KeepGoing"))
             keepGoing = true;
-        else if (!XMLString::compareNIString(argV[index], "/URL=", 5))
-            urlPath = XMLString::transcode(&argV[index][5]);
+        else if (!XMLString::compareNIString(argV[index], L"/URL=", 5))
+            urlPath = &argV[index][5];
         else
-            errStrm << "Unknown parameter: " << argV[index] << EndLn;
+            std::wcerr  << L"Unknown parameter: "
+                        << argV[index] << std::endl;
     }
 
     // We have to have a URL to work on
     if (!urlPath)
     {
-        errStrm << "A URL must be provided, /URL=xxxx" << EndLn;
+        std::wcerr << L"A URL must be provided, /URL=xxxx" << std::endl;
         return 1;
     }
 
@@ -197,9 +185,9 @@ int main(int argC, char** argV)
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "Exception during scan:\n    "
-                << toCatch.getMessage()
-                << EndLn;
+        std::wcout  << L"Exception during scan:\n    "
+                    << toCatch.getMessage()
+                    << std::endl;
     }
     return 0;
 }

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:01  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:01  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:28  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -85,9 +88,9 @@
 // ---------------------------------------------------------------------------
 bool testString()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing String class\n"
-            << "----------------------------------" << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing String class\n"
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
@@ -97,8 +100,8 @@ bool testString()
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << EndLn;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

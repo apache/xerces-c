@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:47  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:47  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:26  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -86,7 +89,8 @@ static bool basicTests()
 
     if (setTest.size() != 32)
     {
-        outStrm << "    Ctor did not create set of correct size" << EndLn;
+        std::wcout  << L"    Ctor did not create set of correct size"
+                    << std::endl;
         return false;
     }
 
@@ -100,7 +104,8 @@ static bool basicTests()
     {
         if (setTest.get(index))
         {
-            outStrm << "    A bit's initial value was not zero" << EndLn;
+            std::wcout << L"    A bit's initial value was not zero"
+                       << std::endl;
             return false;
         }
     }
@@ -108,8 +113,8 @@ static bool basicTests()
     // Make sure that allAreCleared() agrees
     if (!setTest.allAreCleared())
     {
-        outStrm << "    allAreCleared() disagrees with individual bit gets"
-                << EndLn;
+        std::wcout  << L"    allAreCleared() disagrees with individual bit gets"
+                    << std::endl;
         return false;
     }
 
@@ -119,15 +124,16 @@ static bool basicTests()
         setTest.set(index);
         if (!setTest.get(index))
         {
-            outStrm << "    Bit was set but get returned false" << EndLn;
+            std::wcout << L"    Bit was set but get returned false"
+                       << std::endl;
             return false;
         }
 
         setTest.clear(index);
         if (setTest.get(index))
         {
-            outStrm << "    Bit was cleared but get returned true"
-                    << EndLn;
+            std::wcout  << L"    Bit was cleared but get returned true"
+                        << std::endl;
             return false;
         }
     }
@@ -137,7 +143,8 @@ static bool basicTests()
     {
         if (setTest.get(index))
         {
-            outStrm << "    A bit remained set after clearing" << EndLn;
+            std::wcout << L"    A bit remained set after clearing"
+                       << std::endl;
             return false;
         }
     }
@@ -154,7 +161,8 @@ static bool basicTests()
     BitSet setTest2(setTest);
     if (!setTest.equals(setTest2))
     {
-        outStrm << "    Copy ctor did not create equal sets" << EndLn;
+        std::wcout  << L"    Copy ctor did not create equal sets"
+                    << std::endl;
         return false;
     }
 
@@ -164,8 +172,8 @@ static bool basicTests()
     {
         if (setTest2.get(index))
         {
-            outStrm << "    clearAll() did not clear all bits"
-                    << EndLn;
+            std::wcout  << L"    clearAll() did not clear all bits"
+                        << std::endl;
             return false;
         }
     }
@@ -176,8 +184,8 @@ static bool basicTests()
     // Make sure it expanded
     if (setTest2.size() != 64)
     {
-        outStrm << "    Set of bit beyond size did not expand"
-                << EndLn;
+        std::wcout  << L"    Set of bit beyond size did not expand"
+                    << std::endl;
         return false;
     }
 
@@ -188,8 +196,8 @@ static bool basicTests()
     // Make sure that allAreSet() sees them all set
     if (!setTest.allAreSet())
     {
-        outStrm << "    After setting all bits, allAreSet() returned false"
-                << EndLn;
+        std::wcout  << L"    After setting all bits, allAreSet() returned false"
+                    << std::endl;
         return false;
     }
 
@@ -218,8 +226,8 @@ static bool bitopsTests()
     // They should be equal now
     if (!setTest.equals(setTest2))
     {
-        outStrm << "    OR of set with empty set did not create equal sets"
-                << EndLn;
+        std::wcout  << L"    OR of set with empty set did not create equal sets"
+                    << std::endl;
         return false;
     }
 
@@ -227,8 +235,8 @@ static bool bitopsTests()
     setTest2.xorWith(setTest);
     if (!setTest2.allAreCleared())
     {
-        outStrm << "    XOR against original set did not get back original"
-                << EndLn;
+        std::wcout  << L"    XOR against original set did not get back original"
+                    << std::endl;
         return false;
     }
 
@@ -236,7 +244,7 @@ static bool bitopsTests()
     setTest2.andWith(setTest);
     if (!setTest2.allAreCleared())
     {
-        outStrm << "    AND against empty set changed bits" << EndLn;
+        std::wcout << L"    AND against empty set changed bits" << std::endl;
         return false;
     }
 
@@ -249,43 +257,43 @@ static bool bitopsTests()
 // ---------------------------------------------------------------------------
 bool testBitSet()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing BitSet class\n"
-            << "----------------------------------" << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing BitSet class\n"
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
-        outStrm << "Testing basic BitSet methods" << EndLn;
+        std::wcout << L"Testing basic BitSet methods" << std::endl;
         if (!basicTests())
         {
-            outStrm << "Bitset basic test methods failed" << EndLn;
+            std::wcout << L"Bitset basic test methods failed" << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "Bitset basic tests passed" << EndLn;
+            std::wcout << L"Bitset basic tests passed" << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
-        outStrm << "Testing BitSet logical bit ops methods" << EndLn;
+        std::wcout << L"Testing BitSet logical bit ops methods" << std::endl;
         if (!bitopsTests())
         {
-            outStrm << "Bitset logical bit ops failed" << EndLn;
+            std::wcout << L"Bitset logical bit ops failed" << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "Bitset logical bit ops passed" << EndLn;
+            std::wcout << L"Bitset logical bit ops passed" << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << EndLn;
+        std::wcout << L"  ERROR: Unexpected exception!\n   Msg: "
+                << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

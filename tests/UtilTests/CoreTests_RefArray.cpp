@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:52  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:52  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:27  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -98,7 +101,8 @@ static bool constructorTests()
     // Make sure that it has the right initial size
     if (testArray1.length() != 255)
     {
-        outStrm << "    The ctor created wrong length() value" << EndLn;
+        std::wcout  << L"    The ctor created wrong length() value"
+                    << std::endl;
         return false;
     }
 
@@ -107,16 +111,16 @@ static bool constructorTests()
 
     if (testArray2.length() != 255)
     {
-        outStrm << "    The copy ctor created wrong length() value"
-                << EndLn;
+        std::wcout  << L"    The copy ctor created wrong length() value"
+                    << std::endl;
         return false;
     }
 
     // Test the equality of the two arrays
     if (testArray1 != testArray2)
     {
-        outStrm << "    The copy ctor created unequal arrays"
-                << EndLn;
+        std::wcout  << L"    The copy ctor created unequal arrays"
+                    << std::endl;
         return false;
     }
 
@@ -130,8 +134,8 @@ static bool constructorTests()
 
     if (testArray3.length() != 16)
     {
-        outStrm << "    The init values ctor created wrong length() value"
-                << EndLn;
+        std::wcout  << L"    The init values ctor created wrong length() value"
+                    << std::endl;
         return false;
     }
 
@@ -140,8 +144,8 @@ static bool constructorTests()
     {
         if (*testArray3[index] != (double)index)
         {
-            outStrm << "    The init values ctor did not init contents correctly"
-                    << EndLn;
+            std::wcout  << L"    The init values ctor did not init contents correctly"
+                        << std::endl;
             return false;
         }
     }
@@ -155,7 +159,8 @@ static bool constructorTests()
 
     if (testArray4 != testArray3)
     {
-        outStrm << "    Assignment did not create equal arrays" << EndLn;
+        std::wcout  << L"    Assignment did not create equal arrays"
+                    << std::endl;
         return false;
     }
 
@@ -182,8 +187,8 @@ static bool accessTests()
     {
         if (testArray1[index] != &testVals[index])
         {
-            outStrm << "    Failed to read back values just set"
-                    << EndLn;
+            std::wcout  << L"    Failed to read back values just set"
+                        << std::endl;
             return false;
         }
     }
@@ -202,7 +207,7 @@ static bool accessTests()
 
     if (!caughtIt)
     {
-        outStrm << "    Failed to catch index error" << EndLn;
+        std::wcout << L"    Failed to catch index error" << std::endl;
         return false;
     }
 
@@ -215,44 +220,48 @@ static bool accessTests()
 // ---------------------------------------------------------------------------
 bool testRefArray()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing RefArrayOf template class\n"
-            << "----------------------------------" << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing RefArrayOf template class\n"
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
         // Call other local methods to do specific tests
-        outStrm << "Testing RefArrayOf contructors" << EndLn;
+        std::wcout << L"Testing RefArrayOf contructors" << std::endl;
         if (!constructorTests())
         {
-            outStrm << "RefArrayOf constructor tests failed" << EndLn;
+            std::wcout  << L"RefArrayOf constructor tests failed"
+                        << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "RefArrayOf constructor tests passed" << EndLn;
+            std::wcout  << L"RefArrayOf constructor tests passed"
+                        << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
-        outStrm << "Testing RefArrayOf element access" << EndLn;
+        std::wcout << L"Testing RefArrayOf element access" << std::endl;
         if (!accessTests())
         {
-            outStrm << "RefArrayOf element access tests failed" << EndLn;
+            std::wcout  << L"RefArrayOf element access tests failed"
+                        << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "RefArrayOf element access tests passed" << EndLn;
+            std::wcout  << L"RefArrayOf element access tests passed"
+                        << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << EndLn;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

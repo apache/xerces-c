@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:43  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:43  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:26  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -66,7 +69,6 @@
 
 #include <util/XMLException.hpp>
 #include <util/XMLString.hpp>
-#include <util/StdOut.hpp>
 #include <util/XMLUni.hpp>
 
-extern XMLStdOut outStrm;
+#include <iostream>

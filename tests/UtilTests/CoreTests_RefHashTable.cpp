@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:54  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:54  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:27  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -128,31 +131,32 @@ static bool basicTests()
 // ---------------------------------------------------------------------------
 bool testRefHashTable()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing RefHashTableOf class\n"
-            << "----------------------------------" << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing RefHashTableOf class\n"
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
-        outStrm << "Testing basic RefHashtable methods" << EndLn;
+        std::wcout << L"Testing basic RefHashtable methods" << std::endl;
         if (!basicTests())
         {
-            outStrm << "RefHashtable basic test methods failed" << EndLn;
+            std::wcout  << L"RefHashtable basic test methods failed"
+                        << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "RefHashtable basic tests passed" << EndLn;
+            std::wcout << L"RefHashtable basic tests passed" << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << EndLn;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

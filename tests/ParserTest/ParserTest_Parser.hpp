@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:23  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:21  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:23  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:42:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -381,11 +384,3 @@ inline void TestParser::setShowErrLoc(const bool state)
     fShowErrLoc = state;
 }
 
-
-// ---------------------------------------------------------------------------
-//  TestParser: Private helpers
-// ---------------------------------------------------------------------------
-inline void TestParser::showString(const XMLCh* const toShow)
-{
-    showChars(toShow, XMLString::stringLen(toShow));
-}

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:17  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:21  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:17  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:42:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -80,12 +83,5 @@ enum OutputTypes
 // ---------------------------------------------------------------------------
 //  Includes that everyone uses inside this program
 // ---------------------------------------------------------------------------
-#include <util/StdOut.hpp>
 #include "ParserTest_Parser.hpp"
-
-
-// ---------------------------------------------------------------------------
-//  Global data externs for everyone to see. These are from the main Cpp file
-// ---------------------------------------------------------------------------
-extern XMLStdOut   outStrm;
-extern XMLStdErr   errStrm;
+#include <iostream>

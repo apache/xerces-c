@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:09  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:07  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:09  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:29  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -96,32 +99,33 @@ static bool basicTests()
 // ---------------------------------------------------------------------------
 bool testValueStack()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing ValueStackOf template class\n"
-            << "----------------------------------" << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing ValueStackOf template class\n"
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
         // Call other local methods to do specific tests
-        outStrm << "Testing ValueStackOf basics" << EndLn;
+        std::wcout << L"Testing ValueStackOf basics" << std::endl;
         if (!basicTests())
         {
-            outStrm << "ValueStackOf basic tests failed" << EndLn;
+            std::wcout << L"ValueStackOf basic tests failed" << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "ValueArrayOf constructor tests passed" << EndLn;
+            std::wcout  << L"ValueArrayOf constructor tests passed"
+                        << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << EndLn;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

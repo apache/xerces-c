@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:44  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:07  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:44  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:26  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -71,11 +74,6 @@
 #include "CoreTests.hpp"
 #include <util/PlatformUtils.hpp>
 
-
-// ---------------------------------------------------------------------------
-//  Global data
-// ---------------------------------------------------------------------------
-XMLStdOut outStrm;
 
 
 // ---------------------------------------------------------------------------
@@ -106,13 +104,13 @@ int main()
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "Parser Init Failed!\n   INFO: ("
-                << toCatch.getSrcFile() << "." << toCatch.getSrcLine() << ") -"
-                << toCatch.getMessage() << EndLn;
+        std::wcout << L"Parser Init Failed!\n   INFO: ("
+                   << toCatch.getSrcFile() << L"." << toCatch.getSrcLine()
+                   << L") -" << toCatch.getMessage() << std::endl;
         return 0xFFFF;
     }
 
-    outStrm << "\nXML4C2 Core Utilities Unit Tester\n" << EndLn;
+    std::wcout << L"\nXML4C2 Core Utilities Unit Tester\n" << std::endl;
 
     // This value will return the number of failed tests
     int retVal = 0;
@@ -125,10 +123,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testTranscoders())
         {
-            outStrm << "Transcoder tests failed\n";
+            std::wcout << L"Transcoder tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -136,10 +134,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testString())
         {
-            outStrm << "String tests failed\n";
+            std::wcout << L"String tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -147,10 +145,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testCountedPointer())
         {
-            outStrm << "CountedPointerTo tests failed\n";
+            std::wcout << L"CountedPointerTo tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -158,10 +156,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testURL())
         {
-            outStrm << "URL tests failed\n";
+            std::wcout << L"URL tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -169,10 +167,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testValueVector())
         {
-            outStrm << "ValueVectorOf tests failed" << EndLn;
+            std::wcout << L"ValueVectorOf tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -180,10 +178,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testValueArray())
         {
-            outStrm << "ValueArrayOf tests failed" << EndLn;
+            std::wcout << L"ValueArrayOf tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -191,10 +189,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testValueStack())
         {
-            outStrm << "ValueStackOf tests failed" << EndLn;
+            std::wcout << L"ValueStackOf tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -202,10 +200,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefArray())
         {
-            outStrm << "RefArrayOf tests failed" << EndLn;
+            std::wcout << L"RefArrayOf tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -213,10 +211,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefStack())
         {
-            outStrm << "RefStackOf tests failed" << EndLn;
+            std::wcout << L"RefStackOf tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -224,10 +222,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefVector())
         {
-            outStrm << "RefVectorOf tests failed" << EndLn;
+            std::wcout << L"RefVectorOf tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -235,10 +233,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefHashTable())
         {
-            outStrm << "RefHashTableOf tests failed" << EndLn;
+            std::wcout << L"RefHashTableOf tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -246,27 +244,28 @@ int main()
         // -------------------------------------------------------------------
         if (!testBitSet())
         {
-            outStrm << "BitSet tests failed" << EndLn;
+            std::wcout << L"BitSet tests failed" << std::endl;
             retVal++;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "Exception During Test!\n   INFO: ("
-                << toCatch.getSrcFile() << "." << toCatch.getSrcLine() << ") -"
-                << toCatch.getMessage() << EndLn;
+        std::wcout  << L"Exception During Test!\n   INFO: ("
+                    << toCatch.getSrcFile() << L"."
+                    << toCatch.getSrcLine() << L") -"
+                    << toCatch.getMessage() << std::endl;
         return 0xFFFF;
     }
 
     // If we failed any tests, display a message
-    outStrm << "--------------------------------\n";
+    std::wcout << L"--------------------------------\n";
     if (retVal == 0)
-        outStrm << "<<PASSED>>: All tests passed\n";
+        std::wcout << L"<<PASSED>>: All tests passed\n";
     else
-        outStrm << "<<FAILED>>: Some tests failed\n";
-    outStrm << "--------------------------------\n" << EndLn;
+        std::wcout << L"<<FAILED>>: Some tests failed\n";
+    std::wcout << L"--------------------------------\n" << std::endl;
 
     return retVal;
 }

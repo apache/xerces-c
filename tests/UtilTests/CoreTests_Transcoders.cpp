@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
  * Revision 1.4  2000/01/12 00:17:48  roddey
  * Removed validator tests temporarily, since they have changed and the tests need
  * to be rewritten. Added new tests for the new URL class.
@@ -100,9 +103,9 @@
 // ---------------------------------------------------------------------------
 bool testTranscoders()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing transcoder classes\n"
-            << "----------------------------------" << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing transcoder classes\n"
+                << L"----------------------------------" << std::endl;
 
     return true;
 }

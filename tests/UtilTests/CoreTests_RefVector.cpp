@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:59  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:59  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:27  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -100,14 +103,14 @@ template <class T> bool commonRefTests()
     // Make sure the initial capacity is what we set
     if (testVec.curCapacity() != testMax)
     {
-        outStrm << "   Init capacity was incorrect" << EndLn;
+        std::wcout << L"   Init capacity was incorrect" << std::endl;
         return false;
     }
 
     // Make sure the initial size is zero
     if (testVec.size() != 0)
     {
-        outStrm << "   Init size was not correct" << EndLn;
+        std::wcout << L"   Init size was not correct" << std::endl;
         return false;
     }
 
@@ -115,7 +118,7 @@ template <class T> bool commonRefTests()
     testVec.addElement(new T);
     if (testVec.size() != 1)
     {
-        outStrm << "   Adding one element caused bad size" << EndLn;
+        std::wcout << L"   Adding one element caused bad size" << std::endl;
         return false;
     }
 
@@ -123,7 +126,8 @@ template <class T> bool commonRefTests()
     testVec.addElement(new T);
     if (testVec.size() != 2)
     {
-        outStrm << "   Adding another element caused bad size" << EndLn;
+        std::wcout  << L"   Adding another element caused bad size"
+                    << std::endl;
         return false;
     }
 
@@ -133,8 +137,8 @@ template <class T> bool commonRefTests()
 
     if (testVec.curCapacity() == testMax)
     {
-        outStrm << "   Adding another element failed to cause an expansion"
-                << EndLn;
+        std::wcout  << L"   Adding another element failed to cause an expansion"
+                    << std::endl;
         return false;
     }
 
@@ -152,8 +156,8 @@ template <class T> bool commonRefTests()
 
     if (!caughtIt)
     {
-        outStrm << "   Failed to catch array bounds error at element 4"
-                << EndLn;
+        std::wcout  << L"   Failed to catch array bounds error at element 4"
+                    << std::endl;
         return false;
     }
 
@@ -162,8 +166,8 @@ template <class T> bool commonRefTests()
 
     if (testVec.size() != 3)
     {
-        outStrm << "   Removing an element did not adjust size correctly"
-                << EndLn;
+        std::wcout  << L"   Removing an element did not adjust size correctly"
+                    << std::endl;
         return false;
     }
 
@@ -174,8 +178,8 @@ template <class T> bool commonRefTests()
 
     if (testVec.size() != 0)
     {
-        outStrm << "   Removing all elements did not zero the size"
-                << EndLn;
+        std::wcout  << L"   Removing all elements did not zero the size"
+                    << std::endl;
         return false;
     }
 
@@ -193,8 +197,8 @@ template <class T> bool commonRefTests()
 
     if (!caughtIt)
     {
-        outStrm << "   Failed to catch array bounds error at element 0"
-                << EndLn;
+        std::wcout  << L"   Failed to catch array bounds error at element 0"
+                    << std::endl;
         return false;
     }
 
@@ -204,7 +208,7 @@ template <class T> bool commonRefTests()
     testVec.insertElementAt(new T, 0);
     if (testVec.size() != 3)
     {
-        outStrm << "   Inserting elements caused bad size" << EndLn;
+        std::wcout << L"   Inserting elements caused bad size" << std::endl;
         return false;
     }
 
@@ -213,7 +217,7 @@ template <class T> bool commonRefTests()
 
     if (testVec.size() != 0)
     {
-        outStrm << "   removeAllElements caused bad size" << EndLn;
+        std::wcout  << L"   removeAllElements caused bad size" << std::endl;
         return false;
     }
 
@@ -242,8 +246,8 @@ template <class T> bool extendedRefTests()
     {
         if (*testVec.elementAt(index) != T(index))
         {
-            outStrm << "   addElement put elements in wrong order"
-                    << EndLn;
+            std::wcout  << L"   addElement put elements in wrong order"
+                        << std::endl;
             return false;
         }
     }
@@ -255,8 +259,8 @@ template <class T> bool extendedRefTests()
     {
         if (*testVec.elementAt(index) != T(index+1))
         {
-            outStrm << "   removeElement at head removed wrong element"
-                    << EndLn;
+            std::wcout  << L"   removeElement at head removed wrong element"
+                        << std::endl;
             return false;
         }
     }
@@ -268,8 +272,8 @@ template <class T> bool extendedRefTests()
     {
         if (*testVec.elementAt(index) != T(index+1))
         {
-            outStrm << "   removeElement at end removed wrong element"
-                    << EndLn;
+            std::wcout  << L"   removeElement at end removed wrong element"
+                        << std::endl;
             return false;
         }
     }
@@ -288,29 +292,29 @@ static bool doBasicTests()
     //
     // Do the common reference vector tests for ints, bools and strings.
     //
-    outStrm << "Testing RefVectorOf<int>, common tests" << EndLn;
+    std::wcout << L"Testing RefVectorOf<int>, common tests" << std::endl;
     if (!commonRefTests<int>())
     {
-        outStrm << "RefVectorOf<int> failed" << EndLn;
+        std::wcout << L"RefVectorOf<int> failed" << std::endl;
         retVal = false;
     }
      else
     {
-        outStrm << "RefVectorOf<int> passed" << EndLn;
+        std::wcout << L"RefVectorOf<int> passed" << std::endl;
     }
-    outStrm << EndLn;
+    std::wcout << std::endl;
 
-    outStrm << "Testing RefVectorOf<bool>, common tests" << EndLn;
+    std::wcout << L"Testing RefVectorOf<bool>, common tests" << std::endl;
     if (!commonRefTests<bool>())
     {
-        outStrm << "RefVectorOf<bool> failed" << EndLn;
+        std::wcout << L"RefVectorOf<bool> failed" << std::endl;
         retVal = false;
     }
      else
     {
-        outStrm << "RefVectorOf<bool> passed" << EndLn;
+        std::wcout << L"RefVectorOf<bool> passed" << std::endl;
     }
-    outStrm << EndLn;
+    std::wcout << std::endl;
 
 
     //
@@ -318,17 +322,17 @@ static bool doBasicTests()
     //  the instantiation type be of a fundamental value, because its going
     //  to test element ordering issues.
     //
-    outStrm << "Testing RefVectorOf<int>, extended tests" << EndLn;
+    std::wcout << L"Testing RefVectorOf<int>, extended tests" << std::endl;
     if (!extendedRefTests<int>())
     {
-        outStrm << "Extended RefVectorOf<int> failed" << EndLn;
+        std::wcout << L"Extended RefVectorOf<int> failed" << std::endl;
         retVal = false;
     }
      else
     {
-        outStrm << "Extended RefVectorOf<int> passed" << EndLn;
+        std::wcout << L"Extended RefVectorOf<int> passed" << std::endl;
     }
-    outStrm << EndLn;
+    std::wcout << std::endl;
 
     return retVal;
 }
@@ -350,15 +354,15 @@ static bool enumTests()
     {
         if (enumTest.nextElement() != index++)
         {
-            outStrm << "    Enumerator sequence was incorrect" << EndLn;
+            std::wcout << L"    Enumerator sequence was incorrect" << std::endl;
             return false;
         }
     }
 
     if (index != 32)
     {
-        outStrm << "    Enumerator did not enum enough elements"
-                << EndLn;
+        std::wcout  << L"    Enumerator did not enum enough elements"
+                    << std::endl;
         return false;
     }
     return true;
@@ -371,9 +375,9 @@ static bool enumTests()
 // ---------------------------------------------------------------------------
 bool testRefVector()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing RefVectorOf template class\n"
-            << "----------------------------------" << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing RefVectorOf template class\n"
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
@@ -384,23 +388,23 @@ bool testRefVector()
             retVal = false;
 
         // Test the enumerator
-        outStrm << "Testing RefVectorEnumerator" << EndLn;
+        std::wcout << L"Testing RefVectorEnumerator" << std::endl;
         if (!enumTests())
         {
-            outStrm << "RefVectorEnumeration failed" << EndLn;
+            std::wcout << L"RefVectorEnumeration failed" << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "RefVectorEnumeration passed" << EndLn;
+            std::wcout << L"RefVectorEnumeration passed" << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << EndLn;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/19 00:59:06  roddey
+ * Get rid of dependence on old utils output streams.
+ *
  * Revision 1.3  2000/01/12 00:17:48  roddey
  * Removed validator tests temporarily, since they have changed and the tests need
  * to be rewritten. Added new tests for the new URL class.
@@ -76,7 +79,7 @@
 //  XML4C2 includes
 // ---------------------------------------------------------------------------
 #include <util/RuntimeException.hpp>
-#include <util/URL.hpp>
+#include <util/XMLURL.hpp>
 #include "CoreTests.hpp"
 
 
@@ -92,15 +95,15 @@
 //
 struct BasicTestEntry
 {
-    const XMLCh*    orgURL;
-    const XMLCh*    fullText;
-    URL::Protocols  Protocol;
-    const XMLCh*    Fragment;
-    const XMLCh*    Host;
-    const XMLCh*    Path;
-    const XMLCh*    Password;
-    const XMLCh*    Query;
-    const XMLCh*    User;
+    const XMLCh*        orgURL;
+    const XMLCh*        fullText;
+    XMLURL::Protocols   Protocol;
+    const XMLCh*        Fragment;
+    const XMLCh*        Host;
+    const XMLCh*        Path;
+    const XMLCh*        Password;
+    const XMLCh*        Query;
+    const XMLCh*        User;
 };
 
 static bool checkAField(const XMLCh* const test, const XMLCh* const expected)
@@ -110,13 +113,14 @@ static bool checkAField(const XMLCh* const test, const XMLCh* const expected)
 
     if ((!test || !expected) || XMLString::compareString(test, expected))
     {
-        outStrm << "Expected: " << expected << ", but got: " << test << EndLn;
+        std::wcout  << L"Expected: " << expected << L", but got: " << test
+                    << std::endl;
         return false;
     }
     return true;
 }
 
-static bool checkBasicResult(const  URL&            testURL
+static bool checkBasicResult(const  XMLURL&         testURL
                             , const BasicTestEntry& testInfo)
 {
     //
@@ -155,7 +159,7 @@ static bool basicURLTest()
         {
             L"file://host@user:password/path1/path2/file.txt?query#fragment"
             , L"file://host@user:password/path1/path2/file.txt?query#fragment"
-            , URL::File
+            , XMLURL::File
             , L"fragment"
             , L"host"
             , L"/path1/path2/file.txt"
@@ -166,7 +170,7 @@ static bool basicURLTest()
       , {
             L"file:///path2/file.txt?query#fragment"
             , L"file:///path2/file.txt?query#fragment"
-            , URL::File
+            , XMLURL::File
             , L"fragment"
             , 0
             , L"/path2/file.txt"
@@ -177,7 +181,7 @@ static bool basicURLTest()
       , {
             L"#fragment"
             , L"#fragment"
-            , URL::Unknown
+            , XMLURL::Unknown
             , L"fragment"
             , 0
             , 0
@@ -188,7 +192,7 @@ static bool basicURLTest()
       , {
             L"file://host@user/path1/path2/file.txt#fragment"
             , L"file://host@user/path1/path2/file.txt#fragment"
-            , URL::File
+            , XMLURL::File
             , L"fragment"
             , L"host"
             , L"/path1/path2/file.txt"
@@ -205,11 +209,12 @@ static bool basicURLTest()
     //  Do a run where we construct the URL over and over for each
     //  test.
     //
-    for (unsigned int index = 0; index < testCount; index++)
+    unsigned int index;
+    for (index = 0; index < testCount; index++)
     {
         // Force full destruction each time
         {
-            URL testURL(testList[index].orgURL);
+            XMLURL testURL(testList[index].orgURL);
 
             // Call the comparison function
             if (!checkBasicResult(testURL, testList[index]))
@@ -221,8 +226,8 @@ static bool basicURLTest()
     //  Do a run where we use a single URL object and just reset it over
     //  and over again.
     //
-    URL testURL;
-    for (unsigned int index = 0; index < testCount; index++)
+    XMLURL testURL;
+    for (index = 0; index < testCount; index++)
     {
         testURL.setURL(testList[index].orgURL);
 
@@ -274,17 +279,17 @@ static bool relativeURLTest()
     const unsigned int testCount = sizeof(testList) / sizeof(testList[0]);
 
     // This is the base URL against which the tests are run
-    URL baseURL(L"http://a/b/c/d;p?q");
+    XMLURL baseURL(L"http://a/b/c/d;p?q");
 
     bool retVal = true;
     for (unsigned int index = 0; index < testCount; index++)
     {
-        URL testURL(baseURL, testList[index].relative);
+        XMLURL testURL(baseURL, testList[index].relative);
 
         if (XMLString::compareString(testURL.getURLText(), testList[index].result))
         {
-            outStrm << "Expected URL: " << testList[index].result
-                    << " but got: " << testURL.getURLText() << EndLn;
+            std::wcout  << L"Expected URL: " << testList[index].result
+                        << L" but got: " << testURL.getURLText() << std::endl;
             retVal = false;
         }
     }
@@ -297,44 +302,44 @@ static bool relativeURLTest()
 // ---------------------------------------------------------------------------
 bool testURL()
 {
-    outStrm << "----------------------------------\n"
-            << "Testing URL class \n"
-            << "----------------------------------"
-            << EndLn;
+    std::wcout  << L"----------------------------------\n"
+                << L"Testing URL class \n"
+                << L"----------------------------------"
+                << std::endl;
 
     bool retVal = true;
     try
     {
         // Call other local methods to do specific tests
-        outStrm << "Testing basic URL parsing" << EndLn;
+        std::wcout << L"Testing basic URL parsing" << std::endl;
         if (!basicURLTest())
         {
-            outStrm << "Basic URL parsing tests failed" << EndLn;
+            std::wcout << L"Basic URL parsing tests failed" << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "Basic URL parsing tests passed" << EndLn;
+            std::wcout << L"Basic URL parsing tests passed" << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
 
-        outStrm << "Testing relative URL parsing" << EndLn;
+        std::wcout << L"Testing relative URL parsing" << std::endl;
         if (!relativeURLTest())
         {
-            outStrm << "Relative URL parsing tests failed" << EndLn;
+            std::wcout << L"Relative URL parsing tests failed" << std::endl;
             retVal = false;
         }
          else
         {
-            outStrm << "Relative URL parsing tests passed" << EndLn;
+            std::wcout << L"Relative URL parsing tests passed" << std::endl;
         }
-        outStrm << EndLn;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        outStrm << "  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << EndLn;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;
