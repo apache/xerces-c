@@ -9,13 +9,15 @@
 		framework classes have also been documented.</p>
 
 	    <p>&XercesCName; DOM is an implementation of the
-		<jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">Document Object
-		Model (Core) Level 1</jump> as defined in the W3C Recommendation of 1 October, 1998.
+		<jump href="http://www.w3.org/TR/REC-DOM-Level-1/">Document Object
+		Model (Core) Level 1</jump> as defined in the W3C Recommendation of 1 October, 1998; and
+		<jump href="http://www.w3.org/TR/DOM-Level-2-Core/">Document Object
+		Model (Core) Level 2</jump> as defined in the W3C Recommendation of 13 November, 2000.
 		For a complete understanding of how the &XercesCName; APIs work,
-		we recommend you to read the DOM Level 1 specification.</p>
+		we recommend you to read these documents.</p>
 
 	    <p>&XercesCName; SAX is an implementation of the
-		<jump href="http://www.megginson.com/SAX/index.html">SAX 1.0</jump> specification.
+		<jump href="http://www.megginson.com/SAX/index.html">SAX 1.0/2.0</jump> specification.
 		You are encouraged to read this document for a better
 		understanding of the SAX API in &XercesCName;.</p>
 

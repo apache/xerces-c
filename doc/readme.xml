@@ -10,13 +10,13 @@
         <jump href="http://www.w3.org/XML/">XML</jump> data.
         A shared library is provided for parsing, generating, manipulating, and validating XML
         documents. &XercesCName; is faithful to the
-        <jump href="http://www.w3.org/TR/1998/REC-xml-19980210">XML 1.0</jump> recommendation
+        <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump> recommendation
         and associated standards (
-        <jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM 1.0</jump>,
+        <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM 1.0</jump>,
+        <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM 2.0</jump>.
         <jump href="http://www.megginson.com/SAX/SAX1/index.html">SAX 1.0</jump>,
         <jump href="http://www.megginson.com/SAX/index.html">SAX 2.0</jump>,
-        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>,
-        <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2</jump>).
+        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>),
         The parser provides high performance, modularity, and scalability.
         Source code, samples and API documentation are provided with the parser. For
         portability, care has been taken to make minimal use of templates,
@@ -40,13 +40,12 @@
 
     <s2 title="Features">
         <ul>
-            <li>Conforms to <jump href="http://www.w3.org/TR/1998/REC-xml-19980210">XML Spec 1.0</jump></li>
+            <li>Conforms to <jump href="http://www.w3.org/TR/REC-xml">XML Spec 1.0</jump></li>
             <li>Tracking of latest
-            <jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM (Level 1.0)</jump>,
+            <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM (Level 1.0)</jump>,
+            <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM (Level 2.0)</jump>,
             <jump href="http://www.megginson.com/SAX/index.html">SAX/SAX2</jump> and
             <jump href="http://www.w3.org/TR/REC-xml-names/">Namespace</jump> specifications.</li>
-            <li>Experimental
-            <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2.0</jump> implementation</li>
             <li>Source code, samples, and documentation is provided.</li>
             <li>Programmatic generation and validation of XML</li>
             <li>Pluggable catalogs, validators and encodings</li>

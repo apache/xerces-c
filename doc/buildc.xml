@@ -49,7 +49,8 @@
             <note>If you are working on the AlphaWorks version which uses ICU,
             you must have the ICU data DLL named <code>icudata.dll</code> available from your path
             setting. For finding out where you can
-            get ICU from and build it, look at the last section of this page.</note>
+            get ICU from and build it, look at the <link anchor="BuildICU">How to Build ICU</link>.</note>
+
         </s3>
         <s3 title="Building samples">
             <p>Inside the same workspace (xerces-all.dsw), you'll find several other
@@ -115,11 +116,9 @@
         discussion assumes you are working on Linux, but it is with subtle
         understanding that you know how to interpret it for the other UNIX flavors.</p>
 
-        <note>If you wish to build &XercesCName; with
-        <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/">ICU</jump>,
-        look at the <link anchor="icu">last section</link> of this page.
-        It tells you where you can find ICU and how you can build &XercesCName;
-        to include the ICU international library.</note>
+        <note>If you wish to build &XercesCName; with ICU,
+        look at the <link anchor="BuildICU">Building ICU</link>.
+        It tells you where you can get ICU and how to build &XercesCName; with it.</note>
 
         <s3 title="Setting build environment variables">
             <p>Before doing the build, you must first set your environment variables
@@ -898,7 +897,7 @@ gmake install</source>
         '<code>VCVARS32.BAT</code>' or a similar file. Next at the prompt
         enter:</p>
 
-        <source>    set XERCESCROOT=x:\&XercesCSrcInstallDir;
+        <source>set XERCESCROOT=x:\&XercesCSrcInstallDir;
 set ICUROOT=x:\icu
 cd x:\&XercesCSrcInstallDir;\scripts
 perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -t icu</source>
