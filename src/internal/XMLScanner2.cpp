@@ -416,6 +416,19 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , curDef.getFullName()
                         );
                     }
+		            else if ((defType == XMLAttDef::Default) ||
+		                     (defType == XMLAttDef::Fixed)  )
+					{
+		                if (fStandalone)
+		                {
+			                //
+			                // XML 1.0 Section 2.9
+			                // Document is standalone, so attributes must not be defaulted.
+			                //
+			                emitError(XMLErrs::BadStandalone, elemDecl.getFullName());
+
+		                 }
+		             }
                 }
 
                 //

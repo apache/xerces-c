@@ -2518,8 +2518,9 @@ bool XMLScanner::scanStartTag(bool& gotData)
                             , elemDecl->getFullName()
                         );
                     }
-		            else if (defType == XMLAttDef::Default)
-                    {
+		            else if ((defType == XMLAttDef::Default) ||
+		                     (defType == XMLAttDef::Fixed)  )
+					{
 		                if (fStandalone)
 		                {
 			                //
