@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/03/08 23:41:18  roddey
+ * Some fixes for content models that have multiple, trailing, empty
+ * PE refs (for content model extension.)
+ *
  * Revision 1.12  2000/03/03 01:29:35  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -202,7 +206,10 @@ bool DTDValidator::checkForPERef(const  bool    spaceRequired
 
     // If the next char is a percent, then expand the PERef
     if (getReaderMgr()->skippedChar(chPercent))
-        expandPERef(false, inLiteral, inMarkup, throwAtEndExt);
+    {
+        if (!expandPERef(false, inLiteral, inMarkup, throwAtEndExt))
+            getScanner()->emitError(XMLErrs::ExpectedEntityRefName);
+    }
 
     // And skip any more spaces in the expanded value
     if (getReaderMgr()->skippedSpace())
@@ -1127,18 +1134,6 @@ DTDValidator::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
             if (getReaderMgr()->lookingAtChar(chPercent))
             {
                 checkForPERef(false, false, true);
-
-                // If still on a percent, then its an error, so clean up and exit
-                if (getReaderMgr()->lookingAtChar(chPercent))
-                {
-                    getScanner()->emitError
-                    (
-                        XMLErrs::ExpectedSeqOrCloseParen
-                        , elemDecl.getFullName()
-                    );
-                    delete headNode;
-                    return 0;
-                }
             }
              else if (getReaderMgr()->skippedSpace())
             {
@@ -3178,113 +3173,124 @@ bool DTDValidator::scanMixed(DTDElementDecl& toFill)
     //
     while (true)
     {
-        // Spaces are legal here, so check for a PE ref, but don't require space
-        checkForPERef(false, false, true);
-
         //
-        //  If its a star, then tell them they can't have reps in
-        //  mixed model, but eat it and keep going.
+        //  First of all we check for some grunt work details of skipping
+        //  whitespace, expand PE refs, and catching invalid reps.
         //
-        if (getReaderMgr()->skippedChar(chAsterisk))
+        if (getReaderMgr()->lookingAtChar(chPercent))
         {
-            getScanner()->emitError(XMLErrs::NoRepInMixed);
-            continue;
+            // Expand it and continue
+            checkForPERef(false, false, true);
         }
-
-        // Check for the next choice indicator
-        if (!getReaderMgr()->skippedChar(chPipe))
+         else if (getReaderMgr()->skippedChar(chAsterisk))
         {
-            // Has to be the closing paren now.
-            if (!getReaderMgr()->skippedChar(chCloseParen))
+            //
+            //  Tell them they can't have reps in mixed model, but eat
+            //  it and keep going if we are allowed to.
+            //
+            getScanner()->emitError(XMLErrs::NoRepInMixed);
+        }
+         else if (getReaderMgr()->skippedSpace())
+        {
+            // Spaces are ok at this point, just eat them and continue
+            getReaderMgr()->skipPastSpaces();
+        }
+         else
+        {
+            if (!getReaderMgr()->skippedChar(chPipe))
             {
-                getScanner()->emitError(XMLErrs::UnterminatedContentModel);
+                // Has to be the closing paren now.
+                if (!getReaderMgr()->skippedChar(chCloseParen))
+                {
+                    getScanner()->emitError(XMLErrs::UnterminatedContentModel);
+                    delete headNode;
+                    return false;
+                }
+
+                if (!getReaderMgr()->skippedChar(chAsterisk) && starRequired)
+                    getScanner()->emitError(XMLErrs::ExpectedAsterisk);
+
+                //
+                //  Create a zero or more node and make the original head
+                //  node its first child.
+                //
+                headNode = new ContentSpecNode
+                (
+                    ContentSpecNode::ZeroOrMore
+                    , headNode
+                    , 0
+                );
+
+                // Store the head node as the content spec of the element.
+                toFill.setContentSpec(headNode);
+                break;
+            }
+
+            // Its more than just a PCDATA, so an ending star will be required now
+            starRequired = true;
+
+            // Space is legal here so check for a PE ref, but don't require space
+            checkForPERef(false, false, true);
+
+            // Get a name token
+            if (!getReaderMgr()->getName(nameBuf))
+            {
+                getScanner()->emitError(XMLErrs::ExpectedElementName);
                 delete headNode;
                 return false;
             }
 
-            if (!getReaderMgr()->skippedChar(chAsterisk) && starRequired)
-                getScanner()->emitError(XMLErrs::ExpectedAsterisk);
+            //
+            //  Create a leaf node for it. If we can find the element id for
+            //  this element, then use it. Else, we have to fault in an element
+            //  decl, marked as created because of being in a content model.
+            //
+            unsigned int elemId = findElemId(nameBuf.getRawBuffer());
+            if (elemId == XMLElementDecl::fgInvalidElemId)
+            {
+                DTDElementDecl* decl = new DTDElementDecl(nameBuf.getRawBuffer());
+                decl->setCreateReason(XMLElementDecl::InContentModel);
+                fElemDeclPool->put(decl);
+                elemId = decl->getId();
+            }
 
             //
-            //  Create a zero or more node and make the original head
-            //  node its first child.
+            //  If the current node is the original node, this is the first choice
+            //  node, so create an initial choice node with the current node and
+            //  the new element id. Store this as the head node.
             //
-            headNode = new ContentSpecNode
-            (
-                ContentSpecNode::ZeroOrMore
-                , headNode
-                , 0
-            );
-
-            // Store the head node as the content spec of the element.
-            toFill.setContentSpec(headNode);
-            break;
-        }
-
-        // Its more than just a PCDATA, so an ending star will be required now
-        starRequired = true;
-
-        // Space is legal here so check for a PE ref, but don't require space
-        checkForPERef(false, false, true);
-
-        // Get a name token
-        if (!getReaderMgr()->getName(nameBuf))
-        {
-            getScanner()->emitError(XMLErrs::ExpectedElementName);
-            delete headNode;
-            return false;
-        }
-
-        //
-        //  Create a leaf node for it. If we can find the element id for
-        //  this element, then use it. Else, we have to fault in an element
-        //  decl, marked as created because of being in a content model.
-        //
-        unsigned int elemId = findElemId(nameBuf.getRawBuffer());
-        if (elemId == XMLElementDecl::fgInvalidElemId)
-        {
-            DTDElementDecl* decl = new DTDElementDecl(nameBuf.getRawBuffer());
-            decl->setCreateReason(XMLElementDecl::InContentModel);
-            fElemDeclPool->put(decl);
-            elemId = decl->getId();
-        }
-
-        //
-        //  If the current node is the original node, this is the first choice
-        //  node, so create an initial choice node with the current node and
-        //  the new element id. Store this as the head node.
-        //
-        //  Otherwise, we have to steal the right node of the previous choice
-        //  and weave in another choice node there, which has the old choice
-        //  as its left and the new leaf as its right.
-        //
-        if (curNode == orgNode)
-        {
-            curNode = new ContentSpecNode
-            (
-                ContentSpecNode::Choice
-                , curNode
-                , new ContentSpecNode(elemId)
-            );
-
-            // Remember the top node
-            headNode = curNode;
-        }
-         else
-        {
-            ContentSpecNode* oldRight = curNode->orphanSecond();
-            curNode->setSecond
-            (
-                new ContentSpecNode
+            //  Otherwise, we have to steal the right node of the previous choice
+            //  and weave in another choice node there, which has the old choice
+            //  as its left and the new leaf as its right.
+            //
+            if (curNode == orgNode)
+            {
+                curNode = new ContentSpecNode
                 (
                     ContentSpecNode::Choice
-                    , oldRight
+                    , curNode
                     , new ContentSpecNode(elemId)
-                )
-            );
+                );
 
-            // Make the new right node the current node
-            curNode = curNode->getSecond();
+                // Remember the top node
+                headNode = curNode;
+            }
+             else
+            {
+                ContentSpecNode* oldRight = curNode->orphanSecond();
+                curNode->setSecond
+                (
+                    new ContentSpecNode
+                    (
+                        ContentSpecNode::Choice
+                        , oldRight
+                        , new ContentSpecNode(elemId)
+                    )
+                );
+
+                // Make the new right node the current node
+                curNode = curNode->getSecond();
+            }
         }
     }
 
