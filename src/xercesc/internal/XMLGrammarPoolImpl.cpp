@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/06/20 22:19:30  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.1  2003/06/20 18:38:39  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -70,8 +73,8 @@
 #include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
-#include <xercesc/validators/Schema/SchemaGrammar.hpp>
-#include <xercesc/validators/Schema/XMLSchemaDescriptionImpl.hpp>
+#include <xercesc/validators/schema/SchemaGrammar.hpp>
+#include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
