@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/11/09 03:09:21  peiyongz
+ * Storer_NewerThan_Loader
+ *
  * Revision 1.24  2004/11/08 03:57:22  peiyongz
  * read/write Storer level
  *
@@ -111,7 +114,6 @@
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/SynchronizedStringPool.hpp>
-#include <xercesc/util/XMLUni.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -381,7 +383,6 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
     {
         ThrowXMLwithMemMgr(XSerializationException, XMLExcepts::XSer_GrammarPool_NotEmpty, memMgr);
     }
-
     
     try 
     {
@@ -398,15 +399,13 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
         {
             XMLCh     StorerLevelChar[5];
             XMLCh     LoaderLevelChar[5];
-            XMLCh     DummyChar[2] = {chNull};
             XMLString::binToText(StorerLevel,                          StorerLevelChar,   4, 10, memMgr);
             XMLString::binToText(XERCES_GRAMMAR_SERIALIZATION_LEVEL,   LoaderLevelChar,   4, 10, memMgr);
             
-            ThrowXMLwithMemMgr3(XSerializationException
-                    , XMLExcepts::XSer_BinaryData_Version_NotSupported
+            ThrowXMLwithMemMgr2(XSerializationException
+                    , XMLExcepts::XSer_Storer_NewerThan_Loader
                     , StorerLevelChar
                     , LoaderLevelChar
-                    , DummyChar
                     , memMgr);
         }
 

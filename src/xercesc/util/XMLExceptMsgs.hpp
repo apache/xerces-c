@@ -413,7 +413,7 @@ public :
       , XSer_GrammarPool_Empty             = 397
       , XSer_GrammarPool_NotEmpty          = 398
       , XSer_StringPool_NotEmpty           = 399
-      , XSer_BinaryData_Version_NotSupported   = 400
+      , XSer_Storer_NewerThan_Loader       = 400
       , F_HighBounds                       = 401
       , E_LowBounds                        = 402
       , E_HighBounds                       = 403

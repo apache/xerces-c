@@ -831,7 +831,7 @@
             <Message Id="XSer_GrammarPool_Empty"         Text="Grammar Pool is empty"/>
             <Message Id="XSer_GrammarPool_NotEmpty"      Text="Grammar Pool is NOT empty"/>            
             <Message Id="XSer_StringPool_NotEmpty"       Text="String Pool is NOT empty"/>
-            <Message Id="XSer_BinaryData_Version_NotSupported" Text="Binary Data Version '{0}','{1}','{2}' not supported "/>            
+            <Message Id="XSer_Storer_NewerThan_Loader"   Text="Storer Level '{0}' is newer than Loader Level'{1}' "/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLDOMMsg">

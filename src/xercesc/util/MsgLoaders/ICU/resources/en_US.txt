@@ -832,7 +832,7 @@ en_US {
 		"Grammar Pool is empty " ,
 		"Grammar Pool is NOT empty " ,
 		"String Pool is NOT empty " ,
-		"Binary Data Version '{0}','{1}','{2}' not supported  " ,
+		"Storer Level '{0}' is newer than Loader Level'{1}'  " ,
 		"F_ End " ,
 		} 
 

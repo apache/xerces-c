@@ -815,7 +815,7 @@ $set 3
 397  Grammar Pool is empty
 398  Grammar Pool is NOT empty
 399  String Pool is NOT empty
-400  Binary Data Version '{0}','{1}','{2}' not supported 
+400  Storer Level '{0}' is newer than Loader Level'{1}' 
 
 
 $set 4
