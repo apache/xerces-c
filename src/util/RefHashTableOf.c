@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/06/29 18:27:09  jpolast
+ * bug fix for passing hasher class references to constructor
+ *
  * Revision 1.4  2000/06/27 22:11:12  jpolast
  * added more general functionality to hashtables.
  * able to specify which hasher to use.
@@ -101,7 +104,7 @@ template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int mo
 	fHash = new HashXMLCh();
 }
 
-template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems, const HashBase* hash)
+template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hash)
 	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
 {
 	initialize(modulus);

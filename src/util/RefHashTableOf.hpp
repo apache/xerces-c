@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/06/29 18:27:09  jpolast
+ * bug fix for passing hasher class references to constructor
+ *
  * Revision 1.6  2000/06/27 22:11:12  jpolast
  * added more general functionality to hashtables.
  * able to specify which hasher to use.
@@ -143,7 +146,7 @@ public:
 	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
 	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
 	// may delete the hasher of a different hashtable if both use the same hasher.
-    RefHashTableOf(const unsigned int modulus, const bool adoptElems, const HashBase* hash);
+    RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hash);
     ~RefHashTableOf();
 
 
