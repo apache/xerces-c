@@ -19,7 +19,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\samples\PSVIWriter
+PATHCPP = ..\..\..\..\..\samples\PSVIWriter
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

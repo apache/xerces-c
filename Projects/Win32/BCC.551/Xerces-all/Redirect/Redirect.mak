@@ -17,7 +17,7 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\samples\Redirect
+PATHCPP = ..\..\..\..\..\samples\Redirect
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

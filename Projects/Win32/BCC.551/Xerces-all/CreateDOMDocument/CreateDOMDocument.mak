@@ -17,11 +17,11 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\samples\CreateDOMDocument;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;WIN32_LEAN_AND_MEAN
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
 INCLUDEPATH = ..\..\..\..\..\samples\CreateDOMDocument;..\..\..\..\..\src
 LIBPATH = 

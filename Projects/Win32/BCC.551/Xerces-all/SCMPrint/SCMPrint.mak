@@ -17,7 +17,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\samples\SCMPrint
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

@@ -17,7 +17,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\tests\XSValueTest
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

@@ -19,7 +19,7 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\samples\DOMPrint
+PATHCPP = ..\..\..\..\..\samples\DOMPrint
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

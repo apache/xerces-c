@@ -5,6 +5,10 @@ BCB = $(MAKEDIR)\..
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
 PROJECT = $(TARGETPATH)\DeprecatedDOMCount.exe
+!if $d(WITHDEPRDOM)
+!else
+NO_DEPRDOM_PRODUCEMAIN=NEVER_COMPILE
+!endif
 OBJFILES = $(TARGETPATH)\obj\DeprecatedDOMCount.obj
 RESFILES = 
 MAINSOURCE = DeprecatedDOMCount.cpp
@@ -17,11 +21,11 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\tests\DOM\DeprecatedDOMCount;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;$(NO_DEPRDOM_PRODUCEMAIN)
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
 INCLUDEPATH = ..\..\..\..\..\tests\DOM\DeprecatedDOMCount;..\..\..\..\..\src
 LIBPATH = 

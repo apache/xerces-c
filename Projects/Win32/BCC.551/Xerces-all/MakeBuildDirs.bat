@@ -1,6 +1,6 @@
-REM CommandInterpreter: $(COMSPEC)
+REM CommandInterpreter: %COMSPEC%
 
-REM -- Create the Xerces-C target directories for the C++Builder 4 projects
+REM -- Create the Xerces-C target directories for the Borland C++Builder 5 or Borland C++ 5.5.1 projects
 
 mkdir %0\..\..\..\..\..\Build
 mkdir %0\..\..\..\..\..\Build\Win32

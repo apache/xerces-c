@@ -5,9 +5,9 @@ BCB = $(MAKEDIR)\..
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
 PROJECT = $(TARGETPATH)\DOMTraversalTest.exe
-OBJFILES = $(TARGETPATH)\obj\DOMTraversal.obj
+OBJFILES = $(TARGETPATH)\obj\Traversal.obj
 RESFILES = 
-MAINSOURCE = DOMTraversal.cpp
+MAINSOURCE = Traversal.cpp
 RESDEPEN = $(RESFILES)
 LIBFILES = $(TARGETPATH)\xerces-bor_$(XERCESVER).lib
 IDLFILES = 
@@ -17,7 +17,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\tests\DOM\Traversal;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

@@ -18,7 +18,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\tests\XSerializerTest
+PATHCPP = ..\..\..\..\..\tests\XSerializerTest
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

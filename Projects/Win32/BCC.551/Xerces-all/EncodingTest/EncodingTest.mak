@@ -16,7 +16,7 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\tests\EncodingTest;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

@@ -5,9 +5,9 @@ BCB = $(MAKEDIR)\..
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
 PROJECT = $(TARGETPATH)\DOMTypeInfoTest.exe
-OBJFILES = $(TARGETPATH)\obj\DOMTypeInfoTest.obj
+OBJFILES = $(TARGETPATH)\obj\TypeInfo.obj
 RESFILES = 
-MAINSOURCE = DOMTypeInfoTest.cpp
+MAINSOURCE = TypeInfo.cpp
 RESDEPEN = $(RESFILES)
 LIBFILES = $(TARGETPATH)\xerces-bor_$(XERCESVER).lib
 IDLFILES = 
@@ -17,11 +17,11 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\tests\DOM\TypeInfo;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;WIN32_LEAN_AND_MEAN
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
 INCLUDEPATH = ..\..\..\..\..\tests\DOM\TypeInfo;..\..\..\..\..\src
 LIBPATH = 

@@ -18,7 +18,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\samples\StdInParse
+PATHCPP = ..\..\..\..\..\samples\StdInParse
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

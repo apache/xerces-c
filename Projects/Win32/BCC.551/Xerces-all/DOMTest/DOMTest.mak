@@ -5,9 +5,9 @@ BCB = $(MAKEDIR)\..
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
 PROJECT = $(TARGETPATH)\DOMTest.exe
-OBJFILES = $(TARGETPATH)\obj\DOMTest.obj
+OBJFILES = $(TARGETPATH)\obj\DTest.obj
 RESFILES = 
-MAINSOURCE = DOMTest.cpp
+MAINSOURCE = DTest.cpp
 RESDEPEN = $(RESFILES)
 LIBFILES = $(TARGETPATH)\xerces-bor_$(XERCESVER).lib
 IDLFILES = 
@@ -17,7 +17,7 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\tests\DOM\DOMTest;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

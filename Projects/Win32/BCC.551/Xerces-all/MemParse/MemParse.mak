@@ -17,7 +17,7 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\samples\MemParse
+PATHCPP = ..\..\..\..\..\samples\MemParse
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

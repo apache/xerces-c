@@ -17,7 +17,7 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\samples\SAXPrint
+PATHCPP = ..\..\..\..\..\samples\SAXPrint
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;

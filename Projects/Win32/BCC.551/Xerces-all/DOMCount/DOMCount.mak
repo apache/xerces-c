@@ -16,7 +16,7 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = ..\..\..\..\..\samples\DOMCount;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
