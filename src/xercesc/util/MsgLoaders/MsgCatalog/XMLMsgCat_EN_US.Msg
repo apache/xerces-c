@@ -286,6 +286,12 @@ $set 1
 289  Fatal error encountered during schema scan
 290  Reference to external entity declaration '{0}' is not allowed in a standalone document.
 291  Partial markup in parameter entity replacement text in a complete declaration.
+292  The value of the attribute '{0}' is invalid. Prefixed namespace bindings may not be empty.
+293  The prefix 'xmlns' cannot be bound to any namespace explicitly.
+294  The namespace for 'xmlns' cannot be bound to any prefix explicitly.
+295  The prefix 'xml' cannot be bound to any namespace other than its usual namespace.
+296  The namespace for 'xml' cannot be bound to any prefix other than 'xml'.
+297  Element '{0}' cannot have 'xmlns' as its prefix.
 
 
 $set 2

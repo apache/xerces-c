@@ -1267,10 +1267,16 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
 
 //
 //  This method is called with a key/value string pair that represents an
-//  xmlns="xxx" or xmlns:xxx="yyy" attribute. This method will update the
+//  xmlns="yyy" or xmlns:xxx="yyy" attribute. This method will update the
 //  current top of the element stack based on this data. We know that when
 //  we get here, that it is one of these forms, so we don't bother confirming
 //  it.
+//
+//  But we have to ensure
+//      1. xxx is not xmlns
+//      2. if xxx is xml, then yyy must match XMLUni::fgXMLURIName, and vice versa
+//      3. yyy is not XMLUni::fgXMLNSURIName
+//      4. if xxx is not null, then yyy cannot be an empty string.
 //
 void XMLScanner::updateNSMap(const  XMLCh* const    attrName
                             , const XMLCh* const    attrValue)
@@ -1279,22 +1285,46 @@ void XMLScanner::updateNSMap(const  XMLCh* const    attrName
     XMLBufBid bbNormal(&fBufMgr);
     XMLBuffer& normalBuf = bbNormal.getBuffer();
 
-    //  We either have the default prefix (""), or we point it into the attr
-    //  name parameter. Note that the xmlns is not the prefix we care about
-    //  here. To us, the 'prefix' is really the local part of the attrName
-    //  parameter.
-    //
-    const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-    const unsigned int colonOfs = XMLString::indexOf(attrName, chColon);
-    if (colonOfs != -1)
-        prefPtr = &attrName[colonOfs + 1];
-
     //
     //  Normalize the value into the passed buffer. In this case, we don't
     //  care about the return value. An error was issued for the error, which
     //  is all we care about here.
     //
     normalizeAttRawValue(attrName, attrValue, normalBuf);
+    XMLCh* namespaceURI = normalBuf.getRawBuffer();
+
+    //  We either have the default prefix (""), or we point it into the attr
+    //  name parameter. Note that the xmlns is not the prefix we care about
+    //  here. To us, the 'prefix' is really the local part of the attrName
+    //  parameter.
+    //
+    //  Check 1. xxx is not xmlns
+    //        2. if xxx is xml, then yyy must match XMLUni::fgXMLURIName, and vice versa
+    //        3. yyy is not XMLUni::fgXMLNSURIName
+    //        4. if xxx is not null, then yyy cannot be an empty string.
+
+    const XMLCh* prefPtr = XMLUni::fgZeroLenString;
+    const unsigned int colonOfs = XMLString::indexOf(attrName, chColon);
+    if (colonOfs != -1) {
+        prefPtr = &attrName[colonOfs + 1];
+
+        if (XMLString::equals(prefPtr, XMLUni::fgXMLNSString))
+            emitError(XMLErrs::NoUseOfxmlnsAsPrefix);
+        else if (XMLString::equals(prefPtr, XMLUni::fgXMLString)) {
+            if (!XMLString::equals(namespaceURI, XMLUni::fgXMLURIName))
+                emitError(XMLErrs::PrefixXMLNotMatchXMLURI);
+        }
+
+        if (!namespaceURI || !*namespaceURI)
+            emitError(XMLErrs::NoEmptyStrNamespace, attrName);
+    }
+
+    if (XMLString::equals(namespaceURI, XMLUni::fgXMLNSURIName))
+        emitError(XMLErrs::NoUseOfxmlnsURI);
+    else if (XMLString::equals(namespaceURI, XMLUni::fgXMLURIName)) {
+        if (!XMLString::equals(prefPtr, XMLUni::fgXMLString))
+            emitError(XMLErrs::XMLURINotMatchXMLPrefix);
+    }
 
     //
     //  Ok, we have to get the unique id for the attribute value, which is the
@@ -1305,7 +1335,7 @@ void XMLScanner::updateNSMap(const  XMLCh* const    attrName
     fElemStack.addPrefix
     (
         prefPtr
-        , fURIStringPool->addOrFind(normalBuf.getRawBuffer())
+        , fURIStringPool->addOrFind(namespaceURI)
     );
 }
 

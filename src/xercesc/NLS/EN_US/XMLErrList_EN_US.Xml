@@ -298,6 +298,12 @@
             <Message Id="SchemaScanFatalError" Text="Fatal error encountered during schema scan"/>
             <Message Id="IllegalRefInStandalone" Text="Reference to external entity declaration '{0}' is not allowed in a standalone document."/>
             <Message Id="PEBetweenDecl" Text="Partial markup in parameter entity replacement text in a complete declaration."/>
+            <Message Id="NoEmptyStrNamespace" Text="The value of the attribute '{0}' is invalid. Prefixed namespace bindings may not be empty."/>
+            <Message Id="NoUseOfxmlnsAsPrefix" Text="The prefix 'xmlns' cannot be bound to any namespace explicitly."/>
+            <Message Id="NoUseOfxmlnsURI" Text="The namespace for 'xmlns' cannot be bound to any prefix explicitly."/>
+            <Message Id="PrefixXMLNotMatchXMLURI" Text="The prefix 'xml' cannot be bound to any namespace other than its usual namespace."/>
+            <Message Id="XMLURINotMatchXMLPrefix" Text="The namespace for 'xml' cannot be bound to any prefix other than 'xml'."/>
+            <Message Id="NoXMLNSAsElementPrefix" Text="Element '{0}' cannot have 'xmlns' as its prefix."/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">

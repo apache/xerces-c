@@ -305,7 +305,13 @@ public :
       , SchemaScanFatalError               = 289
       , IllegalRefInStandalone             = 290
       , PEBetweenDecl                      = 291
-      , F_HighBounds                       = 292
+      , NoEmptyStrNamespace                = 292
+      , NoUseOfxmlnsAsPrefix               = 293
+      , NoUseOfxmlnsURI                    = 294
+      , PrefixXMLNotMatchXMLURI            = 295
+      , XMLURINotMatchXMLPrefix            = 296
+      , NoXMLNSAsElementPrefix             = 297
+      , F_HighBounds                       = 298
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

@@ -4153,8 +4153,13 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
         //  to map to by the NS spec. xmlns gets mapped to a special place holder
         //  URI that we define (so that it maps to something checkable.)
         //
-        if (XMLString::equals(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString))
+        if (XMLString::equals(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString)) {
             uriId = fXMLNSNamespaceId;
+
+            // if this is an element, it is an error to have xmlns as prefix
+            if (mode == ElemStack::Mode_Element)
+                emitError(XMLErrs::NoXMLNSAsElementPrefix, qName);
+        }
         else if (XMLString::equals(prefixBuf.getRawBuffer(), XMLUni::fgXMLString))
             uriId = fXMLNamespaceId;
         else
