@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/10 19:41:16  abagchi
+ * Added docs for createNodeIterator and createTreeWalker
+ *
  * Revision 1.6  2000/02/06 07:47:28  rahulj
  * Year 2K copyright swat.
  *
@@ -354,15 +357,65 @@ public:
 
     /**
      * Creates a NodeIterator object.   (DOM2)
+     *
+     * NodeIterators are used to step through a set of nodes, e.g. the set of nodes in a NodeList, the
+     * document subtree governed by a particular node, the results of a query, or any other set of nodes.
+     * The set of nodes to be iterated is determined by the implementation of the NodeIterator. DOM Level 2
+     * specifies a single NodeIterator implementation for document-order traversal of a document subtree.
+     * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>. 
+     *
+     * To produce a view of the document that has entity references expanded and does not
+     * expose the entity reference node itself, use the <code>whatToShow</code> flags to hide the entity
+     * reference node and set expandEntityReferences to true when creating the iterator. To
+     * produce a view of the document that has entity reference nodes but no entity expansion,
+     * use the <code>whatToShow</code> flags to show the entity reference node and set
+     * expandEntityReferences to false.
+     *
+     * @param root The root node of the DOM tree
+     * @param whatToShow This attribute determines which node types are presented via the iterator.
+     * @param filter The filter used to screen nodes
+     * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
+     *                   visible to the iterator. If false, they will be skipped over.
      */
 
-    DOM_NodeIterator       createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter*  filter, bool entityReferenceExpansion);
+    DOM_NodeIterator createNodeIterator(DOM_Node root, 
+                                        unsigned long whatToShow, 
+                                        DOM_NodeFilter*  filter, 
+                                        bool entityReferenceExpansion);
 
      /**
      * Creates a TreeWalker object.   (DOM2)
+     *
+     * TreeWalker objects are used to navigate a document tree or subtree using the view of the document defined
+     * by its whatToShow flags and any filters that are defined for the TreeWalker. Any function which performs
+     * navigation using a TreeWalker will automatically support any view defined by a TreeWalker.
+     *
+     * Omitting nodes from the logical view of a subtree can result in a structure that is substantially different from
+     * the same subtree in the complete, unfiltered document. Nodes that are siblings in the TreeWalker view may
+     * be children of different, widely separated nodes in the original view. For instance, consider a Filter that skips
+     * all nodes except for Text nodes and the root node of a document. In the logical view that results, all text
+     * nodes will be siblings and appear as direct children of the root node, no matter how deeply nested the
+     * structure of the original document.
+     *
+     * To produce a view of the document that has entity references expanded
+     * and does not expose the entity reference node itself, use the whatToShow
+     * flags to hide the entity reference node and set <code>expandEntityReferences</code> to
+     * true when creating the TreeWalker. To produce a view of the document
+     * that has entity reference nodes but no entity expansion, use the
+     * <code>whatToShow</code> flags to show the entity reference node and set
+     * <code>expandEntityReferences</code> to false
+     *
+     * @param root The root node of the DOM tree
+     * @param whatToShow This attribute determines which node types are presented via the tree-walker.
+     * @param filter The filter used to screen nodes
+     * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
+     *                   visible to the tree-walker. If false, they will be skipped over.
      */
 
-    DOM_TreeWalker         createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter*  filter, bool entityReferenceExpansion);
+    DOM_TreeWalker  createTreeWalker(DOM_Node root, 
+                                     unsigned long whatToShow, 
+                                     DOM_NodeFilter*  filter, 
+                                     bool entityReferenceExpansion);
 
     //@}
     /** @name Getter functions */
