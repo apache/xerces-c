@@ -115,7 +115,7 @@
 unsigned int
 XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , const unsigned int                attCount
-                        ,       XMLElementDecl&             elemDecl
+                        ,       XMLElementDecl*             elemDecl
                         ,       RefVectorOf<XMLAttr>&       toFill)
 {
     //
@@ -123,7 +123,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     //  that it owns, and to return us a boolean indicating whether it has
     //  any defs.
     //
-    const bool hasDefs = elemDecl.resetDefs();
+    const bool hasDefs = elemDecl->resetDefs();
 
     //
     //  If there are no expliclitily provided attributes and there are no
@@ -220,13 +220,40 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         XMLAttDef::AttTypes attType;
         if (!isNSAttr || fGrammar->getGrammarType() == Grammar::DTDGrammarType)
         {
+            // Some checking for attribute wild card first (for schema)
+            bool laxThisOne = false;
+            bool skipThisOne = false;
+
+            XMLAttDef* attDefForWildCard = 0;
+
+            if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+
+                ComplexTypeInfo* typeInfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
+                if (typeInfo) {
+                    SchemaAttDef* attWildCard = typeInfo->getAttWildCard();
+
+                    if (attWildCard) {
+                        //if schema, see if we should lax or skip the validation of this attribute
+                        if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
+                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
+                            if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+                                RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
+                                if (attRegistry) {
+                                    attDefForWildCard = attRegistry->get(suffPtr);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             //
             //  Find this attribute within the parent element. We pass both
             //  the uriID/name and the raw QName buffer, since we don't know
             //  how the derived validator and its elements store attributes.
             //
             bool wasAdded = false;
-            XMLAttDef* attDef = elemDecl.findAttr
+            XMLAttDef*  attDef = elemDecl->findAttr
             (
                 curPair->getKey()
                 , uriId
@@ -236,13 +263,13 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , wasAdded
             );
 
-            //
-            //  Its not valid for this element, so issue an error if we are
-            //  validating.
-            //
-            if (wasAdded)
+            if (wasAdded && !attDefForWildCard)
             {
-                if (fValidate)
+                //
+                //  Its not valid for this element, so issue an error if we are
+                //  validating.
+                //
+                if (fValidate && !skipThisOne && !laxThisOne)
                 {
                     // This is to tell the Validator that this attribute was
                     // faulted-in, was not an attribute in the attdef originally
@@ -262,7 +289,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     (
                         XMLValid::AttNotDefinedForElement
                         , bufMsg.getRawBuffer()
-                        , elemDecl.getFullName()
+                        , elemDecl->getFullName()
                     );
                 }
             }
@@ -272,7 +299,8 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 // then emit an error
                 if (fValidate
                     && attDef->getCreateReason() == XMLAttDef::JustFaultIn
-                    && !attDef->getProvided())
+                    && !attDef->getProvided()
+                    && !skipThisOne)
                 {
                     XMLBufBid bbURI(&fBufMgr);
                     XMLBuffer& bufURI = bbURI.getBuffer();
@@ -288,7 +316,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     (
                         XMLValid::AttNotDefinedForElement
                         , bufMsg.getRawBuffer()
-                        , elemDecl.getFullName()
+                        , elemDecl->getFullName()
                     );
                 }
              }
@@ -297,18 +325,18 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  If its already provided, then there are more than one of
             //  this attribute in this start tag, so emit an error.
             //
+
             if (attDef->getProvided())
             {
                 emitError
                 (
                     XMLErrs::AttrAlreadyUsedInSTag
                     , attDef->getFullName()
-                    , elemDecl.getFullName()
+                    , elemDecl->getFullName()
                 );
             }
              else
             {
-                // Mark this one as already seen
                 attDef->setProvided(true);
             }
 
@@ -317,41 +345,75 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  don't care about the return status here. If it failed, an error
             //  was issued, which is all we care about.
             //
-            normalizeAttValue
-            (
-                attDef
-                , curPair->getValue()
-                , normBuf
-            );
 
-            //
-            //  If we found an attdef for this one, then lets validate it.
-            //
-            if (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn)
-            {
-                if (fValidate)
+            if (wasAdded && attDefForWildCard) {
+                normalizeAttValue
+                (
+                    attDefForWildCard
+                    , curPair->getValue()
+                    , normBuf
+                );
+
+                //
+                //  If we found an attdef for this one, then lets validate it.
+                //
+                if (fValidate && !skipThisOne)
                 {
-                    if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
-                    {
-                        // normalize the attribute according to schema whitespace facet
-                        XMLBufBid bbtemp(&fBufMgr);
-                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+                    // normalize the attribute according to schema whitespace facet
+                    XMLBufBid bbtemp(&fBufMgr);
+                    XMLBuffer& tempBuf = bbtemp.getBuffer();
 
-                        DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
-                        normBuf.set(tempBuf.getRawBuffer());
-                    }
+                    DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
+                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                    normBuf.set(tempBuf.getRawBuffer());
 
                     fValidator->validateAttrValue
                     (
-                        attDef
+                        attDefForWildCard
                         , normBuf.getRawBuffer()
                     );
                 }
-            }
 
-            // Save the type for later use
-            attType = attDef->getType();
+                // Save the type for later use
+                attType = attDefForWildCard->getType();
+            }
+            else {
+                normalizeAttValue
+                (
+                    attDef
+                    , curPair->getValue()
+                    , normBuf
+                );
+
+                //
+                //  If we found an attdef for this one, then lets validate it.
+                //
+                if (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn)
+                {
+                    if (fValidate && !skipThisOne)
+                    {
+                        if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+                        {
+                            // normalize the attribute according to schema whitespace facet
+                            XMLBufBid bbtemp(&fBufMgr);
+                            XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                            DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
+                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                            normBuf.set(tempBuf.getRawBuffer());
+                        }
+
+                        fValidator->validateAttrValue
+                        (
+                            attDef
+                            , normBuf.getRawBuffer()
+                        );
+                    }
+                }
+
+                // Save the type for later use
+                attType = attDef->getType();
+            }
         }
          else
         {
@@ -415,7 +477,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
         // (2) add default attrs if missing (FIXED and NOT_FIXED)
         //
-        XMLAttDefList& attDefList = elemDecl.getAttDefList();
+        XMLAttDefList& attDefList = elemDecl->getAttDefList();
         while (attDefList.hasMoreElements())
         {
             // Get the current att def, for convenience and its def type
@@ -447,7 +509,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             // XML 1.0 Section 2.9
                             // Document is standalone, so attributes must not be defaulted.
                             //
-                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef.getFullName(), elemDecl.getFullName());
+                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef.getFullName(), elemDecl->getFullName());
                         }
                     }
                 }
@@ -2799,7 +2861,6 @@ bool XMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
 // check if we should skip or lax the validation of the element
 // if skip - no validation
 // if lax - validate only if the element if found
-
 bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                                       const XMLContentModel* const cm,
                                       const unsigned int parentElemDepth)
@@ -2889,3 +2950,47 @@ bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector*
 
     return laxThisOne;
 }
+
+
+// check if there is an AnyAttribute, and if so, see if we should lax or skip
+// if skip - no validation
+// if lax - validate only if the attribute if found
+bool XMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned int uriId, bool& skipThisOne, bool& laxThisOne)
+{
+    XMLAttDef::AttTypes wildCardType = attWildCard->getType();
+    bool anyEncountered = false;
+    skipThisOne = false;
+    laxThisOne = false;
+    if (wildCardType == XMLAttDef::Any_Any)
+        anyEncountered = true;
+    else if (wildCardType == XMLAttDef::Any_Other) {
+        if (attWildCard->getAttName()->getURI() != uriId)
+            anyEncountered = true;
+    }
+    else if (wildCardType == XMLAttDef::Any_List) {
+        ValueVectorOf<unsigned int>* nameURIList = attWildCard->getNamespaceList();
+        unsigned int listSize = (nameURIList) ? nameURIList->size() : 0;
+
+        if (listSize) {
+            for (unsigned int i=0; i < listSize; i++) {
+                if (nameURIList->elementAt(i) == uriId)
+                    anyEncountered = true;
+            }
+        }
+    }
+
+    if (anyEncountered) {
+        XMLAttDef::DefAttTypes   defType   = attWildCard->getDefaultType();
+        if (defType == XMLAttDef::ProcessContents_Skip) {
+            // attribute should just be bypassed,
+            skipThisOne = true;
+        }
+        else if (defType == XMLAttDef::ProcessContents_Lax) {
+            laxThisOne = true;
+        }
+    }
+
+    return false;
+}
+
+

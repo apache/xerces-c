@@ -3088,7 +3088,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  it goes in with the number of values we got during the raw scan of
     //  explictly provided attrs above.
     //
-    attCount = buildAttList(*fRawAttrList, attCount, *elemDecl, *fAttrList);
+    attCount = buildAttList(*fRawAttrList, attCount, elemDecl, *fAttrList);
 
     //
     //  If empty, validate content right now if we are validating and then

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2001/09/10 14:06:22  tng
+ * Schema: AnyAttribute support in Scanner and Validator.
+ *
  * Revision 1.31  2001/08/13 15:06:39  knoaman
  * update <any> validation.
  *
@@ -535,7 +538,7 @@ private :
     (
         const   RefVectorOf<KVStringPair>&  providedAttrs
         , const unsigned int                attCount
-        ,       XMLElementDecl&             elemDecl
+        ,       XMLElementDecl*             elemDecl
         ,       RefVectorOf<XMLAttr>&       toFill
     );
     void checkIDRefs();
@@ -580,6 +583,10 @@ private :
     bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                               const XMLContentModel* const cm,
                               const unsigned int parentElemDepth);
+    bool anyAttributeValidation(SchemaAttDef* attWildCard,
+                                unsigned int uriId,
+                                bool& skipThisOne,
+                                bool& laxThisOne);
 
     // -----------------------------------------------------------------------
     //  Private scanning methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/09/10 14:06:22  tng
+ * Schema: AnyAttribute support in Scanner and Validator.
+ *
  * Revision 1.17  2001/09/05 20:49:11  knoaman
  * Fix for complexTypes with mixed content model.
  *
@@ -365,206 +368,81 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
         return;
     }
 
-    //  Check the Any Type
-    if (type == XMLAttDef::Any_Any
-     || type == XMLAttDef::Any_List
-     || type == XMLAttDef::Any_Other) {
-
-        if (defType == XMLAttDef::ProcessContents_Skip) {
-            // attribute should just be bypassed,
-        }
-        else if (defType == XMLAttDef::ProcessContents_Strict
-             ||  defType == XMLAttDef::ProcessContents_Lax)
-        {
-
-            bool reportError = false;
-            bool processContentStrict = (defType == XMLAttDef::ProcessContents_Strict);
-            QName* const      attName = ((SchemaAttDef*)attDef)->getAttName();
-
-            if (attName->getURI() == getScanner()->getEmptyNamespaceId()) {
-                if (processContentStrict)
-                    reportError = true;
-            } else {
-                SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getScanner()->getURIText(attName->getURI()));
-                if (!sGrammar) {
-                    if (processContentStrict)
-                        reportError = true;
-                } else {
-                    RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
-                    if (!attRegistry) {
-                        if (processContentStrict)
-                            reportError = true;
-                    } else {
-                        SchemaAttDef* attDecl = (SchemaAttDef*) attRegistry->get(attName->getLocalPart());
-                        if (!attDecl) {
-                            if (processContentStrict)
-                                reportError = true;
-                        } else {
-                            DatatypeValidator* attDeclDV = attDecl->getDatatypeValidator();
-                            if (!attDeclDV) {
-                                if (processContentStrict)
-                                    reportError = true;
-                            }
-                            else {
-                                try {
-                                    DatatypeValidator::ValidatorType attDeclDVType = attDeclDV->getType();
-
-                                    // set up the entitydeclpool in ENTITYDatatypeValidator
-                                    // and the idreflist in ID/IDREFDatatypeValidator
-
-                                    if (attDeclDVType == DatatypeValidator::List) {
-                                        DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDeclDV)->getItemTypeDTV();
-                                        DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
-                                        if (itemDTVType == DatatypeValidator::ENTITY)
-                                            ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                                        else if (itemDTVType == DatatypeValidator::ID)
-                                            ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                                        else if (itemDTVType == DatatypeValidator::IDREF)
-                                            ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                                    }
-                                    else if (attDeclDVType == DatatypeValidator::Union) {
-                                        RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)attDeclDV)->getMemberTypeValidators();
-                                        unsigned int memberTypeNumber = memberDTV->size();
-                                        for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
-                                        {
-                                            DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
-                                            if (memberDTVType == DatatypeValidator::ENTITY)
-                                                ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                                            else if (memberDTVType == DatatypeValidator::ID)
-                                                ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                                            else if (memberDTVType == DatatypeValidator::IDREF)
-                                                ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                                        }
-                                    }
-                                    else if (attDeclDVType == DatatypeValidator::ENTITY)
-                                        ((ENTITYDatatypeValidator*)attDeclDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                                    else if (attDeclDVType == DatatypeValidator::ID)
-                                        ((IDDatatypeValidator*)attDeclDV)->setIDRefList(getScanner()->getIDRefList());
-                                    else if (attDeclDVType == DatatypeValidator::IDREF)
-                                        ((IDREFDatatypeValidator*)attDeclDV)->setIDRefList(getScanner()->getIDRefList());
-
-                                    // now validate the attribute value
-                                    // if notation, need to bind URI to notation first
-                                    if (attDeclDVType == DatatypeValidator::NOTATION)
-                                    {
-                                        //
-                                        //  Make sure that this value maps to one of the
-                                        //  notation values in the enumList parameter. We don't have to
-                                        //  look it up in the notation pool (if a notation) because we
-                                        //  will look up the enumerated values themselves. If they are in
-                                        //  the notation pool (after the Grammar is parsed), then obviously
-                                        //  this value will be legal since it matches one of them.
-                                        //
-                                        XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
-                                        XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
-                                        XMLBuffer notationBuf;
-                                        unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
-                                        notationBuf.set(getScanner()->getURIText(uriId));
-                                        notationBuf.append(chColon);
-                                        notationBuf.append(nameBuf.getRawBuffer());
-
-                                        attDeclDV->validate(notationBuf.getRawBuffer());
-                                    }
-                                    else
-                                        attDeclDV->validate(attrValue);
-                                } catch (InvalidDatatypeValueException idve) {
-                                    emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
-                                }
-                                catch (InvalidDatatypeFacetException idve) {
-                                    emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
-                                }
-                                catch (...) {
-                                    emitError(XMLValid::GenericError);
-                                    throw;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (reportError) {
-                emitError(XMLValid::AttNotDefinedForElement, fullName, XMLUni::fgZeroLenString);
-            }
-        }
+    DatatypeValidator* attDefDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
+    if (!attDefDV) {
+        emitError(XMLValid::NoDatatypeValidatorForAttribute, fullName);
     }
     else {
-        DatatypeValidator* attDefDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
-        if (!attDefDV) {
-            emitError(XMLValid::NoDatatypeValidatorForAttribute, fullName);
-        }
-        else {
-            try {
-                DatatypeValidator::ValidatorType attDefDVType = attDefDV->getType();
+        try {
+            DatatypeValidator::ValidatorType attDefDVType = attDefDV->getType();
 
-                // set up the entitydeclpool in ENTITYDatatypeValidator
-                // and the idreflist in ID/IDREFDatatypeValidator
+            // set up the entitydeclpool in ENTITYDatatypeValidator
+            // and the idreflist in ID/IDREFDatatypeValidator
 
-                if (attDefDVType == DatatypeValidator::List) {
-                    DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDefDV)->getItemTypeDTV();
-                    DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
-                    if (itemDTVType == DatatypeValidator::ENTITY)
-                        ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                    else if (itemDTVType == DatatypeValidator::ID)
-                        ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                    else if (itemDTVType == DatatypeValidator::IDREF)
-                        ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                }
-                else if (attDefDVType == DatatypeValidator::Union) {
-                    RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)attDefDV)->getMemberTypeValidators();
-                    unsigned int memberTypeNumber = memberDTV->size();
-                    for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
-                    {
-                        DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
-                        if (memberDTVType == DatatypeValidator::ENTITY)
-                            ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                        else if (memberDTVType == DatatypeValidator::ID)
-                            ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                        else if (memberDTVType == DatatypeValidator::IDREF)
-                            ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                    }
-                }
-                else if (attDefDVType == DatatypeValidator::ENTITY)
-                    ((ENTITYDatatypeValidator*)attDefDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                else if (attDefDVType == DatatypeValidator::ID)
-                    ((IDDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
-                else if (attDefDVType == DatatypeValidator::IDREF)
-                    ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
-
-                // now validate the attribute value
-                // if notation, need to bind URI to notation first
-                if (attDefDVType == DatatypeValidator::NOTATION)
+            if (attDefDVType == DatatypeValidator::List) {
+                DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDefDV)->getItemTypeDTV();
+                DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
+                if (itemDTVType == DatatypeValidator::ENTITY)
+                    ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                else if (itemDTVType == DatatypeValidator::ID)
+                    ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                else if (itemDTVType == DatatypeValidator::IDREF)
+                    ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+            }
+            else if (attDefDVType == DatatypeValidator::Union) {
+                RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)attDefDV)->getMemberTypeValidators();
+                unsigned int memberTypeNumber = memberDTV->size();
+                for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
                 {
-                    //
-                    //  Make sure that this value maps to one of the
-                    //  notation values in the enumList parameter. We don't have to
-                    //  look it up in the notation pool (if a notation) because we
-                    //  will look up the enumerated values themselves. If they are in
-                    //  the notation pool (after the Grammar is parsed), then obviously
-                    //  this value will be legal since it matches one of them.
-                    //
-                    XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
-                    XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
-                    XMLBuffer notationBuf;
-                    unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
-                    notationBuf.set(getScanner()->getURIText(uriId));
-                    notationBuf.append(chColon);
-                    notationBuf.append(nameBuf.getRawBuffer());
-
-                    attDefDV->validate(notationBuf.getRawBuffer());
+                    DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
+                    if (memberDTVType == DatatypeValidator::ENTITY)
+                        ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                    else if (memberDTVType == DatatypeValidator::ID)
+                        ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                    else if (memberDTVType == DatatypeValidator::IDREF)
+                        ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
                 }
-                else
-                    attDefDV->validate(attrValue);
-            } catch (InvalidDatatypeValueException idve) {
-                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
-            catch (InvalidDatatypeFacetException idve) {
-                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+            else if (attDefDVType == DatatypeValidator::ENTITY)
+                ((ENTITYDatatypeValidator*)attDefDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+            else if (attDefDVType == DatatypeValidator::ID)
+                ((IDDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+            else if (attDefDVType == DatatypeValidator::IDREF)
+                ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+
+            // now validate the attribute value
+            // if notation, need to bind URI to notation first
+            if (attDefDVType == DatatypeValidator::NOTATION)
+            {
+                //
+                //  Make sure that this value maps to one of the
+                //  notation values in the enumList parameter. We don't have to
+                //  look it up in the notation pool (if a notation) because we
+                //  will look up the enumerated values themselves. If they are in
+                //  the notation pool (after the Grammar is parsed), then obviously
+                //  this value will be legal since it matches one of them.
+                //
+                XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
+                XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
+                XMLBuffer notationBuf;
+                unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
+                notationBuf.set(getScanner()->getURIText(uriId));
+                notationBuf.append(chColon);
+                notationBuf.append(nameBuf.getRawBuffer());
+
+                attDefDV->validate(notationBuf.getRawBuffer());
             }
-            catch (...) {
-                emitError(XMLValid::GenericError);
-                throw;
-            }
+            else
+                attDefDV->validate(attrValue);
+        } catch (InvalidDatatypeValueException idve) {
+            emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+        }
+        catch (InvalidDatatypeFacetException idve) {
+            emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+        }
+        catch (...) {
+            emitError(XMLValid::GenericError);
+            throw;
         }
     }
     fDatatypeBuffer.reset();
