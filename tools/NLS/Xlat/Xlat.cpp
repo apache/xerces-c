@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/05/05 10:53:08  amassari
+ * Make it compile again on Windows
+ *
  * Revision 1.19  2004/04/20 15:30:49  peiyongz
  * to generate code for private default constructor
  *
@@ -469,14 +472,15 @@ int main (int argC, char** argV) {
         wprintf(L"Parser init error.\n  ERROR: %s\n\n", toCatch.getMessage());
         return ErrReturn_ParserInit;
     }
-    	
+    
+    int i;
     XMLCh** newArgV = new XMLCh*[argC];
-    for(int i=0;i<argC; i++) 
+    for(i=0;i<argC; i++) 
     {
         newArgV[i] = XMLString::transcode(argV[i]);
     }
     int toReturn = (Xlat_main(argC,newArgV));
-    for (int i=0; i<argC; i++) 
+    for (i=0; i<argC; i++) 
     {
         delete [] newArgV[i];
     }
