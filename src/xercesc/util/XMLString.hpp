@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/04/21 20:07:05  knoaman
+ * Performance: use memcpy in moveChars and replicate.
+ *
  * Revision 1.14  2003/02/25 16:42:31  tng
  * [Bug 7072] Documentation for XMLString::transcode states invalid return value.
  *
@@ -226,6 +229,7 @@
 #define XMLSTRING_HPP
 
 #include <xercesc/util/BaseRefVectorOf.hpp>
+#include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1453,14 +1457,11 @@ private :
 //  Inline some methods that are either just passthroughs to other string
 //  methods, or which are key for performance.
 // ---------------------------------------------------------------------------
-inline void XMLString::moveChars(       XMLCh* const    targetStr
-                                , const XMLCh* const    srcStr
-                                , const unsigned int    count)
+inline void XMLString::moveChars(       XMLCh* const targetStr
+                                , const XMLCh* const srcStr
+                                , const unsigned int count)
 {
-    XMLCh* outPtr = targetStr;
-    const XMLCh* inPtr = srcStr;
-    for (unsigned int index = 0; index < count; index++)
-        *outPtr++ = *inPtr++;
+    memcpy(targetStr, srcStr, count * sizeof(XMLCh));
 }
 
 inline unsigned int XMLString::stringLen(const XMLCh* const src)
@@ -1510,10 +1511,7 @@ inline XMLCh* XMLString::replicate(const XMLCh* const toRep)
     {
         const unsigned int len = stringLen(toRep);
         ret = new XMLCh[len + 1];
-        XMLCh* outPtr = ret;
-        const XMLCh* inPtr = toRep;
-        for (unsigned int index = 0; index <= len; index++)
-            *outPtr++ = *inPtr++;
+        memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
     }
     return ret;
 }
