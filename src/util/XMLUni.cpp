@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/18 19:55:04  roddey
+ * Added Windows-1252 as an intrinsic encoding.
+ *
  * Revision 1.8  2000/02/17 00:51:13  roddey
  * Updates for EBCDIC code page issues.
  *
@@ -200,7 +203,7 @@ const XMLCh XMLUni::fgGlobalNSURIName[] =
 
 const XMLCh XMLUni::fgIBM037EncodingString[] =
 {
-    chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_0, chDigit_3, chDigit_7, chNull
+    chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_U, chLatin_S, chNull
 };
 
 const XMLCh XMLUni::fgIBM037EncodingString2[] =
@@ -220,14 +223,8 @@ const XMLCh XMLUni::fgIBM037EncodingString4[] =
 
 const XMLCh XMLUni::fgIBM037EncodingString5[] =
 {
-    chLatin_C, chLatin_P, chDigit_0, chDigit_3, chDigit_7, chNull
-};
-
-const XMLCh XMLUni::fgIBM037EncodingString6[] =
-{
     chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_C, chLatin_P, chDash, chLatin_U, chLatin_S, chNull
 };
-
 
 const XMLCh XMLUni::fgIBM1140EncodingString[] =
 {
@@ -513,6 +510,12 @@ const XMLCh XMLUni::fgValidityDomain[] =
     ,   chLatin_s, chLatin_s, chLatin_a, chLatin_g, chLatin_e, chLatin_s
     ,   chForwardSlash, chLatin_X, chLatin_M, chLatin_L, chLatin_V, chLatin_a
     ,   chLatin_l, chLatin_i, chLatin_d, chLatin_i, chLatin_t, chLatin_y, chNull
+};
+
+const XMLCh XMLUni::fgWin1252EncodingString[] =
+{
+        chLatin_W, chLatin_I, chLatin_N, chLatin_D, chLatin_O, chLatin_W
+    ,   chLatin_S, chDash, chDigit_1, chDigit_2, chDigit_5, chDigit_2, chNull
 };
 
 const XMLCh XMLUni::fgXMLString[] =

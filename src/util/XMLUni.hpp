@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/18 19:55:04  roddey
+ * Added Windows-1252 as an intrinsic encoding.
+ *
  * Revision 1.8  2000/02/17 00:51:13  roddey
  * Updates for EBCDIC code page issues.
  *
@@ -246,7 +249,6 @@ public :
     static const XMLCh fgIBM037EncodingString3[];
     static const XMLCh fgIBM037EncodingString4[];
     static const XMLCh fgIBM037EncodingString5[];
-    static const XMLCh fgIBM037EncodingString6[];
     static const XMLCh fgIBM1140EncodingString[];
     static const XMLCh fgIBM1140EncodingString2[];
     static const XMLCh fgIESString[];
@@ -302,6 +304,7 @@ public :
     static const XMLCh fgUTF16LEncodingString2[];
     static const XMLCh fgVersionString[];
     static const XMLCh fgValidityDomain[];
+    static const XMLCh fgWin1252EncodingString[];
     static const XMLCh fgXMLDeclString[];
     static const XMLCh fgXMLString[];
     static const XMLCh fgXMLStringSpace[];

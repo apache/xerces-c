@@ -66,6 +66,7 @@
 #include <util/XMLUCS4Transcoder.hpp>
 #include <util/XMLUTF8Transcoder.hpp>
 #include <util/XMLUTF16Transcoder.hpp>
+#include <util/XMLWin1252Transcoder.hpp>
 #include <util/XMLUni.hpp>
 #include <util/TransENameMap.hpp>
 
@@ -77,8 +78,60 @@
 //  gMappings
 //      This is a hash table of ENameMap objects. It is created and filled
 //      in when the platform init calls our initTransService() method.
+//
+//  gDisallow1
+//  gDisallowX
+//      These area small set of encoding names that, for temporary reasons,
+//      we disallow at this time.
+//
+//  gDisallowList
+//  gDisallowListSize
+//      An array of the disallow strings, for easier searching below.
+//
+//  gDisallowPre
+//      All of the disallowed encodings start with 'IBM', so we have a prefix
+//      we can check for and quickly decide if we need to search the list.
 // ---------------------------------------------------------------------------
 static RefHashTableOf<ENameMap>*    gMappings = 0;
+static XMLCh                        gDisallow1[] =
+{
+        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_0, chDigit_3
+      , chDigit_7, chNull
+};
+static XMLCh                        gDisallow2[] =
+{
+        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_3, chDigit_7, chNull
+};
+static XMLCh                        gDisallow3[] =
+{
+        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_0, chDigit_3
+    ,   chDigit_7, chDash, chLatin_S, chDigit_3, chDigit_9, chDigit_0, chNull
+};
+static XMLCh                        gDisallow4[] =
+{
+        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_3, chDigit_7, chDash
+    ,   chLatin_S, chDigit_3, chDigit_9, chDigit_0, chNull
+};
+static XMLCh                        gDisallow5[] =
+{
+        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_1
+      , chDigit_1, chDigit_4, chDigit_0, chNull
+};
+static XMLCh                        gDisallow6[] =
+{
+        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_1
+      , chDigit_1, chDigit_4, chDigit_0, chDash, chLatin_S, chDigit_3
+      , chDigit_9, chDigit_0, chNull
+};
+static const unsigned int           gDisallowListSize = 6;
+static XMLCh*                       gDisallowList[gDisallowListSize] =
+{
+    gDisallow1, gDisallow2, gDisallow3, gDisallow4, gDisallow5, gDisallow6
+};
+static XMLCh                        gDisallowPre[] =
+{
+        chLatin_I, chLatin_B, chLatin_M, chNull
+};
 
 
 
@@ -119,7 +172,26 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
     if (ourMapping)
         return ourMapping->makeNew(blockSize);
 
-    // It wasn't an intrinsic, so pass it on to the trans service
+    //
+    //  For now, we have a little list of encodings that we disallow 
+    //  explicitly. So lets check for them up front. They all start with
+    //  IBM, so we can do a quick check to see if we should even do
+    //  anything at all.
+    //
+    if (XMLString::startsWith(upBuf, gDisallowPre))
+    {
+        for (unsigned int index = 0; index < gDisallowListSize; index++)
+        {
+            // If its one of our guys, then pretend we don't understand it
+            if (!XMLString::compareString(upBuf, gDisallowList[index]))
+                return 0;
+        }
+    }
+
+    //
+    //  It wasn't an intrinsic and it wasn't disallowed, so pass it on
+    //  to the trans service to see if he can make anything of it.
+    //
     return makeNewXMLTranscoder(encodingName, resValue, blockSize);
 }
 
@@ -302,16 +374,14 @@ void XMLTransService::initTransService()
     );
 
     //
-    //  Add in our mappings for EBCDIC-US. We map all the default EBCDIC
-    //  encodings to our intrinsic encoder, which is IBM-037. And of course
-    //  we map the IBM-037 encoding itself here as well.
+    //  Add in our mappings for EBCDIC-US. We map all the default EBCDIC-US
+    //  encodings to our intrinsic encoder, which is IBM-037.
     //
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString2));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString3));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString4));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString5));
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString6));
 
     //
     //  Add in our mappings for the EBCDIC-US with Euro update, i.e. IBM1140
@@ -319,4 +389,10 @@ void XMLTransService::initTransService()
     //
     gMappings->put(new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString));
     gMappings->put(new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString2));
+
+    //
+    //  Add in our mappings for Windows-1252. We don't have any aliases for
+    //  this one, so there is just one mapping.
+    //
+    gMappings->put(new ENameMapFor<XMLWin1252Transcoder>(XMLUni::fgWin1252EncodingString));
 }
