@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/23 16:21:40  knoaman
+ * PSVI: create local elements of complex types
+ *
  * Revision 1.1  2003/11/21 17:11:24  knoaman
  * Initial revision
  *
@@ -139,6 +142,7 @@ private:
     (
         SchemaElementDecl* const elemDecl
         , XSModel* const xsModel
+        , XSComplexTypeDefinition* const enclosingTypeDef = 0
     );
 
     XSComplexTypeDefinition* addOrFind

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/23 16:21:40  knoaman
+ * PSVI: create local elements of complex types
+ *
  * Revision 1.2  2003/11/21 22:34:46  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -342,7 +345,8 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
 
 XSElementDeclaration*
 XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
-                           XSModel* const xsModel)
+                           XSModel* const xsModel,
+                           XSComplexTypeDefinition* enclosingTypeDef)
 {
     XSElementDeclaration* xsObj = (XSElementDeclaration*) getObjectFromMap(elemDecl, xsModel);
     if (!xsObj)
@@ -391,6 +395,13 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
             }
         }
 
+        XSConstants::SCOPE elemScope = XSConstants::SCOPE_ABSENT;
+
+        if (enclosingTypeDef)
+            elemScope = XSConstants::SCOPE_LOCAL;
+        else if (elemDecl->getEnclosingScope() == Grammar::TOP_LEVEL_SCOPE)
+            elemScope = XSConstants::SCOPE_GLOBAL;
+
         xsObj = new (fMemoryManager) XSElementDeclaration
         (
             elemDecl
@@ -399,6 +410,8 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
             , getAnnotationFromModel(xsModel, elemDecl)
             , icMap
             , xsModel
+            , elemScope
+            , enclosingTypeDef
             , fMemoryManager
         );
         putObjectInMap(elemDecl, xsObj, xsModel);
@@ -467,8 +480,15 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
         );
         putObjectInMap(typeInfo, xsObj, xsModel);
 
-        // REVISIT
-        // process elements
+        // process local elements
+        unsigned int elemCount = typeInfo->elementCount();
+        for (unsigned int j=0; j<elemCount; j++)
+        {
+            SchemaElementDecl* elemDecl = typeInfo->elementAt(j);
+
+            if (elemDecl->getEnclosingScope() == typeInfo->getScopeDefined())
+                addOrFind(elemDecl, xsModel, xsObj);
+        }
     }
 
     return xsObj;
