@@ -56,6 +56,10 @@
 #
 #
 # $Log$
+# Revision 1.28  2000/04/28 18:43:47  rahulj
+# Added the -P and the -C options to the command line.
+# Change submitted by boercher@kidata.de
+#
 # Revision 1.27  2000/04/12 20:33:18  abagchi
 # Included some more PTX changes
 #
@@ -203,7 +207,7 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'solaris',
-'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx' )"
+            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx' )"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
     echo "       -d (specifies that you want to build debug version)"
@@ -213,6 +217,8 @@ usage()
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
+    echo "       -P <install-prefix>"
+    echo "       -C <any one extra configure options>"
     echo "       -h (to get help on the above commands)"
 }
 
@@ -240,9 +246,9 @@ fi
 
 # Get the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+set -- `getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
 else
-set -- `getopts p:c:x:dm:n:t:r:l:z:h `$*``
+set -- `getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
 fi
 if [ $? != 0 ]
    then
@@ -255,6 +261,7 @@ debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
 msgloader=inmem          # by default use native transcoder
 netaccessor=fileonly     # by default use fileonly
+configureoptions=""
 
 for i in $*
    do
@@ -289,6 +296,12 @@ for i in $*
    -z)
         compileroptions=$2; shift 2;;
 
+   -P)
+        configureoptions="$configureoptions --prefix=$2"; shift 2;;
+
+   -C)
+        configureoptions="$configureoptions $2"; shift 2;;
+
    -h)
         usage
         exit ${ERROR_EXIT_CODE};;
@@ -308,6 +321,7 @@ echo "Message Loader: $msgloader"
 echo "Net Accessor: $netaccessor"
 echo "Transcoder: $transcoder"
 echo "Thread option: $thread"
+echo "Extra configure options: $configureoptions"
 
 
 #
@@ -377,7 +391,7 @@ elif test $platform = "aix"; then
 elif test $platform = "ptx"; then
     threadingLibs=" "
     if test -z $XMLINSTALL; then
-        XMLINSTALL=$ICUROOT
+        XMLINSTALL=$ICUROOT         ## use either the -C or the -P option now.
     fi
 elif test $platform = "hp-10"; then
     threadingLibs="-lcma"
@@ -538,7 +552,7 @@ rm -f config.cache
 rm -f config.log
 rm -f config.status
 if test $platform = "os400"; then
-./configure --host AS400-OS400
+./configure --host AS400-OS400 $configureoptions
 elif test $platform = "ptx"; then
 ./configure --prefix=$XMLINSTALL
 else
@@ -547,16 +561,16 @@ fi
 echo
 echo In future, you may also directly type the following commands to create the Makefiles.
 echo
-echo export TRANSCODER=$TRANSCODER
-echo export MESSAGELOADER=$MESSAGELOADER
-echo export NETACCESSOR=$NETACCESSOR
-echo export CC=$CC
-echo export CXX=$CXX
-echo export CXXFLAGS=$CXXFLAGS
-echo export CFLAGS=$CFLAGS
-echo export LIBS=$LIBS
-echo export NETACCESSOR=$NETACCESSOR
-echo configure
+echo export TRANSCODER=\"$TRANSCODER\"
+echo export MESSAGELOADER=\"$MESSAGELOADER\"
+echo export NETACCESSOR=\"$NETACCESSOR\"
+echo export CC=\"$CC\"
+echo export CXX=\"$CXX\"
+echo export CXXFLAGS=\"$CXXFLAGS\"
+echo export CFLAGS=\"$CFLAGS\"
+echo export LIBS=\"$LIBS\"
+echo export NETACCESSOR=\"$NETACCESSOR\"
+echo configure $configureoptions
 
 echo
 echo If the result of the above commands look OK to you, go to the directory
