@@ -2199,7 +2199,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         if (fixedVal) {
 
             fixedVal = 0;
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue);
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue, name);
         }
 
         if ((useVal && *useVal)
@@ -8464,7 +8464,7 @@ void TraverseSchema::processElemDeclAttrs(const DOMElement* const elem,
 
         // if both default and fixed, emit an error
         if (valueConstraint)
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElementWithFixedAndDefault);
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElementWithFixedAndDefault, getElementAttValue(elem, SchemaSymbols::fgATT_NAME));
 
         // set constraint value to the fixed one
         valueConstraint = fixedVal;

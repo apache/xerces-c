@@ -55,14 +55,14 @@
             <Message Id="InvalidChildFollowingConplexContent" Text="Invalid child following the complexContent child in the complexType"/>
             <Message Id="InvalidComplexTypeBlockValue" Text="The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
             <Message Id="InvalidComplexTypeFinalValue" Text="The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
-            <Message Id="AttributeDefaultFixedValue" Text="An attribute cannot have both 'fixed' and 'default' present at the same time - default used"/>
+            <Message Id="AttributeDefaultFixedValue" Text="Attribute '{0}' cannot have both 'fixed' and 'default' present at the same time."/>
             <Message Id="NotOptionalDefaultAttValue" Text="If default and use are both present, use must have the value 'optional'."/>
             <Message Id="LocalAttributeWithNameRef" Text="Local attribute:{0} has also a ref defined - name ignored"/>
             <Message Id="GlobalAttributeWithNameRef" Text="Global attribute:'{0}' cannot have a ref defined"/>
             <Message Id="DuplicateAttribute" Text="Error: Attribute '{0}' declared more than once in the same scope- ignoring"/>
             <Message Id="AttributeWithTypeAndSimpleType" Text="Attribute declarations may not contain both a type and a simpleType declaration"/>
             <Message Id="AttributeSimpleTypeNotFound" Text="SimpleType ({0}:{1}) for attribute: {2} not found"/>
-            <Message Id="ElementWithFixedAndDefault" Text="An element cannot have both 'fixed' and 'default' present at the same time"/>
+            <Message Id="ElementWithFixedAndDefault" Text="Element '{0}' cannot have both 'fixed' and 'default' present at the same time."/>
             <Message Id="DeclarationWithNameRef" Text="{0}:'{1}' has also a ref defined - name ignored"/>
             <Message Id="BadAttWithRef" Text="ref cannot appear with any of type, abstract, block, final, nillable, default or fixed"/>
             <Message Id="InvalidDeclarationName" Text="Invalid {0} name:'{1}' - declaration ignored"/>

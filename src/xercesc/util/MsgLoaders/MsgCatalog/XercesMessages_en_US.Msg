@@ -45,14 +45,14 @@ $set 1
 46  Invalid child following the complexContent child in the complexType
 47  The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
 48  The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
-49  An attribute cannot have both 'fixed' and 'default' present at the same time - default used
+49  Attribute '{0}' cannot have both 'fixed' and 'default' present at the same time.
 50  If default and use are both present, use must have the value 'optional'.
 51  Local attribute:{0} has also a ref defined - name ignored
 52  Global attribute:'{0}' cannot have a ref defined
 53  Error: Attribute '{0}' declared more than once in the same scope- ignoring
 54  Attribute declarations may not contain both a type and a simpleType declaration
 55  SimpleType ({0}:{1}) for attribute: {2} not found
-56  An element cannot have both 'fixed' and 'default' present at the same time
+56  Element '{0}' cannot have both 'fixed' and 'default' present at the same time.
 57  {0}:'{1}' has also a ref defined - name ignored
 58  ref cannot appear with any of type, abstract, block, final, nillable, default or fixed
 59  Invalid {0} name:'{1}' - declaration ignored
