@@ -1327,16 +1327,21 @@ void DOMDocumentImpl::release()
 void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
 {
     DOMNode *child = object->getFirstChild();
-    if (child != 0)
+    
+    while( child != 0)
     {
-        while( child != 0)
-        {
-            releaseDocNotifyUserData(child);
-            child = child->getNextSibling();
-        }
+            
+         DOMNamedNodeMap *attrlist=child->getAttributes(); 
+    
+         if(attrlist!=0) 
+             for(XMLSize_t i=0;i<attrlist->getLength();++i) 
+                 releaseDocNotifyUserData(attrlist->item(i)); 
+            
+        releaseDocNotifyUserData(child);
+        child = child->getNextSibling();
     }
-    else
-        castToNodeImpl(object)->callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
+
+    castToNodeImpl(object)->callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
 }
 
 void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
