@@ -163,6 +163,8 @@
             <Message Id="InvalidTargetNSValue" Text="'' is not a legal value for the targetNamespace attribute; the attribute must be absent or contain a nonempty value"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
             <Message Id="XMLException_Error" Text="An exception occurred! Type:{0}, Message:{1}"/>
+            <Message Id="InvalidRedefine" Text="Invalid Redefine: '{0}' has already been included or redefined"/>
+            <Message Id="InvalidNSReference" Text="Schema Representation Constraint: Namespace '{0}' is referenced without &lt;import&gt; declaration"/>
         </Error>
         <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
