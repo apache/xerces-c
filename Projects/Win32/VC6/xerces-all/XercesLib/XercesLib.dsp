@@ -1183,6 +1183,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\ReaderMgr.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\SGXMLScanner.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.cpp
 # End Source File
 # Begin Source File

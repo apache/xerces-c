@@ -655,6 +655,12 @@ const XMLCh XMLUni::fgIGScanner[] =
     ,   chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
+const XMLCh XMLUni::fgSGScanner[] =
+{
+        chLatin_S, chLatin_G, chLatin_S, chLatin_c, chLatin_a, chLatin_n
+    ,   chLatin_n, chLatin_e, chLatin_r, chNull
+};
+
 //Exception strings
 const XMLCh XMLUni::fgArrayIndexOutOfBoundsException_Name[] =
 {

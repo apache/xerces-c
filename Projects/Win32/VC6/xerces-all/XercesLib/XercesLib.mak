@@ -241,6 +241,7 @@ CLEAN :
 	-@erase "$(INTDIR)\SchemaInfo.obj"
 	-@erase "$(INTDIR)\SchemaSymbols.obj"
 	-@erase "$(INTDIR)\SchemaValidator.obj"
+	-@erase "$(INTDIR)\SGXMLScanner.obj"
 	-@erase "$(INTDIR)\SimpleContentModel.obj"
 	-@erase "$(INTDIR)\StdInInputSource.obj"
 	-@erase "$(INTDIR)\StdOutFormatTarget.obj"
@@ -478,6 +479,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
+	"$(INTDIR)\SGXMLScanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
@@ -891,6 +893,7 @@ CLEAN :
 	-@erase "$(INTDIR)\SchemaInfo.obj"
 	-@erase "$(INTDIR)\SchemaSymbols.obj"
 	-@erase "$(INTDIR)\SchemaValidator.obj"
+	-@erase "$(INTDIR)\SGXMLScanner.obj"
 	-@erase "$(INTDIR)\SimpleContentModel.obj"
 	-@erase "$(INTDIR)\StdInInputSource.obj"
 	-@erase "$(INTDIR)\StdOutFormatTarget.obj"
@@ -1130,6 +1133,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IGXMLSCanner.obj" \
 	"$(INTDIR)\IGXMLSCanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
+	"$(INTDIR)\SGXMLSCanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLSCanner.obj" \
@@ -1543,6 +1547,7 @@ CLEAN :
 	-@erase "$(INTDIR)\SchemaInfo.obj"
 	-@erase "$(INTDIR)\SchemaSymbols.obj"
 	-@erase "$(INTDIR)\SchemaValidator.obj"
+	-@erase "$(INTDIR)\SGXMLScanner.obj"
 	-@erase "$(INTDIR)\SimpleContentModel.obj"
 	-@erase "$(INTDIR)\StdInInputSource.obj"
 	-@erase "$(INTDIR)\StdOutFormatTarget.obj"
@@ -1782,6 +1787,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
+	"$(INTDIR)\SGXMLScanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
@@ -2195,6 +2201,7 @@ CLEAN :
 	-@erase "$(INTDIR)\SchemaInfo.obj"
 	-@erase "$(INTDIR)\SchemaSymbols.obj"
 	-@erase "$(INTDIR)\SchemaValidator.obj"
+	-@erase "$(INTDIR)\SGXMLScanner.obj"
 	-@erase "$(INTDIR)\SimpleContentModel.obj"
 	-@erase "$(INTDIR)\StdInInputSource.obj"
 	-@erase "$(INTDIR)\StdOutFormatTarget.obj"
@@ -2433,6 +2440,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
+	"$(INTDIR)\SGXMLScanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
@@ -3402,6 +3410,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp
 
 "$(INTDIR)\ReaderMgr.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp
+
+"$(INTDIR)\SGXMLScanner.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

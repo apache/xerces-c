@@ -99,6 +99,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ReaderMgr.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\SGXMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttributesImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttrListImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\WFXMLScanner.obj
@@ -433,6 +434,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp" FORMNAME="" UNITNAME="IGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp" FORMNAME="" UNITNAME="IGXMLScanner2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp" FORMNAME="" UNITNAME="ReaderMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp" FORMNAME="" UNITNAME="SGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.cpp" FORMNAME="" UNITNAME="VecAttributesImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp" FORMNAME="" UNITNAME="VecAttrListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp" FORMNAME="" UNITNAME="WFXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

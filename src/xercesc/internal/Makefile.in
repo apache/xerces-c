@@ -85,6 +85,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	IANAEncodings.hpp \
 	IGXMLScanner.hpp \
 	ReaderMgr.hpp \
+	SGXMLScanner.hpp \
 	VecAttrListImpl.hpp \
 	VecAttributesImpl.hpp \
 	WFXMLScanner.hpp \
@@ -102,6 +103,7 @@ INTERNAL_CPP_OBJECTS = \
 	IGXMLScanner.$(TO) \
 	IGXMLScanner2.$(TO) \
 	ReaderMgr.$(TO) \
+	SGXMLScanner.$(TO) \
 	VecAttrListImpl.$(TO) \
 	VecAttributesImpl.$(TO) \
 	WFXMLScanner.$(TO) \

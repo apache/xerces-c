@@ -109,6 +109,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\ReaderMgr.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SGXMLScanner.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttributesImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttrListImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\WFXMLScanner.obj \
