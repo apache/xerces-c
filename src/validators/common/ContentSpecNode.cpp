@@ -112,6 +112,9 @@ static void formatNode( const   ContentSpecNode* const      curNode
                         , const ContentSpecNode::NodeTypes  parentType
                         ,       XMLBuffer&                  bufToFill)
 {
+    if (!curNode)
+        return;
+
     const ContentSpecNode* first = curNode->getFirst();
     const ContentSpecNode* second = curNode->getSecond();
     const ContentSpecNode::NodeTypes curType = curNode->getType();
