@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/16 17:07:07  abagchi
+ * Added API docs
+ *
  * Revision 1.5  2000/02/06 07:48:06  rahulj
  * Year 2K copyright swat.
  *
@@ -86,12 +89,31 @@
 
 class XMLLCPTranscoder;
 
+/**
+  * Class for representing native character strings and handling common string operations
+  *
+  * This class is Unicode compliant. This class is designed primarily
+  * for internal use, but due to popular demand, it is being made
+  * publicly available. Users of this class must understand that this
+  * is not an officially supported class. All public methods of this
+  * class are <i>static functions</i>.
+  *
+  */
+
 class XMLUTIL_EXPORT XMLString
 {
 public:
-    // -----------------------------------------------------------------------
-    //  Static methods for native character mode string manipulation
-    // -----------------------------------------------------------------------
+    /* Static methods for native character mode string manipulation */
+    /** @name Conversion functions */
+    //@{
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
     static void binToText
     (
         const   unsigned int    toFormat
@@ -100,131 +122,13 @@ public:
         , const unsigned int    radix
     );
 
-    static void binToText
-    (
-        const   unsigned long   toFormat
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    static void binToText
-    (
-        const   long            toFormat
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    static void binToText
-    (
-        const   int             toFormat
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    static void catString
-    (
-                char* const     target
-        , const char* const     src
-    );
-
-    static int compareIString
-    (
-        const   char* const     str1
-        , const char* const     str2
-    );
-
-    static int compareNString
-    (
-        const   char* const     str1
-        , const char* const     str2
-        , const unsigned int    count
-    );
-
-    static int compareNIString
-    (
-        const   char* const     str1
-        , const char* const     str2
-        , const unsigned int    count
-    );
-
-    static int compareString
-    (
-        const   char* const     str1
-        , const char* const     str2
-    );
-
-    static void copyString
-    (
-                char* const     target
-        , const char* const     src
-    );
-
-    static unsigned int hash
-    (
-        const   char* const     tohash
-        , const unsigned int    hashModulus
-    );
-
-    static int indexOf(const char* const toSearch, const char ch);
-
-    static int lastIndexOf(const char* const toSearch, const char ch);
-
-    static int lastIndexOf
-    (
-        const   char* const     toSearch
-        , const char            chToFind
-        , const unsigned int    fromIndex
-    );
-
-    static char* replicate(const char* const toRep);
-
-    static bool startsWith
-    (
-        const   char* const     toTest
-        , const char* const     prefix
-    );
-
-    static unsigned int stringLen(const char* const src);
-
-    static bool startsWithI
-    (
-        const   char* const     toTest
-        , const char* const     prefix
-    );
-
-    static char* transcode
-    (
-        const   XMLCh* const    toTranscode
-    );
-
-    static bool transcode
-    (
-        const   XMLCh* const    toTranscode
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-    );
-
-    static XMLCh* transcode
-    (
-        const   char* const     toTranscode
-    );
-
-    static bool transcode
-    (
-        const   char* const     toTranscode
-        ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
-    );
-
-    static void trim(char* const toTrim);
-
-
-    //
-    //  XMLCh versions of everything
-    //
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
     static void binToText
     (
         const   unsigned int    toFormat
@@ -233,6 +137,28 @@ public:
         , const unsigned int    radix
     );
 
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
+    static void binToText
+    (
+        const   unsigned long   toFormat
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
     static void binToText
     (
         const   unsigned long   toFormat
@@ -241,6 +167,28 @@ public:
         , const unsigned int    radix
     );
 
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
+    static void binToText
+    (
+        const   long            toFormat
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
     static void binToText
     (
         const   long            toFormat
@@ -249,6 +197,28 @@ public:
         , const unsigned int    radix
     );
 
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
+    static void binToText
+    (
+        const   int             toFormat
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return
+      * @param maxChars The maximum number of charcters to convert
+      * @param radix The radix of the input data, based on which the conversion will be done
+      */
     static void binToText
     (
         const   int             toFormat
@@ -256,19 +226,101 @@ public:
         , const unsigned int    maxChars
         , const unsigned int    radix
     );
+    //@}
 
+    /** @name String concatenation functions */
+    //@{
+    /**    Concatenates two strings.
+      * <code>catString</code> appends <code>src</code> to <code>target</code> and
+      * terminates the resulting string with a null character. The initial character of
+      * <code>src</code> overwrites the terminating character of <code>target</code>.
+      * No overflow checking is performed when strings are copied or appended.
+      * The behavior of <code>catString</code> is undefined if source and destination
+      * strings overlap.
+      *
+      *    @param target Null-terminated destination string
+      * @param src Null-terminated source string
+      */
+    static void catString
+    (
+                char* const     target
+        , const char* const     src
+    );
+
+    /**    Concatenates two strings.
+      * <code>catString</code> appends <code>src</code> to <code>target</code> and
+      * terminates the resulting string with a null character. The initial character of
+      * <code>src</code> overwrites the terminating character of <code>target</code>.
+      * No overflow checking is performed when strings are copied or appended.
+      * The behavior of <code>catString</code> is undefined if source and destination
+      * strings overlap.
+      *
+      *    @param target Null-terminated destination string
+      * @param src Null-terminated source string
+      */
     static void catString
     (
                 XMLCh* const    target
         , const XMLCh* const    src
     );
+    //@}
 
+    /** @name String comparison functions */
+    //@{
+    /** Lexicographically compares lowercase versions of <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
+    static int compareIString
+    (
+        const   char* const     str1
+        , const char* const     str2
+    );
+
+    /** Lexicographically compares lowercase versions of <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
     static int compareIString
     (
         const   XMLCh* const    str1
         , const XMLCh* const    str2
     );
 
+
+    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> and returns a value indicating the relationship between the substrings.
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @param count The number of characters to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
+    static int compareNString
+    (
+        const   char* const     str1
+        , const char* const     str2
+        , const unsigned int    count
+    );
+
+    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> and returns a value indicating the relationship between the substrings.
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @param count The number of characters to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
     static int compareNString
     (
         const   XMLCh* const    str1
@@ -276,6 +328,32 @@ public:
         , const unsigned int    count
     );
 
+
+    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> without regard to case and returns a value indicating the relationship between the substrings.
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @param count The number of characters to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
+    static int compareNIString
+    (
+        const   char* const     str1
+        , const char* const     str2
+        , const unsigned int    count
+    );
+
+    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> without regard to case and returns a value indicating the relationship between the substrings.
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @param count The number of characters to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
     static int compareNIString
     (
         const   XMLCh* const    str1
@@ -283,43 +361,112 @@ public:
         , const unsigned int    count
     );
 
+    /** Lexicographically compares <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
+    static int compareString
+    (
+        const   char* const     str1
+        , const char* const     str2
+    );
+
+    /** Lexicographically compares <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *  Less than 0 means <code>str1</code> is less than <code>str2</code>
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      */
     static int compareString
     (
         const   XMLCh* const    str1
         , const XMLCh* const    str2
     );
+    //@}
 
+    /** @name String copy functions */
+    //@{
+    /* Copies <code>src</code>, including the terminating null character, to the location specified by <code>target</code>.
+     *
+     * No overflow checking is performed when strings are copied or appended. The behavior 
+     * of strcpy is undefined if the source and destination strings overlap.
+     * @param target Destination string
+     * @param src Null-terminated source string
+     */
+    static void copyString
+    (
+                char* const     target
+        , const char* const     src
+    );
+
+    /* Copies <code>src</code>, including the terminating null character, to the location specified by <code>target</code>.
+     *
+     * No overflow checking is performed when strings are copied or appended. The behavior 
+     * of <code>copyString</code> is undefined if the source and destination strings overlap.
+     * @param target Destination string
+     * @param src Null-terminated source string
+     */
     static void copyString
     (
                 XMLCh* const    target
         , const XMLCh* const    src
     );
 
+    /* Copies <code>src</code>, upto a fixed number of characters, to the location specified by <code>target</code>.
+     *
+     * No overflow checking is performed when strings are copied or appended. The behavior 
+     * of <code>copyNString</code> is undefined if the source and destination strings overlap.
+     * @param target Destination string
+     * @param src Null-terminated source string
+     * @param maxChars The maximum number of characters to copy
+     */
     static bool copyNString
     (
                 XMLCh* const    target
         , const XMLCh* const    src
         , const unsigned int    maxChars
     );
+    //@}
 
-    static const XMLCh* findAny
+    /** @name Hash functions */
+    //@{
+    /** Hashes a string given a modulus
+      *
+      * @param toHash The string to hash
+      * @param hashModulus The divisor to be used for hashing
+      * @return Returns the hash value
+      */
+    static unsigned int hash
     (
-        const   XMLCh* const    toSearch
-        , const XMLCh* const    searchList
+        const   char* const     tohash
+        , const unsigned int    hashModulus
     );
 
-    static XMLCh* findAny
-    (
-                XMLCh* const    toSearch
-        , const XMLCh* const    searchList
-    );
-
+    /** Hashes a string given a modulus
+      *
+      * @param toHash The string to hash
+      * @param hashModulus The divisor to be used for hashing
+      * @return Returns the hash value
+      */
     static unsigned int hash
     (
         const   XMLCh* const    toHash
         , const unsigned int    hashModulus
     );
 
+    /** Hashes a string given a modulus taking a maximum number of characters as the limit
+      *
+      * @param toHash The string to hash
+      * @param numChars The maximum number of characters to consider for hashing
+      * @param hashModulus The divisor to be used for hashing
+      * @return Returns the hash value
+      */
     static unsigned int hashN
     (
         const   XMLCh* const    toHash
@@ -327,23 +474,258 @@ public:
         , const unsigned int    hashModulus
     );
 
+    //@}
+
+    /** @name Search functions */
+    //@{
+    /**
+      * Provides the index of the first occurance of a character within a string
+      *
+      * @param toSearch The string to search
+      * @param ch The character to search within the string
+      * @return If found, returns the index of the character within the string, else returns -1.
+      */
+    static int indexOf(const char* const toSearch, const char ch);
+
+    /**
+      * Provides the index of the first occurance of a character within a string
+      *
+      * @param toSearch The string to search
+      * @param ch The character to search within the string
+      * @return If found, returns the index of the character within the string, else returns -1.
+      */
     static int indexOf(const XMLCh* const toSearch, const XMLCh ch);
 
+    /**
+      * Provides the index of the last occurance of a character within a string
+      *
+      * @param toSearch The string to search
+      * @param ch The character to search within the string
+      * @return If found, returns the index of the character within the string, else returns -1.
+      */
+    static int lastIndexOf(const char* const toSearch, const char ch);
+
+    /**
+      * Provides the index of the last occurance of a character within a string
+      *
+      * @param toSearch The string to search
+      * @param ch The character to search within the string
+      * @return If found, returns the index of the character within the string, else returns -1.
+      */
     static int lastIndexOf(const XMLCh* const toSearch, const XMLCh ch);
 
+    /**
+      * Provides the index of the last occurance of a character within a string starting backward from a given index
+      *
+      * @param toSearch The string to search
+      * @param chToFInd The character to search within the string
+      * @param fromIndex The index to start backward search from
+      * @return If found, returns the index of the character within the string, else returns -1.
+      */
+    static int lastIndexOf
+    (
+        const   char* const     toSearch
+        , const char            chToFind
+        , const unsigned int    fromIndex
+    );
+
+    /**
+      * Provides the index of the last occurance of a character within a string starting backward from a given index
+      *
+      * @param toSearch The string to search
+      * @param chToFInd The character to search within the string
+      * @param fromIndex The index to start backward search from
+      * @return If found, returns the index of the character within the string, else returns -1.
+      */
     static int lastIndexOf
     (
         const   XMLCh* const    toSearch
         , const XMLCh           ch
         , const unsigned int    fromIndex
     );
+    //@}
 
+    /** @name Replication function */
+    //@{
+    /** Replicates a string
+      * @param toRep The string to replicate
+      * @return Returns a pointer to the replicated string
+      */
+    static char* replicate(const char* const toRep);
+
+    /** Replicates a string
+      * @param toRep The string to replicate
+      * @return Returns a pointer to the replicated string
+      */
+    static XMLCh* replicate(const XMLCh* const toRep);
+
+    //@}
+
+    /** @name String query function */
+    //@{
+    /** Tells if the sub-string appears within a string at the beginning
+      * @param toTest The string to test
+      * @param prefix The sub-string that needs to be checked
+      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      */
+    static bool startsWith
+    (
+        const   char* const     toTest
+        , const char* const     prefix
+    );
+
+    /** Tells if the sub-string appears within a string at the beginning
+      * @param toTest The string to test
+      * @param prefix The sub-string that needs to be checked
+      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      */
+    static bool startsWith
+    (
+        const   XMLCh* const    toTest
+        , const XMLCh* const    prefix
+    );
+
+    /** Tells if the sub-string appears within a string at the beginning without regard to case
+      * @param toTest The string to test
+      * @param prefix The sub-string that needs to be checked
+      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      */
+    static bool startsWithI
+    (
+        const   char* const     toTest
+        , const char* const     prefix
+    );
+
+    /** Tells if the sub-string appears within a string at the beginning without regard to case
+      * @param toTest The string to test
+      * @param prefix The sub-string that needs to be checked
+      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      */
+    static bool startsWithI
+    (
+        const   XMLCh* const    toTest
+        , const XMLCh* const    prefix
+    );
+
+    /** Tells if a string has any occurance of another string within itself
+      * @param toSearch The string to be searched
+      * @param searchList The sub-string to be searched within the string
+      * @return Returns the pointer to the location where the sub-string was found, else returns 0
+      */
+    static const XMLCh* findAny
+    (
+        const   XMLCh* const    toSearch
+        , const XMLCh* const    searchList
+    );
+
+    /** Tells if a string has any occurance of another string within itself
+      * @param toSearch The string to be searched
+      * @param searchList The sub-string to be searched within the string
+      * @return Returns the pointer to the location where the sub-string was found, else returns 0
+      */
+    static XMLCh* findAny
+    (
+                XMLCh* const    toSearch
+        , const XMLCh* const    searchList
+    );
+
+    /** Get the length of the string
+      * @param src The string whose length is to be determined
+      * @return Returns the length of the string
+      */
+    static unsigned int stringLen(const char* const src);
+
+    /** Get the length of the string
+      * @param src The string whose length is to be determined
+      * @return Returns the length of the string
+      */
+    static unsigned int stringLen(const XMLCh* const src);
+    //@}
+
+    /** @name Conversion functions */
+    //@{
+    /** Transcodes a string to native code-page
+      * @param toTranscode The string to be transcoded
+      * @return Returns the transcoded string
+      */
+    static char* transcode
+    (
+        const   XMLCh* const    toTranscode
+    );
+
+    /** Transcodes a string to native code-page
+      * @param toTranscode The string tobe transcoded
+      * @param toFill The buffer that is filled with the transcoded value
+      * @param maxChars The maximum number of characters to transcode
+      * @return Returns true if successful, false if there was an error
+      */
+    static bool transcode
+    (
+        const   XMLCh* const    toTranscode
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+    );
+
+    /** Transcodes a string to native code-page
+      * @param toTranscode The string to be transcoded
+      * @return Returns the transcoded string
+      */
+    static XMLCh* transcode
+    (
+        const   char* const     toTranscode
+    );
+
+    /** Transcodes a string to native code-page
+      * @param toTranscode The string tobe transcoded
+      * @param toFill The buffer that is filled with the transcoded value
+      * @param maxChars The maximum number of characters to transcode
+      * @return Returns true if successful, false if there was an error
+      */
+    static bool transcode
+    (
+        const   char* const     toTranscode
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+    );
+
+    /** Trims off extra space characters from the end of the string
+      * @param toTrim The string to be trimmed. On return this contains the trimmed string
+      */
+    static void trim(char* const toTrim);
+
+    /** Trims off extra space characters from the end of the string
+      * @param toTrim The string to be trimmed. On return this contains the trimmed string
+      */
+    static void trim(XMLCh* const toTrim);
+    //@}
+
+    /** @name Formatting functions */
+    //@{
+    /** Format a Uniform Resource Indicator
+      * If there is a URI, then format out the full name in the <code>{uri}name</code>
+      * form. Otherwise, just set it to the same thing as the base name.
+      *
+      * @param pszURI The URI path
+      * @param pszName The URI name
+      * @return Returns the complete formatted URI
+      */
     static XMLCh* makeUName
     (
         const   XMLCh* const    pszURI
         , const XMLCh* const    pszName
     );
 
+    /**
+      * Internal function to perform token replacement for URI's. <b>Not for general use.</b>
+      *
+      * @param errText The text where the replacement is to be done
+      * @param maxChars The maximum number of characters to consider for replacement
+      * @param text1 Replacement text-one
+      * @param text2 Replacement text-two
+      * @param text3 Replacement text-three
+      * @param text4 Replacement text-four
+      * @return Returns the count of characters that are outputted
+      */
     static unsigned int replaceTokens
     (
                 XMLCh* const    errText
@@ -354,40 +736,31 @@ public:
         , const XMLCh* const    text4
     );
 
-    static XMLCh* replicate(const XMLCh* const toRep);
-
-    static bool startsWith
-    (
-        const   XMLCh* const    toTest
-        , const XMLCh* const    prefix
-    );
-
-    static bool startsWithI
-    (
-        const   XMLCh* const    toTest
-        , const XMLCh* const    prefix
-    );
-
-    static unsigned int stringLen(const XMLCh* const src);
-
-    static void trim(XMLCh* const toTrim);
-
+    /** Converts a string to uppercase
+      * @param toUpperCase The string which needs to be converted to uppercase.
+      *        On return, this buffer also holds the converted uppercase string
+      */
     static void upperCase(XMLCh* const toUpperCase);
+    //@}
 
 
 private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented Constructors and Destructor
-    // -----------------------------------------------------------------------
+    
+    /** @name Constructors and Destructor */
+    //@{
+    /** Unimplemented default constructor */
     XMLString();
+    /** Unimplemented destructor */
     ~XMLString();
+    //@}
 
 
-    // -----------------------------------------------------------------------
-    //  Initialization, called from XMLPlatformUtils class
-    // -----------------------------------------------------------------------
-    friend class XMLPlatformUtils;
+    /** @name Initialization */
+    //@{
+    /** Intialization function called from XMLPlatformUtils class */
     static void initString(XMLLCPTranscoder* const defToUse);
+    //@}
+    friend class XMLPlatformUtils;
 };
 
 #endif
