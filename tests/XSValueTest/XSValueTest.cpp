@@ -17,6 +17,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.13  2004/12/23 16:11:21  cargilld
+* Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
+*
 * Revision 1.12  2004/11/14 19:02:21  peiyongz
 * error status for numeric data types tested
 *
@@ -71,6 +74,7 @@
 #endif
 
 #include <stdio.h>
+#include <math.h>
 
 #include <xercesc/framework/psvi/XSValue.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -86,7 +90,7 @@ static const bool  EXP_RET_CANREP_FALSE = false;
 static const XSValue::Status DONT_CARE = XSValue::st_UnknownType;
 static bool  errSeen = false;
 
-const XMLCh* getDataTypeString(const XSValue::DataType dt)
+static const XMLCh* getDataTypeString(const XSValue::DataType dt)
 {
     switch(dt)
     {
@@ -127,7 +131,7 @@ const XMLCh* getDataTypeString(const XSValue::DataType dt)
     case XSValue::dt_QName:
         return SchemaSymbols::fgDT_QNAME; 
     case XSValue::dt_NOTATION:
-        XMLUni::fgNotationString;   
+        return XMLUni::fgNotationString;   
     case XSValue::dt_normalizedString:
         return SchemaSymbols::fgDT_NORMALIZEDSTRING; 
     case XSValue::dt_token:
@@ -183,7 +187,169 @@ const XMLCh* getDataTypeString(const XSValue::DataType dt)
     }
 }
 
-char* getStatusString(const XSValue::Status status)
+static bool compareActualValue( const XSValue::DataType             datatype
+                              , const XSValue::XSValue_Data         actValue
+                              , const XSValue::XSValue_Data         expValue)
+{
+    switch (datatype) {                        
+        case XSValue::dt_boolean:
+            if (actValue.fValue.f_bool == expValue.fValue.f_bool)
+                return true;
+            printf("ACTVALUE_TEST Unexpected XSValue for dt_boolean, got %d expected %d\n",
+                    actValue.fValue.f_bool, expValue.fValue.f_bool);
+            return false;
+
+        case XSValue::dt_decimal:
+        case XSValue::dt_double:
+            if (fabs(actValue.fValue.f_double - expValue.fValue.f_double) < fabs(actValue.fValue.f_double)/1000)
+                return true;
+            printf("ACTVALUE_TEST Unexpected XSValue for datatype %s, got %f expected %f\n", StrX(getDataTypeString(datatype)).localForm(),
+                    actValue.fValue.f_double, expValue.fValue.f_double);
+            return false;
+        
+        case XSValue::dt_float:            
+            if (fabs(actValue.fValue.f_float - expValue.fValue.f_float) < fabs(actValue.fValue.f_float)/1000)
+                return true;
+            printf("ACTVALUE_TEST Unexpected XSValue for dt_float, got %f expected %f\n",
+                    actValue.fValue.f_float, expValue.fValue.f_float);
+            return false;
+         
+        case XSValue::dt_duration:
+        case XSValue::dt_dateTime:
+        case XSValue::dt_time:            
+        case XSValue::dt_date:            
+        case XSValue::dt_gYearMonth:           
+        case XSValue::dt_gYear:            
+        case XSValue::dt_gMonthDay:           
+        case XSValue::dt_gDay:            
+        case XSValue::dt_gMonth:
+            if (actValue.fValue.f_datetime.f_year   == expValue.fValue.f_datetime.f_year   &&
+                actValue.fValue.f_datetime.f_month  == expValue.fValue.f_datetime.f_month  &&
+                actValue.fValue.f_datetime.f_day    == expValue.fValue.f_datetime.f_day    &&
+                actValue.fValue.f_datetime.f_hour   == expValue.fValue.f_datetime.f_hour   &&
+                actValue.fValue.f_datetime.f_min    == expValue.fValue.f_datetime.f_min    &&
+                actValue.fValue.f_datetime.f_second == expValue.fValue.f_datetime.f_second &&
+                (fabs(actValue.fValue.f_datetime.f_milisec  - expValue.fValue.f_datetime.f_milisec) < 0.01))
+                return true;
+            printf("ACTVALUE_TEST Unexpected %s XSValue\n", StrX(getDataTypeString(datatype)).localForm());                    
+            printf(" Actual year = %d, month = %d, day = %d, hour = %d, min = %d, second = %d, milisec = %f\n",
+                actValue.fValue.f_datetime.f_year, actValue.fValue.f_datetime.f_month, actValue.fValue.f_datetime.f_day,
+                actValue.fValue.f_datetime.f_hour, actValue.fValue.f_datetime.f_min, actValue.fValue.f_datetime.f_second, actValue.fValue.f_datetime.f_milisec);
+            printf(" Expect year = %d, month = %d, day = %d, hour = %d, min = %d, second = %d, milisec = %f\n",
+                expValue.fValue.f_datetime.f_year, expValue.fValue.f_datetime.f_month, expValue.fValue.f_datetime.f_day,
+                expValue.fValue.f_datetime.f_hour, expValue.fValue.f_datetime.f_min, expValue.fValue.f_datetime.f_second, expValue.fValue.f_datetime.f_milisec);
+            return false;  
+                   
+        case XSValue::dt_hexBinary:
+            // in the tests in this file the hexBinary data is always 2 long...
+            if (actValue.fValue.f_byteVal[0] == expValue.fValue.f_byteVal[0] &&
+                actValue.fValue.f_byteVal[1] == expValue.fValue.f_byteVal[1]) 
+                return true;
+            printf("ACTVALUE_TEST Unexpected hexBinary value\n");
+            printf(" Actual Value = %x:%x\n",actValue.fValue.f_byteVal[0],actValue.fValue.f_byteVal[1]);
+            printf(" Expect Value = %x:%x\n",expValue.fValue.f_byteVal[0],expValue.fValue.f_byteVal[1]);    
+            return false;
+
+        case XSValue::dt_base64Binary:
+            // in the tests in this file the base64Binary data is always 9 long (XMLByte[9])
+            // however, a zero byte is used to indicate when the smaller data stream is empty
+            {
+                for (unsigned int i=0; i<9; i++)
+                {
+                    if (!expValue.fValue.f_byteVal[i])
+                        return true;
+                    if (actValue.fValue.f_byteVal[i] != expValue.fValue.f_byteVal[i])
+                    {
+                        printf("ACTVALUE_TEST Unexpected base64Binary value for byte %d\n", i);
+                        printf(" Actual Value = %x\n",actValue.fValue.f_byteVal[i]);
+                        printf(" Expect Value = %x\n",expValue.fValue.f_byteVal[i]);    
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+        case XSValue::dt_string:
+        case XSValue::dt_anyURI:            
+        case XSValue::dt_QName:           
+        case XSValue::dt_NOTATION:          
+        case XSValue::dt_normalizedString:            
+        case XSValue::dt_token:            
+        case XSValue::dt_language:            
+        case XSValue::dt_NMTOKEN:            
+        case XSValue::dt_NMTOKENS:            
+        case XSValue::dt_Name:            
+        case XSValue::dt_NCName:            
+        case XSValue::dt_ID:            
+        case XSValue::dt_IDREF:           
+        case XSValue::dt_IDREFS:            
+        case XSValue::dt_ENTITY:           
+        case XSValue::dt_ENTITIES:
+            printf("ACTVALUE_TEST no Actual Value for datatype %s\n", StrX(getDataTypeString(datatype)).localForm());
+            return false;
+
+        case XSValue::dt_integer:
+        case XSValue::dt_nonPositiveInteger:
+        case XSValue::dt_negativeInteger:            
+        case XSValue::dt_long:            
+            if (actValue.fValue.f_long == expValue.fValue.f_long)
+                return true;
+            printf("ACTVALUE_TEST Unexpected %s XSValue, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
+                    actValue.fValue.f_long, expValue.fValue.f_long);
+            return false;
+                                       
+        case XSValue::dt_int:
+            if (actValue.fValue.f_int == expValue.fValue.f_int)
+                return true;
+            printf("ACTVALUE_TEST Unexpected dt_int XSValue, got %d expected %d\n",
+                    actValue.fValue.f_int, expValue.fValue.f_int);
+            return false;
+        case XSValue::dt_short:
+            if (actValue.fValue.f_short == expValue.fValue.f_short)
+                return true;
+            printf("ACTVALUE_TEST Unexpected dt_short XSValue, got %d expected %d\n",
+                    actValue.fValue.f_short, expValue.fValue.f_short);
+            return false;
+        case XSValue::dt_byte:
+            if (actValue.fValue.f_char == expValue.fValue.f_char)
+                return true;
+            printf("ACTVALUE_TEST Unexpected dt_byte XSValue, got %d expected %d\n",
+                    actValue.fValue.f_char, expValue.fValue.f_char);
+            return false; 
+        case XSValue::dt_nonNegativeInteger:
+        case XSValue::dt_unsignedLong:
+        case XSValue::dt_positiveInteger:
+            if (actValue.fValue.f_ulong == expValue.fValue.f_ulong)
+                return true;
+            printf("ACTVALUE_TEST Unexpected %s XSValue, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
+                    actValue.fValue.f_ulong, expValue.fValue.f_ulong);
+            return false;                    
+        case XSValue::dt_unsignedInt:
+            if (actValue.fValue.f_uint == expValue.fValue.f_uint)
+                return true;
+            printf("ACTVALUE_TEST Unexpected dt_unsignedIntXSValue, got %d expected %d\n",
+                    actValue.fValue.f_uint, expValue.fValue.f_uint);
+            return false;
+        case XSValue::dt_unsignedShort:
+            if (actValue.fValue.f_ushort == expValue.fValue.f_ushort)
+                return true;
+            printf("ACTVALUE_TEST Unexpected dt_unsignedShort XSValue, got %d expected %d\n",
+                    actValue.fValue.f_ushort, expValue.fValue.f_ushort);
+            return false; 
+        case XSValue::dt_unsignedByte:
+            if (actValue.fValue.f_uchar == expValue.fValue.f_uchar)
+                return true;
+            printf("ACTVALUE_TEST Unexpected dt_unsignedByte XSValue, got %d expected %d\n",
+                    actValue.fValue.f_uchar, expValue.fValue.f_uchar);
+            return false;           
+        default:
+            printf("ACTVALUE_TEST Unexpected datatype\n");
+            return false;
+    }
+}
+
+
+static char* getStatusString(const XSValue::Status status)
 {
     switch (status)
     { 
@@ -304,6 +470,7 @@ void ACTVALUE_TEST(  const char*                  const  data
                    ,       bool                          toValidate
                    ,       bool                          expRetValue
                    , const XSValue::Status               expStatus
+                   , const XSValue::XSValue_Data         expValue
                     )
 {
     XSValue::Status myStatus = XSValue::st_Init;
@@ -322,9 +489,12 @@ void ACTVALUE_TEST(  const char*                  const  data
             printf("ACTVALUE_TEST XSValue returned: data=<%s>, datatype=<%s>\n",
                     data, StrX(getDataTypeString(datatype)).localForm());
             errSeen = true;
-        }                                                                            
-
-        delete actRetValue;
+        }      
+        else if (!compareActualValue(datatype, actRetValue->fData, expValue))
+        {
+            errSeen = true;
+        } 
+        delete actRetValue;       
     }
     else 
     {
@@ -347,7 +517,7 @@ void ACTVALUE_TEST(  const char*                  const  data
     }
 }
 #else
-#define ACTVALUE_TEST(data, datatype, toValidate, expRetValue, expStatus)              \
+#define ACTVALUE_TEST(data, datatype, toValidate, expRetValue, expStatus, expValue)    \
 {                                                                                      \
     XSValue::Status myStatus = XSValue::st_Init;                                       \
     XSValue* actRetValue = XSValue::getActualValue(                                    \
@@ -362,6 +532,9 @@ void ACTVALUE_TEST(  const char*                  const  data
             printf("ACTVALUE_TEST XSValue returned,                                    \
                     at line <%d> data=<%s>, datatype=<%s>\n"                           \
                   ,__LINE__, data, StrX(getDataTypeString(datatype)).localForm());     \
+            errSeen = true;                                                            \
+       }                                                                               \
+       else if (!compareActualValue(datatype, actRetValue->fData, expValue)) {         \
             errSeen = true;                                                            \
        }                                                                               \
        delete actRetValue;                                                             \
@@ -608,6 +781,17 @@ void test_dt_decimal()
     const char lex_iv_1[]="12b34.456";
     const char lex_iv_2[]="1234.56.789";
 
+    XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_double = (double)1234.567;
+    XSValue::XSValue_Data act_v_ran64_v_1; act_v_ran64_v_1.fValue.f_double = (double)18446744073709551615.999;
+    XSValue::XSValue_Data act_v_ran64_v_2; act_v_ran64_v_2.fValue.f_double = (double)999.18446744073709551615;
+    //XSValue::XSValue_Data act_v_ran64_iv_1;="18446744073709551616.999";
+    //XSValue::XSValue_Data act_v_ran64_iv_2;="999.18446744073709551616";
+
+    XSValue::XSValue_Data act_v_ran32_v_1; act_v_ran32_v_1.fValue.f_double = (double)4294967295.999;
+    XSValue::XSValue_Data act_v_ran32_v_2; act_v_ran32_v_2.fValue.f_double = (double)999.4294967295;
+    //XSValue::XSValue_Data act_v_ran32_iv_1;="4294967296.999";
+    //XSValue::XSValue_Data act_v_ran32_iv_2;="999.4294967296";
+   
 /***
  * 3.2.3.2 Canonical representation
  *
@@ -686,22 +870,22 @@ void test_dt_decimal()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         //ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
         //ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_1);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
         //ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
         //ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran32_v_1);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran32_v_1);
     }
 
     /***
@@ -767,6 +951,12 @@ void test_dt_float()
     const char lex_v_ran_v_2[]="-3.402823466e+38";
     const char lex_v_ran_v_3[]="+1.175494351e-38";
     const char lex_v_ran_v_4[]="-1.175494351e-38";
+
+    XSValue::XSValue_Data act_v_ran_v_0; act_v_ran_v_0.fValue.f_float = (float)1234.e+10;
+    XSValue::XSValue_Data act_v_ran_v_1; act_v_ran_v_1.fValue.f_float = (float)+3.402823466e+38;
+    XSValue::XSValue_Data act_v_ran_v_2; act_v_ran_v_2.fValue.f_float = (float)-3.402823466e+38;
+    XSValue::XSValue_Data act_v_ran_v_3; act_v_ran_v_3.fValue.f_float = (float)+1.175494351e-38;
+    XSValue::XSValue_Data act_v_ran_v_4; act_v_ran_v_4.fValue.f_float = (float)-1.175494351e-38;
 
     const char lex_v_ran_iv_1[]="+3.402823466e+39";
     const char lex_v_ran_iv_2[]="-3.402823466e+39";
@@ -865,21 +1055,21 @@ void test_dt_float()
         toValidate = ( 0 == i) ? true : false;
 
         // lexical valid, range valid
-        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_3);
+        ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_4);
 
         // lexical valid, range invalid
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
     }
 
@@ -937,7 +1127,6 @@ void test_dt_float()
     CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_4_canrep,    DONT_CARE);
 
 }
-
 /***
 DBL_EPSILON 2.2204460492503131e-016
 DBL_MAX 1.7976931348623158e+308
@@ -954,6 +1143,12 @@ void test_dt_double()
     const char lex_v_ran_v_2[]="-1.7976931348623158e+308";
     const char lex_v_ran_v_3[]="+2.2250738585072014e-308";
     const char lex_v_ran_v_4[]="-2.2250738585072014e-308";
+
+    XSValue::XSValue_Data act_v_ran_v_0; act_v_ran_v_0.fValue.f_double = (double)1234.e+10;
+    XSValue::XSValue_Data act_v_ran_v_1; act_v_ran_v_1.fValue.f_double = (double)+1.7976931348623158e+308;
+    XSValue::XSValue_Data act_v_ran_v_2; act_v_ran_v_2.fValue.f_double = (double)-1.7976931348623158e+308;
+    XSValue::XSValue_Data act_v_ran_v_3; act_v_ran_v_3.fValue.f_double = (double)+2.2250738585072014e-308;
+    XSValue::XSValue_Data act_v_ran_v_4; act_v_ran_v_4.fValue.f_double = (double)-2.2250738585072014e-308;
 
     const char lex_v_ran_iv_1[]="+1.7976931348623158e+309";
     const char lex_v_ran_iv_2[]="-1.7976931348623158e+309";
@@ -1055,21 +1250,21 @@ void test_dt_double()
         toValidate = ( 0 == i) ? true : false;
 
         // lexical valid, range valid
-        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_3);
+        ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_4);
 
         // lexical valid, range invalid
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
     }
 
@@ -1151,6 +1346,12 @@ void test_dt_integer()
     const char lex_v_ran32_iv_1[]="+2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
 
+    XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_long = (long)1234;
+    XSValue::XSValue_Data act_v_ran64_v_1; act_v_ran64_v_1.fValue.f_long = (long)+9223372036854775807;
+    XSValue::XSValue_Data act_v_ran64_v_2; act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
+    XSValue::XSValue_Data act_v_ran32_v_1; act_v_ran32_v_1.fValue.f_long = (long)+2147483647;
+    XSValue::XSValue_Data act_v_ran32_v_2; act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
+
     const char lex_v_ran64_v_1_canrep[]="9223372036854775807";
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
     const char lex_v_ran64_iv_1_canrep[]="9223372036854775808";
@@ -1225,22 +1426,22 @@ void test_dt_integer()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_1);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
     }
 
     /***
@@ -1297,6 +1498,10 @@ void test_dt_nonPositiveInteger()
 
     const char lex_v_ran32_v_2[]="-2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
+
+    XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)-1234;
+    XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
+    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
 
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
     const char lex_v_ran64_iv_2_canrep[]="-9223372036854775809";
@@ -1371,18 +1576,18 @@ void test_dt_nonPositiveInteger()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_2);
     }
 
     /***
@@ -1437,6 +1642,10 @@ void test_dt_negativeInteger()
 
     const char lex_v_ran32_v_2[]="-2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
+
+    XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)-1234;
+    XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
+    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
 
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
     const char lex_v_ran64_iv_2_canrep[]="-9223372036854775809";
@@ -1508,18 +1717,18 @@ void test_dt_negativeInteger()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran32_v_2);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran32_v_2);
     }
 
     /***
@@ -1575,6 +1784,12 @@ void test_dt_long()
     const char lex_v_ran32_v_2[]="-2147483648";
     const char lex_v_ran32_iv_1[]="+2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
+
+    XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)1234;
+    XSValue::XSValue_Data act_v_ran64_v_1;   act_v_ran64_v_1.fValue.f_long = (long)+9223372036854775807;
+    XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
+    XSValue::XSValue_Data act_v_ran32_v_1;   act_v_ran32_v_1.fValue.f_long = (long)+2147483647;
+    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
 
     const char lex_v_ran64_v_1_canrep[]="9223372036854775807";
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
@@ -1652,22 +1867,22 @@ void test_dt_long()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_1);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
     }
 
     /***
@@ -1728,6 +1943,10 @@ void test_dt_int()
     const char lex_v_ran_v_2[]="-2147483648";
     const char lex_v_ran_iv_1[]="+2147483648";
     const char lex_v_ran_iv_2[]="-2147483649";
+
+    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_int = (int)1234;    
+    XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_int = (int)+2147483647;
+    XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_int = (int)-2147483648;
 
     const char lex_v_ran_v_1_canrep[]="2147483647";
     const char lex_v_ran_v_2_canrep[]="-2147483648";
@@ -1805,15 +2024,15 @@ void test_dt_int()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
     }
 
     /***
@@ -1877,6 +2096,10 @@ void test_dt_short()
     const char lex_v_ran_v_2[]="-32768";
     const char lex_v_ran_iv_1[]="+32768";
     const char lex_v_ran_iv_2[]="-32769";
+
+    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_short = (short)1234;    
+    XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_short = (short)+32767;
+    XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_short = (short)-32768;
 
     const char lex_v_ran_v_1_canrep[]="32767";
     const char lex_v_ran_v_2_canrep[]="-32768";
@@ -1955,15 +2178,15 @@ void test_dt_short()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
     }
 
     /***
@@ -2027,6 +2250,10 @@ void test_dt_byte()
     const char lex_v_ran_v_2[]="-128";
     const char lex_v_ran_iv_1[]="+128";
     const char lex_v_ran_iv_2[]="-129";
+
+    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_char = (char)12;    
+    XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_char = (char)+127;
+    XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_char = (char)-128;
 
     const char lex_v_ran_v_1_canrep[]="127";
     const char lex_v_ran_v_2_canrep[]="-128";
@@ -2105,15 +2332,15 @@ void test_dt_byte()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
     }
 
     /***
@@ -2171,14 +2398,18 @@ void test_dt_nonNegativeInteger()
     const char lex_v_ran_v_1[]="1234";
     const char lex_v_ran_iv_1[]="-1";
 
-    const char lex_v_ran64_v_2[]="+9223372036854775807";
-    const char lex_v_ran64_iv_2[]="+9223372036854775808";
+    const char lex_v_ran64_v_2[]="+18446744073709551615";
+    const char lex_v_ran64_iv_2[]="+18446744073709551616";
 
-    const char lex_v_ran32_v_2[]="2147483647";
-    const char lex_v_ran32_iv_2[]="2147483648";
+    const char lex_v_ran32_v_2[]="4294967295";
+    const char lex_v_ran32_iv_2[]="4294967296";
 
-    const char lex_v_ran64_v_2_canrep[]="9223372036854775807";
-    const char lex_v_ran64_iv_2_canrep[]="9223372036854775808";
+    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
+    XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)+18446744073709551615;
+    XSValue::XSValue_Data act_v_ran32_v_2;  act_v_ran32_v_2.fValue.f_ulong = (unsigned long)4294967295;
+
+    const char lex_v_ran64_v_2_canrep[]="18446744073709551615";
+    const char lex_v_ran64_iv_2_canrep[]="18446744073709551616";
 
     const char lex_iv_1[]="12b34.456";
     const char lex_iv_2[]="1234b56";
@@ -2250,18 +2481,18 @@ void test_dt_nonNegativeInteger()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_2);
     }
 
     /***
@@ -2320,6 +2551,12 @@ void test_dt_unsignedLong()
     const char lex_v_ran32_v_2[]="0";
     const char lex_v_ran32_iv_1[]="4294967296";
     const char lex_v_ran32_iv_2[]="-1";
+
+    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
+    XSValue::XSValue_Data act_v_ran64_v_1;  act_v_ran64_v_1.fValue.f_ulong = (unsigned long)+18446744073709551615;
+    XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)0;
+    XSValue::XSValue_Data act_v_ran32_v_1;  act_v_ran32_v_1.fValue.f_ulong = (unsigned long)+4294967295;
+    XSValue::XSValue_Data act_v_ran32_v_2;  act_v_ran32_v_2.fValue.f_ulong = (unsigned long)0;
 
     const char lex_v_ran64_v_1_canrep[]="18446744073709551615";
     const char lex_v_ran64_v_2_canrep[]="0";
@@ -2397,22 +2634,22 @@ void test_dt_unsignedLong()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_1);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
     }
 
     /***
@@ -2475,6 +2712,10 @@ void test_dt_unsignedInt()
     const char lex_v_ran_iv_1[]="4294967296";
     const char lex_v_ran_iv_2[]="-1";
 
+    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_uint = (unsigned int)1234;    
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_uint = (unsigned int)+4294967295;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_uint = (unsigned int)0;
+   
     const char lex_v_ran_v_1_canrep[]="4294967295";
     const char lex_v_ran_v_2_canrep[]="0";
     const char lex_v_ran_iv_1_canrep[]="4294967296";
@@ -2550,15 +2791,15 @@ void test_dt_unsignedInt()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
     }
 
     /***
@@ -2621,6 +2862,10 @@ void test_dt_unsignedShort()
     const char lex_v_ran_iv_1[]="+65536";
     const char lex_v_ran_iv_2[]="-1";
 
+    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_ushort = (unsigned short)1234;    
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_ushort = (unsigned short)+65535;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_ushort = (unsigned short)0;
+   
     const char lex_v_ran_v_1_canrep[]="65535";
     const char lex_v_ran_v_2_canrep[]="0";
     const char lex_v_ran_iv_1_canrep[]="65536";
@@ -2696,15 +2941,15 @@ void test_dt_unsignedShort()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
     }
 
     /***
@@ -2766,6 +3011,10 @@ void test_dt_unsignedByte()
     const char lex_v_ran_v_2[]="0";
     const char lex_v_ran_iv_1[]="+256";
     const char lex_v_ran_iv_2[]="-1";
+
+    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_uchar = (unsigned char)123;    
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_uchar = (unsigned char)+255;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_uchar = (unsigned char)0;
 
     const char lex_v_ran_v_1_canrep[]="255";
     const char lex_v_ran_v_2_canrep[]="0";
@@ -2842,15 +3091,15 @@ void test_dt_unsignedByte()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_0,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
     }
 
     /***
@@ -2908,14 +3157,18 @@ void test_dt_positiveInteger()
     const char lex_v_ran_v_1[]="1234";
     const char lex_v_ran_iv_1[]="0";
 
-    const char lex_v_ran64_v_2[]="+9223372036854775807";
-    const char lex_v_ran64_iv_2[]="+9223372036854775808";
+    const char lex_v_ran64_v_2[]="+18446744073709551615";
+    const char lex_v_ran64_iv_2[]="+18446744073709551616";
 
-    const char lex_v_ran32_v_2[]="2147483647";
-    const char lex_v_ran32_iv_2[]="2147483648";
+    const char lex_v_ran32_v_2[]="4294967295";
+    const char lex_v_ran32_iv_2[]="4294967296";
 
-    const char lex_v_ran64_v_2_canrep[]="9223372036854775807";
-    const char lex_v_ran64_iv_2_canrep[]="9223372036854775808";
+    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
+    XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)+18446744073709551615;
+    XSValue::XSValue_Data act_v_ran32_v_2;  act_v_ran32_v_2.fValue.f_ulong = (unsigned long)+4294967295;
+
+    const char lex_v_ran64_v_2_canrep[]="18446744073709551615";
+    const char lex_v_ran64_iv_2_canrep[]="18446744073709551616";
 
     const char lex_iv_1[]="12b34.456";
     const char lex_iv_2[]="1234b56";
@@ -2986,18 +3239,18 @@ void test_dt_positiveInteger()
         //validation on/off
         toValidate = ( 0 == i) ? true : false;
 
-        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if defined(XML_BITSTOBUILD_64)
-        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
-        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003);
+        ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran32_v_2);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_2);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_2);
     }
 
     /***
@@ -3048,6 +3301,11 @@ void test_dt_boolean()
     const char lex_v_2[]="0";
     const char lex_v_3[]="true";
     const char lex_v_4[]="false";
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_bool = true;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_bool = false;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_bool = true;
+    XSValue::XSValue_Data act_v_ran_v_4;  act_v_ran_v_4.fValue.f_bool = false;
 
     const char lex_iv_1[]="2";
 
@@ -3107,13 +3365,13 @@ void test_dt_boolean()
         toValidate = ( 0 == i) ? true : false;
 
         // lexical valid
-        ACTVALUE_TEST(lex_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(lex_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
+        ACTVALUE_TEST(lex_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_4);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3162,6 +3420,15 @@ void test_dt_hexBinary()
 
     const char lex_iv_1[]="0gb7";
     const char lex_iv_2[]="123";
+
+    XSValue::XSValue_Data act_v_ran_v_1;  
+    XSValue::XSValue_Data act_v_ran_v_2;
+    act_v_ran_v_1.fValue.f_byteVal = new XMLByte[2];
+    act_v_ran_v_1.fValue.f_byteVal[0] = 0xf;
+    act_v_ran_v_1.fValue.f_byteVal[1] = 0xb7;    
+    act_v_ran_v_2.fValue.f_byteVal = new XMLByte[2];
+    act_v_ran_v_2.fValue.f_byteVal[0] = 0x12;
+    act_v_ran_v_2.fValue.f_byteVal[1] = 0x34;    
 
     const char lex_v_1_canrep[]="0FB7";
     const char lex_v_2_canrep[]="1234";
@@ -3218,12 +3485,12 @@ void test_dt_hexBinary()
         toValidate = ( 0 == i) ? true : false;
 
         // lexical valid
-        ACTVALUE_TEST(lex_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3272,9 +3539,34 @@ void test_dt_base64Binary()
     const char lex_iv_2[]="134xcv56gui";
     const char lex_iv_1[]="wxtz8e4";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    //actual values:
+    //"134x cv56 gui0"  :     D7 7E 31 72 FE 7A 82 E8 B4
+    //"wxtz 8e4k"       :     C3 1B 73 F1 EE 24
+    act_v_ran_v_1.fValue.f_byteVal = new XMLByte[9];
+    act_v_ran_v_1.fValue.f_byteVal[0] = 0xd7;
+    act_v_ran_v_1.fValue.f_byteVal[1] = 0x7e;
+    act_v_ran_v_1.fValue.f_byteVal[2] = 0x31;
+    act_v_ran_v_1.fValue.f_byteVal[3] = 0x72;
+    act_v_ran_v_1.fValue.f_byteVal[4] = 0xfe;
+    act_v_ran_v_1.fValue.f_byteVal[5] = 0x7a;
+    act_v_ran_v_1.fValue.f_byteVal[6] = 0x82;
+    act_v_ran_v_1.fValue.f_byteVal[7] = 0xe8;
+    act_v_ran_v_1.fValue.f_byteVal[8] = 0xb4;
+    act_v_ran_v_2.fValue.f_byteVal = new XMLByte[9];
+    act_v_ran_v_2.fValue.f_byteVal[0] = 0xc3;
+    act_v_ran_v_2.fValue.f_byteVal[1] = 0x1b;
+    act_v_ran_v_2.fValue.f_byteVal[2] = 0x73;
+    act_v_ran_v_2.fValue.f_byteVal[3] = 0xf1;  
+    act_v_ran_v_2.fValue.f_byteVal[4] = 0xee;
+    act_v_ran_v_2.fValue.f_byteVal[5] = 0x24;
+    act_v_ran_v_2.fValue.f_byteVal[6] = 0;
+    act_v_ran_v_2.fValue.f_byteVal[7] = 0;
+    act_v_ran_v_2.fValue.f_byteVal[8] = 0;    
+
     const char lex_v_1_canrep[]="134xcv56gui0";
     const char lex_v_2_canrep[]="wxtz8e4k";
-
  
     /***    
      *
@@ -3319,12 +3611,12 @@ void test_dt_base64Binary()
         toValidate = ( 0 == i) ? true : false;
 
         // lexical valid
-        ACTVALUE_TEST(lex_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(lex_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3375,6 +3667,32 @@ void test_dt_duration()
     const char iv_2[]="P1Y1M1DT1H1M1X";
     const char iv_3[]="P1Z1M1DT23H";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 1;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 1;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 23;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 59;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 59;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 1;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 1;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 23;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
     /***    
      *
      * validate
@@ -3420,14 +3738,14 @@ void test_dt_duration()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3484,6 +3802,34 @@ void test_dt_date()
     const char iv_2[]="2001-02-29";
     const char iv_3[]="2001-06-31";
 
+    XSValue::XSValue_Data act_v_ran_v_1;     
+    XSValue::XSValue_Data act_v_ran_v_2;  
+    XSValue::XSValue_Data act_v_ran_v_3;  
+     
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 1991;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 05;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 9999;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 06;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 30;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 99991;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 07;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;    
+
     /***    
      *
      * validate
@@ -3529,14 +3875,14 @@ void test_dt_date()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3593,6 +3939,33 @@ void test_dt_gYearMonth()
     const char iv_2[]="+2000-11";
     const char iv_3[]="2000.90-02";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+    
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 20000;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 02;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 200;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 11;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 2000;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 02;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
     /***    
      *
      * validate
@@ -3638,14 +4011,14 @@ void test_dt_gYearMonth()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3702,6 +4075,34 @@ void test_dt_gYear()
     const char iv_2[]="+2000";
     const char iv_3[]="2000.90";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 9999;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = -1999;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
+
     /***    
      *
      * validate
@@ -3747,14 +4148,14 @@ void test_dt_gYear()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3811,6 +4212,33 @@ void test_dt_gMonthDay()
     const char iv_2[]="--12-32";
     const char iv_3[]="--02-30";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 1;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 3;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 4;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
     /***    
      *
      * validate
@@ -3856,14 +4284,14 @@ void test_dt_gMonthDay()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
     }
 
     /***
@@ -3920,6 +4348,34 @@ void test_dt_gDay()
     const char iv_2[]="---28.00";
     const char iv_3[]="--31";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 28;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
+
     /***    
      *
      * validate
@@ -3965,14 +4421,14 @@ void test_dt_gDay()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_2);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_3);
     }
 
     /***
@@ -4029,6 +4485,34 @@ void test_dt_gMonth()
     const char iv_2[]="---02.09";
     const char iv_3[]="--14--";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 2;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 10;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 12;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
+
     /***    
      *
      * validate
@@ -4074,14 +4558,14 @@ void test_dt_gMonth()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_2);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_3);
     }
 
     /***
@@ -4140,9 +4624,37 @@ void test_dt_dateTime()
     const char iv_4[]="2000-11-30T01:01:01Z99";
     const char iv_5[]="2000-02-28T01:01:01Z10:61";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+
     const char v_1_canrep[]="2000-12-31T23:59:59.00389Z";
     const char v_2_canrep[]="2000-10-01T05:10:20Z";
     const char v_3_canrep[]="2000-10-01T17:10:20Z";
+
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 2000;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 12;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 23;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 59;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 59;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0.00389;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 2000;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 10;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 5;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 10;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 20;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 2000;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 10;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 17;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 10;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 20;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
 
  /***
  * E2-41
@@ -4211,16 +4723,16 @@ void test_dt_dateTime()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
-        ACTVALUE_TEST(iv_5, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_5, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003, act_v_ran_v_1);
     }
 
     /***
@@ -4278,10 +4790,37 @@ void test_dt_time()
     const char iv_4[]="01:01:01Z99";
     const char iv_5[]="01:01:01Z10:61";
 
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+
     const char v_1_canrep[]="23:59:59.389Z";
     const char v_2_canrep[]="00:00:00Z";
     const char v_3_canrep[]="23:59:59Z";
 
+    act_v_ran_v_1.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_1.fValue.f_datetime.f_hour    = 23;
+    act_v_ran_v_1.fValue.f_datetime.f_min     = 59;
+    act_v_ran_v_1.fValue.f_datetime.f_second  = 59;
+    act_v_ran_v_1.fValue.f_datetime.f_milisec = 0.389;
+
+    act_v_ran_v_2.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 24;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 0;
+    act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
+
+    act_v_ran_v_3.fValue.f_datetime.f_year    = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 0;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = 23;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 59;
+    act_v_ran_v_3.fValue.f_datetime.f_second  = 59;
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
 /***
  * 3.2.8.2 Canonical representation
  *
@@ -4342,16 +4881,16 @@ void test_dt_time()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002);
-        ACTVALUE_TEST(iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
-        ACTVALUE_TEST(iv_5, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003, act_v_ran_v_1);
+        ACTVALUE_TEST(iv_5, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FODT0003, act_v_ran_v_1);
     }
 
     /***
@@ -4399,6 +4938,7 @@ void test_dt_string()
     bool  toValidate = true;
 
     const char v_1[]="mystring";
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
 
     /***    
      *
@@ -4440,7 +4980,7 @@ void test_dt_string()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
 
         //  invalid
     }
@@ -4486,7 +5026,11 @@ void test_dt_anyURI()
     const char v_1[]="http://www.schemaTest.org/IBMd3_2_17v01";
     const char v_2[]="gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles";
     const char v_3[]="ftp://www.noNamespace.edu";
-  	
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+
     const char iv_1[]="+htp://peiyongz@:90";
     const char iv_2[]=">////1.2.3.4.";
     const char iv_3[]="<///www.ibm.9om";
@@ -4536,17 +5080,17 @@ void test_dt_anyURI()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
 
     }
 
@@ -4598,7 +5142,11 @@ void test_dt_QName()
     const char v_1[]="Ant:Eater";
     const char v_2[]="Minimum_Length";
     const char v_3[]="abcde:a2345";
-  	
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+    
     const char iv_1[]="Three:Two:One";
     const char iv_2[]=":my";
     const char iv_3[]="+name";
@@ -4648,17 +5196,17 @@ void test_dt_QName()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal));
+            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
 
     }
 
@@ -4709,7 +5257,9 @@ void test_dt_NOTATION()
 
     const char v_1[]="http://www.ibm.com/test:notation1";
     const char iv_1[]="invaliduri:notation2";
-  	
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+     
     /***    
      *
      * validate
@@ -4751,7 +5301,7 @@ void test_dt_NOTATION()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
 
         //  invalid
 
@@ -4802,6 +5352,10 @@ void test_dt_normalizedString()
     
     const char iv_1[]="a\tb";
     const char iv_2[]="a\nb";
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
     
     /***    
      *
@@ -4847,15 +5401,15 @@ void test_dt_normalizedString()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_2);
 
     }
 
@@ -4906,6 +5460,10 @@ void test_dt_token()
     const char v_1[]="4+4=8";
     const char v_2[]="Number2";
     const char v_3[]="someChars=*_-";
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
     
     const char iv_1[]="a\tb";
     const char iv_2[]="a\nb";
@@ -4956,17 +5514,17 @@ void test_dt_token()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
 
     }
 
@@ -5023,7 +5581,10 @@ void test_dt_language()
     const char iv_1[]="ja_JP";
     const char iv_2[]="en+US";
     const char iv_3[]="12-en";
-    
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
     /***    
      *
      * validate
@@ -5069,17 +5630,17 @@ void test_dt_language()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
 
     }
 
@@ -5136,7 +5697,10 @@ void test_dt_NMTOKEN()
     const char iv_1[]="#board";
     const char iv_2[]="@com";
     const char iv_3[]=";abc";
-    
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
     /***    
      *
      * validate
@@ -5182,17 +5746,17 @@ void test_dt_NMTOKEN()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_2);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_3);
 
     }
 
@@ -5249,6 +5813,10 @@ void test_dt_NMTOKENS()
     const char iv_1[]="#board";
     const char iv_2[]="@com";
     const char iv_3[]=";abc";
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
     
     /***    
      *
@@ -5295,17 +5863,17 @@ void test_dt_NMTOKENS()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
 
     }
 
@@ -5362,6 +5930,10 @@ void test_dt_Name()
     const char iv_1[]="9name";
     const char iv_2[]="-name";
     const char iv_3[]=".name";
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
     
     /***    
      *
@@ -5408,17 +5980,17 @@ void test_dt_Name()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_2);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_3);
 
     }
 
@@ -5475,7 +6047,9 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
     const char iv_2[]="_Zeerochert:";
     const char iv_3[]="0:07";
 
-   
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;   
     /***    
      *
      * validate
@@ -5521,17 +6095,17 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
 
     }
 
@@ -5587,7 +6161,10 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
     const char iv_1[]=":Four-_.";
     const char iv_2[]="_Zeerochert:";
     const char iv_3[]="0:07";
-     
+
+    XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
     /***    
      *
      * validate
@@ -5633,17 +6210,17 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_2);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal));
+            (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
 
     }
 
@@ -6083,7 +6660,7 @@ int main(int, char* )
         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
         return 1;
-    }
+    }    
 
     test_dt_string();              
     test_dt_boolean();

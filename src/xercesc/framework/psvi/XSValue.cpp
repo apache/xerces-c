@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/12/23 16:11:21  cargilld
+ * Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
+ *
  * Revision 1.20  2004/12/10 10:37:55  cargilld
  * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
  *
@@ -193,8 +196,8 @@ const bool XSValue::numericSign[XSValue::dt_MAXCOUNT] =
     true, true, true, true, true,
     true, true, true, true, true,
     true, true, true, true, true,
-    true, true, true, true, false,
-    false, false, false, true 
+    true, true, true, false, false,
+    false, false, false, false 
 };
 
 // ---------------------------------------------------------------------------
@@ -1363,10 +1366,10 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     retVal->fData.fValue.f_long = actVal.f_long;                    
                     break;
                 case XSValue::dt_nonNegativeInteger:                
-                    retVal->fData.fValue.f_long = actVal.f_long;
+                    retVal->fData.fValue.f_long = actVal.f_ulong;
                     break;
                 case XSValue::dt_positiveInteger:               
-                    retVal->fData.fValue.f_long = actVal.f_long;
+                    retVal->fData.fValue.f_long = actVal.f_ulong;
                     break;
                 case XSValue::dt_long:                                                    
                     retVal->fData.fValue.f_long = actVal.f_long;                                    
@@ -1437,24 +1440,35 @@ XSValue::getActValDateTimes(const XMLCh*         const content
             break;
         case XSValue::dt_time:
             coreDate.parseTime();
+            coreDate.fValue[XMLDateTime::CentYear] = 0;  
+            coreDate.fValue[XMLDateTime::Month] = 0;
+            coreDate.fValue[XMLDateTime::Day] = 0;
             break;
         case XSValue::dt_date:
             coreDate.parseDate();
             break;
         case XSValue::dt_gYearMonth:
             coreDate.parseYearMonth();
+            coreDate.fValue[XMLDateTime::Day] = 0;
             break;
         case XSValue::dt_gYear:
-            coreDate.parseYear();
+            coreDate.parseYear();            
+            coreDate.fValue[XMLDateTime::Month] = 0;
+            coreDate.fValue[XMLDateTime::Day] = 0;
             break;
         case XSValue::dt_gMonthDay:
             coreDate.parseMonthDay();
+            coreDate.fValue[XMLDateTime::CentYear] = 0;            
             break;
         case XSValue::dt_gDay:
             coreDate.parseDay();
+            coreDate.fValue[XMLDateTime::CentYear] = 0;
+            coreDate.fValue[XMLDateTime::Month] = 0;            
             break;
         case XSValue::dt_gMonth:
             coreDate.parseMonth();
+            coreDate.fValue[XMLDateTime::CentYear] = 0;            
+            coreDate.fValue[XMLDateTime::Day] = 0;
             break;
         default:
             return 0;
@@ -1668,14 +1682,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
                 status = st_FOCA0002;
                 return 0;
             }
-            break;
-        case XSValue::dt_nonNegativeInteger:
-            if (retVal.f_long < 0)
-            {
-                status = st_FOCA0002;
-                return false;
-            }
-            break;
+            break;        
         case XSValue::dt_unsignedInt:
             // strtoul will set value to LONG_INT if ERANGE error
             if ((retVal.f_ulong > UINT_MAX)  ||
@@ -1700,7 +1707,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
             }              
             break;              
         case XSValue::dt_positiveInteger:
-            if (retVal.f_long <= 0)
+            if (retVal.f_ulong == 0)
             {
                 status = st_FOCA0002;
                 return false;

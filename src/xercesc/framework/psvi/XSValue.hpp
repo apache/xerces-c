@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/12/23 16:11:21  cargilld
+ * Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
+ *
  * Revision 1.18  2004/12/10 10:37:55  cargilld
  * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
  *
@@ -247,7 +250,7 @@ public:
     //----------------------------------
     /** public data */
 
-    struct {
+    struct XSValue_Data {
 
         DataType f_datatype;
         
