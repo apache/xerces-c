@@ -56,9 +56,18 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/14 23:53:31  rahulj
+ * Removed the offending Ctrl-M's from the commit message
+ * logs which was giving packaging problems.
+ *
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
  * Revision 1.2  1999/11/23 02:00:44  rahulj
  * Code now works under HPUX 11. Tested inmemory message loader.
-Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+ * Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
  *
  * Revision 1.1.1.1  1999/11/09 01:07:05  twl
  * Initial checkin

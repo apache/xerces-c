@@ -56,9 +56,18 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/14 23:53:33  rahulj
+ * Removed the offending Ctrl-M's from the commit message
+ * logs which was giving packaging problems.
+ *
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
  * Revision 1.3  1999/11/23 02:00:48  rahulj
  * Code now works under HPUX 11. Tested inmemory message loader.
-Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+ * Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
  *
  * Revision 1.2  1999/11/17 22:35:33  rahulj
  * Replaced default attr mutexes with recursive mutexes. Also code works with ICU transcoding service

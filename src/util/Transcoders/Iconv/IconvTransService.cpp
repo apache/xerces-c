@@ -56,10 +56,19 @@
 
 /**
  * $Log$
+ * Revision 1.5  1999/12/14 23:53:35  rahulj
+ * Removed the offending Ctrl-M's from the commit message
+ * logs which was giving packaging problems.
+ *
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
  * Revision 1.4  1999/12/02 20:20:16  rahulj
  * Fixed incorrect comparision of int with a pointer.
-Got burnt because definition of NULL varies on different platforms,
-though use of NULL was not correct in the first place.
+ * Got burnt because definition of NULL varies on different platforms,
+ * though use of NULL was not correct in the first place.
  *
  * Revision 1.3  1999/11/20 00:28:19  rahulj
  * Added code for case-insensitive wide character string compares

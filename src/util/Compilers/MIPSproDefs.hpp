@@ -56,6 +56,15 @@
 
 /**
  * $Log$
+ * Revision 1.2  1999/12/14 23:53:25  rahulj
+ * Removed the offending Ctrl-M's from the commit message
+ * logs which was giving packaging problems.
+ *
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
  * Revision 1.1  1999/12/01 17:16:17  rahulj
  * Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
  *

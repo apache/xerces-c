@@ -55,6 +55,15 @@
 # 
 #
 # $Log$
+# Revision 1.8  1999/12/14 23:53:18  rahulj
+# Removed the offending Ctrl-M's from the commit message
+# logs which was giving packaging problems.
+#
+# PR:
+# Obtained from:
+# Submitted by:
+# Reviewed by:
+#
 # Revision 1.7  1999/12/09 00:48:19  aruna1
 # ICU library inclusion in ALLLIBS due to solaris failure
 #
@@ -63,7 +72,7 @@
 #
 # Revision 1.5  1999/11/23 01:59:28  rahulj
 # Code now works under HPUX 11. Tested inmemory message loader.
-Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+# Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
 #
 # Revision 1.4  1999/11/17 22:36:31  rahulj
 # Code works with ICU transcoding service
