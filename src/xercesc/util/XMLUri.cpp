@@ -1548,7 +1548,7 @@ bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host
     
     // check userinfo
     if (!userinfo)
-        return false;
+        return true;
         
     const XMLCh* tmpStr = userinfo;
     while (*tmpStr)
