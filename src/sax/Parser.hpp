@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/12 03:31:55  rahulj
+ * Removed duplicate CVS Log entries.
+ *
  * Revision 1.3  2000/02/09 01:59:12  abagchi
  * Removed private function docs, added parse docs
  *
@@ -93,19 +96,6 @@ class InputSource;
   * may reuse a parser object (possibly with a different input source)
   * once the first parse has completed successfully, but it may not
   * invoke the parse() methods recursively within a parse.
-  *
-  * $Log$
-  * Revision 1.3  2000/02/09 01:59:12  abagchi
-  * Removed private function docs, added parse docs
-  *
-  * Revision 1.2  2000/02/06 07:47:58  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.1.1.1  1999/11/09 01:07:46  twl
-  * Initial checkin
-  *
-  * Revision 1.3  1999/11/08 20:45:02  rahul
-  * Swat for adding in Product name and CVS comment log variable.
   *
   * @see EntityResolver#EntityResolver
   * @see DTDHandler#DTDHandler

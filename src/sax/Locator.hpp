@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/12 03:31:55  rahulj
+ * Removed duplicate CVS Log entries.
+ *
  * Revision 1.3  2000/02/09 01:55:06  abagchi
  * Removed private function docs
  *
@@ -96,19 +99,6 @@
   * If no locator has been set by the time the application receives
   * the startDocument event, the application should assume that a
   * locator is not available.</p>
-  *
-  * $Log$
-  * Revision 1.3  2000/02/09 01:55:06  abagchi
-  * Removed private function docs
-  *
-  * Revision 1.2  2000/02/06 07:47:58  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.1.1.1  1999/11/09 01:07:46  twl
-  * Initial checkin
-  *
-  * Revision 1.3  1999/11/08 20:45:01  rahul
-  * Swat for adding in Product name and CVS comment log variable.
   *
   * @see DocumentHandler#setDocumentLocator 
   */

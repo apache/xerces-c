@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/12 03:31:55  rahulj
+ * Removed duplicate CVS Log entries.
+ *
  * Revision 1.5  2000/02/12 01:27:19  aruna1
  * Documentation updated
  *
@@ -112,26 +115,6 @@ class BinInputStream;
   * modifies them in any way. They are always passed by const reference so
   * the parser will make a copy of any input sources that it must keep 
   * around beyond the call.</p>
-  *
-  * $Log$
-  * Revision 1.5  2000/02/12 01:27:19  aruna1
-  * Documentation updated
-  *
-  * Revision 1.4  2000/02/09 02:15:28  abagchi
-  * Documented destructor
-  *
-  * Revision 1.3  2000/02/06 07:47:58  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.2  2000/01/12 00:15:39  roddey
-  * Changes to deal with multiply nested, relative pathed, entities and to deal
-  * with the new URL class changes.
-  *
-  * Revision 1.1.1.1  1999/11/09 01:07:46  twl
-  * Initial checkin
-  *
-  * Revision 1.2  1999/11/08 20:45:01  rahul
-  * Swat for adding in Product name and CVS comment log variable.
   *
   * @see Parser#parse
   * @see EntityResolver#resolveEntity
