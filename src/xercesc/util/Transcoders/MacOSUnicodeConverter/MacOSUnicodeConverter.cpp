@@ -774,7 +774,7 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
     
     //  Iterate over the characters, converting into a temporary buffer which we'll discard.
     //  All this to get the size required.
-   while (srcCnt > 0)
+	while (srcCnt > 0)
     {
         TempXMLBuf tmpBuf;
         unsigned int bytesConsumed = 0;
