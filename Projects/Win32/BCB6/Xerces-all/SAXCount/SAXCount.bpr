@@ -41,7 +41,7 @@
   <LINKER>
     <ALLOBJ value="c0x32.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) import32.lib cw32mt.lib"/>
+    <ALLLIB value="$(LIBFILES) import32.lib cw32mti.lib"/>
   </LINKER>
   <IDEOPTIONS>
 [Version Info]
