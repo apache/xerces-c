@@ -28,7 +28,7 @@
             <li>Copy the entire contents of the
             <code>samples</code> directory into a directory named
             samples that you have write-access to;</li>
-            <li>Set the <code>XERCESCOUT</code>environment
+            <li>Set the <code>XERCESCOUT</code> environment
             variable to point to the directory that is the parent
             of the newly-created <code>samples</code>
             directory;</li>

@@ -198,7 +198,7 @@ public :
       *
       * memoryManager: plugged-in memory manager which is owned by user
       *                applications. Applications must make sure that the
-      *                plugged-in memory manager persisit through the call to
+      *                plugged-in memory manager persist through the call to
       *                XMLPlatformUtils::terminate()
       */
     static void Initialize(const char*          const locale = XMLUni::fgXercescDefaultLocale
