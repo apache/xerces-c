@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/03/20 23:43:03  rahulj
+ * Expanded tabs to spaces.
+ *
  * Revision 1.15  2000/03/18 00:00:02  roddey
  * Initial updates for two way transcoding support
  *
@@ -144,11 +147,11 @@
 //  one of these values.
 //
 #if defined (XML_USE_ICU_TRANSCODER)
-	#include <util/Transcoders/ICU/ICUTransService.hpp>
+    #include <util/Transcoders/ICU/ICUTransService.hpp>
 #elif defined (XML_USE_WIN32_TRANSCODER)
-	#include <util/Transcoders/Win32/Win32TransService.hpp>
+    #include <util/Transcoders/Win32/Win32TransService.hpp>
 #else
-	#error A transcoding service must be chosen
+    #error A transcoding service must be chosen
 #endif
 
 //
@@ -157,11 +160,11 @@
 //  one of these values.
 //
 #if defined (XML_USE_INMEMORY_MSGLOADER)
-	#include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+    #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #elif defined (XML_USE_WIN32_MSGLOADER)
-	#include <util/MsgLoaders/Win32/Win32MsgLoader.hpp>
+    #include <util/MsgLoaders/Win32/Win32MsgLoader.hpp>
 #else
-	#error A message loading service must be chosen
+    #error A message loading service must be chosen
 #endif
 
 //
@@ -620,7 +623,7 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
         mov             ecx, toFill
         lock cmpxchg    [ecx], ebx;
         mov             result, eax;
-	}
+    }
     return result;
 
     #else
@@ -689,7 +692,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 #elif defined (XML_USE_WIN32_MSGLOADER)
     return new Win32MsgLoader(msgDomain);
 #else
-	#error You must provide a message loader
+    #error You must provide a message loader
 #endif
 }
 
@@ -713,7 +716,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 #elif defined (XML_USE_WIN32_TRANSCODER)
     return new Win32TransService;
 #else
-	#error You must provide a transcoding service implementation
+    #error You must provide a transcoding service implementation
 #endif
 }
 
