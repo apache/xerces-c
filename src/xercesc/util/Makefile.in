@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.4  2002/04/16 20:10:48  peiyongz
+# Bug#8168: Error when attempting to build NetAccessors
+#
 # Revision 1.3  2002/02/18 06:36:44  jberry
 # Modify Mac OS X "unix" build to use new MacOSURLAccessCF NetAccessor.
 # This means that Xerces no longer relies on the Carbon.framework and
@@ -316,11 +319,10 @@ else
   endif
 endif
 
+NETACCESSORMODULE=FileOnly
 
 ifeq (${NETACCESSOR},NATIVE)
-	ifeq (${PLATFORM},MACOSX)
-	  NETACCESSORMODULE=MacOSURLAccessCF
-	endif
+    NETACCESSORMODULE=MacOSURLAccessCF
 else
 	ifeq (${NETACCESSOR},Socket)
 	  NETACCESSORMODULE=Socket
@@ -484,7 +486,9 @@ includes:: pubheaders $(C_FILES)
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
+ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
+endif
 	${MAKE} -C Compilers $@
 	${MAKE} -C regx $@
 
@@ -516,7 +520,9 @@ compilers::
 
 
 netaccessors::
+ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE)
+endif
 
 regx::
 	${MAKE} -C regx
@@ -538,7 +544,9 @@ clean::
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
+ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
+endif
 	${MAKE} -C Compilers $@
 	${MAKE} -C regx $@
 
@@ -552,7 +560,9 @@ distclean:: clean
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
+ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
+endif
 	${MAKE} -C Compilers $@
 	${MAKE} -C regx $@
 

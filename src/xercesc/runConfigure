@@ -491,9 +491,15 @@ case $netaccessor in
        USELIBWWW=1;;
 
    native)
-       NETACCESSOR=NATIVE
-       netaccessorDefines="-DXML_USE_NETACCESSOR_NATIVE"
-       netaccessorLibs=""
+       if test $platform = "macosx"; then
+           NETACCESSOR=NATIVE
+           netaccessorDefines="-DXML_USE_NETACCESSOR_NATIVE"
+           netaccessorLibs=""
+       else
+           echo "netaccessor option '$netaccessor' is supported on 'macosx' only."
+           exit ${ERROR_EXIT_CODE}
+       fi
+
        ;;
 
    *)
