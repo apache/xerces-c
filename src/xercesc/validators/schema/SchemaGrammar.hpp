@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/05 17:08:10  tng
+ * [Bug 10119] Grammar::getGrammarType need a const modifier
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.14  2001/11/19 18:26:31  knoaman
  * no message
@@ -151,7 +154,7 @@ public:
     // -----------------------------------------------------------------------
     //  Implementation of Virtual Interface
     // -----------------------------------------------------------------------
-    virtual Grammar::GrammarType getGrammarType();
+    virtual Grammar::GrammarType getGrammarType() const;
     virtual const XMLCh* getTargetNamespace() const;
 
     virtual XMLElementDecl* findOrAddElemDecl
@@ -445,7 +448,7 @@ inline void SchemaGrammar::setUPAChecked(bool newState) {
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Virtual methods
 // ---------------------------------------------------------------------------
-inline Grammar::GrammarType SchemaGrammar::getGrammarType() {
+inline Grammar::GrammarType SchemaGrammar::getGrammarType() const {
     return Grammar::SchemaGrammarType;
 }
 

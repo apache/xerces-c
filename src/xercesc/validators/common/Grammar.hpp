@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:38  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/05 17:08:10  tng
+ * [Bug 10119] Grammar::getGrammarType need a const modifier
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/09/14 14:50:22  tng
  * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
@@ -128,7 +131,7 @@ public:
     // -----------------------------------------------------------------------
     //  Virtual Getter methods
     // -----------------------------------------------------------------------
-    virtual GrammarType getGrammarType()=0;
+    virtual GrammarType getGrammarType() const =0;
     virtual const XMLCh* getTargetNamespace() const =0;
 
     // Element Decl

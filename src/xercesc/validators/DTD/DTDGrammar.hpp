@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:43  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/05 17:08:10  tng
+ * [Bug 10119] Grammar::getGrammarType need a const modifier
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/09/14 14:50:22  tng
  * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
@@ -109,7 +112,7 @@ public:
     // -----------------------------------------------------------------------
     //  Implementation of Virtual Interface
     // -----------------------------------------------------------------------
-    virtual Grammar::GrammarType getGrammarType();
+    virtual Grammar::GrammarType getGrammarType() const;
     virtual const XMLCh* getTargetNamespace() const;
 
     virtual XMLElementDecl* findOrAddElemDecl
@@ -258,7 +261,7 @@ inline void DTDGrammar::setRootElemId(unsigned int rootElemId) {
 // ---------------------------------------------------------------------------
 //  DTDGrammar: Virtual methods
 // ---------------------------------------------------------------------------
-inline Grammar::GrammarType DTDGrammar::getGrammarType() {
+inline Grammar::GrammarType DTDGrammar::getGrammarType() const {
     return Grammar::DTDGrammarType;
 }
 
