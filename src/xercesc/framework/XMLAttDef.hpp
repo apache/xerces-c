@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/24 05:19:15  neilg
+ * update method documentation
+ *
  * Revision 1.10  2003/10/10 16:23:29  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -357,6 +360,7 @@ public:
       *
       * @return Returns a boolean value that indicates whether this attribute
       *         was explicitly provided.
+      * @deprecated
       */
     bool getProvided() const;
 
@@ -413,11 +417,13 @@ public:
 
     /**
      * @return the uri part of DOM Level 3 TypeInfo
+     * @deprecated
      */
     virtual const XMLCh* getDOMTypeInfoUri() const = 0;
 
     /**
      * @return the name part of DOM Level 3 TypeInfo
+     * @deprecated
      */
     virtual const XMLCh* getDOMTypeInfoName() const = 0;
 
@@ -458,6 +464,7 @@ public:
       * attributes that have been explicitly provided.
       *
       * @param  newValue The new provided state to set
+      * @deprecated
       */
     void setProvided(const bool newValue);
 

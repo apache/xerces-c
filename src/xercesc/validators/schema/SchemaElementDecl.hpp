@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/11/24 05:21:04  neilg
+ * update method documentation
+ *
  * Revision 1.16  2003/11/21 22:34:46  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -291,11 +294,11 @@ public :
      *    1.1.1.2 clause 1.2 of Schema-Validity Assessment (Element) (3.3.4) applied and the item was valid as defined by Element Locally Valid (Type) (3.3.4).
      *    1.1.2 Neither its [children] nor its [attributes] contains an information item (element or attribute respectively) whose [validity] is invalid.
      *    1.1.3 Neither its [children] nor its [attributes] contains an information item (element or attribute respectively) with a context-determined declaration of mustFind whose [validity] is unknown.
-    , then valid;
-    *    1.2 otherwise invalid.
-    *    2 otherwise notKnown.
-    */
-    // @deprecated; not thread-safe
+     * , then valid;
+     *    1.2 otherwise invalid.
+     *    2 otherwise notKnown.
+     * @deprecated; not thread-safe
+     */
     PSVIDefs::Validity getValidity() const;
 
 
@@ -304,65 +307,69 @@ public :
      * 1 If it was strictly assessed and neither its [children] nor its [attributes] contains an information item (element or attribute respectively) whose [validation attempted] is not full, then full;
      * 2 If it was not strictly assessed and neither its [children] nor its [attributes] contains an information item (element or attribute respectively) whose [validation attempted] is not none, then none;
      *3 otherwise partial.
+     * @deprecated; not thread-safe
      */
-    // @deprecated; not thread-safe
     PSVIDefs::Validation getValidationAttempted() const;
 
 
     /**
      * @return the complexity. simple or complex, depending on the type definition.
+     * @deprecated; not thread-safe
      */
-    // @deprecated; not thread-safe
     PSVIDefs::Complexity getTypeType() const;
 
     /**
      * The target namespace of the type definition.
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
      */
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getTypeUri() const;
 
     /**
      * The {name} of the type definition, if it is not absent. 
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
      */
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getTypeName() const;
 
     /**
      * true if the {name} of the type definition is absent, otherwise false.
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
      */
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     bool getTypeAnonymous() const;
 
     /**
      * If this method returns true and validity is VALID then the next three 
      * produce accurate results
      * @return true if the element is validated using a union type
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
      */
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     bool isTypeDefinitionUnion() const;
 
     /**
      * The {target namespace} of the actual member type definition.
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
      */
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getMemberTypeUri() const;
 
     /**
      * @return true if the {name} of the actual member type definition is absent, otherwise false.
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
      */
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     bool getMemberTypeAnonymous() const;
 
     /**
      * @return the {name} of the actual member type definition, if it is not absent. 
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
      */
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getMemberTypeName() const;
 
 
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+    /**
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     virtual const XMLCh* getDOMTypeInfoUri() const;
-    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+    /**
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     virtual const XMLCh* getDOMTypeInfoName() const;
 
 
@@ -378,27 +385,39 @@ public :
     void setMiscFlags(const int flags);
     void setDefaultValue(const XMLCh* const value);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
-    // @deprecated; should not be needed in a thread-safe implementation
+    /**
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
-    // @deprecated; should not be needed in a thread-safe implementation
+    /**
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     void setXsiSimpleTypeInfo(const DatatypeValidator* const dtv);
     void setAttWildCard(SchemaAttDef* const attWildCard);
     void setSubstitutionGroupElem(SchemaElementDecl* const elemDecl);
-    // @deprecated; should not be needed in a thread-safe implementation
+    /**
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     void setValidity(PSVIDefs::Validity valid);
-    // @deprecated; should not be needed in a thread-safe implementation
+    /**
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     void setValidationAttempted(PSVIDefs::Validation validation);
     
-    //called when element content of this element was validated
-    // @deprecated; should not be needed in a thread-safe implementation
+    /**
+     * called when element content of this element was validated
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     void updateValidityFromElement(const XMLElementDecl *decl, Grammar::GrammarType eleGrammar);
     
     //called when attribute content of this element was validated    
     // @deprecated; should not be needed in a thread-safe implementation
     void updateValidityFromAttribute(const SchemaAttDef *def);
 
-    //cleans up inbetween uses of the SchemaElementDecl. Resets xsiType, Validity etc.
-    // @deprecated; should not be needed in a thread-safe implementation
+    /**
+     * cleans up inbetween uses of the SchemaElementDecl. Resets xsiType, Validity etc.
+     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
+     */
     void reset();
 
     // -----------------------------------------------------------------------

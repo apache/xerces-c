@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/24 05:19:15  neilg
+ * update method documentation
+ *
  * Revision 1.8  2003/10/10 16:23:29  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -199,6 +202,10 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
         , JustFaultIn
     };
 
+    /**
+     * @deprecated Use of addIfNotFound couldl produce undefined 
+     * behaviour in multithreaded environments.
+     */
     enum LookupOpts
     {
         AddIfNotFound
@@ -258,6 +265,8 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
       * defaulted in if not found. If it is defaulted in, then wasAdded should
       * be set, else it should be cleared. If its not found and the caller does
       * not want defaulting, then return a null pointer.
+      * Note that, in a multithreaded environment, it is dangerous for a 
+      * caller to invoke this method with options set to AddIfNotFound.
       *
       * @param  qName       This is the qName of the attribute, i.e. the actual
       *                     lexical name found.
