@@ -74,7 +74,7 @@ usage()
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
-    echo "       -b <bitsToBuild> (accepts '64', '32')"    
+    echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -h (get help on the above commands)"
@@ -139,9 +139,9 @@ while [ $# -gt 0 ]
 
    -d)
         debug=on; shift;;
-        
+
    -b)
-        bitsToBuild=$2; shift 2;;                  
+        bitsToBuild=$2; shift 2;;
 
    -z)
         compileroptions="$compileroptions $2"; shift 2;;
@@ -232,21 +232,22 @@ export CXX
 #
 
 #
-#  aix | linux | hp-11 | solaris | 
+#  aix | linux | hp-11 | solaris |
 #  hp-10 | freebsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
 #
 if test $bitsToBuild = 64; then
-    bitstobuildDefines=" -DXML_BITSTOBUILD_64 " 
+    bitstobuildDefines=" -DXML_BITSTOBUILD_64 "
     bitstobuildLink=" "
     if test $platform; then
         case $platform in
            solaris)
-              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 " ;;
+              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
+              bitstobuildLink=" -xarch=v9 " ;;
            aix)
-              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " 
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
               bitstobuildLink=" -q64 -qwarn64 " ;;
            hp-11)
-              bitstobuildDefines=" $bitstobuildDefines +DA2.0W " 
+              bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
               bitstobuildLink=" +DA2.0W" ;;
            linux)
               bitstobuildDefines=" $bitstobuildDefines " ;;
@@ -274,10 +275,10 @@ export BITSTOBUILD
 # include the user defined CXXFLAGS/CFLAGS first in case they have
 # set an platform spefic flags
 #
-CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $bitstobuildDefines"; 
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $bitstobuildDefines";
 export CXXFLAGS
 
-CFLAGS="$CFLAGS $compileroptions $debugflag $bitstobuildDefines"; 
+CFLAGS="$CFLAGS $compileroptions $debugflag $bitstobuildDefines";
 export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment
