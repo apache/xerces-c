@@ -59,8 +59,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/RefHashTableOf.hpp>
-#include <util/TransService.hpp>
-#include <util/XMLString.hpp>
 #include <util/XML88591Transcoder.hpp>
 #include <util/XMLASCIITranscoder.hpp>
 #include <util/XMLEBCDICTranscoder.hpp>

@@ -55,6 +55,11 @@
  */
 
 
+#if !defined(TRANSENAMEMAP_HPP)
+#define TRANSENAMEMAP_HPP
+
+#include <util/TransService.hpp>
+#include <util/XMLString.hpp>
 
 //
 //  This class is really private to the TransService class. However, some
@@ -186,4 +191,6 @@ private :
 
 #if !defined(XML4C_TMPLSINC)
 #include <util/TransENameMap.c>
+#endif
+
 #endif
