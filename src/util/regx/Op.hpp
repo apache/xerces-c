@@ -77,82 +77,82 @@ class Token;
 class XMLUTIL_EXPORT Op {
 public:
 
-	enum {
-		DOT					= 0,
-		CHAR				= 1,
-		RANGE				= 3,
-		NRANGE				= 4,
-		ANCHOR				= 5,
-		STRING				= 6,
-		CLOSURE				= 7,
-		NONGREEDYCLOSURE	= 8,
-		QUESTION			= 9,
-		NONGREEDYQUESTION	= 10,
-		UNION				= 11,
-		CAPTURE				= 15,
-		BACKREFERENCE		= 16,
-		LOOKAHEAD			= 20,
-		NEGATIVELOOKAHEAD	= 21,
-		LOOKBEHIND			= 22,
-		NEGATIVELOOKBEHIND	= 23,
-		INDEPENDENT			= 24,
-		MODIFIER			= 25,
-		CONDITION			= 26
-	};
+    enum {
+        DOT                = 0,
+        CHAR               = 1,
+        RANGE              = 3,
+        NRANGE             = 4,
+        ANCHOR             = 5,
+        STRING             = 6,
+        CLOSURE            = 7,
+        NONGREEDYCLOSURE   = 8,
+        QUESTION           = 9,
+        NONGREEDYQUESTION  = 10,
+        UNION              = 11,
+        CAPTURE            = 15,
+        BACKREFERENCE      = 16,
+        LOOKAHEAD          = 20,
+        NEGATIVELOOKAHEAD  = 21,
+        LOOKBEHIND         = 22,
+        NEGATIVELOOKBEHIND = 23,
+        INDEPENDENT        = 24,
+        MODIFIER           = 25,
+        CONDITION          = 26
+    };
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	virtual ~Op() { }
+    virtual ~Op() { }
 
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	        short			getOpType() const;
-	        const Op*		getNextOp() const;
-	virtual XMLInt32		getData() const;
-	virtual XMLInt32		getData2() const;
-	virtual int				getSize() const;
-	virtual int				getRefNo() const;
-	virtual const Op*		getConditionFlow() const;
-	virtual const Op*		getYesFlow() const;
-	virtual const Op*		getNoFlow() const;
-	virtual const Op*		elementAt(int index) const;
-	virtual const Op*		getChild() const;
-	virtual const Token*	getToken() const;
-	virtual const XMLCh*	getLiteral() const;
+    // -----------------------------------------------------------------------
+    // Getter functions
+    // -----------------------------------------------------------------------
+            short        getOpType() const;
+            const Op*    getNextOp() const;
+    virtual XMLInt32     getData() const;
+    virtual XMLInt32     getData2() const;
+    virtual int          getSize() const;
+    virtual int          getRefNo() const;
+    virtual const Op*    getConditionFlow() const;
+    virtual const Op*    getYesFlow() const;
+    virtual const Op*    getNoFlow() const;
+    virtual const Op*    elementAt(int index) const;
+    virtual const Op*    getChild() const;
+    virtual const Token* getToken() const;
+    virtual const XMLCh* getLiteral() const;
 
-	// -----------------------------------------------------------------------
-	// Setter functions
-	// -----------------------------------------------------------------------
-	void setOpType(const short type);
-	void setNextOp(const Op* const next);
+    // -----------------------------------------------------------------------
+    // Setter functions
+    // -----------------------------------------------------------------------
+    void setOpType(const short type);
+    void setNextOp(const Op* const next);
 
 protected:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Protected Constructors
     // -----------------------------------------------------------------------
-	Op(const short type);
-	friend class OpFactory;
+    Op(const short type);
+    friend class OpFactory;
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Op(const Op&);
     void operator=(const Op&);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
+    //
+    //  fOpType
+    //      Indicates the type of operation
     //
     //  fNextOp
     //      Points to the next operation in the chain
-	//		
-    //  fOpType
-    //      Indicates the type of operation
     // -----------------------------------------------------------------------
-	const Op*	fNextOp;
-	short		fOpType;
+    short fOpType;
+    const Op*   fNextOp;
 };
 
 
@@ -318,61 +318,6 @@ inline const Op* Op::getNextOp() const {
 	return fNextOp;
 }
 
-inline int Op::getSize() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline XMLInt32	Op::getData() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline XMLInt32	Op::getData2() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline int	Op::getRefNo() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline const Op* Op::elementAt(int index) const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline const Op* Op::getChild() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline const Op* Op::getConditionFlow() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline const Op* Op::getYesFlow() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline const Op* Op::getNoFlow() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-	
-inline const XMLCh* Op::getLiteral() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-	
-inline const Token* Op::getToken() const {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
 // ---------------------------------------------------------------------------
 //  Op: setter methods
 // ---------------------------------------------------------------------------
@@ -384,97 +329,6 @@ inline void Op::setOpType(const short type) {
 inline void Op::setNextOp(const Op* const nextOp) {
 	
 	fNextOp = nextOp;
-}
-
-// ---------------------------------------------------------------------------
-//  CharOp: getter/setter methods
-// ---------------------------------------------------------------------------
-inline XMLInt32 CharOp::getData() const {
-
-	return fCharData;
-}
-
-// ---------------------------------------------------------------------------
-//  UnionOp: getter/setter methods
-// ---------------------------------------------------------------------------
-inline int UnionOp::getSize() const {
-
-	return fBranches->size();
-}
-
-inline const Op* UnionOp::elementAt(int index) const {
-
-	return fBranches->elementAt(index);
-}
-
-inline void UnionOp::addElement(Op* const op) {
-
-	fBranches->addElement(op);
-}
-
-// ---------------------------------------------------------------------------
-//  ChildOp: getter/setter methods
-// ---------------------------------------------------------------------------
-inline const Op* ChildOp::getChild() const {
-
-	return fChild;
-}
-
-inline void ChildOp::setChild(const Op* const child) {
-
-	fChild = child;
-}
-
-// ---------------------------------------------------------------------------
-//  ModifierOp: getter methods
-// ---------------------------------------------------------------------------
-inline XMLInt32 ModifierOp::getData() const {
-
-	return fVal1;
-}
-
-inline XMLInt32 ModifierOp::getData2() const {
-
-	return fVal2;
-}
-
-// ---------------------------------------------------------------------------
-//  RangeOp: getter methods
-// ---------------------------------------------------------------------------
-inline const Token* RangeOp::getToken() const {
-
-	return fToken;
-}
-
-// ---------------------------------------------------------------------------
-//  StringOp: getter methods
-// ---------------------------------------------------------------------------
-inline const XMLCh* StringOp::getLiteral() const {
-
-	return fLiteral;
-}
-
-// ---------------------------------------------------------------------------
-//  ConditionOp: getter methods
-// ---------------------------------------------------------------------------
-inline int ConditionOp::getRefNo() const {
-	
-	return fRefNo;
-}
-
-inline const Op* ConditionOp::getConditionFlow() const {
-
-	return fConditionOp;
-}
-
-inline const Op* ConditionOp::getYesFlow() const {
-
-	return fYesOp;
-}
-
-inline const Op* ConditionOp::getNoFlow() const {
-
-	return fNoOp;
 }
 
 #endif

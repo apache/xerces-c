@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/06/01 14:15:37  knoaman
+ * Add a return value to satisfy compilers that complain about
+ * no return value, although that code will not be executed.
+ *
  * Revision 1.4  2001/05/11 21:50:56  knoaman
  * Schema updates and fixes.
  *
@@ -111,21 +115,21 @@ ParserForXMLSchema::~ParserForXMLSchema() {
 // ---------------------------------------------------------------------------
 Token* ParserForXMLSchema::processCaret() {
 
-	processNext();
-	return getTokenFactory()->createChar(chCaret);
+    processNext();
+    return getTokenFactory()->createChar(chCaret);
 }
 
 Token* ParserForXMLSchema::processDollar() {
 
-	processNext();
-	return getTokenFactory()->createChar(chDollarSign);
+    processNext();
+    return getTokenFactory()->createChar(chDollarSign);
 }
 
 Token* ParserForXMLSchema::processPlus(Token* const tok) {
 
-	processNext();
+    processNext();
     return getTokenFactory()->createConcat(tok,
-		                       getTokenFactory()->createClosure(tok));
+                               getTokenFactory()->createClosure(tok));
 }
 
 Token* ParserForXMLSchema::processStar(Token* const tok) {
@@ -140,9 +144,9 @@ Token* ParserForXMLSchema::processQuestion(Token* const tok) {
 
     TokenFactory* tokFactory = getTokenFactory();
     Token* retTok = tokFactory->createUnion();
-	retTok->addChild(tok, tokFactory);
-	retTok->addChild(tokFactory->createToken(Token::EMPTY), tokFactory);
-	return retTok;
+    retTok->addChild(tok, tokFactory);
+    retTok->addChild(tokFactory->createToken(Token::EMPTY), tokFactory);
+    return retTok;
 }
 
 Token* ParserForXMLSchema::processParen() {
@@ -160,24 +164,24 @@ Token* ParserForXMLSchema::processParen() {
 
 RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
-	setParseContext(S_INBRACKETS);
+    setParseContext(S_INBRACKETS);
     processNext();
 
     RangeToken* base = 0;
     RangeToken* tok = 0;
-	bool isNRange = false;
+    bool isNRange = false;
 
-	if (getState() == T_CHAR && getCharData() == chCaret) {
+    if (getState() == T_CHAR && getCharData() == chCaret) {
 
         isNRange = true;
         processNext();
         base = getTokenFactory()->createRange();
         base->addRange(0, Token::UTF16_MAX);
         tok = getTokenFactory()->createRange();
-	}
-	else {
+    }
+    else {
         tok= getTokenFactory()->createRange();
-	}
+    }
 
     int type;
     bool firstLoop = true;
@@ -190,9 +194,9 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
             if (isNRange) {
 
                 base->subtractRanges(tok);
-				tok = base;
+                tok = base;
             }
-			break;
+            break;
         }
 
         XMLInt32 ch = getCharData();
@@ -201,14 +205,14 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
         if (type == T_BACKSOLIDUS) {
 
             switch(ch) {
-			case chLatin_d:
-			case chLatin_D:
-			case chLatin_w:
-			case chLatin_W:
-			case chLatin_s:
-			case chLatin_S:
+            case chLatin_d:
+            case chLatin_D:
+            case chLatin_w:
+            case chLatin_W:
+            case chLatin_s:
+            case chLatin_S:
                 {
-				    tok->mergeRanges(getTokenForShorthand(ch));
+                    tok->mergeRanges(getTokenForShorthand(ch));
                     end = true;
                 }
                 break;
@@ -218,8 +222,8 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
             case chLatin_C:
                 {
                     ch = processCInCharacterClass(tok, ch);
-					if (ch < 0) {
-					    end = true;
+                    if (ch < 0) {
+                        end = true;
                     }
                 }
                 break;
@@ -230,27 +234,27 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                     RangeToken* tok2 = processBacksolidus_pP(ch);
 
                     if (tok2 == 0) {
-						ThrowXML(ParseException,XMLExcepts::Parser_Atom5);
+                        ThrowXML(ParseException,XMLExcepts::Parser_Atom5);
                     }
 
-					tok->mergeRanges(tok2);
-					end = true;
+                    tok->mergeRanges(tok2);
+                    end = true;
                 }
                 break;
-			default:
-				ch = decodeEscaped();
-			}
+            default:
+                ch = decodeEscaped();
+            }
         } // end if T_BACKSOLIDUS
         else if (type == T_XMLSCHEMA_CC_SUBTRACTION && !firstLoop) {
 
             if (isNRange) {
 
-			    base->subtractRanges(tok);
+                base->subtractRanges(tok);
                 tok = base;
             }
 
-			RangeToken* rangeTok = parseCharacterClass(false);
-			tok->subtractRanges(rangeTok);
+            RangeToken* rangeTok = parseCharacterClass(false);
+            tok->subtractRanges(rangeTok);
 
             if (getState() != T_CHAR || getCharData() != chCloseSquare) {
                 ThrowXML(ParseException,XMLExcepts::Parser_CC5);
@@ -264,92 +268,96 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
             if (type == T_CHAR) {
 
-				if (ch == chOpenSquare)
-					ThrowXML(ParseException,XMLExcepts::Parser_CC6);
+                if (ch == chOpenSquare)
+                    ThrowXML(ParseException,XMLExcepts::Parser_CC6);
 
-				if (ch == chCloseSquare)
+                if (ch == chCloseSquare)
                     ThrowXML(ParseException,XMLExcepts::Parser_CC7);
             }
 
-			if (getState() != T_CHAR || getCharData() != chDash) {
-				tok->addRange(ch, ch);
-			}
-			else {
+            if (getState() != T_CHAR || getCharData() != chDash) {
+                tok->addRange(ch, ch);
+            }
+            else {
 
-				processNext();
+                processNext();
                 if ((type = getState()) == T_EOF)
-					ThrowXML(ParseException,XMLExcepts::Parser_CC2);
+                    ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
-				if (type == T_CHAR && getCharData() == chCloseSquare) {
+                if (type == T_CHAR && getCharData() == chCloseSquare) {
 
-					tok->addRange(ch, ch);
-					tok->addRange(chDash, chDash);
-				}
-				else if (type == T_XMLSCHEMA_CC_SUBTRACTION) {
-					tok->addRange(ch, ch);
-					tok->addRange(chDash, chDash);
-				}
-				else {
+                    tok->addRange(ch, ch);
+                    tok->addRange(chDash, chDash);
+                }
+                else if (type == T_XMLSCHEMA_CC_SUBTRACTION) {
+                    tok->addRange(ch, ch);
+                    tok->addRange(chDash, chDash);
+                }
+                else {
 
-					XMLInt32 rangeEnd = getCharData();
+                    XMLInt32 rangeEnd = getCharData();
 
-					if (type == T_CHAR) {
+                    if (type == T_CHAR) {
 
-						if (rangeEnd == chOpenSquare)
-							ThrowXML(ParseException,XMLExcepts::Parser_CC6);
+                        if (rangeEnd == chOpenSquare)
+                            ThrowXML(ParseException,XMLExcepts::Parser_CC6);
 
-						if (rangeEnd == chCloseSquare)
-							ThrowXML(ParseException,XMLExcepts::Parser_CC7);
-					}
+                        if (rangeEnd == chCloseSquare)
+                            ThrowXML(ParseException,XMLExcepts::Parser_CC7);
+                    }
 
-					if (type == T_BACKSOLIDUS) {
-						rangeEnd = decodeEscaped();
-					}
+                    if (type == T_BACKSOLIDUS) {
+                        rangeEnd = decodeEscaped();
+                    }
 
-					processNext();
-					tok->addRange(ch, rangeEnd);
-				}
-			}
+                    processNext();
+                    tok->addRange(ch, rangeEnd);
+                }
+            }
         }
-		firstLoop = false;
+        firstLoop = false;
     }
 
-	if (getState() == T_EOF)
-		ThrowXML(ParseException,XMLExcepts::Parser_CC2);
+    if (getState() == T_EOF)
+        ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
-	tok->sortRanges();
-	tok->compactRanges();
-	setParseContext(S_NORMAL);
-	processNext();
+    tok->sortRanges();
+    tok->compactRanges();
+    setParseContext(S_NORMAL);
+    processNext();
 
-	return tok;
+    return tok;
 }
 
 XMLInt32 ParserForXMLSchema::processCInCharacterClass(RangeToken* const tok,
                                                       const XMLInt32 ch)
 {
-	tok->mergeRanges(getTokenForShorthand(ch));
-	return -1;
+    tok->mergeRanges(getTokenForShorthand(ch));
+    return -1;
 }
 
 Token* ParserForXMLSchema::processLook(const unsigned short tokType) {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_A() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_B() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_b() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_C() {
@@ -360,81 +368,92 @@ Token* ParserForXMLSchema::processBacksolidus_C() {
 
 Token* ParserForXMLSchema::processBacksolidus_c() {
 
-	processNext();
-	return getTokenForShorthand(chLatin_c);
+    processNext();
+    return getTokenForShorthand(chLatin_c);
 }
 
 Token* ParserForXMLSchema::processBacksolidus_g() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_gt() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_I() {
 
-	processNext();
-	return getTokenForShorthand(chLatin_I);
+    processNext();
+    return getTokenForShorthand(chLatin_I);
 }
 
 Token* ParserForXMLSchema::processBacksolidus_i() {
 
-	processNext();
-	return getTokenForShorthand(chLatin_i);
+    processNext();
+    return getTokenForShorthand(chLatin_i);
 }
 
 Token* ParserForXMLSchema::processBacksolidus_lt() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_X() {
 
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_Z() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_z() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBackReference() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processCondition() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processIndependent() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processModifiers() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processParen2() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 RangeToken* ParserForXMLSchema::parseSetOperations() {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
 }
 
 // ---------------------------------------------------------------------------
@@ -479,36 +498,36 @@ bool ParserForXMLSchema::checkQuestion(const int off) {
 
 XMLInt32 ParserForXMLSchema::decodeEscaped() {
 
-	if (getState() != T_BACKSOLIDUS)
-		ThrowXML(ParseException,XMLExcepts::Parser_Next1);;
+    if (getState() != T_BACKSOLIDUS)
+        ThrowXML(ParseException,XMLExcepts::Parser_Next1);;
 
-	XMLInt32 ch = getCharData();
+    XMLInt32 ch = getCharData();
 
-	switch (ch) {
-	case chLatin_n:
-		ch = chLF;
-		break;
-	case chLatin_r:
-		ch = chCR;
-		break;
-	case chLatin_t:
-		ch = chHTab;
-		break;
-	case chLatin_e:
-	case chLatin_f:
-	case chLatin_x:
-	case chLatin_u:
-	case chLatin_v:
-		ThrowXML(ParseException,XMLExcepts::Parser_Process1);
-	case chLatin_A:
-	case chLatin_Z:
-	case chLatin_z:
-		ThrowXML(ParseException,XMLExcepts::Parser_Descape5);
-	}
+    switch (ch) {
+    case chLatin_n:
+        ch = chLF;
+        break;
+    case chLatin_r:
+        ch = chCR;
+        break;
+    case chLatin_t:
+        ch = chHTab;
+        break;
+    case chLatin_e:
+    case chLatin_f:
+    case chLatin_x:
+    case chLatin_u:
+    case chLatin_v:
+        ThrowXML(ParseException,XMLExcepts::Parser_Process1);
+    case chLatin_A:
+    case chLatin_Z:
+    case chLatin_z:
+        ThrowXML(ParseException,XMLExcepts::Parser_Descape5);
+    }
 
-	return ch;
+    return ch;
 }
 
 /**
-  *	End of file ParserForXMLSchema.cpp
+  * End of file ParserForXMLSchema.cpp
   */

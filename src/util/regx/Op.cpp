@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/01 14:15:36  knoaman
+ * Add a return value to satisfy compilers that complain about
+ * no return value, although that code will not be executed.
+ *
  * Revision 1.2  2001/05/11 13:26:43  tng
  * Copyright update.
  *
@@ -73,17 +77,95 @@
 // ---------------------------------------------------------------------------
 //  Op: Constructors and Destructors
 // ---------------------------------------------------------------------------
-Op::Op(const short type) :	fNextOp(0),
-							fOpType(type) {
+Op::Op(const short type) : fOpType(type),
+                           fNextOp(0) {
 
 }
+
+// ---------------------------------------------------------------------------
+//  Op: Getter methods
+// ---------------------------------------------------------------------------
+int Op::getSize() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value    
+}
+
+XMLInt32 Op::getData() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
+XMLInt32 Op::getData2() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
+int Op::getRefNo() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
+const Op* Op::elementAt(int index) const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
+const Op* Op::getChild() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
+const Op* Op::getConditionFlow() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
+const Op* Op::getYesFlow() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
+const Op* Op::getNoFlow() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+	
+const XMLCh* Op::getLiteral() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+	
+const Token* Op::getToken() const {
+
+	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // for compilers that complain about no return value
+}
+
 
 // ---------------------------------------------------------------------------
 //  CharOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
 CharOp::CharOp(const short type, const XMLInt32 charData)
     : Op(type)
-	  , fCharData(charData) {
+      , fCharData(charData) {
+}
+
+// ---------------------------------------------------------------------------
+//  CharOp: Getter methods
+// ---------------------------------------------------------------------------
+XMLInt32 CharOp::getData() const {
+
+	return fCharData;
 }
 
 // ---------------------------------------------------------------------------
@@ -91,8 +173,26 @@ CharOp::CharOp(const short type, const XMLInt32 charData)
 // ---------------------------------------------------------------------------
 UnionOp::UnionOp(const short type, const int size)
     : Op(type)
-	  , fBranches(new RefVectorOf<Op> (size, false)) {
-	
+      , fBranches(new RefVectorOf<Op> (size, false)) {
+
+}
+
+// ---------------------------------------------------------------------------
+//  UnionOp: Getter/Setter methods
+// ---------------------------------------------------------------------------
+int UnionOp::getSize() const {
+
+	return fBranches->size();
+}
+
+const Op* UnionOp::elementAt(int index) const {
+
+	return fBranches->elementAt(index);
+}
+
+void UnionOp::addElement(Op* const op) {
+
+	fBranches->addElement(op);
 }
 
 // ---------------------------------------------------------------------------
@@ -100,8 +200,21 @@ UnionOp::UnionOp(const short type, const int size)
 // ---------------------------------------------------------------------------
 ChildOp::ChildOp(const short type)
     : Op(type)
-	  , fChild(0) {
+      , fChild(0) {
 
+}
+
+// ---------------------------------------------------------------------------
+//  ChildOp: Getter/Setter methods
+// ---------------------------------------------------------------------------
+const Op* ChildOp::getChild() const {
+
+	return fChild;
+}
+
+void ChildOp::setChild(const Op* const child) {
+
+	fChild = child;
 }
 
 // ---------------------------------------------------------------------------
@@ -109,9 +222,22 @@ ChildOp::ChildOp(const short type)
 // ---------------------------------------------------------------------------
 ModifierOp::ModifierOp(const short type, const XMLInt32 v1, const XMLInt32 v2)
     : ChildOp(type)
-	  , fVal1(v1)
+      , fVal1(v1)
       , fVal2(v2) {
 
+}
+
+// ---------------------------------------------------------------------------
+//  ModifierOp: Getter methods
+// ---------------------------------------------------------------------------
+XMLInt32 ModifierOp::getData() const {
+
+	return fVal1;
+}
+
+XMLInt32 ModifierOp::getData2() const {
+
+	return fVal2;
 }
 
 // ---------------------------------------------------------------------------
@@ -124,6 +250,15 @@ RangeOp::RangeOp(const short type, const Token* const token)
 }
 
 // ---------------------------------------------------------------------------
+//  RangeOp: Getter methods
+// ---------------------------------------------------------------------------
+const Token* RangeOp::getToken() const {
+
+	return fToken;
+}
+
+
+// ---------------------------------------------------------------------------
 //  StringOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
 StringOp::StringOp(const short type, const XMLCh* const literal)
@@ -133,19 +268,50 @@ StringOp::StringOp(const short type, const XMLCh* const literal)
 }
 
 // ---------------------------------------------------------------------------
+//  StringOp: Getter methods
+// ---------------------------------------------------------------------------
+const XMLCh* StringOp::getLiteral() const {
+
+	return fLiteral;
+}
+
+// ---------------------------------------------------------------------------
 //  ConditionOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
 ConditionOp::ConditionOp(const short type, const int refNo,
-						 const Op* const condFlow, const Op* const yesFlow,
-						 const Op* const noFlow)
-	: Op (type)
-	  , fRefNo(refNo)
-	  , fConditionOp(condFlow)
-	  , fYesOp(yesFlow)
-	  , fNoOp(noFlow) {
+                         const Op* const condFlow, const Op* const yesFlow,
+                         const Op* const noFlow)
+    : Op (type)
+      , fRefNo(refNo)
+      , fConditionOp(condFlow)
+      , fYesOp(yesFlow)
+      , fNoOp(noFlow) {
 
 }
 
+// ---------------------------------------------------------------------------
+//  ConditionOp: Getter methods
+// ---------------------------------------------------------------------------
+int ConditionOp::getRefNo() const {
+	
+	return fRefNo;
+}
+
+const Op* ConditionOp::getConditionFlow() const {
+
+	return fConditionOp;
+}
+
+const Op* ConditionOp::getYesFlow() const {
+
+	return fYesOp;
+}
+
+const Op* ConditionOp::getNoFlow() const {
+
+	return fNoOp;
+}
+
 /**
-  *	End file Op.cpp
+  * End file Op.cpp
   */
