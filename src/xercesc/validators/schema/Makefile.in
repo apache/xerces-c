@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2003/06/20 21:56:07  peiyongz
+# Stateless Grammar Pool :: Part I
+#
 # Revision 1.8  2003/06/20 19:03:03  peiyongz
 # Stateless Grammar Pool :: Part I
 #
@@ -202,7 +205,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	XercesAttGroupInfo.$(TO) \
 	XercesElementWildcard.$(TO) \
 	XercesGroupInfo.$(TO) \
-	XMLSchemaDescriptionImpl.$(TO) \	
+	XMLSchemaDescriptionImpl.$(TO) \
 	XUtil.$(TO) \
 	XSDDOMParser.$(TO) \
 	XSDLocator.$(TO) \
