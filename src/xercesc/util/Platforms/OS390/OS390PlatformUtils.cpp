@@ -872,9 +872,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
 {
 
     //
-    //  NOTE: THe path provided has always already been opened successfully,
+    //  NOTE: The path provided has always already been opened successfully,
     //  so we know that its not some pathological freaky path. It comes in
-    //  in native format, and goes out as Unicode always
+    //  in Unicode, and goes out as Unicode always
     //
     char* newSrc = XMLString::transcode(srcPath, manager);
     ArrayJanitor<char> janText(newSrc, manager);
@@ -882,17 +882,38 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     Path390 pathobj;
     pathobj.setPath(newSrc);
 
-    // Use a local buffer that is big enough for the largest legal path
-    char *absPath = (char*) manager->allocate((_POSIX_PATH_MAX+1) * sizeof(char));//new char[_POSIX_PATH_MAX];
-    ArrayJanitor<char> janText2(absPath, manager);
+    // Check if this is a relative path that we care about ....
+    // If it is, then use getCurrentDirectory and append
+    // the relative part passed in to those results
+    if ( (pathobj.isRelative()) && 
+         ( (pathobj.getPathType() == PATH390_HFS) ||
+           (pathobj.getPathType() == PATH390_OTHER) ) )
+       { 
+          XMLCh* curDir = getCurrentDirectory(manager);
+          ArrayJanitor<XMLCh> janText1(curDir, manager);
 
-    if ( (pathobj.getPathType() == PATH390_HFS) || (pathobj.getPathType() == PATH390_OTHER) ) {
-       //get the absolute path
-       if (getcwd(absPath, _POSIX_PATH_MAX) == NULL) {
-          ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
-       }
-       return XMLString::transcode(absPath, manager);
-    }
+          int curDirLen = XMLString::stringLen(curDir);
+          int srcPathLen = XMLString::stringLen(srcPath);
+
+          XMLCh* fullPath = (XMLCh*) manager->allocate
+          (
+             (curDirLen + srcPathLen + 2) * sizeof(XMLCh)
+          );
+
+          // Copy the current directory to the new buffer, then
+          // follow it by a slash, then add relative path after that.  
+          XMLString::copyString(fullPath, curDir);
+          fullPath[curDirLen] = chForwardSlash;
+          XMLString::copyString(&fullPath[curDirLen +1], srcPath);
+
+          // get rid of the redundant stuff
+          removeDotSlash(fullPath);
+          removeDotDotSlash(fullPath);
+        
+          return fullPath;
+        }
+
+    // Just return what they sent in since it wasn't relative
     return XMLString::transcode(newSrc, manager);
 }
 
@@ -940,14 +961,16 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
 XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
 
-    /*** 
-     *  REVISIT:
-     * 
-     *   To be implemented later
-    ***/
+    // Use a local buffer that is big enough for the largest legal path
+    char *absPath = (char*) manager->allocate((_POSIX_PATH_MAX+1) * sizeof(char));
+    ArrayJanitor<char> janText2(absPath, manager);
+    if (getcwd(absPath, _POSIX_PATH_MAX) == NULL) 
+    {
+       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
+    }
+        
+    return XMLString::transcode(absPath, manager);
 
-    XMLCh curDir[]={ chPeriod, chForwardSlash, chNull};
-    return getFullPath(curDir, manager);
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 
