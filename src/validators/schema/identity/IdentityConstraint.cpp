@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/15 17:10:19  knoaman
+ * Particle derivation checking support.
+ *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
  *
@@ -93,6 +96,38 @@ IdentityConstraint::IdentityConstraint(const XMLCh* const identityConstraintName
 IdentityConstraint::~IdentityConstraint()
 {
     cleanUp();
+}
+
+// ---------------------------------------------------------------------------
+//  IdentityConstraint: operators
+// ---------------------------------------------------------------------------
+bool IdentityConstraint::operator ==(const IdentityConstraint& other) const {
+
+    if (getType() != other.getType())
+        return false;
+
+    if (XMLString::compareString(fIdentityConstraintName, other.fIdentityConstraintName))
+        return false;
+
+    if (*fSelector != *(other.fSelector))
+        return false;
+
+    unsigned int fieldCount = fFields->size();
+
+    if (fieldCount != other.fFields->size())
+        return false;
+
+    for (unsigned int i = 0; i < fieldCount; i++) {
+        if (*(fFields->elementAt(i)) != *(other.fFields->elementAt(i)))
+            return false;
+    }
+
+    return true;
+}
+
+bool IdentityConstraint::operator !=(const IdentityConstraint& other) const {
+
+    return !operator==(other);
 }
 
 // ---------------------------------------------------------------------------

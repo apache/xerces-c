@@ -103,6 +103,7 @@ public:
     // -----------------------------------------------------------------------
     bool                     getAbstract() const;
     bool                     getAdoptContentSpec() const;
+    bool                     containsAttWithTypeId() const;
     int                      getDerivedBy() const;
     int                      getBlockSet() const;
     int                      getFinalSet() const;
@@ -133,6 +134,7 @@ public:
     // -----------------------------------------------------------------------
     void setAbstract(const bool isAbstract);
     void setAdoptContentSpec(const bool toAdopt);
+    void setAttWithTypeId(const bool value);
     void setDerivedBy(const int derivedBy);
     void setBlockSet(const int blockSet);
     void setFinalSet(const int finalSet);
@@ -194,6 +196,7 @@ private:
     // -----------------------------------------------------------------------
     bool                               fAbstract;
     bool                               fAdoptContentSpec;
+    bool                               fAttWithTypeId;
     int                                fDerivedBy;
     int                                fBlockSet;
     int                                fFinalSet;
@@ -228,6 +231,11 @@ inline bool ComplexTypeInfo::getAbstract() const {
 inline bool ComplexTypeInfo::getAdoptContentSpec() const {
 
     return fAdoptContentSpec;
+}
+
+inline bool ComplexTypeInfo::containsAttWithTypeId() const {
+
+    return fAttWithTypeId;
 }
 
 inline int ComplexTypeInfo::getDerivedBy() const {
@@ -363,6 +371,11 @@ inline void ComplexTypeInfo::setAbstract(const bool isAbstract) {
 inline void ComplexTypeInfo::setAdoptContentSpec(const bool toAdopt) {
 
     fAdoptContentSpec = toAdopt;
+}
+
+inline void ComplexTypeInfo::setAttWithTypeId(const bool value) {
+
+    fAttWithTypeId = value;
 }
 
 inline void ComplexTypeInfo::setDerivedBy(const int derivedBy) {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/15 17:10:19  knoaman
+ * Particle derivation checking support.
+ *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
  *
@@ -94,10 +97,12 @@ void SelectorMatcher::startDocumentFragment() {
 }
 
 void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
+                                   const unsigned int urlId,
+                                   const XMLCh* const elemPrefix,
                                    const RefVectorOf<XMLAttr>& attrList,
                                    const unsigned int attrCount) {
 
-    XPathMatcher::startElement(elemDecl, attrList, attrCount);
+    XPathMatcher::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
     fElementDepth++;
     
     // activate the fields, if selector is matched
@@ -114,7 +119,7 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
             IC_Field* field = ic->getFieldAt(i);
             XPathMatcher* matcher = fFieldActivator->activateField(field);
 
-            matcher->startElement(elemDecl, attrList, attrCount);
+            matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
         }
     }
 }
@@ -144,6 +149,19 @@ IC_Selector::IC_Selector(XercesXPath* const xpath,
 IC_Selector::~IC_Selector()
 {
     delete fXPath;
+}
+
+// ---------------------------------------------------------------------------
+//  IC_Selector: operators
+// ---------------------------------------------------------------------------
+bool IC_Selector::operator ==(const IC_Selector& other) const {
+
+    return (*fXPath == *(other.fXPath));
+}
+
+bool IC_Selector::operator !=(const IC_Selector& other) const {
+
+    return !operator==(other);
 }
 
 // ---------------------------------------------------------------------------

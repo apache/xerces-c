@@ -110,7 +110,9 @@ public:
     virtual void startDocumentFragment();
     virtual void endDocumentFragment();
     virtual void startElement(const XMLElementDecl& elemDecl,
-		                      const RefVectorOf<XMLAttr>& attrList,
+                              const unsigned int urlId,
+                              const XMLCh* const elemPrefix,
+                              const RefVectorOf<XMLAttr>& attrList,
                               const unsigned int attrCount);
     virtual void endElement(const XMLElementDecl& elemDecl);
     virtual void docCharacters(const XMLCh* const chars, const unsigned int length);

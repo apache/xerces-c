@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/15 17:10:19  knoaman
+ * Particle derivation checking support.
+ *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
  *
@@ -176,6 +179,8 @@ void XPathMatcher::startDocumentFragment() {
 }
 
 void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
+                                const unsigned int urlId,
+                                const XMLCh* const elemPrefix,
 								const RefVectorOf<XMLAttr>& attrList,
                                 const unsigned int attrCount) {
 
@@ -196,7 +201,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
         int stepSize = locPath->getStepSize();
 
         while (fCurrentStep[i] < stepSize &&
-               locPath->getStep(fCurrentStep[i])->getAxis()->getType() == XercesAxis::SELF) {
+               locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::SELF) {
             fCurrentStep[i]++;
         }
 
@@ -220,7 +225,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
         int descendantStep = fCurrentStep[i];
 
         while (fCurrentStep[i] < stepSize &&
-               locPath->getStep(fCurrentStep[i])->getAxis()->getType() == XercesAxis::DESCENDANT) {
+               locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::DESCENDANT) {
             fCurrentStep[i]++;
         }
 
@@ -232,14 +237,17 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
         // match child::... step, if haven't consumed any self::node()
         if ((fCurrentStep[i] == startStep || fCurrentStep[i] > descendantStep) &&
-            locPath->getStep(fCurrentStep[i])->getAxis()->getType() == XercesAxis::CHILD) {
+            locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::CHILD) {
 
             XercesStep* step = locPath->getStep(fCurrentStep[i]);
             XercesNodeTest* nodeTest = step->getNodeTest();
 
             if (nodeTest->getType() == XercesNodeTest::QNAME) {
 
-                if (!(*(nodeTest->getName()) == *(elemDecl.getElementName()))) {
+                QName elemQName(elemPrefix, elemDecl.getElementName()->getLocalPart(), urlId);
+
+//                if (!(*(nodeTest->getName()) == *(elemDecl.getElementName()))) {
+                if (!(*(nodeTest->getName()) == elemQName)) {
 
                     if(fCurrentStep[i] > descendantStep) {
                         fCurrentStep[i] = descendantStep;
@@ -269,7 +277,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
         // match attribute::... step
         if (fCurrentStep[i] < stepSize &&
-            locPath->getStep(fCurrentStep[i])->getAxis()->getType() == XercesAxis::ATTRIBUTE) {
+            locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::ATTRIBUTE) {
 
             if (attrCount) {
 

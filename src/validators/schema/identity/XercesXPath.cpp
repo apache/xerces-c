@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/15 17:10:19  knoaman
+ * Particle derivation checking support.
+ *
  * Revision 1.2  2001/11/07 14:25:36  knoaman
  * Fix compliation error on Unix.
  *
@@ -92,33 +95,6 @@ const XMLByte XPathScanner::fASCIICharMap[128] =
     1, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
     20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,  1, 24,  1,  1,  1
 };
-
-
-// ---------------------------------------------------------------------------
-//  XercesAxis: Constructors and Destructor
-// ---------------------------------------------------------------------------
-XercesAxis::XercesAxis(const short aType)
-    : fType(aType)
-{
-}
-
-XercesAxis::XercesAxis(const XercesAxis& other)
-    : fType(other.fType)
-{
-}
-
-// ---------------------------------------------------------------------------
-//  XercesAxis: Operators
-// ---------------------------------------------------------------------------
-XercesAxis& XercesAxis::operator=(const XercesAxis& other)
-{
-    if (this == &other)
-        return *this;
-
-    fType = other.fType;
-    return *this;
-    
-}
 
 
 // ---------------------------------------------------------------------------
@@ -164,21 +140,36 @@ XercesNodeTest& XercesNodeTest::operator=(const XercesNodeTest& other)
     return *this;
 }
 
+bool XercesNodeTest::operator ==(const XercesNodeTest& other) const {
+
+    if (this == &other)
+        return true;
+
+    if (fType != other.fType)
+        return false;
+
+    return (*fName == *(other.fName));
+}
+
+
+bool XercesNodeTest::operator !=(const XercesNodeTest& other) const {
+
+    return !operator==(other);
+}
 
 // ---------------------------------------------------------------------------
 //  XercesStep: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XercesStep::XercesStep(XercesAxis* const axis, XercesNodeTest* const nodeTest)
-    : fAxis(axis)
+XercesStep::XercesStep(const unsigned short axisType, XercesNodeTest* const nodeTest)
+    : fAxisType(axisType)
     , fNodeTest(nodeTest)
 {
 }
 
 XercesStep::XercesStep(const XercesStep& other)
-    : fAxis(0)
+    : fAxisType(other.fAxisType)
     , fNodeTest(0)
 {
-    fAxis = new XercesAxis(*(other.fAxis));
     fNodeTest = new XercesNodeTest(*(other.fNodeTest));
 }
 
@@ -191,11 +182,31 @@ XercesStep& XercesStep::operator=(const XercesStep& other)
     if (this == &other)
         return *this;
 
-    *fAxis = *(other.fAxis);
+    fAxisType = other.fAxisType;
     *fNodeTest = *(other.fNodeTest);
     return *this;
 }
 
+bool XercesStep::operator==(const XercesStep& other) const {
+
+    if (this == &other)
+        return true;
+
+    if (fAxisType != other.fAxisType)
+        return false;
+
+    if (fAxisType == XercesStep::CHILD ||
+        fAxisType == XercesStep::ATTRIBUTE) {
+        return (*fNodeTest == *(other.fNodeTest));
+    }
+
+    return true;
+}
+
+bool XercesStep::operator!=(const XercesStep& other) const {
+
+    return !operator==(other);
+}
 
 // ---------------------------------------------------------------------------
 //  XercesLocationPath: Constructors and Destructor
@@ -208,6 +219,29 @@ XercesLocationPath::XercesLocationPath()
 XercesLocationPath::XercesLocationPath(RefVectorOf<XercesStep>* const steps)
     : fSteps(steps)
 {
+}
+
+// ---------------------------------------------------------------------------
+//  XercesLocationPath: Operators
+// ---------------------------------------------------------------------------
+bool XercesLocationPath::operator==(const XercesLocationPath& other) const {
+
+    unsigned int stepsSize = fSteps->size();
+
+    if (stepsSize != other.fSteps->size())
+        return false;
+
+    for (unsigned int i=0; i < stepsSize; i++) {
+        if (*(fSteps->elementAt(i)) != *(other.fSteps->elementAt(i)))
+            return false;
+    }
+
+    return true;
+}
+
+bool XercesLocationPath::operator!=(const XercesLocationPath& other) const {
+
+    return !operator==(other);
 }
 
 // ---------------------------------------------------------------------------
@@ -242,6 +276,29 @@ XercesXPath::~XercesXPath() {
 
 
 // ---------------------------------------------------------------------------
+//  XercesXPath: Operators
+// ---------------------------------------------------------------------------
+bool XercesXPath::operator==(const XercesXPath& other) const {
+
+    unsigned int locPathSize = fLocationPaths->size();
+
+    if (locPathSize != other.fLocationPaths->size())
+        return false;
+
+    for (unsigned int i=0; i < locPathSize; i++) {
+        if (*(fLocationPaths->elementAt(i)) != *(other.fLocationPaths->elementAt(i)))
+            return false;
+    }
+
+    return true;
+}
+
+bool XercesXPath::operator!=(const XercesXPath& other) const {
+
+    return !operator==(other);
+}
+
+// ---------------------------------------------------------------------------
 //  XercesPath: Helper methods
 // ---------------------------------------------------------------------------
 void XercesXPath::cleanUp() {
@@ -261,10 +318,7 @@ void XercesXPath::checkForSelectedAttributes() {
         unsigned int stepSize = locPath->getStepSize();
 
         if (stepSize) {
-
-            XercesAxis* axis = locPath->getStep(stepSize - 1)->getAxis();
-
-            if (axis->getType() == XercesAxis::ATTRIBUTE) {
+            if (locPath->getStep(stepSize - 1)->getAxisType() == XercesStep::ATTRIBUTE) {
                 ThrowXML(XPathException, XMLExcepts::XPath_NoAttrSelector);
             }        
 		}
@@ -343,9 +397,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                 case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
                     {
-                        XercesAxis* axis = new XercesAxis(XercesAxis::ATTRIBUTE);
                         XercesNodeTest* nodeTest = new XercesNodeTest(XercesNodeTest::WILDCARD);
-                        XercesStep* step = new XercesStep(axis, nodeTest);
+                        XercesStep* step = new XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                         stepsVector->addElement(step);
                         break;
                     }
@@ -373,9 +426,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                         if (isNamespaceAtt) {
 
                             // build step
-                            XercesAxis* axis = new XercesAxis(XercesAxis::ATTRIBUTE);
                             XercesNodeTest* nodeTest = new XercesNodeTest(prefix, uri);
-                            XercesStep* step = new XercesStep(axis, nodeTest);
+                            XercesStep* step = new XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                             stepsVector->addElement(step);
                             break;
                         }
@@ -386,9 +438,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                         QName aQName(prefix, localPart, uri);
 
                         // build step
-                        XercesAxis* axis = new XercesAxis(XercesAxis::ATTRIBUTE);
                         XercesNodeTest* nodeTest = new XercesNodeTest(&aQName);
-                        XercesStep* step = new XercesStep(axis, nodeTest);
+                        XercesStep* step = new XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                         stepsVector->addElement(step);
                         break;
                     }
@@ -416,9 +467,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
             }
         case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
             {
-                XercesAxis* axis = new XercesAxis(XercesAxis::CHILD);
                 XercesNodeTest* nodeTest = new XercesNodeTest(XercesNodeTest::WILDCARD);
-                XercesStep* step = new XercesStep(axis, nodeTest);
+                XercesStep* step = new XercesStep(XercesStep::CHILD, nodeTest);
                 stepsVector->addElement(step);
                 firstTokenOfLocationPath = false;
                 break;
@@ -448,9 +498,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 if (isNamespace) {
 
                     // build step
-                    XercesAxis* axis = new XercesAxis(XercesAxis::CHILD);
                     XercesNodeTest* nodeTest = new XercesNodeTest(prefix, uri);
-                    XercesStep* step = new XercesStep(axis, nodeTest);
+                    XercesStep* step = new XercesStep(XercesStep::CHILD, nodeTest);
                     stepsVector->addElement(step);
                     break;
                 }
@@ -460,9 +509,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 QName aQName(prefix, localPart, uri);
 
                 // build step
-                XercesAxis* axis = new XercesAxis(XercesAxis::CHILD);
                 XercesNodeTest* nodeTest = new XercesNodeTest(&aQName);
-                XercesStep* step = new XercesStep(axis, nodeTest);
+                XercesStep* step = new XercesStep(XercesStep::CHILD, nodeTest);
                 stepsVector->addElement(step);
                 firstTokenOfLocationPath = false;
                 break;
@@ -470,9 +518,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         case XercesXPath::EXPRTOKEN_PERIOD:
             {
                 // build step
-                XercesAxis* axis = new XercesAxis(XercesAxis::SELF);
                 XercesNodeTest* nodeTest = new XercesNodeTest(XercesNodeTest::NODE);
-                XercesStep* step = new XercesStep(axis, nodeTest);
+                XercesStep* step = new XercesStep(XercesStep::SELF, nodeTest);
                 stepsVector->addElement(step);
 
                 if (firstTokenOfLocationPath && i+1 < tokenCount) {
@@ -494,9 +541,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                             }
                         }
                         // build step
-                        axis = new XercesAxis(XercesAxis::DESCENDANT);
                         nodeTest = new XercesNodeTest(XercesNodeTest::NODE);
-                        step = new XercesStep(axis, nodeTest);
+                        step = new XercesStep(XercesStep::DESCENDANT, nodeTest);
                         stepsVector->addElement(step);
                     }
                 }
@@ -1158,7 +1204,7 @@ int XPathScanner::scanNCName(const XMLCh* const data,
 
         ch = data[currentOffset];
 
-        if (!XMLReader::isNameChar(ch)) {
+        if (ch == chColon || !XMLReader::isNameChar(ch)) {
             break;
         }
     }

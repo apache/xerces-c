@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/11/15 17:10:19  knoaman
+ * Particle derivation checking support.
+ *
  * Revision 1.22  2001/11/07 21:50:28  tng
  * Fix comment log that lead to error.
  *
@@ -143,6 +146,7 @@
 ComplexTypeInfo::ComplexTypeInfo()
     : fAbstract(false)
     , fAdoptContentSpec(true)
+    , fAttWithTypeId(false)
     , fDerivedBy(0)
     , fBlockSet(0)
     , fFinalSet(0)

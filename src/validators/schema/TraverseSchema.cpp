@@ -76,7 +76,6 @@
 #include <validators/schema/SchemaGrammar.hpp>
 #include <validators/schema/SchemaAttDef.hpp>
 #include <internal/XMLReader.hpp>
-#include <validators/common/ContentSpecNode.hpp>
 #include <validators/schema/ComplexTypeInfo.hpp>
 #include <validators/schema/NamespaceScope.hpp>
 #include <validators/schema/SchemaAttDefList.hpp>
@@ -85,14 +84,11 @@
 #include <framework/LocalFileInputSource.hpp>
 #include <framework/URLInputSource.hpp>
 #include <parsers/DOMParser.hpp>
-#include <validators/datatype/InvalidDatatypeValueException.hpp>
-#include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/schema/identity/XPathException.hpp>
 #include <validators/schema/GeneralAttributeCheck.hpp>
 #include <validators/schema/XercesGroupInfo.hpp>
 #include <validators/schema/XercesAttGroupInfo.hpp>
 #include <util/HashPtr.hpp>
-#include <util/SchemaDateTimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
@@ -367,7 +363,7 @@ void TraverseSchema::doTraverseSchema(const DOM_Element& schemaRoot,
     }
 
     fSchemaInfo = currInfo;
-    fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo);
+    fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
 
     // process children nodes
     fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
@@ -398,6 +394,7 @@ void TraverseSchema::doTraverseSchema(const DOM_Element& schemaRoot,
     // Element consistency checks - substitution groups
     if (fFullConstraintChecking) {
         checkRefElementConsistency();
+        checkParticleDerivation();
     }
 }
 
@@ -505,7 +502,7 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
     }
 
     const XMLCh* includeURL = srcToFill->getSystemId();
-    SchemaInfo* includeSchemaInfo = fSchemaInfoList->get(includeURL);
+    SchemaInfo* includeSchemaInfo = fSchemaInfoList->get(includeURL, fTargetNSURI);
 
     if (includeSchemaInfo) {
 
@@ -540,8 +537,8 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
 
         if (!root.isNull()) {
 
-            const XMLCh* targetNSURIString = getElementAttValue(root,SchemaSymbols::fgATT_TARGETNAMESPACE);
-		    unsigned int targetNSLength = XMLString::stringLen(targetNSURIString);
+            const XMLCh* targetNSURIString = getTargetNamespaceString(root);
+            unsigned int targetNSLength = XMLString::stringLen(targetNSURIString);
 
             // check to see if targetNameSpace is right
             if (targetNSLength != 0
@@ -573,7 +570,7 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
                                          XMLString::replicate(includeURL),
                                          fTargetNSURIString, fStringPool, root);
 
-            fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo);
+            fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
             saveInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
             processChildren(root);
 
@@ -649,7 +646,12 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
     }
 
     const XMLCh* importURL = srcToFill->getSystemId();
-    SchemaInfo* importSchemaInfo = fSchemaInfoList->get(importURL);
+    SchemaInfo* importSchemaInfo = 0;
+
+    if (nameSpace)
+        importSchemaInfo = fSchemaInfoList->get(importURL, fURIStringPool->addOrFind(nameSpace));
+    else
+        importSchemaInfo = fSchemaInfoList->get(importURL, fEmptyNamespaceURI);
 
     if (importSchemaInfo) {
 
@@ -705,7 +707,7 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
             return;
         }
 
-        const XMLCh* targetNSURIString = getElementAttValue(root,SchemaSymbols::fgATT_TARGETNAMESPACE);
+        const XMLCh* targetNSURIString = getTargetNamespaceString(root);
 
         if (XMLString::compareString(targetNSURIString, nameSpace) != 0) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ImportNamespaceDifference,
@@ -951,6 +953,12 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
     if (XMLString::stringLen(name) == 0) { // anonymous simpleType
         name = genAnonTypeName(fgAnonSNamePrefix);
     }
+    else if (!XMLString::isValidNCName(name)) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
+                          SchemaSymbols::fgELT_SIMPLETYPE, name);
+        return -1;
+    }
 
     fBuffer.set(fTargetNSURIString);
     fBuffer.append(chComma);
@@ -1166,7 +1174,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     const XMLCh* finalAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_FINAL);
     const XMLCh* abstractAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
     int blockSet = parseBlockSet(blockAttVal, C_Block);
-    int finalSet = parseFinalSet(finalAttVal, ECS_Final);
+    int finalSet = parseFinalSet(finalAttVal, EC_Final);
 
     typeInfo->setBlockSet(blockSet);
     typeInfo->setFinalSet(finalSet);
@@ -1272,7 +1280,6 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& elem) {
     }
 
     int saveScope = fCurrentScope;
-//    unsigned int fullNameIndex = fStringPool->addOrFind(fBuffer.getRawBuffer());
     ContentSpecNode* specNode = 0;
     XercesGroupInfo* saveGroupInfo = fCurrentGroupInfo;
     
@@ -1330,6 +1337,21 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& elem) {
     fGroupRegistry->put((void*) fullName, fCurrentGroupInfo);
     fCurrentGroupInfo = saveGroupInfo;
     fCurrentScope = saveScope;
+
+    if (fRedefineComponents && fRedefineComponents->get(SchemaSymbols::fgELT_GROUP, nameIndex)) {
+
+        fBuffer.set(fullName);
+        fBuffer.append(SchemaSymbols::fgRedefIdentifier);
+        XercesGroupInfo* baseGroupInfo = fGroupRegistry->get(fBuffer.getRawBuffer());
+
+        try {
+            checkParticleDerivationOk(groupInfo->getContentSpec(), groupInfo->getScope(),
+                                      baseGroupInfo->getContentSpec(), baseGroupInfo->getScope());
+        }
+        catch (const RuntimeException& excep) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+        }
+    }
 
     return groupInfo;
 }
@@ -1750,9 +1772,36 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     const XMLCh* defaultVal = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
     const XMLCh* fixedVal = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
     const XMLCh* useVal = getElementAttValue(elem, SchemaSymbols::fgATT_USE);
+    const XMLCh* attForm = getElementAttValue(elem, SchemaSymbols::fgATT_FORM);
+    const XMLCh* dvType = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE);
     DOM_Element  simpleType = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    bool         badContent = false;    
 
-    if(defaultVal) {
+    while (simpleType != 0) {
+
+        DOMString contentName = simpleType.getLocalName();
+        fBuffer.set(contentName.rawBuffer(), contentName.length());
+
+        if (XMLString::compareString(SchemaSymbols::fgELT_SIMPLETYPE,
+                                     fBuffer.getRawBuffer()) == 0) {
+
+            if (XUtil::getNextSiblingElement(simpleType) != 0) {
+                badContent = true;
+            }
+            break;
+        }
+
+        badContent = true;
+        simpleType = XUtil::getNextSiblingElement(simpleType);
+    }
+
+    if (badContent) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttributeContent,
+                          (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
+                          (name) ? name : ref);
+    }
+
+    if (defaultVal) {
 
         if (fixedVal) {
 
@@ -1775,7 +1824,12 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::LocalAttributeWithNameRef, name);
         }
 
-        processAttributeDeclRef(elem, simpleType, typeInfo, ref, useVal);
+        // Check ref representation OK - 3.2.3::3.2
+        if (attForm || dvType || (simpleType != 0)) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttributeRefContentError);
+        }
+
+        processAttributeDeclRef(elem, typeInfo, ref, useVal, defaultVal, fixedVal);
         return;
     }
 
@@ -1788,7 +1842,6 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     }
 
     // Check for duplicate declaration
-    const XMLCh* attForm = getElementAttValue(elem, SchemaSymbols::fgATT_FORM);
     const XMLCh* qualified = SchemaSymbols::fgATTVAL_QUALIFIED;
     int uriIndex = fEmptyNamespaceURI;
 
@@ -1810,29 +1863,13 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         return;
     }
 
-    const XMLCh* typeAttr = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE);
     DatatypeValidator*  dv = 0;
     XMLAttDef::AttTypes attType;
-    DOMString contentName;
     SchemaInfo* saveInfo = fSchemaInfo;
-
-    while (simpleType != 0) {
-
-        contentName = simpleType.getLocalName();
-        fBuffer.set(contentName.rawBuffer(), contentName.length());
-
-        if (XMLString::compareString(SchemaSymbols::fgELT_SIMPLETYPE,
-                                     fBuffer.getRawBuffer()) == 0) {
-            break;
-        }
-
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttributeContent, fBuffer.getRawBuffer());
-        simpleType = XUtil::getNextSiblingElement(simpleType);
-    }
 
     if (simpleType != 0) {
 
-        if (XMLString::stringLen(typeAttr) != 0) {
+        if (XMLString::stringLen(dvType) != 0) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttributeWithTypeAndSimpleType);
         }
 
@@ -1845,15 +1882,17 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         }
 
     }
-    else if (XMLString::stringLen(typeAttr) == 0) {
+    else if (XMLString::stringLen(dvType) == 0) {
 
         attType = XMLAttDef::Simple;
         dv = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_STRING);
     }
     else {
 
-        const XMLCh* localPart = getLocalPart(typeAttr);
-        const XMLCh* prefix = getPrefix(typeAttr);
+        checkEnumerationRequiredNotation(name, dvType);
+
+        const XMLCh* localPart = getLocalPart(dvType);
+        const XMLCh* prefix = getPrefix(dvType);
         const XMLCh* typeURI = resolvePrefixToURI(prefix);        
 
         if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)  == 0) {
@@ -1952,23 +1991,24 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
 
     // validate fixed/default values
     const XMLCh* valueToCheck = defaultVal ? defaultVal : fixedVal;
+    bool  ofTypeID = (dv && dv->getType() == DatatypeValidator::ID);
 
     if (attType == XMLAttDef::Simple && dv && valueToCheck) {
 
-        try {
-            dv->validate(valueToCheck);
+        if (ofTypeID) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3,
+                             SchemaSymbols::fgATT_NAME, name);
         }
-        catch(const InvalidDatatypeValueException& idve) {
-            reportSchemaError(XMLUni::fgValidityDomain,
-                              XMLValid::DisplayErrorMessage, idve.getMessage());
-        }
-        catch (const InvalidDatatypeFacetException& idfe) {
-            reportSchemaError(XMLUni::fgValidityDomain,
-                              XMLValid::DisplayErrorMessage, idfe.getMessage());
-        }
-        catch(...) {
-            reportSchemaError(XMLUni::fgValidityDomain,
-                              XMLValid::DatatypeValidationFailure, valueToCheck);
+        else {
+            try {
+                dv->validate(valueToCheck);
+            }
+            catch (const XMLException& excep) {
+                reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+            }
+            catch(...) {
+                reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valueToCheck);
+            }
         }
     }
 
@@ -2008,9 +2048,18 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     }
     else {
 	
-        bool toClone = false;		
+        bool toClone = false;
 
         if (typeInfo) {
+
+            if (ofTypeID) {
+
+                if (typeInfo->containsAttWithTypeId()) {
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5);
+                }
+
+                typeInfo->setAttWithTypeId(ofTypeID);
+            }
 
             toClone = true;
             typeInfo->addAttDef(attDef);
@@ -2300,7 +2349,6 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem, bool& toDele
                                 subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
 
                                 if (subsElements) {
-
                                     subsElements = new ValueVectorOf<SchemaElementDecl*>(*subsElements);
                                     fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
                                 }
@@ -2390,13 +2438,8 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem, bool& toDele
                 validator->validate(deflt);
             }
         }
-        catch(const InvalidDatatypeValueException& idve) {
-            reportSchemaError(XMLUni::fgValidityDomain,
-                              XMLValid::DisplayErrorMessage, idve.getMessage());
-        }
-        catch (const InvalidDatatypeFacetException& idfe) {
-            reportSchemaError(XMLUni::fgValidityDomain,
-                              XMLValid::DisplayErrorMessage, idfe.getMessage());
+        catch (const XMLException& excep) {
+            reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
         }
         catch(...) {
             reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, deflt);
@@ -2658,17 +2701,8 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
                   qualifiedName, baseValidator, 0, 0, true, finalSet);
         }
     }
-    catch(const SchemaDateTimeException& idtve) {
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idtve.getMessage());
-    }
-    catch(const InvalidDatatypeValueException& idve) {
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idve.getMessage());
-    }
-    catch (const InvalidDatatypeFacetException& idfe) {
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+    catch (const XMLException& excep) {
+        reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
     }
     catch(...) {
         reportSchemaError(XMLUni::fgXMLErrDomain,
@@ -2863,17 +2897,8 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                    (qualifiedName, baseValidator, facets, enums, false, finalSet);
         }
     }
-    catch(const SchemaDateTimeException& idtve) {
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idtve.getMessage());
-    }
-    catch(const InvalidDatatypeValueException& idve) {
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idve.getMessage());
-    }
-    catch (const InvalidDatatypeFacetException& idfe) {
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+    catch (const XMLException& excep) {
+        reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
     }
     catch(...) {
 
@@ -2979,19 +3004,9 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
             }
         }
     }
-    catch(const SchemaDateTimeException& idtve) {
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idtve.getMessage());
-    }
-    catch(const InvalidDatatypeValueException& idve) {
+    catch (const XMLException& excep) {
         janValidators.orphan();
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idve.getMessage());
-    }
-    catch (const InvalidDatatypeFacetException& idfe) {
-        janValidators.orphan();
-        reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+        reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
     }
     catch(...) {
         janValidators.orphan();
@@ -3299,13 +3314,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         )
                     );
                 }
-                catch(const InvalidDatatypeValueException& idve) {
-                    reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idve.getMessage());
-                }
-                catch (const InvalidDatatypeFacetException& idfe) {
-                    reportSchemaError(XMLUni::fgValidityDomain,
-                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+                catch (const XMLException& excep) {
+                    reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
                 }
                 catch(...) {
                     reportSchemaError(XMLUni::fgXMLErrDomain,
@@ -3620,6 +3630,13 @@ void TraverseSchema::traverseKey(const DOM_Element& icElem,
         return;
     }
 
+    if (!XMLString::isValidNCName(name)) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
+                          SchemaSymbols::fgELT_KEY, name);
+        return;
+    }
+
+
     if (!fIdentityConstraintNames) {
         fIdentityConstraintNames = new RefHash2KeysTableOf<IdentityConstraint>(29, false);
     }
@@ -3673,6 +3690,12 @@ void TraverseSchema::traverseUnique(const DOM_Element& icElem,
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
 
     if (!XMLString::stringLen(name)) {
+        return;
+    }
+
+    if (!XMLString::isValidNCName(name)) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
+                          SchemaSymbols::fgELT_UNIQUE, name);
         return;
     }
 
@@ -3732,6 +3755,12 @@ void TraverseSchema::traverseKeyRef(const DOM_Element& icElem,
     const XMLCh* refer = getElementAttValue(icElem, SchemaSymbols::fgATT_REFER);
 
     if (!XMLString::stringLen(name) || !XMLString::stringLen(refer)) {
+        return;
+    }
+
+    if (!XMLString::isValidNCName(name)) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
+                          SchemaSymbols::fgELT_KEYREF, name);
         return;
     }
 
@@ -4394,12 +4423,7 @@ int TraverseSchema::parseBlockSet(const XMLCh* const blockStr,
 
     if (!XMLString::compareString(blockStr, SchemaSymbols::fgATTVAL_POUNDALL)) {
         
-        blockSet = SchemaSymbols::EXTENSION + SchemaSymbols::RESTRICTION;
-		
-		if (blockType == ES_Block) {
-			blockSet += SchemaSymbols::SUBSTITUTION;
-        }
-
+        blockSet = SchemaSymbols::EXTENSION + SchemaSymbols::RESTRICTION + SchemaSymbols::SUBSTITUTION;
         return blockSet;
     }
 
@@ -4456,15 +4480,8 @@ int TraverseSchema::parseFinalSet(const XMLCh* const finalStr,
 
     if (!XMLString::compareString(finalStr, SchemaSymbols::fgATTVAL_POUNDALL)) {
 
-        finalSet = SchemaSymbols::RESTRICTION;
-
-        if (finalType == S_Final) {
-            finalSet += SchemaSymbols::LIST + SchemaSymbols::UNION;
-        }
-        else {
-            finalSet += SchemaSymbols::EXTENSION;
-        }
-
+        finalSet = SchemaSymbols::RESTRICTION + SchemaSymbols::LIST + 
+                   SchemaSymbols::UNION + SchemaSymbols::EXTENSION;
         return finalSet;
     }
 
@@ -4635,7 +4652,7 @@ TraverseSchema::getElementComplexTypeInfo(const XMLCh* const typeStr,
 
         Grammar* aGrammar = fGrammarResolver->getGrammar(typeURI);
 
-        if (!aGrammar || (aGrammar->getGrammarType() != Grammar::SchemaGrammarType)) {
+        if (!aGrammar || aGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
 
             reportSchemaError(XMLUni::fgValidityDomain, XMLValid::GrammarNotFound, typeURI);
             return 0;
@@ -4898,7 +4915,7 @@ TraverseSchema::createSchemaElementDecl(const DOM_Element& elem,
     const XMLCh* block = getElementAttValue(elem,SchemaSymbols::fgATT_BLOCK);
     const XMLCh* final = getElementAttValue(elem,SchemaSymbols::fgATT_FINAL);
     int blockSet = parseBlockSet(block, ES_Block);
-    int finalSet = parseFinalSet(final, ECS_Final);
+    int finalSet = parseFinalSet(final, EC_Final);
     int elementMiscFlags = 0;
     const XMLCh* nillable = getElementAttValue(elem, SchemaSymbols::fgATT_NILLABLE);
     const XMLCh* abstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
@@ -4939,21 +4956,11 @@ TraverseSchema::createSchemaElementDecl(const DOM_Element& elem,
 
 
 void TraverseSchema::processAttributeDeclRef(const DOM_Element& elem,
-                                             const DOM_Element& simpleContent,
                                              ComplexTypeInfo* const typeInfo,
                                              const XMLCh* const refName,
-                                             const XMLCh* const useAttr) {
-
-    // REVISIT - fixedValue & defaultValue - is it valid to overwrite the 'ref'
-    // attribute. For now, we are keeping the actual attribute declaration info
-    // as is.
-
-    // Check ref representation OK - 3.2.3::3.2
-    if (!elem.getAttribute(SchemaSymbols::fgATT_FORM).equals("")
-        || !elem.getAttribute(SchemaSymbols::fgATT_TYPE).equals("")
-        || simpleContent != 0) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttributeRefContentError);
-    }
+                                             const XMLCh* const useAttr,
+                                             const XMLCh* const defaultVal,
+                                             const XMLCh* const fixedVal) {
 
     if (!typeInfo && !fCurrentAttGroupInfo) {
         return;
@@ -5021,33 +5028,95 @@ void TraverseSchema::processAttributeDeclRef(const DOM_Element& elem,
         return;
     }
 
-    bool required        = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_REQUIRED) == 0);
-    bool prohibited      = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_PROHIBITED) == 0);
-    QName* attQName      = refAttDef->getAttName();
+    XMLAttDef::DefAttTypes refAttDefType = refAttDef->getDefaultType();
+    const XMLCh* refAttValue = refAttDef->getValue();
+    bool invalidAttUse = false;
+
+    if (refAttDefType == XMLAttDef::Fixed &&
+        (defaultVal || (fixedVal && XMLString::compareString(fixedVal, refAttValue)))) {
+
+        invalidAttUse = true;
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttUseCorrect, refName);
+    }
+
+    bool required = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_REQUIRED) == 0);
+    bool prohibited = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_PROHIBITED) == 0);
+    QName* attQName = refAttDef->getAttName();
+    DatatypeValidator* attDV = refAttDef->getDatatypeValidator();
     SchemaAttDef* attDef = new SchemaAttDef(attQName->getPrefix(),
                                             attQName->getLocalPart(),
                                             attQName->getURI(),
-                                            refAttDef->getType());
+                                            refAttValue,
+                                            refAttDef->getType(),
+                                            refAttDefType);
 
-    attDef->setValue(refAttDef->getValue());
-    attDef->setDatatypeValidator(refAttDef->getDatatypeValidator());
-
-    if (prohibited) {
-        attDef->setDefaultType(XMLAttDef::Prohibited);
-    }
-    else if (required){
-
-        if (refAttDef->getDefaultType() == XMLAttDef::Fixed) {
+    if (refAttDefType == XMLAttDef::Fixed) {
+        if (required && !invalidAttUse) {
             attDef->setDefaultType(XMLAttDef::Required_And_Fixed);
         }
+    }
+    else {
+
+        if (prohibited) {
+            attDef->setDefaultType(XMLAttDef::Prohibited);
+        }
         else {
-            attDef->setDefaultType(XMLAttDef::Required);
+
+            const XMLCh* valueConstraint = defaultVal;
+
+            if (required){
+
+                if (fixedVal) {
+
+                    attDef->setDefaultType(XMLAttDef::Required_And_Fixed);                    
+                    valueConstraint = fixedVal;
+                }
+                else {
+                    attDef->setDefaultType(XMLAttDef::Required);
+                }
+            }
+
+            if (valueConstraint) {
+
+                // validate content of value constraint
+                if (attDV) {
+
+                    if (attDV->getType() == DatatypeValidator::ID) {
+                        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3,
+                                          SchemaSymbols::fgATT_REF, refName);
+                    }
+                    else {
+                        try {
+                            attDV->validate(valueConstraint);
+                        }
+                        catch(const XMLException& excep) {
+                            reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+                        }
+                        catch (...) {
+                            reportSchemaError(XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valueConstraint);
+                        }
+                    }
+                }
+
+                attDef->setValue(valueConstraint);
+            }
         }
     }
+
+    attDef->setDatatypeValidator(attDV);
 
     bool toClone = false;
 
     if (typeInfo) {
+
+        if (attDV && attDV->getType() == DatatypeValidator::ID) {
+
+            if (typeInfo->containsAttWithTypeId()) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5);
+            }
+
+            typeInfo->setAttWithTypeId(true);
+        }
 
         toClone = true;
         typeInfo->addAttDef(attDef);
@@ -5296,6 +5365,13 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::EmptyComplexRestrictionDerivation);
                 }
             }
+            else { // if base has no content spec, invalid derivation
+                if (!baseTypeInfo->getContentSpec()) {
+
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::PD_EmptyBase);
+                    throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
+                }
+            }
 
             // Delay particle constraint checking (5.3) until we have processed
             // the whole schema.
@@ -5516,7 +5592,6 @@ ComplexTypeInfo* TraverseSchema::getTypeInfoFromNS(const XMLCh* const uriStr,
 bool TraverseSchema::isValidFacet(const XMLCh* const component,
                                   const XMLCh* const name) {
 
-    // TO DO
     if (!XMLString::compareString(name, SchemaSymbols::fgELT_MINEXCLUSIVE) ||
         !XMLString::compareString(name, SchemaSymbols::fgELT_MININCLUSIVE) ||
         !XMLString::compareString(name, SchemaSymbols::fgELT_MAXEXCLUSIVE) ||
@@ -5526,9 +5601,8 @@ bool TraverseSchema::isValidFacet(const XMLCh* const component,
         !XMLString::compareString(name, SchemaSymbols::fgELT_LENGTH) ||
         !XMLString::compareString(name, SchemaSymbols::fgELT_MINLENGTH) ||
         !XMLString::compareString(name, SchemaSymbols::fgELT_MAXLENGTH) ||
-        !XMLString::compareString(name, SchemaSymbols::fgELT_PERIOD) ||
-        !XMLString::compareString(name, SchemaSymbols::fgELT_DURATION) ||
         !XMLString::compareString(name, SchemaSymbols::fgELT_ENUMERATION) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_WHITESPACE) || 
         !XMLString::compareString(name, SchemaSymbols::fgELT_PATTERN) ||
         !XMLString::compareString(name, SchemaSymbols::fgELT_ANNOTATION)) {
         return true;
@@ -5715,16 +5789,19 @@ void TraverseSchema::processAttributes(const DOM_Element& attElem,
                 continue;
             }
 
-            SchemaAttDef* newAttDef = new SchemaAttDef(attName->getPrefix(),
-                                                       attName->getLocalPart(),
-                                                       attName->getURI(),
-                                                       attDef.getValue(),
-                                                       attDef.getType(),
-                                                       attDef.getDefaultType(),
-                                                       attDef.getEnumeration());
+            if (attDef.getDefaultType() != XMLAttDef::Prohibited) {
+            
+                SchemaAttDef* newAttDef = new SchemaAttDef(attName->getPrefix(),
+                                                           attName->getLocalPart(),
+                                                           attName->getURI(),
+                                                           attDef.getValue(),
+                                                           attDef.getType(),
+                                                           attDef.getDefaultType(),
+                                                           attDef.getEnumeration());
 
-            newAttDef->setDatatypeValidator(attDef.getDatatypeValidator());
-            typeInfo->addAttDef(newAttDef);
+                newAttDef->setDatatypeValidator(attDef.getDatatypeValidator());
+                typeInfo->addAttDef(newAttDef);
+            }
         }
     }
 }
@@ -5738,6 +5815,8 @@ void TraverseSchema::defaultComplexTypeInfo(ComplexTypeInfo* const typeInfo) {
         typeInfo->setContentType(SchemaElementDecl::Any);
         typeInfo->setDatatypeValidator(0);
         typeInfo->setContentSpec(0);
+        typeInfo->setBaseComplexTypeInfo(0);
+        typeInfo->setBaseDatatypeValidator(0);
     }
 }
 
@@ -6121,6 +6200,7 @@ TraverseSchema::buildValidSubstitutionListF(SchemaElementDecl* const elemDecl,
             if (isSubstitutionGroupValid(subsElemDecl, chainElem->getComplexTypeInfo(),
                                          chainElem->getDatatypeValidator(), 0, false)) {
                 validSubs->addElement(chainElem);
+                buildValidSubstitutionListB(chainElem, subsElemDecl);
             }
         }
     }
@@ -6464,6 +6544,17 @@ void TraverseSchema::copyAttGroupAttributes(XercesAttGroupInfo* const fromAttGro
                 continue;
             }
 
+            DatatypeValidator* attDV = attDef->getDatatypeValidator();
+
+            if (attDV && attDV->getType() == DatatypeValidator::ID) {
+
+                if (typeInfo->containsAttWithTypeId()) {
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5);
+                }
+
+                typeInfo->setAttWithTypeId(true);
+            }
+
             typeInfo->addAttDef(new SchemaAttDef(attDef));
 
             if (toAttGroup) {
@@ -6729,7 +6820,12 @@ void TraverseSchema::checkAttDerivationOK(const ComplexTypeInfo* const baseTypeI
             XMLAttDef::DefAttTypes baseAttDefType = baseAttDef->getDefaultType();
             XMLAttDef::DefAttTypes childAttDefType = childAttDef.getDefaultType();
 
-            // Constraint 2.1.1 & 3
+            // Constraint 2.1.1 & 3 + check for prohibited base attribute
+            if (baseAttDefType == XMLAttDef::Prohibited
+                && childAttDefType != XMLAttDef::Prohibited) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_8, childLocalPart);
+            }
+
             if ((baseAttDefType & XMLAttDef::Required)
                 && !(childAttDefType & XMLAttDef::Required)) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_2, childLocalPart);
@@ -6890,7 +6986,7 @@ bool TraverseSchema::openRedefinedSchema(const DOM_Element& redefineElem) {
         return false;
     }
 
-    SchemaInfo* redefSchemaInfo = fSchemaInfoList->get(includeURL);
+    SchemaInfo* redefSchemaInfo = fSchemaInfoList->get(includeURL, fTargetNSURI);
 
     if (redefSchemaInfo) {
 
@@ -6931,7 +7027,7 @@ bool TraverseSchema::openRedefinedSchema(const DOM_Element& redefineElem) {
             return false;
         }
 
-        const XMLCh* targetNSURIString = getElementAttValue(root,SchemaSymbols::fgATT_TARGETNAMESPACE);
+        const XMLCh* targetNSURIString = getTargetNamespaceString(root); //getElementAttValue(root,SchemaSymbols::fgATT_TARGETNAMESPACE);
 		unsigned int targetNSLength = XMLString::stringLen(targetNSURIString);
 
         // check to see if targetNameSpace is right
@@ -6961,10 +7057,10 @@ bool TraverseSchema::openRedefinedSchema(const DOM_Element& redefineElem) {
         fSchemaInfo = new SchemaInfo(fElemAttrDefaultQualified, fBlockDefault, 
                                      fFinalDefault, fTargetNSURI, fCurrentScope,
                                      fScopeCount, namespaceDepth,
-									 XMLString::replicate(includeURL),
+                                     XMLString::replicate(includeURL),
                                      fTargetNSURIString, fStringPool, root);
 
-        fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo);
+        fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
         redefSchemaInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
     }
 
@@ -7330,6 +7426,776 @@ void TraverseSchema::fixRedefinedSchema(SchemaInfo* const redefinedSchemaInfo,
     }
 }
 
+void TraverseSchema::checkParticleDerivation() {
+
+    RefHashTableOfEnumerator<ComplexTypeInfo> complexTypeEnum(fComplexTypeRegistry);
+
+    while (complexTypeEnum.hasMoreElements()) {
+
+        ComplexTypeInfo& curTypeInfo = complexTypeEnum.nextElement();
+        ComplexTypeInfo* baseTypeInfo = 0;
+        ContentSpecNode* curSpecNode = 0;
+
+        if (curTypeInfo.getDerivedBy() == SchemaSymbols::RESTRICTION
+            && ((baseTypeInfo = curTypeInfo.getBaseComplexTypeInfo()) != 0)
+            && ((curSpecNode = curTypeInfo.getContentSpec()) != 0)) {
+
+            try {
+                checkParticleDerivationOk(curSpecNode, curTypeInfo.getScopeDefined(),
+                                          baseTypeInfo->getContentSpec(),
+                                          baseTypeInfo->getScopeDefined(), baseTypeInfo);
+            }
+            catch (const RuntimeException& excep) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+            }
+        }
+    }
+}
+
+void TraverseSchema::checkParticleDerivationOk(ContentSpecNode* const curNode,
+                                               const int derivedScope,
+                                               ContentSpecNode* const baseNode,
+                                               const int baseScope,
+                                               const ComplexTypeInfo* const baseInfo) {
+
+    // Check for pointless occurrences of all, choice, sequence.  The result is
+    // the contentspec which is not pointless. If the result is a non-pointless
+    // group, Vector is filled  in with the children of interest
+    if (!curNode || !baseNode)
+        return;
+
+    ContentSpecNode* curSpecNode = curNode;
+    ContentSpecNode* baseSpecNode = baseNode;
+    ValueVectorOf<ContentSpecNode*> curVector(8);
+    ValueVectorOf<ContentSpecNode*> baseVector(8);
+    ContentSpecNode::NodeTypes curNodeType = curSpecNode->getType();
+    ContentSpecNode::NodeTypes baseNodeType = baseSpecNode->getType();
+
+    if (curNodeType == ContentSpecNode::Sequence ||
+        curNodeType == ContentSpecNode::Choice ||
+        curNodeType == ContentSpecNode::All) {
+        curSpecNode = checkForPointlessOccurrences(curSpecNode, curNodeType, &curVector);
+    }
+
+    if (baseNodeType == ContentSpecNode::Sequence ||
+        baseNodeType == ContentSpecNode::Choice ||
+        baseNodeType == ContentSpecNode::All) {
+        baseSpecNode = checkForPointlessOccurrences(baseSpecNode, baseNodeType, &baseVector);
+    }
+
+    curNodeType = curSpecNode->getType();
+    baseNodeType = baseSpecNode->getType();
+
+    switch (curNodeType & 0x0f) {
+    case ContentSpecNode::Leaf:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Leaf:
+                {
+                    checkNameAndTypeOK(curSpecNode, derivedScope, baseSpecNode, baseScope, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSCompat(curSpecNode, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::All:
+                {
+                    checkRecurseAsIfGroup(curSpecNode, derivedScope, baseSpecNode, baseScope, &baseVector, baseInfo);
+                    return;
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }		
+        }
+    case ContentSpecNode::Any:
+    case ContentSpecNode::Any_Other:
+    case ContentSpecNode::Any_NS:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                     checkNSSubset(curSpecNode, baseSpecNode);
+                     return;
+                }
+            case ContentSpecNode::Choice:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::All:
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes1);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    case ContentSpecNode::All:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSRecurseCheckCardinality(curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::All:
+                {
+                    checkRecurse(curSpecNode, derivedScope, &curVector, baseSpecNode, baseScope, &baseVector, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes2);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    case ContentSpecNode::Choice:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSRecurseCheckCardinality(curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+                {
+                    checkRecurse(curSpecNode, derivedScope, &curVector, baseSpecNode, baseScope, &baseVector, baseInfo, true);
+                    return;
+                }
+            case ContentSpecNode::All:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes3);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    case ContentSpecNode::Sequence:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSRecurseCheckCardinality(curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::All:
+                {
+                    checkRecurseUnordered(curSpecNode, &curVector, derivedScope, baseSpecNode, &baseVector, baseScope, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Sequence:
+                {
+                    checkRecurse(curSpecNode, derivedScope, &curVector, baseSpecNode, baseScope, &baseVector, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+                {
+                    checkMapAndSum(curSpecNode, &curVector, derivedScope, baseSpecNode, &baseVector, baseScope, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes4);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    }
+}
+
+ContentSpecNode*
+TraverseSchema::checkForPointlessOccurrences(ContentSpecNode* const specNode,
+                                             const ContentSpecNode::NodeTypes nodeType,
+                                             ValueVectorOf<ContentSpecNode*>* const nodes) {
+
+    ContentSpecNode* rightNode = specNode->getSecond();
+
+    if (!rightNode) {
+
+         gatherChildren(nodeType, specNode->getFirst(), nodes);
+
+         if (nodes->size() == 1) {
+            return nodes->elementAt(0);
+        }
+
+        return specNode;
+    }
+
+    gatherChildren(nodeType, specNode->getFirst(), nodes);
+    gatherChildren(nodeType, rightNode, nodes);
+
+    return specNode;
+}
+
+void TraverseSchema::gatherChildren(const ContentSpecNode::NodeTypes parentNodeType,
+                                    ContentSpecNode* const specNode,
+                                    ValueVectorOf<ContentSpecNode*>* const nodes) {
+
+    if (!specNode) {
+        return;
+    }
+
+    int min = specNode->getMinOccurs();
+    int max = specNode->getMaxOccurs();
+    ContentSpecNode::NodeTypes nodeType = specNode->getType();
+    ContentSpecNode* rightNode = specNode->getSecond();
+
+    if (nodeType == ContentSpecNode::Leaf ||
+        (nodeType & 0x0f) == ContentSpecNode::Any ||
+        (nodeType & 0x0f) == ContentSpecNode::Any_NS ||
+        (nodeType & 0x0f) == ContentSpecNode::Any_Other) {
+        nodes->addElement(specNode);
+    }
+    else if (min !=1 || max != 1) {
+        nodes->addElement(specNode);
+    }
+    else if (!rightNode) {
+        gatherChildren(nodeType, specNode->getFirst(), nodes);
+    }
+    else if (parentNodeType == nodeType) {
+
+        gatherChildren(nodeType, specNode->getFirst(), nodes);
+        gatherChildren(nodeType, rightNode, nodes);
+    }
+    else {
+        nodes->addElement(specNode);
+    }
+}
+
+void
+TraverseSchema::checkNSCompat(const ContentSpecNode* const derivedSpecNode,
+                              const ContentSpecNode* const baseSpecNode) {
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_OccurRangeE,
+                  derivedSpecNode->getElement()->getLocalPart());
+    }
+
+    // check wildcard subset
+    if (!wildcardEltAllowsNamespace(baseSpecNode, derivedSpecNode->getElement()->getURI())) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NSCompat1,
+                  derivedSpecNode->getElement()->getLocalPart());
+    }
+}
+
+bool
+TraverseSchema::wildcardEltAllowsNamespace(const ContentSpecNode* const baseSpecNode,
+                                           const unsigned int derivedURI) {
+
+    ContentSpecNode::NodeTypes nodeType = baseSpecNode->getType();
+
+    if ((nodeType & 0x0f) == ContentSpecNode::Any) {
+        return true;
+    }
+
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
+
+    if ((nodeType & 0x0f) == ContentSpecNode::Any_NS) {
+        if (derivedURI == baseURI) {
+           return true;
+        }
+    }
+    else { // must be ANY_OTHER
+        if (derivedURI != baseURI && derivedURI != (unsigned int) fEmptyNamespaceURI) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void
+TraverseSchema::checkNameAndTypeOK(const ContentSpecNode* const derivedSpecNode,
+                                   const int derivedScope,
+                                   const ContentSpecNode* const baseSpecNode,
+                                   const int baseScope,
+                                   const ComplexTypeInfo* const baseInfo) {
+
+    unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
+    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
+    const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
+
+    if (XMLString::compareString(derivedName, baseName) || derivedURI != baseURI) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NameTypeOK1);
+    }
+
+	// case of mixed complex types with attributes only
+    if (derivedURI == XMLElementDecl::fgPCDataElemId) {
+        return;
+    }
+
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_OccurRangeE, derivedName);
+    }
+
+    SchemaGrammar* aGrammar = fSchemaGrammar;
+    const XMLCh* schemaURI = fURIStringPool->getValueForId(derivedURI);
+
+    if ((derivedURI != (unsigned int) fTargetNSURI) && 
+        (derivedURI != (unsigned int) fEmptyNamespaceURI)) {
+        aGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(schemaURI);
+    }
+
+    if (!aGrammar) { //something is wrong
+        return;
+    }
+
+    SchemaElementDecl* derivedElemDecl = findElement(derivedScope, derivedURI, derivedName, aGrammar);
+
+    if (!derivedElemDecl) {
+        return;
+    }
+
+    SchemaElementDecl* baseElemDecl = 
+        findElement(baseScope, baseURI, baseName, aGrammar, baseInfo);
+
+    if (!baseElemDecl) {
+        return;
+    }
+
+    int derivedFlags = derivedElemDecl->getMiscFlags();
+    int baseFlags = baseElemDecl->getMiscFlags();
+
+    if (((baseFlags & SchemaSymbols::NILLABLE) == 0) &&
+		((derivedFlags & SchemaSymbols::NILLABLE) != 0)) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK2, derivedName);
+    }
+
+    const XMLCh* derivedDefVal = derivedElemDecl->getDefaultValue();
+    const XMLCh* baseDefVal = baseElemDecl->getDefaultValue();
+
+    if (baseDefVal && (baseFlags & SchemaSymbols::FIXED) != 0 &&
+        ((derivedFlags & SchemaSymbols::FIXED) == 0 ||
+         XMLString::compareString(derivedDefVal, baseDefVal))) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK3, derivedName);
+    }
+
+    int derivedBlockSet = derivedElemDecl->getBlockSet();
+    int baseBlockSet = baseElemDecl->getBlockSet();
+
+    if ((derivedBlockSet & baseBlockSet) != baseBlockSet) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK4, derivedName);
+    }
+
+    // check identity constraints
+    checkICRestriction(derivedElemDecl, baseElemDecl, derivedName, baseName);
+
+    // check that the derived element's type is derived from the base's.
+    checkTypesOK(derivedElemDecl, baseElemDecl, derivedName);
+
+}
+
+SchemaElementDecl* 
+TraverseSchema::findElement(const int scope, const unsigned int uriIndex,
+                            const XMLCh* const name, 
+                            SchemaGrammar* const grammar,
+                            const ComplexTypeInfo* const typeInfo) {
+
+    // check for element at given scope first
+    SchemaElementDecl* elemDecl = (SchemaElementDecl*) grammar->getElemDecl(uriIndex, name, 0, scope);
+
+    // if not found, check at global scope
+    if (!elemDecl) {
+
+        elemDecl = (SchemaElementDecl*)
+            grammar->getElemDecl(uriIndex, name, 0, Grammar::TOP_LEVEL_SCOPE);
+
+        // if still not found, and base is specified, look it up there
+        if (!elemDecl && typeInfo) {
+
+            const ComplexTypeInfo* baseInfo = typeInfo;
+
+            while (baseInfo) {
+
+                elemDecl = (SchemaElementDecl*)
+                    grammar->getElemDecl(uriIndex, name, 0, baseInfo->getScopeDefined());
+
+                if (elemDecl) {
+                   break;
+                }
+
+                baseInfo = baseInfo->getBaseComplexTypeInfo();
+            }
+        }
+    }
+
+    return elemDecl;
+}
+
+void 
+TraverseSchema::checkICRestriction(const SchemaElementDecl* const derivedElemDecl,
+                                   const SchemaElementDecl* const baseElemDecl,
+                                   const XMLCh* const derivedElemName,
+                                   const XMLCh* const baseElemName) {
+
+    // REVIST - need to get more clarification
+    unsigned int derivedICCount = derivedElemDecl->getIdentityConstraintCount();
+    unsigned int baseICCount = baseElemDecl->getIdentityConstraintCount();
+
+    if (derivedICCount > baseICCount) {
+        ThrowXML2(RuntimeException, XMLExcepts::PD_NameTypeOK6, derivedElemName, baseElemName);
+    }
+
+    for (unsigned int i=0; i < derivedICCount; i++) {
+
+        bool found = false;
+        IdentityConstraint* ic= derivedElemDecl->getIdentityConstraintAt(i);
+
+        for (unsigned int j=0; j < baseICCount; j++) {
+            if (*ic == *(baseElemDecl->getIdentityConstraintAt(j))) {
+
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            ThrowXML2(RuntimeException, XMLExcepts::PD_NameTypeOK7, derivedElemName, baseElemName);
+        }
+    }
+}
+
+void
+TraverseSchema::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
+                             const SchemaElementDecl* const baseElemDecl,
+                             const XMLCh* const derivedElemName) {
+
+    SchemaElementDecl::ModelTypes baseType = baseElemDecl->getModelType();
+
+    if (baseType == SchemaElementDecl::Any) {
+        return;
+    }
+
+    ComplexTypeInfo* rInfo = derivedElemDecl->getComplexTypeInfo();
+    ComplexTypeInfo* bInfo = baseElemDecl->getComplexTypeInfo();
+
+    if (derivedElemDecl->getModelType() == SchemaElementDecl::Simple) {
+
+        if (baseType != SchemaElementDecl::Simple) {
+            ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+        }
+
+        if (!rInfo) {
+
+            DatatypeValidator* bDV = baseElemDecl->getDatatypeValidator();
+
+            if (bInfo || bDV == 0 || 
+				!bDV->isSubstitutableBy(derivedElemDecl->getDatatypeValidator())) {
+                ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+            }
+
+            return;
+        }
+    }
+
+    for (; rInfo && rInfo != bInfo; rInfo = rInfo->getBaseComplexTypeInfo());
+
+    if (rInfo == 0 || rInfo->getDerivedBy() != SchemaSymbols::RESTRICTION) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+    }
+}
+
+void
+TraverseSchema::checkRecurseAsIfGroup(ContentSpecNode* const derivedSpecNode,
+                                      const int derivedScope,
+                                      const ContentSpecNode* const baseSpecNode,
+                                      const int baseScope,
+                                      ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                                      const ComplexTypeInfo* const baseInfo) {
+
+    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();
+    ValueVectorOf<ContentSpecNode*> derivedNodes(1);
+    bool toLax = false;
+
+    //Treat the element as if it were in a group of the same variety as base
+    ContentSpecNode derivedGroupNode(baseType, derivedSpecNode, 0, false);
+
+    derivedNodes.addElement(derivedSpecNode);
+
+    if (baseSpecNode->getType() == ContentSpecNode::Choice) {
+        toLax = true;
+    }
+
+    checkRecurse(&derivedGroupNode, derivedScope, &derivedNodes,
+                 baseSpecNode, baseScope, baseNodes, baseInfo, toLax);
+}
+
+void 
+TraverseSchema::checkRecurse(const ContentSpecNode* const derivedSpecNode,
+                             const int derivedScope,
+                             ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                             const ContentSpecNode* const baseSpecNode,
+                             const int baseScope,
+                             ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                             const ComplexTypeInfo* const baseInfo,
+                             const bool toLax) {
+
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+    }
+
+    // check for mapping of children
+    unsigned int count1= derivedNodes->size();
+    unsigned int count2= baseNodes->size();
+    unsigned int current = 0;
+
+    for (unsigned int i=0; i<count1; i++) {
+
+        ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
+        bool matched = false;
+
+        for (unsigned int j = current; j<count2 && !matched; j++) {
+
+            ContentSpecNode* baseNode = baseNodes->elementAt(j);
+            current++;
+
+            try {
+
+                checkParticleDerivationOk(derivedNode, derivedScope, baseNode, baseScope, baseInfo);
+                matched = true;
+            }
+            catch(const RuntimeException&) {
+                if (!toLax && !emptiableParticle(baseNode)) {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_Recurse2);
+                }
+            }
+        }
+
+        // did not find a match
+        if (!matched) {
+            ThrowXML(RuntimeException, XMLExcepts::PD_Recurse2);
+        }
+    }
+
+    // Now, see if there are some elements in the base we didn't match up
+    // in case of Sequence or All
+    if (!toLax) {
+        for (unsigned int j = current; j < count2; j++) {
+            if (!emptiableParticle(baseNodes->elementAt(j))) {
+                ThrowXML(RuntimeException, XMLExcepts::PD_Recurse2);
+            }
+        }
+    }
+}
+
+void TraverseSchema::checkNSSubset(const ContentSpecNode* const derivedSpecNode,
+                                   const ContentSpecNode* const baseSpecNode) {
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NSSubset1);
+    }
+
+    if (!isWildCardEltSubset(derivedSpecNode, baseSpecNode)) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NSSubset2);
+    }
+}
+
+bool
+TraverseSchema::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNode,
+                                    const ContentSpecNode* const baseSpecNode) {
+
+    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();
+
+    if ((baseType & 0x0f) == ContentSpecNode::Any) {
+        return true;
+    }
+
+    ContentSpecNode::NodeTypes derivedType = derivedSpecNode->getType();
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
+    unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
+
+    if (((derivedType & 0x0f) == ContentSpecNode::Any_Other) &&
+        ((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
+        baseURI == derivedURI) {
+        return true;
+    }
+
+    if ((derivedType & 0x0f) == ContentSpecNode::Any_NS) {
+
+        if (((baseType & 0x0f) == ContentSpecNode::Any_NS) &&
+            baseURI == derivedURI) {
+            return true;
+        }
+
+        if (((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
+            baseURI != derivedURI) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void 
+TraverseSchema::checkNSRecurseCheckCardinality(const ContentSpecNode* const derivedSpecNode,
+                                               ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                                               const int derivedScope,
+                                               ContentSpecNode* const baseSpecNode) {
+
+    // Implement total range check
+    int derivedMin = getMinTotalRange(derivedSpecNode);
+    int derivedMax = getMaxTotalRange(derivedSpecNode);
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
+                              baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NSRecurseCheckCardinality1);
+    }
+
+    // Check that each member of the group is a valid restriction of the wildcard
+    unsigned int nodesCount = derivedNodes->size();
+
+    for (unsigned int i = 0; i < nodesCount; i++) {
+        checkParticleDerivationOk(derivedNodes->elementAt(i), derivedScope, baseSpecNode, -1);
+    }
+}
+
+void 
+TraverseSchema::checkRecurseUnordered(const ContentSpecNode* const derivedSpecNode,
+                                      ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                                      const int derivedScope,
+                                      ContentSpecNode* const baseSpecNode, 
+                                      ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                                      const int baseScope,
+                                      const ComplexTypeInfo* const baseInfo) {
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+    }
+
+    unsigned int       derivedCount= derivedNodes->size();
+    unsigned int       baseCount = baseNodes->size();
+    bool*              foundIt = new bool[baseCount];
+    ArrayJanitor<bool> janFoundIt(foundIt);
+
+    for (unsigned k=0; k < baseCount; k++) {
+        foundIt[k] = false;
+    }
+
+    // check for mapping of children
+    for (unsigned int i = 0; i < derivedCount; i++) {
+
+        ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
+        bool matched = false;
+
+        for (unsigned int j = 0; j < baseCount && !matched; j++) {
+
+            try {
+
+                checkParticleDerivationOk(derivedNode, derivedScope, baseNodes->elementAt(j), baseScope, baseInfo);
+
+                if (foundIt[j]) {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_RecurseUnordered);
+                }
+
+                foundIt[j] = true;
+                matched = true;
+            }
+            catch (const RuntimeException&) {
+            }
+        }
+
+        // didn't find a match.
+        if (!matched) {
+	        ThrowXML(RuntimeException, XMLExcepts::PD_RecurseUnordered);
+        }
+    }
+
+    // For all unmapped particles in base, check to see it it's emptiable or not
+    for (unsigned int j=0; j < baseCount; j++) {
+        if (!foundIt[j] && !emptiableParticle(baseNodes->elementAt(j))) {
+	        ThrowXML(RuntimeException, XMLExcepts::PD_RecurseUnordered);
+        }			
+    }
+}
+
+void 
+TraverseSchema::checkMapAndSum(const ContentSpecNode* const derivedSpecNode,
+                               ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                               const int derivedScope,
+                               ContentSpecNode* const baseSpecNode, 
+                               ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                               const int baseScope,
+                               const ComplexTypeInfo* const baseInfo) {
+
+    // check Occurrence ranges
+    int derivedCount = derivedNodes->size();
+    int baseCount = baseNodes->size();
+    int derivedMin = derivedSpecNode->getMinOccurs() * derivedCount;
+    int derivedMax = derivedSpecNode->getMaxOccurs();
+
+    if (derivedMax != SchemaSymbols::UNBOUNDED) {
+        derivedMax *= derivedCount;
+    }
+
+    if (!isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
+                             baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+    }
+
+    // check for mapping of children
+    for (int i = 0; i < derivedCount; i++) {
+
+        ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
+        bool matched = false;
+
+        for (int j = 0; j < baseCount && !matched; j++) {
+
+            try {
+
+                checkParticleDerivationOk(derivedNode, derivedScope, baseNodes->elementAt(j), baseScope, baseInfo);
+                matched = true;
+            }
+            catch (const RuntimeException&) {
+            }
+        }
+
+        // didn't find a match.
+        if (!matched) {
+	        ThrowXML(RuntimeException, XMLExcepts::PD_MapAndSum);
+        }
+    }
+
+}
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Error reporting methods
 // ---------------------------------------------------------------------------
@@ -7380,7 +8246,7 @@ void TraverseSchema::init() {
     fGlobalDeclarations = new RefHash2KeysTableOf<XMLCh>(29, false);
     fNotationRegistry = new RefHash2KeysTableOf<XMLCh>(13, false);
     fSubstitutionGroups = new RefHash2KeysTableOf<SchemaElementDecl>(29, false);
-    fSchemaInfoList = new RefHashTableOf<SchemaInfo>(29);
+    fSchemaInfoList = new RefHash2KeysTableOf<SchemaInfo>(29);
 }
 
 void TraverseSchema::cleanUp() {

@@ -83,6 +83,12 @@ public:
                 IdentityConstraint* const identityConstraint);
 	~IC_Selector();
 
+    // -----------------------------------------------------------------------
+    //  operators
+    // -----------------------------------------------------------------------
+    bool operator== (const IC_Selector& other) const;
+    bool operator!= (const IC_Selector& other) const;
+
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
@@ -122,6 +128,8 @@ public:
     // -----------------------------------------------------------------------
     void startDocumentFragment();
     void startElement(const XMLElementDecl& elemDecl,
+                      const unsigned int urlId,
+                      const XMLCh* const elemPrefix,
 		              const RefVectorOf<XMLAttr>& attrList,
                       const unsigned int attrCount);
     void endElement(const XMLElementDecl& elemDecl);

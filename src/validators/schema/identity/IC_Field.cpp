@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/15 17:10:19  knoaman
+ * Particle derivation checking support.
+ *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
  *
@@ -113,6 +116,19 @@ IC_Field::IC_Field(XercesXPath* const xpath,
 IC_Field::~IC_Field()
 {
     delete fXPath;
+}
+
+// ---------------------------------------------------------------------------
+//  IC_Field: operators
+// ---------------------------------------------------------------------------
+bool IC_Field::operator== (const IC_Field& other) const {
+
+    return (*fXPath == *(other.fXPath));
+}
+
+bool IC_Field::operator!= (const IC_Field& other) const {
+
+    return !operator==(other);
 }
 
 // ---------------------------------------------------------------------------

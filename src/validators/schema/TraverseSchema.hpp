@@ -73,9 +73,11 @@
 #include <dom/DOM_Element.hpp>
 #include <dom/DOM_Attr.hpp>
 #include <framework/XMLBuffer.hpp>
+#include <framework/XMLErrorCodes.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <util/ValueVectorOf.hpp>
 #include <util/RefHash2KeysTableOf.hpp>
+#include <validators/common/ContentSpecNode.hpp>
 #include <validators/schema/SchemaGrammar.hpp>
 #include <validators/schema/SchemaInfo.hpp>
 
@@ -332,10 +334,11 @@ private:
       * Process a 'ref' of an Attribute declaration
       */
     void processAttributeDeclRef(const DOM_Element& elem,
-                                 const DOM_Element& simpleTypeContent,
                                  ComplexTypeInfo* const typeInfo,
                                  const XMLCh* const refName,
-                                 const XMLCh* const useVal);
+                                 const XMLCh* const useVal,
+                                 const XMLCh* const defaultVal,
+                                 const XMLCh* const fixedVal);
 
     /**
       * Process a 'ref' on a group
@@ -528,6 +531,8 @@ private:
                                 XercesAttGroupInfo* const toAttGroup,
                                 ComplexTypeInfo* const typeInfo);
 
+    const XMLCh* getTargetNamespaceString(const DOM_Element& elem);
+
     /**
       * Attribute wild card intersection.
       *
@@ -660,6 +665,80 @@ private:
                           ValueVectorOf<SchemaInfo*>* const infoList);
 
     // -----------------------------------------------------------------------
+    //  Particle Derivation Checking methods
+    // -----------------------------------------------------------------------
+    void checkParticleDerivation();
+    void checkParticleDerivationOk(ContentSpecNode* const curNode,
+                                   const int derivedScope,
+                                   ContentSpecNode* const baseNode,
+                                   const int baseScope,
+                                   const ComplexTypeInfo* const baseInfo = 0);
+    ContentSpecNode* checkForPointlessOccurrences(ContentSpecNode* const specNode,
+                                                  const ContentSpecNode::NodeTypes nodeType,
+                                                  ValueVectorOf<ContentSpecNode*>* const nodes);
+    void gatherChildren(const ContentSpecNode::NodeTypes parentNodeType,
+                        ContentSpecNode* const specNode,
+                        ValueVectorOf<ContentSpecNode*>* const nodes);
+    bool isOccurrenceRangeOK(const int min1, const int max1, const int min2, const int max2);
+    void checkNSCompat(const ContentSpecNode* const derivedSpecNode,
+                       const ContentSpecNode* const baseSpecNode);
+    bool wildcardEltAllowsNamespace(const ContentSpecNode* const baseSpecNode,
+                                    const unsigned int derivedURI);
+    void checkNameAndTypeOK(const ContentSpecNode* const derivedSpecNode,
+                            const int derivedScope,
+                            const ContentSpecNode* const baseSpecNode,
+                            const int baseScope,
+                            const ComplexTypeInfo* const baseInfo = 0);
+    SchemaElementDecl* findElement(const int scope,
+                                   const unsigned int uriIndex,
+                                   const XMLCh* const name,
+                                   SchemaGrammar* const grammar,
+                                   const ComplexTypeInfo* const typeInfo = 0);
+    void checkICRestriction(const SchemaElementDecl* const derivedElemDecl,
+                            const SchemaElementDecl* const baseElemDecl,
+                            const XMLCh* const derivedElemName,
+                            const XMLCh* const baseElemName);
+    void checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
+                      const SchemaElementDecl* const baseElemDecl,
+                      const XMLCh* const derivedElemName);
+    void checkRecurseAsIfGroup(ContentSpecNode* const derivedSpecNode,
+                               const int derivedScope,
+                               const ContentSpecNode* const baseSpecNode,
+                               const int baseScope,
+                               ValueVectorOf<ContentSpecNode*>* const nodes,
+                               const ComplexTypeInfo* const baseInfo);
+    void checkRecurse(const ContentSpecNode* const derivedSpecNode,
+                      const int derivedScope,
+                      ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                      const ContentSpecNode* const baseSpecNode,
+                      const int baseScope,
+                      ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                      const ComplexTypeInfo* const baseInfo,
+                      const bool toLax = false);
+    void checkNSSubset(const ContentSpecNode* const derivedSpecNode,
+                       const ContentSpecNode* const baseSpecNode);
+    bool isWildCardEltSubset(const ContentSpecNode* const derivedSpecNode,
+                             const ContentSpecNode* const baseSpecNode);
+    void checkNSRecurseCheckCardinality(const ContentSpecNode* const derivedSpecNode,
+                                        ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                                        const int derivedScope,
+                                        ContentSpecNode* const baseSpecNode);
+    void checkRecurseUnordered(const ContentSpecNode* const derivedSpecNode,
+                               ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                               const int derivedScope,
+                               ContentSpecNode* const baseSpecNode, 
+                               ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                               const int baseScope,
+                               const ComplexTypeInfo* const baseInfo);
+    void checkMapAndSum(const ContentSpecNode* const derivedSpecNode,
+                        ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                        const int derivedScope,
+                        ContentSpecNode* const baseSpecNode, 
+                        ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                        const int baseScope,
+                        const ComplexTypeInfo* const baseInfo);
+
+    // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------
     enum
@@ -667,13 +746,16 @@ private:
         ES_Block
         , C_Block
         , S_Final
+        , EC_Final
         , ECS_Final
     };
 
     enum ExceptionCodes
     {
         NoException = 0,
-        InvalidComplexTypeInfo = 1
+        InvalidComplexTypeInfo = 1,
+        ParticleDerivationNotOK = 2,
+        InvalidContentSpecType = 3
     };
 
     enum
@@ -710,7 +792,7 @@ private:
     RefHashTableOf<ComplexTypeInfo>*              fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*              fGroupRegistry;
     RefHashTableOf<XercesAttGroupInfo>*           fAttGroupRegistry;
-    RefHashTableOf<SchemaInfo>*                   fSchemaInfoList;
+    RefHash2KeysTableOf<SchemaInfo>*              fSchemaInfoList;
     SchemaInfo*                                   fSchemaInfo;
     XercesGroupInfo*                              fCurrentGroupInfo;
     XercesAttGroupInfo*                           fCurrentAttGroupInfo;
@@ -818,6 +900,18 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
     return XMLUni::fgZeroLenString;
 }
 
+inline const XMLCh* 
+TraverseSchema::getTargetNamespaceString(const DOM_Element& elem) {
+
+    const XMLCh* targetNS = getElementAttValue(elem, SchemaSymbols::fgATT_TARGETNAMESPACE);
+
+    if (targetNS && XMLString::stringLen(targetNS) == 0) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidTargetNSValue);
+    }
+
+    return targetNS;
+}
+
 inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
 {
     if (XMLString::compareString(baseURI,fTargetNSURIString) != 0
@@ -894,6 +988,18 @@ inline void TraverseSchema::getRedefineNewTypeName(const XMLCh* const oldTypeNam
     for (int i=0; i < redefineCounter; i++) {
         newTypeName.append(SchemaSymbols::fgRedefIdentifier);
     }
+}
+
+inline bool
+TraverseSchema::isOccurrenceRangeOK(const int min1, const int max1,
+                                    const int min2, const int max2) {
+
+    if (min1 >= min2 &&
+        (max2 == SchemaSymbols::UNBOUNDED || 
+         (max1 != SchemaSymbols::UNBOUNDED && max1 <= max2))) {
+        return true;
+    }
+    return false;
 }
 
 #endif

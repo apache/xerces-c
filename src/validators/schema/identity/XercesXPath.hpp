@@ -76,44 +76,6 @@ class XMLStringPool;
 class NamespaceScope;
 
 
-class VALIDATORS_EXPORT XercesAxis
-{
-public:
-    // -----------------------------------------------------------------------
-    //  Constants
-    // -----------------------------------------------------------------------
-    enum {
-        CHILD = 1,
-        ATTRIBUTE = 2,
-        SELF = 3,
-        DESCENDANT = 4
-    };
-
-    // -----------------------------------------------------------------------
-    //  Constructors/Destructor
-    // -----------------------------------------------------------------------
-    XercesAxis(const short type);
-    XercesAxis(const XercesAxis& other);
-    ~XercesAxis() {}
-
-    // -----------------------------------------------------------------------
-    //  Operators
-    // -----------------------------------------------------------------------
-    XercesAxis& operator= (const XercesAxis& other);
-
-	// -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-    short getType() const { return fType; }
-
-private:
-    // -----------------------------------------------------------------------
-    //  Data members
-    // -----------------------------------------------------------------------
-    short fType;
-};
-
-
 class VALIDATORS_EXPORT XercesNodeTest
 {
 public:
@@ -140,6 +102,8 @@ public:
     //  Operators
     // -----------------------------------------------------------------------
     XercesNodeTest& operator= (const XercesNodeTest& other);
+    bool operator== (const XercesNodeTest& other) const;
+    bool operator!= (const XercesNodeTest& other) const;
 
 	// -----------------------------------------------------------------------
     //  Getter methods
@@ -162,28 +126,40 @@ private:
 class VALIDATORS_EXPORT XercesStep {
 public:
     // -----------------------------------------------------------------------
+    //  Constants
+    // -----------------------------------------------------------------------
+    enum { // Axis type
+        CHILD = 1,
+        ATTRIBUTE = 2,
+        SELF = 3,
+        DESCENDANT = 4
+    };
+
+    // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesStep(XercesAxis* const axis, XercesNodeTest* const nodeTest);
+    XercesStep(const unsigned short axisType, XercesNodeTest* const nodeTest);
     XercesStep(const XercesStep& other);
-    ~XercesStep() { delete fAxis; delete fNodeTest; }
+    ~XercesStep() { delete fNodeTest; }
 
     // -----------------------------------------------------------------------
     //  Operators
     // -----------------------------------------------------------------------
     XercesStep& operator= (const XercesStep& other);
+    bool operator== (const XercesStep& other) const;
+    bool operator!= (const XercesStep& other) const;
 
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XercesAxis* getAxis() const { return fAxis; }
+    unsigned short getAxisType() const { return fAxisType; }
     XercesNodeTest* getNodeTest() const { return fNodeTest; }
 
 private:
     // -----------------------------------------------------------------------
     //  Data members
     // -----------------------------------------------------------------------
-    XercesAxis* fAxis;
+    unsigned short  fAxisType;
     XercesNodeTest* fNodeTest;
 };
 
@@ -200,6 +176,12 @@ public:
     XercesLocationPath();
     XercesLocationPath(RefVectorOf<XercesStep>* const steps);
     ~XercesLocationPath() { delete fSteps; }
+
+    // -----------------------------------------------------------------------
+    //  Operators
+    // -----------------------------------------------------------------------
+    bool operator== (const XercesLocationPath& other) const;
+    bool operator!= (const XercesLocationPath& other) const;
 
     // -----------------------------------------------------------------------
     //  Access methods
@@ -294,6 +276,12 @@ public:
                 const unsigned int emptyNamespaceId,
                 const bool isSelector = false);
 	~XercesXPath();
+
+    // -----------------------------------------------------------------------
+    //  Operators
+    // -----------------------------------------------------------------------
+    bool operator== (const XercesXPath& other) const;
+    bool operator!= (const XercesXPath& other) const;
 
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
