@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -68,9 +68,9 @@
 int        NamedNodeMapImpl::gLiveNamedNodeMaps  = 0;
 int        NamedNodeMapImpl::gTotalNamedNodeMaps = 0;
 
-NamedNodeMapImpl::NamedNodeMapImpl(NodeImpl *ownerNode)
+NamedNodeMapImpl::NamedNodeMapImpl(NodeImpl *ownerNod)
 {
-    this->ownerNode=ownerNode;
+    this->ownerNode=ownerNod;
     this->nodes = null;
     this->readOnly = false;
     this->refCount = 1;
@@ -81,7 +81,7 @@ NamedNodeMapImpl::NamedNodeMapImpl(NodeImpl *ownerNode)
 
 
 NamedNodeMapImpl::~NamedNodeMapImpl()
-{ 
+{
     if (nodes)
     {
         // It is the responsibility of whoever was using the named node
@@ -101,21 +101,21 @@ void NamedNodeMapImpl::addRef(NamedNodeMapImpl *This)
 };
 
 
-NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNode)
+NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNod)
 {
-    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(ownerNode);
+    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(ownerNod);
     if (nodes != null)
     {
         newmap->nodes = new NodeVector(nodes->size());
         for (unsigned int i = 0; i < nodes->size(); ++i)
         {
             NodeImpl *n = nodes->elementAt(i)->cloneNode(true);
-            n->ownerNode = ownerNode;
+            n->ownerNode = ownerNod;
             n->owned(true);
             newmap->nodes->addElement(n);
         }
     }
-      
+
     return newmap;
 };
 
@@ -145,8 +145,8 @@ void NamedNodeMapImpl::removeAll()
             if (n->nodeRefCount == 0)
                 NodeImpl::deleteIf(n);
         }
-        delete nodes;        
-        nodes = null;  
+        delete nodes;
+        nodes = null;
     }
 }
 
@@ -154,13 +154,13 @@ void NamedNodeMapImpl::removeAll()
 
 int NamedNodeMapImpl::findNamePoint(const DOMString &name)
 {
-        
+
     // Binary search
     int i=0;
     if(nodes!=null)
     {
         int first=0,last=nodes->size()-1;
-        
+
         while(first<=last)
         {
             i=(first+last)/2;
@@ -189,7 +189,7 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &name)
     break; // Found insertpoint
     }
     }
-    
+
     *******************/
     return -1 - i; // not-found has to be encoded.
 };
@@ -220,7 +220,7 @@ NodeImpl * NamedNodeMapImpl::item(unsigned int index)
 
 //
 // removeNamedItem() - Remove the named item, and return it.
-//                      The caller must arrange for deletion of the 
+//                      The caller must arrange for deletion of the
 //                      returned item if its refcount has gone to zero -
 //                      we can't do it here because the caller would
 //                      never see the returned node.
@@ -232,7 +232,7 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     int i=findNamePoint(name);
     NodeImpl *n = null;
-    
+
     if(i<0)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
 
@@ -268,7 +268,7 @@ NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     if (arg->owned())
         throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
-    
+
     arg->ownerNode = ownerNode;
     arg->owned(true);
     int i=findNamePoint(arg->getNodeName());
@@ -350,12 +350,12 @@ NodeImpl *NamedNodeMapImpl::getNamedItemNS(const DOMString &namespaceURI,
 NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
 {
     if (arg->getOwnerDocument() != ownerNode->getOwnerDocument())
-        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);   
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
     if (readOnly)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     if (arg->owned())
         throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
-    
+
     arg->ownerNode = ownerNode;
     arg->owned(true);
     int i=findNamePoint(arg->getNamespaceURI(), arg->getLocalName());
@@ -379,7 +379,7 @@ NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
 
 
 // removeNamedItemNS() - Remove the named item, and return it.
-//                      The caller must arrange for deletion of the 
+//                      The caller must arrange for deletion of the
 //                      returned item if its refcount has gone to zero -
 //                      we can't do it here because the caller would
 //                      never see the returned node.
@@ -393,7 +393,7 @@ NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
     if (i < 0)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
 
-    NodeImpl * n = nodes -> elementAt(i);   
+    NodeImpl * n = nodes -> elementAt(i);
     nodes -> removeElementAt(i);	//remove n from nodes
     n->ownerNode = ownerNode->getOwnerDocument();
     n->owned(false);
