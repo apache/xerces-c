@@ -1048,6 +1048,10 @@ DOMString DOMString::transcode(const char* str)
     return DOMString(str);
 }
 
+bool DOMString::operator < (const DOMString &other) const
+{
+    return (compareString(other) < 0);
+}
 
 int DOMString::compareString(const DOMString &other) const
 {

@@ -376,6 +376,14 @@ public:
     int         compareString(const DOMString &other) const;
 
     /**
+      * Less than operator. It is a helper operator for compareString.
+      *
+      * @param other The object to be compared with.
+      * @return True if this DOMString is lexically less than the other DOMString.
+      */
+    bool        operator < (const DOMString &other) const;
+
+    /**
       * Tells if a <code>DOMString</code> contains the same character data
       * as another.
       *
