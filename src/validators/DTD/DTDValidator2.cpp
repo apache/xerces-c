@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/04/10 23:02:00  roddey
+ * Allow an empty DOCTYPE declaration, with just the root name.
+ *
  * Revision 1.13  2000/03/08 23:41:18  roddey
  * Some fixes for content models that have multiple, trailing, empty
  * PE refs (for content model extension.)
@@ -1550,6 +1553,14 @@ void DTDValidator::scanDocTypeDecl(const bool reuseValidator)
     // Skip any spaces after the name
     getReaderMgr()->skipPastSpaces();
 
+    //
+    //  And now if we are looking at a >, then we are done. It is not
+    //  required to have an internal or external subset, though why you
+    //  would not escapes me.
+    //
+    if (getReaderMgr()->skippedChar(chCloseAngle))
+        return;
+
     bool    hasIntSubset = false;
     bool    hasExtSubset = false;
     XMLCh*  sysId = 0;
@@ -1615,7 +1626,10 @@ void DTDValidator::scanDocTypeDecl(const bool reuseValidator)
         // Indicate we are in the internal subset now
         FlagJanitor<bool> janContentFlag(&fInternalSubset, true);
 
-        // Set the current subset flag to let the scanning code know which
+        //
+        //  And try to scan the internal subset. If we fail, try to recover
+        //  by skipping forward tot he close angle and returning.
+        //
         if (!scanInternalSubset())
         {
             getReaderMgr()->skipPastChar(chCloseAngle);
