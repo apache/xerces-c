@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/09/27 13:33:43  tng
+ * [Bug 12547] Xerces C++ 2.1 fails to build on Linux 64 bits arch with -tlinux.  Patch from Guillaume Morin.
+ *
  * Revision 1.1  2002/08/19 19:38:18  tng
  * [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
  *
@@ -816,7 +819,7 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode)
 	// perform conversion
 	wLent *= uChSize();
 	char	*ptr = retVal;
-	size_t	rc = iconvTo(wideCharBuf, &wLent, &ptr, neededLen);
+	size_t	rc = iconvTo(wideCharBuf, (size_t *) &wLent, &ptr, neededLen);
 	if (rc == (size_t)-1) {
 	    if (wBufPtr)
 		delete [] wBufPtr;
