@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/06/20 17:56:21  peiyongz
+ * support for "fixed" option on constrainning facets
+ *
  * Revision 1.6  2001/05/29 19:49:35  tng
  * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
  *
@@ -197,6 +200,27 @@ void HexBinaryDatatypeValidator::init(DatatypeValidator*            const baseVa
                     setFacetsDefined(DatatypeValidator::FACET_PATTERN);
                 // do not construct regex until needed
             } 
+            else if (XMLString::compareString(key, SchemaSymbols::fgATT_FIXED)==0)
+            {
+                unsigned int val;
+                bool         retStatus;
+                try
+                {
+                     retStatus = XMLString::textToBin(value, val);
+                }
+                catch (RuntimeException)
+                {
+                    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                }
+
+                if (!retStatus)
+                {
+                    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                }
+
+                setFixed(val);
+                //no setFacetsDefined here
+            }
             else 
             {
                  ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
@@ -271,13 +295,7 @@ void HexBinaryDatatypeValidator::init(DatatypeValidator*            const baseVa
             if (((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0) &&
                 ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0))
             {
-                // if (pBaseVlidator->getFixed(DatatypeValidator::FACET_LENGTH) == true)
-                //     if ( getLength() != pBaseValidator->getLength() )
-                //         ThrowXML
-                // else
-                //     if ( getLength() > pBaseValidator->getLength() )
-                //         ThrowXML
-                if ( getLength() > pBaseValidator->getLength() )
+                if ( getLength() != pBaseValidator->getLength() )
                 {
                     XMLString::binToText(getLength(), value1, BUF_LEN, 10);
                     XMLString::binToText(pBaseValidator->getLength(), value2, BUF_LEN, 10);
@@ -315,21 +333,31 @@ void HexBinaryDatatypeValidator::init(DatatypeValidator*            const baseVa
             if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
                 ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) != 0))
             {
-                // if (pBaseVlidator->getFixed(DatatypeValidator::FACET_MINLENGTH) == true)
-                //     if ( getMinLength() != pBaseValidator->getMinLength() )
-                //         ThrowXML
-                // else
-                //     if ( getMinLength() < pBaseValidator->getMinLength() )
-                //         ThrowXML
-                if ( getMinLength() < pBaseValidator->getMinLength() )
+                if ((pBaseValidator->getFixed() & DatatypeValidator::FACET_MINLENGTH) !=0)
                 {
-                    XMLString::binToText(getMinLength(), value1, BUF_LEN, 10);
-                    XMLString::binToText(pBaseValidator->getMinLength(), value2, BUF_LEN, 10);
+                    if ( getMinLength() != pBaseValidator->getMinLength() )
+                    {
+                        XMLString::binToText(getMinLength(), value1, BUF_LEN, 10);
+                        XMLString::binToText(pBaseValidator->getMinLength(), value2, BUF_LEN, 10);
 
-                    ThrowXML2(InvalidDatatypeFacetException
+                        ThrowXML2(InvalidDatatypeFacetException
+                        , XMLExcepts::FACET_minLen_base_fixed
+                        , value1
+                        , value2);
+                    }
+                }
+                else
+                {
+                    if ( getMinLength() < pBaseValidator->getMinLength() )
+                    {
+                        XMLString::binToText(getMinLength(), value1, BUF_LEN, 10);
+                        XMLString::binToText(pBaseValidator->getMinLength(), value2, BUF_LEN, 10);
+
+                        ThrowXML2(InvalidDatatypeFacetException
                         , XMLExcepts::FACET_minLen_basemaxLen
                         , value1
                         , value2);
+                    }
                 }
             }
 
@@ -353,21 +381,31 @@ void HexBinaryDatatypeValidator::init(DatatypeValidator*            const baseVa
             if (((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
                 ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0))
             {
-                // if (pBaseVlidator->getFixed(DatatypeValidator::FACET_MAXLENGTH) == true)
-                //     if ( getMaxLength() != pBaseValidator->getMaxLength() )
-                //         ThrowXML
-                // else
-                //     if ( getMaxLength() > pBaseValidator->getMaxLength() )
-                //         ThrowXML
-                if ( getMaxLength() > pBaseValidator->getMaxLength() )
+                if ((pBaseValidator->getFixed() & DatatypeValidator::FACET_MAXLENGTH) !=0)
                 {
-                    XMLString::binToText(getMaxLength(), value1, BUF_LEN, 10);
-                    XMLString::binToText(pBaseValidator->getMaxLength(), value2, BUF_LEN, 10);
+                    if ( getMaxLength() != pBaseValidator->getMaxLength() )
+                    {
+                        XMLString::binToText(getMaxLength(), value1, BUF_LEN, 10);
+                        XMLString::binToText(pBaseValidator->getMaxLength(), value2, BUF_LEN, 10);
 
-                    ThrowXML2(InvalidDatatypeFacetException
+                        ThrowXML2(InvalidDatatypeFacetException
+                        , XMLExcepts::FACET_maxLen_base_fixed
+                        , value1
+                        , value2);
+                    }
+                }
+                else
+                {
+                    if ( getMaxLength() > pBaseValidator->getMaxLength() )
+                    {
+                        XMLString::binToText(getMaxLength(), value1, BUF_LEN, 10);
+                        XMLString::binToText(pBaseValidator->getMaxLength(), value2, BUF_LEN, 10);
+
+                        ThrowXML2(InvalidDatatypeFacetException
                         , XMLExcepts::FACET_maxLen_basemaxLen
                         , value1
                         , value2);
+                    }
                 }
             }
 
@@ -444,6 +482,10 @@ void HexBinaryDatatypeValidator::init(DatatypeValidator*            const baseVa
           }
 
           // we don't inherit pattern
+
+          // inherit "fixed" option
+          setFixed(getFixed() | pBaseValidator->getFixed());
+
      } // end of inheritance
 }
 

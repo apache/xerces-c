@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/06/20 17:56:56  peiyongz
+ * support for "fixed" option on constrainning facets
+ *
  * Revision 1.6  2001/05/11 21:51:09  knoaman
  * Schema updates and fixes.
  *
@@ -92,6 +95,7 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
                                      const ValidatorType type)
     : fFinalSet(finalSet)
     , fFacetsDefined(0)
+    , fFixed(0)
     , fType(type)
     , fBaseValidator(baseValidator)
     , fFacets(facets)
@@ -105,6 +109,21 @@ DatatypeValidator::~DatatypeValidator()
 	cleanUp();
 }
 
+const XMLCh* DatatypeValidator::getWSstring(const short theType) const
+{
+    switch (theType)
+    {
+    case PRESERVE:
+         return SchemaSymbols::fgWS_PRESERVE;
+    case REPLACE:
+         return SchemaSymbols::fgWS_COLLAPSE;
+    case COLLAPSE:
+         return SchemaSymbols::fgWS_REPLACE;
+    default: 
+         return SchemaSymbols::fgWS_PRESERVE;
+    }
+
+}
 /**
   * End of file DatatypeValidator.cpp
   */

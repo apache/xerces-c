@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.9  2001/06/19 13:29:42  knoaman
- * changed scale/precision to fractiondigits/totaldigits.
+ * Revision 1.10  2001/06/20 17:56:32  peiyongz
+ * support for "fixed" option on constrainning facets
  *
  * Revision 1.8  2001/05/29 19:49:34  tng
  * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
@@ -248,6 +248,27 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 setFractionDigits(val);
                 setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);
             }
+            else if (XMLString::compareString(key, SchemaSymbols::fgATT_FIXED)==0)
+            {
+                unsigned int val;
+                bool         retStatus;
+                try
+                {
+                     retStatus = XMLString::textToBin(value, val);
+                }
+                catch (RuntimeException)
+                {
+                    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                }
+
+                if (!retStatus)
+                {
+                    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                }
+
+                setFixed(val);
+                //no setFacetsDefined here
+            }
             else
             {
                  ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
@@ -386,7 +407,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // maxInclusive >= base.maxExclusive
                     // maxInclusive < base.minInclusive
                     // maxInclusive <= base.minExclusive
-
+                    // maxInclusive != base.maxInclusive if (base.fixed)
                     if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) )
                     {
                         if ( ((numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
@@ -440,6 +461,20 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                                 , value1
                                 , value2);
                         }
+
+                        if ( ((numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
+                             ((numBase->getFixed() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
+                             ( XMLBigDecimal::compareValues(getMaxInclusive(), numBase->getMaxInclusive()) != 0 ))
+                        {
+                            XMLCh* value1 = getMaxInclusive()->toString();
+                            ArrayJanitor<XMLCh> jan1(value1);
+                            XMLCh* value2 = numBase->getMaxInclusive()->toString();
+                            ArrayJanitor<XMLCh> jan2(value2);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                , XMLExcepts::FACET_maxIncl_base_fixed
+                                , value1
+                                , value2);
+                        }
                     }
 
                     // check 4.3.8.c3 error:
@@ -447,6 +482,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // maxExclusive > base.maxInclusive
                     // maxExclusive <= base.minInclusive
                     // maxExclusive <= base.minExclusive
+                    // maxExclusive != base.maxExclusive if (base.fixed)
                     if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) )
                     {
                         if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
@@ -500,6 +536,20 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                                 , value1
                                 , value2);
                         }
+
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+                             (( numBase->getFixed() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+                             ( XMLBigDecimal::compareValues(getMaxExclusive(), numBase->getMaxExclusive()) != 0 ))
+                        {
+                            XMLCh* value1 = getMaxExclusive()->toString();
+                            ArrayJanitor<XMLCh> jan1(value1);
+                            XMLCh* value2 = numBase->getMaxExclusive()->toString();
+                            ArrayJanitor<XMLCh> jan2(value2);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                , XMLExcepts::FACET_maxExcl_base_fixed
+                                , value1
+                                , value2);
+                        }                    
                     }
 
                     // check 4.3.9.c3 error:
@@ -507,6 +557,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // minExclusive > base.maxInclusive ??? minExclusive >= base.maxInclusive
                     // minExclusive < base.minInclusive
                     // minExclusive >= base.maxExclusive
+                    // minExclusive != base.minExclusive if (base.fixed)
                     if ( ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) )
                     {
                         if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
@@ -560,6 +611,20 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                                 , value1
                                 , value2);
                         }
+
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
+                             (( numBase->getFixed() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
+                             ( XMLBigDecimal::compareValues(getMinExclusive(), numBase->getMinExclusive() ) != 0 ))
+                        {
+                            XMLCh* value1 = getMinExclusive()->toString();
+                            ArrayJanitor<XMLCh> jan1(value1);
+                            XMLCh* value2 = numBase->getMinExclusive()->toString();
+                            ArrayJanitor<XMLCh> jan2(value2);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                , XMLExcepts::FACET_minExcl_base_fixed
+                                , value1
+                                , value2);
+                        }                    
                     }
 
                     // check 4.3.10.c2 error:
@@ -567,6 +632,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // minInclusive > base.maxInclusive
                     // minInclusive <= base.minExclusive
                     // minInclusive >= base.maxExclusive
+                    // minInclusive != base.minInclusive if (base.fixed)
                     if ( ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
                     {
                         if ( ((numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
@@ -621,9 +687,24 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                                 , value2);
                         }
 
+                        if ( ((numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
+                             ((numBase->getFixed() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
+                             ( XMLBigDecimal::compareValues(getMinInclusive(), numBase->getMinInclusive()) != 0 ))
+                        {
+                            XMLCh* value1 = getMinInclusive()->toString();
+                            ArrayJanitor<XMLCh> jan1(value1);
+                            XMLCh* value2 = numBase->getMinInclusive()->toString();
+                            ArrayJanitor<XMLCh> jan2(value2);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                , XMLExcepts::FACET_minIncl_base_fixed
+                                , value1
+                                , value2);
+                        }
+                    
                     }
 
                     // check 4.3.11.c1 error: totalDigits > base.totalDigits
+                    // totalDigits != base.totalDigits if (base.fixed)
                     if (( getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0)
                     {
                         if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
@@ -636,6 +717,18 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                                  , value1
                                  , value2);
                         }
+
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
+                             (( numBase->getFixed() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
+                              ( fTotalDigits != numBase->fTotalDigits ))
+                        {
+                            XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10);
+                            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                 , XMLExcepts::FACET_totalDigit_base_fixed
+                                 , value1
+                                 , value2);
+                        }                    
                     }
 
                    if (( getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0)
@@ -660,6 +753,19 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                             XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10);
                             ThrowXML2(InvalidDatatypeFacetException
                                  , XMLExcepts::FACET_fractDigit_base_totalDigit
+                                 , value1
+                                 , value2);
+                        }
+
+                        // fractionDigits != base.fractionDigits if (base.fixed)
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
+                             (( numBase->getFixed() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
+                             ( fFractionDigits != numBase->fFractionDigits ))
+                        {
+                            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
+                            XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                 , XMLExcepts::FACET_fractDigit_base_fixed
                                  , value1
                                  , value2);
                         }
@@ -860,20 +966,23 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
         }
 
         // inherit totalDigits         
-        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&          
             (( getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) == 0) )              
         {          
             setTotalDigits(numBase->fTotalDigits);              
-            setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);
+            setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);              
         }
           
         // inherit fractionDigits          
-        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
-            (( getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) == 0) )
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&          
+            (( getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) == 0) )              
         {          
             setFractionDigits(numBase->fFractionDigits);              
-            setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);
+            setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);              
         }
+
+        // inherit "fixed" option
+        setFixed(getFixed() | numBase->getFixed());
           
     }
 

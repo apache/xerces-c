@@ -278,6 +278,12 @@ protected:
 	int   getFacetsDefined() const;
     void  setFacetsDefined(int);
 
+    /**
+      * fixed
+	  */
+	int   getFixed() const;
+    void  setFixed(int);
+
 
     /**
       * fPattern
@@ -295,6 +301,11 @@ protected:
       * set fType
       */
     void setType(ValidatorType);
+
+    /**
+      * get WSString
+      */
+    const XMLCh*   getWSstring(const short WSType) const;
 
 private:
     // -----------------------------------------------------------------------
@@ -338,6 +349,7 @@ private:
 
     int                           fFinalSet;
     int                           fFacetsDefined;
+    int                           fFixed;
     ValidatorType                 fType;
 	DatatypeValidator*            fBaseValidator;
 	RefHashTableOf<KVStringPair>* fFacets;
@@ -429,6 +441,16 @@ inline void DatatypeValidator::setFacetsDefined(int facets)
     fFacetsDefined |= facets;
 }
 
+inline int DatatypeValidator::getFixed() const
+{
+    return fFixed;
+}
+
+inline void DatatypeValidator::setFixed(int fixed)
+{
+    fFixed |= fixed;
+}
+
 inline const XMLCh* DatatypeValidator::getPattern() const
 {
     return fPattern;
@@ -449,7 +471,6 @@ inline void DatatypeValidator::setRegex(RegularExpression* const regex)
 {
     fRegex = regex;
 }
-
 
 #endif
 

@@ -507,42 +507,53 @@ $set 3
 196  totalDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'
 197  fractDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'
 198  fractDigit value '{0}' must be less than or equal to base's fractDigit value '{1}'
-199  Value '{0}' does not match regular expression facet '{1}'
-200  Value '{0}' is not encoded in Base64 
-201  Value '{0}' is not encoded in HexBin 
-202  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
-203  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
-204  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
-205  Value '{0}' is not in enumeration 
-206  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
-207  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
-208  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
-209  Value '{0}' must be less than MaxExclusive '{1}' 
-210  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
-211  Value '{0}' must be greater than MinExclusive '{1}' 
-212  Value '{0}' is not whitespace replaced 
-213  Value '{0}' is not whitespace collapsed 
-214   Empty string encountered.
-215   String contains whitespaces only.
-216   More than one decimal points encountered.
-217   Invalid chars encountered.
-218   Null pointer encountered.
-219  A result is not set.
-220  CompactRanges - Internal Error
-221  Merge Ranges - Mismatched type
-222  SubtractRanges - Internal Error
-223  IntersectRanges - Internal Error
-224  ComplementRanges - Argument must be a RangeToken
-225  Invalid category name: {0}
-226  Keyword '{0}' not found
-227  Reference no must be more than zero
-228  Unknown option: {0}
-229  Unknown token type
-230  Failed to get RangeToken for: {0}
-231  Not supported
-232  Invalid child index
-233  Enabling the NEL option can only be called once per process.
-234  {0}
-235  operator new fails.  Possibly running Of memory
+199  maxInclusive '{0}' must be equal to base's maxInclusive '{1}' , fixed
+200  maxExclusive '{0}' must be equal to base's maxExclusive '{1}' , fixed
+201  minInclusive '{0}' must be equal to base's minInclusive '{1}' , fixed
+202  minExclusive '{0}' must be equal to base's minExclusive '{1}' , fixed
+203  totalDigit '{0}' must be equal to base's totalDigit '{1}'  , fixed
+204  fractDigit '{0}' must be equal to base's fractDigit '{1}' , fixed
+205  maxLen '{0}' must be equal to base's maxLen '{1}' , fixed
+206  minLen '{0}' must be equal to base's minLen '{1}' , fixed
+207  len '{0}' must be equal to base's len '{1}' , fixed
+208  whitespace '{0}' must be equal to base's whitespace '{1}' , fixed
+209  internal Error: fixed
+210  Value '{0}' does not match regular expression facet '{1}'
+211  Value '{0}' is not encoded in Base64 
+212  Value '{0}' is not encoded in HexBin 
+213  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
+214  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
+215  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
+216  Value '{0}' is not in enumeration 
+217  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
+218  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
+219  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
+220  Value '{0}' must be less than MaxExclusive '{1}' 
+221  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
+222  Value '{0}' must be greater than MinExclusive '{1}' 
+223  Value '{0}' is not whitespace replaced 
+224  Value '{0}' is not whitespace collapsed 
+225   Empty string encountered.
+226   String contains whitespaces only.
+227   More than one decimal points encountered.
+228   Invalid chars encountered.
+229   Null pointer encountered.
+230  A result is not set.
+231  CompactRanges - Internal Error
+232  Merge Ranges - Mismatched type
+233  SubtractRanges - Internal Error
+234  IntersectRanges - Internal Error
+235  ComplementRanges - Argument must be a RangeToken
+236  Invalid category name: {0}
+237  Keyword '{0}' not found
+238  Reference no must be more than zero
+239  Unknown option: {0}
+240  Unknown token type
+241  Failed to get RangeToken for: {0}
+242  Not supported
+243  Invalid child index
+244  Enabling the NEL option can only be called once per process.
+245  {0}
+246  operator new fails.  Possibly running Of memory
 
 

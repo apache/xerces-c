@@ -521,6 +521,17 @@
             <Message Id="FACET_totalDigit_base_totalDigit" Text="totalDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'"/>
             <Message Id="FACET_fractDigit_base_totalDigit" Text="fractDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'"/>
             <Message Id="FACET_fractDigit_base_fractDigit" Text="fractDigit value '{0}' must be less than or equal to base's fractDigit value '{1}'"/>
+            <Message Id="FACET_maxIncl_base_fixed" Text="maxInclusive '{0}' must be equal to base's maxInclusive '{1}' , fixed"/>
+            <Message Id="FACET_maxExcl_base_fixed" Text="maxExclusive '{0}' must be equal to base's maxExclusive '{1}' , fixed"/>
+            <Message Id="FACET_minIncl_base_fixed" Text="minInclusive '{0}' must be equal to base's minInclusive '{1}' , fixed"/>
+            <Message Id="FACET_minExcl_base_fixed" Text="minExclusive '{0}' must be equal to base's minExclusive '{1}' , fixed"/>
+            <Message Id="FACET_totalDigit_base_fixed" Text="totalDigit '{0}' must be equal to base's totalDigit '{1}'  , fixed"/>
+            <Message Id="FACET_fractDigit_base_fixed" Text="fractDigit '{0}' must be equal to base's fractDigit '{1}' , fixed"/>
+            <Message Id="FACET_maxLen_base_fixed" Text="maxLen '{0}' must be equal to base's maxLen '{1}' , fixed"/>
+            <Message Id="FACET_minLen_base_fixed" Text="minLen '{0}' must be equal to base's minLen '{1}' , fixed"/>
+            <Message Id="FACET_len_base_fixed" Text="len '{0}' must be equal to base's len '{1}' , fixed"/>
+            <Message Id="FACET_whitespace_base_fixed" Text="whitespace '{0}' must be equal to base's whitespace '{1}' , fixed"/>
+            <Message Id="FACET_internalError_fixed" Text="internal Error: fixed"/>
             <Message Id="VALUE_NotMatch_Pattern" Text="Value '{0}' does not match regular expression facet '{1}'"/>
             <Message Id="VALUE_Not_Base64" Text="Value '{0}' is not encoded in Base64 "/>
             <Message Id="VALUE_Not_HexBin" Text="Value '{0}' is not encoded in HexBin "/>
