@@ -164,7 +164,7 @@ XMLMacPosixFile::open(const char* const path, bool toWrite)
     if (!path)
 		ThrowXML(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero);
 
-	const char* perms = (toWrite) ? "w" : "r+";
+	const char* perms = (toWrite) ? "w" : "r";
 	mFile = fopen(path, perms);
 	
 	return (mFile != NULL);
