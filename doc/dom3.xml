@@ -25,6 +25,7 @@
 </s2>
 
 <s2 title='Implementation of DOM Level 3 Core'>
+    <p>The following are implemented in &XercesCName; &XercesCVersion;.</p>
 <ul>
     <li>
         <code>DOMImplementationRegistry</code>, <code>DOMImplementationSource</code>
@@ -49,6 +50,7 @@
 </s2>
 
 <s2 title='Implementation of DOM Level 3 Load and Save'>
+    <p>The following are implemented in &XercesCName; &XercesCVersion;.</p>
 <ul>
     <li>
         <code>DOMImplementationLS</code>
@@ -69,7 +71,7 @@
 
 </s2>
 <s2 title='Implementation of DOM Level 3 Abstract Schemas'>
-<p>Not Supported</p>
+    <p>The entire section has not been implemented in &XercesCName; &XercesCVersion;.</p>
 </s2>
 
 </s1>
