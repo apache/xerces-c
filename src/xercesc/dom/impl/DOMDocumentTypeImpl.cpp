@@ -314,7 +314,11 @@ const XMLCh * DOMDocumentTypeImpl::getSystemId() const
 
 const XMLCh * DOMDocumentTypeImpl::getInternalSubset() const
 {
-    return internalSubset.getRawBuffer();
+    const XMLCh* subset = internalSubset.getRawBuffer();
+    if (!XMLString::stringLen(subset))
+        return 0;
+    else
+        return subset;
 }
 
 bool DOMDocumentTypeImpl::isIntSubsetReading() const
