@@ -917,7 +917,8 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
                 newelement = createElement(source->getNodeName());
             else
                 newelement = createElementNS(source->getNamespaceURI(),
-                source->getNodeName());
+
+            source->getNodeName());
             DOMNamedNodeMap *srcattr=source->getAttributes();
             if(srcattr!=0)
                 for(XMLSize_t i=0;i<srcattr->getLength();++i)
@@ -929,9 +930,18 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
                             newelement->setAttributeNode(nattr);
                         else
                             newelement->setAttributeNodeNS(nattr);
+
+                        // if the imported attribute is of ID type, register the new node in fNodeIDMap
+                        if (castToNodeImpl(attr)->isIdAttr()) {
+                            castToNodeImpl(nattr)->isIdAttr(true);
+                            if (!fNodeIDMap)
+                                 fNodeIDMap = new (this) DOMNodeIDMap(500, this);
+                            fNodeIDMap->add((DOMAttr*)nattr);
+                        }
                     }
                 }
-                newnode=newelement;
+            newnode=newelement;
+
         }
         break;
     case DOMNode::ATTRIBUTE_NODE :
@@ -942,6 +952,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
             source->getNodeName());
         deep = true;
         // Kids carry value
+
         break;
     case DOMNode::TEXT_NODE :
         newnode = createTextNode(source->getNodeValue());
