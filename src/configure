@@ -1495,6 +1495,7 @@ dom/Makefile \
 parsers/Makefile \
 internal/Makefile \
 sax/Makefile \
+sax2/Makefile \
 ../obj/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
@@ -1621,6 +1622,7 @@ dom/Makefile \
 parsers/Makefile \
 internal/Makefile \
 sax/Makefile \
+sax2/Makefile \
 ../obj/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF

@@ -101,9 +101,9 @@ PRODUCTNAME=xerces
 PRODUCTVERSION=${VER}
 BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
 
-all:: Prepare Util Sax Sax2 Internal Framework Parsers Dom Validators ${THISLIB}${VER}${SHLIBSUFFIX}
+all:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators ${THISLIB}${VER}${SHLIBSUFFIX}
 
-compile:: Prepare Util Sax Sax2 Internal Framework Parsers Dom Validators
+compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators
 
 lib:: compile ${THISLIB}${VER}${SHLIBSUFFIX}
 
@@ -128,9 +128,6 @@ Sax::
 	@echo Building "sax"
 	${CD} $(SAX_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
-Sax2::
-	@echo Building "sax2"
-	${CD} $(SAX2_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
 Internal::
 	@echo Building "internal"
@@ -143,6 +140,10 @@ Framework::
 Parsers::
 	@echo Building "parsers"
 	${CD} $(PARSERS_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
+Sax2::
+	@echo Building "sax2"
+	${CD} $(SAX2_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
 Dom::
 	@echo Building "dom"
