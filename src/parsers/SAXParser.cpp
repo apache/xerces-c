@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/17 03:54:26  rahulj
+ * Added some new getters to query the parser state and
+ * clarified the documentation.
+ *
  * Revision 1.4  2000/02/06 07:47:56  rahulj
  * Year 2K copyright swat.
  *
@@ -251,6 +255,16 @@ const XMLValidator& SAXParser::getValidator() const
 bool SAXParser::getDoNamespaces() const
 {
     return fScanner->getDoNamespaces();
+}
+
+bool SAXParser::getDoValidation() const
+{
+    return fScanner->getDoValidation();
+}
+
+bool SAXParser::getExitOnFirstFatalError() const
+{
+    return fScanner->getExitOnFirstFatal();
 }
 
 

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/02/17 03:54:27  rahulj
+ * Added some new getters to query the parser state and
+ * clarified the documentation.
+ *
  * Revision 1.5  2000/02/16 03:42:58  rahulj
  * Finished documenting the SAX Driver implementation.
  *
@@ -96,14 +100,13 @@ class XMLValidator;
 
 
 /**
-  * This is the Simple API for XML (SAX) 1_0 driver for Xerces-C. It
-  * implements the SAX interface and allows the client program to install
-  * SAX handlers for event callbacks.
+  * This class implements the SAX 'Parser' interface and should be
+  * used by applications wishing to parse the XML files using SAX.
+  * It allows the client program to install SAX handlers for event
+  * callbacks.
   *
-  * <p>This class uses the parsers internal event interfaces and event
-  * callbacks and maps them to the SAX event callbacks.  It can be
-  * used to instantiate a validating or non-validating parser, by
-  * setting a member flag.</p>
+  * <p>It can be used to instantiate a validating or non-validating
+  * parser, by setting a member flag.</p>
   */
 
 class PARSERS_EXPORT SAXParser :
@@ -140,6 +143,7 @@ public :
     /**
       * This method returns the installed document handler. Suitable
       * for 'lvalue' usages.
+      *
       * @return The pointer to the installed document handler object.
       */
     DocumentHandler* getDocumentHandler();
@@ -147,6 +151,7 @@ public :
     /**
       * This method returns the installed document handler. Suitable
       * only for 'rvalue' usages.
+      *
       * @return A const pointer to the installed document handler object.
       */
     const DocumentHandler* getDocumentHandler() const;
@@ -154,6 +159,7 @@ public :
     /**
       * This method returns the installed entity resolver. Suitable
       * for 'lvalue' usages.
+      *
       * @return The pointer to the installed entity resolver object.
       */
     EntityResolver* getEntityResolver();
@@ -161,6 +167,7 @@ public :
     /**
       * This method returns the installed entity resolver. Suitable
       * for 'rvalue' usages.
+      *
       * @return A const pointer to the installed entity resolver object.
       */
     const EntityResolver* getEntityResolver() const;
@@ -168,6 +175,7 @@ public :
     /**
       * This method returns the installed error handler. Suitable
       * for 'lvalue' usages.
+      *
       * @return The pointer to the installed error handler object.
       */
     ErrorHandler* getErrorHandler();
@@ -175,6 +183,7 @@ public :
     /**
       * This method returns the installed error handler. Suitable
       * for 'rvalue' usages.
+      *
       * @return A const pointer to the installed error handler object.
       */
     const ErrorHandler* getErrorHandler() const;
@@ -182,6 +191,7 @@ public :
     /**
       * This method returns a reference to the underlying scanner object.
       * It allows read only access to data maintained in the scanner.
+      *
       * @return A const reference to the underlying scanner object.
       */
     const XMLScanner& getScanner() const;
@@ -189,6 +199,7 @@ public :
     /**
       * This method returns a reference to the parser's installed
       * validator.  
+      *
       * @return A const reference to the installed validator object.
       */
     const XMLValidator& getValidator() const;
@@ -196,10 +207,36 @@ public :
     /**
       * This method returns the state of the parser's namespace
       * handling capability.
+      *
       * @return true, if the parser is currently configured to
       *         understand namespaces, false otherwise.
+      *
+      * @see #setDoNamespaces
       */
     bool getDoNamespaces() const;
+
+    /**
+      * This method returns the state of the parser's validation
+      * handling flag which controls whether validation checks
+      * are enforced or not.
+      *
+      * @return true, if the parser is currently configured to
+      *         do validation, false otherwise.
+      *
+      * @see #setDoValidation
+      */
+    bool getDoValidation() const;
+
+    /**
+      * This method returns the state of the parser's
+      * exit-on-First-Fatal-Error flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         exit on the first fatal error, false otherwise.
+      *
+      * @see #setExitOnFirstFatalError
+      */
+    bool getExitOnFirstFatalError() const;
     //@}
 
 
@@ -210,21 +247,36 @@ public :
     /** @name Setter methods */
     //@{
     /**
-      * This method allows users to enable or disable the parser's namespace
-      * processing. When set to true, parser starts enforcing
+      * This method allows users to enable or disable the parser's
+      * namespace processing. When set to true, parser starts enforcing
       * all the constraints / rules specified by the NameSpace
       * specification.
+      *
+      * <p>The parser's default state is: false.</p>
+      *
+      * <p>This flag is ignored by the underlying scanner if the installed
+      * validator indicates that namespace constraints should be
+      * enforced.</p>
+      *
       * @param newState The value specifying whether NameSpace rules should
       *                 be enforced or not.
+      *
+      * @see #getDoNamespaces
       */
     void setDoNamespaces(const bool newState);
 
     /**
       * This method allows users to enable or disable the parser's validation
       * checks.
+      *
+      * <p>By default, the parser does not to any validation. The default
+      * value is false.</p>
+      *
       * @param newState The value specifying whether the parser should
       *                 do validity checks or not against the DTD in the
       *                 input XML document.
+      *
+      * @see #getDoValidation
       */
     void setDoValidation(const bool newState);
 
@@ -233,9 +285,15 @@ public :
       * encounters the first fatal error. If set to true, the parser
       * will exit at the first fatal error. If false, then it will
       * report the error and continue processing.
+      *
+      * <p>The default value is 'true' and the parser exits on the
+      * first fatal error.</p>
+      *
       * @param newState The value specifying whether the parser should
       *                 continue or exit when it encounters the first
       *                 fatal error.
+      *
+      * @see #getExitOnFirstFatalError
       */
     void setExitOnFirstFatalError(const bool newState);
     //@}
@@ -289,7 +347,8 @@ public :
       *               points to the XML file to be parsed.
       * @param reuseValidator The flag indicating whether the existing
       *                       validator should be reused or not for this
-      *                       parsing process.
+      *                       parsing run.
+      *
       * @see Parser#parse(InputSource)
       */
     virtual void parse(const InputSource& source, const bool reuseValidator = false);
@@ -302,7 +361,7 @@ public :
       *                 contains the path to the XML file to be parsed.
       * @param reuseValidator The flag indicating whether the existing
       *                       validator should be reused or not for this
-      *                       parsing process.
+      *                       parsing run.
       *
       * @see Parser#parse(XMLCh*)
       */
@@ -316,7 +375,7 @@ public :
       *                 contains the path to the XML file to be parsed.
       * @param reuseValidator The flag indicating whether the existing
       *                       validator should be reused or not for this
-      *                       parsing process.
+      *                       parsing run.
       */
     virtual void parse(const char* const systemId, const bool reuseValidator = false);
 
@@ -394,7 +453,7 @@ public :
       *               calls.
       * @param reuseValidator The flag indicating whether the existing validator
       *                       should be reused or not for this parsing
-      *                       process.
+      *                       run.
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It returns
       *         'false' to indicate that the parser could not find a proper
@@ -429,7 +488,7 @@ public :
       *               calls.
       * @param reuseValidator The flag indicating whether the existing validator
       *                       should be reused or not for this parsing
-      *                       process.
+      *                       run.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It returns
