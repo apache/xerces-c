@@ -105,26 +105,44 @@ public:
 
 void ParseErrorHandler::error(const SAXParseException& e)
 {
+    char* systemId = XMLString::transcode(e.getSystemId());
+    char* message = XMLString::transcode(e.getMessage());
+
     fprintf(stderr, "\nError at file \"%s\", line %d, char %d:  %s\n",
-        XMLString::transcode(e.getSystemId()), e.getLineNumber(),
-        e.getColumnNumber(), XMLString::transcode(e.getMessage()));
+        systemId, e.getLineNumber(),
+        e.getColumnNumber(), message);
+
+    delete [] systemId;
+    delete [] message;
     throw e;
 
 };
 
 void ParseErrorHandler::fatalError(const SAXParseException& e)
 {
+    char* systemId = XMLString::transcode(e.getSystemId());
+    char* message = XMLString::transcode(e.getMessage());
+
     fprintf(stderr, "\nFatal Error at file \"%s\", line %d, char %d:  %s\n",
-        XMLString::transcode(e.getSystemId()), e.getLineNumber(),
-        e.getColumnNumber(), XMLString::transcode(e.getMessage()));
+        systemId, e.getLineNumber(),
+        e.getColumnNumber(), message);
+
+    delete [] systemId;
+    delete [] message;
     throw e;
 };
 
 void ParseErrorHandler::warning(const SAXParseException& e)
 {
+    char* systemId = XMLString::transcode(e.getSystemId());
+    char* message = XMLString::transcode(e.getMessage());
+
     fprintf(stderr, "\nWarning at file \"%s\", line %d, char %d:  %s\n",
-        XMLString::transcode(e.getSystemId()), e.getLineNumber(),
-        e.getColumnNumber(), XMLString::transcode(e.getMessage()));
+        systemId, e.getLineNumber(),
+        e.getColumnNumber(), message);
+
+    delete [] systemId;
+    delete [] message;
     throw e;
 
 };
@@ -139,7 +157,8 @@ void ParseErrorHandler::warning(const SAXParseException& e)
 static DOMDocument* parseFile(char *fileName)
 {
     ParseErrorHandler eh;
-    parser = new XercesDOMParser;
+    if (!parser)
+        parser = new XercesDOMParser;
     parser->setDoValidation(false);
     parser->setErrorHandler(&eh);
     try
@@ -259,7 +278,8 @@ static bool  processTestFile(const XMLCh* fileName)
     //
     //  Send the input file through the parse, create a DOM document for it.
     //
-    char *cFileName = XMLString::transcode(fileName);
+    char cFileName[4000];
+    XMLString::transcode(fileName, cFileName, 3999);
     DOMDocument* testDoc = parseFile(cFileName);
     if (testDoc == 0)
         return false;    // parse errors in the source xml.
@@ -386,8 +406,6 @@ static bool  processTestFile(const XMLCh* fileName)
         return false;
     }
 
-    delete [] cFileName;
-
     return true;
 }
 
@@ -450,5 +468,7 @@ int main(int argc, char ** argv) {
            "   %d tests passed,\n"
            "   %d tests failed\n", gTestsRun, gTestsRun-gTestsFailed, gTestsFailed);
 
+    delete parser;
+    parser = 0;
    return 0;
 };
