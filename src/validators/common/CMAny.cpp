@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/08/08 13:23:27  knoaman
+ * Fix condition check.
+ *
  * Revision 1.5  2001/07/09 15:22:35  knoaman
  * complete <any> declaration.
  *
@@ -91,9 +94,9 @@ CMAny::CMAny( const   ContentSpecNode::NodeTypes  type
      , fURI(URI)
      , fPosition(position)
 {
-    if ((type != ContentSpecNode::Any)
-    &&  (type != ContentSpecNode::Any_Other)
-    &&  (type != ContentSpecNode::Any_NS))
+    if ((type & 0x0f) != ContentSpecNode::Any
+    &&  (type & 0x0f) != ContentSpecNode::Any_Other
+    &&  (type & 0x0f) != ContentSpecNode::Any_NS)
     {
 		ThrowXML1(RuntimeException,
 		          XMLExcepts::CM_NotValidSpecTypeForNode,
