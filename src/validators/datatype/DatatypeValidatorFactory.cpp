@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/07/26 20:48:02  peiyongz
+ * FloatDatatypeValidator
+ *
  * Revision 1.19  2001/07/24 21:23:39  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -139,6 +142,7 @@
 #include <validators/datatype/ListDatatypeValidator.hpp>
 #include <validators/datatype/UnionDatatypeValidator.hpp>
 #include <validators/datatype/DoubleDatatypeValidator.hpp>
+#include <validators/datatype/FloatDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -402,9 +406,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                        new Base64BinaryDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,
                        new DoubleDatatypeValidator());
-/*
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,
                        new FloatDatatypeValidator());
+/*
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,
                        new AnyURIDatatypeValidator());
 */
