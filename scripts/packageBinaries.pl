@@ -134,7 +134,7 @@ if ($platform =~ m/Windows/) {
         # Make all files in the Xerces-C system including libraries, samples and tests
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
         print "Executing: msdev xerces-all.dsp /MAKE \"all - $platformname $buildmode\" /REBUILD";
-	system("msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
+		system("msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
 
         # Decide where you want the build copied from
         chdir ($targetdir);
@@ -144,6 +144,7 @@ if ($platform =~ m/Windows/) {
         # Populate the include output directory
         print ("\n\nCopying headers files ...\n");
         $xcopycommand = "xcopy $XERCESCROOT\\src\\*.hpp $targetdir\\include";
+		system ("del  $targetdir\\include\\dom\\*Impl.hpp");
         $xcopycommand =~ s/\//\\/g;
         system ("$xcopycommand /S /C /I /R");
         $xcopycommand = "xcopy $XERCESCROOT\\src\\*.c $targetdir\\include";
@@ -413,6 +414,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         system("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
         system("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
         system("cp -Rf $XERCESCROOT/src/dom/DOM*.hpp $targetdir/include/dom");
+		system("rm -f $targetdir/include/dom/*Impl.hpp");
         system("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
         system("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
         system("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
