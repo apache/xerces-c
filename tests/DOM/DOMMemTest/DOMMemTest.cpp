@@ -66,6 +66,10 @@
 
 /*
  * $Log$
+ * Revision 1.24  2000/11/30 19:46:07  andyh
+ * DOM_Text::splitText(), fix off by one error in the test for index too big error.
+ * Tinny Ng
+ *
  * Revision 1.23  2000/10/13 22:47:37  andyh
  * Fix bug (failure to null-terminate result) in XMLString::trim().
  * Patch contributed by Nadav Aharoni
@@ -591,8 +595,6 @@ void    DOMStringTests()
         TASSERT(strcmp(testString, "Hello") == 0);
     }
     TESTEPILOG;
-
-
 }
 
 
@@ -1025,6 +1027,30 @@ void DOMBasicTests()
         s = a.getValue();
         TASSERT(s.equals("CTestAttrValue"));
 
+    }
+    TESTEPILOG;
+
+
+    //
+    //  splitText()
+    //     Regression test for a bug from Tinny Ng
+    //
+    TESTPROLOG;
+    {
+        DOM_Document doc;
+        doc = DOM_Document::createDocument();
+        DOM_Text tn, tn1, tn2;
+        tn = doc.createTextNode ("0123456789");
+
+        tn1 = tn.splitText(5);
+        TASSERT( tn.getNodeValue().equals("01234"));
+        TASSERT(tn1.getNodeValue().equals("56789"));
+
+        tn2 = tn.splitText(5);
+        TASSERT( tn.getNodeValue().equals("01234"));
+        TASSERT(tn2.getNodeValue().equals(""));
+
+        EXCEPTION_TEST(tn.splitText(6), DOM_DOMException::INDEX_SIZE_ERR);
     }
     TESTEPILOG;
 

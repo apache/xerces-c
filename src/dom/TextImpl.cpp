@@ -113,7 +113,7 @@ TextImpl *TextImpl::splitText(unsigned int offset)
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     }
 	unsigned int len = data.length();
-    if (offset >= len)
+    if (offset > len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
                
     TextImpl *newText = 

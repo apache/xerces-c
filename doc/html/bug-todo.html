@@ -11,17 +11,31 @@
 
 <H2><IMG SRC="resources/logo.gif" WIDTH="135" HEIGHT="60" ALIGN="TOP" BORDER="0"><IMG SRC="graphics/index-header.jpg"
 WIDTH="456" HEIGHT="35" ALIGN="TOP" BORDER="0"></H2>
-
 <H2><BR>
 Xerces-C Bug List</H2>
-<P>This is a list of  bugs that have been submitted on the xerces-c-dev mailing list.  <I>Under Construction.</I></P>
-
+<P>This is a list of bugs that have been submitted on the xerces-c-dev mailing list. <I>Under Construction.</I></P>
 <P>
 <TABLE BORDER="1" WIDTH="100%">
 	<TR>
 		<TD WIDTH="9%">Date</TD>
 		<TD WIDTH="13%">By</TD>
 		<TD WIDTH="78%">Description</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="9%">2000-11-20 </TD>
+		<TD WIDTH="13%">Kriszti&aacute;n Havasi</TD>
+		<TD WIDTH="78%">DOM: Crash when deleting entity reference nodes.  See xerces-c-dev mail.</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="9%">2000-11-17</TD>
+		<TD WIDTH="13%">Daniel Walker</TD>
+		<TD WIDTH="78%">Behavior of ElementImpl::setAttributeNode() - When setting an attribute node, the new AttrImpl's ownerElment member
+			is not updated.</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="9%">2000-11-16</TD>
+		<TD WIDTH="13%">Moishe Lettvin</TD>
+		<TD WIDTH="78%">BinHTTPURLInputStream, the query part of the URL is being ignored.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-10-26</TD>
@@ -37,7 +51,7 @@ Xerces-C Bug List</H2>
 	<TR>
 		<TD WIDTH="9%">2000-10-30</TD>
 		<TD WIDTH="13%">Radovan Chytracek</TD>
-		<TD WIDTH="78%">ignorableWhiteSpace not called during progressive SAX parsing.  Works correctly with batch parsing.</TD>
+		<TD WIDTH="78%">ignorableWhiteSpace not called during progressive SAX parsing. Works correctly with batch parsing.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-10-15</TD>
@@ -79,19 +93,18 @@ Xerces-C Bug List</H2>
 	<TR>
 		<TD WIDTH="9%">&nbsp;</TD>
 		<TD WIDTH="13%">&nbsp;</TD>
-		<TD WIDTH="78%">DOM_XMLDecl - mark as nonstandard, since it's not part of W3C design.  Implement DOM L3 proposal for access to
-			the same information.</TD>
+		<TD WIDTH="78%">DOM_XMLDecl - mark as nonstandard, since it's not part of W3C design. Implement DOM L3 proposal for access to the
+			same information.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">7-2000</TD>
 		<TD WIDTH="13%">Eliot Muir</TD>
-		<TD WIDTH="78%">Dynamically link to either wsock32.lib or ws2_32.lib on Windows, to get rid of hard dependency on one or the other.
-			 </TD>
+		<TD WIDTH="78%">Dynamically link to either wsock32.lib or ws2_32.lib on Windows, to get rid of hard dependency on one or the other.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-10-3</TD>
 		<TD WIDTH="13%">Joe Pruitt</TD>
-		<TD WIDTH="78%">NetAccessor: investigate use of open source library &quot;cURL&quot;.  http://curl.haxx.se   Looks promising.</TD>
+		<TD WIDTH="78%">NetAccessor: investigate use of open source library &quot;cURL&quot;. http://curl.haxx.se Looks promising.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">&nbsp;</TD>
@@ -116,7 +129,7 @@ Xerces-C Bug List</H2>
 	<TR>
 		<TD WIDTH="9%">&nbsp;</TD>
 		<TD WIDTH="13%">&nbsp;</TD>
-		<TD WIDTH="78%">HPUX - incorrect transcode to wchar_t?  Investigate again.</TD>
+		<TD WIDTH="78%">HPUX - incorrect transcode to wchar_t? Investigate again.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">&nbsp;</TD>
@@ -126,22 +139,22 @@ Xerces-C Bug List</H2>
 	<TR>
 		<TD WIDTH="9%">2000-10-25</TD>
 		<TD WIDTH="13%">Tony Wuebben</TD>
-		<TD WIDTH="78%">DOMParser throws exception during DTD evaluation.  See mail list.</TD>
+		<TD WIDTH="78%">DOMParser throws exception during DTD evaluation. See mail list.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-10-24</TD>
 		<TD WIDTH="13%">Joel C. Lim</TD>
-		<TD WIDTH="78%">Possible memory leak.  See mail list.</TD>
+		<TD WIDTH="78%">Possible memory leak. See mail list.</TD>
 	</TR>
 	<TR>
-		<TD WIDTH="9%">2000-10-23 </TD>
+		<TD WIDTH="9%">2000-10-23</TD>
 		<TD WIDTH="13%">Hal DeVore</TD>
-		<TD WIDTH="78%">Access to DOCUMENT_TYPE_NODE entities causes exception.  See mail list.</TD>
+		<TD WIDTH="78%">Access to DOCUMENT_TYPE_NODE entities causes exception. See mail list.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-10-19</TD>
 		<TD WIDTH="13%">Perry A. Caro</TD>
-		<TD WIDTH="78%">Possible bug in VecAttributesImpl.cpp.  See mail list.</TD>
+		<TD WIDTH="78%">Possible bug in VecAttributesImpl.cpp. See mail list.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-10-18</TD>
@@ -151,7 +164,7 @@ Xerces-C Bug List</H2>
 	<TR>
 		<TD WIDTH="9%">2000-10-16</TD>
 		<TD WIDTH="13%">Tony Wuebben</TD>
-		<TD WIDTH="78%">Entity Reference Cleanup dumping core.   See mail list.</TD>
+		<TD WIDTH="78%">Entity Reference Cleanup dumping core. See mail list.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-10-16</TD>
@@ -162,46 +175,34 @@ Xerces-C Bug List</H2>
 	<TR>
 		<TD WIDTH="9%">2000-09-30</TD>
 		<TD WIDTH="13%">Bala Ayres</TD>
-		<TD WIDTH="78%">Possible SAXParser bug.  Verify.   See mail list.</TD>
+		<TD WIDTH="78%">Possible SAXParser bug. Verify. See mail list.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-09-21</TD>
 		<TD WIDTH="13%">Dave Connet</TD>
-		<TD WIDTH="78%">DOMPrint creates invalid XML.  See mail list.  </TD>
+		<TD WIDTH="78%">DOMPrint creates invalid XML. See mail list.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-09-14</TD>
 		<TD WIDTH="13%">Jeff Lewis</TD>
-		<TD WIDTH="78%">ReuseValidator enhancement request.  Reuse only if the DTD listed in the XML is the same as the one previously
-			loaded.</TD>
+		<TD WIDTH="78%">ReuseValidator enhancement request. Reuse only if the DTD listed in the XML is the same as the one previously loaded.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-07-31</TD>
 		<TD WIDTH="13%">Pawel Hubczak</TD>
-		<TD WIDTH="78%">Possible memory leak when ErrorHandler::error override called.  (This might be fixed already)</TD>
+		<TD WIDTH="78%">Possible memory leak when ErrorHandler::error override called. (This might be fixed already)</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="9%">2000-03-08</TD>
 		<TD WIDTH="13%">Dean Roddey</TD>
 		<TD WIDTH="78%">DOMString feature request - transcode to a caller supplied buffer, rather than always allocating a new one on the
-			heap.  Primarily for better performance.</TD>
+			heap. Primarily for better performance.</TD>
 	</TR>
 </TABLE>
 </P>
-
-
-<BLOCKQUOTE>
-
-	<BLOCKQUOTE>
-		<P>
-
-	</BLOCKQUOTE>
-
-</BLOCKQUOTE>
-
 <H2>Xerces-C New Feature Request List</H2>
-
-<H2>
+<H2></H2>
+<P>
 <TABLE BORDER="1" WIDTH="100%">
 	<TR>
 		<TD WIDTH="10%">&nbsp;</TD>
@@ -211,12 +212,23 @@ Xerces-C Bug List</H2>
 	<TR>
 		<TD WIDTH="10%">&nbsp;</TD>
 		<TD WIDTH="13%">&nbsp;</TD>
-		<TD WIDTH="77%">Better Build.  Make it simpler, more standard.</TD>
+		<TD WIDTH="77%">DOM Revalidation.  Easiest approach is probably to create a DOMInputStream and re-run the parser.   Once the DOM
+			Serializer is ready, this shouldn't be hard.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="10%">&nbsp;</TD>
 		<TD WIDTH="13%">&nbsp;</TD>
-		<TD WIDTH="77%">XML Serializer.  Write out a DOM tree in memory as XML.</TD>
+		<TD WIDTH="77%">Option to not read external DTDs (ignore DOCTYPE line)</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="10%">&nbsp;</TD>
+		<TD WIDTH="13%">&nbsp;</TD>
+		<TD WIDTH="77%">Better Build. Make it simpler, more standard.</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="10%">&nbsp;</TD>
+		<TD WIDTH="13%">&nbsp;</TD>
+		<TD WIDTH="77%">XML Serializer. Write out a DOM tree in memory as XML.</TD>
 	</TR>
 	<TR>
 		<TD WIDTH="10%">&nbsp;</TD>
