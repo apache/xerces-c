@@ -250,9 +250,22 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
    <faq title="I am getting a tar checksum error on Solaris. What's the problem?">
       <q>I am getting a tar checksum error on Solaris. What's the problem?</q>
       <a>
-         <p>The problem has to do with how Solaris handles long pathnames. Either use gnu
-            tar to extract the files, or try using the -i switch with Sun's native tar.
-            The -i switch is supposed to make tar ignore checksum errors.
+         <p>The problem is caused by a limitation in the original tar spec, which
+            prevented it from archiving files with long pathnames.  Unfortunately,
+            various current versions of tar use different extensions for eliminating
+            this restriction which are incompatible with each other (or they do not
+            remove the restriction at all).  Rather than altering the pathnames for
+            the xerces-c package, which would make them compatible with the original
+            tar spec but make it more difficult to know what was where, it was
+            decided to use GNU tar (gtar), which handles arbitrarily long pathnames
+            and is freely available on every platform on which xerces-c is
+            supported.  If you don't already have GNU tar installed on your system,
+            you can obtain it from the Free Software Foundation
+            <jump href="http://www.gnu.org/software/tar/tar.html">
+            http://www.gnu.org/software/tar/tar.html</jump>.  For additional
+            background information on this problem, see the online manual
+            <jump href="http://www.gnu.org/manual/tar/html_node/tar_117.html#SEC112">
+            GNU tar and POSIX tar </jump> for the utility.
          </p>
       </a>
    </faq>
