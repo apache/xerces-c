@@ -156,7 +156,11 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
     fNamePool    = new (this) DOMStringPool(257, this);
     try {
         setDocumentType(doctype);
-        appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
+
+        if (qualifiedName)
+            appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
+        else if (fNamespaceURI)
+            throw DOMException(DOMException::NAMESPACE_ERR, 0);
     }
     catch (...) {
         this->deleteHeap();
