@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/03/02 20:53:03  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.7  2000/10/17 00:52:00  andyh
  * Change XMLCh back to unsigned short on all platforms.
  *
@@ -131,6 +135,10 @@ typedef unsigned short XMLCh;
 typedef unsigned short XMLUInt16;
 typedef unsigned int   XMLUInt32;
 
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int            XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment

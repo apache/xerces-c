@@ -95,6 +95,10 @@ typedef unsigned short XMLCh;
 typedef unsigned short XMLUInt16;
 typedef unsigned int   XMLUInt32;
 
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment

@@ -100,6 +100,11 @@ typedef unsigned short  UTF16Ch;
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
 
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
+
 //WLH-2000-08-18 -- Add more compiler quirk cross-defines
 #define _itoa  std::itoa
 

@@ -310,6 +310,38 @@
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
             <Message Id="Val_CantHaveIntSS" Text="When reusing the validator, no internal subset is allowed"/>
             <Message Id="XMLRec_UnknownEncoding" Text="The passed recognizer encoding was not known"/>
+            <Message Id="Parser_Parse1" Text="Wrong character"/>
+            <Message Id="Parser_Parse2" Text="Invalid reference number"/>
+            <Message Id="Parser_Next1" Text="A character is required after \"/>
+            <Message Id="Parser_Next2" Text="'?' is not expected.  '(?:' or '(?=' or '(?!' or '(?&lt;' or '(?#' or '(?&gt;'?"/>
+            <Message Id="Parser_Next3" Text="'(?&lt;=' or '(?&lt;!' is expected"/>
+            <Message Id="Parser_Next4" Text="A comment is not terminated"/>
+            <Message Id="Parser_Factor1" Text="')' is expected"/>
+            <Message Id="Parser_Factor2" Text="Unexpected end of the pattern in a modifier group"/>
+            <Message Id="Parser_Factor3" Text="':' is expected"/>
+            <Message Id="Parser_Factor4" Text="Unexpected end of the pattern in a conditional group"/>
+            <Message Id="Parser_Factor5" Text="A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern"/>
+            <Message Id="Parser_Factor6" Text="There are more than three choises in a conditional group"/>
+            <Message Id="Parser_Atom1" Text="A character in U+0040-U+005f must follow \c"/>
+            <Message Id="Parser_Atom2" Text="A Category character or '{' is required"/>
+            <Message Id="Parser_Atom3" Text="A property name is not closed by '}'"/>
+            <Message Id="Parser_Atom4" Text="Unexpected meta character"/>
+            <Message Id="Parser_Atom5" Text="Unknown property"/>
+            <Message Id="Parser_CC1" Text="A POSIX character class must be closed by ':]'"/>
+            <Message Id="Parser_CC2" Text="Unexpected end of the pattern in a character class"/>
+            <Message Id="Parser_CC3" Text="Unknown name for a POSIX character class"/>
+            <Message Id="Parser_CC4" Text="'-' is invalid here"/>
+            <Message Id="Parser_CC5" Text="']' is expected"/>
+            <Message Id="Parser_CC6" Text="'[' is invalid in a characer class.  Write '\['"/>
+            <Message Id="Parser_CC7" Text="']' is invalid in a characer class.  Write '\]'"/>
+            <Message Id="Parser_Ope1" Text="='[' is expected"/>
+            <Message Id="Parser_Ope2" Text="')' or '-[' or '+[' or '&amp;[' is expected"/>
+            <Message Id="Parser_Descape1" Text="Invalid Unicode hex notation"/>
+            <Message Id="Parser_Descape2" Text="Overflow in a hex notation"/>
+            <Message Id="Parser_Descape3" Text="'\x{' must be closed by '}'"/>
+            <Message Id="Parser_Descape4" Text="Invalid Unicode code point"/>
+            <Message Id="Parser_Descape5" Text="An anchor must not be here"/>
+            <Message Id="Parser_Process1" Text="This expression is not supported in the current option setting"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">

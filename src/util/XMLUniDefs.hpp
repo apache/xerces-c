@@ -73,12 +73,15 @@
 const XMLCh chNull                  = 0x00;
 const XMLCh chHTab                  = 0x09;
 const XMLCh chLF                    = 0x0A;
+const XMLCh chVTab                  = 0x0B;
+const XMLCh chFF                    = 0x0C;
 const XMLCh chCR                    = 0x0D;
 const XMLCh chAmpersand             = 0x26;
 const XMLCh chAsterisk              = 0x2A;
 const XMLCh chAt                    = 0x40;
 const XMLCh chBackSlash             = 0x5C;
 const XMLCh chBang                  = 0x21;
+const XMLCh chCaret                 = 0x5E;
 const XMLCh chCloseAngle            = 0x3E;
 const XMLCh chCloseCurly            = 0x7D;
 const XMLCh chCloseParen            = 0x29;
@@ -178,7 +181,7 @@ const XMLCh chLatin_z               = 0x7A;
 const XMLCh chYenSign               = 0xA5;
 const XMLCh chWonSign               = 0x20A9;
 
-const XMLCh chLineSeparator			= 0x2028;
-const XMLCh chParagraphSeparator	= 0x2029;
+const XMLCh chLineSeparator         = 0x2028;
+const XMLCh chParagraphSeparator    = 0x2029;
 
 #endif

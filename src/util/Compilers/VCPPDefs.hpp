@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/03/02 20:53:08  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.7  2000/06/16 21:13:23  rahulj
  * Add 'D' suffix to the library name for the 'DEBUG' build
  * configuration.
@@ -130,7 +134,10 @@ typedef unsigned short  UTF16Ch;
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
 
-
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment

@@ -298,5 +298,37 @@ $set 3
 101  The element id was invalid
 102  When reusing the validator, no internal subset is allowed
 103  The passed recognizer encoding was not known
+104  Wrong character
+105  Invalid reference number
+106  A character is required after \
+107  '?' is not expected.  '(?:' or '(?=' or '(?!' or '(?<' or '(?#' or '(?>'?
+108  '(?<=' or '(?<!' is expected
+109  A comment is not terminated
+110  ')' is expected
+111  Unexpected end of the pattern in a modifier group
+112  ':' is expected
+113  Unexpected end of the pattern in a conditional group
+114  A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern
+115  There are more than three choises in a conditional group
+116  A character in U+0040-U+005f must follow \c
+117  A Category character or '{' is required
+118  A property name is not closed by '}'
+119  Unexpected meta character
+120  Unknown property
+121  A POSIX character class must be closed by ':]'
+122  Unexpected end of the pattern in a character class
+123  Unknown name for a POSIX character class
+124  '-' is invalid here
+125  ']' is expected
+126  '[' is invalid in a characer class.  Write '\['
+127  ']' is invalid in a characer class.  Write '\]'
+128  ='[' is expected
+129  ')' or '-[' or '+[' or '&[' is expected
+130  Invalid Unicode hex notation
+131  Overflow in a hex notation
+132  '\x{' must be closed by '}'
+133  Invalid Unicode code point
+134  An anchor must not be here
+135  This expression is not supported in the current option setting
 
 

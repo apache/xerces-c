@@ -88,6 +88,10 @@ typedef unsigned short XMLCh;
 typedef unsigned short XMLUInt16;
 typedef unsigned int   XMLUInt32;
 
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int            XMLInt32;
 
 
 // ---------------------------------------------------------------------------

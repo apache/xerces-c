@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/03/02 20:52:54  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.10  2001/02/05 20:01:39  tng
  * define NO_NATIVE_BOOL macro only if not pre-defined/reserved
  *
@@ -127,6 +131,10 @@ typedef unsigned short XMLCh;
 typedef unsigned short XMLUInt16;
 typedef unsigned int   XMLUInt32;
 
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment

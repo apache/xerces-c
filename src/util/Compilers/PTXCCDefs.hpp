@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/03/02 20:53:05  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.2  2000/04/04 21:07:39  abagchi
  * Fixed copyrights with initial checkin
  *
@@ -84,6 +88,11 @@ typedef unsigned short XMLCh;
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
+
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the XML4C debug token if it was on in the build environment

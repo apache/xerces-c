@@ -346,6 +346,24 @@ int XMLString::indexOf(const char* const toSearch, const char ch)
 }
 
 
+int XMLString::indexOf( const   char* const     toSearch
+                        , const char            ch
+                        , const unsigned int    fromIndex)
+{
+    const unsigned int len = strlen(toSearch);
+
+    // Make sure the start index is within the XMLString bounds
+	if ((int)fromIndex > len-1)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+
+    for (unsigned int i = fromIndex; i < len; i++)
+    {
+        if (toSearch[i] == ch)
+            return i;
+    }
+    return -1;
+}
+
 int XMLString::lastIndexOf(const char* const toSearch, const char ch)
 {
     const int len = strlen(toSearch);
@@ -561,6 +579,29 @@ void XMLString::trim(char* const toTrim)
 }
 
 
+void XMLString::subString(char* const targetStr, const char* const srcStr
+                          , const int startIndex, const int endIndex)
+{
+	//if (startIndex < 0 || endIndex < 0)
+    //    ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_NegativeIndex);
+
+	if (targetStr == 0)
+        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
+
+    const int srcLen = strlen(srcStr);
+	const int copySize = endIndex - startIndex;
+
+    // Make sure the start index is within the XMLString bounds
+	if (startIndex > srcLen-1 || endIndex > srcLen - 1)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+
+	for (int i= startIndex; i < endIndex; i++) {
+
+		targetStr[i-startIndex] = srcStr[i];
+	}
+
+	targetStr[copySize] = 0;
+}
 
 // ---------------------------------------------------------------------------
 //  Wide char versions of most of the string methods
@@ -804,6 +845,36 @@ int XMLString::compareString(   const   XMLCh* const    str1
 }
 
 
+bool XMLString::regionMatches(const   XMLCh* const	str1
+							  , const int			offset1
+							  , const XMLCh* const	str2
+							  , const int			offset2
+							  , const unsigned int	charCount)
+{
+	if (!validateRegion(str1, offset1,str2, offset2, charCount))
+		return false;
+
+	if (compareNString(str1+offset1, str2+offset2, charCount) != 0)
+		return false;
+
+	return true;
+}
+
+bool XMLString::regionIMatches(const   XMLCh* const	str1
+						 	   , const int			offset1
+							   , const XMLCh* const	str2
+							   , const int			offset2
+							   , const unsigned int	charCount)
+{
+	if (!validateRegion(str1, offset1,str2, offset2, charCount))
+		return false;
+
+	if (compareNIString(str1+offset1, str2+offset2, charCount) != 0)
+		return false;
+
+	return true;
+}
+
 void XMLString::copyString(XMLCh* const target, const XMLCh* const src)
 {
     if (!src)
@@ -920,6 +991,25 @@ int XMLString::indexOf(const XMLCh* const toSearch, const XMLCh ch)
 {
     const unsigned int len = stringLen(toSearch);
     for (unsigned int i = 0; i < len; i++)
+    {
+        if (toSearch[i] == ch)
+            return i;
+    }
+    return -1;
+}
+
+
+int XMLString::indexOf( const   XMLCh* const    toSearch
+                        , const XMLCh           ch
+                        , const unsigned int    fromIndex)
+{
+    const int len = stringLen(toSearch);
+
+    // Make sure the start index is within the XMLString bounds
+	if ((int)fromIndex > len-1)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+
+    for (int i = (int)fromIndex; i < len; i++)
     {
         if (toSearch[i] == ch)
             return i;
@@ -1074,6 +1164,37 @@ void XMLString::upperCase(XMLCh* const toUpperCase)
     XMLPlatformUtils::fgTransService->upperCase(toUpperCase);
 }
 
+
+void XMLString::lowerCase(XMLCh* const toLowerCase)
+{
+    // Refer this one to the transcoding service
+    //XMLPlatformUtils::fgTransService->lowerCase(toLowerCase);
+}
+
+
+void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
+                          , const int startIndex, const int endIndex)
+{
+	//if (startIndex < 0 || endIndex < 0)
+    //    ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_NegativeIndex);
+
+	if (targetStr == 0)
+        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
+
+    const int srcLen = stringLen(srcStr);
+	const int copySize = endIndex - startIndex;
+
+    // Make sure the start index is within the XMLString bounds
+	if (startIndex > srcLen-1 || endIndex > srcLen - 1)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+
+	for (int i= startIndex; i < endIndex; i++) {
+
+		targetStr[i-startIndex] = srcStr[i];
+	}
+
+	targetStr[copySize] = 0;
+}
 
 
 // ---------------------------------------------------------------------------

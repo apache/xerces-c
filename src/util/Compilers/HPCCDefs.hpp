@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/03/02 20:52:59  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.10  2000/03/29 00:41:07  aruna1
  * Modified bool warnings for HP CC
  *
@@ -138,6 +142,10 @@ typedef unsigned short UTF16Ch;
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
 
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Provide prototypes for some string methods that are not always available

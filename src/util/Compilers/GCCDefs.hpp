@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/03/02 20:52:58  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.12  2001/02/08 14:15:33  tng
  * enable COMPAQ Tru64 UNIX machines to build xerces-c with gcc (tested using COMPAQ gcc version2.95.2 19991024 (release) and Tru64 V5.0 1094).  Added by Martin Kalen.
  *
@@ -128,6 +132,11 @@ typedef unsigned short XMLCh;
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
+
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/03/02 20:52:46  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.15  2001/01/15 21:26:34  tng
  * Performance Patches by David Bertoni.
  *
@@ -523,6 +527,77 @@ public:
         const   XMLCh* const    str1
         , const XMLCh* const    str2
     );
+
+	/** Lexicographically compares <code>str1</code> and <code>str2</code> 
+	  * regions and returns true if they are equal, otherwise false.
+	  *
+      * A substring of <code>str1</code> is compared to a substring of
+	  * <code>str2</code>. The result is true if these substrings represent
+	  * identical character sequences. The substring of <code>str1</code>
+      * to be compared begins at offset1 and has length charsCount. The
+	  * substring of <code>str2</code> to be compared begins at offset2 and
+	  * has length charsCount. The result is false if and only if at least
+      * one of the following is true:
+      *   offset1 is negative.
+      *   offset2 is negative.
+      *   offset1+charsCount is greater than the length of str1.
+      *   offset2+charsCount is greater than the length of str2.
+      *   There is some nonnegative integer k less than charsCount such that:
+      *   str1.charAt(offset1+k) != str2.charAt(offset2+k)
+      *
+      * @param str1 Null-terminated string to compare
+	  * @param offset1 Starting offset of str1
+      * @param str2 Null-terminated string to compare
+	  * @param offset2 Starting offset of str2
+	  * @param charsCount The number of characters to compare
+      * @return true if the specified subregion of <code>str1</code> exactly 
+	  *  matches the specified subregion of <code>str2></code>; false 
+	  *  otherwise. 
+      */
+    static bool regionMatches
+    (
+        const   XMLCh* const    str1
+		, const	int				offset1
+        , const XMLCh* const    str2
+		, const int				offset2
+		, const unsigned int	charCount
+    );
+
+	/** Lexicographically compares <code>str1</code> and <code>str2</code> 
+	  * regions without regard to case and returns true if they are equal, 
+	  * otherwise false.
+	  *
+      * A substring of <code>str1</code> is compared to a substring of
+	  * <code>str2</code>. The result is true if these substrings represent
+	  * identical character sequences. The substring of <code>str1</code>
+      * to be compared begins at offset1 and has length charsCount. The
+	  * substring of <code>str2</code> to be compared begins at offset2 and
+	  * has length charsCount. The result is false if and only if at least
+      * one of the following is true:
+      *   offset1 is negative.
+      *   offset2 is negative.
+      *   offset1+charsCount is greater than the length of str1.
+      *   offset2+charsCount is greater than the length of str2.
+      *   There is some nonnegative integer k less than charsCount such that:
+      *   str1.charAt(offset1+k) != str2.charAt(offset2+k)
+      *
+      * @param str1 Null-terminated string to compare
+	  * @param offset1 Starting offset of str1
+      * @param str2 Null-terminated string to compare
+	  * @param offset2 Starting offset of str2
+	  * @param charsCount The number of characters to compare
+      * @return true if the specified subregion of <code>str1</code> exactly 
+	  *  matches the specified subregion of <code>str2></code>; false 
+	  *  otherwise. 
+      */
+    static bool regionIMatches
+    (
+        const   XMLCh* const    str1
+		, const	int				offset1
+        , const XMLCh* const    str2
+		, const int				offset2
+		, const unsigned int	charCount
+    );
     //@}
 
     /** @name String copy functions */
@@ -645,6 +720,40 @@ public:
       */
     static int indexOf(const XMLCh* const toSearch, const XMLCh ch);
 
+	    /**
+      * Provides the index of the first occurance of a character within a string
+      * starting from a given index
+      *
+      * @param toSearch The string to search
+      * @param chToFInd The character to search within the string
+      * @param fromIndex The index to start earch from
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
+      */
+    static int indexOf
+    (
+        const   char* const     toSearch
+        , const char            chToFind
+        , const unsigned int    fromIndex
+    );
+
+    /**
+      * Provides the index of the first occurance of a character within a string
+      * starting from a given index
+      *
+      * @param toSearch The string to search
+      * @param chToFInd The character to search within the string
+      * @param fromIndex The index to start search from
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
+      */
+    static int indexOf
+    (
+        const   XMLCh* const    toSearch
+        , const XMLCh           chToFind
+        , const unsigned int    fromIndex
+    );
+
     /**
       * Provides the index of the last occurance of a character within a string
       *
@@ -712,6 +821,42 @@ public:
                 XMLCh* const    targetStr
         , const XMLCh* const    srcStr
         , const unsigned int    count
+    );
+
+    //@}
+
+	    /** @name Substring function */
+    //@{
+    /** Create a substring of a givend string. The substring begins at the
+      * specified beginIndex and extends to the character at index 
+      * endIndex - 1.
+      * @param targetStr The string to copy the chars to
+      * @param srcStr The string to copy the chars from
+      * @param startIndex beginning index, inclusive.
+      * @param endIndex the ending index, exclusive.
+      */
+    static void subString
+    (
+                char* const    targetStr
+        , const char* const    srcStr
+        , const int            startIndex
+        , const int            endIndex 
+    );
+
+    /** Create a substring of a givend string. The substring begins at the
+      * specified beginIndex and extends to the character at index 
+      * endIndex - 1.
+      * @param targetStr The string to copy the chars to
+      * @param srcStr The string to copy the chars from
+      * @param startIndex beginning index, inclusive.
+      * @param endIndex the ending index, exclusive.
+      */
+    static void subString
+    (
+                XMLCh* const    targetStr
+        , const XMLCh* const    srcStr
+        , const int             startIndex
+        , const int             endIndex 
     );
 
     //@}
@@ -966,6 +1111,12 @@ public:
       *        On return, this buffer also holds the converted uppercase string
       */
     static void upperCase(XMLCh* const toUpperCase);
+
+	/** Converts a string to lowercase
+      * @param toLowerCase The string which needs to be converted to lowercase.
+      *        On return, this buffer also holds the converted lowercase string
+      */
+    static void lowerCase(XMLCh* const toLowerCase);
     //@}
 
 
@@ -986,6 +1137,15 @@ private :
     static void initString(XMLLCPTranscoder* const defToUse);
     static void termString();
     //@}
+
+	/**
+	  * Called by regionMatches/regionIMatches to validate that we
+	  * have a valid input
+	  */
+	static bool validateRegion(const XMLCh* const str1, const int offset1,
+						const XMLCh* const str2, const int offset2,
+						const unsigned int charsCount);
+
     friend class XMLPlatformUtils;
 };
 
@@ -1047,6 +1207,21 @@ inline XMLCh* XMLString::replicate(const XMLCh* const toRep)
             *outPtr++ = *inPtr++;
     }
     return ret;
+}
+
+inline bool XMLString::validateRegion(const XMLCh* const str1,
+									  const int offset1,
+									  const XMLCh* const str2,
+									  const int offset2,
+									  const unsigned int charsCount)
+{
+
+	if (offset1 < 0 || offset2 < 0 || 
+		(offset1 + charsCount) > XMLString::stringLen(str1) ||
+		(offset2 + charsCount) > XMLString::stringLen(str2) )
+		return false;
+
+	return true;
 }
 
 #endif

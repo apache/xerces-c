@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/03/02 20:53:01  knoaman
+ * Schema: Regular expression - misc. updates for error messages,
+ * and additions of new functions to XMLString class.
+ *
  * Revision 1.4  2000/03/02 19:55:08  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -99,6 +103,10 @@ typedef unsigned short UTF16Ch;
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
 
+// ---------------------------------------------------------------------------
+//  Define signed 32 bits integers
+// ---------------------------------------------------------------------------
+typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  Provide prototypes for some string methods that are not always available
