@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/02/19 00:26:41  roddey
+ * Yet, yet, yet still another EBCDIC alias tweak.
+ *
  * Revision 1.10  2000/02/18 22:03:31  roddey
  * One more tweak for EBCDIC encoding aliases.
  *
@@ -249,12 +252,7 @@ public :
     static const XMLCh fgGlobalNSURIName[];
     static const XMLCh fgIBM037EncodingString[];
     static const XMLCh fgIBM037EncodingString2[];
-    static const XMLCh fgIBM037EncodingString3[];
-    static const XMLCh fgIBM037EncodingString4[];
-    static const XMLCh fgIBM037EncodingString5[];
-    static const XMLCh fgIBM037EncodingString6[];
     static const XMLCh fgIBM1140EncodingString[];
-    static const XMLCh fgIBM1140EncodingString2[];
     static const XMLCh fgIESString[];
     static const XMLCh fgIDString[];
     static const XMLCh fgIDRefString[];

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2000/02/19 00:26:41  roddey
+ * Yet, yet, yet still another EBCDIC alias tweak.
+ *
  * Revision 1.11  2000/02/18 22:24:18  roddey
  * Ok... yet still one more tweak for EBCDIC aliases
  *
@@ -207,7 +210,6 @@ const XMLCh XMLUni::fgGlobalNSURIName[] =
     ,   chLatin_N, chLatin_S, chNull
 };
 
-
 const XMLCh XMLUni::fgIBM037EncodingString[] =
 {
     chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_C, chLatin_P, chDash, chLatin_U, chLatin_S, chNull
@@ -215,31 +217,10 @@ const XMLCh XMLUni::fgIBM037EncodingString[] =
 
 const XMLCh XMLUni::fgIBM037EncodingString2[] =
 {
-    chLatin_C, chLatin_P, chLatin_I, chLatin_B, chLatin_M, chDigit_3, chDigit_7, chNull
-};
-
-const XMLCh XMLUni::fgIBM037EncodingString3[] =
-{
     chLatin_I, chLatin_B, chLatin_M, chDigit_0, chDigit_3, chDigit_7, chNull
 };
 
-const XMLCh XMLUni::fgIBM037EncodingString4[] =
-{
-    chLatin_C, chLatin_P, chDigit_0, chDigit_3, chDigit_7, chNull
-};
-
-const XMLCh XMLUni::fgIBM037EncodingString5[] =
-{
-        chLatin_C, chLatin_S, chLatin_I, chLatin_B, chLatin_M, chDigit_0
-    ,   chDigit_3, chDigit_7, chNull
-};
-
 const XMLCh XMLUni::fgIBM1140EncodingString[] =
-{
-    chLatin_C, chLatin_P, chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
-};
-
-const XMLCh XMLUni::fgIBM1140EncodingString2[] =
 {
     chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
 };

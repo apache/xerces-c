@@ -374,22 +374,17 @@ void XMLTransService::initTransService()
     );
 
     //
-    //  Add in our mappings for EBCDIC-US. We map all the default EBCDIC-US
-    //  encodings to our intrinsic encoder, which is IBM-037.
+    //  Add in our mappings for IBM037, and the one alias we support for
+    //  it, which is EBCDIC-CP-US.
     //
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString2));
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString3));
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString4));
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString5));
-
 
     //
-    //  Add in our mappings for the EBCDIC-US with Euro update, i.e. IBM1140
-    //  or CPIBM1140.
+    //  Add in our mappings for IBM037 with Euro update, i.e. IBM1140. It
+    //  has no aliases
     //
     gMappings->put(new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString));
-    gMappings->put(new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString2));
 
     //
     //  Add in our mappings for Windows-1252. We don't have any aliases for
