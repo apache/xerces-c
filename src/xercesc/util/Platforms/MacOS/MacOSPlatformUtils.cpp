@@ -86,9 +86,20 @@
 #if (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
    #include <xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
 #endif
-#if (defined(XML_USE_NETACCESSOR_URLACCESS) || defined(XML_USE_NETACCESSOR_NATIVE))
+
+//	Make up our minds about which netaccessor we'll use
+#if (defined(XML_USE_NETACCESSOR_URLACCESSCF) || (defined(XML_USE_NETACCESSOR_NATIVE) && TARGET_API_MAC_CARBON))
+    #define USE_URLACCESSCF
+#elif (defined(XML_USE_NETACCESSOR_URLACCESS) || (defined(XML_USE_NETACCESSOR_NATIVE) && !TARGET_API_MAC_CARBON))
+    #define USE_URLACCESS
+#endif
+
+#if defined(USE_URLACCESSCF)
+   #include <xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp>
+#elif defined(USE_URLACCESS)
    #include <xercesc/util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
 #endif
+
 
 #include <cstring>
 #include <cstdlib>
@@ -142,10 +153,6 @@ std::size_t TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChar
 //----------------------------------------------------------------------------
 //  Local Data
 //
-//	gIsClassic
-//	 True if we're in the "classic" environment, either under the blue blox
-//	 or on a real classic OS.
-//
 //  gFileSystemCompatible
 //   This flag indicates whether the file system APIs meet our minimum
 //   requirements.
@@ -164,19 +171,23 @@ std::size_t TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChar
 //   the fork calls, only fork calls may be used to access it.
 //
 // gHasFSPathAPIs
-//   True if the FS supports posix path creation APIs FSPathMakeRef and
-//	 FSRefMakePath. If so, these routines are used to support path creation
-//	 and  interpretation.
+//   True if the FS supports path creation APIs FSPathMakeRef and
+//	 FSRefMakePath.
+//
+// gPathAPIsUsePosixPaths
+//   True if the path creation APIs FSPathMakeRef and FSRefMakePath
+//	 use posix, rather than HFS, style paths. If so, these routines
+//	 are used to support path creation and  interpretation.
 //
 // gHasMPAPIs
 //	 True if the Multiprocessing APIs are available.
 //----------------------------------------------------------------------------
-static bool gIsClassic				= false;
 static bool gFileSystemCompatible	= false;
 static bool gHasFSSpecAPIs			= false;
 static bool gHasFS2TBAPIs			= false;
 static bool gHasHFSPlusAPIs			= false;
 static bool gHasFSPathAPIs			= false;
+static bool gPathAPIsUsePosixPaths	= false;
 static bool gHasMPAPIs				= false;
 
 
@@ -766,26 +777,31 @@ XMLPlatformUtils::atomicDecrement(int &location)
 void
 XMLPlatformUtils::platformInit()
 {
-	//	Detect available functions by seeing if the symbols resolve
-	
 	long value = 0;
-	gIsClassic				= ((void*)kUnresolvedCFragSymbolAddress != Gestalt)
-								&& (noErr == Gestalt(gestaltSystemVersion, &value))
-								&& (value < 0x01000)
-								;
-	
-	gHasFSSpecAPIs			= ((void*)kUnresolvedCFragSymbolAddress != FSMakeFSSpec);
-	gHasFS2TBAPIs			= ((void*)kUnresolvedCFragSymbolAddress != PBXGetVolInfoSync);
-	gHasHFSPlusAPIs			= ((void*)kUnresolvedCFragSymbolAddress != FSOpenFork);
-#if TARGET_API_MAC_CARBON
-	gHasFSPathAPIs			= ((void*)kUnresolvedCFragSymbolAddress != FSPathMakeRef);
-#else
-	gHasFSPathAPIs			= false;
-#endif
+
+	//	Detect available functions
+
+    //	Look for file system services
+    if (noErr == Gestalt(gestaltFSAttr, &value))
+    {
+        gHasFSSpecAPIs		= (value & (1 << gestaltHasFSSpecCalls)) != 0;
+        gHasFS2TBAPIs		= (value & (1 << gestaltFSSupports2TBVols)) != 0;
+        gHasHFSPlusAPIs		= (value & (1 << gestaltHasHFSPlusAPIs)) != 0;
+    
+        #if TARGET_API_MAC_CARBON
+        gHasFSPathAPIs		= ((void*)kUnresolvedCFragSymbolAddress != FSPathMakeRef);
+        #else
+        gHasFSPathAPIs		= false;
+        #endif
+        
+        gPathAPIsUsePosixPaths = gHasFSPathAPIs && (value & (1 << gestaltFSUsesPOSIXPathsForConversion));
+    }
+    
+    //	Look for MP
 	gHasMPAPIs				= MPLibraryIsLoaded();
     
 	//	We require FSSpecs at a minimum
-    gFileSystemCompatible = gHasFSSpecAPIs;
+    gFileSystemCompatible	= gHasFSSpecAPIs;
 }
 
 
@@ -810,7 +826,20 @@ XMLPlatformUtils::platformTerm()
 XMLNetAccessor*
 XMLPlatformUtils::makeNetAccessor()
 {
-#if (defined(XML_USE_NETACCESSOR_URLACCESS) || defined(XML_USE_NETACCESSOR_NATIVE))
+    //	The selection of NetAcessor is made through
+    //	the following preprocessor defines:
+    //
+    //	XML_USE_NETACCESSOR_URLACCESS		-- Use netaccessor based on URLAccess
+    //	XML_USE_NETACCESSOR_URLACCESSCF		-- Use netaccessor based on CFURLAccess (CoreFoundation based)
+    //	XML_USE_NETACCESSOR_NATIVE			-- In absence of above selections, chooses URLACCESSCF
+    //										   if targetting Carbon, and URLAccess otherwise
+    //
+    //	These choices are resolved at the ^^^top^^^ of this file.
+
+#if (defined(USE_URLACCESSCF))
+    //	Use the URLAccess code that relies only on CoreFoundation
+	return new MacOSURLAccessCF;
+#elif (defined(USE_URLACCESS))
 	//	Only try to use URLAccess if it's actually available
 	if (URLAccessAvailable())
 		return new MacOSURLAccess;
@@ -971,7 +1000,7 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
 	//	this isn't a case where we need to use it, we drop back to the
 	//	classic case for this.
 		
-	if (TARGET_API_MAC_CARBON && !gIsClassic && gHasFSPathAPIs)
+	if (TARGET_API_MAC_CARBON && gHasFSPathAPIs && gPathAPIsUsePosixPaths)
 		result = XMLParsePathToFSRef_X(pathName, ref);
 	else
 		result = XMLParsePathToFSRef_Classic(pathName, ref);
@@ -1383,7 +1412,7 @@ XMLCreateFullPathFromFSRef(const FSRef& startingRef)
 	//	and greater. But we use it only on X since on Classic it
 	//	makes paths with ':' separators, which really confuses us!
 	
-	if (TARGET_API_MAC_CARBON && !gIsClassic && gHasFSPathAPIs)
+	if (TARGET_API_MAC_CARBON && gHasFSPathAPIs && gPathAPIsUsePosixPaths)
 		result = XMLCreateFullPathFromFSRef_X(startingRef);
 	else
 		result = XMLCreateFullPathFromFSRef_Classic(startingRef);
