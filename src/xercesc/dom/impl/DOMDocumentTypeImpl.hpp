@@ -88,15 +88,15 @@ private:
 
 
 
-    const XMLCh *       name;
-    DOMNamedNodeMap*    entities;
-    DOMNamedNodeMap*    notations;
-    DOMNamedNodeMap*    elements;
-    const XMLCh *       publicId;
-    const XMLCh *       systemId;
-    const XMLCh *       internalSubset;
+    const XMLCh *       fName;
+    DOMNamedNodeMap*    fEntities;
+    DOMNamedNodeMap*    fNotations;
+    DOMNamedNodeMap*    fElements;
+    const XMLCh *       fPublicId;
+    const XMLCh *       fSystemId;
+    const XMLCh *       fInternalSubset;
 
-    bool			         intSubsetReading;
+    bool			         fIntSubsetReading;
     bool                fIsCreatedFromHeap;
 
     virtual void        setPublicId(const XMLCh * value);
