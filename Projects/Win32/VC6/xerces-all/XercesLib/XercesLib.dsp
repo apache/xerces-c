@@ -1619,6 +1619,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSObjectFactory.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp
 # End Source File
 # Begin Source File
