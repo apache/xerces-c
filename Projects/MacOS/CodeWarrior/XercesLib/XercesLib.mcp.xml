@@ -566,7 +566,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>94kjfn566jei44t2n46v3244t2n46u6244j7257n46i53qcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -7502,6 +7502,51 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -12502,6 +12547,41 @@
                     <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -13017,7 +13097,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652vjfn656fjei652dt2n652fv32652dt2n652fu62652dj72657x46i653zcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -19953,6 +20033,51 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -24953,6 +25078,41 @@
                     <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -25468,7 +25628,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642mjfn6467jei6425t2n6427v326425t2n6427u626425j72647p46i643rcan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652vjfn656fjei652dt2n652fv32652dt2n652fu62652dj72657x46i653zcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -32404,6 +32564,51 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -37404,6 +37609,41 @@
                     <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -37919,7 +38159,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642mjfn6467jei6425t2n6427v326425t2n6427u626425j72647p46i643rcan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>95imjfn5n7jei5i5t2n5i7v325i5t2n5i7u625i5j725pp46i5jrcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -44855,6 +45095,51 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -49855,6 +50140,41 @@
                     <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -50054,7 +50374,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644uphn648epgi644cx4n644ez52644cx4n644ey82644cp92649w88i645ygcn/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>95imjfn5n7jei5i5t2n5i7v325i5t2n5i7u625i5j725pp46i5jrcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -51310,7 +51630,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644uphn648epgi644cx4n644ez52644cx4n644ey82644cp92649w88i645ygcn/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>95imjfn5n7jei5i5t2n5i7v325i5t2n5i7u625i5j725pp46i5jrcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -58273,6 +58593,51 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -63292,6 +63657,41 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -64043,7 +64443,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644uphn648epgi644cx4n644ez52644cx4n644ey82644cp92649w88i645ygcn/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>94kjfn566jei44t2n46v3244t2n46u6244j7257n46i53qcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -71006,6 +71406,51 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -76025,6 +76470,41 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -79273,6 +79753,14 @@
                             <PATHTYPE>PathRelative</PATHTYPE>
                             <PATHROOT>Project</PATHROOT>
                             <ACCESSPATH>../../../../src</ACCESSPATH>
+                            <PATH>xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp</PATH>
+                            <PATHFORMAT>Unix</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>PathRelative</PATHTYPE>
+                            <PATHROOT>Project</PATHROOT>
+                            <ACCESSPATH>../../../../src</ACCESSPATH>
                             <PATH>xercesc/util/Platforms/MacOS/MacOSPlatformUtils.cpp</PATH>
                             <PATHFORMAT>Unix</PATHFORMAT>
                         </FILEREF>
@@ -79281,7 +79769,39 @@
                             <PATHTYPE>PathRelative</PATHTYPE>
                             <PATHROOT>Project</PATHROOT>
                             <ACCESSPATH>../../../../src</ACCESSPATH>
-                            <PATH>xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp</PATH>
+                            <PATH>xercesc/util/Platforms/MacOS/MacAbstractFile.hpp</PATH>
+                            <PATHFORMAT>Unix</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>PathRelative</PATHTYPE>
+                            <PATHROOT>Project</PATHROOT>
+                            <ACCESSPATH>../../../../src</ACCESSPATH>
+                            <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.hpp</PATH>
+                            <PATHFORMAT>Unix</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>PathRelative</PATHTYPE>
+                            <PATHROOT>Project</PATHROOT>
+                            <ACCESSPATH>../../../../src</ACCESSPATH>
+                            <PATH>xercesc/util/Platforms/MacOS/MacCarbonFile.cpp</PATH>
+                            <PATHFORMAT>Unix</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>PathRelative</PATHTYPE>
+                            <PATHROOT>Project</PATHROOT>
+                            <ACCESSPATH>../../../../src</ACCESSPATH>
+                            <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.hpp</PATH>
+                            <PATHFORMAT>Unix</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>PathRelative</PATHTYPE>
+                            <PATHROOT>Project</PATHROOT>
+                            <ACCESSPATH>../../../../src</ACCESSPATH>
+                            <PATH>xercesc/util/Platforms/MacOS/MacPosixFile.cpp</PATH>
                             <PATHFORMAT>Unix</PATHFORMAT>
                         </FILEREF>
                     </GROUP>
