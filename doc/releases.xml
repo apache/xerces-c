@@ -3,8 +3,11 @@
 
 <s1 title="Releases">
 
-<s2 title="Xerces-C Version 1.2.0: June 15, 2000">
+<s2 title="Xerces-C Version 1.2.0: June 19, 2000">
     <ul>
+
+        <li>SAX: Allow any PI occurring before the root element to be reported
+        to the application using the registered document handler.</li>
 
         <li>DOM: reduced memory usage for elements with no attributes.</li>
 

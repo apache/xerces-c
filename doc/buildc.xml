@@ -12,6 +12,7 @@
     <li><link anchor="BuildAS400">Building &XercesCName; on AS/400.</link></li>
     <li><link anchor="BuildMac">Building &XercesCName; on Macintosh.</link></li>
     <li><link anchor="BuildICU">Building ICU.</link></li>
+    <li><link anchor="BuildICUUsingPerl">Building Xerces-C with ICU using bundled Perl scripts.</link></li>
     <li><link anchor="BuildCOM">Building COM module on Windows 98/NT/2000.</link></li>
     <li><link anchor="BuildDocs">How to build the User Documentation?</link></li>
     <li><link anchor="PortingGuide">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</link></li>
@@ -92,7 +93,6 @@
             <tr><td>Redhat Linux 6.1</td><td>g++, gcc (egcs)</td></tr>
             <tr><td>AIX 4.2.1  and higher</td><td>xlC_r, xlc_r</td></tr>
             <tr><td>Solaris 2.6</td><td>CC, cc</td></tr>
-            <tr><td>HP-UX 10.2</td><td>CC, cc</td></tr>
             <tr><td>HP-UX 11</td><td>aCC, cc</td></tr>
         </table>
 
@@ -681,8 +681,8 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
     <anchor name="BuildICU"/>
     <s2 title="How to Build ICU">
         <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
-        native encoding support and also using ICU where you get support for 100's
-        of encodings. ICU stands for International Components for Unicode and is an
+        native encoding support and also using ICU where you get support over 180
+        different encodings. ICU stands for International Components for Unicode and is an
         open source distribution from IBM. You can get
         <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
         <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
@@ -773,6 +773,81 @@ gmake install</source>
 
     </s2>
 
+    <anchor name="BuildICUUsingPerl"/>
+    <s2 title="Building Xerces-C with ICU using bundled Perl scripts">
+
+        <p>To simplify the builds, we use the bundled perl script
+        'packageBinary.pl'. It requires some setup, but once it is done,
+        repeating it becomes easy. Here's how we do it.</p>
+        
+        <p>Prerequisites:</p>
+        <ul>
+        <li>Perl 5.004 or higher</li>
+        <li>Cygwin tools or MKS Toolkit</li>
+        <li>zip.exe</li>
+        </ul>
+
+        <p></p>
+        <p></p>
+        <p>Steps are:</p>
+        <ol>
+        <li>Download the appropriate ICU source archive.</li>
+        <li>Download Xerces-C source archive.</li>
+        <li>Build ICU.</li>
+        <li>Build Xerces-C with ICU.</li>
+        </ol>
+        
+        <p></p>
+
+        <p>Download Xerces-C from <jump href="http://xml.apache.org/xerces-c/dist">
+        http://xml.apache.org/xerces-c/dist</jump> directory.</p>
+
+        <p>Download the appropriate archive for ICU from: <jump
+        href="http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html">http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html</jump>
+        </p>
+
+        
+        <p>For Windows</p>
+        
+        <p>Extract Xerces-C source files from the .zip archive using WinZip, say
+        in the root directory. It should create a directory like
+        '<code>\xerces-c-src_1_2_0</code>'.</p>
+        
+        <p>Extract the ICU files, using WinZip, in root directory of the disk
+        where you have installed Xerces-C, sources. After extraction, there
+        should be a new directory '<code>\icu</code>' which contains all the ICU
+        source files.</p>
+        
+        <p>There are two options to build Xerces-C with ICU. One is to use the
+        MSDEV GUI environment, and the other is to invoke the compiler from the
+        command line.</p>
+
+        <p>Using, the GUI environment, requires one to edit the project files.
+        Here, we will describe only the second option. It involves using the
+        perl script '<code>packageBinaries.pl</code>'.</p>
+
+        <p>Start a command prompt to get a new shell window. Make sure you have
+        perl, cygwin tools (<code>uname</code>, <code>rm</code>,
+        <code>cp</code>, ...), and <code>zip.exe</code> somewhere in the
+        path. Next setup the environment for MSVC using
+        '<code>VCVARS32.BAT</code>' or a similar file. Next at the prompt
+        enter:</p>
+
+        <source>    set XERCESCROOT=\xerces-c-src_1_2_0
+set ICUROOT=\icu
+cd \xerces-c-src_1_2_0\scripts
+perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t icu</source>
+
+        <p>If everything is setup right and works right, then you should see a
+        binary drop created in the target directory specified above. This script
+        will build both ICU and Xerces-C, copy the files (relevant to the binary
+        drop) to the target directory.</p>
+
+        <p>For a description of options available, you can enter:</p>
+          <source>perl packageBinaries.pl</source>
+        
+    </s2>
+
     <anchor name="BuildCOM"/>
     <s2 title="How to build XML for COM on Windows">
 
@@ -849,24 +924,14 @@ gmake install</source>
 
         <ul>
           <li>JDK 1.2.2 (or later).</li>
-          <li>Xerces-J (1.0.0 or later).</li>
-          <li>Xalan (0.19.3 or later)</li>
-          <li>Stylebook 1.0-b2</li>
-          <li>The Apache Style files (dtd's and .xsl files)</li>
+          <li>Xerces-J 1.0.1.<em>bundled</em></li>
+          <li>Xalan-J 0.19.2.<em>bundled</em></li>
+          <li>Stylebook 1.0-b2.<em>bundled</em></li>
+          <li>The Apache Style files (dtd's and .xsl files).<em>bundled</em></li>
         </ul>
 
-        <p>Setup PATH to include the JDK 1.2.2 bin directory. Also setup
-        CLASSPATH environment variable as follows:</p>
-
-        <ul>
-
-          <li>Under Windows (assumes all jars are in '\jars'
-          directory:)<br/>
-          <code>CLASSPATH=\jars\stylebook-1.0-b2.jar;\jars\xalan.jar;\jars\xerces.jar</code></li>
-
-          <li>Under Unix's (assumes all jars are in '~/jars' directory):<br/>
-          <code>export CLASSPATH="~/jars/stylebook-1.0-b2.jar:~/jars/xalan.jar:~/jars/xerces.jar"</code></li>
-        </ul>
+        <p>Invoke a command window and setup PATH to include the JDK 1.2.2 bin
+        directory</p>
 
         <p>Next, cd to the &XercesCName; source drop root directory,
         and enter</p>
@@ -880,54 +945,6 @@ gmake install</source>
 
         <p>This should generate the .html files in the 'doc/html'
         directory.</p>
-
-        <p><em>If you are wondering where to get the three</em> <code>jar</code> <em>files referred above,
-        here is where you would find it.</em></p>
-
-        <ul>
-
-          <li>JDK 1.2.2 is available from <jump
-          href="http://java.sun.com/products/jdk/1.2/">http://java.sun.com/products/jdk/1.2/</jump></li>
-
-          <li>Xerces-J is available from <jump
-          href="http://xml.apache.org/dist/">http://xml.apache.org/dist/</jump>. Extract
-          the xerces.jar file from the binary drop and store it in the
-          'jars' directory as mentioned above.</li>
-
-          <li>Xalan is also available from <jump
-          href="http://xml.apache.org/dist/">http://xml.apache.org/dist/</jump>. Extract
-          the xalan.jar file from the 'jar' distribution that you just downloaded and
-          store it in the same 'jars' directory as mentioned above.</li>
-
-          <li>Getting to Stylebook is little more involved. You will
-          have to download one of the 'xml-stylebook' tar balls from
-          <jump
-          href="http://xml.apache.org/from-cvs/xml-stylebook">http://xml.apache.org/from-cvs/xml-stylebook/</jump>
-          and then extract the file:<br/>
-          <code>xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/><br/>
-
-          Under Unix's you may enter:<br/>
-          <code>gzip -d -c xml-stylebook_20000207231311.tar.gz | tar xf -
-          xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/>
-          to extract this file (in this gzip command, subsitute the tar file
-          name with the one you downloaded). Copy it to the 'jars' directory
-          as mentioned above.<br/><br/>Under Windows you may use 'WinZip' to
-          extract the jar file from the tar ball.</li>
-
-          <li>Lastly, the Apache Style (dtd's and .xsl) files reside in
-          the same 'stylebook' tar ball, as described above. The script
-          <code>createdocs.bat</code> assumes that these styles are installed
-          relative to where it is located in the
-          <code>../../xml-stylebook/styles/apachexml</code> directory. If
-          the directory structure on your build machine differs, you can
-          edit this script file to reflect the difference. To extractt the
-          Apache style files enter:<br/>
-          <code>cd &lt;parent of &XercesCName; source directory&gt;</code><br/>
-          <code>gzip -d -c xml-stylebook_20000207231311.tar.gz | tar xf -
-          xml-stylebook/styles</code></li>
-
-
-        </ul>
 
     </s2>
 
