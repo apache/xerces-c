@@ -3,7 +3,7 @@
 
 <s1 title="Releases">
 
-<s2 title="&XercesCFullName; Version 1.1.0: February 14, 2000">
+<s2 title="Xerces-C Version 1.1.0: February 14, 2000">
         <ul>
         <li>Simplified platform support (removed need to support local standard output streams or to find the location of the parser DLL/SharedLib.)</li>
 				<li>Added support for the NetAccessor plug in abstraction, which allows the parser to support HTTP/FTP based data sources</li>
@@ -15,7 +15,7 @@
 				<li>Significant internal architecture improvements in the handling of encodings and transcoding services.</li>
         </ul>
     </s2>
-    <s2 title="&XercesCFullName; Version 1.0.1: December 15, 1999">
+    <s2 title="Xerces-C Version 1.0.1: December 15, 1999">
         <ul>
             <li>Port to Solaris.</li>
             <li>Improved error recovery and clarified error messages.</li>
@@ -37,7 +37,7 @@
         </ul>
     </s2>
 
-    <s2 title="&XercesCFullName; November 5, 1999">
+    <s2 title="Xerces-C BETA November 5, 1999">
         <ul>
             <li>Created initial code base derived from IBM's XML4C Version 2.0</li>
             <li>Modified documentation to reflect new name (Xerces-C)</li>
