@@ -21,5 +21,9 @@ group xerces_validators =
     BASE_DIR "\\src\\validators\\schema\\SchemaElementDecl.cpp",
     BASE_DIR "\\src\\validators\\schema\\SchemaGrammar.cpp",
     BASE_DIR "\\src\\validators\\schema\\SchemaSymbol.cpp",
-    BASE_DIR "\\src\\validators\\schema\\SchemaValidator.cpp" ,
-    BASE_DIR "\\src\\validators\\schema\\XUtil.cpp"
+    BASE_DIR "\\src\\validators\\schema\\SchemaValidator.cpp",
+    BASE_DIR "\\src\\validators\\schema\\XUtil.cpp",
+    BASE_DIR "\\src\\validators\\schema\\SubstitutionGroupComparator.cpp",
+    BASE_DIR "\\src\\validators\\schema\\NamespaceScope.cpp",
+    BASE_DIR "\\src\\validators\\schema\\ComplexTypeInfo.cpp",
+    BASE_DIR "\\src\\validators\\schema\\TraverseSchema.cpp"

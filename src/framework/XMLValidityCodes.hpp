@@ -11,7 +11,7 @@ public :
     enum Codes
     {
         NoError                            = 0
-      , V_LowBounds                        = 1
+      , E_LowBounds                        = 1
       , ElementNotDefined                  = 2
       , AttNotDefined                      = 3
       , NotationNotDeclared                = 4
@@ -82,16 +82,23 @@ public :
       , SimpleTypeHasChild                 = 69
       , NoDatatypeValidatorForSimpleType   = 70
       , GrammarNotFound                    = 71
-      , V_HighBounds                       = 72
-      , W_LowBounds                        = 73
-      , W_HighBounds                       = 74
-      , E_LowBounds                        = 75
-      , E_HighBounds                       = 76
+      , DisplayErrorMessage                = 72
+      , XsiTypeAbstract                    = 73
+      , SchemaAbstractError                = 74
+      , NillNotAllowed                     = 75
+      , NilAttrNotEmpty                    = 76
+      , FixedDifferentFromActual           = 77
+      , NoDatatypeValidatorForAttribute    = 78
+      , E_HighBounds                       = 79
+      , W_LowBounds                        = 80
+      , W_HighBounds                       = 81
+      , F_LowBounds                        = 82
+      , F_HighBounds                       = 83
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)
     {
-        return ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds));
+        return ((toCheck >= F_LowBounds) && (toCheck <= F_HighBounds));
     }
 
     static bool isWarning(const XMLValid::Codes toCheck)
@@ -99,19 +106,19 @@ public :
         return ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds));
     }
 
-    static bool isValid(const XMLValid::Codes toCheck)
+    static bool isError(const XMLValid::Codes toCheck)
     {
-        return ((toCheck >= V_LowBounds) && (toCheck <= V_HighBounds));
+        return ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds));
     }
 
     static XMLErrorReporter::ErrTypes errorType(const XMLValid::Codes toCheck)
     {
        if ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds))
            return XMLErrorReporter::ErrType_Warning;
-       else if ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds))
+       else if ((toCheck >= F_LowBounds) && (toCheck <= F_HighBounds))
             return XMLErrorReporter::ErrType_Fatal;
-       else if ((toCheck >= V_LowBounds) && (toCheck <= V_HighBounds))
-            return XMLErrorReporter::ErrType_Invalid;
+       else if ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds))
+            return XMLErrorReporter::ErrType_Error;
        return XMLErrorReporter::ErrTypes_Unknown;
     }
 };

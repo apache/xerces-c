@@ -14,13 +14,14 @@
      ===================================================================== -->
 <!ELEMENT   Warning     (Message*)>
 <!ELEMENT   Error       (Message*)>
+<!ELEMENT   FatalError  (Message*)>
 
 
 <!-- =====================================================================
      A message domain represents (optionally) a group of warnings, errors,
      and validity errors.
      ===================================================================== -->
-<!ELEMENT   MsgDomain   (Warning?, Error?)>
+<!ELEMENT   MsgDomain   (Warning?, Error?, FatalError?)>
 <!ATTLIST   MsgDomain
             Domain      CDATA #REQUIRED>
 

@@ -15,6 +15,86 @@
             <Message Id="UndeclaredElemInAttList" Text="Element '{0}' was referenced in an attlist but never declared"/>
         </Warning>
         <Error>
+            <Message Id="FeatureUnsupported" Text="{0} is unsupported"/>
+            <Message Id="TopLevelNoNameComplexType" Text="Error: Top level complexType has no name - declaration ignored"/>
+            <Message Id="TopLevelNoNameAttribute" Text="Globally-declared attribute must have a name - attribute decaration ignored"/>
+            <Message Id="NoNameRefAttribute" Text="Attribute must have a name or a ref - attribute declaration ignored"/>
+            <Message Id="GlobalNoNameElement" Text="Globally-declared element must have a name - element declaration ignored"/>
+            <Message Id="NoNameRefElement" Text="Element must have a name or a ref attribute - element ignored"/>
+            <Message Id="AnonComplexTypeWithName" Text="Anonymous complexType in element {0} has a name attribute"/>
+            <Message Id="AnonSimpleTypeWithName" Text="Anonymous simpleType in element {0} has a name attribute"/>
+            <Message Id="InvalidElementContent" Text="The content of an element information item does not match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)"/>
+            <Message Id="InvalidAttributeName" Text="Invalid attribute name: {0} - declaration ignored"/>
+            <Message Id="UntypedElement" Text="Untyped element: {0}"/>
+            <Message Id="SimpleTypeContentError" Text="Error in content of simpleType"/>
+            <Message Id="ExpectedSimpleTypeInList" Text="Expected simpleType in 'list' declaration for {0}"/>
+            <Message Id="ListUnionRestrictionError" Text="List | Union | Restriction content is invalid for type {0}"/>
+            <Message Id="SimpleTypeDerivationByListError" Text="Error in content of derivation by list for {0}"/>
+            <Message Id="ExpectedSimpleTypeInRestriction" Text="Expected simpleType in 'restriction' declaration for {0}"/>
+            <Message Id="DuplicateFacet" Text="Facet {0} already defined - ignoring"/>
+            <Message Id="ExpectedSimpleTypeInUnion" Text="Expected simpleType in 'union' declaration for {0}"/>
+            <Message Id="EmptySimpleTypeContent" Text="SimpleType content is empty"/>
+            <Message Id="InvalidSimpleContent" Text="The content of the simpleContent element is invalid. The content must be RESTRICTION or EXTENSION"/>
+            <Message Id="UnspecifiedBase" Text="The BASE attribute must be specified for the RESTRICTION or EXTENSION element"/>
+            <Message Id="InvalidComplexContent" Text="The content of the complexContent element is invalid. The content must be RESTRICTION or EXTENSION"/>
+            <Message Id="SchemaElementContentError" Text="Error in content of &lt;schema&gt; element information item"/>
+            <Message Id="ContentError" Text="Content (annotation?,..) is incorrect for type {0}"/>
+            <Message Id="UnknownSimpleType" Text="Unknown simpleType: {0}"/>
+            <Message Id="UnknownComplexType" Text="Unknown complexType: {0}"/>
+            <Message Id="UnresolvedPrefix" Text="Prefix: '{0}' can not be resolved to a URI"/>
+            <Message Id="RefElementNotFound" Text="Ref element {0} not found in the Schema"/>
+            <Message Id="TypeNotFound" Text="Type not found in {0}:{1}"/>
+            <Message Id="TopLevelAttributeNotFound" Text="Could not find top level attribute: {0}"/>
+            <Message Id="InvalidChildInComplexType" Text="Invalid child '{0}' in the complex type"/>
+            <Message Id="BaseTypeNotFound" Text="Base type could not be found: {0}"/>
+            <Message Id="NoAttributeInSchema" Text="No attribute '{0}' was defined in schema: {1}"/>
+            <Message Id="DatatypeValidatorCreationError" Text="Error creating datatype validator: {0}"/>
+            <Message Id="InvalidComplexTypeName" Text="Error: Invalid complexType name - '{0}' is not a valid NCName"/>
+            <Message Id="InvalidChildFollowingSimpleContent" Text="Invalid child following the simpleContent child in the complexType"/>
+            <Message Id="InvalidChildFollowingConplexContent" Text="Invalid child following the complexContent child in the complexType"/>
+            <Message Id="InvalidComplexTypeBlockValue" Text="The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
+            <Message Id="InvalidComplexTypeFinalValue" Text="The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
+            <Message Id="AttributeDefaultFixedValue" Text="An attribute cannot have both 'fixed' and 'default' present at the same time - default used"/>
+            <Message Id="NotOptionalDefaultAttValue" Text="If default and use are both present, use must have the value 'optional'."/>
+            <Message Id="AttributeWithNameRef" Text="Attribute name:{0} has also a ref defined - name ignored"/>
+            <Message Id="DuplicateAttribute" Text="Error: Attribute '{0}' declared more than once in the same scope- ignoring"/>
+            <Message Id="AttributeWithTypeAndSimpleType" Text="Attribute declarations may not contain both a type and a simpleType declaration"/>
+            <Message Id="AttributeSimpleTypeNotFound" Text="SimpleType ({0}:{1}) for attribute: {2} not found"/>
+            <Message Id="ElementWithFixedAndDefault" Text="An element cannot have both 'fixed' and 'default' present at the same time"/>
+            <Message Id="ElementWithNameRef" Text="Element name:{0} has also a ref defined - name ignored"/>
+            <Message Id="BadAttWithRef" Text="ref cannot appear with any of type, abstract, block, final, nullable, default or fixed"/>
+            <Message Id="InvalidElementName" Text="Invalid element name: {0} - declaration ignored"/>
+            <Message Id="GlobalElementWithRef" Text="Globally-declared element {0} cannot have a ref attribute - ref ignored"/>
+            <Message Id="ElementWithTypeAndAnonType" Text="Element {0} has a type attribute and an annoymous type child"/>
+            <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
+            <Message Id="NotSimpleOrMixedElement" Text="Element {0} has a fixed or default value and must have a mixed or simple content model"/>
+            <Message Id="DisallowedSimpleTypeExtension" Text="The simpleType {0} that {1} uses has a value of 'final' which does not permit extension"/>
+            <Message Id="InvalidSimpleContentBase" Text="The type '{0}' specified as the base in the simpleContent element must not have complexContent"/>
+            <Message Id="InvalidComplexTypeBase" Text="The type '{0}' is a simple type. It cannot be used in a derivation by RESTRICTION for a complexType"/>
+            <Message Id="InvalidChildInSimpleContent" Text="Invalid child following the RESTRICTION or EXTENSION element in the simpleContent definition"/>
+            <Message Id="InvalidChildInComplexContent" Text="Invalid child following the RESTRICTION or EXTENSION element in the complexContent definition"/>
+            <Message Id="AnnotationError" Text="Annotation can only appear once: type {0}"/>
+            <Message Id="DisallowedBaseDerivation" Text="The base type {0} does not allow itself to be used as the base for a restriction and/or as a type in a list and/or union"/>
+            <Message Id="SubstitutionRepeated" Text="The value 'substitution' already in the list"/>
+            <Message Id="UnionRepeated" Text="The value 'union' is already in the list"/>
+            <Message Id="ExtensionRepeated" Text="The value 'extension' is already in the list"/>
+            <Message Id="ListRepeated" Text="The value 'list' is already in the list"/>
+            <Message Id="RestrictionRepeated" Text="The value 'restriction' is already in the list"/>
+            <Message Id="InvalidBlockValue" Text="Invalid block value: {0}"/>
+            <Message Id="InvalidFinalValue" Text="Invalid final value: {0}"/>
+            <Message Id="InvalidSubstitutionGroupElement" Text="Element {0} cannot be part of the substitution group headed by {1}"/>
+            <Message Id="SubstitutionGroupTypeMismatch" Text="Element {0} has a type which does not derive from the type of the element at the head of the substitution group"/>
+            <Message Id="DuplicateElementDeclaration" Text="Duplicate element decl in the same scope: {0}"/>
+            <Message Id="InvalidElementBlockValue" Text="The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found"/>
+            <Message Id="InvalidElementFinalValue" Text="The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found"/>
+            <Message Id="AttributeRefContentError" Text="Ref is present, and simpleType/form/type found"/>
+            <Message Id="DuplicateRefAttribute" Text="Duplicate reference attribute {0}:{1} in complexType"/>
+            <Message Id="ForbiddenDerivationByRestriction" Text="Derivation by restriction is forbidden by either the base type '{0}' or the schema"/>
+            <Message Id="ForbiddenDerivationByExtension" Text="Derivation by extension is forbidden by either the base type '{0}' or the schema"/>
+            <Message Id="BaseNotComplexType" Text="The base type specified in the complexContent element must be a complexType"/>
+            <Message Id="DisplayErrorMessage" Text="{0}"/>
+        </Error>
+        <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
             <Message Id="ExpectedAttrName" Text="Expected an attribute name"/>
             <Message Id="ExpectedNotationName" Text="Expected a notation name"/>
@@ -138,7 +218,8 @@
             <Message Id="UnexpectedEOF" Text="Unexpected end of file exception. Message: {0}"/>
             <Message Id="UnexpectedError" Text="UnexpectedError"/>
             <Message Id="BadSchemaLocation" Text="The schemaLocation attribute does not contain pairs of values."/>
-        </Error>
+            <Message Id="NoGrammarResolver" Text="Internal error: don't have a GrammarResolver for TraverseSchema"/>
+        </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">
         <Error>
@@ -212,6 +293,14 @@
             <Message Id="SimpleTypeHasChild" Text="In element {0}: Can not have element children within a simple type content."/>
             <Message Id="NoDatatypeValidatorForSimpleType" Text="This element {0} has a simpletype but no datatypevalidator was found."/>
             <Message Id="GrammarNotFound" Text="There is no Grammar for uri: {0}."/>
+            <Message Id="DisplayErrorMessage" Text="{0}"/>
+            <Message Id="XsiTypeAbstract" Text="Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type"/>
+            <Message Id="SchemaAbstractError" Text="A member of abstract element {0} substitution group must be specified"/>
+            <Message Id="NillNotAllowed" Text="xsi:nil must not be specified for the element {0} with nillable equals false"/>
+            <Message Id="NilAttrNotEmpty" Text="Element {0} with attribute xsi:nil=true must be empty"/>
+            <Message Id="FixedDifferentFromActual" Text="Content of element '{0}' is different from the fixed attribute value in the element's schema declaration."/>
+            <Message Id="NoDatatypeValidatorForAttribute" Text="No datatypevalidator was found for this attribute {0}."/>
+            <Message Id="GenericError" Text="Schema error during parsing"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
@@ -222,6 +311,7 @@
             <Message Id="AttDef_BadAttType" Text="The passed AttTypes value is not known"/>
             <Message Id="AttDef_BadDefAttType" Text="The passed DefAttTypes value is not known"/>
             <Message Id="Bitset_BadIndex" Text="The bit index was beyond the set size"/>
+            <Message Id="Bitset_NotEqualSize" Text="The bit sets are not of the same size"/>
             <Message Id="BufMgr_NoMoreBuffers" Text="The buffer manager cannot provide any more buffers"/>
             <Message Id="BufMgr_BufferNotInPool" Text="The passed buffer was not found in this manager's pool"/>
             <Message Id="CPtr_PointerIsZero" Text="The pointer has not been set"/>
@@ -233,6 +323,7 @@
             <Message Id="CM_UnknownCMType" Text="Unknown content model type"/>
             <Message Id="CM_UnknownCMSpecType" Text="Unknown content spec type"/>
             <Message Id="CM_NoParentCSN" Text="The parent element has no content spec node"/>
+            <Message Id="CM_NotValidSpecTypeForNode" Text="The spec type is not valid for {0}"/>
             <Message Id="DTD_UnknownCreateReason" Text="The creation reason enum has an unknown value"/>
             <Message Id="ElemStack_EmptyStack" Text="The element stack is empty"/>
             <Message Id="ElemStack_BadIndex" Text="The element stack index given was beyond the stack top"/>
@@ -351,6 +442,55 @@
             <Message Id="Parser_Descape5" Text="An anchor must not be here"/>
             <Message Id="Parser_Process1" Text="This expression is not supported in the current option setting"/>
             <Message Id="Gen_NoSchemaValidator" Text="A schema was seen but the installed validator does not understand schema"/>
+            <Message Id="XUTIL_UnCopyableNodeType" Text="The {0} node type is not valid for copy"/>
+            <Message Id="SubGrpComparator_NGR" Text="SubstitutionGroupComparator has no grammar resolver"/>
+            <Message Id="FACET_Invalid_Len" Text="Length Value '{0}' is invalid"/>
+            <Message Id="FACET_Invalid_maxLen" Text="maxLength Value '{0}' is invalid"/>
+            <Message Id="FACET_Invalid_minLen" Text="minLength Value '{0}' is invalid"/>
+            <Message Id="FACET_NonNeg_Len" Text="Length Value '{0}' must be a nonNegativeInteger"/>
+            <Message Id="FACET_NonNeg_maxLen" Text="maxLength Value '{0}' must be a nonNegativeInteger"/>
+            <Message Id="FACET_NonNeg_minLen" Text="minLength Value '{0}' must be a nonNegativeInteger"/>
+            <Message Id="FACET_Len_maxLen" Text="It is an error for both length and maxLength to be members of facets"/>
+            <Message Id="FACET_Len_minLen" Text="It is an error for both length and minLength to be members of facets"/>
+            <Message Id="FACET_maxLen_minLen" Text="Value of maxLenght '{0}' must be greater than the value of minLength '{1}'"/>
+            <Message Id="FACET_bool_Pattern" Text="Only constraining facet in boolean datatype is PATTERN"/>
+            <Message Id="FACET_max_Incl_Excl" Text="It is an error for both maxInclusive and maxExclusive to be specified for the same datatype"/>
+            <Message Id="FACET_min_Incl_Excl" Text="It is an error for both minInclusive and minExclusive to be specified for the same datatype"/>
+            <Message Id="FACET_maxExcl_minExcl" Text="maxExclusive value must be > than minExclusive value"/>
+            <Message Id="FACET_maxExcl_minIncl" Text="maxExclusive value must be > than minInclusive value"/>
+            <Message Id="FACET_maxIncl_minExcl" Text="maxInclusive value must be > than minExclusive value"/>
+            <Message Id="FACET_maxIncl_minIncl" Text="maxInclusive value must be > than minInclusive value"/>
+            <Message Id="FACET_Invalid_Tag" Text="Invalid Facet Tag"/>
+            <Message Id="FACET_Len_baseLen" Text="Value of Length '{0}' must be equal to the base Length '{1}'"/>
+            <Message Id="FACET_minLen_baseminLen" Text="Value of minLength '{0}' must be greater than or equal to the base minLength '{1}'"/>
+            <Message Id="FACET_minLen_basemaxLen" Text="Value of minLength '{0}' must be less than or equal to the base maxLength '{1}'"/>
+            <Message Id="FACET_maxLen_basemaxLen" Text="Value of maxLength '{0}' must be less than or equal to the base maxLength '{1}'"/>
+            <Message Id="FACET_maxLen_baseminLen" Text="Value of maxLength '{0}' must be greater than or equal to the base minLength '{1}'"/>
+            <Message Id="FACET_enum_base" Text="Value of enumeration = '{0}' must be from the value space of base"/>
+            <Message Id="FACET_Invalid_WS" Text="Value of whitespace '{0}' must be one of 'preserve', 'replace', 'collapse'"/>
+            <Message Id="FACET_WS_collapse" Text="It is an error if whiteSpace = 'preserve' or 'replace' and base.whiteSpace = 'collapse'."/>
+            <Message Id="FACET_WS_replace" Text="It is an error if whiteSpace = 'preserve' and base.whiteSpace = 'replace'."/>
+            <Message Id="VALUE_NotMatch_Pattern" Text="Value '{0}' does not match regular expression facet '{1}'"/>
+            <Message Id="VALUE_Not_Base64" Text="Value '{0}' is not encoded in Base64 "/>
+            <Message Id="VALUE_GT_maxLen" Text="Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' "/>
+            <Message Id="VALUE_LT_minLen" Text="Value '{0}' with length '{1}' is less than minimum length facet of '{2}' "/>
+            <Message Id="VALUE_NE_Len" Text="Value '{0}' with length '{1}' is not equal to length facet of '{2}' "/>
+            <Message Id="VALUE_NotIn_Enumeration" Text="Value '{0}' is not in enumeration "/>
+            <Message Id="Regex_Result_Not_Set" Text="A result is not set."/>
+            <Message Id="Regex_CompactRangesError" Text="CompactRanges - Internal Error"/>
+            <Message Id="Regex_MergeRangesTypeMismatch" Text="Merge Ranges - Mismatched type"/>
+            <Message Id="Regex_SubtractRangesError" Text="SubtractRanges - Internal Error"/>
+            <Message Id="Regex_IntersectRangesError" Text="IntersectRanges - Internal Error"/>
+            <Message Id="Regex_ComplementRangesInvalidArg" Text="ComplementRanges - Argument must be a RangeToken"/>
+            <Message Id="Regex_InvalidCategoryName" Text="Invalid category name: {0}"/>
+            <Message Id="Regex_KeywordNotFound" Text="Keyword '{0}' not found"/>
+            <Message Id="Regex_BadRefNo" Text="Reference no must be more than zero"/>
+            <Message Id="Regex_UnknownOption" Text="Unknown option: {0}"/>
+            <Message Id="Regex_UnknownTokenType" Text="Unknown token type"/>
+            <Message Id="Regex_RangeTokenGetError" Text="Failed to get RangeToken for: {0}"/>
+            <Message Id="Regex_NotSupported" Text="Not supported"/>
+            <Message Id="Regex_InvalidChildIndex" Text="Invalid child index"/>
+            <Message Id="NEL_RepeatedCalls" Text="Enabling the NEL option can only be called once per process."/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
