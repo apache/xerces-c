@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/17 05:16:59  neilg
+ * ensure all uses of ArrayJanitor use a memory manager
+ *
  * Revision 1.17  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -729,16 +732,16 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 // ---------------------------------------------------------------------------
 RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expression) {
 
-  XMLCh* tmpBuf = XMLString::transcode(expression);
-  ArrayJanitor<XMLCh> janBuf(tmpBuf);
+  XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
+  ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
   return tokenize(tmpBuf, 0, XMLString::stringLen(tmpBuf));
 }
 
 RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expression,
 								const int start, const int end) {
 
-  XMLCh* tmpBuf = XMLString::transcode(expression);
-  ArrayJanitor<XMLCh> janBuf(tmpBuf);
+  XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
+  ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
   return tokenize(tmpBuf, start, end);
 }
 
@@ -897,10 +900,10 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
 XMLCh* RegularExpression::replace(const char* const matchString, 
                                   const char* const replaceString){
 
-	XMLCh* tmpBuf = XMLString::transcode(matchString);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
-	XMLCh* tmpBuf2 = XMLString::transcode(replaceString);
-    ArrayJanitor<XMLCh> janBuf2(tmpBuf2);
+	XMLCh* tmpBuf = XMLString::transcode(matchString, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
+	XMLCh* tmpBuf2 = XMLString::transcode(replaceString, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf2(tmpBuf2, fMemoryManager);
 
 	return replace(tmpBuf, tmpBuf2, 0, XMLString::stringLen(tmpBuf));
 }
@@ -909,10 +912,10 @@ XMLCh* RegularExpression::replace(const char* const matchString,
                                   const char* const replaceString,
                                   const int start, const int end){
 
- 	XMLCh* tmpBuf = XMLString::transcode(matchString);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
- 	XMLCh* tmpBuf2 = XMLString::transcode(replaceString);
-    ArrayJanitor<XMLCh> janBuf2(tmpBuf2);
+ 	XMLCh* tmpBuf = XMLString::transcode(matchString, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
+ 	XMLCh* tmpBuf2 = XMLString::transcode(replaceString, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf2(tmpBuf2, fMemoryManager);
   
   return replace(tmpBuf, tmpBuf2, start, end);
 }
@@ -932,8 +935,6 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
                                   const XMLCh* const replaceString,
                                   const int start, const int end)
 {
-    // REVISIT:: cargillmem - subEx is temporary... replicate was modified below
-    // but there is also a call to delete[]!!!
 
   //check if matches zero length string - throw error if so
   if (matches(XMLUni::fgZeroLenString, fMemoryManager)){
@@ -967,14 +968,14 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
       //if there are subExpressions, then determine the string we want to 
       //substitute in.
         if (numSubEx != 0) {
-            delete[] (XMLCh*)curRepString;
+            fMemoryManager->deallocate((XMLCh*)curRepString);
             curRepString = subInExp(replaceString, matchString, subEx->elementAt(i));     
         }
       result.append(curRepString);
     }
   }  
     
-  delete[] (XMLCh*)curRepString;
+  fMemoryManager->deallocate((XMLCh*)curRepString);
   return XMLString::replicate(result.getRawBuffer(), fMemoryManager); 
     
 }

@@ -128,8 +128,8 @@ static void WriteCharStr( FILE* stream, const char* const toWrite)
 
 static void WriteUStrStdErr( const XMLCh* const toWrite)
 {
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
+    char* tmpVal = XMLString::transcode(toWrite, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<char> janText(tmpVal, XMLPlatformUtils::fgMemoryManager);
     if (fputs(tmpVal, stderr) == EOF)
     {
        ThrowXML(XMLPlatformUtilsException,
@@ -139,8 +139,8 @@ static void WriteUStrStdErr( const XMLCh* const toWrite)
 
 static void WriteUStrStdOut( const XMLCh* const toWrite)
  {
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janText(tmpVal);
+    char* tmpVal = XMLString::transcode(toWrite, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<char> janText(tmpVal, XMLPlatformUtils::fgMemoryManager);
     if (fputs(tmpVal, stdout) == EOF)
     {
         ThrowXML(XMLPlatformUtilsException,
@@ -282,8 +282,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     if (fileName == NULL)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::CPtr_PointerIsZero);
-    const char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    const char* tmpFileName = XMLString::transcode(fileName, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, XMLPlatformUtils::fgMemoryManager);
     FileHandle retVal = (FILE*)fopen( tmpFileName , "r+" );
 
     if (retVal == NULL)
@@ -308,8 +308,8 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     if (fileName == NULL)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::CPtr_PointerIsZero);
-    const char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    const char* tmpFileName = XMLString::transcode(fileName, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, XMLPlatformUtils::fgMemoryManager);
 
     FileHandle retVal = (FILE*)fopen( tmpFileName, "r+" );
     if (retVal == NULL)

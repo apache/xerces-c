@@ -3483,7 +3483,7 @@ void IGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
             : 0;
 
     XMLCh* canonicalValue = 0;
-    if (fPSVIElemContext.fNormalizedValue)
+    if (fPSVIElemContext.fNormalizedValue )
     {
         if (memberDV)
             canonicalValue = (XMLCh*) memberDV->getCanonicalRepresentation(fPSVIElemContext.fNormalizedValue, fMemoryManager);

@@ -166,8 +166,8 @@ void DTDValidator::faultInAttr(XMLAttr& toFill, const XMLAttDef& attDef) const
         //  There is a colon, so we have to split apart the name and prefix
         //  part.
         //
-        XMLCh* tmpNameBuf = XMLString::replicate(fullName);
-        ArrayJanitor<XMLCh> janNameBuf(tmpNameBuf);
+        XMLCh* tmpNameBuf = XMLString::replicate(fullName, fMemoryManager);
+        ArrayJanitor<XMLCh> janNameBuf(tmpNameBuf, fMemoryManager);
 
         // Put a null where the colon is, to split it into two strings
         tmpNameBuf[colonInd] = chNull;
@@ -297,7 +297,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
     }
     else
     {
-        janTmpVal.reset(XMLString::replicate(attrValue));
+        janTmpVal.reset(XMLString::replicate(attrValue, fMemoryManager), fMemoryManager);
         pszTmpVal = janTmpVal.get();
     }
 
@@ -553,8 +553,8 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
                 //  We need to verify that all of its possible values
                 //  (in the enum list) refer to valid notations.
                 //
-                XMLCh* list = XMLString::replicate(curAttDef.getEnumeration());
-                ArrayJanitor<XMLCh> janList(list);
+                XMLCh* list = XMLString::replicate(curAttDef.getEnumeration(), fMemoryManager);
+                ArrayJanitor<XMLCh> janList(list, fMemoryManager);
 
                 //
                 //  Search forward for a space or a null. If a null,

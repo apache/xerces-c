@@ -2313,7 +2313,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  We have to split the name into its prefix and name parts. Then
         //  we map the prefix to its URI.
         const XMLCh* const namePtr = curPair->getKey();
-        ArrayJanitor<XMLCh> janName(0);
+        ArrayJanitor <XMLCh> janName(0);
 
         // use a stack-based buffer when possible.
         XMLCh tempBuffer[100];

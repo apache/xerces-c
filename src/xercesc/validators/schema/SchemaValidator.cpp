@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.49  2003/12/17 05:16:59  neilg
+ * ensure all uses of ArrayJanitor use a memory manager
+ *
  * Revision 1.48  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -1090,7 +1093,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
                         //  (in the enum list) refer to valid notations.
                         //
                         XMLCh* list = XMLString::replicate(curAttDef.getEnumeration(), fMemoryManager);
-                        ArrayJanitor<XMLCh> janList(list);
+                        ArrayJanitor<XMLCh> janList(list, fMemoryManager);
 
                         //
                         //  Search forward for a space or a null. If a null,
