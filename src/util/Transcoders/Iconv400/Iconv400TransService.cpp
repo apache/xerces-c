@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/02/11 03:06:58  rahulj
+ * Cosmetic changes. Replaced tabs with appropriate number of spaces.
+ *
  * Revision 1.1  2000/02/10 18:08:28  abagchi
  * Initial checkin
  *
@@ -108,12 +111,11 @@ Iconv400TransService::~Iconv400TransService()
 //  Iconv400TransService: The virtual transcoding service API
 // ---------------------------------------------------------------------------
 int Iconv400TransService::compareIString(const   XMLCh* const    comp1
-                                    , const XMLCh* const    comp2)
+                                         , const XMLCh* const    comp2)
 {
     const XMLCh* psz1 = comp1;
     const XMLCh* psz2 = comp2;    
 
-    unsigned int curCount = 0;
     while (true)
     {
                        
@@ -133,8 +135,8 @@ int Iconv400TransService::compareIString(const   XMLCh* const    comp1
 
 
 int Iconv400TransService::compareNIString(const  XMLCh* const    comp1
-                                    , const XMLCh* const    comp2
-                                    , const unsigned int    maxChars)
+                                          , const XMLCh* const    comp2
+                                          , const unsigned int    maxChars)
 {
     const XMLCh* psz1 = comp1;
     const XMLCh* psz2 = comp2;
@@ -143,7 +145,7 @@ int Iconv400TransService::compareNIString(const  XMLCh* const    comp1
     unsigned int curCount = 0;
     while (true)
     {
-// If an inequality, then return the difference
+        // If an inequality, then return the difference
   
 
         // If an inequality, then return difference
