@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/09/25 15:22:34  peiyongz
+ * Implementation of Serialization
+ *
  * Revision 1.8  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -485,6 +488,60 @@ void QName::cleanUp()
     fMemoryManager->deallocate(fPrefix); //delete [] fPrefix;
     fMemoryManager->deallocate(fRawName); //delete [] fRawName;
     fLocalPart = fPrefix = fRawName = 0;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(QName)
+
+void QName::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        int bufferLen = 0;
+
+        //note: buffer size is different from actual string length
+        serEng<<fPrefixBufSz;
+        bufferLen = XMLString::stringLen(fPrefix);
+        serEng<<bufferLen;
+        serEng.write(fPrefix, bufferLen);
+
+        serEng<<fLocalPartBufSz;
+        bufferLen = XMLString::stringLen(fLocalPart);
+        serEng<<bufferLen;
+        serEng.write(fLocalPart, bufferLen);
+
+        //do not serialize rawName
+
+        serEng<<fURIId;
+    }
+    else
+    {
+        int bufferLen = 0;
+
+        serEng>>fPrefixBufSz;
+        fPrefix = (XMLCh*) fMemoryManager->allocate((fPrefixBufSz+1) * sizeof(XMLCh));
+        serEng>>bufferLen;
+        serEng.read(fPrefix, bufferLen);
+        fPrefix[bufferLen] = 0;
+
+        serEng>>fLocalPartBufSz;
+        fLocalPart = (XMLCh*) fMemoryManager->allocate((fLocalPartBufSz+1) * sizeof(XMLCh));
+        serEng>>bufferLen;
+        serEng.read(fLocalPart, bufferLen);
+        fLocalPart[bufferLen] = 0;
+
+        //force raw name rebuilt
+        fRawNameBufSz = 0;
+        fRawName = 0;
+
+        serEng>>fURIId;
+
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

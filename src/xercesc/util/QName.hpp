@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/09/25 15:22:34  peiyongz
+ * Implementation of Serialization
+ *
  * Revision 1.8  2003/05/16 21:36:59  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -117,9 +120,11 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT QName : public XMemory
+class XMLUTIL_EXPORT QName : public XSerializable, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -199,6 +204,11 @@ public :
     //  Misc
     // -----------------------------------------------------------------------
     void cleanUp();
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(QName)
 
 private :
 
