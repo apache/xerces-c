@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -171,6 +171,11 @@ const XMLCh XMLUni::fgIBM037EncodingString2[] =
 const XMLCh XMLUni::fgIBM1140EncodingString[] =
 {
     chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgIBM1140EncodingString2[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDigit_0, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
 };
 
 const XMLCh XMLUni::fgIESString[] =

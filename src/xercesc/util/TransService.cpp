@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -492,9 +492,10 @@ void XMLTransService::initTransService()
 
     //
     //  Add in our mappings for IBM037 with Euro update, i.e. IBM1140. It
-    //  has no aliases
+    //  has alias IBM01140, the one suggested by IANA
     //
     gMappings->put((void*)XMLUni::fgIBM1140EncodingString, new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString));
+    gMappings->put((void*)XMLUni::fgIBM1140EncodingString2, new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString2));
 
     //
     //  Add in our mappings for Windows-1252. We don't have any aliases for
