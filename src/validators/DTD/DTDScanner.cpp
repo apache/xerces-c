@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/07/12 20:10:18  tng
+ * Partial Markup in Parameter Entity is validity constraint and thus should be just error, not fatal error.
+ *
  * Revision 1.16  2001/07/10 21:09:39  tng
  * Give proper error messsage when scanning external id.
  *
@@ -219,7 +222,6 @@ bool DTDScanner::checkForPERef(const  bool    spaceRequired
     if (!fReaderMgr->skippedChar(chPercent))
        return gotSpace;
 
-    fScanner->setHasNoDTD(false);
     while (true)
     {
        if (!expandPERef(false, inLiteral, inMarkup, throwAtEndExt))
@@ -242,6 +244,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
                                 , const bool    inMarkup
                                 , const bool    throwEndOfExt)
 {
+    fScanner->setHasNoDTD(false);
     XMLBufBid bbName(fBufMgr);
 
     //
@@ -2023,13 +2026,21 @@ void DTDScanner::scanEntityDecl()
     if (!checkForPERef(true, false, true))
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
+    // save the hasNoDTD status for Entity Constraint Checking
+    bool hasNoDTD = fScanner->getHasNoDTD();
+    if (hasNoDTD && isPEDecl)
+        fScanner->setHasNoDTD(false);
+
     // According to the type call the value scanning method
     if (!scanEntityDef(*entityDecl, isPEDecl))
     {
         fReaderMgr->skipPastChar(chCloseAngle);
+        fScanner->setHasNoDTD(true);
         fScanner->emitError(XMLErrs::ExpectedEntityValue);
         return;
     }
+    if (hasNoDTD)
+        fScanner->setHasNoDTD(true);
 
     // Space is legal (but not required) here so check for a PE ref
     checkForPERef(false, false, true);
