@@ -375,6 +375,18 @@ public :
       */
     bool getCalculateSrcOfs() const;
 
+    /**
+      * Get the 'force standard uri flag'
+      *
+      * This method returns the state if the parser forces standard uri
+      *
+      * @return true, if the parser is currently configured to
+      *         force standard uri, i.e. malformed uri will be rejected.
+      *
+      * @see #setStandardUriConformant
+      */
+    bool getStandardUriConformant() const;
+
     //@}
 
 
@@ -637,6 +649,18 @@ public :
       * @see #getCalculateSrcOfs
       */
     void setCalculateSrcOfs(const bool newState);
+
+    /** Force standard uri
+      *
+      * This method allows users to tell the parser to force standard uri conformance.
+      *
+      * The parser's default state is: false.
+      *
+      * @param newState The value specifying whether the parser should reject malformed URI.
+      *
+      * @see #getStandardUriConformant
+      */
+    void setStandardUriConformant(const bool newState);
 
     /** Set the scanner to use when scanning the XML document
       *

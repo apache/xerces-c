@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/01/03 20:08:39  tng
+ * New feature StandardUriConformant to force strict standard uri conformance.
+ *
  * Revision 1.6  2002/12/20 22:09:56  tng
  * XML 1.1
  *
@@ -289,6 +292,7 @@ public :
     void setEntityHandler(XMLEntityHandler* const newHandler);
     void setThrowEOE(const bool newValue);
     void setXMLVersion(const XMLReader::XMLVersion version);
+    void setStandardUriConformant(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Implement the SAX Locator interface
@@ -347,6 +351,9 @@ private :
     //  fXMLVersion
     //      Enum to indicate if each Reader should be created as XML 1.1 or
     //      XML 1.0 conformant
+    //
+    //  fStandardUriConformant
+    //      This flag controls whether we force conformant URI
     // -----------------------------------------------------------------------
     XMLEntityDecl*              fCurEntity;
     XMLReader*                  fCurReader;
@@ -356,6 +363,7 @@ private :
     RefStackOf<XMLReader>*      fReaderStack;
     bool                        fThrowEOE;
     XMLReader::XMLVersion       fXMLVersion;
+    bool                        fStandardUriConformant;
 };
 
 
@@ -418,6 +426,11 @@ inline bool ReaderMgr::lookingAtSpace()
 inline void ReaderMgr::setThrowEOE(const bool newValue)
 {
     fThrowEOE = newValue;
+}
+
+inline void ReaderMgr::setStandardUriConformant(const bool newValue)
+{
+    fStandardUriConformant = newValue;
 }
 
 inline bool ReaderMgr::skippedString(const XMLCh* const toSkip)

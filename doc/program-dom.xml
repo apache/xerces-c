@@ -379,11 +379,11 @@
             <anchor name="namespaces"/>
             <table>
                 <tr><th colspan="2"><em>void setDoNamespaces(const bool)</em></th></tr>
-                <tr><th><em>true:</em></th><td> Perform Namespace processing </td></tr>
-                <tr><th><em>false:</em></th><td> Do not perform Namespace processing</td></tr>
+                <tr><th><em>true:</em></th><td> Perform Namespace processing. </td></tr>
+                <tr><th><em>false:</em></th><td> Do not perform Namespace processing. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>note:</em></th><td> If the validation scheme is set to Val_Always or Val_Auto, then the
-                document must contain a grammar that supports the use of namespaces </td></tr>
+                document must contain a grammar that supports the use of namespaces. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="validation-dynamic">setValidationScheme</link>
                 </td></tr>
@@ -535,6 +535,17 @@
                 </td></tr>
             </table>
 
+            <p/>
+
+            <anchor name="StandardUriConformant"/>
+            <table>
+                <tr><th colspan="2"><em>void setStandardUriConformant(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Force standard uri conformance. </td></tr>
+                <tr><th><em>false:</em></th><td> Do not force standard uri conformance. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> If set to true, malformed uri will be rejected
+                and fatal error will be issued. </td></tr>
+            </table>
             <p/>
 
         </s3>
@@ -1076,6 +1087,18 @@
 
             <p/>
 
+            <anchor name="builder-StandardUriConformant"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/standard-uri-conformant</em></th></tr>
+                <tr><th><em>true:</em></th><td> Force standard uri conformance. </td></tr>
+                <tr><th><em>false:</em></th><td> Do not force standard uri conformance. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> If set to true, malformed uri will be rejected
+                and fatal error will be issued. </td></tr>
+            </table>
+            <p/>
+
+            <anchor name="builder-adopts-domdocument"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/dom/user-adopts-DOMDocument</em></th></tr>
                 <tr><th><em>true:</em></th><td> The caller will adopt the DOMDocument that is returned from

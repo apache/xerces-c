@@ -329,6 +329,17 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
             <p/>
 
+            <anchor name="StandardUriConformant"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/standard-uri-conformant</em></th></tr>
+                <tr><th><em>true:</em></th><td> Force standard uri conformance. </td></tr>
+                <tr><th><em>false:</em></th><td> Do not force standard uri conformance. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> If set to true, malformed uri will be rejected
+                and fatal error will be issued. </td></tr>
+            </table>
+            <p/>
+
             </s4>
         </s3>
 

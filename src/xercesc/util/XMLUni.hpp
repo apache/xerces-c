@@ -244,6 +244,7 @@ public :
     static const XMLCh fgXercesUseCachedGrammarInParse[];
     static const XMLCh fgXercesScannerName[];
     static const XMLCh fgXercesCalculateSrcOfs[];
+    static const XMLCh fgXercesStandardUriConformant[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/01/03 20:09:36  tng
+ * New feature StandardUriConformant to force strict standard uri conformance.
+ *
  * Revision 1.15  2002/12/27 16:16:51  knoaman
  * Set scanner options and handlers.
  *
@@ -1436,6 +1439,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setCalculateSrcOfs(value);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
+    {
+        fScanner->setStandardUriConformant(value);
+    }
     else
        throw SAXNotRecognizedException("Unknown Feature");
 }
@@ -1466,6 +1473,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->isUsingCachedGrammarInParse();
     else if (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
         return fScanner->getCalculateSrcOfs();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
+        return fScanner->getStandardUriConformant();
     else
        throw SAXNotRecognizedException("Unknown Feature");
 

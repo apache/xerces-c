@@ -189,6 +189,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fRootElemName(0)
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
+    , fStandardUriConformant(false)
 {
    commonInit();
 
@@ -243,6 +244,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fRootElemName(0)
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
+    , fStandardUriConformant(false)
 {
    commonInit();
 
@@ -288,7 +290,21 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
         //  mistaking a file for a URL.
         XMLURL tmpURL(systemId);
         if (tmpURL.isRelative()) {
-            srcToUse = new LocalFileInputSource(systemId);
+            if (!fStandardUriConformant)
+                srcToUse = new LocalFileInputSource(systemId);
+            else {
+                // since this is the top of the try/catch, cannot call ThrowXML
+                // emit the error directly
+                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
+                fInException = true;
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , e.getType()
+                    , e.getMessage()
+                );
+                return;
+            }
         }
         else
         {
@@ -296,9 +312,23 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
         }
 
     }
-    catch(const MalformedURLException&)
+    catch(const MalformedURLException& e)
     {
-        srcToUse = new LocalFileInputSource(systemId);
+        if (!fStandardUriConformant)
+            srcToUse = new LocalFileInputSource(systemId);
+        else {
+            // since this is the top of the try/catch, cannot call ThrowXML
+            // emit the error directly
+            // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
+            fInException = true;
+            emitError
+            (
+                XMLErrs::XMLException_Fatal
+                , e.getType()
+                , e.getMessage()
+            );
+            return;
+        }
     }
 
     catch(const XMLException& excToCatch)
@@ -366,16 +396,44 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         //  mistaking a file for a URL.
         XMLURL tmpURL(systemId);
         if (tmpURL.isRelative()) {
-            srcToUse = new LocalFileInputSource(systemId);
+            if (!fStandardUriConformant)
+                srcToUse = new LocalFileInputSource(systemId);
+            else {
+                // since this is the top of the try/catch, cannot call ThrowXML
+                // emit the error directly
+                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
+                fInException = true;
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , e.getType()
+                    , e.getMessage()
+                );
+                return false;
+            }
         }
         else
         {
             srcToUse = new URLInputSource(tmpURL);
         }
     }
-    catch(const MalformedURLException&)
+    catch(const MalformedURLException& e)
     {
-        srcToUse = new LocalFileInputSource(systemId);
+        if (!fStandardUriConformant)
+            srcToUse = new LocalFileInputSource(systemId);
+        else {
+            // since this is the top of the try/catch, cannot call ThrowXML
+            // emit the error directly
+            // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
+            fInException = true;
+            emitError
+            (
+                XMLErrs::XMLException_Fatal
+                , e.getType()
+                , e.getMessage()
+            );
+            return false;
+        }
     }
     catch(const XMLException& excToCatch)
     {
@@ -550,6 +608,7 @@ void XMLScanner::setParseSettings(XMLScanner* const refScanner)
     setDoNamespaces(refScanner->getDoNamespaces());
     setDoSchema(refScanner->getDoSchema());
     setCalculateSrcOfs(refScanner->getCalculateSrcOfs());
+    setStandardUriConformant(refScanner->getStandardUriConformant());
     setExitOnFirstFatal(refScanner->getExitOnFirstFatal());
     setValidationConstraintFatal(refScanner->getValidationConstraintFatal());
     setValidationSchemaFullChecking(refScanner->getValidationSchemaFullChecking());
@@ -1458,16 +1517,72 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
             XMLURL tmpURL(systemId);
             if (tmpURL.isRelative())
             {
-                srcToUse = new LocalFileInputSource(systemId);
+                if (!fStandardUriConformant)
+                    srcToUse = new LocalFileInputSource(systemId);
+                else {
+                    // since this is the top of the try/catch, cannot call ThrowXML
+                    // emit the error directly
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
+                    fInException = true;
+                    emitError
+                    (
+                        XMLErrs::XMLException_Fatal
+                        , e.getType()
+                        , e.getMessage()
+                    );
+                    return 0;
+                }
             }
             else
             {
                 srcToUse = new URLInputSource(tmpURL);
             }
         }
-        catch(const MalformedURLException&)
+        catch(const MalformedURLException& e)
         {
-            srcToUse = new LocalFileInputSource(systemId);
+            if (!fStandardUriConformant)
+                srcToUse = new LocalFileInputSource(systemId);
+            else {
+                // since this is the top of the try/catch, cannot call ThrowXML
+                // emit the error directly
+                // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
+                fInException = true;
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , e.getType()
+                    , e.getMessage()
+                );
+                return 0;
+            }
+        }
+        catch(const XMLException& excToCatch)
+        {
+            //  For any other XMLException,
+            //  emit the error and catch any user exception thrown from here.
+            fInException = true;
+            if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
+                emitError
+                (
+                    XMLErrs::XMLException_Warning
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else
+                emitError
+                (
+                    XMLErrs::XMLException_Error
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+                return 0;
         }
         catch(...)
         {

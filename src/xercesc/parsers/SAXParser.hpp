@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/01/03 20:09:36  tng
+ * New feature StandardUriConformant to force strict standard uri conformance.
+ *
  * Revision 1.17  2002/12/30 20:15:51  knoaman
  * Make calculate src offset option false by default.
  *
@@ -502,6 +505,18 @@ public :
     bool getCalculateSrcOfs() const;
 
     /**
+      * Get the 'force standard uri flag'
+      *
+      * This method returns the state if the parser forces standard uri
+      *
+      * @return true, if the parser is currently configured to
+      *         force standard uri, i.e. malformed uri will be rejected.
+      *
+      * @see #setStandardUriConformant
+      */
+    bool getStandardUriConformant() const;
+
+    /**
      * Retrieve the grammar that is associated with the specified namespace key
      *
      * @param  nameSpaceKey Namespace key
@@ -774,6 +789,18 @@ public :
       * @see #getCalculateSrcOfs
       */
     void setCalculateSrcOfs(const bool newState);
+
+    /** Force standard uri
+      *
+      * This method allows users to tell the parser to force standard uri conformance.
+      *
+      * The parser's default state is: false.
+      *
+      * @param newState The value specifying whether the parser should reject malformed URI.
+      *
+      * @see #getStandardUriConformant
+      */
+    void setStandardUriConformant(const bool newState);
 
     /** Set the scanner to use when scanning the XML document
       *

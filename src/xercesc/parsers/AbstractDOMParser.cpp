@@ -309,6 +309,11 @@ bool AbstractDOMParser::getCalculateSrcOfs() const
     return fScanner->getCalculateSrcOfs();
 }
 
+bool AbstractDOMParser::getStandardUriConformant() const
+{
+    return fScanner->getStandardUriConformant();
+}
+
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
@@ -374,6 +379,11 @@ void AbstractDOMParser::setLoadExternalDTD(const bool newState)
 void AbstractDOMParser::setCalculateSrcOfs(const bool newState)
 {
     fScanner->setCalculateSrcOfs(newState);
+}
+
+void AbstractDOMParser::setStandardUriConformant(const bool newState)
+{
+    fScanner->setStandardUriConformant(newState);
 }
 
 void AbstractDOMParser::useScanner(const XMLCh* const scannerName)

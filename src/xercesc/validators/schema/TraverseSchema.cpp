@@ -6133,9 +6133,12 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
 
             srcToFill = new URLInputSource(urlTmp);
         }
-        catch(const MalformedURLException&) {
-            // Its not a URL, so lets assume its a local file name.
-            srcToFill = new LocalFileInputSource(fSchemaInfo->getCurrentSchemaURL(),normalizedURI);
+        catch(const MalformedURLException& e) {
+            // Its not a URL, so lets assume its a local file name if non-standard URI is allowed
+            if (!fScanner->getStandardUriConformant())
+                srcToFill = new LocalFileInputSource(fSchemaInfo->getCurrentSchemaURL(),normalizedURI);
+            else
+                throw e;
         }
     }
 

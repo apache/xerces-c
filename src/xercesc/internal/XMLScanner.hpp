@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/01/03 20:08:40  tng
+ * New feature StandardUriConformant to force strict standard uri conformance.
+ *
  * Revision 1.15  2002/12/27 16:16:51  knoaman
  * Set scanner options and handlers.
  *
@@ -503,6 +506,8 @@ public :
     /* tell if the validator comes from user */
     bool isValidatorFromUser();
 
+    /* tell if standard URI are forced */
+    bool getStandardUriConformant() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -533,6 +538,7 @@ public :
     void setNormalizeData(const bool normalizeData);
     void setCalculateSrcOfs(const bool newValue);
     void setParseSettings(XMLScanner* const refScanner);
+    void setStandardUriConformant(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -583,7 +589,7 @@ public :
 
     // -----------------------------------------------------------------------
     //  Grammar preparsing methods
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     Grammar* loadGrammar
     (
         const   XMLCh* const    systemId
@@ -819,7 +825,14 @@ protected:
     //      This flag indicates whether the parser should perform datatype
     //      normalization that is defined in the schema.
     //
+    //  fCalculateSrcOfs
+    //      This flag indicates the parser should calculate the source offset.
+    //      Turning this on may impact performance.
+    //
+    //  fStandardUriConformant
+    //      This flag controls whether we force conformant URI
     // -----------------------------------------------------------------------
+    bool                        fStandardUriConformant;
     bool                        fCalculateSrcOfs;
     bool                        fDoNamespaces;
     bool                        fExitOnFirstFatal;
@@ -1105,6 +1118,11 @@ inline Grammar* XMLScanner::getRootGrammar() const
     return fRootGrammar;
 }
 
+inline bool XMLScanner::getStandardUriConformant() const
+{
+    return fStandardUriConformant;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1235,6 +1253,12 @@ inline void XMLScanner::useCachedGrammarInParse(const bool newValue)
 inline void XMLScanner::setCalculateSrcOfs(const bool newValue)
 {
     fCalculateSrcOfs = newValue;
+}
+
+inline void XMLScanner::setStandardUriConformant(const bool newValue)
+{
+    fStandardUriConformant = newValue;
+    fReaderMgr.setStandardUriConformant(newValue);
 }
 
 // ---------------------------------------------------------------------------

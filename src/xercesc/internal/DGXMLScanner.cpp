@@ -2272,14 +2272,17 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             }
             srcToFill = new URLInputSource(urlTmp);
         }
-        catch(const MalformedURLException&)
+        catch(const MalformedURLException& e)
         {
-            // Its not a URL, so lets assume its a local file name.
-            srcToFill = new LocalFileInputSource
-            (
-                lastInfo.systemId
-                , expSysId.getRawBuffer()
-            );
+            // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
+            if (!fStandardUriConformant)
+                srcToFill = new LocalFileInputSource
+                (
+                    lastInfo.systemId
+                    , expSysId.getRawBuffer()
+                );
+            else
+                throw e;
         }
     }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/01/03 20:09:36  tng
+ * New feature StandardUriConformant to force strict standard uri conformance.
+ *
  * Revision 1.12  2002/12/27 16:16:51  knoaman
  * Set scanner options and handlers.
  *
@@ -447,6 +450,11 @@ bool SAXParser::getCalculateSrcOfs() const
     return fScanner->getCalculateSrcOfs();
 }
 
+bool SAXParser::getStandardUriConformant() const
+{
+    return fScanner->getStandardUriConformant();
+}
+
 Grammar* SAXParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
     return fGrammarResolver->getGrammar(nameSpaceKey);
@@ -548,6 +556,11 @@ void SAXParser::useCachedGrammarInParse(const bool newState)
 void SAXParser::setCalculateSrcOfs(const bool newState)
 {
     fScanner->setCalculateSrcOfs(newState);
+}
+
+void SAXParser::setStandardUriConformant(const bool newState)
+{
+    fScanner->setStandardUriConformant(newState);
 }
 
 void SAXParser::useScanner(const XMLCh* const scannerName)
