@@ -35,6 +35,7 @@ case "${host}" in
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;;
         *-*-mvs*)       platform=OS390 ;;
+	*-*-OS400*)     platform=OS400 ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)
