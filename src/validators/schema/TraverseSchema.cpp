@@ -2372,14 +2372,16 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
         }
 
         if(typeInfo != 0 &&
-           typeInfo->getContentType() != SchemaElementDecl::Simple &&
-           typeInfo->getContentType() != SchemaElementDecl::Mixed) {
+           contentSpecType != SchemaElementDecl::Simple &&
+           contentSpecType != SchemaElementDecl::Mixed_Simple &&
+           contentSpecType != SchemaElementDecl::Mixed_Complex) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NotSimpleOrMixedElement, name);
         }
 
         if(typeInfo != 0 &&
-           (typeInfo->getContentType() == SchemaElementDecl::Mixed
-            && !emptiableParticle(typeInfo->getContentSpec()))) {
+           ((contentSpecType == SchemaElementDecl::Mixed_Complex
+             || contentSpecType == SchemaElementDecl::Mixed_Simple)
+            && !emptiableParticle(contentSpecNode))) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::EmptiableMixedContent, name);
         }
 
@@ -4719,7 +4721,7 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
             if (baseContentType != SchemaElementDecl::Empty) {
                 if ((isMixed && baseContentType == SchemaElementDecl::Children) 
-                    || (!isMixed && baseContentType == SchemaElementDecl::Mixed)) {
+                    || (!isMixed && baseContentType == SchemaElementDecl::Mixed_Complex)) {
 
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MixedOrElementOnly, baseLocalPart, typeName);
                     throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
@@ -4784,26 +4786,6 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
         }
     }
 
-    if (isMixed) {
-
-        // add #PCDATA leaf
-        QName* tmpName = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgPCDataElemId);
-        Janitor<QName> janQName(tmpName);
-        ContentSpecNode* pcdataNode = new ContentSpecNode(tmpName);
-
-        // If there was an element, the content spec becomes a choice of PCDATA and
-        // the element
-        if (specNode != 0) {
-            specNode = new ContentSpecNode(ContentSpecNode::Choice,
-                                           pcdataNode, specNode, true, adoptSpecNode);
-        }
-        else {
-            specNode = pcdataNode;
-        }
-
-        adoptSpecNode = true;
-    }
-
     typeInfo->setContentSpec(specNode);
     typeInfo->setAdoptContentSpec(adoptSpecNode);
 
@@ -4818,12 +4800,9 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
             //check derivation valid - content type is empty (5.2)
             if (!typeInfo->getContentSpec()) {
-                int baseContentType = baseTypeInfo->getContentType();
 
-                if (baseContentType != SchemaElementDecl::Empty
-                    && ((baseContentType != SchemaElementDecl::Children
-                         && baseContentType != SchemaElementDecl::Mixed)
-                        || !emptiableParticle(baseSpecNode))) {
+                if (baseTypeInfo->getContentType() != SchemaElementDecl::Empty
+                    && !emptiableParticle(baseSpecNode)) {
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::EmptyComplexRestrictionDerivation);
                 }
             }
@@ -4861,7 +4840,23 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
     // Set the content type
     // -------------------------------------------------------------
     if (isMixed) {
-        typeInfo->setContentType(SchemaElementDecl::Mixed);
+
+        if (specNode != 0) {
+            typeInfo->setContentType(SchemaElementDecl::Mixed_Complex);
+        }
+        else {
+            // add #PCDATA leaf and set its minOccurs to 0
+            QName* tmpName = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgPCDataElemId);
+            Janitor<QName> janQName(tmpName);
+            ContentSpecNode* pcdataNode = new ContentSpecNode(tmpName);
+
+            pcdataNode->setMinOccurs(0);
+            typeInfo->setContentSpec(pcdataNode);
+            typeInfo->setAdoptContentSpec(true);
+            typeInfo->setContentType(SchemaElementDecl::Mixed_Simple);
+        }
+
+
     }
     else if (typeInfo->getContentSpec() == 0) {
         typeInfo->setContentType(SchemaElementDecl::Empty);
@@ -5165,7 +5160,7 @@ void TraverseSchema::processAttributes(const DOM_Element& attElem,
     // Check attributes derivation OK
     // -------------------------------------------------------------
     bool baseWithAttributes = (baseTypeInfo && baseTypeInfo->hasAttDefs());
-    bool childWithAttributes = typeInfo->hasAttDefs();
+    bool childWithAttributes = (typeInfo->hasAttDefs() || typeInfo->getAttWildCard());
 
     if (derivedBy == SchemaSymbols::RESTRICTION && childWithAttributes) {
 

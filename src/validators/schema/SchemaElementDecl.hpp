@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/09/05 20:49:11  knoaman
+ * Fix for complexTypes with mixed content model.
+ *
  * Revision 1.12  2001/08/29 20:52:35  tng
  * Schema: xsi:type support
  *
@@ -124,7 +127,8 @@ public :
     {
         Empty
         , Any
-        , Mixed
+        , Mixed_Simple
+        , Mixed_Complex
         , Children
         , Simple
 

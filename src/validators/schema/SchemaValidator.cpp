@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/09/05 20:49:11  knoaman
+ * Fix for complexTypes with mixed content model.
+ *
  * Revision 1.16  2001/08/30 15:47:46  tng
  * Schema: xsi:type fixes
  *
@@ -179,7 +182,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     {
         // We pass no judgement on this one, anything goes
     }
-    else if ((modelType == SchemaElementDecl::Mixed)
+    else if ((modelType == SchemaElementDecl::Mixed_Simple)
+         ||  (modelType == SchemaElementDecl::Mixed_Complex)
          ||  (modelType == SchemaElementDecl::Children))
     {
         // if nillable, it's an error to have value

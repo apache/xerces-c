@@ -118,7 +118,7 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
     {
         // We pass no judgement on this one, anything goes
     }
-     else if ((modelType == DTDElementDecl::Mixed)
+     else if ((modelType == DTDElementDecl::Mixed_Simple)
           ||  (modelType == DTDElementDecl::Children))
     {
         // Get the element's content model or fault it in

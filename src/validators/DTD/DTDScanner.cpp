@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/09/05 20:49:10  knoaman
+ * Fix for complexTypes with mixed content model.
+ *
  * Revision 1.19  2001/08/02 16:54:39  tng
  * Reset some Scanner flags in scanReset().
  *
@@ -1488,7 +1491,7 @@ bool DTDScanner::scanContentSpec(DTDElementDecl& toFill)
     if (fReaderMgr->skippedString(XMLUni::fgPCDATAString))
     {
         // Set the model to mixed
-        toFill.setModelType(DTDElementDecl::Mixed);
+        toFill.setModelType(DTDElementDecl::Mixed_Simple);
         status = scanMixed(toFill);
 
         //

@@ -323,7 +323,7 @@ DTDElementDecl::formatContentModel() const
 XMLContentModel* DTDElementDecl::makeContentModel()
 {
     XMLContentModel* cmRet = 0;
-    if (fModelType == Mixed)
+    if (fModelType == Mixed_Simple)
     {
         //
         //  Just create a mixel content model object. This type of

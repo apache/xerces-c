@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/09/05 20:49:11  knoaman
+ * Fix for complexTypes with mixed content model.
+ *
  * Revision 1.17  2001/08/29 21:27:07  knoaman
  * no message
  *
@@ -373,23 +376,19 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
     if (fContentType == SchemaElementDecl::Simple) {
        // just return nothing
     }
-     else if (fContentType == SchemaElementDecl::Mixed)
+    else if (fContentType == SchemaElementDecl::Mixed_Simple)
     {
         //
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        if(!specNode)
-            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
-
-        if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
-            cmRet = new MixedContentModel(false, specNode);
-        }
-        else {
-            cmRet = createChildModel(specNode, true);
-        }
+        cmRet = new MixedContentModel(false, specNode);
     }
-     else if (fContentType == SchemaElementDecl::Children)
+    else if (fContentType == SchemaElementDecl::Mixed_Complex) {
+
+            cmRet = createChildModel(specNode, true);
+    }
+    else if (fContentType == SchemaElementDecl::Children)
     {
         //
         //  This method will create an optimal model for the complexity
@@ -436,23 +435,19 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     }
     else if (isMixed)
     {
-        ContentSpecNode* rightNode = specNode->getSecond();
-        if (rightNode) {
-            ContentSpecNode::NodeTypes rightType = rightNode->getType();
-
-            if (rightType == ContentSpecNode::All) {
-                // All the nodes under an ALL must be additional ALL nodes and
-                // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
-                // We collapse the ELEMENTs into a single vector.
-                return new AllContentModel(rightNode, true);
-            }
-            else if (rightType == ContentSpecNode::ZeroOrOne) {
-                // An ALL node can appear under a ZERO_OR_ONE node.
-                if (rightNode->getFirst()->getType() == ContentSpecNode::All) {
-                    return new AllContentModel(rightNode->getFirst(), true);
-                }
+        if (specType == ContentSpecNode::All) {
+            // All the nodes under an ALL must be additional ALL nodes and
+            // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
+            // We collapse the ELEMENTs into a single vector.
+            return new AllContentModel(specNode, true);
+        }
+        else if (specType == ContentSpecNode::ZeroOrOne) {
+            // An ALL node can appear under a ZERO_OR_ONE node.
+            if (specNode->getFirst()->getType() == ContentSpecNode::All) {
+                return new AllContentModel(specNode->getFirst(), true);
             }
         }
+
         // otherwise, let fall through to build a DFAContentModel
     }
      else if (specType == ContentSpecNode::Leaf)

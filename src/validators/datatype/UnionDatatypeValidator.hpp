@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/05 20:49:10  knoaman
+ * Fix for complexTypes with mixed content model.
+ *
  * Revision 1.7  2001/08/31 16:53:41  knoaman
  * Misc. fixes.
  *
@@ -279,10 +282,17 @@ RefVectorOf<DatatypeValidator>* UnionDatatypeValidator::getMemberTypeValidators(
 
 inline bool UnionDatatypeValidator::isAtomic() const {
 
-    unsigned int memberSize = (fMemberTypeValidators) ? fMemberTypeValidators->size() : 0;
+
+    RefVectorOf<DatatypeValidator>* memberDVs = getMemberTypeValidators();
+
+    if (!memberDVs) {
+        return false;
+    }
+
+    unsigned int memberSize = memberDVs->size();
 
     for (unsigned int i=0; i < memberSize; i++) {
-        if (!fMemberTypeValidators->elementAt(i)->isAtomic()) {
+        if (!memberDVs->elementAt(i)->isAtomic()) {
             return false;
         }
     }

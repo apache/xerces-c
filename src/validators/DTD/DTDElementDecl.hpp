@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/09/05 20:49:10  knoaman
+ * Fix for complexTypes with mixed content model.
+ *
  * Revision 1.11  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -130,7 +133,7 @@ public :
     {
         Empty
         , Any
-        , Mixed
+        , Mixed_Simple
         , Children
 
         , ModelTypes_Count

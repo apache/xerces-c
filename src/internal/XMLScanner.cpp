@@ -2752,7 +2752,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
         SchemaElementDecl::ModelTypes modelType = tempElement->getModelType();
 
-        if ((modelType == SchemaElementDecl::Mixed)
+        if ((modelType == SchemaElementDecl::Mixed_Simple)
+          ||  (modelType == SchemaElementDecl::Mixed_Complex)
           ||  (modelType == SchemaElementDecl::Children))
         {
             cm = tempElement->getContentModel();
