@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/12/06 17:48:36  tng
+ * Performance Enhancement.  Added setNPrefix and setNLocalPart methods that allow code to take advantage of the fact that it knows the length of the prefix and local name, when possible.  That can avoid a copy of the prefix into a null-terminated temporary variable before copying into the fPrefix.
+ * Also changed the getRawName method so that it would simply return the local part when there is no prefix, instead of allocating another buffer to copy the local part into the fRawName.
+ * When there is a prefix, changed the getRawName to copy the prefix and local part into the fRawName using XMLString::moveChars instead of using XMLString::copyString and XMLString::catString.  The catString method has to loop past the prefix portion of the fRawName, which seems like a waste.
+ * By Henry Zongaro.
+ *
  * Revision 1.7  2001/07/24 18:31:47  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -193,43 +199,44 @@ const XMLCh* QName::getRawName() const
     if (!fRawName || !*fRawName)
     {
         //
-        //  Calculate the worst case size buffer we will need. We use the
-        //  current high water marks of the prefix and name buffers, so it
-        //  might be a little wasteful of memory but we don't have to do
-        //  string len operations on the two strings.
-        //
-        const unsigned int neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
-
-        //
-        //  If no buffer, or the current one is too small, then allocate one
-        //  and get rid of any old one.
-        //
-        if (!fRawName || (neededLen > fRawNameBufSz))
-        {
-            delete [] fRawName;
-
-            // We have to cast off the const'ness to do this
-            ((QName*)this)->fRawNameBufSz = neededLen;
-            ((QName*)this)->fRawName = new XMLCh[neededLen + 1];
-
-            // Make sure its initially empty
-            *fRawName = 0;
-        }
-
-        //
         //  If we have a prefix, then do the prefix:name version. Else, its
         //  just the name.
         //
         if (*fPrefix)
         {
-            const XMLCh colonStr[] = { chColon, chNull };
-            XMLString::copyString(fRawName, fPrefix);
-            XMLString::catString(fRawName, colonStr);
-            XMLString::catString(fRawName, fLocalPart);
+            //
+            //  Calculate the worst case size buffer we will need. We use the
+            //  current high water marks of the prefix and name buffers, so it
+            //  might be a little wasteful of memory but we don't have to do
+            //  string len operations on the two strings.
+            //
+            const unsigned int neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
+
+            //
+            //  If no buffer, or the current one is too small, then allocate one
+            //  and get rid of any old one.
+            //
+            if (!fRawName || (neededLen > fRawNameBufSz))
+            {
+                delete [] fRawName;
+
+                // We have to cast off the const'ness to do this
+                ((QName*)this)->fRawNameBufSz = neededLen;
+                ((QName*)this)->fRawName = new XMLCh[neededLen + 1];
+
+                // Make sure its initially empty
+                *fRawName = 0;
+            }
+
+            const unsigned int prefixLen = XMLString::stringLen(fPrefix);
+
+            XMLString::moveChars(fRawName, fPrefix, prefixLen);
+            fRawName[prefixLen] = chColon;
+            XMLString::copyString(&fRawName[prefixLen+1], fLocalPart);
         }
          else
         {
-            XMLString::copyString(fRawName, fLocalPart);
+            return fLocalPart;
         }
     }
     return fRawName;
@@ -244,43 +251,45 @@ XMLCh* QName::getRawName()
     if (!fRawName || !*fRawName)
     {
         //
-        //  Calculate the worst case size buffer we will need. We use the
-        //  current high water marks of the prefix and name buffers, so it
-        //  might be a little wasteful of memory but we don't have to do
-        //  string len operations on the two strings.
-        //
-        const unsigned int neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
-
-        //
-        //  If no buffer, or the current one is too small, then allocate one
-        //  and get rid of any old one.
-        //
-        if (!fRawName || (neededLen > fRawNameBufSz))
-        {
-            delete [] fRawName;
-
-            // We have to cast off the const'ness to do this
-            ((QName*)this)->fRawNameBufSz = neededLen;
-            ((QName*)this)->fRawName = new XMLCh[neededLen + 1];
-
-            // Make sure its initially empty
-            *fRawName = 0;
-        }
-
-        //
         //  If we have a prefix, then do the prefix:name version. Else, its
         //  just the name.
         //
         if (*fPrefix)
         {
-            const XMLCh colonStr[] = { chColon, chNull };
-            XMLString::copyString(fRawName, fPrefix);
-            XMLString::catString(fRawName, colonStr);
-            XMLString::catString(fRawName, fLocalPart);
+            //
+            //  Calculate the worst case size buffer we will need. We use the
+            //  current high water marks of the prefix and name buffers, so it
+            //  might be a little wasteful of memory but we don't have to do
+            //  string len operations on the two strings.
+            //
+            const unsigned int neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
+
+            //
+            //  If no buffer, or the current one is too small, then allocate one
+            //  and get rid of any old one.
+            //
+            if (!fRawName || (neededLen > fRawNameBufSz))
+            {
+                delete [] fRawName;
+
+                // We have to cast off the const'ness to do this
+                ((QName*)this)->fRawNameBufSz = neededLen;
+                ((QName*)this)->fRawName = new XMLCh[neededLen + 1];
+
+                // Make sure its initially empty
+                *fRawName = 0;
+            }
+
+
+            const unsigned int prefixLen = XMLString::stringLen(fPrefix);
+
+            XMLString::moveChars(fRawName, fPrefix, prefixLen);
+            fRawName[prefixLen] = chColon;
+            XMLString::copyString(&fRawName[prefixLen+1], fLocalPart);
         }
          else
         {
-            XMLString::copyString(fRawName, fLocalPart);
+            return fLocalPart;
         }
     }
     return fRawName;
@@ -291,7 +300,7 @@ XMLCh* QName::getRawName()
 // ---------------------------------------------------------------------------
 void QName::setName(const XMLCh* const    prefix
                   , const XMLCh* const    localPart
-						, const unsigned int    uriId)
+                  , const unsigned int    uriId)
 {
     setPrefix(prefix);
     setLocalPart(localPart);
@@ -305,7 +314,7 @@ void QName::setName(const XMLCh* const    prefix
 }
 
 void QName::setName(const XMLCh* const    rawName
-						, const unsigned int    uriId)
+                  , const unsigned int    uriId)
 {
     //set the rawName
     unsigned int newLen;
@@ -320,38 +329,19 @@ void QName::setName(const XMLCh* const    rawName
     XMLString::moveChars(fRawName, rawName, newLen + 1);
 
     //find out the prefix and localPart from the rawName
-    ArrayJanitor<XMLCh> janName(0);
-    XMLCh tempBuffer[100];
-
     const int colonInd = XMLString::indexOf(rawName, chColon);
-    const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-    const XMLCh* suffPtr = XMLUni::fgZeroLenString;
-    if (colonInd != -1)
+    if (colonInd >= 0)
     {
-        // We have to split the string, so make a copy.
-         if (XMLString::stringLen(rawName) < sizeof(tempBuffer) / sizeof(tempBuffer[0]))
-        {
-            XMLString::copyString(tempBuffer, rawName);
-            tempBuffer[colonInd] = chNull;
-            prefPtr = tempBuffer;
-        }
-        else
-        {
-            janName.reset(XMLString::replicate(rawName));
-            janName[colonInd] = chNull;
-            prefPtr = janName.get();
-        }
-
-        suffPtr = prefPtr + colonInd + 1;
+        setNPrefix(rawName, colonInd);
     }
      else
     {
         // No colon, so we just have a name with no prefix
-        suffPtr = rawName;
+        setPrefix(XMLUni::fgZeroLenString);
     }
 
-    setPrefix(prefPtr);
-    setLocalPart(suffPtr);
+    setNLocalPart(&rawName[colonInd+1], newLen-colonInd-1);
+
 
     // And finally store the URI id parameter
     fURIId = uriId;
@@ -371,6 +361,18 @@ void QName::setPrefix(const XMLCh* prefix)
     XMLString::moveChars(fPrefix, prefix, newLen + 1);
 }
 
+void QName::setNPrefix(const XMLCh* prefix, const unsigned int newLen)
+{
+    if (!fPrefixBufSz || (newLen > fPrefixBufSz))
+    {
+        delete [] fPrefix;
+        fPrefixBufSz = newLen + 8;
+        fPrefix = new XMLCh[fPrefixBufSz + 1];
+    }
+    XMLString::moveChars(fPrefix, prefix, newLen);
+    fPrefix[newLen] = chNull;
+}
+
 void QName::setLocalPart(const XMLCh* localPart)
 {
     unsigned int newLen;
@@ -383,6 +385,18 @@ void QName::setLocalPart(const XMLCh* localPart)
         fLocalPart = new XMLCh[fLocalPartBufSz + 1];
     }
     XMLString::moveChars(fLocalPart, localPart, newLen + 1);
+}
+
+void QName::setNLocalPart(const XMLCh* localPart, const unsigned int newLen)
+{
+    if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
+    {
+        delete [] fLocalPart;
+        fLocalPartBufSz = newLen + 8;
+        fLocalPart = new XMLCh[fLocalPartBufSz + 1];
+    }
+    XMLString::moveChars(fLocalPart, localPart, newLen);
+    fLocalPart[newLen] = chNull;
 }
 
 void QName::setValues(const QName& qname)

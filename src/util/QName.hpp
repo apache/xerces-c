@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/12/06 17:48:36  tng
+ * Performance Enhancement.  Added setNPrefix and setNLocalPart methods that allow code to take advantage of the fact that it knows the length of the prefix and local name, when possible.  That can avoid a copy of the prefix into a null-terminated temporary variable before copying into the fPrefix.
+ * Also changed the getRawName method so that it would simply return the local part when there is no prefix, instead of allocating another buffer to copy the local part into the fRawName.
+ * When there is a prefix, changed the getRawName to copy the prefix and local part into the fRawName using XMLString::moveChars instead of using XMLString::copyString and XMLString::catString.  The catString method has to loop past the prefix portion of the fRawName, which seems like a waste.
+ * By Henry Zongaro.
+ *
  * Revision 1.7  2001/07/24 18:31:47  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -146,6 +152,8 @@ public :
 
     void setPrefix(const XMLCh*) ;
     void setLocalPart(const XMLCh*) ;
+    void setNPrefix(const XMLCh*, const unsigned int) ;
+    void setNLocalPart(const XMLCh*, const unsigned int) ;
     void setURI(const unsigned int) ;
 
     void setValues(const QName& qname);
