@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/09 15:35:13  neilg
+ * fix bug in synchronized addOrFind method; thanks to Khaled for pointing this out
+ *
  * Revision 1.1  2003/10/09 13:51:16  neilg
  * implementation of a StringPool implementation that permits thread-safe updates.  This can now be used by a grammar pool that is locked so that scanners have somehwere to store information about newly-encountered URIs
  *
@@ -100,7 +103,7 @@ unsigned int XMLSynchronizedStringPool::addOrFind(const XMLCh* const newString)
     {
         XMLMutexLock lockInit(&fMutex);
         id = XMLStringPool::addOrFind(newString);
-        return id;
+        return id+fConstPool->getStringCount();
     }
 }
 
