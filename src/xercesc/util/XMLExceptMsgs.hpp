@@ -383,9 +383,28 @@ public :
       , PD_MapAndSum                       = 367
       , PD_InvalidContentType              = 368
       , NodeIDMap_GrowErr                  = 369
-      , F_HighBounds                       = 370
-      , E_LowBounds                        = 371
-      , E_HighBounds                       = 372
+      , XSer_ProtoType_Null_ClassName      = 370
+      , XSer_ProtoType_NameLen_Dif         = 371
+      , XSer_ProtoType_Name_Dif            = 372
+      , XSer_InStream_Read_LT_Req          = 373
+      , XSer_InStream_Read_OverFlow        = 374
+      , XSer_Storing_Violation             = 375
+      , XSer_StoreBuffer_Violation         = 376
+      , XSer_LoadPool_UppBnd_Exceed        = 377
+      , XSer_LoadPool_NoTally_ObjCnt       = 378
+      , XSer_Loading_Violation             = 379
+      , XSer_LoadBuffer_Violation          = 380
+      , XSer_Inv_ClassIndex                = 381
+      , XSer_Inv_FillBuffer_Size           = 382
+      , XSer_Inv_checkFillBuffer_Size      = 383
+      , XSer_Inv_checkFlushBuffer_Size     = 384
+      , XSer_Inv_Null_Pointer              = 385
+      , XSer_Inv_Buffer_Len                = 386
+      , XSer_CreateObject_Fail             = 387
+      , XSer_ObjCount_UppBnd_Exceed        = 388
+      , F_HighBounds                       = 389
+      , E_LowBounds                        = 390
+      , E_HighBounds                       = 391
     };
 
 };

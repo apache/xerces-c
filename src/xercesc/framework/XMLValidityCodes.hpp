@@ -5,6 +5,7 @@
 
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/DOMError.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -152,6 +153,14 @@ public :
        else if ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds))
             return XMLErrorReporter::ErrType_Error;
        return XMLErrorReporter::ErrTypes_Unknown;
+    }
+    static DOMError::ErrorSeverity  DOMErrorType(const XMLValid::Codes toCheck)
+    {
+       if ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds))
+           return DOMError::DOM_SEVERITY_WARNING;
+       else if ((toCheck >= F_LowBounds) && (toCheck <= F_HighBounds))
+            return DOMError::DOM_SEVERITY_FATAL_ERROR;
+       else return DOMError::DOM_SEVERITY_ERROR;
     }
 };
 
