@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/08/14 15:20:38  knoaman
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+ *
  * Revision 1.7  2002/07/11 18:27:04  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -943,7 +946,8 @@ void SAXParser::doctypeComment(const XMLCh* const)
 void SAXParser::doctypeDecl(const   DTDElementDecl& elemDecl
                             , const XMLCh* const    publicId
                             , const XMLCh* const    systemId
-                            , const bool            hasIntSubset)
+                            , const bool            hasIntSubset
+                            , const bool            hasExtSubset)
 {
     // Unused by SAX DTDHandler interface at this time
 }

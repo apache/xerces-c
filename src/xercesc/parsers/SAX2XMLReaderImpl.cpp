@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/08/14 15:20:38  knoaman
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+ *
  * Revision 1.9  2002/07/11 18:27:20  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -1055,11 +1058,14 @@ void SAX2XMLReaderImpl::doctypeComment(const XMLCh* const commentText)
 void SAX2XMLReaderImpl::doctypeDecl(const   DTDElementDecl& elemDecl
                             , const XMLCh* const    publicId
                             , const XMLCh* const    systemId
-                            , const bool            hasIntSubset)
+                            , const bool            hasIntSubset
+                            , const bool            hasExtSubset)
 {
-   // Call the installed LexicalHandler.
-   if (fLexicalHandler)
+    // Call the installed LexicalHandler.
+    if (fLexicalHandler && (hasIntSubset || hasExtSubset))
         fLexicalHandler->startDTD(elemDecl.getFullName(), publicId, systemId);
+
+    fHasExternalSubset = hasExtSubset;
 
     // Unused by SAX DTDHandler interface at this time
 }
@@ -1214,8 +1220,6 @@ void SAX2XMLReaderImpl::startIntSubset()
 
 void SAX2XMLReaderImpl::startExtSubset()
 {
-    fHasExternalSubset = true;
-
     if (fLexicalHandler)
         fLexicalHandler->startEntity(gDTDEntityStr);
 }

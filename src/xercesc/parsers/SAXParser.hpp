@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/08/14 15:20:38  knoaman
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+ *
  * Revision 1.12  2002/07/11 18:27:03  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -1547,6 +1550,8 @@ public :
       *                 system id of the DTD file.
       * @param hasIntSubset A flag indicating if this XML file contains any
       *                     internal subset.
+      * @param hasExtSubset A flag indicating if this XML file contains any
+      *                     external subset. Default is false.
       */
     virtual void doctypeDecl
     (
@@ -1554,6 +1559,7 @@ public :
         , const XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const bool            hasIntSubset
+        , const bool            hasExtSubset = false
     );
 
     /**

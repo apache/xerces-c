@@ -1501,6 +1501,7 @@ public :
         , const XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const bool            hasIntSubset
+        , const bool            hasExtSubset = false
     );
 
     virtual void doctypePI

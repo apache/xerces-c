@@ -2457,7 +2457,7 @@ void XMLScanner::scanDocTypeDecl()
     //  call the doctype event.
     //
     if (fDocTypeHandler)
-        fDocTypeHandler->doctypeDecl(*rootDecl, pubId, sysId, hasIntSubset);
+        fDocTypeHandler->doctypeDecl(*rootDecl, pubId, sysId, hasIntSubset, hasExtSubset);
 
     //
     //  Ok, if we had an internal subset, we are just past the [ character
@@ -4531,7 +4531,7 @@ Grammar* XMLScanner::loadDTDGrammar(const InputSource& src,
         rootDecl->setExternalElemDeclaration(true);
         Janitor<DTDElementDecl> janSrc(rootDecl);
 
-        fDocTypeHandler->doctypeDecl(*rootDecl, src.getPublicId(), src.getSystemId(), false);
+        fDocTypeHandler->doctypeDecl(*rootDecl, src.getPublicId(), src.getSystemId(), false, true);
     }
 
     // Create DTDScanner

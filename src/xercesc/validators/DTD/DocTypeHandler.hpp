@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:43  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/14 15:20:38  knoaman
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/06/19 16:43:46  tng
  * Correct description of DocTypeHandler
@@ -134,6 +137,7 @@ public:
         , const XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const bool            hasIntSubset
+        , const bool            hasExtSubset = false
     ) = 0;
 
     virtual void doctypePI

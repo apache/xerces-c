@@ -961,6 +961,7 @@ void DOMParser::doctypeDecl
     , const XMLCh* const    publicId
     , const XMLCh* const    systemId
     , const bool            hasIntSubset
+    , const bool            hasExtSubset
 )
 {
 	DOM_DocumentType dt;

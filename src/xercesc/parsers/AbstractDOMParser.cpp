@@ -978,6 +978,7 @@ void AbstractDOMParser::doctypeDecl
     , const XMLCh* const    publicId
     , const XMLCh* const    systemId
     , const bool            hasIntSubset
+    , const bool            hasExtSubset
 )
 {
     fDocumentType = (DOMDocumentTypeImpl *) fDocument->createDocumentType(elemDecl.getFullName(), publicId, systemId);
