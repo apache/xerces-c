@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2004/07/21 14:54:39  peiyongz
+ * using the supplied memory manager , patch from David Bertoni
+ *
  * Revision 1.17  2004/03/05 22:21:45  peiyongz
  * readBytes()/writeBytes between BinOutputStream/BinInputStream and
  * XSerializeEngine will always be the full size of the buffer to maintain the exact
@@ -217,7 +220,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fBufEnd(fBufStart+bufSize)
 ,fBufCur(fBufStart)
 ,fBufLoadMax(0)
-,fStorePool( new (gramPool->getMemoryManager()) RefHashTableOf<XSerializedObjectId>(29, true, new HashPtr(), gramPool->getMemoryManager()) )
+,fStorePool( new (gramPool->getMemoryManager()) RefHashTableOf<XSerializedObjectId>(29, true, new (gramPool->getMemoryManager()) HashPtr(), gramPool->getMemoryManager()) )
 ,fLoadPool(0)
 ,fObjectCount(0)
 {
@@ -264,7 +267,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fBufEnd(fBufStart+bufSize)
 ,fBufCur(fBufStart)
 ,fBufLoadMax(0)
-,fStorePool( new (manager) RefHashTableOf<XSerializedObjectId>(29, true, new HashPtr(), manager) )
+,fStorePool( new (manager) RefHashTableOf<XSerializedObjectId>(29, true, new (manager) HashPtr(), manager) )
 ,fLoadPool(0)
 ,fObjectCount(0)
 {
@@ -902,7 +905,7 @@ XSerializeEngine::lookupStorePool(void* const objToLookup) const
 void XSerializeEngine::addStorePool(void* const objToAdd)
 {
     pumpCount();
-    fStorePool->put(objToAdd, new XSerializedObjectId(fObjectCount));
+    fStorePool->put(objToAdd, new (fGrammarPool->getMemoryManager()) XSerializedObjectId(fObjectCount));
 }
 
 XSerializable* XSerializeEngine::lookupLoadPool(XSerializedObjectId_t objectTag) const
