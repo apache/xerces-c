@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.58  2004/09/30 13:14:28  amassari
+ * Fix jira#1280 - Borland leaks memory if break or continue are used inside a catch block
+ *
  * Revision 1.57  2004/09/27 20:13:59  knoaman
  * Reset datatype validator.
  *
@@ -1899,6 +1902,7 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
             ContentSpecNode* baseNode = baseNodes->elementAt(j);
             current++;
 
+            bool bDoBreak=false;    // workaround for Borland bug with 'break' in 'catch'
             try {
 
                 checkParticleDerivationOk(currentGrammar, derivedNodes->elementAt(i),
@@ -1908,9 +1912,11 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
             }
             catch(const XMLException&) {
                 if (!toLax && baseNode->getMinTotalRange()) {
-                    break;
+                    bDoBreak=true;
                 }
             }
+            if(bDoBreak)
+                break;
         }
 
         // did not find a match

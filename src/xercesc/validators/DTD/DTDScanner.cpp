@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.35  2004/09/30 13:14:27  amassari
+ * Fix jira#1280 - Borland leaks memory if break or continue are used inside a catch block
+ *
  * Revision 1.34  2004/09/08 13:56:50  peiyongz
  * Apache License Version 2.0
  *
@@ -2656,168 +2659,171 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
     bool inCharData = false;
     while (true)
     {
-    try
-    {
-        while (true)
+        bool bDoBreak=false;    // workaround for Borland bug with 'break' in 'catch'
+        try
         {
-            const XMLCh nextCh = fReaderMgr->peekNextChar();
-
-            if (nextCh == chOpenAngle)
+            while (true)
             {
-                // Get the reader we started this on
-                // XML 1.0 P28a Well-formedness constraint: PE Between Declarations
-                const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
-                bool wasInPE = (fReaderMgr->getCurrentReader()->getType() == XMLReader::Type_PE);
+                const XMLCh nextCh = fReaderMgr->peekNextChar();
 
-                //
-                //  Now scan the markup. Set the flag so that we will know that
-                //  we were in markup if an end of entity exception occurs.
-                //
-                fReaderMgr->getNextChar();
-                inMarkup = true;
-                scanMarkupDecl(bAcceptDecl);
-                inMarkup = false;
+                if (nextCh == chOpenAngle)
+                {
+                    // Get the reader we started this on
+                    // XML 1.0 P28a Well-formedness constraint: PE Between Declarations
+                    const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+                    bool wasInPE = (fReaderMgr->getCurrentReader()->getType() == XMLReader::Type_PE);
 
-                //
-                //  And see if we got back to the same level. If not, then its
-                //  a partial markup error.
-                //
-                if (fReaderMgr->getCurrentReaderNum() != orgReader){
-                    if (wasInPE)
-                        fScanner->emitError(XMLErrs::PEBetweenDecl);
-                    else if (fScanner->getDoValidation())
-                        fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+                    //
+                    //  Now scan the markup. Set the flag so that we will know that
+                    //  we were in markup if an end of entity exception occurs.
+                    //
+                    fReaderMgr->getNextChar();
+                    inMarkup = true;
+                    scanMarkupDecl(bAcceptDecl);
+                    inMarkup = false;
+
+                    //
+                    //  And see if we got back to the same level. If not, then its
+                    //  a partial markup error.
+                    //
+                    if (fReaderMgr->getCurrentReaderNum() != orgReader){
+                        if (wasInPE)
+                            fScanner->emitError(XMLErrs::PEBetweenDecl);
+                        else if (fScanner->getDoValidation())
+                            fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+                    }
+
                 }
+                 else if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
+                {
+                    //
+                    //  If we have a doc type handler, and advanced callbacks are
+                    //  enabled, then gather up whitespace and call back. Otherwise
+                    //  just skip whitespaces.
+                    //
+                    if (fDocTypeHandler)
+                    {
+                        inCharData = true;
+                        fReaderMgr->getSpaces(bbSpace.getBuffer());
+                        inCharData = false;
 
+                        fDocTypeHandler->doctypeWhitespace
+                        (
+                            bbSpace.getRawBuffer()
+                            , bbSpace.getLen()
+                        );
+                    }
+                     else
+                    {
+                        //
+                        //  If we hit an end of entity in the middle of white
+                        //  space, that's fine. We'll just come back in here
+                        //  again on the next round and skip some more.
+                        //
+                        fReaderMgr->skipPastSpaces();
+                    }
+                }
+                 else if (nextCh == chPercent)
+                {
+                    //
+                    //  Expand (and scan if external) the reference value. Tell
+                    //  it to throw an end of entity exception at the end of the
+                    //  entity.
+                    //
+                    fReaderMgr->getNextChar();
+                    expandPERef(true, false, false, true);
+                }
+                 else if (inIncludeSect && (nextCh == chCloseSquare))
+                {
+                    //
+                    //  Its the end of a conditional include section. So scan it and
+                    //  decrement the include depth counter.
+                    //
+                    fReaderMgr->getNextChar();
+                    if (!fReaderMgr->skippedChar(chCloseSquare))
+                    {
+                        fScanner->emitError(XMLErrs::ExpectedEndOfConditional);
+                        fReaderMgr->skipPastChar(chCloseAngle);
+                    }
+                     else if (!fReaderMgr->skippedChar(chCloseAngle))
+                    {
+                        fScanner->emitError(XMLErrs::ExpectedEndOfConditional);
+                        fReaderMgr->skipPastChar(chCloseAngle);
+                    }
+                    return;
+                }
+                 else if (!nextCh)
+                {
+                    return; // nothing left
+                }
+                else
+                {
+                    fReaderMgr->getNextChar();
+                    if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh))
+                    {
+                        XMLCh tmpBuf[9];
+                        XMLString::binToText
+                        (
+                            nextCh
+                            , tmpBuf
+                            , 8
+                            , 16
+                            , fMemoryManager
+                        );
+                        fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                    }
+                    else
+                    {
+                        fScanner->emitError(XMLErrs::InvalidDocumentStructure);
+                    }
+
+                    // Try to get realigned
+                    static const XMLCh toSkip[] =
+                    {
+                        chPercent, chCloseSquare, chOpenAngle, chNull
+                    };
+                    fReaderMgr->skipUntilInOrWS(toSkip);
+                }
+                bAcceptDecl = false;
             }
-             else if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
+        }
+
+        catch(const EndOfEntityException& toCatch)
+        {
+            //
+            //  If the external entity ended while we were in markup, then that's
+            //  a partial markup error.
+            //
+            if (inMarkup)
             {
-                //
-                //  If we have a doc type handler, and advanced callbacks are
-                //  enabled, then gather up whitespace and call back. Otherwise
-                //  just skip whitespaces.
-                //
+                fScanner->emitError(XMLErrs::PartialMarkupInEntity);
+                inMarkup = false;
+            }
+
+            // If we were in char data, then send what we got
+            if (inCharData)
+            {
+                // Send what we got, then rethrow
                 if (fDocTypeHandler)
                 {
-                    inCharData = true;
-                    fReaderMgr->getSpaces(bbSpace.getBuffer());
-                    inCharData = false;
-
                     fDocTypeHandler->doctypeWhitespace
                     (
                         bbSpace.getRawBuffer()
                         , bbSpace.getLen()
                     );
                 }
-                 else
-                {
-                    //
-                    //  If we hit an end of entity in the middle of white
-                    //  space, that's fine. We'll just come back in here
-                    //  again on the next round and skip some more.
-                    //
-                    fReaderMgr->skipPastSpaces();
-                }
+                inCharData = false;
             }
-             else if (nextCh == chPercent)
-            {
-                //
-                //  Expand (and scan if external) the reference value. Tell
-                //  it to throw an end of entity exception at the end of the
-                //  entity.
-                //
-                fReaderMgr->getNextChar();
-                expandPERef(true, false, false, true);
-            }
-             else if (inIncludeSect && (nextCh == chCloseSquare))
-            {
-                //
-                //  Its the end of a conditional include section. So scan it and
-                //  decrement the include depth counter.
-                //
-                fReaderMgr->getNextChar();
-                if (!fReaderMgr->skippedChar(chCloseSquare))
-                {
-                    fScanner->emitError(XMLErrs::ExpectedEndOfConditional);
-                    fReaderMgr->skipPastChar(chCloseAngle);
-                }
-                 else if (!fReaderMgr->skippedChar(chCloseAngle))
-                {
-                    fScanner->emitError(XMLErrs::ExpectedEndOfConditional);
-                    fReaderMgr->skipPastChar(chCloseAngle);
-                }
-                return;
-            }
-             else if (!nextCh)
-            {
-                return; // nothing left
-            }
-            else
-            {
-                fReaderMgr->getNextChar();
-                if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh))
-                {
-                    XMLCh tmpBuf[9];
-                    XMLString::binToText
-                    (
-                        nextCh
-                        , tmpBuf
-                        , 8
-                        , 16
-                        , fMemoryManager
-                    );
-                    fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
-                }
-                else
-                {
-                    fScanner->emitError(XMLErrs::InvalidDocumentStructure);
-                }
 
-                // Try to get realigned
-                static const XMLCh toSkip[] =
-                {
-                    chPercent, chCloseSquare, chOpenAngle, chNull
-                };
-                fReaderMgr->skipUntilInOrWS(toSkip);
-            }
-            bAcceptDecl = false;
+            //
+            //  If the entity that just ended was the entity that we started
+            //  on, then this is the end of the external subset.
+            //
+            if (orgReader == toCatch.getReaderNum())
+                bDoBreak=true;
         }
-    }
-
-    catch(const EndOfEntityException& toCatch)
-    {
-        //
-        //  If the external entity ended while we were in markup, then that's
-        //  a partial markup error.
-        //
-        if (inMarkup)
-        {
-            fScanner->emitError(XMLErrs::PartialMarkupInEntity);
-            inMarkup = false;
-        }
-
-        // If we were in char data, then send what we got
-        if (inCharData)
-        {
-            // Send what we got, then rethrow
-            if (fDocTypeHandler)
-            {
-                fDocTypeHandler->doctypeWhitespace
-                (
-                    bbSpace.getRawBuffer()
-                    , bbSpace.getLen()
-                );
-            }
-            inCharData = false;
-        }
-
-        //
-        //  If the entity that just ended was the entity that we started
-        //  on, then this is the end of the external subset.
-        //
-        if (orgReader == toCatch.getReaderNum())
+        if(bDoBreak)
             break;
-    }
     }
 
     // If we have a doc type handler, tell it the ext subset ends

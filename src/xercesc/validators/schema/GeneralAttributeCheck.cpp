@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/09/30 13:14:28  amassari
+ * Fix jira#1280 - Borland leaks memory if break or continue are used inside a catch block
+ *
  * Revision 1.23  2004/09/29 20:58:10  knoaman
  * [Bug 1209] Problem with id usage across schema
  * http://issues.apache.org/jira/browse/XERCESC-1209
@@ -420,6 +423,7 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         int attNameId = A_Invalid;
         attName = attribute->getLocalName();
 
+        bool bContinue=false;   // workaround for Borland bug with 'continue' in 'catch'
         try {
             attNameId= fAttMap->get(attName, fMemoryManager);
         }
@@ -431,8 +435,10 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
 
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
                 XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
-            continue;
+            bContinue=true;
         }
+        if(bContinue)
+            continue;
 
         if (fgElemAttTable[elemContext][attNameId] & Att_Mask) {
 

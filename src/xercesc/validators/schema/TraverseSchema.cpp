@@ -3058,6 +3058,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
                 const XMLCh* facetName = content->getLocalName();
 
+                bool bContinue=false;   // workaround for Borland bug with 'continue' in 'catch'
                 try {
                     scope = fAttributeCheck.getFacetId(facetName, fMemoryManager);
                 }
@@ -3069,8 +3070,10 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
                     reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::InvalidFacetName, facetName);
                     content = XUtil::getNextSiblingElement(content);
-                    continue;
+                    bContinue=true;
                 }
+                if(bContinue)
+                    continue;
 
                 // REVISIT
                 // check for annotation content - we are not checking whether the
@@ -3608,6 +3611,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
                 const XMLCh* facetName = content->getLocalName();
 
+                bool bDoBreak=false;    // workaround for Borland bug with 'break' in 'catch'
                 // if not a valid facet, break from the loop
                 try {
                     scope = fAttributeCheck.getFacetId(facetName, fMemoryManager);
@@ -3617,8 +3621,10 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     throw;
                 }
                 catch(...) {
-                    break;
+                    bDoBreak=true;
                 }
+                if(bDoBreak)
+                    break;
 
                 if (content->getNodeType() == DOMNode::ELEMENT_NODE) {
 
