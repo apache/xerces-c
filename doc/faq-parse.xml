@@ -700,7 +700,7 @@ catch (const XMLException&amp; toCatch) {
 
       <p>To ignore the DTD, with &XercesCName; &XercesCVersion; or up, you can call
          <code>setLoadExternalDTD(false)</code> (or
-         <code>setFeature(XMLUni::fgSAX2XercesLoadExternalDTD, false)</code>
+         <code>setFeature(XMLUni::fgXercesLoadExternalDTD, false)</code>
          to disable the loading of external DTD.   The parser will then ignore
          any external DTD completely if the validationScheme is set to Val_Never.
       </p>

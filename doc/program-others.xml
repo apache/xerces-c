@@ -134,7 +134,7 @@ while (gotMore &amp;&amp; !handler.getDone())
       // specified in anotherXmlFile is IGNORED.
       //
       // Note: The anotherXmlFile cannot have any DTD internal subset.
-      parser->setFeature(XMLUni::fgSAX2XercesReuseGrammar, true)
+      parser->setFeature(XMLUni::fgXercesReuseGrammar, true)
       parser->parse(anotherXmlFile);
 
 </source>

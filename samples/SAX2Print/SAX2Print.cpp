@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/06/17 15:33:00  tng
+ * Name Xerces features as XMLUni::fgXercesXXXX instead of XMLUni::fgSAX2XercesXXXX so that they can be shared with DOM parser.
+ *
  * Revision 1.11  2002/05/28 20:20:26  tng
  * Add option '-n' to SAX2Print.
  *
@@ -303,7 +306,7 @@ int main(int argC, char* argV[])
     if (valScheme == SAX2XMLReader::Val_Auto)
     {
         parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-        parser->setFeature(XMLUni::fgSAX2XercesDynamic, true);
+        parser->setFeature(XMLUni::fgXercesDynamic, true);
     }
 
     if (valScheme == SAX2XMLReader::Val_Never)
@@ -314,12 +317,12 @@ int main(int argC, char* argV[])
     if (valScheme == SAX2XMLReader::Val_Always)
     {
         parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-        parser->setFeature(XMLUni::fgSAX2XercesDynamic, false);
+        parser->setFeature(XMLUni::fgXercesDynamic, false);
     }
 
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
-    parser->setFeature(XMLUni::fgSAX2XercesSchema, doSchema);
-    parser->setFeature(XMLUni::fgSAX2XercesSchemaFullChecking, schemaFullChecking);
+    parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+    parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
 
     //

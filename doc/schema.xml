@@ -67,7 +67,7 @@ parser.parse(xmlFile);
                </p>
 <source>SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
-parser->setFeature(XMLUni::fgSAX2XercesSchema, true);
+parser->setFeature(XMLUni::fgXercesSchema, true);
 parser->parse(xmlFile);
 </source>
                <p>Review the sample file, 'samples/data/personal-schema.xml' and
@@ -104,7 +104,7 @@ XMLCh* propertyValue = XMLString::transcode("personal.xsd");
 ArrayJanitor&lt;XMLCh&gt; janValue(propertyValue);
 
 parser->setProperty(
-       XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation,
+       XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation,
        propertyValue);
 parser.parse("test.xml");
 </source>
@@ -127,7 +127,7 @@ XMLCh* propertyValue = XMLString::transcode("http://my.com personal.xsd http://m
 ArrayJanitor&lt;XMLCh&gt; janValue(propertyValue);
 
 parser->setProperty(
-       XMLCh XMLUni::fgSAX2XercesSchemaExternalSchemaLocation,
+       XMLCh XMLUni::fgXercesSchemaExternalSchemaLocation,
        propertyValue);
 parser.parse("test.xml");
 </source>
