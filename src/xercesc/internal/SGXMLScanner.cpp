@@ -2194,7 +2194,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
                 //retrieve the att def
-                SchemaAttDef* attWildCard;
+                SchemaAttDef* attWildCard = 0;
                 if (currType) {
                     attDef = currType->getAttDef(suffPtr, uriId);
                     attWildCard = currType->getAttWildCard();
