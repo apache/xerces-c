@@ -366,6 +366,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         system ("mkdir $targetdir/doc/html");
         system ("mkdir $targetdir/doc/html/apiDocs");
 
+	# Build ICU if needed
 	if (length($ICUROOT) > 0) {
 		# First make the ICU files
 		chdir ("$ICUROOT/source");
@@ -374,7 +375,10 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 		print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
 		system ("$icuCompileFlags configure --prefix=$ICUROOT");
 		system ("gmake clean");	# Clean up the build, may want to comment this line out!
-		system ("gmake install"); # This will take a long time!
+        	system ("rm -f $ICUROOT/data/*.o"); # gmake clean is not enough
+        	system ("rm -f $ICUROOT/data/*.c"); # same for .c files
+		system ("gmake"); # This will take a long time!
+		system ("gmake install"); # Make this separate since this breaks on Solaris
 
 		# Please check if the following needs any change in Version 1.4
 		# For the antiquated CC compiler under HPUX, we need to invoke
@@ -449,7 +453,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         system("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
 	if (length($ICUROOT) > 0) {
 		system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
-		system("cp -f $ICUROOT/data/icudata.* $targetdir/lib");
+		system("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
 	}
         system("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
         system("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
