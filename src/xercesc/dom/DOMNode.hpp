@@ -989,10 +989,37 @@ public:
      *   INVALID_ACCESS_ERR: Raised if this Node has a parent and thus should not be released yet.
      */
     virtual void              release() = 0;
+    //@}     
+#if defined(XML_DOMREFCOUNT_EXPERIMENTAL)
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+	 * This is custom function which can be implemented by classes deriving
+	 * from DOMNode for implementing reference counting on DOMNodes. Any
+	 * implementation which has memory management model which involves
+	 * disposing of nodes immediately after being used can override this
+	 * function to do that job.
+     */
+    virtual void decRefCount() {}
     //@}
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+	 * This is custom function which can be implemented by classes deriving
+	 * from DOMNode for implementing reference counting on DOMNodes.
+     */
+    virtual void incRefCount() {}
+    //@}
+#endif
 };
-
-
+ 
 XERCES_CPP_NAMESPACE_END
 
 #endif

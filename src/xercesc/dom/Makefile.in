@@ -118,7 +118,8 @@ DOM_CPP_PUBHEADERS = \
 	DOMTypeInfo.hpp \
 	DOMUserDataHandler.hpp \
 	DOMWriter.hpp \
-	DOMWriterFilter.hpp
+	DOMWriterFilter.hpp \
+	StDOMNode.hpp
 
 DOM_CPP_PRIVHEADERS =
 
