@@ -748,12 +748,9 @@ autoconf</source>
 <source>env CC="xlc_r -L/usr/lpp/xlC/lib" CXX="xlC_r -L/usr/lpp/xlC/lib"
     C_FLAGS="-w -O" CXX_FLAGS="-w -O"
 configure --prefix=$ICUROOT
-cd common
 gmake
-gmake install
-cd ../tools/makeconv
-gmake</source>
-			<p>The first line is different for different platforms as outlined below:</p>
+gmake install</source>
+            <p>The first line is different for different platforms as outlined below:</p>
 
             <p><em>For Solaris and Linux:</em></p>
 
@@ -794,6 +791,7 @@ gmake</source>
           <li>Xerces-J (1.0.0 or later).</li>
           <li>Xalan (0.19.3 or later)</li>
           <li>Stylebook 1.0-b2</li>
+          <li>The Apache Style files (dtd's and .xsl files)</li>
         </ul>
 
         <p>Setup PATH to include the JDK 1.2.2 bin directory. Also setup
@@ -854,6 +852,19 @@ gmake</source>
           name with the one you downloaded). Copy it to the 'jars' directory
           as mentioned above.<br/><br/>Under Windows you may use 'WinZip' to
           extract the jar file from the tar ball.</li>
+
+          <li>Lastly, the Apache Style (dtd's and .xsl) files reside in
+          the same 'stylebook' tar ball, as described above. The script
+          <code>createdocs.bat</code> assumes that these styles are installed
+          relative to where it is located in the
+          <code>../../xml-stylebook/styles/apachexml</code> directory. If
+          the directory structure on your build machine differs, you can
+          edit this script file to reflect the difference. To extractt the
+          Apache style files enter:<br/>
+          <code>cd &lt;parent of &XercesCName; source directory&gt;</code><br/>
+          <code>gzip -d -c xml-stylebook_20000207231311.tar.gz | tar xf -
+          xml-stylebook/styles</code></li>
+
 
         </ul>
 
