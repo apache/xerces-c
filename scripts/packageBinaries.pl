@@ -429,7 +429,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     #
     #	ICU Build happens here, if one is required.
     #
-    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
         print ("Building ICU from $ICUROOT ...\n");
 
         #Clean up all the dependency files, causes problems for nmake
@@ -460,7 +460,19 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 	    psystem("cat buildlog.txt");
         }
 
-        change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+        $transcoder = 0;
+        if ($opt_t =~ m/icu/i )
+        {
+            $transcoder = 1;
+        }
+        
+        $msgloader = 0;                        
+        if ($opt_m =~ m/icu/i)  
+        {
+            $msgloader = 1;
+        }
+        
+        change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp", $transcoder , $msgloader);
     }
 
 
@@ -1211,7 +1223,8 @@ sub pchdir() {
 
 
 sub change_windows_project_for_ICU() {
-    my ($thefile) = @_;
+    my ($thefile, $transcoder, $msgloader) = @_;
+    
     print "\nConverting Windows Xerces library project ($thefile) for ICU usage...";
     my $thefiledotbak = $thefile . ".bak";
     rename ($thefile, $thefiledotbak);
@@ -1229,11 +1242,22 @@ sub change_windows_project_for_ICU() {
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
         $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
-        $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
         $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
-        $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
-        $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
-
+                
+        if ($transcoder)
+        {
+            $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+            $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
+            $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;  
+        }
+              
+        if ($msgloader)
+        {
+            $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
+            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.cpp/MsgLoaders\\ICU\\ICUMsgLoader.cpp/g;
+            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.hpp/MsgLoaders\\ICU\\ICUMsgLoader.hpp/g; 
+        }
+           
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);
