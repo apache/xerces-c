@@ -1226,7 +1226,7 @@ int XMLString::lastIndexOf(const XMLCh ch,
                            const XMLCh* const toSearch,
                            const unsigned int toSearchLen)
 {
-    for (unsigned int i = toSearchLen-1; i >= 0; i--)
+    for (int i = (int)toSearchLen-1; i >= 0; i--)
     {
         if (toSearch[i] == ch)
             return i;
