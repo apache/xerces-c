@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/11 13:27:39  tng
+ * Copyright update.
+ *
  * Revision 1.3  2001/05/03 21:02:40  tng
  * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
  *
@@ -95,54 +98,54 @@ void XUtil::copyInto(const DOM_Node &src, DOM_Node &dest)
         // copy this node
         DOM_Node node;
         short  type = place.getNodeType();
-        switch (type) 
+        switch (type)
 		{
-		case DOM_Node::CDATA_SECTION_NODE: 
+		case DOM_Node::CDATA_SECTION_NODE:
 			{
                 node = factory.createCDATASection(place.getNodeValue());
                 break;
 			}
-		case DOM_Node::COMMENT_NODE: 
-			{               
-				node = factory.createComment(place.getNodeValue());            
+		case DOM_Node::COMMENT_NODE:
+			{
+				node = factory.createComment(place.getNodeValue());
 				break;
 			}
-		case DOM_Node::ELEMENT_NODE: 
+		case DOM_Node::ELEMENT_NODE:
 			{
 				DOM_Element element = factory.createElement(place.getNodeName());
 				node = element;
 			    ElementImpl *elemImpl = (ElementImpl*)element.fImpl;
 				DOM_NamedNodeMap attrs  = place.getAttributes();
                 unsigned int attrCount = attrs.getLength();
-				for (unsigned int i = 0; i < attrCount; i++) 
+				for (unsigned int i = 0; i < attrCount; i++)
 				{
                     if (attrs.item(i).getNodeType() == DOM_Node::ATTRIBUTE_NODE)
                     {
     				    DOM_Node tmpNode = attrs.item(i);
 					    DOM_Attr attr = (DOM_Attr&)tmpNode;
 					    AttrImpl *attrImpl = elemImpl->setAttribute(attr.getNodeName(), attr.getNodeValue());
-                        if ((factory.getNodeType() == DOM_Node::DOCUMENT_NODE) && !attr.getSpecified()) 
+                        if ((factory.getNodeType() == DOM_Node::DOCUMENT_NODE) && !attr.getSpecified())
                             attrImpl->setSpecified(false);
                     }
 				}//for
 				break;
 			}
-		case DOM_Node::ENTITY_REFERENCE_NODE: 
+		case DOM_Node::ENTITY_REFERENCE_NODE:
 			{
 				node = factory.createEntityReference(place.getNodeName());
 				break;
 			}
-		case DOM_Node::PROCESSING_INSTRUCTION_NODE: 
+		case DOM_Node::PROCESSING_INSTRUCTION_NODE:
 			{
 				node = factory.createProcessingInstruction(place.getNodeName(), place.getNodeValue());
 				break;
 			}
-		case DOM_Node::TEXT_NODE: 
+		case DOM_Node::TEXT_NODE:
 			{
 				node = factory.createTextNode(place.getNodeValue());
 				break;
 			}
-		default: 
+		default:
 			{
                 ThrowXML1(IllegalArgumentException
 				        , XMLExcepts::XUTIL_UnCopyableNodeType
@@ -153,17 +156,17 @@ void XUtil::copyInto(const DOM_Node &src, DOM_Node &dest)
 		dest.appendChild(node);
 
         // iterate over children
-        if (place.hasChildNodes()) 
+        if (place.hasChildNodes())
 		{
 			parent = place;
 			place  = place.getFirstChild();
 			dest   = node;
 		}
             // advance
-        else 
+        else
 		{
 			place = place.getNextSibling();
-			while (place == null && parent != start) 
+			while (place == null && parent != start)
 			{
 				place  = parent.getNextSibling();
 				parent = parent.getParentNode();
@@ -172,14 +175,14 @@ void XUtil::copyInto(const DOM_Node &src, DOM_Node &dest)
 		}
 	}//while
 
-} 
+}
 
 
 /*
      * Returns the concatenated child text of the specified node.
      * This method only looks at the immediate children of type
      * <code>Node.TEXT_NODE</code> or the children of any child
-     * node that is of type <code>Node.CDATA_SECTION_NODE</code> 
+     * node that is of type <code>Node.CDATA_SECTION_NODE</code>
      * for the concatenation.
      *
      * @param node The node to look at.
@@ -194,7 +197,7 @@ DOMString XUtil::getChildText(const DOM_Node &node)
     // concatenate children text
     DOMString bufToFill;
     DOM_Node child = node.getFirstChild();
-    while (child != 0) 
+    while (child != 0)
 	{
 		short type = child.getNodeType();
         if (type == DOM_Node::TEXT_NODE)
@@ -214,9 +217,9 @@ DOM_Element XUtil::getFirstChildElement(const DOM_Node &parent)
 {
     // search for node
     DOM_Node child = parent.getFirstChild();
-    while (child != 0) 
+    while (child != 0)
 	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE) 
+        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
             return (DOM_Element&)child;
 
         child = child.getNextSibling();
@@ -232,7 +235,7 @@ DOM_Element XUtil::getFirstChildElement(const DOM_Node    &parent
 {
     // search for node
     DOM_Node child = parent.getFirstChild();
-    while (child != 0) 
+    while (child != 0)
 	{
         if ((child.getNodeType() == DOM_Node::ELEMENT_NODE) &&
             (XMLString::compareString(child.getNodeName().rawBuffer(), elemName) ==0))
@@ -252,7 +255,7 @@ DOM_Element XUtil::getFirstChildElement(const DOM_Node     &parent
 {
     // search for node
     DOM_Node child = parent.getFirstChild();
-    while (child != 0) 
+    while (child != 0)
 	{
         if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
 		{
@@ -278,9 +281,9 @@ DOM_Element XUtil::getFirstChildElement(const DOM_Node    &parent
 {
     // search for node
     DOM_Node child = parent.getFirstChild();
-    while (child != 0) 
+    while (child != 0)
 	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE) 
+        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
 		{
 			DOM_Element element = (DOM_Element&)child;
             if ((XMLString::compareString(element.getNodeName().rawBuffer(), elemName) ==0) &&
@@ -299,7 +302,7 @@ DOM_Element XUtil::getLastChildElement(const DOM_Node &parent) {
 
     // search for node
     DOM_Node child = parent.getLastChild();
-    while (child != 0) 
+    while (child != 0)
 	{
         if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
             return (DOM_Element&)child;
@@ -318,7 +321,7 @@ DOM_Element XUtil::getLastChildElement(const DOM_Node    &parent
 {
     // search for node
     DOM_Node child = parent.getLastChild();
-    while (child != 0) 
+    while (child != 0)
 	{
         if ((child.getNodeType() == DOM_Node::ELEMENT_NODE) &&
             (XMLString::compareString(child.getNodeName().rawBuffer(), elemName) ==0))
@@ -338,7 +341,7 @@ DOM_Element XUtil::getLastChildElement(const DOM_Node     &parent
 {
     // search for node
     DOM_Node child = parent.getLastChild();
-    while (child != 0) 
+    while (child != 0)
 	{
         if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
 		{
@@ -364,9 +367,9 @@ DOM_Element XUtil::getLastChildElement(const DOM_Node    &parent
 {
     // search for node
     DOM_Node child = parent.getLastChild();
-    while (child != 0) 
+    while (child != 0)
 	{
-        if (child.getNodeType() == DOM_Node::ELEMENT_NODE) 
+        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
 		{
 			DOM_Element element = (DOM_Element&)child;
             if ((XMLString::compareString(element.getNodeName().rawBuffer(), elemName) ==0) &&
@@ -381,11 +384,11 @@ DOM_Element XUtil::getLastChildElement(const DOM_Node    &parent
 }
 
 // Finds and returns the next sibling element node.
-DOM_Element XUtil::getNextSiblingElement(const DOM_Node &node) 
+DOM_Element XUtil::getNextSiblingElement(const DOM_Node &node)
 {
     // search for node
     DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0) 
+    while (sibling != 0)
 	{
         if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
             return (DOM_Element&)sibling;
@@ -399,11 +402,11 @@ DOM_Element XUtil::getNextSiblingElement(const DOM_Node &node)
 
 // Finds and returns the next sibling element node with the give name.
 DOM_Element XUtil::getNextSiblingElement(const DOM_Node    &node
-                                       , const XMLCh* const elemName) 
+                                       , const XMLCh* const elemName)
 {
     // search for node
     DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0) 
+    while (sibling != 0)
 	{
         if ((sibling.getNodeType() == DOM_Node::ELEMENT_NODE) &&
             (XMLString::compareString(sibling.getNodeName().rawBuffer(), elemName) ==0))
@@ -419,11 +422,11 @@ DOM_Element XUtil::getNextSiblingElement(const DOM_Node    &node
 // Finds and returns the next sibling element node with the give name.
 DOM_Element XUtil::getNextSiblingElement(const DOM_Node     &node
                                        , const XMLCh** const elemNames
-									   , unsigned int        length) 
+									   , unsigned int        length)
 {
     // search for node
     DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0) 
+    while (sibling != 0)
 	{
         if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
 		{
@@ -449,9 +452,9 @@ DOM_Element XUtil::getNextSiblingElement(const DOM_Node    &node
 {
     // search for node
     DOM_Node sibling = node.getNextSibling();
-    while (sibling != 0) 
+    while (sibling != 0)
 	{
-        if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE) 
+        if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
 		{
 			DOM_Element element = (DOM_Element&)sibling;
             if ((XMLString::compareString(element.getNodeName().rawBuffer(), elemName) ==0) &&

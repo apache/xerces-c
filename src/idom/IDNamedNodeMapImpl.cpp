@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -299,7 +299,7 @@ int IDNamedNodeMapImpl::findNamePoint(const XMLCh *namespaceURI,
 	return -1;
     // This is a linear search through the same fNodes Vector.
     // The Vector is sorted on the DOM Level 1 nodename.
-    // The DOM Level 2 NS keys are namespaceURI and Localname, 
+    // The DOM Level 2 NS keys are namespaceURI and Localname,
     // so we must linear search thru it.
     // In addition, to get this to work with fNodes without any namespace
     // (namespaceURI and localNames are both 0) we then use the nodeName
@@ -356,7 +356,7 @@ IDOM_Node * IDNamedNodeMapImpl::setNamedItemNS(IDOM_Node *arg)
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     if (castToNodeImpl(arg)->isOwned())
         throw IDOM_DOMException(IDOM_DOMException::INUSE_ATTRIBUTE_ERR,0);
-    
+
     castToNodeImpl(arg)->fOwnerNode = fOwnerNode;
     castToNodeImpl(arg)->isOwned(true);
     int i=findNamePoint(arg->getNamespaceURI(), arg->getLocalName());
@@ -374,7 +374,7 @@ IDOM_Node * IDNamedNodeMapImpl::setNamedItemNS(IDOM_Node *arg)
         castToNodeImpl(previous)->fOwnerNode = fOwnerNode->getOwnerDocument();
         castToNodeImpl(previous)->isOwned(false);
     }
-    
+
     return previous;
 };
 
@@ -393,7 +393,7 @@ IDOM_Node *IDNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
     int i = findNamePoint(namespaceURI, localName);
     if (i < 0)
         throw IDOM_DOMException(IDOM_DOMException::NOT_FOUND_ERR, 0);
-    
+
     IDOM_Node * n = fNodes -> elementAt(i);
     fNodes -> removeElementAt(i);	//remove n from nodes
     castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();

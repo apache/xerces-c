@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -78,7 +78,7 @@
 #include <util/XMLUniDefs.hpp>
 
 
-const OLECHAR* g_DomNodeName[] = 
+const OLECHAR* g_DomNodeName[] =
 {	
 	OLESTR("invalid"),
 	OLESTR("element"),
@@ -94,7 +94,7 @@ const OLECHAR* g_DomNodeName[] =
 	OLESTR("documentfragment"),
 	OLESTR("notation")
 };
- 
+
 const int g_DomNodeNameSize = sizeof(g_DomNodeName) / sizeof(OLECHAR*);
 
 DOMString GetText(const DOM_Node& node)
@@ -102,13 +102,13 @@ DOMString GetText(const DOM_Node& node)
 	DOM_Node::NodeType type = static_cast<DOM_Node::NodeType> (node.getNodeType());
 	DOMString val;		
 
-	if (DOM_Node::DOCUMENT_TYPE_NODE		  == type || 
+	if (DOM_Node::DOCUMENT_TYPE_NODE		  == type ||
 		DOM_Node::NOTATION_NODE				  == type)
 		return val;
 	
-	if (DOM_Node::CDATA_SECTION_NODE		  == type || 
+	if (DOM_Node::CDATA_SECTION_NODE		  == type ||
 		DOM_Node::COMMENT_NODE				  == type ||
-		DOM_Node::PROCESSING_INSTRUCTION_NODE == type || 
+		DOM_Node::PROCESSING_INSTRUCTION_NODE == type ||
 		DOM_Node::TEXT_NODE					  == type) {
 		val = node.getNodeValue();
 		return val;
@@ -116,8 +116,8 @@ DOMString GetText(const DOM_Node& node)
 
 	DOM_NodeList l =  node.getChildNodes();
 	int length = l.getLength();
-	if (length > 0) { 
-		for (int i = 0; i < length; ++i) 
+	if (length > 0) {
+		for (int i = 0; i < length; ++i)
 			val.appendData(GetText(l.item(i)));
 	}
 	else {
@@ -330,7 +330,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMElement *pObj = NULL;
 		hr = CPooledXMLDOMElementObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -340,19 +340,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->element = *(static_cast<DOM_Element*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -362,7 +362,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMAttribute *pObj = NULL;
 		hr = CPooledXMLDOMAttributeObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -372,19 +372,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->attr = *(static_cast<DOM_Attr*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -394,7 +394,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMText *pObj = NULL;
 		hr = CPooledXMLDOMTextObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -404,19 +404,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->text = *(static_cast<DOM_Text*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -426,7 +426,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMCDATASection *pObj = NULL;
 		hr = CPooledXMLDOMCDATASectionObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -436,19 +436,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->cdataSection = *(static_cast<DOM_CDATASection*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -458,7 +458,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMEntityReference *pObj = NULL;
 		hr = CPooledXMLDOMEntityReferenceObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -468,19 +468,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->entityReference = *(static_cast<DOM_EntityReference*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -490,7 +490,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMEntity *pObj = NULL;
 		hr = CPooledXMLDOMEntityObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -500,19 +500,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->entity = *(static_cast<DOM_Entity*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -522,7 +522,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMProcessingInstruction *pObj = NULL;
 		hr = CPooledXMLDOMProcessingInstructionObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -532,19 +532,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->processingInstruction = *(static_cast<DOM_ProcessingInstruction*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -554,7 +554,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMComment *pObj = NULL;
 		hr = CPooledXMLDOMCommentObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -564,19 +564,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->comment = *(static_cast<DOM_Comment*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -586,7 +586,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMDocumentObj *pObj = NULL;
 		hr = CXMLDOMDocumentObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -596,19 +596,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->m_Document = *(static_cast<DOM_Document*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -618,7 +618,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMDocumentTypeObj *pObj = NULL;
 		hr = CXMLDOMDocumentTypeObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -628,19 +628,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->documentType = *(static_cast<DOM_DocumentType*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -650,7 +650,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMDocumentFragmentObj *pObj = NULL;
 		hr = CXMLDOMDocumentFragmentObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -660,19 +660,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->documentFragment = *(static_cast<DOM_DocumentFragment*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -682,7 +682,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMNotationObj *pObj = NULL;
 		hr = CXMLDOMNotationObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -692,19 +692,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->notation = *(static_cast<DOM_Notation*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -715,7 +715,7 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 		CXMLDOMXMLDeclObj *pObj = NULL;
 		hr = CXMLDOMXMLDeclObj::CreateInstance(&pObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			return hr;
 	
 		pObj->AddRef();
@@ -725,19 +725,19 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 		{
 			pObj->xmlDecl = *(static_cast<DOM_XMLDecl*> (&node));
 		}
-		catch(DOM_DOMException& ex) 
+		catch(DOM_DOMException& ex)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return MakeHRESULT(ex);
 		}
 		catch(...)
 		{
-			pObj->Release(); 
+			pObj->Release();
 			return E_FAIL;
 		}
 	
 		hr = pObj->QueryInterface(iid, pVal);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			*pVal = NULL;
 
 		pObj->Release();
@@ -843,10 +843,10 @@ private:
 // ---------------------------------------------------------------------------
 void outputContent(xmlstream& target, const DOMString &toWrite)
 {
-    
+
         int            length = toWrite.length();
         const XMLCh*   chars  = toWrite.rawBuffer();
-        
+
         int index;
         for (index = 0; index < length; index++)
         {
@@ -855,19 +855,19 @@ void outputContent(xmlstream& target, const DOMString &toWrite)
             case chAmpersand :
                 target << XMLStrL("&amp;");
                 break;
-                
+
             case chOpenAngle :
                 target << XMLStrL("&lt;");
                 break;
-                
+
             case chCloseAngle:
                 target << XMLStrL("&gt;");
                 break;
-                
+
             case chDoubleQuote :
                 target << XMLStrL("&quot;");
                 break;
-                
+
             default:
                 // If it is none of the special characters, print it as such
                 target << toWrite.substringData(index, 1);
@@ -908,7 +908,7 @@ xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
             //
             //  Bug here:  we need to find a way to get the encoding name
             //  for the default code page on the system where the program
-            //  is running, and plug that in for the encoding name.  
+            //  is running, and plug that in for the encoding name.
             //
             //target << "<?xml version='1.0' encoding='ISO-8859-1' ?>\n";
             DOM_Node child = toWrite.getFirstChild();
@@ -999,7 +999,7 @@ xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
 			id = doctype.getSystemId();
 			if (id != 0)
 				target << XMLStrL(" SYSTEM \"") << id << XMLStrL("\"");
-			id = doctype.getInternalSubset(); 
+			id = doctype.getInternalSubset();
 			if (id !=0)
 				target << XMLStrL(" [ ") << id  << XMLStrL("]");
 			target  << XMLStrL(">");

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/11 13:26:21  tng
+ * Copyright update.
+ *
  * Revision 1.7  2001/03/30 16:46:57  tng
  * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
  *

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 13:26:48  tng
+ * Copyright update.
+ *
  * Revision 1.2  2001/05/03 18:17:45  knoaman
  * Some design changes:
  * o Changed the TokenFactory from a single static instance, to a
@@ -110,7 +113,7 @@ RegxParser::ReferencePosition::ReferencePosition(const int refNo,
 // ---------------------------------------------------------------------------
 //  RegxParser: Constructors and Destructors
 // ---------------------------------------------------------------------------
-RegxParser::RegxParser() 
+RegxParser::RegxParser()
 	:fHasBackReferences(false),
 	 fOptions(0),
 	 fOffset(0),
@@ -211,7 +214,7 @@ void RegxParser::processNext() {
 			fCharData = fString[fOffset++];
 			break;
 		case chDash:
-            if (isSet(RegularExpression::XMLSCHEMA_MODE) 
+            if (isSet(RegularExpression::XMLSCHEMA_MODE)
                 && fOffset < fStringLen && fString[fOffset] == chOpenSquare) {
 
                 fOffset++;
@@ -222,7 +225,7 @@ void RegxParser::processNext() {
             }
             break;
         case chOpenSquare:
-            if (!isSet(RegularExpression::XMLSCHEMA_MODE) 
+            if (!isSet(RegularExpression::XMLSCHEMA_MODE)
                 && fOffset < fStringLen && fString[fOffset] == chColon) {
 
                 fOffset++;
@@ -534,7 +537,7 @@ Token* RegxParser::processPlus(Token* const tok) {
 			               fTokenFactory->createClosure(tok,true));
     }
 
-    return fTokenFactory->createConcat(tok, 
+    return fTokenFactory->createConcat(tok,
 		                        fTokenFactory->createClosure(tok));
 }
 
@@ -746,7 +749,7 @@ Token* RegxParser::processBacksolidus_c() {
 
     XMLCh ch; //Must be in 0x0040-0x005F
 
-    if (fOffset >= fStringLen 
+    if (fOffset >= fStringLen
         || ((ch = fString[fOffset++]) & 0xFFE0) != 0x0040)
         ThrowXML(ParseException,XMLExcepts::Parser_Atom1);
 
@@ -772,7 +775,7 @@ Token* RegxParser::processBacksolidus_i() {
 Token* RegxParser::processBacksolidus_I() {
 
 	//Ditto
-    return 0; 
+    return 0;
 }
 
 
@@ -872,7 +875,7 @@ Token* RegxParser::parseFactor() {
 
                 min = ch - chDigit_0;
                 while (offset < fStringLen
-                       && (ch = fString[offset++]) >= chDigit_0 
+                       && (ch = fString[offset++]) >= chDigit_0
                        && ch <= chDigit_9) {
 
                     min = min*10 + ch - chDigit_0;
@@ -1199,7 +1202,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
                 positive = false;
             }
 
-			XMLCh* name = new XMLCh[(nameEnd - fOffset) + 1]; 
+			XMLCh* name = new XMLCh[(nameEnd - fOffset) + 1];
 			ArrayJanitor<XMLCh> janName(name);
 
 			XMLString::subString(name, fString, fOffset, nameEnd);
@@ -1282,7 +1285,7 @@ RangeToken* RegxParser::parseSetOperations() {
 
     while (fState != T_RPAREN) {
 
-		if (fState == T_CHAR 
+		if (fState == T_CHAR
             && (fCharData == chDash || fCharData == chAmpersand)
             || fState == T_PLUS) {
 

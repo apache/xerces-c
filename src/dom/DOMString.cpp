@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/05/11 13:25:19  tng
+ * Copyright update.
+ *
  * Revision 1.19  2001/01/25 19:22:50  tng
  * Some bug fixes + Cleanup.  Fixed by Khaled Noaman.
  *
@@ -157,7 +160,7 @@
 #include <assert.h>
 #include <string.h>
 
- 
+
 //----------------------------------------------
 //
 //  Forward decls
@@ -266,7 +269,7 @@ XMLMutex& DOMStringHandle::getMutex()
             delete tmpMutex;
         }
     }
-    
+
     return *DOMStringHandleMutex;
 }
 
@@ -281,14 +284,14 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
     void    *retPtr;
     XMLMutexLock lock(&getMutex());    // Lock the DOMStringHandle mutex for
                                        //  the duration of this function.
-    
-    if (freeListPtr == 0) 
+
+    if (freeListPtr == 0)
     {
         // Uncommon case.  The free list of string handles is empty
-        // Allocate a new batch of them, using the system's 
+        // Allocate a new batch of them, using the system's
         // operator new to get a chunk of memory.
         //
-       DOMStringHandle *dsg = 
+       DOMStringHandle *dsg =
             ::new DOMStringHandle[allocGroupSize];
 
         // Link the block itself into the list of blocks.  The purpose of this is to
@@ -299,23 +302,23 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
 
 
         // Link all of the new storage for StringHandles into the StringHandle free list
-        int   i;    //   Start with index 1;  index 0 is reserved for linking the 
+        int   i;    //   Start with index 1;  index 0 is reserved for linking the
                     //   larger allocation blocks together.
         for (i=1; i<allocGroupSize-1; i++) {
             *(void **)&dsg[i] = freeListPtr;
             freeListPtr = &dsg[i];
         }
     }
-    
+
     retPtr = freeListPtr;
     freeListPtr = *(void **)freeListPtr;
-    
+
     return retPtr;
 };
 
 
 //
-//  Operator delete for DOMStringHandles.  Called implicitly from the 
+//  Operator delete for DOMStringHandles.  Called implicitly from the
 //              Destructor for DOMStringHandle.
 //
 void DOMStringHandle::operator delete(void *pMem)
@@ -326,7 +329,7 @@ void DOMStringHandle::operator delete(void *pMem)
         *(void **)pMem = freeListPtr;
         freeListPtr = pMem;
     }
-    
+
     // If ALL of the string handles are gone, delete the storage blocks used for the
     //   handles as well.  This will generally only happen on PlatFormUtils::Terminate(),
     //   since any use of the DOM will cache some commonly used DOMStrings
@@ -344,8 +347,8 @@ void DOMStringHandle::operator delete(void *pMem)
 
         DOMStringTerminate();            //  Clean up everything else related to DOMString.
     }
-    
-    
+
+
 };
 
 
@@ -425,7 +428,7 @@ DOMString::DOMString(const XMLCh *data)
         unsigned int dataLength = 0;
         while (data[dataLength] != 0)
             ++dataLength;
-                
+
         if (dataLength != 0)
         {
             fHandle = DOMStringHandle::createNewStringHandle(dataLength+1);
@@ -471,7 +474,7 @@ DOMString::DOMString(const XMLCh *data, unsigned int dataLength)
 static XMLLCPTranscoder* gDomConverter = 0;
 XMLLCPTranscoder*  getDomConverter()
 {
-    if (!gDomConverter) 
+    if (!gDomConverter)
     {
         XMLLCPTranscoder* transcoder =
         XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
@@ -491,7 +494,7 @@ XMLLCPTranscoder*  getDomConverter()
 //
 //  Create a DOMString from a char * string in the default code page
 //                     of the system on which we are executing.
-// 
+//
 //
 DOMString::DOMString(const char *srcString)
 {
@@ -544,7 +547,7 @@ DOMString & DOMString::operator =(const DOMString &other)
         fHandle->removeRef();
 
     fHandle = other.fHandle;
-    
+
     if (fHandle)
         fHandle->addRef();
 
@@ -630,7 +633,7 @@ void DOMString::appendData(const DOMString &other)
         unsigned int i;
         for (i=0; i<fHandle->fLength; ++i)
             newP[i] = oldP[i];
-        
+
         fHandle->fDSData->removeRef();
         fHandle->fDSData = newBuf;
     }
@@ -660,7 +663,7 @@ void DOMString::appendData(XMLCh ch)
 	}
 	else
 		newLength = fHandle->fLength + 1;
-    
+
     if (newLength >= fHandle->fDSData->fBufferLength ||
         fHandle->fDSData->fRefCount > 1)
     {
@@ -674,7 +677,7 @@ void DOMString::appendData(XMLCh ch)
         unsigned int i;
         for (i=0; i<fHandle->fLength; ++i)
             newP[i] = oldP[i];
-        
+
         fHandle->fDSData->removeRef();
         fHandle->fDSData = newBuf;
     }
@@ -790,7 +793,7 @@ void DOMString::deleteData(unsigned int offset, unsigned int delLength)
 
         fHandle->fLength = newStringLength;
     }
-    else 
+    else
     {
         // The deletion continues to the end of the string.
         // Simply reset the length.  We don't need to worry
@@ -874,11 +877,11 @@ bool DOMString::equals(const XMLCh *other) const
     // At this point, we know that at least one of the strings had a null
     //  data pointer.
     if (fHandle  && fHandle->fLength != 0)
-        return false; 
-    
+        return false;
+
     if (other && *other != 0)
         return false;
-        
+
     return true;  // Both strings are empty.  DOMString treats zero-length
                   //   and a null data pointer as equivalent.
 };
@@ -889,7 +892,7 @@ void DOMString::insertData(unsigned int offset, const DOMString &src)
     unsigned int origStrLength = this->length();
     if (offset > origStrLength)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
-    
+
     if (fHandle == 0)
     {
         *this = src.clone();
@@ -920,7 +923,7 @@ void DOMString::insertData(unsigned int offset, const DOMString &src)
 
         for (i=0; i<srcLength; i++)
             newP[i+offset] = srcP[i];
-        
+
         for (i=offset; i<origStrLength; i++)
             newP[i+srcLength] = oldP[i];
 
@@ -1030,11 +1033,11 @@ char *DOMString::transcode() const
         // The data in the DOMString itself happens to be null terminated.
         //  Just use it in place.
         srcP = DOMStrData;
-    } 
+    }
     else if (fHandle->fLength < localBufLen-1)
     {
         // The data is not null terminated, but does fit in the
-        //  local buffer (fast allocation).  Copy it over, and add 
+        //  local buffer (fast allocation).  Copy it over, and add
         //  the null termination,
         memcpy(localBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
         srcP = localBuf;
@@ -1111,22 +1114,22 @@ DOMString DOMString::substringData(unsigned int offset, unsigned int count) cons
 {
     if (count == 0)
         return DOMString();
-    
+
     unsigned int thisLen = length();
     if (offset >= thisLen)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
-    
+
     // Cap count to the string length to eliminate overflow
     //  problems when we get passed bogus values, like -1.
     if (count > thisLen)
-        count = thisLen;  
-    
+        count = thisLen;
+
     // If the count extends past the end of the string, cut it
     //   back so that the returned string will stop at the end
     //   of the source string.
     if (offset + count >= thisLen)
         count = thisLen - offset;
-    
+
     // If the substring starts at the beginning of the original string
     //   we do not need to copy the data, but can set up a new
     //   string handle with the shorter length.
@@ -1141,7 +1144,7 @@ DOMString DOMString::substringData(unsigned int offset, unsigned int count) cons
     // Create a completely new DOMString.  No buffer sharing is possible.
     XMLCh *data = fHandle->fDSData->fData;
     return DOMString(data+offset, count);
-    
+
 };
 
 
@@ -1190,7 +1193,7 @@ static void DOMStringTerminate()        // Termination function cleans up all la
                                         //   know this from reference counting.)
 
         delete DOMStringHandleMutex;    //  Delete the synchronization mutex,
-        DOMStringHandleMutex = 0;       
+        DOMStringHandleMutex = 0;
 
         delete gDomConverter;           //  Delete the local code page converter.
         gDomConverter = 0;

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -70,7 +70,7 @@
   * The StringTokenizer methods do not distinguish among identifiers, numbers,
   * and quoted strings, nor do they recognize and skip comments
   *
-  * A StringTokenizer object internally maintains a current position within 
+  * A StringTokenizer object internally maintains a current position within
   * the string to be tokenized. Some operations advance this current position
   * past the characters processed.
   */
@@ -125,7 +125,7 @@ public:
     /** @name Management Function */
     //@{
 
-     /** 
+     /**
        * Tests if there are more tokens available from this tokenizer's string.
        *
        * Returns true if and only if there is at least one token in the string
@@ -137,7 +137,7 @@ public:
       * Calculates the number of times that this tokenizer's nextToken method
       * can be called to return a valid token. The current position is not
       * advanced.
-      * 
+      *
       * Returns the number of tokens remaining in the string using the current
       * delimiter set.
       */
@@ -177,7 +177,7 @@ private:
     //      The string to be parsed
 	//
     //  fDelimeters
-    //      A set of delimeter characters 
+    //      A set of delimeter characters
     //
     //  fTokens
     //      A vector of the token strings
@@ -223,7 +223,7 @@ inline int StringTokenizer::countTokens() {
     for (int i= fOffset; i< fStringLen; i++) {
 
         if (isDelimeter(fString[i])) {
-            
+
             if (inToken) {
                 inToken = false;
             }

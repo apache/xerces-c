@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/11 13:27:17  tng
+ * Copyright update.
+ *
  * Revision 1.3  2001/05/03 21:02:28  tng
  * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
  *
@@ -232,7 +235,7 @@ public :
 
         // They have to be the same size
         if (fBitCount != srcSet.fBitCount)
-            ThrowXML(RuntimeException, XMLExcepts::Bitset_NotEqualSize); 
+            ThrowXML(RuntimeException, XMLExcepts::Bitset_NotEqualSize);
 
         if (fBitCount < 65)
         {

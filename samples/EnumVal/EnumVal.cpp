@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/05/11 13:24:54  tng
+ * Copyright update.
+ *
  * Revision 1.11  2001/04/19 18:16:46  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -202,7 +205,7 @@ int main(int argC, char* argV[])
         XMLPlatformUtils::Terminate();
         return 1;
     }
-    
+
     // We only have one required parameter, which is the file to process
     if ((argC == 2) && (*(argV[1]) == '-'))
     {
@@ -210,7 +213,7 @@ int main(int argC, char* argV[])
         XMLPlatformUtils::Terminate();
         return 2;
     }
-    
+
     const char*              xmlFile   = argV[1];
     SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
 

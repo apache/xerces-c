@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 13:26:40  tng
+ * Copyright update.
+ *
  * Revision 1.2  2001/05/03 18:17:21  knoaman
  * Some design changes:
  * o Changed the TokenFactory from a single static instance, to a
@@ -99,176 +102,176 @@ bool BlockRangeFactory::fKeywordsInitialized = false;
 const int   SIZE = 68;
 const XMLCh fgBlockNames[][SIZE] =
 {
-    { chLatin_B, chLatin_a, chLatin_s, chLatin_i, chLatin_c, chSpace, chLatin_L, chLatin_a, 
+    { chLatin_B, chLatin_a, chLatin_s, chLatin_i, chLatin_c, chSpace, chLatin_L, chLatin_a,
       chLatin_t, chLatin_i, chLatin_n,  chNull },
-    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chDash, chDigit_1, chSpace, 
-      chLatin_S, chLatin_u, chLatin_p, chLatin_p, chLatin_l, chLatin_e, chLatin_m, chLatin_e, 
+    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chDash, chDigit_1, chSpace,
+      chLatin_S, chLatin_u, chLatin_p, chLatin_p, chLatin_l, chLatin_e, chLatin_m, chLatin_e,
       chLatin_n, chLatin_t,  chNull },
-    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chSpace, chLatin_E, chLatin_x, 
-      chLatin_t, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_d, chDash, chLatin_A, 
+    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chSpace, chLatin_E, chLatin_x,
+      chLatin_t, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_d, chDash, chLatin_A,
        chNull },
-    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chSpace, chLatin_E, chLatin_x, 
-      chLatin_t, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_d, chDash, chLatin_B, 
+    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chSpace, chLatin_E, chLatin_x,
+      chLatin_t, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_d, chDash, chLatin_B,
        chNull },
-    { chLatin_I, chLatin_P, chLatin_A, chSpace, chLatin_E, chLatin_x, chLatin_t, chLatin_e, 
+    { chLatin_I, chLatin_P, chLatin_A, chSpace, chLatin_E, chLatin_x, chLatin_t, chLatin_e,
       chLatin_n, chLatin_s, chLatin_i, chLatin_o, chLatin_n, chLatin_s,  chNull },
-    { chLatin_S, chLatin_p, chLatin_a, chLatin_c, chLatin_i, chLatin_n, chLatin_g, chSpace, 
-      chLatin_M, chLatin_o, chLatin_d, chLatin_i, chLatin_f, chLatin_i, chLatin_e, chLatin_r, 
-      chSpace, chLatin_L, chLatin_e, chLatin_t, chLatin_t, chLatin_e, chLatin_r, chLatin_s, 
+    { chLatin_S, chLatin_p, chLatin_a, chLatin_c, chLatin_i, chLatin_n, chLatin_g, chSpace,
+      chLatin_M, chLatin_o, chLatin_d, chLatin_i, chLatin_f, chLatin_i, chLatin_e, chLatin_r,
+      chSpace, chLatin_L, chLatin_e, chLatin_t, chLatin_t, chLatin_e, chLatin_r, chLatin_s,
        chNull },
-    { chLatin_C, chLatin_o, chLatin_m, chLatin_b, chLatin_i, chLatin_n, chLatin_i, chLatin_n, 
-      chLatin_g, chSpace, chLatin_D, chLatin_i, chLatin_a, chLatin_c, chLatin_r, chLatin_i, 
-      chLatin_t, chLatin_i, chLatin_c, chLatin_a, chLatin_l, chSpace, chLatin_M, chLatin_a, 
+    { chLatin_C, chLatin_o, chLatin_m, chLatin_b, chLatin_i, chLatin_n, chLatin_i, chLatin_n,
+      chLatin_g, chSpace, chLatin_D, chLatin_i, chLatin_a, chLatin_c, chLatin_r, chLatin_i,
+      chLatin_t, chLatin_i, chLatin_c, chLatin_a, chLatin_l, chSpace, chLatin_M, chLatin_a,
       chLatin_r, chLatin_k, chLatin_s,  chNull },
     { chLatin_G, chLatin_r, chLatin_e, chLatin_e, chLatin_k,  chNull },
-    { chLatin_C, chLatin_y, chLatin_r, chLatin_i, chLatin_l, chLatin_l, chLatin_i, chLatin_c, 
+    { chLatin_C, chLatin_y, chLatin_r, chLatin_i, chLatin_l, chLatin_l, chLatin_i, chLatin_c,
        chNull },
-    { chLatin_A, chLatin_r, chLatin_m, chLatin_e, chLatin_n, chLatin_i, chLatin_a, chLatin_n, 
+    { chLatin_A, chLatin_r, chLatin_m, chLatin_e, chLatin_n, chLatin_i, chLatin_a, chLatin_n,
        chNull },
     { chLatin_H, chLatin_e, chLatin_b, chLatin_r, chLatin_e, chLatin_w,  chNull },
     { chLatin_A, chLatin_r, chLatin_a, chLatin_b, chLatin_i, chLatin_c,  chNull },
-    { chLatin_D, chLatin_e, chLatin_v, chLatin_a, chLatin_n, chLatin_a, chLatin_g, chLatin_a, 
+    { chLatin_D, chLatin_e, chLatin_v, chLatin_a, chLatin_n, chLatin_a, chLatin_g, chLatin_a,
       chLatin_r, chLatin_i,  chNull },
     { chLatin_B, chLatin_e, chLatin_n, chLatin_g, chLatin_a, chLatin_l, chLatin_i,  chNull },
-    { chLatin_G, chLatin_u, chLatin_r, chLatin_m, chLatin_u, chLatin_k, chLatin_h, chLatin_i, 
+    { chLatin_G, chLatin_u, chLatin_r, chLatin_m, chLatin_u, chLatin_k, chLatin_h, chLatin_i,
        chNull },
-    { chLatin_G, chLatin_u, chLatin_j, chLatin_a, chLatin_r, chLatin_a, chLatin_t, chLatin_i, 
+    { chLatin_G, chLatin_u, chLatin_j, chLatin_a, chLatin_r, chLatin_a, chLatin_t, chLatin_i,
        chNull },
     { chLatin_O, chLatin_r, chLatin_i, chLatin_y, chLatin_a,  chNull },
     { chLatin_T, chLatin_a, chLatin_m, chLatin_i, chLatin_l,  chNull },
     { chLatin_T, chLatin_e, chLatin_l, chLatin_u, chLatin_g, chLatin_u,  chNull },
     { chLatin_K, chLatin_a, chLatin_n, chLatin_n, chLatin_a, chLatin_d, chLatin_a,  chNull },
-    { chLatin_M, chLatin_a, chLatin_l, chLatin_a, chLatin_y, chLatin_a, chLatin_l, chLatin_a, 
+    { chLatin_M, chLatin_a, chLatin_l, chLatin_a, chLatin_y, chLatin_a, chLatin_l, chLatin_a,
       chLatin_m,  chNull },
     { chLatin_T, chLatin_h, chLatin_a, chLatin_i,  chNull },
     { chLatin_L, chLatin_a, chLatin_o,  chNull },
     { chLatin_T, chLatin_i, chLatin_b, chLatin_e, chLatin_t, chLatin_a, chLatin_n,  chNull },
-    { chLatin_G, chLatin_e, chLatin_o, chLatin_r, chLatin_g, chLatin_i, chLatin_a, chLatin_n, 
+    { chLatin_G, chLatin_e, chLatin_o, chLatin_r, chLatin_g, chLatin_i, chLatin_a, chLatin_n,
        chNull },
-    { chLatin_H, chLatin_a, chLatin_n, chLatin_g, chLatin_u, chLatin_l, chSpace, chLatin_J, 
+    { chLatin_H, chLatin_a, chLatin_n, chLatin_g, chLatin_u, chLatin_l, chSpace, chLatin_J,
       chLatin_a, chLatin_m, chLatin_o,  chNull },
-    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chSpace, chLatin_E, chLatin_x, 
-      chLatin_t, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_d, chSpace, chLatin_A, 
-      chLatin_d, chLatin_d, chLatin_i, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chLatin_a, 
+    { chLatin_L, chLatin_a, chLatin_t, chLatin_i, chLatin_n, chSpace, chLatin_E, chLatin_x,
+      chLatin_t, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_d, chSpace, chLatin_A,
+      chLatin_d, chLatin_d, chLatin_i, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chLatin_a,
       chLatin_l,  chNull },
-    { chLatin_G, chLatin_r, chLatin_e, chLatin_e, chLatin_k, chSpace, chLatin_E, chLatin_x, 
+    { chLatin_G, chLatin_r, chLatin_e, chLatin_e, chLatin_k, chSpace, chLatin_E, chLatin_x,
       chLatin_t, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_d,  chNull },
-    { chLatin_G, chLatin_e, chLatin_n, chLatin_e, chLatin_r, chLatin_a, chLatin_l, chSpace, 
-      chLatin_P, chLatin_u, chLatin_n, chLatin_c, chLatin_t, chLatin_u, chLatin_a, chLatin_t, 
+    { chLatin_G, chLatin_e, chLatin_n, chLatin_e, chLatin_r, chLatin_a, chLatin_l, chSpace,
+      chLatin_P, chLatin_u, chLatin_n, chLatin_c, chLatin_t, chLatin_u, chLatin_a, chLatin_t,
       chLatin_i, chLatin_o, chLatin_n,  chNull },
-    { chLatin_S, chLatin_u, chLatin_p, chLatin_e, chLatin_r, chLatin_s, chLatin_c, chLatin_r, 
-      chLatin_i, chLatin_p, chLatin_t, chLatin_s, chSpace, chLatin_a, chLatin_n, chLatin_d, 
-      chSpace, chLatin_S, chLatin_u, chLatin_b, chLatin_s, chLatin_c, chLatin_r, chLatin_i, 
+    { chLatin_S, chLatin_u, chLatin_p, chLatin_e, chLatin_r, chLatin_s, chLatin_c, chLatin_r,
+      chLatin_i, chLatin_p, chLatin_t, chLatin_s, chSpace, chLatin_a, chLatin_n, chLatin_d,
+      chSpace, chLatin_S, chLatin_u, chLatin_b, chLatin_s, chLatin_c, chLatin_r, chLatin_i,
       chLatin_p, chLatin_t, chLatin_s,  chNull },
-    { chLatin_C, chLatin_u, chLatin_r, chLatin_r, chLatin_e, chLatin_n, chLatin_c, chLatin_y, 
-      chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b, chLatin_o, chLatin_l, chLatin_s, 
+    { chLatin_C, chLatin_u, chLatin_r, chLatin_r, chLatin_e, chLatin_n, chLatin_c, chLatin_y,
+      chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b, chLatin_o, chLatin_l, chLatin_s,
        chNull },
-    { chLatin_C, chLatin_o, chLatin_m, chLatin_b, chLatin_i, chLatin_n, chLatin_i, chLatin_n, 
-      chLatin_g, chSpace, chLatin_M, chLatin_a, chLatin_r, chLatin_k, chLatin_s, chSpace, 
-      chLatin_f, chLatin_o, chLatin_r, chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b, 
+    { chLatin_C, chLatin_o, chLatin_m, chLatin_b, chLatin_i, chLatin_n, chLatin_i, chLatin_n,
+      chLatin_g, chSpace, chLatin_M, chLatin_a, chLatin_r, chLatin_k, chLatin_s, chSpace,
+      chLatin_f, chLatin_o, chLatin_r, chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b,
       chLatin_o, chLatin_l, chLatin_s,  chNull },
-    { chLatin_L, chLatin_e, chLatin_t, chLatin_t, chLatin_e, chLatin_r, chLatin_l, chLatin_i, 
-      chLatin_k, chLatin_e, chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b, chLatin_o, 
+    { chLatin_L, chLatin_e, chLatin_t, chLatin_t, chLatin_e, chLatin_r, chLatin_l, chLatin_i,
+      chLatin_k, chLatin_e, chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b, chLatin_o,
       chLatin_l, chLatin_s,  chNull },
-    { chLatin_N, chLatin_u, chLatin_m, chLatin_b, chLatin_e, chLatin_r, chSpace, chLatin_F, 
+    { chLatin_N, chLatin_u, chLatin_m, chLatin_b, chLatin_e, chLatin_r, chSpace, chLatin_F,
       chLatin_o, chLatin_r, chLatin_m, chLatin_s,  chNull },
     { chLatin_A, chLatin_r, chLatin_r, chLatin_o, chLatin_w, chLatin_s,  chNull },
-    { chLatin_M, chLatin_a, chLatin_t, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chLatin_t, 
-      chLatin_i, chLatin_c, chLatin_a, chLatin_l, chSpace, chLatin_O, chLatin_p, chLatin_e, 
+    { chLatin_M, chLatin_a, chLatin_t, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chLatin_t,
+      chLatin_i, chLatin_c, chLatin_a, chLatin_l, chSpace, chLatin_O, chLatin_p, chLatin_e,
       chLatin_r, chLatin_a, chLatin_t, chLatin_o, chLatin_r, chLatin_s,  chNull },
-    { chLatin_M, chLatin_i, chLatin_s, chLatin_c, chLatin_e, chLatin_l, chLatin_l, chLatin_a, 
-      chLatin_n, chLatin_e, chLatin_o, chLatin_u, chLatin_s, chSpace, chLatin_T, chLatin_e, 
+    { chLatin_M, chLatin_i, chLatin_s, chLatin_c, chLatin_e, chLatin_l, chLatin_l, chLatin_a,
+      chLatin_n, chLatin_e, chLatin_o, chLatin_u, chLatin_s, chSpace, chLatin_T, chLatin_e,
       chLatin_c, chLatin_h, chLatin_n, chLatin_i, chLatin_c, chLatin_a, chLatin_l,  chNull },
-    { chLatin_C, chLatin_o, chLatin_n, chLatin_t, chLatin_r, chLatin_o, chLatin_l, chSpace, 
-      chLatin_P, chLatin_i, chLatin_c, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s, 
+    { chLatin_C, chLatin_o, chLatin_n, chLatin_t, chLatin_r, chLatin_o, chLatin_l, chSpace,
+      chLatin_P, chLatin_i, chLatin_c, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s,
        chNull },
-    { chLatin_O, chLatin_p, chLatin_t, chLatin_i, chLatin_c, chLatin_a, chLatin_l, chSpace, 
-      chLatin_C, chLatin_h, chLatin_a, chLatin_r, chLatin_a, chLatin_c, chLatin_t, chLatin_e, 
-      chLatin_r, chSpace, chLatin_R, chLatin_e, chLatin_c, chLatin_o, chLatin_g, chLatin_n, 
+    { chLatin_O, chLatin_p, chLatin_t, chLatin_i, chLatin_c, chLatin_a, chLatin_l, chSpace,
+      chLatin_C, chLatin_h, chLatin_a, chLatin_r, chLatin_a, chLatin_c, chLatin_t, chLatin_e,
+      chLatin_r, chSpace, chLatin_R, chLatin_e, chLatin_c, chLatin_o, chLatin_g, chLatin_n,
       chLatin_i, chLatin_t, chLatin_i, chLatin_o, chLatin_n,  chNull },
-    { chLatin_E, chLatin_n, chLatin_c, chLatin_l, chLatin_o, chLatin_s, chLatin_e, chLatin_d, 
-      chSpace, chLatin_A, chLatin_l, chLatin_p, chLatin_h, chLatin_a, chLatin_n, chLatin_u, 
+    { chLatin_E, chLatin_n, chLatin_c, chLatin_l, chLatin_o, chLatin_s, chLatin_e, chLatin_d,
+      chSpace, chLatin_A, chLatin_l, chLatin_p, chLatin_h, chLatin_a, chLatin_n, chLatin_u,
       chLatin_m, chLatin_e, chLatin_r, chLatin_i, chLatin_c, chLatin_s,  chNull },
-    { chLatin_B, chLatin_o, chLatin_x, chSpace, chLatin_D, chLatin_r, chLatin_a, chLatin_w, 
+    { chLatin_B, chLatin_o, chLatin_x, chSpace, chLatin_D, chLatin_r, chLatin_a, chLatin_w,
       chLatin_i, chLatin_n, chLatin_g,  chNull },
-    { chLatin_B, chLatin_l, chLatin_o, chLatin_c, chLatin_k, chSpace, chLatin_E, chLatin_l, 
+    { chLatin_B, chLatin_l, chLatin_o, chLatin_c, chLatin_k, chSpace, chLatin_E, chLatin_l,
       chLatin_e, chLatin_m, chLatin_e, chLatin_n, chLatin_t, chLatin_s,  chNull },
-    { chLatin_G, chLatin_e, chLatin_o, chLatin_m, chLatin_e, chLatin_t, chLatin_r, chLatin_i, 
-      chLatin_c, chSpace, chLatin_S, chLatin_h, chLatin_a, chLatin_p, chLatin_e, chLatin_s, 
+    { chLatin_G, chLatin_e, chLatin_o, chLatin_m, chLatin_e, chLatin_t, chLatin_r, chLatin_i,
+      chLatin_c, chSpace, chLatin_S, chLatin_h, chLatin_a, chLatin_p, chLatin_e, chLatin_s,
        chNull },
-    { chLatin_M, chLatin_i, chLatin_s, chLatin_c, chLatin_e, chLatin_l, chLatin_l, chLatin_a, 
-      chLatin_n, chLatin_e, chLatin_o, chLatin_u, chLatin_s, chSpace, chLatin_S, chLatin_y, 
+    { chLatin_M, chLatin_i, chLatin_s, chLatin_c, chLatin_e, chLatin_l, chLatin_l, chLatin_a,
+      chLatin_n, chLatin_e, chLatin_o, chLatin_u, chLatin_s, chSpace, chLatin_S, chLatin_y,
       chLatin_m, chLatin_b, chLatin_o, chLatin_l, chLatin_s,  chNull },
-    { chLatin_D, chLatin_i, chLatin_n, chLatin_g, chLatin_b, chLatin_a, chLatin_t, chLatin_s, 
+    { chLatin_D, chLatin_i, chLatin_n, chLatin_g, chLatin_b, chLatin_a, chLatin_t, chLatin_s,
        chNull },
-    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b, 
-      chLatin_o, chLatin_l, chLatin_s, chSpace, chLatin_a, chLatin_n, chLatin_d, chSpace, 
-      chLatin_P, chLatin_u, chLatin_n, chLatin_c, chLatin_t, chLatin_u, chLatin_a, chLatin_t, 
+    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_S, chLatin_y, chLatin_m, chLatin_b,
+      chLatin_o, chLatin_l, chLatin_s, chSpace, chLatin_a, chLatin_n, chLatin_d, chSpace,
+      chLatin_P, chLatin_u, chLatin_n, chLatin_c, chLatin_t, chLatin_u, chLatin_a, chLatin_t,
       chLatin_i, chLatin_o, chLatin_n,  chNull },
-    { chLatin_H, chLatin_i, chLatin_r, chLatin_a, chLatin_g, chLatin_a, chLatin_n, chLatin_a, 
+    { chLatin_H, chLatin_i, chLatin_r, chLatin_a, chLatin_g, chLatin_a, chLatin_n, chLatin_a,
        chNull },
-    { chLatin_K, chLatin_a, chLatin_t, chLatin_a, chLatin_k, chLatin_a, chLatin_n, chLatin_a, 
+    { chLatin_K, chLatin_a, chLatin_t, chLatin_a, chLatin_k, chLatin_a, chLatin_n, chLatin_a,
        chNull },
-    { chLatin_B, chLatin_o, chLatin_p, chLatin_o, chLatin_m, chLatin_o, chLatin_f, chLatin_o, 
+    { chLatin_B, chLatin_o, chLatin_p, chLatin_o, chLatin_m, chLatin_o, chLatin_f, chLatin_o,
        chNull },
-    { chLatin_H, chLatin_a, chLatin_n, chLatin_g, chLatin_u, chLatin_l, chSpace, chLatin_C, 
-      chLatin_o, chLatin_m, chLatin_p, chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i, 
-      chLatin_l, chLatin_i, chLatin_t, chLatin_y, chSpace, chLatin_J, chLatin_a, chLatin_m, 
+    { chLatin_H, chLatin_a, chLatin_n, chLatin_g, chLatin_u, chLatin_l, chSpace, chLatin_C,
+      chLatin_o, chLatin_m, chLatin_p, chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i,
+      chLatin_l, chLatin_i, chLatin_t, chLatin_y, chSpace, chLatin_J, chLatin_a, chLatin_m,
       chLatin_o,  chNull },
     { chLatin_K, chLatin_a, chLatin_n, chLatin_b, chLatin_u, chLatin_n,  chNull },
-    { chLatin_E, chLatin_n, chLatin_c, chLatin_l, chLatin_o, chLatin_s, chLatin_e, chLatin_d, 
-      chSpace, chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_L, chLatin_e, chLatin_t, 
-      chLatin_t, chLatin_e, chLatin_r, chLatin_s, chSpace, chLatin_a, chLatin_n, chLatin_d, 
+    { chLatin_E, chLatin_n, chLatin_c, chLatin_l, chLatin_o, chLatin_s, chLatin_e, chLatin_d,
+      chSpace, chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_L, chLatin_e, chLatin_t,
+      chLatin_t, chLatin_e, chLatin_r, chLatin_s, chSpace, chLatin_a, chLatin_n, chLatin_d,
       chSpace, chLatin_M, chLatin_o, chLatin_n, chLatin_t, chLatin_h, chLatin_s,  chNull },
-    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_C, chLatin_o, chLatin_m, chLatin_p, 
-      chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i, chLatin_l, chLatin_i, chLatin_t, 
+    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_C, chLatin_o, chLatin_m, chLatin_p,
+      chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i, chLatin_l, chLatin_i, chLatin_t,
       chLatin_y,  chNull },
-    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_U, chLatin_n, chLatin_i, chLatin_f, 
-      chLatin_i, chLatin_e, chLatin_d, chSpace, chLatin_I, chLatin_d, chLatin_e, chLatin_o, 
+    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_U, chLatin_n, chLatin_i, chLatin_f,
+      chLatin_i, chLatin_e, chLatin_d, chSpace, chLatin_I, chLatin_d, chLatin_e, chLatin_o,
       chLatin_g, chLatin_r, chLatin_a, chLatin_p, chLatin_h, chLatin_s,  chNull },
-    { chLatin_H, chLatin_a, chLatin_n, chLatin_g, chLatin_u, chLatin_l, chSpace, chLatin_S, 
-      chLatin_y, chLatin_l, chLatin_l, chLatin_a, chLatin_b, chLatin_l, chLatin_e, chLatin_s, 
+    { chLatin_H, chLatin_a, chLatin_n, chLatin_g, chLatin_u, chLatin_l, chSpace, chLatin_S,
+      chLatin_y, chLatin_l, chLatin_l, chLatin_a, chLatin_b, chLatin_l, chLatin_e, chLatin_s,
        chNull },
-    { chLatin_H, chLatin_i, chLatin_g, chLatin_h, chSpace, chLatin_S, chLatin_u, chLatin_r, 
+    { chLatin_H, chLatin_i, chLatin_g, chLatin_h, chSpace, chLatin_S, chLatin_u, chLatin_r,
       chLatin_r, chLatin_o, chLatin_g, chLatin_a, chLatin_t, chLatin_e, chLatin_s,  chNull },
-    { chLatin_H, chLatin_i, chLatin_g, chLatin_h, chSpace, chLatin_P, chLatin_r, chLatin_i, 
-      chLatin_v, chLatin_a, chLatin_t, chLatin_e, chSpace, chLatin_U, chLatin_s, chLatin_e, 
-      chSpace, chLatin_S, chLatin_u, chLatin_r, chLatin_r, chLatin_o, chLatin_g, chLatin_a, 
+    { chLatin_H, chLatin_i, chLatin_g, chLatin_h, chSpace, chLatin_P, chLatin_r, chLatin_i,
+      chLatin_v, chLatin_a, chLatin_t, chLatin_e, chSpace, chLatin_U, chLatin_s, chLatin_e,
+      chSpace, chLatin_S, chLatin_u, chLatin_r, chLatin_r, chLatin_o, chLatin_g, chLatin_a,
       chLatin_t, chLatin_e, chLatin_s,  chNull },
-    { chLatin_L, chLatin_o, chLatin_w, chSpace, chLatin_S, chLatin_u, chLatin_r, chLatin_r, 
+    { chLatin_L, chLatin_o, chLatin_w, chSpace, chLatin_S, chLatin_u, chLatin_r, chLatin_r,
       chLatin_o, chLatin_g, chLatin_a, chLatin_t, chLatin_e, chLatin_s,  chNull },
-    { chLatin_P, chLatin_r, chLatin_i, chLatin_v, chLatin_a, chLatin_t, chLatin_e, chSpace, 
+    { chLatin_P, chLatin_r, chLatin_i, chLatin_v, chLatin_a, chLatin_t, chLatin_e, chSpace,
       chLatin_U, chLatin_s, chLatin_e,  chNull },
-    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_C, chLatin_o, chLatin_m, chLatin_p, 
-      chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i, chLatin_l, chLatin_i, chLatin_t, 
-      chLatin_y, chSpace, chLatin_I, chLatin_d, chLatin_e, chLatin_o, chLatin_g, chLatin_r, 
+    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_C, chLatin_o, chLatin_m, chLatin_p,
+      chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i, chLatin_l, chLatin_i, chLatin_t,
+      chLatin_y, chSpace, chLatin_I, chLatin_d, chLatin_e, chLatin_o, chLatin_g, chLatin_r,
       chLatin_a, chLatin_p, chLatin_h, chLatin_s,  chNull },
-    { chLatin_A, chLatin_l, chLatin_p, chLatin_h, chLatin_a, chLatin_b, chLatin_e, chLatin_t, 
-      chLatin_i, chLatin_c, chSpace, chLatin_P, chLatin_r, chLatin_e, chLatin_s, chLatin_e, 
-      chLatin_n, chLatin_t, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chSpace, 
+    { chLatin_A, chLatin_l, chLatin_p, chLatin_h, chLatin_a, chLatin_b, chLatin_e, chLatin_t,
+      chLatin_i, chLatin_c, chSpace, chLatin_P, chLatin_r, chLatin_e, chLatin_s, chLatin_e,
+      chLatin_n, chLatin_t, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chSpace,
       chLatin_F, chLatin_o, chLatin_r, chLatin_m, chLatin_s,  chNull },
-    { chLatin_A, chLatin_r, chLatin_a, chLatin_b, chLatin_i, chLatin_c, chSpace, chLatin_P, 
-      chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_n, chLatin_t, chLatin_a, chLatin_t, 
-      chLatin_i, chLatin_o, chLatin_n, chSpace, chLatin_F, chLatin_o, chLatin_r, chLatin_m, 
+    { chLatin_A, chLatin_r, chLatin_a, chLatin_b, chLatin_i, chLatin_c, chSpace, chLatin_P,
+      chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_n, chLatin_t, chLatin_a, chLatin_t,
+      chLatin_i, chLatin_o, chLatin_n, chSpace, chLatin_F, chLatin_o, chLatin_r, chLatin_m,
       chLatin_s, chDash, chLatin_A,  chNull },
-    { chLatin_C, chLatin_o, chLatin_m, chLatin_b, chLatin_i, chLatin_n, chLatin_i, chLatin_n, 
-      chLatin_g, chSpace, chLatin_H, chLatin_a, chLatin_l, chLatin_f, chSpace, chLatin_M, 
+    { chLatin_C, chLatin_o, chLatin_m, chLatin_b, chLatin_i, chLatin_n, chLatin_i, chLatin_n,
+      chLatin_g, chSpace, chLatin_H, chLatin_a, chLatin_l, chLatin_f, chSpace, chLatin_M,
       chLatin_a, chLatin_r, chLatin_k, chLatin_s,  chNull },
-    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_C, chLatin_o, chLatin_m, chLatin_p, 
-      chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i, chLatin_l, chLatin_i, chLatin_t, 
+    { chLatin_C, chLatin_J, chLatin_K, chSpace, chLatin_C, chLatin_o, chLatin_m, chLatin_p,
+      chLatin_a, chLatin_t, chLatin_i, chLatin_b, chLatin_i, chLatin_l, chLatin_i, chLatin_t,
       chLatin_y, chSpace, chLatin_F, chLatin_o, chLatin_r, chLatin_m, chLatin_s,  chNull },
-    { chLatin_S, chLatin_m, chLatin_a, chLatin_l, chLatin_l, chSpace, chLatin_F, chLatin_o, 
-      chLatin_r, chLatin_m, chSpace, chLatin_V, chLatin_a, chLatin_r, chLatin_i, chLatin_a, 
+    { chLatin_S, chLatin_m, chLatin_a, chLatin_l, chLatin_l, chSpace, chLatin_F, chLatin_o,
+      chLatin_r, chLatin_m, chSpace, chLatin_V, chLatin_a, chLatin_r, chLatin_i, chLatin_a,
       chLatin_n, chLatin_t, chLatin_s,  chNull },
-    { chLatin_A, chLatin_r, chLatin_a, chLatin_b, chLatin_i, chLatin_c, chSpace, chLatin_P, 
-      chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_n, chLatin_t, chLatin_a, chLatin_t, 
-      chLatin_i, chLatin_o, chLatin_n, chSpace, chLatin_F, chLatin_o, chLatin_r, chLatin_m, 
+    { chLatin_A, chLatin_r, chLatin_a, chLatin_b, chLatin_i, chLatin_c, chSpace, chLatin_P,
+      chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_n, chLatin_t, chLatin_a, chLatin_t,
+      chLatin_i, chLatin_o, chLatin_n, chSpace, chLatin_F, chLatin_o, chLatin_r, chLatin_m,
       chLatin_s, chDash, chLatin_B,  chNull },
-    { chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_a, chLatin_l, chLatin_s, 
+    { chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_a, chLatin_l, chLatin_s,
        chNull },
-    { chLatin_H, chLatin_a, chLatin_l, chLatin_f, chLatin_w, chLatin_i, chLatin_d, chLatin_t, 
-      chLatin_h, chSpace, chLatin_a, chLatin_n, chLatin_d, chSpace, chLatin_F, chLatin_u, 
-      chLatin_l, chLatin_l, chLatin_w, chLatin_i, chLatin_d, chLatin_t, chLatin_h, chSpace, 
+    { chLatin_H, chLatin_a, chLatin_l, chLatin_f, chLatin_w, chLatin_i, chLatin_d, chLatin_t,
+      chLatin_h, chSpace, chLatin_a, chLatin_n, chLatin_d, chSpace, chLatin_F, chLatin_u,
+      chLatin_l, chLatin_l, chLatin_w, chLatin_i, chLatin_d, chLatin_t, chLatin_h, chSpace,
       chLatin_F, chLatin_o, chLatin_r, chLatin_m, chLatin_s,  chNull }
 };
 

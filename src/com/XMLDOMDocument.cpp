@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -138,7 +138,7 @@ HRESULT CXMLDOMDocument::FinalConstruct()
 		return E_FAIL;
 
 	HRESULT hr = CXMLDOMParseErrorObj::CreateInstance(&m_pParseError);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	m_pParseError->AddRef();
@@ -180,7 +180,7 @@ void CXMLDOMDocument::FinalRelease()
 
 void CXMLDOMDocument::warning(const SAXParseException& exception)
 {
-	// ignore warnings 
+	// ignore warnings
 }
 
 void CXMLDOMDocument::error(const SAXParseException& exception)
@@ -265,7 +265,7 @@ STDMETHODIMP CXMLDOMDocument::get_doctype(IXMLDOMDocumentType  **pVal)
 
 	CXMLDOMDocumentTypeObj *pObj = NULL;
 	HRESULT hr = CXMLDOMDocumentTypeObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -277,12 +277,12 @@ STDMETHODIMP CXMLDOMDocument::get_doctype(IXMLDOMDocumentType  **pVal)
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMDocumentType, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -300,13 +300,13 @@ STDMETHODIMP CXMLDOMDocument::get_implementation(IXMLDOMImplementation  **pVal)
 
 	CXMLDOMImplementationObj *pObj = NULL;
 	HRESULT hr = CXMLDOMImplementationObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
 
 	hr = pObj->QueryInterface(IID_IXMLDOMImplementation, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -324,7 +324,7 @@ STDMETHODIMP CXMLDOMDocument::get_documentElement(IXMLDOMElement  * *pVal)
 
 	CXMLDOMElementObj *pObj = NULL;
 	HRESULT hr = CXMLDOMElementObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return S_OK;
 	
 	pObj->AddRef();
@@ -334,19 +334,19 @@ STDMETHODIMP CXMLDOMDocument::get_documentElement(IXMLDOMElement  * *pVal)
 	{
 		pObj->element = m_Document.getDocumentElement();
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return S_OK;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMElement, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -367,7 +367,7 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 			return S_OK;
 		}
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -396,7 +396,7 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 		else
 			m_Document.replaceChild(*pNewValNode, elem);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -419,7 +419,7 @@ STDMETHODIMP CXMLDOMDocument::createElement(BSTR tagName, IXMLDOMElement  **pVal
 
 	CXMLDOMElementObj *pObj = NULL;
 	HRESULT hr = CXMLDOMElementObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -429,19 +429,19 @@ STDMETHODIMP CXMLDOMDocument::createElement(BSTR tagName, IXMLDOMElement  **pVal
 	{
 		pObj->element = m_Document.createElement(tagName);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMElement, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -459,7 +459,7 @@ STDMETHODIMP CXMLDOMDocument::createDocumentFragment(IXMLDOMDocumentFragment  **
 
 	CXMLDOMDocumentFragmentObj *pObj = NULL;
 	HRESULT hr = CXMLDOMDocumentFragmentObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -469,19 +469,19 @@ STDMETHODIMP CXMLDOMDocument::createDocumentFragment(IXMLDOMDocumentFragment  **
 	{
 		pObj->documentFragment = m_Document.createDocumentFragment();
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMDocumentFragment, reinterpret_cast<LPVOID*> (docFrag));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*docFrag = NULL;
 
 	pObj->Release();
@@ -499,7 +499,7 @@ STDMETHODIMP CXMLDOMDocument::createTextNode(BSTR data, IXMLDOMText  **pVal)
 
 	CXMLDOMTextObj *pObj = NULL;
 	HRESULT hr = CXMLDOMTextObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -509,19 +509,19 @@ STDMETHODIMP CXMLDOMDocument::createTextNode(BSTR data, IXMLDOMText  **pVal)
 	{
 		pObj->text = m_Document.createTextNode(data);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMText, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -539,7 +539,7 @@ STDMETHODIMP CXMLDOMDocument::createComment(BSTR data, IXMLDOMComment  **comment
 
 	CXMLDOMCommentObj *pObj = NULL;
 	HRESULT hr = CXMLDOMCommentObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -549,19 +549,19 @@ STDMETHODIMP CXMLDOMDocument::createComment(BSTR data, IXMLDOMComment  **comment
 	{
 		pObj->comment = m_Document.createComment(data);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMComment, reinterpret_cast<LPVOID*> (comment));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*comment = NULL;
 
 	pObj->Release();
@@ -579,7 +579,7 @@ STDMETHODIMP CXMLDOMDocument::createCDATASection(BSTR data, IXMLDOMCDATASection 
 
 	CXMLDOMCDATASectionObj *pObj = NULL;
 	HRESULT hr = CXMLDOMCDATASectionObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -589,19 +589,19 @@ STDMETHODIMP CXMLDOMDocument::createCDATASection(BSTR data, IXMLDOMCDATASection 
 	{
 		pObj->cdataSection = m_Document.createCDATASection(data);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMCDATASection, reinterpret_cast<LPVOID*> (cdata));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*cdata = NULL;
 
 	pObj->Release();
@@ -619,7 +619,7 @@ STDMETHODIMP CXMLDOMDocument::createProcessingInstruction(BSTR target, BSTR data
 
 	CXMLDOMProcessingInstructionObj *pObj = NULL;
 	HRESULT hr = CXMLDOMProcessingInstructionObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -629,19 +629,19 @@ STDMETHODIMP CXMLDOMDocument::createProcessingInstruction(BSTR target, BSTR data
 	{
 		pObj->processingInstruction = m_Document.createProcessingInstruction(target, data);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMProcessingInstruction, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -659,7 +659,7 @@ STDMETHODIMP CXMLDOMDocument::createAttribute(BSTR name, IXMLDOMAttribute  **att
 
 	CXMLDOMAttributeObj *pObj = NULL;
 	HRESULT hr = CXMLDOMAttributeObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -669,19 +669,19 @@ STDMETHODIMP CXMLDOMDocument::createAttribute(BSTR name, IXMLDOMAttribute  **att
 	{
 		pObj->attr = m_Document.createAttribute(name);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMAttribute, reinterpret_cast<LPVOID*> (attr));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*attr = NULL;
 
 	pObj->Release();
@@ -699,7 +699,7 @@ STDMETHODIMP CXMLDOMDocument::createEntityReference(BSTR name, IXMLDOMEntityRefe
 
 	CXMLDOMEntityReferenceObj *pObj = NULL;
 	HRESULT hr = CXMLDOMEntityReferenceObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -709,19 +709,19 @@ STDMETHODIMP CXMLDOMDocument::createEntityReference(BSTR name, IXMLDOMEntityRefe
 	{
 		pObj->entityReference = m_Document.createEntityReference(name);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMEntityReference, reinterpret_cast<LPVOID*> (entityRef));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*entityRef = NULL;
 
 	pObj->Release();
@@ -739,7 +739,7 @@ STDMETHODIMP CXMLDOMDocument::getElementsByTagName(BSTR tagName, IXMLDOMNodeList
 
 	CXMLDOMNodeListObj *pObj = NULL;
 	HRESULT hr = CXMLDOMNodeListObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -749,19 +749,19 @@ STDMETHODIMP CXMLDOMDocument::getElementsByTagName(BSTR tagName, IXMLDOMNodeList
 	{
 		pObj->m_container = m_Document.getElementsByTagName(tagName);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMNodeList, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -776,7 +776,7 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 	if (NULL == pVal)
 		return E_POINTER;
 
-	*pVal = NULL; 
+	*pVal = NULL;
 
 	VARIANT type;
 	::VariantInit(&type);
@@ -788,7 +788,7 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 	if (S_OK != hr)
 		return hr;
 
-	DOMNodeType nodeType = NODE_INVALID; 
+	DOMNodeType nodeType = NODE_INVALID;
 	if (VT_I4 == V_VT(&type))
 		nodeType = static_cast<DOMNodeType> (V_I4(&type));
 	else {
@@ -830,7 +830,7 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 			if (SysStringLen(namespaceURI) > 0)
 				node = m_Document.createAttributeNS(namespaceURI,name);
 			else
-				node = m_Document.createAttribute(name);  
+				node = m_Document.createAttribute(name);
 
 			hr = wrapNode(m_pIXMLDOMDocument,node,IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 			break;
@@ -872,11 +872,11 @@ STDMETHODIMP CXMLDOMDocument::createNode(VARIANT TYPE, BSTR name, BSTR namespace
 			break;
 		}
 		default:
-			hr = E_FAIL; 
+			hr = E_FAIL;
 			break;
 	}
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		hr = MakeHRESULT(ex);
 	}
@@ -902,7 +902,7 @@ STDMETHODIMP CXMLDOMDocument::nodeFromID(BSTR idString, IXMLDOMNode  **pVal)
 	{
 		hr = wrapNode(m_pIXMLDOMDocument, m_Document.getElementById(idString),IID_IXMLDOMNode,reinterpret_cast<LPVOID *> (pVal));
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -923,18 +923,18 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 
 	*isSuccessful = VARIANT_FALSE;
 
-	if (V_VT(&xmlSource) != VT_BSTR					&& 
+	if (V_VT(&xmlSource) != VT_BSTR					&&
 		V_VT(&xmlSource) != VT_DISPATCH				&&
 		V_VT(&xmlSource) != (VT_ARRAY | VT_VARIANT)	&&
 		V_VT(&xmlSource) != (VT_ARRAY | VT_UI1)		&&
 		V_VT(&xmlSource) != VT_UNKNOWN)
 		return E_INVALIDARG;
 
-	// do not start another thread if there is another active  
+	// do not start another thread if there is another active
 	if (NULL != m_hParseThread) {
 		DWORD exitCode = 0;
 		BOOL rc = ::GetExitCodeThread(m_hParseThread, &exitCode);
-		if (!rc || STILL_ACTIVE == exitCode) 
+		if (!rc || STILL_ACTIVE == exitCode)
 			return S_OK;
 		
 		::CloseHandle(m_hParseThread);
@@ -965,7 +965,7 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 					*loc = _T('/');
 					loc = _tcschr(m_FileName,_T('\\'));
 				}
-				m_FileName = baseURL + _T("/") + m_FileName; 
+				m_FileName = baseURL + _T("/") + m_FileName;
 			}
 		}
 	}
@@ -1023,7 +1023,7 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 			return hr;
 
 		if (lUBoundVar >= lLBoundVar) {
-			VARIANT *pIndex = NULL; 
+			VARIANT *pIndex = NULL;
 			hr = ::SafeArrayAccessData(pArray, reinterpret_cast<void **> (&pIndex));
 			if (S_OK != hr)
 				return hr;
@@ -1036,7 +1036,7 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 					hr = E_INVALIDARG;
 					break;
 				}
-				body[i] = V_UI1(&var); 
+				body[i] = V_UI1(&var);
 			}
 			body[length-1] = 0;
 					
@@ -1073,7 +1073,7 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 			return hr;
 
 		if (lUBoundVar >= lLBoundVar) {
-			BYTE *pIndex = NULL; 
+			BYTE *pIndex = NULL;
 			hr = ::SafeArrayAccessData(pArray, reinterpret_cast<void **> (&pIndex));
 			if (S_OK != hr)
 				return hr;
@@ -1083,7 +1083,7 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 			for (long i = 0; i <= lUBoundVar-lLBoundVar; ++i)	
 				body[i] = pIndex[i];
 			
-			body[length-1] = 0; 
+			body[length-1] = 0;
 			::SafeArrayUnaccessData(pArray);
 			m_xml = reinterpret_cast<char*> (body);
 			delete [] body;
@@ -1096,10 +1096,10 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 	m_hParseThread = reinterpret_cast<HANDLE> (_beginthreadex(NULL,
 												 0,
 											     CXMLDOMDocument::ParseThread,
-												 (void *) this, 
+												 (void *) this,
 												 0,
 												 &nthreadID));
-	if (NULL == m_hParseThread) 
+	if (NULL == m_hParseThread)
 		return S_OK;
 	
 	if (m_bAsync) {
@@ -1117,7 +1117,7 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 			case WAIT_OBJECT_0 + 1:
 			{
 				MSG msg;
-				while(::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) { 
+				while(::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
 					if (WM_CLOSE == msg.message || WM_QUIT == msg.message) {
 						 bWait = false;
 						 m_bAbort = true;
@@ -1125,7 +1125,7 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 					}
 					else {
 						PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
-						TranslateMessage(&msg);  
+						TranslateMessage(&msg);
 						DispatchMessage(&msg);
 					}
 				}
@@ -1172,7 +1172,7 @@ HRESULT CXMLDOMDocument::GetBaseURL(_bstr_t &baseURL)
 	if (S_OK != hr)
 		return hr;
 
-	TCHAR url[MAX_PATH] = _T(""); 
+	TCHAR url[MAX_PATH] = _T("");
 	lstrcat(url,_bstr_t(b));
 
 	// look for last slash and remove the filename after it
@@ -1257,11 +1257,11 @@ STDMETHODIMP CXMLDOMDocument::loadXML(BSTR bstrXML, VARIANT_BOOL  *isSuccessful)
 
 	*isSuccessful = VARIANT_FALSE;
 
-	// do not start another thread if there is another active  
+	// do not start another thread if there is another active
 	if (NULL != m_hParseThread) {
 		DWORD exitCode = 0;
 		BOOL rc = ::GetExitCodeThread(m_hParseThread, &exitCode);
-		if (!rc || STILL_ACTIVE == exitCode) 
+		if (!rc || STILL_ACTIVE == exitCode)
 			return S_OK;
 		
 		::CloseHandle(m_hParseThread);
@@ -1283,10 +1283,10 @@ STDMETHODIMP CXMLDOMDocument::loadXML(BSTR bstrXML, VARIANT_BOOL  *isSuccessful)
 	m_hParseThread = reinterpret_cast<HANDLE> (_beginthreadex(NULL,
 												 0,
 											     CXMLDOMDocument::ParseThread,
-												 (void *) this, 
+												 (void *) this,
 												 0,
 												 &nthreadID));
-	if (NULL == m_hParseThread) 
+	if (NULL == m_hParseThread)
 		return S_OK;
 	
 	if (m_bAsync) {
@@ -1304,7 +1304,7 @@ STDMETHODIMP CXMLDOMDocument::loadXML(BSTR bstrXML, VARIANT_BOOL  *isSuccessful)
 			case WAIT_OBJECT_0 + 1:
 			{
 				MSG msg;
-				while(::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) { 
+				while(::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
 					if (WM_CLOSE == msg.message || WM_QUIT == msg.message) {
 						 bWait = false;
 						 m_bAbort = true;
@@ -1312,7 +1312,7 @@ STDMETHODIMP CXMLDOMDocument::loadXML(BSTR bstrXML, VARIANT_BOOL  *isSuccessful)
 					}
 					else {
 						PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
-						TranslateMessage(&msg);  
+						TranslateMessage(&msg);
 						DispatchMessage(&msg);
 					}
 				}
@@ -1351,7 +1351,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 	if (!pThis->m_bAbort && pThis->m_FileName.length() > 0) {
 		CBindStatCallbackObj *pCallbackObj = NULL;
 		HRESULT hr = CBindStatCallbackObj::CreateInstance(&pCallbackObj);
-		if (S_OK != hr) 
+		if (S_OK != hr)
 			pCallbackObj = NULL;
 
 		if (pCallbackObj != NULL) {
@@ -1360,10 +1360,10 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 		}
 		TCHAR name[MAX_PATH] = _T("");
 		if (pThis->m_bAsync)
-			pThis->PostMessage(MSG_READY_STATE_CHANGE,1); 
+			pThis->PostMessage(MSG_READY_STATE_CHANGE,1);
 		
 		hr = URLDownloadToCacheFile(NULL,pThis->m_FileName,name,URLOSTRM_GETNEWESTVERSION,0,pCallbackObj);
-		if (pCallbackObj != NULL) 
+		if (pCallbackObj != NULL)
 			pCallbackObj->Release();
 
 		if (E_ABORT == hr)
@@ -1381,7 +1381,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 		if (S_OK == hr) {
 			pThis->m_FileName = name;
 			if (pThis->m_bAsync)
-				pThis->PostMessage(MSG_READY_STATE_CHANGE,2); 
+				pThis->PostMessage(MSG_READY_STATE_CHANGE,2);
 		}
 	}
 
@@ -1425,7 +1425,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 				parser.parse(static_cast<LPCTSTR> (pThis->m_FileName));
 			else {
 				XMLByte *pXMLByte =  reinterpret_cast<XMLByte*> (static_cast<XMLCh*>(pThis->m_xml));
-				MemBufInputSource memBufIS(pXMLByte,pThis->m_xml.length()*sizeof(XMLCh),OLESTR("IBMXMLParser"),false); 
+				MemBufInputSource memBufIS(pXMLByte,pThis->m_xml.length()*sizeof(XMLCh),OLESTR("IBMXMLParser"),false);
 				memBufIS.setEncoding(OLESTR("UTF-16"));
 				if (!pThis->m_bParseError && !pThis->m_bAbort)
 					parser.parse(memBufIS);
@@ -1443,7 +1443,7 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 		pThis->m_TmpDocument = parser.getDocument();
 
 	if (!pThis->m_bParseError && !pThis->m_bAbort && pThis->m_bAsync)
-		pThis->PostMessage(MSG_READY_STATE_CHANGE,4); 
+		pThis->PostMessage(MSG_READY_STATE_CHANGE,4);
   	
 	return 0;
 }
@@ -1469,7 +1469,7 @@ STDMETHODIMP CXMLDOMDocument::save(VARIANT location)
 			GetXML(child,text);
 		}
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -1560,7 +1560,7 @@ STDMETHODIMP CXMLDOMDocument::put_onreadystatechange(VARIANT newVal)
 		m_pOnReadyStateChange = NULL;
 	}
 	m_pOnReadyStateChange = pDisp;
-	if (m_pOnReadyStateChange != NULL) 
+	if (m_pOnReadyStateChange != NULL)
 		m_pOnReadyStateChange->AddRef();
 
 	return S_OK;
@@ -1583,7 +1583,7 @@ STDMETHODIMP CXMLDOMDocument::put_ondataavailable(VARIANT newVal)
 		m_pOnDataAvailable = NULL;
 	}
 	m_pOnDataAvailable = pDisp;
-	if (m_pOnDataAvailable != NULL) 
+	if (m_pOnDataAvailable != NULL)
 		m_pOnDataAvailable->AddRef();
 	
 	return S_OK;
@@ -1606,7 +1606,7 @@ STDMETHODIMP CXMLDOMDocument::put_ontransformnode(VARIANT newVal)
 		m_pOnTransformNode = NULL;
 	}
 	m_pOnTransformNode = pDisp;
-	if (m_pOnTransformNode != NULL) 
+	if (m_pOnTransformNode != NULL)
 		m_pOnTransformNode->AddRef();
 
 	return S_OK;

@@ -3,7 +3,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -58,64 +58,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:21  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:25:40  tng
+ * Copyright update.
  *
- * Revision 1.9  2000/05/09 00:22:31  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.8  2000/04/27 02:52:42  lehors
- * global reorganization similar to what I've done in Java,
- * nodes now are much smaller.
- * The main changes are:
- * renamed NodeContainer to ParentNode,
- * introduced ChildNode and ChildAndParentNode,
- * all the boolean attributes have been changed to bit flags,
- * ownerDocument is no longer an attribute of NodeImpl, only Parent nodes have
- * it, leave nodes rely on their parent to get it, or get it from ownerNode when
- * they do not have a parent,
- * parent Nodes no longer have a direct pointer to the last child
- * instead the last child is stored as the previous sibling of
- * the first child.
- * I also added support for importing a DocumentType as it's done in Java,
- * and got the importNode mechanism back in sync with Java as well.
- *
- * Here are the most significant changes in size:
- * ElementImpl 52 -> 48
- * TextImpl    44 -> 32
- * AttrImpl    52 -> 36
- *
- * Revision 1.7  2000/03/02 19:53:54  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/10 23:35:10  andyh
- * Update DOM_DOMImplementation::CreateDocumentType and
- * DOM_DocumentType to match latest from W3C
- *
- * Revision 1.5  2000/02/06 07:47:28  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/19 21:39:19  andyh
- * DOM L2, fix problems with new style createDocument.
- *
- * Revision 1.3  2000/01/05 01:16:07  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:56  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:15  rahul
- * Swat for adding in Product name and CVS comment log variable.
+ * Revision 1.1.1.1  2001/04/03 00:14:21  andyh
+ * IDOM
  *
  */
 
@@ -123,7 +70,7 @@
 #include "IDOM_DOMImplementation.hpp"
 
 class IDDOMImplementation: public IDOM_DOMImplementation {
-private:    
+private:
     IDDOMImplementation();
     IDDOMImplementation(const IDDOMImplementation & other);
     IDDOMImplementation & operator = (const IDDOMImplementation & other);

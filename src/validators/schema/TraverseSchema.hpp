@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -185,7 +185,7 @@ private:
     // -----------------------------------------------------------------------
     void reportSchemaError(const XMLCh* const msgDomain, const int errorCode);
     void reportSchemaError(const XMLCh* const msgDomain,
-                           const int errorCode, 
+                           const int errorCode,
                            const XMLCh* const text1,
                            const XMLCh* const text2 = 0,
                            const XMLCh* const text3 = 0,
@@ -200,7 +200,7 @@ private:
     void retrieveNamespaceMapping();
 
     /**
-      * Extract all top-level attribute, attributeGroup, and group Decls and 
+      * Extract all top-level attribute, attributeGroup, and group Decls and
       * put them in the 3 hash tables in the SchemaGrammar.
       */
 	void extractTopLevel3Components(const DOM_Element& rootElem);
@@ -215,13 +215,13 @@ private:
       * Parameters:
       *   rootElem - top element for a given type declaration
       *   contentElem - content must be annotation? or some other simple content
-      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?) 
+      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?)
       *
       * Check for Annotation if it is present, traverse it. If a sibling is
       * found and it is not an annotation return it, otherwise return 0.
       * Used by traverseSimpleTypeDecl.
 	  */
-	DOM_Element checkContent(const DOM_Element& rootElem, 
+	DOM_Element checkContent(const DOM_Element& rootElem,
                              const DOM_Element& contentElem,
                              const bool isEmpty);
 
@@ -395,7 +395,7 @@ private:
       */
     bool isValidNCName(const XMLCh* const name);
 
-    ContentSpecNode* expandContentModel(ContentSpecNode* const specNode, 
+    ContentSpecNode* expandContentModel(ContentSpecNode* const specNode,
                                         const DOM_Element& elem);
 
     /**
@@ -563,7 +563,7 @@ TraverseSchema::isValidRefDeclaration(const DOM_Element& elem) {
              || elem.getAttribute(SchemaSymbols::fgATT_BLOCK).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_FINAL).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_TYPE).length() != 0
-             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0 
+             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_FIXED).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_SUBSTITUTIONGROUP).length() != 0);
 }
@@ -579,7 +579,7 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
         fBuffer.set(attValue.rawBuffer(), attValue.length());
         unsigned int elemId = fStringPool.addOrFind(fBuffer.getRawBuffer());
 
-        return fStringPool.getValueForId(elemId);  
+        return fStringPool.getValueForId(elemId);
     }
 
     return 0;
@@ -590,7 +590,7 @@ inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
     if (XMLString::compareString(baseURI,fTargetNSURIString) != 0
         && XMLString::compareString(baseURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0
         && XMLString::stringLen(baseURI) != 0) {
-        //REVISIT, !!!! a hack: for schema that has no 
+        //REVISIT, !!!! a hack: for schema that has no
         //target namespace, e.g. personal-schema.xml
         return true;
     }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/05/11 13:24:53  tng
+ * Copyright update.
+ *
  * Revision 1.8  2001/05/04 19:01:05  tng
  * DOMPrint fix.  Check error before continuing.
  *

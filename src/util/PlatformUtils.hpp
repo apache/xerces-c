@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -343,7 +343,7 @@ public :
       * @param basePath The string containing the base path
       * @param relativePath The string containing the relative path
       *
-      * @return Returns a string containing the 'woven' path. It should 
+      * @return Returns a string containing the 'woven' path. It should
       * be dynamically allocated and becomes the responsibility of the
       * caller to delete.
       */

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -265,7 +265,7 @@ public :
       * validation-constraint-fatal flag.
       *
       * @return true, if the parser is currently configured to
-      *         set validation constraint errors as fatal, false 
+      *         set validation constraint errors as fatal, false
       *         otherwise.
       *
       * @see #setValidationContraintFatal
@@ -411,7 +411,7 @@ public :
     /**
       * This method allows users to set the parser's behaviour when it
       * encounters a validtion constraint error. If set to true, and the
-      * the parser is set to exit when it encounter the first fatal error, 
+      * the parser is set to exit when it encounter the first fatal error,
       * the parser will exit at the first encounter. If false, then it will
       * report the error and continue processing.
       *

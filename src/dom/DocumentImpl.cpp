@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -115,7 +115,7 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     : ParentNode(this)
 {
     docType=null;
-    
+
 	setDocumentType(doctype);
 	
     docElement=null;
@@ -138,7 +138,7 @@ void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
 	if (doctype->getOwnerDocument() != null)
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
         DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-    
+
     doctype->setOwnerDocument(this);
     doctype->getEntities()->ownerNode->setOwnerDocument(this);
     doctype->getNotations()->ownerNode->setOwnerDocument(this);
@@ -151,7 +151,7 @@ void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
 
 				
 	appendChild(doctype);
-    
+
 }
 
 DocumentImpl::~DocumentImpl()
@@ -170,7 +170,7 @@ DocumentImpl::~DocumentImpl()
         delete ranges;
         ranges = 0;
     }
-    
+
     if (userData) {
         // make sure we won't access userData any further
         hasUserData(false);
@@ -680,7 +680,7 @@ AttrImpl *DocumentImpl::createAttributeNS(const DOMString &fNamespaceURI,
     if (!isXMLName(qualifiedName)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     }
-    return new AttrNSImpl(this, fNamespaceURI, qualifiedName); 
+    return new AttrNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
 
@@ -745,7 +745,7 @@ RangeImpls* DocumentImpl::getRanges()
     return ranges;
 }
 
-void DocumentImpl::removeRange(RangeImpl* range) 
+void DocumentImpl::removeRange(RangeImpl* range)
 {
     if (ranges != null) {
         unsigned int sz = ranges->size();
@@ -770,37 +770,37 @@ void DocumentImpl::removeRange(RangeImpl* range)
 bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
 {
       static int kidOK[14];
-      
+
       if (kidOK[DOM_Node::DOCUMENT_NODE] == 0)
       {
-          kidOK[DOM_Node::DOCUMENT_NODE] = 
+          kidOK[DOM_Node::DOCUMENT_NODE] =
               1 << DOM_Node::ELEMENT_NODE |
-              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE | 
-              1 << DOM_Node::COMMENT_NODE | 
+              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE |
+              1 << DOM_Node::COMMENT_NODE |
               1 << DOM_Node::DOCUMENT_TYPE_NODE |
               1 << DOM_Node::XML_DECL_NODE;
-          
-          kidOK[DOM_Node::DOCUMENT_FRAGMENT_NODE] = 
-              kidOK[DOM_Node::ENTITY_NODE] = 
-              kidOK[DOM_Node::ENTITY_REFERENCE_NODE] = 
-              kidOK[DOM_Node::ELEMENT_NODE] = 
+
+          kidOK[DOM_Node::DOCUMENT_FRAGMENT_NODE] =
+              kidOK[DOM_Node::ENTITY_NODE] =
+              kidOK[DOM_Node::ENTITY_REFERENCE_NODE] =
+              kidOK[DOM_Node::ELEMENT_NODE] =
               1 << DOM_Node::ELEMENT_NODE |
-              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE | 
+              1 << DOM_Node::PROCESSING_INSTRUCTION_NODE |
               1 << DOM_Node::COMMENT_NODE |
               1 << DOM_Node::TEXT_NODE |
               1 << DOM_Node::CDATA_SECTION_NODE |
               1 << DOM_Node::ENTITY_REFERENCE_NODE |
               1 << DOM_Node::XML_DECL_NODE;
 
-          kidOK[DOM_Node::ATTRIBUTE_NODE] = 
+          kidOK[DOM_Node::ATTRIBUTE_NODE] =
               1 << DOM_Node::TEXT_NODE |
               1 << DOM_Node::ENTITY_REFERENCE_NODE;
-          
-          kidOK[DOM_Node::PROCESSING_INSTRUCTION_NODE] = 
-              kidOK[DOM_Node::COMMENT_NODE] = 
-              kidOK[DOM_Node::TEXT_NODE] = 
-              kidOK[DOM_Node::CDATA_SECTION_NODE] = 
-              kidOK[DOM_Node::NOTATION_NODE] = 
+
+          kidOK[DOM_Node::PROCESSING_INSTRUCTION_NODE] =
+              kidOK[DOM_Node::COMMENT_NODE] =
+              kidOK[DOM_Node::TEXT_NODE] =
+              kidOK[DOM_Node::CDATA_SECTION_NODE] =
+              kidOK[DOM_Node::NOTATION_NODE] =
               0;
       };
       int p=parent->getNodeType();
@@ -838,7 +838,7 @@ void DocumentImpl::setUserData(void* val)
 		hasUserData(true);
 	else
 		hasUserData(false);
-};  
+};
 
 /**
  * Denotes that this node has changed.

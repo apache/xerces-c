@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,39 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:35  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:26:00  tng
+ * Copyright update.
  *
- * Revision 1.8  2000/08/08 01:00:36  aruna1
- * detach functionality removed from TreeWalker
- *
- * Revision 1.7  2000/03/28 23:22:17  aruna1
- * Modified return statements in functions  to avoid warnings on HP.
- *
- * Revision 1.6  2000/03/02 19:54:05  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/06 07:47:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/02/04 01:49:25  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  1999/11/30 21:16:26  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.2  1999/11/23 01:48:17  rahulj
- * Changed 0L to 0. CC under HPUX is happy now.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:20  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:33  rahul
- * Swat for adding in Product name and CVS comment log variable.
+ * Revision 1.1.1.1  2001/04/03 00:14:35  andyh
+ * IDOM
  *
  */
 
@@ -100,11 +72,11 @@
 
 /** constructor */
 TreeWalkerImpl::TreeWalkerImpl (
-                                DOM_Node root, 
-                                unsigned long whatToShow, 
-                                DOM_NodeFilter* nodeFilter, 
-                                bool expandEntityRef) 
-:   fCurrentNode(root), 
+                                DOM_Node root,
+                                unsigned long whatToShow,
+                                DOM_NodeFilter* nodeFilter,
+                                bool expandEntityRef)
+:   fCurrentNode(root),
     fRoot(root),
     fWhatToShow(whatToShow),
     fNodeFilter(nodeFilter),
@@ -114,7 +86,7 @@ TreeWalkerImpl::TreeWalkerImpl (
 }
 
 
-TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi) 
+TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi)
 : fCurrentNode(twi.fCurrentNode),
     fRoot(twi.fRoot),
     fWhatToShow(twi.fWhatToShow),

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -90,12 +90,12 @@ IDCDATASectionImpl::~IDCDATASectionImpl()
 IDOM_Node  *IDCDATASectionImpl::cloneNode(bool deep) const
 {
     return new (this->getOwnerDocument()) IDCDATASectionImpl(*this, deep);
-};  
+};
 
 
 const XMLCh * IDCDATASectionImpl::getNodeName() const {
     static const XMLCh gcdata_section[] = {chPound, chLatin_c, chLatin_d, chLatin_a, chLatin_t, chLatin_a,
-        chDash, chLatin_s, chLatin_e, chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, 0};  
+        chDash, chLatin_s, chLatin_e, chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, 0};
     return gcdata_section;
 };
 
@@ -125,8 +125,8 @@ IDOM_Text *IDCDATASectionImpl::splitText(unsigned int offset)
     unsigned int len = XMLString::stringLen(fCharacterData.fData);
     if (offset > len)
         throw IDOM_DOMException(IDOM_DOMException::INDEX_SIZE_ERR, 0);
-               
-    IDOM_Text *newText = 
+
+    IDOM_Text *newText =
                 getOwnerDocument()->createCDATASection(
                         this->substringData(offset, len - offset));
 
@@ -137,7 +137,7 @@ IDOM_Text *IDCDATASectionImpl::splitText(unsigned int offset)
     XMLCh *wData = (XMLCh *)(fCharacterData.fData);  // Cast off const.
     wData[offset] = 0;                               //  idom_revisit - could change a string that
                                                      //     application code has.  Do we want to do this?
-    
+
 
 #ifdef idom_revisit
     if (this->getOwnerDocument() != null) {
@@ -196,11 +196,11 @@ IDOM_Text *IDCDATASectionImpl::splitText(unsigned int offset)
 
 
      const XMLCh * IDCDATASectionImpl::getData() const                  {return fCharacterData.getData();};
-     unsigned int  IDCDATASectionImpl::getLength() const                {return fCharacterData.getLength();}; 
+     unsigned int  IDCDATASectionImpl::getLength() const                {return fCharacterData.getLength();};
      const XMLCh * IDCDATASectionImpl::substringData(unsigned int offset, unsigned int count) const
-                                                                {return fCharacterData.substringData(offset, count);}; 
-     void          IDCDATASectionImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);}; 
-     void          IDCDATASectionImpl::insertData(unsigned int offset, const  XMLCh *arg) 
+                                                                {return fCharacterData.substringData(offset, count);};
+     void          IDCDATASectionImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
+     void          IDCDATASectionImpl::insertData(unsigned int offset, const  XMLCh *arg)
                                                                 {fCharacterData.insertData(offset, arg);};
      void          IDCDATASectionImpl::deleteData(unsigned int offset, unsigned int count)
                                                                 {fCharacterData.deleteData(this, offset, count);};

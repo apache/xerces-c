@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -249,10 +249,10 @@ public:
      * <code>Attr</code> instance can then be attached to an Element
      * using the <code>IDOMElement::setAttribute()</code> method.
      * @param name The name of the attribute.
-     * @return A new <CODE>IDOM_Attr</CODE> 
-     *       object with the <CODE>nodeName</CODE> attribute set to 
-     *       <CODE>name</CODE>, and <CODE>localName</CODE>, <CODE>prefix</CODE>, 
-     *       and <CODE>namespaceURI</CODE> set to 
+     * @return A new <CODE>IDOM_Attr</CODE>
+     *       object with the <CODE>nodeName</CODE> attribute set to
+     *       <CODE>name</CODE>, and <CODE>localName</CODE>, <CODE>prefix</CODE>,
+     *       and <CODE>namespaceURI</CODE> set to
      *       <CODE>null</CODE>.
      * @exception IDOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
@@ -281,7 +281,7 @@ public:
      * document subtree governed by a particular node, the results of a query, or any other set of nodes.
      * The set of nodes to be iterated is determined by the implementation of the NodeIterator. IDOM Level 2
      * specifies a single NodeIterator implementation for document-order traversal of a document subtree.
-     * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>. 
+     * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>.
      *
      * To produce a view of the document that has entity references expanded and does not
      * expose the entity reference node itself, use the <code>whatToShow</code> flags to hide the entity
@@ -299,9 +299,9 @@ public:
      *                   visible to the iterator. If false, they will be skipped over.
      */
 
-    virtual IDOM_NodeIterator *createNodeIterator(IDOM_Node         *root, 
-                                                   unsigned long    whatToShow, 
-                                                   IDOM_NodeFilter* filter, 
+    virtual IDOM_NodeIterator *createNodeIterator(IDOM_Node         *root,
+                                                   unsigned long    whatToShow,
+                                                   IDOM_NodeFilter* filter,
                                                    bool             entityReferenceExpansion) = 0;
      /**
      * Creates a TreeWalker object.   (IDOM2)
@@ -334,9 +334,9 @@ public:
      *                   visible to the tree-walker. If false, they will be skipped over.
      */
 
-    virtual IDOM_TreeWalker  *createTreeWalker(IDOM_Node        *root, 
-                                               unsigned long     whatToShow, 
-                                               IDOM_NodeFilter  *filter, 
+    virtual IDOM_TreeWalker  *createTreeWalker(IDOM_Node        *root,
+                                               unsigned long     whatToShow,
+                                               IDOM_NodeFilter  *filter,
                                                bool              entityReferenceExpansion) = 0;
 
     /**
@@ -359,16 +359,16 @@ public:
                                         const XMLCh * standalone) = 0;
 
     /**
-	  * To create the range  consisting of boundary-points and offset of the 
+	  * To create the range  consisting of boundary-points and offset of the
       * selected contents
       *
-      * @return The initial state of the Range such that both the boundary-points 
-      * are positioned at the beginning of the corresponding IDOM_DOcument, before 
-      * any content. The range returned can only be used to select content 
-      * associated with this document, or with documentFragments and Attrs for 
+      * @return The initial state of the Range such that both the boundary-points
+      * are positioned at the beginning of the corresponding IDOM_DOcument, before
+      * any content. The range returned can only be used to select content
+      * associated with this document, or with documentFragments and Attrs for
       * which this document is the ownerdocument
 	  */
-    virtual IDOM_Range    *createRange() = 0; 
+    virtual IDOM_Range    *createRange() = 0;
 
     //@}
     /** @name Getter functions */
@@ -418,31 +418,31 @@ public:
     //@{
 
     /**
-     * Imports a node from another document to this document. 
-     * The returned node has no parent (<CODE>parentNode</CODE> is 
-     * <CODE>null</CODE>). The source node is not altered or removed from the 
-     * original document; this method creates a new copy of the source 
-     * node.<BR>For all nodes, importing a node creates a node object owned by 
-     * the importing document, with attribute values identical to the source 
-     * node's <CODE>nodeName</CODE> and <CODE>nodeType</CODE>, plus the 
+     * Imports a node from another document to this document.
+     * The returned node has no parent (<CODE>parentNode</CODE> is
+     * <CODE>null</CODE>). The source node is not altered or removed from the
+     * original document; this method creates a new copy of the source
+     * node.<BR>For all nodes, importing a node creates a node object owned by
+     * the importing document, with attribute values identical to the source
+     * node's <CODE>nodeName</CODE> and <CODE>nodeType</CODE>, plus the
      * attributes related to namespaces (prefix and namespaces URI).
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param importedNode The node to import.
-     * @param deep If <CODE>true</CODE>, recursively import the subtree under the 
-     *      specified node; if <CODE>false</CODE>, import only the node itself, 
-     *      as explained above. This does not apply to <CODE>IDOM_Attr</CODE>, 
+     * @param deep If <CODE>true</CODE>, recursively import the subtree under the
+     *      specified node; if <CODE>false</CODE>, import only the node itself,
+     *      as explained above. This does not apply to <CODE>IDOM_Attr</CODE>,
      *      <CODE>IDOM_EntityReference</CODE>, and <CODE>IDOM_Notation</CODE> nodes.
      * @return The imported node that belongs to this <CODE>IDOM_Document</CODE>.
      * @exception IDOMException
-     *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is 
+     *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is
      *                      not supported.
      */
     virtual IDOM_Node        *importNode(IDOM_Node *importedNode, bool deep) = 0;
 
     /**
-     * Creates an element of the given qualified name and 
+     * Creates an element of the given qualified name and
      * namespace URI.
      *
      * <p><b>"Experimental - subject to change"</b></p>
@@ -456,11 +456,11 @@ public:
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
-     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
-     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the 
-     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string, 
-     *      or if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and 
-     *      the <CODE>namespaceURI</CODE> is different from 
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is
+     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the
+     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string,
+     *      or if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and
+     *      the <CODE>namespaceURI</CODE> is different from
      *      "http://www.w3.org/XML/1998/namespace".
      */
     virtual IDOM_Element         *createElementNS(const XMLCh *namespaceURI,
@@ -481,17 +481,17 @@ public:
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
-     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
-     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the 
-     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string, 
-     *      if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and the 
-     *      <CODE>namespaceURI</CODE> is different from 
-     *      "http://www.w3.org/XML/1998/namespace", if the 
-     *      <CODE>qualifiedName</CODE> has a prefix that is "xmlns" and the 
-     *      <CODE>namespaceURI</CODE> is different from 
-     *      "http://www.w3.org/2000/xmlns/", or if the 
-     *      <CODE>qualifiedName</CODE> is "xmlns" and the 
-     *      <CODE>namespaceURI</CODE> is different from 
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is
+     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the
+     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string,
+     *      if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and the
+     *      <CODE>namespaceURI</CODE> is different from
+     *      "http://www.w3.org/XML/1998/namespace", if the
+     *      <CODE>qualifiedName</CODE> has a prefix that is "xmlns" and the
+     *      <CODE>namespaceURI</CODE> is different from
+     *      "http://www.w3.org/2000/xmlns/", or if the
+     *      <CODE>qualifiedName</CODE> is "xmlns" and the
+     *      <CODE>namespaceURI</CODE> is different from
      *      "http://www.w3.org/2000/xmlns/".
      */
     virtual IDOM_Attr        *createAttributeNS(const XMLCh *namespaceURI,
@@ -520,10 +520,10 @@ public:
      * Returns the <code>IDOM_Element</code> whose ID is given by <code>elementId</code>.
      * If no such element exists, returns <code>null</code>.
      * Behavior is not defined if more than one element has this <code>ID</code>.
-     * <P><B>Note:</B> The IDOM implementation must have information that says 
-     * which attributes are of type ID. Attributes with the name "ID" are not of 
-     * type ID unless so defined. Implementations that do not know whether 
-     * attributes are of type ID or not are expected to return 
+     * <P><B>Note:</B> The IDOM implementation must have information that says
+     * which attributes are of type ID. Attributes with the name "ID" are not of
+     * type ID unless so defined. Implementations that do not know whether
+     * attributes are of type ID or not are expected to return
      * <CODE>null</CODE>.</P>
      *
      * <p><b>"Experimental - subject to change"</b></p>

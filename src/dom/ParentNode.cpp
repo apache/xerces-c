@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -78,7 +78,7 @@ ParentNode::ParentNode(DocumentImpl *ownerDoc)
     fCachedLength = -1;
     fCachedChild = null;
     fCachedChildIndex = -1;
-};  
+};
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
@@ -96,10 +96,10 @@ ParentNode::ParentNode(const ParentNode &other)
 };
 
 
-void ParentNode::cloneChildren(const NodeImpl &other) {    
-  //    for (NodeImpl *mykid = other.getFirstChild(); 
-    for (NodeImpl *mykid = ((NodeImpl&)other).getFirstChild(); 
-         mykid != null; 
+void ParentNode::cloneChildren(const NodeImpl &other) {
+  //    for (NodeImpl *mykid = other.getFirstChild();
+    for (NodeImpl *mykid = ((NodeImpl&)other).getFirstChild();
+         mykid != null;
          mykid = mykid->getNextSibling()) {
         this->appendChild(mykid->cloneNode(true));
     }
@@ -130,19 +130,19 @@ NodeListImpl *ParentNode::getChildNodes() {
 
 NodeImpl * ParentNode::getFirstChild() {
     return firstChild;
-}; 
+};
 
 
 NodeImpl * ParentNode::getLastChild()
 {
     return lastChild();
-}; 
+};
 
 ChildNode * ParentNode::lastChild()
 {
     // last child is stored as the previous sibling of first child
     return firstChild != null ? firstChild->previousSibling : null;
-}; 
+};
 
 void ParentNode::lastChild(ChildNode *node) {
         // store lastChild as previous sibling of first child
@@ -173,14 +173,14 @@ unsigned int ParentNode::getLength() {
 
 
 bool ParentNode::hasChildNodes()
-{ 
+{
     return firstChild!=null;
-}; 
+};
 
 
 
 NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
- 
+
     bool errorChecking = ownerDocument->getErrorChecking();
 
     if (newChild->isDocumentFragmentImpl()) {
@@ -211,7 +211,7 @@ NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
                                        null);
                 }
             }
-        }                       
+        }
 
         while (newChild->hasChildNodes()) {    // Move
             insertBefore(newChild->getFirstChild(),refChild);
@@ -256,7 +256,7 @@ NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         }
     }
 
-    // Convert to internal type, to avoid repeated casting  
+    // Convert to internal type, to avoid repeated casting
     ChildNode * newInternal = (ChildNode *)newChild;
 
     NodeImpl *oldparent = newInternal->getParentNode();
@@ -340,8 +340,8 @@ NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 
     return newInternal;
 };
-  
-  
+
+
 NodeImpl *ParentNode::item(unsigned int index) {
     // short way
     if (fCachedChildIndex != -1 && fCachedChild != null) {
@@ -362,16 +362,16 @@ NodeImpl *ParentNode::item(unsigned int index) {
 
     // long way
     fCachedChild = firstChild;
-    for (fCachedChildIndex = 0; 
-         fCachedChildIndex < index && fCachedChild != null; 
+    for (fCachedChildIndex = 0;
+         fCachedChildIndex < index && fCachedChild != null;
          fCachedChildIndex++) {
         fCachedChild = fCachedChild->nextSibling;
     }
     return fCachedChild;
 };
-  
-  
-NodeImpl *ParentNode::removeChild(NodeImpl *oldChild) 
+
+
+NodeImpl *ParentNode::removeChild(NodeImpl *oldChild)
 {
     if (ownerDocument->getErrorChecking()) {
         if (isReadOnly()) {
@@ -391,15 +391,15 @@ NodeImpl *ParentNode::removeChild(NodeImpl *oldChild)
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    if (ranges->elementAt(i) != null) 
+                    if (ranges->elementAt(i) != null)
                         ranges->elementAt(i)->updateRangeForDeletedNode(oldChild);
                 }
             }
         }
     }
-    
+
     ChildNode * oldInternal = (ChildNode *) oldChild;
-    
+
     // update cached length if we have any
     if (fCachedLength != -1) {
         fCachedLength--;
@@ -460,35 +460,35 @@ NodeImpl *ParentNode::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
     // changed() already done.
     return oldChild;
 };
-  
+
 
 void ParentNode::setReadOnly(bool readOnl, bool deep)
 {
     NodeImpl::setReadOnly(readOnl, deep);
-      
+
     if (deep)
         // Recursively set kids
-        for (ChildNode *mykid = firstChild; 
-             mykid != null; 
+        for (ChildNode *mykid = firstChild;
+             mykid != null;
              mykid = mykid->nextSibling)
             if(! (mykid->isEntityReference()))
                 mykid->setReadOnly(readOnl,true);
 };
-  
-  
+
+
 //Introduced in DOM Level 2
-  
+
 void ParentNode::normalize()
 {
     ChildNode *kid, *next;
     for (kid = firstChild; kid != null; kid = next)
     {
         next = kid->nextSibling;
-        
+
         // If kid and next are both Text nodes (but _not_ CDATASection,
         // which is a subclass of Text), they can be merged.
-        if (next != null && 
-            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  && 
+        if (next != null &&
+            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  &&
             next->isTextImpl()  && !(next->isCDATASectionImpl()) )
         {
             ((TextImpl *) kid)->appendData(((TextImpl *) next)->getData());
@@ -497,13 +497,13 @@ void ParentNode::normalize()
                 deleteIf(next);
             next = kid; // Don't advance; there might be another.
         }
-        
-        // Otherwise it might be an Element, which is handled recursively  
+
+        // Otherwise it might be an Element, which is handled recursively
         else
             if (kid->isElementImpl())
                 kid->normalize();
     };
-    
+
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -92,25 +92,25 @@ IDNodeImpl::IDNodeImpl(IDOM_Node *ownerNode)
     this->flags = 0;
     // as long as we do not have any owner, fOwnerNode is our ownerDocument
     fOwnerNode  = ownerNode;
-};  
+};
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
 IDNodeImpl::IDNodeImpl(const IDNodeImpl &other) {
     this->flags = other.flags;
     this->isReadOnly(false);
-    
+
     // Need to break the association w/ original parent
     this->fOwnerNode = other.getOwnerDocument();
     this->isOwned(false);
 };
 
-    
+
 
 IDNodeImpl::~IDNodeImpl() {
     //
     //   Note:  With IDOM memory mgmt, destructors are not called for nodes.
-    
+
     //	if (hasUserData())
     //	{
     //		setUserData(0);
@@ -130,12 +130,12 @@ int IDParentNode::changes() const
 {
     IDDocumentImpl *doc = (IDDocumentImpl *)(castToNode(this)->getOwnerDocument());
     return doc->changes();
-};  
+};
 
 
 
 
-IDOM_Node * IDNodeImpl::appendChild(IDOM_Node *newChild)      
+IDOM_Node * IDNodeImpl::appendChild(IDOM_Node *newChild)
 {
     // Only node types that don't allow children will use this default function.
     //   Others will go to IDParentNode::appendChild.
@@ -159,18 +159,18 @@ IDOM_NodeList *IDNodeImpl::getChildNodes() const {
 
 IDOM_Node * IDNodeImpl::getFirstChild() const {
     return 0;                   // overridden in ParentNode
-}; 
+};
 
 
-IDOM_Node * IDNodeImpl::getLastChild() const 
+IDOM_Node * IDNodeImpl::getLastChild() const
 {
     return 0;                   // overridden in ParentNode
-}; 
+};
 
 
 IDOM_Node * IDNodeImpl::getNextSibling() const {
     return 0;                // overridden in ChildNode
-}; 
+};
 
 
 const XMLCh * IDNodeImpl::getNodeValue() const {
@@ -182,7 +182,7 @@ const XMLCh * IDNodeImpl::getNodeValue() const {
 //  Unlike the external getOwnerDocument, this one returns the owner document
 //     for document nodes as well as all of the other node types.
 //
-IDOM_Document *IDNodeImpl::getOwnerDocument() const 
+IDOM_Document *IDNodeImpl::getOwnerDocument() const
 {
     if (!this->isLeafNode())
     {
@@ -197,7 +197,7 @@ IDOM_Document *IDNodeImpl::getOwnerDocument() const
         assert (fOwnerNode->getNodeType() == IDOM_Node::DOCUMENT_NODE);
         return  (IDOM_Document *)fOwnerNode;
     }
-};  
+};
 
 
 void IDNodeImpl::setOwnerDocument(IDOM_Document *doc) {
@@ -210,16 +210,16 @@ void IDNodeImpl::setOwnerDocument(IDOM_Document *doc) {
     }
 }
 
-IDOM_Node * IDNodeImpl::getParentNode() const 
+IDOM_Node * IDNodeImpl::getParentNode() const
 {
     return 0;                // overridden in ChildNode
-};  
+};
 
 
 IDOM_Node*  IDNodeImpl::getPreviousSibling() const
 {
     return 0;                // overridden in ChildNode
-}; 
+};
 
 
 void *IDNodeImpl::getUserData() const
@@ -234,9 +234,9 @@ void *IDNodeImpl::getUserData() const
 };
 
 bool IDNodeImpl::hasChildNodes() const
-{ 
+{
     return false;
-}; 
+};
 
 
 
@@ -244,15 +244,15 @@ IDOM_Node *IDNodeImpl::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) {
     throw IDOM_DOMException(IDOM_DOMException::HIERARCHY_REQUEST_ERR, 0);
     return 0;
 };
-  
 
-IDOM_Node *IDNodeImpl::removeChild(IDOM_Node *oldChild) 
+
+IDOM_Node *IDNodeImpl::removeChild(IDOM_Node *oldChild)
 {
     throw IDOM_DOMException(IDOM_DOMException::NOT_FOUND_ERR, 0);
     return 0;
 };
-  
-  
+
+
 IDOM_Node *IDNodeImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
 {
     throw IDOM_DOMException(IDOM_DOMException::HIERARCHY_REQUEST_ERR,0);
@@ -273,10 +273,10 @@ void IDNodeImpl::setNodeValue(const XMLCh *val)
 void IDNodeImpl::setReadOnly(bool readOnl, bool deep)
 {
     this->isReadOnly(readOnl);
-    
+
     if (deep) {
-        for (IDOM_Node *mykid = castToNode(this)->getFirstChild(); 
-            mykid != 0; 
+        for (IDOM_Node *mykid = castToNode(this)->getFirstChild();
+            mykid != 0;
             mykid = mykid->getNextSibling())
             if(mykid->getNodeType() != IDOM_Node::ENTITY_REFERENCE_NODE)
                 castToNodeImpl(mykid)->setReadOnly(readOnl,true);
@@ -293,12 +293,12 @@ void IDNodeImpl::setUserData(void * val)
 		hasUserData(true);
 	else
 		hasUserData(false);
-};  
+};
 
 
 
 //Introduced in DOM Level 2
-  
+
 void IDNodeImpl::normalize()
 {
     // does nothing by default, overridden by subclasses
@@ -347,10 +347,10 @@ static const XMLCh s_xmlns[] = {chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLa
 static const XMLCh s_xmlnsURI[] = // "http://www.w3.org/2000/xmlns/"
     {  chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
        chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
-       chLatin_o, chLatin_r, chLatin_g, chForwardSlash, 
+       chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
        chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash,
        chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chForwardSlash, chNull};
-    
+
 
 const XMLCh *IDNodeImpl::getXmlString()      {return s_xml;};
 const XMLCh *IDNodeImpl::getXmlURIString()   {return s_xmlURI;};
@@ -382,10 +382,10 @@ const XMLCh* IDNodeImpl::mapPrefix(const XMLCh *prefix,
     static const XMLCh s_xmlnsURI[] = // "http://www.w3.org/2000/xmlns/"
     {  chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
        chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
-       chLatin_o, chLatin_r, chLatin_g, chForwardSlash, 
+       chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
        chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash,
        chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chForwardSlash, chNull};
-    
+
 
     if (prefix == 0)
         return namespaceURI;

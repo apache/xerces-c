@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/11 13:27:28  tng
+ * Copyright update.
+ *
  * Revision 1.1  2001/05/10 20:51:29  tng
  * Schema: Add DecimalDatatypeValidator and XMLBigDecimal, XMLBigInteger.  By Pei Yong Zhang.
  *
@@ -75,7 +78,7 @@
 // ---------------------------------------------------------------------------
 DecimalDatatypeValidator::DecimalDatatypeValidator(
                           DatatypeValidator*            const baseValidator
-                        , RefHashTableOf<KVStringPair>* const facets     
+                        , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet)
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Decimal)
 , fTotalDigits(0)
@@ -86,7 +89,7 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
 , fMinExclusive(0)
 , fEnumeration(0)
 {
-    try 
+    try
     {
         init(baseValidator, facets);
     }
@@ -96,21 +99,21 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
         cleanUp();
         throw;
     }
-                
+
 }
 
 void DecimalDatatypeValidator::init(DatatypeValidator*            const baseValidator
                                   , RefHashTableOf<KVStringPair>* const facets)
 {
     // Set Facets if any defined
-    if (facets) 
-    { 
+    if (facets)
+    {
         XMLCh* key;
         XMLCh* value;
         RefVectorOf<XMLCh>*             fStrEnumeration = 0; // save the literal value
         Janitor<RefVectorOf<XMLCh> >    janStrEnum(fStrEnumeration);
 
-        RefHashTableOfEnumerator<KVStringPair> e(facets);  
+        RefHashTableOfEnumerator<KVStringPair> e(facets);
 
         while (e.hasMoreElements())
         {
@@ -118,13 +121,13 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
             key = pair.getKey();
             value = pair.getValue();
 
-            if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0) 
-            {        
+            if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)
+            {
                 setPattern(value);
                 if (getPattern())
                     setFacetsDefined(DatatypeValidator::FACET_PATTERN);
                 // do not construct regex until needed
-            } 
+            }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_ENUMERATION)==0)
             {
                 if (fStrEnumeration)
@@ -132,7 +135,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
 
                 fStrEnumeration = XMLString::tokenizeString(value);
                 setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-            } 
+            }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXINCLUSIVE)==0)
             {
                 try
@@ -145,10 +148,10 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Inv_MaxInc);
                 }
                 setFacetsDefined(DatatypeValidator::FACET_MAXINCLUSIVE);
-            } 
+            }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXEXCLUSIVE)==0)
             {
-                try 
+                try
                 {
                      setMaxExclusive(new XMLBigDecimal(value));
                 }
@@ -158,10 +161,10 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Inv_MaxExc);
                 }
                 setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);
-            } 
+            }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MININCLUSIVE)==0)
             {
-                try 
+                try
                 {
                     setMinInclusive(new XMLBigDecimal(value));
                 }
@@ -171,7 +174,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Inv_MinInc);
                 }
                 setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);
-            } 
+            }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MINEXCLUSIVE)==0)
             {
                 try
@@ -184,9 +187,9 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Inv_MinExc);
                 }
                 setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);
-            } 
+            }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_PRECISION)==0)
-            {            
+            {
                 try
                 {
                     setTotalDigits(XMLString::parseInt(value));
@@ -206,7 +209,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 setFacetsDefined(DatatypeValidator::FACET_PRECISSION);
             }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_FRACTIONDIGITS)==0)
-            {               
+            {
                 try
                 {
                     setFractionDigits(XMLString::parseInt(value));
@@ -223,9 +226,9 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Neg_Fraction);
                     //InvalidDatatypeFacetException("fractionDigits value '"+fFractionDigits+"' must be a positiveInteger.");
 
-                setFacetsDefined(DatatypeValidator::FACET_SCALE);      
+                setFacetsDefined(DatatypeValidator::FACET_SCALE);
             }
-            else 
+            else
             {
                  ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
             }
@@ -235,27 +238,27 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
            Schema constraint: Part I -- self checking
         ***/
 
-        if ( getFacetsDefined() != 0 ) 
+        if ( getFacetsDefined() != 0 )
         {
             // non co-existence checking
             // check 4.3.8.c1 error: maxInclusive + maxExclusive
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) && 
-                 ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) ) 
+            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+                 ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) )
             {
                  ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                  // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_max_inc_exc);
-                 // "It is an error for both maxInclusive and maxExclusive to be specified 
+                 // "It is an error for both maxInclusive and maxExclusive to be specified
                  // for the same datatype." );
             }
 
             // non co-existence checking
             // check 4.3.9.c1 error: minInclusive + minExclusive
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) && 
-                 ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) ) 
+            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
+                 ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
             {
                  ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                  // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_min_inc_exc);
-                 // "It is an error for both minInclusive and minExclusive to be specified 
+                 // "It is an error for both minInclusive and minExclusive to be specified
                  // for the same datatype." );
             }
 
@@ -263,79 +266,79 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
             // minExclusive < minInclusive <= maxInclusive < maxExclusive
             //
             // check 4.3.7.c1 must: minInclusive <= maxInclusive
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) && 
-                 ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) ) 
+            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
+                 ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
             {
                 if ( XMLBigDecimal::compareValues(getMinInclusive(), getMaxInclusive()) == 1 )
                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_inc_min_max);
-                    // "minInclusive value ='" + getMinInclusive(false) + "'must be <= 
+                    // "minInclusive value ='" + getMinInclusive(false) + "'must be <=
                     // maxInclusive value ='" + getMaxInclusive(false) + "'. " );
             }
-            
+
             // check 4.3.8.c2 must: minExclusive <= maxExclusive ??? minExclusive < maxExclusive
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) && 
-                 ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) ) 
+            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+                 ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) )
             {
                 if ( XMLBigDecimal::compareValues(getMinExclusive(), getMaxExclusive()) == 1 )
                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_exc_min_max);
-                    // "minExclusive value ='" + getMinExclusive(false) + "'must be <= 
+                    // "minExclusive value ='" + getMinExclusive(false) + "'must be <=
                     // maxExclusive value ='" + getMaxExclusive(false) + "'. " );
             }
-            
+
             // check 4.3.9.c2 must: minExclusive < maxInclusive
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) && 
-                 ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) ) 
+            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
+                 ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) )
             {
                 if ( XMLBigDecimal::compareValues(getMinExclusive(), getMaxInclusive()) != -1 )
                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxinc_minexc);
-                    // "minExclusive value ='" + getMinExclusive(false) + "'must be > 
+                    // "minExclusive value ='" + getMinExclusive(false) + "'must be >
                     // maxInclusive value ='" + getMaxInclusive(false) + "'. " );
             }
-            
+
             // check 4.3.10.c1 must: minInclusive < maxExclusive
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) && 
-                 ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) ) 
+            if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+                 ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
             {
                 if ( XMLBigDecimal::compareValues(getMinInclusive(), getMaxExclusive()) != -1 )
                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                     // ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_maxexc);
-                   // "minInclusive value ='" + getMinInclusive(false) + "'must be < 
+                   // "minInclusive value ='" + getMinInclusive(false) + "'must be <
                    // maxExclusive value ='" + getMaxExclusive(false) + "'. " );
              }
-            
+
             // check 4.3.12.c1 must: fractionDigits <= totalDigits
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) && 
-                 ((getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) ) 
+            if ( ((getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&
+                 ((getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) )
             {
                 if ( fFractionDigits > fTotalDigits )
                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                     //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_scale_precision);
-                    // "fractionDigits value ='" + this.fFractionDigits + "'must be <= 
+                    // "fractionDigits value ='" + this.fFractionDigits + "'must be <=
                     // totalDigits value ='" + this.fTotalDigits + "'. " );
             }
 
         } // if getFacetsDefined
 
         /***
-           Schema constraint: Part II -- self vs base 
+           Schema constraint: Part II -- self vs base
         ***/
 
-        if ( baseValidator != 0 ) 
+        if ( baseValidator != 0 )
         {
             DecimalDatatypeValidator* numBase = (DecimalDatatypeValidator*)baseValidator;
 
             //                                     this
             //                 minExclusive                          maxExclusive
-            //                    minInclusive                  maxInclusive  
+            //                    minInclusive                  maxInclusive
             //
             //                                     base
             //  minExclusive                                                          maxExclusive
-            //      minInclusive                                                   maxExclusive            
+            //      minInclusive                                                   maxExclusive
             //
-            if ( getFacetsDefined() != 0 ) 
+            if ( getFacetsDefined() != 0 )
             {
                 // check 4.3.7.c2 error:
                 // maxInclusive > base.maxInclusive
@@ -343,34 +346,34 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 // maxInclusive < base.minInclusive
                 // maxInclusive <= base.minExclusive
 
-                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) ) 
+                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) )
                 {
                     if ( ((numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxInclusive(), numBase->getMaxInclusive()) == 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxinc_base_maxinc);
-                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be <= 
+                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be <=
                         // base.maxInclusive value ='" + getMaxInclusive(true) + "'." );
-                
+
                     if ( ((numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxInclusive(), numBase->getMaxExclusive()) != -1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxinc_base_maxexc);
-                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be < 
+                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be <
                         // base.maxExclusive value ='" + getMaxExclusive(true) + "'." );
 
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxInclusive(), numBase->getMinInclusive()) == -1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxinc_base_mininc);
-                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be >= 
+                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be >=
                         // base.minInclusive value ='" + getMinInclusive(true) + "'." );
-                    
+
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxInclusive(), numBase->getMinExclusive() ) != 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxinc_base_minexc);
-                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be > 
+                        // "maxInclusive value ='" + getMaxInclusive(false) + "' must be >
                         // base.minExclusive value ='" + getMinExclusive(true) + "'." );
                 }
 
@@ -379,34 +382,34 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 // maxExclusive > base.maxInclusive
                 // maxExclusive <= base.minInclusive
                 // maxExclusive <= base.minExclusive
-                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) ) 
+                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) )
                 {
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxExclusive(), numBase->getMaxExclusive()) == 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxexc_base_maxexc);
-                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be 
+                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be
                         // <= base.maxExclusive value ='" + getMaxExclusive(true) + "'." );
 
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxExclusive(), numBase->getMaxInclusive()) == 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxexc_base_maxinc);
-                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be 
+                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be
                         // <= base.maxInclusive value ='" + getMaxInclusive(true) + "'." );
 
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxExclusive(), numBase->getMinExclusive() ) != 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxexc_base_mininc);
-                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be 
+                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be
                         // > base.minExclusive value ='" + getMinExclusive(true) + "'." );
 
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMaxExclusive(), numBase->getMinInclusive()) != 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_maxexc_base_minexc);
-                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be 
+                        // "maxExclusive value ='" + getMaxExclusive(false) + "' must be
                         // > base.minInclusive value ='" + getMinInclusive(true) + "'." );
                 }
 
@@ -415,36 +418,36 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 // minExclusive > base.maxInclusive ??? minExclusive >= base.maxInclusive
                 // minExclusive < base.minInclusive
                 // minExclusive >= base.maxExclusive
-                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) ) 
+                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) )
                 {
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinExclusive(), numBase->getMinExclusive() ) == -1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_minexc);
-                        // "minExclusive value ='" + getMinExclusive(false) + "' must be 
+                        // "minExclusive value ='" + getMinExclusive(false) + "' must be
                         // >= base.minExclusive value ='" + getMinExclusive(true) + "'." );
 
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinExclusive(), numBase->getMaxInclusive()) == 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_maxinc);
-                        // "minExclusive value ='" + getMinExclusive(false) + "' must be 
-                        // <= base.maxInclusive value ='" + getMaxInclusive(true) + "'." );                   
+                        // "minExclusive value ='" + getMinExclusive(false) + "' must be
+                        // <= base.maxInclusive value ='" + getMaxInclusive(true) + "'." );
 
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinExclusive(), numBase->getMinInclusive()) == -1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_mininc);
-                        // "minExclusive value ='" + getMinExclusive(false) + "' must be 
+                        // "minExclusive value ='" + getMinExclusive(false) + "' must be
                         // >= base.minInclusive value ='" + getMinInclusive(true) + "'." );
-                    
+
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinExclusive(), numBase->getMaxExclusive()) != -1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_maxexc);
-                        // "minExclusive value ='" + getMinExclusive(false) + "' must be 
+                        // "minExclusive value ='" + getMinExclusive(false) + "' must be
                         // < base.maxExclusive value ='" + getMaxExclusive(true) + "'." );
-                    
+
                 }
 
                 // check 4.3.10.c2 error:
@@ -452,38 +455,38 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 // minInclusive > base.maxInclusive
                 // minInclusive <= base.minExclusive
                 // minInclusive >= base.maxExclusive
-                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) ) 
+                if ( ((getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
                 {
                     if ( ((numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinInclusive(), numBase->getMinInclusive()) == -1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_mininc);
-                        // "minInclusive value ='" + getMinInclusive(false) + "' must be 
+                        // "minInclusive value ='" + getMinInclusive(false) + "' must be
                         // >= base.minInclusive value ='" + getMinInclusive(true) + "'." );
-                    
+
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinInclusive(), numBase->getMaxInclusive()) == 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_maxinc);
-                        // "minInclusive value ='" + getMinInclusive(false) + "' must be 
+                        // "minInclusive value ='" + getMinInclusive(false) + "' must be
                         // <= base.maxInclusive value ='" + getMaxInclusive(true) + "'." );
-                    
+
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinInclusive(), numBase->getMinExclusive() ) != 1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_minexc);
-                        // "minInclusive value ='" + getMinInclusive(false) + "' must be 
+                        // "minInclusive value ='" + getMinInclusive(false) + "' must be
                         // > base.minExclusive value ='" + getMinExclusive(true) + "'." );
-                    
+
                     if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
                          ( XMLBigDecimal::compareValues(getMinInclusive(), numBase->getMaxExclusive()) != -1 ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_mininc_base_maxexc);
-                        // "minInclusive value ='" + getMinInclusive(false) + "' must be 
+                        // "minInclusive value ='" + getMinInclusive(false) + "' must be
                         // < base.maxExclusive value ='" + getMaxExclusive(true) + "'." );
-                    
+
                 }
-                
+
                 // check 4.3.11.c1 error: totalDigits > base.totalDigits
                 if (( getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0)
                 {
@@ -491,11 +494,11 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                          ( fTotalDigits > numBase->fTotalDigits ))
                         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
                         //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_totdigit_base_totdigit);
-                        // "totalDigits value ='" + fTotalDigits + "' must be 
+                        // "totalDigits value ='" + fTotalDigits + "' must be
                         // <= base.totalDigits value ='" + numBase.fTotalDigits + "'." );
-        
+
                 }
-                    
+
                 // check question error: fractionDigits > base.fractionDigits ???
                 // check question error: fractionDigits > base.totalDigits ???
                 // check question error: totalDigits conflicts with bounds ???
@@ -511,12 +514,12 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 {
                     int i = 0;
                     int enumLength = fStrEnumeration->size();
-                    try 
+                    try
                     {
-                        for ( ; i < enumLength; i++) 
+                        for ( ; i < enumLength; i++)
                             // ask parent do a complete check
                             numBase->checkContent(fStrEnumeration->elementAt(i), false);
-                    } 
+                    }
 
                     catch ( XMLException& )
                     {
@@ -527,12 +530,12 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
 
                     //
                     // we need to convert from fStrEnumeration to fEnumeration
-                    try 
+                    try
                     {
                         fEnumeration = new RefVectorOf<XMLBigDecimal>(enumLength, true);
-                        for ( ; i < enumLength; i++) 
+                        for ( ; i < enumLength; i++)
                             fEnumeration->insertElementAt(new XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
-                    } 
+                    }
 
                     catch ( NumberFormatException& )
                     {
@@ -546,27 +549,27 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
             }
 
             /***
-               Schema constraint: Part III -- inherit from base 
+               Schema constraint: Part III -- inherit from base
             ***/
-                
+
                 // inherit enumeration
                 if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0 ) &&
                      ((numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0 ))
                 {
                     setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-                    // need to adopt the Vector   
+                    // need to adopt the Vector
                     RefVectorOf<XMLBigDecimal>*  fBaseEnumeration = numBase->fEnumeration;
                     int enumLength = fBaseEnumeration->size();
                     fEnumeration = new RefVectorOf<XMLBigDecimal>(enumLength, true);
-                    for ( int i = 0; i < enumLength; i++) 
+                    for ( int i = 0; i < enumLength; i++)
                         fEnumeration->insertElementAt(fBaseEnumeration->elementAt(i), i);
 
                 }
 
                 // inherit maxExclusive
                 if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) && 
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) ) 
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )
                 {
                     setMaxExclusive(new XMLBigDecimal(*(numBase->getMaxExclusive())));
                     setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);
@@ -574,8 +577,8 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
 
                 // inherit maxInclusive
                 if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) && 
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) ) 
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )
                 {
                     setMaxInclusive(new XMLBigDecimal(*(numBase->getMaxInclusive())));
                     setFacetsDefined(DatatypeValidator::FACET_MAXINCLUSIVE);
@@ -583,8 +586,8 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
 
                 // inherit minExclusive
                 if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) && 
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) ) 
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) )
                 {
                     setMinExclusive(new XMLBigDecimal(*(numBase->getMinExclusive())));
                     setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);
@@ -592,42 +595,42 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
 
                 // inherit minExclusive
                 if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) && 
-                     (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) ) 
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&
+                     (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) )
                 {
                     setMinInclusive(new XMLBigDecimal(*(numBase->getMinInclusive())));
                     setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);
                 }
 
                 // inherit totalDigits
-                if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) && 
-                     (( getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) == 0) ) 
+                if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) &&
+                     (( getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) == 0) )
                 {
                     setTotalDigits(numBase->fTotalDigits);
                     setFacetsDefined(DatatypeValidator::FACET_PRECISSION);
                 }
 
                 // inherit fractionDigits
-                if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) && 
-                     (( getFacetsDefined() & DatatypeValidator::FACET_SCALE) == 0) ) 
+                if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&
+                     (( getFacetsDefined() & DatatypeValidator::FACET_SCALE) == 0) )
                 {
                     setFractionDigits(numBase->fFractionDigits);
                     setFacetsDefined(DatatypeValidator::FACET_SCALE);
-                }            
-                
+                }
+
                 // inherit enumeration
                 if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
                     (( getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
                 {
                     setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-                    // need to adopt the Vector   
+                    // need to adopt the Vector
                     RefVectorOf<XMLBigDecimal>*  fBaseEnumeration = numBase->fEnumeration;
                     int enumLength = fBaseEnumeration->size();
                     fEnumeration = new RefVectorOf<XMLBigDecimal>(enumLength, true);
-                    for ( int i = 0; i < enumLength; i++) 
-                        //invoke XMLBigDecimal's copy ctor 
+                    for ( int i = 0; i < enumLength; i++)
+                        //invoke XMLBigDecimal's copy ctor
                         fEnumeration->insertElementAt(new XMLBigDecimal(*(fBaseEnumeration->elementAt(i))), i);
-                }             
+                }
 
         } //if baseValidator
 
@@ -640,11 +643,11 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
 
     //validate against base validator if any
     DecimalDatatypeValidator *pBase = (DecimalDatatypeValidator*) this->getBaseValidator();
-    if (pBase !=0) 
+    if (pBase !=0)
         pBase->checkContent(content, true);
 
     // we check pattern first
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 ) 
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
         if (getRegex() ==0)
@@ -671,7 +674,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
     {
         int i=0;
         int enumLength = fEnumeration->size();
-        for ( ; i < enumLength; i++) 
+        for ( ; i < enumLength; i++)
         {
             if (XMLBigDecimal::compareValues(theData, fEnumeration->elementAt(i))==0)
                 break;
@@ -680,9 +683,9 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
         if (i == enumLength)
             ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
     }
-      
-       
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0 ) 
+
+
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0 )
     {
         if ( theData->getScale() > fFractionDigits )
             ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_maxLen);
@@ -690,8 +693,8 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             // "'" + content + "'" + " with totalDigits = '"+ totalDigits +"'"
             // "'" + fTotalDigits + "'"} ));
     }
-    
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0 ) 
+
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0 )
     {
         if ( theData->getTotalDigit() > fTotalDigits )
             ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_maxLen);
@@ -699,8 +702,8 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             // "'" + content + "'" + " with totalDigits = '"+ totalDigits +"'"
             // "'" + fTotalDigits + "'"} ));
     }
-    
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0 ) 
+
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0 )
     {
         // must be < MaxExclusive
         if (XMLBigDecimal::compareValues(theData, getMaxExclusive()) != -1)
@@ -708,15 +711,15 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             //ThrowXML(InvalidDatatypeValueException, XMLExcepts::VALUE_exceed_maxexc);
     }
 
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0 ) 
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0 )
     {
         // must be <= MaxInclusive
         if (XMLBigDecimal::compareValues(theData, getMaxInclusive()) == 1)
             ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_maxLen);
             //ThrowXML(InvalidDatatypeValueException, XMLExcepts::VALUE_exceed_maxinc);
     }
-    
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0 ) 
+
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0 )
     {
         // must be >= MinInclusive
         if (XMLBigDecimal::compareValues(theData, getMinInclusive()) == -1)
@@ -724,7 +727,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             //ThrowXML(InvalidDatatypeValueException, XMLExcepts::VALUE_exceed_mininc);
     }
 
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0 ) 
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0 )
     {
         // must be > MinExclusive
         if (XMLBigDecimal::compareValues(theData, getMinExclusive()) != 1)

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,11 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:32  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:25:55  tng
+ * Copyright update.
  *
- * Revision 1.1  2000/07/28 01:33:31  aruna1
- * DOM Level 2 Range feature introduced
+ * Revision 1.1.1.1  2001/04/03 00:14:32  andyh
+ * IDOM
  *
  */
 
@@ -70,12 +70,12 @@
 #include <dom/DOM_DOMException.hpp>
 
 /**
-  * Encapsulate range related DOM error or warning. DOM level 2 implementation. 
+  * Encapsulate range related DOM error or warning. DOM level 2 implementation.
   *
   * <p> The DOM will create and throw an instance of DOM_RangeException
   * when an error condition in range is detected.  Exceptions can occur
   * when an application directly manipulates the range elements in DOM document
-  * tree that is produced by the parser. 
+  * tree that is produced by the parser.
   *
   * <p>Unlike the other classes in the C++ DOM API, DOM_RangeException
   * is NOT a reference to an underlying implementation class, and

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -629,7 +629,7 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
             {
                 if (refreshCharBuffer())
                 {
-                    if (fCharBuf[fCharIndex] == chLF 
+                    if (fCharBuf[fCharIndex] == chLF
                         || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
                         fCharIndex++;
                 }
@@ -876,7 +876,7 @@ bool XMLReader::peekNextChar(XMLCh& chGotten)
     //  normal char get method in regards to newline normalization, though
     //  its not as complicated as the actual character getting method's.
     //
-    if ((fSource == Source_External) 
+    if ((fSource == Source_External)
         && (chGotten == chCR || (fNEL && (chGotten == chNEL))))
         chGotten = chLF;
 
@@ -1591,7 +1591,7 @@ void XMLReader::refreshRawBuffer()
 {
     //
     //  If there are any bytes left, move them down to the start. There
-    //  should only ever be (max bytes per char - 1) at the most. 
+    //  should only ever be (max bytes per char - 1) at the most.
     //
     const unsigned int bytesLeft = fRawBytesAvail - fRawBufIndex;
 

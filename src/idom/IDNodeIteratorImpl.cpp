@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,50 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:25  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:25:45  tng
+ * Copyright update.
  *
- * Revision 1.11  2000/11/01 01:26:30  andyh
- * DOM NodeIterator bug fix - iterators would sometimes continue beyond
- * their starting (root) node.  Fix from Tinny Ng.
- *
- * Revision 1.10  2000/07/17 23:00:16  jpolast
- * bug fix for SHOW_ELEMENT flag incorrectly being retreived.
- * contributed by Grace Yan and Joe Kesselman.
- *
- * Revision 1.9  2000/03/02 19:54:03  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/08 20:26:11  aruna1
- * NodeIterator problem solved
- *
- * Revision 1.7  2000/02/08 01:16:18  aruna1
- * nodeIterator previous tracking problem solved
- *
- * Revision 1.6  2000/02/06 07:47:33  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/02/04 01:49:26  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.4  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.3  1999/11/23 01:48:16  rahulj
- * Changed 0L to 0. CC under HPUX is happy now.
- *
- * Revision 1.2  1999/11/20 00:56:39  rahulj
- * Source files must end with an un-escaped newline.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:15  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:30  rahul
- * Swat for adding in Product name and CVS comment log variable.
+ * Revision 1.1.1.1  2001/04/03 00:14:25  andyh
+ * IDOM
  *
  */
 
@@ -135,8 +96,8 @@ void NodeIteratorImpl::detach ()
 
 
 NodeIteratorImpl::NodeIteratorImpl (
-                                    DOM_Node root, 
-                                    unsigned long whatToShow, 
+                                    DOM_Node root,
+                                    unsigned long whatToShow,
                                     DOM_NodeFilter* nodeFilter,
                                     bool expandEntityRef)
 :   fDetached(false),
@@ -267,7 +228,7 @@ DOM_Node NodeIteratorImpl::previousNode () {
     bool accepted = false;
 
     while (!accepted) {
-        
+
 
         if (fForward && ! aPreviousNode.isNull()) {
             //repeat last node.
@@ -276,7 +237,7 @@ DOM_Node NodeIteratorImpl::previousNode () {
             // get previous node in backwards depth first order.
             aPreviousNode = previousNode(aPreviousNode);
         }
-  
+
         // we are going backwards
         fForward = false;
 
@@ -346,13 +307,13 @@ DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
             return result;
         }
     }
-    
+
     // if hasSibling, return sibling
     if (node != fRoot) {
         result = node.getNextSibling();
         if (! result.isNull()) return result;
-        
-        
+
+
         // return parent's 1st sibling.
         DOM_Node parent = node.getParentNode();
         while (!parent.isNull() && parent != fRoot) {
@@ -362,7 +323,7 @@ DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
             } else {
                 parent = parent.getParentNode();
             }
-            
+
         } // while (parent != null && parent != fRoot) {
     }
     // end of list, return null

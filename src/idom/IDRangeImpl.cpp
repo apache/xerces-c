@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -73,11 +73,11 @@
 
 
 //---------------------
-// C'tor and D'tor 
+// C'tor and D'tor
 //---------------------
 
 RangeImpl::RangeImpl(DOM_Document doc)
-  
+
     :   fDocument(doc),
         fStartContainer(doc),
         fStartOffset(0),
@@ -87,7 +87,7 @@ RangeImpl::RangeImpl(DOM_Document doc)
         fCollapsed(true),
         fRemoveChild(0)
 {
-}        
+}
 
 RangeImpl::RangeImpl(const RangeImpl& other)
 {
@@ -149,13 +149,13 @@ unsigned int RangeImpl::getEndOffset() const
 
 bool RangeImpl::getCollapsed() const
 {
-    if (fDetached) 
+    if (fDetached)
     {
         throw DOM_DOMException(
             DOM_DOMException::INVALID_STATE_ERR, null);
     }
 
-    return ((fStartContainer == fEndContainer) 
+    return ((fStartContainer == fEndContainer)
              && (fStartOffset == fEndOffset));
 }
 
@@ -163,7 +163,7 @@ bool RangeImpl::getCollapsed() const
 // Public getter functions
 //-------------------------------
 
-void RangeImpl::setStartContainer(const DOM_Node& node) 
+void RangeImpl::setStartContainer(const DOM_Node& node)
 {
     if (fDetached)
     {
@@ -174,7 +174,7 @@ void RangeImpl::setStartContainer(const DOM_Node& node)
     fStartContainer = node;
 }
 
-void RangeImpl::setStartOffset(unsigned int offset) 
+void RangeImpl::setStartOffset(unsigned int offset)
 {
     if (fDetached)
     {
@@ -185,7 +185,7 @@ void RangeImpl::setStartOffset(unsigned int offset)
     fStartOffset = offset;
 }
 
-void RangeImpl::setEndContainer(const DOM_Node& node) 
+void RangeImpl::setEndContainer(const DOM_Node& node)
 {
     if (fDetached)
     {
@@ -194,10 +194,10 @@ void RangeImpl::setEndContainer(const DOM_Node& node)
     }
 
     fEndContainer = node;
-    
+
 }
 
-void RangeImpl::setEndOffset(unsigned int offset) 
+void RangeImpl::setEndOffset(unsigned int offset)
 {
     if (fDetached)
     {
@@ -212,17 +212,17 @@ void RangeImpl::setStart(const DOM_Node& refNode, unsigned int offset)
 {
     validateNode(refNode);
     checkIndex(refNode, offset);
-    
+
     fStartContainer = refNode;
     fStartOffset    = offset;
-    
-    if ((fDocument != refNode.getOwnerDocument() ) 
+
+    if ((fDocument != refNode.getOwnerDocument() )
         && (refNode.getOwnerDocument().fImpl != 0) )
     {
         fDocument = refNode.getOwnerDocument();
-        collapse(true); 
+        collapse(true);
     }
-    
+
     //compare the start and end boundary point
     //collapse if start point is after the end point
     if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
@@ -235,17 +235,17 @@ void RangeImpl::setEnd(const DOM_Node& refNode, unsigned int offset)
 {
     validateNode(refNode);
     checkIndex(refNode, offset);
-            
+
     fEndContainer   = refNode;
     fEndOffset      = offset;
-    
-    if ((fDocument != refNode.getOwnerDocument() ) 
+
+    if ((fDocument != refNode.getOwnerDocument() )
         && (refNode.getOwnerDocument().fImpl != 0) )
     {
         fDocument = refNode.getOwnerDocument();
         collapse(false);
     }
-    
+
     //compare the start and end boundary point
     //collapse if start point is after the end point
     if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
@@ -264,7 +264,7 @@ void RangeImpl::setStartBefore(const DOM_Node& refNode)
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
     }
-    
+
     fStartContainer = refNode.getParentNode();
    unsigned int i = 0;
     for (DOM_Node n = refNode; n!=null; n = n.getPreviousSibling()) {
@@ -275,13 +275,13 @@ void RangeImpl::setStartBefore(const DOM_Node& refNode)
     else
         fStartOffset = i-1;
 
-    if ((fDocument != refNode.getOwnerDocument()) 
+    if ((fDocument != refNode.getOwnerDocument())
         && (refNode.getOwnerDocument().fImpl != 0) )
     {
         fDocument = refNode.getOwnerDocument();
-        collapse(true); 
+        collapse(true);
     }
-    
+
     //compare the start and end boundary point
     //collapse if start point is after the end point
     if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
@@ -308,14 +308,14 @@ void RangeImpl::setStartAfter(const DOM_Node& refNode)
     }
 
     fStartOffset = i;
-    
-    if ((fDocument != refNode.getOwnerDocument() ) 
+
+    if ((fDocument != refNode.getOwnerDocument() )
         && (refNode.getOwnerDocument().fImpl != 0) )
     {
         fDocument = refNode.getOwnerDocument();
-        collapse(true); 
+        collapse(true);
     }
-    
+
     //compare the start and end boundary point
     //collapse if start point is after the end point
     if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
@@ -334,7 +334,7 @@ void RangeImpl::setEndBefore(const DOM_Node& refNode)
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
     }
-    
+
     fEndContainer = refNode.getParentNode();
     unsigned int i = 0;
     for (DOM_Node n = refNode; n!=null; n = n.getPreviousSibling(), i++) ;
@@ -344,13 +344,13 @@ void RangeImpl::setEndBefore(const DOM_Node& refNode)
     else
         fEndOffset = i-1;
 
-    if ((fDocument != refNode.getOwnerDocument() ) 
+    if ((fDocument != refNode.getOwnerDocument() )
         && (refNode.getOwnerDocument().fImpl != 0) )
     {
         fDocument = refNode.getOwnerDocument();
-        collapse(true); 
+        collapse(true);
     }
-    
+
     //compare the start and end boundary point
     //collapse if start point is after the end point
     if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
@@ -369,7 +369,7 @@ void RangeImpl::setEndAfter(const DOM_Node& refNode)
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
     }
-    
+
     fEndContainer = refNode.getParentNode();
     unsigned int i = 0;
     for (DOM_Node n = refNode; n!=null; n = n.getPreviousSibling(), i++) ;
@@ -379,13 +379,13 @@ void RangeImpl::setEndAfter(const DOM_Node& refNode)
     else
         fEndOffset = i;
 
-    if ((fDocument != refNode.getOwnerDocument() ) 
+    if ((fDocument != refNode.getOwnerDocument() )
         && (refNode.getOwnerDocument().fImpl != 0) )
     {
         fDocument = refNode.getOwnerDocument();
-        collapse(true); 
+        collapse(true);
     }
-    
+
     //compare the start and end boundary point
     //collapse if start point is after the end point
     if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
@@ -404,14 +404,14 @@ void RangeImpl::detach()
     }
 
     fDetached = true;
-    
+
     //nullify nodes
     fStartContainer = 0;
     fStartOffset    = 0;
     fEndContainer   = 0;
     fEndOffset      = 0;
     fCollapsed      = true;
-    
+
     fRemoveChild    = 0;
 }
 
@@ -445,7 +445,7 @@ void RangeImpl::selectNode(const DOM_Node& refNode)
         //The node itself is the container.
         fStartContainer = refNode;
         fEndContainer   = refNode;
-        
+
         //Select all the contents of the node
         fStartOffset = 0;
         fEndOffset = ((DOM_Text &)refNode).getLength();
@@ -457,12 +457,12 @@ void RangeImpl::selectNode(const DOM_Node& refNode)
     {
         fStartContainer = parent;
         fEndContainer = parent;
-      
+
         unsigned int i = 0;
         for (DOM_Node n = parent.getFirstChild(); n!=null, n!=refNode; n = n.getNextSibling()) {
             i++;
         }
-       
+
         fStartOffset = i;
         fEndOffset = fStartOffset+1;
     }
@@ -471,10 +471,10 @@ void RangeImpl::selectNode(const DOM_Node& refNode)
 void RangeImpl::selectNodeContents(const DOM_Node& node)
 {
     validateNode(node);
-    
+
     fStartContainer = node;
     fEndContainer = node;
-    
+
     fStartOffset = 0;
     if (node.getNodeType() == DOM_Node::TEXT_NODE ) {
         fEndOffset = ((DOM_Text &)node).getLength();
@@ -496,7 +496,7 @@ void RangeImpl::selectNodeContents(const DOM_Node& node)
 void RangeImpl::surroundContents(DOM_Node& newParent)
 {
     if (newParent==null) return;
- 
+
     //check for elimination criteria
     if( fDetached) {
         throw DOM_DOMException(
@@ -507,7 +507,7 @@ void RangeImpl::surroundContents(DOM_Node& newParent)
         throw DOM_DOMException(
             DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     }
-    
+
     int type = newParent.getNodeType();
     if ( !isLegalContainedNode(newParent)
         || type == DOM_Node::DOCUMENT_TYPE_NODE)
@@ -515,9 +515,9 @@ void RangeImpl::surroundContents(DOM_Node& newParent)
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
     }
-    
+
     DOM_Node root = getCommonAncestorContainer();
-    
+
     DOM_Node realStart = fStartContainer;
     DOM_Node realEnd = fEndContainer;
 
@@ -527,12 +527,12 @@ void RangeImpl::surroundContents(DOM_Node& newParent)
     if (fEndContainer.getNodeType() == DOM_Node::TEXT_NODE) {
         realEnd = fEndContainer.getParentNode();
     }
-    
+
     if (realStart != realEnd) {
         throw DOM_RangeException(
             DOM_RangeException::BAD_BOUNDARYPOINTS_ERR, null);
     }
-    
+
     DOM_DocumentFragment frag = extractContents();
     insertNode(newParent);
     newParent.appendChild(frag);
@@ -553,7 +553,7 @@ short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* src
 
     DOM_Node pointA, pointB;
     int offsetA, offsetB;
-        
+
     switch (how)
     {
     case (DOM_Range::START_TO_START) :
@@ -581,7 +581,7 @@ short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* src
         offsetA = fEndOffset;
         break;
     }
-    
+
     // case 1: same container
     if (pointA == pointB) {
         if (offsetA < offsetB) return -1; //A before B
@@ -600,22 +600,22 @@ short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* src
     for (DOM_Node nd = pointB.getFirstChild(); nd != null; nd=nd.getNextSibling()) {
         if (isAncestorOf(nd, pointA)) {
             int index = indexOf(nd, pointB);
-            if (index < offsetB ) return -1; 
+            if (index < offsetB ) return -1;
             return 1; //B strictly before A
         }
     }
-    
+
     // case 4: preorder traversal of context tree.
     DOM_Node ancestor = commonAncestorOf(pointA, pointB);
     DOM_Node current = ancestor;
-    
+
     do {
         if (current == pointA) return -1;
         if (current == pointB) return 1;
-        current = nextNode(current, true); 
+        current = nextNode(current, true);
     }
     while (current!=null && current!=ancestor);
-    
+
     return -2; // this should never happen
 }
 
@@ -648,24 +648,24 @@ void RangeImpl::insertNode(DOM_Node& newNode)
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     }
     }
-    
+
     if (fDocument != newNode.getOwnerDocument()) {
         throw DOM_DOMException(
             DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     }
-    
+
     // Prevent cycles in the tree.
     //isKidOK() is not checked here as its taken care by insertBefore() function
     if (isAncestorOf( newNode, fStartContainer)) {
         throw DOM_DOMException(
             DOM_DOMException::HIERARCHY_REQUEST_ERR, null);
     }
-    
+
     if( fDetached) {
         throw DOM_DOMException(
             DOM_DOMException::INVALID_STATE_ERR, null);
     }
-    
+
     int type = newNode.getNodeType();
     if (type == DOM_Node::ATTRIBUTE_NODE
         || type == DOM_Node::ENTITY_NODE
@@ -675,7 +675,7 @@ void RangeImpl::insertNode(DOM_Node& newNode)
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
     }
-   
+
 
     DOM_Node parent;
     DOM_Node next;
@@ -686,19 +686,19 @@ void RangeImpl::insertNode(DOM_Node& newNode)
         parent = fStartContainer.getParentNode();
 
         //split the text nodes
-       if (fStartOffset > 0) 
+       if (fStartOffset > 0)
             ((DOM_Text &)fStartContainer).splitText(fStartOffset);
-        
+
         //update the new start information later. After inserting the first newNode
-        if (fStartOffset == 0) 
+        if (fStartOffset == 0)
             next = fStartContainer;
         else
             next = fStartContainer.getNextSibling();
-       
+
     } // end of text handling
     else {
         parent = fStartContainer;
-        
+
         next = fStartContainer.getFirstChild();
         for(unsigned int i = 0; (i < fStartOffset) && (next != null); i++) {
             next=next.getNextSibling();
@@ -706,9 +706,9 @@ void RangeImpl::insertNode(DOM_Node& newNode)
     }
 
     if (parent != null) {
-        if (next != null) 
+        if (next != null)
             parent.insertBefore(newNode, next);
-        else 
+        else
             parent.appendChild(newNode);
     }
 }
@@ -719,11 +719,11 @@ RangeImpl* RangeImpl::cloneRange() const
         throw DOM_DOMException(
             DOM_DOMException::INVALID_STATE_ERR, null);
     }
-    
+
     RangeImpl* range = ((DocumentImpl*)fDocument.fImpl)->createRange();
     range->setStart(fStartContainer, fStartOffset);
     range->setEnd(fEndContainer, fEndOffset);
-    
+
     return range;
 }
 
@@ -733,10 +733,10 @@ DOMString RangeImpl::toString() const
         throw DOM_DOMException(
             DOM_DOMException::INVALID_STATE_ERR, null);
     }
-    
+
     DOM_Node node = fStartContainer;
     DOM_Node stopNode = fEndContainer;
-    
+
     DOMString tempString;
     if ( (fStartContainer.getNodeType() == DOM_Node::TEXT_NODE)
         || (fStartContainer.getNodeType() == DOM_Node::CDATA_SECTION_NODE) ) {
@@ -761,7 +761,7 @@ DOMString RangeImpl::toString() const
             node = nextNode(fStartContainer,false);
         }
     }
-    
+
     if ( fEndContainer.getNodeType()!= DOM_Node::TEXT_NODE &&
         fEndContainer.getNodeType()!= DOM_Node::CDATA_SECTION_NODE ){
         int i=fEndOffset;
@@ -773,7 +773,7 @@ DOMString RangeImpl::toString() const
         if ( stopNode == null )
             stopNode = nextNode( fEndContainer, false );
     }
-        
+
     while (node != stopNode) {  //look into all kids of the Range
         if (node == null) break;
         if (node.getNodeType() == DOM_Node::TEXT_NODE
@@ -782,7 +782,7 @@ DOMString RangeImpl::toString() const
         }
         node = nextNode(node, true);
     }
-    
+
     if (fEndContainer.getNodeType() == DOM_Node::TEXT_NODE
         || fEndContainer.getNodeType() == DOM_Node::CDATA_SECTION_NODE) {
         tempString.appendData(fEndContainer.getNodeValue().substringData(0,fEndOffset));
@@ -795,10 +795,10 @@ DOM_Document RangeImpl::getDocument()
     return fDocument;
 }
 
-const DOM_Node RangeImpl::getCommonAncestorContainer() const 
+const DOM_Node RangeImpl::getCommonAncestorContainer() const
 {
-     return commonAncestorOf(fStartContainer, fEndContainer);    
-  
+     return commonAncestorOf(fStartContainer, fEndContainer);
+
 }
 
 //---------------------
@@ -831,7 +831,7 @@ bool RangeImpl::hasLegalRootContainer(const DOM_Node& node) const {
     DOM_Node rootContainer = node;
     for (; rootContainer.getParentNode()!=null; rootContainer = rootContainer.getParentNode())
         ;
-    
+
     switch( rootContainer.getNodeType() ) {
         case DOM_Node::ATTRIBUTE_NODE:
         case DOM_Node::DOCUMENT_NODE:
@@ -872,7 +872,7 @@ void RangeImpl::validateNode(const DOM_Node& node) const
         throw DOM_DOMException(
             DOM_DOMException::INVALID_STATE_ERR, null);
     }
-    
+
     if ( !isValidAncestorType(node)) {
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
@@ -882,7 +882,7 @@ void RangeImpl::validateNode(const DOM_Node& node) const
 
 const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Node& pointB) const
 {
-    if (fDetached) 
+    if (fDetached)
             throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     if (pointA.getOwnerDocument() != pointB.getOwnerDocument())
@@ -890,27 +890,27 @@ const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Nod
 
     //if the containers are same then it itself is its common ancestor.
     if (pointA == pointB)
-        return pointA; 
+        return pointA;
 
     typedef RefVectorOf<NodeImpl> VectorNodes;
     VectorNodes* startV= new VectorNodes(1, false);
     DOM_Node node;
 
-    for (node=fStartContainer; node != null; node=node.getParentNode()) 
+    for (node=fStartContainer; node != null; node=node.getParentNode())
     {
         startV->addElement(node.fImpl);
     }
     VectorNodes* endV = new VectorNodes(1, false);
-    for (node=fEndContainer; node != null; node=node.getParentNode()) 
+    for (node=fEndContainer; node != null; node=node.getParentNode())
     {
         endV->addElement(node.fImpl);
     }
 
     int s = startV->size()-1;
     int e = endV->size()-1;
- 
+
     NodeImpl* commonAncestor;
-    
+
     while (s>=0 && e>=0) {
         if (startV->elementAt(s) == endV->elementAt(e)) {
             commonAncestor = startV->elementAt(s);
@@ -919,10 +919,10 @@ const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Nod
         --s;
         --e;
     }
-    
+
     delete startV;
     delete endV;
-     
+
     return DOM_Node(commonAncestor);
 }
 
@@ -931,9 +931,9 @@ void RangeImpl::checkIndex(const DOM_Node& node, unsigned int offset) const
     if (offset < 0) {
         throw DOM_DOMException( DOM_DOMException::INDEX_SIZE_ERR, null );
     }
-    
+
     short type = node.getNodeType();
-    
+
     if((type == DOM_Node::TEXT_NODE
         || type == DOM_Node::CDATA_SECTION_NODE
         || type == DOM_Node::COMMENT_NODE
@@ -942,7 +942,7 @@ void RangeImpl::checkIndex(const DOM_Node& node, unsigned int offset) const
             throw DOM_DOMException( DOM_DOMException::INDEX_SIZE_ERR, null );
         else  return;
     }
-    
+
     DOM_Node child = node.getFirstChild();
     unsigned int i = 0;
     for (; child != null; i++) {
@@ -951,14 +951,14 @@ void RangeImpl::checkIndex(const DOM_Node& node, unsigned int offset) const
     if (i < offset) {
         throw DOM_DOMException( DOM_DOMException::INDEX_SIZE_ERR, null );
     }
-    
+
 }
 
 DOM_Node RangeImpl::nextNode(const DOM_Node& node, bool visitChildren) const
 {
-    
+
     if (node == null) return null;
-    
+
     DOM_Node result;
     if (visitChildren) {
         result = node.getFirstChild();
@@ -966,17 +966,17 @@ DOM_Node RangeImpl::nextNode(const DOM_Node& node, bool visitChildren) const
             return result;
         }
     }
-    
+
     // if hasSibling, return sibling
     result = node.getNextSibling();
     if (result != null) {
         return result;
     }
-    
-    
+
+
     // return parent's 1st sibling.
     DOM_Node parent = node.getParentNode();
-    
+
 
     while ( (parent != null) && (parent != fDocument) )
     {
@@ -988,10 +988,10 @@ DOM_Node RangeImpl::nextNode(const DOM_Node& node, bool visitChildren) const
             if (parent == fEndContainer) return parent;
 
         }
-        
+
     }
     // end of list, return null
-    return null;            
+    return null;
 }
 
 
@@ -1001,43 +1001,43 @@ DOM_Node RangeImpl::nextNode(const DOM_Node& node, bool visitChildren) const
 */
 DOM_DocumentFragment RangeImpl::traverseContents(TraversalType how)
 {
-    if (fDetached) 
+    if (fDetached)
             throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
-    
+
     if (fStartContainer == null || fEndContainer == null) {
         return DOM_DocumentFragment(); // REVIST: Throw exception?
     }
-    
+
     /* Traversal is accomplished by first determining the
        relationship between the endpoints of the range.
        For each of four significant relationships, we will
        delegate the traversal call to a method that
        can make appropriate assumptions.
     */
-    
+
     // case 1: same container
     if ( fStartContainer == fEndContainer )
         return traverseSameContainer( how );
-                
+
     // case 2: Child C of start container is ancestor of end container
     for (DOM_Node node = fStartContainer.getFirstChild(); node != null; node=node.getNextSibling()) {
         if (isAncestorOf(node, fEndContainer))
             return traverseCommonStartContainer( node, how );
     }
-    
+
     // case 3: Child C of end container  is ancestor of start container
     for (DOM_Node nd = fEndContainer.getFirstChild(); nd != null; nd=nd.getNextSibling()) {
         if (isAncestorOf(nd, fStartContainer))
              return traverseCommonEndContainer( nd, how );
         }
-        
+
     // case 4: preorder traversal of context tree.
     // There is a common ancestor container.  Find the
     // ancestor siblings that are children of that container.
     DOM_Node ancestor = commonAncestorOf(fStartContainer, fEndContainer);
     return traverseCommonAncestors( ancestor, ancestor, how );
     }
-    
+
 /**
  * Visits the nodes selected by this range when we know
  * a-priori that the start and end containers are the same.
@@ -1048,21 +1048,21 @@ DOM_DocumentFragment RangeImpl::traverseSameContainer( int how )
     DOM_DocumentFragment frag = null;
     if ( how!=DELETE_CONTENTS)
         frag = fDocument.createDocumentFragment();
-            
+
     // If selection is empty, just return the fragment
     if ( fStartOffset==fEndOffset )
             return frag;
-            
+
     DOM_Node current = fStartContainer;
     DOM_Node cloneCurrent = null;
-    
+
     // Text node needs special case handling
     if ( fStartContainer.getNodeType()== DOM_Node::TEXT_NODE )
     {
         cloneCurrent = fStartContainer.cloneNode(false);
         cloneCurrent.setNodeValue(
             cloneCurrent.getNodeValue().substringData(fStartOffset, fEndOffset));
-        
+
         // set the original text node to its new value
         if ( how != CLONE_CONTENTS )
             ((DOM_Text &)fStartContainer).deleteData(fStartOffset, fEndOffset-fStartOffset);
@@ -1083,7 +1083,7 @@ DOM_DocumentFragment RangeImpl::traverseSameContainer( int how )
             n = sibling;
             }
     }
-    
+
     // Nothing is partially selected, so collapse to start point
     if ( how != CLONE_CONTENTS )
             collapse(true);
@@ -1540,7 +1540,7 @@ void RangeImpl::recurseTreeAndCheck(DOM_Node& start, DOM_Node& end)
             throw DOM_DOMException(
                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
         }
-        
+
         if (node.hasChildNodes()) {
             node = node.getFirstChild();
             recurseTreeAndCheck(node, end);
@@ -1549,7 +1549,7 @@ void RangeImpl::recurseTreeAndCheck(DOM_Node& start, DOM_Node& end)
 }
 
 
-DOM_Node RangeImpl::removeChild(DOM_Node& parent, DOM_Node& child) 
+DOM_Node RangeImpl::removeChild(DOM_Node& parent, DOM_Node& child)
 {
     fRemoveChild = child; //only a precaution measure not to update this range data before removal
     DOM_Node n = parent.removeChild(child);
@@ -1567,7 +1567,7 @@ DOM_Node RangeImpl::removeChild(DOM_Node& parent, DOM_Node& child)
 *  The  text has already beeen replaced.
 *  Fix-up any offsets.
 */
-void RangeImpl::receiveReplacedText(NodeImpl* node) 
+void RangeImpl::receiveReplacedText(NodeImpl* node)
 {
     if (node == null) return;
     DOM_Node anode(node);
@@ -1581,15 +1581,15 @@ void RangeImpl::receiveReplacedText(NodeImpl* node)
     }
 }
 
- 
+
 /** This function is called from DOM.
 *  The  text has already beeen inserted.
 *  Fix-up any offsets.
 */
-void RangeImpl::updateRangeForDeletedText(DOM_Node& node, unsigned int offset, int count) 
+void RangeImpl::updateRangeForDeletedText(DOM_Node& node, unsigned int offset, int count)
 {
     if (node == null) return;
-    
+
     if (node == fStartContainer
         && fStartContainer.getNodeType() == DOM_Node::TEXT_NODE) {
         if (fStartOffset > offset+count) {
@@ -1602,7 +1602,7 @@ void RangeImpl::updateRangeForDeletedText(DOM_Node& node, unsigned int offset, i
         && fEndContainer.getNodeType() == DOM_Node::TEXT_NODE) {
         if (fEndOffset > offset+count) {
             fEndOffset = fEndOffset-count;
-        } else if (fEndOffset > offset) { 
+        } else if (fEndOffset > offset) {
             fEndOffset = offset;
         }
     }
@@ -1614,28 +1614,28 @@ void RangeImpl::updateRangeForDeletedText(DOM_Node& node, unsigned int offset, i
 *  a node is deleted, because at that time it is
 *  connected in the DOM tree, which we depend on.
 */
-void RangeImpl::updateRangeForDeletedNode(NodeImpl* node) 
+void RangeImpl::updateRangeForDeletedNode(NodeImpl* node)
 {
-    
+
     if (node == null) return;
-    if (fRemoveChild == node) return; 
-    
+    if (fRemoveChild == node) return;
+
     DOM_Node tNode(node);
-    
+
     if (node->getParentNode() == fStartContainer.fImpl) {
         unsigned short index = indexOf(tNode, fStartContainer);
         if ( fStartOffset > index) {
             fStartOffset--;
         }
     }
-    
+
     if (node->getParentNode() == fEndContainer.fImpl) {
         unsigned short index = indexOf(tNode, fEndContainer);
         if ( fEndOffset > index) {
             fEndOffset--;
         }
     }
-    
+
     if (node->getParentNode() != fStartContainer.fImpl
         ||  node->getParentNode() != fEndContainer.fImpl) {
         if (isAncestorOf(node, fStartContainer)) {
@@ -1649,19 +1649,19 @@ void RangeImpl::updateRangeForDeletedNode(NodeImpl* node)
             fEndOffset = indexOf( tNode, tpNode);
         }
     }
-    
+
 }
 
 void RangeImpl::updateRangeForInsertedNode(NodeImpl* node) {
     if (node == null) return;
-    
+
     if (node->getParentNode() == fStartContainer.fImpl) {
         unsigned int index = indexOf(DOM_Node(node), fStartContainer);
         if (index < fStartOffset) {
             fStartOffset++;
         }
     }
-    
+
     if (node->getParentNode() == fEndContainer.fImpl) {
         unsigned int index = indexOf(DOM_Node(node), fEndContainer);
         if (index < fEndOffset) {
@@ -1674,7 +1674,7 @@ void RangeImpl::updateRangeForInsertedNode(NodeImpl* node) {
 void RangeImpl::updateSplitInfo(TextImpl* oldNode, TextImpl* startNode, unsigned int offset)
 {
     if (startNode == null) return;
-    
+
     DOM_Text oldText(oldNode);
     DOM_Text newText(startNode);
 
@@ -1682,7 +1682,7 @@ void RangeImpl::updateSplitInfo(TextImpl* oldNode, TextImpl* startNode, unsigned
           fStartOffset = fStartOffset - offset;
         fStartContainer = newText;
     }
-        
+
     if (fEndContainer == oldText && fEndOffset > offset) {
             fEndContainer = newText;
        fEndOffset = fEndOffset - offset;

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 13:26:46  tng
+ * Copyright update.
+ *
  * Revision 1.2  2001/05/03 18:17:42  knoaman
  * Some design changes:
  * o Changed the TokenFactory from a single static instance, to a
@@ -194,7 +197,7 @@ bool RegularExpression::Context::nextCh(XMLInt32& ch, int& offset,
 // ---------------------------------------------------------------------------
 //  RegularExpression: Constructors and Destructors
 // ---------------------------------------------------------------------------
-RegularExpression::RegularExpression(const char* const pattern) 
+RegularExpression::RegularExpression(const char* const pattern)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -224,7 +227,7 @@ RegularExpression::RegularExpression(const char* const pattern)
 }
 
 RegularExpression::RegularExpression(const char* const pattern,
-									 const char* const options) 
+									 const char* const options)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -255,7 +258,7 @@ RegularExpression::RegularExpression(const char* const pattern,
 }
 
 
-RegularExpression::RegularExpression(const XMLCh* const pattern) 
+RegularExpression::RegularExpression(const XMLCh* const pattern)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -268,7 +271,7 @@ RegularExpression::RegularExpression(const XMLCh* const pattern)
 	 fFixedString(0),
 	 fOperations(0),
 	 fTokenTree(0),
-	 fFirstChar(0) 
+	 fFirstChar(0)
 {
 	try {
 
@@ -282,7 +285,7 @@ RegularExpression::RegularExpression(const XMLCh* const pattern)
 }
 
 RegularExpression::RegularExpression(const XMLCh* const pattern,
-									 const XMLCh* const options) 
+									 const XMLCh* const options)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -323,7 +326,7 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 	fOptions = parseOptions(options);
 	fPattern = XMLString::replicate(pattern);
 
-	RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE) 
+	RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
 		? new ParserForXMLSchema() : new RegxParser();
 
     if (regxParser) {
@@ -637,7 +640,7 @@ int RegularExpression::getOptionValue(const XMLCh ch) {
 }
 
 int RegularExpression::match(Context* const context, const Op* const operations
-							 , int offset, const short direction) 
+							 , int offset, const short direction)
 {
 	const Op* tmpOp = operations;
 	bool ignoreCase = isSet(fOptions, IGNORE_CASE);
@@ -775,7 +778,7 @@ int RegularExpression::match(Context* const context, const Op* const operations
 				return -1;
 			if (matchCondition(context, tmpOp, offset, direction))
 				tmpOp = tmpOp->getYesFlow();
-			else 
+			else
 				if (tmpOp->getNoFlow() != 0)
                     tmpOp = tmpOp->getNoFlow();
                 else
@@ -787,7 +790,7 @@ int RegularExpression::match(Context* const context, const Op* const operations
 	return offset;
 }
 
-bool RegularExpression::matchChar(Context* const context, 
+bool RegularExpression::matchChar(Context* const context,
 								  const XMLInt32 ch, int& offset,
 								  const short direction, const bool ignoreCase)
 {
@@ -906,8 +909,8 @@ bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
 		{
 			int after = getWordType(context->fString, context->fStart,
 									context->fLimit, offset);
-			if (after == WT_IGNORE 
-				|| after == getPreviousWordType(context->fString, 
+			if (after == WT_IGNORE
+				|| after == getPreviousWordType(context->fString,
 												context->fStart
 												, context->fLimit, offset))
 				return false;
@@ -923,7 +926,7 @@ bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
 		else {
 
 			if (!(offset == context->fLimit
-				|| (offset+1 == context->fLimit 
+				|| (offset+1 == context->fLimit
 				    && RegxUtil::isEOLChar(context->fString[offset]))
 				|| (offset+2 == context->fLimit
 				    && context->fString[offset] == chCR
@@ -976,7 +979,7 @@ bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
 
 bool RegularExpression::matchBackReference(Context* const context,
 										   const XMLInt32 refNo, int& offset,
-										   const short direction, 
+										   const short direction,
 										   const bool ignoreCase)
 {
 	if (refNo <=0 || refNo >= fNoGroups)
@@ -993,7 +996,7 @@ bool RegularExpression::matchBackReference(Context* const context,
 	if (context->fLimit - tmpOffset < length)
 		return false;
 
-	bool match = ignoreCase 
+	bool match = ignoreCase
 					? XMLString::regionIMatches(context->fString,tmpOffset,
 												context->fString,start,length)
 					: XMLString::regionMatches(context->fString, tmpOffset,
@@ -1015,7 +1018,7 @@ bool RegularExpression::matchString(Context* const context,
 	if (context->fLimit - offset < length)
 		return false;
 
-	bool match = ignoreCase 
+	bool match = ignoreCase
 					? XMLString::regionIMatches(context->fString, offset,
 												literal, 0, length)
 					: XMLString::regionMatches(context->fString, offset,

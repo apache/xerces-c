@@ -3,7 +3,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -71,9 +71,9 @@
 
 
 typedef RefVectorOf<RangeImpl> Ranges;
- 
+
 class CDOM_EXPORT RangeImpl : public RefCountedImpl {
-public:    
+public:
     //c'tor
     RangeImpl(DOM_Document doc);
     RangeImpl(const RangeImpl& other);
@@ -83,16 +83,16 @@ public:
 
     //referencing related functions
     virtual void                unreferenced();
-    
+
 
     //getter functions
     DOM_Node    getStartContainer() const;
     unsigned    int getStartOffset() const;
     DOM_Node    getEndContainer() const;
     unsigned int getEndOffset() const;
-    
-    
-    
+
+
+
     void        collapse(bool toStart);
     bool        getCollapsed() const;
 
@@ -106,15 +106,15 @@ public:
 
     void        selectNode(const DOM_Node& node);
     void        selectNodeContents(const DOM_Node& node);
-   
+
     short       compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* range) const;
-   
+
     void        detach();
-   
+
     void        deleteContents();
-    
+
     RangeImpl*  cloneRange() const;
-    DOMString   toString() const;    
+    DOMString   toString() const;
 
     DOM_Document getDocument();
     void        surroundContents(DOM_Node& node);
@@ -138,31 +138,31 @@ private:
     };
 
     enum TraversePoint {
-        BEFORE  = -1,    
+        BEFORE  = -1,
         START   = 0,
         AFTER   = 1
     };
 
     //setter functions
-    void        setStartContainer(const DOM_Node& node); 
+    void        setStartContainer(const DOM_Node& node);
     void        setStartOffset(unsigned int offset) ;
     void        setEndContainer(const DOM_Node& node);
     void        setEndOffset(unsigned int offset) ;
 
     //misc functions
     void        validateNode(const DOM_Node& node) const;
-    bool        isValidAncestorType(const DOM_Node& node) const; 
+    bool        isValidAncestorType(const DOM_Node& node) const;
     bool        hasLegalRootContainer(const DOM_Node& node) const;
     bool        isLegalContainedNode(const DOM_Node& node ) const;
     void        checkIndex(const DOM_Node& node, unsigned int offset) const;
     static bool isAncestorOf(const DOM_Node& a, const DOM_Node& b);
-    
+
     unsigned short indexOf(const DOM_Node& child, const DOM_Node& parent) const;
 
     const DOM_Node    commonAncestorOf(const DOM_Node& pointA, const DOM_Node& pointB) const;
     DOM_Node    nextNode(const DOM_Node& node, bool visitChildren) const;
     DOM_DocumentFragment traverseContents(TraversalType type);
-    void        checkReadOnly(DOM_Node& start, DOM_Node& end, 
+    void        checkReadOnly(DOM_Node& start, DOM_Node& end,
                     unsigned int starOffset, unsigned int endOffset);
     void        recurseTreeAndCheck(DOM_Node& start, DOM_Node& end);
     DOM_Node    removeChild(DOM_Node& parent, DOM_Node& child);
@@ -179,8 +179,8 @@ private:
     DOM_Node    traverseTextNode( DOM_Node n, bool isLeft, int how );
     DOM_Node    getSelectedNode( DOM_Node container, int offset );
 
-   
-    //private data 
+
+    //private data
     DOM_Node        fStartContainer;
     unsigned int    fStartOffset;
     DOM_Node        fEndContainer;
@@ -188,9 +188,9 @@ private:
     bool            fCollapsed;
     DOM_Document    fDocument;
     bool            fDetached;
-    
+
     DOM_Node        fRemoveChild;
-    
+
 };
 
 #endif

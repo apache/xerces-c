@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,16 +48,15 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
 
-
-//
-// file IDDocumentImpl.cpp
-//
+/*
+ * $Id$
+ */
 
 #include <util/XMLUniDefs.hpp>
 
@@ -113,7 +112,7 @@ class IDOM_NodeFilter;
 //
 IDDocumentImpl::IDDocumentImpl()
     : fNode(this), fParent(this) ,
-      fCurrentBlock(0), fFreePtr(0), fFreeBytesRemaining(0)  
+      fCurrentBlock(0), fFreePtr(0), fFreeBytesRemaining(0)
 {
     fDocType     = 0;
     fDocElement  = 0;
@@ -131,11 +130,11 @@ IDDocumentImpl::IDDocumentImpl()
 IDDocumentImpl::IDDocumentImpl(const XMLCh *fNamespaceURI,
                                const XMLCh *qualifiedName,
                                IDOM_DocumentType *doctype)
-    : fNode(this), fParent(this), 
-      fCurrentBlock(0), fFreePtr(0), fFreeBytesRemaining(0)   
+    : fNode(this), fParent(this),
+      fCurrentBlock(0), fFreePtr(0), fFreeBytesRemaining(0)
 {
     fDocType=0;
-    
+
 	setDocumentType(doctype);
 	
     fDocElement=0;
@@ -160,7 +159,7 @@ void IDDocumentImpl::setDocumentType(IDOM_DocumentType *doctype)
     if (doctype->getOwnerDocument() != 0 && doctype->getOwnerDocument() != this)
         throw IDOM_DOMException(	//one doctype can belong to only one IDDocumentImpl
         IDOM_DOMException::WRONG_DOCUMENT_ERR, 0);
-    
+
     castToNodeImpl(doctype)->setOwnerDocument(this);
 
     // The doctype can not have any Entities or Notations yet, because they can not
@@ -168,7 +167,7 @@ void IDDocumentImpl::setDocumentType(IDOM_DocumentType *doctype)
 				
     // idom_revisit.  What if this doctype is already a child of the document?
 	appendChild(doctype);
-    
+
 }
 
 IDDocumentImpl::~IDDocumentImpl()
@@ -491,7 +490,7 @@ void IDDocumentImpl::setNodeValue(const XMLCh *x)
 IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
 {
     IDOM_Node *newnode=0;
-    
+
     switch (source->getNodeType())
     {
     case IDOM_Node::ELEMENT_NODE :
@@ -601,12 +600,12 @@ IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
             // No name, no value
             break;
         }
-        
+
     case IDOM_Node::DOCUMENT_NODE : // Document can't be child of Document
     default:                       // Unknown node type
         throw IDOM_DOMException(IDOM_DOMException::NOT_SUPPORTED_ERR, 0);
     }
-    
+
     // If deep, replicate and attach the kids.
     if (deep)
         for (IDOM_Node *srckid = source->getFirstChild();
@@ -617,7 +616,7 @@ IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
         if (newnode->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE
             || newnode->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE)
             castToNodeImpl(newnode)->isReadOnly(true);
-        
+
         return newnode;
 }
 
@@ -637,7 +636,7 @@ IDOM_Attr *IDDocumentImpl::createAttributeNS(const XMLCh *fNamespaceURI,
 {
     if(!isXMLName(qualifiedName))
         throw IDOM_DOMException(IDOM_DOMException::INVALID_CHARACTER_ERR,0);
-    return new (this) IDAttrNSImpl(this, fNamespaceURI, qualifiedName); 
+    return new (this) IDAttrNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
 
@@ -713,7 +712,7 @@ IDOM_Range* IDDocumentImpl::getRanges() const
     return 0;
 }
 
-void IDDocumentImpl::removeRange(IDOM_Range* range) 
+void IDDocumentImpl::removeRange(IDOM_Range* range)
 {
 #ifdef idom_revisit
     if (fRanges != 0) {
@@ -740,37 +739,37 @@ void IDDocumentImpl::removeRange(IDOM_Range* range)
 bool IDDocumentImpl::isKidOK(IDOM_Node *parent, IDOM_Node *child)
 {
       static int kidOK[14];
-      
+
       if (kidOK[IDOM_Node::ATTRIBUTE_NODE] == 0)
       {
-          kidOK[IDOM_Node::DOCUMENT_NODE] = 
+          kidOK[IDOM_Node::DOCUMENT_NODE] =
               1 << IDOM_Node::ELEMENT_NODE |
-              1 << IDOM_Node::PROCESSING_INSTRUCTION_NODE | 
-              1 << IDOM_Node::COMMENT_NODE | 
+              1 << IDOM_Node::PROCESSING_INSTRUCTION_NODE |
+              1 << IDOM_Node::COMMENT_NODE |
               1 << IDOM_Node::DOCUMENT_TYPE_NODE |
               1 << IDOM_Node::XML_DECL_NODE;
-          
-          kidOK[IDOM_Node::DOCUMENT_FRAGMENT_NODE] = 
-              kidOK[IDOM_Node::ENTITY_NODE] = 
-              kidOK[IDOM_Node::ENTITY_REFERENCE_NODE] = 
-              kidOK[IDOM_Node::ELEMENT_NODE] = 
+
+          kidOK[IDOM_Node::DOCUMENT_FRAGMENT_NODE] =
+              kidOK[IDOM_Node::ENTITY_NODE] =
+              kidOK[IDOM_Node::ENTITY_REFERENCE_NODE] =
+              kidOK[IDOM_Node::ELEMENT_NODE] =
               1 << IDOM_Node::ELEMENT_NODE |
-              1 << IDOM_Node::PROCESSING_INSTRUCTION_NODE | 
+              1 << IDOM_Node::PROCESSING_INSTRUCTION_NODE |
               1 << IDOM_Node::COMMENT_NODE |
               1 << IDOM_Node::TEXT_NODE |
               1 << IDOM_Node::CDATA_SECTION_NODE |
               1 << IDOM_Node::ENTITY_REFERENCE_NODE |
               1 << IDOM_Node::XML_DECL_NODE;
 
-          kidOK[IDOM_Node::ATTRIBUTE_NODE] = 
+          kidOK[IDOM_Node::ATTRIBUTE_NODE] =
               1 << IDOM_Node::TEXT_NODE |
               1 << IDOM_Node::ENTITY_REFERENCE_NODE;
-          
-          kidOK[IDOM_Node::PROCESSING_INSTRUCTION_NODE] = 
-              kidOK[IDOM_Node::COMMENT_NODE] = 
-              kidOK[IDOM_Node::TEXT_NODE] = 
-              kidOK[IDOM_Node::CDATA_SECTION_NODE] = 
-              kidOK[IDOM_Node::NOTATION_NODE] = 
+
+          kidOK[IDOM_Node::PROCESSING_INSTRUCTION_NODE] =
+              kidOK[IDOM_Node::COMMENT_NODE] =
+              kidOK[IDOM_Node::TEXT_NODE] =
+              kidOK[IDOM_Node::CDATA_SECTION_NODE] =
+              kidOK[IDOM_Node::NOTATION_NODE] =
               0;
       };
       int p=parent->getNodeType();
@@ -808,12 +807,12 @@ void IDDocumentImpl::setUserData(void* val)
 		fNode.hasUserData(true);
 	else
 		fNode.hasUserData(false);
-};  
+};
 
 
 
 
-void            IDDocumentImpl::changed() 
+void            IDDocumentImpl::changed()
 {
     fChanges++;
 }

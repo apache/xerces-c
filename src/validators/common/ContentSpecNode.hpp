@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/11 13:27:18  tng
+ * Copyright update.
+ *
  * Revision 1.6  2001/05/10 16:33:08  knoaman
  * Traverse Schema Part III + error messages.
  *
@@ -373,7 +376,7 @@ inline ContentSpecNode::~ContentSpecNode()
 		delete fFirst;
     }
 
-    if (fAdoptSecond) { 
+    if (fAdoptSecond) {
 		delete fSecond;
     }
 

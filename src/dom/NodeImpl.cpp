@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -97,29 +97,29 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
     this->flags = 0;
     // as long as we do not have any owner, ownerNode is our ownerDocument
     this->ownerNode  = ownerDoc;
-    
+
     this->nodeRefCount = 0;
-    NodeImpl::gLiveNodeImpls++; 
+    NodeImpl::gLiveNodeImpls++;
     NodeImpl::gTotalNodeImpls++;
-};  
+};
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
 NodeImpl::NodeImpl(const NodeImpl &other) {
     this->flags = other.flags;
     this->isReadOnly(false);
-    
+
     this->nodeRefCount = 0;
-    NodeImpl::gLiveNodeImpls++; 
+    NodeImpl::gLiveNodeImpls++;
     NodeImpl::gTotalNodeImpls++;
-    
+
     // Need to break the association w/ original parent
     //    this->ownerNode = other.getOwnerDocument(); this doesn't work???
     this->ownerNode = ((NodeImpl*)&other)->getOwnerDocument();
     this->isOwned(false);
 };
 
-    
+
 int  NodeImpl::gLiveNodeImpls = 0;         // Counters for debug & tuning.
 int  NodeImpl::gTotalNodeImpls= 0;
 
@@ -158,10 +158,10 @@ int NodeImpl::changes()
     // have a global indicator on the Document. Doing otherwise cost us too
     // much for little gain.
     return getDocument()->changes();
-};  
+};
 
 
-NodeImpl * NodeImpl::appendChild(NodeImpl *newChild)      
+NodeImpl * NodeImpl::appendChild(NodeImpl *newChild)
 {
     return insertBefore(newChild, null);
 };
@@ -180,7 +180,7 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
 
     if (thisNode->isOwned())
         return;
-    
+
     // Delete this node.  There should be no siblings, as the DOM
     //  supports no node operations that would detach a node from
     //  its parent while retaining siblings.
@@ -226,13 +226,13 @@ NodeListImpl *NodeImpl::getChildNodes() {
 
 NodeImpl * NodeImpl::getFirstChild() {
     return 0;                   // overridden in ParentNode
-}; 
+};
 
 
 NodeImpl * NodeImpl::getLastChild()
 {
     return 0;                   // overridden in ParentNode
-}; 
+};
 
 
 unsigned int NodeImpl::getLength() {
@@ -242,7 +242,7 @@ unsigned int NodeImpl::getLength() {
 
 NodeImpl * NodeImpl::getNextSibling() {
     return null;                // overridden in ChildNode
-}; 
+};
 
 
 
@@ -261,7 +261,7 @@ DocumentImpl *NodeImpl::getOwnerDocument()
     } else {
         return (DocumentImpl *) ownerNode;
     }
-};  
+};
 
 // unlike getOwnerDocument this is not overriden by DocumentImpl to return null
 DocumentImpl *NodeImpl::getDocument()
@@ -273,7 +273,7 @@ DocumentImpl *NodeImpl::getDocument()
     } else {
         return (DocumentImpl *) ownerNode;
     }
-};  
+};
 
 
 void NodeImpl::setOwnerDocument(DocumentImpl *doc) {
@@ -287,25 +287,25 @@ void NodeImpl::setOwnerDocument(DocumentImpl *doc) {
 NodeImpl * NodeImpl::getParentNode()
 {
     return null;                // overridden in ChildNode
-};  
+};
 
 
 NodeImpl*  NodeImpl::getPreviousSibling()
 {
     return null;                // overridden in ChildNode
-}; 
+};
 
 
 void *NodeImpl::getUserData()
 {
 	return (hasUserData()) ? getOwnerDocument()->getUserData(this) : null;
-};  
+};
 
 
 bool NodeImpl::hasChildNodes()
-{ 
+{
     return false;
-}; 
+};
 
 
 
@@ -313,19 +313,19 @@ NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     return 0;
 };
-  
+
 NodeImpl *NodeImpl::item(unsigned int index) {
     return 0;
 };
 
 
-NodeImpl *NodeImpl::removeChild(NodeImpl *oldChild) 
+NodeImpl *NodeImpl::removeChild(NodeImpl *oldChild)
 {
     throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
     return 0;
 };
-  
-  
+
+
 NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 {
     throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
@@ -337,21 +337,21 @@ NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
   {
       RefCountedImpl::addRef(this->getOwnerDocument());
   };
-  
-  
+
+
   //
   //    unreferenced  will be called whenever the refernce count on
   //            this node goes from 1 to 0.  This node will only be
-  //            directly deleted here  (by deleteIf) if it is outside 
-  //            of the document tree.  
+  //            directly deleted here  (by deleteIf) if it is outside
+  //            of the document tree.
   //
   void NodeImpl::unreferenced()
   {
       DocumentImpl *doc = this->getOwnerDocument();
       deleteIf(this);       // This gets nodes outside of the document -
       //   deleteIf() deletes only if the parent
-      //   node is null.  
-      
+      //   node is null.
+
       // If this was the last external reference within the document,
       //    the entire document will be deleted as well.
       RefCountedImpl::removeRef(doc);
@@ -383,7 +383,7 @@ void NodeImpl::setUserData(void * val)
 		hasUserData(true);
 	else
 		hasUserData(false);
-};  
+};
 
 
 
@@ -391,10 +391,10 @@ DOMString NodeImpl::toString()
 {
 	return DOMString("[")+getNodeName()+": "+getNodeValue()+"]";
 	// return getNodeName();
-};    
-  
+};
+
 //Introduced in DOM Level 2
-  
+
 void NodeImpl::normalize()
 {
     // does nothing by default, overridden by subclasses
@@ -462,7 +462,7 @@ const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
     DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace", &s_xmlURI);
     DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
     DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
-    
+
     if (prefix == null)
         return namespaceURI;
     if (prefix.equals(xml)) {

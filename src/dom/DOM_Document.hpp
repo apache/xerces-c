@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -214,10 +214,10 @@ public:
     *
     * @param tagName The name of the element type to instantiate, as
     *    a null-terminated unicode string.
-    * @return A new <CODE>DOM_Element</CODE> 
-    *        object with the <CODE>nodeName</CODE> attribute set to 
-    *        <CODE>tagName</CODE>, and <CODE>localName</CODE>, 
-    *        <CODE>prefix</CODE>, and <CODE>namespaceURI</CODE> set to 
+    * @return A new <CODE>DOM_Element</CODE>
+    *        object with the <CODE>nodeName</CODE> attribute set to
+    *        <CODE>tagName</CODE>, and <CODE>localName</CODE>,
+    *        <CODE>prefix</CODE>, and <CODE>namespaceURI</CODE> set to
     *        <CODE>null</CODE>.
     */
     DOM_Element     createElement(const XMLCh *tagName);
@@ -304,10 +304,10 @@ public:
      * <code>Attr</code> instance can then be attached to an Element
      * using the <code>DOMElement::setAttribute()</code> method.
      * @param name The name of the attribute.
-     * @return A new <CODE>DOM_Attr</CODE> 
-     *       object with the <CODE>nodeName</CODE> attribute set to 
-     *       <CODE>name</CODE>, and <CODE>localName</CODE>, <CODE>prefix</CODE>, 
-     *       and <CODE>namespaceURI</CODE> set to 
+     * @return A new <CODE>DOM_Attr</CODE>
+     *       object with the <CODE>nodeName</CODE> attribute set to
+     *       <CODE>name</CODE>, and <CODE>localName</CODE>, <CODE>prefix</CODE>,
+     *       and <CODE>namespaceURI</CODE> set to
      *       <CODE>null</CODE>.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
@@ -336,7 +336,7 @@ public:
      * document subtree governed by a particular node, the results of a query, or any other set of nodes.
      * The set of nodes to be iterated is determined by the implementation of the NodeIterator. DOM Level 2
      * specifies a single NodeIterator implementation for document-order traversal of a document subtree.
-     * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>. 
+     * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>.
      *
      * To produce a view of the document that has entity references expanded and does not
      * expose the entity reference node itself, use the <code>whatToShow</code> flags to hide the entity
@@ -354,9 +354,9 @@ public:
      *                   visible to the iterator. If false, they will be skipped over.
      */
 
-    DOM_NodeIterator createNodeIterator(DOM_Node root, 
-                                        unsigned long whatToShow, 
-                                        DOM_NodeFilter*  filter, 
+    DOM_NodeIterator createNodeIterator(DOM_Node root,
+                                        unsigned long whatToShow,
+                                        DOM_NodeFilter*  filter,
                                         bool entityReferenceExpansion);
      /**
      * Creates a TreeWalker object.   (DOM2)
@@ -389,9 +389,9 @@ public:
      *                   visible to the tree-walker. If false, they will be skipped over.
      */
 
-    DOM_TreeWalker  createTreeWalker(DOM_Node root, 
-                                     unsigned long whatToShow, 
-                                     DOM_NodeFilter*  filter, 
+    DOM_TreeWalker  createTreeWalker(DOM_Node root,
+                                     unsigned long whatToShow,
+                                     DOM_NodeFilter*  filter,
                                      bool entityReferenceExpansion);
 
     /**
@@ -414,16 +414,16 @@ public:
                             const DOMString& standalone);
 
     /**
-	  * To create the range  consisting of boundary-points and offset of the 
+	  * To create the range  consisting of boundary-points and offset of the
       * selected contents
       *
-      * @return The initial state of the Range such that both the boundary-points 
-      * are positioned at the beginning of the corresponding DOM_DOcument, before 
-      * any content. The range returned can only be used to select content 
-      * associated with this document, or with documentFragments and Attrs for 
+      * @return The initial state of the Range such that both the boundary-points
+      * are positioned at the beginning of the corresponding DOM_DOcument, before
+      * any content. The range returned can only be used to select content
+      * associated with this document, or with documentFragments and Attrs for
       * which this document is the ownerdocument
 	  */
-    DOM_Range    createRange(); 
+    DOM_Range    createRange();
 
     //@}
     /** @name Getter functions */
@@ -473,31 +473,31 @@ public:
     //@{
 
     /**
-     * Imports a node from another document to this document. 
-     * The returned node has no parent (<CODE>parentNode</CODE> is 
-     * <CODE>null</CODE>). The source node is not altered or removed from the 
-     * original document; this method creates a new copy of the source 
-     * node.<BR>For all nodes, importing a node creates a node object owned by 
-     * the importing document, with attribute values identical to the source 
-     * node's <CODE>nodeName</CODE> and <CODE>nodeType</CODE>, plus the 
+     * Imports a node from another document to this document.
+     * The returned node has no parent (<CODE>parentNode</CODE> is
+     * <CODE>null</CODE>). The source node is not altered or removed from the
+     * original document; this method creates a new copy of the source
+     * node.<BR>For all nodes, importing a node creates a node object owned by
+     * the importing document, with attribute values identical to the source
+     * node's <CODE>nodeName</CODE> and <CODE>nodeType</CODE>, plus the
      * attributes related to namespaces (prefix and namespaces URI).
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param importedNode The node to import.
-     * @param deep If <CODE>true</CODE>, recursively import the subtree under the 
-     *      specified node; if <CODE>false</CODE>, import only the node itself, 
-     *      as explained above. This does not apply to <CODE>DOM_Attr</CODE>, 
+     * @param deep If <CODE>true</CODE>, recursively import the subtree under the
+     *      specified node; if <CODE>false</CODE>, import only the node itself,
+     *      as explained above. This does not apply to <CODE>DOM_Attr</CODE>,
      *      <CODE>DOM_EntityReference</CODE>, and <CODE>DOM_Notation</CODE> nodes.
      * @return The imported node that belongs to this <CODE>DOM_Document</CODE>.
      * @exception DOMException
-     *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is 
+     *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is
      *                      not supported.
      */
     DOM_Node            importNode(const DOM_Node &importedNode, bool deep);
 
     /**
-     * Creates an element of the given qualified name and 
+     * Creates an element of the given qualified name and
      * namespace URI.
      *
      * <p><b>"Experimental - subject to change"</b></p>
@@ -511,11 +511,11 @@ public:
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
-     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
-     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the 
-     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string, 
-     *      or if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and 
-     *      the <CODE>namespaceURI</CODE> is different from 
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is
+     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the
+     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string,
+     *      or if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and
+     *      the <CODE>namespaceURI</CODE> is different from
      *      "http://www.w3.org/XML/1998/namespace".
      */
     DOM_Element         createElementNS(const DOMString &namespaceURI,
@@ -536,17 +536,17 @@ public:
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
-     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
-     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the 
-     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string, 
-     *      if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and the 
-     *      <CODE>namespaceURI</CODE> is different from 
-     *      "http://www.w3.org/XML/1998/namespace", if the 
-     *      <CODE>qualifiedName</CODE> has a prefix that is "xmlns" and the 
-     *      <CODE>namespaceURI</CODE> is different from 
-     *      "http://www.w3.org/2000/xmlns/", or if the 
-     *      <CODE>qualifiedName</CODE> is "xmlns" and the 
-     *      <CODE>namespaceURI</CODE> is different from 
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is
+     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the
+     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string,
+     *      if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and the
+     *      <CODE>namespaceURI</CODE> is different from
+     *      "http://www.w3.org/XML/1998/namespace", if the
+     *      <CODE>qualifiedName</CODE> has a prefix that is "xmlns" and the
+     *      <CODE>namespaceURI</CODE> is different from
+     *      "http://www.w3.org/2000/xmlns/", or if the
+     *      <CODE>qualifiedName</CODE> is "xmlns" and the
+     *      <CODE>namespaceURI</CODE> is different from
      *      "http://www.w3.org/2000/xmlns/".
      */
     DOM_Attr            createAttributeNS(const DOMString &namespaceURI,
@@ -575,10 +575,10 @@ public:
      * Returns the <code>DOM_Element</code> whose ID is given by <code>elementId</code>.
      * If no such element exists, returns <code>null</code>.
      * Behavior is not defined if more than one element has this <code>ID</code>.
-     * <P><B>Note:</B> The DOM implementation must have information that says 
-     * which attributes are of type ID. Attributes with the name "ID" are not of 
-     * type ID unless so defined. Implementations that do not know whether 
-     * attributes are of type ID or not are expected to return 
+     * <P><B>Note:</B> The DOM implementation must have information that says
+     * which attributes are of type ID. Attributes with the name "ID" are not of
+     * type ID unless so defined. Implementations that do not know whether
+     * attributes are of type ID or not are expected to return
      * <CODE>null</CODE>.</P>
      *
      * <p><b>"Experimental - subject to change"</b></p>
@@ -588,7 +588,7 @@ public:
      */
     DOM_Element         getElementById(const DOMString &elementId);
 
-    /** 
+    /**
      * Sets whether the DOM implementation performs error checking
      * upon operations. Turning off error checking only affects
      * the following DOM checks:

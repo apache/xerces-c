@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/05/11 13:26:17  tng
+ * Copyright update.
+ *
  * Revision 1.15  2001/05/03 18:42:51  knoaman
  * Added new option to the parsers so that the NEL (0x85) char can be treated as a newline character.
  *

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -84,7 +84,7 @@
  *  ... use of *x which is the DOMString ...
  */
 
-AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
+AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
     : NodeImpl (ownerDoc)
 {
     name = aName.clone();
@@ -114,7 +114,7 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
         isIdAttr(true);
         this->getOwnerDocument()->getNodeIDMap()->add(this);
     }
-    
+
     // take care of case where there are kids
     if (!hasStringValue()) {
         cloneChildren(other);
@@ -165,7 +165,7 @@ void AttrImpl::makeChildNode() {
     }
 }
 
-NodeImpl * AttrImpl::cloneNode(bool deep) 
+NodeImpl * AttrImpl::cloneNode(bool deep)
 {
     return new AttrImpl(*this, deep);
 };
@@ -193,7 +193,7 @@ DOMString AttrImpl::getNodeValue()
 };
 
 
-bool AttrImpl::getSpecified() 
+bool AttrImpl::getSpecified()
 {
     return isSpecified();
 };
@@ -201,7 +201,7 @@ bool AttrImpl::getSpecified()
 
 
 
-DOMString AttrImpl::getValue() 
+DOMString AttrImpl::getValue()
 {
     if (value == null) {
         return 0; // return "";
@@ -220,14 +220,14 @@ DOMString AttrImpl::getValue()
     int             length = 0;
     for (node = firstChild; node != null; node = node->nextSibling)
         length += node->getNodeValue().length();
-    
+
     DOMString retString;
     retString.reserve(length);
     for (node = firstChild; node != null; node = node->nextSibling)
     {
         retString.appendData(node->getNodeValue());
     };
-    
+
     return retString;
 };
 
@@ -261,7 +261,7 @@ void AttrImpl::setValue(const DOMString &newvalue)
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null
         );
     }
-    
+
     //  If this attribute was of type ID and in the map, take it out,
     //    then put it back in with the new name.  For now, we don't worry
     //    about what happens if the new name conflicts
@@ -290,7 +290,7 @@ void AttrImpl::setValue(const DOMString &newvalue)
     hasStringValue(true);
     isSpecified(true);
     changed();
-    
+
     if (isIdAttr())
         this->getOwnerDocument()->getNodeIDMap()->add(this);
 
@@ -301,7 +301,7 @@ void AttrImpl::setValue(const DOMString &newvalue)
 DOMString AttrImpl::toString()
 {
     DOMString retString;
-    
+
     retString.appendData(name);
     retString.appendData(DOMString("=\""));
     retString.appendData(getValue());
@@ -331,9 +331,9 @@ void AttrImpl::setOwnerElement(ElementImpl *ownerElem)
 // ParentNode stuff
 
 void AttrImpl::cloneChildren(const NodeImpl &other) {
-  //    for (NodeImpl *mykid = other.getFirstChild(); 
-    for (NodeImpl *mykid = ((NodeImpl&)other).getFirstChild(); 
-         mykid != null; 
+  //    for (NodeImpl *mykid = other.getFirstChild();
+    for (NodeImpl *mykid = ((NodeImpl&)other).getFirstChild();
+         mykid != null;
          mykid = mykid->getNextSibling()) {
         this->appendChild(mykid->cloneNode(true));
     }
@@ -381,14 +381,14 @@ unsigned int AttrImpl::getLength() {
 }
 
 bool AttrImpl::hasChildNodes()
-{ 
+{
     return value != null;
-}; 
+};
 
 
 
 NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
- 
+
     DocumentImpl *ownerDocument = getOwnerDocument();
     bool errorChecking = ownerDocument->getErrorChecking();
 
@@ -420,7 +420,7 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
                                        null);
                 }
             }
-        }                       
+        }
 
         while (newChild->hasChildNodes()) {    // Move
             insertBefore(newChild->getFirstChild(), refChild);
@@ -467,7 +467,7 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 
     makeChildNode(); // make sure we have a node and not a string
 
-    // Convert to internal type, to avoid repeated casting  
+    // Convert to internal type, to avoid repeated casting
     ChildNode * newInternal = (ChildNode *)newChild;
 
     NodeImpl *oldparent = newInternal->getParentNode();
@@ -481,7 +481,7 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     // Attach up
     newInternal->ownerNode = this;
     newInternal->isOwned(true);
-        
+
     // Attach before and after
     // Note: firstChild.previousSibling == lastChild!!
     ChildNode *firstChild = (ChildNode *) value;
@@ -536,8 +536,8 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 
     return newInternal;
 }
-  
-  
+
+
 NodeImpl *AttrImpl::item(unsigned int index) {
 
     if (hasStringValue()) {
@@ -550,15 +550,15 @@ NodeImpl *AttrImpl::item(unsigned int index) {
         }
     }
     ChildNode *nodeListNode = (ChildNode *) value;
-    for (unsigned int nodeListIndex = 0; 
-         nodeListIndex < index && nodeListNode != null; 
+    for (unsigned int nodeListIndex = 0;
+         nodeListIndex < index && nodeListNode != null;
          nodeListIndex++) {
         nodeListNode = nodeListNode->nextSibling;
     }
     return nodeListNode;
 }
-  
-  
+
+
 NodeImpl *AttrImpl::removeChild(NodeImpl *oldChild) {
 
     DocumentImpl *ownerDocument = getOwnerDocument();
@@ -580,15 +580,15 @@ NodeImpl *AttrImpl::removeChild(NodeImpl *oldChild) {
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    if (ranges->elementAt(i) != null) 
+                    if (ranges->elementAt(i) != null)
                         ranges->elementAt(i)->updateRangeForDeletedNode(oldChild);
                 }
             }
         }
     }
-    
+
     ChildNode * oldInternal = (ChildNode *) oldChild;
-    
+
     // Patch linked list around oldChild
     // Note: lastChild == firstChild->previousSibling
     if (oldInternal == value) {
@@ -634,27 +634,27 @@ NodeImpl *AttrImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild) {
     // changed() already done.
     return oldChild;
 }
-  
+
 
 void AttrImpl::setReadOnly(bool readOnl, bool deep) {
     NodeImpl::setReadOnly(readOnl, deep);
-      
+
     if (deep) {
         if (hasStringValue()) {
             return;
         }
         // Recursively set kids
-        for (ChildNode *mykid = (ChildNode *) value; 
-             mykid != null; 
+        for (ChildNode *mykid = (ChildNode *) value;
+             mykid != null;
              mykid = mykid->nextSibling)
             if(! (mykid->isEntityReference()))
                 mykid->setReadOnly(readOnl,true);
     }
 }
-  
-  
+
+
 //Introduced in DOM Level 2
-  
+
 void AttrImpl::normalize()
 {
     if (hasStringValue()) {
@@ -664,11 +664,11 @@ void AttrImpl::normalize()
     for (kid = (ChildNode *) value; kid != null; kid = next)
     {
         next = kid->nextSibling;
-        
+
         // If kid and next are both Text nodes (but _not_ CDATASection,
         // which is a subclass of Text), they can be merged.
-        if (next != null && 
-            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  && 
+        if (next != null &&
+            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  &&
             next->isTextImpl()  && !(next->isCDATASectionImpl()) )
         {
             ((TextImpl *) kid)->appendData(((TextImpl *) next)->getData());
@@ -677,13 +677,13 @@ void AttrImpl::normalize()
                 deleteIf(next);
             next = kid; // Don't advance; there might be another.
         }
-        
-        // Otherwise it might be an Element, which is handled recursively  
+
+        // Otherwise it might be an Element, which is handled recursively
         else
             if (kid->isElementImpl())
                 kid->normalize();
     };
-    
+
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };

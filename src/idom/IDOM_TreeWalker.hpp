@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,42 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:33  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:25:56  tng
+ * Copyright update.
  *
- * Revision 1.9  2000/08/08 01:00:36  aruna1
- * detach functionality removed from TreeWalker
- *
- * Revision 1.8  2000/02/24 20:11:29  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.7  2000/02/17 17:47:25  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.6  2000/02/15 23:17:37  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.5  2000/02/11 03:01:04  abagchi
- * Made protected method public to compile, must be fixed later
- *
- * Revision 1.4  2000/02/11 01:05:11  abagchi
- * Added API docs
- *
- * Revision 1.3  2000/02/06 07:47:31  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:27  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.1.1.1  1999/11/09 01:09:05  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:22  rahul
- * Swat for adding in Product name and CVS comment log variable.
+ * Revision 1.1.1.1  2001/04/03 00:14:33  andyh
+ * IDOM
  *
  */
 
@@ -283,9 +252,9 @@ class CDOM_EXPORT DOM_TreeWalker {
         /**
           * Moves the <code>DOM_TreeWalker</code> to the previous visible node in document
           * order relative to the current node, and returns the new node. If the current
-          * node has no previous node, 
+          * node has no previous node,
           * or if the search for previousNode attempts to step upward from the DOM_TreeWalker's
-          * root node, returns <code>null</code>, and retains the current node. 
+          * root node, returns <code>null</code>, and retains the current node.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
@@ -295,7 +264,7 @@ class CDOM_EXPORT DOM_TreeWalker {
         /**
           * Moves the <code>DOM_TreeWalker</code> to the next visible node in document order
           * relative to the current node, and returns the new node. If the current node has
-          * no next node, 
+          * no next node,
           * or if the search for nextNode attempts to step upward from the DOM_TreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
           *
@@ -316,7 +285,7 @@ class CDOM_EXPORT DOM_TreeWalker {
         void			setCurrentNode(DOM_Node currentNode);
         //@}
 
-        
+
     protected:
         DOM_TreeWalker(TreeWalkerImpl* impl);
 

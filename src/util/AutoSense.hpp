@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/05/11 13:26:26  tng
+ * Copyright update.
+ *
  * Revision 1.19  2001/03/23 19:01:25  tng
  * [Bug 1018]  AutoSense looks for "IRIX" when it should look for "sgi" or "__sgi".  By Jeff Harrell.
  *

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -65,7 +65,7 @@
 
 
 /**
-  * Class for representing unicode characters 
+  * Class for representing unicode characters
   */
 class XMLUTIL_EXPORT XMLUniCharacter
 {
@@ -74,7 +74,7 @@ public:
     //  Public Constants
     // -----------------------------------------------------------------------
     // Unicode chara types
-    enum { 
+    enum {
         UNASSIGNED              = 0,
         UPPERCASE_LETTER        = 1,
         LOWERCASE_LETTER        = 2,
@@ -122,7 +122,7 @@ public:
 	//@}
 
 private :
-    
+
     /** @name Constructors and Destructor */
     //@{
     /** Unimplemented default constructor */

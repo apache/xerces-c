@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/11 13:26:30  tng
+ * Copyright update.
+ *
  * Revision 1.1  2001/05/10 20:51:20  tng
  * Schema: Add DecimalDatatypeValidator and XMLBigDecimal, XMLBigInteger.  By Pei Yong Zhang.
  *
@@ -101,21 +104,21 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
 
     parseBigDecimal(strValue, ret_value, fScale);
     fIntVal = new XMLBigInteger(ret_value);
-   
+
 }
 
 XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy)
 :fIntVal(0)
 ,fScale(toCopy.getScale())
 {
-    
+
     //invoke XMLBigInteger' copy ctor
-    fIntVal = new XMLBigInteger(*(toCopy.getValue())); 
+    fIntVal = new XMLBigInteger(*(toCopy.getValue()));
 }
 
 
 /***
-   *               
+   *
    *  Leading and trailing whitespaces are allowed, and trimmed
    *
    *  Only one and either of (+,-) after the leading whitespace, before
@@ -168,7 +171,7 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
         endPtr--;
 
     //
-    //  Work through what remains and convert each char to a digit. 
+    //  Work through what remains and convert each char to a digit.
     //
     XMLCh* retPtr = retBuffer;
     //
@@ -186,7 +189,7 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
         // skip the '+'
         startPtr++;
     }
-        
+
     // Leading zero will be taken care by BigInteger
 
     bool   dotSignFound = false;
@@ -221,7 +224,7 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
         startPtr++;
     }
 
-    *retPtr = 0;   //terminated 
+    *retPtr = 0;   //terminated
     return;
 }
 
@@ -233,20 +236,20 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
 
 int XMLBigDecimal::compareValues(const XMLBigDecimal* const lValue
                                , const XMLBigDecimal* const rValue)
-{                                                  
+{
     //
     if ((!lValue) ||
         (!rValue) )
         ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLBIGDECIMAL_Null_value);        
-    
+        //ThrowXML(NumberFormatException, XMLExcepts::XMLBIGDECIMAL_Null_value);
+
     /* Optimization: would run fine without the next three lines */
 	int sigDiff = lValue->getSign() - rValue->getSign();
 	if (sigDiff != 0)
 	    return (sigDiff > 0 ? 1 : -1);
 
     //
-	// If signs match, scale and compare intVals 
+	// If signs match, scale and compare intVals
     // since matchScale will destructively change the scale
     // we make a copy for both
     //

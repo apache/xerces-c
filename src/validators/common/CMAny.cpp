@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 13:27:14  tng
+ * Copyright update.
+ *
  * Revision 1.2  2001/05/03 21:02:27  tng
  * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
  *

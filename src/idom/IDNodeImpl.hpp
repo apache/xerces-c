@@ -3,38 +3,38 @@
 
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -48,10 +48,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -120,7 +120,7 @@ public:
     IDNodeImpl(IDOM_Node *ownerDocument);
     IDNodeImpl(const IDNodeImpl &other);
     ~IDNodeImpl();
-    
+
 
      void changed();
      int changes() const;
@@ -149,7 +149,7 @@ public:
      void                setReadOnly(bool readOnly, bool deep);
      void                setUserData(void *value);
      bool                supports(const XMLCh *feature, const XMLCh *version) const;
- 
+
     static  bool         isKidOK(IDOM_Node *parent, IDOM_Node *child);
 
     //Utility, not part of DOM Level 2 API
@@ -234,15 +234,15 @@ public: // should really be protected - ALH
     inline void setValue(bool value) {
         flags = (value ? flags | SETVALUE : flags & ~SETVALUE);
     }
-    
+
     inline bool isIdAttr() const {
         return (flags & ID_ATTR) != 0;
     }
-    
+
     inline void isIdAttr(bool value) {
         flags = (value ? flags | ID_ATTR : flags & ~ID_ATTR);
     }
-    
+
     inline bool hasUserData() const {
         return (flags & USERDATA) != 0;
     }
@@ -253,7 +253,7 @@ public: // should really be protected - ALH
 
     //
     //  LeafNode is set true for node types that can not be ParentNodes (can't have children)
-    //    This knowledge is used to allow casting from any unknown node type to the 
+    //    This knowledge is used to allow casting from any unknown node type to the
     //    IDParentImpl or IDChildImpl parts of the node.
     //
     inline bool isLeafNode() const {
@@ -284,7 +284,7 @@ public: // should really be protected - ALH
 //   be implemented by all node types.  Since there is no inheritance of implementation,
 //   using this macro in the class declaration of the node types make it easier to
 //   accurately get all of the functions declared.
-// 
+//
 #define IDOM_NODE_FUNCTIONS \
     virtual       IDOM_Node          *appendChild(IDOM_Node *newChild) ;\
     virtual       IDOM_Node          *cloneNode(bool deep) const ;\
@@ -309,7 +309,7 @@ public: // should really be protected - ALH
     virtual       IDOM_Node          *replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild) ;\
     virtual       void                setNodeValue(const XMLCh  *nodeValue) ;\
     virtual       bool                supports(const XMLCh *feature, const XMLCh *version) const ;\
-    virtual       void                setPrefix(const XMLCh * prefix) 
+    virtual       void                setPrefix(const XMLCh * prefix)
 
 
 /*

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001 International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -69,9 +69,9 @@ class XMLUTIL_EXPORT XMLBigInteger
 public:
 
 	/**
-	 * Constructs a newly allocated <code>XMLBigInteger</code> object that 
-	 * represents the value represented by the string. The string is 
-	 * converted to an int value as if by the <code>valueOf</code> method. 
+	 * Constructs a newly allocated <code>XMLBigInteger</code> object that
+	 * represents the value represented by the string. The string is
+	 * converted to an int value as if by the <code>valueOf</code> method.
 	 *
 	 * @param      s   the <code>String</code> to be converted to an
 	 *                 <code>XMLBigInteger</code>.
@@ -90,9 +90,9 @@ public:
                               , int&   signValue);
 
     static int  compareValues(const XMLBigInteger* const lValue
-                             ,const XMLBigInteger* const rValue);                              
+                             ,const XMLBigInteger* const rValue);
 
-   
+
     void multiply(const unsigned int byteToShift);
 
     void divide(const unsigned int byteToShift);
@@ -103,9 +103,9 @@ public:
 
 	/**
 	 * Compares this object to the specified object.
-	 * The result is <code>true</code> if and only if the argument is not 
-	 * <code>null</code> and is an <code>XMLBigInteger</code> object that contains 
-	 * the same <code>int</code> value as this object. 
+	 * The result is <code>true</code> if and only if the argument is not
+	 * <code>null</code> and is an <code>XMLBigInteger</code> object that contains
+	 * the same <code>int</code> value as this object.
 	 *
 	 * @param   obj   the object to compare with.
 	 * @return  <code>true</code> if the objects are the same;
@@ -120,7 +120,7 @@ public:
 	int getSign() const;
 
 private:
-    
+
 	void setSign(int);
 
 	/*
@@ -134,9 +134,9 @@ private:
     //
     //  fSign
     //     to represent the sign of the number.
-    // 
+    //
 	//  fMagnitude
-    //     the buffer holding the number.     
+    //     the buffer holding the number.
     //
     // -----------------------------------------------------------------------
 

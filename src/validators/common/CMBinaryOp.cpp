@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 13:27:15  tng
+ * Copyright update.
+ *
  * Revision 1.2  2001/02/16 14:58:57  tng
  * Schema: Update Makefile, configure files, project files, and include path in
  * certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.

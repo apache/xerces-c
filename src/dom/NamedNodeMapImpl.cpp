@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -321,7 +321,7 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &namespaceURI,
 	return -1;
     // This is a linear search through the same nodes Vector.
     // The Vector is sorted on the DOM Level 1 nodename.
-    // The DOM Level 2 NS keys are namespaceURI and Localname, 
+    // The DOM Level 2 NS keys are namespaceURI and Localname,
     // so we must linear search thru it.
     // In addition, to get this to work with nodes without any namespace
     // (namespaceURI and localNames are both null) we then use the nodeName

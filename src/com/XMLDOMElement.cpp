@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -79,7 +79,7 @@ STDMETHODIMP CXMLDOMElement::get_tagName(BSTR  *pVal)
 		DOMString val = element.getTagName();
 		*pVal = SysAllocStringLen(val.rawBuffer(),val.length());
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -107,7 +107,7 @@ STDMETHODIMP CXMLDOMElement::getAttribute(BSTR name, VARIANT  *pVal)
 		V_VT(pVal)   = VT_BSTR;
 		V_BSTR(pVal) = SysAllocStringLen(a.rawBuffer(),a.length());
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -132,7 +132,7 @@ STDMETHODIMP CXMLDOMElement::setAttribute(BSTR name, VARIANT value)
 			element.setAttribute(name,(BSTR) (_bstr_t) value);
 		}
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -153,7 +153,7 @@ STDMETHODIMP CXMLDOMElement::removeAttribute(BSTR name)
 	{
 		element.removeAttribute(name);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -180,7 +180,7 @@ STDMETHODIMP CXMLDOMElement::getAttributeNode(BSTR name, IXMLDOMAttribute  **att
 
 	CXMLDOMAttributeObj *pObj = NULL;
 	HRESULT hr = CXMLDOMAttributeObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 
 	pObj->AddRef();
@@ -190,19 +190,19 @@ STDMETHODIMP CXMLDOMElement::getAttributeNode(BSTR name, IXMLDOMAttribute  **att
 	{
 		pObj->attr = attrNode;
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMAttribute, reinterpret_cast<LPVOID*> (attr));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*attr = NULL;
 
 	pObj->Release();
@@ -263,7 +263,7 @@ STDMETHODIMP CXMLDOMElement::setAttributeNode(IXMLDOMAttribute  *attr, IXMLDOMAt
 			}
 		}
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}
@@ -287,7 +287,7 @@ STDMETHODIMP CXMLDOMElement::removeAttributeNode(IXMLDOMAttribute  *attr, IXMLDO
 
 	CXMLDOMAttributeObj *pObj = NULL;
 	HRESULT hr = CXMLDOMAttributeObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -303,19 +303,19 @@ STDMETHODIMP CXMLDOMElement::removeAttributeNode(IXMLDOMAttribute  *attr, IXMLDO
 		}
 		pObj->attr = element.removeAttributeNode(*((DOM_Attr*) id));
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMAttribute, reinterpret_cast<LPVOID*> (attributeNode));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*attributeNode = NULL;
 
 	pObj->Release();
@@ -333,7 +333,7 @@ STDMETHODIMP CXMLDOMElement::getElementsByTagName(BSTR tagName, IXMLDOMNodeList 
 
 	CXMLDOMNodeListObj *pObj = NULL;
 	HRESULT hr = CXMLDOMNodeListObj::CreateInstance(&pObj);
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		return hr;
 	
 	pObj->AddRef();
@@ -343,19 +343,19 @@ STDMETHODIMP CXMLDOMElement::getElementsByTagName(BSTR tagName, IXMLDOMNodeList 
 	{
 		pObj->m_container = element.getElementsByTagName(tagName);
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return MakeHRESULT(ex);
 	}
 	catch(...)
 	{
-		pObj->Release(); 
+		pObj->Release();
 		return E_FAIL;
 	}
 	
 	hr = pObj->QueryInterface(IID_IXMLDOMNodeList, reinterpret_cast<LPVOID*> (pVal));
-	if (S_OK != hr) 
+	if (S_OK != hr)
 		*pVal = NULL;
 
 	pObj->Release();
@@ -370,7 +370,7 @@ STDMETHODIMP CXMLDOMElement::normalize(void)
 	{
 		element.normalize();
 	}
-	catch(DOM_DOMException& ex) 
+	catch(DOM_DOMException& ex)
 	{
 		return MakeHRESULT(ex);
 	}

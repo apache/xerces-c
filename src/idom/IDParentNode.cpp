@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -72,7 +72,7 @@ IDParentNode::IDParentNode(IDOM_Document *ownerDoc)
     : fOwnerDocument(ownerDoc), fChildNodeList(castToNode(this))
 {
     fFirstChild = 0;
-};  
+};
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
@@ -86,16 +86,16 @@ IDParentNode::IDParentNode(const IDParentNode &other)  :
 };
 
 
-IDOM_Node * IDParentNode::appendChild(IDOM_Node *newChild)      
+IDOM_Node * IDParentNode::appendChild(IDOM_Node *newChild)
 {
     return insertBefore(newChild, 0);
 };
 
 
-void IDParentNode::cloneChildren(const IDOM_Node *other) {    
-  //    for (IDOM_Node *mykid = other.getFirstChild(); 
-    for (IDOM_Node *mykid = other->getFirstChild(); 
-         mykid != 0; 
+void IDParentNode::cloneChildren(const IDOM_Node *other) {
+  //    for (IDOM_Node *mykid = other.getFirstChild();
+    for (IDOM_Node *mykid = other->getFirstChild();
+         mykid != 0;
          mykid = mykid->getNextSibling()) {
             castToNodeImpl(this)->appendChild(mykid->cloneNode(true));
     }
@@ -119,13 +119,13 @@ IDOM_NodeList *IDParentNode::getChildNodes() const {
 
 IDOM_Node * IDParentNode::getFirstChild() const {
     return fFirstChild;
-}; 
+};
 
 
 IDOM_Node * IDParentNode::getLastChild() const
 {
     return lastChild();
-}; 
+};
 
 IDOM_Node * IDParentNode::lastChild() const
 {
@@ -137,7 +137,7 @@ IDOM_Node * IDParentNode::lastChild() const
     IDChildNode *firstChild = castToChildImpl(fFirstChild);
     IDOM_Node *ret = firstChild->previousSibling;
     return ret;
-}; 
+};
 
 
 //
@@ -153,9 +153,9 @@ void IDParentNode::lastChild(IDOM_Node *node) {
 
 
 bool IDParentNode::hasChildNodes() const
-{ 
+{
     return fFirstChild!=0;
-}; 
+};
 
 
 
@@ -163,11 +163,11 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
     IDNodeImpl *thisNodeImpl = castToNodeImpl(this);
     if (thisNodeImpl->isReadOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    
+
     if (newChild->getOwnerDocument() != fOwnerDocument)
         throw IDOM_DOMException(IDOM_DOMException::WRONG_DOCUMENT_ERR, 0);
-    
-    
+
+
     // Prevent cycles in the tree
     bool treeSafe=true;
     for(IDOM_Node *a=castToNode(this)->getParentNode();
@@ -176,11 +176,11 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
         treeSafe=(newChild!=a);
     if(!treeSafe)
         throw IDOM_DOMException(IDOM_DOMException::HIERARCHY_REQUEST_ERR,0);
-    
+
     // refChild must in fact be a child of this node (or 0)
     if (refChild!=0 && refChild->getParentNode() != castToNode(this))
         throw IDOM_DOMException(IDOM_DOMException::NOT_FOUND_ERR,0);
-    
+
     if (newChild->getNodeType() == IDOM_Node::DOCUMENT_FRAGMENT_NODE)
     {
         // SLOW BUT SAFE: We could insert the whole subtree without
@@ -189,7 +189,7 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
         // ends of the list.) But we know some subclasses have special-
         // case behavior they add to insertBefore(), so we don't risk it.
         // This approch also takes fewer bytecodes.
-        
+
         // NOTE: If one of the children is not a legal child of this
         // node, throw HIERARCHY_REQUEST_ERR before _any_ of the children
         // have been transferred. (Alternative behaviors would be to
@@ -197,7 +197,7 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
         // which are acceptable to the target node, neither of which is
         // as robust. PR-DOM-0818 isn't entirely clear on which it
         // recommends?????
-        
+
         // No need to check kids for right-document; if they weren't,
         // they wouldn't be kids of that DocFrag.
         for(IDOM_Node *kid=newChild->getFirstChild(); // Prescan
@@ -206,14 +206,14 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
         {
             if (!IDDocumentImpl::isKidOK(castToNode(this), kid))
               throw IDOM_DOMException(IDOM_DOMException::HIERARCHY_REQUEST_ERR,0);
-        }                       
+        }
         while(newChild->hasChildNodes())     // Move
             insertBefore(newChild->getFirstChild(),refChild);
     }
-    
+
     else if (!IDDocumentImpl::isKidOK(castToNode(this), newChild))
         throw IDOM_DOMException(IDOM_DOMException::HIERARCHY_REQUEST_ERR,0);
-    
+
     else
     {
         IDOM_Node *oldparent=newChild->getParentNode();
@@ -224,7 +224,7 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
         // Attach up
         castToNodeImpl(newChild)->fOwnerNode = castToNode(this);
         castToNodeImpl(newChild)->isOwned(true);
-        
+
         // Attach before and after
         // Note: fFirstChild.previousSibling == lastChild!!
         if (fFirstChild == 0) {
@@ -264,7 +264,7 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
     }
 
     changed();
-    
+
 #ifdef idom_revisit
     if (this->getOwnerDocument() != 0) {
         typedef RefVectorOf<RangeImpl> RangeImpls;
@@ -282,18 +282,18 @@ IDOM_Node *IDParentNode::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild) 
 
     return newChild;
 };
-  
-  
-  
-IDOM_Node *IDParentNode::removeChild(IDOM_Node *oldChild) 
+
+
+
+IDOM_Node *IDParentNode::removeChild(IDOM_Node *oldChild)
 {
     if (castToNodeImpl(this)->isReadOnly())
         throw IDOM_DOMException(
         IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    
+
     if (oldChild != 0 && oldChild->getParentNode() != castToNode(this))
         throw IDOM_DOMException(IDOM_DOMException::NOT_FOUND_ERR, 0);
-    
+
     //fix other ranges for change before deleting the node
 #ifdef idom_revisit
     if (this->getOwnerDocument() !=  0  ) {
@@ -303,15 +303,15 @@ IDOM_Node *IDParentNode::removeChild(IDOM_Node *oldChild)
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    if (ranges->elementAt(i) != 0) 
+                    if (ranges->elementAt(i) != 0)
                         ranges->elementAt(i)->updateRangeForDeletedNode(oldChild);
                 }
             }
         }
     }
 #endif
-    
-   
+
+
     // Patch linked list around oldChild
     // Note: lastChild == fFirstChild->previousSibling
     if (oldChild == fFirstChild) {
@@ -353,35 +353,35 @@ IDOM_Node *IDParentNode::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
     // changed() already done.
     return removeChild(oldChild);
 };
-  
 
-  
+
+
 //Introduced in DOM Level 2
-  
+
 void IDParentNode::normalize()
 {
     IDOM_Node *kid, *next;
     for (kid = fFirstChild; kid != 0; kid = next)
     {
         next = castToChildImpl(kid)->nextSibling;
-        
+
         // If kid and next are both Text nodes (but _not_ CDATASection,
         // which is a subclass of Text), they can be merged.
-        if (next != 0 && 
-            kid->getNodeType() == IDOM_Node::TEXT_NODE   && 
+        if (next != 0 &&
+            kid->getNodeType() == IDOM_Node::TEXT_NODE   &&
             next->getNodeType() == IDOM_Node::TEXT_NODE )
         {
             ((IDTextImpl *) kid)->appendData(((IDTextImpl *) next)->getData());
             removeChild(next);
             next = kid; // Don't advance; there might be another.
         }
-        
-        // Otherwise it might be an Element, which is handled recursively  
+
+        // Otherwise it might be an Element, which is handled recursively
         else
             if (kid->getNodeType() == IDOM_Node::ELEMENT_NODE)
                 kid->normalize();
     };
-    
+
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };

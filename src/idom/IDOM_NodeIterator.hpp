@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,42 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:31  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:25:53  tng
+ * Copyright update.
  *
- * Revision 1.9  2000/02/17 17:47:25  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.8  2000/02/16 19:39:38  aruna1
- * API Doc++ changes in
- *
- * Revision 1.7  2000/02/15 23:17:37  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.6  2000/02/11 18:14:11  abagchi
- * Fixed doc++ bugs
- *
- * Revision 1.5  2000/02/11 03:01:04  abagchi
- * Made protected method public to compile, must be fixed later
- *
- * Revision 1.4  2000/02/10 23:38:05  abagchi
- * Added API docs
- *
- * Revision 1.3  2000/02/06 07:47:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:28  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  1999/11/08 20:44:20  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:01  twl
- * Initial checkin
+ * Revision 1.1.1.1  2001/04/03 00:14:31  andyh
+ * IDOM
  *
  */
 

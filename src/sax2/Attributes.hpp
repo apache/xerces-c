@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/11 13:26:25  tng
+ * Copyright update.
+ *
  * Revision 1.4  2001/02/26 19:44:19  tng
  * Schema: add utility class QName, by Pei Yong Zhang.
  *
@@ -134,10 +137,10 @@
   * }
   * </pre>
   *
-  * The AttributesImpl helper class provides a convenience 
+  * The AttributesImpl helper class provides a convenience
   * implementation for use by parser or application writers.
   *
-  * @see Sax2DocumentHandler#startElement 
+  * @see Sax2DocumentHandler#startElement
   * @see AttributesImpl#AttributesImpl
   */
 
@@ -170,7 +173,7 @@ public:
     * declared or specified.  The number of attributes may be
     * zero.
     *
-    * @return The number of attributes in the list.  
+    * @return The number of attributes in the list.
     */
     virtual unsigned int getLength() const = 0;
 
@@ -185,7 +188,7 @@ public:
     * @param index The index of the attribute in the list (starting at 0).
     * @return The URI of the indexed attribute, or null
     *         if the index is out of range.
-    * @see #getLength 
+    * @see #getLength
     */
 	virtual const XMLCh* getURI(const unsigned int index) const = 0;
 
@@ -200,7 +203,7 @@ public:
     * @param index The index of the attribute in the list (starting at 0).
     * @return The local name of the indexed attribute, or null
     *         if the index is out of range.
-    * @see #getLength 
+    * @see #getLength
     */
     virtual const XMLCh* getLocalName(const unsigned int index) const = 0;
 
@@ -215,7 +218,7 @@ public:
     * @param index The index of the attribute in the list (starting at 0).
     * @return The qName of the indexed attribute, or null
     *         if the index is out of range.
-    * @see #getLength 
+    * @see #getLength
     */
     virtual const XMLCh* getQName(const unsigned int index) const = 0;
 
@@ -237,7 +240,7 @@ public:
     * @param index The index of the attribute in the list (starting at 0).
     * @return The attribute type as a string, or
     *         null if the index is out of range.
-    * @see #getLength 
+    * @see #getLength
     * @see #getType(String)
     */
     virtual const XMLCh* getType(const unsigned int index) const = 0;
@@ -299,7 +302,7 @@ public:
      * Look up an attribute's type by XML 1.0 qualified name.
      *
      * <p>See #getType for a description of the possible types.</p>
-     * 
+     *
      * @param qName The XML 1.0 qualified name.
      * @return The attribute type as a string, or null if the
      *         attribute is not in the list or if qualified names
@@ -324,7 +327,7 @@ public:
      * Look up an attribute's value by XML 1.0 qualified name.
      *
      * <p>See #getValue for a description of the possible values.</p>
-     * 
+     *
      * @param qName The XML 1.0 qualified name.
      * @return The attribute value as a string, or null if the
      *         attribute is not in the list or if qualified names
@@ -340,7 +343,7 @@ private :
     Attributes(const Attributes&);
     /* Assignment operator */
     void operator=(const Attributes&);
-    
+
 };
 
 #endif

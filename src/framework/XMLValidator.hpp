@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.13  2001/05/11 13:25:33  tng
+  * Copyright update.
+  *
   * Revision 1.12  2001/05/03 20:34:22  tng
   * Schema: SchemaValidator update
   *

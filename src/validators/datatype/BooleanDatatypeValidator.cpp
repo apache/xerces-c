@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/11 13:27:26  tng
+ * Copyright update.
+ *
  * Revision 1.1  2001/05/09 18:43:35  tng
  * Add StringDatatypeValidator and BooleanDatatypeValidator.  By Pei Yong Zhang.
  *
@@ -83,16 +86,16 @@ const XMLCh fgValueSpace[][32] =
 // ---------------------------------------------------------------------------
 BooleanDatatypeValidator::BooleanDatatypeValidator(
                           DatatypeValidator*            const baseValidator
-                        , RefHashTableOf<KVStringPair>* const facets     
+                        , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet)
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Boolean)
 {
     // Set Facets if any defined
-    if ( facets ) 
-    { 
+    if ( facets )
+    {
         XMLCh* key;
         XMLCh* value;
-        RefHashTableOfEnumerator<KVStringPair> e(facets);  
+        RefHashTableOfEnumerator<KVStringPair> e(facets);
 
         while (e.hasMoreElements())
         {
@@ -100,17 +103,17 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
             key = pair.getKey();
             value = pair.getValue();
 
-            if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0) 
+            if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)
             {
                 setPattern(value);
                 setFacetsDefined(DatatypeValidator::FACET_PATTERN);
-            } 
-            else 
+            }
+            else
             {
                 ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
             }
 
-        } 
+        }
 
     }// End of facet setting
 }
@@ -120,11 +123,11 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
 
     //validate against base validator if any
     BooleanDatatypeValidator *pBaseValidator = (BooleanDatatypeValidator*) this->getBaseValidator();
-    if (pBaseValidator !=0) 
+    if (pBaseValidator !=0)
         pBaseValidator->checkContent(content, true);
 
     // we check pattern first
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 ) 
+    if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
         if (getRegex() ==0)
@@ -145,12 +148,12 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
         return;
 
     int   i = 0;
-    for ( ; i < SIZE; i++ ) 
+    for ( ; i < SIZE; i++ )
     {
         if ( XMLString::compareString(content, fgValueSpace[i]) ==0 )
             break;
     }
-    
+
     if (i == SIZE)
         ThrowXML(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType);
         //Not valid boolean type
@@ -168,15 +171,15 @@ int BooleanDatatypeValidator::compare(const XMLCh* const lValue
         ( XMLString::compareString(lValue, fgValueSpace[2]) ==0 ) )
     {
         if (( XMLString::compareString(rValue, fgValueSpace[0]) ==0 ) ||
-            ( XMLString::compareString(rValue, fgValueSpace[2]) ==0 ) )        
+            ( XMLString::compareString(rValue, fgValueSpace[2]) ==0 ) )
             return 0;
     }
-    else 
+    else
     if (( XMLString::compareString(lValue, fgValueSpace[1]) ==0 ) ||
         ( XMLString::compareString(lValue, fgValueSpace[3]) ==0 ) )
     {
         if (( XMLString::compareString(rValue, fgValueSpace[1]) ==0 ) ||
-            ( XMLString::compareString(rValue, fgValueSpace[3]) ==0 ) )        
+            ( XMLString::compareString(rValue, fgValueSpace[3]) ==0 ) )
             return 0;
     }
 

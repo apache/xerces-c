@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -88,14 +88,14 @@ private:
 
 public:
     IDXMLDeclImpl(IDOM_Document *ownerDoc);
-    IDXMLDeclImpl(IDOM_Document *ownerDoc, const XMLCh * version, 
+    IDXMLDeclImpl(IDOM_Document *ownerDoc, const XMLCh * version,
                     const XMLCh * encoding, const XMLCh * standalone);
     IDXMLDeclImpl(const IDXMLDeclImpl &other, bool deep=false);
     virtual ~IDXMLDeclImpl();
 
      // Declare all of the functions from IDOM_Node.
     IDOM_NODE_FUNCTIONS;
-    
+
 
     virtual const XMLCh * getVersion() const;
     virtual const XMLCh * getEncoding() const;

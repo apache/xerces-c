@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,12 +48,15 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
 
+/*
+ * $Id$
+ */
 
 #ifndef IDOM_Node_HEADER_GUARD_
 #define IDOM_Node_HEADER_GUARD_
@@ -116,7 +119,7 @@ class  CDOM_EXPORT IDOM_Node {
     /** @name Destructor. */
     //@{
 	 /**
-	  * Destructor for IDOM_Node.  
+	  * Destructor for IDOM_Node.
 	  *
 	  */
         virtual ~IDOM_Node() {};
@@ -395,19 +398,19 @@ class  CDOM_EXPORT IDOM_Node {
     //@{
 
     /**
-     * Puts all <CODE>IDOM_Text</CODE> 
-     * nodes in the full depth of the sub-tree underneath this <CODE>IDOM_Node</CODE>, 
-     * including attribute nodes, into a "normal" form where only markup (e.g., 
-     * tags, comments, processing instructions, CDATA sections, and entity 
+     * Puts all <CODE>IDOM_Text</CODE>
+     * nodes in the full depth of the sub-tree underneath this <CODE>IDOM_Node</CODE>,
+     * including attribute nodes, into a "normal" form where only markup (e.g.,
+     * tags, comments, processing instructions, CDATA sections, and entity
      * references) separates <CODE>IDOM_Text</CODE>
      * nodes, i.e., there are neither adjacent <CODE>IDOM_Text</CODE>
      * nodes nor empty <CODE>IDOM_Text</CODE>
-     * nodes. This can be used to ensure that the DOM view of a document is the 
-     * same as if it were saved and re-loaded, and is useful when operations 
-     * (such as XPointer lookups) that depend on a particular document tree 
+     * nodes. This can be used to ensure that the DOM view of a document is the
+     * same as if it were saved and re-loaded, and is useful when operations
+     * (such as XPointer lookups) that depend on a particular document tree
      * structure are to be used.
-     * <P><B>Note:</B> In cases where the document contains <CODE>IDOM_CDATASections</CODE>, 
-     * the normalize operation alone may not be sufficient, since XPointers do 
+     * <P><B>Note:</B> In cases where the document contains <CODE>IDOM_CDATASections</CODE>,
+     * the normalize operation alone may not be sufficient, since XPointers do
      * not differentiate between <CODE>IDOM_Text</CODE>
      * nodes and <CODE>IDOM_CDATASection</CODE>
      * nodes.</P>
@@ -443,8 +446,8 @@ class  CDOM_EXPORT IDOM_Node {
      * based on an examination of the namespace declarations in scope. It is
      * merely the namespace URI given at creation time.
      * <p>
-     * For nodes of any type other than <CODE>ELEMENT_NODE</CODE> and 
-     * <CODE>ATTRIBUTE_NODE</CODE> and nodes created with a DOM Level 1 method, 
+     * For nodes of any type other than <CODE>ELEMENT_NODE</CODE> and
+     * <CODE>ATTRIBUTE_NODE</CODE> and nodes created with a DOM Level 1 method,
      * such as <CODE>createElement</CODE> from the <CODE>IDOM_Document</CODE>
      * interface, this is always <CODE>null</CODE>.
      *
@@ -476,15 +479,15 @@ class  CDOM_EXPORT IDOM_Node {
     /**
      * Set the <em>namespace prefix</em> of this node.
      * <p>
-     * Note that setting this attribute, when permitted, changes 
-     * the <CODE>nodeName</CODE> attribute, which holds the <EM>qualified 
-     * name</EM>, as well as the <CODE>tagName</CODE> and <CODE>name</CODE> 
+     * Note that setting this attribute, when permitted, changes
+     * the <CODE>nodeName</CODE> attribute, which holds the <EM>qualified
+     * name</EM>, as well as the <CODE>tagName</CODE> and <CODE>name</CODE>
      * attributes of the <CODE>IDOM_Element</CODE> and <CODE>IDOM_Attr</CODE>
      * interfaces, when applicable.
      * <p>
-     * Note also that changing the prefix of an 
-     * attribute, that is known to have a default value, does not make a new 
-     * attribute with the default value and the original prefix appear, since the 
+     * Note also that changing the prefix of an
+     * attribute, that is known to have a default value, does not make a new
+     * attribute with the default value and the original prefix appear, since the
      * <CODE>namespaceURI</CODE> and <CODE>localName</CODE> do not change.
      *
      *
@@ -495,14 +498,14 @@ class  CDOM_EXPORT IDOM_Node {
      * <br>
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      * <br>
-     *   NAMESPACE_ERR: Raised if the specified <CODE>prefix</CODE> is 
-     *      malformed, if the <CODE>namespaceURI</CODE> of this node is 
-     *      <CODE>null</CODE>, if the specified prefix is "xml" and the 
-     *      <CODE>namespaceURI</CODE> of this node is different from 
-     *      "http://www.w3.org/XML/1998/namespace", if this node is an attribute 
-     *      and the specified prefix is "xmlns" and the 
-     *      <CODE>namespaceURI</CODE> of this node is different from 
-     *      "http://www.w3.org/2000/xmlns/", or if this node is an attribute and 
+     *   NAMESPACE_ERR: Raised if the specified <CODE>prefix</CODE> is
+     *      malformed, if the <CODE>namespaceURI</CODE> of this node is
+     *      <CODE>null</CODE>, if the specified prefix is "xml" and the
+     *      <CODE>namespaceURI</CODE> of this node is different from
+     *      "http://www.w3.org/XML/1998/namespace", if this node is an attribute
+     *      and the specified prefix is "xmlns" and the
+     *      <CODE>namespaceURI</CODE> of this node is different from
+     *      "http://www.w3.org/2000/xmlns/", or if this node is an attribute and
      *      the <CODE>qualifiedName</CODE> of this node is "xmlns".
      */
     virtual void              setPrefix(const XMLCh * prefix) = 0;

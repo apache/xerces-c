@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,31 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:35  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:26:00  tng
+ * Copyright update.
  *
- * Revision 1.6  2000/08/08 01:00:37  aruna1
- * detach functionality removed from TreeWalker
- *
- * Revision 1.5  2000/02/24 20:11:31  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/15 23:17:37  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.3  2000/02/06 07:47:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:24  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.1.1.1  1999/11/09 01:09:20  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:34  rahul
- * Swat for adding in Product name and CVS comment log variable.
+ * Revision 1.1.1.1  2001/04/03 00:14:35  andyh
+ * IDOM
  *
  */
 
@@ -102,8 +82,8 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
 
     /** Public constructor */
     TreeWalkerImpl (
-        DOM_Node root, 
-        unsigned long whatToShow, 
+        DOM_Node root,
+        unsigned long whatToShow,
         DOM_NodeFilter* nodeFilter,
         bool expandEntityRef);
     TreeWalkerImpl (const TreeWalkerImpl& twi);
@@ -158,7 +138,7 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
     DOM_Node nextNode ();
 
     void unreferenced ();
-    
+
     // Get the expandEntity reference flag.
     bool getExpandEntityReferences();
 

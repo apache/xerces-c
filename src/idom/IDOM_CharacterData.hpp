@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,33 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/04/03 00:14:27  andyh
- * Initial revision
+ * Revision 1.2  2001/05/11 13:25:49  tng
+ * Copyright update.
  *
- * Revision 1.6  2000/03/02 19:53:53  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/24 20:11:27  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/15 23:17:36  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.3  2000/02/06 07:47:28  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:29  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.1.1.1  1999/11/09 01:08:49  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:13  rahul
- * Swat for adding in Product name and CVS comment log variable.
+ * Revision 1.1.1.1  2001/04/03 00:14:27  andyh
+ * IDOM
  *
  */
 
@@ -94,13 +72,13 @@
 
 
 /**
- * The <code>IDOM_CharacterData</code> interface extends Node with a set  of 
+ * The <code>IDOM_CharacterData</code> interface extends Node with a set  of
  * methods for accessing character data in the DOM.
  *
- * For clarity this set is defined here rather than on each class that uses 
- * these methods. No DOM objects correspond directly to 
- * <code>CharacterData</code>, though <code>Text</code> and others do inherit 
- * the interface from it. All <code>offset</code>s in this interface start 
+ * For clarity this set is defined here rather than on each class that uses
+ * these methods. No DOM objects correspond directly to
+ * <code>CharacterData</code>, though <code>Text</code> and others do inherit
+ * the interface from it. All <code>offset</code>s in this interface start
  * from 0, and index in terms of Unicode 16 bit storage units.
  */
 class CDOM_EXPORT IDOM_CharacterData: public IDOM_Node {
@@ -126,27 +104,27 @@ public:
     /** @name Getter functions. */
     //@{
   /**
-   * Returns the character data of the node that implements this interface. 
+   * Returns the character data of the node that implements this interface.
    *
-   * The DOM implementation may not put arbitrary limits on the amount of data that 
-   * may be stored in a  <code>CharacterData</code> node. However, 
-   * implementation limits may  mean that the entirety of a node's data may 
-   * not fit into a single <code>DOMString</code>. In such cases, the user 
-   * may call <code>substringData</code> to retrieve the data in 
+   * The DOM implementation may not put arbitrary limits on the amount of data that
+   * may be stored in a  <code>CharacterData</code> node. However,
+   * implementation limits may  mean that the entirety of a node's data may
+   * not fit into a single <code>DOMString</code>. In such cases, the user
+   * may call <code>substringData</code> to retrieve the data in
    * appropriately sized pieces.
    * @exception DOMException
    *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
    * @exception DOMException
-   *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than 
-   *   fit in a <code>DOMString</code> variable on the implementation 
+   *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
+   *   fit in a <code>DOMString</code> variable on the implementation
    *   platform.
    */
   virtual const XMLCh *     getData() const = 0;
   /**
-   * Returns the number of characters that are available through <code>data</code> and 
-   * the <code>substringData</code> method below. 
+   * Returns the number of characters that are available through <code>data</code> and
+   * the <code>substringData</code> method below.
    *
-   * This may have the value 
+   * This may have the value
    * zero, i.e., <code>CharacterData</code> nodes may be empty.
    */
   virtual unsigned int       getLength() const = 0;
@@ -155,17 +133,17 @@ public:
    *
    * @param offset Start offset of substring to extract.
    * @param count The number of characters to extract.
-   * @return The specified substring. If the sum of <code>offset</code> and 
-   *   <code>count</code> exceeds the <code>length</code>, then all 
+   * @return The specified substring. If the sum of <code>offset</code> and
+   *   <code>count</code> exceeds the <code>length</code>, then all
    *   characters to the end of the data are returned.
    * @exception DOMException
-   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-   *   than the number of characters in <code>data</code>, or if the 
+   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
+   *   than the number of characters in <code>data</code>, or if the
    *   specified <code>count</code> is negative.
-   *   <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not 
+   *   <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not
    *   fit into a <code>DOMString</code>.
    */
-  virtual const XMLCh *     substringData(unsigned int offset, 
+  virtual const XMLCh *     substringData(unsigned int offset,
                                    unsigned int count) const = 0;
     //@}
     /** @name Functions that set or change data. */
@@ -173,7 +151,7 @@ public:
   /**
    * Append the string to the end of the character data of the node.
    *
-   * Upon success, <code>data</code> provides access to the concatenation of 
+   * Upon success, <code>data</code> provides access to the concatenation of
    * <code>data</code> and the <code>DOMString</code> specified.
    * @param arg The <code>DOMString</code> to append.
    * @exception DOMException
@@ -186,53 +164,53 @@ public:
    * @param offset The character offset at which to insert.
    * @param arg The <code>DOMString</code> to insert.
    * @exception DOMException
-   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
+   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
    *   than the number of characters in <code>data</code>.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
   virtual void               insertData(unsigned int offset, const  XMLCh *arg) = 0;
   /**
-   * Remove a range of characters from the node. 
+   * Remove a range of characters from the node.
    *
-   * Upon success, 
+   * Upon success,
    * <code>data</code> and <code>length</code> reflect the change.
    * @param offset The offset from which to remove characters.
-   * @param count The number of characters to delete. If the sum of 
-   *   <code>offset</code> and <code>count</code> exceeds <code>length</code> 
-   *   then all characters from <code>offset</code> to the end of the data 
+   * @param count The number of characters to delete. If the sum of
+   *   <code>offset</code> and <code>count</code> exceeds <code>length</code>
+   *   then all characters from <code>offset</code> to the end of the data
    *   are deleted.
    * @exception DOMException
-   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-   *   than the number of characters in <code>data</code>, or if the 
+   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
+   *   than the number of characters in <code>data</code>, or if the
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               deleteData(unsigned int offset, 
+  virtual void               deleteData(unsigned int offset,
                                 unsigned int count) = 0;
   /**
-   * Replace the characters starting at the specified character offset with 
+   * Replace the characters starting at the specified character offset with
    * the specified string.
    *
    * @param offset The offset from which to start replacing.
-   * @param count The number of characters to replace. If the sum of 
+   * @param count The number of characters to replace. If the sum of
    *   <code>offset</code> and <code>count</code> exceeds <code>length</code>
-   *   , then all characters to the end of the data are replaced (i.e., the 
-   *   effect is the same as a <code>remove</code> method call with the same 
+   *   , then all characters to the end of the data are replaced (i.e., the
+   *   effect is the same as a <code>remove</code> method call with the same
    *   range, followed by an <code>append</code> method invocation).
-   * @param arg The <code>DOMString</code> with which the range must be 
+   * @param arg The <code>DOMString</code> with which the range must be
    *   replaced.
    * @exception DOMException
-   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-   *   than the number of characters in <code>data</code>, or if the 
+   *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
+   *   than the number of characters in <code>data</code>, or if the
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               replaceData(unsigned int offset, 
-                                 unsigned int count, 
+  virtual void               replaceData(unsigned int offset,
+                                 unsigned int count,
                                  const XMLCh *arg) = 0;
 
   /**
-   * Sets the character data of the node that implements this interface. 
+   * Sets the character data of the node that implements this interface.
    *
    * @param data The <code>DOMString</code> to set.
    */

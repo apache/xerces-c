@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,10 +45,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -67,7 +67,7 @@ THIS_CLASS::THIS_CLASS(DocumentImpl *ownerDoc)
     this->firstChild = null;
 
     fChanges = 0;
-};  
+};
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
@@ -83,10 +83,10 @@ THIS_CLASS::THIS_CLASS(const THIS_CLASS &other)
 };
 
 
-void THIS_CLASS::cloneChildren(const NodeImpl &other) {    
-  //    for (NodeImpl *mykid = other.getFirstChild(); 
-    for (NodeImpl *mykid = ((NodeImpl&)other).getFirstChild(); 
-         mykid != null; 
+void THIS_CLASS::cloneChildren(const NodeImpl &other) {
+  //    for (NodeImpl *mykid = other.getFirstChild();
+    for (NodeImpl *mykid = ((NodeImpl&)other).getFirstChild();
+         mykid != null;
          mykid = mykid->getNextSibling()) {
         this->appendChild(mykid->cloneNode(true));
     }
@@ -117,12 +117,12 @@ void THIS_CLASS::changed()
     if (parentNode != null) {
         parentNode->changed();
     }
-};  
+};
 
 int THIS_CLASS::changes()
 {
     return fChanges;
-};  
+};
 
 
 NodeListImpl *THIS_CLASS::getChildNodes() {
@@ -132,19 +132,19 @@ NodeListImpl *THIS_CLASS::getChildNodes() {
 
 NodeImpl * THIS_CLASS::getFirstChild() {
     return firstChild;
-}; 
+};
 
 
 NodeImpl * THIS_CLASS::getLastChild()
 {
     return lastChild();
-}; 
+};
 
 ChildNode * THIS_CLASS::lastChild()
 {
     // last child is stored as the previous sibling of first child
     return firstChild != null ? firstChild->previousSibling : null;
-}; 
+};
 
 void THIS_CLASS::lastChild(ChildNode *node) {
         // store lastChild as previous sibling of first child
@@ -167,9 +167,9 @@ unsigned int THIS_CLASS::getLength() {
 
 
 bool THIS_CLASS::hasChildNodes()
-{ 
+{
     return firstChild!=null;
-}; 
+};
 
 
 
@@ -177,13 +177,13 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
+
     if (newChild->getOwnerDocument() != ownerDocument)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-    
-    // Convert to internal type, to avoid repeated casting  
+
+    // Convert to internal type, to avoid repeated casting
     ChildNode * newInternal= (ChildNode *)newChild;
-    
+
     // Prevent cycles in the tree
     bool treeSafe=true;
     for(NodeImpl *a=this->getParentNode();
@@ -192,11 +192,11 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         treeSafe=(newInternal!=a);
     if(!treeSafe)
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
-    
+
     // refChild must in fact be a child of this node (or null)
     if (refChild!=null && refChild->getParentNode() != this)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
-    
+
     if (newInternal->isDocumentFragmentImpl())
     {
         // SLOW BUT SAFE: We could insert the whole subtree without
@@ -205,7 +205,7 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         // ends of the list.) But we know some subclasses have special-
         // case behavior they add to insertBefore(), so we don't risk it.
         // This approch also takes fewer bytecodes.
-        
+
         // NOTE: If one of the children is not a legal child of this
         // node, throw HIERARCHY_REQUEST_ERR before _any_ of the children
         // have been transferred. (Alternative behaviors would be to
@@ -213,7 +213,7 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         // which are acceptable to the target node, neither of which is
         // as robust. PR-DOM-0818 isn't entirely clear on which it
         // recommends?????
-        
+
         // No need to check kids for right-document; if they weren't,
         // they wouldn't be kids of that DocFrag.
         for(NodeImpl *kid=newInternal->getFirstChild(); // Prescan
@@ -222,14 +222,14 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         {
             if (!DocumentImpl::isKidOK(this, kid))
               throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
-        }                       
+        }
         while(newInternal->hasChildNodes())     // Move
             insertBefore(newInternal->getFirstChild(),refChild);
     }
-    
+
     else if (!DocumentImpl::isKidOK(this, newInternal))
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
-    
+
     else
     {
         NodeImpl *oldparent=newInternal->getParentNode();
@@ -243,7 +243,7 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         // Attach up
         newInternal->ownerNode = this;
         newInternal->isOwned(true);
-        
+
         // Attach before and after
         // Note: firstChild.previousSibling == lastChild!!
         if (firstChild == null) {
@@ -281,7 +281,7 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     }
 
     changed();
-    
+
     if (this->getOwnerDocument() != null) {
         typedef RefVectorOf<RangeImpl> RangeImpls;
         RangeImpls* ranges = this->getOwnerDocument()->getRanges();
@@ -297,25 +297,25 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 
     return newInternal;
 };
-  
-  
+
+
 NodeImpl *THIS_CLASS::item(unsigned int index) {
     ChildNode *node = firstChild;
     for(unsigned int i=0; i<index && node!=null; ++i)
         node = node->nextSibling;
     return node;
 };
-  
-  
-NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild) 
+
+
+NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild)
 {
     if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
+
     if (oldChild != null && oldChild->getParentNode() != this)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
-    
+
     //fix other ranges for change before deleting the node
     if (this->getOwnerDocument() !=  null  ) {
         typedef RefVectorOf<RangeImpl> RangeImpls;
@@ -324,15 +324,15 @@ NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild)
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    if (ranges->elementAt(i) != null) 
+                    if (ranges->elementAt(i) != null)
                         ranges->elementAt(i)->updateRangeForDeletedNode(oldChild);
                 }
             }
         }
     }
-    
+
     ChildNode * oldInternal = (ChildNode *) oldChild;
-    
+
     // Patch linked list around oldChild
     // Note: lastChild == firstChild->previousSibling
     if (oldInternal == firstChild) {
@@ -374,35 +374,35 @@ NodeImpl *THIS_CLASS::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
     // changed() already done.
     return removeChild(oldChild);
 };
-  
+
 
 void THIS_CLASS::setReadOnly(bool readOnl, bool deep)
 {
     NodeImpl::setReadOnly(readOnl, deep);
-      
+
     if (deep)
         // Recursively set kids
-        for (ChildNode *mykid = firstChild; 
-             mykid != null; 
+        for (ChildNode *mykid = firstChild;
+             mykid != null;
              mykid = mykid->nextSibling)
             if(! (mykid->isEntityReference()))
                 mykid->setReadOnly(readOnl,true);
 };
-  
-  
+
+
 //Introduced in DOM Level 2
-  
+
 void THIS_CLASS::normalize()
 {
     ChildNode *kid, *next;
     for (kid = firstChild; kid != null; kid = next)
     {
         next = kid->nextSibling;
-        
+
         // If kid and next are both Text nodes (but _not_ CDATASection,
         // which is a subclass of Text), they can be merged.
-        if (next != null && 
-            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  && 
+        if (next != null &&
+            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  &&
             next->isTextImpl()  && !(next->isCDATASectionImpl()) )
         {
             ((TextImpl *) kid)->appendData(((TextImpl *) next)->getData());
@@ -411,13 +411,13 @@ void THIS_CLASS::normalize()
                 deleteIf(next);
             next = kid; // Don't advance; there might be another.
         }
-        
-        // Otherwise it might be an Element, which is handled recursively  
+
+        // Otherwise it might be an Element, which is handled recursively
         else
             if (kid->isElementImpl())
                 kid->normalize();
     };
-    
+
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -57,7 +57,7 @@
 /*
  * $Id$
  */
- 
+
 #include "DeepNodeListImpl.hpp"
 #include "DocumentImpl.hpp"
 #include "DocumentTypeImpl.hpp"
@@ -163,7 +163,7 @@ DeepNodeListImpl *ElementImpl::getElementsByTagName(const DOMString &tagname)
 DOMString ElementImpl::getTagName()
 {
     return name;
-}  
+}
 
 
 bool ElementImpl::isElementImpl()
@@ -179,7 +179,7 @@ void ElementImpl::removeAttribute(const DOMString &nam)
                                null);
     }
     if (attributes != null)
-    {    
+    {
     	AttrImpl *att = (AttrImpl *) attributes->getNamedItem(nam);
     	// Remove it
     	if (att != null)
@@ -202,9 +202,9 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
     if (attributes != null)
     {
 	    AttrImpl *found = (AttrImpl *) attributes->getNamedItem(oldAttr->getName());
-    
+
 	    // If it is in fact the right object, remove it.
-    
+
 	    if (found == oldAttr)
 	        attributes->removeNamedItem(oldAttr->getName());
 	    else
@@ -255,10 +255,10 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
       (AttrImpl *) attributes->getNamedItem(newAttr->getName());
     // This will throw INUSE if necessary
     attributes->setNamedItem(newAttr);
-    
+
     // Attr node reference counting note:
     // If oldAttr's refcount is zero at this point, here's what happens...
-    // 
+    //
     //      oldAttr is returned from this function to DOM_Attr::setAttributeNode,
     //      which wraps a DOM_Attr around the returned pointer and sends it
     //      up to application code, incrementing the reference count in the process.
@@ -325,10 +325,10 @@ void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
                                null);
     }
     if (attributes != null)
-    {   
+    {
 		AttrImpl *att =
 		  (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
-		// Remove it 
+		// Remove it
 		if (att != null) {
 			attributes->removeNamedItemNS(fNamespaceURI, fLocalName);
 			if (att->nodeRefCount == 0)
@@ -361,13 +361,13 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
         attributes = new AttrMapImpl(this, null);
     }
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
-    
+
     // This will throw INUSE if necessary
     attributes->setNamedItemNS(newAttr);
-    
+
     // Attr node reference counting note:
     // If oldAttr's refcount is zero at this point, here's what happens...
-    // 
+    //
     //      oldAttr is returned from this function to DOM_Attr::setAttributeNode,
     //      which wraps a DOM_Attr around the returned pointer and sends it
     //      up to application code, incrementing the reference count in the process.
@@ -385,7 +385,7 @@ DeepNodeListImpl *ElementImpl::getElementsByTagNameNS(const DOMString &fNamespac
 }
 
 // DOM_NamedNodeMap UTILITIES
-NamedNodeMapImpl *ElementImpl::NNM_cloneMap(NodeImpl *nnm_ownerNode) 
+NamedNodeMapImpl *ElementImpl::NNM_cloneMap(NodeImpl *nnm_ownerNode)
 {
 	return (getAttributes() == null) ? null : nnm_ownerNode->getAttributes()->cloneMap(nnm_ownerNode);
 }
@@ -410,7 +410,7 @@ NodeImpl *ElementImpl::NNM_item(unsigned int nnm_index)
 	return (getAttributes() == null) ? null : getAttributes()->item(nnm_index);
 }
 
-void ElementImpl::NNM_removeAll() 
+void ElementImpl::NNM_removeAll()
 {
 	if (getAttributes() != null)
 		getAttributes()->removeAll();
@@ -496,6 +496,6 @@ void ElementImpl::setupDefaultAttributes()
 		delete attributes;
 	
 	AttrMapImpl* defAttrs = getDefaultAttributes();
-	if (defAttrs) 
+	if (defAttrs)
 		attributes = new AttrMapImpl(this, defAttrs);
 }

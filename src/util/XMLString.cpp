@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1192,7 +1192,7 @@ int XMLString::parseInt(const XMLCh* const toConvert)
         endPtr--;
 
     //
-    //  Work through what remains and convert each char to a digit. 
+    //  Work through what remains and convert each char to a digit.
     //
     int signValue = 1;
 
@@ -1207,14 +1207,14 @@ int XMLString::parseInt(const XMLCh* const toConvert)
     else if (*startPtr == chPlus)
         startPtr++;  // skip the '+'
 
-    unsigned long tmpVal = 0;   
+    unsigned long tmpVal = 0;
     while (startPtr < endPtr)
     {
         // If not valid decimal digit, then an error
         if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
             ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
             //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
-        
+
         const unsigned int nextVal = (unsigned int)(*startPtr - chDigit_0);
         tmpVal = (tmpVal * 10) + nextVal;
 
