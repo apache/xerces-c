@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/12/16 03:21:39  cargilld
+ * Fix 390 build.
+ *
  * Revision 1.16  2004/11/18 16:20:04  cargilld
  * Changes for linker problems with linux build using xlc.
  *
@@ -279,6 +282,10 @@
         #endif
     #elif defined(XML_AIX) || defined(__linux__)
         #define XML_CSET              
+    #elif defined(__MVS__) && defined(__cplusplus)
+        #define XML_MVSCPP
+    #elif defined(EXM_OS390) && defined(__cplusplus)
+        #define XML_MVSCPP
     #endif
 #elif defined (__GNUG__) || defined(__BEOS__) || defined(__linux__) || defined(__CYGWIN__)
     #define XML_GCC
