@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/06 22:21:49  knoaman
+ * Use IDOM for schema processing.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/12/05 20:12:30  knoaman
  * Use getLocalName instead of getNodeName.
@@ -90,6 +93,10 @@
 #include <xercesc/dom/ElementImpl.hpp>
 #include <xercesc/dom/DocumentImpl.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
+#include <xercesc/idom/IDOM_Element.hpp>
+#include <xercesc/idom/IDOM_Document.hpp>
+#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
+#include <xercesc/idom/IDOM_Node.hpp>
 
 void XUtil::copyInto(const DOM_Node &src, DOM_Node &dest)
 {
@@ -238,6 +245,24 @@ DOM_Element XUtil::getFirstChildElement(const DOM_Node &parent)
     return DOM_Element();
 }
 
+// Finds and returns the first child element node.
+IDOM_Element* XUtil::getFirstChildElement(const IDOM_Node* const parent)
+{
+    // search for node
+    IDOM_Node* child = parent->getFirstChild();
+
+    while (child != 0)
+	{
+        if (child->getNodeType() == IDOM_Node::ELEMENT_NODE)
+            return (IDOM_Element*)child;
+
+        child = child->getNextSibling();
+    }
+
+    // not found
+    return 0;
+}
+
 // Finds and returns the first child node with the given name.
 DOM_Element XUtil::getFirstChildElement(const DOM_Node    &parent
                                       , const XMLCh* const elemName)
@@ -331,6 +356,31 @@ DOM_Element XUtil::getFirstChildElementNS(const DOM_Node     &parent
 
     // not found
     return DOM_Element();
+}
+
+IDOM_Element* XUtil::getFirstChildElementNS(const IDOM_Node* const parent
+                                          , const XMLCh** const elemNames
+                                          , const XMLCh* const uriStr
+                                          , unsigned int        length)
+{
+    // search for node
+    IDOM_Node* child = parent->getFirstChild();
+    while (child != 0)
+	{
+        if (child->getNodeType() == IDOM_Node::ELEMENT_NODE)
+		{
+            for (unsigned int i = 0; i < length; i++)
+			{
+                if (!XMLString::compareString(child->getNamespaceURI(), uriStr) &&
+                    !XMLString::compareString(child->getLocalName(), elemNames[i]))
+                    return (IDOM_Element*)child;
+			}
+		}
+        child = child->getNextSibling();
+    }
+
+    // not found
+    return 0;
 }
 
 // Finds and returns the last child element node.
@@ -436,6 +486,23 @@ DOM_Element XUtil::getNextSiblingElement(const DOM_Node &node)
     return DOM_Element();
 }
 
+IDOM_Element* XUtil::getNextSiblingElement(const IDOM_Node* const node)
+{
+    // search for node
+    IDOM_Node* sibling = node->getNextSibling();
+
+    while (sibling != 0)
+	{
+        if (sibling->getNodeType() == IDOM_Node::ELEMENT_NODE)
+            return (IDOM_Element*)sibling;
+
+        sibling = sibling->getNextSibling();
+    }
+
+    // not found
+    return 0;
+}
+
 // Finds and returns the next sibling element node with the give name.
 DOM_Element XUtil::getNextSiblingElement(const DOM_Node    &node
                                        , const XMLCh* const elemName)
@@ -528,5 +595,30 @@ DOM_Element XUtil::getNextSiblingElementNS(const DOM_Node     &node
 
     // not found
     return DOM_Element();
+}
+
+IDOM_Element* XUtil::getNextSiblingElementNS(const IDOM_Node* const node
+                                           , const XMLCh** const elemNames
+                                           , const XMLCh* const uriStr
+									       , unsigned int        length)
+{
+    // search for node
+    IDOM_Node* sibling = node->getNextSibling();
+    while (sibling != 0)
+	{
+        if (sibling->getNodeType() == IDOM_Node::ELEMENT_NODE)
+		{
+            for (unsigned int i = 0; i < length; i++)
+			{
+                if (!XMLString::compareString(sibling->getNamespaceURI(), uriStr) &&
+                    !XMLString::compareString(sibling->getLocalName(), elemNames[i]))
+                    return (IDOM_Element*)sibling;
+			}
+		}
+        sibling = sibling->getNextSibling();
+    }
+
+    // not found
+    return 0;
 }
 

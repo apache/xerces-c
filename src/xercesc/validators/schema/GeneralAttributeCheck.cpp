@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/06 22:21:49  knoaman
+ * Use IDOM for schema processing.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
+ * sane_include
  *
  * Revision 1.16  2002/01/02 19:50:34  knoaman
  * Fix for error message when checking for attributes with a namespace prefix.
@@ -119,7 +122,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/dom/DOM_NamedNodeMap.hpp>
+#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -855,7 +858,7 @@ GeneralAttributeCheck::reinitGeneralAttCheck() {
 //  GeneralAttributeCheck: Validation methods
 // ---------------------------------------------------------------------------
 void
-GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
+GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
                                        const unsigned short elemContext,
                                        TraverseSchema* const schema) {
 
@@ -863,26 +866,16 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
         return;
     }
 
-    DOMString                   name = elem.getLocalName();
     int                         prefixContext = globalPrefix;
-    unsigned int                nameLen = name.length();
-    XMLCh*                      elemName = 0;
+    const XMLCh*                elemName = elem->getLocalName();
     const XMLCh*                contextStr = fgGlobal;
     RefVectorOf<AttributeInfo>* elemAttrs = 0;
-
-    if (nameLen) {
-        elemName = new XMLCh[nameLen + 1];
-        XMLString::copyNString(elemName, name.rawBuffer(), nameLen);
-        elemName[nameLen] = chNull;
-    }
-
-    ArrayJanitor<XMLCh> janName(elemName);
 
     if (elemContext == LocalContext) {
 
         contextStr = fgLocal;
 
-        if (elem.getAttribute(SchemaSymbols::fgATT_REF) == 0) {
+        if (elem->getAttributeNode(SchemaSymbols::fgATT_REF) == 0) {
             prefixContext = localNamePrefix;
         }
         else {
@@ -912,7 +905,6 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
     unsigned int           size = elemAttrs->size();
     RefHashTableOf<XMLCh>  attNameList(5);
-    XMLBuffer              aBuffer(128);
 
     for (unsigned int i=0; i< size; i++) {
 
@@ -921,17 +913,14 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
         if (attInfo) {
 
             XMLCh* attName = attInfo->getName();
-            DOMString attValue = elem.getAttribute(attName);
-            DOM_Attr attNode = elem.getAttributeNode(attName);
-            unsigned int attValueLen = attValue.length();
+            const XMLCh* attValue = elem->getAttribute(attName);
+            IDOM_Attr* attNode = elem->getAttributeNode(attName);
+            unsigned int attValueLen = XMLString::stringLen(attValue);
 
             attNameList.put((void*) attName, 0);
 
             if (attValueLen > 0) {
-
-                aBuffer.set(attValue.rawBuffer(), attValueLen);
-                validate(attName, aBuffer.getRawBuffer(),
-                         attInfo->getValidatorIndex(), schema);
+                validate(attName, attValue, attInfo->getValidatorIndex(), schema);
             }
             else if (attNode == 0) {
                 if (attInfo->getDefaultOption() == Att_Required) {
@@ -945,65 +934,56 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
     // ------------------------------------------------------------------
     // Check for disallowed attributes
     // ------------------------------------------------------------------
-    DOM_NamedNodeMap eltAttrs = elem.getAttributes();
-    int attrCount = eltAttrs.getLength();
+    IDOM_NamedNodeMap* eltAttrs = elem->getAttributes();
+    int attrCount = eltAttrs->getLength();
 
     for (int j = 0; j < attrCount; j++) {
 
-        DOM_Node  attribute = eltAttrs.item(j);
+        IDOM_Node*  attribute = eltAttrs->item(j);
 
-        if (attribute.isNull()) {
+        if (!attribute) {
             break;
         }
 
         // Bypass attributes that start with xml
-        DOMString attName = attribute.getNodeName();
-        aBuffer.set(attName.rawBuffer(), attName.length());
-        XMLCh* tmpName = aBuffer.getRawBuffer();
+        const XMLCh* attName = attribute->getNodeName();
 
-        if ((*tmpName == chLatin_X || *tmpName == chLatin_x)
-           && (*(tmpName+1) == chLatin_M || *(tmpName+1) == chLatin_m)
-           && (*(tmpName+2) == chLatin_L || *(tmpName+2) == chLatin_l)) {
+        if ((*attName == chLatin_X || *attName == chLatin_x)
+           && (*(attName+1) == chLatin_M || *(attName+1) == chLatin_m)
+           && (*(attName+2) == chLatin_L || *(attName+2) == chLatin_l)) {
             continue;
         }
 
         // for attributes with namespace prefix
-        DOMString attrURI = attribute.getNamespaceURI();
+        const XMLCh* attrURI = attribute->getNamespaceURI();
 
-        if (attrURI != 0 && attrURI.length() != 0) {
+        if (attrURI != 0 && XMLString::stringLen(attrURI) != 0) {
 
             // attributes with schema namespace are not allowed
             // and not allowed on "documentation" and "appInfo"
-            if (attrURI.equals(SchemaSymbols::fgURI_SCHEMAFORSCHEMA) ||
+            if (!XMLString::compareString(attrURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) ||
                 !XMLString::compareString(elemName, SchemaSymbols::fgELT_APPINFO) ||
                 !XMLString::compareString(elemName, SchemaSymbols::fgELT_DOCUMENTATION)) {
 
                 schema->reportSchemaError(XMLUni::fgXMLErrDomain,
-                    XMLErrs::AttributeDisallowed, tmpName, contextStr, elemName);
+                    XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
             } else {
 
                 // Try for a "lax" validation
-                XMLBuffer tmpBuf(128);
-
-                tmpBuf.set(attrURI.rawBuffer(), attrURI.length());
-                attName = attribute.getLocalName();
-                aBuffer.set(attName.rawBuffer(), attName.length());
-                tmpName = aBuffer.getRawBuffer();
-                DatatypeValidator* dv = schema->getDatatypeValidator(tmpBuf.getRawBuffer(), tmpName);
+                DatatypeValidator* dv = schema->getDatatypeValidator(attrURI, attribute->getLocalName());
 
                 if (dv) {
 
-                    DOMString attrVal = attribute.getNodeValue();
-                    tmpBuf.set(attrVal.rawBuffer(), attrVal.length());
+                    const XMLCh* attrVal = attribute->getNodeValue();
 
                     try {
-                        dv->validate(tmpBuf.getRawBuffer());
+                        dv->validate(attrVal);
                     }
                     catch(const XMLException& excep) {
                         schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
                     }
                     catch(...) {
-                        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue, tmpBuf.getRawBuffer(), tmpName);
+                        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue, attrVal, attName);
                     }
                 }
                 // REVISIT:
@@ -1014,14 +994,12 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
             continue;
         }
 
-        attName = attribute.getLocalName();
-        aBuffer.set(attName.rawBuffer(), attName.length());
-        tmpName = aBuffer.getRawBuffer();
+        attName = attribute->getLocalName();
 
         // check whether this attribute is allowed
-        if (!attNameList.containsKey(tmpName)) {
+        if (!attNameList.containsKey(attName)) {
             schema->reportSchemaError(XMLUni::fgXMLErrDomain,
-                XMLErrs::AttributeDisallowed, tmpName, contextStr, elemName);
+                XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
         }
     }
 }

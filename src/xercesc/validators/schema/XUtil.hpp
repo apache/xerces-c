@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/06 22:21:49  knoaman
+ * Use IDOM for schema processing.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/11/02 14:13:45  knoaman
  * Add support for identity constraints.
@@ -77,6 +80,9 @@
 #include <xercesc/dom/DOM_Document.hpp>
 #include <xercesc/dom/DOM_NamedNodeMap.hpp>
 #include <xercesc/dom/DOM_Node.hpp>
+
+class IDOM_Node;
+class IDOM_Element;
 
 /**
  * Some useful utility methods.
@@ -107,6 +113,8 @@ public:
 
     // Finds and returns the first child element node.
     static DOM_Element getFirstChildElement(const DOM_Node &parent);
+    static IDOM_Element* getFirstChildElement(const IDOM_Node* const parent);
+
     // Finds and returns the first child element node with the given name.
     static DOM_Element getFirstChildElement(const DOM_Node    &parent
 		                                  , const XMLCh* const elemName);
@@ -126,6 +134,10 @@ public:
                                             , const XMLCh** const elemNames
                                             , const XMLCh* const uriStr
                                             , unsigned int        length);
+    static IDOM_Element* getFirstChildElementNS(const IDOM_Node* const parent
+                                              , const XMLCh** const elemNames
+                                              , const XMLCh* const uriStr
+                                              , unsigned int       length);
 
     // Finds and returns the last child element node.
     static DOM_Element getLastChildElement(const DOM_Node &parent);
@@ -145,6 +157,8 @@ public:
 
     // Finds and returns the next sibling element node.
     static DOM_Element getNextSiblingElement(const DOM_Node &node);
+    static IDOM_Element* getNextSiblingElement(const IDOM_Node* const node);
+
     // Finds and returns the next sibling element node with the given name.
     static DOM_Element getNextSiblingElement(const DOM_Node    &node
 		                                   , const XMLCh* const elemName);
@@ -165,6 +179,10 @@ public:
                                              , const XMLCh** const elemNames
                                              , const XMLCh* const uriStr
                                              , unsigned int        length);
+    static IDOM_Element* getNextSiblingElementNS(const IDOM_Node* const node
+                                               , const XMLCh** const elemNames
+                                               , const XMLCh* const uriStr
+                                               , unsigned int        length);
 
 protected:
     // -----------------------------------------------------------------------

@@ -88,7 +88,7 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/internal/XMLInternalErrorHandler.hpp>
-#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/parsers/IDOMParser.hpp>
 #include <xercesc/dom/DOM_DOMException.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
@@ -229,19 +229,16 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             XMLAttDef*  attDef = 0;
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
-                ComplexTypeInfo* typeInfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
-                if (typeInfo) {
-                    SchemaAttDef* attWildCard = typeInfo->getAttWildCard();
+                SchemaAttDef* attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
 
-                    if (attWildCard) {
-                        //if schema, see if we should lax or skip the validation of this attribute
-                        if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
-                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
-                            if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
-                                RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
-                                if (attRegistry) {
-                                    attDefForWildCard = attRegistry->get(suffPtr);
-                                }
+                if (attWildCard) {
+                    //if schema, see if we should lax or skip the validation of this attribute
+                    if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
+                        SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
+                        if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+                            RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
+                            if (attRegistry) {
+                                attDefForWildCard = attRegistry->get(suffPtr);
                             }
                         }
                     }
@@ -1457,9 +1454,9 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
     Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-        DOMParser parser;
+        IDOMParser parser;
         XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
-        parser.setValidationScheme(DOMParser::Val_Never);
+        parser.setValidationScheme(IDOMParser::Val_Never);
         parser.setDoNamespaces(true);
         parser.setErrorHandler((ErrorHandler*) &internalErrorHandler);
         parser.setEntityResolver(fEntityResolver);
@@ -1542,14 +1539,14 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         if (internalErrorHandler.getSawFatal() && fExitOnFirstFatal)
             emitError(XMLErrs::SchemaScanFatalError);
 
-        DOM_Document  document = parser.getDocument(); //Our Grammar
+        IDOM_Document* document = parser.getDocument(); //Our Grammar
 
-        if (!document.isNull()) {
+        if (document != 0) {
 
-            DOM_Element root = document.getDocumentElement();// This is what we pass to TraverserSchema
-            if (!root.isNull())
+            IDOM_Element* root = document->getDocumentElement();// This is what we pass to TraverserSchema
+            if (root != 0)
             {
-                const XMLCh* newUri = root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).rawBuffer();
+                const XMLCh* newUri = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
                 if (XMLString::compareString(newUri, uri)) {
                     if (fValidate)
                         fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
