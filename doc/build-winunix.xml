@@ -74,9 +74,9 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
         </s3>
     </s2>
 
-    <anchor name="WinBorland"/>
+    <anchor name="WinBorlandBuilder"/>
     <s2 title="Building &XercesCName; on Windows using Borland C++Builder">
-        <p>&XercesCName; sourec distribution comes with Borland C++Builder projects to help you
+        <p>&XercesCName; sourec distribution comes with Borland C++Builder6 projects to help you
 		build &XercesCName;. The following describes the steps you need to build
 		&XercesCName;.</p>
 
@@ -107,6 +107,26 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 
         </s3>
     </s2>
+    
+    <anchor name="WinBorlandCC"/>
+    <s2 title="Building &XercesCName; on Windows using Borland C++ Compiler">
+        <p>&XercesCName; sourec distribution comes with Borland C++ Compiler make files to help you
+		build &XercesCName;. The following describes the steps you need to build
+		&XercesCName;.</p>
+
+        <ol>
+		   <li>Change directory to <code> &XercesCSrcInstallDir;\Projects\Win32\BCC.551</code></li>
+           <li>Run <code>MakeBuildDirs.bat</code>.</li>
+		   <li>Then issue</li>
+		       <ul>
+		       <li><code>make -f Xerces-all.mak</code>
+               <br/>to build the dll (without deprecated DOM API) and tests, or</li>
+               <li><code>make -f Xerces-all.mak -DWITHDEPRDOM=Y</code>
+               <br/>to build the dll with deprecated DOM API (approx. 300k larger) and tests</li>
+               </ul>
+	    </ol>           
+    </s2>
+        
     <anchor name="CygWin"/>
     <s2 title="Building &XercesCName; on Windows using Cygwin">
         <p><em>Do not jump into the build directly before reading this.</em></p>
