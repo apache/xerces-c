@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/22 00:36:50  roddey
+ * Added a new 'native XMLCh' transcoder to correctly handle
+ * internal entities now that XMLCh isn't always UTF-16.
+ *
  * Revision 1.7  2000/02/06 07:47:53  rahulj
  * Year 2K copyright swat.
  *
@@ -599,6 +603,10 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
     //  This one is easy, we just create an input stream for the data and
     //  provide a few extra goodies.
     //
+    //  NOTE: We use a special encoding string that will be recognized
+    //  as a 'do nothing' transcoder for the already internalized XMLCh
+    //  data that makes up an internal entity.
+    //
     XMLReader* retVal = new XMLReader
     (
         sysId
@@ -610,7 +618,7 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
             , copyBuf ? BinMemInputStream::BufOpt_Copy
                         : BinMemInputStream::BufOpt_Reference
           )
-        , XMLRecognizer::nameForEncoding(XMLRecognizer::Def_UTF16)
+        , XMLUni::fgXMLChEncodingString
         , refFrom
         , type
         , XMLReader::Source_Internal

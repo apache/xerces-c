@@ -61,6 +61,7 @@
 #include <util/RefHashTableOf.hpp>
 #include <util/XML88591Transcoder.hpp>
 #include <util/XMLASCIITranscoder.hpp>
+#include <util/XMLChTranscoder.hpp>
 #include <util/XMLEBCDICTranscoder.hpp>
 #include <util/XMLIBM1140Transcoder.hpp>
 #include <util/XMLUCS4Transcoder.hpp>
@@ -259,6 +260,12 @@ void XMLTransService::initTransService()
     //  is to adopt the elements, which is fine with us.
     //
     gMappings = new RefHashTableOf<ENameMap>(103);
+
+    //
+    //  Add in the magical mapping for the native XMLCh transcoder. This
+    //  is used for internal entities.
+    //
+    gMappings->put(new ENameMapFor<XMLChTranscoder>(XMLUni::fgXMLChEncodingString));
 
     //
     //  Add in our mappings for ASCII.

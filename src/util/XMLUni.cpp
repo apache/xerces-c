@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.13  2000/02/22 00:36:37  roddey
+ * Added a new 'native XMLCh' transcoder to correctly handle
+ * internal entities now that XMLCh isn't always UTF-16.
+ *
  * Revision 1.12  2000/02/19 00:26:41  roddey
  * Yet, yet, yet still another EBCDIC alias tweak.
  *
@@ -505,6 +509,12 @@ const XMLCh XMLUni::fgWin1252EncodingString[] =
 {
         chLatin_W, chLatin_I, chLatin_N, chLatin_D, chLatin_O, chLatin_W
     ,   chLatin_S, chDash, chDigit_1, chDigit_2, chDigit_5, chDigit_2, chNull
+};
+
+const XMLCh XMLUni::fgXMLChEncodingString[] =
+{
+        chLatin_X, chLatin_E, chLatin_R, chLatin_C, chLatin_E, chLatin_S
+    ,   chDash, chLatin_X, chLatin_M, chLatin_L, chLatin_C, chLatin_H, chNull
 };
 
 const XMLCh XMLUni::fgXMLString[] =

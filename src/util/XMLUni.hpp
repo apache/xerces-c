@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.12  2000/02/22 00:36:37  roddey
+ * Added a new 'native XMLCh' transcoder to correctly handle
+ * internal entities now that XMLCh isn't always UTF-16.
+ *
  * Revision 1.11  2000/02/19 00:26:41  roddey
  * Yet, yet, yet still another EBCDIC alias tweak.
  *
@@ -307,6 +311,7 @@ public :
     static const XMLCh fgVersionString[];
     static const XMLCh fgValidityDomain[];
     static const XMLCh fgWin1252EncodingString[];
+    static const XMLCh fgXMLChEncodingString[];
     static const XMLCh fgXMLDeclString[];
     static const XMLCh fgXMLString[];
     static const XMLCh fgXMLStringSpace[];
