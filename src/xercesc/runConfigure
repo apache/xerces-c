@@ -86,9 +86,9 @@ usage()
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'solaris',
             'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
-            'ptx', 'tru64', 'macosx'. 'cygwin')"
-    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, icc or ecc)"
+            'ptx', 'tru64', 'macosx', 'cygwin', 'qnx')"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, , QCC, icc or ecc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
@@ -227,7 +227,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin)
+   aix | openserver | unixware | beos | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx)
        # platform has been recognized
        ;;
    *)
@@ -287,6 +287,8 @@ else
                exit ${ERROR_EXIT_CODE};;
         esac
         fi
+    elif test $platform = "qnx"; then
+        threadingLibs=""; ## QNX has pthread API in libc
     elif test $platform = "openserver"; then
         case $thread in
            pthread)
@@ -530,6 +532,8 @@ case $netaccessor in
                netaccessorLibs="";;
            beos)
                netaccessorLibs="-lnet";;
+           qnx) 
+               netaccessorLibs="-lsocket";;
            solaris)
                netaccessorLibs="-lnsl -lsocket"
              if test $thread = "dce"; then
@@ -577,7 +581,7 @@ export NETACCESSOR
 #
 
 case $cppcompiler in
-   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc)
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc | QCC )
       ;;
       
    '')

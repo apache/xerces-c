@@ -1309,6 +1309,7 @@ case "${host}" in
         *-*-*unixware*) platform=UNIXWARE ;;
         *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-beos*)      platform=BEOS ;;
+        *-*-nto*)       platform=QNX ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;

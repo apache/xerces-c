@@ -38,6 +38,7 @@ case "${host}" in
         *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-beos*)      platform=BEOS ;;
         *-*-linux*)     platform=LINUX ;;
+        *-*-nto*)       platform=QNX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;

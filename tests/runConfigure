@@ -196,7 +196,7 @@ echo "Extra link options: $linkeroptions"
 # Now check if the options are correct or not, bail out if incorrect
 #
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin)
+   aix | openserver | unixware | beos | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx)
        # platform has been recognized
        ;;
    *)

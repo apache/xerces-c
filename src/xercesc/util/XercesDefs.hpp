@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/03/13 22:11:46  tng
+ * [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
+ *
  * Revision 1.12  2003/02/23 05:44:12  jberry
  * Ripple through changes of BeOSDefs.h name change
  *
@@ -298,6 +301,9 @@
 #include	<xercesc/util/Platforms/Tru64/Tru64Defs.hpp>
 #endif
 
+#if defined(XML_QNX)
+#include	<xercesc/util/Platforms/QNX/QNXDefs.hpp>
+#endif
 
 // ---------------------------------------------------------------------------
 //  And now we subinclude a header according to the development environment
@@ -372,6 +378,9 @@
 #include	<xercesc/util/Compilers/DECCXXDefs.hpp>
 #endif
 
+#if defined(XML_QCC)
+#include	<xercesc/util/Compilers/QCCDefs.hpp>
+#endif
 
 // ---------------------------------------------------------------------------
 //  Some general typedefs that are defined for internal flexibility.

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2003/03/13 22:11:28  tng
+# [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
+#
 # Revision 1.6  2002/12/02 20:41:09  tng
 # [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
 #
@@ -156,6 +159,9 @@ ifeq (${PLATFORM}, AIX)
 endif
 ifeq (${PLATFORM}, BEOS)
     SUBMODULE = BeOS
+endif
+ifeq (${PLATFORM}, QNX)
+    SUBMODULE = QNX
 endif
 ifeq (${PLATFORM}, LINUX)
     SUBMODULE = Linux

@@ -166,8 +166,10 @@ endif
 ${FQ_REAL_NAME}:	$(ALL_OBJECTS)
 	@echo Building ${FQ_REAL_NAME}
 	${MAKE_SHARED} ${LD_SONAME} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
-	@echo symlink ${FQ_SO_NAME}
+    ifneq (${FQ_SO_NAME},${FQ_REAL_NAME})
+	@echo symlink ${FQ_SO_NAME} 
 	rm -rf ${FQ_SO_NAME}   && ln -s ${FQ_REAL_NAME} ${FQ_SO_NAME}
+    endif
 	@echo symlink ${FQ_LINK_NAME}
 	rm -rf ${FQ_LINK_NAME} && ln -s ${FQ_SO_NAME} ${FQ_LINK_NAME}
 

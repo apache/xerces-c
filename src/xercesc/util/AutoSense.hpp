@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/03/13 22:11:46  tng
+ * [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
+ *
  * Revision 1.8  2002/12/02 20:40:49  tng
  * [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
  *
@@ -197,6 +200,9 @@
 #elif defined(__BEOS__)
     #define XML_BEOS
     #define XML_UNIX
+#elif defined(__QNXNTO__)
+    #define XML_QNX
+    #define XML_UNIX
 #elif defined(__linux__)
     #define XML_LINUX
     #define XML_UNIX
@@ -271,6 +277,8 @@
     #else
         #error Code requires port to current development environment
     #endif
+#elif defined (__QNXNTO__)
+    #define XML_QCC
 #elif defined (__GNUG__) || defined(__BEOS__) || defined(__linux__) || defined(__CYGWIN__)
     #define XML_GCC
 #elif defined(XML_HPUX)

@@ -199,6 +199,17 @@ EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
 SHLIBSUFFIX=.so
 endif
 
+#=============== QNX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, QNX)
+CMP= -c ${CXXFLAGS}
+CC= QCC -c 
+LINK = QCC ${LDFLAGS}
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
+EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+SHLIBSUFFIX=.so
+endif
+
+
 #=============== CYGWIN SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, CYGWIN)
 CMP= -c ${CXXFLAGS}

@@ -336,6 +336,27 @@ SHLIBSUFFIX=.so
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
 
+#=============== QNX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, QNX)
+PLATFORM_COMPILE_OPTIONS = -shared
+MAKE_SHARED = ${CXX}  -shared ${LDFLAGS}
+MAKE_SHARED_C = ${CC} -shared ${LDFLAGS}
+ifeq (${TRANSCODER}, ICU)
+    ALLLIBS = ${LIBS} -L/usr/local/lib -licuuc -licudata
+else
+    ALLLIBS = ${LIBS}
+endif
+
+ifeq (${MESSAGELOADER}, ICU)
+    ALLLIBS = ${LIBS} -L/usr/local/lib -licuuc -licudata -lXercesMessages
+endif
+
+EXTRA_LINK_OPTIONS =
+SHLIBSUFFIX=.so
+## Compiler switch to embed a library name
+LD_SONAME = -Wl,-soname,${SO_NAME}
+endif
+
 #=============== FREEBSD SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, FREEBSD)
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
@@ -584,6 +605,16 @@ ifeq (${PLATFORM}, MACOSX)
     LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
     SO_NAME  =${LIBNAME}.${SO_TARGET_VERSION}${SHLIBSUFFIX}
     REAL_NAME=${LIBNAME}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
+endif
+ifeq (${PLATFORM}, QNX)
+    #
+    # LINK_NAME=libxerces-c.{suffix}
+    # SO_NAME  =libxerces-c.20.{suffix}
+    # REAL_NAME=libxerces-c.20.{suffix}
+    #
+	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+	SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+	REAL_NAME=$(SO_NAME)
 endif
 
 # Default naming (if no special cases above)

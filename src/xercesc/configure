@@ -1255,6 +1255,7 @@ case "${host}" in
         *-*-UnixWare*)  platform=UNIXWARE ;;
         *-*-unixware*)  platform=UNIXWARE ;;
         *-*-beos*)      platform=BEOS ;;
+        *-*-nto*)       platform=QNX ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
@@ -1453,6 +1454,7 @@ util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
 util/Platforms/BeOS/Makefile \
+util/Platforms/QNX/Makefile \
 util/Platforms/Linux/Makefile \
 util/Platforms/FreeBSD/Makefile \
 util/Platforms/HPUX/Makefile \
@@ -1606,6 +1608,7 @@ util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
 util/Platforms/BeOS/Makefile \
+util/Platforms/QNX/Makefile \
 util/Platforms/Linux/Makefile \
 util/Platforms/FreeBSD/Makefile \
 util/Platforms/HPUX/Makefile \
