@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/04/25 17:20:11  peiyongz
+ * throw exception if getcwd() fails
+ *
  * Revision 1.6  2003/04/24 02:55:58  peiyongz
  * Logical Path Resolution
  *
@@ -386,10 +389,16 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 XMLCh* XMLPlatformUtils::getCurrentDirectory()
 {
-    char  *tempDir = getcwd(NULL, PATH_MAX+1);
-    XMLCh *curDir = tempDir ? XMLString::transcode(tempDir) : 0;
-    free(tempDir);
-    return curDir;
+    char  dirBuf[PATH_MAX + 1];
+    char  *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
+
+    if (!curDir)
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::File_CouldNotGetBasePathName);
+    }
+
+    return XMLString::transcode(curDir);
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 

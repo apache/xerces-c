@@ -343,7 +343,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
   ArrayJanitor<char> janText(newSrc);
 
   // Use a local buffer that is big enough for the largest legal path
-  char absPath[PATH_MAX];
+  char absPath[PATH_MAX + 1];
   //get the absolute path
   char* retPath = realpath(newSrc, &absPath[0]);
 
@@ -375,10 +375,16 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 XMLCh* XMLPlatformUtils::getCurrentDirectory()
 {
-    char  *tempDir = getcwd(NULL, PATH_MAX+1);
-    XMLCh *curDir = tempDir ? XMLString::transcode(tempDir) : 0;
-    free(tempDir);
-    return curDir;
+    char  dirBuf[PATH_MAX + 1];
+    char  *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
+
+    if (!curDir)
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::File_CouldNotGetBasePathName);
+    }
+
+    return XMLString::transcode(curDir);
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 
