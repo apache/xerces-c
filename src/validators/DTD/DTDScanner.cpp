@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/04/23 18:54:35  tng
+ * Reuse grammar should allow users to use any stored element decl as root.  Fixed by Erik Rydgren.
+ *
  * Revision 1.3  2001/04/19 18:17:21  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -1561,6 +1564,8 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
                 return;
             }
         }
+        if (rootDecl)
+            fDTDGrammar->setRootElemId(rootDecl->getId());
     }
      else
     {
