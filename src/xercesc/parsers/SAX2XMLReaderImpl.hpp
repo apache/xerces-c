@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2004/10/04 11:30:51  amassari
+ * As start/endPrefixMapping doesn't use the XMLBufMgr variable, we need only one XMLBuffer
+ *
  * Revision 1.27  2004/10/04 09:26:31  amassari
  * Use an XMLStringPool+ValueStackOf(int) object to store the prefixes currently in scope, instead of a XMLBufMgr+ValueStack(XMLBuffer), that has a limitation of 32 items (jira#866)
  *
@@ -211,7 +214,6 @@
 #include <xercesc/util/RefStackOf.hpp>
 #include <xercesc/util/SecurityManager.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
-#include <xercesc/framework/XMLBufferMgr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1788,8 +1790,8 @@ private :
     //      Tells the parser whether it should reuse the grammar or not.
     //      If true, there cannot be any internal subset.
     //
-    //	fStringBuffers
-    //		Any temporary strings we need are pulled out of this pool
+    //	fPrefixesStorage
+    //		the namespace prefixes will be allocated from this pool
     //
     //	fPrefixes
     //		A Stack of the current namespace prefixes that need calls to
@@ -1847,6 +1849,9 @@ private :
     //      The grammar pool passed from external application (through derivatives).
     //      which could be 0, not owned.
     //
+    //   fBuffer
+    //      A buffer used to store the element name
+    //
     // -----------------------------------------------------------------------
     bool                        fNamespacePrefix;
     bool                        fAutoValidation;
@@ -1876,7 +1881,7 @@ private :
     XMLValidator*               fValidator;
     MemoryManager*              fMemoryManager;
     XMLGrammarPool*             fGrammarPool;
-    XMLBufferMgr                fStringBuffers;
+    XMLBuffer                   fBuffer;
 	
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.40  2004/10/04 11:30:51  amassari
+ * As start/endPrefixMapping doesn't use the XMLBufMgr variable, we need only one XMLBuffer
+ *
  * Revision 1.39  2004/10/04 09:26:31  amassari
  * Use an XMLStringPool+ValueStackOf(int) object to store the prefixes currently in scope, instead of a XMLBufMgr+ValueStack(XMLBuffer), that has a limitation of 32 items (jira#866)
  *
@@ -285,7 +288,6 @@
  */
 
 #include <xercesc/util/IOException.hpp>
-#include <xercesc/util/XMLChTranscoder.hpp>
 #include <xercesc/util/RefStackOf.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
@@ -344,7 +346,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     , fValidator(0)
     , fMemoryManager(manager)
     , fGrammarPool(gramPool)
-    , fStringBuffers(manager)
+    , fBuffer(1023,manager)
 {
     try
     {
@@ -949,12 +951,12 @@ startElement(   const   XMLElementDecl&         elemDecl
 
     if (fDocHandler)
     {
-        XMLBufBid elemQName( &fStringBuffers ) ;
+        fBuffer.reset();
         if (elemPrefix && *elemPrefix) {
-            elemQName.set(elemPrefix);
-            elemQName.append(chColon);
+            fBuffer.set(elemPrefix);
+            fBuffer.append(chColon);
         }
-        elemQName.append(elemDecl.getBaseName());
+        fBuffer.append(elemDecl.getBaseName());
 
         if (getDoNamespaces())
         {
@@ -1007,7 +1009,7 @@ startElement(   const   XMLElementDecl&         elemDecl
             (
                 fScanner->getURIText(elemURLId)
                 , elemDecl.getBaseName()
-                , elemQName.getRawBuffer()
+                , fBuffer.getRawBuffer()
                 , fAttrList
             );
         }
@@ -1031,7 +1033,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 (
                     fScanner->getURIText(elemURLId)
                     , elemDecl.getBaseName()
-                    , elemQName.getRawBuffer()
+                    , fBuffer.getRawBuffer()
                 );
 
                 unsigned int numPrefix = fPrefixCounts->pop();
@@ -1081,18 +1083,18 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
         // get the prefixes back so that we can call endPrefixMapping()
         if (getDoNamespaces())
         {
-            XMLBufBid elemQName( &fStringBuffers ) ;
+            fBuffer.reset();
             if (elemPrefix && *elemPrefix) {
-                elemQName.set(elemPrefix);
-                elemQName.append(chColon);
+                fBuffer.set(elemPrefix);
+                fBuffer.append(chColon);
             }
-            elemQName.append(elemDecl.getBaseName());
+            fBuffer.append(elemDecl.getBaseName());
 
             fDocHandler->endElement
             (
                 fScanner->getURIText(uriId)
                 , elemDecl.getBaseName()
-                , elemQName.getRawBuffer()
+                , fBuffer.getRawBuffer()
             );
 
             unsigned int numPrefix = fPrefixCounts->pop();
