@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/01/14 19:45:15  tng
+ * Support IconvFBSD in multi-threading environment with all the possible combinations of threading and transcoding options.  By Max Gotlib.
+ *
  * Revision 1.3  2001/12/12 14:48:16  tng
  * More bug fixes in IconvFBSD Transcoder.  By Max Gotlib.
  *
@@ -168,6 +171,7 @@ static const IconvFBSDEncoding	gIconvFBSDEncodings[] = {
 
 #endif /* XML_USE_LIBICONV */
 
+#include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/PlatformUtils.hpp>
@@ -181,8 +185,8 @@ static const IconvFBSDEncoding	gIconvFBSDEncodings[] = {
 // ---------------------------------------------------------------------------
 //  Local, const data
 // ---------------------------------------------------------------------------
-static const int    gTempBuffArraySize = 1024;
-static const XMLCh  gMyServiceId[] =
+static const unsigned int	gTempBuffArraySize = 4096;
+static const XMLCh  		gMyServiceId[] =
 {
     chLatin_I, chLatin_C, chLatin_o, chLatin_n, chLatin_v, chNull
 };
@@ -272,14 +276,26 @@ static wint_t fbsd_towupper(wint_t ch)
 
 #else /* XML_USE_LIBICONV */
 
+#if !defined(APP_NO_THREADS)
+
+#  include <util/Mutexes.hpp>
+// Iconv() access syncronization point
+static XMLMutex	*gIconvMutex = NULL;
+#  define ICONV_LOCK	XMLMutexLock lockConverter(gIconvMutex);
+
+#else /* APP_NO_THREADS */
+
+# define ICONV_LOCK
+
+#endif /* !APP_NO_THREADS */
+
 //----------------------------------------------------------------------------
 // There is implementation of the libiconv for FreeBSD (available through the
 // ports collection). The following is a wrapper around the iconv().
 //----------------------------------------------------------------------------
 
 IconvFBSDCD::IconvFBSDCD ()
-    : fTmpXMLBuf(0), fTmpXMLSize(0), fTmpUBuf(0), fTmpUSize(0),
-      fUChSize(0), fUBO(LITTLE_ENDIAN),
+    : fUChSize(0), fUBO(LITTLE_ENDIAN),
       fCDTo((iconv_t)-1), fCDFrom((iconv_t)-1)
 {
 }
@@ -288,9 +304,7 @@ IconvFBSDCD::IconvFBSDCD ( iconv_t	cd_from,
 			   iconv_t	cd_to,
 			   size_t	uchsize,
 			   unsigned int	ubo )
-    : fTmpXMLBuf(0), fTmpXMLSize(0),
-      fTmpUBuf(0), fTmpUSize(0),
-      fUChSize(uchsize), fUBO(ubo),
+    : fUChSize(uchsize), fUBO(ubo),
       fCDTo(cd_to), fCDFrom(cd_from)
 {
     if (fCDFrom == (iconv_t) -1 || fCDTo == (iconv_t) -1) {
@@ -300,10 +314,6 @@ IconvFBSDCD::IconvFBSDCD ( iconv_t	cd_from,
 
 IconvFBSDCD::~IconvFBSDCD()
 {
-    if (fTmpXMLBuf)
-	delete [] fTmpXMLBuf;
-    if (fTmpUBuf)
-	delete [] fTmpUBuf;
 }
 
 // Convert "native unicode" character into XMLCh
@@ -355,29 +365,27 @@ XMLCh	IconvFBSDCD::toUpper (const XMLCh ch) const
 	return toupper(ch);
     
     char	wcbuf[fUChSize * 2];
-    char	tmpArr[4];
-
     xmlChToMbc (ch, wcbuf);
+
+    char	tmpArr[4];
     char*	ptr = wcbuf;
     size_t	len = fUChSize;
     char	*pTmpArr = tmpArr;
     size_t	bLen = 2;
-    {
-	XMLMutexLock lockConverter(&fMutex);
 
-	if (::iconv (fCDTo, (const char**) &ptr, &len,
-		     &pTmpArr, &bLen) == (size_t) -1)
-	    return 0;
-	tmpArr[1] = toupper (*tmpArr);
-	*tmpArr = tmpArr[1]; 
-	len = 1;
-	pTmpArr = wcbuf;
-	bLen = fUChSize;
-	ptr = tmpArr;
-	if (::iconv (fCDFrom, (const char **)&ptr, &len,
-		     &pTmpArr, &bLen) == (size_t) -1)
-	    return 0;
-    }
+    ICONV_LOCK;
+    if (::iconv (fCDTo, (const char**) &ptr, &len,
+		 &pTmpArr, &bLen) == (size_t) -1)
+	return 0;
+    tmpArr[1] = toupper (*tmpArr);
+    *tmpArr = tmpArr[1]; 
+    len = 1;
+    pTmpArr = wcbuf;
+    bLen = fUChSize;
+    ptr = tmpArr;
+    if (::iconv (fCDFrom, (const char **)&ptr, &len,
+		 &pTmpArr, &bLen) == (size_t) -1)
+	return 0;
     mbcToXMLCh (wcbuf, (XMLCh*) &ch);
     return ch;
 }
@@ -389,42 +397,20 @@ bool	IconvFBSDCD::isSpace(const XMLCh toCheck) const
 	return isspace(toCheck);
     char	wcbuf[fUChSize * 2];
     char	tmpArr[4];
+
     xmlChToMbc (toCheck, wcbuf);
     char*	ptr = wcbuf;
     size_t	len = fUChSize;
     char	*pTmpArr = tmpArr;
     size_t	bLen = 2;
-    {
-	XMLMutexLock lockConverter(&fMutex);
 
+    {
+	ICONV_LOCK;
 	if (::iconv (fCDTo, (const char**) &ptr, &len,
 		     &pTmpArr, &bLen) == (size_t) -1)
 	    return 0;
     }
     return isspace(*tmpArr);
-}
-
-// Allocate internal buffer space, large enough to hold 'cnt'
-// XMLCh characters, and fill it with data, supplyed in the array
-// of "native unicode" characters.
-XMLCh*	IconvFBSDCD::xmlFromMbs (const char *str, size_t cnt )
-{
-    if (str == NULL && cnt == 0)
-	return NULL;
-    if (cnt > fTmpXMLSize) {
-	delete [] fTmpXMLBuf;
-	fTmpXMLBuf = NULL;
-	fTmpXMLSize = 0;
-    }
-    if (fTmpXMLBuf == NULL) {
-	fTmpXMLBuf = new XMLCh[cnt];
-	if (fTmpXMLBuf == NULL)
-	    return NULL;
-	fTmpXMLSize = cnt;
-    }
-    if (str == NULL)
-	return fTmpXMLBuf;
-    return mbsToXML (str, cnt, fTmpXMLBuf, cnt);
 }
 
 // Fill array of XMLCh characters with data, supplyed in the array
@@ -465,29 +451,6 @@ XMLCh*	IconvFBSDCD::mbsToXML
 	    }
     }
     return xml_str;
-}
-
-// Allocate internal buffer space, large enough to hold 'cnt'
-// "native unicode" characters, and fill it with data, supplyed
-// in the array of XMLCh characters.
-char*	IconvFBSDCD::mbsFromXML (const XMLCh *str, size_t cnt)
-{
-    if (str == NULL && cnt == 0)
-	return NULL;
-    if (cnt > fTmpUSize) {
-	delete [] fTmpUBuf;
-	fTmpUBuf = NULL;
-	fTmpUSize = 0;
-    }
-    if (fTmpUBuf == NULL) {
-	fTmpUBuf = new char[cnt * fUChSize];
-	if (fTmpUBuf == NULL)
-	    return NULL;
-	fTmpUSize = cnt;
-    }
-    if (str == NULL)
-	return fTmpUBuf;
-    return xmlToMbs (str, cnt, fTmpUBuf, cnt);
 }
 
 // Fill array of "native unicode" characters with data, supplyed
@@ -536,7 +499,7 @@ size_t	IconvFBSDCD::iconvFrom ( const char	*fromPtr,
 				 char		**toPtr,
 				 size_t		toLen ) const
 {
-    XMLMutexLock lockConverter(&fMutex);
+    ICONV_LOCK;
     return ::iconv (fCDFrom, &fromPtr, fromLen, toPtr, &toLen);
 }
 
@@ -545,7 +508,7 @@ size_t	IconvFBSDCD::iconvTo ( const char	*fromPtr,
 			       char		**toPtr,
 			       size_t		toLen ) const
 {
-    XMLMutexLock lockConverter(&fMutex);
+    ICONV_LOCK;
     return ::iconv (fCDTo, &fromPtr, fromLen, toPtr, &toLen);
 }
 
@@ -557,12 +520,20 @@ size_t	IconvFBSDCD::iconvTo ( const char	*fromPtr,
 // ---------------------------------------------------------------------------
 
 IconvFBSDTransService::IconvFBSDTransService()
-#ifdef XML_USE_LIBICONV
+#ifndef XML_USE_LIBICONV
+{}
+#else  /* XML_USE_LIBICONV */
     : IconvFBSDCD(), fUnicodeCP(0)
-#endif /* XML_USE_LIBICONV */
 {
-#ifdef XML_USE_LIBICONV
-
+#if !defined(APP_NO_THREADS)
+    // Create global lock object
+    if (gIconvMutex == NULL) {
+	gIconvMutex = new XMLMutex;
+	if (gIconvMutex == NULL)
+	    XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
+    }
+#endif
+    
     // Try to obtain local (host) characterset through the environment
     char*	fLocalCP = setlocale (LC_CTYPE, "");
     if (fLocalCP == NULL)
@@ -581,6 +552,7 @@ IconvFBSDTransService::IconvFBSDTransService()
     for (eptr = gIconvFBSDEncodings; eptr->fSchema; eptr++) {
 	if (eptr->fUChSize != sizeof(XMLCh))
 	    continue;
+	ICONV_LOCK;
 	// try to create conversion descriptor
 	iconv_t	cd_to = iconv_open(fLocalCP, eptr->fSchema);
 	if (cd_to == (iconv_t)-1)
@@ -602,6 +574,7 @@ IconvFBSDTransService::IconvFBSDTransService()
 	// try to use any known schema
 	for (eptr = gIconvFBSDEncodings; eptr->fSchema; eptr++) {
 	    // try to create conversion descriptor
+	    ICONV_LOCK;
 	    iconv_t	cd_to = iconv_open(fLocalCP, eptr->fSchema);
 	    if (cd_to == (iconv_t)-1)
 		continue;
@@ -621,17 +594,20 @@ IconvFBSDTransService::IconvFBSDTransService()
 
     if (fUnicodeCP == NULL || cdTo() == (iconv_t)-1 || cdFrom() == (iconv_t)-1)
 	XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
-    
-#endif /* XML_USE_LIBICONV */
 }
+#endif /* XML_USE_LIBICONV */
 
 IconvFBSDTransService::~IconvFBSDTransService()
 {
 #ifdef XML_USE_LIBICONV
-    if (cdTo() != (iconv_t) -1)
+    if (cdTo() != (iconv_t) -1) {
 	iconv_close (cdTo());
-    if (cdFrom() != (iconv_t) -1)
+	setCDTo ((iconv_t)-1);
+    }
+    if (cdFrom() != (iconv_t) -1) {
 	iconv_close (cdFrom());
+	setCDFrom ((iconv_t)-1);
+    }
 #endif /* XML_USE_LIBICONV */
 }
 
@@ -663,8 +639,6 @@ int IconvFBSDTransService::compareIString(const XMLCh* const	comp1
     while ( (*cptr1 != 0) && (*cptr2 != 0) ) {
         if (c1 != c2)
             break;
-        cptr1++;
-        cptr2++;  
 	c1 = toUpper(*(++cptr1));
 	c2 = toUpper(*(++cptr2));
 
@@ -800,37 +774,37 @@ IconvFBSDTransService::makeNewXMLTranscoder
 #else /* XML_USE_LIBICONV */
 
     resValue = XMLTransService::UnsupportedEncoding;
-
     IconvFBSDTranscoder	*newTranscoder = NULL;
-    size_t	wLent = getWideCharLength (encodingName);
-    char*	encWName = mbsFromXML (encodingName, wLent);
-    char	encLocal[wLent+1];
-    char*	pEnclocal = encLocal;
-    size_t	len = wLent;
-    wLent *= uChSize();
-    if (iconvTo (encWName, &wLent, &pEnclocal, len) == (size_t) -1 &&
-	errno != E2BIG)
-	return 0;
-    encLocal[len] = 0;
 
+    char	*encLocal = XMLString::transcode(encodingName);
     iconv_t	cd_from, cd_to;
-    cd_from = iconv_open (fUnicodeCP, encLocal);
-    if (cd_from == (iconv_t)-1) {
-	resValue = XMLTransService::SupportFilesNotFound;
-	return NULL;
+
+    {
+	ICONV_LOCK;
+	cd_from = iconv_open (fUnicodeCP, encLocal);
+	if (cd_from == (iconv_t)-1) {
+	    resValue = XMLTransService::SupportFilesNotFound;
+	    if (encLocal)
+		delete [] encLocal;
+	    return NULL;
+	}
+	cd_to = iconv_open (encLocal, fUnicodeCP);
+	if (cd_to == (iconv_t)-1) {
+	    resValue = XMLTransService::SupportFilesNotFound;
+	    iconv_close (cd_from);
+	    if (encLocal)
+		delete [] encLocal;
+	    return NULL;
+	}
+	newTranscoder = new IconvFBSDTranscoder (encodingName,
+						 blockSize,
+						 cd_from, cd_to,
+						 uChSize(), UBO());
     }
-    cd_to = iconv_open (encLocal, fUnicodeCP);
-    if (cd_to == (iconv_t)-1) {
-	resValue = XMLTransService::SupportFilesNotFound;
-	iconv_close (cd_from);
-	return NULL;
-    }
-    newTranscoder = new IconvFBSDTranscoder (encodingName,
-					     blockSize,
-					     cd_from, cd_to,
-					     uChSize(), UBO());
     if (newTranscoder)
 	resValue = XMLTransService::Ok;
+    if (encLocal)
+	delete [] encLocal;
     return newTranscoder;
     
 #endif /* !XML_USE_LIBICONV */
@@ -847,7 +821,7 @@ void IconvFBSDTransService::upperCase(XMLCh* const toUpperCase) const
 	*outPtr = toUpper(*outPtr);
 #endif /* !XML_USE_LIBICONV */
         outPtr++;
-    }    
+    }
 }
 
 
@@ -869,26 +843,23 @@ IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText)
 
 #else /* XML_USE_LIBICONV */
 
-    char	*tmpWideArr = mbsFromXML (NULL, gTempBuffArraySize);
-    if (tmpWideArr == NULL)
-	return 0;
     size_t      len, srcLen;
-    size_t	totalLen = 0;
-    
     len = srcLen = strlen(srcText);
     if (len == 0)
         return 0;
 
-    size_t	bLen = gTempBuffArraySize * uChSize();
+    char	tmpWideArr[gTempBuffArraySize];
+    size_t	totalLen = 0;
+
     for (;;) {
 	char		*pTmpArr = tmpWideArr;
 	const char	*ptr = srcText + srcLen - len;
-	size_t	rc = iconvFrom(ptr, &len, &pTmpArr, bLen);
+	size_t	rc = iconvFrom(ptr, &len, &pTmpArr, gTempBuffArraySize);
 	if (rc == (size_t) -1 && errno != E2BIG)
 	    return 0;
-	size_t	sz = pTmpArr - (char *) tmpWideArr;
-	totalLen += sz;
-	if (sz == 0 || len == 0)
+	rc = pTmpArr - (char *) tmpWideArr;
+	totalLen += rc;
+	if (rc == 0 || len == 0)
 	    break;
     }
     return totalLen / uChSize();
@@ -902,10 +873,12 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 {
     if (!srcText)
         return 0;
+    unsigned int  wLent = getWideCharLength(srcText);
+    if (wLent == 0)
+        return 0;
 
 #ifndef XML_USE_LIBICONV
     
-    unsigned int  wLent = getWideCharLength(srcText);
     wchar_t       tmpWideCharArr[gTempBuffArraySize];
     wchar_t*      allocatedArray = 0;
     wchar_t*      wideCharBuf = 0;
@@ -916,43 +889,55 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
         wideCharBuf = tmpWideCharArr;
 
     for (unsigned int i = 0; i < wLent; i++)
-    {
         wideCharBuf[i] = srcText[i];
-    }
     wideCharBuf[wLent] = 0x00;
 
     const unsigned int retVal = fbsd_wcstombs(NULL, wideCharBuf, 0);
+
     if (allocatedArray)
 	delete [] allocatedArray;
-
     if (retVal == ~0)
         return 0;
     return retVal;
 
 #else /* XML_USE_LIBICONV */
 
-    size_t	wLent = getWideCharLength(srcText);
-    if (wLent == 0)
-        return 0;
-    char	*wBuf = mbsFromXML (srcText, wLent);
-    if (wBuf == NULL)
-	return 0;
-    char	tmpBuff[ gTempBuffArraySize ];
-    size_t      len;
-    size_t	totalLen = 0;
+    char	tmpWBuff[gTempBuffArraySize];
+    char	*wBuf = 0;
+    char	*wBufPtr = 0;
+    size_t      len = wLent * uChSize();
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+	if (len > gTempBuffArraySize) {
+	    wBufPtr = new char[len];
+	    if (wBufPtr == NULL)
+		return 0;
+	    wBuf = wBufPtr;
+	} else
+	    wBuf = tmpWBuff;
+	xmlToMbs (srcText, wLent, wBuf, wLent);
+    } else
+	wBuf = (char *) srcText;
     
-    len = wLent * uChSize();
+    char	tmpBuff[gTempBuffArraySize];
+    size_t	totalLen = 0;
+    char	*srcEnd = wBuf + wLent * uChSize();
+    
     for (;;) {
 	char		*pTmpArr = tmpBuff;
-	const char	*ptr = wBuf + wLent * uChSize() - len;
+	const char	*ptr = srcEnd - len;
 	size_t	rc = iconvTo(ptr, &len, &pTmpArr, gTempBuffArraySize);
-	if (rc == (size_t) -1 && errno != E2BIG)
+	if (rc == (size_t) -1 && errno != E2BIG) {
+	    if (wBufPtr)
+		delete [] wBufPtr;
 	    return 0;
-	size_t	sz = pTmpArr - tmpBuff;
-	totalLen += sz;
-	if (sz == 0 || len == 0)
+	}
+	rc = pTmpArr - tmpBuff;
+	totalLen += rc;
+	if (rc == 0 || len == 0)
 	    break;
     }
+    if (wBufPtr)
+	delete [] wBufPtr;
     return totalLen;
 
 #endif /* !XML_USE_LIBICONV */
@@ -965,8 +950,7 @@ char* IconvFBSDLCPTranscoder::transcode(const XMLCh* const toTranscode)
         return 0;
 
     char* retVal = 0;
-    if (*toTranscode)
-    {
+    if (*toTranscode) {
         unsigned int  wLent = getWideCharLength(toTranscode);
 
 #ifndef XML_USE_LIBICONV
@@ -981,25 +965,22 @@ char* IconvFBSDLCPTranscoder::transcode(const XMLCh* const toTranscode)
             wideCharBuf = tmpWideCharArr;
 
         for (unsigned int i = 0; i < wLent; i++)
-        {
             wideCharBuf[i] = toTranscode[i];
-        }
         wideCharBuf[wLent] = 0x00;
 
         // Calc the needed size.
         const size_t neededLen = fbsd_wcstombs(NULL, wideCharBuf, 0);
-        if (neededLen == -1)
-        {
+        if (neededLen == -1) {
 	    if (allocatedArray)
 		delete [] allocatedArray;
             return 0;
-        }
-
+	}
+	
         retVal = new char[neededLen + 1];
         fbsd_wcstombs(retVal, wideCharBuf, neededLen);
-        retVal[neededLen] = 0;
 	if (allocatedArray)
 	    delete [] allocatedArray;
+        retVal[neededLen] = 0;
 
 #else /* XML_USE_LIBICONV */
 
@@ -1012,21 +993,39 @@ char* IconvFBSDLCPTranscoder::transcode(const XMLCh* const toTranscode)
 	if (retVal == NULL)
             return 0;
 	// prepare the original
-	char	*wideCharBuf = mbsFromXML (toTranscode, wLent);
-	if (wideCharBuf == NULL)
-	    return 0;
+	char	tmpWBuff[gTempBuffArraySize];
+	char	*wideCharBuf = 0;
+	char	*wBufPtr = 0;
+	size_t  len = wLent * uChSize();
+	
+	if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+	    if (len > gTempBuffArraySize) {
+		wBufPtr = new char[len];
+		if (wBufPtr == NULL)
+		    return 0;
+		wideCharBuf = wBufPtr;
+	    } else
+		wideCharBuf = tmpWBuff;
+	    xmlToMbs (toTranscode, wLent, wideCharBuf, wLent);
+	} else
+	    wideCharBuf = (char *) toTranscode;
+
 	// perform conversion
 	wLent *= uChSize();
 	char	*ptr = retVal;
-	if (iconvTo(wideCharBuf, &wLent, &ptr, neededLen) == (size_t)-1)
+	size_t	rc = iconvTo(wideCharBuf, &wLent, &ptr, neededLen);
+	if (rc == (size_t)-1) {
+	    if (wBufPtr)
+		delete [] wBufPtr;
 	    return 0;
+	}
+	if (wBufPtr)
+	    delete [] wBufPtr;
         retVal[neededLen] = 0;
 
 #endif /* !XML_USE_LIBICONV */
 
-    }
-    else
-    {
+    } else {
         retVal = new char[1];
 	if (retVal == NULL)
 	    return 0;
@@ -1081,13 +1080,33 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const	toTranscode
 #else /* XML_USE_LIBICONV */
 
     // Fill the "unicode" string
-    char	*wideCharBuf = mbsFromXML (toTranscode, wLent);
-    
+    char	tmpWBuff[gTempBuffArraySize];
+    char	*wideCharBuf = 0;
+    char	*wBufPtr = 0;
+    size_t  len = wLent * uChSize();
+
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+	if (len > gTempBuffArraySize) {
+	    wBufPtr = new char[len];
+	    if (wBufPtr == NULL)
+		return 0;
+	    wideCharBuf = wBufPtr;
+	} else
+	    wideCharBuf = tmpWBuff;
+	xmlToMbs (toTranscode, wLent, wideCharBuf, wLent);
+    } else
+	wideCharBuf = (char *) toTranscode;
+
     // Ok, go ahead and try the transcoding. If it fails, then ...
     char	*ptr = toFill;
-    size_t	len = wLent * uChSize();
-    if (iconvTo(wideCharBuf, &len, &ptr, maxBytes) == (size_t)-1)
+    size_t	rc = iconvTo(wideCharBuf, &len, &ptr, maxBytes);
+    if (rc == (size_t)-1) {
+	if (wBufPtr)
+	    delete [] wBufPtr;
 	return false;
+    }
+    if (wBufPtr)
+	delete [] wBufPtr;
     
 #endif /* !XML_USE_LIBICONV */
 
@@ -1105,8 +1124,8 @@ XMLCh* IconvFBSDLCPTranscoder::transcode(const char* const toTranscode)
 
     XMLCh* retVal = 0;
     if (*toTranscode) {
-        const unsigned int len = calcRequiredSize(toTranscode);
-        if (len == 0) {
+        const unsigned int wLent = calcRequiredSize(toTranscode);
+        if (wLent == 0) {
             retVal = new XMLCh[1];
             retVal[0] = 0;
             return retVal;
@@ -1118,36 +1137,58 @@ XMLCh* IconvFBSDLCPTranscoder::transcode(const char* const toTranscode)
         wchar_t*      allocatedArray = 0;
         wchar_t*      wideCharBuf = 0;
 
-        if (len >= gTempBuffArraySize)
-            wideCharBuf = allocatedArray = new wchar_t[len + 1];
+        if (wLent >= gTempBuffArraySize)
+            wideCharBuf = allocatedArray = new wchar_t[wLent + 1];
         else
             wideCharBuf = tmpWideCharArr;
 
-        fbsd_mbstowcs(wideCharBuf, toTranscode, len);
-        retVal = new XMLCh[len + 1];
-        for (unsigned int i = 0; i < len; i++)
+        fbsd_mbstowcs(wideCharBuf, toTranscode, wLent);
+        retVal = new XMLCh[wLent + 1];
+	if (retVal == NULL) {
+	    if (allocatedArray)
+		delete [] allocatedArray;
+	    return NULL;
+	}
+        for (unsigned int i = 0; i < wLent; i++)
             retVal[i] = (XMLCh) wideCharBuf[i];
-        retVal[len] = 0x00;
+        retVal[wLent] = 0x00;
 	if (allocatedArray)
 	    delete [] allocatedArray;
 
 #else /* XML_USE_LIBICONV */
 
-	char		*wideCharBuf = mbsFromXML(NULL, len + 1);
-	if (wideCharBuf == NULL)
-	    return 0;
-	size_t		flen = strlen(toTranscode);
-	char		*ptr = wideCharBuf;
-	if (iconvFrom(toTranscode, &flen, &ptr, len*uChSize()) == (size_t) -1)
-	    return 0;
-	retVal = xmlFromMbs (wideCharBuf, len + 1);
-	if (retVal == NULL) {
-	    if (wideCharBuf)
-		delete [] wideCharBuf;
-	    return 0;
+	char	tmpWBuff[gTempBuffArraySize];
+	char	*wideCharBuf = 0;
+	char	*wBufPtr = 0;
+	size_t  len = wLent * uChSize();
+
+	retVal = new XMLCh[wLent + 1];
+	if (retVal == NULL)
+	    return NULL;
+	if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+	    if (len > gTempBuffArraySize) {
+		wBufPtr = new char[len];
+		if (wBufPtr == NULL)
+		    return 0;
+		wideCharBuf = wBufPtr;
+	    } else
+		wideCharBuf = tmpWBuff;
+	} else
+	    wideCharBuf = (char *) retVal;
+
+	size_t	flen = strlen(toTranscode);
+	char	*ptr = wideCharBuf;
+	size_t	rc = iconvFrom(toTranscode, &flen, &ptr, len);
+	if (rc == (size_t) -1) {
+	    if (wBufPtr)
+		delete [] wBufPtr;
+	    return NULL;
 	}
-	setTmpXMLBuf(NULL, 0);
-        retVal[len] = 0x00;
+	if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
+	    mbsToXML (wideCharBuf, wLent, retVal, wLent);
+	if (wBufPtr)
+	    delete [] wBufPtr;
+        retVal[wLent] = 0x00;
 	
 #endif /* !XML_USE_LIBICONV */
 
@@ -1179,9 +1220,9 @@ bool IconvFBSDLCPTranscoder::transcode(const   char* const	toTranscode
         return true;
     }
 
-    size_t len = calcRequiredSize(toTranscode);
-    if (len > maxChars)
-        len = maxChars;
+    size_t wLent = calcRequiredSize(toTranscode);
+    if (wLent > maxChars)
+        wLent = maxChars;
 
 #ifndef XML_USE_LIBICONV
 
@@ -1190,34 +1231,55 @@ bool IconvFBSDLCPTranscoder::transcode(const   char* const	toTranscode
     wchar_t*      wideCharBuf = 0;
 
     if (maxChars >= gTempBuffArraySize)
-        wideCharBuf = allocatedArray = new wchar_t[len + 1];
+        wideCharBuf = allocatedArray = new wchar_t[wLent + 1];
     else
         wideCharBuf = tmpWideCharArr;
 
-    if (fbsd_mbstowcs(wideCharBuf, toTranscode, len) == -1) {
+    if (fbsd_mbstowcs(wideCharBuf, toTranscode, wLent) == -1) {
 	if (allocatedArray)
 	    delete [] allocatedArray;
         return false;
     }
-    for (unsigned int i = 0; i < len; i++)
+    for (unsigned int i = 0; i < wLent; i++)
         toFill[i] = (XMLCh) wideCharBuf[i];
     if (allocatedArray)
 	delete [] allocatedArray;
 
 #else /* XML_USE_LIBICONV */
 
-    char	*wideCharBuf = mbsFromXML (toFill, maxChars);
-    if (wideCharBuf == NULL)
-	return 0;
-    size_t	flen = len;
+    char	tmpWBuff[gTempBuffArraySize];
+    char	*wideCharBuf = 0;
+    char	*wBufPtr = 0;
+    size_t	len = wLent * uChSize();
+
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+	if (len > gTempBuffArraySize) {
+	    wBufPtr = new char[len];
+	    if (wBufPtr == NULL)
+		return 0;
+	    wideCharBuf = wBufPtr;
+	} else
+	    wideCharBuf = tmpWBuff;
+    } else
+	wideCharBuf = (char *) toFill;
+
+    size_t	flen = strlen(toTranscode); // wLent;
     char	*ptr = wideCharBuf;
-    if (iconvFrom(toTranscode, &flen, &ptr, maxChars*uChSize()) == (size_t)-1)
+    size_t	rc = iconvFrom(toTranscode, &flen, &ptr, len);
+    if (rc == (size_t)-1) {
+	if (wBufPtr)
+	    delete [] wBufPtr;
 	return false;
-    mbsToXML (wideCharBuf, maxChars, toFill, maxChars);
+    }
+    
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
+	mbsToXML (wideCharBuf, wLent, toFill, wLent);
+    if (wBufPtr)
+	delete [] wBufPtr;
     
 #endif /* !XML_USE_LIBICONV */
 
-    toFill[maxChars] = 0x00;
+    toFill[wLent] = 0x00;
     return true;
 }
 
@@ -1271,10 +1333,15 @@ IconvFBSDTranscoder::IconvFBSDTranscoder (const	XMLCh* const	encodingName
 
 IconvFBSDTranscoder::~IconvFBSDTranscoder()
 {
-    if (cdTo() != (iconv_t)-1)
+    ICONV_LOCK;
+    if (cdTo() != (iconv_t)-1) {
 	iconv_close (cdTo());
-    if (cdFrom() != (iconv_t)-1)
+	setCDTo ((iconv_t)-1);
+    }
+    if (cdFrom() != (iconv_t)-1) {
 	iconv_close (cdFrom());
+	setCDFrom ((iconv_t)-1);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1290,31 +1357,51 @@ unsigned int	IconvFBSDTranscoder::transcodeFrom
     ,       unsigned char* const    charSizes )
 {
     // Transcode TO XMLCh
-
     const char*  startSrc = (const char*) srcData;
     const char*  endSrc = (const char*) srcData + srcCount;
-    char* startTarget = mbsFromXML (NULL, maxChars);
-    if (startTarget == NULL)
-	return 0;
-    char* orgTarget = startTarget;
+
+    char	tmpWBuff[gTempBuffArraySize];
+    char	*startTarget = 0;
+    char	*wBufPtr = 0;
+    size_t	len = maxChars * uChSize();
+
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+	if (len > gTempBuffArraySize) {
+	    wBufPtr = new char[len];
+	    if (wBufPtr == NULL)
+		return 0;
+	    startTarget = wBufPtr;
+	} else
+	    startTarget = tmpWBuff;
+    } else
+	startTarget = (char *) toFill;    
 
     // Do character-by-character transcoding
+    char	*orgTarget = startTarget;
     size_t	srcLen = srcCount;
+    size_t	prevSrcLen = srcLen;
     unsigned int toReturn = 0;
     bytesEaten = 0;
-    for (size_t cnt = 0; cnt < maxChars; cnt++) {
+    for (size_t cnt = 0; cnt < maxChars && srcLen; cnt++) {
 	size_t	rc = iconvFrom(startSrc, &srcLen, &orgTarget, uChSize());
 	if (rc == (size_t)-1) {
-	    if (errno != E2BIG)
+	    if (errno != E2BIG) {
+		if (wBufPtr)
+		    delete [] wBufPtr;
 		ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+	    }
 	    break;
 	}
-	charSizes[cnt] = endSrc - srcLen - startSrc;
+	charSizes[cnt] = prevSrcLen - srcLen;
+	prevSrcLen = srcLen;
 	bytesEaten += charSizes[cnt];
 	startSrc = endSrc - srcLen;
 	toReturn++;
-    }
-    mbsToXML (startTarget, maxChars, toFill, maxChars);
+    }    
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
+	mbsToXML (startTarget, toReturn, toFill, toReturn);
+    if (wBufPtr)
+	delete [] wBufPtr;
     return toReturn;
 }
 
@@ -1328,14 +1415,34 @@ unsigned int	IconvFBSDTranscoder::transcodeTo
     , const UnRepOpts		options )
 {
     // Transcode FROM XMLCh
+    char	tmpWBuff[gTempBuffArraySize];
+    char	*startSrc = tmpWBuff;
+    char	*wBufPtr = 0;
+    size_t	len = srcCount * uChSize();
 
-    const char*  startSrc = mbsFromXML(srcData, srcCount);
-    char* startTarget = (char *) toFill;
-    size_t	srcLen = srcCount * sizeof(XMLCh);
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+	if (len > gTempBuffArraySize) {
+	    wBufPtr = new char[len];
+	    if (wBufPtr == NULL)
+		return 0;
+	    startSrc = wBufPtr;
+	} else
+	    startSrc = tmpWBuff;
+	xmlToMbs (srcData, srcCount, startSrc, srcCount);
+    } else
+	startSrc = (char *) srcData;
+
+    char*	startTarget = (char *) toFill;
+    size_t	srcLen = len;
     size_t	rc = iconvTo (startSrc, &srcLen, &startTarget, maxBytes);
-    if (rc == (size_t)-1 && errno != E2BIG)
+    if (rc == (size_t)-1 && errno != E2BIG) {
+	if (wBufPtr)
+	    delete [] wBufPtr;
 	ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
-    charsEaten = srcCount - srcLen / sizeof(XMLCh);
+    }
+    charsEaten = srcCount - srcLen / uChSize();
+    if (wBufPtr)
+	delete [] wBufPtr;
     return startTarget - (char *)toFill;
 }
 
@@ -1361,6 +1468,7 @@ bool		IconvFBSDTranscoder::canTranscodeTo
     size_t	len = srcCount * uChSize();
     char	tmpBuf[64];
     char*	pTmpBuf = tmpBuf;
+
     size_t	rc = iconvTo( srcBuf, &len, &pTmpBuf, 64);
     return (rc != (size_t)-1) && (len == 0);
 }

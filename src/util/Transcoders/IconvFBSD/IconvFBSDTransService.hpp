@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/01/14 19:45:15  tng
+ * Support IconvFBSD in multi-threading environment with all the possible combinations of threading and transcoding options.  By Max Gotlib.
+ *
  * Revision 1.2  2001/12/11 15:10:14  tng
  * More changes to IconvFBSDTransService.  Allow using "old" TransServece implementation (via '-t native' option to runConfigure) or
  * to employ libiconv (it is a part of FreeBSD ports-collection) services.  By Max Gotlib.
@@ -72,7 +75,6 @@
 
 #ifdef XML_USE_LIBICONV
 
-#  include <util/Mutexes.hpp>
 #  include <iconv.h>
 
 // ---------------------------------------------------------------------------
@@ -104,16 +106,7 @@ public:
     XMLCh 	toUpper (const XMLCh ch) const;
 
     // Check if passed characters belongs to the :space: class
-    virtual bool isSpace(const XMLCh toCheck) const;
-    
-    // Allocate internal buffer space, large enough to hold 'cnt'
-    // XMLCh characters, and fill it with data, supplyed in the array
-    // of "native unicode" characters.
-    XMLCh*	xmlFromMbs
-    (
-	const char*	str,
-	size_t		cnt
-    );
+    virtual bool isSpace(const XMLCh toCheck) const;    
 
     // Fill array of XMLCh characters with data, supplyed in the array
     // of "native unicode" characters.
@@ -124,14 +117,6 @@ public:
 	size_t		xml_cnt
     ) const;
 
-    // Allocate internal buffer space, large enough to hold 'cnt'
-    // "native unicode" characters, and fill it with data, supplyed
-    // in the array of XMLCh characters.
-    char*	mbsFromXML
-    (
-	const XMLCh*	str,
-	size_t		cnt
-    );
 
     // Fill array of "native unicode" characters with data, supplyed
     // in the array of XMLCh characters.
@@ -177,9 +162,6 @@ protected:
     inline void	setCDFrom (iconv_t cd) { fCDFrom = cd; }
     inline void	setUChSize (size_t sz) { fUChSize = sz; }
     inline void	setUBO (unsigned int u) { fUBO = u; }
-    inline void	setTmpXMLBuf (XMLCh* b, size_t s) {
-	fTmpXMLBuf = b; fTmpXMLSize = s;
-    }
     
 private:
     // -----------------------------------------------------------------------
@@ -191,36 +173,19 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fTmpXMLBuf
-    //      Temporary buffer for holding arrays of XMLCh characters
-    //  fTmpXMLSize
-    //      Size of the XMLCh temporary buffer
-    //  fTmpUBuf
-    //      Temporary buffer for holding arrays of "native unicode" characters
-    //  fTmpUSize
-    //      Size of the "native unicode" temporary buffer
     //  fCDTo
     //	    Characterset conversion descriptor TO the local-host encoding
     //  fCDFrom
     //	    Characterset conversion descriptor FROM the local-host encoding
-    //  fTmpUSize
-    //      Size of the "native unicode" temporary buffer
     //  fUChSize
     //      Sizeof the "native unicode" character in bytes
     //  fUBO
     //      "Native unicode" characters byte order
-    //  fMutex
-    //      We have to synchronize threaded calls to the converter.
     // -----------------------------------------------------------------------
-    XMLCh*	fTmpXMLBuf;
-    size_t	fTmpXMLSize;
-    char*	fTmpUBuf;
-    size_t	fTmpUSize;
     size_t	fUChSize;
     unsigned int fUBO;
     iconv_t	fCDTo;
     iconv_t	fCDFrom;
-    mutable XMLMutex	fMutex;
 };
 
 #endif /* XML_USE_LIBICONV */
@@ -294,8 +259,6 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fLocalCP
-    //      Local (host) character set name
     //  fUnicodeCP
     //      Unicode encoding schema name
     // -----------------------------------------------------------------------
