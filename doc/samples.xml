@@ -77,7 +77,7 @@
     <p>Rebuilding the Configuration Files</p>
 
     <p>Although it shouldn't be necessary, if you want to rebuild the VAC++
-    configuration files, you'll need to have Object Rexx running on your system:<p>
+    configuration files, you'll need to have Object Rexx running on your system:</p>
 
     <ul>
      <li> If you are not currently running Object Rexx, run the SWITCHRX command from
