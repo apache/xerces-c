@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/11/13 13:24:05  tng
+ * Fix documentation for DefaultHandler.
+ *
  * Revision 1.4  2000/12/22 15:17:01  tng
  * SAX2-ext's LexicalHandler support added by David Bertoni.
  *
@@ -90,9 +93,9 @@ class Attributes;
 /**
   * Default base class for SAX2 handlers.
   *
-  * <p>This class implements the default behaviour for four SAX2
-  * interfaces: EntityResolver, DTDHandler, Sax2DocumentHandler,
-  * and ErrorHandler.</p>
+  * <p>This class implements the default behaviour for SAX2
+  * interfaces: EntityResolver, DTDHandler, ContentHandler,
+  * ErrorHandler, and LexicalHandler.</p>
   *
   * <p>Application writers can extend this class when they need to
   * implement only part of an interface; parser writers can
@@ -105,13 +108,14 @@ class Attributes;
   * @see DTDHandler#DTDHandler
   * @see ContentHandler#ContentHandler
   * @see ErrorHandler#ErrorHandler
+  * @see LexicalHandler#LexicalHandler
   */
 
 class SAX2_EXPORT DefaultHandler :
 
-    public EntityResolver, 
-	public DTDHandler, 
-	public ContentHandler, 
+    public EntityResolver,
+	public DTDHandler,
+	public ContentHandler,
    public ErrorHandler,
    public LexicalHandler
 {
@@ -170,8 +174,8 @@ public:
     */
     virtual void endElement
 	(
-		const XMLCh* const uri, 
-		const XMLCh* const localname, 
+		const XMLCh* const uri,
+		const XMLCh* const localname,
 		const XMLCh* const qname
 	);
 
@@ -295,7 +299,7 @@ public:
     * @see DocumentHandler#startPrefixMapping
     */
 	virtual void startPrefixMapping
-	( 
+	(
 		const	XMLCh* const	prefix,
 		const	XMLCh* const	uri
 	) ;
@@ -330,8 +334,8 @@ public:
     *
 	* <p>Introduced with SAX2</p>
 	*
-    * @param name The name of the skipped entity.  If it is a parameter entity, 
-	* the name will begin with %, and if it is the external DTD subset, 
+    * @param name The name of the skipped entity.  If it is a parameter entity,
+	* the name will begin with %, and if it is the external DTD subset,
 	* it will be the string [dtd].
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
@@ -357,7 +361,7 @@ public:
     *
     * @param publicId The public identifer, or null if none is
     *                 available.
-    * @param systemId The system identifier provided in the XML 
+    * @param systemId The system identifier provided in the XML
     *                 document.
     * @return The new input source, or null to require the
     *         default behaviour.
