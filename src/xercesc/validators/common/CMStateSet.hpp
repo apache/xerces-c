@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:38  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/16 12:50:08  tng
+ * [Bug 10651] CMStateSet.hpp includes both memory.h and string.h.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/08/16 21:51:43  peiyongz
  * hashCode() added
@@ -110,7 +113,6 @@
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
 #include <string.h>
-#include <memory.h>
 
 
 class CMStateSet
