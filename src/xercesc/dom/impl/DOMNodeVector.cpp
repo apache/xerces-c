@@ -111,7 +111,7 @@ void DOMNodeVector::addElement(DOMNode *elem) {
 void DOMNodeVector::checkSpace() {
     if (nextFreeSlot == allocatedSize) {
         XMLSize_t grow = allocatedSize/2;
-        if (grow < 50) grow = 50;
+        if (grow < 10) grow = 10;
         XMLSize_t newAllocatedSize = allocatedSize + grow;
         DOMDocument *doc = data[0]->getOwnerDocument();
 
