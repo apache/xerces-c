@@ -86,6 +86,7 @@ static const XMLCh* gEncodingNameMap[XMLRecognizer::Encodings_Count] =
     , XMLUni::fgUTF8EncodingString
     , XMLUni::fgUTF16BEncodingString
     , XMLUni::fgUTF16LEncodingString
+    , XMLUni::fgXMLChEncodingString
 };
 
 
@@ -204,46 +205,46 @@ XMLRecognizer::Encodings
 XMLRecognizer::encodingForName(const XMLCh* const encName)
 {
     //
-    //  Compare the passed string, case insensitively, to the variations
-    //  that we recognize.
+    //  Compare the passed string, assume input string is already uppercased,
+    //  to the variations that we recognize.
     //
     //  !!NOTE: Note that we don't handle EBCDIC here because we don't handle
     //  that one ourselves. It is allowed to fall into 'other'.
     //
    if (encName == XMLUni::fgXMLChEncodingString ||
-        !XMLString::compareIString(encName, XMLUni::fgXMLChEncodingString))
+        !XMLString::compareString(encName, XMLUni::fgXMLChEncodingString))
    {
-        return XMLRecognizer::OtherEncoding;
+        return XMLRecognizer::XERCES_XMLCH;
    }
-   else if (!XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString)
-    ||  !XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString2))
+   else if (!XMLString::compareString(encName, XMLUni::fgUTF8EncodingString)
+    ||  !XMLString::compareString(encName, XMLUni::fgUTF8EncodingString2))
     {
         return XMLRecognizer::UTF_8;
     }
-     else if (!XMLString::compareIString(encName, XMLUni::fgUSASCIIEncodingString)
-          ||  !XMLString::compareIString(encName, XMLUni::fgUSASCIIEncodingString2)
-          ||  !XMLString::compareIString(encName, XMLUni::fgUSASCIIEncodingString3)
-          ||  !XMLString::compareIString(encName, XMLUni::fgUSASCIIEncodingString4))
+     else if (!XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString)
+          ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString2)
+          ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString3)
+          ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString4))
     {
         return XMLRecognizer::US_ASCII;
     }
-     else if (!XMLString::compareIString(encName, XMLUni::fgUTF16LEncodingString)
-          ||  !XMLString::compareIString(encName, XMLUni::fgUTF16LEncodingString2))
+     else if (!XMLString::compareString(encName, XMLUni::fgUTF16LEncodingString)
+          ||  !XMLString::compareString(encName, XMLUni::fgUTF16LEncodingString2))
     {
         return XMLRecognizer::UTF_16L;
     }
-     else if (!XMLString::compareIString(encName, XMLUni::fgUTF16BEncodingString)
-          ||  !XMLString::compareIString(encName, XMLUni::fgUTF16BEncodingString2))
+     else if (!XMLString::compareString(encName, XMLUni::fgUTF16BEncodingString)
+          ||  !XMLString::compareString(encName, XMLUni::fgUTF16BEncodingString2))
     {
         return XMLRecognizer::UTF_16B;
     }
-     else if (!XMLString::compareIString(encName, XMLUni::fgUCS4LEncodingString)
-          ||  !XMLString::compareIString(encName, XMLUni::fgUCS4LEncodingString2))
+     else if (!XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString)
+          ||  !XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString2))
     {
         return XMLRecognizer::UCS_4L;
     }
-     else if (!XMLString::compareIString(encName, XMLUni::fgUCS4BEncodingString)
-          ||  !XMLString::compareIString(encName, XMLUni::fgUCS4BEncodingString2))
+     else if (!XMLString::compareString(encName, XMLUni::fgUCS4BEncodingString)
+          ||  !XMLString::compareString(encName, XMLUni::fgUCS4BEncodingString2))
     {
         return XMLRecognizer::UCS_4B;
     }
