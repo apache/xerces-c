@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/10/31 22:17:11  peiyongz
+ * solve ownership
+ *
  * Revision 1.14  2003/10/17 21:13:44  peiyongz
  * using XTemplateSerializer
  *
@@ -487,9 +490,12 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
         /***
          * Deserialize RefArrayVectorOf<XMLCh>
          * Deserialize RefVectorOf<DatatypeValidator>
-         ***/    
-        XTemplateSerializer::loadObject(&fEnumeration, 8, true, serEng);
-        XTemplateSerializer::loadObject(&fMemberTypeValidators, 8, true, serEng);
+         ***/
+        bool owned = fEnumerationInherited ? true : false;
+        XTemplateSerializer::loadObject(&fEnumeration, 8, owned, serEng);
+
+        owned = fMemberTypesInherited ? true : false;
+        XTemplateSerializer::loadObject(&fMemberTypeValidators, 8, owned, serEng);
 
         fValidatedDatatype = DatatypeValidator::loadDV(serEng);
 
