@@ -566,7 +566,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>963ikjfn63n6jei63i4t2n63i6v3263i4t2n63i6u6263i4j7263pn46i63jqcan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -3232,15 +3232,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -9191,13 +9182,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -13033,7 +13017,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964kkjfn64q6jei64k4t2n64k6v3264k4t2n64k6u6264k4j7264rn46i64mqcan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -15699,15 +15683,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -21658,13 +21633,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -25500,7 +25468,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964kkjfn64q6jei64k4t2n64k6v3264k4t2n64k6u6264k4j7264rn46i64mqcan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642mjfn6467jei6425t2n6427v326425t2n6427u626425j72647p46i643rcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -28966,15 +28934,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.cpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -34741,13 +34700,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/Compilers/CodeWarriorDefs.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -37967,7 +37919,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>95kmjzn5q7jyi5k5tkn5k7vm25k5tkn5k7uq25k5jr25rp4qi5mrcun/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9642mjfn6467jei6425t2n6427v326425t2n6427u626425j72647p46i643rcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -40633,15 +40585,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -46592,13 +46535,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -50118,7 +50054,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>95kmjzn5q7jyi5k5tkn5k7vm25k5tkn5k7uq25k5jr25rp4qi5mrcun/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644uphn648epgi644cx4n644ez52644cx4n644ey82644cp92649w88i645ygcn/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -51374,7 +51310,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954vjfw58fjes54dt2w54fv3a54dt2w54fu6a54dj7a59x46s55zcaw/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644uphn648epgi644cx4n644ez52644cx4n644ey82644cp92649w88i645ygcn/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -54040,15 +53976,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -60026,13 +59953,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -64123,7 +64043,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954vjfw58fjes54dt2w54fv3a54dt2w54fu6a54dj7a59x46s55zcaw/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9644uphn648epgi644cx4n644ez52644cx4n644ey82644cp92649w88i645ygcn/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -66789,15 +66709,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
@@ -72775,13 +72686,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/util/KVStringPair.hpp</PATH>
-                    <PATHFORMAT>Unix</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>../../../../src</ACCESSPATH>
-                    <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -79202,14 +79106,6 @@
                 </FILEREF>
                 <GROUP><NAME>MsgLoaders</NAME>
                     <GROUP><NAME>InMemory</NAME>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>PathRelative</PATHTYPE>
-                            <PATHROOT>Project</PATHROOT>
-                            <ACCESSPATH>../../../../src</ACCESSPATH>
-                            <PATH>xercesc/util/MsgLoaders/InMemory/CppErrMsgs_EN_US.hpp</PATH>
-                            <PATHFORMAT>Unix</PATHFORMAT>
-                        </FILEREF>
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>PathRelative</PATHTYPE>
