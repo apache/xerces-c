@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/07/26 13:33:44  knoaman
+ * Public/System id for notations should be stored as NULL if missing.
+ *
  * Revision 1.7  2002/07/11 18:39:48  knoaman
  * Access entities through the DTDGrammar instead of the scanner.
  *
@@ -3329,11 +3332,13 @@ void DTDScanner::scanNotationDecl()
      else
     {
         // Fill in a new notation declaration and add it to the pool
+        const XMLCh* publicId = bbPubId.getRawBuffer();
+        const XMLCh* systemId = bbSysId.getRawBuffer();
         decl = new XMLNotationDecl
         (
             bbName.getRawBuffer()
-            , bbPubId.getRawBuffer()
-            , bbSysId.getRawBuffer()
+            , (*publicId) ? publicId : 0
+            , (*systemId) ? systemId : 0
         );
         fDTDGrammar->putNotationDecl(decl);
     }
