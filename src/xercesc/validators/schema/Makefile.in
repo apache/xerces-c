@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.4  2002/05/21 19:33:44  tng
+# DOM Reorganization: rename XSDIDOMParser to XSDDOMParser
+#
 # Revision 1.3  2002/03/21 15:34:40  knoaman
 # Add support for reporting line/column numbers of schema errors.
 #
@@ -159,7 +162,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	XercesElementWildcard.hpp \
 	XercesGroupInfo.hpp \
 	XUtil.hpp \
-	XSDIDOMParser.hpp \
+	XSDDOMParser.hpp \
 	XSDLocator.hpp \
 	XSDErrorReporter.hpp
 
@@ -184,7 +187,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	XercesElementWildcard.$(TO) \
 	XercesGroupInfo.$(TO) \
 	XUtil.$(TO) \
-	XSDIDOMParser.$(TO) \
+	XSDDOMParser.$(TO) \
 	XSDLocator.$(TO) \
 	XSDErrorReporter.$(TO)
 
