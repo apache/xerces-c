@@ -1,4 +1,4 @@
-%define tarversion 2_2_0
+%define tarversion 2_3_0
 
 # threads
 # values: pthreads, none
@@ -6,8 +6,8 @@
 
 Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
-Version:	2.2.0
-Release:	2
+Version:	2.3.0
+Release:	3
 URL:		http://xml.apache.org/xerces-c/
 Source0:	%{name}-src%{tarversion}.tar.gz
 Copyright:	Apache
@@ -67,7 +67,7 @@ make
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src%{tarversion}
 cd $XERCESCROOT/src/xercesc
 make PREFIX=$RPM_BUILD_ROOT%{prefix} install
-ln -sf %{prefix}/lib/libxerces-c.so.22 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
+ln -sf %{prefix}/lib/libxerces-c.so.23 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
 mkdir -p $RPM_BUILD_ROOT%{prefix}/bin
 #we don't want obj directory
 install `find $XERCESCROOT/bin -type f -maxdepth 1` $RPM_BUILD_ROOT%{prefix}/bin
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE.txt STATUS credits.txt Readme.html doc/
 
 %changelog
+* Fri March 14 2003 Tinny Ng <tng@ca.ibm.com>
+- changed to 2.3
+
 * Wed Dec 18 2002 Albert Strasheim <albert@stonethree.com>
 - added symlink to libxerces-c.so in lib directory
 

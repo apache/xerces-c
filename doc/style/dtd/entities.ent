@@ -2,17 +2,17 @@
 
 <!ENTITY XercesCFullName      "Xerces C++ Parser">            <!-- fullproductname -->
 <!ENTITY XercesCName          "Xerces-C++">                   <!-- productname -->
-<!ENTITY XercesCVersion       "2.2.0">                        <!-- versionnumber -->
+<!ENTITY XercesCVersion       "2.3.0">                        <!-- versionnumber -->
 <!ENTITY XercesCVersion152    "1.5.2">                        <!-- versionnumber -->
 <!ENTITY XercesCProjectName   "Xerces">                       <!-- projectname -->
-<!ENTITY XercesCInstallDir    "xerces-c2_2_0">                <!-- installdirname -->
-<!ENTITY XercesCSrcInstallDir "xerces-c-src2_2_0">            <!-- sourcedirectory -->
+<!ENTITY XercesCInstallDir    "xerces-c2_3_0">                <!-- installdirname -->
+<!ENTITY XercesCSrcInstallDir "xerces-c-src2_3_0">            <!-- sourcedirectory -->
 <!ENTITY XercesCWindowsLib    "xerces-c_2">                   <!-- windowslibname -->
-<!ENTITY XercesCWindowsDLL    "xerces-c_2_2_0">               <!-- windowsDLLname -->
-<!ENTITY XercesCUnixSoName    "22.0">                         <!-- unixlibname -->
-<!ENTITY XercesCUnixVersion   "22">                           <!-- unixlibname -->
+<!ENTITY XercesCWindowsDLL    "xerces-c_2_3_0">               <!-- windowsDLLname -->
+<!ENTITY XercesCUnixSoName    "23.0">                         <!-- unixlibname -->
+<!ENTITY XercesCUnixVersion   "23">                           <!-- unixlibname -->
 <!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
 <!ENTITY XercesCNamespace     "xercesc">                      <!-- C++ namespace name -->
-<!ENTITY XercesCNSVersion     "xercesc_2_2">                  <!-- C++ namespace name with Version -->
+<!ENTITY XercesCNSVersion     "xercesc_2_3">                  <!-- C++ namespace name with Version -->
 <!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->
 <!ENTITY XercesDistDir        "xml.apache.org/dist/xerces-c"> <!-- download directory -->

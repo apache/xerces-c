@@ -162,8 +162,8 @@ SOURCE="$(InputPath)"
 "$(OUTDIR)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	<<tempfile.bat
 	@echo off
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_2_0D.dll "$(TargetDir)"
-	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_2_0D.dll "$(TargetDir)"
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_3_0D.dll "$(TargetDir)"
+	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_3_0D.dll "$(TargetDir)"
 	regsvr32 /s /c "$(TargetPath)"
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg"
 <<
@@ -179,11 +179,11 @@ OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
 
 !IF "$(RECURSE)" == "0"
 
-ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_2_0.dll"
+ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_3_0.dll"
 
 !ELSE
 
-ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_2_0.dll"
+ALL : "$(OUTDIR)\xerces-com.dll" "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" "..\..\..\..\..\src\xercesc\com\xml4com.h" "..\..\..\..\..\src\xercesc\com\xml4com_i.c" ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg" "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_3_0.dll"
 
 !ENDIF
 
@@ -219,7 +219,7 @@ CLEAN :
 	-@erase "..\..\..\..\..\src\xercesc\com\xml4com.h"
 	-@erase "..\..\..\..\..\src\xercesc\com\xml4com_i.c"
 	-@erase ".\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\regsvr32.trg"
-	-@erase "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_2_0.dll"
+	-@erase "\Xerces-Testing\Build\Win32\xml4com\ReleaseMinDependency\xerces-c_2_3_0.dll"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -303,8 +303,8 @@ SOURCE="$(InputPath)"
 "$(OUTDIR)\xerces-c_2_2_0.dll"	"$(OUTDIR)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	<<tempfile.bat
 	@echo off
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_2_0.dll $(TargetDir)
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_2_0.dll $(TargetDir)
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_3_0.dll $(TargetDir)
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_3_0.dll $(TargetDir)
 	regsvr32 /s /c "$(TargetPath)"
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg"
 <<

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -157,7 +157,7 @@
  */
 
 #define XERCES_VERSION_MAJOR 2
-#define XERCES_VERSION_MINOR 2
+#define XERCES_VERSION_MINOR 3
 #define XERCES_VERSION_REVISION 0
 
 

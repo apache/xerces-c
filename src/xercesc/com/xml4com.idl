@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,8 +69,8 @@ import "oaidl.idl";
 	//  Format for version is major.minor
 	//  no support for additional parts (like 1.5.2)
 	//  Use 1.60 for subsequent release
-	version(2.20),
-	helpstring("Xerces XML Parser 2.2.0")
+	version(2.30),
+	helpstring("Xerces XML Parser 2.3.0")
 ]
 library Xerces
 {

@@ -29,11 +29,11 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_2_0");
-    print (" -o \$HOME/xerces-c2_2_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_3_0");
+    print (" -o \$HOME/xerces-c2_3_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src2_2_0");
-    print (" -o\\xerces-c2_2_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src2_3_0");
+    print (" -o\\xerces-c2_3_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -1122,7 +1122,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         #
         # copy icudata dll
-        # For ICU 2.2:
+        # For ICU 2.4:
         # on AIX, it is called libicudata24.0.so
         # on Solaris/Linux, it is called libicudata.so.24.0
         # on HP, it is called libicudata.s1.24.0
@@ -1243,29 +1243,29 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.22.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.22.0 .");
-        psystem("ln -s libxerces-c.so.22.0 libxerces-c.so.22 ");
-        psystem("ln -s libxerces-c.so.22   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.23.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.23.0 .");
+        psystem("ln -s libxerces-c.so.23.0 libxerces-c.so.23 ");
+        psystem("ln -s libxerces-c.so.23   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.22.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.22.0 .");
-        psystem("ln -s libxerces-c.sl.22.0 libxerces-c.sl.22 ");
-        psystem("ln -s libxerces-c.sl.22   libxerces-c.sl    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.23.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.23.0 .");
+        psystem("ln -s libxerces-c.sl.23.0 libxerces-c.sl.23 ");
+        psystem("ln -s libxerces-c.sl.23   libxerces-c.sl    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c22.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c22.0.so .");
-        psystem("ln -s libxerces-c22.0.so libxerces-c22.so  ");
-        psystem("ln -s libxerces-c22.so   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c23.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c23.0.so .");
+        psystem("ln -s libxerces-c23.0.so libxerces-c23.so  ");
+        psystem("ln -s libxerces-c23.so   libxerces-c.so    ");
     }
 
 	# Mac OS X
-    if ((-e "$XERCESCROOT/lib/libxerces-c.22.0.dylib" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.22.0.dylib .");
-        psystem("ln -s libxerces-c.22.0.dylib libxerces-c.22.dylib ");
-        psystem("ln -s libxerces-c.22.dylib   libxerces-c.dylib    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.23.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.23.0.dylib .");
+        psystem("ln -s libxerces-c.23.0.dylib libxerces-c.23.dylib ");
+        psystem("ln -s libxerces-c.23.dylib   libxerces-c.dylib    ");
     }
 
     # Populate the Message Catalog Files
@@ -1326,17 +1326,17 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         if ( $opt_m =~ m/icu/i) {
             psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
 
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages22.0.so $targetdir/lib");
-            psystem("find . -name 'libXercesMessages22.0.so' -exec ln -s {} libXercesMessages22.so \\;");
-            psystem("find . -name 'libXercesMessages22.so    -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages23.0.so $targetdir/lib");
+            psystem("find . -name 'libXercesMessages23.0.so' -exec ln -s {} libXercesMessages23.so \\;");
+            psystem("find . -name 'libXercesMessages23.so    -exec ln -s {} libXercesMessages.so \\;");
                     
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages.so.22.0 $targetdir/lib");
-            psystem("find . -name 'libXercesMessages.so.22.0' -exec ln -s {} libXercesMessages.so.22 \\;");
-            psystem("find . -name 'libXercesMessages.so.22'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages.so.23.0 $targetdir/lib");
+            psystem("find . -name 'libXercesMessages.so.23.0' -exec ln -s {} libXercesMessages.so.23 \\;");
+            psystem("find . -name 'libXercesMessages.so.23'   -exec ln -s {} libXercesMessages.so \\;");
             
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages.sl.22.0 $targetdir/lib");
-            psystem("find . -name 'libXercesMessages.sl.22.0' -exec ln -s {} libXercesMessages.sl.22 \\;");
-            psystem("find . -name 'libXercesMessages.sl.22'   -exec ln -s {} libXercesMessages.sl \\;");            
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages.sl.23.0 $targetdir/lib");
+            psystem("find . -name 'libXercesMessages.sl.23.0' -exec ln -s {} libXercesMessages.sl.23 \\;");
+            psystem("find . -name 'libXercesMessages.sl.23'   -exec ln -s {} libXercesMessages.sl \\;");            
         }        	
 
     }
@@ -1456,7 +1456,7 @@ sub change_windows_project_for_ICU() {
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
         $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];
         $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];       
-        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_2_0.lib/g;
+        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_3_0.lib/g;
         
         if ($transcoder)
         {
@@ -1497,7 +1497,7 @@ sub change_windows_makefile_for_ICU() {
 
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
         $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources" /machine:IA64];
-        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_2_0.lib/g;
+        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_3_0.lib/g;
             
         if ($transcoder) {
             $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
@@ -1536,7 +1536,7 @@ sub change_windows_project_for_ICU_VC7() {
             }
         $line =~ s/AdditionalIncludeDirectories=\"([^"]*)/AdditionalIncludeDirectories=\"$ICUROOT\\include;$1/;
         $line =~ s/AdditionalLibraryDirectories=\"([^"]*)/AdditionalLibraryDirectories=\"$ICUROOT\\lib;$ICUROOT\\source\\data;$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources;$1/;
-        $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages2_2_0.lib $1/;
+        $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages2_3_0.lib $1/;
 
         if ($transcoder) {
             $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;

@@ -4,6 +4,7 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
+        <li><link anchor="Migrateto220">Migrating from &XercesCName; 2.1.0 to 2.2.0</link></li>      
         <li><link anchor="Migrateto210">Migrating from &XercesCName; 2.0.0 to 2.1.0</link></li>
         <li><link anchor="Migrateto200">Migrating from &XercesCName; 1.7.0 to 2.0.0</link></li>
         <li><link anchor="Migrateto170">Migrating from &XercesCName; 1.6.0 to 1.7.0</link></li>
@@ -13,6 +14,153 @@
       </ul>
     </s2>
 
+    <anchor name="Migrateto220"/>
+    <s2 title="Migrating from &XercesCName; 2.1.0 to &XercesCName; 2.2.0">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.1.0 code base and the &XercesCName; 2.2.0.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures220">New features in &XercesCName; 2.2.0</link></li>
+        <li><link anchor="CPPNamespace220">Using C++ Namespace</link></li>
+        <li><link anchor="API220">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI220">New Public API</link></li>
+            <li><link anchor="ModifiedAPI220">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI220">Deprecated/Removed Public API</link></li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures220"/>
+    <s3 title="New features in &XercesCName; 2.2.0">
+      <ul>
+        <li>C++ Namespace Support</li>
+        <li>Schema 1.0 Errata Implementation</li>
+        <li>Experimental Implementation of XML 1.1</li>
+        <li>More DOM L3 Core Support:</li>
+        <ul>
+            <li>DOMNode: baseURI</li>
+            <li>DOMAttr: isId, getTypeInfo</li>
+            <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode, getTypeInfo</li>
+        </ul>
+        <li>DOM Message: make use of the non-standard extension DOMImplementation::loadDOMExceptionMsg
+        to load the default error text message for the correspond Exception Code.</li>
+        <li>New feature XMLPlatformUtils::Initialize(const char* const locale) to set
+        the locale for message loader.   See <jump href="program-others.html#SpecifylocaleforMessageLoader">
+        Specify locale for Message Loader</jump> for details</li>
+        <li>Support Build with ICU Message Loader, or Message Catalog Message Loader</li>
+        <li>RPM for Linux</li>
+        <li>390: Uniconv390 support</li>
+        <li>390: support record-oriented MVS datasets with the DOM Level 3 serialization APIs</li>
+        <li>Support for Linux/390</li>
+        <li>Performance: Break Scanner for different functionalities and many other performance improvement</li>
+        <li>New feature, "http://apache.org/xml/features/dom/byte-order-mark", allows user to enable
+            DOMWriter to write Byte-Order-Mark in the output XML stream, 
+            See <jump href="program-dom.html#Byte-Order-Mark">
+            Xercesc Feature: Byte Order Mark</jump> for details</li>        
+      </ul>
+    </s3>
+
+    <anchor name="CPPNamespace220"/>
+    <s3 title="Using C++ Namespace">
+        <p>&XercesCName; 2.2.0 now supports C++ Namespace.  All &XercesCName;
+           classes/data/variables are defined in the <code>"namespace &XercesCNamespace;"</code>
+           if C++ Namespace support is ENABLED.</p>
+
+        <p>All the binary distributions of &XercesCName; 2.2.0 are now built with
+           C++ Namespace enabled.   Therefore users' applications that links with the distributed
+           binary packages must namespace qualified all the &XercesCName; classes/data/variables
+           with <code>"&XercesCNamespace;::"</code> or add the
+           <code>"using namespace &XercesCNamespace;"</code> clause.</p>
+
+        <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">Using C++ Namespace</jump>
+           for more details.</p>
+
+    </s3>
+
+    <anchor name="API220"/>
+    <s3 title="Public API Changes">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           2.1.0; and the &XercesCName; 2.2.0 releases
+           of the parser. </p>
+
+        <anchor name="NewAPI220"/>
+        <s4 title="New Public API">
+            <ul>
+              <li>To support additional DOM L3 functions, the following are added:</li>
+              <ul>
+                  <li>DOMAttr: isId, getTypeInfo</li>
+                  <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode, getTypeInfo</li>
+                  <li>Added DOMTypeInfo class for getTypeInfo class in DOMElement and DOMAttr</li>
+                  <li>Added getDOMTypeInfoUri, getDOMTypeInfoName to XMLAttDef and XMLElementDecl for use in building DOMTypeInfo</li>
+              </ul>
+              <li>Added a non-standard extension DOMImplementation::loadDOMExceptionMsg to load the
+              default error message for the corresponding DOMException code.</li>
+              <li>XMLAttr: Added a constructor and a set method to allow creating/setting of
+              XMLAttr using a rawname.</li>
+              <li>Added XMLUri::getUriText to return the URI as a string specification.</li>
+              <li>Add XMLString::fixURI to transform an absolute path filename to standard URI form.</li>
+              <li>Added XMLString::equals for faster string comparison.</li>
+              <li>To allow users to tell the parser to force standard uri conformance,
+                  the following are added:</li>
+                <ul>
+                  <li>XercesDOMParser/DOMParser/SAXParser: get/setStandardUriConformant</li>
+                  <li>and DOMBuilder/SAX2XMLReader will recognize the feature
+                      http://apache.org/xml/features/standard-uri-conformant</li>
+                </ul>
+              <li>Add XMLURL::hasInvalidChar() to indicate if the URL has invalid char as per RFC standard</li>
+              <li>To allow users to enable/disable src offset calculation,
+                  the following are added:</li>
+                <ul>
+                  <li>XercesDOMParser/DOMParser/SAXParser: get/setCalculateSrcOfs</li>
+                  <li>and DOMBuilder/SAX2XMLReader will recognize the feature
+                      http://apache.org/xml/features/calculate-src-ofst</li>
+                </ul>
+              <li>To allow users to select the scanner when scanning XML documents,
+                  the following are added:</li>
+                <ul>
+                  <li>XercesDOMParser/DOMParser/SAXParser: useScanner</li>
+                  <li>and DOMBuilder/SAX2XMLReader will recognize the property
+                      http://apache.org/xml/properties/scannerName</li>
+                </ul>
+             <li>Added getSrcOffset to XercesDOMParser/DOMParser/SAXParser/DOMBuilder/SAX2XMLReader to
+                 allow users to get the current src offset within the input source.</li>
+            </ul>
+        </s4>
+
+        <anchor name="ModifiedAPI220"/>
+        <s4 title="Modified Public API">
+            <ul>
+              <li>The following DOM functions are being added a const modifier.</li>
+              <ul>
+                  <li>DOMImplementation::hasFeature</li>
+                  <li>DOMNode: isSameNode, isEqualNode, compareTreePosition</li>
+              </ul>
+              <li>XMLPlatformUtils::Initialize() takes a parameter specifying locale
+              for message loader, with default value "en_US".</li>
+              <li>To fix [Bug 13641], the QName copy constructor is corrected to take
+              a reference as parameter, i.e. QName(const QName&amp; qname).</li>
+              <li>To fix [Bug 12232], the QName operator== has been added a const modified.</li>
+              <li>Move XMLUri copy constructor and operator = as public.</li>
+              <li>Move XMLUri::isURIString as public.</li>
+              <li>For validation purpose, added two more default parameters to
+              XMLValidator::validateAttrValue.</li>
+              <li>To fix [Bug 15802], the getURIText of DOMParser/XercesDOMParser/SAXParser/SAX2XMLReader
+              are being added a const modifier.</li>
+            </ul>
+        </s4>
+
+        <anchor name="DeprecatedAPI220"/>
+        <s4 title="Deprecated/Removed Public API">
+            <ul>
+              <li>No Deprecated Public API in this release.</li>
+            </ul>
+        </s4>
+
+    </s3>
+    </s2>
+        
     <anchor name="Migrateto210"/>
     <s2 title="Migrating from &XercesCName; 2.0.0 to &XercesCName; 2.1.0">
       <p>The following section is a discussion of the technical differences between
