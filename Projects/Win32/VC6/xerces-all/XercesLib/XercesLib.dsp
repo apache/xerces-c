@@ -324,6 +324,10 @@ SOURCE=..\..\..\..\..\src\util\RefHashTableOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\RefHash2KeysTableOf.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\RefStackOf.hpp
 # End Source File
 # Begin Source File

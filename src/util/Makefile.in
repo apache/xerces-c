@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.28  2001/02/27 18:23:59  tng
+# Schema: Add utility RefHash2KeysTableOf.
+#
 # Revision 1.27  2001/02/26 19:44:23  tng
 # Schema: add utility class QName, by Pei Yong Zhang.
 #
@@ -239,6 +242,7 @@ UTIL_CPP_PUBHEADERS = \
     PlatformUtils.hpp \
     QName.hpp \
     RefArrayOf.hpp \
+    RefHash2KeysTableOf.hpp \
     RefHashTableOf.hpp \
     RefStackOf.hpp \
     RefVectorOf.hpp \
@@ -284,6 +288,7 @@ C_FILES = \
     KeyValuePair.c \
     NameIdPool.c \
     RefArrayOf.c \
+    RefHash2KeysTableOf.c \
     RefHashTableOf.c \
     RefStackOf.c \
     RefVectorOf.c \
