@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.38  2003/01/29 20:04:09  gareth
+ * testing for DOMTypeInfo
+ *
  * Revision 1.37  2003/01/03 17:09:02  tng
  * delete the parser when done, avoid memory leak report with the test case
  *
@@ -1044,7 +1047,7 @@ int main(int argc, char **argv)
         //Setup parser
 
         XercesDOMParser *parser = new XercesDOMParser;
-        parser->setValidationScheme(XercesDOMParser::Val_Auto);
+        parser->setValidationScheme(XercesDOMParser::Val_Never);
         parser->setDoNamespaces(true);
         parser->setDoSchema(true);
         parser->setCreateEntityReferenceNodes(true);

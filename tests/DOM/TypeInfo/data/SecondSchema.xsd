@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' elementFormDefault="unqualified"  targetNamespace="http://www.secondSchema" >
+  <xs:element name="realTag1" type="xs:string" />
+  <xs:element name="realTag2" type="xs:string" />
+  <xs:element name="realTag3" type="xs:string" />
+  <xs:attribute name="attr1" type="xs:string" />
+  <xs:attribute name="attr2" type="xs:integer" />
+ 
+</xs:schema>
