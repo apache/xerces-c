@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/10/17 19:25:38  andyh
+ * XMLFormatTarget, removed version of writeChars with no length.  Can not be
+ * safely used, and obscured other errors.
+ *
  * Revision 1.6  2000/10/10 23:54:58  andyh
  * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
  * output to multi-byte encodings.
@@ -308,15 +312,10 @@ public:
     // -----------------------------------------------------------------------
     virtual void writeChars
     (
-        const   XMLByte* const  toWrite
-    ) = 0;
-
-    virtual void writeChars
-    (
         const   XMLByte* const      toWrite
         , const unsigned int        count
         ,       XMLFormatter* const formatter
-    );
+    ) = 0;
 
 
 protected :

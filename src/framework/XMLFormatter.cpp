@@ -674,12 +674,3 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
     }
 }
 
-// ---------------------------------------------------------------------------
-//  XMLFormatTarget: default writeChars() implementation
-// ---------------------------------------------------------------------------
-void XMLFormatTarget::writeChars(const   XMLByte* const toWrite
-                                , const unsigned int    count
-                                , XMLFormatter* const   formatter)
-{
-  writeChars(toWrite);
-}
