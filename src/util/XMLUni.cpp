@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/04/19 18:06:20  aruna1
+ * Changes for duplicate strings
+ *
  * Revision 1.15  2000/04/19 02:26:41  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
  *
@@ -597,19 +600,4 @@ const XMLCh XMLUni::fgYesString[] =
 };
 
 const XMLCh XMLUni::fgZeroLenString[] = { chNull };
-
-const XMLCh XMLUni::fgPublicString[] =
-{
-	chLatin_P, chLatin_U, chLatin_B, chLatin_L, chLatin_I, chLatin_C, chSpace, chNull
-};
-
-const XMLCh XMLUni::fgSystemString[] =
-{
-	chLatin_S, chLatin_Y, chLatin_S, chLatin_T, chLatin_E, chLatin_M, chSpace, chNull
-};
-
-const XMLCh XMLUni::fgNdataString[] =
-{
-	chLatin_N, chLatin_D, chLatin_A, chLatin_T, chLatin_A, chSpace, chNull
-};
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2000/04/19 18:06:22  aruna1
+ * Changes for duplicate strings
+ *
  * Revision 1.17  2000/04/19 02:26:41  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
  *
@@ -346,10 +349,6 @@ public :
     static const XMLCh fgXMLURIName[];
     static const XMLCh fgYesString[];
     static const XMLCh fgZeroLenString[];
-
-    static const XMLCh fgPublicString[];
-	static const XMLCh fgSystemString[];
-	static const XMLCh fgNdataString[];
 };
 
 #endif
