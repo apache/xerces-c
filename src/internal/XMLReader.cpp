@@ -1136,6 +1136,50 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
     return true;
 }
 
+//
+// This is just to peek if the next coming buffer
+// matches the string toPeek.
+// Similar to skippedString, but just the fCharIndex and fCurCol are not updated
+//
+bool XMLReader::peekString(const XMLCh* const toPeek)
+{
+    // Get the length of the string to skip
+    const unsigned int srcLen = XMLString::stringLen(toPeek);
+
+    //
+    //  See if the current reader has enough chars to test against this
+    //  string. If not, then ask it to reload its buffer. If that does not
+    //  get us enough, then it cannot match.
+    //
+    //  NOTE: This works because strings never have to cross a reader! And
+    //  a string to skip will never have a new line in it, so we will never
+    //  miss adjusting the current line.
+    //
+    unsigned int charsLeft = charsLeftInBuffer();
+    while (charsLeft < srcLen)
+    {
+         refreshCharBuffer();
+         unsigned int t = charsLeftInBuffer();
+         if (t == charsLeft)   // if the refreshCharBuf() did not add anything new
+             return false;     //   give up and return.
+         charsLeft = t;
+	}
+
+
+
+
+    //
+    //  Ok, now we now that the current reader has enough chars in its
+    //  buffer and that its index is back at zero. So we can do a quick and
+    //  dirty comparison straight to its buffer with no requirement to unget
+    //  if it fails.
+    //
+    if (XMLString::compareNString(&fCharBuf[fCharIndex], toPeek, srcLen))
+        return false;
+
+    return true;
+}
+
 
 // ---------------------------------------------------------------------------
 //  XMLReader: Setter methods (most are inlined)

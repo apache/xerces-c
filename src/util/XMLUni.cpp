@@ -509,6 +509,11 @@ const XMLCh XMLUni::fgXMLStringLFU[] =
 };
 
 //<?xml{S}
+const XMLCh XMLUni::fgXMLDeclString[] =
+{
+    chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chNull
+};
+
 const XMLCh XMLUni::fgXMLDeclStringSpace[] =
 {
     chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l, chSpace, chNull

@@ -313,9 +313,8 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //
             normalizeAttValue
             (
-                curPair->getKey()
+                attDef
                 , curPair->getValue()
-                , attDef->getType()
                 , normBuf
             );
 
@@ -350,11 +349,10 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         {
             // Just normalize as CDATA
             attType = XMLAttDef::CData;
-            normalizeAttValue
+            normalizeAttRawValue
             (
                 curPair->getKey()
                 , curPair->getValue()
-                , XMLAttDef::CData
                 , normBuf
             );
         }
@@ -546,9 +544,8 @@ bool XMLScanner::isLegalToken(const XMLPScanToken& toCheck)
 //  are legal if escaped only. And some escape chars are not subject to
 //  normalization rules.
 //
-bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
+bool XMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                                     , const XMLCh* const        value
-                                    , const XMLAttDef::AttTypes type
                                     ,       XMLBuffer&          toFill)
 {
     // A simple state value for a whitespace processing state machine
@@ -558,6 +555,10 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
         , InContent
     };
 
+    // Get the type and name
+    const XMLAttDef::AttTypes type = attDef->getType();
+    const XMLCh* const attrName = attDef->getFullName();
+
     // Assume its going to go fine, and empty the target buffer in preperation
     bool retVal = true;
     toFill.reset();
@@ -565,13 +566,7 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
     //
     // Get attribute def - to check to see if it's declared externally or not
     //
-    bool  added = false;
-    bool  isAttExternal = false;
-    const ElemStack::StackElem* topElem = fElemStack.topElement();
-    if (topElem && topElem->fThisElement) {
-        const XMLAttDef* attDef = topElem->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
-        isAttExternal = (attDef) ? attDef->isExternal() : false;
-    }
+    bool  isAttExternal = attDef->isExternal();
 
     //
     //  Loop through the chars of the source value and normalize it according
@@ -639,18 +634,6 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                 }
                  else
                 {
-                    //
-                    // Check Validity Constraint for Standalone document declaration
-                    // XML 1.0, Section 2.9
-                    //
-                    if (fStandalone && fValidate && isAttExternal)
-                    {
-                         //
-                         // Can't have a standalone document declaration of "yes" if  attribute
-                         // values are subject to normalisation
-                         //
-                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                    }
                     srcPtr++;
                     continue;
                 }
@@ -661,13 +644,13 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                 {
                     curState = InWhitespace;
                     srcPtr++;
-                    if (!firstNonWS || (nextCh != chSpace))
+                    //
+                    // Check Validity Constraint for Standalone document declaration
+                    // XML 1.0, Section 2.9
+                    //
+                    if (fStandalone && fValidate && isAttExternal)
                     {
-                        //
-                        // Check Validity Constraint for Standalone document declaration
-                        // XML 1.0, Section 2.9
-                        //
-                        if (fStandalone && fValidate && isAttExternal)
+                        if (!firstNonWS || (nextCh != chSpace) || (fReaderMgr.lookingAtSpace()))
                         {
                              //
                              // Can't have a standalone document declaration of "yes" if  attribute
@@ -680,6 +663,76 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                 }
                 firstNonWS = true;
             }
+        }
+
+        // Add this char to the target buffer
+        toFill.append(nextCh);
+
+        // And move up to the next character in the source
+        srcPtr++;
+    }
+    return retVal;
+}
+
+//
+//  This method will just normalize the input value as CDATA without
+//  any standalone checking.
+//
+bool XMLScanner::normalizeAttRawValue( const   XMLCh* const        attrName
+                                    , const XMLCh* const        value
+                                    ,       XMLBuffer&          toFill)
+{
+    // A simple state value for a whitespace processing state machine
+    enum States
+    {
+        InWhitespace
+        , InContent
+    };
+
+    // Assume its going to go fine, and empty the target buffer in preperation
+    bool retVal = true;
+    toFill.reset();
+
+    //
+    //  Loop through the chars of the source value and normalize it according
+    //  to the type.
+    //
+    States curState = InContent;
+    bool escaped;
+    bool firstNonWS = false;
+    XMLCh nextCh;
+    const XMLCh* srcPtr = value;
+    while (*srcPtr)
+    {
+        //
+        //  Get the next character from the source. We have to watch for
+        //  escaped characters (which are indicated by a 0xFFFF value followed
+        //  by the char that was escaped.)
+        //
+        nextCh = *srcPtr;
+        escaped = (nextCh == 0xFFFF);
+        if (escaped)
+            nextCh = *++srcPtr;
+
+        //
+        //  If its not escaped, then make sure its not a < character, which is
+        //  not allowed in attribute values.
+        //
+        if (!escaped && (*srcPtr == chOpenAngle))
+        {
+            emitError(XMLErrs::BracketInAttrValue, attrName);
+            retVal = false;
+        }
+
+        if (!escaped)
+        {
+            //
+            //  NOTE: Yes this is a little redundant in that a 0x20 is
+            //  replaced with an 0x20. But its faster to do this (I think)
+            //  than checking for 9, A, and D separately.
+            //
+            if (XMLReader::isWhitespace(nextCh))
+                nextCh = chSpace;
         }
 
         // Add this char to the target buffer
@@ -1096,7 +1149,7 @@ void XMLScanner::updateNSMap(const  XMLCh* const    attrName
     //  care about the return value. An error was issued for the error, which
     //  is all we care about here.
     //
-    normalizeAttValue(attrName, attrValue, XMLAttDef::CData, normalBuf);
+    normalizeAttRawValue(attrName, attrValue, normalBuf);
 
     //
     //  Ok, we have to get the unique id for the attribute value, which is the
@@ -1566,9 +1619,8 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
 }
 
 
-bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
-                                ,       XMLBuffer&          toFill
-                                , const XMLAttDef::AttTypes type)
+bool XMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
+                                ,       XMLBuffer&          toFill)
 {
     enum States
     {
@@ -1576,6 +1628,9 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
         , InContent
     };
 
+    // Get the type and name
+    const XMLAttDef::AttTypes type = attDef->getType();
+    const XMLCh* const attrName = attDef->getFullName();
 
     // Reset the target buffer
     toFill.reset();
@@ -1594,13 +1649,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
     //
     // Get attribute def - to check to see if it's declared externally or not
     //
-    bool  added = false;
-    bool  isAttExternal = false;
-    const ElemStack::StackElem* topElem = fElemStack.topElement();
-    if (topElem && topElem->fThisElement) {
-        const XMLAttDef* attDef = topElem->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
-        isAttExternal = (attDef) ? attDef->isExternal() : false;
-    }
+    bool  isAttExternal = attDef->isExternal();
 
     //
     //  Loop until we get the attribute value. Note that we use a double
@@ -1765,18 +1814,6 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                     }
                      else
                     {
-                        //
-                        // Check Validity Constraint for Standalone document declaration
-                        // XML 1.0, Section 2.9
-                        //
-                        if (fStandalone && fValidate && isAttExternal)
-                        {
-                             //
-                             // Can't have a standalone document declaration of "yes" if  attribute
-                             // values are subject to normalisation
-                             //
-                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                        }
                         continue;
                     }
                 }
@@ -1785,13 +1822,13 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                     if (XMLReader::isWhitespace(nextCh))
                     {
                         curState = InWhitespace;
-                        if (!firstNonWS || (nextCh != chSpace))
+                        //
+                        // Check Validity Constraint for Standalone document declaration
+                        // XML 1.0, Section 2.9
+                        //
+                        if (fStandalone && fValidate && isAttExternal)
                         {
-                            //
-                            // Check Validity Constraint for Standalone document declaration
-                            // XML 1.0, Section 2.9
-                            //
-                            if (fStandalone && fValidate && isAttExternal)
+                            if (!firstNonWS || (nextCh != chSpace) || (fReaderMgr.lookingAtSpace()))
                             {
                                  //
                                  // Can't have a standalone document declaration of "yes" if  attribute

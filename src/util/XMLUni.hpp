@@ -164,6 +164,7 @@ public :
     static const XMLCh fgXMLStringHTabU[];
     static const XMLCh fgXMLStringCRU[];
     static const XMLCh fgXMLStringLFU[];
+    static const XMLCh fgXMLDeclString[];
     static const XMLCh fgXMLDeclStringSpace[];
     static const XMLCh fgXMLDeclStringHTab[];
     static const XMLCh fgXMLDeclStringLF[];

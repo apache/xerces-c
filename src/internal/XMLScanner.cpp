@@ -2377,7 +2377,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  char refs expanded.
             //
             fReaderMgr.skipPastSpaces();
-            if (!scanAttValue(attDef->getFullName(), fAttValueBuf, attDef->getType()))
+            if (!scanAttValue(attDef, fAttValueBuf))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -2512,7 +2512,8 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  top again.
             //
             emitError(XMLErrs::ExpectedAttrName);
-            scanAttValue(XMLUni::fgZeroLenString, fAttValueBuf, XMLAttDef::CData);
+            fReaderMgr.getNextChar();
+            fReaderMgr.skipQuotedString(nextCh);
             fReaderMgr.skipPastSpaces();
             continue;
         }
@@ -3419,59 +3420,4 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
     }
     return uriId;
 }
-
-bool XMLScanner::checkXMLDecl(bool startWithAngle) {
-    //
-    // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
-    // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
-    //
-    // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+
-    //
-
-    if (startWithAngle) {
-        if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpace)
-           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTab)
-           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLF)
-           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCR))
-        {
-            return true;
-        }
-        else if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpaceU)
-           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTabU)
-           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLFU)
-           || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCRU))
-        {
-            //
-            //  Just in case, check for upper case. If found, issue
-            //  an error, but keep going.
-            //
-            emitError(XMLErrs::XMLDeclMustBeLowerCase);
-            return true;
-        }
-    }
-    else {
-        if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpace)
-           || fReaderMgr.skippedString(XMLUni::fgXMLStringHTab)
-           || fReaderMgr.skippedString(XMLUni::fgXMLStringLF)
-           || fReaderMgr.skippedString(XMLUni::fgXMLStringCR))
-        {
-            return true;
-        }
-        else if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpaceU)
-           || fReaderMgr.skippedString(XMLUni::fgXMLStringHTabU)
-           || fReaderMgr.skippedString(XMLUni::fgXMLStringLFU)
-           || fReaderMgr.skippedString(XMLUni::fgXMLStringCRU))
-        {
-            //
-            //  Just in case, check for upper case. If found, issue
-            //  an error, but keep going.
-            //
-            emitError(XMLErrs::XMLDeclMustBeLowerCase);
-            return true;
-        }
-    }
-
-    return false;
-}
-
 

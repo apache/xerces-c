@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/07/12 18:50:13  tng
+ * Some performance modification regarding standalone check and xml decl check.
+ *
  * Revision 1.16  2001/05/11 13:26:17  tng
  * Copyright update.
  *
@@ -273,6 +276,7 @@ public:
     bool skippedChar(const XMLCh toSkip);
     bool skippedSpace();
     bool skippedString(const XMLCh* const toSkip);
+    bool peekString(const XMLCh* const toPeek);
 
 
     // -----------------------------------------------------------------------

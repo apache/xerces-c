@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2001/07/12 18:50:17  tng
+ * Some performance modification regarding standalone check and xml decl check.
+ *
  * Revision 1.25  2001/07/10 21:09:31  tng
  * Give proper error messsage when scanning external id.
  *
@@ -520,9 +523,14 @@ private :
     bool isLegalToken(const XMLPScanToken& toCheck);
     bool normalizeAttValue
     (
+        const   XMLAttDef* const    attDef
+        , const XMLCh* const        value
+        ,       XMLBuffer&          toFill
+    );
+    bool normalizeAttRawValue
+    (
         const   XMLCh* const        attrName
         , const XMLCh* const        value
-        , const XMLAttDef::AttTypes type
         ,       XMLBuffer&          toFill
     );
 
@@ -569,9 +577,8 @@ private :
     );
     bool scanAttValue
     (
-        const   XMLCh* const        attrName
+        const   XMLAttDef* const    attDef
         ,       XMLBuffer&          toFill
-        , const XMLAttDef::AttTypes type
     );
     void scanCDSection();
     void scanCharData(XMLBuffer& toToUse);
@@ -1115,5 +1122,63 @@ inline void XMLScanner::setDoValidation(const bool validate)
         fValScheme = Val_Always;
     else
         fValScheme = Val_Never;
+}
+
+inline bool XMLScanner::checkXMLDecl(bool startWithAngle) {
+    //
+    // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
+    // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+    //
+    // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+
+    //
+
+    if (startWithAngle) {
+        if (fReaderMgr.peekString(XMLUni::fgXMLDeclString)) {
+            if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpace)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTab)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLF)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCR))
+            {
+                return true;
+            }
+            else if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpaceU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTabU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLFU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCRU))
+            {
+                //
+                //  Just in case, check for upper case. If found, issue
+                //  an error, but keep going.
+                //
+                emitError(XMLErrs::XMLDeclMustBeLowerCase);
+                return true;
+            }
+        }
+    }
+    else {
+        if (fReaderMgr.peekString(XMLUni::fgXMLString)) {
+            if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpace)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringHTab)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringLF)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringCR))
+            {
+                return true;
+            }
+            else if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpaceU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringHTabU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringLFU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringCRU))
+            {
+                //
+                //  Just in case, check for upper case. If found, issue
+                //  an error, but keep going.
+                //
+                emitError(XMLErrs::XMLDeclMustBeLowerCase);
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 #endif
