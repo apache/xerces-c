@@ -394,7 +394,7 @@ perl ShortenFiles.pl</source>
 			</p>
 		
 			<ul>
-				<li>Run CodeWarrior (tested with latest CW Pro 6.2).
+				<li>Run CodeWarrior (tested with latest CW Pro 7.0).
 				</li>
 				
 				<li>Import the project Projects/MacOS/CodeWarrior/XercesLib/XercesLib.mcp.xml,
@@ -404,13 +404,6 @@ perl ShortenFiles.pl</source>
 				<li>This project contains five build targets that build all combinations of
 				classic, carbon, debug, and release versions, with an all target that
 				builds all of these. Build any or all of these.
-				</li>
-				
-				<li>Note that the Carbon targets contain an access path for a Carbon Support
-				folder in the compiler folder. Up-to-date Apple headers and libraries
-				are required. Either create a Carbon Support folder with recent headers and
-				libraries or, if your MacOS Support folder is up to date, point the
-				access path to this, or make an alias to it called "Carbon Support".
 				</li>
 			</ul>
 		
