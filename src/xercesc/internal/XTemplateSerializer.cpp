@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2004/10/26 14:48:46  peiyongz
+ * Maintain consistent order among multiple store/load session to allow comparison
+ *
  * Revision 1.10  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -52,12 +55,233 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/internal/XSerializeEngine.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
 XERCES_CPP_NAMESPACE_BEGIN
+
+/***
+ * internal class meant to be comsumed by XTemplateSerializer only
+ * the size can not grow
+ ***/
+#ifdef _DEBUG
+
+class KeySet : public XMemory
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Contructors and Destructor
+    // -----------------------------------------------------------------------
+    KeySet
+    (
+      const XMLCh* const         strKey
+    , const int                  intKey1 = 0
+    , const int                  intKey2 = 0
+    ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    ~KeySet();
+
+    // -----------------------------------------------------------------------
+    //  Public operators
+    // -----------------------------------------------------------------------
+    inline void getKeys(const XMLCh*&, int&, int&) const;
+           void print() const;
+    
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    KeySet(const KeySet&);
+    KeySet& operator=(const KeySet&); 
+
+    // -----------------------------------------------------------------------
+    //  Data members
+    //  reference only
+    // -----------------------------------------------------------------------
+    const XMLCh* const    fStrKey;
+    const int             fIntKey1;
+    const int             fIntKey2;
+          MemoryManager*  fMemoryManager;
+
+};    
+
+KeySet::KeySet(const XMLCh* const         strKey
+             , const int                  intKey1
+             , const int                  intKey2
+             ,       MemoryManager* const manager)
+:fStrKey(strKey)
+,fIntKey1(intKey1)
+,fIntKey2(intKey2)
+,fMemoryManager(manager)
+{
+}
+
+KeySet::~KeySet()
+{
+}
+
+inline 
+void KeySet::getKeys(const XMLCh*& strKey, int& intKey1, int& intKey2) const
+{
+    strKey  = fStrKey;
+    intKey1 = fIntKey1;
+    intKey2 = fIntKey2;
+}
+
+void KeySet::print() const
+{
+    char* tmpStr = XMLString::transcode(fStrKey);
+    printf("tmpStr=<%s>, intKey1=<%d>, intKey2=<%d>\n", tmpStr, fIntKey1, fIntKey2);
+    XMLString::release(&tmpStr);
+}
+
+static int compareKeySet(const void* keyl, const void* keyr)
+{
+    const KeySet* pairl=*(const KeySet**)keyl;
+    const KeySet* pairr=*(const KeySet**)keyr;
+        
+    const XMLCh* strKeyl   = 0;
+    int          intKeyl_1 = 0;
+    int          intKeyl_2 = 0;
+    pairl->getKeys(strKeyl, intKeyl_1, intKeyl_2);
+
+    const XMLCh* strKeyr   = 0;
+    int          intKeyr_1 = 0;
+    int          intKeyr_2 = 0;
+    pairr->getKeys(strKeyr, intKeyr_1, intKeyr_2);
+                        
+    int compareValue = XMLString::compareString(strKeyl, strKeyr);
+    
+    if (compareValue !=0)
+        return compareValue;
+
+    compareValue = intKeyl_1 - intKeyr_1;      
+    if (compareValue !=0)
+        return compareValue;
+
+    return (intKeyl_2 - intKeyr_2);
+
+}
+
+class SortArray : public XMemory
+{
+private :
+    // -----------------------------------------------------------------------
+    //  Contructors and Destructor
+    // -----------------------------------------------------------------------
+    SortArray
+    (
+          const unsigned int         size
+        ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+	~SortArray();
+
+    // -----------------------------------------------------------------------
+    //  Public operators
+    // -----------------------------------------------------------------------
+    inline const KeySet* elementAt(const unsigned int index)       const;
+           void  addElement(const KeySet* const keySet);
+           void  sort();
+           void  dump() const;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SortArray(const SortArray&);
+    SortArray& operator=(const SortArray&); 
+
+    // -----------------------------------------------------------------------
+    //  Data members
+    // -----------------------------------------------------------------------
+          unsigned int    fCur;      //point to the current available slot
+          unsigned int    fSize;
+    const KeySet**        fElemList;  //owning objects
+          MemoryManager*  fMemoryManager;
+
+    friend class XTemplateSerializer;
+
+};
+
+SortArray::SortArray(const unsigned int         size
+                   ,       MemoryManager* const manager )
+:fCur(0)
+,fSize(size)
+,fMemoryManager(manager)
+{
+    fElemList = (const KeySet**) fMemoryManager->allocate(size * sizeof (KeySet*));
+}
+
+SortArray::~SortArray()
+{
+    for (unsigned int i=0; i< fSize; i++)
+        delete fElemList[i];
+
+    fMemoryManager->deallocate(fElemList);
+}
+
+inline 
+const KeySet* SortArray::elementAt(const unsigned int index) const
+{
+    assert(index < fCur);
+    return fElemList[index];
+}
+
+void SortArray::addElement(const KeySet* const keySet)
+{
+    assert(fCur < fSize);
+    fElemList[fCur++]=keySet;
+}
+
+void SortArray::sort()
+{
+    assert(fCur == fSize);
+    //dump();
+    qsort(fElemList, fSize, sizeof (KeySet*), compareKeySet);
+    //dump();
+}
+
+void  SortArray::dump() const
+{
+    printf("\n fSize=<%d>, fCur=<%d>\n", fSize, fCur);
+    for (unsigned int i = 0; i < fCur; i++)
+        fElemList[i]->print();
+}
+
+#define GET_NEXT_KEYSET()                              \
+    const KeySet* keySet  = sortArray.elementAt(i);  \
+    const XMLCh*  strKey  = 0;                       \
+    int           intKey1 = 0;                       \
+    int           intKey2 = 0;                       \
+    keySet->getKeys(strKey, intKey1, intKey2);
+
+#define SORT_KEYSET_ONEKEY()                                     \
+   SortArray sortArray(itemNumber);                              \
+   while (e.hasMoreElements())                                   \
+   {                                                             \
+       KeySet* keySet = new KeySet((XMLCh*) e.nextElementKey()); \
+       sortArray.addElement(keySet);                             \
+   }                                                             \
+   sortArray.sort();
+
+#define SORT_KEYSET_TWOKEYS()                                    \
+   SortArray sortArray(itemNumber);                              \
+   while (e.hasMoreElements())                                   \
+   {                                                             \
+       XMLCh*     strKey;                                        \
+       int        intKey;                                        \
+       e.nextElementKey((void*&)strKey, intKey);                 \
+       KeySet* keySet = new KeySet(strKey, intKey);              \
+       sortArray.addElement(keySet);                             \
+   }                                                             \
+   sortArray.sort();
+
+#endif
 
 /**********************************************************
  *
@@ -117,7 +341,6 @@ void XTemplateSerializer::loadObject(ValueVectorOf<SchemaElementDecl*>**       o
             (*objToLoad)->addElement(data);
         }
     }
-
 }
 
 void XTemplateSerializer::storeObject(ValueVectorOf<unsigned int>* const objToStore
@@ -256,6 +479,7 @@ void XTemplateSerializer::storeObject(RefVectorOf<SchemaAttDef>* const objToStor
 
     if (serEng.needToStoreObject(objToStore))
     {
+
         int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
@@ -264,6 +488,7 @@ void XTemplateSerializer::storeObject(RefVectorOf<SchemaAttDef>* const objToStor
             SchemaAttDef* data = objToStore->elementAt(i);
             serEng<<data;
         }
+
     }
 
 }
@@ -276,6 +501,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<SchemaAttDef>** objToLoad
 
     if (serEng.needToLoadObject((void**)objToLoad))
     {
+
         if (!*objToLoad)
         {
             if (initSize < 0)
@@ -299,6 +525,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<SchemaAttDef>** objToLoad
             serEng>>data;
             (*objToLoad)->addElement(data);
         }
+
     }
 
 }
@@ -309,6 +536,7 @@ void XTemplateSerializer::storeObject(RefVectorOf<SchemaElementDecl>* const objT
 
     if (serEng.needToStoreObject(objToStore))
     {
+
         int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
@@ -317,6 +545,7 @@ void XTemplateSerializer::storeObject(RefVectorOf<SchemaElementDecl>* const objT
             SchemaElementDecl* data = objToStore->elementAt(i);
             serEng<<data;
         }
+
     }
 
 }
@@ -764,11 +993,25 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            KVStringPair* data = objToStore->get(strKey);
+            serEng<<data;
+        }
+#else
         while (e.hasMoreElements())
         {
             KVStringPair* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -828,11 +1071,25 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            XMLAttDef* data = objToStore->get(strKey);
+            serEng<<data;
+        }
+#else
         while (e.hasMoreElements())
         {
             XMLAttDef* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -899,11 +1156,25 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            DTDAttDef* data = objToStore->get(strKey);
+            serEng<<data;
+        }
+#else
         while (e.hasMoreElements())
         {
             DTDAttDef* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -965,11 +1236,25 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            ComplexTypeInfo* data = objToStore->get(strKey);
+            serEng<<data;
+        }
+#else
         while (e.hasMoreElements())
         {
             ComplexTypeInfo* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -1031,6 +1316,22 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            unsigned int id  = serEng.getStringPool()->getId(strKey);
+            serEng<<id;
+
+            XercesGroupInfo* data = objToStore->get(strKey);
+            serEng<<data;
+        }
+#else
         while (e.hasMoreElements())
         {
             XMLCh*       key = (XMLCh*) e.nextElementKey();           
@@ -1049,11 +1350,12 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
            //   }
            //
 
-            serEng<<id;            
+            serEng<<id;
 
             XercesGroupInfo* data = objToStore->get(key);
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -1120,11 +1422,25 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            XercesAttGroupInfo* data = objToStore->get(strKey);
+            serEng<<data;
+        }
+#else
         while (e.hasMoreElements())
         {
             XercesAttGroupInfo* data = objToStore->get(e.nextElementKey());            
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -1187,6 +1503,21 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            serEng.writeString(strKey);
+
+            XMLRefInfo* data = objToStore->get(strKey);
+            serEng<<data;
+        }
+#else
         while (e.hasMoreElements())
         {
             XMLCh*     key  = (XMLCh*) e.nextElementKey();
@@ -1195,6 +1526,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
             XMLRefInfo* data = objToStore->get(key);
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -1259,6 +1591,19 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            DatatypeValidator* data = objToStore->get(strKey);
+            DatatypeValidator::storeDV(serEng, data);
+        }
+#else
         while (e.hasMoreElements())
         {
             /***
@@ -1272,6 +1617,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
             DatatypeValidator* data = objToStore->get(e.nextElementKey());
             DatatypeValidator::storeDV(serEng, data);
         }
+#endif
     }
 }
 
@@ -1359,11 +1705,26 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_ONEKEY()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            Grammar* data = objToStore->get(strKey);
+            Grammar::storeGrammar(serEng, data);
+        }
+#else
         while (e.hasMoreElements())
         {
             Grammar* data = objToStore->get(e.nextElementKey());
             Grammar::storeGrammar(serEng, data);
         }
+#endif
+
     }
 }
 
@@ -1416,6 +1777,53 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XSAnnotation> e(objToStore, false, objToStore->getMemoryManager());
+
+#ifdef _DEBUG
+        //get the total item number
+        int   itemNumber = 0;
+        while (e.hasMoreElements())
+        {
+            void* key = e.nextElementKey();
+            XSerializeEngine::XSerializedObjectId_t keyId = serEng.lookupStorePool(key);
+
+            if (keyId)
+                itemNumber++;
+        }
+
+        serEng<<itemNumber;
+        e.Reset();
+
+        //to sort the key
+        //though keyId is not supposed to be involved in compare
+        //we merely use the kepPair to encap both the string key and keyid
+        SortArray sortArray(itemNumber);
+        while (e.hasMoreElements())
+        {
+            void* key = e.nextElementKey();
+            XSerializeEngine::XSerializedObjectId_t keyId = serEng.lookupStorePool(key);
+
+            if (keyId)
+            {
+                KeySet* keySet = new KeySet((XMLCh*)key, keyId);
+                sortArray.addElement(keySet);
+            }
+
+        }
+
+        sortArray.sort();
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            XSerializeEngine::XSerializedObjectId_t keyId = (XSerializeEngine::XSerializedObjectId_t)intKey1;
+            XSAnnotation* data = objToStore->get(strKey);
+
+            serEng<<keyId;
+            serEng<<data;
+        }
+#else
         ValueVectorOf<XSerializeEngine::XSerializedObjectId_t> ids(16, serEng.getMemoryManager());
         ValueVectorOf<void*> keys(16, serEng.getMemoryManager());
 
@@ -1441,6 +1849,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
             serEng<<keyId;
             serEng<<data;
         }
+#endif
     }
 }
 
@@ -1474,6 +1883,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             XSerializeEngine::XSerializedObjectId_t keyId = 0;
+
             serEng>>keyId;
 
             void* key = serEng.lookupLoadPool(keyId);
@@ -1515,6 +1925,21 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+        //to sort the key
+        SORT_KEYSET_TWOKEYS()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            SchemaAttDef* data = objToStore->get(strKey, intKey1);
+            serEng<<data;
+
+        }
+#else
+
         while (e.hasMoreElements())
         {
             XMLCh*     key1;
@@ -1525,7 +1950,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
             serEng<<data;
 
         }
-
+#endif
     }
 
 }
@@ -1595,6 +2020,24 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
         serEng<<itemNumber;
         e.Reset();
 
+#ifdef _DEBUG
+
+        //to sort the key
+        SORT_KEYSET_TWOKEYS()
+
+        //to store the data
+        for (int i=0; i < itemNumber; i++)
+        {
+            GET_NEXT_KEYSET()
+
+            serEng.writeString(strKey);
+            serEng<<intKey1;
+
+            ElemVector* data = objToStore->get(strKey, intKey1);
+            storeObject(data, serEng);
+        }
+#else
+
         while (e.hasMoreElements())
         {
             XMLCh*     key1;
@@ -1608,7 +2051,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
             storeObject(data, serEng);
 
         }
-
+#endif
     }
 
 }
@@ -1700,6 +2143,7 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
  *
  *   SchemaElementDecl
  *
+ *   maintain the same order through id
  ***********************************************************/
 void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* const objToStore
                                     , XSerializeEngine&                            serEng)
@@ -1710,30 +2154,15 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
 
         serEng<<objToStore->getHashModulus();
 
-        int itemNumber = 0;
         RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(objToStore, false, objToStore->getMemoryManager());
+      
+        serEng<<e.size();
 
-        XMLCh*     key1;
-        int        key2;
-        int        key3;
-
-        while (e.hasMoreKeys())
-        {
-            e.nextElementKey((void*&)key1, key2, key3);
-            itemNumber++;
+        while (e.hasMoreElements())
+        {                       
+            SchemaElementDecl& data = e.nextElement();
+            serEng<<&data;
         }
-
-        serEng<<itemNumber;
-        e.resetKey();
-
-        while (e.hasMoreKeys())
-        {           
-            e.nextElementKey((void*&)key1, key2, key3);
-
-            SchemaElementDecl* data = objToStore->getByKey(key1, key2, key3);
-            serEng<<data;
-        }
-
     }
 
 }
@@ -1770,7 +2199,7 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
         {                       
             SchemaElementDecl*  elemDecl;
             serEng>>elemDecl;
-                    	           
+            
             (*objToLoad)->put(elemDecl->getBaseName()
                             , elemDecl->getURI()
                             , elemDecl->getEnclosingScope()
@@ -1791,6 +2220,7 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
  *   DTDEntityDecl
  *   XMLNotationDecl
  *
+ *   maintain the same order through id
  ***********************************************************/
 void XTemplateSerializer::storeObject(NameIdPool<DTDElementDecl>* const objToStore
                                     , XSerializeEngine&                 serEng)
@@ -1798,24 +2228,15 @@ void XTemplateSerializer::storeObject(NameIdPool<DTDElementDecl>* const objToSto
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int itemNumber = 0;
         NameIdPoolEnumerator<DTDElementDecl> e(objToStore, objToStore->getMemoryManager());
 
-        while (e.hasMoreElements())
-        {
-            e.nextElement();
-            itemNumber++;
-        }
-
-        serEng<<itemNumber;
-        e.Reset();
+        serEng<<e.size();
 
         while (e.hasMoreElements())
         {
             DTDElementDecl& data = e.nextElement();
             data.serialize(serEng);
         }
-
     }
 
 }
@@ -1864,24 +2285,15 @@ void XTemplateSerializer::storeObject(NameIdPool<DTDEntityDecl>* const objToStor
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int itemNumber = 0;
         NameIdPoolEnumerator<DTDEntityDecl> e(objToStore, objToStore->getMemoryManager());
 
-        while (e.hasMoreElements())
-        {
-            e.nextElement();
-            itemNumber++;
-        }
-
-        serEng<<itemNumber;
-        e.Reset();
+        serEng<<e.size();
 
         while (e.hasMoreElements())
         {
             DTDEntityDecl& data = e.nextElement();
             data.serialize(serEng);
         }
-
     }
 
 }
@@ -1930,24 +2342,15 @@ void XTemplateSerializer::storeObject(NameIdPool<XMLNotationDecl>* const objToSt
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int itemNumber = 0;
         NameIdPoolEnumerator<XMLNotationDecl> e(objToStore, objToStore->getMemoryManager());
 
-        while (e.hasMoreElements())
-        {
-            e.nextElement();
-            itemNumber++;
-        }
-
-        serEng<<itemNumber;
-        e.Reset();
+        serEng<<e.size();
 
         while (e.hasMoreElements())
         {
             XMLNotationDecl& data = e.nextElement();
             data.serialize(serEng);
         }
-
     }
 
 }
