@@ -312,8 +312,8 @@ DOMDeepNodeListPool<TVal>::put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const
 
         newBucket->fData = valueToAdopt;
         newBucket->fKey1 = key1;
-        newBucket->fKey2 = key2;
-        newBucket->fKey3 = key3;
+        newBucket->fKey2 = XMLString::replicate(key2);
+        newBucket->fKey3 = XMLString::replicate(key3);
     }
      else
     {
