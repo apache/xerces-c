@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/08 23:52:34  roddey
+ * Got rid of the use of -1 to represent an invalid transition state,
+ * and just created a const value that is unsigned. This should make
+ * some compilers happier.
+ *
  * Revision 1.3  2000/03/02 19:55:38  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -89,12 +94,17 @@
 // ---------------------------------------------------------------------------
 //  Local static data
 //
+//  gInvalidTrans
+//      This value represents an invalid transition in each line of the
+//      transition table.
+//
 //  gEOCFakeId
 //  gEpsilonFakeId
 //      We have to put in a couple of special CMLeaf nodes to represent
 //      special values, using fake element ids that we know won't conflict
 //      with real element ids.
 // ---------------------------------------------------------------------------
+static const unsigned int   gInvalidTrans   = 0xFFFFFFFF;
 static const unsigned int   gEOCFakeId      = 0xFFFFFFF1;
 static const unsigned int   gEpsilonFakeId  = 0xFFFFFFF2;
 
@@ -195,7 +205,7 @@ DFAContentModel::validateContent(   const   unsigned int*   childIds
         curState = fTransTable[curState][elemIndex];
 
         //  If its not a legal transition then we failed.
-        if (curState == -1)
+        if (curState == gInvalidTrans)
             return childIndex;
     }
 
@@ -747,15 +757,15 @@ bool DFAContentModel::isAmbiguous() const
 
 
 //
-//  -1 is used to represent bad transitions in the transition table entry for
-//  each state. So each entry is initialized to an all -1 array. This method
-//  creates a new entry and initializes it.
+//  kInvalidTrans is used to represent bad transitions in the transition table
+//  entry for each state. So each entry is initialized to that value. This
+//  method creates a new entry and initializes it.
 //
 unsigned int* DFAContentModel::makeDefStateList() const
 {
     unsigned int* retArray = new unsigned int[fElemMapSize];
     for (unsigned int index = 0; index < fElemMapSize; index++)
-        retArray[index] = -1;
+        retArray[index] = gInvalidTrans;
     return retArray;
 }
 
