@@ -48,8 +48,8 @@ usage()
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 
             'netbsd', 'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware', 
-            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx',
-            'interix', 'mingw-msys')
+            'os400', 'os390', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 
+            'qnx', 'interix', 'mingw-msys')
             [required; no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc) 
             [default is make default; cc for gnu make]"
@@ -251,7 +251,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx | interix | mingw-msys)
+   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | os390 | irix | ptx | tru64 | macosx | cygwin | qnx | interix | mingw-msys)
        # platform has been recognized
        ;;
    *)
@@ -273,6 +273,8 @@ if test $debug = "off"; then
          debugflag="-w -O2";
       elif test $platform = "aix"; then
          debugflag="-w -O2";
+      elif test $platform = "os390"; then
+         debugflag="";         
       else
          debugflag="-w -O";
       fi
@@ -374,6 +376,9 @@ else
         THREADS=dce
         threadingLibs="-lcma"
         threadingDefines="-DXML_USE_DCE"
+    elif test $platform = "os390"; then       
+        threadingLibs=""
+        threadingDefines="-D_OPEN_THREADS"        
     elif test $platform = "unixware"; then
         threadingLibs="" ## Linkflags control the use of threads on UnixWare
     elif test $platform = "solaris"; then
@@ -482,10 +487,7 @@ case $transcoder in
        TRANSCODER=ICU;;
    Iconv400)
        transcodingDefines="-DXML_USE_ICONV400_TRANSCODER" ;
-       TRANSCODER=Iconv400 ;;
-   Iconv390)
-       transcodingDefines="-DXML_USE_ICONV390_TRANSCODER" ;
-       TRANSCODER=Iconv390 ;;
+       TRANSCODER=Iconv400 ;;   
    Uniconv390)
        transcodingDefines="-DXML_USE_UNICONV390_TRANSCODER" ;
        TRANSCODER=Uniconv390 ;;
