@@ -2326,23 +2326,13 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
     bool    firstNonWS = false;
     bool    gotLeadingSurrogate = false;
     bool    escaped;
-    bool    charref_expanded = false;
     while (true)
     {
     try
     {
         while(true)
         {
-            // Get another char. Use second char if one is waiting
-            if (secondCh)
-            {
-                nextCh = secondCh;
-                secondCh = 0;
-            }
-            else
-            {
-                nextCh = fReaderMgr.getNextChar();
-            }
+            nextCh = fReaderMgr.getNextChar();
 
             if (!nextCh)
                 ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
@@ -2372,18 +2362,16 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                     gotLeadingSurrogate = false;
                     continue;
                 }
-                charref_expanded = true;
             }
-
-            // Deal with surrogate pairs
-            if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
+            else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
             {
+                // Deal with surrogate pairs
                 //  Its a leading surrogate. If we already got one, then
                 //  issue an error, else set leading flag to make sure that
                 //  we look for a trailing next time.
                 if (gotLeadingSurrogate)
                     emitError(XMLErrs::Expected2ndSurrogateChar);
-                 else
+                else
                     gotLeadingSurrogate = true;
             }
             else
@@ -2407,22 +2395,17 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                     // Its got to at least be a valid XML character
                     if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
                     {
-                        // if it was a character reference and is control char, then it's ok
-                        if (!(charref_expanded && fReaderMgr.getCurrentReader()->isControlChar(nextCh)))
-                        {
-                            XMLCh tmpBuf[9];
-                            XMLString::binToText
-                            (
-                                nextCh
-                                , tmpBuf
-                                , 8
-                                , 16
-                            );
-                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
-                        }
+                        XMLCh tmpBuf[9];
+                        XMLString::binToText
+                        (
+                            nextCh
+                            , tmpBuf
+                            , 8
+                            , 16
+                        );
+                        emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                     }
                 }
-                charref_expanded = false;
                 gotLeadingSurrogate = false;
             }
 
@@ -2498,6 +2481,9 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
 
             // Else add it to the buffer
             toFill.append(nextCh);
+
+            if (secondCh)
+                toFill.append(secondCh);
         }
     }
     catch(const EndOfEntityException&)
@@ -2704,44 +2690,36 @@ void DGXMLScanner::scanCharData(XMLBuffer& toUse)
     bool    escaped = false;
     bool    gotLeadingSurrogate = false;
     bool    notDone = true;
-    bool    charref_expanded = false;
     while (notDone)
     {
         try
         {
             while (true)
             {
-                if (secondCh)
+                //  Eat through as many plain content characters as possible without
+                //  needing special handling.  Moving most content characters here,
+                //  in this one call, rather than running the overall loop once
+                //  per content character, is a speed optimization.
+                if (curState == State_Waiting  &&  !gotLeadingSurrogate)
                 {
-                    nextCh = secondCh;
-                    secondCh = 0;
+                     fReaderMgr.movePlainContentChars(toUse);
                 }
-                else
+
+                // Try to get another char from the source
+                //   The code from here on down covers all contengencies,
+                if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
                 {
-                    //  Eat through as many plain content characters as possible without
-                    //  needing special handling.  Moving most content characters here,
-                    //  in this one call, rather than running the overall loop once
-                    //  per content character, is a speed optimization.
-                    if (curState == State_Waiting  &&  !gotLeadingSurrogate)
-                    {
-                         fReaderMgr.movePlainContentChars(toUse);
-                    }
+                    // If we were waiting for a trailing surrogate, its an error
+                    if (gotLeadingSurrogate)
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
 
-                    // Try to get another char from the source
-                    //   The code from here on down covers all contengencies,
-                    if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
-                    {
-                        // If we were waiting for a trailing surrogate, its an error
-                        if (gotLeadingSurrogate)
-                            emitError(XMLErrs::Expected2ndSurrogateChar);
-
-                        notDone = false;
-                        break;
-                    }
+                    notDone = false;
+                    break;
                 }
 
                 //  Watch for a reference. Note that the escapement mechanism
                 //  is ignored in this content.
+                escaped = false;
                 if (nextCh == chAmpersand)
                 {
                     sendCharData(toUse);
@@ -2754,42 +2732,10 @@ void DGXMLScanner::scanCharData(XMLBuffer& toUse)
                         gotLeadingSurrogate = false;
                         continue;
                     }
-                    charref_expanded = true;
                 }
-                else
+                else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
                 {
-                    escaped = false;
-                }
-
-                 // Keep the state machine up to date
-                if (!escaped)
-                {
-                    if (nextCh == chCloseSquare)
-                    {
-                        if (curState == State_Waiting)
-                            curState = State_GotOne;
-                        else if (curState == State_GotOne)
-                            curState = State_GotTwo;
-                    }
-                    else if (nextCh == chCloseAngle)
-                    {
-                        if (curState == State_GotTwo)
-                            emitError(XMLErrs::BadSequenceInCharData);
-                        curState = State_Waiting;
-                    }
-                    else
-                    {
-                        curState = State_Waiting;
-                    }
-                }
-                else
-                {
-                    curState = State_Waiting;
-                }
-
-                // Deal with surrogate pairs
-                if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
-                {
+                    // Deal with surrogate pairs
                     //  Its a leading surrogate. If we already got one, then
                     //  issue an error, else set leading flag to make sure that
                     //  we look for a trailing next time.
@@ -2819,27 +2765,51 @@ void DGXMLScanner::scanCharData(XMLBuffer& toUse)
                         // Make sure the returned char is a valid XML char
                         if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
                         {
-                            // if it was a character reference and is control char, then it's ok
-                            if (!(charref_expanded && fReaderMgr.getCurrentReader()->isControlChar(nextCh)))
-                            {
-                                XMLCh tmpBuf[9];
-                                XMLString::binToText
-                                (
-                                    nextCh
-                                    , tmpBuf
-                                    , 8
-                                    , 16
-                                );
-                                emitError(XMLErrs::InvalidCharacter, tmpBuf);
-                            }
+                            XMLCh tmpBuf[9];
+                            XMLString::binToText
+                            (
+                                nextCh
+                                , tmpBuf
+                                , 8
+                                , 16
+                            );
+                            emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         }
                     }
-                    charref_expanded = false;
                     gotLeadingSurrogate = false;
+                }
+
+                 // Keep the state machine up to date
+                if (!escaped)
+                {
+                    if (nextCh == chCloseSquare)
+                    {
+                        if (curState == State_Waiting)
+                            curState = State_GotOne;
+                        else if (curState == State_GotOne)
+                            curState = State_GotTwo;
+                    }
+                    else if (nextCh == chCloseAngle)
+                    {
+                        if (curState == State_GotTwo)
+                            emitError(XMLErrs::BadSequenceInCharData);
+                        curState = State_Waiting;
+                    }
+                    else
+                    {
+                        curState = State_Waiting;
+                    }
+                }
+                else
+                {
+                    curState = State_Waiting;
                 }
 
                 // Add this char to the buffer
                 toUse.append(nextCh);
+
+                if (secondCh)
+                    toUse.append(secondCh);
             }
         }
         catch(const EndOfEntityException& toCatch)

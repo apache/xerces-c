@@ -1725,16 +1725,27 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
     }
 
     // Return the char (or chars)
-    if (value >= 0x10000)
+    // And check if the character expanded is valid or not
+    if (value >= 0x10000 && value <= 0x10FFFF)
     {
         value -= 0x10000;
         toFill = XMLCh((value >> 10) + 0xD800);
         second = XMLCh((value & 0x3FF) + 0xDC00);
     }
-    else
+    else if (value <= 0xFFFD)
     {
         toFill = XMLCh(value);
         second = 0;
+        if (!fReaderMgr.getCurrentReader()->isXMLChar(toFill) && !fReaderMgr.getCurrentReader()->isControlChar(toFill)) {
+            // Character reference was not in the valid range
+            emitError(XMLErrs::InvalidCharacterRef);
+            return false;
+        }
+    }
+    else {
+        // Character reference was not in the valid range
+        emitError(XMLErrs::InvalidCharacterRef);
+        return false;
     }
 
     return true;
