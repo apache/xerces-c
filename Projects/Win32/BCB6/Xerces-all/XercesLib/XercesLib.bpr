@@ -335,7 +335,7 @@
       -DPROJ_PARSERS -DPROJ_SAX4C -DPROJ_SAX2 -DPROJ_DOM -DPROJ_VALIDATORS 
       -DXML_SINGLEDLL -DXML_USE_WIN32_TRANSCODER -DXML_USE_WIN32_MSGLOADER 
       -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -boa"/>
-    <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -tWD -tWM -c"/>
+    <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b -k -y -v -vi- -tWD -tWM -c"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
       -N0..\..\..\..\..\Build\Win32\BCB6\obj -$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>

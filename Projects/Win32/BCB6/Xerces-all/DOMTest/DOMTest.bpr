@@ -25,12 +25,12 @@
     <MAINSOURCE value="DOMTest.cpp"/>
     <INCLUDEPATH value="..\..\..\..\..\tests\DOM\DOMTest;..\..\..\..\..\src;$(BCB)\include"/>
     <LIBPATH value="$(BCB)\lib"/>
-    <WARNINGS value=""/>
+    <WARNINGS value="-w-rch -w-ccc"/>
     <WARNOPTSTR value=""/>
   </MACROS>
   <OPTIONS>
     <IDLCFLAGS value="-src_suffix cpp -boa"/>
-    <CFLAG1 value="-Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC"/>
+    <CFLAG1 value="-Od -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
       -N0..\..\..\..\..\Build\Win32\BCB6\obj -$YD -$W -$O- -v -JPHN -M"/>
     <RFLAGS value=""/>
