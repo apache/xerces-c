@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/03/03 23:04:17  peiyongz
+ * deallocate fNamespace when loaded
+ *
  * Revision 1.6  2003/12/24 15:24:16  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -244,6 +247,12 @@ void XMLSchemaDescriptionImpl::serialize(XSerializeEngine& serEng)
         serEng>>i;
 
         fContextType = (ContextType)i;       
+
+        //the original fNamespace which came from the ctor needs deallocated
+        if (fNamespace)
+        {
+            XMLGrammarDescription::getMemoryManager()->deallocate((void*)fNamespace);
+        }
         serEng.readString((XMLCh*&)fNamespace);
 
         /***
