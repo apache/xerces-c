@@ -305,7 +305,7 @@ const XMLCh * DOMElementImpl::getAttributeNS(const XMLCh *fNamespaceURI,
 {
     DOMAttr * attr=
       (DOMAttr *)(fAttributes->getNamedItemNS(fNamespaceURI, fLocalName));
-    return (attr==0) ? 0 : attr->getValue();
+    return (attr==0) ? XMLUni::fgZeroLenString : attr->getValue();
 }
 
 
