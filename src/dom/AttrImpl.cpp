@@ -57,6 +57,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/03 23:07:27  andyh
+ * Add several new functions from Robert Weir to DOMString.
+ *
  * Revision 1.3  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -146,7 +149,8 @@ DOMString AttrImpl::getValue()
     for (node = getFirstChild(); node != null; node = node->getNextSibling())
         length += node->getNodeValue().length();
     
-    DOMString retString(length);
+    DOMString retString;
+	retString.reserve(length);
     for (node = getFirstChild(); node != null; node = node->getNextSibling())
     {
         retString.appendData(node->getNodeValue());

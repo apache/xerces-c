@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/03 23:07:27  andyh
+ * Add several new functions from Robert Weir to DOMString.
+ *
  * Revision 1.4  2000/01/05 22:16:26  robweir
  * Move DOMString implementation class declarations into a new
  * file: DOMStringImpl.hpp.  Include this header in DOMString.hpp
@@ -148,15 +151,9 @@ public:
     DOMString(const char *other);
 
     /**
-      * Constructor to build an empty DOMString with the character buffer
-      *  preallocated to the specified size.  A DOMString will grow its buffer
-      *  on demand, as characters are added, but it can be more efficient to
-      *  allocate once in advance, if the size is known.
-      *
-      * @param initialBufferSize The initial size of the buffer inside the 
-      * <code>DOMString</code>, measured in 16 bit characters.
+      * Construct a null DOMString.
       */
-    DOMString(int initalBufferSize);
+    DOMString(int nullPointerValue);
 
     /**
       * Assignment operator.  Make destination DOMString refer to the same
@@ -165,6 +162,10 @@ public:
       * @param the source DOMString.
       */
     DOMString &        operator = (const DOMString &other);
+
+
+
+    DOMString &        operator = (DOM_NullPtr *other);
 
     //@}
     /** @name Destructor. */
@@ -186,7 +187,7 @@ public:
       * @param other The string to be concatenated.
       * @return The concatenated object
       */
-    DOMString   operator + (const DOMString &other);
+    // DOMString   operator + (const DOMString &other);
 
     //@}
     /** @name Equality and Inequality operators. */
@@ -242,12 +243,62 @@ public:
     /** @name Functions to change the string. */
     //@{
 
+
+    /**
+      * Preallocate storage in the string to hold a given number of characters.
+      * A DOMString will grow its buffer on demand, as characters are added,
+      * but it can be more efficient to allocate once in advance, if the size is known.
+      *
+      * @param size The number of 16 bit characters to reserve.
+      */
+    void reserve(size_t size);
+
+    
     /**
       * Appends the content of another <code>DOMString</code> to this string.
       *
       * @param other The object to be appended
       */
     void        appendData(const DOMString &other);
+
+    /**
+      * Append a single Unicode character to this string.
+      *
+      * @param other The object to be appended
+      */
+    void        appendData(XMLCh ch);
+
+     /**
+      * Append a null-terminated XMLCh * (Unicode) string to this string.
+      *
+      * @param other The object to be appended
+      */
+    void        appendData(const XMLCh *other);
+
+
+    /**
+      * Appends the content of another <code>DOMString</code> to this string.
+      *
+      * @param other The object to be appended
+      */
+	DOMString& operator +=(const DOMString &other);
+
+
+    /**
+      * Appends the content of a c-style string to this string.
+      *
+      * @param other The string to be appended
+      */
+    DOMString& operator +=(const XMLCh* other);
+
+
+    /**
+      * Appends a character to this string.
+      *
+      * @param ch The character to be appended
+      */
+	DOMString& operator +=(XMLCh ch);
+
 
     /**
       * Clears the data of this <code>DOMString</code>.
@@ -291,12 +342,25 @@ public:
 
     /**
       * Returns a copy of the string, transcoded to the local code page. The
-      * caller is responsible for cleaning up this buffer.
+      * caller owns the (char *) string that is returned, and is responsible
+      * for deleting it.
       *
       * @return A pointer to a newly allocated buffer of char elements, which
       *         represents the original string, but in the local encoding.
       */
     char        *transcode() const;
+
+
+    /**
+      * Creates a DOMString, transcoded from an input 8 bit char * string
+      * in the local code page.
+      *
+      * @param str The string to be transcoded
+      * @return A new DOMString object
+      */
+    static DOMString transcode(const char* str);
+
+
 
     /**
       * Returns a sub-string of the <code>DOMString</code> starting at a specified position.
@@ -390,5 +454,59 @@ private:
     static int              gLiveStringDataCount;
     static int              gTotalStringDataCount;
 };
+
+
+/****** Global Helper Functions ******/
+
+/**
+  * Concatenate two DOMString's.
+  *
+  * @param lhs the first string
+  * @param rhs the second string
+  * @return The concatenated object
+  */
+CDOM_EXPORT DOMString operator + (const DOMString &lhs, const DOMString &rhs);
+
+/**
+  * Concatenate a null terminated Unicode string to a DOMString.
+  *
+  * @param lhs the DOMString
+  * @param rhs the XMLCh * string
+  * @return The concatenated object
+  */
+CDOM_EXPORT DOMString operator + (const DOMString &lhs, const XMLCh* rhs);
+
+
+/**
+  * Concatenate a DOMString to a null terminated Unicode string
+  *
+  * @param lhs the null-terminated Unicode string
+  * @param rhs the DOMString
+  * @return The concatenated object
+  */
+CDOM_EXPORT DOMString operator + (const XMLCh* lhs, const DOMString &rhs);
+
+
+/**
+  * Concatenate a single Unicode character to a DOMString.
+  *
+  * @param lhs the DOMString
+  * @param rhs the character
+  * @return The concatenated object
+  */
+CDOM_EXPORT DOMString operator + (const DOMString &lhs, XMLCh rhs);
+
+
+/**
+  * Concatenate a DOMString to a single Unicode character.
+  *
+  * @param lhs the character
+  * @param rhs the DOMString
+  * @return The concatenated object
+  */
+CDOM_EXPORT DOMString operator + (XMLCh lhs, const DOMString &rhs);
+
+
+
 
 #endif

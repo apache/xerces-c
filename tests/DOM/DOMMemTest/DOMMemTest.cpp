@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/02/03 23:07:28  andyh
+ * Add several new functions from Robert Weir to DOMString.
+ *
  * Revision 1.10  2000/01/29 00:39:09  andyh
  * Redo synchronization in DOMStringHandle allocator.  There
  * was a bug in the use of Compare and Swap.  Switched to mutexes.
@@ -196,12 +199,15 @@ int  main()
     //
     TESTPROLOG
     {
+        //  ToDo - this test will fail on EBCDIC machines.  !!
 
         XMLCh a[] = {'H', 'e', 'l', 'l', 'o', 0};
         DOMString x(a);
         DOMString y = "Hello";
-
         TASSERT(x.equals(y));
+
+        DOMString z(a+2, 3);
+        TASSERT(z.equals("llo"));
     }
     TESTEPILOG
 
@@ -213,6 +219,13 @@ int  main()
         DOMString a;
         DOMString b;
         TASSERT (a==0);
+        a = 0;
+        TASSERT(a==0);
+        TASSERT((a!=0) == false);
+
+        DOMString c(0);
+        TASSERT(c==0);
+        TASSERT(c==a);
     }
     TESTEPILOG
 
@@ -225,6 +238,10 @@ int  main()
         DOMString b = a.clone();
         TASSERT(a.equals(b));
         TASSERT(a != b);
+        a = 0;
+        TASSERT(b.equals("hello"));
+        TASSERT(a == 0);
+        TASSERT(a.equals(""));
     }
     TESTEPILOG
 
@@ -284,6 +301,7 @@ int  main()
 
     //
     //  Test 7  Append Data, Common case, no extra space in original buffer.
+    //          Also, operator +=, which is a convenience alias for appendData.
     //
     TESTPROLOG;
     {
@@ -293,6 +311,24 @@ int  main()
         a.appendData(b);
         TASSERT(a.equals("Test 07append"));
         TASSERT(b.equals("append"));
+
+        a.appendData((XMLCh)0x31);
+        TASSERT(a.equals("Test 07append1"));
+
+        XMLCh  s[] = {0x32, 0x33, 0x00};
+        a.appendData(s);
+        TASSERT(a.equals("Test 07append123"));
+
+        a = "Test 07a ";
+        a += b;
+        TASSERT(a.equals("Test 07a append"));
+       
+        a += (XMLCh)0x31;
+        TASSERT(a.equals("Test 07a append1"));
+
+        a += s;
+        TASSERT(a.equals("Test 07a append123"));
+
     }
     TESTEPILOG
 
@@ -302,11 +338,12 @@ int  main()
     //
     TESTPROLOG;
     {
-        DOMString a(100);
+        DOMString a;
+		a.reserve(100);
         DOMString b("Test 08");
         DOMString c("append");
 
-        // TASSERT(a == 0);  // (should it?)
+        TASSERT(a != 0);  // (The String object has an identity, even if no contents)
         TASSERT(a.length() == 0);
         a.appendData(b);
         TASSERT(a.equals(b));
@@ -327,7 +364,8 @@ int  main()
     //
     TESTPROLOG;
     {
-        DOMString a(100);
+        DOMString a;
+		a.reserve(100);
         DOMString b("Test 09");
         DOMString c("append");
 
@@ -351,7 +389,36 @@ int  main()
         TASSERT(c.equals("append"));
         TASSERT(d.equals("Test 09"));
     };
-    TESTEPILOG
+    TESTEPILOG;
+
+
+    //
+    // Test 10   DOMString Operator +
+    //
+    TESTPROLOG;
+    {
+        DOMString a;
+        DOMString b("DOMString ");
+        XMLCh     s[] = {0x58, 0x4d, 0x4c, 0x20, 0x00};   // Unicode "XML "
+        XMLCh     Z   = 0x5A;                             // Unicode 'Z'
+
+        a = b + b;
+        TASSERT(a.equals("DOMString DOMString "));
+
+        a = b + s;
+        TASSERT(a.equals("DOMString XML "));
+
+        a = s + b;
+        TASSERT(a.equals("XML DOMString "));
+
+        a = b + Z;
+        TASSERT(a.equals("DOMString Z"));
+
+        a = Z + b;
+        TASSERT(a.equals("ZDOMString "));
+    }
+    TESTEPILOG;
+
 
 
     //
@@ -787,6 +854,9 @@ int  main()
 		char *roundTripString = DOMTestStr.transcode();
 		TASSERT(strcmp(testStr, roundTripString) == 0);
 		delete [] roundTripString;
+
+        DOMString domstr2 = DOMString::transcode(testStr);
+        TASSERT(domstr2.equals(DOMTestStr));
 	}
     TESTEPILOG;
 
@@ -1248,6 +1318,12 @@ int  main()
     }
     TESTEPILOG;
 
+
+    {
+        
+
+
+    }
  
     //
     //  Print Final allocation stats for full test
@@ -1257,3 +1333,4 @@ int  main()
     return 0;
     };
     
+            

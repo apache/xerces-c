@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/02/03 23:07:27  andyh
+ * Add several new functions from Robert Weir to DOMString.
+ *
  * Revision 1.8  2000/01/29 00:39:08  andyh
  * Redo synchronization in DOMStringHandle allocator.  There
  * was a bug in the use of Compare and Swap.  Switched to mutexes.
@@ -435,11 +438,10 @@ DOMString::DOMString(const char *srcString)
 
 
 
-DOMString::DOMString(int initialBufferSize)
+DOMString::DOMString(int nullValue)
 {
-    fHandle = 0;
-    if (initialBufferSize > 0)
-        fHandle = DOMStringHandle::createNewStringHandle(initialBufferSize);
+   assert(nullValue == 0);
+   fHandle = 0;
 };
 
 
@@ -469,13 +471,25 @@ DOMString & DOMString::operator =(const DOMString &other)
 };
 
 
+DOMString & DOMString::operator = (DOM_NullPtr *arg)
+{
+    assert(arg == 0);
+    if (fHandle)
+        fHandle->removeRef();
+
+    fHandle = 0;
+    return *this;
+};
+
+
+#if 0
 DOMString DOMString::operator + (const DOMString &other)
 {
     DOMString retString = this->clone();
     retString.appendData(other);
     return retString;
 };
-
+#endif
 
 bool DOMString::operator ==(const DOMString &other) const
 {
@@ -499,13 +513,31 @@ bool DOMString::operator != (const DOM_NullPtr *p) const
     return (fHandle != 0);
 };
 
+
+
+void DOMString::reserve(size_t size)
+{
+	if (fHandle == 0)
+	{
+	    if (size > 0)
+	        fHandle = DOMStringHandle::createNewStringHandle(size);
+	}
+}
+
+
+
 void DOMString::appendData(const DOMString &other)
 {
     int i;
     if (other.fHandle == 0 || other.fHandle->fLength == 0)
         return;
 
-    if (fHandle == 0 || fHandle->fLength == 0)
+    // If this string is empty and this string does not have an
+    //   already allocated buffer sufficient to hold the string being
+    //   appended, return a clone of the other string.
+    //
+    if (fHandle == 0 || (fHandle->fLength == 0 &&
+        fHandle->fDSData->fBufferLength < other.fHandle->fLength))
     {
         if (fHandle) fHandle->removeRef();
         this->fHandle = other.fHandle->cloneStringHandle();
@@ -530,6 +562,9 @@ void DOMString::appendData(const DOMString &other)
         fHandle->fDSData = newBuf;
     }
 
+    //
+    // This string now had enough buffer room to hold the data to
+    //  be appended.  Go ahead and copy it in.
     XMLCh *srcP = other.fHandle->fDSData->fData;
     XMLCh *destP = &fHandle->fDSData->fData[fHandle->fLength];
     for (i=0; i<=other.fHandle->fLength; i++)
@@ -537,6 +572,73 @@ void DOMString::appendData(const DOMString &other)
 
     fHandle->fLength += other.fHandle->fLength;
 }
+
+
+
+void DOMString::appendData(XMLCh ch)
+{
+	int newLength = 0;
+
+	if (fHandle == 0)
+	{
+		fHandle = DOMStringHandle::createNewStringHandle(1);
+		newLength = 1;
+	}
+	else
+		newLength = fHandle->fLength + 1;
+    
+    if (newLength >= fHandle->fDSData->fBufferLength ||
+        fHandle->fDSData->fRefCount > 1)
+    {
+        // We can't stick the data to be added onto the end of the
+        //  existing string, either because there is not space in
+        //  the buffer, or because the buffer is being shared with
+        //  some other string.  So, make a new buffer.
+        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
+        XMLCh *newP = newBuf->fData;
+        XMLCh *oldP = fHandle->fDSData->fData;
+        for (int i=0; i<fHandle->fLength; ++i)
+            newP[i] = oldP[i];
+        
+        fHandle->fDSData->removeRef();
+        fHandle->fDSData = newBuf;
+    }
+
+    XMLCh *destP = &fHandle->fDSData->fData[fHandle->fLength];
+	destP[0] = ch;
+
+    fHandle->fLength ++;
+}
+
+// TODO: A custom version could be written more efficiently, avoiding
+// the creation of the temporary DOMString
+void DOMString::appendData(const XMLCh* other)
+{
+	appendData(DOMString(other));
+}
+
+
+DOMString& DOMString::operator +=(const DOMString &other)
+{
+	appendData(other);
+
+	return *this;
+}
+
+DOMString& DOMString::operator +=(const XMLCh *str)
+{
+	appendData(str);
+
+	return *this;
+}
+
+DOMString& DOMString::operator +=(XMLCh ch)
+{
+	appendData(ch);
+
+	return *this;
+}
+
 
 
 XMLCh     DOMString::charAt(int index) const
@@ -882,6 +984,12 @@ char *DOMString::transcode() const
 }
 
 
+DOMString DOMString::transcode(const char* str)
+{
+    return DOMString(str);
+}
+
+
 int DOMString::compareString(const DOMString &other) const
 {
     // Note: this strcmp does not match the semantics
@@ -934,4 +1042,44 @@ DOMString DOMString::substringData(int offset, int count) const
     }
     return retString;
 };
+
+
+DOMString operator + (const DOMString &lhs, const DOMString &rhs)
+{
+    DOMString retString = lhs.clone();
+    retString.appendData(rhs);
+    return retString;
+}
+
+DOMString operator + (const DOMString &lhs, const XMLCh* rhs)
+{
+    DOMString retString = lhs.clone();
+    retString.appendData(rhs);
+    return retString;
+}
+
+DOMString operator + (const XMLCh* lhs, const DOMString& rhs)
+{
+    DOMString retString = DOMString(lhs);
+    retString.appendData(rhs);
+    return retString;
+}
+
+
+DOMString operator + (const DOMString &lhs, XMLCh rhs)
+{
+    DOMString retString = lhs.clone();
+    retString.appendData(rhs);
+    return retString;
+}
+
+DOMString operator + (XMLCh lhs, const DOMString& rhs)
+{
+    DOMString retString;
+	retString.appendData(lhs);
+    retString.appendData(rhs);
+    return retString;
+}
+
+
 
