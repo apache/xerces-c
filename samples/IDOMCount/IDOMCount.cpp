@@ -67,6 +67,7 @@
 #include <parsers/IDOMParser.hpp>
 #include <idom/IDOM_DOMException.hpp>
 #include <idom/IDOM_Document.hpp>
+#include <idom/IDOM_NodeList.hpp>
 #include "IDOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
@@ -328,8 +329,15 @@ int main(int argC, char* argV[])
         {
             IDOM_Document *doc = parser->getDocument();
             unsigned int elementCount = 0;
-            if (doc)
+            if (doc) {
                 elementCount = countChildElements((IDOM_Node*)doc->getDocumentElement());
+                // test getElementsByTagName and getLength
+                XMLCh xa[] = {chAsterisk, chNull};
+                if (elementCount != doc->getElementsByTagName(xa)->getLength()) {
+                    cout << "\nErrors occured, element count is wrong\n" << endl;
+                    errorOccurred = true;
+                }
+            }
 
             // Print out the stats that we collected and time taken.
             cout << xmlFile << ": " << duration << " ms ("
