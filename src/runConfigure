@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.9  1999/12/03 01:19:11  rahulj
+# Split export statements into two. assignment and then export. Solaris is happy now
+#
 # Revision 1.8  1999/12/02 18:10:51  dirkx
 # Changed exit codes from -1 to '1'. Added indirection.
 #
@@ -402,18 +405,25 @@ case $cppcompiler in
       ;;
 esac
 
-export CC=$ccompiler
-export CXX=$cppcompiler
+CC="$ccompiler"
+export CC
 
+CXX="$cppcompiler"
+export CXX
 
 
 #
 # Set the extra C and C++ compiler flags
 #
 
-export CXXFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
-export CFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
-export LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
+CXXFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+export CXXFLAGS
+
+CFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+export CFLAGS
+
+LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
+export LIBS
 
 
 echo
