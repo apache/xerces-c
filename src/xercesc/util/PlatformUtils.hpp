@@ -707,7 +707,7 @@ public :
 	  *	The results of this function may be altered by defining
 	  * XML_PLATFORM_NEW_BLOCK_ALIGNMENT.
 	  */
-	static inline void* alignPointerForNewBlockAllocation(void* ptr);
+	static inline size_t alignPointerForNewBlockAllocation(size_t ptrSize);
 
 private :
     /** @name Private static methods */
@@ -794,8 +794,14 @@ MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
 //  Calculate alignment required by platform for a new
 //	block allocation. We use this in our custom allocators
 //	to ensure that returned blocks are properly aligned.
-inline void*
-XMLPlatformUtils::alignPointerForNewBlockAllocation(void* ptr)
+// Note that, although this will take a pointer and return the position
+// at which it should be placed for correct alignment, in our code
+// we normally use size_t parameters to discover what the alignment
+// of header blocks should be.  Thus, if this is to be
+// used for the former purpose, to make compilers happy
+// some casting will be necessary - neilg.
+inline size_t
+XMLPlatformUtils::alignPointerForNewBlockAllocation(size_t ptrSize)
 {
 	//	Macro XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be defined
 	//	as needed to dictate alignment requirements on a
@@ -808,12 +814,12 @@ XMLPlatformUtils::alignPointerForNewBlockAllocation(void* ptr)
 	#endif
 	
 	//	Calculate current alignment of pointer
-	size_t current = (long)ptr % alignment;
+	size_t current = ptrSize % alignment;
 	
 	//	Adjust pointer alignment as needed
 	return (current == 0)
-		 ? ptr
-		 : ((char*)ptr + alignment - current);
+		 ? ptrSize
+		 : (ptrSize + alignment - current);
 }
 
 
