@@ -211,7 +211,7 @@ else
 endif
 
 ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc30 -licudata30 -lXercesMessages25
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc30 -licudata30 -lXercesMessages26
 endif
 
 ifeq (${CXXVER}, v5compat)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/09/30 18:52:59  peiyongz
+ * XercesC2_6_0 updates
+ *
  * Revision 1.22  2004/09/08 13:56:33  peiyongz
  * Apache License Version 2.0
  *
@@ -146,7 +149,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  */
 
 #if defined(_WIN32) || defined(WIN32)
-extern "C" void U_IMPORT *XercesMessages2_5_0_dat;
+extern "C" void U_IMPORT *XercesMessages2_6_0_dat;
 #else
 extern "C" void U_IMPORT *XercesMessages_dat;
 #endif
@@ -170,7 +173,7 @@ static void setAppData()
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
 #if defined(_WIN32) || defined(WIN32)
-        udata_setAppData("XercesMessages", &XercesMessages2_5_0_dat, &err);
+        udata_setAppData("XercesMessages", &XercesMessages2_6_0_dat, &err);
 #else
         udata_setAppData("XercesMessages", &XercesMessages_dat, &err);
 #endif        
