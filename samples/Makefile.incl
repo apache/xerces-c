@@ -79,10 +79,10 @@ TO = o
 
 #=============== IRIX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, IRIX)
-  ifeq (${COMPILER}, g++)
+  ifeq (${GXX}, yes)
 	CMP= -c ${CXXFLAGS}
-	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
-	LINK = g++ -D${PLATFORM} -fpic ${LDFLAGS}
+	CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+	LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
   else
@@ -97,10 +97,10 @@ endif
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, SOLARIS)
-  ifeq (${COMPILER}, g++)
+  ifeq (${GXX}, yes)
 	CMP= -c ${CXXFLAGS}
-	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
- LINK = g++ -D${PLATFORM} -fpic ${LDFLAGS}
+	CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+	LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
   else
@@ -126,8 +126,8 @@ endif
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, UNIXWARE)
   CMP= -O2 -c ${CXXFLAGS} -pthread
-  CC= g++ -O2 -c -D${PLATFORM} -D_REENTRANT -fpic -pthread
-  LINK = g++ -D${PLATFORM} -fpic -pthread ${LDFLAGS}
+  CC= ${COMPILER} -O2 -c -D${PLATFORM} -D_REENTRANT -fpic -pthread
+  LINK = ${COMPILER} -D${PLATFORM} -fpic -pthread ${LDFLAGS}
   EXTRA_LINK_OPTIONS=-lc -lsocket ${EXTRA_LIBS}
   PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
   SHLIBSUFFIX=.so
@@ -192,8 +192,8 @@ endif
 #=============== FREEBSD SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, FREEBSD)
   CMP= -c ${CXXFLAGS}
-  CC= g++ -c -D${PLATFORM} -fPIC
-  LINK = g++ -D${PLATFORM} -fPIC ${LDFLAGS}
+  CC= ${COMPILER} -c -D${PLATFORM} -fPIC
+  LINK = ${COMPILER} -D${PLATFORM} -fPIC ${LDFLAGS}
   PLATFORM_LIB_LINK_OPTIONS=-Wl,-rpath,${XERCESCROOT}/lib
   ifdef ICUROOT
     PLATFORM_LIB_LINK_OPTIONS+=-L${ICUROOT} -Wl,-rpath,${ICUROOT}

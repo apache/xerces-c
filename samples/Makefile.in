@@ -75,6 +75,8 @@ LIB_DIR=${XERCESCROOT}/lib
 
 PLATFORM = @platform@
 COMPILER = @compiler@
+GCC = @GCC@
+GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

@@ -57,6 +57,8 @@ AC_SUBST(platform)
 
 compiler=${CXX}
 AC_SUBST(compiler)
+AC_SUBST(GXX)
+AC_SUBST(GCC)
 
 # prefix=${prefix}
 AC_SUBST(prefix)
