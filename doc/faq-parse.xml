@@ -39,7 +39,7 @@
       <p>If you find any Schema feature which is specified in the W3C XML Schema Language
          Recommendation does not work with &XercesCName; &XercesCVersion;, we encourage
          the submission of bugs as described in
-         <jump href="bug-report.html">Bug-Reporting</jump> page.
+         <jump href="bug-report.html">Bug Reporting</jump> page.
        </p>
 
     </a>
@@ -73,7 +73,7 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
     <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
     <a>
-      <p>Yes.  Since &XercesCName; Version 1.5.2., the code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
+      <p>Yes.  The code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
          multiple times in one process is now allowed.
       </p>
 
@@ -155,11 +155,11 @@ catch (const XMLException&amp; toCatch) {
 
     <a>
 
-      <p>Please make sure you are using &XercesCName; Version 1.5.2 or up.
+      <p>Please make sure you are using the latest &XercesCName;.
       </p>
 
-      <p>&XercesCName; Version 1.5.1 or below does not allow XMLPlatformUtils::Initialize()/Terminate()
-         pair to be called more than once.
+      <p>Earlier &XercesCName; does not allow XMLPlatformUtils::Initialize()/Terminate()
+         pair to be called more than once or has a problem.
       </p>
 
     </a>
