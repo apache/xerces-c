@@ -320,7 +320,6 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIAttributeList.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIElement.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIItem.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ValidationContextImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSAnnotation.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeDeclaration.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeGroupDefinition.obj \
@@ -340,6 +339,19 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSSimpleTypeDefinition.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSTypeDefinition.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XProtoType.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSerializeEngine.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateSerializer.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\MemoryManagerArrayImpl.obj \ 
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ValidationContextImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRefInfo.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLAttDefList.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLGrammarDescription.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\Grammar.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SynchronizedStringPool.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDEntityDecl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDTDDescription.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLSchemaDescription.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinFileOutputStream.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinOutputStream.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj \
@@ -347,10 +359,12 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj\
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj\
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj\
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj\
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSValue.obj\ 
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSAXMLScanner.obj\ 
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj"
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj\
+	..\..\..\..\..\Build\Win32\BCB6\obj\XMLInitializer.obj 
+
 RESFILES = ..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res
 MAINSOURCE = Xerceslib.cpp
 RESDEPEN = $(RESFILES)
