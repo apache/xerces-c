@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/15 23:59:06  roddey
+ * More updated documentation of Framework classes.
+ *
  * Revision 1.3  2000/02/15 01:21:30  roddey
  * Some initial documentation improvements. More to come...
  *
@@ -120,6 +123,26 @@ public :
 
     /** @name Constructors */
     //@{
+
+    /**
+      * A memory buffer input source is constructed from a buffer of byte
+      * data, and the count of bytes in that buffer. The parser will parse
+      * from this memory buffer until it has eaten the indicated number of
+      * bytes.
+      *
+      * Note that the system id provided serves two purposes. Firstly it is
+      * going to be displayed in error messages as the source of the error.
+      * And secondly, any entities which are refered to from this entity
+      * via relative paths/URLs will be relative to this fake system id.
+      *
+      * @param  srcDocBytes     The actual data buffer to be parsed from.
+      * @param  byteCount       The count of bytes (not characters, bytes!)
+      *                         in the buffer.
+      * @Param  bufId           A fake system id for the buffer.
+      * @Param  adoptBuffer     Indicates whether this object should adopt
+      *                         the buffer (i.e. make a copy of it) or just
+      *                         use it in place.
+      */
     MemBufInputSource
     (
         const   XMLByte* const  srcDocBytes
@@ -128,6 +151,10 @@ public :
         , const bool            adoptBuffer = false
     );
 
+    /**
+      * This constructor is identical to the previous one, except that it takes
+      * the fake system id in local code page form and transcodes it internally.
+      */
     MemBufInputSource
     (
         const   XMLByte* const  srcDocBytes
@@ -139,6 +166,10 @@ public :
 
     /** @name Destructor */
     //@{
+    /**
+      * If the buffer was adopted, the copy made during construction is deleted
+      * at this point.
+      */
     ~MemBufInputSource();
     //@}
 
@@ -146,13 +177,51 @@ public :
     // -----------------------------------------------------------------------
     //  Virtual input source interface
     // -----------------------------------------------------------------------
+
+    /** @name Virtual methods */
+    //{@
+
+    /**
+      * This method will return a binary input stream derivative that will
+      * parse from the memory buffer. If setCopyBufToStream() has been set,
+      * then the stream will make its own copy. Otherwise, it will use the
+      * buffer as is (in which case it must remain valid until the stream
+      * is no longer in use, i.e. the parse completes.)
+      *
+      * @return A dynamically allocated binary input stream derivative that
+      *         can parse from the memory buffer.
+      */
     BinInputStream* makeStream() const;
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+
+    /** @name Setter methods */
+
+    //{@
+
+    /**
+      * By default, for safety's sake, each newly created stream from this
+      * input source will make its own copy of the buffer to stream from. This
+      * avoids having to deal with aliasing of the buffer for simple work. But,
+      * for higher performance applications or for large buffers, this is
+      * obviously not optimal.
+      *
+      * In such cases, you can call this method to turn off that default
+      * action. Once turned off, the streams will just get a pointer to the
+      * buffer and parse directly from that. In this case, you must insure that
+      * the buffer remains valid for as long as any parse events are still
+      * using it.
+      *
+      * @param  newState    The new boolean flag state to set.
+      */
     void setCopyBufToStream(const bool newState);
+
+    //@}
 
 
 private :

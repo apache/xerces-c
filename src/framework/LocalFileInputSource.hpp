@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/15 23:59:06  roddey
+ * More updated documentation of Framework classes.
+ *
  * Revision 1.3  2000/02/15 01:21:30  roddey
  * Some initial documentation improvements. More to come...
  *
@@ -110,12 +113,47 @@ public :
 
     /** @name Constructors */
     //@{
+
+    /**
+      * A local file input source requires a path to the file to load. This
+      * can be provided either as a fully qualified path, a path relative to
+      * the current working directly, or a path relative to a provided base
+      * path.
+      *
+      * The completed path will become the system id of this input source.
+      * The constructors don't take any public id for local files, but you
+      * still set them via the parent class' setPublicId() method of course.
+      *
+      * This constructor takes an explicit base path and a possibly relative
+      * path. If the relative path is seen to be fully qualified, it is used
+      * as is. Otherwise, it is made relative to the passed base path.
+      *
+      * @param  basePath    The base path from which the passed relative path
+      *                     will be based, if the relative part is indeed
+      *                     relative.
+      *
+      * @param  relativePath    The relative part of the path. It can actually
+      *                         be fully qualified, in which case it is taken
+      *                         as is.
+      */
     LocalFileInputSource
     (
         const   XMLCh* const    basePath
         , const XMLCh* const    relativePath
     );
 
+    /**
+      * This constructor takes a single parameter which is the fully qualified
+      * or relative path. If it is fully qualified, it is taken as is. If it is
+      * relative, then it is completed relative to the current working directory
+      * (or the equivalent on the local host machine.)
+      *
+      * The completed path will become the system id of this input source.
+      * The constructors don't take any public id for local files, but you
+      * still set them via the parent class' setPublicId() method of course.
+      *
+      * @param  filePath    The relative or fully qualified path.
+      */
     LocalFileInputSource
     (
         const   XMLCh* const    filePath
@@ -131,7 +169,20 @@ public :
     // -----------------------------------------------------------------------
     //  Virtual input source interface
     // -----------------------------------------------------------------------
+
+    /** @name Virtual methods */
+    //{@
+
+    /**
+    * This method will return a binary input stream derivative that will
+    * parse from the local file indicatedby the system id.
+    *
+    * @return A dynamically allocated binary input stream derivative that
+    *         can parse from the file indicated by the system id.
+    */
     virtual BinInputStream* makeStream() const;
+
+    //@}
 };
 
 #endif

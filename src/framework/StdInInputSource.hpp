@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/15 23:59:06  roddey
+ * More updated documentation of Framework classes.
+ *
  * Revision 1.3  2000/02/15 01:21:30  roddey
  * Some initial documentation improvements. More to come...
  *
@@ -73,7 +76,6 @@
  * Swat for adding in Product name and CVS comment log variable.
  *
  */
-
 
 
 #if !defined(STDININPUTSOURCE_HPP)
@@ -103,6 +105,13 @@ public :
 
     /** @name Constructor */
     //@{
+
+    /**
+      * Since the standard input is a canned source, the constructor is very
+      * simple. It just uses local platform services to open up the standard
+      * input source as file, a new handleof which it gives to each new stream
+      * it creates.
+      */
     StdInInputSource();
     //@}
 
@@ -115,7 +124,21 @@ public :
     // -----------------------------------------------------------------------
     //  Virtual input source interface
     // -----------------------------------------------------------------------
+
+
+    /** @name Virtual methods */
+    //{@
+
+    /**
+     * This method will return a binary input stream derivative that will
+     * parse from the standard input of the local host.
+     *
+     * @return A dynamically allocated binary input stream derivative that
+     *         can parse from the standardinput.
+     */
     BinInputStream* makeStream() const;
+
+    //@}
 };
 
 inline StdInInputSource::StdInInputSource() :

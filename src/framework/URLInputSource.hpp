@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/15 23:59:07  roddey
+ * More updated documentation of Framework classes.
+ *
  * Revision 1.5  2000/02/15 01:21:30  roddey
  * Some initial documentation improvements. More to come...
  *
@@ -103,6 +106,10 @@ class BinInputStream;
  *  As with all InputSource derivatives. The primary objective of an input
  *  source is to create an input stream via which the parser can spool in
  *  data from the referenced source.
+ *
+ *  Note that the parse system does not necessarily support URL based XML
+ *  entities out of the box. Support for socket based access is optional and
+ *  controlled by the per-platform support.
  */
 class XMLPARSER_EXPORT URLInputSource : public InputSource
 {
@@ -113,29 +120,97 @@ public :
 
     /** @name Constructors */
     //@{
+
+    /**
+      * This constructor accepts an already built URL. It is assumed that
+      * it is correct and it will be used as is. In this case, no public id
+      * accepted, but it can still be set via the parent class' setPublicId()
+      * method.
+      *
+      * @param  urlId   The URL which holds the system id of the entity
+      *                 to parse.
+      */
     URLInputSource(const XMLURL& urlId);
+
+
+    /**
+     *  This constructor takes a base system id URL and a possibly relative
+     *  system id. The relative part is parsed and, if it is indeed relative,
+     *  it will be made relative to the passed base id. Otherwise, it will be
+     *  taken as is.
+     *
+     *  @param  baseId      The base system id URL which provides the base
+     *                      for any relative id part.
+     *
+     *  @param  systemId    The possibly relative system id URL. If its relative
+     *                      its based on baseId, else its taken as is.
+     */
     URLInputSource
     (
         const   XMLCh* const    baseId
         , const XMLCh* const    systemId
     );
+
+    /**
+     *  This constructor is indentical to the previous one, except that it also
+     *  allows you to set a public id if you want to.
+     *
+     *  @param  baseId      The base system id URL which provides the base
+     *                      for any relative id part.
+     *
+     *  @param  systemId    The possibly relative system id URL. If its relative
+     *                      its based on baseId, else its taken as is.
+     *
+     *  @param  publicId    The optional public id to set. This is just passed
+     *                      on to the parent class for storage.
+     */
     URLInputSource
     (
         const   XMLCh* const    baseId
         , const XMLCh* const    systemId
         , const XMLCh* const    publicId
     );
+
+
+    /**
+     *  This constructor is identical to the second constructor above, except that
+     *  it accepts the relative system id part as a local code page string and
+     *  just transcodes it internally, as a convenience.
+     *
+     *  @param  baseId      The base system id URL which provides the base
+     *                      for any relative id part.
+     *
+     *  @param  systemId    The possibly relative system id URL. If its relative
+     *                      its based on baseId, else its taken as is.
+     */
     URLInputSource
     (
         const   XMLCh* const    baseId
         , const char* const     systemId
     );
+
+    /**
+     *  This constructor is identical to the third constructor above, except that
+     *  it accepts the relative and public ids as local code page strings and just
+     *  transcodes them internally, as a convenience.
+     *
+     *  @param  baseId      The base system id URL which provides the base
+     *                      for any relative id part.
+     *
+     *  @param  systemId    The possibly relative system id URL. If its relative
+     *                      its based on baseId, else its taken as is.
+     *
+     *  @param  publicId    The optional public id to set. This is just passed
+     *                      on to the parent class for storage.
+     *                      on to the parent class for storage.
+     */
     URLInputSource
     (
         const   XMLCh* const    baseId
         , const char* const     systemId
         , const char* const     publicId
     );
+
     //@}
 
     /** @name Destructor */
@@ -147,13 +222,37 @@ public :
     // -----------------------------------------------------------------------
     //  Virtual input source interface
     // -----------------------------------------------------------------------
+
+    /** @name Virtual methods */
+    //{@
+
+    /**
+     * This method will return a binary input stream derivative that will
+     * parse from the source refered to by the URL system id.
+     */
     BinInputStream* makeStream() const;
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+
+    /** @name Getter methods */
+    //{@
+
+    /**
+      * This method will return a const reference to the URL member which
+      * contains the system id in pre-parsed URL form. If you just want the
+      * string format, call getSystemId() on the parent class.
+      *
+      * @return A const reference to a URL object that contains the current
+      *         system id set for this input source.
+      */
     const XMLURL& urlSrc() const;
+
+    //@}
 
 
 private :
