@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/10/05 02:09:37  neilg
+ * the validator now keeps track of the current complex and simple type (including if this is an xsi:type).  This allows both the validator and the scanner to know what the current type is, without the need to modify the element declaration each time an xsi:type is seen
+ *
  * Revision 1.18  2003/08/14 03:01:04  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -256,6 +259,7 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     ComplexTypeInfo* getCurrentTypeInfo() const;
+    DatatypeValidator *getCurrentDatatypeValidator() const;
 
 private:
     // -----------------------------------------------------------------------
@@ -369,8 +373,9 @@ private:
     // -----------------------------------------------------------------------
     //  The following used internally in the validator
     //
-    //  fXsiTypeValidator
-    //      The validator used for xsi type validation
+    //  fCurrentDatatypeValidator
+    //      The validator used for validating the content of elements
+    //      with simple types
     //
     //  fDatatypeBuffer
     //      Buffer for simple type element string content
@@ -392,7 +397,7 @@ private:
     GrammarResolver*                fGrammarResolver;
     QName*                          fXsiType;
     bool                            fNil;
-    DatatypeValidator*              fXsiTypeValidator;
+    DatatypeValidator*              fCurrentDatatypeValidator;
     XMLBuffer*                      fNotationBuf;
     XMLBuffer                       fDatatypeBuffer;
     bool                            fTrailing;
@@ -438,6 +443,11 @@ inline ComplexTypeInfo* SchemaValidator::getCurrentTypeInfo() const {
     if (fTypeStack->empty())
         return 0;
     return fTypeStack->peek();
+}
+
+inline DatatypeValidator * SchemaValidator::getCurrentDatatypeValidator() const 
+{
+    return fCurrentDatatypeValidator;
 }
 
 // ---------------------------------------------------------------------------
