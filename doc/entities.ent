@@ -9,4 +9,4 @@
 <!ENTITY XercesCWindowsLib    "xerces-c_1">                   <!-- windowslibname -->
 <!ENTITY XercesCUnixLib       "libxerces-c1_1">               <!-- unixlibname -->
 <!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->
-<!ENTITY XercesDistDir        "xml.apache.org/dist">          <!-- download directory -->
+<!ENTITY XercesDistDir        "xml.apache.org/dist/xerces-c"> <!-- download directory -->

@@ -22,7 +22,8 @@
 	    <p><em><jump href="apiDocs/index.html">Click here for the &XercesCName; API documentation.</jump></em></p>
 
 	    <note>The API documentation is automatically generated using
-		<jump href="http://www.stack.nl/~dimitri/doxygen/">doxygen</jump>.</note>
+		<jump href="http://www.stack.nl/~dimitri/doxygen/">doxygen</jump> and
+		<jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</note>
 
     </s2>
 </s1>
