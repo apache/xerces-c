@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:23  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/11 21:08:23  peiyongz
+ * Bug#7000: fix to corrupted URL, patch from kent@iastate.edu (Kent)
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/09/04 17:53:09  peiyongz
  * Bugzilla# 3170: patch from Kevin Philips to handle Query in XMLURL.
@@ -196,7 +199,9 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
 
     if (queryAsCharStar != 0)
     {		
-	fBuffer[strlen(fBuffer)] = chQuestion;
+        size_t n = strlen(fBuffer);
+        fBuffer[n] = chQuestion;
+        fBuffer[n+1] = chNull;
         strcat(fBuffer, queryAsCharStar);
     }
 
