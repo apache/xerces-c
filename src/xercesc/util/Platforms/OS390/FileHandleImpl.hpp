@@ -60,7 +60,7 @@
 
 #ifndef FILEHANDLEIMPL_HPP
 #define FILEHANDLEIMPL_HPP
-
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

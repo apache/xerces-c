@@ -66,6 +66,7 @@
 #include <stdlib.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include "FileHandleImpl.hpp"
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

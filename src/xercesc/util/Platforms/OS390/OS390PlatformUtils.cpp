@@ -336,7 +336,7 @@ static FileHandleImpl* openRead(char* tmpFileName
      // of the FileHandleImpl class.
 
      fileHandle = fopen(pathobj.getfopenPath(), optionBuffer);
-     retVal = new (manager) FileHandleImpl(fileHandle, _FHI_READ, pathobj.isRecordType(), manager);
+     retVal = new (manager) FileHandleImpl(fileHandle, _FHI_READ, pathobj.isRecordType(), 0, manager);
 
      // temp fix for HFS files with "type=record" specified
      // close the file and re-open it without the fopen options
@@ -1120,7 +1120,7 @@ FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
      FILE* fileHandle = 0;
      fileHandle = fdopen(dup(0), "rb");
      if (fileHandle)
-        retVal = new (manager) FileHandleImpl(fileHandle, _FHI_READ, _FHI_NOT_TYPE_RECORD, manager);
+        retVal = new (manager) FileHandleImpl(fileHandle, _FHI_READ, _FHI_NOT_TYPE_RECORD, 0, manager);
      else
         retVal = 0;
 
