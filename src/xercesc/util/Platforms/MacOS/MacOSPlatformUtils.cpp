@@ -68,6 +68,7 @@
 #include <cstdio>
 #include <memory>
 #include <algorithm>
+#include <unistd.h>
 
 #if defined(__APPLE__)
     //	Include from Frameworks Headers under ProjectBuilder
