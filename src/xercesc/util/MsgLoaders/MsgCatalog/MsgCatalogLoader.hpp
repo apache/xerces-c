@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:21  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/23 21:03:06  peiyongz
+ * Build MsgCatalog on Solaris
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:21  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/03/02 19:55:16  roddey
  * This checkin includes many changes done while waiting for the
@@ -103,14 +106,14 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
     );
 
     virtual bool loadMsg
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
         , const XMLCh* const            repText1
         , const XMLCh* const            repText2 = 0
         , const XMLCh* const            repText3 = 0
@@ -121,7 +124,7 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
         , const char* const             repText1
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0
@@ -148,8 +151,9 @@ private :
     //  fMsgDomain
     //      This is the name of the error domain that this loader is for.
     // -----------------------------------------------------------------------
-    nl_catd 	fCatalogHandle;
-    XMLCh*      fMsgDomain;
+    nl_catd       fCatalogHandle;
+    XMLCh*        fMsgDomain;
+    unsigned int  fMsgSet;
 	
 };
 

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:21  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/23 21:03:06  peiyongz
+ * Build MsgCatalog on Solaris
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:21  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/10/09 12:19:44  tng
  * Leak fix: can call transcode directly instead of using copyString.
@@ -108,36 +111,49 @@
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
 // ---------------------------------------------------------------------------
-MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain) :
-
-    fCatalogHandle(0)
-    , fMsgDomain(0)
+MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
+:fCatalogHandle(0)
+,fMsgDomain(0)
+,fMsgSet(0)
 {
-    // Try to get the module handle
-	char* tempLoc = setlocale(LC_ALL, "");
-    char catfile[256];
-    if (XMLPlatformUtils::fgLibLocation) {
-        strcpy(catfile, XMLPlatformUtils::fgLibLocation);
-        strcat(catfile, "/msg/");
-        strcat(catfile, "XMLMessages.cat");
+    if (XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain)
+    &&  XMLString::compareString(msgDomain, XMLUni::fgExceptDomain)
+    &&  XMLString::compareString(msgDomain, XMLUni::fgValidityDomain))
+    {
+        char* msgDom = XMLString::transcode(msgDomain);
+        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
-	fCatalogHandle = catopen(catfile , 0);
+
+    // Try to get the module handle
+    char* tempLoc = setlocale(LC_ALL, "");
+    char catfile[256];
+
+    strcpy(catfile, getenv("XERCESCROOT"));
+    strcat(catfile, "/lib/msg/XMLMessages.cat");
+
+    fCatalogHandle = catopen(catfile , 0);
     if ((int)fCatalogHandle == -1)
     {
         // Probably have to call panic here
-		printf("Could not open catalog XMLMessages\n");
-		// TBD: Tell user what the locale is
-		exit(1);
+        printf("Could not open catalog XMLMessages\n");
+        // TBD: Tell user what the locale is
+        exit(1);
     }
 
     fMsgDomain = XMLString::replicate(msgDomain);
+
+    if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
+        fMsgSet = CatId_XMLErrs;
+    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
+        fMsgSet = CatId_XMLExcepts;
+    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
+        fMsgSet = CatId_XMLValid;
 }
 
 MsgCatalogLoader::~MsgCatalogLoader()
 {
-    if (fCatalogHandle)
-	catclose( fCatalogHandle );	
-    delete fMsgDomain;
+    catclose(fCatalogHandle);	
+    delete [] fMsgDomain;
 }
 
 
@@ -145,29 +161,28 @@ MsgCatalogLoader::~MsgCatalogLoader()
 //  Implementation of the virtual message loader API
 // ---------------------------------------------------------------------------
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
-                            ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars)
+                              ,       XMLCh*   const          toFill
+                              , const unsigned int            maxChars)
 {
-    int msgSet = CatId_XMLErrs;
-    if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
-        msgSet = CatId_XMLErrs;
-    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
-        msgSet = CatId_XMLExcepts;
-    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
-        msgSet = CatId_XMLValid;
-
     char msgString[100];
-    sprintf(msgString, "Could not find message ID %d from message set %d\n", msgToLoad, msgSet);
-    char* catMessage = catgets( fCatalogHandle, msgSet, (int)msgToLoad, msgString);
-    XMLString::transcode(catMessage, toFill, maxChars);
-	
-    return true;
-}
+    sprintf(msgString, "Could not find message ID %d from message set %d\n", msgToLoad, fMsgSet);
+    char* catMessage = catgets( fCatalogHandle, fMsgSet, (int)msgToLoad, msgString);
 
+    // catgets returns a pointer to msgString if it fails to locate the message
+    // from the message catalog
+    if (XMLString::compareString(catMessage, msgString) == 0)
+        return false;   
+    else
+    {
+        XMLString::transcode(catMessage, toFill, maxChars);
+        return true;
+    }
+	
+}
 
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int            maxChars
                             , const XMLCh* const            repText1
                             , const XMLCh* const            repText2
                             , const XMLCh* const            repText3
@@ -185,7 +200,7 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int            maxChars
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3
