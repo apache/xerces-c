@@ -102,11 +102,13 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
 # As of Version 3, ICU is not a required component of XERCES-C
 $ICUROOT = $ENV{'ICUROOT'};
 $ICU_DATA = $ENV{'ICU_DATA'};
-if (!length($ICUROOT)) {
-    print "You have not defined your ICU install directory.\n";
+if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && (length($ICUROOT) == 0)) {
+    print "You have specified an ICU build but you have not defined your ICU install directory.\n";
     print "To build with ICU, you must set an environment variable called ICUROOT\n";
-    print "Proceeding to build XERCES-C without ICU...\n";
+    print "Cannot proceed any further.\n";
+    exit(-1);
 }
+$ICUIsPresent = (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0);
 
 # Check if the source directory exists or not
 if (!(-e $XERCESCROOT)) {
@@ -206,6 +208,7 @@ if ($platform eq "win64bit" )
     psystem ("mkdir $targetdir\\samples\\EnumVal");
     psystem ("mkdir $targetdir\\samples\\SEnumVal");
     psystem ("mkdir $targetdir\\samples\\CreateDOMDocument");
+    psystem ("mkdir $targetdir\\scripts");
     psystem ("mkdir $targetdir\\doc");
     psystem ("mkdir $targetdir\\doc\\html");
     psystem ("mkdir $targetdir\\doc\\html\\apiDocs");
@@ -223,7 +226,7 @@ if ($platform eq "win64bit" )
     #
     #REVISIT: icu
     #
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
 
         print ("Building ICU from $ICUROOT ...\n");
 
@@ -359,7 +362,7 @@ if ($platform eq "win64bit" )
     psystem("del  $targetdir\\include\\xercesc\\dom\\deprecated\\*Impl.hpp");
     psystem("del  $targetdir\\include\\xercesc\\dom\\deprecated\\DS*.hpp");
 
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         psystem("xcopy /s /y $ICUROOT\\include\\* $targetdir\\include");
     }
 
@@ -370,7 +373,7 @@ if ($platform eq "win64bit" )
     psystem("copy /y $BUILDDIR\\*.dll $targetdir\\bin");
     psystem("copy /y $BUILDDIR\\*.exe $targetdir\\bin");
 
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
 
         # Copy the ICU dlls and libs
         psystem("copy /y $ICUROOT\\bin\\icuuc24.dll $targetdir\\bin");
@@ -442,6 +445,10 @@ if ($platform eq "win64bit" )
 
     psystem("copy /y $XERCESCROOT\\samples\\data\\* $targetdir\\samples\\data");
 
+    # Populate the scripts directory
+    print ("\n \nCopying script files ...\n");
+    psystem("copy $XERCESCROOT\\scripts\\sanityTest* $targetdir\\scripts");
+
     # Populate the docs directory
     print ("\n \nCopying documentation ...\n");
     psystem("xcopy /s /y $XERCESCROOT\\doc\\* $targetdir\\doc");
@@ -449,7 +456,7 @@ if ($platform eq "win64bit" )
     psystem("copy $XERCESCROOT\\credits.txt $targetdir");
     psystem("copy $XERCESCROOT\\LICENSE.txt $targetdir");
 
-    if (length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         psystem("copy $XERCESCROOT\\license.html $targetdir");
         psystem("copy $XERCESCROOT\\XLicense.html $targetdir");
     }
@@ -557,6 +564,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     psystem ("mkdir $targetdir/samples/EnumVal");
     psystem ("mkdir $targetdir/samples/SEnumVal");
     psystem ("mkdir $targetdir/samples/CreateDOMDocument");
+    psystem ("mkdir $targetdir/scripts");
     psystem ("mkdir $targetdir/doc");
     psystem ("mkdir $targetdir/doc/html");
     psystem ("mkdir $targetdir/doc/html/apiDocs");
@@ -575,7 +583,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     #
     #	ICU Build happens here, if one is required.
     #
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         print ("Building ICU from $ICUROOT ...\n");
 
         #Clean up all the dependency files, causes problems for nmake
@@ -765,7 +773,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     psystem ("rm  $targetdir/include/xercesc/dom/deprecated/*Impl.hpp");
     psystem ("rm  $targetdir/include/xercesc/dom/deprecated/DS*.hpp");
 
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         psystem("cp -Rfv $ICUROOT/include/* $targetdir/include");
     }
 
@@ -776,7 +784,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     psystem("cp -fv $BUILDDIR/*.dll $targetdir/bin");
     psystem("cp -fv $BUILDDIR/*.exe $targetdir/bin");
 
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {    	
+    if ($ICUIsPresent) {    	
         # Copy the ICU dlls and libs
         psystem("cp -fv $ICUROOT/bin/icuuc24.dll $targetdir/bin");
         psystem("cp -fv $ICUROOT/bin/icuuc24d.dll $targetdir/bin");
@@ -846,6 +854,10 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
 
     psystem("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
 
+    # Populate the scripts directory
+    print ("\n\nCopying script files ...\n");
+    psystem("cp $XERCESCROOT/scripts/sanityTest* $targetdir/scripts");
+
     # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
     psystem("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
@@ -853,7 +865,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     psystem("cp $XERCESCROOT/credits.txt $targetdir");
     psystem("cp $XERCESCROOT/LICENSE.txt $targetdir");
 
-    if (length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         psystem("cp $XERCESCROOT/license.html $targetdir");
         psystem("cp $XERCESCROOT/XLicense.html $targetdir");
     }
@@ -993,7 +1005,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         # Generally speaking, ICU must be built, before XML4C can be built, for ptx.
         # If this case causes problems, we can revisit it in the future. Right now,
         # we fail only if ICUROOT is defined but mh-ptx is not present.
-        if (length($ICUROOT)) {
+        if ($ICUIsPresent) {
             if (!(-e "$ICUROOT/source/config/mh-ptx")) {
                 print ("Error: Could not locate PTX-specific ICU files.\n");
                 print ("    The PTX-specific patches must be applied to both XML4C and ICU before a build can succeed.\n");
@@ -1049,7 +1061,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     }
     psystem ("mkdir $targetdir/include");
     psystem ("mkdir $targetdir/include/xercesc");
-    if (length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         psystem ("mkdir $targetdir/include/unicode");
     }
     psystem ("mkdir $targetdir/include/xercesc/sax");
@@ -1104,6 +1116,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem ("mkdir $targetdir/samples/EnumVal");
     psystem ("mkdir $targetdir/samples/SEnumVal");
     psystem ("mkdir $targetdir/samples/CreateDOMDocument");
+    psystem ("mkdir $targetdir/scripts");
     psystem ("mkdir $targetdir/doc");
     psystem ("mkdir $targetdir/doc/html");
     psystem ("mkdir $targetdir/doc/html/apiDocs");
@@ -1112,10 +1125,6 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && !(length($opt_j) > 0))
     {
         print("\n\nBuild ICU with \'$opt_b\' bit ...\n");
-        if(length($ICUROOT) == 0) {
-           print("Error, ICUROOT not set, can not build ICU\n");
-           exit(-1);
-           }
 
         # First make the ICU files executable
         pchdir ("$ICUROOT/source");
@@ -1172,7 +1181,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     # Move ICU libs into lib dir, so samples will link.  This matches the structure of
     #   the eventual binary packaging, even though we are doing it in the build directory.
     #
-    if (length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         pchdir ("$XERCESCROOT/lib");
 
         #
@@ -1283,7 +1292,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem("cp -Rf $XERCESCROOT/src/xercesc/validators/schema/*.hpp $targetdir/include/xercesc/validators/schema");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/validators/schema/identity/*.hpp $targetdir/include/xercesc/validators/schema/identity");
 
-    if (length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         print "\nICU files are being copied from \'$ICUROOT\'";
         psystem("cp -Rf $ICUROOT/include/* $targetdir/include");
     }
@@ -1334,7 +1343,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     #
     # Create symbolic link for those ICU libraries
     #
-    if (length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         pchdir ("$targetdir/lib");
 
         #
@@ -1438,13 +1447,17 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
     psystem("rm -f $targetdir/samples/Makefile");
 
+    # Populate the scripts directory
+    print ("\n\nCopying script files ...\n");
+    psystem("cp $XERCESCROOT/scripts/sanityTest* $targetdir/scripts");
+
     # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
     psystem("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
     psystem("cp $XERCESCROOT/Readme.html $targetdir");
     psystem("cp $XERCESCROOT/credits.txt $targetdir");
     psystem("cp $XERCESCROOT/LICENSE.txt $targetdir");
-    if (length($ICUROOT) > 0) {
+    if ($ICUIsPresent) {
         psystem("cp $XERCESCROOT/license.html $targetdir");
         psystem("cp $XERCESCROOT/XLicense.html $targetdir");
     }
