@@ -30,9 +30,12 @@
     <li>
         <code>DOMImplementationRegistry</code>, <code>DOMImplementationSource</code>
     </li>
-
+    <li>
+        <code>DOMException</code>: VALIDATION_ERR
+    </li>
      <li>
-        <code>DOMDocument</code>: set/getActualEncoding, set/getEncoding, set/getVersion, set/getStandalone, set/getDocumentURI, renameNode
+        <code>DOMDocument</code>: set/getActualEncoding, set/getEncoding, set/getVersion, set/getStandalone,
+        set/getDocumentURI, set/getStrictErrorChecking, renameNode
     </li>
     <li>
         <code>DOMEntity</code>: set/getActualEncoding, set/getEncoding, set/getVersion
@@ -42,6 +45,9 @@
     </li>
     <li>
         <code>DOMNode</code>: set/getUserData, isSameNode, isEqualNode
+    </li>
+    <li>
+        <code>DOMText</code>: getIsWhitespaceInElementContent
     </li>
     <li>
         <code>DOMUserDataHandler</code>
