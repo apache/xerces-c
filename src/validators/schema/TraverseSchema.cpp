@@ -1189,11 +1189,10 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     // Handle "ref="
     // ------------------------------------------------------------------
-    if (nameEmpty || (!refEmpty && !topLevel)) {
+    if (!topLevel) {
 
-        if (!nameEmpty) {
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DeclarationWithNameRef,
-                              SchemaSymbols::fgELT_GROUP, name);
+        if (refEmpty) {
+            return 0;
         }
 
         return processGroupRef(elem, ref);
@@ -1241,8 +1240,8 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& elem) {
     }
     else {
         
-        if (elem.getAttributeNode(SchemaSymbols::fgATT_MINOCCURS) != 0
-            || elem.getAttributeNode(SchemaSymbols::fgATT_MAXOCCURS) != 0) {
+        if (content.getAttributeNode(SchemaSymbols::fgATT_MINOCCURS) != 0
+            || content.getAttributeNode(SchemaSymbols::fgATT_MAXOCCURS) != 0) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MinMaxOnGroupChild);
         }
 
@@ -1327,16 +1326,14 @@ TraverseSchema::traverseAttributeGroupDecl(const DOM_Element& elem,
     // ------------------------------------------------------------------
     // Handle "ref="
     // ------------------------------------------------------------------
-    if (nameEmpty || (!refEmpty && !topLevel)) {
+    if (!topLevel) {
 
-        if (!nameEmpty) {
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DeclarationWithNameRef,
-                              SchemaSymbols::fgELT_ATTRIBUTEGROUP, name);
+        if (refEmpty) {
+            return 0;
         }
 
         return processAttributeGroupRef(elem, ref, typeInfo);
     }
-
 
     // ------------------------------------------------------------------
     // Handle "name="

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/10/16 17:01:58  knoaman
+ * Extra constraint checking.
+ *
  * Revision 1.7  2001/10/15 19:29:26  knoaman
  * Add support for <notation> declaration.
  *
@@ -827,8 +830,21 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
     elemAttrs = fElementMap->get(elemName, prefixContext);
 
     if (!elemAttrs) {
-        // We should report an error
-        return;
+
+        // Try ref, some local declaration can have only a ref
+        if (prefixContext == localNamePrefix) {
+            elemAttrs = fElementMap->get(elemName, localRefPrefix);
+
+            if (!elemAttrs) {
+                return;
+            }
+
+            prefixContext = localRefPrefix;
+        }
+        else {        
+            // We should report an error
+            return;
+        }
     }
 
     unsigned int           size = elemAttrs->size();
