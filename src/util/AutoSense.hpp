@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/03/23 19:01:25  tng
+ * [Bug 1018]  AutoSense looks for "IRIX" when it should look for "sgi" or "__sgi".  By Jeff Harrell.
+ *
  * Revision 1.18  2001/02/09 14:40:01  tng
  * Update support for SCO UnixWare 7 (gcc).  Tested under UnixWare 7.1.1 with gcc version 2.95.2 19991024 (release) with gmake 3.79.1.  Updated by Martin Kalen.
  *
@@ -152,7 +155,7 @@
 #elif defined(__linux__)
     #define XML_LINUX
     #define XML_UNIX
-#elif defined(IRIX)
+#elif defined(IRIX) || defined(__sgi)
     #define XML_IRIX
     #define XML_UNIX
 #elif defined(__MVS__)
@@ -227,7 +230,7 @@
     #elif (__cplusplus == 199707 || __cplusplus == 199711)
         #define XML_HPUX_aCC
     #endif
-#elif defined(XML_IRIX) || defined(__sgi)
+#elif defined(XML_IRIX)
     #define XML_MIPSPRO_CC
 #elif defined(XML_PTX)
     #define XML_PTX_CC
