@@ -64,7 +64,7 @@
             provides a hard linked data DLL. i.e. icudata.dll will be loaded
             when xerces-c is loaded.</li>
 
-        <li>Problem with progressive parsing. parseNext() would through an
+        <li>Problem with progressive parsing. parseNext() would throw an
             exception when the document contains entities, either internal or
             external.</li>
 
