@@ -114,6 +114,8 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir/samples/SAX2Print");
     psystem ("mkdir $targetdir/samples/DOMCount");
     psystem ("mkdir $targetdir/samples/DOMPrint");
+    psystem ("mkdir $targetdir/samples/IDOMCount");
+    psystem ("mkdir $targetdir/samples/IDOMPrint");
     psystem ("mkdir $targetdir/samples/Redirect");
     psystem ("mkdir $targetdir/samples/MemParse");
     psystem ("mkdir $targetdir/samples/PParse");
@@ -185,6 +187,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 		sax2
         framework
         dom
+        idom
         internal
         parsers
         util
@@ -243,6 +246,9 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("rm  $targetdir/include/dom/*Impl.hpp");
     psystem ("rm  $targetdir/include/dom/DS*.hpp");
 
+    psystem ("rm  $targetdir/include/idom/*Impl.hpp");
+    psystem ("rm  $targetdir/include/idom/IDS*.hpp");
+
 
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         psystem("cp -Rfv $ICUROOT/include/* $targetdir/include");
@@ -290,6 +296,10 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem("rm -f $targetdir/samples/DOMCount/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
     psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/IDOMCount/* $targetdir/samples/IDOMCount");
+    psystem("rm -f $targetdir/samples/IDOMCount/Makefile");
+    psystem("cp -Rfv $XERCESCROOT/samples/IDOMPrint/* $targetdir/samples/IDOMPrint");
+    psystem("rm -f $targetdir/samples/IDOMPrint/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
     psystem("rm -f $targetdir/samples/Redirect/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
@@ -478,6 +488,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/include/util/Transcoders/Iconv");
     psystem ("mkdir $targetdir/include/util/Transcoders/Win32");
     psystem ("mkdir $targetdir/include/dom");
+    psystem ("mkdir $targetdir/include/idom");
     psystem ("mkdir $targetdir/include/validators");
     psystem ("mkdir $targetdir/include/validators/common");
     psystem ("mkdir $targetdir/include/validators/datatype");
@@ -491,6 +502,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/samples/SAX2Print");
     psystem ("mkdir $targetdir/samples/DOMCount");
     psystem ("mkdir $targetdir/samples/DOMPrint");
+    psystem ("mkdir $targetdir/samples/IDOMCount");
+    psystem ("mkdir $targetdir/samples/IDOMPrint");
     psystem ("mkdir $targetdir/samples/Redirect");
     psystem ("mkdir $targetdir/samples/MemParse");
     psystem ("mkdir $targetdir/samples/PParse");
@@ -607,11 +620,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 	psystem("cp -Rf $XERCESCROOT/src/sax2/*.hpp $targetdir/include/sax2");
     psystem("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
     psystem("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
+    psystem("cp -Rf $XERCESCROOT/src/idom/ID*.hpp $targetdir/include/idom");
 
     psystem("cp -Rf $XERCESCROOT/version.incl $targetdir");
 
     psystem("rm -f $targetdir/include/dom/*Impl.hpp");
     psystem("rm -f $targetdir/include/dom/DS*.hpp");
+    psystem("rm -f $targetdir/include/idom/*Impl.hpp");
+    psystem("rm -f $targetdir/include/idom/IDS*.hpp");
     psystem("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
     psystem("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
     psystem("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
@@ -680,6 +696,10 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("rm -f $targetdir/samples/DOMCount/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
     psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/IDOMCount/* $targetdir/samples/IDOMCount");
+    psystem("rm -f $targetdir/samples/IDOMCount/Makefile");
+    psystem("cp -Rf $XERCESCROOT/samples/IDOMPrint/* $targetdir/samples/IDOMPrint");
+    psystem("rm -f $targetdir/samples/IDOMPrint/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
     psystem("rm -f $targetdir/samples/Redirect/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
