@@ -70,6 +70,7 @@
 #include <util/XMLUni.hpp>
 
 
+
 // ---------------------------------------------------------------------------
 //  Local types
 //
@@ -122,6 +123,7 @@ protected :
     }
 
 
+    ENameMap(){};
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -171,8 +173,9 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    ENameMapFor(const ENameMapFor<TType>&);
-    void operator=(const ENameMapFor<TType>&);
+    ENameMapFor(){};
+    ENameMapFor(const ENameMapFor<TType>&){};
+    void operator=(const ENameMapFor<TType>&){};
 };
 
 
@@ -207,8 +210,8 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    ENameMapFor(const ENameMapFor<TType>&);
-    void operator=(const ENameMapFor<TType>&);
+    EEndianNameMapFor(const EEndianNameMapFor<TType>&);
+    void operator=(const EEndianNameMapFor<TType>&);
 
 
     // -----------------------------------------------------------------------
@@ -220,7 +223,6 @@ private :
     // -----------------------------------------------------------------------
     bool    fSwapped;
 };
-
 
 
 // ---------------------------------------------------------------------------
