@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/05/22 22:38:12  andyh
+ * DOM: GetNodeById(), fixed bad problem with rehash operation that caused
+ * creashes.
+ *
  * Revision 1.5  2000/03/28 19:43:13  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -140,6 +144,8 @@ void NodeVector::checkSpace() {
 
 	
 NodeImpl *NodeVector::elementAt(unsigned int index) {
+    if (index >= nextFreeSlot)
+        return 0;
 	return data[index];
 };
 

@@ -58,6 +58,7 @@
 #include "AttrImpl.hpp"
 #include "NodeIDMap.hpp"
 #include <util/XMLString.hpp>
+#include <stdio.h>
 
 static const int gPrimes[] = {997, 9973, 99991, 999983, 0 };  // To do - add a few more.
 
@@ -130,6 +131,8 @@ void NodeIDMap::add(AttrImpl *attr)
 			tableSlot == (AttrImpl *)-1)
 			break;
 		currentHash += initalHash;  // rehash
+        if (currentHash >= fSize)
+            currentHash = currentHash % fSize;
     }
 
     //
@@ -175,6 +178,8 @@ void NodeIDMap::remove(AttrImpl *attr)
         }
 
         currentHash += initalHash;  // rehash.
+        if (currentHash >= fSize)
+            currentHash = currentHash % fSize;
     }
 
 };
@@ -206,6 +211,8 @@ AttrImpl *NodeIDMap::find(const DOMString &id)
             return tableSlot;
 
         currentHash += initalHash;  // rehash
+        if (currentHash >= fSize)
+            currentHash = currentHash % fSize;
     }
     return 0;  // Never gets here, but keeps some compilers happy.
 };
@@ -224,6 +231,7 @@ void NodeIDMap::growTable()
     //
     //  Figure the new table size.
     //
+    fprintf(stderr, "growing...\n");
     fSizeIndex++;
     fSize = gPrimes[fSizeIndex];
     if (fSize == 0)
