@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/06/16 20:25:43  rahulj
+ * Add the -v=always option to force validation checking. Need this
+ * option for running the conformance tests.
+ *
  * Revision 1.11  2000/05/31 18:36:26  rahulj
  * Matched the command line options supported by DOMPrint.
  *
@@ -149,7 +153,7 @@ static void usage()
              "sensitive.\n\n"
              "Options:\n"
              "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]\n"
-             "    -v=xxx      Validation scheme [never | auto*]\n"
+             "    -v=xxx      Validation scheme [always | never | auto*]\n"
              "    -n          Enable namespace processing.\n"
              "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
              "    -?          Show this help\n\n"
@@ -212,6 +216,8 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Never;
             else if (!strcmp(parm, "auto"))
                 valScheme = SAXParser::Val_Auto;
+            else if (!strcmp(parm, "always"))
+                valScheme = SAXParser::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;

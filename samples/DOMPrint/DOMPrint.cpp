@@ -262,7 +262,7 @@ void usage()
             "Options:\n"
             "    -e          Expand entity references. Default is no expansion.\n"
             "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]\n"
-            "    -v=xxx      Validation scheme [never | auto*]\n"
+            "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Default is off.\n"
             "    -x=XXX      Use a particular encoding for output. Default is\n"
             "                the same encoding as the input XML file. UTF-8 if\n"
@@ -333,6 +333,8 @@ int main(int argC, char* argV[])
                 gValScheme = DOMParser::Val_Never;
             else if (!strcmp(parm, "auto"))
                 gValScheme = DOMParser::Val_Auto;
+            else if (!strcmp(parm, "always"))
+                gValScheme = DOMParser::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;

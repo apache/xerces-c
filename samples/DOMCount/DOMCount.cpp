@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/06/16 20:25:23  rahulj
+ * Add the -v=always option to force validation checking. Need this
+ * option for running the conformance tests.
+ *
  * Revision 1.7  2000/05/31 18:42:31  rahulj
  * 'Auto' validation is the default processing mode.
  *
@@ -114,7 +118,7 @@ void usage()
             "the DOM tree, and then prints the number of elements\n"
             "found in the input XML file.\n\n"
             "Options:\n"
-            "    -v=xxx      Validation scheme [never | auto*]\n"
+            "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Defaults to off.\n\n"
             "  * = Default if not provided explicitly\n\n"
          << endl;
@@ -170,6 +174,8 @@ int main(int argC, char* argV[])
                 valScheme = DOMParser::Val_Never;
             else if (!strcmp(parm, "auto"))
                 valScheme = DOMParser::Val_Auto;
+            else if (!strcmp(parm, "always"))
+                valScheme = DOMParser::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;

@@ -56,6 +56,10 @@
 
 /*
 * $Log$
+* Revision 1.8  2000/06/16 20:25:38  rahulj
+* Add the -v=always option to force validation checking. Need this
+* option for running the conformance tests.
+*
 * Revision 1.7  2000/05/31 18:39:59  rahulj
 * 'Auto' validation is the default processing mode.
 *
@@ -105,7 +109,7 @@ void usage()
     cout << "\nUsage:\n"
             "    SAXCount [options] <XML file>\n\n"
             "Options:\n"
-            "    -v=xxx      Validation scheme [never | auto*]\n"
+            "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Defaults to off.\n\n"
             "This program prints the number of elements, attributes,\n"
             "white spaces and other non-white space characters in the "
@@ -169,6 +173,8 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Never;
             else if (!strcmp(parm, "auto"))
                 valScheme = SAXParser::Val_Auto;
+            else if (!strcmp(parm, "always"))
+                valScheme = SAXParser::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
