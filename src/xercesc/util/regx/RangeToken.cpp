@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 21:46:47  knoaman
+ * Add missing include.
+ *
  * Revision 1.6  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -105,7 +108,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
-#include <xercesc/util/XMLExceptMsgs.hpp>
+#include <xercesc/util/IllegalArgumentException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
