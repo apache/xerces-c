@@ -102,13 +102,13 @@ DOMElement* XSDDOMParser::createElementNSNode(const XMLCh *namespaceURI,
 // ---------------------------------------------------------------------------
 //  XSDDOMParser: Setter methods
 // ---------------------------------------------------------------------------
-inline void XSDDOMParser::setUserErrorReporter(XMLErrorReporter* const errorReporter)
+void XSDDOMParser::setUserErrorReporter(XMLErrorReporter* const errorReporter)
 {
     fUserErrorReporter = errorReporter;
     getScanner()->setErrorReporter(this);
 }
 
-inline void XSDDOMParser::setUserEntityHandler(XMLEntityHandler* const entityHandler)
+void XSDDOMParser::setUserEntityHandler(XMLEntityHandler* const entityHandler)
 {
     fUserEntityHandler = entityHandler;
     getScanner()->setEntityHandler(this);
