@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.19  2000/07/17 19:11:20  jpolast
+ * fix for uninitialized variable gotData bug and endDocument bug.
+ * Submitted by Jim Reitz (jereitz@home.com)
+ *
  * Revision 1.18  2000/05/11 23:11:33  andyh
  * Add missing validity checks for stand-alone documents, character range
  * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
@@ -711,7 +715,7 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
          else
         {
             // Its some sort of markup
-            bool gotData;
+            bool gotData = true;
             switch(curToken)
             {
                 case Token_CData :
@@ -750,7 +754,11 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
 
             // If we hit the end, then do the miscellaneous part
             if (!gotData)
+			{
+				if (fDocHandler)
+					fDocHandler->endDocument();
                 scanMiscellaneous();
+			}
         }
     }
 
