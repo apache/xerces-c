@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/11 22:48:13  knoaman
+ * Serialization of XSAnnotation.
+ *
  * Revision 1.2  2003/11/06 19:28:11  knoaman
  * PSVI support for annotations.
  *
@@ -68,6 +71,7 @@
 #define XSANNOTATION_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
+#include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -79,7 +83,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  */
 
 
-class XMLPARSER_EXPORT XSAnnotation : public XSObject
+class XMLPARSER_EXPORT XSAnnotation : public XSerializable, public XSObject
 {
 public:
 
@@ -159,6 +163,13 @@ public:
     void setNext(XSAnnotation* const nextAnnotation);
 
     //@}
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XSAnnotation)
+    XSAnnotation(MemoryManager* const manager);
+
 private:
 
     // -----------------------------------------------------------------------

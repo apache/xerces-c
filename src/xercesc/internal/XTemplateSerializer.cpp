@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/11/11 22:48:13  knoaman
+ * Serialization of XSAnnotation.
+ *
  * Revision 1.4  2003/11/03 22:01:27  peiyongz
  * Store/Load keys separately from SchemaElementDecl
  *
@@ -79,6 +82,7 @@
 #include <xercesc/internal/XSerializeEngine.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
+#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -764,6 +768,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesStep>** objToLoad
  *   XMLRefInfo
  *   DatatypeValidator
  *   Grammar
+ *   XSAnnotation
  *
  ***********************************************************/
 void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToStore
@@ -1381,6 +1386,82 @@ void XTemplateSerializer::loadObject(RefHashTableOf<Grammar>** objToLoad
             data = Grammar::loadGrammar(serEng);
 
             (*objToLoad)->put((void*)key, data);
+        }
+    }
+}
+
+
+void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToStore
+                                    , XSerializeEngine&              serEng)
+{
+
+    if (serEng.needToStoreObject(objToStore))
+    {
+        RefHashTableOfEnumerator<XSAnnotation> e(objToStore);
+        ValueVectorOf<XSerializeEngine::XSerializedObjectId_t> ids(16, serEng.getMemoryManager());
+        ValueVectorOf<void*> keys(16, serEng.getMemoryManager());
+
+        while (e.hasMoreElements())
+        {
+            void* key = e.nextElementKey();
+            XSerializeEngine::XSerializedObjectId_t keyId = serEng.lookupStorePool(key);
+
+            if (keyId)
+            {
+                ids.addElement(keyId);
+                keys.addElement(key);
+            }
+        }
+
+        int itemNumber = ids.size();
+        serEng<<itemNumber;
+
+        for (int i=0; i<itemNumber; i++)
+        {
+            XSerializeEngine::XSerializedObjectId_t keyId = ids.elementAt(i);
+            XSAnnotation* data = objToStore->get(keys.elementAt(i));
+            serEng<<keyId;
+            serEng<<data;
+        }
+    }
+}
+
+void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
+                                   , int                            initSize
+                                   , bool                           toAdopt
+                                   , XSerializeEngine&              serEng)
+{
+    if (serEng.needToLoadObject((void**)objToLoad))
+    {
+        if (!*objToLoad)
+        {
+            if (initSize < 0)
+                initSize = 29;
+
+            *objToLoad = new (serEng.getMemoryManager())
+                RefHashTableOf<XSAnnotation>(
+                    initSize
+                    , toAdopt
+                    , new (serEng.getMemoryManager()) HashPtr()
+                    , serEng.getMemoryManager()
+                );
+        }
+
+        serEng.registerObject(*objToLoad);
+
+        int itemNumber = 0;
+        serEng>>itemNumber;
+
+        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        {
+            XSerializeEngine::XSerializedObjectId_t keyId = 0;
+            serEng>>keyId;
+
+            void* key = serEng.lookupLoadPool(keyId);
+            XSAnnotation*  data;
+            serEng>>data;
+
+            (*objToLoad)->put(key, data);
         }
     }
 }

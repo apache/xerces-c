@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/11 22:48:13  knoaman
+ * Serialization of XSAnnotation.
+ *
  * Revision 1.2  2003/11/06 19:28:11  knoaman
  * PSVI support for annotations.
  *
@@ -73,6 +76,13 @@ XSAnnotation::XSAnnotation(const XMLCh* const content,
                            MemoryManager * const manager):
     XSObject(XSConstants::ANNOTATION, manager)
     , fContents(XMLString::replicate(content, manager))
+    , fNext(0)
+{
+}
+
+XSAnnotation::XSAnnotation(MemoryManager * const manager):
+    XSObject(XSConstants::ANNOTATION, manager)
+    , fContents(0)
     , fNext(0)
 {
 }
@@ -117,7 +127,35 @@ void XSAnnotation::setNext(XSAnnotation* const nextAnnotation)
         fNext = nextAnnotation;
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
 
+IMPL_XSERIALIZABLE_TOCREATE(XSAnnotation)
+
+void XSAnnotation::serialize(XSerializeEngine& serEng)
+{
+    /***
+     * Since we are pretty sure that fIdMap and fHashTable is 
+     * not shared by any other object, therefore there is no owned/referenced
+     * issue. Thus we can serialize the raw data only, rather than serializing 
+     * both fIdMap and fHashTable.
+     *
+     * And we can rebuild the fIdMap and fHashTable out of the raw data during
+     * deserialization.
+     *
+    ***/
+    if (serEng.isStoring())
+    {
+        serEng.writeString(fContents);
+        serEng<<fNext;
+    }
+    else
+    {
+        serEng.readString(fContents);
+        serEng>>fNext;
+    }
+}
 
 XERCES_CPP_NAMESPACE_END
 

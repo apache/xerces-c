@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/11 22:48:13  knoaman
+ * Serialization of XSAnnotation.
+ *
  * Revision 1.2  2003/10/29 16:16:08  peiyongz
  * GrammarPool' serialization/deserialization support
  *
@@ -92,6 +95,7 @@
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -239,6 +243,7 @@ public:
      *   XMLRefInfo
      *   DatatypeValidator
      *   Grammar
+     *   XSAnnotation
      *
      ***********************************************************/
     static void           storeObject(RefHashTableOf<KVStringPair>* const tempObjToWrite
@@ -309,6 +314,14 @@ public:
                                     , XSerializeEngine&              serEng);
 
     static void           loadObject(RefHashTableOf<Grammar>**       tempObjToRead
+                                   , int                             initSize
+                                   , bool                            toAdopt
+                                   , XSerializeEngine&               serEng);
+
+    static void           storeObject(RefHashTableOf<XSAnnotation>* const tempObjToWrite
+                                    , XSerializeEngine&                   serEng);
+
+    static void           loadObject(RefHashTableOf<XSAnnotation>**  tempObjToRead
                                    , int                             initSize
                                    , bool                            toAdopt
                                    , XSerializeEngine&               serEng);

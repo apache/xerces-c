@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/11 22:48:13  knoaman
+ * Serialization of XSAnnotation.
+ *
  * Revision 1.7  2003/10/17 21:09:03  peiyongz
  * renaming methods
  *
@@ -533,6 +536,11 @@ private:
 
     inline void            Assert(bool  toEval
                                 , const XMLExcepts::Codes toThrow)  const;
+
+    // Make XTemplateSerializer friend of XSerializeEngine so that
+    // we can call lookupStorePool and lookupLoadPool in the case of
+    // annotations.
+    friend class XTemplateSerializer;
 
     // -------------------------------------------------------------------------------
     //  data

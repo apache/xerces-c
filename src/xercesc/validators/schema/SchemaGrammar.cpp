@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/11/11 22:48:13  knoaman
+ * Serialization of XSAnnotation.
+ *
  * Revision 1.15  2003/11/06 21:52:17  neilg
  * fix typo
  *
@@ -419,6 +422,11 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::storeObject(fValidSubstitutionGroups, serEng);
 
+        /***
+         * Serialize RefHashTableOf<XSAnnotation>*       fAnnotations;
+         ***/
+        XTemplateSerializer::storeObject(fAnnotations, serEng);
+
         serEng.writeString(fTargetNamespace);
         serEng<<fValidated;
         serEng<<fGramDesc;
@@ -466,6 +474,11 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
          * Deserialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
          ***/
         XTemplateSerializer::loadObject(&fValidSubstitutionGroups, 29, true, serEng);
+
+        /***
+         * Deserialize RefHashTableOf<XSAnnotation>*       fAnnotations;
+         ***/
+        XTemplateSerializer::loadObject(&fAnnotations, 29, true, serEng);
 
         serEng.readString(fTargetNamespace);
         serEng>>fValidated;
