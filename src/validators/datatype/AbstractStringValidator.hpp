@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/10/11 19:32:12  peiyongz
+ * Allow derived to overwrite inheritFacet()
+ *
  * Revision 1.5  2001/10/09 21:00:54  peiyongz
  * . init() take 1 arg,
  * . make inspectFacetBase() virtual to allow ListDTV provide its own method,
@@ -159,6 +162,8 @@ protected:
     //
     virtual void inspectFacetBase();
 
+    virtual void inheritFacet();
+
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
@@ -190,8 +195,6 @@ private:
     void assignFacet();
 
     void inspectFacet();
-
-    void inheritFacet();
 
     // -----------------------------------------------------------------------
     //  Private data members
