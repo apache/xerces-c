@@ -108,8 +108,10 @@ if ($platform =~ m/Windows/) {
         mkdir ($targetdir . "/samples/EnumVal", "0644");
         mkdir ($targetdir . "/doc", "0644");
         mkdir ($targetdir . "/doc/apiDocs", "0644");
-        mkdir ($targetdir . "/bin/icu", "0644");
-        mkdir ($targetdir . "/bin/icu/data", "0644");
+	if ( length($ICUROOT) > 0 ) {
+	    mkdir ($targetdir . "/bin/icu", "0644");
+	    mkdir ($targetdir . "/bin/icu/data", "0644");
+	}
 
 	if (length($ICUROOT) > 0) {
 		chdir ("$ICUROOT");
@@ -121,16 +123,31 @@ if ($platform =~ m/Windows/) {
 		chdir ("$ICUROOT/source/common");
 		# NOTE: Delete the next line if 'nmake clean' breaks the build
 		print "Executing: nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"";
-		system("nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"");
+		#system("nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"");
+		system("msdev common.dsp /MAKE \"common - $platformname $buildmode\" /CLEAN");
 		print "Executing: nmake -f common.mak all CFG=\"common - $platformname $buildmode\"";
-		system("nmake -f common.mak all CFG=\"common - $platformname $buildmode\"");
+		#system("nmake -f common.mak all CFG=\"common - $platformname $buildmode\"");
+		system("msdev common.dsp /MAKE \"common - $platformname $buildmode\" /REBUILD");
+
+		# Make the toolutil.lib
+		if ( -e "$ICUROOT/source/tools/toolutil" ) {
+		    chdir ("$ICUROOT/source/tools/toolutil");
+		    # NOTE: Delete the next line if 'nmake clean' breaks the build
+		    #system "nmake -f makeconv.mak clean CFG=\"makeconv - $platformname $buildmode\"";
+		    system("msdev toolutil.dsp /MAKE \"toolutil - $platformname $buildmode\" /CLEAN");
+		    print "Executing: nmake -f toolutil.mak CFG=\"toolutil - $platformname $buildmode\"";
+		    #system("nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"");
+		    system("msdev toolutil.dsp /MAKE \"toolutil - $platformname $buildmode\" /REBUILD");
+		}
 
 		# Make the makeconv utility
 		chdir ("$ICUROOT/source/tools/makeconv");
 		# NOTE: Delete the next line if 'nmake clean' breaks the build
-		system "nmake -f makeconv.mak clean CFG=\"makeconv - $platformname $buildmode\"";
+		#system "nmake -f makeconv.mak clean CFG=\"makeconv - $platformname $buildmode\"";
+		system("msdev makeconv.dsp /MAKE \"makeconv - $platformname $buildmode\" /CLEAN");
 		print "Executing: nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"";
-		system("nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"");
+		#system("nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"");
+		system("msdev makeconv.dsp /MAKE \"makeconv - $platformname $buildmode\" /REBUILD");
 	}
 
         # Clean up all the dependency files, causes problems for nmake
@@ -141,64 +158,84 @@ if ($platform =~ m/Windows/) {
         # Make the XERCES-C dll
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib");
         print "Executing: nmake -f XercesLib.mak clean CFG=\"XercesLib - $platformname $buildmode\"";
-        system("nmake -f XercesLib.mak clean CFG=\"XercesLib - $platformname $buildmode\"");
+        #system("nmake -f XercesLib.mak clean CFG=\"XercesLib - $platformname $buildmode\"");
+	system("msdev XercesLib.dsp /MAKE \"XercesLib - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f XercesLib.mak all CFG=\"XercesLib - $platformname $buildmode\"";
-        system("nmake -f XercesLib.mak all CFG=\"XercesLib - $platformname $buildmode\"");
+        #system("nmake -f XercesLib.mak all CFG=\"XercesLib - $platformname $buildmode\"");
+	system("msdev XercesLib.dsp /MAKE \"XercesLib - $platformname $buildmode\" /REBUILD");
 
         # Make the SAXCount sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXCount");
-        system "nmake -f SAXCount.mak clean CFG=\"SAXCount - $platformname $buildmode\"";
+        #system "nmake -f SAXCount.mak clean CFG=\"SAXCount - $platformname $buildmode\"";
+	system("msdev SAXCount.dsp /MAKE \"SAXCount - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f SAXCount.mak all CFG=\"SAXCount - $platformname $buildmode\"";
-        system("nmake -f SAXCount.mak all CFG=\"SAXCount - $platformname $buildmode\"");
+        #system("nmake -f SAXCount.mak all CFG=\"SAXCount - $platformname $buildmode\"");
+	system("msdev SAXCount.dsp /MAKE \"SAXCount - $platformname $buildmode\" /REBUILD");
 
         # Make the SAXPrint sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXPrint");
-        system "nmake -f SAXPrint.mak clean CFG=\"SAXPrint - $platformname $buildmode\"";
+        #system "nmake -f SAXPrint.mak clean CFG=\"SAXPrint - $platformname $buildmode\"";
+	system("msdev SAXPrint.dsp /MAKE \"SAXPrint - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f SAXPrint.mak all CFG=\"SAXPrint - $platformname $buildmode\"";
-        system("nmake -f SAXPrint.mak all CFG=\"SAXPrint - $platformname $buildmode\"");
+        #system("nmake -f SAXPrint.mak all CFG=\"SAXPrint - $platformname $buildmode\"");
+	system("msdev SAXPrint.dsp /MAKE \"SAXPrint - $platformname $buildmode\" /REBUILD");
 
         # Make the DOMCount sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMCount");
-        system "nmake -f DOMCount.mak clean CFG=\"DOMCount - $platformname $buildmode\"";
+        #system "nmake -f DOMCount.mak clean CFG=\"DOMCount - $platformname $buildmode\"";
+        system("msdev DOMCount.dsp /MAKE \"DOMCount - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f DOMCount.mak all CFG=\"DOMCount - $platformname $buildmode\"";
-        system("nmake -f DOMCount.mak all CFG=\"DOMCount - $platformname $buildmode\"");
+        #system("nmake -f DOMCount.mak all CFG=\"DOMCount - $platformname $buildmode\"");
+	system("msdev DOMCount.dsp /MAKE \"DOMCount - $platformname $buildmode\" /REBUILD");
 
         # Make the DOMPrint sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMPrint");
-        system "nmake -f DOMPrint.mak clean CFG=\"DOMPrint - $platformname $buildmode\"";
+        #system "nmake -f DOMPrint.mak clean CFG=\"DOMPrint - $platformname $buildmode\"";
+	system("msdev DOMPrint.dsp /MAKE \"DOMPrint - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f DOMPrint.mak all CFG=\"DOMPrint - $platformname $buildmode\"";
-        system("nmake -f DOMPrint.mak all CFG=\"DOMPrint - $platformname $buildmode\"");
+        #system("nmake -f DOMPrint.mak all CFG=\"DOMPrint - $platformname $buildmode\"");
+	system("msdev DOMPrint.dsp /MAKE \"DOMPrint - $platformname $buildmode\" /REBUILD");
 
         # Make the Redirect sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/Redirect");
-        system "nmake -f Redirect.mak clean CFG=\"Redirect - $platformname $buildmode\"";
+        #system "nmake -f Redirect.mak clean CFG=\"Redirect - $platformname $buildmode\"";
+	system("msdev Redirect.dsp /MAKE \"Redirect - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f Redirect.mak all CFG=\"Redirect - $platformname $buildmode\"";
-        system("nmake -f Redirect.mak all CFG=\"Redirect - $platformname $buildmode\"");
+        #system("nmake -f Redirect.mak all CFG=\"Redirect - $platformname $buildmode\"");
+	system("msdev Redirect.dsp /MAKE \"Redirect - $platformname $buildmode\" /REBUILD");
 
 
         # Make the MemParse sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/MemParse");
-        system "nmake -f MemParse.mak clean CFG=\"MemParse - $platformname $buildmode\"";
+        #system "nmake -f MemParse.mak clean CFG=\"MemParse - $platformname $buildmode\"";
+	system("msdev MemParse.dsp /MAKE \"MemParse - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f MemParse.mak all CFG=\"MemParse - $platformname $buildmode\"";
-        system("nmake -f MemParse.mak all CFG=\"MemParse - $platformname $buildmode\"");
+        #system("nmake -f MemParse.mak all CFG=\"MemParse - $platformname $buildmode\"");
+	system("msdev MemParse.dsp /MAKE \"MemParse - $platformname $buildmode\" /REBUILD");
 
         # Make the PParse sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/PParse");
-        system "nmake -f PParse.mak clean CFG=\"PParse - $platformname $buildmode\"";
+        #system "nmake -f PParse.mak clean CFG=\"PParse - $platformname $buildmode\"";
+	system("msdev PParse.dsp /MAKE \"PParse - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f PParse.mak all CFG=\"PParse - $platformname $buildmode\"";
-        system("nmake -f PParse.mak all CFG=\"PParse - $platformname $buildmode\"");
+        #system("nmake -f PParse.mak all CFG=\"PParse - $platformname $buildmode\"");
+	system("msdev PParse.dsp /MAKE \"PParse - $platformname $buildmode\" /REBUILD");
 
         # Make the StdInParse sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/StdInParse");
-        system "nmake -f StdInParse.mak clean CFG=\"StdInParse - $platformname $buildmode\"";
+        #system "nmake -f StdInParse.mak clean CFG=\"StdInParse - $platformname $buildmode\"";
+	system("msdev StdInParse.dsp /MAKE \"StdInParse - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"";
-        system("nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"");
+        #system("nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"");
+	system("msdev StdInParse.dsp /MAKE \"StdInParse - $platformname $buildmode\" /REBUILD");
 
         # Make the EnumVal sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/EnumVal");
-        system "nmake -f EnumVal.mak clean CFG=\"EnumVal - $platformname $buildmode\"";
+        #system "nmake -f EnumVal.mak clean CFG=\"EnumVal - $platformname $buildmode\"";
+	system("msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /CLEAN");
         print "Executing: nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"";
-        system("nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"");
+        #system("nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"");
+	system("msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /REBUILD");
 
 	if (length($ICUROOT) > 0) {
 		# run makeconv now
@@ -207,8 +244,10 @@ if ($platform =~ m/Windows/) {
 		@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
 		@allucmfiles = grep(/\.ucm/, @allfiles);
 		closedir(THISDIR);
+		-e "$ICUROOT/bin/Release/icuuc.dll" or die " ICU build not completed so icuuc\.dll is not there";
+		system ("cp -fv $ICUROOT/bin/$buildmode/*.dll $ICUROOT/source/tools/makeconv/$buildmode");
 		foreach $ucmfile (@allucmfiles) {
-			system ("$ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $ucmfile");
+		        system ("$ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $ucmfile");
 		}
 	}
 
@@ -250,15 +289,26 @@ if ($platform =~ m/Windows/) {
         # Populate the samples directory
         print ("\n\nCopying sample files ...\n");
         system("cp -Rfv $XERCESCROOT/samples/Projects/* $targetdir/samples/Projects");
+
         system("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+        system("rm -f $targetdir/samples/SAXCount/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+        system("rm -f $targetdir/samples/SAXPrint/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+        system("rm -f $targetdir/samples/DOMCount/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+        system("rm -f $targetdir/samples/DOMPrint/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+        system("rm -f $targetdir/samples/Redirect/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+        system("rm -f $targetdir/samples/MemParse/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+        system("rm -f $targetdir/samples/PParse/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+        system("rm -f $targetdir/samples/StdInParse/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
+        system("rm -f $targetdir/samples/EnumVal/Makefile");
+
         system("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
 
         # Populate the docs directory
@@ -266,7 +316,12 @@ if ($platform =~ m/Windows/) {
         system("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
         system("cp -Rfv $XERCESCROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
         system("cp $XERCESCROOT/Readme.html $targetdir");
+        system("cp $XERCESCROOT/credits.txt $targetdir");	
+        system("cp $XERCESCROOT/LICENSE $targetdir");
         system("cp $XERCESCROOT/doc/license.html $targetdir");
+        system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+        system("cp $XERCESCROOT/license.html $targetdir");
+        system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
 
         # Now package it all up using ZIP
         chdir ("$targetdir/..");
@@ -379,6 +434,8 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 	if (length($ICUROOT) > 0) {
 		# First make the ICU files
 		chdir ("$ICUROOT/source");
+		system ("chmod 777 configure");
+		system ("chmod 777 install-sh");
 		print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
 		system ("$icuCompileFlags configure --prefix=$ICUROOT");
 		chdir ("$ICUROOT/source/common");
@@ -399,6 +456,9 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 
         # make the source files
         chdir ("$XERCESCROOT/src");
+
+	if ( $platform =~ m/sunos/i ) { $platform = "solaris"; }
+	if ( $platform =~ m/AIX/ ) { $platform = "aix"; }
 
         system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
         system ("gmake clean");	# May want to comment this line out to speed up
@@ -477,20 +537,45 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 
         system("cp -Rf $XERCESCROOT/samples/data/* $targetdir/samples/data");
         system("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+        system("rm -f $targetdir/samples/SAXCount/Makefile");
         system("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+        system("rm -f $targetdir/samples/SAXPrint/Makefile");
         system("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+        system("rm -f $targetdir/samples/DOMCount/Makefile");
         system("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+        system("rm -f $targetdir/samples/DOMPrint/Makefile");
         system("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+        system("rm -f $targetdir/samples/Redirect/Makefile");
         system("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+        system("rm -f $targetdir/samples/MemParse/Makefile");
         system("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+        system("rm -f $targetdir/samples/PParse/Makefile");
         system("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+        system("rm -f $targetdir/samples/StdInParse/Makefile");
         system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
+        system("rm -f $targetdir/samples/EnumVal/Makefile");
+        system("rm -f $targetdir/samples/Makefile");
+#        system("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+#        system("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+#        system("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+#        system("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+#        system("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+#        system("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+#        system("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+#        system("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+#        system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
 
         # Populate the docs directory
         print ("\n\nCopying documentation ...\n");
         system("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
         system("cp -Rf $XERCESCROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
         system("cp $XERCESCROOT/Readme.html $targetdir");
+        system("cp $XERCESCROOT/credits.txt $targetdir");	
+        system("cp $XERCESCROOT/LICENSE $targetdir");
+        system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+        system("cp $XERCESCROOT/license.html $targetdir");
+        system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+
         system("cp $XERCESCROOT/doc/license.html $targetdir");
 
         # Change the directory permissions
