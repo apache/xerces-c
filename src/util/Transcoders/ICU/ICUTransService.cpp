@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2000/06/01 23:26:36  abagchi
+ * Added  && !defined(XML_PTX)
+ *
  * Revision 1.19  2000/05/11 23:13:31  rahulj
  * Works with latest revision of ICU which provides a hard
  * linked data DLL. i.e. icudata.dll will be loaded when xerces-c is
@@ -147,9 +150,9 @@
 #include <unicode/udata.h>
 
 
-#if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX)
+#if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
 // Forward reference the symbol which points to the ICU converter data.
-extern "C" const uint8_t U_IMPORT icudata_dat[]; 
+extern "C" const uint8_t U_IMPORT icudata_dat[];
 #endif
 
 
@@ -211,7 +214,7 @@ static XMLCh* convertToXMLCh(const UChar* const toConvert)
 // ---------------------------------------------------------------------------
 ICUTransService::ICUTransService()
 {
-#if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX)
+#if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
     // Pass the location of the converter data to ICU. By doing so, we are
     // forcing the load of ICU converter data DLL, after the Xerces-C DLL is
     // loaded. This implies that Xerces-C, now has to explicitly link with the
@@ -290,7 +293,7 @@ int ICUTransService::compareNIString(const  XMLCh* const    comp1
         psz2++;
 
         //
-        //  Bump the count of chars done. If it equals the count then we 
+        //  Bump the count of chars done. If it equals the count then we
         //  are equal for the requested count, so break out and return
         //  equal.
         //
@@ -502,7 +505,7 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
                 , getEncodingName()
             );
         }
-         else            
+         else
         {
             ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
         }
