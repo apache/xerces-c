@@ -102,6 +102,9 @@ public:
     int         getTotalDigit() const;
 
     /**
+     *
+     *  Deprecated: please use getRawData
+     *
      *  Return a copy of the fMagnitue.
      *  A leading sign is ALWAYS in place and the caller of this method
      *  is responsible for the de-allocation of the memory.

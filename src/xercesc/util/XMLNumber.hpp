@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/09 15:13:46  peiyongz
+ * Deprecated toString() in XMLNumber family
+ *
  * Revision 1.5  2003/03/10 20:55:58  peiyongz
  * Schema Errata E2-40 double/float
  *
@@ -101,7 +104,9 @@ public:
 
     virtual ~XMLNumber();
 
-	/**
+    /**
+     *  Deprecated: please use getRawData
+     *
 	 *  Return string representation of the decimal value.
      *  A decimal point will be included as necessary,
      *  the caller of this method is responsible for the

@@ -88,6 +88,11 @@ public:
     static int            compareValues(const XMLBigDecimal* const lValue
                                       , const XMLBigDecimal* const rValue);
 
+    /**
+     *
+     *  Deprecated: please use getRawData
+     *
+     */
     virtual XMLCh*        toString() const;
     
     virtual XMLCh*        getRawData() const;

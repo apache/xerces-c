@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/05/09 15:13:46  peiyongz
+ * Deprecated toString() in XMLNumber family
+ *
  * Revision 1.9  2003/03/10 20:55:58  peiyongz
  * Schema Errata E2-40 double/float
  *
@@ -151,6 +154,11 @@ public:
 
     virtual ~XMLAbstractDoubleFloat();
 
+    /**
+     *
+     *  Deprecated: please use getRawData
+     *
+     */
     virtual XMLCh*        toString() const;
     
     virtual XMLCh*        getRawData() const;
