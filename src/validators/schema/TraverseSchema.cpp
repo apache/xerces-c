@@ -5217,7 +5217,7 @@ int TraverseSchema::getMinTotalRange(const ContentSpecNode* const specNode) {
         return 0;
     }
 
-    int min = ((ContentSpecNode*)specNode)->getMinOccurs();
+    int min = specNode->getMinOccurs();
 
     ContentSpecNode::NodeTypes nodeType = specNode->getType();
     const ContentSpecNode* first = 0;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/08/22 16:04:07  tng
+ * ContentSpecNode copy constructor should copy Min and Max as well.
+ *
  * Revision 1.12  2001/08/21 18:47:42  peiyongz
  * AIX 4.2, xlC 3 rev.1 compilation error: dtor() declared with external linkage
  *                                 and called or defined before being declared as inline
@@ -181,10 +184,10 @@ public :
     NodeTypes getType() const;
     ContentSpecNode* orphanFirst();
     ContentSpecNode* orphanSecond();
-    unsigned int getMinOccurs();
-    unsigned int getMaxOccurs();
-    bool isFirstAdopted();
-    bool isSecondAdopted();
+    unsigned int getMinOccurs() const;
+    unsigned int getMaxOccurs() const;
+    bool isFirstAdopted() const;
+    bool isSecondAdopted() const;
 
 
     // -----------------------------------------------------------------------
@@ -337,8 +340,8 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
     fType = toCopy.getType();
     fAdoptFirst = true;
     fAdoptSecond = true;
-    fMinOccurs = 1;
-    fMaxOccurs = 1;
+    fMinOccurs = toCopy.getMinOccurs();
+    fMaxOccurs = toCopy.getMaxOccurs();
 }
 
 inline ContentSpecNode::~ContentSpecNode()
@@ -407,22 +410,22 @@ inline ContentSpecNode* ContentSpecNode::orphanSecond()
     return retNode;
 }
 
-inline unsigned int ContentSpecNode::getMinOccurs()
+inline unsigned int ContentSpecNode::getMinOccurs() const
 {
     return fMinOccurs;
 }
 
-inline unsigned int ContentSpecNode::getMaxOccurs()
+inline unsigned int ContentSpecNode::getMaxOccurs() const
 {
     return fMaxOccurs;
 }
 
-inline bool ContentSpecNode::isFirstAdopted()
+inline bool ContentSpecNode::isFirstAdopted() const
 {
     return fAdoptFirst;
 }
 
-inline bool ContentSpecNode::isSecondAdopted()
+inline bool ContentSpecNode::isSecondAdopted() const
 {
     return fAdoptSecond;
 }
