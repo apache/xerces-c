@@ -71,6 +71,7 @@
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
@@ -1876,7 +1877,7 @@ void SGXMLScanner::commonInit()
     fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
 
     // Create dummy schema grammar
-    fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+    fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
 
     //  Create the Validator and init them
     fSchemaValidator = new (fMemoryManager) SchemaValidator(0, fMemoryManager);
@@ -3172,7 +3173,8 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         fElemStack.setValidationFlag(fValidate);
                     }
 
-                    grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+                    grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+
                     TraverseSchema traverseSchema
                     (
                         root
@@ -3324,7 +3326,7 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+            SchemaGrammar* grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
             TraverseSchema traverseSchema
             (
                 root

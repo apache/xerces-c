@@ -80,6 +80,7 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/validators/schema/identity/XPathException.hpp>
 #include <xercesc/validators/schema/GeneralAttributeCheck.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
@@ -741,7 +742,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
             // Preprocess new schema
             // --------------------------------------------------------
             SchemaInfo* saveInfo = fSchemaInfo;
-            fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+            fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();
             preprocessSchema(root, importURL);
             fPreprocessedNodes->put((void*) elem, fSchemaInfo);
 

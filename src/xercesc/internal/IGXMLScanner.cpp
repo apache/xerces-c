@@ -71,6 +71,7 @@
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
@@ -2845,7 +2846,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         }
     }
 
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();

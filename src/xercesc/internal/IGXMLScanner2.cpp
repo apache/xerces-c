@@ -77,6 +77,7 @@
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
@@ -864,7 +865,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
@@ -1417,7 +1418,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         }
                     }
 
-                    grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+                    grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();                    
                     TraverseSchema traverseSchema
                     (
                         root
@@ -1588,7 +1589,8 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+            SchemaGrammar* grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
+
             TraverseSchema traverseSchema
             (
                 root

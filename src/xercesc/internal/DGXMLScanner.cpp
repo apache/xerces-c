@@ -71,6 +71,7 @@
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
@@ -1675,7 +1676,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fValidatorFromUser)
         fValidator->reset();
 
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();   
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fValidator->setGrammar(fGrammar);
@@ -2029,7 +2030,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
     fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fRootGrammar = 0;
