@@ -1586,11 +1586,15 @@
                                                 acceptable),
                                                 UTF-16, UTF-16LE, UTF-16BE, UCS-4, UCS-4LE, and UCS-4BE.
                                                 
-                                                In the case of UFT-16/UCS-4, the system directive, ENDIANMODE_LITTLE
+                                                In the case of UTF-16/UCS-4, the system directive, ENDIANMODE_LITTLE
                                                 and ENDIANMODE_BIG (which denotes the host machine's endian mode),
                                                 is refered to determine the appropriate BOM to be written. 
                 </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>see:</em></th><td>
+                <jump href="http://www.w3.org/TR/REC-xml#sec-guessing"> XML 1.0 Appendix F </jump>
+                for more information about BOM.
+                </td></tr>                
             </table>
            </s4>
         </s3>
