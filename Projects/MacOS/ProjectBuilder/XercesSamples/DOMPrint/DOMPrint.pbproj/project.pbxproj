@@ -141,6 +141,7 @@
 				08FB77A5FE84155DC02AAC07,
 			);
 			buildSettings = {
+				BUILD_SETTING = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = ../../../../../src/;
 				LIBRARY_SEARCH_PATHS = "";
