@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2000/04/18 17:57:29  roddey
+ * Fix signature of ::fileSize() method. Bug #119
+ *
  * Revision 1.18  2000/04/11 19:11:55  roddey
  * Replace Yen signs with backslash in wide char path names
  * under NT. This avoids ambiguous code point in some asian
@@ -254,7 +257,7 @@ void XMLPlatformUtils::closeFile(FileHandle theFile)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
 }
 
-unsigned int XMLPlatformUtils::fileSize(const FileHandle theFile)
+unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 {
     // Get the current position
     const unsigned int curPos = ::SetFilePointer(theFile, 0, 0, FILE_CURRENT);
