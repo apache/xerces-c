@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2005/02/02 09:27:54  amassari
+ * Added rehashing capabilities
+ *
  * Revision 1.14  2004/12/30 14:52:34  amassari
  * Added API to remove all entries having the same primary key
  *
@@ -204,8 +207,8 @@ private:
     // -----------------------------------------------------------------------
     RefHash2KeysTableBucketElem<TVal>* findBucketElem(const void* const key1, const int key2, unsigned int& hashVal);
     const RefHash2KeysTableBucketElem<TVal>* findBucketElem(const void* const key1, const int key2, unsigned int& hashVal) const;
-    void removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal);
-	void initialize(const unsigned int modulus);
+    void initialize(const unsigned int modulus);
+    void rehash();
 
 
     // -----------------------------------------------------------------------
@@ -223,15 +226,19 @@ private:
     //  fHashModulus
     //      The modulus used for this hash table, to hash the keys. This is
     //      also the number of elements in the bucket list.
-	//
-	//  fHash
-	//      The hasher for the key1 data type.
+    //
+    //  fCount
+    //      The number of elements currently in the map
+    //
+    //  fHash
+    //      The hasher for the key1 data type.
     // -----------------------------------------------------------------------
     MemoryManager*                      fMemoryManager;
     bool                                fAdoptedElems;
     RefHash2KeysTableBucketElem<TVal>** fBucketList;
     unsigned int                        fHashModulus;
-	HashBase*							fHash;
+    unsigned int                        fCount;
+    HashBase*							fHash;
 };
 
 
