@@ -777,24 +777,29 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
 
-       XMLBufBid bbURI(&fBufMgr);
-        XMLBuffer& bufURI = bbURI.getBuffer();
-        XMLCh* namespaceURI = 0;
-
-        XMLBufBid elemQName(&fBufMgr);
+        const XMLCh* namespaceURI = 0;
 
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
-            fScanner->getURIText(urlId, bufURI);   //get namespaceURI
-            namespaceURI = bufURI.getRawBuffer();
+
+            namespaceURI = fScanner->getURIText(urlId); //get namespaceURI
 
             if (elemPrefix && *elemPrefix) {
+
+                XMLBufBid elemQName(&fBufMgr);
+
                 elemQName.set(elemPrefix);
                 elemQName.append(chColon);
+                elemQName.append(elemDecl.getBaseName());
+                elem = createElementNSNode(namespaceURI, elemQName.getRawBuffer());
             }
+            else { 
+                elem = createElementNSNode(namespaceURI, elemDecl.getBaseName());
+            }
+        } 
+        else {
+            elem = createElementNSNode(namespaceURI, elemDecl.getBaseName());
         }
-        elemQName.append(elemDecl.getBaseName());
 
-        elem = createElementNSNode(namespaceURI, elemQName.getRawBuffer());
         elemImpl = (DOMElementImpl *) elem;
 
         for (unsigned int index = 0; index < attrCount; ++index) {
@@ -804,8 +809,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             if (XMLString::equals(oneAttrib -> getName(), XMLNS))    //for xmlns=...
                 attrURIId = fScanner->getXMLNSNamespaceId();
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
-                fScanner->getURIText(attrURIId, bufURI);   //get namespaceURI
-                namespaceURI = bufURI.getRawBuffer();
+                namespaceURI = fScanner->getURIText(attrURIId);   //get namespaceURI
             }
             //  revisit.  Optimize to init the named node map to the
             //            right size up front.
