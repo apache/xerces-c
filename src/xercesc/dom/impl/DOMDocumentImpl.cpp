@@ -71,7 +71,6 @@
 #include "XSDElementNSImpl.hpp"
 #include "DOMEntityImpl.hpp"
 #include "DOMEntityReferenceImpl.hpp"
-#include "DOMNamedNodeMapImpl.hpp"
 #include "DOMNormalizer.hpp"
 #include "DOMNotationImpl.hpp"
 #include "DOMProcessingInstructionImpl.hpp"
@@ -238,10 +237,13 @@ DOMDocumentImpl::~DOMDocumentImpl()
 
 DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
 
-    // Note:  the cloned document node goes on the system heap.  All other
-    //   nodes added to the new document will go on that document's heap,
-    //   but we need to construct the document first, before its heap exists.
+    // Note:  the cloned document node goes on the same heap we live in.
     DOMDocumentImpl *newdoc = new (fMemoryManager) DOMDocumentImpl(fMemoryManager);
+    if(fEncoding && *fEncoding)
+        newdoc->setEncoding(fEncoding);
+    if(fVersion && *fVersion)
+        newdoc->setVersion(fVersion);
+    newdoc->setStandalone(fStandalone);
 
     // then the children by _importing_ them
     if (deep)
