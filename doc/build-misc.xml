@@ -1,0 +1,315 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+
+<faqs title="Other Build Instructions">
+    <faq title="Building &XercesCName; with ICU using bundled Perl scripts on Windows">
+    <q>Building &XercesCName; with ICU using bundled Perl scripts on Windows</q>
+    <a>
+        <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
+        native encoding support and also using ICU where you get support over 180
+        different encodings. ICU stands for International Components for Unicode and is an
+        open source distribution from IBM. You can get
+        <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
+        <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
+        or go to the ICU
+        <jump href="http://oss.software.ibm.com/icu/download/index.html">download page</jump>
+        directly.</p>
+
+        <note><em>Important:</em> Please remember that <em>ICU and
+        &XercesCName; must be built with the same compiler</em>,
+        preferably with the same version. You cannot for example,
+        build ICU with a threaded version of the xlC compiler and
+        build &XercesCName; with a non-threaded one.</note>
+
+        <p>There are two options to build Xerces-C with ICU. One is to use the
+        MSDEV GUI environment, and the other is to invoke the compiler from the
+        command line.</p>
+
+        <p>Using, the GUI environment, requires one to edit the project files.
+        Here, we will describe only the second option. It involves using the
+        perl script '<code>packageBinaries.pl</code>'.</p>
+
+        <p><em>Prerequisites:</em></p>
+        <ul>
+        <li>Perl 5.004 or higher</li>
+        <li>Cygwin tools or MKS Toolkit</li>
+        <li>zip.exe</li>
+        </ul>
+
+        <p>Extract Xerces-C source files from the .zip archive using WinZip, say
+        in the root directory (an arbitrary drive x:). It should create a directory like
+        '<code>x:\&XercesCSrcInstallDir;</code>'.</p>
+
+        <p>Extract the ICU files, using WinZip, in root directory of the disk
+        where you have installed Xerces-C, sources. After extraction, there
+        should be a new directory '<code>x:\icu</code>' which contains all the ICU
+        source files.</p>
+
+        <p>Start a command prompt to get a new shell window. Make sure you have
+        perl, cygwin tools (<code>uname</code>, <code>rm</code>,
+        <code>cp</code>, ...), and <code>zip.exe</code> somewhere in the
+        path. Next setup the environment for MSVC using
+        '<code>VCVARS32.BAT</code>' or a similar file. Then at the prompt
+        enter:</p>
+
+        <source>set XERCESCROOT=x:\&XercesCSrcInstallDir;
+set ICUROOT=x:\icu
+cd x:\&XercesCSrcInstallDir;\scripts
+perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -t icu</source>
+
+        <p>(Match the source directory to your system; the target directory can be
+        anything you want.)</p>
+
+        <p>If everything is setup right and works right, then you should see a
+        binary drop created in the target directory specified above. This script
+        will build both ICU and Xerces-C, copy the files (relevant to the binary
+        drop) to the target directory.</p>
+
+        <p>For a description of options available, you can enter:</p>
+          <source>perl packageBinaries.pl</source>
+    </a>
+    </faq>
+
+    <faq title="Building &XercesCName; COM Wrapper on Windows">
+    <q>Building &XercesCName; COM Wrapper on Windows</q>
+    <a>
+        <p>To build the COM module for use with XML on Windows platforms, you
+        must first set up your machine appropriately with necessary tools and
+        software modules and then try to compile it. The end result is an additional
+        library that you can use along with the standard &XercesCName; for writing
+        VB templates or for use with IE 5.0 using JavaScript.</p>
+
+        <s3 title="Setting up your machine for COM">
+        <p>To build the COM project you will need to install the MS PlatformSDK.
+        Some of the header files we use don't come with Visual C++ 6.0. You may
+        download it from Microsoft's Website at <jump href="http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm">http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm</jump>
+        or directly FTP it from <jump href="ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe">ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe</jump>.</p>
+
+        <p>The installation is huge, but you don't need most of it. So you
+        may do a <em>custom install</em> by just selecting "Build Environment" and
+        choosing the required components. First select the top level Platform SDK.
+        Then click the down arrow and make all of the components unavailable. Next open the
+        "Build Environment" branch and select only the following items:</p>
+        <ul>
+        <li>Win32 API</li>
+        <li>Component Services</li>
+        <li>Web Services - Internet Explorer</li>
+        </ul>
+
+        <p><em>Important:</em> When the installation is complete you need to update VC6's
+        include path to include <code>..\platformsdk\include\atl30</code>. You do this by
+        choosing "Tools -> Options -> Directories". This path
+        should be placed <ref>second</ref> after the normal PlatformSDK include.
+        You change the order of the paths by clicking the up and down arrows.</p>
+
+        <note>The order in which the directories appear on your path is important. Your
+        first include path should be <code>..\platformsdk\include</code>. The second one
+        should be <code>..\platformsdk\include\atl30</code>.</note>
+        </s3>
+
+        <s3 title="Building COM module for &XercesCName;">
+        <p>Once you have set up your machine, build &XercesCName; COM module
+        by choosing the project named 'xml4com' inside the workspace. Then select your
+        build mode to be <em>xml4com - Win32 Release MinDependency</em>. Finally build the
+        project. This will produce a DLL named <code>xerces-com.dll</code> which needs
+        to be present in your path (on local machine) before you can use it.</p>
+        </s3>
+
+        <s3 title="Testing the COM module">
+        <p>There are some sample test programs in the <code>test/COMTest</code>
+        directory which show examples of navigating and searching an XML tree
+        using DOM. You need to browse the HTML files in this directory using
+        IE 5.0. Make sure that your build has worked properly, specially the
+        registration of the ActiveX controls that happens in the final step.</p>
+        <p>You may also want to check out the NIST DOM test suite at
+        <jump href="http://xw2k.sdct.itl.nist.gov/BRADY/DOM/">http://xw2k.sdct.itl.nist.gov/BRADY/DOM/</jump>.
+        You will have to modify the documents in the NIST suite to load the
+        Xerces COM object instead of the MSIE COM object.</p>
+        </s3>
+    </a>
+    </faq>
+
+
+    <faq title="Building User Documentation">
+    <q>Building User Documentation</q>
+    <a>
+        <p>The user documentation (this very page that you are reading
+        on the browser right now), was generated using an XML
+        application called StyleBook. This application makes use of
+        Xerces-J and Xalan to create the HTML file from the XML source
+        files. The XML source files for the documentation are part of
+        the &XercesCName; module. These files reside in the
+        <code>doc</code> directory.</p>
+
+        <p><em>Pre-requisites for building the user
+        documentation are:</em></p>
+
+        <ul>
+          <li>JDK 1.2.2 (or later).</li>
+          <li>Xerces-J 1.0.1.<em>bundled</em></li>
+          <li>Xalan-J 0.19.2.<em>bundled</em></li>
+          <li>Stylebook 1.0-b2.<em>bundled</em></li>
+          <li>The Apache Style files (dtd's and .xsl files).<em>bundled</em></li>
+        </ul>
+
+        <p>Invoke a command window and setup PATH to include the JDK 1.2.2 bin
+        directory</p>
+
+        <p>Next, cd to the &XercesCName; source drop root directory,
+        and enter</p>
+
+        <ul>
+          <li>Under Windows:<br/>
+          <code>createDocs</code></li>
+          <li>Under Unix's:<br/>
+          <code>sh createDocs.bat</code></li>
+        </ul>
+
+        <p>This should generate the .html files in the 'doc/html'
+        directory.</p>
+    </a>
+    </faq>
+
+
+    <faq title="I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?">
+    <q>I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</q>
+    <a>
+      <p>All platform dependent code in &XercesCProjectName; has been
+      isolated to a couple of files, which should ease the porting
+      effort.  Here are the basic steps that should be followed to
+      port &XercesCProjectName;.</p>
+
+      <ol>
+
+        <li>The directory <code>src/util/Platforms</code> contains the
+        platform sensitive files while <code>src/util/Compilers</code> contains
+        all development environment sensitive files. Each operating
+        system has a file of its own and each development environment
+        has another one of its own too.
+
+        <br/>
+
+        As an example, the Win32 platform as a <code>Win32Defs.hpp</code> file
+        and the Visual C++ environment has a <code>VCPPDefs.hpp</code> file.
+        These files set up certain define tokens, typedefs,
+        constants, etc... that will drive the rest of the code to
+        do the right thing for that platform and development
+        environment. AIX/CSet have their own <code>AIXDefs.hpp</code> and
+        <code>CSetDefs.hpp</code> files, and so on. You should create new
+        versions of these files for your platform and environment
+        and follow the comments in them to set up your own.
+        Probably the comments in the Win32 and Visual C++ will be
+        the best to follow, since that is where the main
+        development is done.</li>
+
+        <li>Next, edit the file <code>XML4CDefs.hpp</code>, which is where all
+            of the fundamental stuff comes into the system. You will
+            see conditional sections in there where the above
+            per-platform and per-environment headers are brought in.
+            Add the new ones for your platform under the appropriate
+            conditionals.</li>
+
+        <li>Now edit <code>AutoSense.hpp</code>. Here we set canonical &XercesCProjectName;
+            internal <code>#define</code> tokens which indicate the platform and
+            compiler. These definitions are based on known platform
+            and compiler defines.
+            <br/>
+            <code>AutoSense.hpp</code> is included in <code>XML4CDefs.hpp</code> and the
+            canonical platform and compiler settings thus defined will
+            make the particular platform and compiler headers to be
+            the included at compilation.
+            <br/>
+            It might be a little tricky to decipher this file so be
+            careful. If you are using say another compiler on Win32,
+            probably it will use similar tokens so that the platform
+            will get picked up already using what is already there.</li>
+
+        <li>Once this is done, you will then need to implement a
+            version of the <ref>platform utilities</ref> for your platform.
+            Each operating system has a file which implements some
+            methods of the XMLPlatformUtils class, specific to that
+            operating system. These are not terribly complex, so it
+            should not be a lot of work. The Win32 verions is called
+            <code>Win32PlatformUtils.cpp</code>, the AIX version is
+            <code>AIXPlatformUtils.cpp</code> and so on. Create one for your
+            platform, with the correct name, and empty out all of the
+            implementation so that just the empty shells of the
+            methods are there (with dummy returns where needed to make
+            the compiler happy.) Once you've done that, you can start
+            to get it to build without any real implementation.</li>
+
+        <li>Once you have the system building, then start
+            implementing your own platform utilties methods. Follow
+            the comments in the Win32 version as to what they do, the
+            comments will be improved in subsequent versions, but they
+            should be fairly obvious now. Once you have these
+            implementations done, you should be able to start
+            debugging the system using the demo programs.</li>
+      </ol>
+      <p>That is the work required in a nutshell!</p>
+    </a>
+    </faq>
+
+
+    <faq title="What should I define XMLCh to be?">
+    <q>What should I define XMLCh to be?</q>
+    <a>
+        <p>XMLCh should be defined to be a type suitable for holding a
+           utf-16 encoded (16 bit) value, usually an <code>unsigned short</code>. </p>
+
+        <p>All XML data is handled within xerces-c as strings of
+           XMLCh characters.  Regardless of the size of the
+           type chosen, the data stored in variables of type XMLCh
+           will always be utf-16 encoded values. </p>
+
+
+
+        <p>Unlike XMLCh, the  encoding
+               of wchar_t is platform dependent.  Sometimes it is utf-16
+               (AIX, Windows), sometimes ucs-4 (Solaris,
+               Linux), sometimes it is not based on Unicode at all
+               (HP/UX, AS/400, system 390).  </p>
+
+        <p>Some earlier releases of xerce-c defined XMLCh to be the
+           same type as wchar_t on most platforms, with the goal of making
+           it possible to pass XMLCh strings to library or system functions
+           that were expecting wchar_t paramters.  This approach has
+           been abandonded because of</p>
+
+           <ul>
+              <li>
+                 Portability problems with any code that assumes that
+                 the types of XMLCh and wchar_t are compatible
+              </li>
+
+              <li>Excessive memory usage, especially in the DOM, on
+                  platforms with 32 bit wchar_t.
+              </li>
+
+              <li>utf-16 encoded XMLCh is not always compatible with
+                  ucs-4 encoded wchar_t on Solaris and Linux.  The
+                  problem occurs with Unicode characters with values
+                  greater than 64k; in ucs-4 the value is stored as
+                  a single 32 bit quatity.  With utf-16, the value
+                  will be stored as a "surrogate pair" of two 16 bit
+                  values.  Even with XMLCh equated to wchar_t, xerces will
+                  still create the utf-16 encoded surrogate pairs, which
+                  are illegal in ucs-4 encoded wchar_t strings.
+               </li>
+           </ul>
+    </a>
+    </faq>
+
+    <faq title="Where can I look for more help?">
+    <q>Where can I look for more help?</q>
+    <a>
+        <p>If you have read this page, followed the instructions, and
+        still cannot resolve your problem(s), there is more help. You
+        can find out if others have
+        solved this same problem before you, by checking the Apache XML
+        mailing list archives at <jump href="http://archive.covalent.net ">
+        http://archive.covalent.net</jump>.</p>
+    </a>
+    </faq>
+
+</faqs>

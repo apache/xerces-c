@@ -1,0 +1,384 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+
+<faqs title="Building on Windows and UNIX">
+    <faq title="Building &XercesCName; on Windows NT/98">
+    <q>Building &XercesCName; on Windows NT/98</q>
+    <a>
+        <p>&XercesCName; comes with Microsoft Visual C++ projects and workspaces to
+        help you build &XercesCName;. The following describes the steps you need
+        to build &XercesCName;.</p>
+
+        <s3 title="Building &XercesCName; library">
+            <p>To build &XercesCName; from it source (using MSVC), you will
+            need to open the workspace containing the project. If you are
+            building your application, you may want to add the &XercesCName;
+            project inside your applications's workspace.</p>
+            <p>The workspace containing the &XercesCName; project file and
+            all other samples is:</p>
+<source>&XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\xerces-all.dsw</source>
+            <p>Once you are inside MSVC, you need to build the project marked
+            <em>XercesLib</em>.</p>
+            <p>If you want to include the &XercesCName; project separately,
+            you need to pick up:</p>
+<source>&XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp</source>
+            <p>You must make sure that you are linking your application with
+            the &XercesCWindowsLib;.lib library and also make sure that
+            the associated DLL is somewhere in your path.</p>
+            <note>If you are working on the AlphaWorks version which uses ICU,
+            you must have the ICU data DLL named <code>icudata.dll</code> available from your path
+            setting. For finding out where you can
+            get ICU from and build it, look at the <jump href="build-misc.html#faq-1">How to Build ICU</jump>.</note>
+
+        </s3>
+        <s3 title="Building samples">
+            <p>Inside the same workspace (xerces-all.dsw), you'll find several other
+            projects. These are for the samples. Select all the samples and right click
+            on the selection. Then choose "Build (selection only)" to build all the
+            samples in one shot.</p>
+        </s3>
+    </a>
+    </faq>
+
+    <faq title="Building &XercesCName; on Windows using Visual Age C++">
+    <q>Building &XercesCName; on Windows using Visual Age C++</q>
+    <a>
+        <p>A few unsupported projects are also packaged with &XercesCName;. Due to
+        origins of &XercesCName; inside IBM labs, we do have projects for IBM's
+        <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump> on Windows.
+        The following describes the steps you need to build &XercesCName; using
+        Visual Age C++.</p>
+
+        <s3 title="Building &XercesCName; library">
+            <p><em>Requirements:</em></p>
+
+            <ul>
+                <li>VisualAge C++ Version 4.0 with Fixpak 1:
+                <br/>Download the
+                <jump href="http://www-4.ibm.com/software/ad/vacpp/service/csd.html">Fixpak</jump>
+                from the IBM VisualAge C++ Corrective Services web page.</li>
+            </ul>
+
+            <p>To include the ICU library:</p>
+
+            <ul>
+                <li>ICU Build:
+                <br/>You should have the
+                <jump href="http://oss.software.ibm.com/icu/">ICU Library</jump>
+                in the same directory as the &XercesCName; library. For example if
+                &XercesCName; is at the top level of the d drive, put the ICU
+                library at the top level of d e.g. d:/xml4c, d:/icu.</li>
+            </ul>
+
+            <p><em>Instructions:</em></p>
+            <ol>
+                <li>Change the directory to d:\xml4c\Projects\Win32</li>
+                <li>If a d:\xml4c\Project\Win32\VACPP40 directory does not exist, create it.</li>
+                <li>Copy the IBM VisualAge project file, <code>XML4C2X.icc</code>,
+                    to the VACPP40 directory.</li>
+                <li>From the VisualAge main menu enter the project file name and path.</li>
+                <li>When the build finishes the status bar displays this message: Last Compile
+                   completed Successfully with warnings on date.</li>
+            </ol>
+            <note>These instructions assume that you install in drive d:\.
+            Replace d with the appropriate drive letter.</note>
+        </s3>
+    </a>
+    </faq>
+
+
+    <faq title="Building &XercesCName; on UNIX platforms">
+    <q>Building &XercesCName; on UNIX platforms</q>
+    <a>
+        <p>&XercesCName; uses
+        <jump href="http://www.gnu.org">GNU</jump> tools like
+        <jump href="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</jump> and
+        <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump>
+        to build the system. You must first make sure you
+        have these tools installed on your system before proceeding.
+        If you don not have required tools, ask your system administrator
+        to get them for you. These tools are free under the GNU Public Licence
+        and may be obtained from the
+        <jump href="http://www.gnu.org">Free Software Foundation</jump>.</p>
+
+        <p><em>Do not jump into the build directly before reading this.</em></p>
+
+        <p>Spending some time reading the following instructions will save you a
+        lot of wasted time and support-related e-mail communication.
+        The &XercesCName; build instructions are a little different from
+        normal product builds. Specifically, there are some wrapper-scripts
+        that have been written to make life easier for you. You are free
+        not to use these scripts and use
+        <jump href="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</jump> and
+        <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump>
+        directly, but we want to make sure you know what you are by-passing and
+        what risks you are taking. So read the following instructions
+        carefully before attempting to build it yourself.</p>
+
+        <p>Besides having all necessary build tools, you also need to know what
+        compilers we have tested &XercesCName; on. The following table lists the
+        relevant platforms and compilers.</p>
+
+        <table>
+            <tr><td><em>Operating System</em></td><td><em>C++, C Compilers</em></td></tr>
+            <tr><td>Redhat Linux 6.1</td><td>g++, gcc (egcs)</td></tr>
+            <tr><td>AIX 4.2.1  and higher</td><td>xlC_r, xlc_r</td></tr>
+            <tr><td>Solaris 2.6</td><td>CC, cc</td></tr>
+            <tr><td>HP-UX 11</td><td>aCC, cc</td></tr>
+        </table>
+
+        <p>If you are not using any of these compilers, you are taking a calculated risk
+        by exploring new grounds. Your effort in making &XercesCName; work on this
+        new compiler is greatly appreciated and any problems you face can be addressed
+        on the &XercesCName; <jump href="mailto:&XercesCEmailAddress;">mailing list</jump>.
+        </p>
+
+        <p><em>Differences between the UNIX platforms:</em> The description below is
+        generic, but as every programmer is aware, there are minor differences
+        within the various UNIX flavors the world has been bestowed with.
+        The one difference that you need to watch out in the discussion below,
+        pertains to the system environment variable for finding libraries.
+        On <em>Linux and Solaris</em>, the environment variable name is called
+        <code>LD_LIBRARY_PATH</code>, on <em>AIX</em> it is <code>LIBPATH</code>,
+        while on <em>HP-UX</em> it is <code>SHLIB_PATH</code>. The following
+        discussion assumes you are working on Linux, but it is with subtle
+        understanding that you know how to interpret it for the other UNIX flavors.</p>
+
+        <note>If you wish to build &XercesCName; with ICU,
+        look at the <jump href="build-misc.html#faq-1">Building ICU</jump>.
+        It tells you where you can get ICU and how to build &XercesCName; with it.</note>
+
+        <s3 title="Setting build environment variables">
+            <p>Before doing the build, you must first set your environment variables
+            to pick-up the compiler and also specify where you extracted &XercesCName;
+            on your machine.
+            While the first one is probably set for you by the system administrator, just
+            make sure you can invoke the compiler. You may do so by typing the
+            compiler invocation command without any parameters (e.g. xlc_r, or g++, or cc)
+            and check if you get a proper response back.</p>
+            <p>Next set your &XercesCName; root path as follows:</p>
+<source>export XERCESCROOT=&lt;full path to &XercesCSrcInstallDir;&gt;</source>
+
+            <p>This should be the full path of the directory where you extracted &XercesCName;.</p>
+            </s3>
+
+        <s3 title="Building &XercesCName; library">
+            <p>As mentioned earlier, you must be ready with the GNU tools like
+            <jump href="http://www.gnu.org/software/autoconf/autoconf.html">autoconf</jump> and
+            <jump href="http://www.gnu.org/software/make/make.html">gmake</jump>
+            before you attempt the build.</p>
+
+            <p>The autoconf tool is required on only one platform and produces
+            a set of portable scripts (configure) that you can run on all
+            other platforms without actually having the autoconf tool installed
+            everywhere. In all probability the autoconf-generated script
+            (called <code>configure</code>) is already in your <code>src</code>
+            directory. If not, type:</p>
+
+<source>cd $XERCESCROOT/src
+autoconf</source>
+
+            <p>This generates a shell-script called <code>configure</code>. It is tempting to run
+            this script directly as is normally the case, but wait a minute. If you are
+            using the default compilers like
+            <jump href="http://www.gnu.org/software/gcc/gcc.html">gcc</jump> and
+            <jump href="http://www.gnu.org/software/gcc/gcc.html">g++</jump> you do not have a problem. But
+            if you are not on the standard GNU compilers, you need to export a few more
+            environment variables before you can invoke configure.</p>
+
+            <p>Rather than make you to figure out what strange environment
+            variables you need to use, we have provided you with a wrapper
+            script that does the job for you. All you need to tell the script
+            is what your compiler is, and what options you are going to use
+            inside your build, and the script does everything for you. Here
+            is what the script takes as input:</p>
+
+<source>runConfigure
+runConfigure: Helper script to run "configure" for one of the
+              supported platforms.
+Usage: runConfigure "options"
+       where options may be any of the following:
+       -p &lt;platform&gt; (accepts 'aix', 'linux', 'solaris',
+                            'hp-10', 'hp-11', 'irix', 'unixware')
+       -c &lt;C compiler name&gt; (e.g. xlc_r, gcc, cc)
+       -x &lt;C++ compiler name&gt; (e.g. xlC_r, g++, CC, aCC)
+       -d (specifies that you want to build debug version)
+       -m &lt;message loader&gt; can be 'inmem', 'icu', 'iconv'
+       -n &lt;net accessor&gt; can be 'fileonly', 'libwww'
+       -t &lt;transcoder&gt; can be 'icu' or 'native'
+       -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
+       -l &lt;extra linker options&gt;
+       -z &lt;extra compiler options&gt;
+       -h (to get help on the above commands)</source>
+
+            <note>&XercesCName; can be built as either a standalone library or as a library
+            dependent on International Components for Unicode (ICU). For simplicity,
+            the following discussion only explains standalone builds.</note>
+
+            <p>One of the common ways to build &XercesCName; is as follows:</p>
+
+<source>runConfigure -plinux -cgcc -xg++ -minmem -nfileonly -tnative</source>
+
+            <p>The response will be something like this:</p>
+<source>
+Generating makefiles with the following options ...
+Platform: linux
+C Compiler: gcc
+C++ Compiler: g++
+Extra compile options:
+Extra link options:
+Message Loader: inmem
+Net Accessor: fileonly
+Transcoder: native
+Thread option:
+Debug is OFF
+
+creating cache ./config.cache
+checking for gcc... gcc
+checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
+checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether we are using GNU C... yes
+checking whether gcc accepts -g... yes
+checking for c++... g++
+checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
+checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether we are using GNU C++... yes
+checking whether g++ accepts -g... yes
+checking for a BSD compatible install... /usr/bin/install -c
+checking for autoconf... autoconf
+checking for floor in -lm... yes
+checking how to run the C preprocessor... gcc -E
+checking for ANSI C header files... yes
+checking for XMLByte... no
+checking host system type... i686-pc-linux-gnu
+updating cache ./config.cache
+creating ./config.status
+creating Makefile
+creating util/Makefile
+creating util/Transcoders/ICU/Makefile
+creating util/Transcoders/Iconv/Makefile
+creating util/Transcoders/Iconv390/Makefile
+creating util/Transcoders/Iconv400/Makefile
+creating util/Platforms/Makefile
+creating util/Compilers/Makefile
+creating util/MsgLoaders/InMemory/Makefile
+creating util/MsgLoaders/ICU/Makefile
+creating util/MsgLoaders/MsgCatalog/Makefile
+creating util/MsgLoaders/MsgFile/Makefile
+creating validators/DTD/Makefile
+creating framework/Makefile
+creating dom/Makefile
+creating parsers/Makefile
+creating internal/Makefile
+creating sax/Makefile
+creating ../obj/Makefile
+creating conf.h
+cat: ./conf.h.in: No such file or directory
+conf.h is unchanged
+
+Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
+Still cannot resolve it? Find out if someone else had the same problem before.
+Check the mailing list archives at http://archive.covalent.net.
+
+In future, you may also directly type the following commands to create the Makefiles.
+
+export TRANSCODER=NATIVE
+export MESSAGELOADER=INMEM
+export USELIBWWW=0
+export CC=gcc
+export CXX=g++
+export CXXFLAGS=-O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER
+export CFLAGS=-O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER
+export LIBS= -lpthread
+configure
+
+If the result of the above commands look OK to you, go to the directory
+XERCESCROOT and type "gmake" to make the XERCES-C system.</source>
+
+<note>The error message concerning <code>conf.h</code>
+is NOT an indication of a problem. This code has been inserted to make it
+work on AS/400, but it gives this message which appears to be an error. The problem
+will be fixed in future.</note>
+
+            <p>So now you see what the wrapper script has actually been doing! It has
+            invoked <code>configure</code>
+            to create the Makefiles in the individual sub-directories, but in addition
+            to that, it has set a few environment variables to correctly configure
+            your compiler and compiler flags too.</p>
+
+            <p>Now that the Makefiles are all created, you are ready to do the actual build.</p>
+
+<source>gmake</source>
+
+            <p>Is that it? Yes, that's all you need to build &XercesCName;.</p>
+        </s3>
+
+        <s3 title="Building samples">
+            <p>Similarly, you can build the samples by giving the same commands in the
+            <code>samples</code> directory.</p>
+
+<source>cd $XERCESCROOT/samples
+runConfigure -plinux -cgcc -xg++
+gmake</source>
+
+            <p>The samples get built in the <code>bin</code> directory. Before you run the
+            samples, you must make sure that your library path is set to pick up
+            libraries from <code>$XERCESCROOT/lib</code>. If not, type the following to
+            set your library path properly.</p>
+
+<source>export LD_LIBRARY_PATH=$XERCESCROOT/lib:$LD_LIBRARY_PATH</source>
+            <p>You are now set to run the sample applications.</p>
+
+        </s3>
+    </a>
+    </faq>
+
+    <faq title="Building &XercesCName; as a single-threaded library on Unix platforms">
+    <q>Building &XercesCName; as a single-threaded library on Unix platforms</q>
+    <a>
+         <p>To build a single-threaded library on Unix platforms you have to update
+         one or more of the following files <code>Makefile.incl, Makefile.in, runConfigure</code>.
+         The following steps guide you to create a single-threaded library for each platform:</p>
+
+         <p>For Aix - </p>
+         <ul>
+         <li>Replace <code>xlc_r</code> and <code>xlC_r</code> libraries with
+            <code>xlc</code> and <code>xlC</code> respectively</li>
+         <li>Replace <code>makeC++SharedLib_r</code> with <code>makeC++SharedLib</code></li>
+         <li>Remove the flag <code>-D_THREAD_SAFE</code></li>
+         <li>Remove inclusion of any threaded library directories from the <code>LIBPATH</code></li>
+         <li>Remove inclusion of <code>-lpthreads</code> and <code>-lpthread_compat</code></li>
+         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under AIX specific options
+                  in <code>Makefile.incl</code></li>
+         </ul>
+
+        <p>For Solaris -</p>
+         <ul>
+          <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under SOLARIS
+            specific options in <code>Makefile.incl</code></li>
+          <li>Remove compiler switch <code>-mt</code></li>
+          <li>Remove <code>-D_REENTRANT</code> flag from the 'compile' options</li>
+      <li>Remove inclusion of <code>-lpthread</code></li>
+    </ul>
+
+    <p>For Linux -</p>
+        <ul>
+         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under LINUX
+            specific options in <code>Makefile.incl</code></li>
+     <li>Remove <code>-D_REENTRANT</code> flag from the 'compile' options</li>
+     <li>Remove inclusion of <code>-lpthread</code></li>
+    </ul>
+
+
+    <p>For HPUX -</p>
+        <ul>
+         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under HP
+            specific options in <code>Makefile.incl</code></li>
+     <li>Remove inclusion of <code>-lpthread</code> and <code>-lcma</code></li>
+     <li>Remove threading defines like <code>-D_PTHREADS_DRAFT4 ,
+        -DXML_USE_DCE</code></li>
+    </ul>
+   </a>
+   </faq>
+
+</faqs>

@@ -1,14 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE book SYSTEM "./dtd/book.dtd">
 
-<book title="Xerces-C documentation" copyright="2000 The Apache Software Foundation">
+<book title="&XercesCName; Documentation" copyright="2001 The Apache Software Foundation">
   <external href="../index.html"  label="Home"/>
 
   <separator/>
 
-  <document id="index"       label="Readme"       source="readme.xml"/>
-  <document id="install"     label="Installation" source="install.xml"/>
-  <document id="build"       label="Build"        source="buildc.xml"/>
+  <document  id="index"       label="Readme"             source="readme.xml"/>
+  <document  id="install"     label="Installation"       source="install.xml"/>
+  <group id="build"           title="Build Instructions" label="Build Instructions">
+     <entry id="build-winunix" source="build-winunix.xml"/>
+     <entry id="build-other" source="build-other.xml"/>
+     <entry id="build-misc"   source="build-misc.xml"/>
+  </group>
 
   <separator/>
 

@@ -1,0 +1,400 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+
+<faqs title="Building on Other Platforms">
+    <faq title="Building &XercesCName; on OS/2 using Visual Age C++">
+    <q>Building &XercesCName; on OS/2 using Visual Age C++</q>
+    <a>
+          <p>OS/2 is a favourite IBM PC platforms. The only
+          option in this platform is to use
+          <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump>.
+          Here are the steps you need to build &XercesCName; using
+          Visual Age C++ on OS/2.</p>
+          <s3 title="Building &XercesCName; library">
+             <p><em>Requirements:</em></p>
+                <ul>
+                    <li>VisualAge C++ Version 4.0 with Fixpak 1:
+                    <br/>Download the
+                    <jump href="http://www-4.ibm.com/software/ad/vacpp/service/csd.html">Fixpak</jump>
+                    from the IBM VisualAge C++ Corrective Services web page.</li>
+                </ul>
+
+             <p>There are two ways to build &XercesCName;. The "From Existing" method only
+                  requires VAC++. The "From Scratch" method requires both Object Rexx and VAC++
+                  installed.</p>
+
+          <p><em>The &quot;From Existing&quot; Method</em></p>
+          <ol>
+            <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
+            find and edit the VAC++ configuration file <code>project_options.icc</code>.</li>
+
+            <li>Change the directory on the first line <code>'BASE_DIR = "..."'</code>
+            to match the base directory of the Xerces-C sources on your system.
+            Note that the directory path must use double backslashes <code>"\\"</code>!</li>
+
+            <li>Save <code>project_options.icc</code></li>
+
+            <li>Start the Command Line in the VAC++ folder.</li>
+
+            <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
+
+            <li>Run <code>build.cmd</code>. This does a migration build.</li>
+
+            <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
+            This file should contain only informational messages, almost all complaining
+            about constant values in comparisons.</li>
+
+            <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
+            The library file is an import library for the DLL.</li>
+          </ol>
+
+          <p><em>The &quot;From Scratch&quot; Method</em></p>
+          <ol>
+            <li>If you are not currently running <code>Object Rexx</code>,
+            run the <code>SWITCHRX</code> command from a command line,
+            answer <code>"yes"</code> to switching to <code>Object Rexx</code>, and follow the
+            instructions to reboot. You can switch back to <code>"Classic Rexx"</code> by running
+            <code>SWITCHRX</code> again. But you probably won't need to switch back since
+            <code>Object Rexx</code> runs almost 100% of Classic Rexx programs.</li>
+
+            <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
+            run <code>genICC.cmd</code>. This builds the VAC++ configuration files for
+            the sources you have on your system.</li>
+
+            <li>Check the generated <code>ICC</code> files to ensure that they didn't pick up some
+            non-OS/2 platform stuff. This happens when new platform-specific directories
+            are added to Xerces. If they did pick up new non-OS/2 stuff, either edit it out
+            of the <code>ICC</code> file or add them to the "ignore" array in <code>genICC.cmd</code> and
+            re-run <code>genICC</code>.</li>
+
+            <li>Start the Command Line in the VAC++ folder.</li>
+
+            <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
+
+            <li>Run <code>build.cmd</code> This does a migration build.</li>
+
+            <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
+            This file should contain only informational messages, almost all complaining about constant
+            values in comparisons.</li>
+
+            <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
+            The library file is an import library for the DLL.)</li>
+
+          </ol>
+
+         <p><em>Packaging the Binaries</em></p>
+
+          <p>There is an <code>Object Rexx</code> program that will package the binaries and headers.
+          (See step 1 of the "From scratch" method on how to switch to <code>Object Rexx</code>.) The
+          <code>packageBinaries.cmd</code> file is in the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code>
+          directory. Run <code>packageBinaries</code>, giving the source and target directories
+          like this:</p>
+
+          <source>packageBinaries -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-os2</source>
+
+          <p>(Match the source directory to your system; the target directory can be
+          anything you want.)</p>
+
+          <note>If you don't want to use the <code>Object Rexx</code> program, you'll need to
+          manually  copy the "*.hpp" and "*.c" files to an include directory.
+          (Be sure to maintain the same directory structure that you find under
+          <code>&XercesCSrcInstallDir;</code>.)</note>
+          </s3>
+    </a>
+    </faq>
+
+    <faq title="Building &XercesCName; on AS/400">
+    <q>Building &XercesCName; on AS/400</q>
+    <a>
+            <p>The following addresses the requirements and build of
+           &XercesCName; natively on the AS/400.
+            </p>
+            <s3 title="Building &XercesCName; library">
+                <p><em>Requirements:</em></p>
+
+                <ul>
+                    <li><code>QSHELL</code> interpreter installed (install base option 30, operating system)</li>
+                    <li>QShell Utilities,  PRPQ  5799-XEH</li>
+                    <li>ILE C++ for AS/400,  PRPQ 5799-GDW</li>
+                    <li>GNU facilities  (the gnu facilities are currently available by request
+                    only.  Send e-mail to <jump href="mailto:rchgo400@us.ibm.com">rchgo400@us.ibm.com</jump>)</li>
+                </ul>
+
+                <p><em>Recommendations:</em></p>
+
+                <ul>
+                <li>There are a couple of options when building the XML4C parser on AS/400.
+                For messaging support, you can use the in memory message option or the
+                message file support. For code page translation, you can use the AS/400
+                native <code>Iconv400</code> support or ICU. If you choose ICU, follow the instructions
+                to build the ICU service program with the ICU download. Those instructions
+                are not included here.</li>
+
+                <li>Currently we recommend that you take the options of <code>MsgFile</code> and
+                <code>Iconv400</code> (see below)</li>
+                </ul>
+
+                <p><em>Setup Instructions:</em></p>
+
+                <ul>
+                <li>Make sure that you have the requirements installed on your AS/400.
+                We highly recommend that you read the writeup that accompanies the gnu
+                facilities download.  There are install instructions as well as
+                information about how modules, programs and service programs can be
+                created in Unix-like fashion using gnu utilities.  Note that symbolic
+                links are use in the file system to point to actual AS/400 <code>*module</code>,
+                <code>*pgm</code> and <code>*srvpgm</code> objects in libraries.</li>
+                <li>Download the tar file  (unix version) to the AS/400
+                (using a mapped drive), and decompress and <code>untar</code> the source.
+                We have had difficulty with the tar command on AS/400. This is under
+                investigation.  If you have trouble, we recommend the following work
+                around:</li></ul>
+<source>
+qsh:
+gunzip -d &lt;tar file.gz&gt;
+pax -r -f &lt;uncompressed tar file&gt;</source>
+
+                <ul>
+                <li>Create AS400 target library. This library will be the target
+                for the resulting  modules and  &XercesCName; service program. You will
+                specify this library on the <code>OUTPUTDIR</code> environment variable
+                in step 4</li>
+                <li>Set up the following environment variables in your build process
+                (use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
+                </ul>
+<source>
+XERCESCROOT - &lt;the full path to your &XercesCName; sources&gt;
+PLATFORM  - 'OS400'
+MAKE   - '/usr/bin/gmake'
+OUTPUTDIR  - &lt;identifies target as400 library for *module, *pgm and *srvpgm objects&gt;
+ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source>
+
+                <ul>
+                <li>Add <code>QCXXN</code>, to your build process library list.
+                This results in the resolution of <code>CRTCPPMOD</code> used by the
+                <code>icc</code> compiler.</li>
+
+                <li>The runConfigure instruction below uses <code>'egrep'</code>.
+                This is not on the AS/400 but you can create it by doing the following:
+                <code>edtf '/usr/bin/egrep'</code> with the following source:</li>
+                </ul>
+
+<source>
+#!/usr/bin/sh
+/usr/bin/grep -e "$@"</source>
+
+         <p>You may want to put the environment variables and library list
+         setup instructions in a <code>CL</code> program so you will not forget these steps
+         during your build.</p>
+
+         <p><em>Configure</em></p>
+
+         <p>To configure the make files for an AS/400 build do the following:</p>
+         <source>
+         qsh
+         cd &lt;full path to &XercesCName;&gt;/src
+         runConfigure -p os400 -x icc -c icc -m MsgFile -t Iconv400</source>
+
+         <p>Troubleshooting:</p>
+         <source>error: configure: error: installation or configuration problem:
+         C compiler cannot create executables.</source>
+
+         <p>If during <code>runConfigure</code> you see the above error message, it
+         can mean one of two things. Either <code>QCXXN</code> is not on your library
+         list  <em>OR</em> the <code>runConfigure</code> cannot create the temporary
+         modules (<code>CONFTest1</code>, etc) it uses to test out the compiler
+         options. The second reason happens because the test modules already exist
+         from a previous run of <code>runConfigure</code>. To correct the problem,
+         do the following:</p>
+<source>
+DLTMOD &lt;your OUTPUTDIR library&gt;/CONFT* and
+DLTPGM your &lt;OUTPUTDIR library&gt;/CONFT*</source>
+
+        <p><em>Build</em></p>
+
+<source>
+qsh
+gmake -e</source>
+
+         <p>The above gmake will result in a service program being created
+         in your specified library and a symbolic link to that service program
+         placed in &lt;path to &XercesCName;/lib&gt;. You can either bind your
+         XML application programs directly to the parser's service program
+         via the <code>BNDSRVPGM</code> option on the <code>CRTPGM</code> or
+         <code>CRTSRVPGM</code> command  or you can specify a binding directory
+         on your <code>icc</code>  command. To specify an archive file to bind to,
+         use the  <code>-L, -l</code> binding options on icc.  An archive file
+         on AS/400 is a binding directory. To create an archive file, use
+         <code>qar</code> command.  (see the gnu facilities write up).
+         </p>
+
+         <p>
+         After building the &XercesCName; service program, create a binding directory
+         by doing the following (note, this binding directory is used when building
+         the samples):</p>
+<source>
+qsh
+cd &lt;full path to &XercesCName;>/lib&gt;
+qar -cuv libxercesc1_1.a *.o
+command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/libxercesc1_1.a')
+command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
+
+
+         <p><em>Troubleshooting:</em></p>
+         <p>If you are on a V4R3 system, you will get a bind problem
+         <code>'descriptor  QlgCvtTextDescToDesc not found'</code> using Iconv400.
+         On V4R3 the system doesn't automatically pick up the <code>QSYS/QLGUSR</code> service
+         program for you when resolving this function. This is not the case on V4R4.
+         To fix this, you can either manually create the service program after creating
+         all the resulting modules in your &lt;OUTPUTDIR&gt; library or you can create
+         a symbolic link to a binding directory that points to  the <code>QLGUSR</code>
+         service program and then specify  an additional <code>-L, -l</code> on the
+         <code>EXTRA_LINK_OPTIONS</code> in <code>Makefile.incl</code>.
+         See the <code>ln</code> and <code>qar</code> function in the gnu utilities.</p>
+
+         <p>To build for transcoder ICU:</p>
+         <ol>
+          <li>Make sure you have an <code>ICUROOT</code> path set up so that you can
+          find the ICU header files (usually <code>/usr/local</code>)</li>
+          <li>Make sure you have created a binding directory (symbolic link)
+          in the file system so that you can bind the &XercesCName; service program
+          to the ICU service program and specify that on the <code>EXTRA_LINK_OPTIONS</code>
+          in <code>src/Makefile.incl</code> (usually the default is a link
+          in <code>/usr/local/lib</code>).</li>
+         </ol>
+
+         <p><em>Creating AS400 XML parser message file:</em></p>
+         <p>As specified earlier, the <code>-m</code> MsgFile support on the
+         <code>runConfigure</code> enable the parser messages to be pulled from
+         an AS/400 message file. To view the source for creating  the message file
+         and the XML parser messages, see the following stream file:</p>
+<source>
+EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</source>
+
+         <p>In the prolog of <code>CrtXMLMsgs</code> there are instructions to create
+         the message file:</p>
+         <ol>
+         <li>Use the <code>CPYFRMSTMF</code> to copy the CL source to an AS/400 source
+         physical file. Note that the target source file needs to have record length
+         of about 200 bytes to avoid any truncation.</li>
+         <li>Create the CL program to create the message file and add the various
+         message descriptions</li>
+         <li>Call the CL program, providing the name of the message file
+         (use <code>QXMLMSG</code> as default) and a library  (this can be any
+         library, including any product library in which you wish to embed
+         the xml parser)</li>
+         </ol>
+
+         <p>Note that the &XercesCName; source code for resolving parser messages is
+         using by default message file  <code>QXMLMSG, *LIBL</code>.
+         If you want to change either the message file name or explicitly qualify the
+         library to match your product needs, you must edit the following <code>.cpp</code>
+         files prior to your build.</p>
+<source>
+&lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/MsgLoader.cpp
+&lt;full path to &XercesCName;&gt;/src/util/Platforms/OS400/OS400PlatformUtils.cpp</source>
+
+         <p><em>Troubleshooting:</em></p>
+         <p>If you are using the parser and are failing to get any  message text
+         for error codes, it may be because of the <code>*LIBL</code> resolution of
+         the message file.</p>
+        </s3>
+
+        <s3 title="Building Samples on AS/400">
+<source>
+qsh
+cd &lt;full path to &XercesCName;&gt;/samples
+runConfigure -p os400 -x icc -c icc
+gmake -e</source>
+
+            <p><em>Troubleshooting:</em></p>
+            <p>If you take a <code>'sed'</code> error, while trying to make the samples.
+            This is an AS400 anomaly having to do with certain new line character and
+            the <code>sed</code> function. A temporary work around is to use <code>EDTF</code>
+            on the configure stream file (<code>../samples/configure</code>) and delete the
+            following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
+            </p>
+
+        </s3>
+    </a>
+    </faq>
+
+    <faq title="Building &XercesCName; on Macintosh using CodeWarrior">
+    <q>Building &XercesCName; on Macintosh using CodeWarrior</q>
+    <a>
+        <p>The following addresses the requirements and build of
+           &XercesCName; Mactintosh using CodeWarrior.
+        </p>
+
+        <s3 title="Building &XercesCName; library">
+            <p>The directions in this file cover installing and building
+            &XercesCName; and ICU under the MacOS  using CodeWarrior.</p>
+            <ol>
+                <li><em>Create a folder:</em>
+                    <br/>for the &XercesCName; and ICU distributions,
+                    the "src drop" folder </li>
+
+                <li><em>Download and uncompress:</em>
+                    <br/>the ICU and &XercesCName; source distribution
+                    <br/>the ICU and &XercesCName; binary distributions,
+                    for the documentation included </li>
+
+                <li><em>Move the new folders:</em>
+                    <br/>move the newly created &XercesCName; and icu124
+                    folders to the "src drop" folder.</li>
+
+                <li><em>Drag and drop:</em>
+                    <br/>the &XercesCName; folder into the "rename file" application located in
+                    the same folder as this readme.
+                    <br/>This is a MacPerl script that renames files that have
+                    names too long to fit in a HFS/HFS+ filesystem.
+                    It also searches through all of the source code and changes
+                    the #include statements to refer to the new file names.</li>
+
+                <li><em>Move the MacOS folder:</em>
+                    <br/>from the in the Projects folder to "src drop:&XercesCName;:Projects".</li>
+
+                <li><em>Open and build &XercesCName;:</em>
+                    <br/>open the CodeWarrior project file
+                    "src drop:&XercesCName;:Projects:MacOS:&XercesCName;:&XercesCName;"
+                    and build the &XercesCName; library.</li>
+
+                <li><em>Open and build ICU:</em>
+                    <br/>open the CodeWarrior project file
+                    "src drop:&XercesCName;:Projects:MacOS:icu:icu"
+                    and build the ICU library.</li>
+
+                <li><em>Binary distribution:</em>
+                <br/>If you wish, you can create projects for and build the rest of the tools and test
+                suites.  They are not needed if you just want to use &XercesCName;. I suggest that you
+                use the binary data files distributed with the binary distribution of ICU instead of
+                creating your own from the text data files in the ICE source distribution.</li>
+            </ol>
+
+            <p>There are some things to be aware of when creating your own
+            projects using &XercesCName;.</p>
+            <ol>
+                <li>You will need to link against both the ICU and &XercesCName; libraries.</li>
+                <li>The options "Always search user paths" and "Interpret DOS and Unix Paths" are
+                    very useful.  Some of the code won't compile without them set.</li>
+                <li>Most of the tools and test code will require slight modification to compile and run
+                    correctly (typecasts, command line parameters, etc), but it is possible to get
+                    them working correctly.</li>
+                <li>You will most likely have to set up the Access Paths.  The access paths in the
+                    &XercesCName; projects should serve as a good example.</li>
+            </ol>
+
+
+            <note>These instructions were originally contributed by
+            <jump href="mailto:jbellardo@alumni.calpoly.edu">J. Bellardo</jump>.
+            &XercesCName; has undergone many changes since these instructions
+            were written. So, these instructions are not upto date.
+            But it will give you a jump start if you are struggling to get it
+            to work for the first time. We will be glad to get your changes.
+            Please respond to <jump href="mailto:&XercesCEmailAddress;">
+            &XercesCEmailAddress;</jump> with your comments and corrections.</note>
+
+        </s3>
+    </a>
+    </faq>
+</faqs>
