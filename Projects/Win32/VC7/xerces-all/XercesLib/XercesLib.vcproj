@@ -594,9 +594,6 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp">
 				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp">
-				</File>
 			</Filter>
 			<Filter
 				Name="Transcoders"

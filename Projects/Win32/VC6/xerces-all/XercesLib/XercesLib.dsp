@@ -178,10 +178,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp
 
 SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp
-# End Source File
 # End Group
 # Begin Group "Transcoders"
 
