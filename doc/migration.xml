@@ -262,7 +262,16 @@ void test(char* xmlFile) {
                 </ul>
               <li>To support Preparsing Grammar and Grammar Caching, the following are added:</li>
                 <ul>
-                   <li></li>
+                   <li>XercesDOMParser/DOMParser/SAXParser functions loadGrammar, resetCachedGrammarPool,
+                       cacheGrammarFromParse, isCachingGrammarFromParse, useCachedGrammarInParse,
+                       isUsingCachedGrammarInParse.</li>
+                   <li>SAX2XMLReader functions loadGrammar, resetCachedGrammarPool, and will recognize the features
+                       http://apache.org/xml/features/validation/cache-grammarFromParse and 
+                       http://apache.org/xml/features/validation/use-cachedGrammarInParse.</li>
+                </ul>
+              <li>To support access to Grammar info, the following are added:</li>
+                <ul>
+                   <li>XercesDOMParser/DOMParser/SAXParser/SAX2XMLReader functions getRootGrammar, getGrammar, getURIText.</li>
                 </ul>
             </ul>
         </s4>
@@ -279,10 +288,11 @@ void test(char* xmlFile) {
                    Users should now use the "Grammar Caching" feature as described in
                    <link anchor="Reuse">Reuse Grammar becomes Grammar Caching</link>.</li>
                 <ul>
-                   <li>(in SAXParser, DOMParser, and XercesDOMParser) </li>
+                   <li>(in Parser, SAXParser, DOMParser, and XercesDOMParser) </li>
                    <li>parse(const InputSource&amp; source, const bool reuseGrammar = false);</li>
                    <li>parse(const XMLCh* const systemId, const bool reuseGrammar = false);</li>
                    <li>parse(const char* const systemId, const bool reuseGrammar = false);</li>
+                   <li>(in SAXParser, DOMParser, and XercesDOMParser) </li>
                    <li>parseFirst(const InputSource&amp; source, XMLPScanToken&amp;  toFill, const bool reuseGrammar = false);</li>
                    <li>parseFirst(const XMLCh* const systemId, XMLPScanToken&amp;  toFill, const bool reuseGrammar = false);</li>
                    <li>parseFirst(const char* const systemId, XMLPScanToken&amp;  toFill, const bool reuseGrammar = false);</li>

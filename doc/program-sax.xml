@@ -284,11 +284,13 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
 
             <anchor name="use-cached"/>
             <table>
-                <tr><td colspan="2"><em>useCachedGrammarInParse</em></td></tr>
-                <tr><td><em>true:</em></td><td></td></tr>
-                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td colspan="2"><em>void useCachedGrammarInParse(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td>Use cached grammar if it exists in the pool.</td></tr>
+                <tr><td><em>false:</em></td><td>Parse the schema grammar.</td></tr>
                 <tr><td><em>default:</em></td><td> false </td></tr>
                 <tr><td><em>note:</em></td><td>The getter function for this method is called isUsingCachedGrammarInParse</td></tr>
+                <tr><td><em>note:</em></td><td>If the grammar caching option is enabled, this option is set to true automatically.
+                Any setting to this option by the users is a no-op.</td></tr>
                 <tr><td><em>see:</em></td><td>
                 <link anchor="cache-grammar">cacheGrammarFromParse</link>
                 </td></tr>
@@ -298,9 +300,9 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
 
             <anchor name="cache-grammar"/>
             <table>
-                <tr><td colspan="2"><em>cacheGrammarFromParse</em></td></tr>
-                <tr><td><em>true:</em></td><td></td></tr>
-                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td colspan="2"><em>void cacheGrammarFromParse(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td>Cache the grammar in the pool for re-use in subsequent parses.</td></tr>
+                <tr><td><em>false:</em></td><td>Do not cache the grammar in the pool</td></tr>
                 <tr><td><em>default:</em></td><td> false </td></tr>
                 <tr><td><em>note:</em></td><td>The getter function for this method is called isCachingGrammarFromParse</td></tr>
                 <tr><td><em>note:</em></td><td> If set to true, the useCachedGrammarInParse

@@ -92,24 +92,99 @@ while (gotMore &amp;&amp; !handler.getDone())
     <s2 title="Preparsing Grammar and Grammar Caching">
         <p>&XercesCName; &XercesCVersion; provides a new function to pre-parse the grammar so that users
            can check for any syntax or error before using the grammar.  Users can also optionally
-           cached these pre-parsed grammars for later use during actual parsing.
+           cache these pre-parsed grammars for later use during actual parsing.
         </p>
         <p>Here is an example:</p>
 <source>
+XercesDOMParser parser;
+
+// enbale schema processing
+parser.setDoSchema(true);
+parser.setDONamespaces(true);
+
+// Let's preparse the schema grammar (.xsd) and cache it.
+Grammar* grammar = parser.loadGrammar(xmlFile, Grammar::SchemaGrammarType, true);
 </source>
-        <p>Besides caching the pre-parsed grammar, users can also cache any grammars encountered
-           during parse.
+        <p>Besides caching pre-parsed schema grammars, users can also cache any
+           grammars encountered during an xml document parse.
         </p>
         <p>Here is an example:</p>
 <source>
+SAXParser parser;
+
+// Enable grammar caching by setting cacheGrammarFromParse to true.
+// The parser will cache any encountered grammars if it does not
+// exist in the pool.
+// If the grammar is DTD, no internal subset is allowed.
+parser.cacheGrammarFromParse(true);
+
+// Let's parse our xml file (DTD grammar)
+parser.parse(xmlFile);
+
+// We can get the grammar where the root element was declared
+// by calling the parser's method getRootGrammar;
+// Note: The parser owns the grammar, and the user should not delete it.
+Grammar* grammar = parser.getRootGrammar();
 </source>
-        <p>Here is an example how to use these cached grammars:
+        <p>We can use any previously cached grammars when parsing new xml
+        documents. Here are some examples on how to use those cached grammars:
         </p>
 <source>
+/**
+  * Caching and reusing XML Schema (.xsd) grammar
+  * Parse an XML document and cache its grammar set. Then,  use the cached
+  * grammar set in subsequent parses.
+  */
+
+XercesDOMParser parser;
+
+// Enable schema processing
+parser.setDoSchema(true);
+parser.setDoNamespaces(true);
+
+// Enable grammar caching
+parser.cacheGrammarFromParsing(true);
+
+// Let's parse the XML document. The parser will cache any grammars encounterd.
+parser.parse(xmlFile);
+
+// No need to enable re-use by setting useCachedGrammarInParse to true. It is
+// automatically enabled with grammar caching.
+for (int i=0; i&lt; 3; i++)
+    parser.parse(xmlFile);
+
+// This will flush the grammar pool
+parser.resetCachedGrammarPool(); 
+</source>
+
+<source>
+/**
+  * Caching and reusing DTD grammar
+  * Preparse a grammar and cache it in the pool. Then, we use the cached grammar
+  * when parsing XML documents.
+  */
+
+SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+
+// Load grammar and cache it
+parser->loadGrammar(dtdFile, Grammar::DTDGrammarType, true);
+
+// enable grammar reuse
+parser->setFeature(XMLUni::fgXercesUseCachedGrammarInParse, true);
+
+// Parse xml files
+parser->parse(xmlFile1);
+parser->parse(xmlFile2);
 </source>
         <p>There are some limitations about caching and using cached grammars:</p>
            <ul>
-              <li></li>
+              <li>When caching/reusing DTD grammars, no internal subset is allowed.</li>
+              <li>When preparsing grammars with caching option enabled, if a grammar, in the
+              result set, already exists in the pool (same NS for schema or same system 
+              id for DTD), the entire set will not be cached.</li>
+              <li>When parsing an XML document with the grammar caching option enabled, the
+              reuse option is also automatically enabled. We will only parse a grammar if it
+              does not exist in the pool.</li>
            </ul>
     </s2>
 

@@ -302,10 +302,11 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             <anchor name="use-cached"/>
             <table>
                 <tr><td colspan="2"><em>http://apache.org/xml/features/validation/use-cachedGrammarInParse</em></td></tr>
-                <tr><td><em>true:</em></td><td></td></tr>
-                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td><em>true:</em></td><td>Use cached grammar if it exists in the pool.</td></tr>
+                <tr><td><em>false:</em></td><td>Parse the schema grammar.</td></tr>
                 <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td></td></tr>
+                <tr><td><em>note:</em></td><td>If http://apache.org/xml/features/validation/cache-grammarFromParse is enabled,
+                this feature is set to true automatically. Any setting to this feature by the users is a no-op.</td></tr>
                 <tr><td><em>see:</em></td><td>
                 <link anchor="cache-grammar">http://apache.org/xml/features/validation/cache-grammarFromParse</link>
                 </td></tr>
@@ -316,8 +317,8 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             <anchor name="cache-grammar"/>
             <table>
                 <tr><td colspan="2"><em>http://apache.org/xml/features/validation/cache-grammarFromParse</em></td></tr>
-                <tr><td><em>true:</em></td><td></td></tr>
-                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td><em>true:</em></td><td>Cache the grammar in the pool for re-use in subsequent parses.</td></tr>
+                <tr><td><em>false:</em></td><td>Do not cache the grammar in the pool</td></tr>
                 <tr><td><em>default:</em></td><td> false </td></tr>
                 <tr><td><em>note:</em></td><td> If set to true, the http://apache.org/xml/features/validation/use-cachedGrammarInParse
                 is also set to true automatically.</td></tr>
