@@ -57,6 +57,10 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/05/21 15:19:16  peiyongz
+ * [jira1216]  GrammarResolver never clears internal cache of
+ * Grammar instances -- patch from David Bertoni
+ *
  * Revision 1.25  2004/02/17 15:53:50  neilg
  * fix potential memory leak
  *
@@ -403,6 +407,10 @@ void GrammarResolver::resetCachedGrammar()
     fGrammarPool->clear();
     // Even though fXSModel and fGrammarPoolXSModel will be invalid don't touch 
     // them here as getXSModel will handle this.
+
+    //to clear all other references to the grammars just deleted from fGrammarPool
+    fGrammarFromPool->removeAll(); 
+
 }
 
 void GrammarResolver::cacheGrammars()
