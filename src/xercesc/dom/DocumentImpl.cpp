@@ -593,7 +593,7 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
             newentity->setNotationName(srcentity->getNotationName());
             // Kids carry additional value
             newnode=newentity;
-            newentity->isReadOnly(false);// allow deep import temporarily
+            newentity->setReadOnly(false, true);// allow deep import temporarily
         }
         break;
     case DOM_Node::PROCESSING_INSTRUCTION_NODE :
@@ -662,8 +662,8 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
             newnode->appendChild(importNode(srckid, true));
         }
     if (newnode->getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE
-        || newnode->getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)
-	newnode->isReadOnly(true);
+        || newnode->getNodeType() == DOM_Node::ENTITY_NODE)
+         ((EntityReferenceImpl*)newnode)->setReadOnly(true, true);
 
     return newnode;
 };

@@ -567,7 +567,7 @@ IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
             newentity->setNotationName(srcentity->getNotationName());
             // Kids carry additional value
             newnode=newentity;
-            castToNodeImpl(newentity)->isReadOnly(false);// allow deep import temporarily
+            castToNodeImpl(newentity)->setReadOnly(false, true);// allow deep import temporarily
         }
         break;
     case IDOM_Node::PROCESSING_INSTRUCTION_NODE :
@@ -636,8 +636,8 @@ IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
             newnode->appendChild(importNode(srckid, true));
         }
         if (newnode->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE
-            || newnode->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE)
-            castToNodeImpl(newnode)->isReadOnly(true);
+            || newnode->getNodeType() == IDOM_Node::ENTITY_NODE)
+            castToNodeImpl(newnode)->setReadOnly(true, true);
 
         return newnode;
 }
