@@ -13,9 +13,80 @@
     </tr>
 
     <tr>
+        <td >2000/12/12</td>
+        <td >Gareth Reakes</td>
+        <td >null pointer bug.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/12/08</td>
+        <td >Tinny Ng</td>
+        <td >Entity Reference cleanup dumping core if the last entity reference is deleted.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/12/06</td>
+        <td >Tinny Ng</td>
+        <td >fix the link to FAQ.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/12/06</td>
+        <td >Tinny Ng</td>
+        <td >further fixes to Range, and update RangeTest.cpp with more test coverage.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/11/30</td>
+        <td >Bill Schindler</td>
+        <td >Spell check, fix typos, fix grammar, readability editing, clean up formatting.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/11/30</td>
+        <td >Bill Schindler</td>
+        <td >Remove dead code (old StdOut and StdErr functions); minor clean-up.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/11/30</td>
+        <td >Tinny Ng</td>
+        <td >patch to fix a number of Range problems.  See mail of 11/21/2000.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/11/30</td>
+        <td >Tinny Ng</td>
+        <td >DOM_Text::splitText(), fix off by one error in the test for index too big error.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/11/30</td>
+        <td >Tinny Ng</td>
+        <td >reuseValidator - fix bugs (spurious errors) that occured on reuse due to
+             pools already containing some items.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000/11/08</td>
+        <td >Andrei Smirnov</td>
+        <td >Build updates for Solaris 2.8 64 bit.
+        </td>
+    </tr>
+
+    <tr>
         <td >2000/11/07</td>
         <td >Tinny Ng</td>
-        <td >Bug fix for DTD entity reference problem reported by TOny Wuebben on 10/25.
+        <td >Bug fix for DTD entity reference problem reported by Tony Wuebben on 10/25.
         </td>
     </tr>
 
