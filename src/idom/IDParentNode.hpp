@@ -101,6 +101,7 @@ public:
     IDParentNode(const IDParentNode &other);
 
     IDOM_Document * getOwnerDocument() const;
+    void setOwnerDocument(IDOM_Document* doc);
 
     // Track changes to the node tree structure under this node.  An optimization
     //   for NodeLists.

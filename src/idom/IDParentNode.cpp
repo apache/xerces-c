@@ -125,6 +125,9 @@ IDOM_Document * IDParentNode::getDocument() const {
     return fOwnerDocument;
 }
 
+void IDParentNode::setOwnerDocument(IDOM_Document* doc) {
+    fOwnerDocument = doc;
+}
 
 IDOM_NodeList *IDParentNode::getChildNodes() const {
     const IDOM_NodeList *ret = &fChildNodeList;

@@ -110,19 +110,23 @@ class IDOM_NodeFilter;
 //                             allocate.
 //
 IDDocumentImpl::IDDocumentImpl()
-    : fNode(this), fParent(this) ,
-      fCurrentBlock(0), fFreePtr(0), fFreeBytesRemaining(0)
+    : fNode(this),
+      fParent(this),
+      fCurrentBlock(0),
+      fFreePtr(0),
+      fFreeBytesRemaining(0),
+      fDocType(0),
+      fDocElement(0),
+      fNamePool(0),
+      fIterators(0L),
+      fTreeWalkers(0L),
+      fNodeIDMap(0),
+      fUserData(0),
+      fRanges(0),
+      fChanges(0),
+      fNodeListPool(0)
 {
-    fDocType     = 0;
-    fDocElement  = 0;
     fNamePool    = new (this) IDStringPool(257, this);
-    fIterators   = 0L;
-    fTreeWalkers = 0L;
-    fNodeIDMap   = 0;
-    fUserData    = 0;
-    fRanges      = 0;
-    fChanges     = 0;
-    fNodeListPool = 0;
 };
 
 
@@ -130,23 +134,26 @@ IDDocumentImpl::IDDocumentImpl()
 IDDocumentImpl::IDDocumentImpl(const XMLCh *fNamespaceURI,
                                const XMLCh *qualifiedName,
                                IDOM_DocumentType *doctype)
-    : fNode(this), fParent(this),
-      fCurrentBlock(0), fFreePtr(0), fFreeBytesRemaining(0)
+    : fNode(this),
+      fParent(this),
+      fCurrentBlock(0),
+      fFreePtr(0),
+      fFreeBytesRemaining(0),
+      fDocType(0),
+      fDocElement(0),
+      fNamePool(0),
+      fIterators(0L),
+      fTreeWalkers(0L),
+      fNodeIDMap(0),
+      fUserData(0),
+      fRanges(0),
+      fChanges(0),
+      fNodeListPool(0)
 {
-    fDocType=0;
 
+   fNamePool    = new (this) IDStringPool(257, this);
 	setDocumentType(doctype);
-	
-    fDocElement=0;
-    appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
-    fNamePool    = new (this) IDStringPool(257, this);
-    fIterators   = 0;
-    fTreeWalkers = 0;
-    fNodeIDMap   = 0;
-    fUserData    = 0;
-    fRanges      = 0;
-    fChanges     = 0;
-    fNodeListPool = 0;
+   appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
 }
 
 void IDDocumentImpl::setDocumentType(IDOM_DocumentType *doctype)
@@ -161,7 +168,8 @@ void IDDocumentImpl::setDocumentType(IDOM_DocumentType *doctype)
         throw IDOM_DOMException(	//one doctype can belong to only one IDDocumentImpl
         IDOM_DOMException::WRONG_DOCUMENT_ERR, 0);
 
-    castToNodeImpl(doctype)->setOwnerDocument(this);
+    IDDocumentTypeImpl* doctypeImpl = (IDDocumentTypeImpl*) doctype;
+    doctypeImpl->setOwnerDocument(this);
 
     // The doctype can not have any Entities or Notations yet, because they can not
     //   be created except through factory methods on a document.

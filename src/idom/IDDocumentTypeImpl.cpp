@@ -68,15 +68,26 @@
 
 IDDocumentTypeImpl::IDDocumentTypeImpl(IDOM_Document *ownerDoc,
                                    const XMLCh *dtName)
-    : fNode(ownerDoc), fParent(ownerDoc),
-    publicId(0), systemId(0), internalSubset(0) //DOM Level 2
-	, intSubsetReading(false)	
+    : fNode(ownerDoc),
+    fParent(ownerDoc),
+    publicId(0),
+    systemId(0),
+    name(0),
+    internalSubset(0), //DOM Level 2
+    intSubsetReading(false),
+    entities(0),
+    notations(0),
+    elements(0)
 {
-    name = ((IDDocumentImpl *)ownerDoc)->getPooledString(dtName);
-    entities = new (ownerDoc) IDNamedNodeMapImpl(this);
-    notations= new (ownerDoc) IDNamedNodeMapImpl(this);
-    elements = new (ownerDoc) IDNamedNodeMapImpl(this);
-
+    if (ownerDoc) {
+        name = ((IDDocumentImpl *)ownerDoc)->getPooledString(dtName);
+        entities = new (ownerDoc) IDNamedNodeMapImpl(this);
+        notations= new (ownerDoc) IDNamedNodeMapImpl(this);
+        elements = new (ownerDoc) IDNamedNodeMapImpl(this);
+    }
+    else {
+        name = XMLString::replicate(dtName);
+    }
 };
 
 
@@ -86,50 +97,95 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(IDOM_Document *ownerDoc,
                                    const XMLCh *pubId,
                                    const XMLCh *sysId)
 	: fNode(ownerDoc),
-    fParent(ownerDoc)
+    fParent(ownerDoc),
+    publicId(0),
+    systemId(0),
+    name(0),
+    internalSubset(0), //DOM Level 2
+    intSubsetReading(false),
+    entities(0),
+    notations(0),
+    elements(0)
 {
-    IDDocumentImpl *docImpl = (IDDocumentImpl *)ownerDoc;
-    publicId = docImpl->cloneString(pubId);
-    systemId = docImpl->cloneString(sysId);
-    internalSubset = 0;
-    intSubsetReading = false;
-
-    name = ((IDDocumentImpl *)ownerDoc)->getPooledString(qualifiedName);
     if (IDDocumentImpl::indexofQualifiedName(qualifiedName) < 0)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
 
-    entities = new (ownerDoc) IDNamedNodeMapImpl(this);
-    notations= new (ownerDoc) IDNamedNodeMapImpl(this);
-    elements = new (ownerDoc) IDNamedNodeMapImpl(this);
+    if (ownerDoc) {
+        IDDocumentImpl *docImpl = (IDDocumentImpl *)ownerDoc;
+        publicId = docImpl->cloneString(pubId);
+        systemId = docImpl->cloneString(sysId);
+        name = ((IDDocumentImpl *)ownerDoc)->getPooledString(qualifiedName);
+        entities = new (ownerDoc) IDNamedNodeMapImpl(this);
+        notations= new (ownerDoc) IDNamedNodeMapImpl(this);
+        elements = new (ownerDoc) IDNamedNodeMapImpl(this);
+    }
+    else {
+        publicId = XMLString::replicate(pubId);
+        systemId = XMLString::replicate(sysId);
+        name = XMLString::replicate(qualifiedName);
+    }
 };
 
 
 IDDocumentTypeImpl::IDDocumentTypeImpl(const IDDocumentTypeImpl &other, bool deep)
-    : fNode(other.fNode), fParent(other.fParent), fChild(other.fChild)
+    : fNode(other.fNode),
+    fParent(other.fParent),
+    fChild(other.fChild),
+    publicId(0),
+    systemId(0),
+    name(0),
+    internalSubset(0), //DOM Level 2
+    intSubsetReading(other.intSubsetReading),
+    entities(0),
+    notations(0),
+    elements(0)
 {
-    name = other.name;
-    if (deep)
-        fParent.cloneChildren(&other);
-    entities = ((IDNamedNodeMapImpl *)other.entities)->cloneMap(this);
-    notations= ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
-    elements = ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
+    if ((IDDocumentImpl *)this->fNode.getOwnerDocument()) {
+        name = other.name;
+        if (deep)
+            fParent.cloneChildren(&other);
+        entities = ((IDNamedNodeMapImpl *)other.entities)->cloneMap(this);
+        notations= ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
+        elements = ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
 
-    //DOM Level 2
-    publicId		= other.publicId;
-    systemId		= other.systemId;
-	internalSubset	= other.internalSubset;
-	intSubsetReading = other.intSubsetReading;
+        //DOM Level 2
+        publicId		= other.publicId;
+        systemId		= other.systemId;
+        internalSubset	= other.internalSubset;
+    }
+    else {
+        name = XMLString::replicate(other.name);
+        publicId = XMLString::replicate(other.publicId);
+        systemId = XMLString::replicate(other.systemId);
+        internalSubset = XMLString::replicate(other.internalSubset);
+    }
 }
 
 
 IDDocumentTypeImpl::~IDDocumentTypeImpl()
 {
+    if (!(castToNodeImpl(this)->getOwnerDocument())) {
+        XMLCh* temp = (XMLCh*) name;  // cast off const
+        delete [] temp;
+
+        temp = (XMLCh*) publicId;  // cast off const
+        delete [] temp;
+
+        temp = (XMLCh*) systemId;
+        delete [] temp;
+
+        temp = (XMLCh*) internalSubset;
+        delete [] temp;
+    }
 }
 
 
 IDOM_Node *IDDocumentTypeImpl::cloneNode(bool deep) const
 {
-    return new (castToNodeImpl(this)->getOwnerDocument()) IDDocumentTypeImpl(*this, deep);
+    if (castToNodeImpl(this)->getOwnerDocument())
+        return new (castToNodeImpl(this)->getOwnerDocument()) IDDocumentTypeImpl(*this, deep);
+
+    return new IDDocumentTypeImpl(*this, deep);
 }
 
 /**
@@ -137,8 +193,38 @@ IDOM_Node *IDDocumentTypeImpl::cloneNode(bool deep) const
  * set the ownerDocument of this node and its children
  */
 void IDDocumentTypeImpl::setOwnerDocument(IDOM_Document *doc) {
-    fNode.setOwnerDocument(doc);
-    // idom_revisit.  Who deletes this guy, if he's not on the document heap?
+    if (castToNodeImpl(this)->getOwnerDocument()) {
+        fNode.setOwnerDocument(doc);
+        fParent.setOwnerDocument(doc);
+    }
+    else {
+        if (doc) {
+            IDDocumentImpl *docImpl = (IDDocumentImpl *)doc;
+
+            XMLCh* temp = (XMLCh*) publicId; // cast off const
+            publicId = docImpl->cloneString(publicId);
+            delete [] temp;
+
+            temp = (XMLCh*) systemId; // cast off const
+            systemId = docImpl->cloneString(systemId);
+            delete [] temp;
+
+            temp = (XMLCh*) internalSubset; // cast off const
+            internalSubset = docImpl->cloneString(internalSubset);
+            delete [] temp;
+
+            temp = (XMLCh*) name; // cast off const
+            name = docImpl->cloneString(name);
+            delete [] temp;
+
+            entities = new (docImpl) IDNamedNodeMapImpl(this);
+            notations= new (docImpl) IDNamedNodeMapImpl(this);
+            elements = new (docImpl) IDNamedNodeMapImpl(this);
+
+            fNode.setOwnerDocument(doc);
+            fParent.setOwnerDocument(doc);
+        }
+    }
 }
 
 const XMLCh * IDDocumentTypeImpl::getNodeName() const
@@ -187,8 +273,10 @@ void IDDocumentTypeImpl::setNodeValue(const XMLCh *val)
 void IDDocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
 {
     fNode.setReadOnly(readOnl,deep);
-    ((IDNamedNodeMapImpl *)entities)->setReadOnly(readOnl,true);
-    ((IDNamedNodeMapImpl *)notations)->setReadOnly(readOnl,true);
+    if (entities)
+        ((IDNamedNodeMapImpl *)entities)->setReadOnly(readOnl,true);
+    if (notations)
+        ((IDNamedNodeMapImpl *)notations)->setReadOnly(readOnl,true);
 };
 
 
@@ -224,21 +312,42 @@ void        IDDocumentTypeImpl::setPublicId(const XMLCh *value)
     // idom_revist.  Why shouldn't 0 be assigned like any other value?
     if (value == 0)
         return;
-    publicId = ((IDDocumentImpl *)this->fNode.getOwnerDocument())->getPooledString(value);
+
+    if ((IDDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
+        publicId = ((IDDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->getPooledString(value);
+    else {
+        XMLCh* temp = (XMLCh*) publicId; // cast off const
+        delete [] temp;
+        publicId = XMLString::replicate(value);
+    }
 }
 
 void        IDDocumentTypeImpl::setSystemId(const XMLCh *value)
 {
     if (value == 0)
         return;
-    systemId = ((IDDocumentImpl *)this->fNode.getOwnerDocument())->getPooledString(value);
+
+    if ((IDDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
+        systemId = ((IDDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->getPooledString(value);
+    else {
+        XMLCh* temp = (XMLCh*) systemId; // cast off const
+        delete [] temp;
+        systemId = XMLString::replicate(value);
+    }
 }
 
 void        IDDocumentTypeImpl::setInternalSubset(const XMLCh *value)
 {
     if (value == 0)
         return;
-    internalSubset = ((IDDocumentImpl *)this->fNode.getOwnerDocument())->getPooledString(value);
+
+    if ((IDDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
+        internalSubset = ((IDDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->getPooledString(value);
+    else {
+        XMLCh* temp = (XMLCh*) internalSubset; // cast off const
+        delete [] temp;
+        internalSubset = XMLString::replicate(value);
+    }
 }
 
 
