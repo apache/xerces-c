@@ -191,6 +191,9 @@ void DOMBuffer::append(const XMLCh* const chars, const unsigned int count)
         expandCapacity(actualCount);
     memcpy(&fBuffer[fIndex], chars, actualCount * sizeof(XMLCh));
     fIndex += actualCount;
+
+    // Keep it null terminated
+    fBuffer[fIndex] = 0;
 }
 
 void DOMBuffer::set(const XMLCh* const chars, const unsigned int count)
@@ -203,6 +206,9 @@ void DOMBuffer::set(const XMLCh* const chars, const unsigned int count)
         expandCapacity(actualCount);
     memcpy(fBuffer, chars, actualCount * sizeof(XMLCh));
     fIndex = actualCount;
+
+    // Keep it null terminated
+    fBuffer[fIndex] = 0;
 }
 
 
