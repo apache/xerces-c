@@ -140,7 +140,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     else if (reason == Panic_CantLoadMsgDomain)
         reasonStr = "Cannot load message domain";
     else if (reason == Panic_SynchronizationErr)
-        reasonStr = "A system synchronization error occured";
+        reasonStr = "A system synchronization error occurred";
     else if (reason == Panic_SystemInit)
         reasonStr = "Failed to complete platfrom dependent initialization";
 

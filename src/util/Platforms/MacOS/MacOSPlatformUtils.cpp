@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/08/14 17:51:48  jpolast
+ * spelling updates (pointed about by Jesse Pelton)
+ *
  * Revision 1.9  2000/07/30 05:18:31  jberry
  * Remove stray character
  *
@@ -357,7 +360,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     else if (reason == Panic_CantLoadMsgDomain)
         reasonStr = "Cannot load message domain";
     else if (reason == Panic_SynchronizationErr)
-        reasonStr = "A system synchronization error occured";
+        reasonStr = "A system synchronization error occurred";
     else if (reason == Panic_SystemInit)
         reasonStr = "Failed to complete platform dependent initialization";
     else
