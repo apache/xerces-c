@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/18 19:55:37  andyh
+ * Remove dependencies on XMLStdout and err, as these are about
+ * to stop working.
+ *
  * Revision 1.6  2000/01/05 22:16:26  robweir
  * Move DOMString implementation class declarations into a new
  * file: DOMStringImpl.hpp.  Include this header in DOMString.hpp
@@ -90,11 +94,11 @@
  *
  */
 
-
+#include <stdio.h>
 #include <util/PlatformUtils.hpp>
 #include <util/RuntimeException.hpp>
-#include <util/StdOut.hpp>
 #include <util/TransService.hpp>
+#include <util/XMLString.hpp>
 #include "DOMString.hpp"
 
 #ifndef XML_DEBUG
@@ -763,26 +767,31 @@ void DOMString::print() const
 
     if (len > 0)
     {
-
         XMLCh *p = fHandle->fDSData->fData;
 
-		XMLStdOut out;
+        // Copy the data from the DOMString buffer into another buffer.
+        //  This is only required because the data in the DOMString buffer
+        //  may not be null terminated, but we need the null here.
 		XMLCh* buffer = new XMLCh[len+1];
         int i;
 		for (i=0; i<len; i++)
 		   buffer[i] = p[i];
 		buffer[len] = 0;
-		out << buffer;
+
+        // Transcode from Unicode to char * in whatever the system local code page is.
+        char *pc = XMLString::transcode(buffer);
+        fputs(pc, stdout);
+
         delete [] buffer;
+        delete pc;
     };
 };
 
 
 void DOMString::println() const
 {
-    XMLStdOut out;
 	print();
-    out << EndLn;
+    putchar('\n');
 };
 
 
