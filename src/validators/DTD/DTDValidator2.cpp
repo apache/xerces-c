@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/28 19:09:44  roddey
+ * The API is not in place to allow client code to make sense of start/end entity
+ * ref calls from attribute values. So supress them for now.
+ *
  * Revision 1.6  2000/01/15 01:26:18  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -2041,10 +2045,6 @@ DTDValidator::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
             return EntityExp_Failed;
         }
 
-        // Do a start entity reference event
-        if (getScanner()->getDocHandler())
-            getScanner()->getDocHandler()->startEntityReference(*decl);
-
         // If it starts with the XML string, then parse a text decl
         if (getReaderMgr()->skippedString(XMLUni::fgXMLDeclString))
             scanTextDecl();
@@ -2075,10 +2075,6 @@ DTDValidator::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         //
         if (!getReaderMgr()->pushReader(valueReader, decl))
             getScanner()->emitError(XML4CErrs::RecursiveEntity, decl->getName());
-
-        // Do a start entity reference event
-        if (getScanner()->getDocHandler())
-            getScanner()->getDocHandler()->startEntityReference(*decl);
     }
 
     return EntityExp_Pushed;
