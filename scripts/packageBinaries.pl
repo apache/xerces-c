@@ -320,8 +320,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         }
         else {
             psystem("msdev xerces-all.dsw /MAKE \"all - $PlatformName Release\" /REBUILD /OUT buildlog_release.txt");
-          # psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /REBUILD /OUT buildlog_debug.txt");
-          # psystem("msdev xerces-all.dsw /MAKE \"XercesDeprecatedDOMLib - $PlatformName Debug\" /REBUILD /OUT buildlog_depdom_debug.txt");
+            psystem("msdev xerces-all.dsw /MAKE \"all - $PlatformName Debug\"   /REBUILD /OUT buildlog_debug.txt");
         }	
     } elsif ($DevStudioVer eq "7.0") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
@@ -332,7 +331,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     }
 
     system("type buildlog_release.txt");
-  # system("type buildlog_debug.txt");
+    system("type buildlog_debug.txt");
   # system("type buildlog_depdom_debug.txt");
 
 #
