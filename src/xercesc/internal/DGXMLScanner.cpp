@@ -2182,7 +2182,9 @@ void DGXMLScanner::updateNSMap(const    XMLCh* const attrPrefix
                 emitError(XMLErrs::PrefixXMLNotMatchXMLURI);
         }
 
-        if (!attrValue || !*attrValue)
+        if (!attrValue)
+            emitError(XMLErrs::NoEmptyStrNamespace, attrLocalName);
+        else if(!*attrValue && fXMLVersion == XMLReader::XMLV1_0)
             emitError(XMLErrs::NoEmptyStrNamespace, attrLocalName);
     }
 

@@ -1361,7 +1361,9 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
                             emitError(XMLErrs::PrefixXMLNotMatchXMLURI);
                     }
 
-                    if (!namespaceURI || !*namespaceURI)
+                    if (!namespaceURI)
+                        emitError(XMLErrs::NoEmptyStrNamespace, attNameRawBuf);
+                    else if(!*namespaceURI && fXMLVersion == XMLReader::XMLV1_0)
                         emitError(XMLErrs::NoEmptyStrNamespace, attNameRawBuf);
 
                     fElemStack.addPrefix

@@ -2912,7 +2912,9 @@ void SGXMLScanner::updateNSMap(const  XMLCh* const    attrName
                 emitError(XMLErrs::PrefixXMLNotMatchXMLURI);
         }
 
-        if (!namespaceURI || !*namespaceURI)
+        if (!namespaceURI)
+            emitError(XMLErrs::NoEmptyStrNamespace, attrName);
+        else if(!*namespaceURI && fXMLVersion == XMLReader::XMLV1_0)
             emitError(XMLErrs::NoEmptyStrNamespace, attrName);
     }
 
