@@ -85,7 +85,6 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-#include <iostream>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
