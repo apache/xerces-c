@@ -438,31 +438,41 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
     );
 
     const XMLCh* contents = 0;
-    for (DOMElement* child = XUtil::getFirstChildElement(annotationElem);
-         child != 0;
-         child = XUtil::getNextSiblingElement(child)) {
+    DOMElement* child = XUtil::getFirstChildElement(annotationElem);
+    if (child) {
+        for (;
+             child != 0;
+             child = XUtil::getNextSiblingElement(child)) {
 
-        const XMLCh* name = child->getLocalName();
+            const XMLCh* name = child->getLocalName();
 
-        if (XMLString::equals(name, SchemaSymbols::fgELT_APPINFO)) {
+            if (XMLString::equals(name, SchemaSymbols::fgELT_APPINFO)) {
 
-            DOMNode* textContent = child->getFirstChild();
-            if (textContent && textContent->getNodeType() == DOMNode::TEXT_NODE)
-                contents = ((DOMText*) textContent)->getData();
+                DOMNode* textContent = child->getFirstChild();
+                if (textContent && textContent->getNodeType() == DOMNode::TEXT_NODE)
+                    contents = ((DOMText*) textContent)->getData();
 
-            fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Appinfo, this);
+                fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Appinfo, this);
+            }
+            else if (XMLString::equals(name, SchemaSymbols::fgELT_DOCUMENTATION)) {
+
+                DOMNode* textContent = child->getFirstChild();
+                if (textContent && textContent->getNodeType() == DOMNode::TEXT_NODE)
+                    contents = ((DOMText*) textContent)->getData();
+
+                fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Documentation, this);
+            }
+            else {
+                reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAnnotationContent);
+            }
         }
-        else if (XMLString::equals(name, SchemaSymbols::fgELT_DOCUMENTATION)) {
-
-            DOMNode* textContent = child->getFirstChild();
-            if (textContent && textContent->getNodeType() == DOMNode::TEXT_NODE)
-                contents = ((DOMText*) textContent)->getData();
-
-            fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Documentation, this);
-        }
-        else {
-            reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAnnotationContent);
-        }
+    }
+    else
+    {
+        // If the Annotation has no children, get the text directly
+        DOMNode* textContent = annotationElem->getFirstChild();
+        if (textContent && textContent->getNodeType() == DOMNode::TEXT_NODE)
+            contents = ((DOMText*) textContent)->getData();    
     }
 
     if (contents)
