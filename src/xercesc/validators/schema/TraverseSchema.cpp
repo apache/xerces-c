@@ -236,6 +236,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fIC_Elements(0)
     , fDeclStack(0)
     , fGlobalDeclarations(0)
+    , fNonXSAttList(0)
     , fNotationRegistry(0)
     , fRedefineComponents(0)
     , fIdentityConstraintNames(0)
@@ -429,7 +430,10 @@ void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(schemaRoot, GeneralAttributeCheck::E_Schema, this, true);
+    fAttributeCheck.checkAttributes(
+        schemaRoot, GeneralAttributeCheck::E_Schema, this
+        , true, fSchemaInfo->getNonXSAttList()
+    );
 
     retrieveNamespaceMapping(schemaRoot);
     unsigned short elemAttrDefaultQualified = 0;
@@ -450,13 +454,17 @@ void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
 }
 
 
-XSAnnotation* TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
-                                                     const bool topLevel) {
+XSAnnotation*
+TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
+                                       ValueVectorOf<DOMNode*>* const nonXSAttList,
+                                       const bool topLevel) {
 
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(annotationElem, GeneralAttributeCheck::E_Annotation, this, topLevel);
+    fAttributeCheck.checkAttributes(
+        annotationElem, GeneralAttributeCheck::E_Annotation, this, topLevel
+    );
 
     const XMLCh* contents = 0;
     for (DOMElement* child = XUtil::getFirstChildElement(annotationElem);
@@ -487,7 +495,51 @@ XSAnnotation* TraverseSchema::traverseAnnotationDecl(const DOMElement* const ann
     }
 
     if (contents)
-        return new (fGrammarPoolMemoryManager) XSAnnotation(contents, fGrammarPoolMemoryManager);
+    {
+        unsigned int nonXSAttSize = nonXSAttList->size();
+
+        if (nonXSAttSize)
+        {
+            int annotTokenStart = XMLString::patternMatch(
+                contents, SchemaSymbols::fgELT_ANNOTATION);
+
+            if (annotTokenStart == -1) // somthing is wrong
+                return 0;
+
+            // set annotation element
+            fBuffer.set(contents, annotTokenStart + 10);
+
+            for (unsigned int i=0; i<nonXSAttSize; i++)
+            {
+                DOMNode* attNode = nonXSAttList->elementAt(i);
+
+                if (!XMLString::equals(
+                        annotationElem->getAttributeNS(
+                           attNode->getNamespaceURI(), attNode->getLocalName())
+                        , XMLUni::fgZeroLenString)
+                   )
+                {
+                    continue;
+                }
+
+                fBuffer.append(chSpace);
+                fBuffer.append(attNode->getNodeName());
+                fBuffer.append(chEqual);
+                fBuffer.append(chDoubleQuote);
+                processAttValue(attNode->getNodeValue(), fBuffer);
+                fBuffer.append(chDoubleQuote);
+            }
+
+            // add remaining annotation content
+            fBuffer.append(contents + annotTokenStart + 10);
+
+            return new (fGrammarPoolMemoryManager) XSAnnotation(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager);
+        }
+        else
+        {
+            return new (fGrammarPoolMemoryManager) XSAnnotation(contents, fGrammarPoolMemoryManager);
+        }
+    }
 
     return 0;
 }
@@ -505,23 +557,24 @@ XSAnnotation* TraverseSchema::traverseAnnotationDecl(const DOMElement* const ann
   */
 void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Check attributes
-    // ------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_Include, this, true);
+    // -----------------------------------------------------------------------
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_Include, this, true);
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0)
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
 
     if (fAnnotation)
-        fSchemaGrammar->addAnnotation(fAnnotation);
+        delete fAnnotation;//fSchemaGrammar->addAnnotation(fAnnotation);
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Get 'schemaLocation' attribute
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
 
     if (!schemaLocation || !*schemaLocation) {
@@ -652,23 +705,24 @@ void TraverseSchema::traverseInclude(const DOMElement* const elem) {
   */
 void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Check attributes
-    // ------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_Import, this, true);
+    // -----------------------------------------------------------------------
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_Import, this, true);
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0)
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
 
     if (fAnnotation)
-        fSchemaGrammar->addAnnotation(fAnnotation);
+        delete fAnnotation;//fSchemaGrammar->addAnnotation(fAnnotation);
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Handle 'namespace' attribute
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     const XMLCh* nameSpace = getElementAttValue(elem, SchemaSymbols::fgATT_NAMESPACE);
 
     if (XMLString::equals(nameSpace, fTargetNSURIString)) {
@@ -842,10 +896,12 @@ void TraverseSchema::traverseImport(const DOMElement* const elem) {
   */
 void TraverseSchema::preprocessRedefine(const DOMElement* const redefineElem) {
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Check attributes
-    // ------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(redefineElem, GeneralAttributeCheck::E_Redefine, this, true);
+    // -----------------------------------------------------------------------
+    fAttributeCheck.checkAttributes(
+        redefineElem, GeneralAttributeCheck::E_Redefine, this, true
+    );
 
     // First, we look through the children of redefineElem. Each one will
     // correspond to an element of the redefined schema that we need to
@@ -915,14 +971,16 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
                                        const int modelGroupType)
 {
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Check attributes
-    // ------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_Sequence, this);
+    // -----------------------------------------------------------------------
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_Sequence, this, false, fNonXSAttList
+    );
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Process contents
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     DOMElement* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
     Janitor<XSAnnotation> janAnnot(fAnnotation);
     ContentSpecNode* left = 0;
@@ -1087,16 +1145,18 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
 
     if (!dv) {
 
-        // ------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Check attributes
-        // ------------------------------------------------------------------
+        // -------------------------------------------------------------------
         unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_SimpleTypeGlobal
                                           : GeneralAttributeCheck::E_SimpleTypeLocal;
 
-        fAttributeCheck.checkAttributes(childElem, scope, this, topLevel);
+        fAttributeCheck.checkAttributes(
+            childElem, scope, this, topLevel, fNonXSAttList
+        );
 
         // Circular constraint checking
-        if (fCurrentTypeNameStack->containsElement(fullTypeNameId)){
+        if (fCurrentTypeNameStack->containsElement(fullTypeNameId)) {
 
             reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, name);
             return 0;
@@ -1228,7 +1288,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // -----------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_ComplexTypeGlobal
                                       : GeneralAttributeCheck::E_ComplexTypeLocal;
-    fAttributeCheck.checkAttributes(elem, scope, this, topLevel);
+    fAttributeCheck.checkAttributes(elem, scope, this, topLevel, fNonXSAttList);
 
     // -----------------------------------------------------------------------
     // Create a new instance
@@ -1410,7 +1470,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_GroupGlobal
                                       : GeneralAttributeCheck::E_GroupRef;
-    fAttributeCheck.checkAttributes(elem, scope, this, topLevel);
+    fAttributeCheck.checkAttributes(elem, scope, this, topLevel, fNonXSAttList);
 
     // ------------------------------------------------------------------
     // Handle "ref="
@@ -1581,7 +1641,7 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_AttributeGroupGlobal
                                       : GeneralAttributeCheck::E_AttributeGroupRef;
-    fAttributeCheck.checkAttributes(elem, scope, this, topLevel);
+    fAttributeCheck.checkAttributes(elem, scope, this, topLevel, fNonXSAttList);
 
     // ------------------------------------------------------------------
     // Handle "ref="
@@ -1733,7 +1793,9 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_Any, this);
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_Any, this, false, fNonXSAttList
+    );
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -1900,14 +1962,16 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
 ContentSpecNode*
 TraverseSchema::traverseAll(const DOMElement* const elem) {
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Check attributes
-    // ------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_All, this);
+    // -----------------------------------------------------------------------
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_All, this, false, fNonXSAttList
+    );
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Process contents
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     DOMElement* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
     Janitor<XSAnnotation> janAnnot(fAnnotation);
 
@@ -2029,10 +2093,12 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // Check attributes
     // ------------------------------------------------------------------
-    unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_AttributeGlobal
-                                      : (refEmpty) ? GeneralAttributeCheck::E_AttributeLocal
-                                                   : GeneralAttributeCheck::E_AttributeRef;
-    fAttributeCheck.checkAttributes(elem, scope, this, topLevel);
+    unsigned short scope = (topLevel)
+        ? GeneralAttributeCheck::E_AttributeGlobal
+        : (refEmpty) ? GeneralAttributeCheck::E_AttributeLocal
+                     : GeneralAttributeCheck::E_AttributeRef;
+
+    fAttributeCheck.checkAttributes(elem, scope, this, topLevel, fNonXSAttList);
 
     const XMLCh* defaultVal = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
     const XMLCh* fixedVal = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
@@ -2200,7 +2266,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                 attType = XMLAttDef::Simple;
             }
         }
-        else 
+        else
             attType = XMLAttDef::Simple;
 
         dv = dvBack;
@@ -2415,7 +2481,7 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_ElementGlobal
                                       : GeneralAttributeCheck::E_ElementLocal;
 
-    fAttributeCheck.checkAttributes(elem, scope, this, topLevel);
+    fAttributeCheck.checkAttributes(elem, scope, this, topLevel, fNonXSAttList);
 
     // check annotation
     const DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
@@ -2613,14 +2679,16 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
 const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) {
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Check attributes
-    // ------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_Notation, this, true);
+    // -----------------------------------------------------------------------
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_Notation, this, true, fNonXSAttList
+    );
 
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Process notation attributes/elements
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     bool         nameEmpty = (!name || !*name) ? true : false;
 
@@ -2728,7 +2796,9 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
     DatatypeValidator* baseValidator = 0;
     const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_ITEMTYPE);
 
-    fAttributeCheck.checkAttributes(contentElem, GeneralAttributeCheck::E_List, this);
+    fAttributeCheck.checkAttributes(
+        contentElem, GeneralAttributeCheck::E_List, this, false, fNonXSAttList
+    );
 
     if (XUtil::getNextSiblingElement(contentElem) != 0) {
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
@@ -2833,7 +2903,9 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
     DatatypeValidator* newDV = 0;
     const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_BASE);
 
-    fAttributeCheck.checkAttributes(contentElem, GeneralAttributeCheck::E_Restriction, this);
+    fAttributeCheck.checkAttributes(
+        contentElem, GeneralAttributeCheck::E_Restriction, this, false, fNonXSAttList
+    );
 
     if (XUtil::getNextSiblingElement(contentElem) != 0) {
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
@@ -2922,11 +2994,12 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                 // REVISIT
                 // check for annotation content - we are not checking whether the
                 // return is empty or not. If not empty we should report an error
+                fAttributeCheck.checkAttributes(
+                    content, scope, this, false, fNonXSAttList
+                );
                 checkContent(rootElem, XUtil::getFirstChildElement(content), true);
 
                 const XMLCh* attValue = content->getAttribute(SchemaSymbols::fgATT_VALUE);
-                fAttributeCheck.checkAttributes(content, scope, this);
-
                 if (facets == 0) {
                     facets = new (fGrammarPoolMemoryManager) RefHashTableOf<KVStringPair>(29, true, fGrammarPoolMemoryManager);
                 }
@@ -3072,7 +3145,9 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
                                 int baseRefContext,
                                 Janitor<XSAnnotation>* const janAnnot) {
 
-    fAttributeCheck.checkAttributes(contentElem, GeneralAttributeCheck::E_Union, this);
+    fAttributeCheck.checkAttributes(
+        contentElem, GeneralAttributeCheck::E_Union, this, false, fNonXSAttList
+    );
 
     if (XUtil::getNextSiblingElement(contentElem) != 0) {
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
@@ -3225,7 +3300,10 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(contentDecl, GeneralAttributeCheck::E_SimpleContent, this);
+    fAttributeCheck.checkAttributes(
+        contentDecl, GeneralAttributeCheck::E_SimpleContent
+        , this, false, fNonXSAttList
+    );
 
     // -----------------------------------------------------------------------
     // Set the content type to be simple, and initialize content spec handle
@@ -3258,12 +3336,18 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
     if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
-        fAttributeCheck.checkAttributes(simpleContent, GeneralAttributeCheck::E_Restriction, this);
+        fAttributeCheck.checkAttributes(
+            simpleContent, GeneralAttributeCheck::E_Restriction
+            , this, false, fNonXSAttList
+        );
         typeInfo->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
     }
     else if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
-        fAttributeCheck.checkAttributes(simpleContent, GeneralAttributeCheck::E_Extension, this);
+        fAttributeCheck.checkAttributes(
+            simpleContent, GeneralAttributeCheck::E_Extension
+            , this, false, fNonXSAttList
+        );
         typeInfo->setDerivedBy(SchemaSymbols::XSD_EXTENSION);
     }
     else {
@@ -3599,10 +3683,13 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
                                                 const bool isMixed,
                                                 Janitor<XSAnnotation>* const janAnnot)
 {
-    // ------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     // Check attributes
-    // ------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(contentDecl, GeneralAttributeCheck::E_ComplexContent, this);
+    // -----------------------------------------------------------------------
+    fAttributeCheck.checkAttributes(
+        contentDecl, GeneralAttributeCheck::E_ComplexContent
+        , this, false, fNonXSAttList
+    );
 
     // -----------------------------------------------------------------------
     // Determine whether the content is mixed, or element-only
@@ -3733,7 +3820,9 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_AnyAttribute, this);
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_AnyAttribute, this, false, fNonXSAttList
+    );
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -3851,7 +3940,9 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(icElem, GeneralAttributeCheck::E_Key, this);
+    fAttributeCheck.checkAttributes(
+        icElem, GeneralAttributeCheck::E_Key, this, false, fNonXSAttList
+    );
 
     // -----------------------------------------------------------------------
     // Create identity constraint
@@ -3912,7 +4003,9 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(icElem, GeneralAttributeCheck::E_Unique, this);
+    fAttributeCheck.checkAttributes(
+        icElem, GeneralAttributeCheck::E_Unique, this, false, fNonXSAttList
+    );
 
     // -----------------------------------------------------------------------
     // Create identity constraint
@@ -3975,7 +4068,9 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(icElem, GeneralAttributeCheck::E_KeyRef, this);
+    fAttributeCheck.checkAttributes(
+        icElem, GeneralAttributeCheck::E_KeyRef, this, false, fNonXSAttList
+    );
 
     // -----------------------------------------------------------------------
     // Verify that key reference "refer" attribute is valid
@@ -4069,7 +4164,9 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
         return false;
     }
 
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_Selector, this);
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_Selector, this, false, fNonXSAttList
+    );
     checkContent(icElem, XUtil::getFirstChildElement(elem), true);
     if (fAnnotation)
     {
@@ -4147,7 +4244,9 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
         }
         else {
             // General Attribute Checking
-            fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_Field, this);
+            fAttributeCheck.checkAttributes(
+                elem, GeneralAttributeCheck::E_Field, this, false, fNonXSAttList
+            );
             checkContent(icElem, XUtil::getFirstChildElement(elem), true);
             if (fAnnotation)
 			{
@@ -4263,7 +4362,10 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         const XMLCh* name = child->getLocalName();
 
         if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
-            fSchemaGrammar->addAnnotation(traverseAnnotationDecl(child, true));
+            fSchemaGrammar->addAnnotation(
+                traverseAnnotationDecl(
+                    child, fSchemaInfo->getNonXSAttList(), true)
+            );
         }
         else if (XMLString::equals(name, SchemaSymbols::fgELT_INCLUDE)) {
             traverseInclude(child);
@@ -4295,7 +4397,10 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         }
 
         if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
-            fSchemaGrammar->addAnnotation(traverseAnnotationDecl(child, true));
+            fSchemaGrammar->addAnnotation(
+                traverseAnnotationDecl(
+                    child, fSchemaInfo->getNonXSAttList(), true)
+            );
         }
         else if (XMLString::equals(name, SchemaSymbols::fgELT_SIMPLETYPE)) {
 
@@ -4472,7 +4577,7 @@ DOMElement* TraverseSchema::checkContent(const DOMElement* const rootElem,
 
     if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
 
-        fAnnotation = traverseAnnotationDecl(content);
+        fAnnotation = traverseAnnotationDecl(content, fNonXSAttList);
         content = XUtil::getNextSiblingElement(content);
 
         if (!content) { // must be followed by content
@@ -4635,7 +4740,9 @@ TraverseSchema::processElementDeclRef(const DOMElement* const elem,
                                       const XMLCh* const refName)
 {
     // check attributes
-    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_ElementRef, this);
+    fAttributeCheck.checkAttributes(
+        elem, GeneralAttributeCheck::E_ElementRef, this, false, fNonXSAttList
+    );
 
     // handle annotation
     DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
@@ -8110,6 +8217,7 @@ void TraverseSchema::init() {
     for(unsigned int i=0; i < ENUM_ELT_SIZE; i++)
         fGlobalDeclarations[i] = new (fMemoryManager) ValueVectorOf<unsigned int>(8, fMemoryManager);
 
+    fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(4, fMemoryManager);
     fNotationRegistry = new (fMemoryManager) RefHash2KeysTableOf<XMLCh>(13, (bool) false, fMemoryManager);
     fSchemaInfoList = new (fMemoryManager) RefHash2KeysTableOf<SchemaInfo>(29, fMemoryManager);
     fPreprocessedNodes = new (fMemoryManager) RefHashTableOf<SchemaInfo>
@@ -8134,6 +8242,7 @@ void TraverseSchema::cleanUp() {
 
     fMemoryManager->deallocate(fGlobalDeclarations);//delete [] fGlobalDeclarations;
 
+    delete fNonXSAttList;
     delete fNotationRegistry;
     delete fRedefineComponents;
     delete fIdentityConstraintNames;
@@ -8398,6 +8507,41 @@ void TraverseSchema::processSubstitutionGroup(const DOMElement* const elem,
                 buildValidSubstitutionListF(elem, elemDecl, subsElemDecl);
             }
         }
+    }
+}
+
+void TraverseSchema::processAttValue(const XMLCh* const attVal,
+                                     XMLBuffer& aBuf)
+{
+    // REVISIT-KN: assuming that attVal is not NULL
+    //
+    // normally, nothing will happen
+    const XMLCh* srcVal = attVal;
+    XMLCh nextCh = *srcVal;
+    while (nextCh)
+    {
+        if (nextCh == chDoubleQuote)
+        {
+            aBuf.append(chAmpersand);
+            aBuf.append(XMLUni::fgQuot);
+            aBuf.append(chSemiColon);
+        }
+        else if (nextCh == chCloseAngle)
+        {
+            aBuf.append(chAmpersand);
+            aBuf.append(XMLUni::fgGT);
+            aBuf.append(chSemiColon);
+        }
+        else if (nextCh == chAmpersand)
+        {
+            aBuf.append(chAmpersand);
+            aBuf.append(XMLUni::fgAmp);
+            aBuf.append(chSemiColon);
+        }
+        else
+            aBuf.append(nextCh);
+
+        nextCh = *++srcVal;
     }
 }
 

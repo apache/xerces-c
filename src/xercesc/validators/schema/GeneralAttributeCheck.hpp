@@ -81,7 +81,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 class TraverseSchema;
 class DOMElement;
-
+class DOMNode;
 
 class VALIDATORS_EXPORT GeneralAttributeCheck : public XMemory
 {
@@ -241,7 +241,8 @@ public:
     void checkAttributes(const DOMElement* const elem,
                          const unsigned short elemContext,
                          TraverseSchema* const schema,
-                         const bool isTopLevel = false);
+                         const bool isTopLevel = false,
+                         ValueVectorOf<DOMNode*>* const nonXSAttList = 0);
 
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted

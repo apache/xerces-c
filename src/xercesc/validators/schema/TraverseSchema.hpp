@@ -172,6 +172,7 @@ private:
                                          const XMLCh* const schemaURL);
     void                traverseSchemaHeader(const DOMElement* const schemaRoot);
     XSAnnotation*       traverseAnnotationDecl(const DOMElement* const childElem,
+                                               ValueVectorOf<DOMNode*>* const nonXSAttList,
                                                const bool topLevel = false);
     void                traverseInclude(const DOMElement* const childElem);
     void                traverseImport(const DOMElement* const childElem);
@@ -726,6 +727,8 @@ private:
     void processKeyRefFor(SchemaInfo* const aSchemaInfo,
                           ValueVectorOf<SchemaInfo*>* const infoList);
 
+    void processAttValue(const XMLCh* const attVal, XMLBuffer& aBuf);
+
     // Spaces are not allowed in URI, so %20 is used instead.
     // Convert %20 to spaces before resolving the URI
     void normalizeURI(const XMLCh* const systemURI, XMLBuffer& normalizedURI);
@@ -792,6 +795,7 @@ private:
     ValueVectorOf<SchemaElementDecl*>*             fIC_Elements;
     ValueVectorOf<const DOMElement*>*              fDeclStack;
     ValueVectorOf<unsigned int>**                  fGlobalDeclarations;
+    ValueVectorOf<DOMNode*>*                       fNonXSAttList;
     RefHashTableOf<ValueVectorOf<DOMElement*> >*   fIC_NodeListNS;
     RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
     RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;

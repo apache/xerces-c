@@ -137,6 +137,7 @@ public:
     BaseRefVectorEnumerator<SchemaInfo>   getImportingListEnumerator() const;
     ValueVectorOf<const DOMElement*>* getRecursingAnonTypes() const;
     ValueVectorOf<const XMLCh*>*      getRecursingTypeNames() const;
+    ValueVectorOf<DOMNode*>* getNonXSAttList() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -196,6 +197,7 @@ private:
     ValueVectorOf<const DOMElement*>* fRecursingAnonTypes;
     ValueVectorOf<const XMLCh*>*      fRecursingTypeNames;
     ValueVectorOf<DOMElement*>*       fTopLevelComponents[C_Count];
+    ValueVectorOf<DOMNode*>*          fNonXSAttList;
     MemoryManager*                    fMemoryManager;
 };
 
@@ -268,6 +270,11 @@ inline ValueVectorOf<const XMLCh*>*
 SchemaInfo::getRecursingTypeNames() const {
 
     return fRecursingTypeNames;
+}
+
+inline ValueVectorOf<DOMNode*>* SchemaInfo::getNonXSAttList() const
+{
+    return fNonXSAttList;
 }
 
 // ---------------------------------------------------------------------------

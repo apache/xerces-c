@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/12/11 19:26:27  knoaman
+ * Store non schema attributes from parent in XSAnnotation
+ *
  * Revision 1.16  2003/11/12 20:35:31  peiyongz
  * Stateless Grammar: ValidationContext
  *
@@ -361,11 +364,14 @@ void
 GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
                                        const unsigned short elemContext,
                                        TraverseSchema* const schema,
-                                       const bool isTopLevel) {
+                                       const bool isTopLevel,
+                                       ValueVectorOf<DOMNode*>* const nonXSAttList)
+{
+    if (nonXSAttList)
+        nonXSAttList->removeAllElements();
 
-    if (elem == 0 || !fAttMap || elemContext>=E_Count) {
+    if (elem == 0 || !fAttMap || elemContext>=E_Count)
         return;
-    }
 
     const XMLCh* elemName = elem->getLocalName();
     if (!XMLString::equals(SchemaSymbols::fgURI_SCHEMAFORSCHEMA, elem->getNamespaceURI())) {
@@ -390,10 +396,20 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         DOMNode*     attribute = eltAttrs->item(i);
         const XMLCh* attName = attribute->getNodeName();
 
+        // skip namespace declarations
+        if (XMLString::equals(attName, XMLUni::fgXMLNSString)
+            || XMLString::startsWith(attName, XMLUni::fgXMLNSColonString))
+            continue;
+
         // Bypass attributes that start with xml
+        // add this to the list of "non-schema" attributes
         if ((*attName == chLatin_X || *attName == chLatin_x)
            && (*(attName+1) == chLatin_M || *(attName+1) == chLatin_m)
            && (*(attName+2) == chLatin_L || *(attName+2) == chLatin_l)) {
+
+           if (nonXSAttList)
+                nonXSAttList->addElement(attribute);
+
             continue;
         }
 
@@ -410,32 +426,10 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
 
                 schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
                     XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
-            } else {
-
-                // Try for a "lax" validation
-                DatatypeValidator* dv = schema->getDatatypeValidator(attrURI, attribute->getLocalName());
-
-                if (dv) {
-
-                    const XMLCh* attrVal = attribute->getNodeValue();
-
-                    try {
-                        dv->validate(attrVal, fValidationContext);
-                    }
-                    catch(const XMLException& excep) {
-                        schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
-                    }
-                    catch(const OutOfMemoryException&)
-                    {
-                        throw;
-                    }
-                    catch(...) {
-                        schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue, attrVal, attName);
-                    }
-                }
-                // REVISIT:
-                // If no dv found, store attribute info for a "lax" validation
-                // after schema traversal ?? - KN
+            }
+            else if (nonXSAttList)
+            {
+                nonXSAttList->addElement(attribute);
             }
 
             continue;

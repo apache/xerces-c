@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/11 19:26:27  knoaman
+ * Store non schema attributes from parent in XSAnnotation
+ *
  * Revision 1.10  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -148,11 +151,13 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fImportedNSList(0)
     , fRecursingAnonTypes(0)
     , fRecursingTypeNames(0)
+    , fNonXSAttList(0)
     , fMemoryManager(manager)
 {
     fImportingInfoList = new (fMemoryManager) RefVectorOf<SchemaInfo>(4, false, fMemoryManager);
     for (unsigned int i = 0; i < C_Count; i++)
         fTopLevelComponents[i] = 0;
+    fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(2, fMemoryManager);
 }
 
 
@@ -185,6 +190,9 @@ SchemaInfo::~SchemaInfo()
         delete fTopLevelComponents[i];
         fTopLevelComponents[i] = 0;
     }
+
+    delete fNonXSAttList;
+    fNonXSAttList = 0;
 }
 
 // ---------------------------------------------------------------------------
