@@ -91,9 +91,19 @@ system ("SAXPrint");
 system ("SAXPrint -v=never personal.xml");
 system ("SAXPrint personal.xml");
 
+#  Run SAX2Count
+system ("SAX2Count");
+system ("SAX2Count -v=never personal.xml");
+system ("SAX2Count personal.xml");
+
+#  Run SAX2Print
+system ("SAX2Print");
+system ("SAX2Print -v=never personal.xml");
+system ("SAX2Print personal.xml");
+
 #  Run MemParse
 system ("MemParse");
-system ("MemParse -v");
+system ("MemParse -v=never");
 
 #  Run Redirect
 system ("Redirect");
@@ -111,7 +121,7 @@ system ("DOMPrint personal.xml");
 
 #  Run StdInParse
 system ("StdInParse < personal.xml");
-system ("StdInParse -v < personal.xml");
+system ("StdInParse -v=never < personal.xml");
 
 #  Run PParse
 system ("PParse");

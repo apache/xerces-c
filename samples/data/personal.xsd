@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns='http://www.w3.org/2000/10/XMLSchema'>
+
+ <element name="personnel">
+  <complexType>
+   <sequence>
+     <element ref="person" minOccurs='1' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name="person">
+  <complexType>
+   <sequence>
+     <element ref="name"/>
+     <element ref="email" minOccurs='0' maxOccurs='unbounded'/>
+     <element ref="url"   minOccurs='0' maxOccurs='unbounded'/>
+     <element ref="link"  minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name="id"  type="ID" use='required'/>
+   <attribute name="note" type="string"/>
+   <attribute name="contr" use='default' value="false">
+    <simpleType>
+     <restriction base = "string">
+       <enumeration value="true"/>
+       <enumeration value="false"/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name="name">
+  <complexType>
+   <sequence>
+    <element ref="family"/>
+    <element ref="given"/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name="family" type='string'/>
+
+ <element name="given" type='string'/>
+
+ <element name="email" type='string'/>
+
+ <element name="url">
+  <complexType>
+   <attribute name="href" type="string" default="http://"/>
+  </complexType>
+ </element>
+
+ <element name="link">
+  <complexType>
+   <attribute name="manager" type="IDREF"/>
+   <attribute name="subordinates" type="IDREFS"/>
+  </complexType>
+ </element>
+
+ <notation name='gif' public='-//APP/Photoshop/4.0' system='photoshop.exe'/>
+
+</schema>

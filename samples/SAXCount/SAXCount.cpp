@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.10  2001/05/03 16:00:12  tng
+* Schema: samples update with schema
+*
 * Revision 1.9  2000/10/19 23:52:41  andyh
 * SAXCount: Allow multiple files on command line
 *
@@ -113,7 +116,8 @@ void usage()
             "    SAXCount [options] <XML file>\n\n"
             "Options:\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
-            "    -n          Enable namespace processing. Defaults to off.\n\n"
+            "    -n          Enable namespace processing. Defaults to off.\n"
+            "    -s          Enable schema processing. Defaults to off.\n\n"
             "This program prints the number of elements, attributes,\n"
             "white spaces and other non-white space characters in the "
             "input file.\n\n"
@@ -132,14 +136,14 @@ int main(int argC, char* argV[])
     {
         XMLPlatformUtils::Initialize();
     }
-    
+
     catch (const XMLException& toCatch)
     {
         cerr << "Error during initialization! Message:\n"
             << StrX(toCatch.getMessage()) << endl;
         return 1;
     }
-    
+
     // Check command line and extract arguments.
     if (argC < 2)
     {
@@ -147,11 +151,12 @@ int main(int argC, char* argV[])
         XMLPlatformUtils::Terminate();
         return 1;
     }
-    
+
     const char*              xmlFile = 0;
     SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
     bool                     doNamespaces = false;
-    
+    bool                     doSchema = false;
+
 
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
@@ -159,7 +164,7 @@ int main(int argC, char* argV[])
         // Break out on first non-dash parameter
         if (argV[argInd][0] != '-')
             break;
-        
+
         if (!strncmp(argV[argInd], "-v=", 3)
         ||  !strncmp(argV[argInd], "-V=", 3))
         {
@@ -182,13 +187,18 @@ int main(int argC, char* argV[])
         {
             doNamespaces = true;
         }
+         else if (!strcmp(argV[argInd], "-s")
+              ||  !strcmp(argV[argInd], "-S"))
+        {
+            doSchema = true;
+        }
         else
         {
             cerr << "Unknown option '" << argV[argInd]
                 << "', ignoring it\n" << endl;
         }
     }
-    
+
     //
     //  There should at least one parameter left, and that
     //  should be the file name(s).
@@ -200,20 +210,21 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    
+
     for (; argInd < argC; argInd++)
     {
         xmlFile = argV[argInd];
-        
+
         //
         //  Create a SAX parser object. Then, according to what we were told on
         //  the command line, set it to validate or not.
         //
         SAXParser parser;
-        
+
         parser.setValidationScheme(valScheme);
         parser.setDoNamespaces(doNamespaces);
-        
+        parser.setDoSchema(doSchema);
+
         //
         //  Create our SAX handler object and install it on the parser, as the
         //  document and error handler.
@@ -221,8 +232,8 @@ int main(int argC, char* argV[])
         SAXCountHandlers handler;
         parser.setDocumentHandler(&handler);
         parser.setErrorHandler(&handler);
-        
-        
+
+
         //
         //  Get the starting time and kick off the parse of the indicated
         //  file. Catch any exceptions that might propogate out of it.
@@ -235,7 +246,7 @@ int main(int argC, char* argV[])
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
         }
-        
+
         catch (const XMLException& e)
         {
             cerr << "\nError during parsing: '" << xmlFile << "'\n"
@@ -244,15 +255,15 @@ int main(int argC, char* argV[])
             XMLPlatformUtils::Terminate();
             return 4;
         }
-        
+
         catch (...)
         {
             cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
             XMLPlatformUtils::Terminate();
             return 4;
         }
-        
-        
+
+
         // Print out the stats that we collected and time taken
         if (!handler.getSawErrors())
         {
@@ -263,10 +274,10 @@ int main(int argC, char* argV[])
                 << handler.getCharacterCount() << " chars)" << endl;
         }
     }
-    
+
     // And call the termination method
     XMLPlatformUtils::Terminate();
-    
+
     return 0;
 }
 

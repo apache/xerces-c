@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/05/03 16:00:25  tng
+ * Schema: samples update with schema
+ *
  * Revision 1.12  2000/10/10 23:55:58  andyh
  * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
  * output to multi-byte encodings.
@@ -136,7 +139,7 @@ static const XMLCh  gXMLDecl1[] =
 static const XMLCh  gXMLDecl2[] =
 {
         chDoubleQuote, chQuestion, chCloseAngle
-    ,   chCR, chLF, chNull
+    ,   chLF, chNull
 };
 
 

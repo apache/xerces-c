@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/03 16:00:32  tng
+ * Schema: samples update with schema
+ *
  * Revision 1.7  2001/02/22 20:59:57  tng
  * [Bug 678] StdInParse doesn't output filename or duration
  *
@@ -98,14 +101,19 @@
 //
 //  doNamespaces
 //      Indicates whether namespace processing should be enabled or not.
-//      The default is no, but -ns overrides that.
+//      The default is no, but -n overrides that.
 //
-//  doValidation
-//      Indicates whether validation should be done. The default is not
-//      to validate, but -v overrides that.
+//  doSchema
+//      Indicates whether schema processing should be enabled or not.
+//      The default is no, but -s overrides that.
+//
+//  valScheme
+//      Indicates what validation scheme to use. It defaults to 'auto', but
+//      can be set via the -v= command.
 // ---------------------------------------------------------------------------
 static bool     doNamespaces    = false;
-static bool     doValidation    = false;
+static bool     doSchema        = false;
+static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 
 
 
@@ -116,9 +124,11 @@ void usage()
 {
     cout << "\nUsage:\n"
          << "    StdInParse [options]\n"
-         << "    -v  Do a validating parse. [default is off]\n"
-         << "    -n  Enable namespace processing. [default is off]\n"
-		 << "    -?  Show this help\n\n"
+         << "    -v=xxx      Validation scheme [always | never | auto] \n"
+         << "    -n          Enable namespace processing. [default is off]\n"
+         << "    -s          Enable schema processing. [default is off]\n"
+		   << "    -?          Show this help\n\n"
+         << "  * = Default if not provided explicitly\n\n"
          << "This program allows you to redirect a file into the program\n"
          << "to be parsed. It will count the elements, characters, and \n"
          << "spaces and display these stats at the end\n"
@@ -147,20 +157,37 @@ int main(int argC, char* argV[])
     int parmInd;
     for (parmInd = 1; parmInd < argC; parmInd++)
     {
-		if (!strcmp(argV[parmInd], "-?"))
-		{
-			usage();
-			return 1;
-		}
-        if (!strcmp(argV[parmInd], "-v")
-        ||  !strcmp(argV[parmInd], "-V"))
+        if (!strcmp(argV[parmInd], "-?"))
         {
-            doValidation = true;
+            usage();
+            return 1;
+        }
+        if (!strncmp(argV[parmInd], "-v=", 3)
+        ||  !strncmp(argV[parmInd], "-V=", 3))
+        {
+            const char* const parm = &argV[parmInd][3];
+
+            if (!strcmp(parm, "never"))
+                valScheme = SAXParser::Val_Never;
+            else if (!strcmp(parm, "auto"))
+                valScheme = SAXParser::Val_Auto;
+            else if (!strcmp(parm, "always"))
+                valScheme = SAXParser::Val_Always;
+            else
+            {
+                cerr << "Unknown -v= value: " << parm << endl;
+                return 2;
+            }
         }
          else if (!strcmp(argV[parmInd], "-n")
               ||  !strcmp(argV[parmInd], "-N"))
         {
             doNamespaces = true;
+        }
+         else if (!strcmp(argV[parmInd], "-s")
+              ||  !strcmp(argV[parmInd], "-S"))
+        {
+            doSchema = true;
         }
          else
         {
@@ -174,8 +201,9 @@ int main(int argC, char* argV[])
     //  the command line, set the options.
     //
     SAXParser parser;
-    parser.setDoValidation(doValidation);
+    parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
+    parser.setDoSchema(doSchema);
 
 
     //

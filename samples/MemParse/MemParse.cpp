@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/03 15:59:40  tng
+ * Schema: samples update with schema
+ *
  * Revision 1.7  2000/09/11 18:43:48  aruna1
  * OS390 related updates
  *
@@ -177,7 +180,10 @@ void usage()
          << "containing XML statements, and reports the number of\n"
          << "elements and attributes found.\n"
          << "\nOptions:\n"
-         << "    -v  Do a validating parse. Default is non-validating.\n\n"
+         << "    -v=xxx      Validation scheme [always | never | auto*]\n"
+         << "    -n          Enable namespace processing. Defaults to off.\n"
+         << "    -s          Enable schema processing. Defaults to off.\n\n"
+         << "  * = Default if not provided explicitly\n"
          << endl;
 }
 
@@ -199,8 +205,9 @@ int main(int argC, char* argV[])
          return 1;
     }
 
-    bool doValidation    = false;
+    SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
     bool doNamespaces    = false;
+    bool doSchema        = false;
     if (argC > 1)
     {
         // See if non validating dom parser configuration is requested.
@@ -213,15 +220,32 @@ int main(int argC, char* argV[])
         int argInd;
         for (argInd = 1; argInd < argC; argInd++)
         {
-            if (!strcmp(argV[argInd], "-v")
-            ||  !strcmp(argV[argInd], "-V"))
+            if (!strncmp(argV[argInd], "-v=", 3)
+            ||  !strncmp(argV[argInd], "-V=", 3))
             {
-                doValidation = true;
+                const char* const parm = &argV[argInd][3];
+
+                if (!strcmp(parm, "never"))
+                    valScheme = SAXParser::Val_Never;
+                else if (!strcmp(parm, "auto"))
+                    valScheme = SAXParser::Val_Auto;
+                else if (!strcmp(parm, "always"))
+                    valScheme = SAXParser::Val_Always;
+                else
+                {
+                    cerr << "Unknown -v= value: " << parm << endl;
+                    return 2;
+                }
             }
              else if (!strcmp(argV[argInd], "-n")
                   ||  !strcmp(argV[argInd], "-N"))
             {
                 doNamespaces = true;
+            }
+             else if (!strcmp(argV[argInd], "-s")
+                  ||  !strcmp(argV[argInd], "-S"))
+            {
+                doSchema = true;
             }
              else
             {
@@ -236,8 +260,9 @@ int main(int argC, char* argV[])
     //  the command line, set it to validate or not.
     //
     SAXParser parser;
-    parser.setDoValidation(doValidation);
+    parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
+    parser.setDoSchema(doSchema);
 
     //
     //  Create our SAX handler object and install it on the parser, as the
@@ -296,11 +321,8 @@ int main(int argC, char* argV[])
          << handler.getSpaceCount() << " spaces, "
          << handler.getCharacterCount() << " characters).\n" << endl;
 
-    if (doValidation == false)
-    {
-        cout << "You can also invoke it with '-v' parameter to turn "
-             << "on validation.\n";
-    }
+    // And call the termination method
+    XMLPlatformUtils::Terminate();
 
     return 0;
 }

@@ -5,6 +5,7 @@ Usage:
 Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
 
 This program prints the number of elements, attributes,
 white spaces and other non-white space characters in the input file.
@@ -23,6 +24,120 @@ Options:
     -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing.
+    -s          Enable schema processing.
+    -x=XXX      Use a particular encoding for output (LATIN1*).
+    -?          Show this help
+
+  * = Default if not provided explicitly
+
+The parser has intrinsic support for the following encodings:
+    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
+    WINDOWS-1252, IBM1140, IBM037
+
+<?xml version="1.0" encoding="LATIN1"?>
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel><?xml version="1.0" encoding="LATIN1"?>
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel>
+Usage:
+    SAX2Count [options] <XML file>
+
+Options:
+    -v=xxx      Validation scheme [always | never | auto*]
+    -n          Disable namespace processing. Defaults to on.
+    -s          Disable schema processing. Defaults to on.
+
+This program prints the number of elements, attributes,
+white spaces and other non-white space characters in the input file.
+
+  * = Default if not provided explicitly
+
+personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+
+Usage: SAX2Print [options] file
+This program prints the data returned by the various SAX2
+handlers for the specified input file. Options are NOT case
+sensitive.
+
+Options:
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
+    -v=xxx      Validation scheme [always | never | auto*]
+    -e          Expand Namespace Alias with URI's.
     -x=XXX      Use a particular encoding for output (LATIN1*).
     -?          Show this help
 
@@ -131,9 +246,8 @@ Finished parsing the memory buffer containing the following XML statements:
 </company>
 
 
-Parsing took{timing removed}(4 elements, 1 attributes, 0 spaces, 111 characters).
+Parsing took{timing removed}(4 elements, 1 attributes, 16 spaces, 95 characters).
 
-You can also invoke it with '-v' parameter to turn on validation.
 
 Finished parsing the memory buffer containing the following XML statements:
 
@@ -155,7 +269,7 @@ Finished parsing the memory buffer containing the following XML statements:
 </company>
 
 
-Parsing took{timing removed}(4 elements, 1 attributes, 16 spaces, 95 characters).
+Parsing took{timing removed}(4 elements, 1 attributes, 0 spaces, 111 characters).
 
 
 Usage:
@@ -180,6 +294,7 @@ found in the input XML file.
 Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
 
   * = Default if not provided explicitly
 
@@ -190,7 +305,7 @@ personal.xml:{timing removed}(37 elems).
 Usage: DOMPrint [options] file
 
 This program invokes the Xerces-C DOM parser and builds the DOM
-tree. It then traverses the DOM tree and prints the contents 
+tree. It then traverses the DOM tree and prints the contents
 of the tree. Options are NOT case sensitive.
 
 Options:
@@ -198,6 +313,7 @@ Options:
     -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Default is off.
+    -s          Enable schema processing. Default is off.
     -x=XXX      Use a particular encoding for output. Default is
                 the same encoding as the input XML file. UTF-8 if
                 input XML file has not XML declaration.
@@ -297,8 +413,8 @@ The parser has intrinsic support for the following encodings:
 
 </personnel>
 
-stdin:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 stdin:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+stdin:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 
 Usage: PParse [options] <file>
 
@@ -310,9 +426,12 @@ ever it is you want. In our little test, our event handler looks for
 At that point, our progressive parse loop exits.
 
 Options:
-      -v            - Do validation [default is off]
+      -v=xxx        - Validation scheme [always | never | auto*]
       -n            - Enable namespace processing [default is off]
+      -s            - Enable schema processing [default is off]
       -?            - Show this help (must be the only parameter)
+
+  * = Default if not provided explicitly
 
 Got the required 16 elements
 

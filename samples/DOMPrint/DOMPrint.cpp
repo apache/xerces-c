@@ -126,11 +126,11 @@ static const XMLCh  gXMLDecl3[] =
 static const XMLCh  gXMLDecl4[] =
 {
         chDoubleQuote, chQuestion, chCloseAngle
-    ,   chCR, chLF, chNull
+    ,   chLF, chNull
 };
 
 static const XMLCh  gStartCDATA[] =
-{ 
+{
         chOpenAngle, chBang, chOpenSquare, chLatin_C, chLatin_D,
         chLatin_A, chLatin_T, chLatin_A, chOpenSquare, chNull
 };
@@ -140,7 +140,7 @@ static const XMLCh  gEndCDATA[] =
     chCloseSquare, chCloseSquare, chCloseAngle, chNull
 };
 static const XMLCh  gStartComment[] =
-{ 
+{
     chOpenAngle, chBang, chDash, chDash, chNull
 };
 
@@ -150,27 +150,27 @@ static const XMLCh  gEndComment[] =
 };
 
 static const XMLCh  gStartDoctype[] =
-{ 
+{
     chOpenAngle, chBang, chLatin_D, chLatin_O, chLatin_C, chLatin_T,
     chLatin_Y, chLatin_P, chLatin_E, chSpace, chNull
 };
 static const XMLCh  gPublic[] =
-{ 
+{
     chLatin_P, chLatin_U, chLatin_B, chLatin_L, chLatin_I,
     chLatin_C, chSpace, chDoubleQuote, chNull
 };
 static const XMLCh  gSystem[] =
-{ 
+{
     chLatin_S, chLatin_Y, chLatin_S, chLatin_T, chLatin_E,
     chLatin_M, chSpace, chDoubleQuote, chNull
 };
 static const XMLCh  gStartEntity[] =
-{ 
+{
     chOpenAngle, chBang, chLatin_E, chLatin_N, chLatin_T, chLatin_I,
     chLatin_T, chLatin_Y, chSpace, chNull
 };
 static const XMLCh  gNotation[] =
-{ 
+{
     chLatin_N, chLatin_D, chLatin_A, chLatin_T, chLatin_A,
     chSpace, chDoubleQuote, chNull
 };
@@ -222,6 +222,9 @@ private:
 //  gDoNamespaces
 //      Indicates whether namespace processing should be done.
 //
+//  gDoSchema
+//      Indicates whether schema processing should be done.
+//
 //  gDoCreate
 //      Indicates whether entity reference nodes needs to be created or not
 //      Defaults to false
@@ -237,6 +240,7 @@ private:
 // ---------------------------------------------------------------------------
 static char*                    gXmlFile               = 0;
 static bool                     gDoNamespaces          = false;
+static bool                     gDoSchema              = false;
 static bool                     gDoCreate              = false;
 static XMLCh*                   gEncodingName          = 0;
 static XMLFormatter::UnRepFlags gUnRepFlags            = XMLFormatter::UnRep_CharRef;
@@ -265,13 +269,14 @@ void usage()
 {
     cout << "\nUsage: DOMPrint [options] file\n\n"
             "This program invokes the Xerces-C DOM parser and builds the DOM\n"
-            "tree. It then traverses the DOM tree and prints the contents \n"
+            "tree. It then traverses the DOM tree and prints the contents\n"
             "of the tree. Options are NOT case sensitive.\n\n"
             "Options:\n"
             "    -e          create entity reference nodes. Default is no expansion.\n"
             "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Default is off.\n"
+            "    -s          Enable schema processing. Default is off.\n"
             "    -x=XXX      Use a particular encoding for output. Default is\n"
             "                the same encoding as the input XML file. UTF-8 if\n"
             "                input XML file has not XML declaration.\n"
@@ -354,6 +359,11 @@ int main(int argC, char* argV[])
         {
             gDoNamespaces = true;
         }
+         else if (!strcmp(argV[parmInd], "-s")
+              ||  !strcmp(argV[parmInd], "-S"))
+        {
+            gDoSchema = true;
+        }
          else if (!strcmp(argV[parmInd], "-e")
               ||  !strcmp(argV[parmInd], "-E"))
         {
@@ -413,6 +423,7 @@ int main(int argC, char* argV[])
     DOMParser *parser = new DOMParser;
     parser->setValidationScheme(gValScheme);
     parser->setDoNamespaces(gDoNamespaces);
+    parser->setDoSchema(gDoSchema);
     ErrorHandler *errReporter = new DOMTreeErrorReporter();
     parser->setErrorHandler(errReporter);
     parser->setCreateEntityReferenceNodes(gDoCreate);
@@ -435,7 +446,7 @@ int main(int argC, char* argV[])
         errorsOccured = true;
     }
 
- 
+
     catch (const DOM_DOMException& e)
     {
        cerr << "An error occured during parsing\n   Message: "
@@ -477,7 +488,7 @@ int main(int argC, char* argV[])
 
         try
         {
-            gFormatter = new XMLFormatter(gEncodingName, formatTarget, 
+            gFormatter = new XMLFormatter(gEncodingName, formatTarget,
                                           XMLFormatter::NoEscapes, gUnRepFlags);
             cout << doc << endl;
         }
@@ -521,7 +532,7 @@ int main(int argC, char* argV[])
 
 
 // ---------------------------------------------------------------------------
-//  ostream << DOM_Node   
+//  ostream << DOM_Node
 //
 //  Stream out a DOM node, and, recursively, all of its children. This
 //  function is the heart of writing a DOM tree out as XML source. Give it
@@ -538,7 +549,7 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
     {
         case DOM_Node::TEXT_NODE:
         {
-            gFormatter->formatBuf(nodeValue.rawBuffer(), 
+            gFormatter->formatBuf(nodeValue.rawBuffer(),
                                   lent, XMLFormatter::CharEscapes);
             break;
         }
@@ -631,8 +642,8 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             }
             break;
         }
-        
-        
+
+
         case DOM_Node::ENTITY_REFERENCE_NODE:
             {
                 DOM_Node child;
@@ -645,7 +656,7 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
                 }
 #else
                 //
-                // Instead of printing the refernece tree 
+                // Instead of printing the refernece tree
                 // we'd output the actual text as it appeared in the xml file.
                 // This would be the case when -e option was chosen
                 //
@@ -654,8 +665,8 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
 #endif
                 break;
             }
-            
-            
+
+
         case DOM_Node::CDATA_SECTION_NODE:
             {
             *gFormatter << XMLFormatter::NoEscapes << gStartCDATA
@@ -663,7 +674,7 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             break;
         }
 
-        
+
         case DOM_Node::COMMENT_NODE:
         {
             *gFormatter << XMLFormatter::NoEscapes << gStartComment
@@ -671,14 +682,14 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             break;
         }
 
-        
+
         case DOM_Node::DOCUMENT_TYPE_NODE:
         {
             DOM_DocumentType doctype = (DOM_DocumentType &)toWrite;;
 
             *gFormatter << XMLFormatter::NoEscapes  << gStartDoctype
                         << nodeName;
- 
+
             DOMString id = doctype.getPublicId();
             if (id != 0)
             {
@@ -687,7 +698,7 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
                 id = doctype.getSystemId();
                 if (id != 0)
                 {
-                    *gFormatter << XMLFormatter::NoEscapes << chSpace 
+                    *gFormatter << XMLFormatter::NoEscapes << chSpace
                        << chDoubleQuote << id << chDoubleQuote;
                 }
             }
@@ -700,8 +711,8 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
                         << id << chDoubleQuote;
                 }
             }
-            
-            id = doctype.getInternalSubset(); 
+
+            id = doctype.getInternalSubset();
             if (id !=0)
                 *gFormatter << XMLFormatter::NoEscapes << chOpenSquare
                             << id << chCloseSquare;
@@ -709,8 +720,8 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             *gFormatter << XMLFormatter::NoEscapes << chCloseAngle;
             break;
         }
-        
-        
+
+
         case DOM_Node::ENTITY_NODE:
         {
             *gFormatter << XMLFormatter::NoEscapes << gStartEntity
@@ -725,18 +736,18 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             if (id != 0)
                 *gFormatter << XMLFormatter::NoEscapes << gSystem
                             << id << chDoubleQuote;
-            
+
             id = ((DOM_Entity &)toWrite).getNotationName();
             if (id != 0)
                 *gFormatter << XMLFormatter::NoEscapes << gNotation
                             << id << chDoubleQuote;
 
-            *gFormatter << XMLFormatter::NoEscapes << chCloseAngle << chCR << chLF;
+            *gFormatter << XMLFormatter::NoEscapes << chCloseAngle << chLF;
 
             break;
         }
-        
-        
+
+
         case DOM_Node::XML_DECL_NODE:
         {
             DOMString  str;
@@ -744,17 +755,17 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             *gFormatter << gXMLDecl1 << ((DOM_XMLDecl &)toWrite).getVersion();
 
             *gFormatter << gXMLDecl2 << gEncodingName;
-            
+
             str = ((DOM_XMLDecl &)toWrite).getStandalone();
             if (str != 0)
                 *gFormatter << gXMLDecl3 << str;
-            
+
             *gFormatter << gXMLDecl4;
 
             break;
         }
-        
-        
+
+
         default:
             cerr << "Unrecognized node type = "
                  << (long)toWrite.getNodeType() << endl;

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/03 15:59:48  tng
+ * Schema: samples update with schema
+ *
  * Revision 1.7  2000/06/20 02:23:08  rahulj
  * Help message added by Joe Polastre.
  *
@@ -99,10 +102,12 @@
 //  The parameters are:
 //
 //      [-?]            - Show usage and exit
-//      [-v]            - Do validation
+//      [-v=xxx]        - Validation scheme [always | never | auto*]
 //      [-n]            - Enable namespace processing
+//      [-s]            - Enable schema processing
 //      filename        - The path to the XML file to parse
 //
+//  * = Default if not provided explicitly
 //  These are non-case sensitive
 // ---------------------------------------------------------------------------
 
@@ -125,13 +130,17 @@
 //  doNamespaces
 //      Indicates whether namespace processing should be done.
 //
-//  doValidation
-//      Indicates whether validation should be done. The default is not
-//      to validate, but -v overrides that.
+//  doSchema
+//      Indicates whether schema processing should be done.
+//
+//  valScheme
+//      Indicates what validation scheme to use. It defaults to 'auto', but
+//      can be set via the -v= command.
 // ---------------------------------------------------------------------------
-static char*	xmlFile         = 0;
+static char*	 xmlFile         = 0;
 static bool     doNamespaces    = false;
-static bool     doValidation    = false;
+static bool     doSchema        = false;
+static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 
 
 
@@ -148,9 +157,11 @@ static void usage()
          <<  "16 new elements then sets a flag to indicate its found what it wants.\n"
          <<  "At that point, our progressive parse loop exits.\n\n"
          <<  "Options:\n"
-         <<  "      -v            - Do validation [default is off]\n"
+         <<  "      -v=xxx        - Validation scheme [always | never | auto*]\n"
          <<  "      -n            - Enable namespace processing [default is off]\n"
-         <<  "      -?            - Show this help (must be the only parameter)\n"
+         <<  "      -s            - Enable schema processing [default is off]\n"
+         <<  "      -?            - Show this help (must be the only parameter)\n\n"
+         <<  "  * = Default if not provided explicitly\n"
          <<  endl;
 }
 
@@ -172,7 +183,7 @@ int main(int argC, char* argV[])
          cerr << "Error during initialization! :\n"
               << StrX(toCatch.getMessage()) << endl;
          return 1;
-    } 
+    }
 
 
     // Check command line and extract arguments.
@@ -197,15 +208,32 @@ int main(int argC, char* argV[])
         if (argV[parmInd][0] != '-')
             break;
 
-        if (!strcmp(argV[parmInd], "-v")
-        ||  !strcmp(argV[parmInd], "-V"))
+        if (!strncmp(argV[parmInd], "-v=", 3)
+        ||  !strncmp(argV[parmInd], "-V=", 3))
         {
-            doValidation = true;
+            const char* const parm = &argV[parmInd][3];
+
+            if (!strcmp(parm, "never"))
+                valScheme = SAXParser::Val_Never;
+            else if (!strcmp(parm, "auto"))
+                valScheme = SAXParser::Val_Auto;
+            else if (!strcmp(parm, "always"))
+                valScheme = SAXParser::Val_Always;
+            else
+            {
+                cerr << "Unknown -v= value: " << parm << endl;
+                return 2;
+            }
         }
          else if (!strcmp(argV[parmInd], "-n")
               ||  !strcmp(argV[parmInd], "-N"))
         {
             doNamespaces = true;
+        }
+         else if (!strcmp(argV[parmInd], "-s")
+              ||  !strcmp(argV[parmInd], "-S"))
+        {
+            doSchema = true;
         }
          else
         {
@@ -234,8 +262,9 @@ int main(int argC, char* argV[])
     PParseHandlers handler;
     parser.setDocumentHandler(&handler);
     parser.setErrorHandler(&handler);
-    parser.setDoValidation(doValidation);
+    parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
+    parser.setDoSchema(doSchema);
 
     //
     //  Ok, lets do the progressive parse loop. On each time around the

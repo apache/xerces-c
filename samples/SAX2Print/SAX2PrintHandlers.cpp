@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/03 16:00:03  tng
+ * Schema: samples update with schema
+ *
  * Revision 1.3  2000/10/10 23:55:53  andyh
  * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
  * output to multi-byte encodings.
@@ -102,7 +105,7 @@ static const XMLCh  gXMLDecl1[] =
 static const XMLCh  gXMLDecl2[] =
 {
         chDoubleQuote, chQuestion, chCloseAngle
-    ,   chCR, chLF, chNull
+    ,   chLF, chNull
 };
 
 
@@ -222,8 +225,8 @@ void SAX2PrintHandlers::endDocument()
 }
 
 
-void SAX2PrintHandlers::endElement(const XMLCh* const uri, 
-								 const XMLCh* const localname, 
+void SAX2PrintHandlers::endElement(const XMLCh* const uri,
+								 const XMLCh* const localname,
 								 const XMLCh* const qname)
 {
     // No escapes are legal here

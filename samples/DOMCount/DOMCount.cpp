@@ -87,7 +87,8 @@ void usage()
             "found in the input XML file.\n\n"
             "Options:\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
-            "    -n          Enable namespace processing. Defaults to off.\n\n"
+            "    -n          Enable namespace processing. Defaults to off.\n"
+            "    -s          Enable schema processing. Defaults to off.\n\n"
             "  * = Default if not provided explicitly\n\n"
          << endl;
 }
@@ -118,6 +119,7 @@ int main(int argC, char* argV[])
     const char*              xmlFile = 0;
     DOMParser::ValSchemes    valScheme = DOMParser::Val_Auto;
     bool                     doNamespaces    = false;
+    bool                     doSchema        = false;
 
     // See if non validating dom parser configuration is requested.
     if ((argC == 2) && !strcmp(argV[1], "-?"))
@@ -155,6 +157,11 @@ int main(int argC, char* argV[])
         {
             doNamespaces = true;
         }
+         else if (!strcmp(argV[argInd], "-s")
+              ||  !strcmp(argV[argInd], "-S"))
+        {
+            doSchema = true;
+        }
          else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -177,6 +184,7 @@ int main(int argC, char* argV[])
     DOMParser parser;
     parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
+    parser.setDoSchema(doSchema);
 
     // And create our error handler and install it
     DOMCountErrorHandler errorHandler;
