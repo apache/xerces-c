@@ -299,6 +299,7 @@ if ($platform eq "win64bit" )
      qw'sax
 		sax2
         framework
+        framework\\psvi        
         dom
         dom\\deprecated
         internal
@@ -710,6 +711,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
      qw'sax
 		sax2
         framework
+        framework/psvi        
         dom
         dom/deprecated
         internal
@@ -1067,6 +1069,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem ("mkdir $targetdir/include/xercesc/sax");
     psystem ("mkdir $targetdir/include/xercesc/sax2");
     psystem ("mkdir $targetdir/include/xercesc/framework");
+    psystem ("mkdir $targetdir/include/xercesc/framework/psvi");    
     psystem ("mkdir $targetdir/include/xercesc/internal");
     psystem ("mkdir $targetdir/include/xercesc/parsers");
     psystem ("mkdir $targetdir/include/xercesc/util");
@@ -1249,6 +1252,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem("cp -Rf $XERCESCROOT/src/xercesc/sax/*.hpp $targetdir/include/xercesc/sax");
 	psystem("cp -Rf $XERCESCROOT/src/xercesc/sax2/*.hpp $targetdir/include/xercesc/sax2");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/framework/*.hpp $targetdir/include/xercesc/framework");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/framework/psvi/*.hpp $targetdir/include/xercesc/framework/psvi");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/*.hpp $targetdir/include/xercesc/dom");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/deprecated/*.hpp $targetdir/include/xercesc/dom/deprecated");
 
