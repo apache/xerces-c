@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/05/22 20:54:14  knoaman
+ * Prepare for DOM L3 :
+ * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
+ * EntityHandler/ErrorHandler directly.
+ * - Add 'AbstractDOMParser' class to provide common functionality for XercesDOMParser
+ * and DOMBuilder.
+ *
  * Revision 1.4  2002/04/19 13:33:23  knoaman
  * Fix for bug 8236.
  *
@@ -135,7 +142,7 @@ public:
        , const unsigned int        uriId);
 
     void setNillable(bool isNil);
-    void setErrorHandler(ErrorHandler* const handler);
+    void setErrorReporter(XMLErrorReporter* const errorReporter);
     void setExitOnFirstFatal(const bool newValue);
 
     // -----------------------------------------------------------------------
@@ -349,6 +356,11 @@ inline void SchemaValidator::setNillable(bool isNil) {
     fNil = isNil;
 }
 
+inline void SchemaValidator::setExitOnFirstFatal(const bool newValue) {
+
+    fSchemaErrorReporter.setExitOnFirstFatal(newValue);
+}
+
 // ---------------------------------------------------------------------------
 //  Virtual interface
 // ---------------------------------------------------------------------------
@@ -358,6 +370,12 @@ inline Grammar* SchemaValidator::getGrammar() const {
 
 inline void SchemaValidator::setGrammar(Grammar* aGrammar) {
     fSchemaGrammar = (SchemaGrammar*) aGrammar;
+}
+
+inline void SchemaValidator::setErrorReporter(XMLErrorReporter* const errorReporter) {
+
+    XMLValidator::setErrorReporter(errorReporter);
+    fSchemaErrorReporter.setErrorReporter(errorReporter);
 }
 
 // ---------------------------------------------------------------------------
@@ -390,16 +408,6 @@ SchemaValidator::isOccurrenceRangeOK(const int min1, const int max1,
         return true;
     }
     return false;
-}
-
-inline void SchemaValidator::setErrorHandler(ErrorHandler* const handler) {
-
-    fSchemaErrorReporter.setErrorHandler(handler);
-}
-
-inline void SchemaValidator::setExitOnFirstFatal(const bool newValue) {
-
-    fSchemaErrorReporter.setExitOnFirstFatal(newValue);
 }
 
 #endif

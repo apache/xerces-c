@@ -73,6 +73,8 @@
 // ---------------------------------------------------------------------------
 XSDDOMParser::XSDDOMParser(XMLValidator* const valToAdopt) :
     XercesDOMParser(valToAdopt)
+    , fSawFatal(false)
+    , fUserErrorReporter(0)
 {
 
 }
@@ -87,11 +89,56 @@ XSDDOMParser::~XSDDOMParser()
 //  XSDDOMParser: Helper methods
 // ---------------------------------------------------------------------------
 DOMElement* XSDDOMParser::createElementNSNode(const XMLCh *namespaceURI,
-	                                             const XMLCh *qualifiedName)
+                                              const XMLCh *qualifiedName)
 {
     ReaderMgr::LastExtEntityInfo lastInfo;
-    ((ReaderMgr*) fScanner->getLocator())->getLastExtEntityInfo(lastInfo);
+    ((ReaderMgr*) getScanner()->getLocator())->getLastExtEntityInfo(lastInfo);
 
     return getDocument()->createElementNS(namespaceURI, qualifiedName,
                                           lastInfo.lineNumber, lastInfo.colNumber);
+}
+
+
+// ---------------------------------------------------------------------------
+//  XSDDOMParser: Setter methods
+// ---------------------------------------------------------------------------
+inline void XSDDOMParser::setUserErrorReporter(XMLErrorReporter* const errorReporter)
+{
+    fUserErrorReporter = errorReporter;
+    getScanner()->setErrorReporter(this);
+}
+
+inline void XSDDOMParser::setUserEntityHandler(XMLEntityHandler* const entityHandler)
+{
+    fUserEntityHandler = entityHandler;
+    getScanner()->setEntityHandler(this);
+}
+
+// ---------------------------------------------------------------------------
+//  XSDDOMParser: Implementation of the XMLErrorReporter interface
+// ---------------------------------------------------------------------------
+void XSDDOMParser::error(const   unsigned int                code
+                         , const XMLCh* const                msgDomain
+                         , const XMLErrorReporter::ErrTypes  errType
+                         , const XMLCh* const                errorText
+                         , const XMLCh* const                systemId
+                         , const XMLCh* const                publicId
+                         , const unsigned int                lineNum
+                         , const unsigned int                colNum)
+{
+    if (errType >= XMLErrorReporter::ErrType_Fatal)
+        fSawFatal = true;
+
+    if (fUserErrorReporter)
+        fUserErrorReporter->error(code, msgDomain, errType, errorText,
+                                  systemId, publicId, lineNum, colNum);
+}
+
+InputSource* XSDDOMParser::resolveEntity(const XMLCh* const publicId,
+                                             const XMLCh* const systemId)
+{
+    if (fUserEntityHandler)
+        return fUserEntityHandler->resolveEntity(publicId, systemId);
+
+    return 0;
 }

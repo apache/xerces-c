@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/22 20:54:33  knoaman
+ * Prepare for DOM L3 :
+ * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
+ * EntityHandler/ErrorHandler directly.
+ * - Add 'AbstractDOMParser' class to provide common functionality for XercesDOMParser
+ * and DOMBuilder.
+ *
  * Revision 1.2  2002/03/25 20:25:32  knoaman
  * Move particle derivation checking from TraverseSchema to SchemaValidator.
  *
@@ -221,7 +228,6 @@ class XMLDocumentHandler;
 class DocTypeHandler;
 class XMLElementDecl;
 class XMLEntityHandler;
-class EntityResolver;
 class XMLErrorReporter;
 class ErrorHandler;
 class XMLMsgLoader;
@@ -469,7 +475,6 @@ public :
     void setDocTypeHandler(DocTypeHandler* const docTypeHandler);
     void setDoNamespaces(const bool doNamespaces);
     void setEntityHandler(XMLEntityHandler* const docTypeHandler);
-    void setEntityResolver(EntityResolver* const handler);
     void setErrorReporter(XMLErrorReporter* const errHandler);
     void setErrorHandler(ErrorHandler* const handler);
     void setExitOnFirstFatal(const bool newValue);
@@ -722,10 +727,6 @@ private :
     //      The client code's entity handler. If zero, then no entity handler
     //      callouts are done. We don't adopt it.
     //
-    //  fEntityResolver
-    //      The client code's entity resolver.  Need to store this info for
-    //      Schema parse entity resolving.
-    //
     //  fErrorReporter
     //      The client code's error reporter. If zero, then no error reporter
     //      callouts are done. We don't adopt it.
@@ -933,7 +934,6 @@ private :
     DocTypeHandler*             fDocTypeHandler;
     ElemStack                   fElemStack;
     XMLEntityHandler*           fEntityHandler;
-    EntityResolver*             fEntityResolver;
     XMLErrorReporter*           fErrorReporter;
     ErrorHandler*               fErrorHandler;
     RefHashTableOf<XMLRefInfo>* fIDRefList;
@@ -1193,18 +1193,12 @@ inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
 inline void XMLScanner::setErrorHandler(ErrorHandler* const handler)
 {
     fErrorHandler = handler;
-    fSchemaValidator->setErrorHandler(handler);
 }
 
 inline void XMLScanner::setEntityHandler(XMLEntityHandler* const entityHandler)
 {
     fEntityHandler = entityHandler;
     fReaderMgr.setEntityHandler(entityHandler);
-}
-
-inline void XMLScanner::setEntityResolver(EntityResolver* const handler)
-{
-    fEntityResolver = handler;
 }
 
 inline void XMLScanner::setExitOnFirstFatal(const bool newValue)

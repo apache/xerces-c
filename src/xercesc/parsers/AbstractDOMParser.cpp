@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -70,40 +70,48 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/sax/ErrorHandler.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
-#include "DOMParser.hpp"
-#include "ElementImpl.hpp"
-#include "AttrImpl.hpp"
-#include "AttrNSImpl.hpp"
-#include "TextImpl.hpp"
-#include "DocumentImpl.hpp"
-#include "DocumentTypeImpl.hpp"
-#include "EntityImpl.hpp"
-#include "NotationImpl.hpp"
-#include "NamedNodeMapImpl.hpp"
-#include "NodeIDMap.hpp"
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/impl/DOMAttrImpl.hpp>
+#include <xercesc/dom/DOMCDATASection.hpp>
+#include <xercesc/dom/DOMComment.hpp>
+#include <xercesc/dom/impl/DOMTextImpl.hpp>
+#include <xercesc/dom/impl/DOMDocumentImpl.hpp>
+#include <xercesc/dom/impl/DOMDocumentTypeImpl.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
+#include <xercesc/dom/impl/DOMElementImpl.hpp>
+#include <xercesc/dom/impl/DOMEntityImpl.hpp>
+#include <xercesc/dom/impl/DOMEntityReferenceImpl.hpp>
+#include <xercesc/dom/impl/DOMNotationImpl.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMProcessingInstruction.hpp>
+#include <xercesc/dom/impl/DOMNodeIDMap.hpp>
 
 
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 
 // ---------------------------------------------------------------------------
-//  DOMParser: Constructors and Destructor
+//  AbstractDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DOMParser::DOMParser(XMLValidator* const valToAdopt) :
+AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
 
-fErrorHandler(0)
-, fEntityResolver(0)
-, fCreateEntityReferenceNodes(true)
-, fToCreateXMLDeclTypeNode(false)
+  fCreateEntityReferenceNodes(true)
 , fIncludeIgnorableWhitespace(true)
-, fNodeStack(0)
+, fWithinElement(false)
+, fParseInProgress(false)
 , fScanner(0)
+, fCurrentParent(0)
+, fCurrentNode(0)
+, fDocument(0)
+, fNodeStack(0)
+, fDocumentType(0)
+, fDocumentVector(0)
 {
     //
     //  Create a scanner and tell it what validator to use. Then set us
@@ -113,28 +121,36 @@ fErrorHandler(0)
     fScanner->setDocHandler(this);
     fScanner->setDocTypeHandler(this);
 
-    fNodeStack = new ValueStackOf<DOM_Node>(64);
+    fNodeStack = new ValueStackOf<DOMNode*>(64);
     this->reset();
 
 
 }
 
 
-DOMParser::~DOMParser()
+AbstractDOMParser::~AbstractDOMParser()
 {
+    if (fDocumentVector)
+        delete fDocumentVector;
+
+    delete fDocument;
     delete fNodeStack;
     delete fScanner;
 }
 
 
-void DOMParser::reset()
+void AbstractDOMParser::reset()
 {
-    //
-    //  Note: DOM Documents are reference counted. Doing this assignment
-    //  will cause the old one to go away unless application code is also
-    //  holding a reference to it.
-    //
-    fDocument = DOM_Document::createDocument();
+    // if fDocument exists already, store the old pointer in the vector for deletion later
+    if (fDocument) {
+        if (!fDocumentVector) {
+            // allocate the vector if not exists yet
+            fDocumentVector  = new RefVectorOf<DOMDocumentImpl>(10, true) ;
+        }
+        fDocumentVector->addElement(fDocument);
+    }
+
+    fDocument = 0;
     resetDocType();
 
     fCurrentParent   = 0;
@@ -147,29 +163,34 @@ void DOMParser::reset()
 
 
 // ---------------------------------------------------------------------------
-//  DOMParser: Getter methods
+//  AbstractDOMParser: Getter methods
 // ---------------------------------------------------------------------------
-const XMLValidator& DOMParser::getValidator() const
+DOMDocument* AbstractDOMParser::getDocument()
+{
+    return fDocument;
+}
+
+const XMLValidator& AbstractDOMParser::getValidator() const
 {
     return *fScanner->getValidator();
 }
 
-bool DOMParser::getDoNamespaces() const
+bool AbstractDOMParser::getDoNamespaces() const
 {
     return fScanner->getDoNamespaces();
 }
 
-bool DOMParser::getExitOnFirstFatalError() const
+bool AbstractDOMParser::getExitOnFirstFatalError() const
 {
     return fScanner->getExitOnFirstFatal();
 }
 
-bool DOMParser::getValidationConstraintFatal() const
+bool AbstractDOMParser::getValidationConstraintFatal() const
 {
     return fScanner->getValidationConstraintFatal();
 }
 
-DOMParser::ValSchemes DOMParser::getValidationScheme() const
+AbstractDOMParser::ValSchemes AbstractDOMParser::getValidationScheme() const
 {
     const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
 
@@ -181,75 +202,50 @@ DOMParser::ValSchemes DOMParser::getValidationScheme() const
     return Val_Auto;
 }
 
-bool DOMParser::getDoSchema() const
+bool AbstractDOMParser::getDoSchema() const
 {
     return fScanner->getDoSchema();
 }
 
-bool DOMParser::getValidationSchemaFullChecking() const
+bool AbstractDOMParser::getValidationSchemaFullChecking() const
 {
     return fScanner->getValidationSchemaFullChecking();
 }
 
-int DOMParser::getErrorCount() const
+int AbstractDOMParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
 }
 
-XMLCh* DOMParser::getExternalSchemaLocation() const
+XMLCh* AbstractDOMParser::getExternalSchemaLocation() const
 {
     return fScanner->getExternalSchemaLocation();
 }
 
-XMLCh* DOMParser::getExternalNoNamespaceSchemaLocation() const
+XMLCh* AbstractDOMParser::getExternalNoNamespaceSchemaLocation() const
 {
     return fScanner->getExternalNoNamespaceSchemaLocation();
 }
 
-
 // ---------------------------------------------------------------------------
-//  DOMParser: Setter methods
+//  AbstractDOMParser: Setter methods
 // ---------------------------------------------------------------------------
-void DOMParser::setDoNamespaces(const bool newState)
+void AbstractDOMParser::setDoNamespaces(const bool newState)
 {
     fScanner->setDoNamespaces(newState);
 }
 
-void DOMParser::setErrorHandler(ErrorHandler* const handler)
-{
-    fErrorHandler = handler;
-    if (fErrorHandler) {
-        fScanner->setErrorReporter(this);
-        fScanner->setErrorHandler(fErrorHandler);
-    }
-    else {
-        fScanner->setErrorReporter(0);
-        fScanner->setErrorHandler(0);
-    }
-}
-
-void DOMParser::setEntityResolver(EntityResolver* const handler)
-{
-    fEntityResolver = handler;
-    if (fEntityResolver) {
-        fScanner->setEntityHandler(this);
-    }
-    else {
-        fScanner->setEntityHandler(0);
-    }
-}
-
-void DOMParser::setExitOnFirstFatalError(const bool newState)
+void AbstractDOMParser::setExitOnFirstFatalError(const bool newState)
 {
     fScanner->setExitOnFirstFatal(newState);
 }
 
-void DOMParser::setValidationConstraintFatal(const bool newState)
+void AbstractDOMParser::setValidationConstraintFatal(const bool newState)
 {
     fScanner->setValidationConstraintFatal(newState);
 }
 
-void DOMParser::setValidationScheme(const ValSchemes newScheme)
+void AbstractDOMParser::setValidationScheme(const ValSchemes newScheme)
 {
     if (newScheme == Val_Never)
         fScanner->setValidationScheme(XMLScanner::Val_Never);
@@ -259,39 +255,39 @@ void DOMParser::setValidationScheme(const ValSchemes newScheme)
         fScanner->setValidationScheme(XMLScanner::Val_Auto);
 }
 
-void DOMParser::setDoSchema(const bool newState)
+void AbstractDOMParser::setDoSchema(const bool newState)
 {
     fScanner->setDoSchema(newState);
 }
 
-void DOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
+void AbstractDOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
 }
 
-void DOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)
+void AbstractDOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)
 {
     fScanner->setExternalSchemaLocation(schemaLocation);
 }
-void DOMParser::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
+void AbstractDOMParser::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
 }
 
-void DOMParser::setExternalSchemaLocation(const char* const schemaLocation)
+void AbstractDOMParser::setExternalSchemaLocation(const char* const schemaLocation)
 {
     fScanner->setExternalSchemaLocation(schemaLocation);
 }
-void DOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
+void AbstractDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
 }
 
 
 // ---------------------------------------------------------------------------
-//  DOMParser: Parsing methods
+//  AbstractDOMParser: Parsing methods
 // ---------------------------------------------------------------------------
-void DOMParser::parse(const InputSource& source, const bool reuseGrammar)
+void AbstractDOMParser::parse(const InputSource& source, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -311,7 +307,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseGrammar)
     }
 }
 
-void DOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
+void AbstractDOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -331,7 +327,7 @@ void DOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
     }
 }
 
-void DOMParser::parse(const char* const systemId, const bool reuseGrammar)
+void AbstractDOMParser::parse(const char* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -354,11 +350,11 @@ void DOMParser::parse(const char* const systemId, const bool reuseGrammar)
 
 
 // ---------------------------------------------------------------------------
-//  DOMParser: Progressive parse methods
+//  AbstractDOMParser: Progressive parse methods
 // ---------------------------------------------------------------------------
-bool DOMParser::parseFirst( const   XMLCh* const    systemId
-                           ,       XMLPScanToken&  toFill
-                           , const bool            reuseGrammar)
+bool AbstractDOMParser::parseFirst( const XMLCh* const    systemId
+                                   ,       XMLPScanToken&  toFill
+                                   , const bool            reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -370,9 +366,9 @@ bool DOMParser::parseFirst( const   XMLCh* const    systemId
     return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
-bool DOMParser::parseFirst( const   char* const         systemId
-                           ,       XMLPScanToken&      toFill
-                           , const bool                reuseGrammar)
+bool AbstractDOMParser::parseFirst( const char* const         systemId
+                                   ,       XMLPScanToken&      toFill
+                                   , const bool                reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -384,9 +380,9 @@ bool DOMParser::parseFirst( const   char* const         systemId
     return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
-bool DOMParser::parseFirst( const   InputSource&    source
-                           ,       XMLPScanToken&  toFill
-                           , const bool            reuseGrammar)
+bool AbstractDOMParser::parseFirst( const InputSource& source
+                                   ,       XMLPScanToken&  toFill
+                                   , const bool            reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -398,12 +394,12 @@ bool DOMParser::parseFirst( const   InputSource&    source
     return fScanner->scanFirst(source, toFill, reuseGrammar);
 }
 
-bool DOMParser::parseNext(XMLPScanToken& token)
+bool AbstractDOMParser::parseNext(XMLPScanToken& token)
 {
     return fScanner->scanNext(token);
 }
 
-void DOMParser::parseReset(XMLPScanToken& token)
+void AbstractDOMParser::parseReset(XMLPScanToken& token)
 {
     // Reset the scanner, and then reset the parser
     fScanner->scanReset(token);
@@ -412,71 +408,26 @@ void DOMParser::parseReset(XMLPScanToken& token)
 
 
 // ---------------------------------------------------------------------------
-//  DOMParser: Implementation of the XMLErrorReporter interface
+//  AbstractDOMParser: Utilities
 // ---------------------------------------------------------------------------
-void DOMParser::error(  const   unsigned int                code
-                      , const XMLCh* const                msgDomain
-                      , const XMLErrorReporter::ErrTypes  errType
-                      , const XMLCh* const                errorText
-                      , const XMLCh* const                systemId
-                      , const XMLCh* const                publicId
-                      , const unsigned int                lineNum
-                      , const unsigned int                colNum)
+void AbstractDOMParser::resetDocumentPool()
 {
-    SAXParseException toThrow = SAXParseException
-        (
-        errorText
-        , publicId
-        , systemId
-        , lineNum
-        , colNum
-        );
+    //  We cannot enter here while a regular parse is in progress.
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    //
-    //  If there is an error handler registered, call it, otherwise ignore
-    //  all but the fatal errors.
-    //
-    if (!fErrorHandler)
-    {
-        if (errType == XMLErrorReporter::ErrType_Fatal)
-            throw toThrow;
-        return;
-    }
+    if (fDocumentVector)
+        fDocumentVector->removeAllElements();
 
-    if (errType == XMLErrorReporter::ErrType_Warning)
-        fErrorHandler->warning(toThrow);
-    else if (errType >= XMLErrorReporter::ErrType_Fatal)
-        fErrorHandler->fatalError(toThrow);
-    else
-        fErrorHandler->error(toThrow);
-}
-
-void DOMParser::resetErrors()
-{
+    delete fDocument;
+    fDocument = 0;
 }
 
 
 // ---------------------------------------------------------------------------
-//  DOMParser: Implementation of XMLEntityHandler interface
+//  AbstractDOMParser: Implementation of XMLDocumentHandler interface
 // ---------------------------------------------------------------------------
-InputSource*
-DOMParser::resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId)
-{
-    //
-    //  Just map it to the SAX entity resolver. If there is not one installed,
-    //  return a null pointer to cause the default resolution.
-    //
-    if (fEntityResolver)
-        return fEntityResolver->resolveEntity(publicId, systemId);
-    return 0;
-}
-
-
-
-// ---------------------------------------------------------------------------
-//  DOMParser: Implementation of XMLDocumentHandler interface
-// ---------------------------------------------------------------------------
-void DOMParser::docCharacters(  const   XMLCh* const    chars
+void AbstractDOMParser::docCharacters(  const   XMLCh* const    chars
                               , const unsigned int    length
                               , const bool            cdataSection)
 {
@@ -484,61 +435,67 @@ void DOMParser::docCharacters(  const   XMLCh* const    chars
     if (!fWithinElement)
         return;
 
+    // revisit.  Is it really safe to null-terminate here?
+    //                Does the scanner do it already?
+    //                If scanner goes up to the very end of an unterminated
+    //                buffer, we may be stepping on something bad here.
+    //           Probably best to modify the scanner to null terminate.
+    XMLCh savedChar = chars[length];
+    XMLCh *ncChars  = (XMLCh *)chars;   // cast off const
+    ncChars[length] = 0;
     if (cdataSection == true)
     {
-        DOM_CDATASection node = fDocument.createCDATASection
-            (
-            DOMString(chars, length)
-            );
-        fCurrentParent.appendChild(node);
+        DOMCDATASection *node = fDocument->createCDATASection(chars);
+        fCurrentParent->appendChild(node);
         fCurrentNode = node;
     }
     else
     {
-        if (fCurrentNode.getNodeType() == DOM_Node::TEXT_NODE)
+        if (fCurrentNode->getNodeType() == DOMNode::TEXT_NODE)
         {
-            DOM_Text node = (DOM_Text&)fCurrentNode;
-            node.appendData(DOMString(chars, length));
+            DOMText *node = (DOMText *)fCurrentNode;
+            node->appendData(chars);
         }
         else
         {
-            DOM_Text node = fDocument.createTextNode(DOMString(chars, length));
-            fCurrentParent.appendChild(node);
-
+            DOMText *node = fDocument->createTextNode(chars);
+            fCurrentParent->appendChild(node);
             fCurrentNode = node;
-
         }
     }
+    ncChars[length] = savedChar;
+    return;
 }
 
 
-void DOMParser::docComment(const XMLCh* const comment)
+void AbstractDOMParser::docComment(const XMLCh* const comment)
 {
-    DOM_Comment dcom = fDocument.createComment(comment);
-    fCurrentParent.appendChild(dcom);
+    DOMComment *dcom = fDocument->createComment(comment);
+    fCurrentParent->appendChild(dcom);
     fCurrentNode = dcom;
 }
 
 
-void DOMParser::docPI(  const   XMLCh* const    target
+void AbstractDOMParser::docPI(  const   XMLCh* const    target
                       , const XMLCh* const    data)
 {
-    DOM_ProcessingInstruction pi = fDocument.createProcessingInstruction
+    DOMProcessingInstruction *pi = fDocument->createProcessingInstruction
         (
         target
         , data
         );
-    fCurrentParent.appendChild(pi);
+    fCurrentParent->appendChild(pi);
     fCurrentNode = pi;
 }
 
 
-void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
+void AbstractDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fCreateEntityReferenceNodes == true)
     {
-        if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-            ((DOM_EntityReference&)fCurrentParent).fImpl->setReadOnly(true, true);
+        if (fCurrentParent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+            DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) fCurrentParent;
+            erImpl->setReadOnly(true, true);
         }
         fCurrentParent = fNodeStack->pop();
         fCurrentNode   = fCurrentParent;
@@ -546,7 +503,7 @@ void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 }
 
 
-void DOMParser::endElement( const   XMLElementDecl&     elemDecl
+void AbstractDOMParser::endElement( const   XMLElementDecl&     elemDecl
                            , const unsigned int        urlId
                            , const bool                isRoot)
 {
@@ -559,7 +516,7 @@ void DOMParser::endElement( const   XMLElementDecl&     elemDecl
 }
 
 
-void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
+void AbstractDOMParser::ignorableWhitespace(const   XMLCh* const    chars
                                     , const unsigned int    length
                                     , const bool            cdataSection)
 {
@@ -567,24 +524,29 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
     if (!fWithinElement || !fIncludeIgnorableWhitespace)
         return;
 
-    if (fCurrentNode.getNodeType() == DOM_Node::TEXT_NODE)
+    // revisit.  Not safe to slam in a null like this.
+    XMLCh savedChar = chars[length];
+    XMLCh *ncChars  = (XMLCh *)chars;   // cast off const
+    ncChars[length] = chNull;
+
+    if (fCurrentNode->getNodeType() == DOMNode::TEXT_NODE)
     {
-        DOM_Text node = (DOM_Text&)fCurrentNode;
-        node.appendData(DOMString(chars, length));
+        DOMText *node = (DOMText *)fCurrentNode;
+        node->appendData(chars);
     }
     else
     {
-        DOM_Text node = fDocument.createTextNode(DOMString(chars, length));
-        TextImpl *text = (TextImpl *) node.fImpl;
-        text -> setIgnorableWhitespace(true);
-        fCurrentParent.appendChild(node);
+        DOMTextImpl *node = (DOMTextImpl *)fDocument->createTextNode(chars);
+        node->setIgnorableWhitespace(true);
+        fCurrentParent->appendChild(node);
 
         fCurrentNode = node;
     }
+    ncChars[length] = savedChar;
 }
 
 
-void DOMParser::resetDocument()
+void AbstractDOMParser::resetDocument()
 {
     //
     //  The reset methods are called before a new parse event occurs.
@@ -592,27 +554,28 @@ void DOMParser::resetDocument()
     //  from a previous use, in particular the DOM document itself.
     //
     this->reset();
+    fDocument = (DOMDocumentImpl *)DOMImplementation::getImplementation()->createDocument();
 }
 
 
-void DOMParser::startDocument()
+void AbstractDOMParser::startDocument()
 {
     // Just set the document as the current parent and current node
     fCurrentParent = fDocument;
     fCurrentNode   = fDocument;
     // set DOM error checking off
-    fDocument.setErrorChecking(false);
+    fDocument->setErrorChecking(false);
 }
 
 
-void DOMParser::endDocument()
+void AbstractDOMParser::endDocument()
 {
     // set DOM error checking back on
-    fDocument.setErrorChecking(true);
+    fDocument->setErrorChecking(true);
 }
 
 
-void DOMParser::startElement(const  XMLElementDecl&         elemDecl
+void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                              , const unsigned int            urlId
                              , const XMLCh* const            elemPrefix
                              , const RefVectorOf<XMLAttr>&   attrList
@@ -620,18 +583,17 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
                              , const bool                    isEmpty
                              , const bool                    isRoot)
 {
-    DOM_Element     elem;
-    DocumentImpl    *docImpl = (DocumentImpl *)fDocument.fImpl;
+    DOMElement     *elem;
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         XMLBuffer buf;
-        DOMString namespaceURI = 0;
+        XMLCh* namespaceURI = 0;
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
             fScanner->getURIText(urlId, buf);   //get namespaceURI
-            namespaceURI = DOMString(buf.getRawBuffer());
+            namespaceURI = buf.getRawBuffer();
         }
-        elem = fDocument.createElementNS(namespaceURI, elemDecl.getFullName());
-        ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
+        elem = createElementNSNode(namespaceURI, elemDecl.getFullName());
+        DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
         for (unsigned int index = 0; index < attrCount; ++index) {
             static const XMLCh XMLNS[] = {
             chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
@@ -643,47 +605,58 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
                 attrURIId = fScanner->getXMLNSNamespaceId();
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                 fScanner->getURIText(attrURIId, buf);   //get namespaceURI
-                namespaceURI = DOMString(buf.getRawBuffer());
+                namespaceURI = buf.getRawBuffer();
             }
-            AttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
-            oneAttrib -> getValue());
+            //  revisit.  Optimize to init the named node map to the
+            //            right size up front.
+            DOMAttrImpl *attr = (DOMAttrImpl *)
+                fDocument->createAttributeNS(namespaceURI, oneAttrib->getQName());
+            attr->setValue(oneAttrib -> getValue());
+            elemImpl->setAttributeNode(attr);
+
+            //DOMAttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
+            //    oneAttrib -> getValue());
 
             // Attributes of type ID.  If this is one, add it to the hashtable of IDs
             //   that is constructed for use by GetElementByID().
             //
             if (oneAttrib->getType()==XMLAttDef::ID)
             {
-                if (docImpl->fNodeIDMap == 0)
-                    docImpl->fNodeIDMap = new NodeIDMap(500);
-                docImpl->fNodeIDMap->add(attr);
-                attr->isIdAttr(true);
+                if (fDocument->fNodeIDMap == 0)
+                    fDocument->fNodeIDMap = new (fDocument) DOMNodeIDMap(500, fDocument);
+                fDocument->fNodeIDMap->add(attr);
+                attr->fNode.isIdAttr(true);
             }
 
             attr->setSpecified(oneAttrib->getSpecified());
         }
     }
     else {    //DOM Level 1
-        elem = fDocument.createElement(elemDecl.getFullName());
-        ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
-        for (unsigned int index = 0; index < attrCount; ++index) {
-            const XMLAttr* oneAttrib = attrList.elementAt(index);
-            AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-            attr->setSpecified(oneAttrib->getSpecified());
+        elem = fDocument->createElement(elemDecl.getFullName());
+        DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
+			for (unsigned int index = 0; index < attrCount; ++index) {
+				const XMLAttr* oneAttrib = attrList.elementAt(index);
+            //AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+            DOMAttrImpl *attr = (DOMAttrImpl *)
+                fDocument->createAttribute(oneAttrib->getName());
+            attr->setValue(oneAttrib -> getValue());
+            elemImpl->setAttributeNode(attr);
+				attr->setSpecified(oneAttrib->getSpecified());
 
-            // Attributes of type ID.  If this is one, add it to the hashtable of IDs
-            //   that is constructed for use by GetElementByID().
-            //
-            if (oneAttrib->getType()==XMLAttDef::ID)
-            {
-                if (docImpl->fNodeIDMap == 0)
-                    docImpl->fNodeIDMap = new NodeIDMap(500);
-                docImpl->fNodeIDMap->add(attr);
-                attr->isIdAttr(true);
+				// Attributes of type ID.  If this is one, add it to the hashtable of IDs
+				//   that is constructed for use by GetElementByID().
+				//
+				if (oneAttrib->getType()==XMLAttDef::ID)
+				{
+                if (fDocument->fNodeIDMap == 0)
+                    fDocument->fNodeIDMap = new (fDocument) DOMNodeIDMap(500, fDocument);
+                fDocument->fNodeIDMap->add(attr);
+                attr->fNode.isIdAttr(true);
             }
         }
     }
 
-    fCurrentParent.appendChild(elem);
+    fCurrentParent->appendChild(elem);
 
     fNodeStack->push(fCurrentParent);
     fCurrentParent = elem;
@@ -696,58 +669,54 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 }
 
 
-void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
+void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fCreateEntityReferenceNodes == true)
     {
-		DOMString entName(entDecl.getName());
-        DOM_EntityReference er = fDocument.createEntityReference(entName);
+        const XMLCh * entName = entDecl.getName();
+        DOMEntityReference *er = fDocument->createEntityReference(entName);
 
         //set the readOnly flag to false before appending node, will be reset in endEntityReference
-        er.fImpl->setReadOnly(false, true);
+        DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;
+        erImpl->setReadOnly(false, true);
 
-        fCurrentParent.appendChild(er);
+        fCurrentParent->appendChild(er);
         fNodeStack->push(fCurrentParent);
         fCurrentParent = er;
         fCurrentNode = er;
 
-		// this entityRef needs to be stored in Entity map too.
+        // this entityRef needs to be stored in Entity map too.
         // We'd decide later whether the entity nodes should be created by a
         // separated method in parser or not. For now just stick it in if
         // the ref nodes are created
-		EntityImpl* entity = (EntityImpl*)fDocumentType->entities->getNamedItem(entName);
-		entity->setEntityRef((EntityReferenceImpl*)er.fImpl);
+        DOMNamedNodeMap *entities = fDocumentType->getEntities();
+        DOMEntityImpl* entity = (DOMEntityImpl*)entities->getNamedItem(entName);
+        entity->setEntityRef(er);
 
     }
 }
 
 
-void DOMParser::XMLDecl(const   XMLCh* const version
-                        , const XMLCh* const encoding
-                        , const XMLCh* const standalone
-                        , const XMLCh* const actualEncStr)
+void AbstractDOMParser::XMLDecl(const   XMLCh* const version
+                                , const XMLCh* const encoding
+                                , const XMLCh* const standalone
+                                , const XMLCh* const actualEncStr)
 {
-    //This is a non-standard extension to creating XMLDecl type nodes and attching to DOM Tree
-    // currently this flag it set to false unless user explicitly asks for it
-    // Needs to be revisited after W3C specs are laid out on this issue.
-
-    if (fToCreateXMLDeclTypeNode) {
-
-        DOMString ver(version);
-        DOMString enc(encoding);
-        DOMString isStd(standalone);
-        DOM_XMLDecl xmlDecl = fDocument.createXMLDecl(ver, enc, isStd);
-
-        fCurrentParent.appendChild(xmlDecl);
-    }
+    // placehold for DOM Level 3
 }
 
-
-
 // ---------------------------------------------------------------------------
-//  DOMParser: Deprecated methods
+//  AbstractDOMParser: Helper methods
 // ---------------------------------------------------------------------------
-bool DOMParser::getDoValidation() const
+DOMElement* AbstractDOMParser::createElementNSNode(const XMLCh *namespaceURI,
+                                                   const XMLCh *qualifiedName)
+{
+    return fDocument->createElementNS(namespaceURI, qualifiedName);
+}
+// ---------------------------------------------------------------------------
+//  AbstractDOMParser: Deprecated methods
+// ---------------------------------------------------------------------------
+bool AbstractDOMParser::getDoValidation() const
 {
     //
     //  We don't want to tie the public parser classes to the enum used
@@ -761,7 +730,7 @@ bool DOMParser::getDoValidation() const
     return false;
 }
 
-void DOMParser::setDoValidation(const bool newState)
+void AbstractDOMParser::setDoValidation(const bool newState)
 {
     fScanner->setDoValidation
     (
@@ -770,7 +739,7 @@ void DOMParser::setDoValidation(const bool newState)
 }
 
 //doctypehandler interfaces
-void DOMParser::attDef
+void AbstractDOMParser::attDef
 (
     const   DTDElementDecl&     elemDecl
     , const DTDAttDef&          attDef
@@ -779,78 +748,77 @@ void DOMParser::attDef
 {	
     if (fDocumentType->isIntSubsetReading())
     {
-        DOMString attString;
+        XMLBuffer attString;
         if (elemDecl.hasAttDefs())
         {
-            attString.appendData(chOpenAngle);
-            attString.appendData(chBang);
-            attString.appendData(XMLUni::fgAttListString);
-            attString.appendData(chSpace);
-            attString.appendData(elemDecl.getFullName());
+            attString.append(chOpenAngle);
+            attString.append(chBang);
+            attString.append(XMLUni::fgAttListString);
+            attString.append(chSpace);
+            attString.append(elemDecl.getFullName());
 
-            attString.appendData(chSpace);
-            attString.appendData(attDef.getFullName());
+            attString.append(chSpace);
+            attString.append(attDef.getFullName());
 
             // Get the type and display it
             const XMLAttDef::AttTypes type = attDef.getType();
             switch(type)
             {
             case XMLAttDef::CData :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgCDATAString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgCDATAString);
                 break;
             case XMLAttDef::ID :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgIDString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgIDString);
                 break;
             case XMLAttDef::IDRef :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgIDRefString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgIDRefString);
                 break;
             case XMLAttDef::IDRefs :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgIDRefsString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgIDRefsString);
                 break;
             case XMLAttDef::Entity :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgEntityString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgEntityString);
                 break;
             case XMLAttDef::Entities :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgEntitiesString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgEntitiesString);
                 break;
             case XMLAttDef::NmToken :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgNmTokenString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgNmTokenString);
                 break;
             case XMLAttDef::NmTokens :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgNmTokensString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgNmTokensString);
                 break;
 
             case XMLAttDef::Notation :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgNotationString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgNotationString);
                 break;
 
             case XMLAttDef::Enumeration :
-                attString.appendData(chSpace);
-                //  attString.appendData(XMLUni::fgEnumerationString);
+                attString.append(chSpace);
                 const XMLCh* enumString = attDef.getEnumeration();
                 int length = XMLString::stringLen(enumString);
                 if (length > 0) {
 
-                    DOMString anotherEnumString;
+                    XMLBuffer anotherEnumString;
 
-                    anotherEnumString.appendData(chOpenParen );
+                    anotherEnumString.append(chOpenParen );
                     for(int i=0; i<length; i++) {
                         if (enumString[i] == chSpace)
-                            anotherEnumString.appendData(chPipe);
+                            anotherEnumString.append(chPipe);
                         else
-                            anotherEnumString.appendData(enumString[i]);
+                            anotherEnumString.append(enumString[i]);
                     }
-                    anotherEnumString.appendData(chCloseParen);
-                    attString.appendData(anotherEnumString);
+                    anotherEnumString.append(chCloseParen);
+                    attString.append(anotherEnumString.getRawBuffer());
                 }
                 break;
             }
@@ -859,34 +827,34 @@ void DOMParser::attDef
             switch(def)
             {
             case XMLAttDef::Required :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgRequiredString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgRequiredString);
                 break;
             case XMLAttDef::Implied :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgImpliedString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgImpliedString);
                 break;
             case XMLAttDef::Fixed :
-                attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgFixedString);
+                attString.append(chSpace);
+                attString.append(XMLUni::fgFixedString);
                 break;
             }
 
             const XMLCh* defaultValue = attDef.getValue();
             if (defaultValue != 0) {
-                attString.appendData(chSpace);
-                attString.appendData(chDoubleQuote);
-                attString.appendData(defaultValue);
-                attString.appendData(chDoubleQuote);
+                attString.append(chSpace);
+                attString.append(chDoubleQuote);
+                attString.append(defaultValue);
+                attString.append(chDoubleQuote);
             }
 
-            attString.appendData(chCloseAngle);
-            fDocumentType->internalSubset.appendData(attString);
+            attString.append(chCloseAngle);
+            fDocumentType->setInternalSubset(attString.getRawBuffer());
         }
     }
 }
 
-void DOMParser::doctypeComment
+void AbstractDOMParser::doctypeComment
 (
     const   XMLCh* const    comment
 )
@@ -895,20 +863,20 @@ void DOMParser::doctypeComment
     {
         if (comment != 0)
         {
-            DOMString comString;
-            comString.appendData(XMLUni::fgCommentString);
-            comString.appendData(chSpace);
-            comString.appendData(comment);
-            comString.appendData(chSpace);
-            comString.appendData(chDash);
-            comString.appendData(chDash);
-            comString.appendData(chCloseAngle);
-            fDocumentType->internalSubset.appendData(comString);
+            XMLBuffer comString;
+            comString.append(XMLUni::fgCommentString);
+            comString.append(chSpace);
+            comString.append(comment);
+            comString.append(chSpace);
+            comString.append(chDash);
+            comString.append(chDash);
+            comString.append(chCloseAngle);
+            fDocumentType->setInternalSubset(comString.getRawBuffer());
         }
     }
 }
 
-void DOMParser::doctypeDecl
+void AbstractDOMParser::doctypeDecl
 (
     const   DTDElementDecl& elemDecl
     , const XMLCh* const    publicId
@@ -916,14 +884,12 @@ void DOMParser::doctypeDecl
     , const bool            hasIntSubset
 )
 {
-	DOM_DocumentType dt;
-	dt = fDocument.getImplementation().createDocumentType(elemDecl.getFullName(), publicId, systemId);
-    fDocumentType = (DocumentTypeImpl*)dt.fImpl;
-	((DocumentImpl*)fDocument.fImpl)->setDocumentType(fDocumentType);
+    fDocumentType = (DOMDocumentTypeImpl *) fDocument->createDocumentType(elemDecl.getFullName(), publicId, systemId);
+    fDocument->setDocumentType(fDocumentType);
 
 }
 
-void DOMParser::doctypePI
+void AbstractDOMParser::doctypePI
 (
     const   XMLCh* const    target
     , const XMLCh* const    data
@@ -932,32 +898,32 @@ void DOMParser::doctypePI
     if (fDocumentType->isIntSubsetReading())
 	{
 		//add these chars to internalSubset variable
-        DOMString pi;
-        pi.appendData(chOpenAngle);
-        pi.appendData(chQuestion);
-        pi.appendData(target);
-        pi.appendData(chSpace);
-        pi.appendData(data);
-        pi.appendData(chQuestion);
-        pi.appendData(chCloseAngle);
+        XMLBuffer pi;
+        pi.append(chOpenAngle);
+        pi.append(chQuestion);
+        pi.append(target);
+        pi.append(chSpace);
+        pi.append(data);
+        pi.append(chQuestion);
+        pi.append(chCloseAngle);
 
-		fDocumentType->internalSubset.appendData(pi);
+		fDocumentType->setInternalSubset(pi.getRawBuffer());
 	}
 	
 }
 
 
-void DOMParser::doctypeWhitespace
+void AbstractDOMParser::doctypeWhitespace
 (
     const   XMLCh* const    chars
     , const unsigned int    length
 )
 {
     if (fDocumentType->isIntSubsetReading())
-		fDocumentType->internalSubset.appendData(chars);
+		fDocumentType->setInternalSubset(chars);
 }
 
-void DOMParser::elementDecl
+void AbstractDOMParser::elementDecl
 (
     const   DTDElementDecl& decl
     , const bool            isIgnored
@@ -965,27 +931,27 @@ void DOMParser::elementDecl
 {
     if (fDocumentType->isIntSubsetReading())
 	{
-        DOMString elemDecl;
+        XMLBuffer elemDecl;
 
-        elemDecl.appendData(chOpenAngle);
-        elemDecl.appendData(chBang);
-        elemDecl.appendData(XMLUni::fgElemString);
-        elemDecl.appendData(chSpace);
-        elemDecl.appendData(decl.getFullName());
+        elemDecl.append(chOpenAngle);
+        elemDecl.append(chBang);
+        elemDecl.append(XMLUni::fgElemString);
+        elemDecl.append(chSpace);
+        elemDecl.append(decl.getFullName());
 
         //get the ContentSpec information
         const XMLCh* contentModel = decl.getFormattedContentModel();
         if (contentModel != 0) {
-            elemDecl.appendData(chSpace);
-            elemDecl.appendData(contentModel);
+            elemDecl.append(chSpace);
+            elemDecl.append(contentModel);
         }
 
-        elemDecl.appendData(chCloseAngle);
-		fDocumentType->internalSubset.appendData(elemDecl);
+        elemDecl.append(chCloseAngle);
+		fDocumentType->setInternalSubset(elemDecl.getRawBuffer());
 	}
 }
 
-void DOMParser::endAttList
+void AbstractDOMParser::endAttList
 (
     const   DTDElementDecl& elemDecl
 )
@@ -997,16 +963,17 @@ void DOMParser::endAttList
 	// see DocumentTypeImpl
 	if (elemDecl.hasAttDefs())
 	{		
-		XMLAttDefList* defAttrs = &elemDecl.getAttDefList();
-		XMLAttDef* attr = 0;
-		AttrImpl* insertAttr = 0;
-		DOM_Element dom_elem = fDocument.createElement(elemDecl.getFullName());
-		ElementImpl* elem = (ElementImpl*)(dom_elem.fImpl);
+        XMLAttDefList* defAttrs = &elemDecl.getAttDefList();
+        XMLAttDef* attr = 0;
+
+        DOMAttrImpl * insertAttr = 0;
+        DOMElement     *elem  = fDocument->createElement(elemDecl.getFullName());
+        DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
 
 		while (defAttrs->hasMoreElements())
         {
             attr = &defAttrs->nextElement();
-            if (attr->getValue() != null)
+            if (attr->getValue() != 0)
             {
                 if (fScanner->getDoNamespaces())
                 {
@@ -1014,8 +981,8 @@ void DOMParser::endAttList
                     // to be bound to "http://www.w3.org/2000/xmlns/"
                     // So as long as the XML parser doesn't do it, it needs to
                     // done here.
-                    DOMString qualifiedName = attr->getFullName();
-                    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
+                    const XMLCh* qualifiedName = attr->getFullName();
+                    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
 
                     XMLBuffer buf;
                     static const XMLCh XMLNS[] = {
@@ -1024,76 +991,75 @@ void DOMParser::endAttList
                     if (index > 0) {
                         // there is prefix
                         // map to XML URI for all cases except when prefix == "xmlns"
-                        DOMString prefix = qualifiedName.substringData(0, index);
+                        XMLCh* prefix;
+                        XMLCh temp[1000];
 
-                        if (prefix.equals(XMLNS))
+                        if (index > 999)
+                            prefix = new XMLCh[index+1];
+                        else
+                            prefix = temp;
+
+                        XMLString::subString(prefix ,qualifiedName, 0, index);
+
+                        if (!XMLString::compareString(prefix,XMLNS))
                             buf.append(XMLUni::fgXMLNSURIName);
                         else
                             buf.append(XMLUni::fgXMLURIName);
+
+                        if (index > 999)
+                            delete prefix;
                     }
                     else {
                         //   No prefix
-                        if (qualifiedName.equals(XMLNS))
+                        if (!XMLString::compareString(qualifiedName,XMLNS))
                             buf.append(XMLUni::fgXMLNSURIName);
                     }
 
-                    insertAttr = new AttrNSImpl((DocumentImpl*)fDocument.fImpl,
-                       DOMString(buf.getRawBuffer()),     // NameSpaceURI
+                    insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(
+                       buf.getRawBuffer(),     // NameSpaceURI
                        qualifiedName);   // qualified name
 
                 }
                 else
                 {
                     // Namespaces is turned off...
-                    insertAttr = new AttrImpl((DocumentImpl*)fDocument.fImpl, attr->getFullName());
+                    insertAttr = (DOMAttrImpl *) fDocument->createAttribute(attr->getFullName());
                 }
                 insertAttr->setValue(attr->getValue());
-                // memory leak here
-                AttrImpl * previousAttr = elem->setAttributeNode(insertAttr);
-				if ( previousAttr != 0 && previousAttr->nodeRefCount ==0)
-					NodeImpl::deleteIf(previousAttr);
-
+                elemImpl->setAttributeNode(insertAttr);
                 insertAttr->setSpecified(false);
             }
         }
-        ElementImpl *previousElem = (ElementImpl *)
-                fDocumentType->getElements()->setNamedItem( elem );
-
-        //
-        //  If this new element is replacing an element node that was already
-        //    in the element named node map, we need to delete the original
-        //    element node, assuming no-one else was referencing it.
-        //
-        if (previousElem != 0 && previousElem->nodeRefCount == 0)
-            NodeImpl::deleteIf(previousElem);
+        fDocumentType->getElements()->setNamedItem(elemImpl);
     }
 }
 
-void DOMParser::endIntSubset()
+void AbstractDOMParser::endIntSubset()
 {
 	fDocumentType->intSubsetReading = false;
 }
 
-void DOMParser::endExtSubset()
+void AbstractDOMParser::endExtSubset()
 {
 }
 
-void DOMParser::entityDecl
+void AbstractDOMParser::entityDecl
 (
     const   DTDEntityDecl&  entityDecl
     , const bool            isPEDecl
     , const bool            isIgnored
 )
 {
-	EntityImpl* entity = ((DocumentImpl*)fDocument.fImpl)->createEntity(entityDecl.getName());
+    DOMEntityImpl* entity = (DOMEntityImpl *) fDocument->createEntity(entityDecl.getName());
 
-	entity->setPublicId(entityDecl.getPublicId());
-	entity->setSystemId(entityDecl.getSystemId());
-	entity->setNotationName(entityDecl.getNotationName());
+    entity->setPublicId(entityDecl.getPublicId());
+    entity->setSystemId(entityDecl.getSystemId());
+    entity->setNotationName(entityDecl.getNotationName());
 
-    EntityImpl *previousDef = (EntityImpl *)
-	    fDocumentType->entities->setNamedItem( entity );
+    DOMEntityImpl *previousDef = (DOMEntityImpl *)
+	    fDocumentType->getEntities()->setNamedItem( entity );
 
+    #ifdef _revisit
     //
     //  If this new entity node is replacing an entity node that was already
     //    in the entities named node map (happens if documents redefine the
@@ -1102,105 +1068,97 @@ void DOMParser::entityDecl
     //
     if (previousDef != 0 && previousDef->nodeRefCount == 0)
     	        NodeImpl::deleteIf(previousDef);
+    #endif
 
+    if (fDocumentType->isIntSubsetReading())
+    {
+        //add thes chars to internalSubset variable
+        XMLBuffer entityName;
+        entityName.append(chOpenAngle);
+        entityName.append(chBang);
+        entityName.append(XMLUni::fgEntityString);
+        entityName.append(chSpace);
 
-	if (fDocumentType->isIntSubsetReading())
-	{
-		//add thes chars to internalSubset variable
-		DOMString entityName;
-		entityName.appendData(chOpenAngle);
-        entityName.appendData(chBang);
-		entityName.appendData(XMLUni::fgEntityString);
-        entityName.appendData(chSpace);
+        entityName.append(entityDecl.getName());
 
-        entityName.appendData(entityDecl.getName());
-        DOMString id = entity->getPublicId();
+        const XMLCh* id = entity->getPublicId();
         if (id != 0) {
-            entityName.appendData(chSpace);
-            entityName.appendData(XMLUni::fgPubIDString);
-            entityName.appendData(chSpace);
-            entityName.appendData(chDoubleQuote);
-            entityName.appendData(id);
-            entityName.appendData(chDoubleQuote);
+            entityName.append(chSpace);
+            entityName.append(XMLUni::fgPubIDString);
+            entityName.append(chSpace);
+            entityName.append(chDoubleQuote);
+            entityName.append(id);
+            entityName.append(chDoubleQuote);
         }
         id = entity->getSystemId();
         if (id != 0) {
-            entityName.appendData(chSpace);
-            entityName.appendData(XMLUni::fgSysIDString);
-            entityName.appendData(chSpace);
-            entityName.appendData(chDoubleQuote);
-            entityName.appendData(id);
-            entityName.appendData(chDoubleQuote);
+            entityName.append(chSpace);
+            entityName.append(XMLUni::fgSysIDString);
+            entityName.append(chSpace);
+            entityName.append(chDoubleQuote);
+            entityName.append(id);
+            entityName.append(chDoubleQuote);
 
         }
         id = entity->getNotationName();
         if (id != 0) {
-            entityName.appendData(chSpace);
-            entityName.appendData(XMLUni::fgNDATAString);
-            entityName.appendData(chSpace);
-            entityName.appendData(chDoubleQuote);
-            entityName.appendData(id);
-            entityName.appendData(chDoubleQuote);
+            entityName.append(chSpace);
+            entityName.append(XMLUni::fgNDATAString);
+            entityName.append(chSpace);
+            entityName.append(chDoubleQuote);
+            entityName.append(id);
+            entityName.append(chDoubleQuote);
         }
         id = entityDecl.getValue();
         if (id !=0) {
-            entityName.appendData(chSpace);
-            entityName.appendData(chDoubleQuote);
-            entityName.appendData(id);
-            entityName.appendData(chDoubleQuote);
+            entityName.append(chSpace);
+            entityName.append(chDoubleQuote);
+            entityName.append(id);
+            entityName.append(chDoubleQuote);
         }
 
-        entityName.appendData(chCloseAngle);
-        fDocumentType->internalSubset.appendData(entityName);
+        entityName.append(chCloseAngle);
+        fDocumentType->setInternalSubset(entityName.getRawBuffer());
     }
 
 }
 
-void DOMParser::resetDocType()
+void AbstractDOMParser::resetDocType()
 {
-	fDocumentType = null;
+	fDocumentType = 0;
 }
 
-void DOMParser::notationDecl
+void AbstractDOMParser::notationDecl
 (
     const   XMLNotationDecl&    notDecl
     , const bool                isIgnored
 )
 {
-	NotationImpl* notation = ((DocumentImpl*)fDocument.fImpl)->createNotation(notDecl.getName());
+	DOMNotationImpl* notation = (DOMNotationImpl *)fDocument->createNotation(notDecl.getName());
 	notation->setPublicId(notDecl.getPublicId());
 	notation->setSystemId(notDecl.getSystemId());
 
-    NotationImpl *previousNot = (NotationImpl *)
-       fDocumentType->notations->setNamedItem( notation );
-
-    //
-    //  If this new notation is replacing a notation node that was already
-    //    in the notation named node map, we need to delete the original
-    //    notation node, assuming no-one else was referencing it.
-    //
-    if (previousNot != 0 && previousNot->nodeRefCount == 0)
-        NodeImpl::deleteIf(previousNot);
+	fDocumentType->getNotations()->setNamedItem( notation );
 
 }
 
-void DOMParser::startAttList
+void AbstractDOMParser::startAttList
 (
     const   DTDElementDecl& elemDecl
 )
 {
 }
 
-void DOMParser::startIntSubset()
+void AbstractDOMParser::startIntSubset()
 {
 	fDocumentType->intSubsetReading = true;
 }
 
-void DOMParser::startExtSubset()
+void AbstractDOMParser::startExtSubset()
 {
 }
 
-void DOMParser::TextDecl
+void AbstractDOMParser::TextDecl
 (
     const   XMLCh* const    versionStr
     , const XMLCh* const    encodingStr

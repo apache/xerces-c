@@ -87,7 +87,7 @@
 //  Forward Declarations
 // ---------------------------------------------------------------------------
 class GrammarResolver;
-class EntityResolver;
+class XMLEntityHandler;
 class XMLValidator;
 class XMLScanner;
 class DatatypeValidator;
@@ -98,13 +98,12 @@ class XMLAttDef;
 class NamespaceScope;
 class SchemaAttDef;
 class InputSource;
-class ErrorHandler;
 class XercesGroupInfo;
 class XercesAttGroupInfo;
 class IdentityConstraint;
-class XercesDOMParser;
 class XSDLocator;
 class XSDDOMParser;
+class XMLErrorReporter;
 
 
 class VALIDATORS_EXPORT TraverseSchema
@@ -122,8 +121,8 @@ public:
         , XMLScanner* const                  xmlScanner
         , XMLValidator* const                xmlValidator
         , const XMLCh* const                 schemaURL
-        , EntityResolver* const              entityResolver
-        , ErrorHandler* const                errorHandler
+        , XMLEntityHandler* const            entityHandler
+        , XMLErrorReporter* const            errorReporter
     );
 
     ~TraverseSchema();
@@ -241,7 +240,7 @@ private:
                            const int errorCode);
     void reportSchemaError(const XSDLocator* const aLocator,
                            const XMLCh* const msgDomain,
-                           const int errorCode,
+                           const int errorCode, 
                            const XMLCh* const text1,
                            const XMLCh* const text2 = 0,
                            const XMLCh* const text3 = 0,
@@ -251,7 +250,7 @@ private:
                            const int errorCode);
     void reportSchemaError(const DOMElement* const elem,
                            const XMLCh* const msgDomain,
-                           const int errorCode,
+                           const int errorCode, 
                            const XMLCh* const text1,
                            const XMLCh* const text2 = 0,
                            const XMLCh* const text3 = 0,
@@ -280,13 +279,13 @@ private:
       * Parameters:
       *   rootElem - top element for a given type declaration
       *   contentElem - content must be annotation? or some other simple content
-      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?)
+      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?) 
       *
       * Check for Annotation if it is present, traverse it. If a sibling is
       * found and it is not an annotation return it, otherwise return 0.
       * Used by traverseSimpleTypeDecl.
       */
-    DOMElement* checkContent(const DOMElement* const rootElem,
+    DOMElement* checkContent(const DOMElement* const rootElem, 
                                DOMElement* const contentElem,
                                const bool isEmpty);
 
@@ -571,7 +570,7 @@ private:
       * Attribute wild card intersection.
       *
       * Note:
-      *    The first parameter will be the result of the intersection, so
+      *    The first parameter will be the result of the intersection, so 
       *    we need to make sure that first parameter is a copy of the
       *    actual attribute definition we need to intersect with.
       *
@@ -585,7 +584,7 @@ private:
       * Attribute wild card union.
       *
       * Note:
-      *    The first parameter will be the result of the union, so
+      *    The first parameter will be the result of the union, so 
       *    we need to make sure that first parameter is a copy of the
       *    actual attribute definition we need to intersect with.
       *
@@ -654,12 +653,12 @@ private:
                                     SchemaInfo* const redefiningSchemaInfo);
 
 	/**
-      * This function looks among the children of 'redefineChildElem' for a
+      * This function looks among the children of 'redefineChildElem' for a 
       * component of type 'redefineChildComponentName'. If it finds one, it
       * evaluates whether its ref attribute contains a reference to
       * 'refChildTypeName'. If it does, it returns 1 + the value returned by
       * calls to itself on all other children.  In all other cases it returns
-      * 0 plus the sum of the values returned by calls to itself on
+      * 0 plus the sum of the values returned by calls to itself on 
       * redefineChildElem's children. It also resets the value of ref so that
       * it will refer to the renamed type from the schema being redefined.
       */
@@ -740,8 +739,8 @@ private:
     DatatypeValidatorFactory*                      fDatatypeRegistry;
     GrammarResolver*                               fGrammarResolver;
     SchemaGrammar*                                 fSchemaGrammar;
-    EntityResolver*                                fEntityResolver;
-    ErrorHandler*                                  fErrorHandler;
+    XMLEntityHandler*                              fEntityHandler;
+    XMLErrorReporter*                              fErrorReporter;
     XMLStringPool*                                 fURIStringPool;
     XMLStringPool*                                 fStringPool;
     XMLBuffer                                      fBuffer;
@@ -773,7 +772,7 @@ private:
     RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
     XSDDOMParser*                                  fParser;
     RefHashTableOf<SchemaInfo>*                    fPreprocessedNodes;
-    XSDErrorReporter                               fErrorReporter;
+    XSDErrorReporter                               fXSDErrorReporter;
     XSDLocator*                                    fLocator;
 
     friend class GeneralAttributeCheck;
@@ -824,7 +823,7 @@ TraverseSchema::isValidRefDeclaration(const DOMElement* const elem) {
              || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_BLOCK)) != 0
              || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_FINAL)) != 0
              || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_TYPE)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_DEFAULT)) != 0
+             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_DEFAULT)) != 0 
              || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_FIXED)) != 0
              || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_SUBSTITUTIONGROUP)) != 0);
 }
@@ -858,7 +857,7 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOMElement* const elem,
     return attValue;
 }
 
-inline const XMLCh*
+inline const XMLCh* 
 TraverseSchema::getTargetNamespaceString(const DOMElement* const elem) {
 
     const XMLCh* targetNS = getElementAttValue(elem, SchemaSymbols::fgATT_TARGETNAMESPACE);
@@ -875,7 +874,7 @@ inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
     if (XMLString::compareString(baseURI,fTargetNSURIString) != 0
         && XMLString::compareString(baseURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0
         && XMLString::stringLen(baseURI) != 0) {
-        //REVISIT, !!!! a hack: for schema that has no
+        //REVISIT, !!!! a hack: for schema that has no 
         //target namespace, e.g. personal-schema.xml
         return true;
     }
@@ -918,7 +917,7 @@ inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
     return value;
 }
 
-inline void
+inline void 
 TraverseSchema::copyWildCardData(const SchemaAttDef* const srcWildCard,
                                  SchemaAttDef* const destWildCard) {
 

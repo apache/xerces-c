@@ -113,7 +113,7 @@ public:
 
 protected:
     virtual void            setIgnorableWhitespace(bool ignorable);
-    friend class            XercesDOMParser;
+    friend class            AbstractDOMParser;
 };
 
 #endif

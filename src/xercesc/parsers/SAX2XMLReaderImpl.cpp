@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/22 20:53:41  knoaman
+ * Prepare for DOM L3 :
+ * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
+ * EntityHandler/ErrorHandler directly.
+ * - Add 'AbstractDOMParser' class to provide common functionality for XercesDOMParser
+ * and DOMBuilder.
+ *
  * Revision 1.2  2002/02/13 16:09:24  knoaman
  * Move SAX2 features/properties names constants to XMLUni.
  *
@@ -444,11 +451,9 @@ void SAX2XMLReaderImpl::setEntityResolver(EntityResolver* const resolver)
     fEntityResolver = resolver;
     if (fEntityResolver) {
         fScanner->setEntityHandler(this);
-        fScanner->setEntityResolver(fEntityResolver);
     }
     else {
         fScanner->setEntityHandler(0);
-        fScanner->setEntityResolver(0);
     }
 }
 

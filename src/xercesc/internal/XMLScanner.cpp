@@ -203,7 +203,6 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fDocHandler(0)
     , fDocTypeHandler(0)
     , fEntityHandler(0)
-    , fEntityResolver(0)
     , fErrorReporter(0)
     , fErrorHandler(0)
     , fIDRefList(0)
@@ -267,7 +266,6 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fDocHandler(docHandler)
     , fDocTypeHandler(docTypeHandler)
     , fEntityHandler(entityHandler)
-    , fEntityResolver(0)
     , fErrorReporter(errHandler)
     , fErrorHandler(0)
     , fIDRefList(0)
@@ -477,18 +475,6 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseGrammar)
         fReaderMgr.reset();
     }
 
-    catch(const SAXException&)
-    {
-        //
-        //  We have to propogate SAX exceptions.
-        //
-        //  Make sure that the reader manager gets reset, then rethrow this
-        //  exception since it means nothing much to us.
-        //
-        fReaderMgr.reset();
-        throw;
-    }
-
     catch(const XMLException& excToCatch)
     {
         //
@@ -659,13 +645,6 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         // This is a 'first fatal error' type exit, so reset and reuturn failure
         fReaderMgr.reset();
         return false;
-    }
-
-    // We have to propogate SAX exceptions
-    catch(const SAXException&)
-    {
-        fReaderMgr.reset();
-        throw;
     }
 
     catch(const XMLException& excToCatch)
@@ -1045,7 +1024,6 @@ void XMLScanner::initValidator(XMLValidator* theValidator) {
     if (theValidator->handlesSchema()) {
 
         ((SchemaValidator*) theValidator)->setGrammarResolver(fGrammarResolver);
-        ((SchemaValidator*) theValidator)->setErrorHandler(fErrorHandler);
         ((SchemaValidator*) theValidator)->setExitOnFirstFatal(fExitOnFirstFatal);
     }
 }

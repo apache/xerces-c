@@ -56,6 +56,13 @@
 
 /**
   * $Log$
+  * Revision 1.2  2002/05/22 20:54:14  knoaman
+  * Prepare for DOM L3 :
+  * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
+  * EntityHandler/ErrorHandler directly.
+  * - Add 'AbstractDOMParser' class to provide common functionality for XercesDOMParser
+  * and DOMBuilder.
+  *
   * Revision 1.1  2002/03/21 15:34:40  knoaman
   * Add support for reporting line/column numbers of schema errors.
   *
@@ -67,10 +74,10 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
-#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
+#include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
@@ -137,9 +144,9 @@ static XMLMutex& gErrMsgMutex()
 // ---------------------------------------------------------------------------
 //  XSDErrorReporter: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XSDErrorReporter::XSDErrorReporter(ErrorHandler* const handler) :
+XSDErrorReporter::XSDErrorReporter(XMLErrorReporter* const errorReporter) :
     fExitOnFirstFatal(false)
-    , fErrorHandler(handler)
+    , fErrorReporter(errorReporter)
 {
 
     //
@@ -171,47 +178,6 @@ XSDErrorReporter::XSDErrorReporter(ErrorHandler* const handler) :
 
 
 // ---------------------------------------------------------------------------
-//  XSDErrorReporter: Error Handler
-// ---------------------------------------------------------------------------
-void XSDErrorReporter::error(const unsigned int errCode,
-                             const XMLCh* const errDomain,
-                             const ErrTypes errType,
-                             const XMLCh* const errorText,
-                             const XMLCh* const systemId,
-                             const XMLCh* const publicId,
-                             const unsigned int lineNum,
-                             const unsigned int colNum)
-{
-    SAXParseException toThrow = SAXParseException
-        (
-        errorText
-        , publicId
-        , systemId
-        , lineNum
-        , colNum
-        );
-
-    //
-    //  If there is an error handler registered, call it, otherwise ignore
-    //  all but the fatal errors.
-    //
-    if (!fErrorHandler)
-    {
-        if (errType == XMLErrorReporter::ErrType_Fatal)
-            throw toThrow;
-        return;
-    }
-
-    if (errType == XMLErrorReporter::ErrType_Warning)
-        fErrorHandler->warning(toThrow);
-    else if (errType >= XMLErrorReporter::ErrType_Fatal)
-        fErrorHandler->fatalError(toThrow);
-    else
-        fErrorHandler->error(toThrow);
-}
-
-
-// ---------------------------------------------------------------------------
 //  XSDErrorReporter: Error reporting
 // ---------------------------------------------------------------------------
 void XSDErrorReporter::emitError(const unsigned int toEmit,
@@ -229,7 +195,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     const unsigned int msgSize = 1023;
     XMLCh errText[msgSize + 1];
     XMLMsgLoader* msgLoader = gErrMsgLoader;
-    ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
+    XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
 
     if (!XMLString::compareString(msgDomain, XMLUni::fgValidityDomain)) {
 
@@ -247,9 +213,10 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
         }
     }
 
-    error(toEmit, msgDomain, errType, errText, aLocator->getSystemId(),
-          aLocator->getPublicId(), aLocator->getLineNumber(),
-          aLocator->getColumnNumber());
+    if (fErrorReporter)
+        fErrorReporter->error(toEmit, msgDomain, errType, errText, aLocator->getSystemId(),
+                              aLocator->getPublicId(), aLocator->getLineNumber(),
+                              aLocator->getColumnNumber());
 
     // Bail out if its fatal an we are to give up on the first fatal error
     if (errType == XMLErrorReporter::ErrType_Fatal && fExitOnFirstFatal)
@@ -275,7 +242,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     const unsigned int maxChars = 2047;
     XMLCh errText[maxChars + 1];
     XMLMsgLoader* msgLoader = gErrMsgLoader;
-    ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
+    XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
 
     if (!XMLString::compareString(msgDomain, XMLUni::fgValidityDomain)) {
 
@@ -293,9 +260,10 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
         }
     }
 
-    error(toEmit, msgDomain, errType, errText, aLocator->getSystemId(),
-          aLocator->getPublicId(), aLocator->getLineNumber(),
-          aLocator->getColumnNumber());
+    if (fErrorReporter)
+        fErrorReporter->error(toEmit, msgDomain, errType, errText, aLocator->getSystemId(),
+                              aLocator->getPublicId(), aLocator->getLineNumber(),
+                              aLocator->getColumnNumber());
 
     // Bail out if its fatal an we are to give up on the first fatal error
     if (errType == XMLErrorReporter::ErrType_Fatal && fExitOnFirstFatal)

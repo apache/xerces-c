@@ -56,8 +56,15 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:07  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/22 20:53:41  knoaman
+ * Prepare for DOM L3 :
+ * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
+ * EntityHandler/ErrorHandler directly.
+ * - Add 'AbstractDOMParser' class to provide common functionality for XercesDOMParser
+ * and DOMBuilder.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:07  peiyongz
+ * sane_include
  *
  * Revision 1.23  2001/11/20 18:51:44  tng
  * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
@@ -532,11 +539,9 @@ void SAXParser::setEntityResolver(EntityResolver* const resolver)
     fEntityResolver = resolver;
     if (fEntityResolver) {
         fScanner->setEntityHandler(this);
-        fScanner->setEntityResolver(fEntityResolver);
     }
     else {
         fScanner->setEntityHandler(0);
-        fScanner->setEntityResolver(0);
     }
 }
 

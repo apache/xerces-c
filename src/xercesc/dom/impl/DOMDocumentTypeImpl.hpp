@@ -103,7 +103,7 @@ private:
     virtual void        setInternalSubset(const XMLCh *value);
     bool                isIntSubsetReading() const;
 
-    friend class XercesDOMParser;
+    friend class AbstractDOMParser;
 
 public:
     DOMDocumentTypeImpl(DOMDocument *, const XMLCh *);

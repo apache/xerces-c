@@ -62,23 +62,21 @@
 #if !defined(XSDERRORREPORTER_HPP)
 #define XSDERRORREPORTER_HPP
 
-#include <xercesc/framework/XMLErrorReporter.hpp>
-
 
 class Locator;
-class ErrorHandler;
+class XMLErrorReporter;
 
 
 /**
  *  This class reports schema errors
  */
-class VALIDATORS_EXPORT XSDErrorReporter: public XMLErrorReporter
+class VALIDATORS_EXPORT XSDErrorReporter
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors are hidden, only the virtual destructor is exposed
     // -----------------------------------------------------------------------
-    XSDErrorReporter(ErrorHandler* const handler = 0);
+    XSDErrorReporter(XMLErrorReporter* const errorReporter = 0);
 
     virtual ~XSDErrorReporter()
     {
@@ -92,25 +90,8 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setErrorHandler(ErrorHandler* const handler);
+    void setErrorReporter(XMLErrorReporter* const errorReporter);
     void setExitOnFirstFatal(const bool newValue);
-
-    // -----------------------------------------------------------------------
-    //  The error handler interface
-    // -----------------------------------------------------------------------
-    virtual void error
-    (
-        const   unsigned int        errCode
-        , const XMLCh* const        errDomain
-        , const ErrTypes            type
-        , const XMLCh* const        errorText
-        , const XMLCh* const        systemId
-        , const XMLCh* const        publicId
-        , const unsigned int        lineNum
-        , const unsigned int        colNum
-    );
-
-    virtual void resetErrors();
 
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
@@ -142,8 +123,8 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool          fExitOnFirstFatal;
-    ErrorHandler* fErrorHandler;
+    bool              fExitOnFirstFatal;
+    XMLErrorReporter* fErrorReporter;
 };
 
 
@@ -163,16 +144,9 @@ inline void XSDErrorReporter::setExitOnFirstFatal(const bool newValue)
     fExitOnFirstFatal = newValue;
 }
 
-inline void XSDErrorReporter::setErrorHandler(ErrorHandler* const handler)
+inline void XSDErrorReporter::setErrorReporter(XMLErrorReporter* const errorReporter)
 {
-    fErrorHandler = handler;
-}
-
-// ---------------------------------------------------------------------------
-//  XSDErrorReporter: Error Handler
-// ---------------------------------------------------------------------------
-inline void XSDErrorReporter::resetErrors()
-{
+    fErrorReporter = errorReporter;
 }
 
 

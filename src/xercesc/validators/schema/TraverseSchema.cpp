@@ -62,7 +62,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/TraverseSchema.hpp>
-#include <xercesc/sax/EntityResolver.hpp>
+#include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/validators/schema/identity/IC_Key.hpp>
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
 #include <xercesc/validators/schema/identity/IC_Unique.hpp>
@@ -80,7 +80,6 @@
 #include <xercesc/validators/schema/NamespaceScope.hpp>
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
-#include <xercesc/internal/XMLInternalErrorHandler.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/validators/schema/identity/XPathException.hpp>
@@ -185,8 +184,8 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
                               , XMLScanner* const      xmlScanner
                               , XMLValidator* const    xmlValidator
                               , const XMLCh* const     schemaURL
-                              , EntityResolver* const  entityResolver
-                              , ErrorHandler* const    errorHandler)
+                              , XMLEntityHandler* const  entityHandler
+                              , XMLErrorReporter* const errorReporter)
     : fFullConstraintChecking(false)
     , fTargetNSURI(-1)
     , fEmptyNamespaceURI(-1)
@@ -198,8 +197,8 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fDatatypeRegistry(0)
     , fGrammarResolver(grammarResolver)
     , fSchemaGrammar(schemaGrammar)
-    , fEntityResolver(entityResolver)
-    , fErrorHandler(errorHandler)
+    , fEntityHandler(entityHandler)
+    , fErrorReporter(errorReporter)
     , fURIStringPool(uriStringPool)
     , fStringPool(0)
     , fValidator(xmlValidator)
@@ -406,12 +405,12 @@ void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
         elemAttrDefaultQualified |= Elem_Def_Qualified;
     }
 
-    if (!XMLString::compareString(schemaRoot->getAttribute(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT),
+    if (!XMLString::compareString(schemaRoot->getAttribute(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT), 
                                   SchemaSymbols::fgATTVAL_QUALIFIED)) {
         elemAttrDefaultQualified |= Attr_Def_Qualified;
     }
 
-    fSchemaInfo->setElemAttrDefaultQualified(elemAttrDefaultQualified);
+    fSchemaInfo->setElemAttrDefaultQualified(elemAttrDefaultQualified);    
     fSchemaInfo->setBlockDefault(parseBlockSet(schemaRoot, ES_Block, true));
     fSchemaInfo->setFinalDefault(parseFinalSet(schemaRoot, ECS_Final, true));
 }
@@ -503,26 +502,24 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // Parse input source
     // ------------------------------------------------------------------
-    XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
-
     if (!fParser)
         fParser = new XSDDOMParser;
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
-    fParser->setErrorHandler((ErrorHandler*) &internalErrorHandler);
-    fParser->setEntityResolver(fEntityResolver);
+    fParser->setUserEntityHandler(fEntityHandler);
+    fParser->setUserErrorReporter(fErrorReporter);
 
     // Should just issue warning if the schema is not found
     const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
     srcToFill->setIssueFatalErrorIfNotFound(false);
 
-    fParser->parse(*srcToFill) ;
+    fParser->parse(*srcToFill);
 
     // Reset the InputSource
     srcToFill->setIssueFatalErrorIfNotFound(flag);
 
-    if (internalErrorHandler.getSawFatal() && fScanner->getExitOnFirstFatal())
+    if (fParser->getSawFatal() && fScanner->getExitOnFirstFatal())
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::SchemaScanFatalError);
 
     // ------------------------------------------------------------------
@@ -685,15 +682,13 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // Parse input source
     // ------------------------------------------------------------------
-    XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
-
     if (!fParser)
         fParser = new XSDDOMParser;
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
-    fParser->setErrorHandler((ErrorHandler*) &internalErrorHandler);
-    fParser->setEntityResolver(fEntityResolver);
+    fParser->setUserEntityHandler(fEntityHandler);
+    fParser->setUserErrorReporter(fErrorReporter);
 
     // Should just issue warning if the schema is not found
     const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
@@ -704,7 +699,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // Reset the InputSource
     srcToFill->setIssueFatalErrorIfNotFound(flag);
 
-    if (internalErrorHandler.getSawFatal() && fScanner->getExitOnFirstFatal())
+    if (fParser->getSawFatal() && fScanner->getExitOnFirstFatal())
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::SchemaScanFatalError);
 
     // ------------------------------------------------------------------
@@ -970,7 +965,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     // Process contents
     // ------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(childElem,SchemaSymbols::fgATT_NAME);
-    bool nameEmpty = (XMLString::stringLen(name) == 0);
+    bool nameEmpty = (XMLString::stringLen(name) == 0); 
 
     if (topLevel && nameEmpty) {
         reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameGlobalElement,
@@ -1416,7 +1411,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
             fBuffer.set(fullName);
             fBuffer.append(SchemaSymbols::fgRedefIdentifier);
-            groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));
+            groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));            
         }
     }
 
@@ -2656,7 +2651,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Notation_InvalidDecl, name);
     }
 
-    fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)),
+    fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), 
                            fTargetNSURI, 0);
 
     //we don't really care if something inside <notation> is wrong..
@@ -3331,7 +3326,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         }
                         else {
 
-                            const XMLCh* facetNameStr =
+                            const XMLCh* facetNameStr = 
                                 fStringPool->getValueForId(fStringPool->addOrFind(facetName));
 
                             facets->put((void*) facetNameStr, new KVStringPair(facetNameStr, attValue));
@@ -3918,7 +3913,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     fBuffer.reset();
 
     unsigned int startIndex = 0;
-    	
+    	 
     while (startIndex < xpathLen) {
 
         if (!XMLString::startsWith(xpathExpr + startIndex, fgForwardSlash)
@@ -3932,7 +3927,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
             break;
 
         fBuffer.append(xpathExpr + startIndex, chOffset + 1 - startIndex);
-        startIndex = chOffset + 1;
+        startIndex = chOffset + 1;    
     }
 
     if (startIndex < xpathLen)
@@ -5458,7 +5453,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             }
 
             // Check for derivation valid (extension) - 1.4.2.2
-            if (baseContentType != SchemaElementDecl::Empty
+            if (baseContentType != SchemaElementDecl::Empty 
                 && baseContentType != SchemaElementDecl::Simple) {
                 if ((isMixed && baseContentType == SchemaElementDecl::Children)
                     || (!isMixed && baseContentType != SchemaElementDecl::Children)) {
@@ -6090,9 +6085,8 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
     // ------------------------------------------------------------------
     InputSource* srcToFill = 0;
 
-    if (fEntityResolver){
-        srcToFill = fEntityResolver->resolveEntity(XMLUni::fgZeroLenString,
-                                                   loc);
+    if (fEntityHandler){
+        srcToFill = fEntityHandler->resolveEntity(XMLUni::fgZeroLenString, loc);
     }
 
     //  If they didn't create a source via the entity resolver, then we
@@ -7218,15 +7212,13 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // ------------------------------------------------------------------
     // Parse input source
     // ------------------------------------------------------------------
-    XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
-
     if (!fParser)
         fParser = new XSDDOMParser;
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
-    fParser->setErrorHandler((ErrorHandler*) &internalErrorHandler);
-    fParser->setEntityResolver(fEntityResolver);
+    fParser->setUserEntityHandler(fEntityHandler);
+    fParser->setUserErrorReporter(fErrorReporter);
 
     // Should just issue warning if the schema is not found
     const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
@@ -7237,7 +7229,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // Reset the InputSource
     srcToFill->setIssueFatalErrorIfNotFound(flag);
 
-    if (internalErrorHandler.getSawFatal() && fScanner->getExitOnFirstFatal())
+    if (fParser->getSawFatal() && fScanner->getExitOnFirstFatal())
         reportSchemaError(redefineElem, XMLUni::fgXMLErrDomain, XMLErrs::SchemaScanFatalError);
 
     // ------------------------------------------------------------------
@@ -7666,7 +7658,7 @@ void TraverseSchema::reportSchemaError(const XSDLocator* const aLocator,
                                        const XMLCh* const msgDomain,
                                        const int errorCode) {
 
-    fErrorReporter.emitError(errorCode, msgDomain, aLocator);
+    fXSDErrorReporter.emitError(errorCode, msgDomain, aLocator);
 }
 
 void TraverseSchema::reportSchemaError(const XSDLocator* const aLocator,
@@ -7677,7 +7669,7 @@ void TraverseSchema::reportSchemaError(const XSDLocator* const aLocator,
                                        const XMLCh* const text3,
                                        const XMLCh* const text4) {
 
-    fErrorReporter.emitError(errorCode, msgDomain, aLocator, text1, text2, text3, text4);
+    fXSDErrorReporter.emitError(errorCode, msgDomain, aLocator, text1, text2, text3, text4);
 }
 
 void TraverseSchema::reportSchemaError(const DOMElement* const elem,
@@ -7688,7 +7680,7 @@ void TraverseSchema::reportSchemaError(const DOMElement* const elem,
                         ((XSDElementNSImpl*) elem)->getLineNo(),
                         ((XSDElementNSImpl*) elem)->getColumnNo());
 
-    fErrorReporter.emitError(errorCode, msgDomain, fLocator);
+    fXSDErrorReporter.emitError(errorCode, msgDomain, fLocator);
 }
 
 void TraverseSchema::reportSchemaError(const DOMElement* const elem,
@@ -7703,7 +7695,7 @@ void TraverseSchema::reportSchemaError(const DOMElement* const elem,
                         ((XSDElementNSImpl*) elem)->getLineNo(),
                         ((XSDElementNSImpl*) elem)->getColumnNo());
 
-    fErrorReporter.emitError(errorCode, msgDomain, fLocator, text1, text2, text3, text4);
+    fXSDErrorReporter.emitError(errorCode, msgDomain, fLocator, text1, text2, text3, text4);
 }
 
 // ---------------------------------------------------------------------------
@@ -7711,12 +7703,12 @@ void TraverseSchema::reportSchemaError(const DOMElement* const elem,
 // ---------------------------------------------------------------------------
 void TraverseSchema::init() {
 
-    fErrorReporter.setErrorHandler(fErrorHandler);
+    fXSDErrorReporter.setErrorReporter(fErrorReporter);
 
     if (fScanner && fScanner->getValidationSchemaFullChecking()) {
 
         fFullConstraintChecking = true;
-        fErrorReporter.setExitOnFirstFatal(fScanner->getExitOnFirstFatal());
+        fXSDErrorReporter.setExitOnFirstFatal(fScanner->getExitOnFirstFatal());
     }
 
     fDatatypeRegistry = fGrammarResolver->getDatatypeRegistry();

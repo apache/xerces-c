@@ -101,12 +101,62 @@ public :
 
     //@}
 
+
+    // -----------------------------------------------------------------------
+    //  Get methods
+    // -----------------------------------------------------------------------
+    bool getSawFatal() const;
+
+
+    // -----------------------------------------------------------------------
+    //  Set methods
+    // -----------------------------------------------------------------------
+    void setUserErrorReporter(XMLErrorReporter* const errorReporter);
+    void setUserEntityHandler(XMLEntityHandler* const entityHandler);
+
+
+    // -----------------------------------------------------------------------
+    //  XMLErrorReporter interface
+    // -----------------------------------------------------------------------
+    virtual void error
+    (
+        const   unsigned int        errCode
+        , const XMLCh* const        errDomain
+        , const ErrTypes            type
+        , const XMLCh* const        errorText
+        , const XMLCh* const        systemId
+        , const XMLCh* const        publicId
+        , const unsigned int        lineNum
+        , const unsigned int        colNum
+    );
+
+    // -----------------------------------------------------------------------
+    //  XMLEntityHandler interface
+    // -----------------------------------------------------------------------
+    virtual InputSource* resolveEntity
+    (
+        const   XMLCh* const    publicId
+        , const XMLCh* const    systemId
+    );
+
 protected :
     // -----------------------------------------------------------------------
     //  Protected Helper methods
     // -----------------------------------------------------------------------
     virtual DOMElement* createElementNSNode(const XMLCh *fNamespaceURI,
-                                              const XMLCh *qualifiedName);
+                                            const XMLCh *qualifiedName);
+
+private:
+    bool              fSawFatal;
+    XMLErrorReporter* fUserErrorReporter;
+    XMLEntityHandler* fUserEntityHandler;
 };
+
+
+inline bool XSDDOMParser::getSawFatal() const
+{
+    return fSawFatal;
+}
+
 
 #endif

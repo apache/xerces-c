@@ -76,7 +76,6 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLURL.hpp>
-#include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
@@ -87,9 +86,7 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
-#include <xercesc/internal/XMLInternalErrorHandler.hpp>
 #include <xercesc/dom/DOMException.hpp>
-#include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
@@ -226,7 +223,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             XMLAttDef* attDefForWildCard = 0;
             XMLAttDef*  attDef = 0;
-
+          
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
                 //retrieve the att def
@@ -1413,11 +1410,11 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
         XSDDOMParser parser;
-        XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
+
         parser.setValidationScheme(XercesDOMParser::Val_Never);
         parser.setDoNamespaces(true);
-        parser.setErrorHandler((ErrorHandler*) &internalErrorHandler);
-        parser.setEntityResolver(fEntityResolver);
+        parser.setUserEntityHandler(fEntityHandler);
+        parser.setUserErrorReporter(fErrorReporter);
 
         // Create a buffer for expanding the system id
         XMLBufBid bbSys(&fBufMgr);
@@ -1427,29 +1424,22 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         //  Allow the entity handler to expand the system id if they choose
         //  to do so.
         //
+        InputSource* srcToFill = 0;
         if (fEntityHandler)
         {
             if (!fEntityHandler->expandSystemId(loc, expSysId))
                 expSysId.set(loc);
+
+            fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
+                                         , expSysId.getRawBuffer());
         }
          else
         {
             expSysId.set(loc);
         }
 
-        // Call the entity resolver interface to get an input source
-        InputSource* srcToFill = 0;
-        if (fEntityResolver)
-        {
-            srcToFill = fEntityResolver->resolveEntity
-            (
-                XMLUni::fgZeroLenString
-                , expSysId.getRawBuffer()
-            );
-        }
-
         //
-        //  If they didn't create a source via the entity resolver, then we
+        //  If they didn't create a source via the entity handler, then we
         //  have to create one on our own.
         //
         if (!srcToFill)
@@ -1489,12 +1479,12 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
         srcToFill->setIssueFatalErrorIfNotFound(false);
 
-        parser.parse(*srcToFill) ;
+        parser.parse(*srcToFill);
 
         // Reset the InputSource
         srcToFill->setIssueFatalErrorIfNotFound(flag);
 
-        if (internalErrorHandler.getSawFatal() && fExitOnFirstFatal)
+        if (parser.getSawFatal() && fExitOnFirstFatal)
             emitError(XMLErrs::SchemaScanFatalError);
 
         DOMDocument* document = parser.getDocument(); //Our Grammar
@@ -1535,7 +1525,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
                     }
 
                     grammar = new SchemaGrammar();
-                    TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
+                    TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityHandler, fErrorReporter);
 
                     if (fGrammarType == Grammar::DTDGrammarType) {
                         fGrammar = grammar;
