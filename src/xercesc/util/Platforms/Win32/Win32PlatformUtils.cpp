@@ -476,8 +476,10 @@ FileHandle XMLPlatformUtils::openStdInHandle()
     //  shutting it would prevent any further output.
     //
     HANDLE stdInOrg = ::GetStdHandle(STD_INPUT_HANDLE);
-    if (stdInOrg == INVALID_HANDLE_VALUE)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
+    if (stdInOrg == INVALID_HANDLE_VALUE) {
+        XMLCh stdinStr[] = {chLatin_s, chLatin_t, chLatin_d, chLatin_i, chLatin_n, chNull};
+        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, stdinStr);
+    }
 
     HANDLE retHandle;
     if (!::DuplicateHandle

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/12/06 16:43:33  tng
+ * Fix the error messages thrown from net accessor module.
+ *
  * Revision 1.6  2002/12/02 20:41:17  tng
  * [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
  *
@@ -174,15 +177,15 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         unsigned long  numAddress = inet_addr(hostNameAsCharStar);
         if (numAddress < 0)
         {
-            ThrowXML(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution);
+            ThrowXML1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName);
         }
         if ((hostEntPtr =
                 gethostbyaddr((char *) &numAddress,
                               sizeof(unsigned long), AF_INET)) == NULL)
         {
-            ThrowXML(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution);
+            ThrowXML1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName);
         }
     }
 
@@ -194,14 +197,14 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     int s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
     if (s < 0)
     {
-        ThrowXML(NetAccessorException,
-                 XMLExcepts::NetAcc_CreateSocket);
+        ThrowXML1(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText());
     }
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0)
     {
-        ThrowXML(NetAccessorException,
-                 XMLExcepts::NetAcc_ConnSocket);
+        ThrowXML1(NetAccessorException,
+                 XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText());
     }
 
     // The port is open and ready to go.
@@ -241,8 +244,8 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     int  aLent = 0;
     if ((aLent = write(s, (void *) fBuffer, lent)) != lent)
     {
-        ThrowXML(NetAccessorException,
-                 XMLExcepts::NetAcc_WriteSocket);
+        ThrowXML1(NetAccessorException,
+                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText());
     }
 
     //
@@ -251,7 +254,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     aLent = read(s, (void *)fBuffer, sizeof(fBuffer)-1);
     if (aLent <= 0)
     {
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
 
     fBufferEnd = fBuffer+aLent;
@@ -284,13 +287,13 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     char *p = strstr(fBuffer, "HTTP");
     if (p == 0)
     {
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
 
     p = strchr(p, ' ');
     if (p == 0)
     {
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
 
     int httpResponse = atoi(p);
@@ -299,7 +302,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         // Most likely a 404 Not Found error.
         //   Should recognize and handle the forwarding responses.
         //
-        ThrowXML(NetAccessorException, XMLExcepts::File_CouldNotOpenFile);
+        ThrowXML1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText());
     }
 
 
@@ -337,7 +340,7 @@ unsigned int UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
         len = read(fSocket, (void *) toFill, maxToRead);
         if (len == -1)
         {
-            ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+            ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
         }
     }
 

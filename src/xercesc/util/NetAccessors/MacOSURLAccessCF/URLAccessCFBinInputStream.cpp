@@ -142,24 +142,24 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
                 break;
 
             case kCFURLRemoteHostUnavailableError:
-                ThrowXML(NetAccessorException,  XMLExcepts::NetAcc_TargetResolution);
+                ThrowXML1(NetAccessorException,  XMLExcepts::NetAcc_TargetResolution, urlSource.getHost());
                 break;
 
             case kCFURLUnknownError:
-                ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+                ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlText);
                 break;
 
             case kCFURLResourceNotFoundError:
             case kCFURLResourceAccessViolationError:
             case kCFURLTimeoutError:
-                ThrowXML(NetAccessorException, XMLExcepts::File_CouldNotOpenFile);
+                ThrowXML1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlText);
                 break;
 
             case kCFURLImproperArgumentsError:
             case kCFURLUnknownPropertyKeyError:
             case kCFURLPropertyKeyUnavailableError:
             default:
-                ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InternalError);
+                ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_InternalError, urlText);
                 break;
         }
     }

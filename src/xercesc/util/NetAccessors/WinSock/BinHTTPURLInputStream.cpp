@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/06 16:43:55  tng
+ * Fix the error messages thrown from net accessor module.
+ *
  * Revision 1.2  2002/11/04 15:11:39  tng
  * C++ Namespace Support.
  *
@@ -344,16 +347,16 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         if (numAddress == INADDR_NONE)
         {
             // Call WSAGetLastError() to get the error number.
-            ThrowXML(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution);
+            ThrowXML1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName);
         }
         if ((hostEntPtr =
                 gethostbyaddr((const char *) &numAddress,
                               sizeof(unsigned long), AF_INET)) == NULL)
         {
             // Call WSAGetLastError() to get the error number.
-            ThrowXML(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution);
+            ThrowXML1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName);
         }
     }
 
@@ -366,15 +369,15 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     if (s == INVALID_SOCKET)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML(NetAccessorException,
-                 XMLExcepts::NetAcc_CreateSocket);
+        ThrowXML1(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText());
     }
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML(NetAccessorException,
-                 XMLExcepts::NetAcc_ConnSocket);
+        ThrowXML1(NetAccessorException,
+                 XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText());
     }
 
 
@@ -421,8 +424,8 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     if ((aLent = send(s, fBuffer, lent, 0)) != lent)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML(NetAccessorException,
-                 XMLExcepts::NetAcc_WriteSocket);
+        ThrowXML1(NetAccessorException,
+                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText());
     }
 
 
@@ -434,7 +437,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     if (aLent == SOCKET_ERROR || aLent == 0)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
 
     fBufferEnd = fBuffer+aLent;
@@ -469,7 +472,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
                 if (aLent == SOCKET_ERROR || aLent == 0)
                 {
                     // Call WSAGetLastError() to get the error number.
-                    ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+                    ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
                 }
                 fBufferEnd = fBufferEnd + aLent;
                 *fBufferEnd = 0;
@@ -482,13 +485,13 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     char *p = strstr(fBuffer, "HTTP");
     if (p == 0)
     {
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
 
     p = strchr(p, ' ');
     if (p == 0)
     {
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
 
     int httpResponse = atoi(p);
@@ -497,7 +500,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         // Most likely a 404 Not Found error.
         //   Should recognize and handle the forwarding responses.
         //
-        ThrowXML(NetAccessorException, XMLExcepts::File_CouldNotOpenFile);
+        ThrowXML1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText());
     }
 
     fSocketHandle = (unsigned int) s;

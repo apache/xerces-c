@@ -272,7 +272,7 @@ XMLMacFile::openWithPermission(const XMLCh* const fileName, int macPermission)
     OSErr err = noErr;
 
     if (mFileValid)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
+        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     if (gHasHFSPlusAPIs)
     {
@@ -590,7 +590,7 @@ XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
+        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     Janitor<XMLMacAbstractFile> file(new XMLMacFile());
     file->open(fileName);
@@ -612,7 +612,7 @@ XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 {
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
+        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     Janitor<XMLMacAbstractFile> file(new XMLMacFile());
     file->openFileToWrite(fileName);
@@ -624,7 +624,8 @@ XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 FileHandle
 XMLPlatformUtils::openStdInHandle()
 {
-    ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
+    XMLCh stdinStr[] = {chLatin_s, chLatin_t, chLatin_d, chLatin_i, chLatin_n, chNull};
+    ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, stdinStr);
     return NULL;
 }
 

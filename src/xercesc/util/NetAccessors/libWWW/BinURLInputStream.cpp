@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2002/12/06 16:42:13  tng
+ * Fix the error messages thrown from net accessor module.
+ *
  * Revision 1.2  2002/11/04 15:11:39  tng
  * C++ Namespace Support.
  *
@@ -191,8 +194,7 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
         HTResponse * response = HTRequest_response (request);
         fRemoteFileSize = HTResponse_length(response);
         if (fRemoteFileSize < 0) {
-            ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_InternalError,
-                "Cannot determine length of remote file.");
+            ThrowXML(NetAccessorException, XMLExcepts::NetAcc_LengthError);
         }
     }
 
@@ -203,8 +205,7 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
 
     if (status == NO)
     {
-        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_InternalError,
-            "Cannot determine length of remote file.");
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_LengthError);
     }
 }
 

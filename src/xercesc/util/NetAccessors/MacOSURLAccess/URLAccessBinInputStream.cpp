@@ -113,7 +113,7 @@ URLAccessBinInputStream::URLAccessBinInputStream(const XMLURL& urlSource)
 			break;
 		
 		default:
-        	ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ConnSocket);
+        	ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText());
         	break;
 	}
 }
@@ -228,7 +228,7 @@ URLAccessBinInputStream::readBytes(XMLByte* const    toFill
 	
 	//	Throw on any error
 	if (status != noErr || state == kURLErrorOccurredState)
-	    ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+	    ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, mURLReference);
 	
 	//	Return number of bytes delivered
 	return maxToRead - bytesDesired;
