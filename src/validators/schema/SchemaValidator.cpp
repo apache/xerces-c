@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/10/12 20:44:01  tng
+ * Schema Fix: Notation Uri Binding.
+ *
  * Revision 1.19  2001/10/04 15:08:56  knoaman
  * Add support for circular import.
  *
@@ -425,13 +428,10 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
                 //  the notation pool (after the Grammar is parsed), then obviously
                 //  this value will be legal since it matches one of them.
                 //
-                XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
-                XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
                 XMLBuffer notationBuf;
-                unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
-                notationBuf.set(getScanner()->getURIText(uriId));
+                notationBuf.set(fSchemaGrammar->getTargetNamespace());
                 notationBuf.append(chColon);
-                notationBuf.append(nameBuf.getRawBuffer());
+                notationBuf.append(attrValue);
 
                 attDefDV->validate(notationBuf.getRawBuffer());
             }
