@@ -315,25 +315,26 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     if ($DevStudioVer eq "6.0") {
         if ($PlatformName eq "Win64") { # /USEENV
             psystem("msdev xerces-all.dsw /MAKE \"all - $PlatformName Release\" /USEENV /REBUILD /OUT buildlog_release.txt");
-          # psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /USEENV /REBUILD /OUT buildlog_debug.txt");
-          # psystem("msdev xerces-all.dsw /MAKE \"XercesDeprecatedDOMLib - $PlatformName Debug\" /USEENV /REBUILD /OUT buildlog_depdom_debug.txt");
+            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /USEENV /REBUILD /OUT buildlog_debug.txt");
+            psystem("msdev xerces-all.dsw /MAKE \"XercesDeprecatedDOMLib - $PlatformName Debug\" /USEENV /REBUILD /OUT buildlog_depdom_debug.txt");
         }
         else {
             psystem("msdev xerces-all.dsw /MAKE \"all - $PlatformName Release\" /REBUILD /OUT buildlog_release.txt");
-          # psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /REBUILD /OUT buildlog_debug.txt");
-          # psystem("msdev xerces-all.dsw /MAKE \"XercesDeprecatedDOMLib - $PlatformName Debug\" /REBUILD /OUT buildlog_depdom_debug.txt");
+            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /REBUILD /OUT buildlog_debug.txt");
+            psystem("msdev xerces-all.dsw /MAKE \"XercesDeprecatedDOMLib - $PlatformName Debug\" /REBUILD /OUT buildlog_depdom_debug.txt");
         }	
     } elsif ($DevStudioVer eq "7.0") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
-      # psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
-      # psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");                
+        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
+        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");                
     } else { # "6.1"
         psystem( "nmake -f all.mak \"CFG=all - $PlatformName Release\" CPP=$opt_x.exe >buildlog_release.txt 2>&1");
     }
 
     system("type buildlog_release.txt");
-  # system("type buildlog_debug.txt");
-  # system("type buildlog_depdom_debug.txt");
+    system("type buildlog_debug.txt");
+    system("type buildlog_depdom_debug.txt");
+
 
 #
 # Population Begin
@@ -382,11 +383,15 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     # Population::Xerces-c
     # 
     print ("\n\nCopying Xerces-c outputs ...\n");            
-    psystem("cp -fv $ReleaseBuildDir/*.dll   $targetdir/bin");
-    psystem("cp -fv $ReleaseBuildDir/*.exe $targetdir/bin");    
-    psystem("cp -fv $ReleaseBuildDir/xerces-c_*.lib $targetdir/lib");
+    psystem("cp -fv $ReleaseBuildDir/*.dll               $targetdir/bin");
+    psystem("cp -fv $ReleaseBuildDir/*.exe               $targetdir/bin");        
+    psystem("cp -fv $ReleaseBuildDir/xerces-c_*.lib      $targetdir/lib");
     psystem("cp -fv $ReleaseBuildDir/xerces-depdom_*.lib $targetdir/lib");
-           
+
+    psystem("cp -fv $DebugBuildDir/*.dll                 $targetdir/bin");
+    psystem("cp -fv $DebugBuildDir/xerces-c_*.lib        $targetdir/lib");
+    psystem("cp -fv $DebugBuildDir/xerces-depdom_*.lib   $targetdir/lib");
+               
     # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
     psystem("cp -fv $XERCESCROOT/Build/Win32/$VCBuildDir/Release/obj/*.map $targetdir/etc");
@@ -677,7 +682,15 @@ if ( ($platform =~ m/AIX/i)      ||
                 else {
                     psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
                 }
-                                                    
+           }elsif ($platform eq 'solaris') {                       
+                if ($opt_b eq "32") {               	
+                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT --disable-64bit-libs");
+                }
+                else {
+                    $icu_cxxflags = '"-w -O3 -xarch=v9"';
+                    $icu_cflags = '"-w -xO3 -xarch=v9"';                 	
+                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
+                }                                         
             } else {
             # set the 32 bit or 64 bit
                 if ($opt_b eq "32") {
