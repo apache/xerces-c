@@ -120,7 +120,7 @@ Grammar* XercesDOMParser::getRootGrammar()
     return getScanner()->getRootGrammar();
 }
 
-const XMLCh* XercesDOMParser::getURIText(unsigned int uriId)
+const XMLCh* XercesDOMParser::getURIText(unsigned int uriId) const
 {
     return getScanner()->getURIText(uriId);
 }

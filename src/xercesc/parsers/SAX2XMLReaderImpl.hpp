@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/01/09 19:07:08  tng
+ * [Bug 15802] Add "const" qualifier to getURIText.
+ *
  * Revision 1.16  2002/12/23 15:23:18  knoaman
  * Added a public api to various parsers to return the src offset within the input
  * source.
@@ -651,7 +654,7 @@ public :
       * @param uriId id of the string in the URI string pool.
       * @return URI string corresponding to the URI id.
       */
-    virtual const XMLCh* getURIText(unsigned int uriId);
+    virtual const XMLCh* getURIText(unsigned int uriId) const;
 
     /**
       * Returns the current src offset within the input source.
@@ -1827,7 +1830,7 @@ inline Grammar* SAX2XMLReaderImpl::getRootGrammar()
     return fScanner->getRootGrammar();
 }
 
-inline const XMLCh* SAX2XMLReaderImpl::getURIText(unsigned int uriId)
+inline const XMLCh* SAX2XMLReaderImpl::getURIText(unsigned int uriId) const
 {
     return fScanner->getURIText(uriId);
 }

@@ -263,7 +263,7 @@ Grammar* DOMParser::getRootGrammar()
     return fScanner->getRootGrammar();
 }
 
-const XMLCh* DOMParser::getURIText(unsigned int uriId)
+const XMLCh* DOMParser::getURIText(unsigned int uriId) const
 {
     return fScanner->getURIText(uriId);
 }

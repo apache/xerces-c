@@ -199,7 +199,7 @@ public :
      * @param uriId id of the string in the URI string pool.
      * @return URI string corresponding to the URI id.
      */
-    const XMLCh* getURIText(unsigned int uriId);
+    const XMLCh* getURIText(unsigned int uriId) const;
 
     /**
      * Returns the current src offset within the input source.

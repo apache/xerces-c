@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/01/09 19:07:08  tng
+ * [Bug 15802] Add "const" qualifier to getURIText.
+ *
  * Revision 1.13  2003/01/03 20:09:36  tng
  * New feature StandardUriConformant to force strict standard uri conformance.
  *
@@ -465,7 +468,7 @@ Grammar* SAXParser::getRootGrammar()
     return fScanner->getRootGrammar();
 }
 
-const XMLCh* SAXParser::getURIText(unsigned int uriId)
+const XMLCh* SAXParser::getURIText(unsigned int uriId) const
 {
     return fScanner->getURIText(uriId);
 }

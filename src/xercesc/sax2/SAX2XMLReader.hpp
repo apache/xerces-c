@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/01/09 19:07:27  tng
+ * [Bug 15802] Add "const" qualifier to getURIText.
+ *
  * Revision 1.8  2002/12/23 15:23:18  knoaman
  * Added a public api to various parsers to return the src offset within the input
  * source.
@@ -619,7 +622,7 @@ public:
       * @param uriId id of the string in the URI string pool.
       * @return URI string corresponding to the URI id.
       */
-    virtual const XMLCh* getURIText(unsigned int uriId) = 0;
+    virtual const XMLCh* getURIText(unsigned int uriId) const = 0;
 
     /**
       * Returns the current src offset within the input source.

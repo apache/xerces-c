@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/01/09 19:07:08  tng
+ * [Bug 15802] Add "const" qualifier to getURIText.
+ *
  * Revision 1.18  2003/01/03 20:09:36  tng
  * New feature StandardUriConformant to force strict standard uri conformance.
  *
@@ -537,7 +540,7 @@ public :
      * @param uriId id of the string in the URI string pool.
      * @return URI string corresponding to the URI id.
      */
-    const XMLCh* getURIText(unsigned int uriId);
+    const XMLCh* getURIText(unsigned int uriId) const;
 
     /**
      * Returns the current src offset within the input source.
