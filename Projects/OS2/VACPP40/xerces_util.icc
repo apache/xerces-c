@@ -1,4 +1,5 @@
 group xerces_util =
+    BASE_DIR "\\src\\util\\Base64.cpp",
     BASE_DIR "\\src\\util\\BinFileInputStream.cpp",
     BASE_DIR "\\src\\util\\BinInputStream.cpp",
     BASE_DIR "\\src\\util\\BinMemInputStream.cpp",
@@ -6,6 +7,7 @@ group xerces_util =
     BASE_DIR "\\src\\util\\HashPtr.cpp",
     BASE_DIR "\\src\\util\\HashXMLCh.cpp",
     BASE_DIR "\\src\\util\\HeaderDummy.cpp",
+    BASE_DIR "\\src\\util\\HexBin.cpp",
     BASE_DIR "\\src\\util\\KVStringPair.cpp",
     BASE_DIR "\\src\\util\\Mutexes.cpp",
     BASE_DIR "\\src\\util\\PlatformUtils.cpp",
