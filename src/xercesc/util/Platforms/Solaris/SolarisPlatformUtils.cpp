@@ -239,13 +239,13 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
 {
     const char* tmpFileName = XMLString::transcode(fileName, manager);
     ArrayJanitor<char> janText((char*)tmpFileName, manager);
-    return (FileHandle)open( tmpFileName , O_WRONLY | O_CREAT | O_LARGEFILE, 0666);
+    return (FileHandle)open( tmpFileName , O_WRONLY | O_CREAT | O_TRUNC | O_LARGEFILE, 0666);
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
                                              , MemoryManager* const manager)
 {
-    return (FileHandle)open( fileName , O_WRONLY | O_CREAT | O_LARGEFILE, 0666);
+    return (FileHandle)open( fileName , O_WRONLY | O_CREAT | O_TRUNC | O_LARGEFILE, 0666);
 }
 
 unsigned int
