@@ -412,8 +412,9 @@ $set 2
 107  The key for identity constraint of element '{0}' is not found.
 108  Non-whitespace characters are not allowed in schema elements other than 'appinfo' and 'documentation'.
 109  EMPTY Element '{0}' has Attribute '{1}' of type NOTATION 
-110  Element '{0}' has more than one Attribute of type NOTATION 
-111  Attribute '{0}' has non distinct token '{1}' 
+110  EMPTY Element '{0}' can't have content(not even entity references, comments, PIs or white space). 
+111  Element '{0}' has more than one Attribute of type NOTATION 
+112  Attribute '{0}' has non distinct token '{1}' 
 
 
 $set 3

@@ -911,6 +911,7 @@ bool IGXMLScanner::scanContent()
 
                     case Token_Comment :
                         scanComment();
+                        fElemStack.setCommentOrPISeen();
                         break;
 
                     case Token_EndTag :
@@ -919,6 +920,7 @@ bool IGXMLScanner::scanContent()
 
                     case Token_PI :
                         scanPI();
+                        fElemStack.setCommentOrPISeen();
                         break;
 
                     case Token_StartTag :
@@ -1085,6 +1087,24 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     DatatypeValidator* psviMemberType = 0;
     if (fValidate)
     {
+
+       //
+       // XML1.0-3rd
+       // Validity Constraint: 
+       // The declaration matches EMPTY and the element has no content (not even 
+       // entity references, comments, PIs or white space).
+       //
+       if ( (fGrammarType == Grammar::DTDGrammarType) &&
+            (topElem->fCommentOrPISeen)               &&
+            (((DTDElementDecl*) topElem->fThisElement)->getModelType() == DTDElementDecl::Empty))
+       {
+           fValidator->emitError
+               (
+               XMLValid::EmptyElemHasContent
+               , topElem->fThisElement->getFullName()
+               );
+       }
+           
         int res = fValidator->checkContent
         (
             topElem->fThisElement

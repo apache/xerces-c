@@ -423,6 +423,7 @@ en_US {
 		"The key for identity constraint of element '{0}' is not found. " ,
 		"Non-whitespace characters are not allowed in schema elements other than 'appinfo' and 'documentation'. " ,
 		"EMPTY Element '{0}' has Attribute '{1}' of type NOTATION  " ,
+		"EMPTY Element '{0}' can't have content(not even entity references, comments, PIs or white space).  " ,
 		"Element '{0}' has more than one Attribute of type NOTATION  " ,
 		"Attribute '{0}' has non distinct token '{1}'  " ,
 		"E_ End " ,

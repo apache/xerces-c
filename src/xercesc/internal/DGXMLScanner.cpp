@@ -582,6 +582,7 @@ bool DGXMLScanner::scanContent()
 
                     case Token_Comment :
                         scanComment();
+                        fElemStack.setCommentOrPISeen();
                         break;
 
                     case Token_EndTag :
@@ -590,6 +591,7 @@ bool DGXMLScanner::scanContent()
 
                     case Token_PI :
                         scanPI();
+                        fElemStack.setCommentOrPISeen();
                         break;
 
                     case Token_StartTag :
@@ -704,6 +706,23 @@ void DGXMLScanner::scanEndTag(bool& gotData)
     //  this element and let him validate it.
     if (fValidate)
     {
+
+       //
+       // XML1.0-3rd
+       // Validity Constraint: 
+       // The declaration matches EMPTY and the element has no content (not even 
+       // entity references, comments, PIs or white space).
+       //
+       if ( (topElem->fCommentOrPISeen)               &&
+            (((DTDElementDecl*) topElem->fThisElement)->getModelType() == DTDElementDecl::Empty))
+       {
+           fValidator->emitError
+               (
+               XMLValid::EmptyElemHasContent
+               , topElem->fThisElement->getFullName()
+               );
+       }
+
         int res = fValidator->checkContent
         (
             topElem->fThisElement

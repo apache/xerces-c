@@ -124,13 +124,14 @@ public :
       , IC_KeyNotFound                     = 107
       , NonWSContent                       = 108
       , EmptyElemNotationAttr              = 109
-      , ElemOneNotationAttr                = 110
-      , AttrDupToken                       = 111
-      , E_HighBounds                       = 112
-      , W_LowBounds                        = 113
-      , W_HighBounds                       = 114
-      , F_LowBounds                        = 115
-      , F_HighBounds                       = 116
+      , EmptyElemHasContent                = 110
+      , ElemOneNotationAttr                = 111
+      , AttrDupToken                       = 112
+      , E_HighBounds                       = 113
+      , W_LowBounds                        = 114
+      , W_HighBounds                       = 115
+      , F_LowBounds                        = 116
+      , F_HighBounds                       = 117
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

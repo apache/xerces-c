@@ -425,8 +425,9 @@
             <Message Id="IC_KeyNotFound" Text="The key for identity constraint of element '{0}' is not found."/>
             <Message Id="NonWSContent" Text="Non-whitespace characters are not allowed in schema elements other than 'appinfo' and 'documentation'."/>
             <Message Id="EmptyElemNotationAttr" Text="EMPTY Element '{0}' has Attribute '{1}' of type NOTATION "/>
-            <Message Id="ElemOneNotationAttr"    Text="Element '{0}' has more than one Attribute of type NOTATION "/>
-            <Message Id="AttrDupToken"              Text="Attribute '{0}' has non distinct token '{1}' "/>                        
+            <Message Id="EmptyElemHasContent"   Text="EMPTY Element '{0}' can't have content(not even entity references, comments, PIs or white space). "/>            
+            <Message Id="ElemOneNotationAttr"   Text="Element '{0}' has more than one Attribute of type NOTATION "/>
+            <Message Id="AttrDupToken"          Text="Attribute '{0}' has non distinct token '{1}' "/>                        
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
