@@ -168,6 +168,8 @@ public:
     void              callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
                                            const DOMNode* src,
                                            const DOMNode* dst) const;
+    //reverses the bit pattern given by compareTreePosition
+    short             reverseTreeOrderBitPattern(short pattern) const;
 
 
     //Utility, not part of DOM Level 2 API
