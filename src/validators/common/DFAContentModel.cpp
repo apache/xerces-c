@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.28  2001/12/06 17:52:17  tng
+ * Performance Enhancement.  The QName that was passed to the CMLeaf
+ * constructor was always being copied, even though the CMLeaf objects
+ * only existed during construction of a DFA.  In most cases the original
+ * QName that was passed into the CMLeaf constructor continued to exist long
+ * after the CMLeaf was destroyed; in some cases the QName was constructed
+ * specifically to be passed to the CMLeaf constructor.  Added a second CMLeaf constructor that indicated the QName passed in was to be adopted; otherwise the CMLeaf constructor just sets a reference to the QName passed in.
+ * By Henry Zongaro.
+ *
  * Revision 1.27  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
  *
@@ -508,8 +517,11 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  DFA state position and count the number of such leafs, which is left
     //  in the fLeafCount member.
     //
-    QName* qname = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLContentModel::gEOCFakeId);
-    CMLeaf* nodeEOC = new CMLeaf(qname);
+    CMLeaf* nodeEOC = new CMLeaf(new QName(XMLUni::fgZeroLenString,
+                                           XMLUni::fgZeroLenString,
+                                           XMLContentModel::gEOCFakeId)
+                                 , ~0
+                                 , true);
     CMNode* nodeOrgContent = buildSyntaxTree(curNode);
     fHeadNode = new CMBinaryOp
     (
@@ -917,7 +929,6 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //
 
     delete fHeadNode;
-    delete qname;
 
     for (index = 0; index < fLeafCount; index++)
         delete fFollowList[index];
@@ -1102,14 +1113,13 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
          ((curType & 0x0f) == ContentSpecNode::Any_NS) ||
          ((curType & 0x0f) == ContentSpecNode::Any_Other)  )
     {
-        QName* qname = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, ((CMAny*) nodeCur)->getURI());
-
-        fLeafList[newIndex] = new CMLeaf(qname, ((CMAny*)nodeCur)->getPosition());
+        fLeafList[newIndex] = new CMLeaf(new QName(XMLUni::fgZeroLenString
+                                                 , XMLUni::fgZeroLenString
+                                                 , ((CMAny*) nodeCur)->getURI())
+                                       , ((CMAny*)nodeCur)->getPosition()
+                                       , true);
         fLeafListType[newIndex] = curType;
         ++newIndex;
-
-
-        delete qname;
     }
     else if ((curType == ContentSpecNode::Choice)
          ||  (curType == ContentSpecNode::Sequence))

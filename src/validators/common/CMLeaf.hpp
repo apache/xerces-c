@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/12/06 17:52:17  tng
+ * Performance Enhancement.  The QName that was passed to the CMLeaf
+ * constructor was always being copied, even though the CMLeaf objects
+ * only existed during construction of a DFA.  In most cases the original
+ * QName that was passed into the CMLeaf constructor continued to exist long
+ * after the CMLeaf was destroyed; in some cases the QName was constructed
+ * specifically to be passed to the CMLeaf constructor.  Added a second CMLeaf constructor that indicated the QName passed in was to be adopted; otherwise the CMLeaf constructor just sets a reference to the QName passed in.
+ * By Henry Zongaro.
+ *
  * Revision 1.5  2001/10/03 15:08:45  tng
  * typo fix: remove the extra space which may confuse some compilers while constructing the qname.
  *
@@ -121,6 +130,12 @@ public :
           QName* const          element
         , const unsigned int    position = ~0
     );
+    CMLeaf
+    (
+          QName* const          element
+        , const unsigned int    position
+        , const bool            adopt
+    );
     ~CMLeaf();
 
 
@@ -163,9 +178,13 @@ private :
     //      Part of the algorithm to convert a regex directly to a DFA
     //      numbers each leaf sequentially. If its -1, that means its an
     //      epsilon node. All others are non-epsilon positions.
+    //
+    //  fAdopt
+    //      This node is responsible for the storage of the fElement QName.
     // -----------------------------------------------------------------------
     QName*          fElement;
     unsigned int    fPosition;
+    bool            fAdopt;
 };
 
 
@@ -177,16 +196,48 @@ inline CMLeaf::CMLeaf(    QName* const          element
     CMNode(ContentSpecNode::Leaf)
     , fElement(0)
     , fPosition(position)
+    , fAdopt(false)
 {
     if (!element)
-        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+    {
+        fElement = new QName(XMLUni::fgZeroLenString
+                           , XMLUni::fgZeroLenString
+                           , XMLElementDecl::fgInvalidElemId);
+        // We have to be responsible for this QName - override default fAdopt
+        fAdopt = true;
+    }
     else
-        fElement = new QName(element);
+    {
+        fElement = element;
+    }
+}
+
+inline CMLeaf::CMLeaf(    QName* const          element
+                        , const unsigned int    position
+                        , const bool            adopt) :
+    CMNode(ContentSpecNode::Leaf)
+    , fElement(0)
+    , fPosition(position)
+    , fAdopt(adopt)
+{
+    if (!element)
+    {
+        fElement = new QName(XMLUni::fgZeroLenString
+                           , XMLUni::fgZeroLenString
+                           , XMLElementDecl::fgInvalidElemId);
+        // We have to be responsible for this QName - override adopt parameter
+        fAdopt = true;
+    }
+    else
+    {
+        fElement = element;
+    }
 }
 
 inline CMLeaf::~CMLeaf()
 {
-    delete fElement;
+    if (fAdopt)
+        delete fElement;
 }
 
 
