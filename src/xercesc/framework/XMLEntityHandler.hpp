@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.4  2002/06/06 20:41:51  tng
+  * Regression fix: should assign the returned InputSource from resolveEntity to srcToFill.
+  *
   * Revision 1.3  2002/05/31 15:14:07  tng
   * Fix doxygen documentation.
   *
@@ -185,6 +188,8 @@ public:
       *                 or <code>null</code> if there is no base URI.
       * @return The value returned by the SAX resolveEntity method or
       *         NULL otherwise to indicate no processing was done.
+      *         The returned InputSource is owned by the parser which is
+      *         responsible to clean up the memory.
       */
     virtual InputSource* resolveEntity
     (

@@ -223,7 +223,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             XMLAttDef* attDefForWildCard = 0;
             XMLAttDef*  attDef = 0;
-          
+
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
                 //retrieve the att def
@@ -1430,8 +1430,8 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
             if (!fEntityHandler->expandSystemId(loc, expSysId))
                 expSysId.set(loc);
 
-            fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
-                                         , expSysId.getRawBuffer());
+            srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
+                                                     , expSysId.getRawBuffer());
         }
          else
         {
