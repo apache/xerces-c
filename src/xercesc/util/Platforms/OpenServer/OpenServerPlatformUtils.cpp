@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/19 13:04:32  gareth
+ * Bug# 14661 Caldera implemented openFileToWrite and writeBufferToFile. Patch from Cameron Dorrat.
+ *
  * Revision 1.3  2002/11/04 15:13:01  tng
  * C++ Namespace Support.
  *
@@ -271,6 +274,18 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    return fopen( tmpFileName , "wb" );
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    return fopen( fileName , "wb" );
+}
+
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
 	return (FileHandle)fdopen(dup(0), "rb");
@@ -289,6 +304,41 @@ unsigned int XMLPlatformUtils::readFileBuffer(FileHandle           theFile,
     }
 
     return (unsigned int)noOfItemsRead;
+}
+
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)                                   
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush         )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    size_t bytesWritten = 0;
+
+    while (true)
+    {
+        bytesWritten=fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
+
+        if(ferror((FILE*)theFile))
+        {
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        }
+
+        if (bytesWritten < toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
 }
 
 void XMLPlatformUtils::resetFile(FileHandle theFile)
@@ -312,7 +362,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     ArrayJanitor<char> janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-    char *absPath = new char[pathconf(newSrc, _PC_PATH_MAX)];
+	 // Without the *3 we get exceptions with gcc on OpenServer 5.0.5/6 when 
+	 // relative paths are passed in
+    char *absPath = new char[pathconf(newSrc, _PC_PATH_MAX)*3];
     ArrayJanitor<char> janText2(absPath);
     // Get the absolute path
     char* retPath = realpath(newSrc, absPath);
