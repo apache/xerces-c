@@ -57,6 +57,12 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/01/20 16:50:13  tng
+ * DOMWriter fix:
+ * 1. wrong wrong nested cdata message
+ * 2. pretty format the cdata section
+ * 3. do not increment error count if warning was issued
+ *
  * Revision 1.10  2002/12/10 21:01:32  tng
  * NLS: DOMWriter should use message loader to load message instead of using hardcoded static stirng
  *
@@ -389,10 +395,12 @@ private:
                                             , XMLDOMMsg::Codes        toEmit);
 
     void                          procCdataSection(const XMLCh*   const nodeValue
-                                                 , const DOMNode* const nodeToWrite);
+                                                 , const DOMNode* const nodeToWrite
+                                                 , int level);
 
     void                          procUnrepCharInCdataSection(const XMLCh*   const nodeValue
-                                                            , const DOMNode* const nodeToWrite);
+                                                            , const DOMNode* const nodeToWrite
+                                                            , int level);
 
     bool                          canSetFeature(const int featureId
                                               , bool      val)     const;

@@ -57,6 +57,12 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.27  2003/01/20 16:50:13  tng
+ * DOMWriter fix:
+ * 1. wrong wrong nested cdata message
+ * 2. pretty format the cdata section
+ * 3. do not increment error count if warning was issued
+ *
  * Revision 1.26  2003/01/09 19:53:45  tng
  * [Bug 15372] DOMBuilder::parseFromURI ignores result of handleErrors.
  *
@@ -1004,15 +1010,21 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
+            if(level == 1)
+                printNewLine();
+
+            printNewLine();
+            printIndent(level);
+
             if (getFeature(SPLIT_CDATA_SECTIONS_ID))
             {
                 // it is fairly complicated and we process this
                 // in a separate function.
-                procCdataSection(nodeValue, nodeToWrite);
+                procCdataSection(nodeValue, nodeToWrite, level);
             }
             else
             {
-                // search for "]]>"
+                // search for "]]>", the node value is not supposed to have this
                 if (XMLString::patternMatch((XMLCh* const) nodeValue, gEndCDATA) != -1)
                 {
                     reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NestedCDATA);
@@ -1227,7 +1239,8 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
         toContinueProcess = fErrorHandler->handleError(domError);
     }
 
-    fErrorCount++;
+    if (errorType != DOMError::DOM_SEVERITY_WARNING)
+        fErrorCount++;
 
     return toContinueProcess;
 }
@@ -1250,7 +1263,8 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
         toContinueProcess = fErrorHandler->handleError(domError);
     }
 
-    fErrorCount++;
+    if (errorType != DOMError::DOM_SEVERITY_WARNING)
+        fErrorCount++;
 
     if (errorType == DOMError::DOM_SEVERITY_FATAL_ERROR || !toContinueProcess)
         throw toEmit;
@@ -1262,12 +1276,14 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
 //
 //
 void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
-                                   , const DOMNode* const nodeToWrite)
+                                   , const DOMNode* const nodeToWrite
+                                   , int level)
 {
     /***
      * Append a ']]>' at the end
      */
-    XMLCh* repNodeValue = new XMLCh [XMLString::stringLen(nodeValue) + offset + 1];
+    int len = XMLString::stringLen(nodeValue);
+    XMLCh* repNodeValue = new XMLCh [len + offset + 1];
     XMLString::copyString(repNodeValue, nodeValue);
     XMLString::catString(repNodeValue, gEndCDATA);
     ArrayJanitor<XMLCh>  jName(repNodeValue);
@@ -1285,7 +1301,9 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
         {
             nextPtr = curPtr + endTagPos + offset;  // skip the ']]>'
             *(curPtr + endTagPos) = chNull;         //nullify the first ']'
-            reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, XMLDOMMsg::Writer_NestedCDATA);
+            if (endTagPos != len)
+                reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, XMLDOMMsg::Writer_NestedCDATA);
+            len = len - endTagPos - offset;
         }
         else
         {
@@ -1297,6 +1315,8 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
         ***/
         if (endTagPos == 0)
         {
+            printNewLine();
+            printIndent(level);
             TRY_CATCH_THROW
             (
                 *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << gEndCDATA;
@@ -1305,7 +1325,7 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
         }
         else
         {
-            procUnrepCharInCdataSection(curPtr, nodeToWrite);
+            procUnrepCharInCdataSection(curPtr, nodeToWrite, level);
         }
 
         if (endTagFound)
@@ -1322,7 +1342,8 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
 //
 //
 void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
-                                              , const DOMNode* const nodeToWrite)
+                                              , const DOMNode* const nodeToWrite
+                                              , int level)
 {
     //
     //  We have to check each character and see if it could be represented.
@@ -1354,7 +1375,8 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
 
         if (tmpPtr > srcPtr)
         {
-
+            printNewLine();
+            printIndent(level);
             TRY_CATCH_THROW
            (
                 *fFormatter << XMLFormatter::NoEscapes << gStartCDATA;
