@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/11/03 22:01:27  peiyongz
+ * Store/Load keys separately from SchemaElementDecl
+ *
  * Revision 1.3  2003/10/31 22:15:31  peiyongz
  * fix bug in creating ElemVector
  *
@@ -1574,20 +1577,28 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
         int itemNumber = 0;
         RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(objToStore);
 
-        while (e.hasMoreElements())
+        XMLCh*     key1;
+        int        key2;
+        int        key3;
+
+        while (e.hasMoreKeys())
         {
-            e.nextElement();
+            e.nextElementKey((void*&)key1, key2, key3);
             itemNumber++;
         }
 
         serEng<<itemNumber;
-        e.Reset();
+        e.resetKey();
 
-        while (e.hasMoreElements())
-        {
-            //there is no e.nextElementKey() for RefHash3KeysIdPoolEnumerator
-            SchemaElementDecl& data = e.nextElement();
-            data.serialize(serEng);
+        while (e.hasMoreKeys())
+        {           
+            e.nextElementKey((void*&)key1, key2, key3);
+            serEng.writeString(key1);
+            serEng<<key2;
+            serEng<<key3;
+
+            SchemaElementDecl* data = objToStore->getByKey(key1, key2, key3);
+            serEng<<data;
         }
 
     }
@@ -1621,15 +1632,23 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
         int itemNumber = 0;
         serEng>>itemNumber;
 
+        XMLCh*     key1;
+        int        key2;
+        int        key3;
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {               
-            SchemaElementDecl*  elemDecl = new (serEng.getMemoryManager()) 
-                                           SchemaElementDecl(serEng.getMemoryManager());
-            elemDecl->serialize(serEng);
-            (*objToLoad)->put(elemDecl->getBaseName()
-                            , elemDecl->getURI()
-                            , elemDecl->getEnclosingScope()
+        {                       
+            serEng.readString(key1);
+            serEng>>key2;
+            serEng>>key3;
+
+            SchemaElementDecl*  elemDecl;
+            serEng>>elemDecl;
+
+            (*objToLoad)->put(key1
+                            , key2
+                            , key3
                             , elemDecl);
+
         }
    
     }
