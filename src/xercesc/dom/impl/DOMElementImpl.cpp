@@ -522,11 +522,11 @@ const XMLCh* DOMElementImpl::getBaseURI() const
            bool             DOMElementImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
                                                                                     {return fNode.isSupported (feature, version); };
            void             DOMElementImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool             DOMElementImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMElementImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
            void*            DOMElementImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                     {return fNode.setUserData(key, data, handler); };
            void*            DOMElementImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           short            DOMElementImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           short            DOMElementImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMElementImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMElementImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
            const XMLCh*     DOMElementImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
@@ -536,7 +536,7 @@ const XMLCh* DOMElementImpl::getBaseURI() const
 
 
 
-bool DOMElementImpl::isEqualNode(const DOMNode* arg)
+bool DOMElementImpl::isEqualNode(const DOMNode* arg) const
 {
     if (isSameNode(arg)) {
         return true;

@@ -123,7 +123,7 @@ public:
     void	normalize();
 
     //Introduced in DOM Level 3
-    bool isEqualNode(const DOMNode* arg);
+    bool isEqualNode(const DOMNode* arg) const;
 
     // NON-DOM
     // unlike getOwnerDocument this never returns null, even for Document nodes

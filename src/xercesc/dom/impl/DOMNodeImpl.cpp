@@ -441,12 +441,12 @@ void DOMNodeImpl::callUserDataHandlers(DOMUserDataHandler::DOMOperationType oper
         ((DOMDocumentImpl*)getOwnerDocument())->callUserDataHandlers(this, operation, src, dst);
 }
 
-bool DOMNodeImpl::isSameNode(const DOMNode* other)
+bool DOMNodeImpl::isSameNode(const DOMNode* other) const
 {
     return (castToNode(this) == other);
 }
 
-bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
+bool DOMNodeImpl::isEqualNode(const DOMNode* arg) const
 {
     if (!arg)
         return false;
@@ -676,7 +676,7 @@ const XMLCh*     DOMNodeImpl::getBaseURI() const{
     return 0;
 }
 
-short            DOMNodeImpl::compareTreePosition(DOMNode* other){
+short            DOMNodeImpl::compareTreePosition(const DOMNode* other) const {
     // Questions of clarification for this method - to be answered by the
     // DOM WG.   Current assumptions listed - LM
     //
@@ -750,9 +750,9 @@ short            DOMNodeImpl::compareTreePosition(DOMNode* other){
     // We do this now, so that we get this info correct for attribute nodes
     // and their children.
 
-    DOMNode *node;
-    DOMNode *thisAncestor = castToNode(this);
-    DOMNode *otherAncestor = other;
+    const DOMNode *node;
+    const DOMNode *thisAncestor = castToNode(this);
+    const DOMNode *otherAncestor = other;
     int thisDepth=0;
     int otherDepth=0;
     for (node = castToNode(this); node != 0; node = node->getParentNode()) {
@@ -772,7 +772,7 @@ short            DOMNodeImpl::compareTreePosition(DOMNode* other){
     }
 
 
-    DOMNode *otherNode = other;
+    const DOMNode *otherNode = other;
 
     short thisAncestorType = thisAncestor->getNodeType();
     short otherAncestorType = otherAncestor->getNodeType();

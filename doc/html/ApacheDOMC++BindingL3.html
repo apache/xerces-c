@@ -110,6 +110,15 @@ are owned by implementation</li>
 
 <td ALIGN=LEFT VALIGN=TOP>[Bug 12442] Fix typo: "Mode:" -> "Model" </td>
 </tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>Xerces-C++ 2.1: September 26, 2002</td>
+
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- add const modifier to DOMNode::compareTreePosition
+<br>- add const modifier to DOMNode::isSameNode
+<br>- add const modifier to DOMNode::isEqualNode
+</tr>
 </table>
 
 <p>
@@ -1486,7 +1495,7 @@ prefix) = 0;</font></font></td>
 <td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>isSameNode(const DOMNode*
-other) = 0;</font></font></td>
+other) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -1497,7 +1506,7 @@ other) = 0;</font></font></td>
 <td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>isEqualNode(const DOMNode*
-arg) = 0;</font></font></td>
+arg) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -1542,8 +1551,8 @@ key) const = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>short</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>compareTreePosition(DOMNode*
-other) 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>compareTreePosition(const DOMNode*
+other) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>

@@ -219,13 +219,13 @@ void DOMCDATASectionImpl::release()
                                                                                          {return fNode.isSupported (feature, version); };
            void             DOMCDATASectionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMCDATASectionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMCDATASectionImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
-           bool             DOMCDATASectionImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
+           bool             DOMCDATASectionImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
+           bool             DOMCDATASectionImpl::isEqualNode(const DOMNode* arg) const   {return fParent.isEqualNode(arg); };
            void*            DOMCDATASectionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                          {return fNode.setUserData(key, data, handler); };
            void*            DOMCDATASectionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
            const XMLCh*     DOMCDATASectionImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            DOMCDATASectionImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           short            DOMCDATASectionImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMCDATASectionImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMCDATASectionImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
            const XMLCh*     DOMCDATASectionImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };

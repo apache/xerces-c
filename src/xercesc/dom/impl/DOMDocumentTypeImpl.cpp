@@ -464,12 +464,12 @@ void DOMDocumentTypeImpl::release()
                                                                                          {return fNode.isSupported (feature, version); };
            void             DOMDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMDocumentTypeImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMDocumentTypeImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
            void*            DOMDocumentTypeImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                          {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentTypeImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
            const XMLCh*     DOMDocumentTypeImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            DOMDocumentTypeImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           short            DOMDocumentTypeImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMDocumentTypeImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMDocumentTypeImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
            const XMLCh*     DOMDocumentTypeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
@@ -478,7 +478,7 @@ void DOMDocumentTypeImpl::release()
            DOMNode*         DOMDocumentTypeImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 
-bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg)
+bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
 {
     if (isSameNode(arg)) {
         return true;

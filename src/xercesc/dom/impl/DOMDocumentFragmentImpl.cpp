@@ -160,13 +160,13 @@ void DOMDocumentFragmentImpl::release()
                                                                                              {return fNode.isSupported (feature, version); };
            void             DOMDocumentFragmentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMDocumentFragmentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMDocumentFragmentImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
-           bool             DOMDocumentFragmentImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
+           bool             DOMDocumentFragmentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
+           bool             DOMDocumentFragmentImpl::isEqualNode(const DOMNode* arg) const   {return fParent.isEqualNode(arg); };
            void*            DOMDocumentFragmentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                              {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentFragmentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
            const XMLCh*     DOMDocumentFragmentImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            DOMDocumentFragmentImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           short            DOMDocumentFragmentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMDocumentFragmentImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMDocumentFragmentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
            const XMLCh*     DOMDocumentFragmentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };

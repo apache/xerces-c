@@ -148,13 +148,13 @@ void DOMCommentImpl::release()
                                                                                     {return fNode.isSupported (feature, version); };
            void             DOMCommentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMCommentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMCommentImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
-           bool             DOMCommentImpl::isEqualNode(const DOMNode* arg)         {return fNode.isEqualNode(arg); };
+           bool             DOMCommentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
+           bool             DOMCommentImpl::isEqualNode(const DOMNode* arg) const   {return fNode.isEqualNode(arg); };
            void*            DOMCommentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                     {return fNode.setUserData(key, data, handler); };
            void*            DOMCommentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
            const XMLCh*     DOMCommentImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            DOMCommentImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           short            DOMCommentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMCommentImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMCommentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
            const XMLCh*     DOMCommentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };

@@ -402,7 +402,7 @@ void DOMParentNode::normalize()
 
 //Introduced in DOM Level 3
 
-bool DOMParentNode::isEqualNode(const DOMNode* arg)
+bool DOMParentNode::isEqualNode(const DOMNode* arg) const
 {
     if (arg && castToNodeImpl(this)->isSameNode(arg))
         return true;

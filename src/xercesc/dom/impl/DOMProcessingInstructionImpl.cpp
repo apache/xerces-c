@@ -213,12 +213,12 @@ const XMLCh* DOMProcessingInstructionImpl::getBaseURI() const
                                                                                                   {return fNode.isSupported (feature, version); };
            void             DOMProcessingInstructionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMProcessingInstructionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMProcessingInstructionImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
-           bool             DOMProcessingInstructionImpl::isEqualNode(const DOMNode* arg)         {return fNode.isEqualNode(arg); };
+           bool             DOMProcessingInstructionImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
+           bool             DOMProcessingInstructionImpl::isEqualNode(const DOMNode* arg) const   {return fNode.isEqualNode(arg); };
            void*            DOMProcessingInstructionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                                   {return fNode.setUserData(key, data, handler); };
            void*            DOMProcessingInstructionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           short            DOMProcessingInstructionImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           short            DOMProcessingInstructionImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMProcessingInstructionImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMProcessingInstructionImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
            const XMLCh*     DOMProcessingInstructionImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };

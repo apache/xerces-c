@@ -283,12 +283,12 @@ void DOMEntityImpl::release()
                                                                                    {return fNode.isSupported (feature, version); };
            void             DOMEntityImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMEntityImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMEntityImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
-           bool             DOMEntityImpl::isEqualNode(const DOMNode* arg)         {cloneEntityRefTree(); return fParent.isEqualNode(arg); };
+           bool             DOMEntityImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
+           bool             DOMEntityImpl::isEqualNode(const DOMNode* arg) const   {cloneEntityRefTree(); return fParent.isEqualNode(arg); };
            void*            DOMEntityImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                    {return fNode.setUserData(key, data, handler); };
            void*            DOMEntityImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           short            DOMEntityImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           short            DOMEntityImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMEntityImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMEntityImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
            const XMLCh*     DOMEntityImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };

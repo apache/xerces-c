@@ -665,7 +665,7 @@ public:
      *   <code>false</code> otherwise.
      * @since DOM Level 3
      */
-    virtual bool              isSameNode(const DOMNode* other) = 0;
+    virtual bool              isSameNode(const DOMNode* other) const = 0;
 
     /**
      * Tests whether two nodes are equal.
@@ -709,7 +709,7 @@ public:
      *   <code>true</code> otherwise <code>false</code>.
      * @since DOM Level 3
      */
-    virtual bool              isEqualNode(const DOMNode* arg) = 0;
+    virtual bool              isEqualNode(const DOMNode* arg) const = 0;
 
 
     /**
@@ -791,7 +791,7 @@ public:
      *   node.
      * @since DOM Level 3
      */
-    virtual short                  compareTreePosition(DOMNode* other) = 0;
+    virtual short                  compareTreePosition(const DOMNode* other) const = 0;
 
     /**
      * This attribute returns the text content of this node and its
