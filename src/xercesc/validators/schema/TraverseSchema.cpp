@@ -6415,7 +6415,7 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
 bool
 TraverseSchema::emptiableParticle(const ContentSpecNode* const specNode) {
 
-    if (!fFullConstraintChecking || (specNode->getMinTotalRange() == 0)) {
+    if (!fFullConstraintChecking || !specNode || (specNode->getMinTotalRange() == 0)) {
         return true;
     }
 
