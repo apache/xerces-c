@@ -2074,14 +2074,6 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
 //  this call.
 void IGXMLScanner::scanCDSection()
 {
-    //  This is the CDATA section opening sequence, minus the '<' character.
-    //  We use this to watch for nested CDATA sections, which are illegal.
-    static const XMLCh CDataPrefix[] =
-    {
-            chBang, chOpenSquare, chLatin_C, chLatin_D, chLatin_A
-        ,   chLatin_T, chLatin_A, chOpenSquare, chNull
-    };
-
     static const XMLCh CDataClose[] =
     {
             chCloseSquare, chCloseAngle, chNull

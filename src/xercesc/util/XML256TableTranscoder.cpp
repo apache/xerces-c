@@ -228,7 +228,6 @@ XMLByte XML256TableTranscoder::xlatOneTo(const XMLCh toXlat) const
 {
     unsigned int    lowOfs = 0;
     unsigned int    hiOfs = fToSize - 1;
-    XMLByte         curByte = 0;
     do
     {
         // Calc the mid point of the low and high offset.

@@ -2061,7 +2061,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         , *fRawAttrList
         , isEmpty
     );
-    const bool gotAttrs = (attCount != 0);
 
     // save the contentleafname and currentscope before addlevel, for later use
     ContentLeafNameTypeVector* cv = 0;

@@ -1645,7 +1645,6 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
     //  handler on every round.
     XMLCh   nextCh;
     XMLCh   secondCh = 0;
-    bool    firstNonWS = false;
     bool    gotLeadingSurrogate = false;
     bool    escaped;
     while (true)
@@ -1766,14 +1765,6 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
 //  this call.
 void WFXMLScanner::scanCDSection()
 {
-    //  This is the CDATA section opening sequence, minus the '<' character.
-    //  We use this to watch for nested CDATA sections, which are illegal.
-    static const XMLCh CDataPrefix[] =
-    {
-            chBang, chOpenSquare, chLatin_C, chLatin_D, chLatin_A
-        ,   chLatin_T, chLatin_A, chOpenSquare, chNull
-    };
-
     static const XMLCh CDataClose[] =
     {
             chCloseSquare, chCloseAngle, chNull

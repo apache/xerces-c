@@ -1752,7 +1752,6 @@ void XMLString::fixURI(const XMLCh* const str, XMLCh* const target)
         return;
 
     int colonIdx = XMLString::indexOf(str, chColon);
-    int slashIdx = XMLString::indexOf(str, chForwardSlash);
 
     // If starts with a '/' we assume
     // this is an absolute (UNIX) file path and prefix it with file://

@@ -651,7 +651,6 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
         const unsigned int bufSize = 511;
         char tmpPath[511 + 1];
 
-        char* namePart = 0;
         if (!::GetCurrentDirectoryA(bufSize, tmpPath))
             return 0;
 
