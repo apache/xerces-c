@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/12 22:58:29  roddey
+ * Added support for 'auto validate' mode.
+ *
  * Revision 1.7  2000/03/24 01:31:12  chchou
  * Fix bug #8 to support ignorable whitespace text nodes
  *
@@ -123,6 +126,17 @@ class PARSERS_EXPORT DOMParser :
     , public XMLEntityHandler
 {
 public :
+    // -----------------------------------------------------------------------
+    //  Class types
+    // -----------------------------------------------------------------------
+    enum ValSchemes
+    {
+        Val_Never
+        , Val_Always
+        , Val_Auto
+    };
+
+
     // -----------------------------------------------------------------------
     //  Constructors and Detructor
     // -----------------------------------------------------------------------
@@ -227,6 +241,14 @@ public :
       */
     const XMLValidator& getValidator() const;
 
+    /**
+      * This method returns an enumerated value that indicates the current
+      * validation scheme set on this parser.
+      *
+      * @return The ValSchemes value current set on this parser.
+      */
+    ValSchemes getValidationScheme() const;
+
     /** Get the 'do namespaces' flag
       *
       * This method returns the state of the parser's namespace processing
@@ -238,18 +260,6 @@ public :
       * @see #setDoNamespaces
       */
     bool getDoNamespaces() const;
-
-    /** Get the 'do validation' flag
-      *
-      * This method returns the state of the parser's validation handling
-      * flag which controls whether validation checks are enforced or not.
-      *
-      * @return true, if the parser is currently configured to
-      *         do validation, false otherwise.
-      *
-      * @see #setDoValidation
-      */
-    bool getDoValidation() const;
 
     /** Get the 'exit on first error' flag
       *
@@ -351,22 +361,6 @@ public :
       */
     void setDoNamespaces(const bool newState);
 
-    /** Set the 'do validation' flag
-      *
-      * This method allows users to enable or disable the parser's validation
-      * checks.
-      *
-      * <p>By default, the parser does not to any validation. The default
-      * value is false.</p>
-      *
-      * @param newState The value specifying whether the parser should
-      *                 do validity checks or not against the DTD in the
-      *                 input XML document.
-      *
-      * @see #getDoValidation
-      */
-    void setDoValidation(const bool newState);
-
     /** Set the 'exit on first error' flag
       *
       * This method allows users to set the parser's behaviour when it
@@ -419,6 +413,19 @@ public :
       * @see #getIncludeIgnorableWhitespace
       */
     void setIncludeIgnorableWhitespace(const bool include);
+
+    /**
+      * This method allows users to set the validation scheme to be used
+      * by this parser. The value is one of the ValSchemes enumerated values
+      * defined by this class.
+      *
+      * <p>The parser's default state is: Val_Auto.</p>
+      *
+      * @param newState The new validation scheme to use.
+      *
+      * @see #getValidationScheme
+      */
+    void setValidationScheme(const ValSchemes newScheme);
 
     //@}
 
@@ -997,6 +1004,37 @@ public :
         , const XMLCh* const    standaloneStr
         , const XMLCh* const    actualEncStr
     );
+    //@}
+
+
+    /** @name Deprecated Methods */
+    //@{
+    /**
+      * This method returns the state of the parser's validation
+      * handling flag which controls whether validation checks
+      * are enforced or not.
+      *
+      * @return true, if the parser is currently configured to
+      *         do validation, false otherwise.
+      *
+      * @see #setDoValidation
+      */
+    bool getDoValidation() const;
+
+    /**
+      * This method allows users to enable or disable the parser's validation
+      * checks.
+      *
+      * <p>By default, the parser does not to any validation. The default
+      * value is false.</p>
+      *
+      * @param newState The value specifying whether the parser should
+      *                 do validity checks or not against the DTD in the
+      *                 input XML document.
+      *
+      * @see #getDoValidation
+      */
+    void setDoValidation(const bool newState);
     //@}
 
 

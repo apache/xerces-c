@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/12 22:58:30  roddey
+ * Added support for 'auto validate' mode.
+ *
  * Revision 1.7  2000/03/03 01:29:34  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -124,6 +127,17 @@ class PARSERS_EXPORT SAXParser :
     , public DocTypeHandler
 {
 public :
+    // -----------------------------------------------------------------------
+    //  Class types
+    // -----------------------------------------------------------------------
+    enum ValSchemes
+    {
+        Val_Never
+        , Val_Always
+        , Val_Auto
+    };
+
+
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
@@ -211,6 +225,14 @@ public :
     const XMLValidator& getValidator() const;
 
     /**
+      * This method returns an enumerated value that indicates the current
+      * validation scheme set on this parser.
+      *
+      * @return The ValSchemes value current set on this parser.
+      */
+    ValSchemes getValidationScheme() const;
+
+    /**
       * This method returns the state of the parser's namespace
       * handling capability.
       *
@@ -220,18 +242,6 @@ public :
       * @see #setDoNamespaces
       */
     bool getDoNamespaces() const;
-
-    /**
-      * This method returns the state of the parser's validation
-      * handling flag which controls whether validation checks
-      * are enforced or not.
-      *
-      * @return true, if the parser is currently configured to
-      *         do validation, false otherwise.
-      *
-      * @see #setDoValidation
-      */
-    bool getDoValidation() const;
 
     /**
       * This method returns the state of the parser's
@@ -272,19 +282,17 @@ public :
     void setDoNamespaces(const bool newState);
 
     /**
-      * This method allows users to enable or disable the parser's validation
-      * checks.
+      * This method allows users to set the validation scheme to be used
+      * by this parser. The value is one of the ValSchemes enumerated values
+      * defined by this class.
       *
-      * <p>By default, the parser does not to any validation. The default
-      * value is false.</p>
+      * <p>The parser's default state is: Val_Auto.</p>
       *
-      * @param newState The value specifying whether the parser should
-      *                 do validity checks or not against the DTD in the
-      *                 input XML document.
+      * @param newState The new validation scheme to use.
       *
-      * @see #getDoValidation
+      * @see #getValidationScheme
       */
-    void setDoValidation(const bool newState);
+    void setValidationScheme(const ValSchemes newScheme);
 
     /**
       * This method allows users to set the parser's behaviour when it
@@ -1226,6 +1234,37 @@ public :
       *                    being parsed.
       */
     virtual void startInputSource(const InputSource& inputSource);
+    //@}
+
+
+    /** @name Deprecated Methods */
+    //@{
+    /**
+      * This method returns the state of the parser's validation
+      * handling flag which controls whether validation checks
+      * are enforced or not.
+      *
+      * @return true, if the parser is currently configured to
+      *         do validation, false otherwise.
+      *
+      * @see #setDoValidation
+      */
+    bool getDoValidation() const;
+
+    /**
+      * This method allows users to enable or disable the parser's validation
+      * checks.
+      *
+      * <p>By default, the parser does not to any validation. The default
+      * value is false.</p>
+      *
+      * @param newState The value specifying whether the parser should
+      *                 do validity checks or not against the DTD in the
+      *                 input XML document.
+      *
+      * @see #getDoValidation
+      */
+    void setDoValidation(const bool newState);
     //@}
 
 

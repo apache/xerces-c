@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/04/12 22:58:28  roddey
+ * Added support for 'auto validate' mode.
+ *
  * Revision 1.11  2000/03/02 19:54:30  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -267,7 +270,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //
             if (wasAdded)
             {
-                if (fDoValidation && !isNSAttr)
+                if (fValidate && !isNSAttr)
                 {
                     XMLBuffer bufURI;
                     fValidator->getURIText(uriId, bufURI);
@@ -401,7 +404,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             if (!curDef.getProvided())
             {
-                if (fDoValidation)
+                if (fValidate)
                 {
                     // If we are validating and its required, then an error
                     if (defType == XMLAttDef::Required)
@@ -827,7 +830,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
     //  not. If not, its always just characters; else, it depends on the
     //  current element's content model.
     //
-    if (fDoValidation)
+    if (fValidate)
     {
         // See if all the text is whitespace
         const bool isSpaces = XMLReader::isAllSpaces(rawBuf, len);

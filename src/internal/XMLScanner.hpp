@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/12 22:58:28  roddey
+ * Added support for 'auto validate' mode.
+ *
  * Revision 1.8  2000/03/03 01:29:32  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -147,6 +150,11 @@ public :
     //  XMLTokens
     //      These represent the possible types of input we can get while
     //      scanning content.
+    //
+    //  ValScheme
+    //      This indicates what the scanner should do in terms of validation.
+    //      'Auto' means if there is any int/ext subset, then validate. Else,
+    //      don't.
     // -----------------------------------------------------------------------
     enum DeclTypes
     {
@@ -171,6 +179,13 @@ public :
         , Token_PI
         , Token_StartTag
         , Token_Unknown
+    };
+
+    enum ValSchemes
+    {
+        Val_Never
+        , Val_Always
+        , Val_Auto
     };
 
 
@@ -219,7 +234,7 @@ public :
     const XMLDocumentHandler* getDocHandler() const;
     XMLDocumentHandler* getDocHandler();
     bool getDoNamespaces() const;
-    bool getDoValidation() const;
+    ValSchemes getValidationScheme() const;
     const XMLEntityHandler* getEntityHandler() const;
     XMLEntityHandler* getEntityHandler();
     const XMLErrorReporter* getErrorReporter() const;
@@ -249,11 +264,19 @@ public :
     // -----------------------------------------------------------------------
     void setDocHandler(XMLDocumentHandler* const docHandler);
     void setDoNamespaces(const bool doNamespaces);
-    void setDoValidation(const bool validate);
     void setEntityHandler(XMLEntityHandler* const docTypeHandler);
     void setErrorReporter(XMLErrorReporter* const errHandler);
     void setExitOnFirstFatal(const bool newValue);
+    void setValidationScheme(const ValSchemes newScheme);
     void setValidator(XMLValidator* const validator);
+
+
+    // -----------------------------------------------------------------------
+    //  Deprecated methods as of 3.2.0. Use getValidationScheme() and
+    //  setValidationScheme() instead.
+    // -----------------------------------------------------------------------
+    bool getDoValidation() const;
+    void setDoValidation(const bool validate);
 
 
     // -----------------------------------------------------------------------
@@ -485,12 +508,6 @@ private :
     //      namespaces or not. If the installed validator indicates that it
     //      has to do namespaces, then this is ignored.
     //
-    //  fDoValidation
-    //      Indicates whether any validation should be done. A validator
-    //      can still be installed and it will build up all the data
-    //      structures for the DTD/Schema declarations, but the scanner will
-    //      not ask it to validate anything.
-    //
     //  fElemStack
     //      This is the element stack that is used to track the elements that
     //      are currently being worked on.
@@ -507,6 +524,11 @@ private :
     //      This indicates whether we bail out on the first fatal XML error
     //      or not. It defaults to true, which is the strict XML way, but it
     //      can be changed.
+    //
+    //  fHaveSubset
+    //      Indicates whether any internal/external DTD subset has been seen
+    //      so far. Its cleared before a new parse, so it is used along with
+    //      fValScheme to know whether we should validate or not.
     //
     //  fIDRefList
     //      This is a list of XMLRefInfo objects. This member lets us do all
@@ -544,10 +566,19 @@ private :
     //      Indicates whether the document is standalone or not. Defaults to
     //      no, but can be overridden in the XMLDecl.
     //
+    //  fValidate
+    //      Indicates whether any validation should be done. Once we reach
+    //      the point past the DOCTYPE, we check fHaveSubset and fValScheme
+    //      and use them to set this flag, which is then used to control
+    //      whether validation is done.
+    //
     //  fValidator
     //      The installed validator. We look at them via the abstract
     //      validator interface, and don't know what it actual is.
     //
+    //  fValScheme
+    //      This is the currently set validation scheme. It defaults to
+    //      'never', but can be set by the client.
     //
     //  fAttName
     //  fAttValue
@@ -566,11 +597,11 @@ private :
     XMLBufferMgr                fBufMgr;
     XMLDocumentHandler*         fDocHandler;
     bool                        fDoNamespaces;
-    bool                        fDoValidation;
     ElemStack                   fElemStack;
     XMLEntityHandler*           fEntityHandler;
     XMLErrorReporter*           fErrorReporter;
     bool                        fExitOnFirstFatal;
+    bool                        fHaveSubset;
     RefHashTableOf<XMLRefInfo>* fIDRefList;
     bool                        fInException;
     RefVectorOf<KVStringPair>*  fRawAttrList;
@@ -579,7 +610,9 @@ private :
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
     bool                        fStandalone;
+    bool                        fValidate;
     XMLValidator*               fValidator;
+    ValSchemes                  fValScheme;
 
     XMLBuffer                   fAttNameBuf;
     XMLBuffer                   fAttValueBuf;
@@ -608,11 +641,6 @@ inline XMLDocumentHandler* XMLScanner::getDocHandler()
 inline bool XMLScanner::getDoNamespaces() const
 {
     return fDoNamespaces;
-}
-
-inline bool XMLScanner::getDoValidation() const
-{
-    return fDoValidation;
 }
 
 inline const XMLEntityHandler* XMLScanner::getEntityHandler() const
@@ -670,6 +698,11 @@ inline bool XMLScanner::getStandalone() const
     return fStandalone;
 }
 
+inline XMLScanner::ValSchemes XMLScanner::getValidationScheme() const
+{
+    return fValScheme;
+}
+
 inline const XMLValidator* XMLScanner::getValidator() const
 {
     return fValidator;
@@ -708,6 +741,35 @@ inline void XMLScanner::setEntityHandler(XMLEntityHandler* const entityHandler)
 inline void XMLScanner::setExitOnFirstFatal(const bool newValue)
 {
     fExitOnFirstFatal = newValue;
+}
+
+inline void XMLScanner::setValidationScheme(const ValSchemes newScheme)
+{
+    fValScheme = newScheme;
+}
+
+inline void XMLScanner::setValidator(XMLValidator* const validator)
+{
+    fValidator = validator;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLScanner: Deprecated methods
+// ---------------------------------------------------------------------------
+inline bool XMLScanner::getDoValidation() const
+{
+    if (fValScheme == Val_Always)
+        return true;
+    return false;
+}
+
+inline void XMLScanner::setDoValidation(const bool validate)
+{
+    if (validate)
+        fValScheme = Val_Always;
+    else
+        fValScheme = Val_Never;
 }
 
 #endif

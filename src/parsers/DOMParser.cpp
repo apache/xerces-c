@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.15  2000/04/12 22:58:29  roddey
+* Added support for 'auto validate' mode.
+*
 * Revision 1.14  2000/03/24 21:25:28  abagchi
 * Added getElementById() from patch submitted by Jeff Lewis
 *
@@ -207,15 +210,24 @@ bool DOMParser::getDoNamespaces() const
     return fScanner->getDoNamespaces();
 }
 
-bool DOMParser::getDoValidation() const
-{
-    return fScanner->getDoValidation();
-}
-
 bool DOMParser::getExitOnFirstFatalError() const
 {
     return fScanner->getExitOnFirstFatal();
 }
+
+DOMParser::ValSchemes DOMParser::getValidationScheme() const
+{
+    const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
+
+    if (scheme == XMLScanner::Val_Always)
+        return Val_Always;
+    else if (scheme == XMLScanner::Val_Never)
+        return Val_Never;
+
+    return Val_Auto;
+}
+
+
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods
@@ -223,11 +235,6 @@ bool DOMParser::getExitOnFirstFatalError() const
 void DOMParser::setDoNamespaces(const bool newState)
 {
     fScanner->setDoNamespaces(newState);
-}
-
-void DOMParser::setDoValidation(const bool newState)
-{
-    fScanner->setDoValidation(newState);
 }
 
 void DOMParser::setErrorHandler(ErrorHandler* const handler)
@@ -258,6 +265,17 @@ void DOMParser::setExitOnFirstFatalError(const bool newState)
 {
     fScanner->setExitOnFirstFatal(newState);
 }
+
+void DOMParser::setValidationScheme(const ValSchemes newScheme)
+{
+    if (newScheme == Val_Never)
+        fScanner->setValidationScheme(XMLScanner::Val_Never);
+    else if (newScheme == Val_Always)
+        fScanner->setValidationScheme(XMLScanner::Val_Always);
+    else
+        fScanner->setValidationScheme(XMLScanner::Val_Auto);
+}
+
 
 
 // ---------------------------------------------------------------------------
@@ -659,4 +677,31 @@ void DOMParser::XMLDecl(const   XMLCh* const
                         , const XMLCh* const)
 {
     // This is not used by DOM at this time
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  DOMParser: Deprecated methods
+// ---------------------------------------------------------------------------
+bool DOMParser::getDoValidation() const
+{
+    //
+    //  We don't want to tie the public parser classes to the enum used
+    //  by the scanner, so we use a separate one and map.
+    //
+    //  DON'T mix the new and old methods!!
+    //
+    const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
+    if (scheme == XMLScanner::Val_Always)
+        return true;
+    return false;
+}
+
+void DOMParser::setDoValidation(const bool newState)
+{
+    fScanner->setDoValidation
+    (
+        newState ? XMLScanner::Val_Always : XMLScanner::Val_Never
+    );
 }

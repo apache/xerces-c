@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/04/12 22:58:27  roddey
+ * Added support for 'auto validate' mode.
+ *
  * Revision 1.9  2000/04/06 19:09:51  roddey
  * Some more improvements to output formatting. Now it will correctly
  * handle doing the 'replacement char' style of dealing with chars
@@ -113,22 +116,22 @@
 //      Indicates whether namespace processing should be enabled or not.
 //      Defaults to disabled.
 //
-//  doValidation
-//      Indicates whether the validating or non-validating parser should be
-//      used. Defaults to validating, -NV overrides.
-//
 //  encodingName
 //      The encoding we are to output in. If not set on the command line,
 //      then it is defaulted to UTF-8.
 //
 //  xmlFile
 //      The path to the file to parser. Set via command line.
+//
+//  valScheme
+//      Indicates what validation scheme to use. It defaults to 'auto', but
+//      can be set via the -v= command.
 // ---------------------------------------------------------------------------
 static bool                     doNamespaces    = false;
-static bool                     doValidation    = false;
 static const char*              encodingName    = "UTF-8";
 static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_Fail;
 static char*                    xmlFile         = 0;
+static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 
 
 
@@ -142,7 +145,7 @@ static void usage()
          <<  "   handlers for the specified input file.\n\n"
          <<  "   Options:\n"
          <<  "     -u=xxx      Handle unrepresentable chars [fail* | rep | ref]\n"
-         <<  "     -v          Invoke the Validating SAX Parser.\n"
+         <<  "     -v=xxx      Validation scheme [never | always | auto*]\n"
          <<  "     -n          Enable namespace processing.\n"
          <<  "     -x=XXX      Use a particular encoding for output (UTF-8*).\n"
          <<  "     -?          Show this help\n\n"
@@ -191,22 +194,36 @@ int main(int argC, char* argV[])
         if (argV[parmInd][0] != '-')
             break;
 
-        if (!strcmp(argV[parmInd], "-v")
-        ||  !strcmp(argV[parmInd], "-V"))
+        if (!strncmp(argV[parmInd], "-v=", 3)
+        ||  !strncmp(argV[parmInd], "-V=", 3))
         {
-            doValidation = true;
+            const char* const parm = &argV[parmInd][3];
+
+            if (!strcmp(parm, "never"))
+                valScheme = SAXParser::Val_Never;
+            else if (!strcmp(parm, "always"))
+                valScheme = SAXParser::Val_Always;
+            else if (!strcmp(parm, "auto"))
+                valScheme = SAXParser::Val_Auto;
+            else
+            {
+                cerr << "Unknown -v= value: " << parm << endl;
+                return 2;
+            }
         }
          else if (!strcmp(argV[parmInd], "-n")
               ||  !strcmp(argV[parmInd], "-N"))
         {
             doNamespaces = true;
         }
-         else if (!strncmp(argV[parmInd], "-x=", 3))
+         else if (!strncmp(argV[parmInd], "-x=", 3)
+              ||  !strncmp(argV[parmInd], "-X=", 3))
         {
             // Get out the encoding name
             encodingName = &argV[parmInd][3];
         }
-         else if (!strncmp(argV[parmInd], "-u=", 3))
+         else if (!strncmp(argV[parmInd], "-u=", 3)
+              ||  !strncmp(argV[parmInd], "-U=", 3))
         {
             const char* const parm = &argV[parmInd][3];
 
@@ -245,7 +262,7 @@ int main(int argC, char* argV[])
     //  the command line, set it to validate or not.
     //
     SAXParser parser;
-    parser.setDoValidation(doValidation);
+    parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
 
     //

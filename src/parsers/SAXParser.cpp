@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/04/12 22:58:30  roddey
+ * Added support for 'auto validate' mode.
+ *
  * Revision 1.9  2000/04/11 19:17:58  roddey
  * If a SAX error handler is installed, then the resetErrors() event handler
  * should call the one on the installed SAX error handler.
@@ -242,28 +245,6 @@ bool SAXParser::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
 
 
 // ---------------------------------------------------------------------------
-//  SAXParser: Setter methods
-// ---------------------------------------------------------------------------
-void SAXParser::setDoNamespaces(const bool newState)
-{
-    fScanner->setDoNamespaces(newState);
-}
-
-
-void SAXParser::setDoValidation(const bool newState)
-{
-    fScanner->setDoValidation(newState);
-}
-
-
-void SAXParser::setExitOnFirstFatalError(const bool newState)
-{
-    fScanner->setExitOnFirstFatal(newState);
-}
-
-
-
-// ---------------------------------------------------------------------------
 //  SAXParser: Getter methods
 // ---------------------------------------------------------------------------
 const XMLValidator& SAXParser::getValidator() const
@@ -277,15 +258,51 @@ bool SAXParser::getDoNamespaces() const
     return fScanner->getDoNamespaces();
 }
 
-bool SAXParser::getDoValidation() const
-{
-    return fScanner->getDoValidation();
-}
 
 bool SAXParser::getExitOnFirstFatalError() const
 {
     return fScanner->getExitOnFirstFatal();
 }
+
+
+SAXParser::ValSchemes SAXParser::getValidationScheme() const
+{
+    const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
+
+    if (scheme == XMLScanner::Val_Always)
+        return Val_Always;
+    else if (scheme == XMLScanner::Val_Never)
+        return Val_Never;
+
+    return Val_Auto;
+}
+
+
+// ---------------------------------------------------------------------------
+//  SAXParser: Setter methods
+// ---------------------------------------------------------------------------
+void SAXParser::setDoNamespaces(const bool newState)
+{
+    fScanner->setDoNamespaces(newState);
+}
+
+
+void SAXParser::setExitOnFirstFatalError(const bool newState)
+{
+    fScanner->setExitOnFirstFatal(newState);
+}
+
+
+void SAXParser::setValidationScheme(const ValSchemes newScheme)
+{
+    if (newScheme == Val_Never)
+        fScanner->setValidationScheme(XMLScanner::Val_Never);
+    else if (newScheme == Val_Always)
+        fScanner->setValidationScheme(XMLScanner::Val_Always);
+    else
+        fScanner->setValidationScheme(XMLScanner::Val_Auto);
+}
+
 
 
 // ---------------------------------------------------------------------------
@@ -923,4 +940,31 @@ SAXParser::resolveEntity(   const   XMLCh* const    publicId
 void SAXParser::startInputSource(const InputSource&)
 {
     // Nothing to do for this one
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  SAXParser: Deprecated methods
+// ---------------------------------------------------------------------------
+bool SAXParser::getDoValidation() const
+{
+    //
+    //  We don't want to tie the public parser classes to the enum used
+    //  by the scanner, so we use a separate one and map.
+    //
+    //  DON'T mix the new and old methods!!
+    //
+    const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
+    if (scheme == XMLScanner::Val_Always)
+        return true;
+    return false;
+}
+
+void SAXParser::setDoValidation(const bool newState)
+{
+    fScanner->setDoValidation
+    (
+        newState ? XMLScanner::Val_Always : XMLScanner::Val_Never
+    );
 }

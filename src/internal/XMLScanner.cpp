@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/04/12 22:58:28  roddey
+ * Added support for 'auto validate' mode.
+ *
  * Revision 1.13  2000/03/03 22:32:51  roddey
  * Fixed a bug in SimpleContentModel that allowed an <a/> to be taken
  * as valid for a content model of (a,b).
@@ -211,10 +214,10 @@ XMLScanner::XMLScanner(XMLValidator* const validator) :
     fAttrList(0)
     , fDocHandler(0)
     , fDoNamespaces(false)
-    , fDoValidation(false)
     , fEntityHandler(0)
     , fErrorReporter(0)
     , fExitOnFirstFatal(true)
+    , fHaveSubset(false)
     , fIDRefList(0)
     , fInException(false)
     , fRawAttrList(0)
@@ -222,7 +225,9 @@ XMLScanner::XMLScanner(XMLValidator* const validator) :
     , fScannerId(0)
     , fSequenceId(0)
     , fStandalone(false)
+    , fValidate(false)
     , fValidator(validator)
+    , fValScheme(Val_Never)
 {
     commonInit();
 }
@@ -235,10 +240,10 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const   docHandler
     fAttrList(0)
     , fDocHandler(docHandler)
     , fDoNamespaces(false)
-    , fDoValidation(false)
     , fEntityHandler(entityHandler)
     , fErrorReporter(errHandler)
     , fExitOnFirstFatal(true)
+    , fHaveSubset(false)
     , fIDRefList(0)
     , fInException(false)
     , fRawAttrList(0)
@@ -246,7 +251,9 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const   docHandler
     , fScannerId(0)
     , fSequenceId(0)
     , fStandalone(false)
+    , fValidate(false)
     , fValidator(validator)
+    , fValScheme(Val_Never)
 {
     commonInit();
 }
@@ -319,6 +326,9 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
     // Store the reuse validator flag
     fReuseValidator = reuseValidator;
 
+    // Clear some flags for new round
+    fHaveSubset = false;
+
     try
     {
         //
@@ -358,11 +368,23 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
         }
          else
         {
+            //
+            //  Set our validation flag at this point. If the validation
+            //  scheme is not auto, then take that. Else see if we saw any
+            //  subset.
+            //
+            if (fValScheme == Val_Never)
+                fValidate = false;
+            else if (fValScheme == Val_Always)
+                fValidate = true;
+            else
+                fValidate = fHaveSubset;
+
             // Scan content, and tell it its not an external entity
             if (scanContent(false))
             {
                 // Do post-parse validation if required
-                if (fDoValidation)
+                if (fValidate)
                 {
                     //
                     //  We handle ID reference semantics at this level since
@@ -525,6 +547,9 @@ bool XMLScanner::scanFirst( const   InputSource&    src
 
     // Reset the scanner and its plugged in stuff for a new run
     scanReset(src);
+
+    // Clear some flags for new round
+    fHaveSubset = false;
 
     try
     {
@@ -1037,21 +1062,6 @@ XMLScanner::getLastExtLocation(         XMLCh* const    sysIdToFill
     }
     return true;
 }
-
-
-// ---------------------------------------------------------------------------
-//  XMLScanner: Setter methods methods
-// ---------------------------------------------------------------------------
-void XMLScanner::setDoValidation(const bool validate)
-{
-    fDoValidation = validate;
-}
-
-void XMLScanner::setValidator(XMLValidator* const validator)
-{
-    fValidator = validator;
-}
-
 
 
 // ---------------------------------------------------------------------------
@@ -1572,7 +1582,7 @@ void XMLScanner::scanEndTag(bool& gotData)
     //  If validation is enabled, then lets pass him the list of children and
     //  this element and let him validate it.
     //
-    if (fDoValidation)
+    if (fValidate)
     {
         int res = fValidator->checkContent
         (
@@ -1898,6 +1908,9 @@ void XMLScanner::scanProlog()
                         fValidator->scanDTD(fReuseValidator);
                     else
                         ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+
+                    // Set the 'have subset' flag
+                    fHaveSubset = true;
                 }
                  else
                 {
@@ -2004,7 +2017,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
     if (wasAdded)
     {
         // If validating then emit an error
-        if (fDoValidation)
+        if (fValidate)
         {
             fValidator->emitError
             (
@@ -2018,13 +2031,13 @@ bool XMLScanner::scanStartTag(bool& gotData)
         //  things simpler and we aren't going to do do the validation checks
         //  that need to know if it was really declared or not anyway.
         //
-        if (!fDoValidation)
+        if (!fValidate)
             elemDecl->setCreateReason(XMLElementDecl::Declared);
     }
      else
     {
         // If its not marked declared and validating, then emit an error
-        if (!elemDecl->isDeclared() && fDoValidation)
+        if (!elemDecl->isDeclared() && fValidate)
         {
             fValidator->emitError
             (
@@ -2048,7 +2061,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
     //
     if (isRoot)
     {
-        if (fDoValidation)
+        if (fValidate)
         {
             if (!fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
@@ -2188,7 +2201,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 //  If there is a validation handler, then we are validating
                 //  so emit an error.
                 //
-                if (fDoValidation)
+                if (fValidate)
                 {
                     fValidator->emitError
                     (
@@ -2379,7 +2392,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
 
             if (!curDef.getProvided())
             {
-                if (fDoValidation)
+                if (fValidate)
                 {
                     // If we are validating and its required, then an error
                     if (defType == XMLAttDef::Required)
@@ -2439,7 +2452,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
     if (isEmpty)
     {
         // If validating, then insure that its legal to have no content
-        if (fDoValidation)
+        if (fValidate)
         {
             const int res = fValidator->checkContent(elemDecl->getId(), 0, 0);
             if (res >= 0)
@@ -2626,7 +2639,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     if (wasAdded)
     {
         // If validating then emit an error
-        if (fDoValidation)
+        if (fValidate)
         {
             fValidator->emitError
             (
@@ -2640,13 +2653,13 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         //  things simpler and we aren't going to do do the validation checks
         //  that need to know if it was really declared or not anyway.
         //
-        if (!fDoValidation)
+        if (!fValidate)
             elemDecl->setCreateReason(XMLElementDecl::Declared);
     }
      else
     {
         // If its not marked declared and validating, then emit an error
-        if (!elemDecl->isDeclared() && fDoValidation)
+        if (!elemDecl->isDeclared() && fValidate)
         {
             fValidator->emitError
             (
@@ -2671,7 +2684,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //
     if (isRoot)
     {
-        if (fDoValidation)
+        if (fValidate)
         {
             if (!fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
@@ -2709,7 +2722,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         fElemStack.popTop();
 
         // If validating, then insure that its legal to have no content
-        if (fDoValidation)
+        if (fValidate)
         {
             const int res = fValidator->checkContent(elemDecl->getId(), 0, 0);
             if (res >= 0)
