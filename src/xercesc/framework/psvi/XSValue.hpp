@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/08/12 14:24:34  peiyongz
+ * HP aCC A.03
+ *
  * Revision 1.2  2004/08/11 17:06:44  peiyongz
  * Do not panic if can't create RegEx
  *
@@ -328,10 +331,10 @@ public:
     } fData;
 
     static
-    void XSValue::reinitMutex();
+    void reinitMutex();
 
     static
-    void XSValue::reinitRegEx();
+    void reinitRegEx();
 
 private:
 
