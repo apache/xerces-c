@@ -24,7 +24,7 @@
 				OptimizeForProcessor="1"
 				AdditionalIncludeDirectories="..\..\..\..\..\include"
 				PreprocessorDefinitions="PROJ_MEMPARSE,_DEBUG,WIN32,_CONSOLE,PLATFORM_WIN32"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\bin\obj/MemParse.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\bin\obj/"

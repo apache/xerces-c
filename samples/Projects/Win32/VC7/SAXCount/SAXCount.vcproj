@@ -25,7 +25,7 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\include"
 				PreprocessorDefinitions="PROJ_SAXCOUNT,_DEBUG,WIN32,_CONSOLE,PLATFORM_WIN32"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\bin\obj/SAXCount.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\bin\obj/"

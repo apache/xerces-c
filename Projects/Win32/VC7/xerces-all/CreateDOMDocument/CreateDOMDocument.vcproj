@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="CreateDOMDocument"
+	ProjectGUID="{8709DC2A-0EC9-4B67-9E98-95D5174B2C3F}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -33,7 +34,6 @@
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -42,9 +42,7 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/CreateDOMDocument.exe"
-				Version="1.0"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/CreateDOMDocument.pdb"
 				SubSystem="1"/>
@@ -87,7 +85,6 @@
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
 			<Tool
@@ -97,9 +94,7 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/CreateDOMDocument.exe"
-				Version="3.0"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/CreateDOMDocument.pdb"

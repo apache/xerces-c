@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="SEnumVal"
+	ProjectGUID="{2230D938-8908-4C12-9E96-9C6C4048A52D}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -34,7 +35,6 @@
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				BrowseInformation="1"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -44,7 +44,6 @@
 				AdditionalDependencies="xerces-c_2.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/SEnumVal.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/SEnumVal.pdb"
 				SubSystem="1"/>
@@ -86,9 +85,7 @@
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				BrowseInformation="1"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
 			<Tool
@@ -98,9 +95,7 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/SEnumVal.exe"
-				Version="1.0"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/SEnumVal.pdb"

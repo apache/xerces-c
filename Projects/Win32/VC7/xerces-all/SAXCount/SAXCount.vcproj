@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="SAXCount"
+	ProjectGUID="{2AB767A9-6A3B-4993-8FDB-3E6A30560739}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -33,7 +34,6 @@
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -42,9 +42,7 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/SAXCount.exe"
-				Version="1.0"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/SAXCount.pdb"
 				SubSystem="1"/>
@@ -86,9 +84,7 @@
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				BrowseInformation="1"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
 			<Tool
@@ -98,9 +94,7 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/SAXCount.exe"
-				Version="1.0"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/SAXCount.pdb"

@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="XercesLib"
+	ProjectGUID="{152CE948-F659-4206-A50A-1D2B9658EF96}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -33,7 +34,6 @@
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -43,7 +43,7 @@
 				AdditionalDependencies="ws2_32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_1_0.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2_1_0.pdb"
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xerces-c_2_1_0.map"
@@ -54,7 +54,6 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
 				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/XercesLib.tlb"/>
 			<Tool
@@ -92,9 +91,7 @@
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				BrowseInformation="1"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
@@ -105,7 +102,7 @@
 				AdditionalDependencies="ws2_32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_1_0D.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_1_0D.pdb"
 				SubSystem="2"
@@ -115,7 +112,6 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
 				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Debug/XercesLib.tlb"/>
 			<Tool
