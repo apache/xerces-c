@@ -46,7 +46,7 @@
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC6\Release/XSerializerTest.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/XSerializerTest.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -98,7 +98,7 @@
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC6\Debug/XSerializerTest.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Debug/XSerializerTest.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
