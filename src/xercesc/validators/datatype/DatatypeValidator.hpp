@@ -427,7 +427,9 @@ private:
     // -----------------------------------------------------------------------
     //  CleanUp methods
     // -----------------------------------------------------------------------
-	void cleanUp();
+    void cleanUp();
+
+    bool isBuiltInDV(DatatypeValidator* const);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -539,7 +541,7 @@ inline RegularExpression* DatatypeValidator::getRegex() const
 
 inline const XMLCh* DatatypeValidator::getTypeName() const
 {
-    return fTypeLocalName;
+    return fTypeName;
 }
 
 inline bool DatatypeValidator::getAnonymous() const
@@ -634,7 +636,6 @@ DatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck)
 
     return false;
 }
-
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/11/05 16:37:18  peiyongz
+ * don't serialize built-in baseValidator, and don't serialize localName/uriName
+ *
  * Revision 1.13  2003/10/17 21:13:44  peiyongz
  * using XTemplateSerializer
  *
@@ -311,7 +314,19 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng<<fFixed;
         serEng<<(int)fType;
 
-        storeDV(serEng, fBaseValidator);
+        /***
+         * don't serialize the fBaseValidator if it is a built-in
+         ***/
+        if (isBuiltInDV(fBaseValidator))
+        {
+            serEng<<true;
+            serEng.writeString(fBaseValidator->getTypeName());
+        }
+        else
+        {
+            serEng<<false;
+            storeDV(serEng, fBaseValidator);
+        }
 
         /***
          *  Serialize RefHashTableOf<KVStringPair>
@@ -321,17 +336,16 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng.writeString(fPattern);
 
         /***
-         * don't serialize fRegex
+         * don't serialize 
+         *       fRegex
+         *       fTypeLocalName
+         *       fTypeUri
          ***/
-
         serEng.writeString(fTypeName);
-        serEng.writeString(fTypeLocalName);
-        serEng.writeString(fTypeUri);
+
     }
     else
     {
-        int dataLen = 0;
-
         serEng>>fAnonymous;
         serEng>>fWhiteSpace;
         serEng>>fFinalSet;
@@ -347,7 +361,28 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *  get the basevalidator's type
          *
          ***/
-        fBaseValidator = loadDV(serEng);
+        bool isBuiltInDV = false;
+        serEng>>isBuiltInDV;
+
+        if (isBuiltInDV)
+        {
+            XMLCh* baseTypeName;
+            serEng.readString(baseTypeName);
+            ArrayJanitor<XMLCh> janName(baseTypeName, fMemoryManager);
+
+            /***
+             *  Link to the fBuiltInRegistry
+             *
+             *  Since DatatypeValidatorFactory is always the first one
+             *  to be deserialized in SchemaGrammar, we are sure that
+             *  the BuiltInRegistry shall be available now.
+             ***/
+            fBaseValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(baseTypeName);
+        }
+        else
+        {
+            fBaseValidator = loadDV(serEng);
+        }
 
         /***
          *
@@ -363,9 +398,16 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          ***/
         fRegex = 0;
 
-        serEng.readString(fTypeName);
-        serEng.readString((XMLCh*&)fTypeLocalName);
-        serEng.readString((XMLCh*&)fTypeUri);
+        /***
+         *   Recreate through setTypeName()
+         *       fTypeName
+         *       fTypeLocalName
+         *       fTypeUri
+         ***/
+        XMLCh* typeName;
+        serEng.readString(typeName);
+        ArrayJanitor<XMLCh> janName(typeName, fMemoryManager);
+        setTypeName(typeName);
 
     }
 
@@ -552,6 +594,13 @@ DatatypeValidator* DatatypeValidator::loadDV(XSerializeEngine& serEng)
         break;
     }
 
+}
+
+inline bool 
+DatatypeValidator::isBuiltInDV(DatatypeValidator* const dv)
+{
+    return dv? DatatypeValidatorFactory::getBuiltInRegistry()->containsKey(dv->getTypeName())
+             : false;
 }
 
 XERCES_CPP_NAMESPACE_END
