@@ -383,11 +383,15 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     # Population::Xerces-c
     # 
     print ("\n\nCopying Xerces-c outputs ...\n");            
-    psystem("cp -fv $ReleaseBuildDir/*.dll   $targetdir/bin");
-    psystem("cp -fv $ReleaseBuildDir/*.exe $targetdir/bin");    
-    psystem("cp -fv $ReleaseBuildDir/xerces-c_*.lib $targetdir/lib");
+    psystem("cp -fv $ReleaseBuildDir/*.dll               $targetdir/bin");
+    psystem("cp -fv $ReleaseBuildDir/*.exe               $targetdir/bin");        
+    psystem("cp -fv $ReleaseBuildDir/xerces-c_*.lib      $targetdir/lib");
     psystem("cp -fv $ReleaseBuildDir/xerces-depdom_*.lib $targetdir/lib");
-           
+
+    psystem("cp -fv $DebugBuildDir/*.dll                 $targetdir/bin");
+    psystem("cp -fv $DebugBuildDir/xerces-c_*.lib        $targetdir/lib");
+    psystem("cp -fv $DebugBuildDir/xerces-depdom_*.lib   $targetdir/lib");
+               
     # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
     psystem("cp -fv $XERCESCROOT/Build/Win32/$VCBuildDir/Release/obj/*.map $targetdir/etc");
