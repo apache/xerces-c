@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/22 01:00:10  aruna1
+ * GNUGDefs references removed. Now only GCCDefs is used instead
+ *
  * Revision 1.7  2000/02/06 07:48:00  rahulj
  * Year 2K copyright swat.
  *
@@ -166,10 +169,10 @@
     #elif defined(_EDG_RUNTIME_USES_NAMESPACES)
         #define XML_SOLARIS_KAICC
     #elif defined(__GNUG__)
-        #define XML_GNUG
+		#define XML_GCC
     #endif
-#elif defined(__GNUG__)
-    #define XML_GNUG
+#elif defined (__GNUG__) || defined(__linux__)
+    #define XML_GCC
 #elif defined(XML_HPUX)
     #if defined(EXM_HPUX)
         #define XML_HPUX_KAICC
@@ -182,8 +185,6 @@
     #define XML_MIPSPRO_CC
 #elif defined(XML_TANDEM)
     #define XML_TANDEMCC
-#elif defined(__linux__)
-    #define XML_GCC
 #elif defined(__MVS__) && defined(__cplusplus)
     #define XML_MVSCPP
 #elif defined(EXM_OS390) && defined(__cplusplus)

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.10  2000/02/22 01:00:48  aruna1
+# GNUGDefs references removed. Now only GCCDefs is used instead
+#
 # Revision 1.9  2000/02/10 00:12:06  abagchi
 # Removed OS400SetDefs.cpp
 #
@@ -113,7 +116,6 @@ CPP_PUBHEADERS = \
 	CSetDefs.hpp \
 	CodeWarriorDefs.hpp \
 	GCCDefs.hpp \
-	GNUGDefs.hpp \
 	HPCCDefs.hpp \
 	IBMVAOS2Defs.hpp \
 	IBMVAW32Defs.hpp \

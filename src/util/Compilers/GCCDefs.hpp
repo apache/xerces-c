@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/22 01:00:48  aruna1
+ * GNUGDefs references removed. Now only GCCDefs is used instead
+ *
  * Revision 1.7  2000/02/06 07:48:17  rahulj
  * Year 2K copyright swat.
  *
@@ -104,6 +107,11 @@
 // typedef unsigned short XMLCh; // is another option, now considered old
 typedef wchar_t XMLCh;
 
+// ---------------------------------------------------------------------------
+//  Define unsigned 16 and 32 bits integers
+// ---------------------------------------------------------------------------
+typedef unsigned short  XMLUInt16;
+typedef unsigned int    XMLUInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the XML4C debug token if it was on in the build environment

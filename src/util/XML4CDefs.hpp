@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/02/22 01:00:10  aruna1
+ * GNUGDefs references removed. Now only GCCDefs is used instead
+ *
  * Revision 1.10  2000/02/06 07:48:05  rahulj
  * Year 2K copyright swat.
  *
@@ -198,10 +201,6 @@ static const unsigned int   gXML4CRevision   = 0;
 
 #if defined(XML_SOLARIS_KAICC)
 #include    <util/Compilers/SunKaiDefs.hpp>
-#endif
-
-#if defined(XML_GNUG)
-#include    <util/Compilers/GNUGDefs.hpp>
 #endif
 
 #if defined(XML_HPUX_CC) || defined(XML_HPUX_aCC) || defined(XML_HPUX_KAICC)
