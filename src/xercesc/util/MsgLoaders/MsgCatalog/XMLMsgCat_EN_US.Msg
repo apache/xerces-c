@@ -284,6 +284,8 @@ $set 1
 287  The schemaLocation attribute does not contain pairs of values.
 288  Internal error: don't have a GrammarResolver for TraverseSchema
 289  Fatal error encountered during schema scan
+290  Reference to external entity declaration '{0}' is not allowed in a standalone document.
+291  Partial markup in parameter entity replacement text in a complete declaration.
 
 
 $set 2

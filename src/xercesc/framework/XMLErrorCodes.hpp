@@ -303,7 +303,9 @@ public :
       , BadSchemaLocation                  = 287
       , NoGrammarResolver                  = 288
       , SchemaScanFatalError               = 289
-      , F_HighBounds                       = 290
+      , IllegalRefInStandalone             = 290
+      , PEBetweenDecl                      = 291
+      , F_HighBounds                       = 292
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

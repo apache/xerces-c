@@ -93,7 +93,7 @@ public :
       , GenericError                       = 77
       , ElementNotQualified                = 78
       , ElementNotUnQualified              = 79
-      , IllegalRefInStandalone             = 80
+      , VC_IllegalRefInStandalone          = 80
       , NoDefAttForStandalone              = 81
       , NoAttNormForStandalone             = 82
       , NoWSForStandalone                  = 83

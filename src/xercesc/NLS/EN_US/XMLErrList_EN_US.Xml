@@ -296,6 +296,8 @@
             <Message Id="BadSchemaLocation" Text="The schemaLocation attribute does not contain pairs of values."/>
             <Message Id="NoGrammarResolver" Text="Internal error: don't have a GrammarResolver for TraverseSchema"/>
             <Message Id="SchemaScanFatalError" Text="Fatal error encountered during schema scan"/>
+            <Message Id="IllegalRefInStandalone" Text="Reference to external entity declaration '{0}' is not allowed in a standalone document."/>
+            <Message Id="PEBetweenDecl" Text="Partial markup in parameter entity replacement text in a complete declaration."/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">
@@ -378,7 +380,7 @@
             <Message Id="GenericError" Text="Schema error during parsing"/>
             <Message Id="ElementNotQualified" Text="Element '{0}' should be qualified"/>
             <Message Id="ElementNotUnQualified" Text="Element '{0}' should be un-qualified"/>
-            <Message Id="IllegalRefInStandalone" Text="Reference to external entity declaration '{0}' is not allowed in a standalone document."/>
+            <Message Id="VC_IllegalRefInStandalone" Text="Reference to external entity declaration '{0}' is not allowed in a standalone document."/>
             <Message Id="NoDefAttForStandalone" Text="Attribute '{0}' for element '{1}' has a default value and must be specified in a standalone document."/>
             <Message Id="NoAttNormForStandalone" Text="Attribute '{0}' must not be changed by normalization in a standalone document."/>
             <Message Id="NoWSForStandalone" Text="White space must not occur between externally declared elements with element content in a standalone document."/>
