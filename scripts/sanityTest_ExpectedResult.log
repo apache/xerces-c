@@ -2,41 +2,46 @@
 Usage:
     SAXCount [options] <XML file> | List file>
 
+This program invokes the SAX Parser, and then prints the
+number of elements, attributes, spaces and characters found
+in each XML file, using SAX API.
+
 Options:
-    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
-    -v=xxx      Validation scheme [always | never | auto*]
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
     -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
 
-This program prints the number of elements, attributes,
-white spaces and other non-white space characters in the input file.
-
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
 personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
 personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
 
-Usage: SAXPrint [options] file
-This program prints the data returned by the various SAX
-handlers for the specified input file. Options are NOT case
-sensitive.
+Usage:
+    SAX2Print [options] <XML file>
+
+This program invokes the SAX Parser, and then prints the
+data returned by the various SAX handlers for the specified
+XML file.
 
 Options:
-    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
-    -v=xxx      Validation scheme [always | never | auto*]
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing.
     -s          Enable schema processing.
     -f          Enable full schema constraint checking.
     -x=XXX      Use a particular encoding for output (LATIN1*).
-    -?          Show this help
+    -?          Show this help.
 
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037
+    WINDOWS-1252, IBM1140, IBM037.
 
 <?xml version="1.0" encoding="LATIN1"?>
 <personnel>
@@ -159,42 +164,49 @@ The parser has intrinsic support for the following encodings:
 Usage:
     SAX2Count [options] <XML file> | List file>
 
+This program invokes the SAX2XMLReader, and then prints the
+number of elements, attributes, spaces and characters found
+in each XML file, using SAX2 API.
+
 Options:
-    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
-    -v=xxx      Validation scheme [always | never | auto*]
-    -n          Disable namespace processing. Defaults to on.
-    -s          Disable schema processing. Defaults to on.
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
     -f          Enable full schema constraint checking processing. Defaults to off.
+    -n          Disable namespace processing. Defaults to on.
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
+    -s          Disable schema processing. Defaults to on.
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
+    -?          Show this help.
 
-This program prints the number of elements, attributes,
-white spaces and other non-white space characters in the input file.
-
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
 personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
 personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
 
-Usage: SAX2Print [options] file
-This program prints the data returned by the various SAX2
-handlers for the specified input file. Options are NOT case
-sensitive.
+Usage:
+    SAX2Print [options] <XML file>
+
+This program invokes the SAX2XMLReader, and then prints the
+data returned by the various SAX2 handlers for the specified
+XML file.
 
 Options:
-    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
-    -v=xxx      Validation scheme [always | never | auto*]
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
     -e          Expand Namespace Alias with URI's.
     -x=XXX      Use a particular encoding for output (LATIN1*).
-    -s          Disable schema processing. Defaults to on.
     -f          Enable full schema constraint checking processing. Defaults to off.
+    -s          Disable schema processing. Defaults to on.
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
+    -?          Show this help.
 
-    -?          Show this help
-
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037
+    WINDOWS-1252, IBM1140, IBM037.
 
 <?xml version="1.0" encoding="LATIN1"?>
 <personnel>
@@ -375,47 +387,48 @@ personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 Usage:
     DOMCount [options] <XML file> | List file>
 
-This program invokes the XML4C DOM parser, builds
-the DOM tree, and then prints the number of elements
-found in the input XML file.
+This program invokes the DOM parser, builds the DOM tree,
+and then prints the number of elements found in each XML file.
 
 Options:
-    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
-    -v=xxx      Validation scheme [always | never | auto*]
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
     -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
 
-  * = Default if not provided explicitly
-
+  * = Default if not provided explicitly.
 
 personal.xml:{timing removed}(37 elems).
 personal.xml:{timing removed}(37 elems).
 personal-schema.xml:{timing removed}(37 elems).
 
-Usage: DOMPrint [options] <XML file>
+Usage:
+    DOMPrint [options] <XML file>
 
-This program invokes the Xerces-C DOM parser and builds the DOM
-tree. It then traverses the DOM tree and prints the contents
-of the tree. Options are NOT case sensitive.
+This program invokes the DOM parser, and builds the DOM tree.
+It then traverses the DOM tree and prints the contents of the
+tree for the specified XML file.
 
 Options:
     -e          create entity reference nodes. Default is no expansion.
-    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
-    -v=xxx      Validation scheme [always | never | auto*]
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Default is off.
     -s          Enable schema processing. Default is off.
     -f          Enable full schema constraint checking. Defaults to off.
     -x=XXX      Use a particular encoding for output. Default is
                 the same encoding as the input XML file. UTF-8 if
                 input XML file has not XML declaration.
-    -?          Show this help (must be the only parameter)
+    -?          Show this help.
 
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037
+    WINDOWS-1252, IBM1140, IBM037.
 
 <?xml version="1.0" encoding="iso-8859-1"?>
 
@@ -551,47 +564,48 @@ The parser has intrinsic support for the following encodings:
 Usage:
     IDOMCount [options] <XML file> | List file>
 
-This program invokes the XML4C DOM parser, builds
-the DOM tree, and then prints the number of elements
-found in the input XML file.
+This program invokes the IDOM parser, builds the DOM tree,
+and then prints the number of elements found in each XML file.
 
 Options:
-    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file
-    -v=xxx      Validation scheme [always | never | auto*]
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
     -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
 
-  * = Default if not provided explicitly
-
+  * = Default if not provided explicitly.
 
 personal.xml:{timing removed}(37 elems).
 personal.xml:{timing removed}(37 elems).
 personal-schema.xml:{timing removed}(37 elems).
 
-Usage: IDOMPrint [options] <XML file>
+Usage:
+    IDOMPrint [options] <XML file>
 
-This program invokes the Xerces-C IDOM parser and builds the IDOM
-tree. It then traverses the DOM tree and prints the contents
-of the tree. Options are NOT case sensitive.
+This program invokes the IDOM parser, and builds the DOM tree.
+It then traverses the DOM tree and prints the contents of the
+tree for the specified XML file.
 
 Options:
     -e          create entity reference nodes. Default is no expansion.
-    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
-    -v=xxx      Validation scheme [always | never | auto*]
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Default is off.
     -s          Enable schema processing. Default is off.
     -f          Enable full schema constraint checking. Defaults is off.
     -x=XXX      Use a particular encoding for output. Default is
                 the same encoding as the input XML file. UTF-8 if
                 input XML file has not XML declaration.
-    -?          Show this help (must be the only parameter)
+    -?          Show this help.
 
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037
+    WINDOWS-1252, IBM1140, IBM037.
 
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE personnel "personal.dtd" SYSTEM "personal.dtd">
@@ -724,9 +738,10 @@ stdin:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
 stdin:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 stdin:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
 
-Usage: PParse [options] <file>
+Usage:
+    PParse [options] <XML file>
 
-This sample program demonstrates the progressive parse capabilities of
+This program demonstrates the progressive parse capabilities of
 the parser system. It allows you to do a scanFirst() call followed by
 a loop which calls scanNext(). You can drop out when you've found what
 ever it is you want. In our little test, our event handler looks for
@@ -734,27 +749,24 @@ ever it is you want. In our little test, our event handler looks for
 At that point, our progressive parse loop exits.
 
 Options:
-      -v=xxx        - Validation scheme [always | never | auto*]
-      -n            - Enable namespace processing [default is off]
-      -s            - Enable schema processing [default is off]
-      -f            - Enable full schema constraint checking [default is off]
-      -?            - Show this help (must be the only parameter)
+      -v=xxx        - Validation scheme [always | never | auto*].
+      -n            - Enable namespace processing [default is off].
+      -s            - Enable schema processing [default is off].
+      -f            - Enable full schema constraint checking [default is off].
+      -?            - Show this help.
 
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
-Got the required 16 elements
-
-Got the required 16 elements
-
+personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
 
 Usage:
     EnumVal <XML file>
 
-This program parses a file, then shows how to enumerate the
-contents of the validator pools. Essentially, shows how one can
-access the DTD information stored in internal data structures.
-
-  * = Default if not provided explicitly
+This program parses the specified XML file, then shows how to
+enumerate the contents of the validator pools. Essentially,
+shows how one can access the DTD information stored in internal
+data structures.
 
 
 ELEMENTS:
