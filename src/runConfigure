@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.10  1999/12/09 00:48:19  aruna1
+# ICU library inclusion in ALLLIBS due to solaris failure
+#
 # Revision 1.9  1999/12/03 01:19:11  rahulj
 # Split export statements into two. assignment and then export. Solaris is happy now
 #
@@ -313,7 +316,7 @@ case $transcoder in
            exit ${ERROR_EXIT_CODE};
        fi
        transcodingDefines="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include";
-       transcodingLibs="-L${ICUROOT}/lib -licu-uc";
+       transcodingLibs="-L${ICUROOT}/lib";
        TRANSCODER=ICU;;
 
    native)
