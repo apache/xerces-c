@@ -97,6 +97,7 @@ EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
 ThreadTest/Makefile \
+XSerializerTest/Makefile \
 MemHandlerTest/Makefile])
 
 echo

@@ -1537,6 +1537,7 @@ EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
 ThreadTest/Makefile \
+XSerializerTest/Makefile \
 MemHandlerTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
@@ -1644,6 +1645,7 @@ EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
 ThreadTest/Makefile \
+XSerializerTest/Makefile \
 MemHandlerTest/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
