@@ -54,56 +54,8 @@
  * <http://www.apache.org/>.
  */
 
-/**
- * $Log$
- * Revision 1.3  2000/10/09 18:55:58  jberry
- * - Fix Mac OS X support. GCC in this environment sets wchar_t to a 32 bit
- *   value which requires an additional transcoding stage (bleh...)
- * - Improve sensitivity to environment in order to support a broader
- *   range of system versions.
- * - Fix a few compiler sensitivities.
- *
- * Revision 1.2  2000/07/25 22:31:26  aruna1
- * Char definitions in XMLUni moved to XMLUniDefs
- *
- * Revision 1.1  2000/07/18 18:26:15  andyh
- * Mac OS update.
- * Contributed by James Berry <jberry@criticalpath.com>
- *
- * Revision 1.8  2000/02/06 07:48:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/01/25 23:14:19  roddey
- * Borland does not support wcsupr(), but does support _wcsupr(). Since VC++ does also,
- * _wcsupr() was used in order to have the both work with the same transcoding code.
- *
- * Revision 1.6  2000/01/25 22:49:58  roddey
- * Moved the supportsSrcOfs() method from the individual transcoder to the
- * transcoding service, where it should have been to begin with.
- *
- * Revision 1.5  2000/01/25 19:19:09  roddey
- * Simple addition of a getId() method to the xcode and netacess abstractions to
- * allow each impl to give back an id string.
- *
- * Revision 1.4  1999/12/18 00:22:33  roddey
- * Changes to support the new, completely orthagonal, transcoder architecture.
- *
- * Revision 1.3  1999/12/15 19:44:02  roddey
- * Now implements the new transcoding abstractions, with separate interface
- * classes for XML transcoders and local code page transcoders.
- *
- * Revision 1.2  1999/12/01 18:54:26  roddey
- * Small syntactical change to make it compile under Borland's compiler.
- * It does not make it worse under other compilers, so why not. Basically
- * it was just changing ::iswspace() to iswspace(), i.e. get rid of the ::
- * prefix, which freaked out Borland for some reason.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:04  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+/*
+ *	$Id$
  */
 
 
