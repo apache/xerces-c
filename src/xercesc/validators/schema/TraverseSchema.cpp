@@ -2878,8 +2878,9 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
         contentElem, GeneralAttributeCheck::E_List, this, false, fNonXSAttList
     );
 
-    if (XUtil::getNextSiblingElement(contentElem) != 0) {
-        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
+    const DOMElement* tempEl = XUtil::getNextSiblingElement(contentElem);
+    if (tempEl != 0) {
+        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError, tempEl->getLocalName());
     }
 
     DOMElement*      content = 0;
@@ -2991,8 +2992,9 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
         contentElem, GeneralAttributeCheck::E_Restriction, this, false, fNonXSAttList
     );
 
-    if (XUtil::getNextSiblingElement(contentElem) != 0) {
-        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
+    const DOMElement* tempEl = XUtil::getNextSiblingElement(contentElem);
+    if (tempEl != 0) {
+        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError, tempEl->getLocalName());
     }
 
     DOMElement* content = 0;
@@ -3252,8 +3254,9 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
         contentElem, GeneralAttributeCheck::E_Union, this, false, fNonXSAttList
     );
 
-    if (XUtil::getNextSiblingElement(contentElem) != 0) {
-        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
+    const DOMElement* tempEl = XUtil::getNextSiblingElement(contentElem);
+    if (tempEl != 0) {
+        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError, tempEl->getLocalName());
     }
 
     const XMLCh*                    baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_MEMBERTYPES);

@@ -28,7 +28,7 @@
             <Message Id="AnonSimpleTypeWithName" Text="Anonymous simpleType in element {0} has a name attribute"/>
             <Message Id="InvalidElementContent" Text="The content of an element information item does not match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)"/>
             <Message Id="UntypedElement" Text="Untyped element: {0}"/>
-            <Message Id="SimpleTypeContentError" Text="Error in content of simpleType"/>
+            <Message Id="SimpleTypeContentError" Text="Error in content of simpleType, '{0}' is invalid.  Only allowed one of (restriction | list | union)."/>
             <Message Id="ExpectedSimpleTypeInList" Text="Expected simpleType in 'list' declaration for {0}"/>
             <Message Id="ListUnionRestrictionError" Text="List | Union | Restriction content is invalid for type {0}"/>
             <Message Id="SimpleTypeDerivationByListError" Text="Error in content of derivation by list for {0}"/>
@@ -665,10 +665,10 @@
             <Message Id="FACET_len_base_fixed" Text="len '{0}' must be equal to base's len '{1}' , fixed"/>
             <Message Id="FACET_whitespace_base_fixed" Text="whitespace '{0}' must be equal to base's whitespace '{1}' , fixed"/>
             <Message Id="FACET_internalError_fixed" Text="internal Error: fixed"/>		
-            <Message Id="FACET_List_Null_baseValidator" Text="Null base validator in List "/>
-            <Message Id="FACET_Union_Null_memberTypeValidators" Text="Null member type validators in Union "/>
-            <Message Id="FACET_Union_Null_baseValidator" Text="Null base validator in Union"/>
-            <Message Id="FACET_Union_invalid_baseValidatorType" Text="Union's base validator's type '{0}' must be union too "/>
+            <Message Id="FACET_List_Null_baseValidator" Text="simpleType list's 'itemType' is empty."/>
+            <Message Id="FACET_Union_Null_memberTypeValidators" Text="simpleType union's 'memberTypes' is empty."/>
+            <Message Id="FACET_Union_Null_baseValidator" Text="simpleType restriction's union 'base' is empty."/>
+            <Message Id="FACET_Union_invalid_baseValidatorType" Text="simpleType restriction's union 'base' type is '{0}' instead of union."/>
             <Message Id="VALUE_NotMatch_Pattern" Text="Value '{0}' does not match regular expression facet '{1}'"/>
             <Message Id="VALUE_Not_Base64" Text="Value '{0}' is not encoded in Base64 "/>
             <Message Id="VALUE_Not_HexBin" Text="Value '{0}' is not encoded in HexBin "/>

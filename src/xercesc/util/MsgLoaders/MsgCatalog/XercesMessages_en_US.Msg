@@ -18,7 +18,7 @@ $set 1
 19  Anonymous simpleType in element {0} has a name attribute
 20  The content of an element information item does not match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)
 21  Untyped element: {0}
-22  Error in content of simpleType
+22  Error in content of simpleType, '{0}' is invalid.  Only allowed one of (restriction | list | union).
 23  Expected simpleType in 'list' declaration for {0}
 24  List | Union | Restriction content is invalid for type {0}
 25  Error in content of derivation by list for {0}
@@ -649,10 +649,10 @@ $set 3
 231  len '{0}' must be equal to base's len '{1}' , fixed
 232  whitespace '{0}' must be equal to base's whitespace '{1}' , fixed
 233  internal Error: fixed
-234  Null base validator in List 
-235  Null member type validators in Union 
-236  Null base validator in Union
-237  Union's base validator's type '{0}' must be union too 
+234  simpleType list's 'itemType' is empty.
+235  simpleType union's 'memberTypes' is empty.
+236  simpleType restriction's union 'base' is empty.
+237  simpleType restriction's union 'base' type is '{0}' instead of union.
 238  Value '{0}' does not match regular expression facet '{1}'
 239  Value '{0}' is not encoded in Base64 
 240  Value '{0}' is not encoded in HexBin 
