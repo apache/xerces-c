@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/28 14:55:11  neilg
+ * fix for compilation error on HPUX
+ *
  * Revision 1.6  2003/11/27 21:29:05  neilg
  * implement writeAnnotation; thanks to Dave Cargill
  *
@@ -111,7 +114,7 @@ public:
 	    /**
 	     * The object type is <code>org.w3c.dom.Document</code>.
 	     */
-	    W3C_DOM_DOCUMENT          = 2,
+	    W3C_DOM_DOCUMENT          = 2
     };
 
     //  Constructors and Destructor
