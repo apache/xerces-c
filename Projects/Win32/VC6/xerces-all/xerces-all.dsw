@@ -78,7 +78,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "DOMTraversal"=".\DOMTraversal\DOMTraversal.dsp" - Package Owner=<4>
+Project: "DOMTraversalTest"=".\DOMTraversalTest\DOMTraversalTest.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
