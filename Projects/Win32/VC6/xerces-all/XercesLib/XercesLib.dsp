@@ -1259,6 +1259,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\URLInputSource.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\ValidationContext.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.cpp
 # End Source File
 # Begin Source File
@@ -1512,6 +1516,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\SGXMLScanner.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.hpp
 # End Source File
 # Begin Source File
 
