@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/06/06 20:36:33  tng
+ * Fix: Valid encoding name is not checked in scanning Text Decl
+ *
  * Revision 1.5  2002/05/30 16:17:19  tng
  * Add feature to optionally ignore external DTD.
  *
@@ -3644,7 +3647,7 @@ void DTDScanner::scanTextDecl()
 
         // Followed by a single or double quoted version string
         getQuotedString(bbEncoding.getBuffer());
-        if (bbEncoding.isEmpty())
+        if (bbEncoding.isEmpty() || !XMLString::isValidEncName(bbEncoding.getRawBuffer()))
         {
             fScanner->emitError(XMLErrs::BadXMLEncoding, bbEncoding.getRawBuffer());
             fReaderMgr->skipPastChar(chCloseAngle);
