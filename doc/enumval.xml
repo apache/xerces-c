@@ -25,8 +25,10 @@ gmake</source>
         </s3>
 
         <s3 title="Running EnumVal">
-          <p>This program parses a file, then shows how to enumerate the contents of the validator pools.
-          To run EnumVal, enter the following </p>
+          <p>This program parses the specified XML file, then shows how to
+            enumerate the contents of the validator pools. Essentially,
+            shows how one can access the DTD information stored in internal
+            data structures.  To run EnumVal, enter the following </p>
 <source>EnumVal &lt;XML file&gt;</source>
           <p>Here is a sample output from EnumVal</p>
 <source>cd &XercesCInstallDir;-linux/samples/data

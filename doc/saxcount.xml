@@ -32,22 +32,28 @@ gmake</source>
           elements in the file. To run SAXCount, enter the following </p>
 <source>SAXCount &lt;XML File&gt;</source>
           <p>The following parameters may be set from the command line </p>
-<source>Usage:
-    SAXCount [options] &lt;XML file>
+<source>
+Usage:
+    SAXCount [options] &lt;XML file | List file&gt;
+
+This program invokes the SAX Parser, and then prints the
+number of elements, attributes, spaces and characters found
+in each XML file, using SAX API.
 
 Options:
-    -v=xxx      Validation scheme [always | never | auto*]
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
 
-This program prints the number of elements, attributes,
-white spaces and other non-white space characters in the input file.
-
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 </source>
           <p><em>-v=always</em> will force validation<br/>
              <em>-v=never</em> will not use any validation<br/>
-             <em>-v=auto</em> will validate if a DOCTYPE declaration is present in the XML document</p>
+             <em>-v=auto</em> will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
           <p>Here is a sample output from SAXCount</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
 SAXCount -v=always personal.xml

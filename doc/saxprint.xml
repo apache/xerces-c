@@ -41,24 +41,28 @@ gmake</source>
 
 <source>SAXPrint &lt;XML file&gt;</source>
           <p>The following parameters may be set from the command line </p>
-<source>Usage: SAXPrint [options] file
-This program prints the data returned by the various SAX
-handlers for the specified input file. Options are NOT case
-sensitive.
+<source>
+Usage:
+    SAXPrint [options] &lt;XML file&gt;
+
+This program invokes the SAX Parser, and then prints the
+data returned by the various SAX handlers for the specified
+XML file.
 
 Options:
-    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
-    -v=xxx      Validation scheme [always | never | auto*]
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing.
     -s          Enable schema processing.
+    -f          Enable full schema constraint checking.
     -x=XXX      Use a particular encoding for output (LATIN1*).
-    -?          Show this help
+    -?          Show this help.
 
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037
+    WINDOWS-1252, IBM1140, IBM037.
 </source>
 
           <p><em>-u=fail</em> will fail when unrepresentable characters are encountered<br/>
@@ -66,7 +70,7 @@ The parser has intrinsic support for the following encodings:
              <em>-u=ref</em> will report the character as a reference</p>
           <p><em>-v=always</em> will force validation<br/>
              <em>-v=never</em>  will not use any validation<br/>
-             <em>-v=auto</em>   will validate if a DOCTYPE declaration is present in the XML document</p>
+             <em>-v=auto</em>   will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
           <p>Here is a sample output from SAXPrint</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
 SAXPrint -v=always personal.xml

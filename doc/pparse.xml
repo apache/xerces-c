@@ -37,13 +37,12 @@ gmake</source>
         </s3>
 
         <s3 title="Running PParse">
-        	<p>The program looks for the first 16 elements of the XML file,
-			and reports if successful.</p>
-<source>PParse &lt;XML file&gt;</source>
+        	<p>PParse parses an XML file and prints out a count of the number of
+          elements in the file</p>
+<source>Usage:
+    PParse [options] &lt;XML file&gt;
 
-<source>Usage: PParse [options] &lt;file>
-
-This sample program demonstrates the progressive parse capabilities of
+This program demonstrates the progressive parse capabilities of
 the parser system. It allows you to do a scanFirst() call followed by
 a loop which calls scanNext(). You can drop out when you've found what
 ever it is you want. In our little test, our event handler looks for
@@ -51,18 +50,29 @@ ever it is you want. In our little test, our event handler looks for
 At that point, our progressive parse loop exits.
 
 Options:
-      -v=xxx        - Validation scheme [always | never | auto*]
-      -n            - Enable namespace processing [default is off]
-      -s            - Enable schema processing [default is off]
-      -?            - Show this help (must be the only parameter)
+      -v=xxx        - Validation scheme [always | never | auto*].
+      -n            - Enable namespace processing [default is off].
+      -s            - Enable schema processing [default is off].
+      -f            - Enable full schema constraint checking [default is off].
+      -?            - Show this help.
 
-  * = Default if not provided explicitly
+  * = Default if not provided explicitly.
 </source>
-          	<p>The output is the following:</p>
+          <p><em>-v=always</em> will force validation<br/>
+             <em>-v=never</em> will not use any validation<br/>
+             <em>-v=auto</em> will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
+          <p>Here is a sample output from PParse</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
-PParse personal.xml
+PParse -v=always personal.xml
+personal.xml: 60 ms (37 elems, 12 attrs, 134 spaces, 134 chars)</source>
+          <p>Running PParse with the validating parser gives a different result because
+          ignorable white-space is counted separately from regular characters.</p>
+<source>PParse -v=never personal.xml
+personal.xml: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+          <p>Note that the sum of spaces and chracters in both versions is the same.</p>
 
-Got the required 16 elements.</source>
+          <note>The time reported by the program may be different depending on your
+          machine processor.</note>
         </s3>
     </s2>
 </s1>

@@ -31,12 +31,31 @@ gmake</source>
           <p>This program uses the SAX Parser to parse a memory buffer
              containing XML statements, and reports the number of elements and attributes
              found. </p>
-<source>MemParse [-v]</source>
-          <p>The -v option is used to invoke the Validating SAX Parser instead.
+          <p>The following parameters may be set from the command line </p>
+<source>
+Usage:
+    MemParse [options]
 
-          When invoked with a validating parser: </p>
+This program uses the SAX Parser to parse a memory buffer
+containing XML statements, and reports the number of
+elements and attributes found.
+
+Options:
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+</source>
+          <p><em>-v=always</em> will force validation<br/>
+             <em>-v=never</em>  will not use any validation<br/>
+             <em>-v=auto</em>   will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
+          <p>Here is a sample output from MemParse</p>
+
 <source>cd &XercesCInstallDir;-linux/samples/data
-MemParse -v</source>
+MemParse -v=always</source>
           <p>The output is the following:</p>
 <source>Finished parsing the memory buffer containing the following XML statements:
 
@@ -57,7 +76,36 @@ MemParse -v</source>
   &lt;/developedAt&gt;
 &lt;/company&gt;
 
-Parsing took 0 ms (4 elements, 1 attributes, 16 spaces, 95 characters).</source>
+Parsing took 10 ms (4 elements, 1 attributes, 16 spaces, 95 characters).</source>
+          <p>Running MemParse with the validating parser gives a different result because
+          ignorable white-space is counted separately from regular characters.</p>
+<source>
+MemParse -v=never</source>
+          <p>The output is the following:</p>
+<source>Finished parsing the memory buffer containing the following XML statements:
+
+&lt;?xml version='1.0' encoding='ascii'?&gt;
+&lt;!DOCTYPE company [
+&lt;!ELEMENT company     (product,category,developedAt)&gt;
+&lt;!ELEMENT product     (#PCDATA)&gt;
+&lt;!ELEMENT category    (#PCDATA)&gt;
+&lt;!ATTLIST category idea CDATA #IMPLIED&gt;
+&lt;!ELEMENT developedAt (#PCDATA)&gt;
+]&gt;
+
+&lt;company&gt;
+  &lt;product&gt;XML4C&lt;/product&gt;
+  &lt;category idea='great'&gt;XML Parsing Tools&lt;/category&gt;
+  &lt;developedAt&gt;
+    IBM Center for Java Technology, Silicon Valley, Cupertino, CA
+  &lt;/developedAt&gt;
+&lt;/company&gt;
+
+Parsing took 10 ms (4 elements, 1 attributes, 0 spaces, 111 characters).</source>
+          <p>Note that the sum of spaces and chracters in both versions is the same.</p>
+
+          <note>The time reported by the system may be different, depending on your
+          processor type.</note>
 
         </s3>
     </s2>

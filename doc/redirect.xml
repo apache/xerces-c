@@ -59,6 +59,9 @@ personal.xml: 30 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
              when encountering external entities. For example, an application might want to
              redirect all references to entities outside of its domain to local cached copies.</p>
 
+          <note>The time reported by the program may be different depending on your
+          machine processor.</note>
+
         </s3>
     </s2>
 </s1>

@@ -26,28 +26,42 @@ gmake</source>
         </s3>
 
         <s3 title="Running StdInParse">
-          <p>The StdInParse sample parses an XML file and prints out a
+          <p>The StdInParse sample parses an XML file from standard input and prints out a
 		  count of the number of
           elements in the file. To run StdInParse, enter the following: </p>
 <source>StdInParse &lt; &lt;XML file&gt;</source>
           <p>The following parameters may be set from the command line </p>
-<source>Usage:
-    StdInParse [options]
-    -v=xxx      Validation scheme [always | never | auto]
-    -n          Enable namespace processing. [default is off]
-    -s          Enable schema processing. [default is off]
-    -?          Show this help
+<source>
+Usage:
+    StdInParse [options] &lt; &lt;XML file&gt;
 
-  * = Default if not provided explicitly
+This program demonstrates streaming XML data from standard
+input.  It then uses the SAX Parser, and prints the
+number of elements, attributes, spaces and characters found
+in the input, using SAX API.
 
-This program allows you to redirect a file into the program
-to be parsed. It will count the elements, characters, and
-spaces and display these stats at the end
+Options:
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
 </source>
+          <p><em>-v=always</em> will force validation<br/>
+             <em>-v=never</em> will not use any validation<br/>
+             <em>-v=auto</em> will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
+          <p>Make sure that you run StdInParse in the samples/data directory.</p>
           <p>Here is a sample output from StdInParse:</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
-StdInParse &lt; personal.xml
-stdin: 60 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+StdInParse -v=always &lt; personal.xml
+stdin: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+          <p>Running StdInParse with the validating parser gives a different result because
+          ignorable white-space is counted separately from regular characters.</p>
+<source>StdInParse -v=never &lt; personal.xml
+stdin: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+          <p>Note that the sum of spaces and chracters in both versions is the same.</p>
 
           <note>The time reported by the program may be different depending on your
           machine processor.</note>

@@ -4,7 +4,7 @@
 <s1 title="&XercesCName; Samples">
 
     <s2 title="Building the Samples">
-    <p>&XercesCName; comes packaged with ten sample applications that
+    <p>&XercesCName; comes packaged with 14 sample applications that
     demonstrate salient features of the parser using simple
     applications written on top of the SAX and DOM APIs provided by
     the parser.</p>
@@ -19,14 +19,19 @@
     Note that <em>runConfigure</em> is just a helper script and you are free to
     use <em>./configure</em> with the correct parameters to make it work
     on any platform-compiler combination of your choice. The script needs the following parameters:
+
     </p>
-<source>Usage: runConfigure "options"
+<source>
+Usage: runConfigure "options"
        where options may be any of the following:
-       -p &lt;platform&gt; (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11')
-       -c &lt;C compiler name&gt; (e.g. gcc, xlc_r, cc or aCC)
-       -x &lt;C++ compiler name&gt; (e.g. g++, xlC_r, CC or aCC)
+       -p &lt;platform&gt; (accepts 'aix', 'unixware', 'linux', 'solaris',
+'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64', 'macosx')
+       -c &lt;C compiler name&gt; (e.g. gcc, xlc or icc)
+       -x &lt;C++ compiler name&gt; (e.g. g++, xlC, or icc)
        -d (specifies that you want to build debug version)
-       -h (get help on the above commands)</source>
+       -h (get help on the above commands)
+       -z &lt;extra compiler options&gt;
+</source>
 
     <note><em>NOTE:</em>The code samples in this section assume that you are are working on the Linux binary drop.
     If you are using some other UNIX flavor, please replace '-linux' with the appropriate

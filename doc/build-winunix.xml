@@ -228,23 +228,25 @@ autoconf</source>
             inside your build, and the script does everything for you. Here
             is what the script takes as input:</p>
 
-<source>runConfigure
-runConfigure: Helper script to run "configure" for one of the
-              supported platforms.
+<source>
+runConfigure: Helper script to run "configure" for one of the supported platforms
 Usage: runConfigure "options"
        where options may be any of the following:
        -p &lt;platform&gt; (accepts 'aix', 'linux', 'solaris',
-                            'hp-10', 'hp-11', 'irix', 'unixware')
-       -c &lt;C compiler name&gt; (e.g. xlc_r, gcc, cc)
-       -x &lt;C++ compiler name&gt; (e.g. xlC_r, g++, CC, aCC)
+            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64', 'macosx' )
+       -c &lt;C compiler name&gt; (e.g. gcc, cc, xlc_r, icc)
+       -x &lt;C++ compiler name&gt; (e.g. g++, CC, xlC_r, icc, c++)
        -d (specifies that you want to build debug version)
-       -m &lt;message loader&gt; can be 'inmem', 'icu', 'iconv'
-       -n &lt;net accessor&gt; can be 'fileonly', 'libwww'
-       -t &lt;transcoder&gt; can be 'icu' or 'native'
-       -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
+       -m &lt;message loader&gt; can be 'inmem', 'icu', 'MsgFile' or 'iconv'
+       -n &lt;net accessor&gt; can be 'fileonly', 'libwww', 'socket' or 'native'
+       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390' or 'native'
+       -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'
        -l &lt;extra linker options&gt;
        -z &lt;extra compiler options&gt;
-       -h (to get help on the above commands)</source>
+       -P &lt;install-prefix&gt;
+       -C &lt;any one extra configure options&gt;
+       -h (to get help on the above commands)
+</source>
 
             <note>&XercesCName; can be built as either a standalone library or as a library
             dependent on International Components for Unicode (ICU). For simplicity,
@@ -252,35 +254,36 @@ Usage: runConfigure "options"
 
             <p>One of the common ways to build &XercesCName; is as follows:</p>
 
-<source>runConfigure -plinux -cgcc -xg++ -minmem -nfileonly -tnative</source>
+<source>runConfigure -plinux -cgcc -xg++ -minmem -nsocket -tnative -rpthread</source>
 
             <p>The response will be something like this:</p>
-<source>Generating makefiles with the following options ...
+<source>
+Generating makefiles with the following options ...
 Platform: linux
 C Compiler: gcc
 C++ Compiler: g++
 Extra compile options:
 Extra link options:
 Message Loader: inmem
-Net Accessor: fileonly
+Net Accessor: socket
 Transcoder: native
-Thread option:
+Thread option: pthread
+Extra configure options:
 Debug is OFF
 
 creating cache ./config.cache
 checking for gcc... gcc
-checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
-checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether the C compiler (gcc  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) works... yes
+checking whether the C compiler (gcc  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) is a cross-compiler... no
 checking whether we are using GNU C... yes
 checking whether gcc accepts -g... yes
 checking for c++... g++
-checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
-checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether the C++ compiler (g++  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) works... yes
+checking whether the C++ compiler (g++  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) is a cross-compiler... no
 checking whether we are using GNU C++... yes
 checking whether g++ accepts -g... yes
 checking for a BSD compatible install... /usr/bin/install -c
 checking for autoconf... autoconf
-checking for floor in -lm... yes
 checking how to run the C preprocessor... gcc -E
 checking for ANSI C header files... yes
 checking for XMLByte... no
@@ -293,41 +296,62 @@ creating util/Transcoders/ICU/Makefile
 creating util/Transcoders/Iconv/Makefile
 creating util/Transcoders/Iconv390/Makefile
 creating util/Transcoders/Iconv400/Makefile
+creating util/Transcoders/MacOSUnicodeConverter/Makefile
 creating util/Platforms/Makefile
+creating util/Platforms/Solaris/Makefile
+creating util/Platforms/AIX/Makefile
+creating util/Platforms/Linux/Makefile
+creating util/Platforms/HPUX/Makefile
+creating util/Platforms/OS390/Makefile
+creating util/Platforms/OS400/Makefile
+creating util/Platforms/IRIX/Makefile
+creating util/Platforms/PTX/Makefile
+creating util/Platforms/UnixWare/Makefile
+creating util/Platforms/Tru64/Makefile
+creating util/Platforms/MacOS/Makefile
 creating util/Compilers/Makefile
 creating util/MsgLoaders/InMemory/Makefile
 creating util/MsgLoaders/ICU/Makefile
 creating util/MsgLoaders/MsgCatalog/Makefile
 creating util/MsgLoaders/MsgFile/Makefile
+creating util/NetAccessors/Socket/Makefile
+creating util/NetAccessors/libWWW/Makefile
+creating util/NetAccessors/MacOSURLAccess/Makefile
+creating util/regx/Makefile
+creating validators/Makefile
+creating validators/common/Makefile
+creating validators/datatype/Makefile
 creating validators/DTD/Makefile
+creating validators/schema/Makefile
 creating framework/Makefile
 creating dom/Makefile
+creating idom/Makefile
 creating parsers/Makefile
 creating internal/Makefile
 creating sax/Makefile
+creating sax2/Makefile
 creating ../obj/Makefile
-creating conf.h
-cat: ./conf.h.in: No such file or directory
-conf.h is unchanged
 
 Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
 Still cannot resolve it? Find out if someone else had the same problem before.
-Check the mailing list archives at http://archive.covalent.net.
+Go to http://marc.theaimsgroup.com/?l=xerces-c-dev
 
 In future, you may also directly type the following commands to create the Makefiles.
 
-export TRANSCODER=NATIVE
-export MESSAGELOADER=INMEM
-export USELIBWWW=0
-export CC=gcc
-export CXX=g++
-export CXXFLAGS=-O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER
-export CFLAGS=-O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER
-export LIBS= -lpthread
+export TRANSCODER="NATIVE"
+export MESSAGELOADER="INMEM"
+export NETACCESSOR="Socket"
+export THREADS="pthread"
+export CC="gcc"
+export CXX="g++"
+export CXXFLAGS=" -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET"
+export CFLAGS=" -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET"
+export LDFLAGS=""
+export LIBS=" -lpthread "
 configure
 
 If the result of the above commands look OK to you, go to the directory
-XERCESCROOT and type "gmake" to make the &XercesCName; system.</source>
+/home/build/linux_xml4c/xerces-c-src1_5_2/src and type "gmake" to make the XERCES-C system.</source>
 
 <note>The error message concerning <code>conf.h</code>
 is NOT an indication of a problem. This code has been inserted to make it
