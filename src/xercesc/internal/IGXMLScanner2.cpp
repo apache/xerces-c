@@ -139,10 +139,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     if (!hasDefs && !attCount)
         return 0;
 
-    // PSVI handling
-    if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType )
-        fPSVIAttrList->reset();
-
     // Keep up with how many attrs we end up with total
     unsigned int retCount = 0;
 
@@ -586,6 +582,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             // now fill in the PSVIAttributes entry for this attribute:
             if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
 	        {
+	            psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
 	            SchemaAttDef *actualAttDef = 0;
 	            if(attDef)
 	                actualAttDef = (SchemaAttDef *)attDef;
@@ -594,12 +591,12 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(actualAttDef)
                 {
 	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
-	                psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
                     DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
 	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
 	                if(attrValid != PSVIItem::VALIDITY_VALID)
 	                {
-	                    psviAttr->reset(
+	                    psviAttr->reset
+                        (
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
@@ -616,7 +613,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                    XSSimpleTypeDefinition *memberType = 0;
 	                    if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
 	                        memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
-	                    psviAttr->reset(
+	                    psviAttr->reset
+                        (
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
@@ -628,6 +626,21 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , (memberType)?attrValidator:attrDataType
 	                    );
 	                }
+                }
+                else
+                {
+	                psviAttr->reset
+                    (
+	                    fRootElemName
+	                    , attrValid
+	                    , attrAssessed
+                        , 0
+	                    , 0
+	                    , 0
+	                    , false
+	                    , 0
+                        , 0
+	                );
                 }
 	        }
 	    }

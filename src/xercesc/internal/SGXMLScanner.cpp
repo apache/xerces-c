@@ -973,8 +973,11 @@ void SGXMLScanner::scanEndTag(bool& gotData)
 
     if (fValidate && topElem->fThisElement->isDeclared())
     {
-        fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
         fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+        if(!fPSVIElemContext.fCurrentTypeInfo)
+            fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+        else
+            fPSVIElemContext.fCurrentDV = 0;
         if (fPSVIHandler)
         {
             fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
@@ -1733,6 +1736,10 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     // clear the map used to detect duplicate attributes
     fUndeclaredAttrRegistryNS->removeAll();
 
+    // PSVI handling:  must reset this, even if no attributes...
+    if(getPSVIHandler())
+        fPSVIAttrList->reset();
+
     //  Now lets get the fAttrList filled in. This involves faulting in any
     //  defaulted and fixed attributes and normalizing the values of any that
     //  we got explicitly.
@@ -1811,8 +1818,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         {
             if (fValidate && elemDecl->isDeclared())
             {
-                fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                 fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+                if(!fPSVIElemContext.fCurrentTypeInfo)
+                    fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+                else
+                    fPSVIElemContext.fCurrentDV = 0;
                 if(fPSVIHandler)
                 {
                     fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
@@ -2297,10 +2307,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     if (!hasDefs && !attCount)
         return 0;
 
-    // PSVI handling
-    if(getPSVIHandler())
-        fPSVIAttrList->reset();
-
     // Keep up with how many attrs we end up with total
     unsigned int retCount = 0;
 
@@ -2693,6 +2699,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             // now fill in the PSVIAttributes entry for this attribute:
 	        if(getPSVIHandler())
 	        {
+	            psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
 	            SchemaAttDef *actualAttDef = 0;
 	            if(attDef)
 	                actualAttDef = (SchemaAttDef *)attDef;
@@ -2701,12 +2708,12 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(actualAttDef)
                 {
 	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
-	                psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
                     DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
 	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
 	                if(attrValid != PSVIItem::VALIDITY_VALID)
 	                {
-	                    psviAttr->reset(
+	                    psviAttr->reset
+                        (
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
@@ -2723,7 +2730,8 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                    XSSimpleTypeDefinition *memberType = 0;
 	                    if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
 	                        memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
-	                    psviAttr->reset(
+	                    psviAttr->reset
+                        (
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
@@ -2735,6 +2743,21 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , (memberType)?attrValidator:attrDataType
 	                    );
 	                }
+                }
+                else
+                {
+	                psviAttr->reset
+                    (
+	                    fRootElemName
+	                    , attrValid
+	                    , attrAssessed
+	                    , 0
+	                    , 0
+                        , 0
+	                    , false
+	                    , 0
+                        , 0
+	                );
                 }
 	        }
         }

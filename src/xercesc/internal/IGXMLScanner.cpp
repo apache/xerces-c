@@ -1067,8 +1067,11 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     {
         if (fValidate && topElem->fThisElement->isDeclared())
         {
-            fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
             fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+            if(!fPSVIElemContext.fCurrentTypeInfo)
+                fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+            else
+                fPSVIElemContext.fCurrentDV = 0;
             if(fPSVIHandler)
             {
                 fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
@@ -2807,6 +2810,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         fElemStack.addChild(elemDecl->getElementName(), true);
     }
 
+    // PSVI handling:  even if it turns out there are
+    // no attributes, we need to reset this list...
+    if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType )
+        fPSVIAttrList->reset();
+
     //  Now lets get the fAttrList filled in. This involves faulting in any
     //  defaulted and fixed attributes and normalizing the values of any that
     //  we got explicitly.
@@ -2884,8 +2892,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         {
             if (fValidate && elemDecl->isDeclared())
             {
-                fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                 fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+                if(!fPSVIElemContext.fCurrentTypeInfo)
+                    fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+                else
+                    fPSVIElemContext.fCurrentDV = 0;
                 if(fPSVIHandler)
                 {
                     fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
