@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2003/08/14 16:31:13  gareth
+ * Method added to allow serilization of custom nodes from derived classes.
+ *
  * Revision 1.17  2003/05/29 18:47:52  knoaman
  * Apply memory manager.
  *
@@ -402,6 +405,23 @@ private:
     /** helper **/
     void                          initSession(const DOMNode* const);
     void                          processNode(const DOMNode* const);
+
+    void                          procCdataSection(const XMLCh*   const nodeValue
+                                                 , const DOMNode* const nodeToWrite
+                                                 , int level);
+
+    void                          procUnrepCharInCdataSection(const XMLCh*   const nodeValue
+                                                            , const DOMNode* const nodeToWrite
+                                                            , int level);
+
+protected:
+    /**
+     * Overidden by derived classes to extend the abilities of the standard writer
+     * always returns false in the default implementation
+     * @return true if the method deals with nodeToWrite
+     */
+    virtual bool                          customNodeSerialize(const DOMNode* const nodeToWrite, int level);
+
     DOMNodeFilter::FilterAction   checkFilter(const DOMNode* const) const;
 
     bool                          checkFeature(const XMLCh* const featName
@@ -414,14 +434,6 @@ private:
     bool                          reportError(const DOMNode* const    errorNode
                                             , DOMError::ErrorSeverity errorType
                                             , XMLDOMMsg::Codes        toEmit);
-
-    void                          procCdataSection(const XMLCh*   const nodeValue
-                                                 , const DOMNode* const nodeToWrite
-                                                 , int level);
-
-    void                          procUnrepCharInCdataSection(const XMLCh*   const nodeValue
-                                                            , const DOMNode* const nodeToWrite
-                                                            , int level);
 
     bool                          canSetFeature(const int featureId
                                               , bool      val)     const;

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.41  2003/08/14 16:31:13  gareth
+ * Method added to allow serilization of custom nodes from derived classes.
+ *
  * Revision 1.40  2003/08/12 12:46:57  gareth
  * Added serialization for attribute nodes. Patch by Caroline Rioux.
  *
@@ -1367,17 +1370,23 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
     default:
         /***
-            This is an implementation specific behaviour, we abort serialization
-            once unrecognized node type encountered.
+            This is an implementation specific behaviour, we abort if a user derived class has not dealt with
+            this node type.
          ***/
         {
-            reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NotRecognizedType);
-            // UnreognizedNodeType;
+            if(!customNodeSerialize(nodeToWrite, level)) {
+                reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NotRecognizedType);
+                // UnreognizedNodeType;
+            }
         }
 
         break;
     }
 
+}
+
+bool DOMWriterImpl::customNodeSerialize(const DOMNode* const nodeToWrite, int level) {
+    return false;
 }
 
 //
