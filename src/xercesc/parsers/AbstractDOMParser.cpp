@@ -724,42 +724,14 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                         // So as long as the XML parser doesn't do it, it needs to
                         // done here.
                         const XMLCh* qualifiedName = attr->getFullName();
-                        int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
-
+                        XMLBufBid bbPrefixQName(&fBufMgr);
                         XMLBufBid bbQName(&fBufMgr);
-                        XMLBuffer& buf = bbQName.getBuffer();
-                        static const XMLCh XMLNS[] = {
-                            chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
-
-                        if (index > 0) {
-                            // there is prefix
-                            // map to XML URI for all cases except when prefix == "xmlns"
-                            XMLCh* prefix;
-                            XMLCh temp[1000];
-
-                            if (index > 999)
-                                prefix = new XMLCh[index+1];
-                            else
-                                prefix = temp;
-
-                            XMLString::subString(prefix ,qualifiedName, 0, index);
-
-                            if (!XMLString::compareString(prefix,XMLNS))
-                                buf.append(XMLUni::fgXMLNSURIName);
-                            else
-                                buf.append(XMLUni::fgXMLURIName);
-
-                            if (index > 999)
-                                delete prefix;
-                        }
-                        else {
-                            //   No prefix
-                            if (!XMLString::compareString(qualifiedName,XMLNS))
-                                buf.append(XMLUni::fgXMLNSURIName);
-                        }
+                        XMLBuffer& prefixBuf = bbPrefixQName.getBuffer();
+                        XMLBuffer& nameBuf = bbQName.getBuffer();
+                        unsigned int uriId = fScanner->resolveQName(qualifiedName, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
 
                         insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(
-                           buf.getRawBuffer(),     // NameSpaceURI
+                           fScanner->getURIText(uriId),     // NameSpaceURI
                            qualifiedName);   // qualified name
 
                         DOMNode* remAttr = elemImpl->setDefaultAttributeNodeNS(insertAttr);
