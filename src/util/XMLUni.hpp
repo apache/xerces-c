@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/04/11 19:10:55  roddey
+ * Added constant for Yen sign, which needs to be checked for
+ * specially in some new code.
+ *
  * Revision 1.14  2000/03/02 19:54:50  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -235,6 +239,8 @@ const XMLCh chLatin_w               = 0x77;
 const XMLCh chLatin_x               = 0x78;
 const XMLCh chLatin_y               = 0x79;
 const XMLCh chLatin_z               = 0x7A;
+
+const XMLCh chYenSign               = 0xA5;
 
 
 class XMLUTIL_EXPORT XMLUni
