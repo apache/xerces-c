@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/07/21 03:22:44  andyh
+ * Improved (but still weak) http access by the parser.
+ * Windows only.  UNIX will follow, probably tomorrow.
+ *
  * Revision 1.4  2000/05/15 22:31:29  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -95,52 +99,37 @@
 
 
 
-//
-// This define specifies the size of the buffer used to read chunks
-// out of the URL input stream.
-//
-
-#define URLISBUFMAXSIZE        8192
-
-
-//
-// URL's, as per the standards, is essentially composed of just ASCII characters
-// and hence converting it to a 'char *' requires just to drop the leading zero
-// byte. However, the URL's have to be 'escaped', meaning that certain unsafe
-// and reserved characters have to be escaped to their corresponding hex values.
-//
-// The input Unicode string is assumed to be 0 terminated.
-// The caller is responsible to free the memory allocated to store the resultant
-// 'char *' string.
-//
-
-static char* localTranscode(const XMLCh* latinStrInUnicode)
-{
-    unsigned int   lent = XMLString::stringLen(latinStrInUnicode);
-    char*  retval = new char[lent + 1];
-    unsigned int  i = 0;
-    for (i = 0; i < lent; i++)
-        retval[i] = (char) latinStrInUnicode[i]; // drop the leading byte.
-    retval[lent] = 0;
-    return retval;
-}
-
-
 
 BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
       : fSocketHandle(0)
       , fBytesProcessed(0)
 {
-    const XMLCh*        uri = urlSource.getURLText();
-    char*               uriAsCharStar = localTranscode(uri);
-    ArrayJanitor<char>  janBuf(uriAsCharStar);
+
+    //
+    // Pull all of the parts of the URL out of th urlSource object, and transcode them
+    //   and transcode them back to ASCII.
+    //
     const XMLCh*        hostName = urlSource.getHost();
-    char*               hostNameAsCharStar = localTranscode(hostName);
+    char*               hostNameAsCharStar = XMLString::transcode(hostName);
     ArrayJanitor<char>  janBuf1(hostNameAsCharStar);
+
+    const XMLCh*        path = urlSource.getPath();
+    char*               pathAsCharStar = XMLString::transcode(path);
+    ArrayJanitor<char>  janBuf2(pathAsCharStar);
+
+    const XMLCh*        fragment = urlSource.getFragment();
+    char*               fragmentAsCharStar = 0;
+    if (fragment)
+        fragmentAsCharStar = XMLString::transcode(fragment);
+    ArrayJanitor<char>  janBuf3(fragmentAsCharStar);
+
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
+
+    //
+    // Set up a socket.
+    //
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
-    char                obuf[1024];  // URL's should be < 1018 bytes.
 
 
     if ((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL)
@@ -181,21 +170,101 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         ThrowXML(NetAccessorException,
                  XMLExcepts::NetAcc_ConnSocket);
     }
-    
-    // Now you can simply read and write from/to the socket.
 
-    sprintf(obuf, "GET %s\n\n", uriAsCharStar);
-    int lent = strlen(obuf);
+
+    // The port is open and ready to go.
+    // Build up the http GET command to send to the server.
+    // To do:  We should really support http 1.1.  This implementation
+    //         is weak.
+    strcpy(fBuffer, "GET ");
+    strcat(fBuffer, pathAsCharStar);
+
+    if (fragmentAsCharStar != 0)
+    {
+        strcat(fBuffer, fragmentAsCharStar);
+    }
+    strcat(fBuffer, " HTTP/1.0\r\n");
+
+
+    strcat(fBuffer, "Host: ");
+    strcat(fBuffer, hostNameAsCharStar);
+    if (portNumber != 80)
+    {
+        int i = strlen(fBuffer);
+        _itoa(portNumber, fBuffer+i, 10);
+    }
+    strcat(fBuffer, "\r\n\r\n");
+
+    // Send the http request
+    int lent = strlen(fBuffer);
     int  aLent = 0;
-    if ((aLent = send(s, (const char *) obuf, lent, 0)) != lent)
+    if ((aLent = send(s, fBuffer, lent, 0)) != lent)
     {
         // Call WSAGetLastError() to get the error number.
         ThrowXML(NetAccessorException,
                  XMLExcepts::NetAcc_WriteSocket);
     }
 
-    fSocketHandle = (unsigned int) s;
 
+    //
+    // get the response, check the http header for errors from the server.
+    //
+    aLent = recv(s, fBuffer, sizeof(fBuffer)-1, 0);
+    if (aLent == SOCKET_ERROR || aLent == 0)
+    {
+        // Call WSAGetLastError() to get the error number.
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+    }
+
+    fBufferEnd = fBuffer+aLent;
+    *fBufferEnd = 0;
+
+    // Find the break between the returned http header and any data.
+    //  (Delimited by a blank line)
+    // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
+    //
+    fBufferPos = strstr(fBuffer, "\r\n\r\n");
+    if (fBufferPos != 0)
+    {
+        fBufferPos += 4;
+        *(fBufferPos-2) = 0;
+    }
+    else
+    {
+        fBufferPos = strstr(fBuffer, "\n\n");
+        if (fBufferPos != 0)
+        {
+            fBufferPos += 2;
+            *(fBufferPos-1) = 0;
+        }
+        else
+            fBufferPos = fBufferEnd;
+    }
+
+    // Make sure the header includes an HTTP 200 OK response.
+    //
+    char *p = strstr(fBuffer, "HTTP");
+    if (p == 0) 
+    {
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+    }
+
+    p = strchr(p, ' ');
+    if (p == 0) 
+    {
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+    }
+    
+    int httpResponse = atoi(p);
+    if (httpResponse != 200)
+    {
+        // Most likely a 404 Not Found error.
+        //   Should recognize and handle the forwarding responses.
+        //
+        ThrowXML(NetAccessorException, XMLExcepts::File_CouldNotOpenFile);
+    }
+
+    fSocketHandle = (unsigned int) s;
 }
 
 
@@ -208,28 +277,34 @@ BinHTTPURLInputStream::~BinHTTPURLInputStream()
 
 
 //
-// Here we will not maintain any local buffer. We will read directly
-// into the buffer that is passed as the parameter. The scanner always
-// requests for more input in chunks of size 32Kbytes.
+//  readBytes
 //
-
 unsigned int BinHTTPURLInputStream::readBytes(XMLByte* const    toFill
                                     , const unsigned int    maxToRead)
 {
-    unsigned int  retval = 0;
-
-    int lent = recv((SOCKET) fSocketHandle, (char *) toFill, maxToRead, 0);
-
-    if (lent == SOCKET_ERROR)
+    unsigned int len = fBufferEnd - fBufferPos;
+    if (len > 0)
     {
-        // Call WSAGetLastError() to get the error number.
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        // If there's any data left over in the buffer into which we first
+        //   read from the server (to get the http header), return that.
+        if (len > maxToRead)
+            len = maxToRead;
+        memcpy(toFill, fBufferPos, len);
+        fBufferPos += len;
     }
     else
     {
-        retval = lent;
-        fBytesProcessed += retval;
+        // There was no data in the local buffer.
+        // Read some from the socket, straight into our caller's buffer.
+        //
+        len = recv((SOCKET) fSocketHandle, (char *) toFill, maxToRead, 0);
+        if (len == SOCKET_ERROR)
+        {
+            // Call WSAGetLastError() to get the error number.
+            ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+        }
     }
-
-    return retval;
+    
+    fBytesProcessed += len;
+    return len;
 }
