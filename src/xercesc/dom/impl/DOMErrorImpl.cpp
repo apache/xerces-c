@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/02 14:33:13  amassari
+ * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
+ *
  * Revision 1.6  2003/09/04 14:38:25  gareth
  * Fix for bug #22008. Removed the ability to adopt the DOMObject.
  *
@@ -139,7 +142,7 @@ void DOMErrorImpl::setLocation(DOMLocator* const location)
     fLocation = location;
 }
 
-void DOMErrorImpl::setRelatedException(void* exception) const
+void DOMErrorImpl::setRelatedException(void* exc) const
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }

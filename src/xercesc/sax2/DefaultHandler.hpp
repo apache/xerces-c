@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/02 14:33:13  amassari
+ * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
+ *
  * Revision 1.5  2002/11/04 14:55:45  tng
  * C++ Namespace Support.
  *
@@ -412,13 +415,13 @@ public:
     * for each error, such as inserting the message in a log file or
     * printing it to the console.</p>
     *
-    * @param exception The warning information encoded as an exception.
+    * @param exc The warning information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#warning
     * @see SAXParseException#SAXParseException
     */
-    virtual void error(const SAXParseException& exception);
+    virtual void error(const SAXParseException& exc);
 
   /**
     * Report a fatal XML parsing error.
@@ -431,13 +434,13 @@ public:
     * method is invoked, since the document is no longer reliable, and
     * the parser may no longer report parsing events.</p>
     *
-    * @param exception The error information encoded as an exception.
+    * @param exc The error information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#fatalError
     * @see SAXParseException#SAXParseException
     */
-    virtual void fatalError(const SAXParseException& exception);
+    virtual void fatalError(const SAXParseException& exc);
 
   /**
     * Receive notification of a parser warning.
@@ -447,13 +450,13 @@ public:
     * for each warning, such as inserting the message in a log file or
     * printing it to the console.</p>
     *
-    * @param exception The warning information encoded as an exception.
+    * @param exc The warning information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#warning
     * @see SAXParseException#SAXParseException
     */
-    virtual void warning(const SAXParseException& exception);
+    virtual void warning(const SAXParseException& exc);
 
     /**
     * Reset the Error handler object on its reuse
@@ -732,9 +735,9 @@ inline void DefaultHandler::error(const SAXParseException&)
 {
 }
 
-inline void DefaultHandler::fatalError(const SAXParseException& exception)
+inline void DefaultHandler::fatalError(const SAXParseException& exc)
 {
-    throw exception;
+    throw exc;
 }
 
 inline void

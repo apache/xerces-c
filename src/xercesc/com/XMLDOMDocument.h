@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/02 14:33:13  amassari
+ * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
+ *
  * Revision 1.5  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -206,9 +209,9 @@ END_MSG_MAP()
 	STDMETHOD(put_ontransformnode)(VARIANT newVal);
 
 	// Error handling
-	virtual void warning(const SAXParseException& exception);
-	virtual void error(const SAXParseException& exception);
-    virtual void fatalError(const SAXParseException& exception);
+	virtual void warning(const SAXParseException& exc);
+	virtual void error(const SAXParseException& exc);
+    virtual void fatalError(const SAXParseException& exc);
 
 	bool IsAbort() const { return m_bAbort; }
 

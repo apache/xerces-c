@@ -178,31 +178,31 @@ void CXMLDOMDocument::FinalRelease()
 	DestroyWindow();
 }
 
-void CXMLDOMDocument::warning(const SAXParseException& exception)
+void CXMLDOMDocument::warning(const SAXParseException& exc)
 {
 	// ignore warnings
 }
 
-void CXMLDOMDocument::error(const SAXParseException& exception)
+void CXMLDOMDocument::error(const SAXParseException& exc)
 {
 	m_pParseError->SetData(1,
-						   exception.getSystemId(),
-						   exception.getMessage(),
+						   exc.getSystemId(),
+						   exc.getMessage(),
 						   _T(""),
-						   exception.getLineNumber(),
-						   exception.getColumnNumber(),
+						   exc.getLineNumber(),
+						   exc.getColumnNumber(),
 						   0);
 	m_bParseError = true;
 }
 
-void CXMLDOMDocument::fatalError(const SAXParseException& exception)
+void CXMLDOMDocument::fatalError(const SAXParseException& exc)
 {
 	m_pParseError->SetData(1,
-						   exception.getSystemId(),
-						   exception.getMessage(),
+						   exc.getSystemId(),
+						   exc.getMessage(),
 						   _T(""),
-						   exception.getLineNumber(),
-						   exception.getColumnNumber(),
+						   exc.getLineNumber(),
+						   exc.getColumnNumber(),
 						   0);
 	m_bParseError = true;
 }

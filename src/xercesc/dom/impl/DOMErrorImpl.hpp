@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/02 14:33:13  amassari
+ * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
+ *
  * Revision 1.8  2003/09/04 14:38:25  gareth
  * Fix for bug #22008. Removed the ability to adopt the DOMObject.
  *
@@ -209,11 +212,11 @@ public:
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
-     * @param exception the related exception to set.
+     * @param exc the related exception to set.
      * @see   getRelatedException
      * @since DOM Level 3
      */
-    virtual void setRelatedException(void* exception) const;
+    virtual void setRelatedException(void* exc) const;
 
     virtual void setType(const XMLCh* type);
 
