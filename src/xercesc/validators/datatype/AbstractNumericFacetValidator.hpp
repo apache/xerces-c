@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -111,6 +114,11 @@ public:
 	//@}
 
 	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(AbstractNumericFacetValidator)
 
 protected:
 
@@ -204,6 +212,9 @@ private:
     void inspectFacetBase();
 
     void inheritFacet();
+
+    XMLNumber*          readNumber(XMLNumber::NumberType   numType
+                                 , XSerializeEngine&       serEng);
 
 };
 

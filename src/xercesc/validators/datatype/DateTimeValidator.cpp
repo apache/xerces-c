@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.9  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -369,6 +372,30 @@ void DateTimeValidator::setEnumeration()
     for ( int i = 0; i < enumLength; i++)
         fEnumeration->insertElementAt(parse(fStrEnumeration->elementAt(i)), i);
 
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(DateTimeValidator)
+
+void DateTimeValidator::serialize(XSerializeEngine& serEng)
+{
+    /***
+     *
+     * Note: All its derivatives share the same number type, that is
+     *       XMLNumber::DateTime, so this class would write it.
+     ***/
+
+    if (serEng.isStoring())
+    {
+        serEng<<(int) XMLNumber::DateTime;
+    }
+
+    AbstractNumericFacetValidator::serialize(serEng);
+
+    //fDateTime can be instantiated during checkContent(), so don't serialize it.
 }
 
 XERCES_CPP_NAMESPACE_END

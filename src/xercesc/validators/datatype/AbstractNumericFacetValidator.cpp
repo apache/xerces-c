@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.12  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -120,6 +123,14 @@
 #include <xercesc/validators/datatype/AbstractNumericFacetValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+
+//since we need to dynamically created each and every derivatives 
+//during deserialization by XSerializeEngine>>Derivative, we got
+//to include all hpp
+#include <xercesc/util/XMLFloat.hpp>
+#include <xercesc/util/XMLDouble.hpp>
+#include <xercesc/util/XMLBigDecimal.hpp>
+#include <xercesc/util/XMLDateTime.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -854,6 +865,182 @@ void AbstractNumericFacetValidator::inheritFacet()
 const RefArrayVectorOf<XMLCh>* AbstractNumericFacetValidator::getEnumString() const
 {
 	return (fEnumerationInherited? getBaseValidator()->getEnumString() : fStrEnumeration );
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(AbstractNumericFacetValidator)
+
+/***
+ *  This dv needs to serialize/deserialize four boundary data members
+ *  which are derivatives of XMLlNumber.
+ *  The derivatives of this class, namely, Deciamldv, Doubledv, Floatdv and
+ *  DateTimedv needs to write a typeEnum into the binary data stream, so
+ *  during loading, this method reads the typeEnum first, and then instantiate
+ *  the right type of objects, say XMLDouble, XMLFloat, XMLBigDecimal and 
+ *  XMLDateTime.
+ *
+ *  
+ ***/
+void AbstractNumericFacetValidator::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+
+        DatatypeValidator::serialize(serEng);
+
+        serEng<<fMaxInclusiveInherited;
+        serEng<<fMaxExclusiveInherited;
+        serEng<<fMinInclusiveInherited;
+        serEng<<fMinExclusiveInherited;
+        serEng<<fEnumerationInherited;
+ 
+        // need not write type info for the XMLNumber since
+        // the derivative class has done that
+        serEng<<fMaxInclusive;
+        serEng<<fMaxExclusive;
+        serEng<<fMinInclusive;
+        serEng<<fMinExclusive;
+
+        /***
+         * Serialize RefArrayVectorOf<XMLCh>
+         ***/
+        if (fStrEnumeration)
+        {
+            int enumLength = fStrEnumeration->size();
+            serEng<<enumLength;
+
+            for ( int i = 0 ; i < enumLength; i++)
+            {            
+                serEng.writeString(fStrEnumeration->elementAt(i));
+            }
+        }
+        else
+        {
+            serEng<<0;
+        }
+
+        /***
+         * Serialize RefVectorOf<XMLNumber>
+         ***/
+        if (fEnumeration)
+        {           
+            int enumLength = fEnumeration->size();
+            serEng<<enumLength;
+
+            for ( int i=0; i < enumLength; i++)
+            {
+                serEng<<fEnumeration->elementAt(i);
+            }
+        }
+        else
+        {
+            serEng<<0;
+        }
+    
+    }
+    else
+    {
+        // Read the number type info for the XMLNumber FIRST!!!
+        int                     nType;
+        XMLNumber::NumberType   numType;
+        serEng>>nType;
+        numType = (XMLNumber::NumberType) nType;
+
+        DatatypeValidator::serialize(serEng);
+
+        serEng>>fMaxInclusiveInherited;
+        serEng>>fMaxExclusiveInherited;
+        serEng>>fMinInclusiveInherited;
+        serEng>>fMinExclusiveInherited;
+        serEng>>fEnumerationInherited;
+
+        fMaxInclusive=readNumber(numType, serEng);
+        fMaxExclusive=readNumber(numType, serEng);
+        fMinInclusive=readNumber(numType, serEng);
+        fMinExclusive=readNumber(numType, serEng);
+
+        /***
+          *  Deserialize RefArrayVectorOf<XMLCh>         
+         ***/
+        int enumLength = 0;;
+        serEng>>enumLength;
+
+        if (enumLength)
+        {
+            if (!fStrEnumeration)
+            {
+                fStrEnumeration = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
+            }
+
+            for ( int i = 0; i < enumLength; i++)
+            {
+                XMLCh* enumVal;
+                serEng.readString(enumVal);
+                fStrEnumeration->addElement(enumVal);
+            }
+        }
+
+        /***
+          *  Deserialize RefVectorOf<XMLNumber>         
+         ***/
+        enumLength = 0;;
+        serEng>>enumLength;
+
+        if (enumLength)
+        {
+            if (!fEnumeration)
+            {
+                fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(8, true, fMemoryManager);
+            }
+
+            for ( int i = 0; i < enumLength; i++)
+            {
+                fEnumeration->addElement(readNumber(numType, serEng));
+            }
+        }
+
+    }
+
+}
+
+XMLNumber* AbstractNumericFacetValidator::readNumber(XMLNumber::NumberType  numType
+                                                   , XSerializeEngine&      serEng)
+{
+
+    switch((XMLNumber::NumberType) numType)
+    {
+    case XMLNumber::Float: 
+        XMLFloat* floatNum;
+        serEng>>floatNum;
+        return floatNum;
+        break;
+    case XMLNumber::Double:
+        XMLDouble* doubleNum;
+        serEng>>doubleNum;
+        return doubleNum;
+        break;
+    case XMLNumber::BigDecimal: 
+        XMLBigDecimal* bigdecimalNum;
+        serEng>>bigdecimalNum;
+        return bigdecimalNum;
+        break;
+    case XMLNumber::DateTime: 
+        XMLDateTime* datetimeNum;
+        serEng>>datetimeNum;
+        return datetimeNum;
+        break;
+    case XMLNumber::UnKnown:
+        return 0;
+        break;
+    default: //we treat this same as UnKnown
+        return 0;
+        break;
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

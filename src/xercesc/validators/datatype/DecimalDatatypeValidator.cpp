@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.12  2003/08/14 03:00:11  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -602,6 +605,32 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
     {
        ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage());
     }
+
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(DecimalDatatypeValidator)
+
+void DecimalDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    /***
+     * Note: 
+     *
+     *     During storing, we need write the specific number
+     *     type info before calling base::serialize().
+     *
+     *     While loading, we do nothing here
+     ***/
+
+    if (serEng.isStoring())
+    {
+        serEng<<(int) (XMLNumber::BigDecimal);
+    }
+
+    AbstractNumericValidator::serialize(serEng);
 
 }
 

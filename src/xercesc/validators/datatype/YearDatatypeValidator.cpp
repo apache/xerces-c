@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.7  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -156,6 +159,17 @@ XMLDateTime* YearDatatypeValidator::parse(const XMLCh* const content)
 void YearDatatypeValidator::parse(XMLDateTime* const pDate)
 {
     pDate->parseYear();
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(YearDatatypeValidator)
+
+void YearDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    DateTimeValidator::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END

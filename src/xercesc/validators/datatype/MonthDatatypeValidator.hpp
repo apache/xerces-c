@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.5  2003/08/14 03:00:11  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -121,6 +124,11 @@ public:
         , const int finalSet
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(MonthDatatypeValidator)
 
 protected:
 

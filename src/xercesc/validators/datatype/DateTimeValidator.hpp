@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.4  2003/08/14 03:00:11  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -103,6 +106,11 @@ public:
 
     virtual int  compare(const XMLCh* const value1
                        , const XMLCh* const value2);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(DateTimeValidator)
 
 protected:
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -319,6 +322,32 @@ void DoubleDatatypeValidator::checkContent( const XMLCh* const content, bool asB
     {
        ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage());
     }
+
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(DoubleDatatypeValidator)
+
+void DoubleDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    /***
+     * Note: 
+     *
+     *     During storing, we need write the specific number
+     *     type info before calling base::serialize().
+     *
+     *     While loading, we do nothing here
+     ***/
+
+    if (serEng.isStoring())
+    {
+        serEng<<(int) (XMLNumber::Double);
+    }
+
+    AbstractNumericValidator::serialize(serEng);
 
 }
 

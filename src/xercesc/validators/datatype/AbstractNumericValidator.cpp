@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/10/02 19:21:06  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.5  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -177,6 +180,32 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
        ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
     }
 
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(AbstractNumericValidator)
+
+void AbstractNumericValidator::serialize(XSerializeEngine& serEng)
+{
+    AbstractNumericFacetValidator::serialize(serEng);
+
+    /***
+     * Need not to do anything else here
+     *
+     * Note: its derivatives, Doubledv, Floatdv and Decimaldv writes
+     *       number type info into the binary data stream to be read
+     *       by AbstractNumericFacetVaildator during loading, therefore
+     *       this class can NOT write/read anything into/from the binary
+     *       data stream.
+     *
+     *       Later on, if this class has to write/read something into/from
+     *       the binary data stream, we need to add a numberType data
+     *       to XMLNumber and let AbstractNumericFacetValidator to write/read
+     *       this number type info.
+     ***/
 }
 
 XERCES_CPP_NAMESPACE_END
