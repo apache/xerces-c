@@ -199,6 +199,12 @@ DOMDocument *DOMImplementationImpl::createDocument()
         return new DOMDocumentImpl();
 }
 
+//Introduced in DOM Level 3
+DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh* feature){
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
 //
 //  DOMImplementation::getImplementation.  DOMImplementation is supposed to
 //                                              be a pure interface class.  This one static
@@ -207,7 +213,6 @@ DOMImplementation *DOMImplementation::getImplementation()
 {
     return (DOMImplementation*) DOMImplementationImpl::getDOMImplementationImpl();
 }
-
 
 // ------------------------------------------------------------
 // DOMImplementationLS Virtual interface

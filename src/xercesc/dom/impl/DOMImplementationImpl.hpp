@@ -97,6 +97,9 @@ public:
                                                const XMLCh *qualifiedName,
                                                DOMDocumentType *doctype);
 
+    // DOM Level 3
+    virtual DOMImplementation*  getInterface(const XMLCh* feature);
+
     // Non-standard extension
     virtual DOMDocument*        createDocument();
 

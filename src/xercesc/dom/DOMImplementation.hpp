@@ -200,6 +200,32 @@ public:
                                         DOMDocumentType *doctype) = 0;
 
     //@}
+    // -----------------------------------------------------------------------
+    // Functions introduced in DOM Level 3
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
+    //@{
+    /**
+     * This method makes available a <code>DOMImplementation</code>'s
+     * specialized interface (see ).
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param feature The name of the feature requested (case-insensitive).
+     * @return Returns an alternate <code>DOMImplementation</code> which
+     *   implements the specialized APIs of the specified feature, if any,
+     *   or <code>null</code> if there is no alternate
+     *   <code>DOMImplementation</code> object which implements interfaces
+     *   associated with that feature. Any alternate
+     *   <code>DOMImplementation</code> returned by this method must
+     *   delegate to the primary core <code>DOMImplementation</code> and not
+     *   return results inconsistent with the primary
+     *   <code>DOMImplementation</code>
+     * @since DOM Level 3
+     */
+    virtual DOMImplementation* getInterface(const XMLCh* feature) = 0;
+
+    //@}
 
     // -----------------------------------------------------------------------
     // Non-standard extension
