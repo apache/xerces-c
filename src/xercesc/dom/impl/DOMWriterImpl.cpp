@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.45  2003/11/24 12:27:57  gareth
+ * added in support for xml-declaration feature.
+ *
  * Revision 1.44  2003/11/24 11:10:58  gareth
  * Fix for bug 22917. Patch by Adam Heinz .
  *
@@ -232,6 +235,7 @@ static const int SPLIT_CDATA_SECTIONS_ID          = 0x5;
 static const int VALIDATION_ID                    = 0x6;
 static const int WHITESPACE_IN_ELEMENT_CONTENT_ID = 0x7;
 static const int BYTE_ORDER_MARK_ID               = 0x8;
+static const int XML_DECLARATIION                 = 0x9;
 
 //    feature                      true                       false
 // ================================================================================
@@ -259,7 +263,8 @@ static const bool  featuresSupported[] = {
     true,  true,  // split-cdata-sections
     false, true,  // validation
     true,  false, // whitespace-in-element-content
-    true,  true   // byte-order-mark
+    true,  true,   // byte-order-mark
+    true,  true   // xml-declaration
 };
 
 // default end-of-line sequence
@@ -509,6 +514,8 @@ DOMWriterImpl::DOMWriterImpl(MemoryManager* const manager)
     setFeature(VALIDATION_ID,                    false);
     setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
     setFeature(BYTE_ORDER_MARK_ID,               false);
+    setFeature(XML_DECLARATIION,                 true );
+
 }
 
 bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
@@ -886,19 +893,19 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             //[80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' | "'" EncName
             //[32] SDDecl       ::= S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"'))
             //
-            // We always print out the xmldecl no matter whether it is
-            // present in the original XML instance document or not.
-            //
-            const XMLCh* versionNo = (docu->getVersion()) ? docu->getVersion() : gXMLDecl_ver10;
-            *fFormatter << gXMLDecl_VersionInfo << versionNo << gXMLDecl_separator;
 
-            // use the encoding resolved in initSession()
-            *fFormatter << gXMLDecl_EncodingDecl << fEncodingUsed << gXMLDecl_separator;
+            if (getFeature(XML_DECLARATIION)) {
+                const XMLCh* versionNo = (docu->getVersion()) ? docu->getVersion() : gXMLDecl_ver10;
+                *fFormatter << gXMLDecl_VersionInfo << versionNo << gXMLDecl_separator;
 
-            const XMLCh* st = (docu->getStandalone())? XMLUni::fgYesString : XMLUni::fgNoString;
-            *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
+                // use the encoding resolved in initSession()
+                *fFormatter << gXMLDecl_EncodingDecl << fEncodingUsed << gXMLDecl_separator;
 
-            *fFormatter << gXMLDecl_endtag;
+                const XMLCh* st = (docu->getStandalone())? XMLUni::fgYesString : XMLUni::fgNoString;
+                *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
+                
+                *fFormatter << gXMLDecl_endtag;
+            }
 
             DOMNodeSPtr child = nodeToWrite->getFirstChild();
             while( child != 0)
@@ -1455,6 +1462,9 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
         featureId = WHITESPACE_IN_ELEMENT_CONTENT_ID;
     else if (XMLString::equals(featName, XMLUni::fgDOMWRTBOM))
         featureId = BYTE_ORDER_MARK_ID;
+    else if (XMLString::equals(featName, XMLUni::fgDOMXMLDeclaration))
+        featureId = XML_DECLARATIION;
+
 
     //feature name not resolvable
     if (featureId == INVALID_FEATURE_ID)

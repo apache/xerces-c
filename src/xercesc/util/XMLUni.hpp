@@ -288,6 +288,8 @@ public :
     static const XMLCh fgDOMWRTValidation[];
     static const XMLCh fgDOMWRTWhitespaceInElementContent[];
     static const XMLCh fgDOMWRTBOM[];
+    static const XMLCh fgDOMXMLDeclaration[];
+
 
     // Locale
     static const char  fgXercescDefaultLocale[];

@@ -1388,6 +1388,14 @@ const XMLCh XMLUni::fgDOMWRTBOM[] =
     chLatin_m, chLatin_a, chLatin_r, chLatin_k, chNull
 };
 
+//xml-declaration
+const XMLCh XMLUni::fgDOMXMLDeclaration[] =
+{ 
+    chLatin_x, chLatin_m, chLatin_l, chDash, chLatin_d, chLatin_e, chLatin_c,
+    chLatin_l, chLatin_a, chLatin_r, chLatin_a, chLatin_t, chLatin_i, chLatin_o,
+    chLatin_n, chNull 
+};
+
 // en_US
 const char XMLUni::fgXercescDefaultLocale[] = "en_US";
 
