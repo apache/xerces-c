@@ -1025,8 +1025,6 @@ DOMNode* DOMRangeImpl::nextNode(const DOMNode* node, bool visitChildren) const
             return result;
         } else {
             parent = parent->getParentNode();
-            if (parent == fEndContainer) return parent;
-
         }
 
     }
