@@ -66,18 +66,22 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <errno.h>
+
+#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/TranscodingException.hpp>
+
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>
-#include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/TransService.hpp>
-#include <xercesc/util/TranscodingException.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLUri.hpp>
 #include <xercesc/internal/XMLReader.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -667,6 +671,50 @@ void XMLString::subString(char* const targetStr, const char* const srcStr
 
     targetStr[copySize] = 0;
 }
+
+bool XMLString::isValidNOTATION(const XMLCh*         const name
+                              ,       MemoryManager* const manager )
+{
+    //
+    //  NOTATATION: <URI>:<localPart>
+    //  where URI is optional
+    //        ':' and localPart must be present
+    //
+    int nameLen = XMLString::stringLen(name);
+    int colPos = XMLString::lastIndexOf(name, chColon);
+
+    if ((colPos == -1)         ||      // no ':'
+        (colPos == nameLen - 1)  )     // <URI>':'
+        return false;
+
+    // Examine URI
+    if (colPos > 0)
+    {
+        XMLCh* temp = (XMLCh*) &(name[colPos]);
+        *temp = 0;
+
+        try
+        {            
+            XMLUri  newURI(name, manager); // no relative uri support here
+            *temp = chColon;
+        }
+        catch(const OutOfMemoryException&)
+        {
+            *temp = chColon;
+            return false;
+        }
+        catch (...)
+        {
+            *temp = chColon;
+            return false;
+        }
+    }
+
+    // Examine localpart
+    return XMLString::isValidNCName(&(name[colPos+1]));
+
+}
+
 
 /**
   * Deprecated: isValidNCName

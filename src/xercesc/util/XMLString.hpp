@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/08/11 16:07:27  peiyongz
+ * isValidNOTATION
+ *
  * Revision 1.25  2004/05/25 18:11:32  peiyongz
  * removeChar() added
  *
@@ -1023,6 +1026,16 @@ public:
       * @return Returns the length of the string
       */
     static unsigned int stringLen(const XMLCh* const src);
+
+    /**
+      *
+      * Checks whether an name is a valid NOTATION according to XML 1.0
+      * @param name    The string to check its NOTATION validity
+      * @param manager The memory manager
+      * @return Returns true if name is NOTATION valid, otherwise false
+      */
+    static bool isValidNOTATION(const XMLCh*         const name
+                              ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
       * Deprecated: please use XMLChar1_0::isValidNCName
