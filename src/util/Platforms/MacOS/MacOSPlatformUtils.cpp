@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/09/04 16:31:15  jberry
+ * Fix atomic increment & decrement to return value after operation rather than before. Thanks to Michael Crawford.
+ *
  * Revision 1.10  2000/08/14 17:51:48  jpolast
  * spelling updates (pointed about by Jesse Pelton)
  *
@@ -673,15 +676,23 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
 }
 
 
+//
+//	Atomic Increment and Decrement
+//
+//	Apple's routines return the value as it was before the
+//	operation, while these routines want to return it as it
+//	is after. So we perform the translation before returning
+//	the value.
+//
 int XMLPlatformUtils::atomicIncrement(int &location)
 {
-    return IncrementAtomic(reinterpret_cast<long*>(&location));
+    return IncrementAtomic(reinterpret_cast<long*>(&location)) + 1;
 }
 
 
 int XMLPlatformUtils::atomicDecrement(int &location)
 {
-    return DecrementAtomic(reinterpret_cast<long*>(&location));
+    return DecrementAtomic(reinterpret_cast<long*>(&location)) - 1;
 }
 
 
