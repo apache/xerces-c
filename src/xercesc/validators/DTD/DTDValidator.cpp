@@ -522,15 +522,25 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
         //      valid for their type.
         //  3) That for any notation types, that their lists
         //      of possible values refer to declared notations.
+        //
         //  4) XML1.0(3rd edition)
-        //     No Notation on Empty Element
-        //     For compatibility, an attribute of type NOTATION MUST NOT 
-        //     be declared on an element declared EMPTY.
+        //
+        //     Validity constraint: One Notation Per Element Type
+        //     An element type MUST NOT have more than one NOTATION attribute specified.
+        //
+        //     Validity constraint: No Notation on Empty Element
+        //     For compatibility, an attribute of type NOTATION MUST NOT be declared on an element declared EMPTY.
+        //
+        //     Validity constraint: No Duplicate Tokens
+        //     The notation names in a single NotationType attribute declaration, as well as 
+        //     the NmTokens in a single Enumeration attribute declaration, MUST all be distinct.
         //
 
         XMLAttDefList& attDefList = curElem.getAttDefList();
         bool seenId = false;
+        bool seenNOTATION = false;
         bool elemEmpty = (curElem.getModelType() == DTDElementDecl::Empty);
+
         for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
         {
             const XMLAttDef& curAttDef = attDefList.getAttDef(i);
@@ -551,68 +561,50 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
             }
              else if (curAttDef.getType() == XMLAttDef::Notation)
             {
+                if (seenNOTATION)
+                {
+                    emitError
+                    (
+                        XMLValid::ElemOneNotationAttr
+                      , curElem.getFullName()
+                    );
+
+                    break;
+                }
+
+                seenNOTATION = true;
+
                 // no notation attribute on empty element
                 if (elemEmpty)
                 {
                     emitError
                    (
                       XMLValid::EmptyElemNotationAttr
-                    , curElem.getElementName()->getRawName()
+                    , curElem.getFullName()
                     , curAttDef.getFullName()
                     );
+
+                    break;
                 }
 
+                //go through enumeration list to check
+                // distinct 
+                // notation declaration
                 if (curAttDef.getEnumeration())
                 {
-
-                    //
-                    //  We need to verify that all of its possible values
-                    //  (in the enum list) refer to valid notations.
-                    //
-                    XMLCh* list = XMLString::replicate(curAttDef.getEnumeration(), getScanner()->getMemoryManager());
-                    ArrayJanitor<XMLCh> janList(list, getScanner()->getMemoryManager());
-
-                    //
-                    //  Search forward for a space or a null. If a null,
-                    //  we are done. If a space, cap it and look it up.
-                    //
-                    bool    breakFlag = false;
-                    XMLCh*  listPtr = list;
-                    XMLCh*  lastPtr = listPtr;
-                    while (true)
-                    {
-                        while (*listPtr && (*listPtr != chSpace))
-                            listPtr++;
-
-                        //
-                        //  If at the end, indicate we need to break after
-                        //  this one. Else, cap it off here.
-                        //
-                        if (!*listPtr)
-                            breakFlag = true;
-                        else
-                            *listPtr = chNull;
-
-                        if (!fDTDGrammar->getNotationDecl(lastPtr))
-                        {
-                            emitError
-                            (
-                                XMLValid::UnknownNotRefAttr
-                                , curAttDef.getFullName()
-                                , lastPtr
-                            );
-                        }
-
-                        // Break out if we hit the end last time
-                        if (breakFlag)
-                            break;
-
-                        // Else move upwards and try again
-                        listPtr++;
-                        lastPtr = listPtr;
-                    }
+                    checkTokenList(curAttDef, true);
                 }
              }
+             else if (curAttDef.getType() == XMLAttDef::Enumeration )
+             {
+                //go through enumeration list to check
+                // distinct only
+                if (curAttDef.getEnumeration())
+                {
+                    checkTokenList(curAttDef, false);
+                }
+             }
+
             // If it has a default/fixed value, then validate it
             if (validateDefAttr && curAttDef.getValue())
             {
@@ -658,6 +650,71 @@ void DTDValidator::postParseValidation()
     //  ID/IDREF validation, since that is the same no matter what kind of
     //  validator.
     //
+}
+
+//
+//  We need to verify that all of its possible values
+//  (in the enum list) 
+//   is distinct and
+//   refer to valid notations if toValidateNotation is set on
+//
+void DTDValidator::checkTokenList(const XMLAttDef&  curAttDef
+                                ,       bool        toValidateNotation)
+{
+
+    XMLCh* list = XMLString::replicate(curAttDef.getEnumeration(), getScanner()->getMemoryManager());
+    ArrayJanitor<XMLCh> janList(list, getScanner()->getMemoryManager());
+
+    //
+    //  Search forward for a space or a null. If a null,
+    //  we are done. If a space, cap it and look it up.
+    //
+    bool    breakFlag = false;
+    XMLCh*  listPtr = list;
+    XMLCh*  lastPtr = listPtr;
+    while (true)
+    {
+        while (*listPtr && (*listPtr != chSpace))
+            listPtr++;
+
+        //
+        //  If at the end, indicate we need to break after
+        //  this one. Else, cap it off here.
+        //
+        if (!*listPtr)
+            breakFlag = true;
+        else
+            *listPtr++ = chNull;
+
+        //distinction check
+        //there should be no same token found in the remaining list
+        if (XMLString::isInList(lastPtr, listPtr))
+        {
+            emitError
+                (
+                XMLValid::AttrDupToken
+                , curAttDef.getFullName()
+                , lastPtr
+                );
+        }
+
+        if (toValidateNotation && !fDTDGrammar->getNotationDecl(lastPtr))
+        {
+            emitError
+                (
+                XMLValid::UnknownNotRefAttr
+                , curAttDef.getFullName()
+                , lastPtr
+                );
+        }
+
+        // Break out if we hit the end last time
+        if (breakFlag)
+            break;
+
+        // Else move upwards and try again
+        lastPtr = listPtr;
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

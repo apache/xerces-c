@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/04/21 18:00:13  peiyongz
+ * xml1.0 3rd edition VC: no more than one attibute of notation type per element,
+ * distinct token for attribute of notation/enumerated type
+ *
  * Revision 1.7  2004/01/29 11:52:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -213,6 +217,12 @@ private:
     // -----------------------------------------------------------------------
     DTDValidator(const DTDValidator &);
     DTDValidator& operator = (const  DTDValidator&);
+
+    // -----------------------------------------------------------------------
+    //  Helper
+    // -----------------------------------------------------------------------
+    void   checkTokenList(const XMLAttDef&  attDef
+                        ,       bool        toValidateNotation);
 
     // -----------------------------------------------------------------------
     //  Private data members
