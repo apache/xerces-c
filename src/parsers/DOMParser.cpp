@@ -97,7 +97,7 @@ DOMParser::DOMParser(XMLValidator* const valToAdopt) :
 
 fErrorHandler(0)
 , fEntityResolver(0)
-, fExpandEntityReferences(false)
+, fCreateEntityReferenceNodes(false)
 , fToCreateXMLDeclTypeNode(false)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
@@ -492,7 +492,7 @@ void DOMParser::docPI(  const   XMLCh* const    target
 
 void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
-    if (fExpandEntityReferences == true)
+    if (fCreateEntityReferenceNodes == true)
     {
         fCurrentParent = fNodeStack->pop();
         fCurrentNode   = fCurrentParent;
@@ -665,7 +665,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 
 void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 {
-    if (fExpandEntityReferences == true)
+    if (fCreateEntityReferenceNodes == true)
     {
 		DOMString entName(entDecl.getName());
         DOM_EntityReference er = fDocument.createEntityReference(entName);
@@ -674,10 +674,20 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         fCurrentParent = er;
         fCurrentNode = er;
 
-		//this entityRef needs to be stored in Entity map too.
+		// this entityRef needs to be stored in Entity map too.
+        // We'd decide later whether the entity nodes should be created by a 
+        // separated method in parser or not. For now just stick it in if 
+        // the ref nodes are created
 		EntityImpl* entity = (EntityImpl*)fDocumentType->entities->getNamedItem(entName);
 		entity->setEntityRef((EntityReferenceImpl*)er.fImpl);
-		fDocumentType->entities->setNamedItem(entity);
+        bool owned = entity->isOwned();
+        if (owned)
+            entity->isOwned(false);
+        
+        fDocumentType->entities->setNamedItem(entity);
+        
+        if (entity->isOwned != owned)
+            entity->isOwned(owned);
     }
 }
 

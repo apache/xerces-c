@@ -249,6 +249,7 @@ public :
     bool getExitOnFirstFatalError() const;
 
     /** Get the 'expand entity references' flag.
+      * DEPRECATED Use getCreateEntityReferenceNodes() instead.
       *
       * This method returns the state of the parser's expand entity
       * references flag.
@@ -260,7 +261,26 @@ public :
       */
     bool getExpandEntityReferences() const;
 
-    /** Get the 'include ignorable whitespace' flag.
+    /** Get the 'include entity references' flag
+      *
+      * This flag  specifies whether the parser is
+      * creating entity reference nodes in the DOM tree being produced.
+      * When the 'create' flag is
+      * true, the DOM tree will contain entity reference nodes. 
+      * When the 'create' flag is false, no entity reference nodes
+      * are included in the DOM tree.
+      * <p>The replacement text
+      * of the entity is included in either case, either as a
+      * child of the Entity Reference node or in place at the location
+      * of the reference.
+      *
+      * @return  The state of the create entity reference node
+      *               flag.
+      * @see #setCreateEntityReferenceNodes
+      */
+    bool  getCreateEntityReferenceNodes()const;
+
+   /** Get the 'include ignorable whitespace' flag.
       *
       * This method returns the state of the parser's include ignorable
       * whitespace flag.
@@ -366,6 +386,7 @@ public :
 
     /** Set the 'expand entity references' flag
       *
+      * DEPRECATED.  USE setCreateEntityReferenceNodes instead.
       * This method allows the user to specify whether the parser should
       * expand all entity reference nodes. When the 'do expansion' flag is
       * true, the DOM tree does not have any entity reference nodes. It is
@@ -379,7 +400,25 @@ public :
       */
     void setExpandEntityReferences(const bool expand);
 
-    /** Set the 'include ignorable whitespace' flag
+     /** Set the 'include entity references' flag
+      *
+      * This method allows the user to specify whether the parser should
+      * create entity reference nodes in the DOM tree being produced.
+      * When the 'create' flag is
+      * true, the DOM tree constains entity reference nodes. 
+      * When the 'create' flag is false, no entity reference nodes
+      * are included in the DOM tree.
+      * <p>The replacement text
+      * of the entity is included in either case, either as a
+      * child of the Entity Reference node or in place at the location
+      * of the reference.
+      *
+      * @param create The new state of the create entity reference nodes
+      *               flag.
+      */
+    void setCreateEntityReferenceNodes(const bool create);
+
+   /** Set the 'include ignorable whitespace' flag
       *
       * This method allows the user to specify whether a validating parser
       * should include ignorable whitespaces as text nodes.  It has no effect
@@ -1179,10 +1218,8 @@ private :
     //  fErrorHandler
     //      The installed SAX error handler, if any. Null if none.
     //
-    //  fExpandEntityReference
-    //      Indicates whether entity reference nodes should be expanded to
-    //      its constituent text nodes or just created a single (end result)
-    //      text node.
+    //  fCreateEntityReferenceNode
+    //      Indicates whether entity reference nodes should be created.
     //
     //  fIncludeIgnorableWhitespace
     //      Indicates whether ignorable whiltespace should be added to
@@ -1227,7 +1264,7 @@ private :
     DOM_Document            fDocument;
     EntityResolver*         fEntityResolver;
     ErrorHandler*           fErrorHandler;
-    bool                    fExpandEntityReferences;
+    bool                    fCreateEntityReferenceNodes;
     bool                    fIncludeIgnorableWhitespace;
     ValueStackOf<DOM_Node>* fNodeStack;
     bool                    fParseInProgress;
@@ -1306,7 +1343,11 @@ inline const EntityResolver* DOMParser::getEntityResolver() const
 
 inline bool DOMParser::getExpandEntityReferences() const
 {
-    return fExpandEntityReferences;
+    return fCreateEntityReferenceNodes;
+}
+inline bool DOMParser::getCreateEntityReferenceNodes() const
+{
+    return fCreateEntityReferenceNodes;
 }
 
 inline bool DOMParser::getIncludeIgnorableWhitespace() const
@@ -1330,7 +1371,12 @@ inline bool DOMParser::getToCreateXMLDeclTypeNode() const
 // ---------------------------------------------------------------------------
 inline void DOMParser::setExpandEntityReferences(const bool expand)
 {
-    fExpandEntityReferences = expand;
+    fCreateEntityReferenceNodes = expand;
+}
+
+inline void DOMParser::setCreateEntityReferenceNodes(const bool create)
+{
+    fCreateEntityReferenceNodes = create;
 }
 
 inline void DOMParser::setIncludeIgnorableWhitespace(const bool include)
