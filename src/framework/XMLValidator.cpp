@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.12  2001/11/28 20:32:49  tng
+  * Do not increment the error count if it is a warning.
+  *
   * Revision 1.11  2001/10/24 23:46:52  peiyongz
   * [Bug 4342] fix the leak.
   *
@@ -176,9 +179,10 @@ static XMLMsgLoader& getMsgLoader()
 //
 void XMLValidator::emitError(const XMLValid::Codes toEmit)
 {
-    //	Track our error count
-    fScanner->incrementErrorCount();
-    
+    // Bump the error count if it is not a warning
+    if (XMLValid::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
+        fScanner->incrementErrorCount();
+
     //	Call error reporter if we have one
     if (fErrorReporter)
     {
@@ -233,9 +237,10 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
                             , const XMLCh* const    text3
                             , const XMLCh* const    text4)
 {
-    //	Track our error count
-    fScanner->incrementErrorCount();
-    
+    // Bump the error count if it is not a warning
+    if (XMLValid::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
+        fScanner->incrementErrorCount();
+
     //	Call error reporter if we have one
     if (fErrorReporter)
     {
@@ -293,9 +298,10 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
                             , const char* const     text3
                             , const char* const     text4)
 {
-    //	Track our error count
-    fScanner->incrementErrorCount();
-    
+    // Bump the error count if it is not a warning
+    if (XMLValid::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
+        fScanner->incrementErrorCount();
+
     //	Call error reporter if we have one
     if (fErrorReporter)
     {

@@ -1059,8 +1059,9 @@ void XMLScanner::resetURIStringPool() {
 //
 void XMLScanner::emitError(const XMLErrs::Codes toEmit)
 {
-    //	Bump the error count
-    incrementErrorCount();
+    // Bump the error count if it is not a warning
+    if (XMLErrs::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
+        incrementErrorCount();
 
     if (fErrorReporter)
     {
@@ -1110,8 +1111,9 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
                             , const XMLCh* const        text3
                             , const XMLCh* const        text4)
 {
-    //	Bump the error count
-    incrementErrorCount();
+    // Bump the error count if it is not a warning
+    if (XMLErrs::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
+        incrementErrorCount();
 
     if (fErrorReporter)
     {
@@ -1164,8 +1166,9 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
                             , const char* const         text3
                             , const char* const         text4)
 {
-    //	Bump the error count
-    incrementErrorCount();
+    // Bump the error count if it is not a warning
+    if (XMLErrs::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
+        incrementErrorCount();
 
     if (fErrorReporter)
     {
