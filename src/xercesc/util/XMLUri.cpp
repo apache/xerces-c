@@ -438,7 +438,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // string or a fragment (e.g. "?y" or "#s") -
         // see <http://www.ics.uci.edu/~fielding/url/test1.html> which
         // identified this as a bug in the RFC
-        if ((!fPath || XMLString::stringLen(fPath) == 0) &&
+        if ((!fPath || !*fPath) &&
             fScheme == 0 &&
             fHost == 0)
         {
@@ -483,7 +483,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         }
 
         // check for absolute path - RFC 2396 5.2 #5
-        if (XMLString::stringLen(fPath) > 0 &&
+        if ((fPath && *fPath) &&
             XMLString::startsWith(fPath, SINGLE_SLASH))
         {
             return;
@@ -654,13 +654,13 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     ArrayJanitor<XMLCh> portName(portStr);
     int port = -1;
 
-    if ((XMLString::stringLen(host) > 0) &&   // non empty host
+    if ((host && *host) &&   // non empty host
         (index != -1)                    &&   // ":" found
         (start < end)                     )   // ":" is not the last
     {
         XMLString::subString(portStr, &(uriSpec[start]), 0, end-start);
 
-        if (XMLString::stringLen(portStr) > 0)
+        if (portStr && *portStr)
         {
             try
             {
@@ -936,7 +936,7 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
 
     //sometimes we get passed a empty string rather than a null.
     //Other procedures rely on it being null
-    if(XMLString::stringLen(newUserInfo) > 0) {
+    if(newUserInfo && *newUserInfo) {
         fUserInfo = XMLString::replicate(newUserInfo);
     }
 
@@ -1246,7 +1246,7 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
     XMLCh* tmpAddr = XMLString::replicate(addrString);
     ArrayJanitor<XMLCh>  janName(tmpAddr);
     XMLString::trim(tmpAddr);
-    if ((XMLString::stringLen(tmpAddr) == 0) ||
+    if ((!tmpAddr || !*tmpAddr) ||
         (XMLString::stringLen(tmpAddr) > 255) )
         return false;
 
