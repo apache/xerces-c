@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/09/12 13:03:43  tng
+ * [Bug 3155] SAX2 does not offer progressive parse.
+ *
  * Revision 1.17  2001/08/02 19:00:46  tng
  * [Bug 1329] SAX2XMLReaderImpl leaks XMLBuffers.
  *
@@ -611,6 +614,61 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
     }
 }
 
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Progressive parse methods
+// ---------------------------------------------------------------------------
+bool SAX2XMLReaderImpl::parseFirst( const   XMLCh* const    systemId
+                            ,       XMLPScanToken&  toFill
+                            , const bool            reuseGrammar)
+{
+    //
+    //  Avoid multiple entrance. We cannot enter here while a regular parse
+    //  is in progress.
+    //
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+}
+
+bool SAX2XMLReaderImpl::parseFirst( const   char* const     systemId
+                            ,       XMLPScanToken&  toFill
+                            , const bool            reuseGrammar)
+{
+    //
+    //  Avoid multiple entrance. We cannot enter here while a regular parse
+    //  is in progress.
+    //
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+}
+
+bool SAX2XMLReaderImpl::parseFirst( const   InputSource&    source
+                            ,       XMLPScanToken&  toFill
+                            , const bool            reuseGrammar)
+{
+    //
+    //  Avoid multiple entrance. We cannot enter here while a regular parse
+    //  is in progress.
+    //
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    return fScanner->scanFirst(source, toFill, reuseGrammar);
+}
+
+bool SAX2XMLReaderImpl::parseNext(XMLPScanToken& token)
+{
+    return fScanner->scanNext(token);
+}
+
+void SAX2XMLReaderImpl::parseReset(XMLPScanToken& token)
+{
+    // Reset the scanner
+    fScanner->scanReset(token);
+}
 
 // ---------------------------------------------------------------------------
 //  SAX2XMLReaderImpl: Overrides of the XMLDocumentHandler interface
