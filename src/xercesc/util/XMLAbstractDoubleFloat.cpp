@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/05/03 16:05:45  peiyongz
+ * Bug 7341: Missing newline at end of util and DOM source files,
+ * patch from Martin Kalen.
+ *
  * Revision 1.3  2002/03/06 19:13:12  peiyongz
  * Patch: more valid lexcial representation for positive/negative zero
  *

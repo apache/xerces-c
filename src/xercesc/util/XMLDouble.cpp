@@ -57,8 +57,12 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:15  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/03 16:05:45  peiyongz
+ * Bug 7341: Missing newline at end of util and DOM source files,
+ * patch from Martin Kalen.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
+ * sane_include
  *
  * Revision 1.16  2001/11/19 21:33:42  peiyongz
  * Reorganization: Double/Float

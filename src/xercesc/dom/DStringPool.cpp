@@ -56,8 +56,12 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:47  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/03 16:06:45  peiyongz
+ * Bug 7341: Missing newline at end of util and DOM source files,
+ * patch from Martin Kalen.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:47  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/10/25 21:47:14  peiyongz
  * Replace XMLDeleterFor with XMLRegisterCleanup
