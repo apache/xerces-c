@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/10/02 13:29:12  tng
+ * Since the compare function return int, so use XMLString::compareString instead of XMLString::equals there.
+ *
  * Revision 1.4  2002/09/24 19:44:40  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -567,7 +570,7 @@ void AbstractStringValidator::inheritFacet()
 int AbstractStringValidator::compare(const XMLCh* const lValue
                                    , const XMLCh* const rValue)
 {
-    return !XMLString::equals(lValue, rValue);
+    return XMLString::compareString(lValue, rValue);
 }
 
 void AbstractStringValidator::validate( const XMLCh* const content)

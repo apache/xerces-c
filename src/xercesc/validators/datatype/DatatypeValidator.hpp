@@ -188,7 +188,7 @@ public:
     /**
       * Returns whether the type is atomic or not
       *
-      * To be redefined in List/Union validators  
+      * To be redefined in List/Union validators
       */
     virtual bool isAtomic() const;
 
@@ -422,7 +422,7 @@ inline void DatatypeValidator::cleanUp() {
 inline int DatatypeValidator::compare(const XMLCh* const lValue,
                                       const XMLCh* const rValue)
 {
-    return !XMLString::equals(lValue, rValue);
+    return XMLString::compareString(lValue, rValue);
 }
 
 // ---------------------------------------------------------------------------
