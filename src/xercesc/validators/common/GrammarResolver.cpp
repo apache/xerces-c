@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/06/25 17:44:04  peiyongz
+ * cacheGrammar() revised
+ *
  * Revision 1.10  2003/06/23 15:53:50  peiyongz
  * clean up temporary XMLGrammarDescription to make MemoryTest happy
  *
@@ -283,25 +286,37 @@ void GrammarResolver::resetCachedGrammar()
 
 void GrammarResolver::cacheGrammars()
 {
-    RefHashTableOfEnumerator<GrammarEntry> grammarEnum(fGrammarBucket);
 
-    /***
-     * It is up to the GrammarPool to handle duplicated grammar
-     *
-     * Destroy the grammarEntry but reuse the grammar and description
-     * embedded.
-     *
-     */
+    RefHashTableOfEnumerator<GrammarEntry> grammarEnum(fGrammarBucket);
+    ValueVectorOf<XMLCh*> keys(8, fMemoryManager);
+    unsigned int keyCount = 0;
+
+    // Build key set
     while (grammarEnum.hasMoreElements()) 
     {
         XMLCh* grammarKey = (XMLCh*) grammarEnum.nextElementKey();
+        keys.addElement(grammarKey);
+        keyCount++;
+    }
+
+    // Cache
+    for (unsigned int i = 0; i < keyCount; i++) 
+    {
+        XMLCh* grammarKey = keys.elementAt(i);    
         GrammarEntry* theEntry = fGrammarBucket->orphanKey(grammarKey);
+
+        /***
+         * Destroy the grammarEntry but retain the grammar/description
+         */
         XMLGrammarDescription* description = theEntry->getDescription();
         Grammar*               grammar     = theEntry->getGrammar();
         theEntry->nullGrammar();
         theEntry->nullDescription();
         delete theEntry;
 
+        /***
+         * It is up to the GrammarPool implementation to handle duplicated grammar
+         */
         fGrammarPool->cacheGrammar(description, grammar);
     }
 
