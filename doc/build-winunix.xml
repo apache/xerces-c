@@ -131,7 +131,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 		&XercesCName;.</p>
 
         <ol>
-		   <li>Change directory to <code> &XercesCSrcInstallDir;\Projects\Win32\BCC.551</code></li>
+		   <li>Change directory to <code> &XercesCSrcInstallDir;\Projects\Win32\BCC.551\Xerces-all</code></li>
            <li>Run <code>MakeBuildDirs.bat</code>.</li>
 		   <li>Then issue</li>
 		       <ul>
