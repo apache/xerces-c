@@ -1064,11 +1064,16 @@ void IGXMLScanner::scanEndTag(bool& gotData)
         {
             fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
             fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+            fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
+
+            if (XMLString::equals(fPSVIElemContext.fNormalizedValue, XMLUni::fgZeroLenString))
+                fPSVIElemContext.fNormalizedValue = 0;
         }
         else
         {
             fPSVIElemContext.fCurrentDV = 0;
             fPSVIElemContext.fCurrentTypeInfo = 0;
+            fPSVIElemContext.fNormalizedValue = 0;
         }
     }
 
@@ -2801,11 +2806,16 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             {
                 fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                 fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+                fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
+
+                if (XMLString::equals(fPSVIElemContext.fNormalizedValue, XMLUni::fgZeroLenString))
+                    fPSVIElemContext.fNormalizedValue = 0;
             }
             else
             {
                 fPSVIElemContext.fCurrentDV = 0;
                 fPSVIElemContext.fCurrentTypeInfo = 0;
+                fPSVIElemContext.fNormalizedValue = 0;
             }
         }
 
@@ -3349,6 +3359,15 @@ void IGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
             ? (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentTypeInfo)
             : 0;
 
+    XMLCh* canonicalValue = 0;
+    if (fPSVIElemContext.fNormalizedValue)
+    {
+        if (memberDV)
+            canonicalValue = (XMLCh*) memberDV->getCanonicalRepresentation(fPSVIElemContext.fNormalizedValue, fMemoryManager);
+        else if (fPSVIElemContext.fCurrentDV)
+            canonicalValue = (XMLCh*) fPSVIElemContext.fCurrentDV->getCanonicalRepresentation(fPSVIElemContext.fNormalizedValue, fMemoryManager);
+    }
+
     fPSVIElement->reset
     (
         validity
@@ -3361,6 +3380,8 @@ void IGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
         , (memberDV) ? (XSSimpleTypeDefinition*) fModel->getXSObject(memberDV) : 0
         , fModel
         , elemDecl->getDefaultValue()
+        , fPSVIElemContext.fNormalizedValue
+        , canonicalValue
     );
 
     fPSVIHandler->handleElementPSVI
@@ -3387,6 +3408,7 @@ void IGXMLScanner::resetPSVIElemContext()
     fPSVIElemContext.fNoneValidationDepth = -1;
     fPSVIElemContext.fCurrentDV = 0;
     fPSVIElemContext.fCurrentTypeInfo = 0;
+    fPSVIElemContext.fNormalizedValue = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/11/28 21:18:32  knoaman
+ * Make use of canonical representation in PSVIElement
+ *
  * Revision 1.22  2003/11/27 22:52:37  knoaman
  * PSVIElement implementation
  *
@@ -272,6 +275,7 @@ public:
     DatatypeValidator *getMostRecentAttrValidator() const;
     bool getErrorOccurred() const;
     bool getIsElemSpecified() const;
+    const XMLCh* getNormalizedValue() const;
 
 private:
     // -----------------------------------------------------------------------
@@ -532,6 +536,11 @@ inline bool SchemaValidator::getErrorOccurred() const
 inline bool SchemaValidator::getIsElemSpecified() const
 {
     return fElemIsSpecified;
+}
+
+inline const XMLCh* SchemaValidator::getNormalizedValue() const
+{
+    return fDatatypeBuffer.getRawBuffer();
 }
 
 XERCES_CPP_NAMESPACE_END

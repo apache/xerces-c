@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/28 21:18:31  knoaman
+ * Make use of canonical representation in PSVIElement
+ *
  * Revision 1.4  2003/11/25 16:14:28  neilg
  * move inlines into PSVIItem.hpp
  *
@@ -81,6 +84,7 @@ PSVIItem::PSVIItem( MemoryManager* const manager ):
         fValidationContext(0),
         fNormalizedValue(0),
         fDefaultValue(0),
+        fCanonicalValue(0),
         fValidityState(VALIDITY_NOTKNOWN),
         fAssessmentType(VALIDATION_FULL),
         fIsSpecified(false),

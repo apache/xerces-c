@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2003/11/28 21:18:32  knoaman
+ * Make use of canonical representation in PSVIElement
+ *
  * Revision 1.30  2003/11/28 19:54:31  knoaman
  * PSVIElement update
  *
@@ -336,6 +339,7 @@ struct PSVIElemContext
     int                fNoneValidationDepth;
     DatatypeValidator* fCurrentDV;
     ComplexTypeInfo*   fCurrentTypeInfo;
+    const XMLCh*       fNormalizedValue;
 };
 
 //  This is the mondo scanner class, which does the vast majority of the

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/28 21:18:31  knoaman
+ * Make use of canonical representation in PSVIElement
+ *
  * Revision 1.5  2003/11/27 22:52:37  knoaman
  * PSVIElement implementation
  *
@@ -181,7 +184,7 @@ public:
         , XSModel* const                schemaInfo
         , const XMLCh* const            defaultValue
         , const XMLCh* const            normalizedValue = 0
-        , const XMLCh* const            canonicalValue = 0
+        , XMLCh* const                  canonicalValue = 0
         , XSNotationDeclaration* const  notationDecl = 0
     );
 
@@ -209,7 +212,6 @@ private:
     XSNotationDeclaration *fNotationDecl;
     XSModel *fSchemaInfo;
 };
-inline PSVIElement::~PSVIElement() {}
 
 inline XSElementDeclaration *PSVIElement::getElementDeclaration() 
 {

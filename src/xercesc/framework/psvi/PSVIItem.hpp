@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/28 21:18:31  knoaman
+ * Make use of canonical representation in PSVIElement
+ *
  * Revision 1.7  2003/11/27 17:58:59  neilg
  * fix compilation error
  *
@@ -249,7 +252,7 @@ public:
      * was validated by a simple type definition for which canonical
      * representations of values are defined.
      */
-    const XMLCh *getCanonicalRepresentation();
+    const XMLCh *getCanonicalRepresentation() const;
 
     //@}
 
@@ -311,7 +314,7 @@ protected:
     const XMLCh*                fValidationContext;
     const XMLCh*                fNormalizedValue;
     const XMLCh*                fDefaultValue;
-    const XMLCh*                fCanonicalValue;
+    XMLCh*                      fCanonicalValue;
     VALIDITY_STATE              fValidityState;
     ASSESSMENT_TYPE             fAssessmentType;
     bool                        fIsSpecified;
@@ -336,7 +339,7 @@ inline const XMLCh* PSVIItem::getSchemaDefault()
     return fDefaultValue;
 }
 
-inline const XMLCh* PSVIItem::getCanonicalRepresentation() 
+inline const XMLCh* PSVIItem::getCanonicalRepresentation() const
 {
     return fCanonicalValue;
 }

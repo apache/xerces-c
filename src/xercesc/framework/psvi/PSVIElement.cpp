@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/28 21:18:31  knoaman
+ * Make use of canonical representation in PSVIElement
+ *
  * Revision 1.4  2003/11/27 22:52:37  knoaman
  * PSVIElement implementation
  *
@@ -85,6 +88,11 @@ PSVIElement::PSVIElement(MemoryManager* const manager):
         fNotationDecl(0),
         fSchemaInfo(0)
 {
+}
+
+PSVIElement::~PSVIElement()
+{
+    fMemoryManager->deallocate(fCanonicalValue);
 }
 
 XSTypeDefinition* PSVIElement::getTypeDefinition()
@@ -118,7 +126,7 @@ void PSVIElement::reset( const VALIDITY_STATE          validityState
                        , XSModel* const                schemaInfo
                        , const XMLCh* const            defaultValue
                        , const XMLCh* const            normalizedValue
-                       , const XMLCh* const            canonicalValue
+                       , XMLCh* const                  canonicalValue
                        , XSNotationDeclaration* const  notationDecl)
 {
     fValidationContext = validationContext;
@@ -132,6 +140,7 @@ void PSVIElement::reset( const VALIDITY_STATE          validityState
     fSchemaInfo = schemaInfo;
     fDefaultValue = defaultValue;
     fNormalizedValue = normalizedValue;
+    fMemoryManager->deallocate(fCanonicalValue);
     fCanonicalValue = canonicalValue;
 }
 
