@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/05/05 17:37:12  amassari
+ * Enable libWWW on Linux
+ *
  * Revision 1.22  2004/01/13 16:34:21  cargilld
  * Misc memory management changes.
  *
@@ -261,6 +264,8 @@
 
 #if defined (XML_USE_NETACCESSOR_SOCKET)
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
+#elif defined (XML_USE_NETACCESSOR_LIBWWW)
+    #include <xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp>
 #endif
 
 
@@ -274,6 +279,8 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 #if defined (XML_USE_NETACCESSOR_SOCKET)
     return new SocketNetAccessor();
+#elif defined (XML_USE_NETACCESSOR_LIBWWW)
+    return new LibWWWNetAccessor();
 #else
     return 0;
 #endif
