@@ -226,5 +226,5 @@ private :
 };
 
 #if !defined(XERCES_TMPLSINC)
-#include "SimpleValueHashTableOf.cpp"
+#include "SimpleValueHashTableOf.c"
 #endif

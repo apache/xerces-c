@@ -110,7 +110,7 @@ ${BATCH_TARGET}:: ${OBJS}
 $(OUTDIR)/SimpleHashPtr.o:: ${SRC}/SimpleHashPtr.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SimpleHashPtr.o ${SRC}/SimpleHashPtr.cpp
 
-$(OUTDIR)/MemoryMonitor.o:: ${SRC}/MemoryMonitor.cpp ${OUTDIR}/SimpleValueHashTableOf.cpp ${SRC}/SimpleHashPtr.cpp ${HEADER_FILES}
+$(OUTDIR)/MemoryMonitor.o:: ${SRC}/MemoryMonitor.cpp ${OUTDIR}/SimpleValueHashTableOf.c ${SRC}/SimpleHashPtr.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/MemoryMonitor.o ${SRC}/MemoryMonitor.cpp
 
 clean::
