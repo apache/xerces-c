@@ -1853,7 +1853,7 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
             else {
                 secondNode = new (fGrammarPoolMemoryManager) ContentSpecNode
                 (
-                    ContentSpecNode::Choice
+                    ContentSpecNode::Any_NS_Choice
                     , secondNode
                     , firstNode
                     , true

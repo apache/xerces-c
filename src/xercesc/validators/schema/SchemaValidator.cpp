@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.40  2003/11/07 17:08:12  knoaman
+ * For PSVI support, distinguish wildcard elements with namespace lists.
+ *
  * Revision 1.39  2003/10/05 02:09:37  neilg
  * the validator now keeps track of the current complex and simple type (including if this is an xsi:type).  This allows both the validator and the scanner to know what the current type is, without the need to modify the element declaration each time an xsi:type is seen
  *
@@ -1404,13 +1407,13 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
     ContentSpecNode::NodeTypes baseNodeType = baseSpecNode->getType();
 
     if (curNodeType == ContentSpecNode::Sequence ||
-        curNodeType == ContentSpecNode::Choice ||
+        (curNodeType & 0x0f) == ContentSpecNode::Choice ||
         curNodeType == ContentSpecNode::All) {
         curSpecNode = checkForPointlessOccurrences(curSpecNode, curNodeType, &curVector);
     }
 
     if (baseNodeType == ContentSpecNode::Sequence ||
-        baseNodeType == ContentSpecNode::Choice ||
+        (baseNodeType & 0x0f) == ContentSpecNode::Choice ||
         baseNodeType == ContentSpecNode::All) {
         baseSpecNode = checkForPointlessOccurrences(baseSpecNode, baseNodeType, &baseVector);
     }
@@ -1435,6 +1438,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
+            case ContentSpecNode::Any_NS_Choice:
             case ContentSpecNode::Sequence:
             case ContentSpecNode::All:
                 {
@@ -1461,6 +1465,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                      return;
                 }
             case ContentSpecNode::Choice:
+            case ContentSpecNode::Any_NS_Choice:
             case ContentSpecNode::Sequence:
             case ContentSpecNode::All:
             case ContentSpecNode::Leaf:
@@ -1490,6 +1495,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
+            case ContentSpecNode::Any_NS_Choice:
             case ContentSpecNode::Sequence:
             case ContentSpecNode::Leaf:
                 {
@@ -1502,6 +1508,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             }
         }
     case ContentSpecNode::Choice:
+    case ContentSpecNode::Any_NS_Choice:
         {
             switch (baseNodeType & 0x0f) {
             case ContentSpecNode::Any:
@@ -1512,6 +1519,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
+            case ContentSpecNode::Any_NS_Choice:
                 {
                     checkRecurse(aGrammar, curSpecNode, derivedScope, &curVector,
                                  baseSpecNode, baseScope, &baseVector, baseInfo, true);
@@ -1552,6 +1560,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                     return;
                 }
             case ContentSpecNode::Choice:
+            case ContentSpecNode::Any_NS_Choice:
                 {
                     checkMapAndSum(aGrammar, curSpecNode, &curVector, derivedScope,
                                    baseSpecNode, &baseVector, baseScope, baseInfo);
@@ -1896,7 +1905,7 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
 
     derivedNodes.addElement(derivedSpecNode);
 
-    if (baseSpecNode->getType() == ContentSpecNode::Choice) {
+    if ((baseSpecNode->getType() & 0x0f) == ContentSpecNode::Choice) {
         toLax = true;
     }
 

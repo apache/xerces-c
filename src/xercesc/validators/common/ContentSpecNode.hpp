@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/07 17:08:11  knoaman
+ * For PSVI support, distinguish wildcard elements with namespace lists.
+ *
  * Revision 1.8  2003/09/26 18:29:27  peiyongz
  * Implement serialization/deserialization
  *
@@ -196,6 +199,7 @@ public :
         , Any_Other
         , Any_NS = 8
         , All = 9
+        , Any_NS_Choice = 20
         , Any_Lax = 22
         , Any_Other_Lax = 23
         , Any_NS_Lax = 24

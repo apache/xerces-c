@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/07 17:08:11  knoaman
+ * For PSVI support, distinguish wildcard elements with namespace lists.
+ *
  * Revision 1.6  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -481,7 +484,7 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
     ContentSpecNode* rightNode = curNode->getSecond();
 
     // And recurse according to the type of node
-    if ((curType == ContentSpecNode::Choice)
+    if (((curType & 0x0f) == ContentSpecNode::Choice)
     ||  (curType == ContentSpecNode::Sequence))
     {
         // Recurse on the left and right nodes

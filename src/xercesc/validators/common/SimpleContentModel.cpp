@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/07 17:08:11  knoaman
+ * For PSVI support, distinguish wildcard elements with namespace lists.
+ *
  * Revision 1.4  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -258,6 +261,7 @@ SimpleContentModel::validateContent(QName** const       children
             break;
 
         case ContentSpecNode::Choice :
+        case ContentSpecNode::Any_NS_Choice :
             //
             //  There can only be one child, and it must be one of the
             //  two types we stored.
@@ -425,6 +429,7 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
             break;
 
         case ContentSpecNode::Choice :
+        case ContentSpecNode::Any_NS_Choice :
             //
             //  There can only be one child, and it must be one of the
             //  two types we stored.
@@ -521,7 +526,7 @@ void SimpleContentModel::checkUniqueParticleAttribution
         fSecondChild->setURI(pContentSpecOrgURI[orgURIIndex]);
 
     // only possible violation is when it's a choice
-    if (fOp == ContentSpecNode::Choice) {
+    if ((fOp & 0x0f) == ContentSpecNode::Choice) {
 
         SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
 

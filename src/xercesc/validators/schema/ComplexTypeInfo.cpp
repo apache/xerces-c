@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/11/07 17:08:12  knoaman
+ * For PSVI support, distinguish wildcard elements with namespace lists.
+ *
  * Revision 1.16  2003/10/29 16:22:58  peiyongz
  * allow proper recreation of ContentModel from deserialization
  *
@@ -590,7 +593,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
             , fMemoryManager
         );
     }
-     else if ((specType == ContentSpecNode::Choice)
+     else if (((specType & 0x0f) == ContentSpecNode::Choice)
           ||  (specType == ContentSpecNode::Sequence))
     {
         //
@@ -679,7 +682,7 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
     {
         retNode =  expandContentModel(curNode, minOccurs, maxOccurs);
     }
-    else if ((curType == ContentSpecNode::Choice)
+    else if (((curType & 0x0f) == ContentSpecNode::Choice)
         ||   (curType == ContentSpecNode::All)
         ||   (curType == ContentSpecNode::Sequence))
     {

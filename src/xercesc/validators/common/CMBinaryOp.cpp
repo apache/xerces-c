@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/07 17:08:11  knoaman
+ * For PSVI support, distinguish wildcard elements with namespace lists.
+ *
  * Revision 1.3  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -116,7 +119,7 @@ CMBinaryOp::CMBinaryOp( const ContentSpecNode::NodeTypes type
     , fRightChild(rightToAdopt)
 {
     // Insure that its one of the types we require
-    if ((type != ContentSpecNode::Choice)
+    if (((type & 0x0f) != ContentSpecNode::Choice)
     &&  (type != ContentSpecNode::Sequence))
     {
         ThrowXML(RuntimeException, XMLExcepts::CM_BinOpHadUnaryType);
@@ -164,7 +167,7 @@ bool CMBinaryOp::isNullable() const
     //  this node is nullable. If its a concatenation, then both of
     //  them have to be nullable.
     //
-    if (getType() == ContentSpecNode::Choice)
+    if ((getType() & 0x0f) == ContentSpecNode::Choice)
         return (fLeftChild->isNullable() || fRightChild->isNullable());
 
     return (fLeftChild->isNullable() && fRightChild->isNullable());
@@ -176,7 +179,7 @@ bool CMBinaryOp::isNullable() const
 // ---------------------------------------------------------------------------
 void CMBinaryOp::calcFirstPos(CMStateSet& toSet) const
 {
-    if (getType() == ContentSpecNode::Choice)
+    if ((getType() & 0x0f) == ContentSpecNode::Choice)
     {
         // Its the the union of the first positions of our children.
         toSet = fLeftChild->getFirstPos();
@@ -197,7 +200,7 @@ void CMBinaryOp::calcFirstPos(CMStateSet& toSet) const
 
 void CMBinaryOp::calcLastPos(CMStateSet& toSet) const
 {
-    if (getType() == ContentSpecNode::Choice)
+    if ((getType() & 0x0f) == ContentSpecNode::Choice)
     {
         // Its the the union of the first positions of our children.
         toSet = fLeftChild->getLastPos();

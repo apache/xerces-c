@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/07 17:08:11  knoaman
+ * For PSVI support, distinguish wildcard elements with namespace lists.
+ *
  * Revision 1.7  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -1090,7 +1093,7 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         ContentSpecNode* leftNode = curNode->getFirst();
         ContentSpecNode* rightNode = curNode->getSecond();
 
-        if ((curType == ContentSpecNode::Choice)
+        if (((curType & 0x0f) == ContentSpecNode::Choice)
         ||   (curType == ContentSpecNode::Sequence))
         {
             //
@@ -1134,7 +1137,7 @@ void DFAContentModel::calcFollowList(CMNode* const curNode)
     // Get the spec type of the passed node
     const ContentSpecNode::NodeTypes curType = curNode->getType();
 
-    if (curType == ContentSpecNode::Choice)
+    if ((curType & 0x0f) == ContentSpecNode::Choice)
     {
         // Just recurse
         calcFollowList(((CMBinaryOp*)curNode)->getLeft());
@@ -1246,7 +1249,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
         fLeafListType[newIndex] = curType;
         ++newIndex;
     }
-    else if ((curType == ContentSpecNode::Choice)
+    else if (((curType & 0x0f) == ContentSpecNode::Choice)
          ||  (curType == ContentSpecNode::Sequence))
     {
         newIndex = postTreeBuildInit(((CMBinaryOp*)nodeCur)->getLeft(), newIndex);

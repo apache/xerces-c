@@ -171,6 +171,7 @@ static void formatNode( const   ContentSpecNode* const      curNode
             break;
 
         case ContentSpecNode::Choice :
+        case ContentSpecNode::Any_NS_Choice:
             if (parentType != curType)
                 bufToFill.append(chOpenParen);
             formatNode(first, curType, bufToFill);
@@ -234,7 +235,7 @@ int ContentSpecNode::getMinTotalRange() const {
 
     if (fType == ContentSpecNode::Sequence
         || fType == ContentSpecNode::All
-        || fType == ContentSpecNode::Choice) {
+        || (fType & 0x0f) == ContentSpecNode::Choice) {
 
         int minFirst = fFirst->getMinTotalRange();
 
@@ -242,7 +243,7 @@ int ContentSpecNode::getMinTotalRange() const {
 
             int minSecond = fSecond->getMinTotalRange();
 
-            if (fType == ContentSpecNode::Choice) {
+            if ((fType & 0x0f) == ContentSpecNode::Choice) {
                 min = min * ((minFirst < minSecond)? minFirst : minSecond);
             }
             else {
@@ -266,7 +267,7 @@ int ContentSpecNode::getMaxTotalRange() const {
 
     if (fType == ContentSpecNode::Sequence
         || fType == ContentSpecNode::All
-        || fType == ContentSpecNode::Choice) {
+        || (fType & 0x0f) == ContentSpecNode::Choice) {
 
         int maxFirst = fFirst->getMaxTotalRange();
 
@@ -283,7 +284,7 @@ int ContentSpecNode::getMaxTotalRange() const {
             }
             else {
 
-                if (fType == ContentSpecNode::Choice) {
+                if ((fType & 0x0f) == ContentSpecNode::Choice) {
                     max = max * (maxFirst > maxSecond) ? maxFirst : maxSecond;
                 }
                 else {
