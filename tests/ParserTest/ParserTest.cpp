@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.7  2000/03/02 19:55:46  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.6  2000/02/06 07:48:36  rahulj
  * Year 2K copyright swat.
  *
@@ -197,6 +202,10 @@ int main(int argC, char** argV)
              << StrX(toCatch.getMessage())
              << endl;
     }
+
+    // And call the termination method
+    XMLPlatformUtils::Terminate();
+
     return 0;
 }
 

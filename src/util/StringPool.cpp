@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:46  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:04  rahulj
  * Year 2K copyright swat.
  *
@@ -176,7 +181,7 @@ unsigned int XMLStringPool::getId(const XMLCh* const toFind) const
 const XMLCh* XMLStringPool::getValueForId(const unsigned int id) const
 {
     if (!id || (id >= fCurId))
-        ThrowXML(IllegalArgumentException, XML4CExcepts::StrPool_IllegalId);
+        ThrowXML(IllegalArgumentException, XMLExcepts::StrPool_IllegalId);
 
     // Just index the id map and return that element's string
     return fIdMap[id]->fString;

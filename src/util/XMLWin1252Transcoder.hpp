@@ -57,7 +57,7 @@
 #ifndef XMLWIN1252TRANSCODER_HPP
 #define XMLWIN2152TRANSCODER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/TransService.hpp>
 
 

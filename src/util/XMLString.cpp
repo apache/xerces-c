@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.7  2000/03/02 19:54:49  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.6  2000/02/06 07:48:06  rahulj
  * Year 2K copyright swat.
  *
@@ -131,7 +136,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     };
 
     if (!maxChars)
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Str_ZeroSizedTargetBuf);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
 
     // Handle special case
     if (!toFormat)
@@ -190,12 +195,12 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
      else
     {
-        ThrowXML(RuntimeException, XML4CExcepts::Str_UnknownRadix);
+        ThrowXML(RuntimeException, XMLExcepts::Str_UnknownRadix);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Str_TargetBufTooSmall);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall);
 
     // Reverse the tmp buffer into the caller's buffer
     unsigned int outIndex = 0;
@@ -365,7 +370,7 @@ int XMLString::lastIndexOf( const   char* const     toSearch
 
     // Make sure the start index is within the XMLString bounds
 	if ((int)fromIndex > len-1)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Str_StartIndexPastEnd);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
 
     for (int i = (int)fromIndex; i >= 0; i--)
     {
@@ -576,7 +581,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     };
 
     if (!maxChars)
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Str_ZeroSizedTargetBuf);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
 
     // Handle special case
     if (!toFormat)
@@ -635,12 +640,12 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
      else
     {
-        ThrowXML(RuntimeException, XML4CExcepts::Str_UnknownRadix);
+        ThrowXML(RuntimeException, XMLExcepts::Str_UnknownRadix);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Str_TargetBufTooSmall);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall);
 
     // Reverse the tmp buffer into the caller's buffer
     unsigned int outIndex = 0;
@@ -943,7 +948,7 @@ int XMLString::lastIndexOf( const   XMLCh* const    toSearch
 {
     const int len = stringLen(toSearch);
 	if ((int)fromIndex > len-1)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Str_StartIndexPastEnd);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
 
     for (int i = (int)fromIndex; i >= 0; i--)
     {
@@ -982,45 +987,6 @@ XMLString::makeUName(const XMLCh* const pszURI, const XMLCh* const pszName)
         pszRet = replicate(pszName);
     }
     return pszRet;
-}
-
-
-XMLCh* XMLString::replicate(const XMLCh* const toRep)
-{
-    // If a null string, return a null string
-    if (!toRep)
-        return 0;
-
-    XMLCh* ret = new XMLCh[stringLen(toRep) + 1];
-    copyString(ret, toRep);
-    return ret;
-}
-
-
-bool XMLString::startsWith( const   XMLCh* const    toTest
-                            , const XMLCh* const    prefix)
-{
-    return (compareNString(toTest, prefix, stringLen(prefix)) == 0);
-}
-
-
-bool XMLString::startsWithI(const   XMLCh* const    toTest
-                            , const XMLCh* const    prefix)
-{
-    return (compareNIString(toTest, prefix, stringLen(prefix)) == 0);
-}
-
-
-unsigned int XMLString::stringLen(const XMLCh* const src)
-{
-    if (!src)
-        return 0;
-
-    unsigned int len = 0;
-    const XMLCh* pszTmp = src;
-    while (*pszTmp++)
-        len++;
-    return len;
 }
 
 
@@ -1063,7 +1029,6 @@ void XMLString::upperCase(XMLCh* const toUpperCase)
 
 
 
-
 // ---------------------------------------------------------------------------
 //  XMLString: Private static methods
 // ---------------------------------------------------------------------------
@@ -1071,4 +1036,11 @@ void XMLString::initString(XMLLCPTranscoder* const defToUse)
 {
     // Store away the default transcoder that we are to use
     gTranscoder = defToUse;
+}
+
+void XMLString::termString()
+{
+    // Just clean up our local code page transcoder
+    delete gTranscoder;
+    gTranscoder = 0;
 }

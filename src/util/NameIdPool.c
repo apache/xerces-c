@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:42  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:02  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/NameIdPool.hpp>
 #endif
 
@@ -111,7 +116,7 @@ NameIdPool<TElem>::NameIdPool(  const   unsigned int    hashModulus
     , fHashModulus(hashModulus)
 {
     if (!fHashModulus)
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Pool_ZeroModulus);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
 
     // Allocate the bucket list and zero them
     fBucketList = new NameIdPoolBucketElem<TElem>*[fHashModulus];
@@ -210,7 +215,7 @@ NameIdPool<TElem>::getById(const unsigned int elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Pool_InvalidId);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
 
     return fIdPtrs[elemId];
 }
@@ -220,7 +225,7 @@ const TElem* NameIdPool<TElem>::getById(const unsigned int elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Pool_InvalidId);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
 
     return fIdPtrs[elemId];
 }
@@ -240,7 +245,7 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
         ThrowXML1
         (
             IllegalArgumentException
-            , XML4CExcepts::Pool_ElemAlreadyExists
+            , XMLExcepts::Pool_ElemAlreadyExists
             , elemToAdopt->getKey()
         );
     }
@@ -293,7 +298,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal)
     hashVal = XMLString::hash(key, fHashModulus);
 
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XML4CExcepts::Pool_BadHashFromKey);
+        ThrowXML(RuntimeException, XMLExcepts::Pool_BadHashFromKey);
 
     // Search that bucket for the key
     NameIdPoolBucketElem<TElem>* curElem = fBucketList[hashVal];
@@ -314,7 +319,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
     hashVal = XMLString::hash(key, fHashModulus);
 
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XML4CExcepts::Pool_BadHashFromKey);
+        ThrowXML(RuntimeException, XMLExcepts::Pool_BadHashFromKey);
 
     // Search that bucket for the key
     const NameIdPoolBucketElem<TElem>* curElem = fBucketList[hashVal];
@@ -394,7 +399,7 @@ template <class TElem> TElem& NameIdPoolEnumerator<TElem>::nextElement()
 {
     // If our index is zero or past the end, then we are done
     if (!fCurIndex || (fCurIndex > fToEnum->fIdCounter))
-        ThrowXML(NoSuchElementException, XML4CExcepts::Enum_NoMoreElements);
+        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
 
     // Return the current element and bump the index
     return *fToEnum->fIdPtrs[fCurIndex++];

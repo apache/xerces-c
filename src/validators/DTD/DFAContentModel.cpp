@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:38  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/09 21:42:37  abagchi
  * Copyright swatswat
  *
@@ -598,7 +603,7 @@ CMNode* DFAContentModel::buildSyntaxTree(const ContentSpecNode* const curNode)
         }
          else
         {
-            ThrowXML(RuntimeException, XML4CExcepts::CM_UnknownCMSpecType);
+            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
         }
     }
     return retNode;
@@ -666,7 +671,7 @@ void DFAContentModel::calcFollowList(CMNode* const curNode)
      else if ((curType == ContentSpecNode::OneOrMore)
           ||  (curType == ContentSpecNode::ZeroOrOne))
     {
-        ThrowXML1(RuntimeException, XML4CExcepts::CM_NotValidForSpecType, "CalcFollowList");
+        ThrowXML1(RuntimeException, XMLExcepts::CM_NotValidForSpecType, "CalcFollowList");
     }
 }
 
@@ -789,7 +794,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
     }
      else
     {
-        ThrowXML(RuntimeException, XML4CExcepts::CM_UnknownCMSpecType);
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
     }
     return newIndex;
 }

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/03/02 19:54:24  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -86,10 +91,13 @@
 XMLAttr::XMLAttr() :
 
     fName(0)
+    , fNameBufSz(0)
     , fPrefix(0)
+    , fPrefixBufSz(0)
     , fQName(0)
     , fType(XMLAttDef::CData)
     , fValue(0)
+    , fValueBufSz(0)
     , fSpecified(false)
     , fURIId(0)
 {
@@ -103,16 +111,24 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const bool                specified) :
 
     fName(0)
+    , fNameBufSz(0)
     , fPrefix(0)
+    , fPrefixBufSz(0)
     , fQName(0)
     , fType(type)
     , fValue(0)
+    , fValueBufSz(0)
     , fSpecified(specified)
     , fURIId(0)
 {
     try
     {
-        set(uriId, attrName, attrPrefix, attrValue);
+        //
+        //  Just call the local setters to set up everything. Too much
+        //  work is required to replicate that functionality here.
+        //
+        setName(uriId, attrName, attrPrefix);
+        setValue(attrValue);
     }
 
     catch(...)
@@ -132,9 +148,13 @@ const XMLCh* XMLAttr::getQName() const
     {
         if (*fPrefix)
         {
-            const unsigned int len = XMLString::stringLen(fPrefix)
-                                     + XMLString::stringLen(fName)
-                                     + 1;
+            //
+            //  Calc the length. we just use the current buffer sizes
+            //  of thename and prefix, so this is a worst case length
+            //  and its faster than doing string len calls to figure
+            //  out the exact length.
+            //
+            const unsigned int len = fPrefixBufSz + fNameBufSz + 1;
             const XMLCh colonStr[] = { chColon, chNull };
 
             // We are faulting this guy in, so cast of const'ness
@@ -156,51 +176,36 @@ const XMLCh* XMLAttr::getQName() const
 // ---------------------------------------------------------------------------
 //  XMLAttr: Setter methods
 // ---------------------------------------------------------------------------
-void XMLAttr::set(  const   unsigned int        uriId
-                    , const XMLCh* const        attrName
-                    , const XMLCh* const        attrPrefix
-                    , const XMLCh* const        attrValue
-                    , const XMLAttDef::AttTypes type)
-{
-    // Clean up the old stuff
-    delete [] fName;
-    fName = 0;
-    delete [] fPrefix;
-    fPrefix = 0;
-    delete [] fValue;
-    fValue = 0;
-
-    // And clean up the QName and leave it undone until asked for
-    delete [] fQName;
-    fQName = 0;
-
-    // And now replicate the stuff into our members
-    fType = type;
-    fURIId = uriId;
-    fName = XMLString::replicate(attrName);
-    fPrefix = XMLString::replicate(attrPrefix);
-    fValue = XMLString::replicate(attrValue);
-}
-
-
 void XMLAttr::setName(  const   unsigned int    uriId
                         , const XMLCh* const    attrName
                         , const XMLCh* const    attrPrefix)
 {
-    // Clean up the old stuff
-    delete [] fName;
-    fName = 0;
-    delete [] fPrefix;
-    fPrefix = 0;
+    unsigned int newLen;
 
-    // And clean up the QName and leave it undone until asked for
+    newLen = XMLString::stringLen(attrName);
+    if (!fNameBufSz | (newLen > fNameBufSz))
+    {
+        delete [] fName;
+        fNameBufSz = newLen + 8;
+        fName = new XMLCh[fNameBufSz + 1];
+    }
+    XMLString::moveChars(fName, attrName, newLen + 1);
+
+    newLen = XMLString::stringLen(attrPrefix);
+    if (!fPrefixBufSz || (newLen > fPrefixBufSz))
+    {
+        delete [] fPrefix;
+        fPrefixBufSz = newLen + 8;
+        fPrefix = new XMLCh[fPrefixBufSz + 1];
+    }
+    XMLString::moveChars(fPrefix, attrPrefix, newLen + 1);
+
+    // And clean up the QName and leave it undone until/if asked for again
     delete [] fQName;
     fQName = 0;
 
-    // And now replicate the stuff into our members
+    // And finally store the URI id parameter
     fURIId = uriId;
-    fName = XMLString::replicate(attrName);
-    fPrefix = XMLString::replicate(attrPrefix);
 }
 
 
@@ -212,8 +217,14 @@ void XMLAttr::setURIId(const unsigned int uriId)
 
 void XMLAttr::setValue(const XMLCh* const newValue)
 {
-    delete [] fValue;
-    fValue = XMLString::replicate(newValue);
+    const unsigned int newLen = XMLString::stringLen(newValue);
+    if (!fValueBufSz || (newLen > fValueBufSz))
+    {
+        delete [] fValue;
+        fValueBufSz = newLen + 8;
+        fValue = new XMLCh[fValueBufSz + 1];
+    }
+    XMLString::moveChars(fValue, newValue, newLen + 1);
 }
 
 

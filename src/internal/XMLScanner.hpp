@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/02 19:54:30  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.6  2000/02/24 20:18:07  abagchi
  * Swat for removing Log from API docs
  *
@@ -183,10 +188,10 @@ public :
     // -----------------------------------------------------------------------
     //  Error emitter methods
     // -----------------------------------------------------------------------
-    void emitError(const XML4CErrs::Codes toEmit);
+    void emitError(const XMLErrs::Codes toEmit);
     void emitError
     (
-        const   XML4CErrs::Codes    toEmit
+        const   XMLErrs::Codes    toEmit
         , const XMLCh* const        text1
         , const XMLCh* const        text2 = 0
         , const XMLCh* const        text3 = 0
@@ -194,7 +199,7 @@ public :
     );
     void emitError
     (
-        const   XML4CErrs::Codes    toEmit
+        const   XMLErrs::Codes    toEmit
         , const char* const         text1
         , const char* const         text2 = 0
         , const char* const         text3 = 0
@@ -226,6 +231,7 @@ public :
         ,       unsigned int&   lineToFill
         ,       unsigned int&   colToFill
     );
+    const Locator* getLocator() const;
     unsigned int getSrcOffset() const;
     bool getStandalone() const;
     const XMLValidator* getValidator() const;
@@ -639,6 +645,11 @@ inline bool XMLScanner::getInException() const
 inline const RefHashTableOf<XMLRefInfo>& XMLScanner::getIDRefList() const
 {
     return *fIDRefList;
+}
+
+inline const Locator* XMLScanner::getLocator() const
+{
+    return &fReaderMgr;
 }
 
 inline unsigned int XMLScanner::getSrcOffset() const

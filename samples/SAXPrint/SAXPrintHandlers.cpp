@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:53:49  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/11 03:05:35  abagchi
  * Removed second parameter from call to StrX constructor
  *
@@ -99,26 +104,26 @@ SAXPrintHandlers::~SAXPrintHandlers()
 // ---------------------------------------------------------------------------
 void SAXPrintHandlers::error(const SAXParseException& e)
 {
-    cerr << "\nError at (file " << StrX(e.getSystemId())
+    cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void SAXPrintHandlers::fatalError(const SAXParseException& e)
 {
-    cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
+    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void SAXPrintHandlers::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at (file " << StrX(e.getSystemId())
+    cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:55:08  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/06 07:48:17  rahulj
  * Year 2K copyright swat.
  *
@@ -105,7 +110,7 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 // ---------------------------------------------------------------------------
 //  The name of the DSO that is built by the MIPSpro C++ version of the
 //  system. We append a previously defined token which holds the DSO
-//  versioning string. This is defined in XML4CDefs.hpp which is what this
+//  versioning string. This is defined in XercesDefs.hpp which is what this
 //  file is included into.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libxerces-c";
+const char* const Xerces_DLLName = "libxerces-c";

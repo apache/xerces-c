@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:27  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:29  rahulj
  * Year 2K copyright swat.
  *
@@ -82,7 +87,7 @@
 #include    <util/PlatformUtils.hpp>
 #include    <util/RuntimeException.hpp>
 #include    <util/Janitor.hpp>
-#include    <util/XML4CDefs.hpp>
+#include    <util/XercesDefs.hpp>
 #include    <stdio.h>
 #include    <stdlib.h>
 #include    <IO.h>
@@ -162,8 +167,8 @@ void XMLPlatformUtils::setupIntlPath()
     //
 
     char libName[256];
-    strcpy(libName, XML4C2_DLLName);
-    strcat(libName, gXML4C2VersionStr);
+    strcpy(libName, Xerces_DLLName);
+    strcat(libName, gXercesVersionStr);
     strcat(libName, ".a");
 
     char* libEnvVar = getenv(sharedLibEnvVar);

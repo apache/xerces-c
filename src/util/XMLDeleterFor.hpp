@@ -1,6 +1,3 @@
-#ifndef EntityImpl_HEADER_GUARD_
-#define EntityImpl_HEADER_GUARD_
-
 /*
  * The Apache Software License, Version 1.1
  * 
@@ -59,64 +56,62 @@
 
 /*
  * $Log$
- * Revision 1.5  2000/03/02 19:54:01  roddey
+ * Revision 1.1  2000/03/02 19:54:48  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
  * available elsewhere.
  *
- * Revision 1.4  2000/02/24 20:11:30  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/21 07:47:07  robweir
- * Patches to support Xalan, where we need to create a
- * "special" DOM with subclassed Nodes.
- *
- * 1. Export the NodeImpl-derived classes
- * 2. Ensure that their constructors have at least protected access
- *
- * Revision 1.1.1.1  1999/11/09 01:09:09  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:27  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
  */
 
-//
-//  This file is part of the internal implementation of the C++ XML DOM.
-//  It should NOT be included or used directly by application programs.
-//
-//  Applications should include the file <dom/DOM.hpp> for the entire
-//  DOM API, or DOM_*.hpp for individual DOM classes, where the class
-//  name is substituded for the *.
-//
+
+#if !defined(XMLDELETERFOR_HPP)
+#define XMLDELETERFOR_HPP
 
 #include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include <util/PlatformUtils.hpp>
 
-class CDOM_EXPORT EntityImpl: public NodeImpl {
-private:
-    DOMString publicId;
-    DOMString systemId;
-    DOMString notationName;
 
-public:
-    EntityImpl(DocumentImpl *, const DOMString &eName);
-    EntityImpl(const EntityImpl &other, bool deep=false);
-    virtual ~EntityImpl();
-    
-    virtual NodeImpl    *cloneNode(bool deep);
-    virtual DOMString   getPublicId();
-    virtual DOMString   getSystemId();
-    virtual DOMString   getNotationName();
-    virtual void        setNodeValue(const DOMString &arg);
-    virtual void        setNotationName(const DOMString &arg);
-    virtual void        setPublicId(const DOMString &arg);
-    virtual void        setSystemId(const DOMString &arg);
+// 
+//  For internal use only.
+//
+//  This class is used by the platform utilities class to support cleanup
+//  of global/static data which is lazily created. Since that data is
+//  widely spread out, and in higher level DLLs, the platform utilities
+//  class cannot know about them directly. So, the code that creates such
+//  objects creates an registers a deleter for the object. The platform
+//  termination call will iterate the list and delete the objects.
+//
+template <class T> class XMLDeleterFor : public XMLDeleter
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    XMLDeleterFor(T* toDelete);
+    ~XMLDeleterFor();
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLDeleterFor();
+    XMLDeleterFor(const XMLDeleterFor<T>&);
+    void operator=(const XMLDeleterFor<T>&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fToDelete
+    //      This is a pointer to the data to destroy
+    // -----------------------------------------------------------------------
+    T*  fToDelete;
 };
 
+
+#if !defined(XERCES_TMPLSINC)
+#include <util/XMLDeleterFor.c>
 #endif
 
+#endif

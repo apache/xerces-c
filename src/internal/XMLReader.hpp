@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/02 19:54:29  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.7  2000/02/24 20:18:07  abagchi
  * Swat for removing Log from API docs
  *
@@ -478,8 +483,8 @@ private:
     //
     //  fgCharCharsTables
     //      The character characteristics table. Bits in each byte, represent
-    //      the characteristics of each character. This one is static since
-    //      it only has to be created once and is read-only after that.
+    //      the characteristics of each character. It is generated via some
+    //      code and then hard coded into the cpp file for speed.
     // -----------------------------------------------------------------------
     static const XMLByte    fgCharCharsTable[0x10000];
 };

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/02 19:53:56  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.10  2000/02/24 20:11:28  abagchi
  * Swat for removing Log from API docs
  *
@@ -98,7 +103,7 @@
 #ifndef DOM_NamedNodeMap_HEADER_GUARD_
 #define DOM_NamedNodeMap_HEADER_GUARD_
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 #include <dom/DOM_Node.hpp>
 class NamedNodeMapImpl;

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.11  2000/03/02 19:54:30  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.10  2000/02/06 07:47:54  rahulj
  * Year 2K copyright swat.
  *
@@ -273,7 +278,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     bufMsg.append(suffPtr);
                     fValidator->emitError
                     (
-                        XML4CValid::AttNotDefinedForElement
+                        XMLValid::AttNotDefinedForElement
                         , bufMsg.getRawBuffer()
                         , elemDecl.getFullName()
                     );
@@ -321,7 +326,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     {
                         emitError
                         (
-                            XML4CErrs::AttrAlreadyUsedInSTag
+                            XMLErrs::AttrAlreadyUsedInSTag
                             , attDef->getFullName()
                             , elemDecl.getFullName()
                         );
@@ -403,7 +408,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     {
                         fValidator->emitError
                         (
-                            XML4CValid::RequiredAttrNotProvided
+                            XMLValid::RequiredAttrNotProvided
                             , curDef.getFullName()
                         );
                     }
@@ -470,7 +475,7 @@ void XMLScanner::checkIDRefs()
 
         // If its used but not declared, then its an error
         if (!curRef.getDeclared() && curRef.getUsed())
-            fValidator->emitError(XML4CValid::IDNotDeclared, curRef.getRefName());
+            fValidator->emitError(XMLValid::IDNotDeclared, curRef.getRefName());
     }
 }
 
@@ -539,7 +544,7 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
         //
         if (!escaped && (*srcPtr == chOpenAngle))
         {
-            emitError(XML4CErrs::BracketInAttrValue, attrName);
+            emitError(XMLErrs::BracketInAttrValue, attrName);
             retVal = false;
         }
 
@@ -620,7 +625,7 @@ XMLScanner::resolvePrefix(  const   XMLCh* const        prefix
 
     // If it was unknown, then the URI was faked in but we have to issue an error
     if (unknown)
-        emitError(XML4CErrs::UnknownPrefix, prefix);
+        emitError(XMLErrs::UnknownPrefix, prefix);
 
     return uriId;
 }
@@ -651,7 +656,7 @@ XMLScanner::resolvePrefix(  const   XMLCh* const        prefix
 
     // If it was unknown, then the URI was faked in but we have to issue an error
     if (unknown)
-        emitError(XML4CErrs::UnknownPrefix, prefix);
+        emitError(XMLErrs::UnknownPrefix, prefix);
 
     fValidator->getURIText(uriId, bufToFill);
     return uriId;
@@ -687,7 +692,7 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
         bool unknown;
         uriId = fElemStack.mapPrefixToURI(prefixBuf.getRawBuffer(), mode, unknown);
 
-        #if defined(XML4C_DEBUG)
+        #if defined(XERCES_DEBUG)
         if (unknown)
         {
             // <TBD> This one should never be unknown
@@ -720,7 +725,7 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
             bool unknown;
             uriId = fElemStack.mapPrefixToURI(prefixBuf.getRawBuffer(), mode, unknown);
             if (unknown)
-                emitError(XML4CErrs::UnknownPrefix, prefixBuf.getRawBuffer());
+                emitError(XMLErrs::UnknownPrefix, prefixBuf.getRawBuffer());
         }
     }
     return uriId;
@@ -791,7 +796,7 @@ void XMLScanner::scanReset(const InputSource& src)
         , XMLReader::Source_External
     );
     if (!newReader)
-        ThrowXML1(RuntimeException, XML4CExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+        ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
 
     // Push this read onto the reader manager
     fReaderMgr.pushReader(newReader, 0);
@@ -836,7 +841,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
         if (charOpts == XMLElementDecl::NoCharData)
         {
             // They definitely cannot handle any type of char data
-            fValidator->emitError(XML4CValid::NoCharDataInCM);
+            fValidator->emitError(XMLValid::NoCharDataInCM);
         }
          else if (isSpaces)
         {
@@ -867,7 +872,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
             }
              else
             {
-                fValidator->emitError(XML4CValid::NoCharDataInCM);
+                fValidator->emitError(XMLValid::NoCharDataInCM);
             }
         }
     }
@@ -954,7 +959,7 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
         if (fReaderMgr.skippedString(gCommentString))
             return Token_Comment;
 
-        emitError(XML4CErrs::ExpectedCommentOrCDATA);
+        emitError(XMLErrs::ExpectedCommentOrCDATA);
         return Token_Unknown;
     }
      else if (nextCh == chQuestion)
@@ -1126,7 +1131,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                 }
 
                 if (!nextCh)
-                    ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+                    ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
 
                 //
                 //  Check for our ending quote. It has to be in the same entity
@@ -1140,7 +1145,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                     // Watch for spillover into a previous entity
                     if (curReader > fReaderMgr.getCurrentReaderNum())
                     {
-                        emitError(XML4CErrs::PartialMarkupInEntity);
+                        emitError(XMLErrs::PartialMarkupInEntity);
                         return false;
                     }
                 }
@@ -1170,7 +1175,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                     //
                     if (gotLeadingSurrogate)
                     {
-                        emitError(XML4CErrs::Expected2ndSurrogateChar);
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
                     }
                      else
                     {
@@ -1185,7 +1190,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                                 , 8
                                 , 16
                             );
-                            emitError(XML4CErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                         }
                         gotLeadingSurrogate = true;
                     }
@@ -1201,7 +1206,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                     {
                         // Its trailing, so make sure we were expecting it
                         if (!gotLeadingSurrogate)
-                            emitError(XML4CErrs::Unexpected2ndSurrogateChar);
+                            emitError(XMLErrs::Unexpected2ndSurrogateChar);
                     }
                      else
                     {
@@ -1210,7 +1215,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                         //  trailing surrogate.
                         //
                         if (gotLeadingSurrogate)
-                            emitError(XML4CErrs::Expected2ndSurrogateChar);
+                            emitError(XMLErrs::Expected2ndSurrogateChar);
                     }
                     gotLeadingSurrogate = false;
                 }
@@ -1294,7 +1299,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
             }
 
             if (!nextCh)
-                ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
 
             // Its got to at least be a valid XML character
             if (!XMLReader::isXMLChar(nextCh))
@@ -1307,7 +1312,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                     , 8
                     , 16
                 );
-                emitError(XML4CErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
             }
 
             // Check for our ending quote in the same entity
@@ -1319,7 +1324,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                 // Watch for spillover into a previous entity
                 if (curReader > fReaderMgr.getCurrentReaderNum())
                 {
-                    emitError(XML4CErrs::PartialMarkupInEntity);
+                    emitError(XMLErrs::PartialMarkupInEntity);
                     return false;
                 }
             }
@@ -1348,7 +1353,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                 //  we look for a trailing next time.
                 //
                 if (gotLeadingSurrogate)
-                    emitError(XML4CErrs::Expected2ndSurrogateChar);
+                    emitError(XMLErrs::Expected2ndSurrogateChar);
                  else
                     gotLeadingSurrogate = true;
             }
@@ -1363,7 +1368,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                 {
                     // Its trailing, so make sure we were expecting it
                     if (!gotLeadingSurrogate)
-                        emitError(XML4CErrs::Unexpected2ndSurrogateChar);
+                        emitError(XMLErrs::Unexpected2ndSurrogateChar);
                 }
                  else
                 {
@@ -1372,7 +1377,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                     //  trailing surrogate.
                     //
                     if (gotLeadingSurrogate)
-                        emitError(XML4CErrs::Expected2ndSurrogateChar);
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
                 gotLeadingSurrogate = false;
             }
@@ -1382,7 +1387,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
             //  is not allowed in attribute values.
             //
             if (!escaped && (nextCh == chOpenAngle))
-                emitError(XML4CErrs::BracketInAttrValue, attrName);
+                emitError(XMLErrs::BracketInAttrValue, attrName);
 
             //
             //  If the attribute is a CDATA type we do simple replacement of
@@ -1475,7 +1480,7 @@ void XMLScanner::scanCDSection()
     //
     if (!fReaderMgr.skippedChar(chOpenSquare))
     {
-        emitError(XML4CErrs::ExpectedOpenSquareBracket);
+        emitError(XMLErrs::ExpectedOpenSquareBracket);
         fReaderMgr.skipPastSpaces();
 
         // If we still don't find it, then give up, else keep going
@@ -1500,8 +1505,8 @@ void XMLScanner::scanCDSection()
         // Watch for unexpected end of file
         if (!nextCh)
         {
-            emitError(XML4CErrs::UnterminatedCDATASection);
-            ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+            emitError(XMLErrs::UnterminatedCDATASection);
+            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
         }
 
         //
@@ -1550,7 +1555,7 @@ void XMLScanner::scanCDSection()
                 nestCount++;
 
                 // And issue the nested CDATA error
-                emitError(XML4CErrs::NestedCDATA);
+                emitError(XMLErrs::NestedCDATA);
             }
         }
 
@@ -1571,7 +1576,7 @@ void XMLScanner::scanCDSection()
                     , 8
                     , 16
                 );
-                emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+                emitError(XMLErrs::InvalidCharacter, tmpBuf);
                 emittedError = true;
             }
         }
@@ -1633,7 +1638,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                 {
                     // If we were waiting for a trailing surrogate, its an error
                     if (gotLeadingSurrogate)
-                        emitError(XML4CErrs::Expected2ndSurrogateChar);
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
 
                     notDone = false;
                     break;
@@ -1675,7 +1680,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                  else if (nextCh == chCloseAngle)
                 {
                     if (curState == State_GotTwo)
-                        emitError(XML4CErrs::BadSequenceInCharData);
+                        emitError(XMLErrs::BadSequenceInCharData);
                     curState = State_Waiting;
                 }
                  else
@@ -1697,7 +1702,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                 //  we look for a trailing next time.
                 //
                 if (gotLeadingSurrogate)
-                    emitError(XML4CErrs::Expected2ndSurrogateChar);
+                    emitError(XMLErrs::Expected2ndSurrogateChar);
                 else
                     gotLeadingSurrogate = true;
             }
@@ -1712,7 +1717,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                 {
                     // Its trailing, so make sure we were expecting it
                     if (!gotLeadingSurrogate)
-                        emitError(XML4CErrs::Unexpected2ndSurrogateChar);
+                        emitError(XMLErrs::Unexpected2ndSurrogateChar);
                 }
                  else
                 {
@@ -1721,7 +1726,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                     //  trailing surrogate.
                     //
                     if (gotLeadingSurrogate)
-                        emitError(XML4CErrs::Expected2ndSurrogateChar);
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
 
                     // Make sure the returned char is a valid XML char
                     if (!XMLReader::isXMLChar(nextCh))
@@ -1734,7 +1739,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                             , 8
                             , 16
                         );
-                        emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+                        emitError(XMLErrs::InvalidCharacter, tmpBuf);
                     }
                 }
                 gotLeadingSurrogate = false;
@@ -1786,7 +1791,7 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
     }
      else if (fReaderMgr.skippedChar(chLatin_X))
     {
-        emitError(XML4CErrs::HexRadixMustBeLowerCase);
+        emitError(XMLErrs::HexRadixMustBeLowerCase);
         radix = 16;
     }
 
@@ -1796,7 +1801,7 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
 
         // Break out on the terminating semicolon
         if (nextCh == chSemiColon)
@@ -1826,9 +1831,9 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
             //  Else, do an expected a numerical ref thing.
             //
             if (gotOne)
-                emitError(XML4CErrs::UnterminatedCharRef);
+                emitError(XMLErrs::UnterminatedCharRef);
             else
-                emitError(XML4CErrs::ExpectedNumericalCharRef);
+                emitError(XMLErrs::ExpectedNumericalCharRef);
 
             // Return failure
             return false;
@@ -1844,7 +1849,7 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
             XMLCh tmpStr[2];
             tmpStr[0] = nextCh;
             tmpStr[1] = chNull;
-            emitError(XML4CErrs::BadDigitForRadix, tmpStr);
+            emitError(XMLErrs::BadDigitForRadix, tmpStr);
         }
          else
         {
@@ -1908,8 +1913,8 @@ void XMLScanner::scanComment()
         //  Watch for an end of file
         if (!nextCh)
         {
-            emitError(XML4CErrs::UnterminatedComment);
-            ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+            emitError(XMLErrs::UnterminatedComment);
+            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
         }
 
         // Make sure its a valid XML character
@@ -1923,7 +1928,7 @@ void XMLScanner::scanComment()
                 , 8
                 , 16
             );
-            emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+            emitError(XMLErrs::InvalidCharacter, tmpBuf);
         }
 
         if (curState == InText)
@@ -1957,7 +1962,7 @@ void XMLScanner::scanComment()
             // The next character must be the closing bracket
             if (nextCh != chCloseAngle)
             {
-                emitError(XML4CErrs::IllegalSequenceInComment);
+                emitError(XMLErrs::IllegalSequenceInComment);
                 fReaderMgr.skipPastChar(chCloseAngle);
                 return;
             }
@@ -2034,7 +2039,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         escaped = true;
 
         if (curReader != fReaderMgr.getCurrentReaderNum())
-            emitError(XML4CErrs::PartialMarkupInEntity);
+            emitError(XMLErrs::PartialMarkupInEntity);
 
         return EntityExp_Returned;
     }
@@ -2043,7 +2048,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
     XMLBufBid bbName(&fBufMgr);
     if (!fReaderMgr.getName(bbName.getBuffer()))
     {
-        emitError(XML4CErrs::ExpectedEntityRefName);
+        emitError(XMLErrs::ExpectedEntityRefName);
         return EntityExp_Failed;
     }
 
@@ -2052,11 +2057,11 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
     //  an error and try to continue.
     //
     if (!fReaderMgr.skippedChar(chSemiColon))
-        emitError(XML4CErrs::UnterminatedEntityRef, bbName.getRawBuffer());
+        emitError(XMLErrs::UnterminatedEntityRef, bbName.getRawBuffer());
 
     // Make sure we ended up on the same entity reader as the & char
     if (curReader != fReaderMgr.getCurrentReaderNum())
-        emitError(XML4CErrs::PartialMarkupInEntity);
+        emitError(XMLErrs::PartialMarkupInEntity);
 
     // Look up the name in the general entity pool
     XMLEntityDecl* decl = fValidator->findEntityDecl(bbName.getRawBuffer(), false);
@@ -2064,7 +2069,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
     // If it does not exist, then obviously an error
     if (!decl)
     {
-        emitError(XML4CErrs::EntityNotFound, bbName.getRawBuffer());
+        emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
         return EntityExp_Failed;
     }
 
@@ -2073,20 +2078,20 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
     //  in the internal subset. Keep going though.
     //
     if (fStandalone && !decl->getDeclaredInIntSubset())
-        emitError(XML4CErrs::IllegalRefInStandalone, bbName.getRawBuffer());
+        emitError(XMLErrs::IllegalRefInStandalone, bbName.getRawBuffer());
 
     if (decl->isExternal())
     {
         // If its unparsed, then its not valid here
         if (decl->isUnparsed())
         {
-            emitError(XML4CErrs::NoUnparsedEntityRefs, bbName.getRawBuffer());
+            emitError(XMLErrs::NoUnparsedEntityRefs, bbName.getRawBuffer());
             return EntityExp_Failed;
         }
 
         // If we are in an attribute value, then not valid but keep going
         if (inAttVal)
-            emitError(XML4CErrs::NoExtRefsInAttValue);
+            emitError(XMLErrs::NoExtRefsInAttValue);
 
         // And now create a reader to read this entity
         InputSource* srcUsed;
@@ -2109,7 +2114,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         //  then emit an error and return.
         //
         if (!reader)
-            ThrowXML1(RuntimeException, XML4CExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId());
+            ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId());
 
         //
         //  Push the reader. If its a recursive expansion, then emit an error
@@ -2117,7 +2122,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         //
         if (!fReaderMgr.pushReader(reader, decl))
         {
-            emitError(XML4CErrs::RecursiveEntity, decl->getName());
+            emitError(XMLErrs::RecursiveEntity, decl->getName());
             return EntityExp_Failed;
         }
 
@@ -2171,7 +2176,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         //  will have just been discarded, but we just keep going.
         //
         if (!fReaderMgr.pushReader(valueReader, decl))
-            emitError(XML4CErrs::RecursiveEntity, decl->getName());
+            emitError(XMLErrs::RecursiveEntity, decl->getName());
 
         //
         //  Do a start entity reference event.
@@ -2210,14 +2215,14 @@ bool XMLScanner::scanId(        XMLBuffer&  pubIdToFill
         // If they were looking for a public id, then we failed
         if (whatKind == IDType_Public)
         {
-            emitError(XML4CErrs::ExpectedPublicId);
+            emitError(XMLErrs::ExpectedPublicId);
             return false;
         }
 
         // We must skip spaces
         if (!fReaderMgr.skipPastSpaces())
         {
-            emitError(XML4CErrs::ExpectedWhitespace);
+            emitError(XMLErrs::ExpectedWhitespace);
             return false;
         }
 
@@ -2235,7 +2240,7 @@ bool XMLScanner::scanId(        XMLBuffer&  pubIdToFill
     //
     if (!fReaderMgr.skipPastSpaces())
     {
-        emitError(XML4CErrs::ExpectedWhitespace);
+        emitError(XMLErrs::ExpectedWhitespace);
 
         //
         //  Just in case, if they just forgot the whitespace but the next char
@@ -2248,7 +2253,7 @@ bool XMLScanner::scanId(        XMLBuffer&  pubIdToFill
 
     if (!scanPublicLiteral(pubIdToFill))
     {
-        emitError(XML4CErrs::ExpectedPublicId);
+        emitError(XMLErrs::ExpectedPublicId);
         return false;
     }
 
@@ -2276,7 +2281,7 @@ bool XMLScanner::scanId(        XMLBuffer&  pubIdToFill
             //  give up since its probably going to work. The user just
             //  missed the separating space. Otherwise, fail.
             //
-            emitError(XML4CErrs::ExpectedWhitespace);
+            emitError(XMLErrs::ExpectedWhitespace);
             if (!bIsQuote)
                 return false;
         }
@@ -2292,7 +2297,7 @@ bool XMLScanner::scanId(        XMLBuffer&  pubIdToFill
             //  Else, just return success.
             //
             if (bIsQuote)
-                emitError(XML4CErrs::ExpectedWhitespace);
+                emitError(XMLErrs::ExpectedWhitespace);
              else
                 return true;
         }
@@ -2300,7 +2305,7 @@ bool XMLScanner::scanId(        XMLBuffer&  pubIdToFill
 
     if (!scanSystemLiteral(sysIdToFill))
     {
-        emitError(XML4CErrs::ExpectedSystemId);
+        emitError(XMLErrs::ExpectedSystemId);
         return false;
     }
 
@@ -2328,7 +2333,7 @@ bool XMLScanner::scanPublicLiteral(XMLBuffer& toFill)
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
 
         if (nextCh == quoteCh)
             break;
@@ -2347,7 +2352,7 @@ bool XMLScanner::scanPublicLiteral(XMLBuffer& toFill)
                 , 8
                 , 16
             );
-            emitError(XML4CErrs::InvalidPublicIdChar, tmpBuf);
+            emitError(XMLErrs::InvalidPublicIdChar, tmpBuf);
         }
 
         toFill.append(nextCh);
@@ -2377,7 +2382,7 @@ bool XMLScanner::scanSystemLiteral(XMLBuffer& toFill)
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
 
         // Break out on terminating quote
         if (nextCh == quoteCh)

@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x10000000" /version:1.0 /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib"
+# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x12000000" /version:1.2 /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib"
 # SUBTRACT LINK32 /pdb:none /incremental:yes
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
+# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x10000000" /version:1.1 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1.lib" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x12000000" /version:1.2 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1.lib" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -334,7 +334,7 @@ SOURCE=..\..\..\..\..\src\util\ValueVectorOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XML4CDefs.hpp
+SOURCE=..\..\..\..\..\src\util\XercesDefs.hpp
 # End Source File
 # Begin Source File
 
@@ -359,6 +359,10 @@ SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLDeleterFor.hpp
 # End Source File
 # Begin Source File
 
@@ -438,19 +442,19 @@ SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.hpp
 # End Source File
 # End Group
 # Begin Group "framework"

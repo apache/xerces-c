@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:18  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:24  rahulj
  * Year 2K copyright swat.
  *
@@ -71,14 +76,13 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 #include <windows.h>
 #include "Win32MsgLoader.hpp"
-
 
 
 // ---------------------------------------------------------------------------
@@ -91,7 +95,7 @@ Win32MsgLoader::Win32MsgLoader(const XMLCh* const msgDomain) :
     , fMsgDomain(0)
 {
     // Try to get the module handle
-    fModHandle = ::GetModuleHandleA(XML4C_DLLName);
+    fModHandle = ::GetModuleHandleA(Xerces_DLLName);
     if (!fModHandle)
     {
         //
@@ -100,7 +104,7 @@ Win32MsgLoader::Win32MsgLoader(const XMLCh* const msgDomain) :
         //  that we are part of.
         //
         static const char* const privDLLName = "IXUTIL";
-        fModHandle = ::GetModuleHandle(privDLLName);
+        fModHandle = ::GetModuleHandleA(privDLLName);
 
         // If neither exists, then we give up
         if (!fModHandle)
@@ -132,13 +136,65 @@ Win32MsgLoader::~Win32MsgLoader()
 // ---------------------------------------------------------------------------
 //  Implementation of the virtual message loader API
 // ---------------------------------------------------------------------------
+
+//
+//  This is the method that actually does the work of loading a message from
+//  the attached resources. Note that we don't use LoadStringW here, since it
+//  won't work on Win98. So we go the next level down and do what LoadStringW
+//  would have done, since this will work on either platform.
+//
 bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
                             , const unsigned long           maxChars)
 {
-    // Load the id, adjusting it by the domain offset
-    if (!::LoadStringW(fModHandle, msgToLoad + fDomainOfs, toFill, maxChars))
+    // In case we error return, and they don't check it...
+    toFill[0] = 0;
+
+    // Adjust the message id by the domain offset
+    const unsigned int theMsgId = msgToLoad + fDomainOfs;
+
+    //
+    //  Figure out the actual id the id, adjusting it by the domain offset.
+    //  Then first we calculate the particular 16 string block that this id
+    //  is in, and the offset within that block of the string in question.
+    //
+    const unsigned int theBlock = (theMsgId >> 4) + 1;
+    const unsigned int theOfs   = theMsgId & 0x000F;
+
+    // Try to find this resource. If we fail to find it, return false
+    HRSRC hMsgRsc = ::FindResourceExA
+    (
+        fModHandle
+        , RT_STRING
+        , MAKEINTRESOURCE(theBlock)
+        , MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL)
+    );
+    if (!hMsgRsc)
         return false;
+
+    // We found it, so load the block. If this fails, also return a false
+    HGLOBAL hGbl = ::LoadResource(fModHandle, hMsgRsc);
+    if (!hGbl)
+        return false;
+
+    // Lock this resource into memory. Again, if it fails, just return false
+    const XMLCh* pBlock = (const XMLCh*)::LockResource(hGbl);
+    if (!pBlock)
+        return false;
+
+    //
+    //  Look through the block for our desired message. Its stored such that
+    //  the zeroth entry has the length minus the separator null.
+    //
+    for (unsigned int index = 0; index < theOfs; index++)
+        pBlock += *pBlock + 1;
+
+    // Calculate how many actual chars we will end up with
+    const unsigned int actualChars = ((maxChars < *pBlock) ? maxChars : *pBlock);
+
+    // Ok, finally now copy as much as we can into the caller's buffer
+    wcsncpy(toFill, pBlock + 1, actualChars);
+    toFill[actualChars] = 0;
 
     return true;
 }

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/02 19:54:46  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/24 20:05:25  abagchi
  * Swat for removing Log from API docs
  *
@@ -73,7 +78,7 @@
 #if !defined(OUTPUTSTREAM_HPP)
 #define OUTPUTSTREAM_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 class StreamJanitor;
 

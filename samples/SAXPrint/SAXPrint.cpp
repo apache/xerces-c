@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:53:49  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/11 02:39:43  abagchi
  * Removed StrX::transcode
  *
@@ -85,16 +90,27 @@
 // ---------------------------------------------------------------------------
 //  Local data
 //
-//  xmlFile
-//      The path to the file to parser. Set via command line.
+//  doEscapes
+//      Indicates whether, in the output, characters that are commonly
+//      represented in XML via intrinsic character references should be
+//      output that way.
+//
+//  doNamespaces
+//      Indicates whether namespace processing should be enabled or not.
+//      Defaults to disabled.
 //
 //  doValidation
 //      Indicates whether the validating or non-validating parser should be
 //      used. Defaults to validating, -NV overrides.
+//
+//  xmlFile
+//      The path to the file to parser. Set via command line.
 // ---------------------------------------------------------------------------
-static char*    xmlFile         = 0;
 static bool     doEscapes       = true;
+static bool     doNamespaces    = false;
 static bool     doValidation    = false;
+static char*    xmlFile         = 0;
+
 
 
 // ---------------------------------------------------------------------------
@@ -108,6 +124,7 @@ static void usage()
          <<  "   Options:\n"
          <<  "     -NoEscape   Don't escape special characters in output\n"
          <<  "     -v          Invoke the Validating SAX Parser.\n"
+         <<  "     -n          Enable namespace processing.\n"
          <<  "     -?          Show this help\n"
          <<  endl;
 }
@@ -119,8 +136,6 @@ static void usage()
 // ---------------------------------------------------------------------------
 int main(int argC, char* argV[])
 {
-    unsigned int parmInd = 0;
-
     // Initialize the XML4C2 system
     try
     {
@@ -142,13 +157,14 @@ int main(int argC, char* argV[])
     }
 
     // Watch for special case help request
-    if (strcmp(argV[1], "-?") == 0)
+    if ((argC == 2) && !strcmp(argV[1], "-?"))
     {
         usage();
-        return 0;
+        return 2;
     }
 
-    for (parmInd = 1; parmInd < (unsigned int)argC; parmInd++)
+    int parmInd;
+    for (parmInd = 1; parmInd < argC; parmInd++)
     {
         // Break out on first parm not starting with a dash
         if (argV[parmInd][0] != '-')
@@ -159,14 +175,19 @@ int main(int argC, char* argV[])
         {
             doValidation = true;
         }
+         else if (!strcmp(argV[parmInd], "-n")
+              ||  !strcmp(argV[parmInd], "-N"))
+        {
+            doNamespaces = true;
+        }
          else if (!strcmp(argV[parmInd], "-NoEscape"))
         {
             doEscapes = false;
         }
          else
         {
-            usage();
-            return 1;
+            cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it\n" << endl;
         }
     }
 
@@ -174,7 +195,7 @@ int main(int argC, char* argV[])
     //  And now we have to have only one parameter left and it must be
     //  the file name.
     //
-    if (parmInd + 1 != (unsigned int)argC)
+    if (parmInd + 1 != argC)
     {
         usage();
         return 1;
@@ -187,6 +208,7 @@ int main(int argC, char* argV[])
     //
     SAXParser parser;
     parser.setDoValidation(doValidation);
+    parser.setDoNamespaces(doNamespaces);
 
     //
     //  Create the handler object and install it as the document and error

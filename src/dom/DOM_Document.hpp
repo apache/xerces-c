@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/02 19:53:55  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.9  2000/02/24 20:11:27  abagchi
  * Swat for removing Log from API docs
  *
@@ -97,7 +102,7 @@
 #ifndef DOM_Document_HEADER_GUARD_
 #define DOM_Document_HEADER_GUARD_
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <dom/DOM_DocumentType.hpp>
 #include <dom/DOM_DOMImplementation.hpp>
 #include <dom/DOM_Element.hpp>

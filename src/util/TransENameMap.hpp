@@ -189,7 +189,7 @@ private :
 };
 
 
-#if !defined(XML4C_TMPLSINC)
+#if !defined(XERCES_TMPLSINC)
 #include <util/TransENameMap.c>
 #endif
 

@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\DOM" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_CONSOLE" /FD /c
+# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\DOM" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -51,7 +51,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib IXDom.lib IXUtil.lib icuuc.lib /nologo /version:2.4 /subsystem:console /map /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" /libpath:"\ICU\Lib\Release"
+# ADD LINK32 kernel32.lib user32.lib IXDom.lib IXUtil.lib icuuc.lib /nologo /version:2.4 /subsystem:console /map /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" /libpath:"\icu_1_4_0\Lib\Release"
 
 !ELSEIF  "$(CFG)" == "DOMTest - Win32 Debug"
 
@@ -67,8 +67,8 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\DOM" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_CONSOLE" /FR /FD /GZ /c
-# SUBTRACT CPP /YX
+# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\DOM" /D "_DEBUG" /D "WIN32" /D "_CONSOLE" /FD /GZ /c
+# SUBTRACT CPP /Fr /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -76,7 +76,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib IXDom.lib IXUtil.lib icuuc.lib /nologo /version:2.4 /subsystem:console /debug /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" /libpath:"\ICU\Lib\Debug"
+# ADD LINK32 kernel32.lib user32.lib IXDom.lib IXUtil.lib icuuc.lib /nologo /version:2.4 /subsystem:console /debug /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" /libpath:"\icu_1_4_0\Lib\Debug"
 
 !ENDIF 
 
@@ -89,7 +89,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DomTest\DTest.cpp
+SOURCE=..\..\..\..\..\tests\DOM\DOMTest\DTest.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -97,12 +97,8 @@ SOURCE=..\..\..\..\..\src\dom\DomTest\DTest.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DomTest\DTest.h
+SOURCE=..\..\..\..\..\tests\DOM\DOMTest\DTest.h
 # End Source File
-# End Group
-# Begin Group "Resource Files"
-
-# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
 # End Target
 # End Project

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:55:07  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/06 07:48:16  rahulj
  * Year 2K copyright swat.
  *
@@ -120,10 +125,10 @@ typedef unsigned int    XMLUInt32;
 
 
 // ---------------------------------------------------------------------------
-//  Force on the XML4C debug token if it was on in the build environment
+//  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 #ifdef _DEBUG
-#define XML4C_DEBUG
+#define XERCES_DEBUG
 #endif
 
 
@@ -131,4 +136,4 @@ typedef unsigned int    XMLUInt32;
 //  The name of the DLL as built by the Borland projects. At this time, it
 //  does not use the versioning stuff.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "XercesLib";
+const char* const Xerces_DLLName = "XercesLib";

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:38  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/09 21:42:37  abagchi
  * Copyright swatswat
  *
@@ -99,8 +104,10 @@ static void formatNode( const   ContentSpecNode* const      curNode
 
     // Calculate the parens flag for the rep nodes
     bool doRepParens = false;
-    if (((firstType != ContentSpecNode::Leaf) && (parentType != -1))
-    ||  ((firstType == ContentSpecNode::Leaf) && (parentType == -1)))
+    if (((firstType != ContentSpecNode::Leaf)
+            && (parentType != ContentSpecNode::UnknownType))
+    ||  ((firstType == ContentSpecNode::Leaf)
+            && (parentType == ContentSpecNode::UnknownType)))
     {
         doRepParens = true;
     }
@@ -181,7 +188,7 @@ void ContentSpecNode::formatSpec(const  XMLValidator&   validator
     formatNode
     (
         this
-        , ContentSpecNode::NodeTypes(-1)
+        , UnknownType
         , validator
         , bufToFill
     );

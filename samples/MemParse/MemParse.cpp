@@ -55,15 +55,13 @@
  */
 
 
-/**
- * This sample program illustrates how one can use a memory buffer as the
- * input to parser. The memory buffer contains raw bytes representing XML
- * statements.
- *
- * Look at the API documentation for 'MemBufInputSource' for more information
- * on parameters to the constructor.
- *
+/*
  * $Log$
+ * Revision 1.6  2000/03/02 19:53:42  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.5  2000/02/11 02:37:01  abagchi
  * Removed StrX::transcode
  *
@@ -81,6 +79,17 @@
  *
  * Revision 1.7  1999/11/08 20:43:36  rahul
  * Swat for adding in Product name and CVS comment log variable.
+ *
+ */
+
+
+/**
+ * This sample program illustrates how one can use a memory buffer as the
+ * input to parser. The memory buffer contains raw bytes representing XML
+ * statements.
+ *
+ * Look at the API documentation for 'MemBufInputSource' for more information
+ * on parameters to the constructor.
  *
  */
 
@@ -151,7 +160,7 @@ void usage()
 // ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
-int main(int argc, char* args[])
+int main(int argC, char* argV[])
 {
     // Initialize the XML4C2 system
     try
@@ -165,25 +174,35 @@ int main(int argc, char* args[])
          return 1;
     }
 
-    const char* options = args[1];
-    bool  doValidation = false;
-
-    if (argc > 1)
+    bool doValidation    = false;
+    bool doNamespaces    = false;
+    if (argC > 1)
     {
-        // Check for some special cases values of the parameter
-        if (!strncmp(options, "-?", 2))
+        // See if non validating dom parser configuration is requested.
+        if ((argC == 2) && !strcmp(argV[1], "-?"))
         {
             usage();
-            return 0;
+            return 2;
         }
-        else if (!strncmp(options, "-v", 3))
+
+        int argInd;
+        for (argInd = 1; argInd < argC; argInd++)
         {
-            doValidation = true;
-        }
-        else if (options[0] == '-')
-        {
-            usage();
-            return -1;
+            if (!strcmp(argV[argInd], "-v")
+            ||  !strcmp(argV[argInd], "-V"))
+            {
+                doValidation = true;
+            }
+             else if (!strcmp(argV[argInd], "-n")
+                  ||  !strcmp(argV[argInd], "-N"))
+            {
+                doNamespaces = true;
+            }
+             else
+            {
+                cerr << "Unknown option '" << argV[argInd]
+                     << "', ignoring it\n" << endl;
+            }
         }
     }
 
@@ -193,6 +212,7 @@ int main(int argc, char* args[])
     //
     SAXParser parser;
     parser.setDoValidation(doValidation);
+    parser.setDoNamespaces(doNamespaces);
 
     //
     //  Create our SAX handler object and install it on the parser, as the

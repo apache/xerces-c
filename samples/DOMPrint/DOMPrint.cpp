@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.6  2000/03/02 19:53:40  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.5  2000/02/06 07:47:18  rahulj
  * Year 2K copyright swat.
  *
@@ -92,17 +97,20 @@
 //
 //      [-?]            - Show usage and exit
 //      [-v]            - Do validation
+//      [-n]            - Enable namespace processing
 //      [-NoEscape]     - Don't escape characters like '<' or '&'.
 //      filename        - The path to the XML file to parse
 //
 //  These are non-case sensitive
 //
 //   Limitations:
-//     1.  The encoding="xxx" clause in the XML header should reflect
-//         the system local code page, but does not.
-//     2.  Cases where the XML data contains characters that can not
-//         be represented in the system local code page are not handled.
-//
+//      1.  The encoding="xxx" clause in the XML header should reflect
+//          the system local code page, but does not.
+//      2.  Cases where the XML data contains characters that can not
+//          be represented in the system local code page are not handled.
+//      3.  Enabled namespace processing won't affect the output, since
+//          DOM doesn't do namespace yet. But it will confirm that all
+//          prefixes are correctly mapped, else you'll get errors.
 // ---------------------------------------------------------------------------
 
 
@@ -125,24 +133,28 @@
 //  xmlFile
 //      The path to the file to parser. Set via command line.
 //
-//  doValidation
-//      Indicates whether validation should be done. The default is not
-//      to validate, but -v overrides that.
-//
 //  doEscapes
 //      Indicates whether special chars should be escaped in the output.
 //      Defaults to doing escapes, -NoEscape overrides.
+//
+//  doNamespaces
+//      Indicates whether namespace processing should be done.
+//
+//  doValidation
+//      Indicates whether validation should be done. The default is not
+//      to validate, but -v overrides that.
 // ---------------------------------------------------------------------------
 static char*	xmlFile         = 0;
-static bool     doValidation    = false;
 static bool     doEscapes       = true;
+static bool     doNamespaces    = false;
+static bool     doValidation    = false;
 
 
 // ---------------------------------------------------------------------------
 //  Forward references
 // ---------------------------------------------------------------------------
-void          outputContent(ostream& target, const DOMString &s);
-void          usage();
+void     outputContent(ostream& target, const DOMString &s);
+void     usage();
 ostream& operator<<(ostream& target, const DOMString& toWrite);
 ostream& operator<<(ostream& target, DOM_Node& toWrite);
 
@@ -177,10 +189,10 @@ int main(int argC, char* argV[])
     }
 
     // Watch for special case help request
-    if (strcmp(argV[1], "-?") == 0)
+    if (!strcmp(argV[1], "-?"))
     {
         usage();
-        return 0;
+        return 2;
     }
 
     // See if non validating dom parser configuration is requested.
@@ -195,6 +207,11 @@ int main(int argC, char* argV[])
         ||  !strcmp(argV[parmInd], "-V"))
         {
             doValidation = true;
+        }
+         else if (!strcmp(argV[parmInd], "-n")
+              ||  !strcmp(argV[parmInd], "-N"))
+        {
+            doNamespaces = true;
         }
          else if (!strcmp(argV[parmInd], "-NoEscape"))
         {
@@ -225,6 +242,7 @@ int main(int argC, char* argV[])
     //
     DOMParser parser;
     parser.setDoValidation(doValidation);
+    parser.setDoNamespaces(doNamespaces);
     ErrorHandler *errReporter = new DOMTreeErrorReporter();
     parser.setErrorHandler(errReporter);
 
@@ -241,7 +259,7 @@ int main(int argC, char* argV[])
     catch (const XMLException& e)
     {
         cerr << "An error occured during parsing\n   Message: "
-            << DOMString(e.getMessage()) << endl;
+             << DOMString(e.getMessage()) << endl;
         errorsOccured = true;
     }
 
@@ -275,12 +293,14 @@ int main(int argC, char* argV[])
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage: DOMPrint [options] file\n"
-            "   This program invokes the XML4C DOM parser and builds the DOM tree.\n"
-            "   It then traverses the DOM tree and prints the contents of the tree\n"
+    cout << "\nUsage: DOMPrint [options] file\n\n"
+            "   This program invokes the XML4C DOM parser and \n"
+            "   builds the DOM tree. It then traverses the DOM \n"
+            "   tree and prints the contents of the tree\n"
             "   Options are case insensitive\n\n"
             "   Options:\n"
             "     -v          Validate the data according to the DTD\n"
+            "     -n          Enable namespace processing\n"
             "     -NoEscape   Don't escape special characters in output\n"
             "     -?          Show this help (must be the only parameter)\n"
           <<  endl;
@@ -290,13 +310,11 @@ void usage()
 
 
 // ---------------------------------------------------------------------------
-//
 //  ostream << DOM_Node   
 //
-//                Stream out a DOM node, and, recursively, all of its children.
-//                This function is the heart of writing a DOM tree out as
-//                XML source.  Give it a document node and it will do the whole thing.
-//
+//  Stream out a DOM node, and, recursively, all of its children. This
+//  function is the heart of writing a DOM tree out as XML source. Give it
+//  a document node and it will do the whole thing.
 // ---------------------------------------------------------------------------
 ostream& operator<<(ostream& target, DOM_Node& toWrite)
 {
@@ -324,10 +342,11 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
 
         case DOM_Node::DOCUMENT_NODE :
         {
-            // Bug here:  we need to find a way to get the encoding name
-            //   for the default code page on the system where the
-            //   program is running, and plug that in for the encoding
-            //   name.  
+            //
+            //  Bug here:  we need to find a way to get the encoding name
+            //  for the default code page on the system where the program
+            //  is running, and plug that in for the encoding name.  
+            //
             target << "<?xml version='1.0' encoding='ISO-8859-1' ?>\n";
             DOM_Node child = toWrite.getFirstChild();
             while( child != 0)
@@ -335,7 +354,6 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
                 target << child << endl;
                 child = child.getNextSibling();
             }
-
             break;
         }
 
@@ -379,8 +397,8 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             else
             {
                 //
-                //  There were no children.  Output the short form close of the
-                //  element start tag, making it an empty-element tag.
+                //  There were no children. Output the short form close of
+                //  the element start tag, making it an empty-element tag.
                 //
                 target << "/>";
             }
@@ -416,11 +434,11 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
 
 
 // ---------------------------------------------------------------------------
+//  outputContent
 //
-//  outputContent  - Write document content from a DOMString to a C++ ostream.
-//                   Escape the XML special characters (<, &, etc.) unless this
-//                   is suppressed by the command line option.
-//
+//  Write document content from a DOMString to a C++ ostream. Escape the
+//  XML special characters (<, &, etc.) unless this is suppressed by the
+//  command line option.
 // ---------------------------------------------------------------------------
 void outputContent(ostream& target, const DOMString &toWrite)
 {
@@ -468,12 +486,10 @@ void outputContent(ostream& target, const DOMString &toWrite)
 
 
 // ---------------------------------------------------------------------------
+//  ostream << DOMString
 //
-//  ostream << DOMString    Stream out a DOM string.
-//                          Doing this requires that we first transcode
-//                          to char * form in the default code page
-//                          for the system
-//
+//  Stream out a DOM string. Doing this requires that we first transcode
+//  to char * form in the default code page for the system
 // ---------------------------------------------------------------------------
 ostream& operator<<(ostream& target, const DOMString& s)
 {

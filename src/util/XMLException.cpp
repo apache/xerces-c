@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:54:48  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/06 07:48:05  rahulj
  * Year 2K copyright swat.
  *
@@ -180,7 +185,7 @@ void XMLException::setPosition(const char* const file, const unsigned int line)
 // ---------------------------------------------------------------------------
 XMLException::XMLException() :
 
-    fCode(XML4CExcepts::NoError)
+    fCode(XMLExcepts::NoError)
     , fSrcFile(0)
     , fSrcLine(0)
     , fMsg(0)
@@ -191,7 +196,7 @@ XMLException::XMLException() :
 XMLException::XMLException( const   char* const     srcFile
                             , const unsigned int    srcLine) :
 
-    fCode(XML4CExcepts::NoError)
+    fCode(XMLExcepts::NoError)
     , fSrcFile(0)
     , fSrcLine(srcLine)
     , fMsg(0)
@@ -237,7 +242,7 @@ void XMLException::operator=(const XMLException& toAssign)
 // ---------------------------------------------------------------------------
 //  XMLException: Protected methods
 // ---------------------------------------------------------------------------
-void XMLException::loadExceptText(const XML4CExcepts::Codes toLoad)
+void XMLException::loadExceptText(const XMLExcepts::Codes toLoad)
 {
     // Store the error code
     fCode = toLoad;
@@ -262,7 +267,7 @@ void XMLException::loadExceptText(const XML4CExcepts::Codes toLoad)
 
 
 void
-XMLException::loadExceptText(const  XML4CExcepts::Codes toLoad
+XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
                             , const XMLCh* const        text1
                             , const XMLCh* const        text2
                             , const XMLCh* const        text3
@@ -291,7 +296,7 @@ XMLException::loadExceptText(const  XML4CExcepts::Codes toLoad
 
 
 void
-XMLException::loadExceptText(const  XML4CExcepts::Codes toLoad
+XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
                             , const char* const         text1
                             , const char* const         text2
                             , const char* const         text3

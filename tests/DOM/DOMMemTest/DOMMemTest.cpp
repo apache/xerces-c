@@ -64,8 +64,13 @@
 //     This is NOT a complete test of DOM functionality.
 //
 
-/**
+/*
  * $Log$
+ * Revision 1.18  2000/03/02 19:55:44  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.17  2000/02/29 02:19:12  rahulj
  * No more compilation errors under HPUX 11.0. We do not build
  * DOMMemTest as it crashes the aCC compiler.

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:32  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:30  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 // NOTE:
 //
-//  XML4C is not officially supported on Tandem. This file was sent
+//  Xerces is not officially supported on Tandem. This file was sent
 //  in by one of the Tandem users and is included in the distribution
 //  just for convenience. Please send any defects / modification
 //  reports to xml4c@us.ibm.com
@@ -162,7 +167,7 @@ void XMLPlatformUtils::setupIntlPath()
     //  search route.
     //
 
-    static const char* const pubDLLNameBase = XML4C2_DLLName;
+    static const char* const pubDLLNameBase = Xerces_DLLName;
     char pubDLLNameReal[256];
     strcpy(pubDLLNameReal, pubDLLNameBase);
     strcat(pubDLLNameReal, gXML4C2VersionStr);

@@ -58,6 +58,11 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/02 19:54:03  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.6  2000/02/24 20:11:30  abagchi
  * Swat for removing Log from API docs
  *
@@ -94,7 +99,7 @@
 //  name is substituded for the *.
 //
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include "RefCountedImpl.hpp"
 
 class  NodeImpl;

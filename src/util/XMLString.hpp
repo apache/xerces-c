@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/03/02 19:54:49  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.8  2000/02/24 20:05:26  abagchi
  * Swat for removing Log from API docs
  *
@@ -92,7 +97,7 @@
 #if !defined(XMLSTRING_HPP)
 #define XMLSTRING_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 class XMLLCPTranscoder;
 
@@ -612,6 +617,22 @@ public:
     );
     //@}
 
+    /** @name Fixed size string movement */
+    //@{
+    /** Moves X number of chars
+      * @param targetStr The string to copy the chars to
+      * @param srcStr The string to copy the chars from
+      * @param count The number of chars to move
+      */
+    static void moveChars
+    (
+                XMLCh* const    targetStr
+        , const XMLCh* const    srcStr
+        , const unsigned int    count
+    );
+
+    //@}
+
     /** @name Replication function */
     //@{
     /** Replicates a string
@@ -838,10 +859,66 @@ private :
 
     /** @name Initialization */
     //@{
-    /** Intialization function called from XMLPlatformUtils class */
+    /** Init/Term methods called from XMLPlatformUtils class */
     static void initString(XMLLCPTranscoder* const defToUse);
+    static void termString();
     //@}
     friend class XMLPlatformUtils;
 };
+
+
+// ---------------------------------------------------------------------------
+//  Inline some methods that are either just passthroughs to other string
+//  methods, or which are key for performance.
+// ---------------------------------------------------------------------------
+inline void XMLString::moveChars(       XMLCh* const    targetStr
+                                , const XMLCh* const    srcStr
+                                , const unsigned int    count)
+{
+    XMLCh* outPtr = targetStr;
+    const XMLCh* inPtr = srcStr;
+    for (unsigned int index = 0; index < count; index++)
+        *outPtr++ = *inPtr++;
+}
+
+inline bool XMLString::startsWith(  const   XMLCh* const    toTest
+                                    , const XMLCh* const    prefix)
+{
+    return (compareNString(toTest, prefix, stringLen(prefix)) == 0);
+}
+
+inline bool XMLString::startsWithI( const   XMLCh* const    toTest
+                                    , const XMLCh* const    prefix)
+{
+    return (compareNIString(toTest, prefix, stringLen(prefix)) == 0);
+}
+
+inline unsigned int XMLString::stringLen(const XMLCh* const src)
+{
+    unsigned int len = 0;
+    if (src)
+    {
+        const XMLCh* pszTmp = src;
+        while (*pszTmp++)
+            len++;
+    }
+    return len;
+}
+
+inline XMLCh* XMLString::replicate(const XMLCh* const toRep)
+{
+    // If a null string, return a null string!
+    XMLCh* ret = 0;
+    if (toRep)
+    {
+        const unsigned int len = stringLen(toRep);
+        ret = new XMLCh[len + 1];
+        XMLCh* outPtr = ret;
+        const XMLCh* inPtr = toRep;
+        for (unsigned int index = 0; index <= len; index++)
+            *outPtr++ = *inPtr++;
+    }
+    return ret;
+}
 
 #endif

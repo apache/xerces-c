@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/02 19:54:24  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/24 20:00:22  abagchi
  * Swat for removing Log from API docs
  *
@@ -95,6 +100,11 @@
  *
  *  The code receiving this information can ask its validator for more info
  *  about the attribute, i.e. get its declaration from the DTD/Schema info.
+ *
+ *  Because of the heavy use (and reuse) of instances of this class, and the
+ *  number of string members it has, this class takes pains to not reallocate
+ *  string members unless it has to. It keeps up with how long each buffer
+ *  is and only reallocates if the new value won't fit.
  */
 class XMLPARSER_EXPORT XMLAttr
 {
@@ -330,12 +340,17 @@ private :
     //  Private instance variables
     //
     //  fName
-    //      The base part of the name of the attribute.
+    //  fNameBufSz
+    //      The base part of the name of the attribute, and the current size
+    //      of the buffer (minus one, where the null is.)
     //
     //  fPrefix
-    //      The prefix that was applied to this attribute's name. It really
-    //      does not matter technically but it might be required for pratical
-    //      reasons, to recreate the original document for instance.
+    //  fPrefixBufSz
+    //      The prefix that was applied to this attribute's name, and the
+    //      current size of the buffer (minus one, where the null is.) It
+    //      really does not matter technically but it might be required
+    //      for pratical reasons, to recreate the original document for
+    //      instance.
     //
     //  fQName
     //      This is the QName form of the name, which is faulted in (from the
@@ -350,17 +365,22 @@ private :
     //      type of attribute it was.
     //
     //  fValue
-    //      The attribute value that was given in the attribute instance.
+    //  fValueBufSz
+    //      The attribute value that was given in the attribute instance, and
+    //      its current buffer size (minus one, where the null is.)
     //
     //  fURIId
     //      The id of the URI that this attribute belongs to.
     // -----------------------------------------------------------------------
     XMLCh*              fName;
+    unsigned int        fNameBufSz;
     XMLCh*              fPrefix;
+    unsigned int        fPrefixBufSz;
     XMLCh*              fQName;
     bool                fSpecified;
     XMLAttDef::AttTypes fType;
     XMLCh*              fValue;
+    unsigned int        fValueBufSz;
     unsigned int        fURIId;
 };
 
@@ -410,6 +430,20 @@ inline unsigned int XMLAttr::getURIId() const
 // ---------------------------------------------------------------------------
 //  XMLAttr: Setter methods
 // ---------------------------------------------------------------------------
+inline void XMLAttr::set(const  unsigned int        uriId
+                        , const XMLCh* const        attrName
+                        , const XMLCh* const        attrPrefix
+                        , const XMLCh* const        attrValue
+                        , const XMLAttDef::AttTypes type)
+{
+    // Set the name info and the value via their respective calls
+    setName(uriId, attrName, attrPrefix);
+    setValue(attrValue);
+
+    // And store the type
+    fType = type;
+}
+
 inline void XMLAttr::setType(const XMLAttDef::AttTypes newValue)
 {
     fType = newValue;

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:53:47  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:47:23  rahulj
  * Year 2K copyright swat.
  *
@@ -86,6 +91,7 @@ SAXCountHandlers::SAXCountHandlers() :
     , fAttrCount(0)
     , fCharacterCount(0)
     , fSpaceCount(0)
+    , fSawErrors(false)
 {
 }
 
@@ -130,24 +136,26 @@ void SAXCountHandlers::resetDocument()
 // ---------------------------------------------------------------------------
 void SAXCountHandlers::error(const SAXParseException& e)
 {
-    cerr << "\nError at (file " << StrX(e.getSystemId())
+    fSawErrors = true;
+    cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void SAXCountHandlers::fatalError(const SAXParseException& e)
 {
-    cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
+    fSawErrors = true;
+    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void SAXCountHandlers::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at (file " << StrX(e.getSystemId())
+    cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.11  2000/03/02 19:53:59  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.10  2000/02/10 23:35:11  andyh
  * Update DOM_DOMImplementation::CreateDocumentType and
  * DOM_DocumentType to match latest from W3C

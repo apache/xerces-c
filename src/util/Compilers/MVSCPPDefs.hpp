@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:55:08  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/16 22:51:04  abagchi
  * defined PLATFORM_EXPORT to _Export
  *
@@ -120,20 +125,21 @@ typedef unsigned int   XMLUInt32;
 
 
 // ---------------------------------------------------------------------------
-//  Force on the XML4C debug token if it was on in the build environment
+//  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 #if 0
-#define XML4C_DEBUG
+#define XERCES_DEBUG
 #endif
 
 
 // ---------------------------------------------------------------------------
 //  Provide some common string ops that are different/notavail on MVSCPP
 // ---------------------------------------------------------------------------
+
 //
 // This is a upper casing function. Note that this will not cover
-// all NLS cases such as european accents etc. but there aren't
-// any of these in the current uses of this function in XML4C.
+// all NLS cases such as European accents etc. but there aren't
+// any of these in the current uses of this function in Xerces.
 // If this changes in the future, than we can re-address the issue
 // at that time.
 //
@@ -173,4 +179,4 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the MVSCPP version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libxerces-c";
+const char* const Xerces_DLLName = "libxerces-c";

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:55:15  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/06 07:48:22  rahulj
  * Year 2K copyright swat.
  *
@@ -74,7 +79,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/BitOps.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLMsgLoader.hpp>

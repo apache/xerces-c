@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.6  2000/03/02 19:54:33  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.5  2000/02/17 03:54:26  rahulj
  * Added some new getters to query the parser state and
  * clarified the documentation.
@@ -275,7 +280,7 @@ void SAXParser::parse(const InputSource& source, const bool reuseValidator)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
     try
     {
@@ -295,7 +300,7 @@ void SAXParser::parse(const XMLCh* const systemId, const bool reuseValidator)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
     try
     {
@@ -315,7 +320,7 @@ void SAXParser::parse(const char* const systemId, const bool reuseValidator)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
     try
     {
@@ -408,7 +413,7 @@ bool SAXParser::parseFirst( const   XMLCh* const    systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
     return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
@@ -422,7 +427,7 @@ bool SAXParser::parseFirst( const   char* const     systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
     return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
@@ -436,7 +441,7 @@ bool SAXParser::parseFirst( const   InputSource&    source
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
     return fScanner->scanFirst(source, toFill, reuseValidator);
 }
@@ -607,7 +612,10 @@ void SAXParser::startDocument()
 {
     // Just map to the SAX document handler
     if (fDocHandler)
+    {
+        fDocHandler->setDocumentLocator(fScanner->getLocator());
         fDocHandler->startDocument();
+    }
 
     //
     //  If there are any installed advanced handlers, then lets call them

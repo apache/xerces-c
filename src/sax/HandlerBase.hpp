@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/02 19:54:35  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.5  2000/02/24 20:12:55  abagchi
  * Swat for removing Log from API docs
  *
@@ -231,7 +236,7 @@ public:
     * @see DocumentHandler#setDocumentLocator
     * @see Locator
     */
-    virtual void setDocumentLocator(Locator* const locator);
+    virtual void setDocumentLocator(const Locator* const locator);
 
   /**
     * Receive notification of the beginning of the document.
@@ -487,7 +492,7 @@ HandlerBase::unparsedEntityDecl(const   XMLCh* const name
 {
 }
 
-inline void HandlerBase::setDocumentLocator(Locator* const locator)
+inline void HandlerBase::setDocumentLocator(const Locator* const locator)
 {
 }
 

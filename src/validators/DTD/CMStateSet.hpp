@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/02 19:55:37  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/24 20:16:48  abagchi
  * Swat for removing Log from API docs
  *
@@ -82,7 +87,7 @@
 #if !defined(CMSTATESET_HPP)
 #define CMSTATESET_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/ArrayIndexOutOfBoundsException.hpp>
 #include <framework/XMLValidityCodes.hpp>
 #include <string.h>
@@ -232,7 +237,7 @@ public :
     bool getBit(const unsigned int bitToGet) const
     {
         if (bitToGet >= fBitCount)
-            ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Bitset_BadIndex);
+            ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex);
 
         if (fBitCount < 65)
         {
@@ -267,7 +272,7 @@ public :
     void setBit(const unsigned int bitToSet)
     {
         if (bitToSet >= fBitCount)
-            ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Bitset_BadIndex);
+            ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex);
 
         if (fBitCount < 65)
         {

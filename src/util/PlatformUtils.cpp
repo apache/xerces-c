@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.6  2000/03/02 19:54:44  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.5  2000/02/06 07:48:03  rahulj
  * Year 2K copyright swat.
  *
@@ -86,32 +91,35 @@
 #include <util/XMLMsgLoader.hpp>
 #include <util/Mutexes.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
+#include <util/RefVectorOf.hpp>
 #include <util/TransService.hpp>
+#include <util/XMLString.hpp>
+#include <util/XMLNetAccessor.hpp>
 #include <util/XMLUni.hpp>
 
 
 // ---------------------------------------------------------------------------
 //  Local data members
 //
-//  gMsgMutex
-//      This is a mutex that will be used to synchronize access to the single
-//      static message loader for exception messages.
+//  gSyncMutex
+//      This is a mutex that will be used to synchronize access to some of
+//      the static data of the platform utilities class and here locally.
 // ---------------------------------------------------------------------------
-static XMLMutex*    gMsgMutex = 0;
+static XMLMutex*                gSyncMutex = 0;
+static RefVectorOf<XMLDeleter>  gLazyData(512);
+static bool                     gInitFlag = false;
 
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Static Data Members
 // ---------------------------------------------------------------------------
-bool                XMLPlatformUtils::fgInitFlag = false;
 XMLNetAccessor*     XMLPlatformUtils::fgNetAccessor = 0;
 XMLTransService*    XMLPlatformUtils::fgTransService = 0;
 
 
 
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform independent init methods
+//  XMLPlatformUtils: Init/term methods
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::Initialize()
 {
@@ -121,12 +129,12 @@ void XMLPlatformUtils::Initialize()
     //  like processes that cannot keep up with whether they have initialized
     //  us yet or not.
     //
-    if (fgInitFlag)
+    if (gInitFlag)
         return;
-    fgInitFlag = true;
+    gInitFlag = true;
 
-    // Create the message sync mutex
-    gMsgMutex = new XMLMutex;
+    // Create the local sync mutex
+    gSyncMutex = new XMLMutex;
 
     //
     //  Call the platform init method, which is implemented in each of the
@@ -173,8 +181,46 @@ void XMLPlatformUtils::Initialize()
 }
 
 
+void XMLPlatformUtils::Terminate()
+{
+    // Delete any net accessor that got installed
+    delete fgNetAccessor;
+    fgNetAccessor = 0;
+
+    //
+    //  Call the method that cleans up the registered lazy eval objects.
+    //  This is all higher level code which might try to report errors if
+    //  they have problems, so we want to do this before we hose our
+    //  fundamental bits and pieces.
+    //
+    cleanupLazyData();
+
+    //
+    //  Call some other internal modules to give them a chance to clean up.
+    //  Do the string class last in case something tries to use it during
+    //  cleanup.
+    //
+    XMLString::termString();
+
+    // Clean up the the transcoding service
+    delete fgTransService;
+    fgTransService = 0;
+
+    // Clean up the sync mutex
+    delete gSyncMutex;
+    gSyncMutex = 0;
+
+    //
+    //  And do platform termination. This cannot do use any XML services
+    //  at all, it can only clean up local stuff. It it reports an error,
+    //  it cannot use any XML exception or error reporting services.
+    //
+    platformTerm();
+}
+
+
 // ---------------------------------------------------------------------------
-//  Platform independent Msg support methods
+//  XMLPlatformUtils: Msg support methods
 // ---------------------------------------------------------------------------
 XMLMsgLoader* XMLPlatformUtils::loadMsgSet(const XMLCh* const msgDomain)
 {
@@ -184,4 +230,41 @@ XMLMsgLoader* XMLPlatformUtils::loadMsgSet(const XMLCh* const msgDomain)
     //  works or not. That's their decision.
     //
     return loadAMsgSet(msgDomain);
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Lazy eval methods
+// ---------------------------------------------------------------------------
+void XMLPlatformUtils::registerLazyData(XMLDeleter* const deleter)
+{
+    // Just add a copy of this object to the vector. MUST be synchronized
+    XMLMutexLock lock(gSyncMutex);
+    gLazyData.addElement(deleter);
+}
+
+
+void XMLPlatformUtils::cleanupLazyData()
+{
+    //
+    //  Loop through the vector and try to delete each object. Use a try
+    //  block so that we don't fall out prematurely if one of them hoses.
+    //  Note that we effectively do them in reverse order of their having
+    //  been registered.
+    //
+    //  Also, note that we don't synchronize here because this is happening
+    //  during shutdown.
+    //
+    while (gLazyData.size())
+    {
+        try
+        {
+            gLazyData.removeLastElement();
+        }
+
+        catch(...)
+        {
+            // We don't try to report errors here, just fall through
+        }
+    }
 }

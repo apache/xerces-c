@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:47  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:05  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/ValueVectorOf.hpp>
 #endif
 
@@ -148,7 +153,7 @@ template <class TElem> void ValueVectorOf<TElem>::
 setElementAt(const TElem& toSet, const unsigned int setAt)
 {
     if (setAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
     fElemList[setAt] = toSet;
 }
 
@@ -162,7 +167,7 @@ insertElementAt(const TElem& toInsert, const unsigned int insertAt)
     }
 
     if (insertAt > fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
     // Make room for the newbie
     for (unsigned int index = fCurCount; index > insertAt; index--)
@@ -177,7 +182,7 @@ template <class TElem> void ValueVectorOf<TElem>::
 removeElementAt(const unsigned int removeAt)
 {
     if (removeAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
     if (removeAt == fCurCount-1)
     {
@@ -206,7 +211,7 @@ template <class TElem> const TElem& ValueVectorOf<TElem>::
 elementAt(const unsigned int getAt) const
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
     return fElemList[getAt];
 }
 
@@ -214,7 +219,7 @@ template <class TElem> TElem& ValueVectorOf<TElem>::
 elementAt(const unsigned int getAt)
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
     return fElemList[getAt];
 }
 

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:44  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:03  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/RefStackOf.hpp>
 #endif
 
@@ -99,7 +104,7 @@ template <class TElem> const TElem* RefStackOf<TElem>::
 elementAt(const unsigned int index) const
 {
     if (index > fVector.size())
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Stack_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Stack_BadIndex);
     return fVector.elementAt(index);
 }
 
@@ -112,7 +117,7 @@ template <class TElem> const TElem* RefStackOf<TElem>::peek() const
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XML4CExcepts::Stack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
 
     return fVector.elementAt(curSize-1);
 }
@@ -121,7 +126,7 @@ template <class TElem> TElem* RefStackOf<TElem>::pop()
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XML4CExcepts::Stack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
 
     // Orphan off the element from the last slot in the vector
     return fVector.orphanElementAt(curSize-1);

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.9  2000/03/02 19:55:45  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.8  2000/02/29 02:19:13  rahulj
  * No more compilation errors under HPUX 11.0. We do not build
  * DOMMemTest as it crashes the aCC compiler.
@@ -101,43 +106,6 @@
  *
  */
  
-/**
- * $Log$
- * Revision 1.8  2000/02/29 02:19:13  rahulj
- * No more compilation errors under HPUX 11.0. We do not build
- * DOMMemTest as it crashes the aCC compiler.
- *
- * Revision 1.7  2000/02/06 07:48:36  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.6  2000/02/04 05:46:31  andyh
- * Change offsets and lengths form signed to unsigned
- *
- * Revision 1.5  2000/02/04 01:50:13  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.4  2000/01/29 00:39:09  andyh
- * Redo synchronization in DOMStringHandle allocator.  There
- * was a bug in the use of Compare and Swap.  Switched to mutexes.
- *
- * Changed a few plain deletes to delete [].
- *
- * Revision 1.3  2000/01/19 21:40:58  andyh
- * Remove a few remaining dependencies on the (now defunct)
- * XML StdOut stream.
- *
- * Revision 1.2  1999/12/03 00:02:25  andyh
- * DOM tests updated to catch DOMException by ref.
- * Added tests of DOMString::transcode() and append()
- *
- * Revision 1.1.1.1  1999/11/09 01:02:34  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:42:24  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
- */
-
 #include <stdio.h>
 #include "DTest.h"
 #include <util/PlatformUtils.hpp>
@@ -1515,7 +1483,7 @@ void DTest::testElement(DOM_Document document)
     };
 
     // Fetch the newly added attribute back out directly from the element itself.
-    fetchedAttr = (DOM_Attr &)element.getAttributeNode("AnotherFirstElementAttribute");
+    fetchedAttr = element.getAttributeNode("AnotherFirstElementAttribute");
     if (fetchedAttr != newAttributeNode)
     {       
         printf("DOM_Element Tests Failure 004\n");
@@ -1529,7 +1497,7 @@ void DTest::testElement(DOM_Document document)
     int i;
     for (i = 0; i < docSize; i++)
     {
-        DOM_Node n = (DOM_Node &) docElements.item(i);
+        DOM_Node n = docElements.item(i);
         if (! (elementNames[i].equals(n.getNodeName())))
         {
             printf("Warning!!! Comparison of DOM_Element's 'getElementsByTagName' "
@@ -1556,7 +1524,7 @@ void DTest::testElement(DOM_Document document)
                                 //   this test to fail on all but the first time through.
         for (j = 0; j < textSize; j++)
         {
-            DOM_Node n = (DOM_Node &) text.item(j);
+            DOM_Node n = text.item(j);
             if (! (textCompare[j].equals(n.getNodeValue())))
             {
                 printf("Warning!!! Comparison of original text nodes via DOM_Node 'getChildNodes' & DOM_NodeList 'item'\n"
@@ -1574,7 +1542,7 @@ void DTest::testElement(DOM_Document document)
     element.normalize();        // Concatenates all adjacent text nodes in this element's subtree
     DOM_NodeList text2 = ((DOM_Node) element2).getChildNodes();
     compare = "dBodyLevel31'sChildTextNode11dBodyLevel31'sChildTextNode12dBodyLevel31'sChildTextNode13";
-    DOM_Node n = (DOM_Node &) text2.item(0);
+    DOM_Node n = text2.item(0);
     if (! (compare.equals(n.getNodeValue())))
     {
         printf("Warning!!! Comparison of concatenated text nodes created by DOM_Element's 'normalize' failed!\n");

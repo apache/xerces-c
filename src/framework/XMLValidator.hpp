@@ -56,6 +56,11 @@
 
  /*
   * $Log$
+  * Revision 1.6  2000/03/02 19:54:25  roddey
+  * This checkin includes many changes done while waiting for the
+  * 1.1.0 code to be finished. I can't list them all here, but a list is
+  * available elsewhere.
+  *
   * Revision 1.5  2000/02/24 20:00:24  abagchi
   * Swat for removing Log from API docs
   *
@@ -80,7 +85,7 @@
 #if !defined(XMLVALIDATOR_HPP)
 #define XMLVALIDATOR_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/XMLEnumerator.hpp>
 #include <util/RefHashTableOf.hpp>
 #include <framework/XMLAttr.hpp>
@@ -572,22 +577,22 @@ public:
      *                  as either XMLCh strings, or local code page strings which
      *                  will be transcoded internally.
      */
-    void emitError(const XML4CValid::Codes toEmit);
+    void emitError(const XMLValid::Codes toEmit);
     void emitError
     (
-        const   XML4CValid::Codes   toEmit
-        , const XMLCh* const        text1
-        , const XMLCh* const        text2 = 0
-        , const XMLCh* const        text3 = 0
-        , const XMLCh* const        text4 = 0
+        const   XMLValid::Codes toEmit
+        , const XMLCh* const    text1
+        , const XMLCh* const    text2 = 0
+        , const XMLCh* const    text3 = 0
+        , const XMLCh* const    text4 = 0
     );
     void emitError
     (
-        const   XML4CValid::Codes   toEmit
-        , const char* const         text1
-        , const char* const         text2 = 0
-        , const char* const         text3 = 0
-        , const char* const         text4 = 0
+        const   XMLValid::Codes toEmit
+        , const char* const     text1
+        , const char* const     text2 = 0
+        , const char* const     text3 = 0
+        , const char* const     text4 = 0
     );
 
     //@}

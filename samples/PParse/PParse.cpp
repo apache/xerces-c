@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:53:44  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/11 02:37:48  abagchi
  * Removed StrX::transcode
  *
@@ -85,11 +90,12 @@
 //  The parameters are:
 //
 //      [-?]            - Show usage and exit
+//      [-v]            - Do validation
+//      [-n]            - Enable namespace processing
 //      filename        - The path to the XML file to parse
 //
 //  These are non-case sensitive
 // ---------------------------------------------------------------------------
-
 
 
 // ---------------------------------------------------------------------------
@@ -106,8 +112,22 @@
 //
 //  xmlFile
 //      The path to the file to parser. Set via command line.
+//
+//  doEscapes
+//      Indicates whether special chars should be escaped in the output.
+//      Defaults to doing escapes, -NoEscape overrides.
+//
+//  doNamespaces
+//      Indicates whether namespace processing should be done.
+//
+//  doValidation
+//      Indicates whether validation should be done. The default is not
+//      to validate, but -v overrides that.
 // ---------------------------------------------------------------------------
-static char* xmlFile    = 0;
+static char*	xmlFile         = 0;
+static bool     doEscapes       = true;
+static bool     doNamespaces    = false;
+static bool     doValidation    = false;
 
 
 
@@ -150,14 +170,51 @@ int main(int argC, char* argV[])
     }
 
     // Watch for special case help request
-    if (strcmp(argV[1], "-?") == 0)
+    if (!strcmp(argV[1], "-?"))
     {
         usage();
-        return 0;
+        return 2;
     }
 
-    // Its not the help request so its got to be the file name
-    xmlFile = argV[1];
+    // See if non validating dom parser configuration is requested.
+    int parmInd;
+    for (parmInd = 1; parmInd < argC; parmInd++)
+    {
+        // Break out on first parm not starting with a dash
+        if (argV[parmInd][0] != '-')
+            break;
+
+        if (!strcmp(argV[parmInd], "-v")
+        ||  !strcmp(argV[parmInd], "-V"))
+        {
+            doValidation = true;
+        }
+         else if (!strcmp(argV[parmInd], "-n")
+              ||  !strcmp(argV[parmInd], "-N"))
+        {
+            doNamespaces = true;
+        }
+         else if (!strcmp(argV[parmInd], "-NoEscape"))
+        {
+            doEscapes = false;
+        }
+         else
+        {
+            usage();
+            return 1;
+        }
+    }
+
+    //
+    //  And now we have to have only one parameter left and it must be
+    //  the file name.
+    //
+    if (parmInd + 1 != argC)
+    {
+        usage();
+        return 1;
+    }
+    xmlFile = argV[parmInd];
 
 
     //
@@ -168,6 +225,8 @@ int main(int argC, char* argV[])
     PParseHandlers handler;
     parser.setDocumentHandler(&handler);
     parser.setErrorHandler(&handler);
+    parser.setDoValidation(doValidation);
+    parser.setDoNamespaces(doNamespaces);
 
     //
     //  Ok, lets do the progressive parse loop. On each time around the

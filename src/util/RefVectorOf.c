@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:45  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:03  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/RefVectorOf.hpp>
 #endif
 
@@ -119,7 +124,7 @@ template <class TElem> void
 RefVectorOf<TElem>::setElementAt(TElem* const toSet, const unsigned int setAt)
 {
     if (setAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
     if (fAdoptedElems)
         delete fElemList[setAt];
@@ -136,7 +141,7 @@ insertElementAt(TElem* const toInsert, const unsigned int insertAt)
     }
 
     if (insertAt > fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
     ensureExtraCapacity(1);
 
@@ -153,7 +158,7 @@ template <class TElem> TElem* RefVectorOf<TElem>::
 orphanElementAt(const unsigned int orphanAt)
 {
     if (orphanAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
     // Get the element we are going to orphan
     TElem* retVal = fElemList[orphanAt];
@@ -198,7 +203,7 @@ template <class TElem> void RefVectorOf<TElem>::
 removeElementAt(const unsigned int removeAt)
 {
     if (removeAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
     if (fAdoptedElems)
         delete fElemList[removeAt];
@@ -245,7 +250,7 @@ template <class TElem> const TElem* RefVectorOf<TElem>::
 elementAt(const unsigned int getAt) const
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
     return fElemList[getAt];
 }
 
@@ -253,7 +258,7 @@ template <class TElem> TElem*
 RefVectorOf<TElem>::elementAt(const unsigned int getAt)
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Vector_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
     return fElemList[getAt];
 }
 

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.10  2000/03/02 19:54:29  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.9  2000/02/14 19:27:07  roddey
  * Make an EBCDIC file without an encoding="" string an error.
  *
@@ -123,7 +128,6 @@
 // ---------------------------------------------------------------------------
 //  XMLReader: Public, static methods
 // ---------------------------------------------------------------------------
-
 bool XMLReader::isFirstNameChar(const XMLCh toCheck)
 {
     static const XMLByte ourMask = gBaseCharMask | gLetterCharMask;
@@ -214,11 +218,11 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     //
     fEncoding = XMLRecognizer::basicEncodingProbe(fRawByteBuf, fRawBytesAvail);
 
-    #if defined(XML4C_DEBUG)
+    #if defined(XERCES_DEBUG)
     if ((fEncoding < XMLRecognizer::Encodings_Min)
     ||  (fEncoding > XMLRecognizer::Encodings_Max))
     {
-        ThrowXML(RuntimeException, XML4CExcepts::Reader_BadAutoEncoding);
+        ThrowXML(RuntimeException, XMLExcepts::Reader_BadAutoEncoding);
     }
     #endif
 
@@ -312,7 +316,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
         ThrowXML1
         (
             RuntimeException
-            , XML4CExcepts::Reader_CantCreateCvtrFor
+            , XMLExcepts::Reader_CantCreateCvtrFor
             , fEncodingStr
         );
     }
@@ -350,7 +354,7 @@ XMLReader::~XMLReader()
 unsigned int XMLReader::getSrcOffset() const
 {
     if (!fSrcOfsSupported)
-        ThrowXML(RuntimeException, XML4CExcepts::Reader_SrcOfsNotSupported);
+        ThrowXML(RuntimeException, XMLExcepts::Reader_SrcOfsNotSupported);
 
     //
     //  Take the current source offset and add in the sizes that we've
@@ -391,7 +395,7 @@ bool XMLReader::refreshCharBuffer()
     if (!fTranscoder)
     {
         if (fEncoding == XMLRecognizer::EBCDIC)
-            ThrowXML(RuntimeException, XML4CExcepts::Reader_EncodingStrRequired);
+            ThrowXML(RuntimeException, XMLExcepts::Reader_EncodingStrRequired);
 
         // Ask the transcoding service to make use a transcoder
         XMLTransService::Codes failReason;
@@ -407,7 +411,7 @@ bool XMLReader::refreshCharBuffer()
             ThrowXML1
             (
                 RuntimeException
-                , XML4CExcepts::Reader_CantCreateCvtrFor
+                , XMLExcepts::Reader_CantCreateCvtrFor
                 , fEncodingStr
             );
         }
@@ -1309,7 +1313,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     );
 
     if (!fTranscoder)
-        ThrowXML1(RuntimeException, XML4CExcepts::Reader_CantCreateCvtrFor, fEncodingStr);
+        ThrowXML1(RuntimeException, XMLExcepts::Reader_CantCreateCvtrFor, fEncodingStr);
 
     // Update the base encoding member with the new base encoding found
     fEncoding = newBaseEncoding;
@@ -1429,7 +1433,7 @@ void XMLReader::doInitDecode()
                     ThrowXML1
                     (
                         TranscodingException
-                        , XML4CExcepts::Reader_CouldNotDecodeFirstLine
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
                         , fSystemId
                     );
                 }
@@ -1491,7 +1495,7 @@ void XMLReader::doInitDecode()
                     ThrowXML1
                     (
                         TranscodingException
-                        , XML4CExcepts::Reader_CouldNotDecodeFirstLine
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
                         , fSystemId
                     );
                 }
@@ -1604,7 +1608,7 @@ void XMLReader::doInitDecode()
 
         default :
             // It should never be anything else here
-            ThrowXML(TranscodingException, XML4CExcepts::Reader_BadAutoEncoding);
+            ThrowXML(TranscodingException, XMLExcepts::Reader_BadAutoEncoding);
             break;
     }
 

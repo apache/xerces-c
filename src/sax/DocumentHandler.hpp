@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/02 19:54:34  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.5  2000/02/24 20:12:55  abagchi
  * Swat for removing Log from API docs
  *
@@ -80,7 +85,7 @@
 #ifndef DOCUMENTHANDLER_HPP
 #define DOCUMENTHANDLER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 class AttributeList;
 class Locator;
@@ -257,30 +262,32 @@ public:
   /**
     * Receive an object for locating the origin of SAX document events.
     *
-    * <p>SAX parsers are strongly encouraged (though not absolutely
+    * SAX parsers are strongly encouraged (though not absolutely
     * required) to supply a locator: if it does so, it must supply
     * the locator to the application by invoking this method before
     * invoking any of the other methods in the DocumentHandler
-    * interface.</p>
+    * interface.
     *
-    * <p>The locator allows the application to determine the end
+    * The locator allows the application to determine the end
     * position of any document-related event, even if the parser is
     * not reporting an error.  Typically, the application will
     * use this information for reporting its own errors (such as
     * character content that does not match an application's
-    * business rules).  The information returned by the locator
-    * is probably not sufficient for use with a search engine.</p>
+    * business rules). The information returned by the locator
+    * is probably not sufficient for use with a search engine.
     *
-    * <p>Note that the locator will return correct information only
-    * during the invocation of the events in this interface.  The
-    * application should not attempt to use it at any other time.</p>
+    * Note that the locator will return correct information only
+    * during the invocation of the events in this interface. The
+    * application should not attempt to use it at any other time.
     *
     * @param locator An object that can return the location of
-    *                any SAX document event.
+    *                any SAX document event. The object is only
+    *                'on loan' to the client code and they are not
+    *                to attempt to delete or modify it in any way!
+    *
     * @see Locator#Locator
     */
-
-    virtual void setDocumentLocator(Locator* const locator) = 0;
+    virtual void setDocumentLocator(const Locator* const locator) = 0;
 
   /**
     * Receive notification of the beginning of a document.

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/02 19:54:40  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/24 20:05:24  abagchi
  * Swat for removing Log from API docs
  *
@@ -74,7 +79,7 @@
 #if !defined(ILLEGALARGUMENTEXCEPTION_HPP)
 #define ILLEGALARGUMENTEXCEPTION_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLException.hpp>
 
@@ -89,6 +94,6 @@ static const XMLCh gIllegalArgumentException_Name[] =
     ,   chNull
 };
 
-MakeXML4CException(IllegalArgumentException, XMLUTIL_EXPORT)
+MakeXMLException(IllegalArgumentException, XMLUTIL_EXPORT)
 
 #endif

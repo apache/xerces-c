@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:09  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:18  rahulj
  * Year 2K copyright swat.
  *
@@ -64,7 +69,7 @@
 
 #ifndef OS400SETDEFS_H
 #define OS400SETDEFS_H 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 // ---------------------------------------------------------------------------
 // Define these away for this platform
@@ -83,6 +88,8 @@
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef unsigned short XMLCh;
+
+
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers
 // ---------------------------------------------------------------------------
@@ -92,22 +99,19 @@ typedef unsigned int   XMLUInt32;
 
 
 // ---------------------------------------------------------------------------
-//  Force on the XML4C2 debug token if it was on in the build environment
+//  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 #if 0
-#define XML4C2_DEBUG
+#define XERCES_DEBUG
 #endif
 
 
 // ---------------------------------------------------------------------------
-//  Provide some common string ops that are different/notavail on CSet
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the CSet C++ version of the
 //  system. We append a previously defined token which holds the DLL
-//  versioning string. This is defined in XML4CDefs.hpp which is what this
+//  versioning string. This is defined in XercesDefs.hpp which is what this
 //  file is included into.
 // ---------------------------------------------------------------------------
-const char* const XML4C2_DLLName = "QXML4C";
+const char* const Xerces_DLLName = "QXML4C";
+
 #endif

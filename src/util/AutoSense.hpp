@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/02 19:54:37  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.10  2000/03/02 01:51:00  aruna1
  * Sun CC 5.0 related changes
  *
@@ -161,7 +166,7 @@
 
 // ---------------------------------------------------------------------------
 //  This section attempts to autodetect the compiler being used. It will set
-//  up XML4C specific defines that can be used by the rest of the code.
+//  up Xerces specific defines that can be used by the rest of the code.
 // ---------------------------------------------------------------------------
 #if defined(_MSC_VER)
     #define XML_VISUALCPP

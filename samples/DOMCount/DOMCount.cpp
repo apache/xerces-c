@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:53:39  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/11 02:32:46  abagchi
  * Removed StrX::transcode
  *
@@ -93,17 +98,18 @@
 void usage()
 {
     cout << "\nUsage:\n"
-         << "    DOMCount [-v] {XML file}\n"
-         << "This program invokes the XML4C DOM parser, builds "
-         << "the DOM tree, and then prints the number of elements "
+         << "    DOMCount [-v -n] {XML file}\n\n"
+         << "This program invokes the XML4C DOM parser, builds\n"
+         << "the DOM tree, and then prints the number of elements\n"
          << "found in the input XML file.\n\n"
          << "Options:\n"
-         << "        -v  Do validation in this parse.\n\n"
+         << "        -v  Do validation in this parse.\n"
+         << "        -n  Enable namespace processing.\n\n"
          << endl;
 }
 
 
-int main(int argc, char* args[])
+int main(int argC, char* argV[])
 {
     // Initialize the XML4C system
 	try
@@ -119,40 +125,62 @@ int main(int argc, char* args[])
     }
 
     // Check command line and extract arguments.
-    if (argc < 2)
+    if (argC < 2)
     {
         usage();
-        return -1;
+        return 1;
     }
 
-    const char* xmlFile         = args[1];
+    const char* xmlFile;
     bool        doValidation    = false;
+    bool        doNamespaces    = false;
 
     // See if non validating dom parser configuration is requested.
-    if (!strncmp(xmlFile, "-?", 2))
+    if ((argC == 2) && !strcmp(argV[1], "-?"))
     {
         usage();
-        return 0;
+        return 2;
     }
-     else if (!strncmp(xmlFile, "-v", 2))
+
+    int argInd;
+    for (argInd = 1; argInd < argC; argInd++)
     {
-        doValidation = true;
-        if (argc < 3)
+        // Break out on first non-dash parameter
+        if (argV[argInd][0] != '-')
+            break;
+
+        if (!strcmp(argV[argInd], "-v")
+        ||  !strcmp(argV[argInd], "-V"))
         {
-            usage();
-            return -1;
+            doValidation = true;
         }
-        xmlFile = args[2];
+         else if (!strcmp(argV[argInd], "-n")
+              ||  !strcmp(argV[argInd], "-N"))
+        {
+            doNamespaces = true;
+        }
+         else
+        {
+            cerr << "Unknown option '" << argV[argInd]
+                 << "', ignoring it\n" << endl;
+        }
     }
-     else if (xmlFile[0] == '-')
+
+    //
+    //  There should be only one and only one parameter left, and that
+    //  should be the file name.
+    //
+    if (argInd != argC - 1)
     {
         usage();
-        return -1;
+        return 1;
     }
+    xmlFile = argV[argInd];
 
     // Instantiate the DOM parser.
     DOMParser parser;
     parser.setDoValidation(doValidation);
+    parser.setDoNamespaces(doNamespaces);
 
     // And create our error handler and install it
     DOMCount elementCounter;
@@ -174,8 +202,8 @@ int main(int argc, char* args[])
     catch (const XMLException& toCatch)
     {
         cerr << "\nError during parsing: '" << xmlFile << "'\n"
-                << "Exception message is:  \n"
-                << StrX(toCatch.getMessage()) << "\n" << endl;
+             << "Exception message is:  \n"
+             << StrX(toCatch.getMessage()) << "\n" << endl;
         return -1;
     }
 
@@ -183,18 +211,26 @@ int main(int argc, char* args[])
     //  Extract the DOM tree, get the list of all the elements and report the
     //  length as the count of elements.
     //
-    DOM_Document doc = parser.getDocument();
-    unsigned int elementCount = doc.getElementsByTagName("*").getLength();
+    if (elementCounter.getSawErrors())
+    {
+        cout << "\nErrors occured, no output available\n" << endl;
+    }
+     else
+    {
+        DOM_Document doc = parser.getDocument();
+        unsigned int elementCount = doc.getElementsByTagName("*").getLength();
 
-    // Print out the stats that we collected and time taken.
-    cout << xmlFile << ": " << duration << " ms ("
-            << elementCount << " elems)." << endl;
-
+        // Print out the stats that we collected and time taken.
+        cout << xmlFile << ": " << duration << " ms ("
+             << elementCount << " elems)." << endl;
+    }
     return 0;
 }
 
 
-DOMCount::DOMCount()
+DOMCount::DOMCount() :
+
+    fSawErrors(false)
 {
 }
 
@@ -208,29 +244,30 @@ DOMCount::~DOMCount()
 // ---------------------------------------------------------------------------
 void DOMCount::error(const SAXParseException& e)
 {
-    cerr << "\nError at (file " << StrX(e.getSystemId())
+    fSawErrors = true;
+    cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void DOMCount::fatalError(const SAXParseException& e)
 {
-    cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
+    fSawErrors = true;
+    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void DOMCount::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at (file " << StrX(e.getSystemId())
+    cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void DOMCount::resetErrors()
 {
 }
-

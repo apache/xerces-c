@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:53:50  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/11 02:40:58  abagchi
  * Removed StrX::transcode
  *
@@ -106,7 +111,7 @@ void usage()
     cout << "\nUsage:\n"
          << "    StdInParse [options]\n"
          << "    -v  Do a validating parse. Defaults to non-validating.\n"
-         << "    -ns Enable namespace processing.\n\n"
+         << "    -n  Enable namespace processing.\n\n"
          << "This program allows you to redirect a file into the program\n"
          << "to be parsed. It will count the elements, characters, and \n"
          << "spaces and display these stats at the end\n"
@@ -132,23 +137,23 @@ int main(int argC, char* argV[])
          return 1;
     }
 
-    unsigned int parmInd;
-    for (parmInd = 1; parmInd < (unsigned int)argC; parmInd++)
+    int parmInd;
+    for (parmInd = 1; parmInd < argC; parmInd++)
     {
         if (!strcmp(argV[parmInd], "-v")
         ||  !strcmp(argV[parmInd], "-V"))
         {
             doValidation = true;
         }
-         else if (!strcmp(argV[parmInd], "-NS")
-              ||  !strcmp(argV[parmInd], "-ns"))
+         else if (!strcmp(argV[parmInd], "-n")
+              ||  !strcmp(argV[parmInd], "-N"))
         {
             doNamespaces = true;
         }
          else
         {
-            usage();
-            return 1;
+            cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it\n" << endl;
         }
     }
 

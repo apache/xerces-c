@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:47  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:05  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/ValueStackOf.hpp>
 #endif
 
@@ -103,7 +108,7 @@ template <class TElem> const TElem& ValueStackOf<TElem>::peek() const
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XML4CExcepts::Stack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
 
     return fVector.elementAt(curSize-1);
 }
@@ -112,7 +117,7 @@ template <class TElem> TElem ValueStackOf<TElem>::pop()
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XML4CExcepts::Stack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
 
     TElem retVal = fVector.elementAt(curSize-1);
     fVector.removeElementAt(curSize-1);

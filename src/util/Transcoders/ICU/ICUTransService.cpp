@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.15  2000/03/02 19:55:34  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.14  2000/02/10 21:28:53  aruna1
  * Problem solved for converting UChar to XMLCh. This problem showed up on solaris as UChar was != XMLCh
  *
@@ -432,7 +437,7 @@ ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
                             ,       unsigned char* const    charSizes)
 {
     // If debugging, insure the block size is legal
-    #if defined(XML4C_DEBUG)
+    #if defined(XERCES_DEBUG)
     checkBlockSize(maxChars);
     #endif
 
@@ -473,7 +478,7 @@ ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
     {
         if (orgTarget != (UChar*)toFill)
             delete [] orgTarget;
-        ThrowXML(TranscodingException, XML4CExcepts::Trans_CouldNotXCodeXMLData);
+        ThrowXML(TranscodingException, XMLExcepts::Trans_CouldNotXCodeXMLData);
     }
 
     // Calculate the bytes eaten and store in caller's param

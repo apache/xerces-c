@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/02 19:55:38  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/24 20:16:48  abagchi
  * Swat for removing Log from API docs
  *
@@ -75,7 +80,7 @@
 #define CONTENTSPECNODE_HPP
 
 #include <framework/XMLElementDecl.hpp>
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 class XMLBuffer;
 class XMLValidator;
@@ -95,6 +100,8 @@ public :
         , OneOrMore
         , Choice
         , Sequence
+
+        , UnknownType = -1
     };
 
 

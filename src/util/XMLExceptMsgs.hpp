@@ -1,9 +1,9 @@
 // This file is generated, don't edit it!!
 
-#if !defined(ERRHEADER_XML4CExcepts)
-#define ERRHEADER_XML4CExcepts
+#if !defined(ERRHEADER_XMLExcepts)
+#define ERRHEADER_XMLExcepts
 
-class XML4CExcepts
+class XMLExcepts
 {
 public :
     enum Codes

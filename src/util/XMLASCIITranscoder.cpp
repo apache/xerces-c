@@ -106,7 +106,7 @@ XMLASCIITranscoder::transcodeOne(const  XMLByte* const  srcData
         ThrowXML1
         (
             TranscodingException
-            , XML4CExcepts::Trans_NotInSourceSet
+            , XMLExcepts::Trans_NotInSourceSet
             , XMLUni::fgUSASCIIEncodingString
         );
     }
@@ -126,7 +126,7 @@ XMLASCIITranscoder::transcodeXML(const  XMLByte* const          srcData
                                 ,       unsigned char* const    charSizes)
 {
     // If debugging, make sure that the block size is legal
-    #if defined(XML4C_DEBUG)
+    #if defined(XERCES_DEBUG)
     checkBlockSize(maxChars);
     #endif
 
@@ -164,7 +164,7 @@ XMLASCIITranscoder::transcodeXML(const  XMLByte* const          srcData
         ThrowXML1
         (
             TranscodingException
-            , XML4CExcepts::Trans_NotInSourceSet
+            , XMLExcepts::Trans_NotInSourceSet
             , XMLUni::fgUSASCIIEncodingString
         );
     }

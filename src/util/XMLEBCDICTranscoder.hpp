@@ -57,7 +57,7 @@
 #ifndef XMLEBCDICTRANSCODER_HPP
 #define XMLEBCDICTRANSCODER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/TransService.hpp>
 
 

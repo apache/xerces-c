@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.6  2000/03/02 19:55:22  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.5  2000/02/06 07:48:27  rahulj
  * Year 2K copyright swat.
  *
@@ -130,7 +135,7 @@ static void WriteCharStr( FILE* stream, const char* const toWrite)
     if (fputs(toWrite, stream) == EOF)
     {
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::Strm_StdErrWriteFailure);
+                 XMLExcept::Strm_StdErrWriteFailure);
     }
 }
 
@@ -141,7 +146,7 @@ static void WriteUStrStdErr( const XMLCh* const toWrite)
     if (fputs(tmpVal, stderr) == EOF)
     {
        ThrowXML(XMLPlatformUtilsException,
-                XML4CExcepts::Strm_StdErrWriteFailure);
+                XMLExcept::Strm_StdErrWriteFailure);
    }
 }
 
@@ -152,7 +157,7 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
     if (fputs(tmpVal, stdout) == EOF)
     {
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::Strm_StdOutWriteFailure);
+                 XMLExcept::Strm_StdOutWriteFailure);
     }
 }
 
@@ -210,8 +215,8 @@ void XMLPlatformUtils::platformInit()
 
     // Construct the library name from the global variables
 
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
+    strcpy(libName, Xerces_DLLName);
+    strcat(libName, gXercesVersionStr);
     strcat(libName, ".so");
 
     char* libEnvVar = getenv(sharedLibEnvVar);
@@ -402,7 +407,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     int curPos = ftell( (FILE*)theFile);
     if (curPos == -1)
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotGetSize);
+                 XMLExcept::File_CouldNotGetSize);
 
     return (unsigned int)curPos;
 }
@@ -411,7 +416,7 @@ void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
     if (fclose((FILE*)theFile))
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotCloseFile);
+                 XMLExcept::File_CouldNotCloseFile);
 }
 
 unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
@@ -420,23 +425,23 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     long  int curPos = ftell((FILE*) theFile);
     if (curPos == -1)
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotGetCurPos);
+                 XMLExcept::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
      if (fseek((FILE*) theFile, 0, SEEK_END))
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotSeekToEnd);
+                 XMLExcept::File_CouldNotSeekToEnd);
 
     long int retVal = ftell((FILE*)theFile);
     if (retVal == -1)
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotSeekToEnd);
+                 XMLExcept::File_CouldNotSeekToEnd);
 
     // And put the pointer back
 
     if (fseek( (FILE*)theFile, curPos, SEEK_SET) )
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotSeekToPos);
+                 XMLExcept::File_CouldNotSeekToPos);
 
     return (unsigned int)retVal;
 }
@@ -470,7 +475,7 @@ XMLPlatformUtils::readFileBuffer( FileHandle          theFile
     if(ferror((FILE*)theFile))
     {
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotReadFromFile);
+                 XMLExcept::File_CouldNotReadFromFile);
     }
 
     return (unsigned int)noOfItemsRead;
@@ -482,7 +487,7 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET))
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotResetFile);
+                 XMLExcept::File_CouldNotResetFile);
 }
 
 
@@ -516,7 +521,7 @@ XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
     if (!tmpPath)
     {
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::File_CouldNotGetBasePathName);
+                 XMLExcept::File_CouldNotGetBasePathName);
     }
 
     char* newXMLString = new char [strlen(tmpPath) +2];
@@ -563,7 +568,7 @@ void* XMLPlatformUtils::makeMutex()
     if (pthread_mutex_init(mutex, attr))
     {
         ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::Mutex_CouldNotCreate);
+                 XMLExcept::Mutex_CouldNotCreate);
     }
     pthread_mutexattr_destroy(attr);
     delete attr;
@@ -579,7 +584,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
         if (pthread_mutex_destroy((pthread_mutex_t*) mtxHandle))
         {
             ThrowXML(XMLPlatformUtilsException,
-                     XML4CExcepts::Mutex_CouldNotDestroy);
+                     XMLExcept::Mutex_CouldNotDestroy);
         }
         delete mtxHandle;
     }
@@ -593,7 +598,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
         if (pthread_mutex_lock((pthread_mutex_t*) mtxHandle))
         {
             ThrowXML(XMLPlatformUtilsException,
-                     XML4CExcepts::Mutex_CouldNotLock);
+                     XMLExcept::Mutex_CouldNotLock);
         }
     }
 }
@@ -606,7 +611,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
         if (pthread_mutex_unlock((pthread_mutex_t*) mtxHandle))
         {
             ThrowXML(XMLPlatformUtilsException,
-                     XML4CExcepts::Mutex_CouldNotUnlock);
+                     XMLExcept::Mutex_CouldNotUnlock);
         }
     }
 }

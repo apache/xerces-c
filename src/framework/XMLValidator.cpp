@@ -56,6 +56,11 @@
 
 /**
   * $Log$
+  * Revision 1.5  2000/03/02 19:54:25  roddey
+  * This checkin includes many changes done while waiting for the
+  * 1.1.0 code to be finished. I can't list them all here, but a list is
+  * available elsewhere.
+  *
   * Revision 1.4  2000/02/06 07:47:49  rahulj
   * Year 2K copyright swat.
   *
@@ -141,7 +146,7 @@ static XMLMsgLoader& getMsgLoader()
 //  It handles getting the message loaded, doing token replacement, etc...
 //  and then calling the error handler, if its installed.
 //
-void XMLValidator::emitError(const XML4CValid::Codes toEmit)
+void XMLValidator::emitError(const XMLValid::Codes toEmit)
 {
     if (fErrorReporter)
     {
@@ -171,7 +176,7 @@ void XMLValidator::emitError(const XML4CValid::Codes toEmit)
         (
             toEmit
             , XMLUni::fgValidityDomain
-            , XML4CValid::errorType(toEmit)
+            , XMLValid::errorType(toEmit)
             , errText
             , lastInfo.systemId
             , lastInfo.publicId
@@ -181,7 +186,7 @@ void XMLValidator::emitError(const XML4CValid::Codes toEmit)
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
+    if ((XMLValid::isValid(toEmit) || XMLValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
     &&  !fScanner->getInException())
     {
@@ -189,11 +194,11 @@ void XMLValidator::emitError(const XML4CValid::Codes toEmit)
     }
 }
 
-void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
-                            , const XMLCh* const        text1
-                            , const XMLCh* const        text2
-                            , const XMLCh* const        text3
-                            , const XMLCh* const        text4)
+void XMLValidator::emitError(const  XMLValid::Codes toEmit
+                            , const XMLCh* const    text1
+                            , const XMLCh* const    text2
+                            , const XMLCh* const    text3
+                            , const XMLCh* const    text4)
 {
     if (fErrorReporter)
     {
@@ -226,7 +231,7 @@ void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
         (
             toEmit
             , XMLUni::fgValidityDomain
-            , XML4CValid::errorType(toEmit)
+            , XMLValid::errorType(toEmit)
             , errText
             , lastInfo.systemId
             , lastInfo.publicId
@@ -236,7 +241,7 @@ void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
+    if ((XMLValid::isValid(toEmit) || XMLValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
     &&  !fScanner->getInException())
     {
@@ -244,11 +249,11 @@ void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
     }
 }
 
-void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
-                            , const char* const         text1
-                            , const char* const         text2
-                            , const char* const         text3
-                            , const char* const         text4)
+void XMLValidator::emitError(const  XMLValid::Codes toEmit
+                            , const char* const     text1
+                            , const char* const     text2
+                            , const char* const     text3
+                            , const char* const     text4)
 {
     if (fErrorReporter)
     {
@@ -281,7 +286,7 @@ void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
         (
             toEmit
             , XMLUni::fgValidityDomain
-            , XML4CValid::errorType(toEmit)
+            , XMLValid::errorType(toEmit)
             , errText
             , lastInfo.systemId
             , lastInfo.publicId
@@ -291,7 +296,7 @@ void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
+    if ((XMLValid::isValid(toEmit) || XMLValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
     &&  !fScanner->getInException())
     {

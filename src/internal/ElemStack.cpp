@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:54:28  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/08 19:38:58  roddey
  * xmlns:xxx="" should affect the mapping of the prefixes of sibling attributes,
  * which was not being done.
@@ -200,10 +205,10 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
 const XMLElementDecl& ElemStack::elemAt(const unsigned int index) const
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XML4CExcepts::ElemStack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
 
     if (index >= fStack[fStackTop-1]->fChildCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::ElemStack_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::ElemStack_BadIndex);
 
     return *(fStack[fStackTop-1]->fThisElement);
 }
@@ -213,7 +218,7 @@ const ElemStack::StackElem* ElemStack::popTop()
 {
     // Watch for an underflow error
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XML4CExcepts::ElemStack_StackUnderflow);
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow);
 
     fStackTop--;
     return fStack[fStackTop];
@@ -224,7 +229,7 @@ void
 ElemStack::setElement(XMLElementDecl* const toSet, const unsigned int readerNum)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XML4CExcepts::ElemStack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
 
     fStack[fStackTop - 1]->fThisElement = toSet;
     fStack[fStackTop - 1]->fReaderNum = readerNum;
@@ -237,14 +242,14 @@ ElemStack::setElement(XMLElementDecl* const toSet, const unsigned int readerNum)
 unsigned int ElemStack::addChild(const unsigned int childId, const bool toParent)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XML4CExcepts::ElemStack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
 
     //
     //  If they want to add to the parent, then we have to have at least two
     //  elements on the stack.
     //
     if (toParent && (fStackTop < 2))
-        ThrowXML(NoSuchElementException, XML4CExcepts::ElemStack_NoParentPushed);
+        ThrowXML(NoSuchElementException, XMLExcepts::ElemStack_NoParentPushed);
 
     // Get a convenience pointer to the stack top row
     StackElem* curRow = toParent
@@ -294,7 +299,7 @@ unsigned int ElemStack::addChild(const unsigned int childId, const bool toParent
 const ElemStack::StackElem* ElemStack::topElement() const
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XML4CExcepts::ElemStack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
 
     return fStack[fStackTop - 1];
 }
@@ -307,7 +312,7 @@ void ElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
                             , const unsigned int    uriId)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XML4CExcepts::ElemStack_EmptyStack);
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
 
     // Get a convenience pointer to the stack top row
     StackElem* curRow = fStack[fStackTop - 1];

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.8  2000/03/02 19:55:46  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.7  2000/02/06 07:48:37  rahulj
  * Year 2K copyright swat.
  *
@@ -369,17 +374,21 @@ TestParser::startElement(const  XMLElementDecl&         elemDecl
                 if (fDoNamespaces)
                 {
                     fScanner->getValidator()->getURIText(curAttr->getURIId(), bufURI);
-                    cout << "{" << StrX(bufURI.getRawBuffer())
-                         << "}" << StrX(curAttr->getName()) << "="
-                         << StrX(curAttr->getValue()) << "\n";
+                    cout << "Name=" << "{" << StrX(bufURI.getRawBuffer())
+                         << "}" << StrX(curAttr->getName());
                 }
                  else
                 {
-                    cout << StrX(curAttr->getQName()) << "="
-                         << StrX(curAttr->getValue()) << "\n";
+                    cout << "Name=" << StrX(curAttr->getQName());
                 }
 
-                cout << "           ";
+                if (curAttr->getSpecified())
+                    cout << " (Explicit)  ";
+                else
+                    cout << " (Defaulted) ";
+
+                cout << "Value=" << StrX(curAttr->getValue()) << "\n"
+                     << "           ";
             }
         }
 

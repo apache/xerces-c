@@ -60,6 +60,11 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.10  2000/03/02 19:54:33  roddey
+* This checkin includes many changes done while waiting for the
+* 1.1.0 code to be finished. I can't list them all here, but a list is
+* available elsewhere.
+*
 * Revision 1.9  2000/02/17 17:47:26  andyh
 * Update Doc++ API comments
 * NameSpace update to track W3C
@@ -240,7 +245,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseValidator)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
     
     try
     { 
@@ -260,7 +265,7 @@ void DOMParser::parse(const XMLCh* const systemId, const bool reuseValidator)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
     
     try
     { 
@@ -280,7 +285,7 @@ void DOMParser::parse(const char* const systemId, const bool reuseValidator)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
     
     try
     { 
@@ -310,7 +315,7 @@ bool DOMParser::parseFirst( const   XMLCh* const    systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
     
     return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
@@ -324,7 +329,7 @@ bool DOMParser::parseFirst( const   char* const         systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
     
     return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
@@ -338,7 +343,7 @@ bool DOMParser::parseFirst( const   InputSource&    source
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
     
     return fScanner->scanFirst(source, toFill, reuseValidator);
 }

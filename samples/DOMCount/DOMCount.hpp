@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:53:39  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/11 02:43:55  abagchi
  * Removed StrX::transcode
  *
@@ -91,6 +96,13 @@ public:
     DOMCount();
     ~DOMCount();
 
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    bool getSawErrors() const;
+
+
     // -----------------------------------------------------------------------
     //  Implementation of the SAX ErrorHandler interface
     // -----------------------------------------------------------------------
@@ -106,6 +118,17 @@ private :
     // -----------------------------------------------------------------------
     DOMCount(const DOMCount&);
     void operator=(const DOMCount&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fSawErrors
+    //      This is set if we get any errors, and is queryable via a getter
+    //      method. Its used by the main code to suppress output if there are
+    //      errors.
+    // -----------------------------------------------------------------------
+    bool    fSawErrors;
 };
 
 
@@ -153,4 +176,9 @@ inline ostream& operator<<(ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;
+}
+
+inline bool DOMCount::getSawErrors() const
+{
+    return fSawErrors;
 }

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/02 19:54:49  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.7  2000/02/24 20:05:26  abagchi
  * Swat for removing Log from API docs
  *
@@ -92,7 +97,7 @@
 #if !defined(XMLNETACCESSOR_HPP)
 #define XMLNETACCESSOR_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLException.hpp>
 #include <util/XMLURL.hpp>
@@ -110,7 +115,7 @@ static const XMLCh gNetAccessorException_Name[] =
     ,   chLatin_o, chLatin_n, chNull
 };
 
-MakeXML4CException(NetAccessorException, XMLUTIL_EXPORT)
+MakeXMLException(NetAccessorException, XMLUTIL_EXPORT)
 
 
 

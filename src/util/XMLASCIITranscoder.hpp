@@ -57,7 +57,7 @@
 #ifndef XMLASCIITRANSCODER_HPP
 #define XMLASCIITRANSCODER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/TransService.hpp>
 
 

@@ -55,8 +55,13 @@
  */
 
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:55:52  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/14 19:25:44  roddey
  * Fixed some small bugs in how it used strings returned from DOM calls.
  *
@@ -478,17 +483,17 @@ extern "C" int wmain(int argC, XMLCh** argV)
             if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgXMLErrDomain))
             {
                 headerName = L"XMLErrorCodes.hpp";
-                errNameSpace = L"XML4CErrs";
+                errNameSpace = L"XMLErrs";
             }
              else if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgValidityDomain))
             {
                 headerName = L"XMLValidityCodes.hpp";
-                errNameSpace = L"XML4CValid";
+                errNameSpace = L"XMLValid";
             }
              else if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
             {
                 headerName = L"XMLExceptMsgs.hpp";
-                errNameSpace = L"XML4CExcepts";
+                errNameSpace = L"XMLExcepts";
             }
              else
             {

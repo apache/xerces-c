@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.14  2000/03/02 19:54:49  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.13  2000/02/22 00:36:37  roddey
  * Added a new 'native XMLCh' transcoder to correctly handle
  * internal entities now that XMLCh isn't always UTF-16.
@@ -109,7 +114,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/XMLUni.hpp>
 
 

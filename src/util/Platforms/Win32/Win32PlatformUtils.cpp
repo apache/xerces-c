@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.13  2000/03/02 19:55:34  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.12  2000/02/06 07:48:32  rahulj
  * Year 2K copyright swat.
  *
@@ -197,7 +202,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     MessageBoxA
     (
         0
-        , "XML4C Panic Error"
+        , "Xerces Panic Error"
         , reasonStr
         , MB_OK | MB_ICONSTOP
     );
@@ -214,7 +219,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     // Get the current position
     const unsigned int curPos = ::SetFilePointer(theFile, 0, 0, FILE_CURRENT);
     if (curPos == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetCurPos);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
 
     return curPos;
 }
@@ -222,7 +227,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
     if (!::CloseHandle(theFile))
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotCloseFile);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
 }
 
 unsigned int XMLPlatformUtils::fileSize(const FileHandle theFile)
@@ -230,16 +235,16 @@ unsigned int XMLPlatformUtils::fileSize(const FileHandle theFile)
     // Get the current position
     const unsigned int curPos = ::SetFilePointer(theFile, 0, 0, FILE_CURRENT);
     if (curPos == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetCurPos);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
     const unsigned int retVal = ::SetFilePointer(theFile, 0, 0, FILE_END);
     if (curPos == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToEnd);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
     // And put the pointer back
     if (::SetFilePointer(theFile, curPos, 0, FILE_BEGIN) == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToPos);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos);
 
     return retVal;
 }
@@ -312,7 +317,7 @@ FileHandle XMLPlatformUtils::openStdInHandle()
     //
     HANDLE stdInOrg = ::GetStdHandle(STD_INPUT_HANDLE);
     if (stdInOrg == INVALID_HANDLE_VALUE)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
 
     HANDLE retHandle;
     if (!::DuplicateHandle
@@ -325,7 +330,7 @@ FileHandle XMLPlatformUtils::openStdInHandle()
         , FALSE
         , DUPLICATE_SAME_ACCESS))
     {
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotDupHandle);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotDupHandle);
     }
     return retHandle;
 }
@@ -344,7 +349,7 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
         //  means no more data from the pipe, so return zero.
         //
         if (::GetLastError() != ERROR_BROKEN_PIPE)
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotReadFromFile);
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
     }
     return (unsigned int)bytesRead;
 }
@@ -354,7 +359,7 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
     // Seek to the start of the file
     if (::SetFilePointer(theFile, 0, 0, FILE_BEGIN) == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotResetFile);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
 }
 
 
@@ -590,9 +595,9 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
                                 , const void* const toCompare)
 {
     //
-    // Windows supports InterlockedCompareExchange only on Windows 98, NT 4.0,
-    //  and newer. Not on Win 95. So we are back to using assembler.
-    //    (But only if building with MSVC)
+    //  Windows supports InterlockedCompareExchange only on Windows 98,
+    //  NT 4.0, and newer. Not on Win 95. So we are back to using assembler.
+    //  (But only if building with MSVC.)
     //
     #if defined(_MSC_VER)
 
@@ -619,6 +624,7 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
         , (void*)newValue
         , (void*)toCompare
     );
+
     #endif
 }
 
@@ -706,11 +712,15 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 //
 void XMLPlatformUtils::platformInit()
 {
-    //
-    //  Figure out if we are on NT and save that flag for later use.
-    //
+    // Figure out if we are on NT and save that flag for later use
     OSVERSIONINFO   OSVer;
     OSVer.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     ::GetVersionEx(&OSVer);
     gOnNT = (OSVer.dwPlatformId == VER_PLATFORM_WIN32_NT);
+}
+
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any temrination requirements for win32 at this time
 }

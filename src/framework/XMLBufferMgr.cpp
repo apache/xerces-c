@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:24  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:47:47  rahulj
  * Year 2K copyright swat.
  *
@@ -136,7 +141,7 @@ XMLBuffer& XMLBufferMgr::bidOnBuffer()
     }
 
     // We did not find one, so freak out
-    ThrowXML(RuntimeException, XML4CExcepts::BufMgr_NoMoreBuffers);
+    ThrowXML(RuntimeException, XMLExcepts::BufMgr_NoMoreBuffers);
 
     // NOTE: Dummy return to make some compilers happy. Never really gets called!
     return *fBufList[0];
@@ -157,5 +162,5 @@ void XMLBufferMgr::releaseBuffer(XMLBuffer& toRelease)
     }
 
     // It was not a legal buffer
-    ThrowXML(RuntimeException, XML4CExcepts::BufMgr_BufferNotInPool);
+    ThrowXML(RuntimeException, XMLExcepts::BufMgr_BufferNotInPool);
 }

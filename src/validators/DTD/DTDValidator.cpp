@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:55:39  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/09 21:42:38  abagchi
  * Copyright swatswat
  *
@@ -251,7 +256,7 @@ int DTDValidator::checkContent( const   unsigned int    elemId
     //
     DTDElementDecl* elemDecl = fElemDeclPool->getById(elemId);
     if (!elemDecl)
-        ThrowXML(RuntimeException, XML4CExcepts::Val_InvalidElemId);
+        ThrowXML(RuntimeException, XMLExcepts::Val_InvalidElemId);
 
     //
     //  Get the content spec type of this element. This will tell us what
@@ -283,7 +288,7 @@ int DTDValidator::checkContent( const   unsigned int    elemId
     }
      else
     {
-        ThrowXML(RuntimeException, XML4CExcepts::CM_UnknownCMType);
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMType);
     }
 
     // Went ok, so return success
@@ -581,7 +586,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
     if (defType == XMLAttDef::Fixed)
     {
         if (XMLString::compareString(attrValue, valueText))
-            emitError(XML4CValid::NotSameAsFixedValue, fullName, attrValue, valueText);
+            emitError(XMLValid::NotSameAsFixedValue, fullName, attrValue, valueText);
     }
 
     //
@@ -594,7 +599,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
     // An empty string cannot be valid for any of the other types
     if (!attrValue[0])
     {
-        emitError(XML4CValid::InvalidEmptyAttValue, fullName);
+        emitError(XMLValid::InvalidEmptyAttValue, fullName);
         return;
     }
 
@@ -653,7 +658,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
         {
             // If its not, emit and error but try to keep going
             if (!XMLReader::isFirstNameChar(*valPtr))
-                emitError(XML4CValid::AttrValNotName, fullName);
+                emitError(XMLValid::AttrValNotName, fullName);
             valPtr++;
         }
 
@@ -668,7 +673,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
             {
                 if (!multipleValues)
                 {
-                    emitError(XML4CValid::NoMultipleValues, fullName);
+                    emitError(XMLValid::NoMultipleValues, fullName);
                     return;
                 }
                 break;
@@ -676,7 +681,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
 
             if (!XMLReader::isNameChar(*valPtr))
             {
-                emitError(XML4CValid::AttrValNotName, fullName);
+                emitError(XMLValid::AttrValNotName, fullName);
                 return;
             }
             valPtr++;
@@ -704,7 +709,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
                 if (find)
                 {
                     if (find->getDeclared() && (type == XMLAttDef::ID))
-                        emitError(XML4CValid::ReusedIDValue, pszTmpVal);
+                        emitError(XMLValid::ReusedIDValue, pszTmpVal);
                 }
                  else
                 {
@@ -733,13 +738,13 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
             if (decl)
             {
                 if (!decl->isUnparsed())
-                    emitError(XML4CValid::BadEntityRefAttr, fullName);
+                    emitError(XMLValid::BadEntityRefAttr, fullName);
             }
              else
             {
                 emitError
                 (
-                    XML4CValid::UnknownEntityRefAttr
+                    XMLValid::UnknownEntityRefAttr
                     , fullName
                     , pszTmpVal
                 );
@@ -756,7 +761,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
             //  this value will be legal since it matches one of them.
             //
             if (!isInList(pszTmpVal, enumList))
-                emitError(XML4CValid::DoesNotMatchEnumList, fullName);
+                emitError(XMLValid::DoesNotMatchEnumList, fullName);
         }
 
         // If not doing multiple values, then we are done
@@ -814,7 +819,7 @@ void DTDValidator::scanDTD(const bool reuseValidator)
                 {
                     getScanner()->emitError
                     (
-                        XML4CErrs::UndeclaredElemInAttList
+                        XMLErrs::UndeclaredElemInAttList
                         , curElem.getFullName()
                     );
                 }
@@ -822,7 +827,7 @@ void DTDValidator::scanDTD(const bool reuseValidator)
                 {
                     emitError
                     (
-                        XML4CValid::UndeclaredElemInDocType
+                        XMLValid::UndeclaredElemInDocType
                         , curElem.getFullName()
                     );
                 }
@@ -830,13 +835,13 @@ void DTDValidator::scanDTD(const bool reuseValidator)
                 {
                     getScanner()->emitError
                     (
-                        XML4CErrs::UndeclaredElemInCM
+                        XMLErrs::UndeclaredElemInCM
                         , curElem.getFullName()
                     );
                 }
                 else
                 {
-                    #if defined(XML4C_DEBUG)
+                    #if defined(XERCES_DEBUG)
                     // <TBD> Should throw here
                     #endif
                 }
@@ -864,7 +869,7 @@ void DTDValidator::scanDTD(const bool reuseValidator)
                     {
                         emitError
                         (
-                            XML4CValid::MultipleIdAttrs
+                            XMLValid::MultipleIdAttrs
                             , curElem.getFullName()
                         );
                         break;
@@ -906,7 +911,7 @@ void DTDValidator::scanDTD(const bool reuseValidator)
                         {
                             emitError
                             (
-                                XML4CValid::UnknownNotRefAttr
+                                XMLValid::UnknownNotRefAttr
                                 , curAttDef.getFullName()
                                 , lastPtr
                             );
@@ -951,7 +956,7 @@ void DTDValidator::scanDTD(const bool reuseValidator)
             {
                 emitError
                 (
-                    XML4CValid::NotationNotDeclared
+                    XMLValid::NotationNotDeclared
                     , curEntity.getNotationName()
                 );
             }

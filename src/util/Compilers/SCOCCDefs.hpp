@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:09  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:18  rahulj
  * Year 2K copyright swat.
  *
@@ -88,6 +93,7 @@
 typedef unsigned short XMLCh;
 
 
+// ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the CC version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libxerces-c";
+const char* const Xerces_DLLName = "libxerces-c";

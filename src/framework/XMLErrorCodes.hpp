@@ -1,11 +1,11 @@
 // This file is generated, don't edit it!!
 
-#if !defined(ERRHEADER_XML4CErrs)
-#define ERRHEADER_XML4CErrs
+#if !defined(ERRHEADER_XMLErrs)
+#define ERRHEADER_XMLErrs
 
 #include <framework/XMLErrorReporter.hpp>
 
-class XML4CErrs
+class XMLErrs
 {
 public :
     enum Codes
@@ -145,22 +145,22 @@ public :
       , V_HighBounds                       = 132
     };
 
-    static bool isFatal(const XML4CErrs::Codes toCheck)
+    static bool isFatal(const XMLErrs::Codes toCheck)
     {
         return ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds));
     }
 
-    static bool isWarning(const XML4CErrs::Codes toCheck)
+    static bool isWarning(const XMLErrs::Codes toCheck)
     {
         return ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds));
     }
 
-    static bool isValid(const XML4CErrs::Codes toCheck)
+    static bool isValid(const XMLErrs::Codes toCheck)
     {
         return ((toCheck >= V_LowBounds) && (toCheck <= V_HighBounds));
     }
 
-    static XMLErrorReporter::ErrTypes errorType(const XML4CErrs::Codes toCheck)
+    static XMLErrorReporter::ErrTypes errorType(const XMLErrs::Codes toCheck)
     {
        if ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds))
            return XMLErrorReporter::ErrType_Warning;

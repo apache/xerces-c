@@ -54,10 +54,16 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.11  2000/03/02 19:54:30  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.10  2000/02/29 22:54:46  aruna1
- * MultiThreaded problem for solaris with CC compiler resolved in scanXMLDecl() function.
+ * MultiThreaded problem for solaris with CC compiler resolved in scanXMLDecl()
+ * function.
  *
  * Revision 1.9  2000/02/06 07:47:54  rahulj
  * Year 2K copyright swat.
@@ -120,9 +126,10 @@
 #include <util/RefVectorOf.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/UnexpectedEOFException.hpp>
-#include <util/XMLURL.hpp>
+#include <util/XMLDeleterFor.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLUni.hpp>
+#include <util/XMLURL.hpp>
 #include <sax/InputSource.hpp>
 #include <sax/SAXException.hpp>
 #include <framework/LocalFileInputSource.hpp>
@@ -157,6 +164,7 @@ static XMLMsgLoader*   gMsgLoader;
 //
 static XMLMutex& gScannerMutex()
 {
+    static bool      registered = false;
     static XMLMutex* scannerMutex = 0;
     if (!scannerMutex)
     {
@@ -165,6 +173,19 @@ static XMLMutex& gScannerMutex()
         {
             // Someone beat us to it, so let's clean up ours
             delete tmpMutex;
+        }
+
+        // Now lock it and try to register it
+        XMLMutexLock lock(scannerMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!registered)
+        {
+            XMLPlatformUtils::registerLazyData
+            (
+                new XMLDeleterFor<XMLMutex>(scannerMutex)
+            );
+            registered = true;
         }
     }
     return *scannerMutex;
@@ -247,7 +268,7 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId
         //
         XMLURL tmpURL(systemId);
         if (tmpURL.isRelative())
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+            ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
         srcToUse = new URLInputSource(tmpURL);
     }
 
@@ -322,7 +343,7 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
         //
         if (fReaderMgr.atEOF())
         {
-            emitError(XML4CErrs::EmptyMainEntity);
+            emitError(XMLErrs::EmptyMainEntity);
         }
          else
         {
@@ -363,13 +384,13 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
     //  before the flush of the reader mgr, or it will fail because it tries
     //  to find out the position in the XML source of the error.
     //
-    catch(const XML4CErrs::Codes)
+    catch(const XMLErrs::Codes)
     {
         // This is a 'first fatal error' type exit, so reset and fall through
         fReaderMgr.reset();
     }
 
-    catch(const XML4CValid::Codes)
+    catch(const XMLValid::Codes)
     {
         // This is a 'first fatal error' type exit, so reset and fall through
         fReaderMgr.reset();
@@ -398,7 +419,7 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
         {
             emitError
             (
-                XML4CErrs::XMLException
+                XMLErrs::XMLException
                 , excToCatch.getType()
                 , excToCatch.getMessage()
             );
@@ -449,7 +470,7 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         //
         XMLURL tmpURL(systemId);
         if (tmpURL.isRelative())
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+            ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
         srcToUse = new URLInputSource(tmpURL);
     }
 
@@ -511,17 +532,18 @@ bool XMLScanner::scanFirst( const   InputSource&    src
     //  before the flush of the reader mgr, or it will fail because it tries
     //  to find out the position in the XML source of the error.
     //
-    catch(const XML4CErrs::Codes)
+    catch(const XMLErrs::Codes)
     {
         // This is a 'first failure' exception so reset and return a failure
         fReaderMgr.reset();
         return false;
     }
 
-    catch(const XML4CValid::Codes)
+    catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
+        // This is a 'first fatal error' type exit, so reset and reuturn failure
         fReaderMgr.reset();
+        return false;
     }
 
     // We have to propogate SAX exceptions
@@ -542,7 +564,7 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         {
             emitError
             (
-                XML4CErrs::XMLException
+                XMLErrs::XMLException
                 , excToCatch.getType()
                 , excToCatch.getMessage()
             );
@@ -577,7 +599,7 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
 {
     // Make sure this token is still legal
     if (!isLegalToken(token))
-        ThrowXML(RuntimeException, XML4CExcepts::Scan_BadPScanToken);
+        ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
 
     bool retVal = true;
     try
@@ -597,7 +619,7 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
                 const ElemStack::StackElem* topElem = fElemStack.popTop();
                 emitError
                 (
-                    XML4CErrs::EndedWithTagsOnStack
+                    XMLErrs::EndedWithTagsOnStack
                     , topElem->fThisElement->getFullName()
                 );
             }
@@ -613,7 +635,7 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
                 case Token_CData :
                     // Make sure we are within content
                     if (fElemStack.isEmpty())
-                        emitError(XML4CErrs::CDATAOutsideOfContent);
+                        emitError(XMLErrs::CDATAOutsideOfContent);
                     scanCDSection();
                     break;
 
@@ -642,7 +664,7 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
             }
 
             if (orgReader != fReaderMgr.getCurrentReaderNum())
-                emitError(XML4CErrs::PartialMarkupInEntity);
+                emitError(XMLErrs::PartialMarkupInEntity);
 
             // If we hit the end, then do the miscellaneous part
             if (!gotData)
@@ -657,17 +679,18 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
     //  before the flush of the reader mgr, or it will fail because it tries
     //  to find out the position in the XML source of the error.
     //
-    catch(const XML4CErrs::Codes)
+    catch(const XMLErrs::Codes)
     {
         // This is a 'first failure' exception, so reset and return failure
         fReaderMgr.reset();
         return false;
     }
 
-    catch(const XML4CValid::Codes)
+    catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
+        // This is a 'first fatal error' type exit, so reset and reuturn failure
         fReaderMgr.reset();
+        return false;
     }
 
     // We have to propogate SAX exceptions
@@ -689,7 +712,7 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
         {
             emitError
             (
-                XML4CErrs::XMLException
+                XMLErrs::XMLException
                 , excToCatch.getType()
                 , excToCatch.getMessage()
             );
@@ -744,13 +767,15 @@ void XMLScanner::commonInit()
         // If we haven't loaded our message yet, then do that
         if (!gMsgLoader)
         {
-            // MUST check again since we could have gotten beat to the lock
+            gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
             if (!gMsgLoader)
-            {
-                gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
-                if (!gMsgLoader)
-                    XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-            }
+                XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+
+            // Register this object to be cleaned up at termination
+            XMLPlatformUtils::registerLazyData
+            (
+                new XMLDeleterFor<XMLMsgLoader>(gMsgLoader)
+            );
         }
 
         // And assign ourselves the next available scanner id
@@ -793,7 +818,7 @@ void XMLScanner::commonInit()
 //  It handles getting the message loaded, doing token replacement, etc...
 //  and then calling the error handler, if its installed.
 //
-void XMLScanner::emitError(const XML4CErrs::Codes toEmit)
+void XMLScanner::emitError(const XMLErrs::Codes toEmit)
 {
     if (fErrorReporter)
     {
@@ -823,7 +848,7 @@ void XMLScanner::emitError(const XML4CErrs::Codes toEmit)
         (
             toEmit
             , XMLUni::fgXMLErrDomain
-            , XML4CErrs::errorType(toEmit)
+            , XMLErrs::errorType(toEmit)
             , errText
             , lastInfo.systemId
             , lastInfo.publicId
@@ -833,11 +858,11 @@ void XMLScanner::emitError(const XML4CErrs::Codes toEmit)
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
+    if (XMLErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
         throw toEmit;
 }
 
-void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
+void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
                             , const XMLCh* const        text1
                             , const XMLCh* const        text2
                             , const XMLCh* const        text3
@@ -874,7 +899,7 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
         (
             toEmit
             , XMLUni::fgXMLErrDomain
-            , XML4CErrs::errorType(toEmit)
+            , XMLErrs::errorType(toEmit)
             , errText
             , lastInfo.systemId
             , lastInfo.publicId
@@ -884,11 +909,11 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
+    if (XMLErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
         throw toEmit;
 }
 
-void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
+void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
                             , const char* const         text1
                             , const char* const         text2
                             , const char* const         text3
@@ -925,7 +950,7 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
         (
             toEmit
             , XMLUni::fgXMLErrDomain
-            , XML4CErrs::errorType(toEmit)
+            , XMLErrs::errorType(toEmit)
             , errText
             , lastInfo.systemId
             , lastInfo.publicId
@@ -935,7 +960,7 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
+    if (XMLErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
         throw toEmit;
 }
 
@@ -1059,7 +1084,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
                  else
                 {
                     // Emit the error but keep on going
-                    emitError(XML4CErrs::ExpectedWhitespace);
+                    emitError(XMLErrs::ExpectedWhitespace);
                 }
             }
         }
@@ -1078,7 +1103,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //
             if (!fReaderMgr.getName(fAttNameBuf))
             {
-                emitError(XML4CErrs::ExpectedAttrName);
+                emitError(XMLErrs::ExpectedAttrName);
                 fReaderMgr.skipPastChar(chCloseAngle);
                 return attCount;
             }
@@ -1092,7 +1117,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
                     , chOpenAngle, chForwardSlash, chNull
                 };
 
-                emitError(XML4CErrs::ExpectedEqSign);
+                emitError(XMLErrs::ExpectedEqSign);
 
                 //
                 //  Try to sync back up by skipping forward until we either
@@ -1114,7 +1139,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag, elemName);
+                    emitError(XMLErrs::UnterminatedStartTag, elemName);
                     return attCount;
                 }
                  else
@@ -1136,7 +1161,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
                     chCloseAngle, chOpenAngle, chForwardSlash, chNull
                 };
 
-                emitError(XML4CErrs::ExpectedAttrValue);
+                emitError(XMLErrs::ExpectedAttrValue);
 
                 //
                 //  It failed, so lets try to get synced back up. We skip
@@ -1157,7 +1182,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag, elemName);
+                    emitError(XMLErrs::UnterminatedStartTag, elemName);
                     return attCount;
                 }
                  else
@@ -1179,13 +1204,13 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
 
                 if (colonFirst != colonLast)
                 {
-                    emitError(XML4CErrs::TooManyColonsInName);
+                    emitError(XMLErrs::TooManyColonsInName);
                     continue;
                 }
                  else if ((colonFirst == 0)
                       ||  (colonLast == (int)fAttNameBuf.getLen() - 1))
                 {
-                    emitError(XML4CErrs::InvalidColonPos);
+                    emitError(XMLErrs::InvalidColonPos);
                     continue;
                 }
             }
@@ -1224,7 +1249,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
         //  deal with it.
         //
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
 
         if (nextCh == chForwardSlash)
         {
@@ -1248,7 +1273,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  next open bracket, which is what we would have seeked to (and
             //  skipped this whole tag.)
             //
-            emitError(XML4CErrs::UnterminatedStartTag, elemName);
+            emitError(XMLErrs::UnterminatedStartTag, elemName);
             break;
         }
          else if ((nextCh == chSingleQuote) || (nextCh == chDoubleQuote))
@@ -1259,7 +1284,7 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  error and eat the quoted string, then jump back to the
             //  top again.
             //
-            emitError(XML4CErrs::ExpectedAttrName);
+            emitError(XMLErrs::ExpectedAttrName);
             fReaderMgr.getNextChar();
             fReaderMgr.skipQuotedString(nextCh);
             fReaderMgr.skipPastSpaces();
@@ -1326,7 +1351,7 @@ bool XMLScanner::scanContent(const bool extEntity)
                         const ElemStack::StackElem* topElem = fElemStack.popTop();
                         emitError
                         (
-                            XML4CErrs::EndedWithTagsOnStack
+                            XMLErrs::EndedWithTagsOnStack
                             , topElem->fThisElement->getFullName()
                         );
                     }
@@ -1348,7 +1373,7 @@ bool XMLScanner::scanContent(const bool extEntity)
                     case Token_CData :
                         // Make sure we are within content
                         if (fElemStack.isEmpty())
-                            emitError(XML4CErrs::CDATAOutsideOfContent);
+                            emitError(XMLErrs::CDATAOutsideOfContent);
                         scanCDSection();
                         break;
 
@@ -1377,7 +1402,7 @@ bool XMLScanner::scanContent(const bool extEntity)
                 }
 
                 if (orgReader != fReaderMgr.getCurrentReaderNum())
-                    emitError(XML4CErrs::PartialMarkupInEntity);
+                    emitError(XMLErrs::PartialMarkupInEntity);
 
                 // And we are back out of markup again
                 inMarkup = false;
@@ -1391,7 +1416,7 @@ bool XMLScanner::scanContent(const bool extEntity)
             //  partial markup error.
             //
             if (inMarkup)
-                emitError(XML4CErrs::PartialMarkupInEntity);
+                emitError(XMLErrs::PartialMarkupInEntity);
 
             // Send an end of entity reference event
             if (fDocHandler)
@@ -1421,9 +1446,9 @@ void XMLScanner::scanEndTag(bool& gotData)
     //
     if (fElemStack.isEmpty())
     {
-        emitError(XML4CErrs::MoreEndThanStartTags);
+        emitError(XMLErrs::MoreEndThanStartTags);
         fReaderMgr.skipPastChar(chCloseAngle);
-        ThrowXML(RuntimeException, XML4CExcepts::Scan_UnbalancedStartEnd);
+        ThrowXML(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd);
     }
 
     // After the </ is the element QName, so get a name from the input
@@ -1432,7 +1457,7 @@ void XMLScanner::scanEndTag(bool& gotData)
     if (!fReaderMgr.getName(qnameBuf))
     {
         // It failed so we can't really do anything with it
-        emitError(XML4CErrs::ExpectedElementName);
+        emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipPastChar(chCloseAngle);
         return;
     }
@@ -1482,14 +1507,14 @@ void XMLScanner::scanEndTag(bool& gotData)
     {
         emitError
         (
-            XML4CErrs::ExpectedEndOfTagX
+            XMLErrs::ExpectedEndOfTagX
             , topElem->fThisElement->getFullName()
         );
     }
 
     // Make sure we are back on the same reader as where we started
     if (topElem->fReaderNum != fReaderMgr.getCurrentReaderNum())
-        emitError(XML4CErrs::PartialTagMarkupError);
+        emitError(XMLErrs::PartialTagMarkupError);
 
     // See if it was the root element, to avoid multiple calls below
     const bool isRoot = fElemStack.isEmpty();
@@ -1502,7 +1527,7 @@ void XMLScanner::scanEndTag(bool& gotData)
     {
         emitError
         (
-            XML4CErrs::UnterminatedEndTag
+            XMLErrs::UnterminatedEndTag
             , topElem->fThisElement->getFullName()
         );
     }
@@ -1545,7 +1570,7 @@ void XMLScanner::scanEndTag(bool& gotData)
             {
                 fValidator->emitError
                 (
-                    XML4CValid::EmptyNotValidForContent
+                    XMLValid::EmptyNotValidForContent
                     , topElem->fThisElement->getFormattedContentModel(*fValidator)
                 );
             }
@@ -1553,7 +1578,7 @@ void XMLScanner::scanEndTag(bool& gotData)
             {
                 fValidator->emitError
                 (
-                    XML4CValid::NotEnoughElemsForCM
+                    XMLValid::NotEnoughElemsForCM
                     , topElem->fThisElement->getFormattedContentModel(*fValidator)
                 );
             }
@@ -1567,7 +1592,7 @@ void XMLScanner::scanEndTag(bool& gotData)
 
                 fValidator->emitError
                 (
-                    XML4CValid::ElementNotValidForContent
+                    XMLValid::ElementNotValidForContent
                     , decl->getFullName()
                     , topElem->fThisElement->getFormattedContentModel(*fValidator)
                 );
@@ -1604,7 +1629,7 @@ void XMLScanner::scanMiscellaneous()
                 if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpace))
                 {
                     // Can't have an XML decl here
-                    emitError(XML4CErrs::NotValidAfterContent);
+                    emitError(XMLErrs::NotValidAfterContent);
                     fReaderMgr.skipPastChar(chCloseAngle);
                 }
                  else if (fReaderMgr.skippedString(XMLUni::fgPIString))
@@ -1618,7 +1643,7 @@ void XMLScanner::scanMiscellaneous()
                  else
                 {
                     // This can't be possible, so just give up
-                    emitError(XML4CErrs::ExpectedCommentOrPI);
+                    emitError(XMLErrs::ExpectedCommentOrPI);
                     fReaderMgr.skipPastChar(chCloseAngle);
                 }
             }
@@ -1645,7 +1670,7 @@ void XMLScanner::scanMiscellaneous()
             }
              else
             {
-                emitError(XML4CErrs::ExpectedCommentOrPI);
+                emitError(XMLErrs::ExpectedCommentOrPI);
                 fReaderMgr.skipPastChar(chCloseAngle);
             }
         }
@@ -1656,7 +1681,7 @@ void XMLScanner::scanMiscellaneous()
             //  Some entity leaked out of the content part of the document. Issue
             //  a warning and keep going.
             //
-            emitError(XML4CErrs::EntityPropogated);
+            emitError(XMLErrs::EntityPropogated);
         }
     }
 }
@@ -1678,7 +1703,7 @@ void XMLScanner::scanPI()
     XMLBufBid bbName(&fBufMgr);
     if (!fReaderMgr.getNameToken(bbName.getBuffer()))
     {
-        emitError(XML4CErrs::PINameExpected);
+        emitError(XMLErrs::PINameExpected);
         fReaderMgr.skipPastChar(chCloseAngle);
         return;
     }
@@ -1688,13 +1713,13 @@ void XMLScanner::scanPI()
 
     // See if it is some form of 'xml' and emit a warning
     if (!XMLString::compareIString(namePtr, XMLUni::fgXMLString))
-        emitError(XML4CErrs::NoPIStartsWithXML);
+        emitError(XMLErrs::NoPIStartsWithXML);
 
     // If namespaces are enabled, then no colons allowed
     if (fDoNamespaces)
     {
         if (XMLString::indexOf(namePtr, chColon) != -1)
-            emitError(XML4CErrs::ColonNotLegalWithNS);
+            emitError(XMLErrs::ColonNotLegalWithNS);
     }
 
     //
@@ -1715,8 +1740,8 @@ void XMLScanner::scanPI()
             // Watch for an end of file, which is always bad here
             if (!nextCh)
             {
-                emitError(XML4CErrs::UnterminatedPI);
-                ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+                emitError(XMLErrs::UnterminatedPI);
+                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
             }
 
             // Watch for potential terminating character
@@ -1738,7 +1763,7 @@ void XMLScanner::scanPI()
                     , 8
                     , 16
                 );
-                emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+                emitError(XMLErrs::InvalidCharacter, tmpBuf);
             }
 
             bbTarget.append(nextCh);
@@ -1749,14 +1774,14 @@ void XMLScanner::scanPI()
         // No target, but make sure its terminated ok
         if (!fReaderMgr.skippedChar(chQuestion))
         {
-            emitError(XML4CErrs::UnterminatedPI);
+            emitError(XMLErrs::UnterminatedPI);
             fReaderMgr.skipPastChar(chCloseAngle);
             return;
         }
 
         if (!fReaderMgr.skippedChar(chCloseAngle))
         {
-            emitError(XML4CErrs::UnterminatedPI);
+            emitError(XMLErrs::UnterminatedPI);
             fReaderMgr.skipPastChar(chCloseAngle);
             return;
         }
@@ -1826,7 +1851,7 @@ void XMLScanner::scanProlog()
                     if ((curReader->getLineNumber() != 1)
                     ||  (curReader->getColumnNumber() != 7))
                     {
-                        emitError(XML4CErrs::XMLDeclMustBeFirst);
+                        emitError(XMLErrs::XMLDeclMustBeFirst);
                     }
                     scanXMLDecl(Decl_XML);
                 }
@@ -1848,7 +1873,7 @@ void XMLScanner::scanProlog()
                     if (fValidator->handlesDTD())
                         fValidator->scanDTD(fReuseValidator);
                     else
-                        ThrowXML(RuntimeException, XML4CExcepts::Gen_NoDTDValidator);
+                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
                 }
                  else
                 {
@@ -1879,7 +1904,7 @@ void XMLScanner::scanProlog()
             }
              else
             {
-                emitError(XML4CErrs::InvalidDocumentStructure);
+                emitError(XMLErrs::InvalidDocumentStructure);
                 fReaderMgr.skipPastChar(chCloseAngle);
             }
 
@@ -1900,7 +1925,7 @@ void XMLScanner::scanProlog()
         //
         emitError
         (
-            XML4CErrs::UnexpectedEOE
+            XMLErrs::UnexpectedEOE
             , "in prolog"
         );
     }
@@ -1922,7 +1947,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
     //
     if (!fReaderMgr.getName(fQNameBuf))
     {
-        emitError(XML4CErrs::ExpectedElementName);
+        emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipToChar(chOpenAngle);
         return false;
     }
@@ -1959,7 +1984,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
         {
             fValidator->emitError
             (
-                XML4CValid::ElementNotDefined
+                XMLValid::ElementNotDefined
                 , elemDecl->getFullName()
             );
         }
@@ -1979,7 +2004,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
         {
             fValidator->emitError
             (
-                XML4CValid::ElementNotDefined
+                XMLValid::ElementNotDefined
                 , elemDecl->getFullName()
             );
         }
@@ -2002,7 +2027,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
         if (fDoValidation)
         {
             if (!fValidator->checkRootElement(elemDecl->getId()))
-                fValidator->emitError(XML4CValid::RootElemNotLikeDocType);
+                fValidator->emitError(XMLValid::RootElemNotLikeDocType);
         }
     }
      else
@@ -2054,7 +2079,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                  else
                 {
                     // Emit the error but keep on going
-                    emitError(XML4CErrs::ExpectedWhitespace);
+                    emitError(XMLErrs::ExpectedWhitespace);
                 }
             }
         }
@@ -2073,7 +2098,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //
             if (!fReaderMgr.getName(fAttNameBuf))
             {
-                emitError(XML4CErrs::ExpectedAttrName);
+                emitError(XMLErrs::ExpectedAttrName);
                 fReaderMgr.skipPastChar(chCloseAngle);
                 return false;
             }
@@ -2087,7 +2112,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                     , chOpenAngle, chForwardSlash, chNull
                 };
 
-                emitError(XML4CErrs::ExpectedEqSign);
+                emitError(XMLErrs::ExpectedEqSign);
 
                 //
                 //  Try to sync back up by skipping forward until we either
@@ -2109,7 +2134,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
+                    emitError(XMLErrs::UnterminatedStartTag, elemDecl->getFullName());
                     return false;
                 }
                  else
@@ -2143,7 +2168,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 {
                     fValidator->emitError
                     (
-                        XML4CValid::AttNotDefinedForElement
+                        XMLValid::AttNotDefinedForElement
                         , fAttNameBuf.getRawBuffer()
                         , elemDecl->getFullName()
                     );
@@ -2158,7 +2183,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             {
                 emitError
                 (
-                    XML4CErrs::AttrAlreadyUsedInSTag
+                    XMLErrs::AttrAlreadyUsedInSTag
                     , attDef->getFullName()
                     , elemDecl->getFullName()
                 );
@@ -2182,7 +2207,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                     chCloseAngle, chOpenAngle, chForwardSlash, chNull
                 };
 
-                emitError(XML4CErrs::ExpectedAttrValue);
+                emitError(XMLErrs::ExpectedAttrValue);
 
                 //
                 //  It failed, so lets try to get synced back up. We skip
@@ -2203,7 +2228,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                  else if (chFound == chOpenAngle)
                 {
                     // Assume a malformed tag and that new one is starting
-                    emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
+                    emitError(XMLErrs::UnterminatedStartTag, elemDecl->getFullName());
                     return false;
                 }
                  else
@@ -2272,14 +2297,14 @@ bool XMLScanner::scanStartTag(bool& gotData)
         //  deal with it.
         //
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XML4CExcepts::Gen_UnexpectedEOF);
+            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
 
         if (nextCh == chForwardSlash)
         {
             fReaderMgr.getNextChar();
             isEmpty = true;
             if (!fReaderMgr.skippedChar(chCloseAngle))
-                emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
+                emitError(XMLErrs::UnterminatedStartTag, elemDecl->getFullName());
             break;
         }
          else if (nextCh == chCloseAngle)
@@ -2295,7 +2320,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  next open bracket, which is what we would have seeked to (and
             //  skipped this whole tag.)
             //
-            emitError(XML4CErrs::UnterminatedStartTag, elemDecl->getFullName());
+            emitError(XMLErrs::UnterminatedStartTag, elemDecl->getFullName());
             break;
         }
          else if ((nextCh == chSingleQuote) || (nextCh == chDoubleQuote))
@@ -2306,7 +2331,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  error and eat the quoted string, then jump back to the
             //  top again.
             //
-            emitError(XML4CErrs::ExpectedAttrName);
+            emitError(XMLErrs::ExpectedAttrName);
             scanAttValue(XMLUni::fgZeroLenString, fAttValueBuf, XMLAttDef::CData);
             fReaderMgr.skipPastSpaces();
             continue;
@@ -2337,7 +2362,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                     {
                         fValidator->emitError
                         (
-                            XML4CValid::RequiredAttrNotProvided
+                            XMLValid::RequiredAttrNotProvided
                             , curDef.getFullName()
                             , elemDecl->getFullName()
                         );
@@ -2397,7 +2422,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             {
                 fValidator->emitError
                 (
-                    XML4CValid::ElementNotValidForContent
+                    XMLValid::ElementNotValidForContent
                     , elemDecl->getFullName()
                     , elemDecl->getFormattedContentModel(*fValidator)
                 );
@@ -2460,7 +2485,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //
     if (!fReaderMgr.getName(fQNameBuf))
     {
-        emitError(XML4CErrs::ExpectedElementName);
+        emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipToChar(chOpenAngle);
         return false;
     }
@@ -2482,7 +2507,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             , 8
             , 16
         );
-        emitError(XML4CErrs::InvalidCharacter, tmpBuf);
+        emitError(XMLErrs::InvalidCharacter, tmpBuf);
     }
 
     // See if its the root element
@@ -2581,7 +2606,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         {
             fValidator->emitError
             (
-                XML4CValid::ElementNotDefined
+                XMLValid::ElementNotDefined
                 , elemDecl->getFullName()
             );
         }
@@ -2601,7 +2626,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         {
             fValidator->emitError
             (
-                XML4CValid::ElementNotDefined
+                XMLValid::ElementNotDefined
                 , elemDecl->getFullName()
             );
         }
@@ -2625,7 +2650,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         if (fDoValidation)
         {
             if (!fValidator->checkRootElement(elemDecl->getId()))
-                fValidator->emitError(XML4CValid::RootElemNotLikeDocType);
+                fValidator->emitError(XMLValid::RootElemNotLikeDocType);
         }
     }
      else
@@ -2667,7 +2692,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             {
                 fValidator->emitError
                 (
-                    XML4CValid::ElementNotValidForContent
+                    XMLValid::ElementNotValidForContent
                     , elemDecl->getFullName()
                     , elemDecl->getFormattedContentModel(*fValidator)
                 );
@@ -2742,18 +2767,6 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     //  Also set up a list of buffers in the right order so that we know
     //  where to put stuff.
     //
-/*
-This code gives a multithreaded problem on solaris CC compiler. So its 
-been replaced by the below uncommented code.
-
-    XMLBuffer* buffers[StringCount] =
-    {
-        &bbVersion.getBuffer()
-        , &bbEncoding.getBuffer()
-        , &bbStand.getBuffer()
-        , &bbDummy.getBuffer()
-    };
-*/
     XMLBuffer* buffers[StringCount] ;
     buffers[0] = &bbVersion.getBuffer();
     buffers[1] = &bbEncoding.getBuffer();
@@ -2774,13 +2787,13 @@ been replaced by the below uncommented code.
 
         // If this is not the first string, then we require the spaces
         if (!spaceCount && curCount)
-            emitError(XML4CErrs::ExpectedWhitespace);
+            emitError(XMLErrs::ExpectedWhitespace);
 
         //
         //  Get characters up to the next whitespace or equal's sign.
         //
         if (!scanUpToWSOr(nameBuf, chEqual))
-            emitError(XML4CErrs::ExpectedDeclString);
+            emitError(XMLErrs::ExpectedDeclString);
 
         // See if it matches any of our expected strings
         if (!XMLString::compareString(nameBuf.getRawBuffer(), XMLUni::fgVersionString))
@@ -2797,9 +2810,9 @@ been replaced by the below uncommented code.
         //  see if this one has been done already and give that error.
         //
         if (curString == UnknownString)
-            emitError(XML4CErrs::ExpectedDeclString, nameBuf.getRawBuffer());
+            emitError(XMLErrs::ExpectedDeclString, nameBuf.getRawBuffer());
         else if (flags[curString] != -1)
-            emitError(XML4CErrs::DeclStringRep, nameBuf.getRawBuffer());
+            emitError(XMLErrs::DeclStringRep, nameBuf.getRawBuffer());
         else if (flags[curString] == -1)
             flags[curString] = ++curCount;
 
@@ -2808,7 +2821,7 @@ been replaced by the below uncommented code.
         //  but keep trying to go on.
         //
         if (!scanEq())
-            emitError(XML4CErrs::ExpectedEqSign);
+            emitError(XMLErrs::ExpectedEqSign);
 
         //
         //  Get a quote string into the buffer for the string that we are
@@ -2816,7 +2829,7 @@ been replaced by the below uncommented code.
         //
         if (!getQuotedString(*buffers[curString]))
         {
-            emitError(XML4CErrs::ExpectedQuotedString);
+            emitError(XMLErrs::ExpectedQuotedString);
             fReaderMgr.skipPastChar(chCloseAngle);
             return;
         }
@@ -2826,12 +2839,12 @@ been replaced by the below uncommented code.
         if (curString == VersionString)
         {
             if (XMLString::compareString(rawValue, XMLUni::fgSupportedVersion))
-                emitError(XML4CErrs::UnsupportedXMLVersion, rawValue);
+                emitError(XMLErrs::UnsupportedXMLVersion, rawValue);
         }
          else if (curString == EncodingString)
         {
             if (!XMLString::stringLen(rawValue))
-                emitError(XML4CErrs::BadXMLEncoding, rawValue);
+                emitError(XMLErrs::BadXMLEncoding, rawValue);
         }
          else if (curString == StandaloneString)
         {
@@ -2841,7 +2854,7 @@ been replaced by the below uncommented code.
                 fStandalone = false;
             else
             {
-                emitError(XML4CErrs::BadStandalone);
+                emitError(XMLErrs::BadStandalone);
                 if (!XMLString::compareIString(rawValue, XMLUni::fgYesString))
                     fStandalone = true;
                 else if (!XMLString::compareIString(rawValue, XMLUni::fgNoString))
@@ -2862,7 +2875,7 @@ been replaced by the below uncommented code.
         {
             if (flags[index] !=  curTop + 1)
             {
-                emitError(XML4CErrs::DeclStringsInWrongOrder);
+                emitError(XMLErrs::DeclStringsInWrongOrder);
                 break;
             }
             curTop = flags[index];
@@ -2874,18 +2887,18 @@ been replaced by the below uncommented code.
     //  then standalone must not be present.
     //
     if ((type == Decl_XML) && (flags[VersionString] == -1))
-        emitError(XML4CErrs::XMLVersionRequired);
+        emitError(XMLErrs::XMLVersionRequired);
     else if ((type == Decl_Text) && (flags[StandaloneString] != -1))
-        emitError(XML4CErrs::StandaloneNotLegal);
+        emitError(XMLErrs::StandaloneNotLegal);
 
     if (!fReaderMgr.skippedChar(chQuestion))
     {
-        emitError(XML4CErrs::UnterminatedXMLDecl);
+        emitError(XMLErrs::UnterminatedXMLDecl);
         fReaderMgr.skipPastChar(chCloseAngle);
     }
      else if (!fReaderMgr.skippedChar(chCloseAngle))
     {
-        emitError(XML4CErrs::UnterminatedXMLDecl);
+        emitError(XMLErrs::UnterminatedXMLDecl);
         fReaderMgr.skipPastChar(chCloseAngle);
     }
 
@@ -2921,6 +2934,6 @@ been replaced by the below uncommented code.
     if (flags[EncodingString] != -1)
     {
         if (!fReaderMgr.getCurrentReader()->setEncoding(bbEncoding.getRawBuffer()))
-            emitError(XML4CErrs::ContradictoryEncoding, bbEncoding.getRawBuffer());
+            emitError(XMLErrs::ContradictoryEncoding, bbEncoding.getRawBuffer());
     }
 }

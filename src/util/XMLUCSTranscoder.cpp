@@ -154,7 +154,7 @@ XMLUCS4Transcoder::transcodeXML(const   XMLByte* const          srcData
                                 ,       unsigned char* const    charSizes)
 {
     // If debugging, make sure that the block size is legal
-    #if defined(XML4C_DEBUG)
+    #if defined(XERCES_DEBUG)
     checkBlockSize(maxChars);
     #endif
 

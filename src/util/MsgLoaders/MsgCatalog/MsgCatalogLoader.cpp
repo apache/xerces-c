@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:55:16  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/06 07:48:22  rahulj
  * Year 2K copyright swat.
  *
@@ -77,7 +82,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLString.hpp>
@@ -133,13 +138,13 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
                             , const unsigned long           maxChars)
 {
-    int msgSet = CatId_XML4CErrs;
+    int msgSet = CatId_XMLErrs;
     if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
-        msgSet = CatId_XML4CErrs;
+        msgSet = CatId_XMLErrs;
     else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
-        msgSet = CatId_XML4CExcepts;
+        msgSet = CatId_XMLExcepts;
     else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
-        msgSet = CatId_XML4CValid;
+        msgSet = CatId_XMLValid;
 
     char msgString[100];
     sprintf(msgString, "Could not find message ID %d from message set %d\n", msgToLoad, msgSet);

@@ -71,7 +71,7 @@
 #ifndef DStringPool_HEADER_GUARD_
 #define DStringPool_HEADER_GUARD_
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <dom/DOMString.hpp>
 
 struct DStringPoolEntry;

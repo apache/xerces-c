@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.5  2000/03/02 19:55:07  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/06 07:48:17  rahulj
  * Year 2K copyright swat.
  *
@@ -74,7 +79,7 @@
 // ---------------------------------------------------------------------------
 // NOTE:
 //
-//    XML4C is not officially supported on Macintosh. This file was sent
+//    Xerces is not officially supported on Macintosh. This file was sent
 //    in by one of the Macintosh users and is included in the distribution
 //    just for convenience. Please send any defects / modification
 //    reports to xml4c@us.ibm.com
@@ -105,17 +110,17 @@ typedef unsigned short XMLCh;
 
 
 // ---------------------------------------------------------------------------
-//  Force on the XML4C debug token if it was on in the build environment
+//  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 //#ifdef _DEBUG
-//#define XML4C_DEBUG
+//#define XERCES_DEBUG
 //#endif
 
 
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the Codewarrior version of the
 //  system. We append a previously defined token which holds the DLL
-//  versioning string. This is defined in XML4CDefs.hpp which is what this
+//  versioning string. This is defined in XercesDefs.hpp which is what this
 //  file is included into.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "xerces-c" XML4C_DLLVersionStr;
+const char* const Xerces_DLLName = "xerces-c" Xerces_DLLVersionStr;

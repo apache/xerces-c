@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:54:29  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/06 07:47:53  rahulj
  * Year 2K copyright swat.
  *
@@ -112,21 +117,21 @@ unsigned int VecAttrListImpl::getLength() const
 const XMLCh* VecAttrListImpl::getName(const unsigned int index) const
 {
     if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::AttrList_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
     return fVector->elementAt(index)->getName();
 }
 
 const XMLCh* VecAttrListImpl::getType(const unsigned int index) const
 {
     if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::AttrList_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
     return XMLAttDef::getAttTypeString(fVector->elementAt(index)->getType());
 }
 
 const XMLCh* VecAttrListImpl::getValue(const unsigned int index) const
 {
     if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::AttrList_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
     return fVector->elementAt(index)->getValue();
 }
 

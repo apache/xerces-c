@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.9  2000/03/02 19:55:08  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.8  2000/02/22 01:00:48  aruna1
  * GNUGDefs references removed. Now only GCCDefs is used instead
  *
@@ -114,10 +119,10 @@ typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
 
 // ---------------------------------------------------------------------------
-//  Force on the XML4C debug token if it was on in the build environment
+//  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 #if 0
-#define XML4C_DEBUG
+#define XERCES_DEBUG
 #endif
 
 
@@ -146,4 +151,4 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the GCC version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libxerces-c";
+const char* const Xerces_DLLName = "libxerces-c";

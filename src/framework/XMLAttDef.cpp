@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:24  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
  *
@@ -124,7 +129,7 @@ const XMLCh* XMLAttDef::getAttTypeString(const XMLAttDef::AttTypes attrType)
 {
     // Check for an invalid attribute type and return a null
     if ((attrType < AttTypes_Min) || (attrType > AttTypes_Max))
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::AttDef_BadAttType);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttDef_BadAttType);
     return gAttTypeStrings[attrType];
 }
 
@@ -132,7 +137,7 @@ const XMLCh* XMLAttDef::getDefAttTypeString(const XMLAttDef::DefAttTypes attrTyp
 {
     // Check for an invalid attribute type and return a null
     if ((attrType < DefAttTypes_Min) || (attrType > DefAttTypes_Max))
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::AttDef_BadDefAttType);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttDef_BadDefAttType);
     return gDefAttTypeStrings[attrType];
 }
 

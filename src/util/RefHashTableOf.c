@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:44  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:03  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Include
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/RefHashTableOf.hpp>
 #endif
 
@@ -88,7 +93,7 @@ RefHashTableOf( const   unsigned int    modulus
     , fHashModulus(modulus)
 {
     if (modulus == 0)
-        ThrowXML(IllegalArgumentException, XML4CExcepts::HshTbl_ZeroModulus);
+        ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
     fBucketList = new RefHashTableBucketElem<TVal>*[fHashModulus];
@@ -226,7 +231,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal)
     // Hash the key
     hashVal = XMLString::hash(key, fHashModulus);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XML4CExcepts::HshTbl_BadHashFromKey);
+        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
 
     // Search that bucket for the key
     RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -246,7 +251,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
     // Hash the key
     hashVal = XMLString::hash(key, fHashModulus);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XML4CExcepts::HshTbl_BadHashFromKey);
+        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
 
     // Search that bucket for the key
     const RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -267,7 +272,7 @@ removeBucketElem(const XMLCh* const key, unsigned int& hashVal)
     // Hash the key
     hashVal = XMLString::hash(key, fHashModulus);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XML4CExcepts::HshTbl_BadHashFromKey);
+        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
 
     //
     //  Search the given bucket for this key. Keep up with the previous
@@ -307,7 +312,7 @@ removeBucketElem(const XMLCh* const key, unsigned int& hashVal)
     }
 
     // We never found that key
-    ThrowXML(NoSuchElementException, XML4CExcepts::HshTbl_NoSuchKeyExists);
+    ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
 }
 
 
@@ -360,7 +365,7 @@ template <class TVal> TVal& RefHashTableOfEnumerator<TVal>::nextElement()
 {
     // Make sure we have an element to return
     if (!hasMoreElements())
-        ThrowXML(NoSuchElementException, XML4CExcepts::Enum_NoMoreElements);
+        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
 
     //
     //  Save the current element, then move up to the next one for the

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:38  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:01  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/CountedPointer.hpp>
 #endif
 
@@ -141,13 +146,13 @@ template <class T> T* CountedPointerTo<T>::operator->()
 template <class T> const T& CountedPointerTo<T>::operator*() const
 {
     if (!fPtr)
-        ThrowXML(NullPointerException, XML4CExcepts::CPtr_PointerIsZero);
+        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
     return *fPtr;
 }
 
 template <class T> T& CountedPointerTo<T>::operator*()
 {
     if (!fPtr)
-        ThrowXML(NullPointerException, XML4CExcepts::CPtr_PointerIsZero);
+        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
     return *fPtr;
 }

@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:37  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/09 21:42:37  abagchi
  * Copyright swatswat
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/RuntimeException.hpp>
 #include <validators/DTD/CMStateSet.hpp>
 #include <validators/DTD/CMUnaryOp.hpp>
@@ -90,7 +95,7 @@ CMUnaryOp::CMUnaryOp(   const   ContentSpecNode::NodeTypes  type
     &&  (type != ContentSpecNode::ZeroOrMore)
     &&  (type != ContentSpecNode::OneOrMore))
     {
-        ThrowXML(RuntimeException, XML4CExcepts::CM_UnaryOpHadBinType);
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnaryOpHadBinType);
     }
 }
 

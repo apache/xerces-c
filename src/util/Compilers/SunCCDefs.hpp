@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.8  2000/03/02 19:55:09  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.7  2000/03/02 01:50:30  aruna1
  * Sun CC 5.0 related changes
  *
@@ -104,17 +109,19 @@
 // ---------------------------------------------------------------------------
 typedef wchar_t XMLCh;
 
+
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
 
+
 // ---------------------------------------------------------------------------
-//  Force on the XML4C debug token if it was on in the build environment
+//  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 #if 0
-#define XML4C_DEBUG
+#define XERCES_DEBUG
 #endif
 
 
@@ -142,4 +149,4 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the CC version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libxerces-c";
+const char* const Xerces_DLLName = "libxerces-c";

@@ -349,7 +349,7 @@ SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32Defs.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XML4CDefs.hpp
+SOURCE=..\..\..\..\..\src\util\XercesDefs.hpp
 # End Source File
 # Begin Source File
 
@@ -362,6 +362,10 @@ SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.Hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLDeleterFor.hpp
 # End Source File
 # Begin Source File
 

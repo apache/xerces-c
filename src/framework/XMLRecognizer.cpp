@@ -56,6 +56,11 @@
 
 /**
  *  $Log$
+ *  Revision 1.4  2000/03/02 19:54:25  roddey
+ *  This checkin includes many changes done while waiting for the
+ *  1.1.0 code to be finished. I can't list them all here, but a list is
+ *  available elsewhere.
+ *
  *  Revision 1.3  2000/02/06 07:47:48  rahulj
  *  Year 2K copyright swat.
  *
@@ -264,7 +269,7 @@ const XMLCh*
 XMLRecognizer::nameForEncoding(const XMLRecognizer::Encodings theEncoding)
 {
     if (theEncoding > Encodings_Count)
-        ThrowXML(RuntimeException, XML4CExcepts::XMLRec_UnknownEncoding);
+        ThrowXML(RuntimeException, XMLExcepts::XMLRec_UnknownEncoding);
 
     return gEncodingNameMap[theEncoding];
 }

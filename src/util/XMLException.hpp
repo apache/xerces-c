@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/02 19:54:48  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/24 20:05:26  abagchi
  * Swat for removing Log from API docs
  *
@@ -73,7 +78,7 @@
 #if !defined(EXCEPTION_HPP)
 #define EXCEPTION_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/XMLExceptMsgs.hpp>
 
 
@@ -104,7 +109,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XML4CExcepts::Codes getCode() const;
+    XMLExcepts::Codes getCode() const;
     const XMLCh* getMessage() const;
     const char* getSrcFile() const;
     unsigned int getSrcLine() const;
@@ -137,11 +142,11 @@ protected :
     // -----------------------------------------------------------------------
     void loadExceptText
     (
-        const   XML4CExcepts::Codes toLoad
+        const   XMLExcepts::Codes toLoad
     );
     void loadExceptText
     (
-        const   XML4CExcepts::Codes toLoad
+        const   XMLExcepts::Codes toLoad
         , const XMLCh* const        text1
         , const XMLCh* const        text2 = 0
         , const XMLCh* const        text3 = 0
@@ -149,7 +154,7 @@ protected :
     );
     void loadExceptText
     (
-        const   XML4CExcepts::Codes toLoad
+        const   XMLExcepts::Codes toLoad
         , const char* const         text1
         , const char* const         text2 = 0
         , const char* const         text3 = 0
@@ -172,7 +177,7 @@ private :
     //  fMsg
     //      The loaded message text for this exception.
     // -----------------------------------------------------------------------
-    XML4CExcepts::Codes fCode;
+    XMLExcepts::Codes fCode;
     char*               fSrcFile;
     unsigned int        fSrcLine;
     XMLCh*              fMsg;
@@ -181,7 +186,7 @@ private :
 // ---------------------------------------------------------------------------
 //  XMLException: Getter methods
 // ---------------------------------------------------------------------------
-inline XML4CExcepts::Codes XMLException::getCode() const
+inline XMLExcepts::Codes XMLException::getCode() const
 {
     return fCode;
 }
@@ -209,14 +214,14 @@ inline unsigned int XMLException::getSrcLine() const
 //  except the name of the exception, so it crazy to type them in over and
 //  over.
 // ---------------------------------------------------------------------------
-#define MakeXML4CException(theType, expKeyword) \
+#define MakeXMLException(theType, expKeyword) \
 class expKeyword theType : public XMLException \
 { \
 public: \
  \
     theType(const   char* const         srcFile \
             , const unsigned int        srcLine \
-            , const XML4CExcepts::Codes toThrow) : \
+            , const XMLExcepts::Codes toThrow) : \
         XMLException(srcFile, srcLine) \
     { \
         loadExceptText(toThrow); \
@@ -230,7 +235,7 @@ public: \
   \
     theType(const   char* const         srcFile \
             , const unsigned int        srcLine \
-            , const XML4CExcepts::Codes toThrow \
+            , const XMLExcepts::Codes toThrow \
             , const XMLCh* const        text1 \
             , const XMLCh* const        text2 = 0 \
             , const XMLCh* const        text3 = 0 \
@@ -242,7 +247,7 @@ public: \
  \
     theType(const   char* const         srcFile \
             , const unsigned int        srcLine \
-            , const XML4CExcepts::Codes toThrow \
+            , const XMLExcepts::Codes toThrow \
             , const char* const         text1 \
             , const char* const         text2 = 0 \
             , const char* const         text3 = 0 \

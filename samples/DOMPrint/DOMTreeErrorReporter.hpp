@@ -1,3 +1,4 @@
+
 /*
  * The Apache Software License, Version 1.1
  * 
@@ -54,8 +55,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:53:40  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/06 07:47:18  rahulj
  * Year 2K copyright swat.
  *
@@ -73,7 +79,7 @@
  *
  */
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <sax/ErrorHandler.hpp>
 #include <iostream.h>
 

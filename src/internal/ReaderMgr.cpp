@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.10  2000/03/02 19:54:28  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.9  2000/02/24 02:12:54  aruna1
  * ReaderMgr:;getReaderDepth() added
  *
@@ -438,7 +443,7 @@ void ReaderMgr::cleanStackBackTo(const unsigned int readerNum)
             break;
 
         if (fReaderStack->empty())
-            ThrowXML(RuntimeException, XML4CExcepts::RdrMgr_ReaderIdNotFound);
+            ThrowXML(RuntimeException, XMLExcepts::RdrMgr_ReaderIdNotFound);
 
         delete fCurReader;
         fCurReader = fReaderStack->pop();
@@ -549,8 +554,13 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         {
             XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
             if (urlTmp.isRelative())
-                ThrowXML(MalformedURLException,
-                         XML4CExcepts::URL_NoProtocolPresent);
+            {
+                ThrowXML
+                (
+                    MalformedURLException
+                    , XMLExcepts::URL_NoProtocolPresent
+                );
+            }
             srcToFill = new URLInputSource(urlTmp);
         }
 
@@ -667,9 +677,19 @@ XMLReader* ReaderMgr::getCurrentReader()
 
 unsigned int ReaderMgr::getReaderDepth() const
 {
+    // If the stack doesn't exist, its obviously zero
     if (!fEntityStack)
         return 0;
-    return fEntityStack->size() + 1;
+
+    //
+    //  The return is the stack size, plus one if there is a current
+    //  reader. So if there is no current reader and none on the stack,
+    //  its zero, else its some non-zero value.
+    //
+    unsigned int retVal = fEntityStack->size();
+    if (fCurReader)
+        retVal++;
+    return retVal;
 }
 
 void ReaderMgr::getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const
@@ -802,6 +822,47 @@ void ReaderMgr::reset()
     if (fEntityStack)
         fEntityStack->removeAllElements();
 }
+
+
+// ---------------------------------------------------------------------------
+//  ReaderMgr: Implement the SAX Locator interface
+// ---------------------------------------------------------------------------
+const XMLCh* ReaderMgr::getPublicId() const
+{
+    if (!fReaderStack && !fCurReader)
+        return XMLUni::fgZeroLenString;
+
+    const XMLEntityDecl* theEntity;
+    return getLastExtEntity(theEntity)->getPublicId();
+}
+
+const XMLCh* ReaderMgr::getSystemId() const
+{
+    if (!fReaderStack && !fCurReader)
+        return XMLUni::fgZeroLenString;
+
+    const XMLEntityDecl* theEntity;
+    return getLastExtEntity(theEntity)->getSystemId();
+}
+
+int ReaderMgr::getColumnNumber() const
+{
+    if (!fReaderStack && !fCurReader)
+        return 0;
+
+    const XMLEntityDecl* theEntity;
+    return getLastExtEntity(theEntity)->getColumnNumber();
+}
+
+int ReaderMgr::getLineNumber() const
+{
+    if (!fReaderStack && !fCurReader)
+        return 0;
+
+    const XMLEntityDecl* theEntity;
+    return getLastExtEntity(theEntity)->getLineNumber();
+}
+
 
 
 // ---------------------------------------------------------------------------

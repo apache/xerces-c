@@ -57,7 +57,7 @@
 #ifndef XMLCHTRANSCODER_HPP
 #define XMLCHTRANSCODER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/TransService.hpp>
 
 

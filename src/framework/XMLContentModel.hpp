@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/02 19:54:24  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/24 20:00:23  abagchi
  * Swat for removing Log from API docs
  *
@@ -77,7 +82,7 @@
 #if !defined(CONTENTMODEL_HPP)
 #define CONTENTMODEL_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/RefVectorOf.hpp>
 
 /**

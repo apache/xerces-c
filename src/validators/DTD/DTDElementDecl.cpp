@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:55:39  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/09 21:42:37  abagchi
  * Copyright swatswat
  *
@@ -325,7 +330,7 @@ XMLContentModel* DTDElementDecl::makeContentModel() const
     }
      else
     {
-        ThrowXML(RuntimeException, XML4CExcepts::CM_MustBeMixedOrChildren);
+        ThrowXML(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren);
     }
     return cmRet;
 }
@@ -345,7 +350,7 @@ XMLContentModel* DTDElementDecl::createChildModel() const
     //  if it was, it should have already gotten taken by the Mixed model.
     //
     if (specNode->getElemId() == XMLElementDecl::fgPCDataElemId)
-        ThrowXML(RuntimeException, XML4CExcepts::CM_NoPCDATAHere);
+        ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
 
     //
     //  According to the type of node, we will create the correct type of
@@ -400,7 +405,7 @@ XMLContentModel* DTDElementDecl::createChildModel() const
     }
      else
     {
-        ThrowXML(RuntimeException, XML4CExcepts::CM_UnknownCMSpecType);
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
     }
 
     // Its not any simple type of content, so create a DFA based content model

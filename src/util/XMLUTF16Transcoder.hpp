@@ -57,7 +57,7 @@
 #ifndef XMLUTF16TRANSCODER_HPP
 #define XMLUTF16TRANSCODER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/TransService.hpp>
 
 

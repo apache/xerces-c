@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/03/02 19:54:44  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:48:03  rahulj
  * Year 2K copyright swat.
  *
@@ -71,7 +76,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined(XML4C_TMPLSINC)
+#if defined(XERCES_TMPLSINC)
 #include <util/RefArrayOf.hpp>
 #endif
 
@@ -124,7 +129,7 @@ template <class TElem> TElem*& RefArrayOf<TElem>::
 operator[](const unsigned int index)
 {
     if (index >= fSize)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Array_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
     return fArray[index];
 }
 
@@ -132,7 +137,7 @@ template <class TElem> const TElem* RefArrayOf<TElem>::
 operator[](const unsigned int index) const
 {
     if (index >= fSize)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Array_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
     return fArray[index];
 }
 
@@ -221,7 +226,7 @@ template <class TElem> TElem** RefArrayOf<TElem>::rawData() const
 template <class TElem> void RefArrayOf<TElem>::deleteAt(const unsigned int index)
 {
     if (index >= fSize)
-        ThrowXML(ArrayIndexOutOfBoundsException, XML4CExcepts::Array_BadIndex);
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
 
     delete fArray[index];
     fArray[index] = 0;
@@ -242,7 +247,7 @@ template <class TElem> void RefArrayOf<TElem>::resize(const unsigned int newSize
         return;
 
     if (newSize < fSize)
-        ThrowXML(IllegalArgumentException, XML4CExcepts::Array_BadNewSize);
+        ThrowXML(IllegalArgumentException, XMLExcepts::Array_BadNewSize);
 
     // Allocate the new array
     TElem** newArray = new TElem*[newSize];

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/02 19:54:46  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.7  2000/02/24 20:05:25  abagchi
  * Swat for removing Log from API docs
  *
@@ -89,7 +94,7 @@
 #ifndef TRANSSERVICE_HPP
 #define TRANSSERVICE_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 
 // Forward references
@@ -100,7 +105,7 @@ class XMLTranscoder;
 
 //
 //  This class is an abstract base class which are used to abstract the
-//  transcoding services that XML4C uses. The parser's actual transcoding
+//  transcoding services that Xerces uses. The parser's actual transcoding
 //  needs are small so it is desirable to allow different implementations
 //  to be provided.
 //

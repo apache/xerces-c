@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/03/02 19:54:29  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.8  2000/02/24 20:18:07  abagchi
  * Swat for removing Log from API docs
  *
@@ -99,9 +104,10 @@
 #if !defined(READERMGR_HPP)
 #define READERMGR_HPP
 
-#include <framework/XMLBuffer.hpp>
 #include <util/RefStackOf.hpp>
 #include <util/XMLString.hpp>
+#include <sax/Locator.hpp>
+#include <framework/XMLBuffer.hpp>
 #include <internal/XMLReader.hpp>
 
 class XMLBuffer;
@@ -120,7 +126,7 @@ class XMLScanner;
 //  talks to the reader manager, which handles the stack and popping off
 //  used up readers.
 // ---------------------------------------------------------------------------
-class XMLPARSER_EXPORT ReaderMgr
+class XMLPARSER_EXPORT ReaderMgr : public Locator
 {
 public :
     // -----------------------------------------------------------------------
@@ -231,6 +237,15 @@ public :
     // -----------------------------------------------------------------------
     void setEntityHandler(XMLEntityHandler* const newHandler);
     void setThrowEOE(const bool newValue);
+
+
+    // -----------------------------------------------------------------------
+    //  Implement the SAX Locator interface
+    // -----------------------------------------------------------------------
+    virtual const XMLCh* getPublicId() const;
+    virtual const XMLCh* getSystemId() const;
+    virtual int getLineNumber() const;
+    virtual int getColumnNumber() const;
 
 
 private :

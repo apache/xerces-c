@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/02 19:54:41  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/24 20:05:24  abagchi
  * Swat for removing Log from API docs
  *
@@ -74,7 +79,7 @@
 #define KEYVALUEPAIR_HPP
 
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 
 
 template <class TKey, class TValue> class KeyValuePair
@@ -120,7 +125,7 @@ template <class TKey, class TValue> class KeyValuePair
 };
 
 
-#if !defined(XML4C_TMPLSINC)
+#if !defined(XERCES_TMPLSINC)
 #include <util/KeyValuePair.c>
 #endif
 

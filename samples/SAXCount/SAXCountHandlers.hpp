@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/03/02 19:53:47  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.2  2000/02/06 07:47:23  rahulj
  * Year 2K copyright swat.
  *
@@ -88,22 +93,27 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getElementCount()
+    unsigned int getElementCount() const
     {
         return fElementCount;
     }
 
-    unsigned int getAttrCount()
+    unsigned int getAttrCount() const
     {
         return fAttrCount;
     }
 
-    unsigned int getCharacterCount()
+    unsigned int getCharacterCount() const
     {
         return fCharacterCount;
     }
 
-    unsigned int getSpaceCount()
+    bool getSawErrors() const
+    {
+        return fSawErrors;
+    }
+
+    unsigned int getSpaceCount() const
     {
         return fSpaceCount;
     }
@@ -136,11 +146,14 @@ private:
     //  fSpaceCount
     //      These are just counters that are run upwards based on the input
     //      from the document handlers.
+    //
+    //  fSawErrors
+    //      This is set by the error handlers, and is queryable later to
+    //      see if any errors occured.
     // -----------------------------------------------------------------------
     unsigned int    fAttrCount;
     unsigned int    fCharacterCount;
     unsigned int    fElementCount;
     unsigned int    fSpaceCount;
-
-
+    bool            fSawErrors;
 };

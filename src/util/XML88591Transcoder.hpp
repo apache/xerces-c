@@ -57,7 +57,7 @@
 #ifndef XML88591TRANSCODER_HPP
 #define XML88591TRANSCODER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/TransService.hpp>
 
 

@@ -59,6 +59,11 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/02 19:53:51  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.4  2000/02/24 20:11:26  abagchi
  * Swat for removing Log from API docs
  *
@@ -91,7 +96,7 @@
 
 
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include "NodeImpl.hpp"
 #include "DOM_Node.hpp"
 

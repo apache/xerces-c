@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.1  2000/03/02 19:54:50  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.13  2000/03/02 01:51:00  aruna1
  * Sun CC 5.0 related changes
  *
@@ -104,21 +109,21 @@
  */
 
 
-#if !defined(XML4CDEFS_HPP)
-#define XML4CDEFS_HPP
+#if !defined(XERCESDEFS_HPP)
+#define XERCESDEFS_HPP
 
 
 // ---------------------------------------------------------------------------
-//  These are the various representations of the current version of XML4C.
+//  These are the various representations of the current version of Xerces.
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define XML4C_DLLVersionStr "1_1"
-static const char* const    gXML4CVersionStr = "1_1";
-static const char* const    gXML4CFullVersionStr = "1_1_0";
-static const unsigned int   gXML4CMajVersion = 1;
-static const unsigned int   gXML4CMinVersion = 1;
-static const unsigned int   gXML4CRevision   = 0;
+#define Xerces_DLLVersionStr "1_2"
+static const char* const    gXercesVersionStr = "1_2";
+static const char* const    gXercesFullVersionStr = "1_2_0";
+static const unsigned int   gXercesMajVersion = 1;
+static const unsigned int   gXercesMinVersion = 2;
+static const unsigned int   gXercesRevision   = 0;
 
 
 // ---------------------------------------------------------------------------
@@ -179,6 +184,7 @@ static const unsigned int   gXML4CRevision   = 0;
 #if defined(XML_AS400)
 #include	<util/Platforms/OS400/OS400Defs.hpp>
 #endif
+
 
 // ---------------------------------------------------------------------------
 //  And now we subinclude a header according to the development environment

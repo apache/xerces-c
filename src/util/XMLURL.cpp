@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.8  2000/03/02 19:54:49  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.7  2000/02/17 18:09:02  roddey
  * Fixed an infinite loop caused while trying to trim leading
  * whitespace from the raw URL during parsing.
@@ -387,7 +392,7 @@ const XMLCh* XMLURL::getProtocolName() const
 {
     // Check to see if its ever been set
     if (fProtocol == Unknown)
-        ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
 
     return gTypeList[fProtocol].prefix;
 }
@@ -535,7 +540,7 @@ BinInputStream* XMLURL::makeNewStream() const
     //  have to just throw here.
     //
     if (!XMLPlatformUtils::fgNetAccessor)
-        ThrowXML(MalformedURLException, XML4CExcepts::URL_UnsupportedProto);
+        ThrowXML(MalformedURLException, XMLExcepts::URL_UnsupportedProto);
 
     // Else ask the net accessor to create the stream
     return XMLPlatformUtils::fgNetAccessor->makeNew(*this);
@@ -672,7 +677,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
     if (baseURL.isRelative())
     {
         // <TBD> Add an error for this
-        // ThrowXML(MalformedURLException, XML4CExcepts::URL_BaseWasRelative);
+        // ThrowXML(MalformedURLException, XMLExcepts::URL_BaseWasRelative);
     }
 
     //
@@ -751,7 +756,7 @@ void XMLURL::parse(const XMLCh* const urlText)
 {
     // Simplify things by checking for the psycho scenarios first
     if (!*urlText)
-        ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
 
     //
     //  The first thing we will do is to check for a file name, so that
@@ -766,7 +771,7 @@ void XMLURL::parse(const XMLCh* const urlText)
             if ((*(urlText + 2) == chForwardSlash)
             ||  (*(urlText + 2) == chBackSlash))
             {
-                ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+                ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
             }
         }
     }
@@ -791,7 +796,7 @@ void XMLURL::parse(const XMLCh* const urlText)
 
     // Make sure it wasn't all space
     if (!*srcPtr)
-        ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
 
     //
     //  Ok, the next thing we have to do is to find either a / or : character.
@@ -823,7 +828,7 @@ void XMLURL::parse(const XMLCh* const urlText)
                 ThrowXML1
                 (
                     MalformedURLException
-                    , XML4CExcepts::URL_UnsupportedProto1
+                    , XMLExcepts::URL_UnsupportedProto1
                     , srcPtr
                 );
             }

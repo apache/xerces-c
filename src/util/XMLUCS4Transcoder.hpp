@@ -57,7 +57,7 @@
 #ifndef XMLUCS4TRANSCODER_HPP
 #define XMLUCS4TRANSCODER_HPP
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/TransService.hpp>
 
 

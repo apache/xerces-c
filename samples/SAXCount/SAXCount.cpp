@@ -54,8 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/03/02 19:53:47  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
  * Revision 1.3  2000/02/11 02:39:10  abagchi
  * Removed StrX::transcode
  *
@@ -83,8 +88,9 @@
 void usage()
 {
     cout << "\nUsage:\n"
-         << "    SAXCount [-v] <XML file>\n"
+         << "    SAXCount [-v -n] <XML file>\n\n"
          << "    -v  Do a validating parse. Defaults to non-validating.\n"
+         << "    -n  Enable namespace processing. Defaults to off.\n\n"
          << "This program prints the number of elements, attributes,\n"
          << "white spaces and other non-white space characters in the "
          << "input file.\n" << endl;
@@ -94,7 +100,7 @@ void usage()
 // ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
-int main(int argc, char* args[])
+int main(int argC, char* argV[])
 {
     // Initialize the XML4C2 system
     try
@@ -109,36 +115,58 @@ int main(int argc, char* args[])
          return 1;
     }
 
-    // We only have one required parameter, which is the file to process
-    if (argc < 2)
+    // Check command line and extract arguments.
+    if (argC < 2)
     {
         usage();
-        return -1;
+        return 1;
     }
-    const char* xmlFile = args[1];
-    bool  doValidation = false;
 
-    // Check for some special cases values of the parameter
-    if (!strncmp(xmlFile, "-?", 2))
+    const char* xmlFile;
+    bool        doValidation    = false;
+    bool        doNamespaces    = false;
+
+    // See if non validating dom parser configuration is requested.
+    if ((argC == 2) && !strcmp(argV[1], "-?"))
     {
         usage();
-        return 0;
+        return 2;
     }
-     else if (!strncmp(xmlFile, "-v", 2))
+
+    int argInd;
+    for (argInd = 1; argInd < argC; argInd++)
     {
-        doValidation = true;
-        if (argc < 3)
+        // Break out on first non-dash parameter
+        if (argV[argInd][0] != '-')
+            break;
+
+        if (!strcmp(argV[argInd], "-v")
+        ||  !strcmp(argV[argInd], "-V"))
         {
-            usage();
-            return -1;
+            doValidation = true;
         }
-        xmlFile = args[2];
+         else if (!strcmp(argV[argInd], "-n")
+              ||  !strcmp(argV[argInd], "-N"))
+        {
+            doNamespaces = true;
+        }
+         else
+        {
+            cerr << "Unknown option '" << argV[argInd]
+                 << "', ignoring it\n" << endl;
+        }
     }
-     else if (xmlFile[0] == '-')
+
+    //
+    //  There should be only one and only one parameter left, and that
+    //  should be the file name.
+    //
+    if (argInd != argC - 1)
     {
         usage();
-        return -1;
+        return 1;
     }
+    xmlFile = argV[argInd];
 
     //
     //  Create a SAX parser object. Then, according to what we were told on
@@ -146,6 +174,7 @@ int main(int argc, char* args[])
     //
     SAXParser parser;
     parser.setDoValidation(doValidation);
+    parser.setDoNamespaces(doNamespaces);
 
     //
     //  Create our SAX handler object and install it on the parser, as the
@@ -177,11 +206,14 @@ int main(int argc, char* args[])
     }
 
     // Print out the stats that we collected and time taken
-    cout << xmlFile << ": " << duration << " ms ("
-         << handler.getElementCount() << " elems, "
-         << handler.getAttrCount() << " attrs, "
-         << handler.getSpaceCount() << " spaces, "
-         << handler.getCharacterCount() << " chars)" << endl;
+    if (!handler.getSawErrors())
+    {
+        cout << xmlFile << ": " << duration << " ms ("
+             << handler.getElementCount() << " elems, "
+             << handler.getAttrCount() << " attrs, "
+             << handler.getSpaceCount() << " spaces, "
+             << handler.getCharacterCount() << " chars)" << endl;
+    }
 
     return 0;
 }
