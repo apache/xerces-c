@@ -57,15 +57,19 @@
                <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">
                    XML Schema Part 2: Datatypes</jump>, W3C Recommendation 2 May 2001</li>
             </ul>
-            <li>Experimental Implementation of <jump href="http://www.w3.org/TR/xml11/">
+            <li>Full experimental implementation of <jump href="http://www.w3.org/TR/xml11/">
                 XML 1.1</jump>, W3C Candidate Recommendation of October 15, 2002
                 (Note: section 2.13 Normalization Checking has not been implemented)</li>
+            <li>Full experimental implementation of <jump href="http://www.w3.org/TR/xml-names11/">
+                Namespaces in XML 1.1</jump>, W3C Candidate Recommendation of 18 December 2002</li>                
             <li>Contains a partial implementation of the
-            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409/">
-            DOM Level 3.0 Core Specification</jump>, W3C Working Draft of 09 April 2002 and
-            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-            DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>,
-            W3C Working Draft of 09 April 2002.  This implementation is experimental.
+            <jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
+            DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Working Draft 26 February 2003 
+            and
+            <jump href="http://www.w3.org/TR/DOM-Level-3-LS/">
+            Document Object Model (DOM) Level 3 Load and Save Specification</jump>,
+            Version 1.0 W3C Working Draft 26 February 2003.
+            This implementation is experimental.
             See <jump href="dom3.html">DOM Level 3 Support</jump> for detail.</li>
             <li>Source code, samples, and documentation is provided</li>
             <li>Programmatic generation and validation of XML</li>

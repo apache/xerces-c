@@ -27,7 +27,18 @@
     <anchor name="NewFeatures230"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
-        <li></li>        
+        <li>Experimental Implementation of Namespaces in XML 1.1 </li>
+        <li>Experimental Implementation of XML 1.1: in DOMWriter</li>
+        <li>More Schema 1.0 Errata Implementation</li>
+        <li>More DOM L3 Core Support</li>        
+        <ul>
+            <li>DOMConfiguration</li>
+            <li>Document Normalization</li>
+        </ul>
+        <li>Plugable Memory Manager</li>      
+        <li>Plugable Security Manager</li>      
+        <li>Plugable Panic Handler</li>
+        <li>Logical Path Resolution</li>        
       </ul>
     </s3>
 

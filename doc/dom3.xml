@@ -16,11 +16,11 @@
     The &XercesCName; &XercesCVersion; contains an experimental implementation of
     a subset of the W3C DOM Level 3 as specified in </p>
     <ul>
-      <li><jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409/">
-      DOM Level 3.0 Core Specification</jump>, a W3C Working Draft of 09 April 2002 and</li>
-      <li><jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-      DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>,
-      a W3C Working Draft of 09 April 2002.</li>
+      <li><jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
+          DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Working Draft 26 February 2003 and  </li>
+      <li> <jump href="http://www.w3.org/TR/DOM-Level-3-LS/">
+          Document Object Model (DOM) Level 3 Load and Save Specification</jump>,
+          Version 1.0 W3C Working Draft 26 February 2003 </li>
     </ul>
 </s2>
 
@@ -35,7 +35,7 @@
     </li>
      <li>
         <code>DOMDocument</code>: set/getActualEncoding, set/getEncoding, set/getVersion, set/getStandalone,
-        set/getDocumentURI, set/getStrictErrorChecking, renameNode
+        set/getDocumentURI, set/getStrictErrorChecking, renameNode, normalizeDocument
     </li>
     <li>
         <code>DOMEntity</code>: set/getActualEncoding, set/getEncoding, set/getVersion
@@ -58,6 +58,10 @@
     <li>
         <code>DOMUserDataHandler</code>
     </li>
+    <li>
+        <code>DOMConfiguration</code>
+    </li>    
+    
 </ul>
 </s2>
 

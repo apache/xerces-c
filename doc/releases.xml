@@ -17,7 +17,13 @@
     </p>
 </s2>
 
-<s2 title="Release Information of &XercesCName; &XercesCVersion;: xxxx, 2003">
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: May 23, 2003">
+
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=02%2F07%2F03&amp;chfieldto=05%2F23%2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &XercesCVersion;.
+</p>
+
 <table>
     <tr>
         <th>Date</th>
@@ -26,6 +32,439 @@
     </tr>
     
     <tr>
+        <td>2003-05-16</td>
+        <td>Khaled Noaman</td>
+        <td>Configurable Memory Management
+        </td>
+    </tr>        
+        
+    <tr>
+        <td>2003-05-15</td>
+        <td>Gareth Reakes</td>
+        <td>Document::normalizeDocument() Implementaion
+        </td>
+    </tr>        
+        
+    <tr>
+        <td>2003-05-15</td>
+        <td>Nathan Codding</td>
+        <td>Optimization. We now resize the hash when appropriate.
+        </td>
+    </tr>        
+        
+    <tr>
+        <td>2003-05-14</td>
+        <td>Alberto Massari</td>
+        <td>Fix to problem with multiple default namespace attributes being serialized
+        </td>
+    </tr>        
+        
+    <tr>
+        <td>2003-05-14</td>
+        <td>Hiramatsu Yoshifumi</td> 
+        <td>port to NetBSD
+        </td>
+    </tr>        
+            
+    <tr>
+        <td>2003-05-13</td>
+        <td>Neil Graham</td>
+        <td>Fix a bug that caused ComplexTypeInfo#elementCount() to report values 
+            including references to global elements only when the schema-full-checking 
+            flag was true
+        </td>
+    </tr>        
+                
+    <tr>
+        <td>2003-05-12</td>
+        <td>Alberto Massari</td>
+        <td>[Bug 18832] Corrected serilization with regards to namespace nodes
+        </td>
+    </tr>        
+                 
+    <tr>
+        <td>2003-05-10</td>
+        <td>Zeid Derhally</td>
+        <td>Fix bugs 19816, 19817, 19818;
+        </td>
+    </tr>        
+                 
+    <tr>
+        <td>2003-05-06</td>
+        <td>Neil Graham</td>
+        <td>Fix GCC compilation problem and incorrect #include
+        </td>
+    </tr>                                
+    
+    <tr>
+        <td>2003-05-05</td>
+        <td>Urs Muff/Neil Graham</td>
+        <td>Adding optional support for reference counting of nodes within the DOM
+        </td>
+    </tr>
+        
+    <tr>
+        <td>2003-05-01</td>
+        <td>James Devries</td>
+        <td>Socket support added on OS400
+        </td>
+    </tr>
+         
+    <tr>
+        <td>2003-04-30</td>
+        <td>Khaled Noaman</td>
+        <td>MemoryManager and XMemory
+        </td>
+    </tr>
+         
+    <tr>
+        <td>2003-04-30</td>
+        <td>Andrew Hefford</td>
+        <td>[Bug 19472]Spelling mistake correction. 
+        </td>
+    </tr>
+         
+    <tr>
+        <td>2003-04-29</td>
+        <td>Khaled Noaman</td>
+        <td>Cut link to XMLBigInteger
+        </td>
+    </tr>
+         
+    <tr>
+        <td>2003-04-28</td>
+        <td>Neil Graham</td>
+        <td>Implement namespaces 1.1
+        </td>
+    </tr>
+         
+    <tr>
+        <td>2003-04-28</td>
+        <td>Ailian Ding</td>
+        <td>[Bug 19402] OS2PlatformUtils.cpp compareAndSwap() need to return retVal.
+        </td>
+    </tr>
+    
+    <tr>
+        <td>2003-04-28</td>
+        <td>James Berry</td>
+        <td>Add function prototype to eliminate compiler warning
+        </td>
+    </tr>    
+
+    <tr>
+        <td>2003-04-27</td>
+        <td>James Berry</td>
+        <td>Add new files to Mac OS CodeWarrior project
+        </td>
+    </tr>    
+           
+    <tr>
+        <td>2003-04-27</td>
+        <td>James Berry</td>
+        <td>Add include for stdlib to pull in size_t declaration
+        </td>
+    </tr>            
+
+    <tr>   
+        <td>2003-04-27</td>
+        <td>James Berry</td>
+        <td>Add new files to Mac OS ProjectBuilder projects
+        </td>
+    </tr>    
+        
+    <tr>   
+        <td>2003-04-27</td>
+        <td>James Berry</td>
+        <td>PanicHandler, GetCurrentDir() and isAnySlash() on MAC
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-25</td>
+        <td>Khaled Noaman</td>
+        <td>Replicate key2 and key3 when putting an item in the list
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-25</td>
+        <td>PeiYong Zhang</td>
+        <td>throw exception if getcwd() fails
+        </td>
+    </tr>                  
+    
+    <tr>   
+        <td>2003-04-25</td>
+        <td>Neil Graham</td>
+        <td>Win32PlatformUtils: use WIN API to make it compilable 
+            on Windows with both cygwin and MSVC++
+        </td>
+    </tr>  
+        
+    <tr>   
+        <td>2003-04-24</td>
+        <td>PeiYong Zhang</td>
+        <td>Logical Path Resolution
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-22</td>
+        <td>Khaled Noaman</td>
+        <td>Initialize security manager in Scanner constructor
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-22</td>
+        <td>Neil Graham</td>
+        <td>change const static member (in SecurityManager) to an enum 
+            to make MSVC happy
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-21</td>
+        <td>Khaled Noaman</td>
+        <td>Use XMLString::release to prepare for configurable memory manager.
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-21</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: use memcpy in moveChars and replicate.
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-21</td>
+        <td>Khaled Noaman</td>
+        <td>MemoryManager and MemoryManagerImpl
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-21</td>
+        <td>PeiYong Zhang</td>
+        <td>Performance tuning to XMLPlatformUtils::getFullPath()
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-17</td>
+        <td>Neil Graham</td>
+        <td>new property, http://apache.org/xml/properties/security-manager
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-15</td>
+        <td>Berin Lautenbach</td>
+        <td>[Bug 17096] XMLUri relative path calculation badly broken
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-09</td>
+        <td>Pedro Lopes</td>
+        <td>[Bug 18860] Samples on Borland C++ 6 - access violations and build errors
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-09</td>
+        <td>Guido Gagliardi</td>
+        <td>[Bug 18856] Example code do not compile
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-07</td>
+        <td>Vasily Tchekalkin</td>
+        <td>[Bug 18672] IconvGNUTranscoder can't be build when namespaces is on.
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-04</td>
+        <td>Neil Graham</td>
+        <td>Update to project file: DOMConfigurationImpl
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-03</td>
+        <td>PeiYong Zhang</td>
+        <td>Revised Implementation of getTextContent() to use castToNodeImpl()
+        </td>
+    </tr>  
+               
+    <tr>   
+        <td>2003-04-02</td>
+        <td>Erik Rydgren</td>
+        <td>Implementation of getTextContent().
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-02</td>
+        <td>Neil Graham</td>
+        <td>Fix to personal.xsd to permit xml:base on on elements
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-04-01</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 18594] DOMWriter does not recognize Document Fragment
+        </td>
+    </tr>  
+                                                                     
+    <tr>   
+        <td>2003-04-01</td>
+        <td>PeiYong Zhang</td>
+        <td>Link in version numbered ICU on AIX
+        </td>
+    </tr>             
+    
+    <tr>   
+        <td>2003-03-31</td>
+        <td>Gareth Reakes</td>
+        <td>Changed the API for document normalization to the new Level 3 WD
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-31</td>
+        <td>Caroline Rioux</td>
+        <td>DOMConfiguration
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-27</td>
+        <td>Tinny Ng</td>
+        <td> use __IBMCPP__ instead of __xlC__ to determine xlC compiler
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-25</td>
+        <td>Khaled Noaman</td>
+        <td>Fix typo in program-others.xml
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-24</td>
+        <td>Tinny Ng</td>
+        <td>Link in version numbered ICU so that multiple version of XML4C can coexist
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-23</td>
+        <td>PeiYong Zhang</td>
+        <td>Invalid second values in XMLDateTime
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-03-21</td>
+        <td>Khaled Noaman</td>
+        <td>Should reset reader manager before returning loaded grammar
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-03-20</td>
+        <td>PeiYong Zhang</td>
+        <td>Fix to 'genrb' on Linux
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-20</td>
+        <td>Neil Graham</td>
+        <td>[Bug 12436] Add detection of invalid UTF-8 byte sequences
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-19</td>
+        <td>Vinayak</td>
+        <td>Added flag (p) and code to the countChildElements fn to enable 
+            printing of nodes and all associated attributes
+        </td>
+    </tr>  
+       
+    <tr>   
+        <td>2003-03-18</td>
+        <td>PeiYong Zhang</td>
+        <td>Build versioned shared library, libXercesMessages on UNIX
+        </td>
+    </tr>  
+           
+    <tr>   
+        <td>2003-03-18</td>
+        <td>Khaled Noaman</td>
+        <td>Schema Errata E2-18.
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-18</td>
+        <td>Alberto Massari</td>
+        <td>[Bug 18063] References to attributeGroup/group definition are not 
+            allowed to have annotations
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-17</td>
+        <td>PeiYong Zhang</td>
+        <td>Build versioned Message on Windows
+        </td>
+    </tr>  
+        
+    <tr>   
+        <td>2003-03-16</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 18051] Memory leak in Formatter
+        </td>
+    </tr>  
+        
+    <tr>   
+        <td>2003-03-15</td>
+        <td>PeiYong</td>
+        <td>[Bug 17983] Formatter does not escape control characters
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-14</td>
+        <td>PeiYong Zhang</td>
+        <td>Copy non-versioned libXercesMessages to target directory
+        </td>
+    </tr>  
+    
+    <tr>   
+        <td>2003-03-14</td>
+        <td>PeiYong Zhang</td>
+        <td>Enable to locate libXercesMessage
+        </td>
+    </tr>                                  
+              
+    <tr>   
+        <td>2003-03-14</td>
+        <td>Tinny Ng</td>
+        <td>Change to 2.3
+        </td>
+    </tr>  
+                                                                                                        
+    <tr>   
         <td>2003-03-14</td>
         <td>Tinny Ng</td>
         <td>[Bug 17147] C++ namespace breaks build of XercesCOM DLL.

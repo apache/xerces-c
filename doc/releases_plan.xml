@@ -5,8 +5,8 @@
 
 <s2 title="&XercesCName; Future Releases Plan">
 <p>This document highlights the release plan for &XercesCName;.</p>
-<s3 title="Current Status"><p>&XercesCName; 2.2.0 - released on February 7, 2003.</p></s3>
-<s3 title="Next Target Release"><p>&XercesCName; 2.3.0 - plan to be released by the Fall of 2003.</p></s3>
+<s3 title="Current Status"><p>&XercesCName; 2.3.0 - released on May 23, 2003.</p></s3>
+<s3 title="Next Target Release"><p>&XercesCName; 2.4.0 - plan to be released by the Fall of 2003.</p></s3>
 <s3 title="&XercesCName; Features list">
 <p> The following table lists the TODO items for &XercesCName;.  It does not include fixing
 bugs that are opened in Bugzilla; unless such Bugzilla bug involves a major development
@@ -30,20 +30,6 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Selectable Component Build (Xerces-C++ Lite)</td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>Static Library Build</td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-
-    <tr>
         <td>Schema 1.1</td>
         <td></td>
         <td></td>
@@ -58,12 +44,33 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>SAX 2.0.1</td>
+        <td>SAX-like API</td>
         <td></td>
         <td></td>
         <td></td>
     </tr>
-
+    
+    <tr>
+        <td>Grammar Pool</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    
+    <tr>
+        <td>Persistent Grammar</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    
+    <tr>
+        <td>Memory Pool</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+                
 </table>
 </s3>
 </s2>
