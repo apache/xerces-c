@@ -314,7 +314,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                 , unRepOpts
             );
 
-            #if XML_DEBUG
+            #if defined(XML_DEBUG)
             if ((outBytes > kTmpBufSize)
             ||  (charsEaten > srcCount))
             {
@@ -372,7 +372,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                     , unRepOpts
                 );
 
-                #if XML_DEBUG
+                #if defined(XML_DEBUG)
                 if ((outBytes > kTmpBufSize)
                 ||  (charsEaten > srcCount))
                 {

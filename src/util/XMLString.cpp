@@ -298,7 +298,7 @@ void XMLString::copyString(         char* const    target
 void XMLString::cut(        XMLCh* const    toCutFrom
                     , const unsigned int    count)
 {
-    #if XML_DEBUG
+    #if defined(XML_DEBUG)
     if (count > stringLen(toCutFrom))
     {
         // <TBD> This is bad of course
