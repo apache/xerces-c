@@ -125,10 +125,10 @@ system ("DOMCount -n -s personal-schema.xml");
 
 #  Run DOMPrint
 system ("DOMPrint");
-system ("DOMPrint -wddc=off -v=never personal.xml");
-system ("DOMPrint -wddc=off personal.xml");
-system ("DOMPrint -wddc=on personal.xml");
-system ("DOMPrint -wddc=off -n -s personal-schema.xml");
+system ("DOMPrint -wfpp=on -wddc=off -v=never personal.xml");
+system ("DOMPrint -wfpp=on -wddc=off personal.xml");
+system ("DOMPrint -wfpp=on -wddc=on  personal.xml");
+system ("DOMPrint -wfpp=on -wddc=off -n -s personal-schema.xml");
 
 #  Run StdInParse
 system ("StdInParse < personal.xml");
