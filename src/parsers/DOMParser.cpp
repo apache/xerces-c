@@ -60,6 +60,10 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.8  2000/02/17 03:53:50  rahulj
+* Added some new getters to query the parser state and
+* Finished documenting the public and protected methods.
+*
 * Revision 1.7  2000/02/06 07:47:56  rahulj
 * Year 2K copyright swat.
 *
@@ -166,6 +170,20 @@ const XMLValidator& DOMParser::getValidator() const
     return *fValidator;
 }
 
+bool DOMParser::getDoNamespaces() const
+{
+    return fScanner->getDoNamespaces();
+}
+
+bool DOMParser::getDoValidation() const
+{
+    return fScanner->getDoValidation();
+}
+
+bool DOMParser::getExitOnFirstFatalError() const
+{
+    return fScanner->getExitOnFirstFatal();
+}
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods
@@ -525,7 +543,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
         unsigned int globalNSid = fValidator -> getGlobalNamespaceId();
         XMLBuffer buf;
         DOMString namespaceURI = 0;
-        if (urlId != globalNSid) {	//TagName has a prefix
+        if (urlId != globalNSid) {  //TagName has a prefix
             fValidator -> getURIText(urlId, buf);   //get namespaceURI
             namespaceURI = DOMString(buf.getRawBuffer());
         }
@@ -534,14 +552,14 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
-            if (attrURIId != globalNSid) {	//TagName has a prefix
+            if (attrURIId != globalNSid) {  //TagName has a prefix
                 fValidator -> getURIText(attrURIId, buf);   //get namespaceURI
                 namespaceURI = DOMString(buf.getRawBuffer());
             }
             elem.setAttributeNS(namespaceURI, oneAttrib -> getQName(),
                 oneAttrib -> getValue());
         }
-    } else {	//DOM Level 1
+    } else {    //DOM Level 1
         elem = fDocument.createElement(elemDecl.getFullName());
         for (unsigned int index = 0; index < attrCount; ++index) {
             const XMLAttr* oneAttrib = attrList.elementAt(index);
