@@ -685,6 +685,21 @@ if ( ($platform =~ m/AIX/i)      ||
             if ($platform =~ m/ptx/i) {
                 psystem ("chmod +x runConfigureICU");
                 psystem ("sh ./runConfigureICU PTX");
+            }
+            elsif ($platform eq 'hp-11') {
+
+                my $cXX = $opt_x;                 
+                if ($opt_x eq "aCC05") {
+                    $cXX = "aCC";
+                }
+                                
+                if ($opt_b eq "32") {
+                    psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT --disable-64bit-libs");
+                }
+                else {
+                    psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
+                }                                   
+
             } else {
             # set the 32 bit or 64 bit
                 if ($opt_b eq "32") {
