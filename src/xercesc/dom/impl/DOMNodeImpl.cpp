@@ -492,6 +492,190 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
     return true;
 }
 
+const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI,
+                                                bool useDefault) const {
+    // REVISIT: When Namespaces 1.1 comes out this may not be true
+    // Prefix can't be bound to null namespace
+    if (namespaceURI == 0) {
+        return 0;
+    }
+
+    DOMNode *thisNode = castToNode(this);
+
+    short type = thisNode->getNodeType();
+
+    switch (type) {
+    case DOMNode::ELEMENT_NODE: {
+        const XMLCh* ns = thisNode->getNamespaceURI(); // to flip out children
+        return lookupNamespacePrefix(namespaceURI, useDefault, (DOMElement*)thisNode);
+    }
+    case DOMNode::DOCUMENT_NODE:{
+        return ((DOMDocument*)thisNode)->getDocumentElement()->lookupNamespacePrefix(namespaceURI, useDefault);
+    }
+
+    case DOMNode::ENTITY_NODE :
+    case DOMNode::NOTATION_NODE:
+    case DOMNode::DOCUMENT_FRAGMENT_NODE:
+    case DOMNode::DOCUMENT_TYPE_NODE:
+        // type is unknown
+        return 0;
+    case DOMNode::ATTRIBUTE_NODE:{
+        if (fOwnerNode->getNodeType() == DOMNode::ELEMENT_NODE) {
+            return fOwnerNode->lookupNamespacePrefix(namespaceURI, useDefault);
+        }
+        return 0;
+    }
+    default:{
+        DOMNode *ancestor = getElementAncestor(thisNode);
+        if (ancestor != 0) {
+            return ancestor->lookupNamespacePrefix(namespaceURI, useDefault);
+        }
+        return 0;
+    }
+    }
+}
+
+
+DOMNode* DOMNodeImpl::getElementAncestor (const DOMNode* currentNode) const {
+    DOMNode* parent = currentNode->getParentNode();
+    if (parent != 0) {
+        short type = parent->getNodeType();
+        if (type == DOMNode::ELEMENT_NODE) {
+            return parent;
+        }
+        return getElementAncestor(parent);
+    }
+    return 0;
+}
+
+
+const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI, bool useDefault, DOMElement *el) const {
+    DOMNode *thisNode = castToNode(this);
+
+    const XMLCh* ns = getNamespaceURI();
+    // REVISIT: if no prefix is available is it null or empty string, or
+    //          could be both?
+    const XMLCh* prefix = getPrefix();
+
+    if (ns != 0 && (XMLString::compareString(ns,namespaceURI) == 0)) {
+        if (useDefault || prefix != 0) {
+            const XMLCh* foundNamespace =  el->lookupNamespaceURI(prefix);
+            if (foundNamespace != 0 && (XMLString::compareString(foundNamespace, namespaceURI) == 0)) {
+                return prefix;
+            }
+        }
+    }
+    if (thisNode->hasAttributes()) {
+        DOMNamedNodeMap *nodeMap = thisNode->getAttributes();
+
+        if(nodeMap != 0) {
+            int length = nodeMap->getLength();
+
+            for (int i = 0;i < length;i++) {
+                DOMNode *attr = nodeMap->item(i);
+                const XMLCh* attrPrefix = attr->getPrefix();
+                const XMLCh* value = attr->getNodeValue();
+
+                ns = attr->getNamespaceURI();
+
+                if (ns != 0 && (XMLString::compareString(ns, s_xmlnsURI) == 0)) {
+                    // DOM Level 2 nodes
+                    if ((useDefault && (XMLString::compareString(attr->getNodeName(), s_xmlns) == 0)) ||
+                        (attrPrefix != 0 && (XMLString::compareString(attrPrefix, s_xmlns) == 0)) &&
+                        (XMLString::compareString(value, namespaceURI) == 0)) {
+                        const XMLCh* localname= attr->getLocalName();
+                        const XMLCh* foundNamespace = el->lookupNamespaceURI(localname);
+                        if (foundNamespace != 0 && (XMLString::compareString(foundNamespace, namespaceURI) == 0)) {
+                            return localname;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    DOMNode *ancestor = getElementAncestor(thisNode);
+    if (ancestor != 0) {
+        return castToNodeImpl(ancestor)->lookupNamespacePrefix(namespaceURI, useDefault, el);
+    }
+    return 0;
+}
+
+const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const  {
+    DOMNode *thisNode = castToNode(this);
+
+    short type = thisNode->getNodeType();
+    switch (type) {
+    case DOMNode::ELEMENT_NODE : {
+        const XMLCh* ns = getNamespaceURI();
+        const XMLCh* prefix = getPrefix();
+        if (ns != 0) {
+            // REVISIT: is it possible that prefix is empty string?
+            if (specifiedPrefix == 0 && prefix == specifiedPrefix) {
+                // looking for default namespace
+                return ns;
+            } else if (prefix != 0 && (XMLString::compareString(prefix, specifiedPrefix) == 0)) {
+                // non default namespace
+                return ns;
+            }
+        }
+        if (thisNode->hasAttributes()) {
+            DOMNamedNodeMap *nodeMap = thisNode->getAttributes();
+            if(nodeMap != 0) {
+                int length = nodeMap->getLength();
+                for (int i = 0;i < length;i++) {
+                    DOMNode *attr = nodeMap->item(i);
+                    const XMLCh *attrPrefix = attr->getPrefix();
+                    const XMLCh *value = attr->getNodeValue();
+                    ns = attr->getNamespaceURI();
+
+                    if (ns != 0 && (XMLString::compareString(ns, s_xmlnsURI) == 0)) {
+                        // at this point we are dealing with DOM Level 2 nodes only
+                        if (specifiedPrefix == 0 &&
+                            (XMLString::compareString(attr->getNodeName(), s_xmlns) == 0)) {
+                            // default namespace
+                            return value;
+                        } else if (attrPrefix != 0 &&
+                                   (XMLString::compareString(attrPrefix, s_xmlns) == 0) &&
+                                   (XMLString::compareString(attr->getLocalName(), specifiedPrefix) == 0)) {
+                            // non default namespace
+                            return value;
+                        }
+                    }
+                }
+            }
+        }
+        DOMNode *ancestor = getElementAncestor(thisNode);
+        if (ancestor != 0) {
+            return ancestor->lookupNamespaceURI(specifiedPrefix);
+        }
+        return 0;
+    }
+    case DOMNode::DOCUMENT_NODE : {
+        return((DOMDocument*)thisNode)->getDocumentElement()->lookupNamespaceURI(specifiedPrefix);
+    }
+    case DOMNode::ENTITY_NODE :
+    case DOMNode::NOTATION_NODE:
+    case DOMNode::DOCUMENT_FRAGMENT_NODE:
+    case DOMNode::DOCUMENT_TYPE_NODE:
+        // type is unknown
+        return 0;
+    case DOMNode::ATTRIBUTE_NODE:{
+        if (fOwnerNode->getNodeType() == DOMNode::ELEMENT_NODE) {
+            return fOwnerNode->lookupNamespaceURI(specifiedPrefix);
+        }
+        return 0;
+    }
+    default:{
+        DOMNode *ancestor = getElementAncestor(castToNode(this));
+        if (ancestor != 0) {
+            return ancestor->lookupNamespaceURI(specifiedPrefix);
+        }
+        return 0;
+    }
+    }
+}
+
+
 const XMLCh*     DOMNodeImpl::getBaseURI() const{
     return 0;
 }
@@ -728,19 +912,9 @@ void             DOMNodeImpl::setTextContent(const XMLCh* textContent){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
 
-const XMLCh*     DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-    return 0;
-}
-
-bool             DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) {
+bool             DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return false;
-}
-
-const XMLCh*     DOMNodeImpl::lookupNamespaceURI(const XMLCh* prefix) {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-    return 0;
 }
 
 DOMNode*         DOMNodeImpl::getInterface(const XMLCh* feature)      {
