@@ -996,7 +996,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                         // The normalized data can only be as large as the
                         // original size, so this will avoid allocating way
                         // too much or too little memory.
-                        XMLBuffer toFill(toSend.getLen());
+                        XMLBuffer toFill(toSend.getLen()+1);
 
                         // normalize the character according to schema whitespace facet
                         DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
