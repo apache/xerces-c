@@ -56,8 +56,9 @@
 
 /**
  * $Log$
- * Revision 1.3  2000/01/19 00:59:20  roddey
- * Get rid of dependence on old utils output streams.
+ * Revision 1.4  2000/01/21 23:58:06  roddey
+ * Initial move away from util streams was bad. Wide char APIs didn't allow enough
+ * control to do canonical output, so changed to use std short char APIs.
  *
  * Revision 1.2  2000/01/12 00:29:49  roddey
  * Changes for the new URL and InputSource changes.
@@ -76,15 +77,17 @@
 // ---------------------------------------------------------------------------
 #include    <util/PlatformUtils.hpp>
 #include    <util/XMLString.hpp>
+#include    <util/XMLURL.hpp>
 #include    <internal/XMLScanner.hpp>
 #include    <validators/DTD/DTDValidator.hpp>
 #include    "ParserTest.hpp"
 
 
+
 // ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
-extern "C" int wmain(int argC, wchar_t** argV)
+int main(int argC, char** argV)
 {
     // Init the XML platform
     try
@@ -94,8 +97,8 @@ extern "C" int wmain(int argC, wchar_t** argV)
 
     catch(const XMLException& toCatch)
     {
-        std::wcerr  << L"Error during platform init! Message:\n"
-                    << toCatch.getMessage() << std::endl;
+        cout << "Error during platform init! Message:\n"
+             << StrX(toCatch.getMessage()) << endl;
         return 1;
     }
 
@@ -112,40 +115,39 @@ extern "C" int wmain(int argC, wchar_t** argV)
     XMLCh*  urlPath = 0;
     for (int index = 1; index < argC; index++)
     {
-        if (!XMLString::compareIString(argV[index], L"/Debug"))
+        if (!XMLString::compareIString(argV[index], "/Debug"))
             parserTest.setOutputType(OutputType_Debug);
-        else if (!XMLString::compareIString(argV[index], L"/Validate"))
+        else if (!XMLString::compareIString(argV[index], "/Validate"))
             doValidation = true;
-        else if (!XMLString::compareIString(argV[index], L"/Namespaces"))
+        else if (!XMLString::compareIString(argV[index], "/Namespaces"))
         {
             doNamespaces = true;
             parserTest.setDoNamespaces(true);
         }
-        else if (!XMLString::compareIString(argV[index], L"/XML"))
+        else if (!XMLString::compareIString(argV[index], "/XML"))
             parserTest.setOutputType(OutputType_XML);
-        else if (!XMLString::compareIString(argV[index], L"/IntDTD"))
+        else if (!XMLString::compareIString(argV[index], "/IntDTD"))
             parserTest.setShowIntDTD(true);
-        else if (!XMLString::compareIString(argV[index], L"/ShowWarnings"))
+        else if (!XMLString::compareIString(argV[index], "/ShowWarnings"))
             parserTest.setShowWarnings(true);
-        else if (!XMLString::compareIString(argV[index], L"/ShowErrLoc"))
+        else if (!XMLString::compareIString(argV[index], "/ShowErrLoc"))
             parserTest.setShowErrLoc(true);
-        else if (!XMLString::compareIString(argV[index], L"/JCCanon"))
+        else if (!XMLString::compareIString(argV[index], "/JCCanon"))
             parserTest.setOutputType(OutputType_JCCanon);
-        else if (!XMLString::compareIString(argV[index], L"/SunCanon"))
+        else if (!XMLString::compareIString(argV[index], "/SunCanon"))
             parserTest.setOutputType(OutputType_SunCanon);
-        else if (!XMLString::compareIString(argV[index], L"/KeepGoing"))
+        else if (!XMLString::compareIString(argV[index], "/KeepGoing"))
             keepGoing = true;
-        else if (!XMLString::compareNIString(argV[index], L"/URL=", 5))
-            urlPath = &argV[index][5];
+        else if (!XMLString::compareNIString(argV[index], "/URL=", 5))
+            urlPath = XMLString::transcode(&argV[index][5]);
         else
-            std::wcerr  << L"Unknown parameter: "
-                        << argV[index] << std::endl;
+            cout << "Unknown parameter: " << argV[index] << endl;
     }
 
     // We have to have a URL to work on
     if (!urlPath)
     {
-        std::wcerr << L"A URL must be provided, /URL=xxxx" << std::endl;
+        cout << "A URL must be provided, /URL=xxxx" << endl;
         return 1;
     }
 
@@ -185,9 +187,78 @@ extern "C" int wmain(int argC, wchar_t** argV)
 
     catch(const XMLException& toCatch)
     {
-        std::wcout  << L"Exception during scan:\n    "
-                    << toCatch.getMessage()
-                    << std::endl;
+        cout << "Exception during scan:\n    "
+             << StrX(toCatch.getMessage())
+             << endl;
     }
     return 0;
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  StrX: Private helper methods
+// ---------------------------------------------------------------------------
+void StrX::transcode(const XMLCh* const toTranscode, const unsigned int len)
+{
+    // Short circuit if its a null pointer
+    if (!toTranscode || (!toTranscode[0]))
+    {
+        fLocalForm = new char[1];
+        fLocalForm[0] = 0;
+        return;
+	}
+
+    // See if our XMLCh and wchar_t as the same on this platform
+    const bool isSameSize = (sizeof(XMLCh) == sizeof(wchar_t));
+
+    //
+    //  Get the actual number of chars. If the passed len is zero, its null
+    //  terminated. Else we have to use the len.
+    //
+    wchar_t realLen = (wchar_t)len;
+    if (!realLen)
+    {
+        //
+        //  We cannot just assume we can use wcslen() because we don't know
+        //  if our XMLCh is the same as wchar_t on this platform.
+        //
+        const XMLCh* tmpPtr = toTranscode;
+        while (*(tmpPtr++))
+            realLen++;
+    }
+
+    //
+    //  If either the passed length was non-zero or our char sizes are not 
+    //  same, we have to use a temp buffer. Since this is common in these
+    //  samples, we just do it anyway.
+    //
+    wchar_t* tmpSource = new wchar_t[realLen + 1];
+    if (isSameSize)
+    {
+        memcpy(tmpSource, toTranscode, realLen * sizeof(wchar_t));
+    }
+     else
+    {
+        for (unsigned int index = 0; index < realLen; index++)
+            tmpSource[index] = (wchar_t)toTranscode[index];
+    }
+    tmpSource[realLen] = 0;
+
+    // See now many chars we need to transcode this guy
+    const unsigned int targetLen = ::wcstombs(0, tmpSource, 0);
+
+    // Allocate out storage member
+    fLocalForm = new char[targetLen + 1];
+
+    //
+    //  And transcode our temp source buffer to the local buffer. Cap it
+    //  off since the converter won't do it (because the null is beyond
+    //  where the target will fill up.)
+    //
+    ::wcstombs(fLocalForm, tmpSource, targetLen);
+    fLocalForm[targetLen] = 0;
+
+    // Don't forget to delete our temp buffer
+    delete [] tmpSource;
 }

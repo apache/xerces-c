@@ -56,11 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.2  2000/01/19 00:59:21  roddey
- * Get rid of dependence on old utils output streams.
+ * Revision 1.3  2000/01/21 23:58:06  roddey
+ * Initial move away from util streams was bad. Wide char APIs didn't allow enough
+ * control to do canonical output, so changed to use std short char APIs.
  *
- * Revision 1.1.1.1  1999/11/09 01:02:23  twl
- * Initial checkin
+ * Revision 1.1  1999/11/09 01:02:23  twl
+ * Initial revision
  *
  * Revision 1.3  1999/11/08 20:42:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -382,5 +383,4 @@ inline void TestParser::setShowWarnings(const bool state)
 inline void TestParser::setShowErrLoc(const bool state)
 {
     fShowErrLoc = state;
-}
 

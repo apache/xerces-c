@@ -56,11 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.2  2000/01/19 00:59:21  roddey
- * Get rid of dependence on old utils output streams.
+ * Revision 1.3  2000/01/21 23:58:06  roddey
+ * Initial move away from util streams was bad. Wide char APIs didn't allow enough
+ * control to do canonical output, so changed to use std short char APIs.
  *
- * Revision 1.1.1.1  1999/11/09 01:02:17  twl
- * Initial checkin
+ * Revision 1.1  1999/11/09 01:02:17  twl
+ * Initial revision
  *
  * Revision 1.3  1999/11/08 20:42:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -80,8 +81,66 @@ enum OutputTypes
 };
 
 
+
 // ---------------------------------------------------------------------------
 //  Includes that everyone uses inside this program
 // ---------------------------------------------------------------------------
 #include "ParserTest_Parser.hpp"
-#include <iostream>
+#include <iostream.h>
+#include <stdlib.h>
+
+
+// ---------------------------------------------------------------------------
+//  This is a simple class that lets us do easy (though not terribly efficient)
+//  trancoding of XMLCh data to local code page for display.
+// ---------------------------------------------------------------------------
+class StrX
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+	StrX(const XMLCh* const toTranscode, const unsigned int len = 0) :
+
+        fLocalForm(0)
+    {
+        // Call the private transcoding method
+        transcode(toTranscode, len);
+    }
+
+    ~StrX()
+    {
+        delete [] fLocalForm;
+    }
+
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    const char* localForm() const
+    {
+        return fLocalForm;
+    }
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+	void transcode (const XMLCh* const toTranscode, const unsigned int len);
+
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fLocalForm
+    //      This is the local code page form of the string.
+    // -----------------------------------------------------------------------
+    char*   fLocalForm;
+};
+
+inline ostream& operator<<(ostream& target, const StrX& toDump)
+{
+    target << toDump.localForm();
+    return target;
+}

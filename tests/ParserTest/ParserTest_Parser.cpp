@@ -56,11 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.2  2000/01/19 00:59:21  roddey
- * Get rid of dependence on old utils output streams.
+ * Revision 1.3  2000/01/21 23:58:06  roddey
+ * Initial move away from util streams was bad. Wide char APIs didn't allow enough
+ * control to do canonical output, so changed to use std short char APIs.
  *
- * Revision 1.1.1.1  1999/11/09 01:02:22  twl
- * Initial checkin
+ * Revision 1.1  1999/11/09 01:02:22  twl
+ * Initial revision
  *
  * Revision 1.3  1999/11/08 20:42:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -85,6 +86,7 @@
 #include <validators/DTD/DTDEntityDecl.hpp>
 #include "ParserTest.hpp"
 
+#include <util/BitOps.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local functions
@@ -130,10 +132,10 @@ void TestParser::docCharacters( const   XMLCh* const    chars
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got CHARS:\n    Bytes: "
-                    << length << L", CDATA?: "
-                    << (cdataSection ? L"Yes" : L"No")
-                    << L"\n" << std::endl;
+        cout << "Got CHARS:\n    Bytes: "
+             << length << ", CDATA?: "
+             << (cdataSection ? "Yes" : "No")
+             << "\n" << endl;
     }
      else if ((fOutputType == OutputType_JCCanon)
           ||  (fOutputType == OutputType_SunCanon))
@@ -143,10 +145,10 @@ void TestParser::docCharacters( const   XMLCh* const    chars
      else if (fOutputType == OutputType_XML)
     {
         if (cdataSection)
-            std::wcout << L"<![CDATA[";
+            cout << "<![CDATA[";
         showChars(chars, length);
         if (cdataSection)
-            std::wcout << L"]]>";
+            cout << "]]>";
     }
 }
 
@@ -154,15 +156,15 @@ void TestParser::docComment(const XMLCh* const comment)
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got document COMMENT:\n    "
-                    << L"Text: \"" << comment << L"\"\n"
-                    << std::endl;
+        cout << "Got document COMMENT:\n    "
+             << "Text: \"" << StrX(comment) << "\"\n"
+             << endl;
     }
      else if (fOutputType == OutputType_XML)
     {
-        std::wcout << L"<!--";
+        cout << "<!--";
         showString(comment);
-        std::wcout << L"-->";
+        cout << "-->";
     }
 }
 
@@ -171,24 +173,24 @@ void TestParser::docPI( const   XMLCh* const    target
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got document PI:\n     "
-                    << L"Target: \"" << target << '"';
+        cout << "Got document PI:\n     "
+             << "Target: \"" << target << '"';
 
         if (XMLString::stringLen(data))
-            std::wcout << L", Data: \"" << data << '"';
+            cout << ", Data: \"" << StrX(data) << '"';
 
-        std::wcout << L"\n" << std::endl;
+        cout << "\n" << endl;
     }
      else if ((fOutputType == OutputType_XML)
           ||  (fOutputType == OutputType_JCCanon)
           ||  (fOutputType == OutputType_SunCanon))
     {
-        std::wcout << L"<?";
+        cout << "<?";
         showString(target);
-        std::wcout << L" ";
+        cout << " ";
         if (XMLString::stringLen(data))
-            std::wcout << data;
-        std::wcout << L"?>";
+            cout << StrX(data);
+        cout << "?>";
     }
 }
 
@@ -197,11 +199,11 @@ void TestParser::endDocument()
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout << L"Got ENDDOCUMENT:\n" << std::endl;
+        cout << "Got ENDDOCUMENT:\n" << endl;
     }
      else if (fOutputType == OutputType_SunCanon)
     {
-        std::wcout << L"\r\n";
+        cout << "\r\n";
     }
 }
 
@@ -216,26 +218,26 @@ void TestParser::endElement(const   XMLElementDecl& elemDecl
             XMLBuffer bufURI;
             fScanner->getValidator()->getURIText(uriId, bufURI);
 
-            std::wcout  << L"Got ENDELEMENT:\n    Name: "
-                        << L"Name: {" << bufURI.getRawBuffer() << L"}"
-                        << elemDecl.getBaseName()
-                        << std::endl;
+            cout << "Got ENDELEMENT:\n    Name: "
+                 << "{" << StrX(bufURI.getRawBuffer()) << "}"
+                 << StrX(elemDecl.getBaseName())
+                 << endl;
         }
          else
         {
-            std::wcout  << L"Got ENDELEMENT:\n    Name: "
-                        << elemDecl.getFullName() << std::endl;
+            cout << "Got ENDELEMENT:\n    Name: "
+                 << StrX(elemDecl.getFullName()) << endl;
         }
 
-        std::wcout << std::endl;
+        cout << endl;
     }
      else if ((fOutputType == OutputType_XML)
           ||  (fOutputType == OutputType_JCCanon)
           ||  (fOutputType == OutputType_SunCanon))
     {
-        std::wcout << L"</";
+        cout << "</";
         showString(elemDecl.getFullName());
-        std::wcout << L">";
+        cout << ">";
     }
 
     // Clear the flag that says we're now inside the root
@@ -247,9 +249,8 @@ void TestParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got ENDENTITYREF:\n    "
-                    << L"Name: " << entDecl.getName() << L"\n"
-                    << std::endl;
+        cout << "Got ENDENTITYREF:\n    "
+             << "Name: " << StrX(entDecl.getName()) << "\n" << endl;
     }
 }
 
@@ -259,18 +260,18 @@ void TestParser::ignorableWhitespace(const  XMLCh* const    chars
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got WHITESPACE:\n    Bytes: "
-                    << length << L", CDATA?: "
-                    << (cdataSection ? L"Yes" : L"No")
-                    << L"\n" << std::endl;
+        cout << "Got WHITESPACE:\n    Bytes: "
+             << length << ", CDATA?: "
+             << (cdataSection ? "Yes" : "No")
+             << "\n" << endl;
     }
      else if (fOutputType == OutputType_XML)
     {
         if (cdataSection)
-            std::wcout << L"<![CDATA[";
+            cout << "<![CDATA[";
         showChars(chars, length);
         if (cdataSection)
-            std::wcout << L"]]>";
+            cout << "]]>";
     }
      else if ((fOutputType == OutputType_JCCanon)
           ||  (fOutputType == OutputType_SunCanon))
@@ -284,13 +285,13 @@ void TestParser::ignorableWhitespace(const  XMLCh* const    chars
 void TestParser::resetDocument()
 {
     if (fOutputType == OutputType_Debug)
-        std::wcout << L"Got RESETDOCUMENT:\n" << std::endl;
+        cout << "Got RESETDOCUMENT:\n" << endl;
 }
 
 void TestParser::startDocument()
 {
     if (fOutputType == OutputType_Debug)
-        std::wcout << L"Got STARTDOCUMENT:\n" << std::endl;
+        cout << "Got STARTDOCUMENT:\n" << endl;
 }
 
 void
@@ -312,91 +313,87 @@ TestParser::startElement(const  XMLElementDecl&         elemDecl
         if (fDoNamespaces)
         {
             fScanner->getValidator()->getURIText(uriId, bufURI);
-            std::wcout  << L"Got STARTELEMENT:\n    "
-                        << L" Name: {" << bufURI.getRawBuffer()
-                        << L"}" << elemDecl.getBaseName()
-                        << L", AttCount: " << attCount
-                        << L", Empty?: "
-                        << (isEmpty ? L"yes" : L"no")
-                        << L"\n";
+            cout << "Got STARTELEMENT:\n    "
+                 << " Name: {" << StrX(bufURI.getRawBuffer()) << "}"
+                 << StrX(elemDecl.getBaseName())
+                 << ", AttCount: " << attCount
+                 << ", Empty?: "
+                 << (isEmpty ? "yes" : "no")
+                 << "\n";
         }
          else
         {
-            std::wcout  << L"Got STARTELEMENT:\n    "
-                        << L" Name: " << elemDecl.getFullName()
-                        << L", AttCount: " << attCount
-                        << L", Empty?: "
-                        << (isEmpty ? L"yes" : L"no")
-                        << L"\n";
+            cout << "Got STARTELEMENT:\n    Name: "
+                 << StrX(elemDecl.getFullName())
+                 << ", AttCount: " << attCount
+                 << ", Empty?: "
+                 << (isEmpty ? "yes" : "no")
+                 << "\n";
         }
 
         // If any attributes, then show them
         if (attCount)
         {
-            std::wcout << L"    Attrs: ";
+            cout << "    Attrs: ";
             for (unsigned int attInd = 0; attInd < attCount; attInd++)
             {
                 const XMLAttr* curAttr = attrList.elementAt(attInd);
 
                 if (fDoNamespaces)
                 {
-                    fScanner->getValidator()->getURIText
-                    (
-                        curAttr->getURIId()
-                        , bufURI
-                    );
-                    std::wcout  << L"{" << bufURI.getRawBuffer()
-                                << L"}" << curAttr->getName() << L"="
-                                << curAttr->getValue() << L"\n";
+                    fScanner->getValidator()->getURIText(curAttr->getURIId(), bufURI);
+                    cout << "{" << StrX(bufURI.getRawBuffer())
+                         << "}" << StrX(curAttr->getName()) << "="
+                         << StrX(curAttr->getValue()) << "\n";
                 }
                  else
                 {
-                    std::wcout  << curAttr->getQName() << L"="
-                                << curAttr->getValue() << L"\n";
+                    cout << StrX(curAttr->getQName()) << "="
+                         << StrX(curAttr->getValue()) << "\n";
                 }
 
-                std::wcout << L"           ";
+                cout << "           ";
             }
         }
 
-        std::wcout << std::endl;
+        cout << endl;
     }
      else if (fOutputType == OutputType_XML)
     {
-        std::wcout << L"<";
+        cout << "<";
         showString(elemDecl.getFullName());
 
         if (attCount)
         {
-            std::wcout << L" ";
+            cout << " ";
 
             for (unsigned int index = 0; index < attCount; index++)
             {
                 const XMLAttr* curAttr = attrList.elementAt(index);
                 showString(curAttr->getQName());
-                std::wcout << L"=\"";
+                cout << "=\"";
                 showString(curAttr->getValue());
-                std::wcout << L"\"";
+                cout << "\"";
 
                 if (index < attCount-1)
-                    std::wcout << L" ";
+                    cout << " ";
             }
         }
 
         if (isEmpty)
-            std::wcout << L"/>";
+            cout << "/>";
         else
-            std::wcout << L">";
+            cout << ">";
     }
      else if ((fOutputType == OutputType_JCCanon)
           ||  (fOutputType == OutputType_SunCanon))
     {
-        std::wcout << L"<";
+        cout << "<";
         showString(elemDecl.getFullName());
 
         if (attCount)
         {
-            std::wcout << L" ";
+            cout << " ";
 
             //
             //  Get a list of attribute pointers. The canonical output
@@ -416,25 +413,25 @@ TestParser::startElement(const  XMLElementDecl&         elemDecl
             {
                 const XMLAttr* curAttr = attrTmp[index];
                 showString(curAttr->getQName());
-                std::wcout << L"=\"";
+                cout << "=\"";
                 showString(curAttr->getValue());
-                std::wcout << L"\"";
+                cout << "\"";
 
                 if (index < attCount-1)
-                    std::wcout << L" ";
+                    cout << " ";
             }
             delete [] attrTmp;
         }
 
         if (isEmpty)
         {
-            std::wcout << L"></";
+            cout << "></";
             showString(elemDecl.getFullName());
-            std::wcout << L">";
+            cout << ">";
         }
          else
         {
-            std::wcout << L">";
+            cout << ">";
         }
     }
 }
@@ -443,8 +440,8 @@ void TestParser::startEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got STARTENTITY:\n    "
-                    << L"Name: " << entDecl.getName() << L"\n" << std::endl;
+        cout << "Got STARTENTITY:\n    "
+             << "Name: " << StrX(entDecl.getName()) << "\n" << endl;
     }
 }
 
@@ -455,28 +452,28 @@ void TestParser::XMLDecl(const  XMLCh* const    versionStr
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got XMLDECL:\n    "
-                    << L"Version:\"" << versionStr << L"\""
-                    << L" Encoding:\"" << encodingStr << L"\""
-                    << L" Standalone:\"" << standaloneStr << L"\""
-                    << L" Auto Encoding:\"" << autoEncStr << L"\""
-                    << L"\n"
-                    << std::endl;
+        cout << "Got XMLDECL:\n    "
+             << "Version:\"" << StrX(versionStr) << "\""
+             << " Encoding:\"" << StrX(encodingStr) << "\""
+             << " Standalone:\"" << StrX(standaloneStr) << "\""
+             << " Auto Encoding:\"" << StrX(autoEncStr) << "\""
+             << "\n"
+             << endl;
     }
      else if (fOutputType == OutputType_XML)
     {
-        std::wcout << L"<?xml";
+        cout << "<?xml";
 
         if (XMLString::stringLen(versionStr))
-            std::wcout << L" version=\"" << versionStr << '"';
+            cout << " version=\"" << StrX(versionStr) << '"';
 
         if (XMLString::stringLen(encodingStr))
-            std::wcout << L" encoding=\"" << encodingStr << '"';
+            cout << " encoding=\"" << StrX(encodingStr) << '"';
 
         if (XMLString::stringLen(standaloneStr))
-            std::wcout  << L" standlone=\"" << standaloneStr << '"';
+            cout  << " standlone=\"" << StrX(standaloneStr) << '"';
 
-        std::wcout << L" ?>";
+        cout << " ?>";
     }
 }
 
@@ -490,17 +487,17 @@ void TestParser::attDef(const   DTDElementDecl& elemDecl
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got ATTDEF:\n    "
-                    << L"Name: " << attDef.getFullName()
-                    << L", Type: "
-                    << XMLAttDef::getAttTypeString(attDef.getType())
-                    << L", DefType: "
-                    << XMLAttDef::getDefAttTypeString(attDef.getDefaultType());
+        cout << "Got ATTDEF:\n    "
+             << "Name: " << StrX(attDef.getFullName())
+             << ", Type: "
+             << StrX(XMLAttDef::getAttTypeString(attDef.getType()))
+             << ", DefType: "
+             << StrX(XMLAttDef::getDefAttTypeString(attDef.getDefaultType()));
 
         if (XMLString::stringLen(attDef.getValue()))
-            std::wcout << L", Value: \"" << attDef.getValue() << '"';
+            cout << ", Value: \"" << StrX(attDef.getValue()) << '"';
 
-        std::wcout << L"\n" << std::endl;
+        cout << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -509,33 +506,33 @@ void TestParser::attDef(const   DTDElementDecl& elemDecl
 
         if (fIntDTDOutput)
         {
-            std::wcout << attDef.getFullName() << L" ";
+            cout << StrX(attDef.getFullName()) << " ";
             if (attDef.getType() == XMLAttDef::Enumeration)
             {
-                std::wcout << chOpenParen;
+                cout << '(';
                 const XMLCh* curCh = attDef.getEnumeration();
                 while (*curCh)
                 {
                     while (!XMLReader::isWhitespace(*curCh))
-                        std::wcout << *curCh++;
+                        cout << *curCh++;
                     curCh++;
                     if (*curCh)
-                        std::wcout << chPipe;
+                        cout << '|';
                 }
-                std::wcout << chCloseParen;
+                cout << ')';
             }
              else
             {
-                std::wcout << XMLAttDef::getAttTypeString(attDef.getType());
+                cout << StrX(XMLAttDef::getAttTypeString(attDef.getType()));
             }
 
             if (XMLString::stringLen(attDef.getValue()))
-                std::wcout << L" \"" << attDef.getValue() << '"';
+                cout << " \"" << StrX(attDef.getValue()) << '"';
 
             if (attDef.getDefaultType() != XMLAttDef::Default)
             {
-                std::wcout  << L" "
-                            << XMLAttDef::getDefAttTypeString(attDef.getDefaultType());
+                cout << " "
+                     << StrX(XMLAttDef::getDefAttTypeString(attDef.getDefaultType()));
             }
         }
     }
@@ -545,9 +542,9 @@ void TestParser::doctypeComment(const XMLCh* const comment)
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got DTD COMMENT:\n    "
-                    << L"Text: \"" << comment << L"\"\n"
-                    << std::endl;
+        cout << "Got DTD COMMENT:\n    "
+             << "Text: \"" << StrX(comment) << "\"\n"
+             << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -555,7 +552,7 @@ void TestParser::doctypeComment(const XMLCh* const comment)
             return;
 
         if (fIntDTDOutput)
-            std::wcout << L"<!--" << comment << L"-->";
+            cout << "<!--" << StrX(comment) << "-->";
     }
 }
 
@@ -566,26 +563,26 @@ void TestParser::doctypeDecl(const  DTDElementDecl& elemDecl
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got DOCTYPE:\n    "
-                    << L"Root: " << elemDecl.getFullName();
+        cout << "Got DOCTYPE:\n    "
+                << "Root: " << StrX(elemDecl.getFullName());
 
         if (XMLString::stringLen(publicId))
-            std::wcout << L", PUBLIC: " << publicId;
+            cout << ", PUBLIC: " << StrX(publicId);
 
         if (XMLString::stringLen(systemId))
-            std::wcout << L", SYSTEM: " << systemId;
+            cout << ", SYSTEM: " << StrX(systemId);
 
-        std::wcout << L"\n" << std::endl;
+        cout << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
         if (fIntDTDOutput)
         {
-            std::wcout << L"<!DOCTYPE " << elemDecl.getFullName();
+            cout << "<!DOCTYPE " << StrX(elemDecl.getFullName());
             showIds(publicId, systemId);
 
             if (!hasIntSubset)
-                std::wcout << L">";
+                cout << ">";
         }
     }
 }
@@ -595,12 +592,12 @@ void TestParser::doctypePI( const   XMLCh* const    target
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got DTD PI:\n     "
-                    << L"Target: \"" << target << '"';
+        cout << "Got DTD PI:\n     "
+                << "Target: \"" << StrX(target) << '"';
 
         if (XMLString::stringLen(data))
-            std::wcout << L", Data: \"" << data << '"';
-        std::wcout << L"\n" << std::endl;
+            cout << ", Data: \"" << StrX(data) << '"';
+        cout << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -609,10 +606,10 @@ void TestParser::doctypePI( const   XMLCh* const    target
 
         if (fIntDTDOutput)
         {
-            std::wcout << L"<?" << target;
+            cout << "<?" << target;
             if (XMLString::stringLen(data))
-                std::wcout << L" " << data;
-            std::wcout << L"?>";
+                cout << " " << StrX(data);
+            cout << "?>";
         }
     }
 }
@@ -622,8 +619,8 @@ void TestParser::doctypeWhitespace( const   XMLCh* const    chars
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got DTD Spaces:\n    Bytes: "
-                    << length << L"\n" << std::endl;
+        cout << "Got DTD Spaces:\n    Bytes: "
+             << length << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -640,15 +637,15 @@ void TestParser::elementDecl(const  DTDElementDecl&     decl
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got ELEMENT DECL:\n    "
-                    << L"Name: " << decl.getFullName();
+        cout << "Got ELEMENT DECL:\n    "
+             << "Name: " << StrX(decl.getFullName());
 
         if (isIgnored)
-            std::wcout << L" (Ignored)";
+            cout << " (Ignored)";
 
-        std::wcout << L", Content: ";
-        std::wcout << decl.getFormattedContentModel(*fScanner->getValidator());
-        std::wcout << L"\n" << std::endl;
+        cout << ", Content: ";
+        cout << StrX(decl.getFormattedContentModel(*fScanner->getValidator()));
+        cout << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -657,9 +654,9 @@ void TestParser::elementDecl(const  DTDElementDecl&     decl
 
         if (fIntDTDOutput)
         {
-            std::wcout << L"<!ELEMENT " << decl.getFullName() << L" ";
-            std::wcout << decl.getFormattedContentModel(*fScanner->getValidator());
-            std::wcout << L">";
+            cout << "<!ELEMENT " << StrX(decl.getFullName()) << " ";
+            cout << decl.getFormattedContentModel(*fScanner->getValidator());
+            cout << ">";
         }
     }
 }
@@ -668,9 +665,9 @@ void TestParser::endAttList(const DTDElementDecl& elemDecl)
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got ENDATTLIST:\n    "
-                    << L"Name: " << elemDecl.getFullName() << L"\n"
-                    << std::endl;
+        cout << "Got ENDATTLIST:\n    "
+             << "Name: " << StrX(elemDecl.getFullName()) << "\n"
+             << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -678,7 +675,7 @@ void TestParser::endAttList(const DTDElementDecl& elemDecl)
             return;
 
         if (fIntDTDOutput)
-            std::wcout << L">";
+            cout << ">";
     }
 }
 
@@ -686,12 +683,12 @@ void TestParser::endIntSubset()
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout << L"Got ENDINTSUBSET\n" << std::endl;
+        cout << "Got ENDINTSUBSET\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
         if (fIntDTDOutput)
-            std::wcout << L"]>";
+            cout << "]>";
     }
 }
 
@@ -699,7 +696,7 @@ void TestParser::endExtSubset()
 {
     fInExtSubset = false;
     if (fOutputType == OutputType_Debug)
-        std::wcout << L"Got ENDEXTSUBSET\n" << std::endl;
+        cout << "Got ENDEXTSUBSET\n" << endl;
 }
 
 void TestParser::entityDecl(const   DTDEntityDecl&  entityDecl
@@ -708,10 +705,10 @@ void TestParser::entityDecl(const   DTDEntityDecl&  entityDecl
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got ENTITYDECL:\n    "
-                    << L"Name: " << entityDecl.getName()
-                    << (isPEDecl ? L" [Parameter Entity]" : L" [General Entity]")
-                    << L"\n" << std::endl;
+        cout << "Got ENTITYDECL:\n    "
+             << "Name: " << StrX(entityDecl.getName())
+             << (isPEDecl ? " [Parameter Entity]" : " [General Entity]")
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -720,17 +717,17 @@ void TestParser::entityDecl(const   DTDEntityDecl&  entityDecl
 
         if (fIntDTDOutput)
         {
-            std::wcout << L"<!ENTITY ";
+            cout << "<!ENTITY ";
             if (isPEDecl)
-                std::wcout << L"% ";
-            std::wcout << entityDecl.getName();
+                cout << "% ";
+            cout << StrX(entityDecl.getName());
         
             if (entityDecl.isExternal())
                 showIds(entityDecl.getPublicId(), entityDecl.getSystemId());
              else
-                std::wcout << L" \"" << entityDecl.getValue() << L"\"";
+                cout << " \"" << StrX(entityDecl.getValue()) << "\"";
 
-            std::wcout << L">";
+            cout << ">";
         }
     }
 }
@@ -738,7 +735,7 @@ void TestParser::entityDecl(const   DTDEntityDecl&  entityDecl
 void TestParser::resetDocType()
 {
     if (fOutputType == OutputType_Debug)
-        std::wcout << L"Got RESETDOCTYPE:\n" << std::endl;
+        cout << "Got RESETDOCTYPE:\n" << endl;
 }
 
 void TestParser::notationDecl(  const   XMLNotationDecl&    notDecl
@@ -746,9 +743,9 @@ void TestParser::notationDecl(  const   XMLNotationDecl&    notDecl
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got NOTATIONDECL:\n    "
-                    << L"Name: " << notDecl.getName()
-                    << std::endl;
+        cout << "Got NOTATIONDECL:\n    "
+             << "Name: " << StrX(notDecl.getName())
+             << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -757,20 +754,20 @@ void TestParser::notationDecl(  const   XMLNotationDecl&    notDecl
 
         if (fIntDTDOutput)
         {
-            std::wcout << L"<!NOTATION " << notDecl.getName() << L" ";
+            cout << "<!NOTATION " << StrX(notDecl.getName()) << " ";
 
             if (!XMLString::stringLen(notDecl.getSystemId()))
-                std::wcout << L"PUBLIC ";
+                cout << "PUBLIC ";
             else
-                std::wcout << L"SYSTEM ";
+                cout << "SYSTEM ";
 
             if (XMLString::stringLen(notDecl.getPublicId()))
-                std::wcout << L"\"" << notDecl.getPublicId() << '"';
+                cout << "\"" << StrX(notDecl.getPublicId()) << '"';
 
             if (XMLString::stringLen(notDecl.getSystemId()))
-                std::wcout << L" \"" << notDecl.getSystemId() << '"';
+                cout << " \"" << StrX(notDecl.getSystemId()) << '"';
 
-            std::wcout << L">";
+            cout << ">";
         }
     }
 }
@@ -779,9 +776,9 @@ void TestParser::startAttList(const DTDElementDecl& elemDecl)
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout  << L"Got STARTATTLIST:\n    "
-                    << L"Name: " << elemDecl.getFullName() << L"\n"
-                    << std::endl;
+        cout << "Got STARTATTLIST:\n    "
+                << "Name: " << StrX(elemDecl.getFullName())
+                << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -789,7 +786,7 @@ void TestParser::startAttList(const DTDElementDecl& elemDecl)
             return;
 
         if (fIntDTDOutput)
-            std::wcout << "<!ATTLIST " << elemDecl.getFullName();
+            cout << "<!ATTLIST " << StrX(elemDecl.getFullName());
     }
 }
 
@@ -797,12 +794,12 @@ void TestParser::startIntSubset()
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout << L"Got STARTINTSUBSET\n" << std::endl;
+        cout << "Got STARTINTSUBSET\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
         if (fIntDTDOutput)
-            std::wcout << L" [";
+            cout << " [";
     }
 }
 
@@ -810,7 +807,7 @@ void TestParser::startExtSubset()
 {
     fInExtSubset = true;
     if (fOutputType == OutputType_Debug)
-        std::wcout << L"Got STARTEXTSUBSET\n" << std::endl;
+        cout << "Got STARTEXTSUBSET\n" << endl;
 }
 
 void TestParser::TextDecl(  const   XMLCh* const    versionStr
@@ -818,15 +815,15 @@ void TestParser::TextDecl(  const   XMLCh* const    versionStr
 {
     if (fOutputType == OutputType_Debug)
     {
-        std::wcout << L"Got TEXTDECL:\n    ";
+        cout << "Got TEXTDECL:\n    ";
 
         if (XMLString::stringLen(versionStr))
-            std::wcout << L"Version: " << versionStr;
+            cout << "Version: " << StrX(versionStr);
 
         if (XMLString::stringLen(encodingStr))
-            std::wcout << L"Encoding: " << encodingStr;
+            cout << "Encoding: " << StrX(encodingStr);
 
-        std::wcout << L"\n" << std::endl;
+        cout << "\n" << endl;
     }
 }
 
@@ -866,10 +863,10 @@ void TestParser::error( const   unsigned int                errCode
         if (ofs != -1)
             entName = &systemId[ofs + 1];
 
-        std::wcout  << lineNum << L"/" << colNum
-                    << L":" << entName
-                    << L" - " << text
-                    << std::endl;
+        cout << lineNum << "/" << colNum
+                << L":" << entName
+                << L" - " << text
+                << endl;
         return;
     }
 
@@ -877,37 +874,36 @@ void TestParser::error( const   unsigned int                errCode
     if ((type == XMLErrorReporter::ErrType_Warning) && !fShowWarnings)
         return;
 
-    const XMLCh* typeStr = L"?";
+    const char* typeStr = "?";
     if (type == XMLErrorReporter::ErrType_Fatal)
-        typeStr = L"ERROR";
+        typeStr = "ERROR";
     else if (type == XMLErrorReporter::ErrType_Warning)
-        typeStr = L"WARNING";
+        typeStr = "WARNING";
     else if (type == XMLErrorReporter::ErrType_Invalid)
-        typeStr = L"VALIDITY";
+        typeStr = "VALIDITY";
 
     // Output the error heading and the error type string
-    std::wcout << L"\nError: (" << typeStr;
+    cout << "\nError: (" << typeStr;
 
     // If we have either id, display them
     if (XMLString::stringLen(systemId))
-         std::wcout << L", System Id: " << systemId;
+         cout << ", System Id: " << StrX(systemId);
 
     if (XMLString::stringLen(publicId))
-        std::wcout << L", Public Id: " << publicId;
+        cout << ", Public Id: " << StrX(publicId);
 
     // Display the position information
-    std::wcout  << std::hex
-                << L", Line/Col: " << lineNum << L"/" << colNum
-                << std::dec << L")\n";
+    cout << ", Line/Col: " << lineNum << "/" << colNum
+         << ")\n";
 
     // And finally the error text
-    std::wcout << text << std::endl;
+    cout << StrX(text) << endl;
 }
 
 void TestParser::resetErrors()
 {
     if (fOutputType == OutputType_Debug)
-        std::wcout << L"Got RESETERRORS:\n" << std::endl;
+        cout << "Got RESETERRORS:\n" << endl;
 }
 
 
@@ -939,7 +935,7 @@ void TestParser::showChars( const   XMLCh* const    chars
         {
             if (index == length)
             {
-                std::wcerr << L"Missing trailing surrogate\n" << std::endl;
+                cout << "Missing trailing surrogate\n" << endl;
                 break;
             }
 
@@ -1000,35 +996,27 @@ void TestParser::showChar(const char toShow, const bool doCan)
     if (doCan)
     {
         if (toShow == chLF)
-            std::wcout << L"&#10;";
+            cout << "&#10;";
         else if (toShow == chHTab)
-            std::wcout << L"&#9;";
+            cout << "&#9;";
         else if (toShow == chCR)
-            std::wcout << L"&#13;";
+            cout << "&#13;";
         else if (toShow == chSingleQuote)
-            std::wcout << L"&apos;";
+            cout << "&apos;";
         else if (toShow == chAmpersand)
-            std::wcout << L"&amp;";
+            cout << "&amp;";
         else if (toShow == chDoubleQuote)
-            std::wcout << L"&quot;";
+            cout << "&quot;";
         else if (toShow == chOpenAngle)
-            std::wcout << L"&lt;";
+            cout << "&lt;";
         else if (toShow == chCloseAngle)
-            std::wcout << L"&gt;";
+            cout << "&gt;";
         else
-        {
-            wchar_t tmpStr[2];
-            tmpStr[0] = toShow;
-            tmpStr[1] = 0;
-            std::wcout << tmpStr;
-        }
+            cout << toShow;
     }
      else
     {
-        wchar_t tmpStr[2];
-        tmpStr[0] = toShow;
-        tmpStr[1] = 0;
-        std::wcout << tmpStr;
+        cout << toShow;
     }
 }
 
@@ -1039,19 +1027,19 @@ TestParser::showIds(const XMLCh* const publicId, const XMLCh* const systemId)
     {
         if (!XMLString::stringLen(publicId))
         {
-            std::wcout << L" SYSTEM '" << systemId << L"'";
+            cout << " SYSTEM '" << systemId << "'";
         }
          else
         {
-            std::wcout << L" PUBLIC '" << publicId << L"'";
+            cout << " PUBLIC '" << publicId << "'";
             if (systemId)
-                std::wcout << L" '" << systemId << L"'";
+                cout << " '" << systemId << "'";
         }
     }
 }
 
 
-inline void TestParser::showString(const XMLCh* const toShow)
+void TestParser::showString(const XMLCh* const toShow)
 {
     showChars(toShow, XMLString::stringLen(toShow));
 }
