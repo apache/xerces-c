@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2002/05/27 21:11:26  tng
+ * Add DOMDocumentRange and DOMDocumentTraversal.
+ *
  * Revision 1.8  2002/05/21 18:52:35  tng
  * Test case update: modify to use the latest DOM interface.
  *
@@ -302,7 +305,7 @@ int  main()
             unsigned long       whatToShow = DOMNodeFilter::SHOW_ALL;
             MyFilter* filter = new MyFilter(0);
 
-            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = ((DOMDocumentTraversal*)doc)->createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter->getWhatToShow() == 65535);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
@@ -403,7 +406,7 @@ int  main()
             unsigned long       whatToShow = DOMNodeFilter::SHOW_TEXT;
             MyFilter* filter = new MyFilter(DOMNode::TEXT_NODE);
 
-            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = ((DOMDocumentTraversal*)doc)->createNodeIterator(root, whatToShow,  filter, true);
 
             TASSERT(iter->getWhatToShow() == 4);
             TASSERT(iter->getExpandEntityReferences() == 1);
@@ -448,7 +451,7 @@ int  main()
             unsigned long       whatToShow = DOMNodeFilter::SHOW_PROCESSING_INSTRUCTION;
             MyFilter* filter = new MyFilter(DOMNode::PROCESSING_INSTRUCTION_NODE);
 
-            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = ((DOMDocumentTraversal*)doc)->createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter->getWhatToShow() == 64);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
@@ -490,7 +493,7 @@ int  main()
 
         {
             unsigned long whatToShow = DOMNodeFilter::SHOW_ALL;
-            DOMTreeWalker* tw = doc->createTreeWalker(doc, whatToShow, 0, true);
+            DOMTreeWalker* tw = ((DOMDocumentTraversal*)doc)->createTreeWalker(doc, whatToShow, 0, true);
 
             TASSERT(tw->getCurrentNode() == doc);
             TASSERT(tw->firstChild() == root);
@@ -539,7 +542,7 @@ int  main()
         {
             MyFilter mf(DOMNode::ELEMENT_NODE, true);
             unsigned long whatToShow = DOMNodeFilter::SHOW_ELEMENT;
-            DOMTreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
+            DOMTreeWalker* tw = ((DOMDocumentTraversal*)doc)->createTreeWalker(root, whatToShow, &mf, true);
 
             tw->setCurrentNode(E12);
             TASSERT(tw->firstChild() == E121);   //still first visible child
@@ -572,7 +575,7 @@ int  main()
         {
             MyFilter mf(DOMNode::TEXT_NODE, true);
             unsigned long whatToShow = DOMNodeFilter::SHOW_TEXT;
-            DOMTreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
+            DOMTreeWalker* tw = ((DOMDocumentTraversal*)doc)->createTreeWalker(root, whatToShow, &mf, true);
 
             TASSERT(tw->firstChild() == 0);   //E11 rejected and no children is TEXT
             TASSERT(tw->getCurrentNode() == root);

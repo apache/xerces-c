@@ -280,7 +280,7 @@ int  main()
             DOMText*     E210 = doc->createTextNode(xInsertedText);
 
             DOMNode* rt = doc->getDocumentElement();
-            DOMRange* range = doc->createRange();
+            DOMRange* range = ((DOMDocumentRange*)doc)->createRange();
 
 
 
@@ -679,7 +679,7 @@ int  main()
             root2->appendChild(body2);
 
             //set range
-            DOMRange* range3 = doc2->createRange();
+            DOMRange* range3 = ((DOMDocumentRange*)doc2)->createRange();
             range3->setStart(text3,1);
             range3->setEnd(body2,1);
 
@@ -772,7 +772,7 @@ int  main()
             upbody->appendChild(uptext1);
             root2->appendChild(upbody);
 
-            DOMRange* uprange = doc2->createRange();
+            DOMRange* uprange = ((DOMDocumentRange*)doc2)->createRange();
             uprange->setStart(upbody,0);
             uprange->setEnd(upbody,1);
 
@@ -797,7 +797,7 @@ int  main()
             upbody2->appendChild(uptext2);
             root2->appendChild(upbody2);
 
-            DOMRange* uprange2 = doc2->createRange();
+            DOMRange* uprange2 = ((DOMDocumentRange*)doc2)->createRange();
             uprange2->setStart(uptext2,1);
             uprange2->setEnd(upbody2,1);
 
@@ -872,7 +872,7 @@ int  main()
             //***************************************************************
             //TEST toString
             //***************************************************************
-            DOMRange* newtestrange = doc3->createRange();
+            DOMRange* newtestrange = ((DOMDocumentRange*)doc3)->createRange();
             //case 1:
             //start container is text node
             //   i) end container is also text node

@@ -83,6 +83,8 @@ DOM_CPP_PUBHEADERS = \
 	DOMCharacterData.hpp \
 	DOMComment.hpp \
 	DOMDocument.hpp \
+	DOMDocumentRange.hpp \
+	DOMDocumentTraversal.hpp \
 	DOMDocumentFragment.hpp \
 	DOMDocumentType.hpp \
 	DOMElement.hpp \

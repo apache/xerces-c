@@ -2704,6 +2704,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocumentRange.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocumentTraversal.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocumentType.hpp
 # End Source File
 # Begin Source File

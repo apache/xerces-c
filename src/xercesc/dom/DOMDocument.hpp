@@ -63,6 +63,9 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNode.hpp"
+#include "DOMDocumentRange.hpp"
+#include "DOMDocumentTraversal.hpp"
+
 
 class DOMNodeIteratorImpl;
 
@@ -81,9 +84,6 @@ class DOMNodeList;
 class DOMNotation;
 class DOMText;
 class DOMNode;
-class DOMNodeIterator;
-class DOMTreeWalker;
-class DOMRange;
 
 
 /**
@@ -98,7 +98,9 @@ class DOMRange;
 * <code>ownerDocument</code> attribute which associates them with the
 * <code>Document</code> within whose  context they were created.
 */
-class CDOM_EXPORT DOMDocument: public DOMNode {
+class CDOM_EXPORT DOMDocument: public DOMDocumentRange,
+ public DOMDocumentTraversal,
+ public DOMNode {
 
 protected:
     /** @name Constructors and assignment operators */
@@ -271,79 +273,6 @@ public:
      */
     virtual DOMEntityReference    *createEntityReference(const XMLCh *name) = 0;
 
-
-    /**
-     * Creates a NodeIterator object.   (DOM2)
-     *
-     * NodeIterators are used to step through a set of nodes, e.g. the set of nodes in a NodeList, the
-     * document subtree governed by a particular node, the results of a query, or any other set of nodes.
-     * The set of nodes to be iterated is determined by the implementation of the NodeIterator. DOM Level 2
-     * specifies a single NodeIterator implementation for document-order traversal of a document subtree.
-     * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>.
-     *
-     * To produce a view of the document that has entity references expanded and does not
-     * expose the entity reference node itself, use the <code>whatToShow</code> flags to hide the entity
-     * reference node and set expandEntityReferences to true when creating the iterator. To
-     * produce a view of the document that has entity reference nodes but no entity expansion,
-     * use the <code>whatToShow</code> flags to show the entity reference node and set
-     * expandEntityReferences to false.
-     *
-     * @param root The root node of the DOM tree
-     * @param whatToShow This attribute determines which node types are presented via the iterator.
-     * @param filter The filter used to screen nodes
-     * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
-     *                   visible to the iterator. If false, they will be skipped over.
-     */
-
-    virtual DOMNodeIterator *createNodeIterator(DOMNode         *root,
-                                                   unsigned long    whatToShow,
-                                                   DOMNodeFilter* filter,
-                                                   bool             entityReferenceExpansion) = 0;
-     /**
-     * Creates a TreeWalker object.   (DOM2)
-     *
-     * TreeWalker objects are used to navigate a document tree or subtree using the view of the document defined
-     * by its whatToShow flags and any filters that are defined for the TreeWalker. Any function which performs
-     * navigation using a TreeWalker will automatically support any view defined by a TreeWalker.
-     *
-     * Omitting nodes from the logical view of a subtree can result in a structure that is substantially different from
-     * the same subtree in the complete, unfiltered document. Nodes that are siblings in the TreeWalker view may
-     * be children of different, widely separated nodes in the original view. For instance, consider a Filter that skips
-     * all nodes except for Text nodes and the root node of a document. In the logical view that results, all text
-     * nodes will be siblings and appear as direct children of the root node, no matter how deeply nested the
-     * structure of the original document.
-     *
-     * To produce a view of the document that has entity references expanded
-     * and does not expose the entity reference node itself, use the whatToShow
-     * flags to hide the entity reference node and set <code>expandEntityReferences</code> to
-     * true when creating the TreeWalker. To produce a view of the document
-     * that has entity reference nodes but no entity expansion, use the
-     * <code>whatToShow</code> flags to show the entity reference node and set
-     * <code>expandEntityReferences</code> to false
-     *
-     * @param root The root node of the DOM tree
-     * @param whatToShow This attribute determines which node types are presented via the tree-walker.
-     * @param filter The filter used to screen nodes
-     * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
-     *                   visible to the tree-walker. If false, they will be skipped over.
-     */
-
-    virtual DOMTreeWalker  *createTreeWalker(DOMNode        *root,
-                                               unsigned long     whatToShow,
-                                               DOMNodeFilter  *filter,
-                                               bool              entityReferenceExpansion) = 0;
-
-    /**
-	  * To create the range  consisting of boundary-points and offset of the
-      * selected contents
-      *
-      * @return The initial state of the Range such that both the boundary-points
-      * are positioned at the beginning of the corresponding DOMDOcument, before
-      * any content. The range returned can only be used to select content
-      * associated with this document, or with documentFragments and Attrs for
-      * which this document is the ownerdocument
-	  */
-    virtual DOMRange    *createRange() = 0;
 
     //@}
     /** @name Getter functions */

@@ -1,10 +1,10 @@
-#ifndef DOMHEADER_GUARD_HPP
-#define DOMHEADER_GUARD_HPP
+#ifndef DOMDocumentRange_HEADER_GUARD_
+#define DOMDocumentRange_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 2001, International
+ * originally based on software copyright (c) 2002, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -59,37 +59,46 @@
 
 /*
  * $Id$
+*/
+
+#include <xercesc/util/XercesDefs.hpp>
+
+class DOMRange;
+
+
+/**
+ * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113'>Document Object Model (DOM) Level 2 Traversal and Range Specification</a>.
+ * @since DOM Level 2
  */
+class CDOM_EXPORT DOMDocumentRange {
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
+protected:
+    DOMDocumentRange() {};
+    DOMDocumentRange(const DOMDocumentRange &other) {};
+    DOMDocumentRange & operator = (const DOMDocumentRange &other) {return *this;};
 
-#include <xercesc/dom/DOMAttr.hpp>
-#include <xercesc/dom/DOMCDATASection.hpp>
-#include <xercesc/dom/DOMCharacterData.hpp>
-#include <xercesc/dom/DOMComment.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentRange.hpp>
-#include <xercesc/dom/DOMDocumentTraversal.hpp>
-#include <xercesc/dom/DOMDocumentFragment.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMEntity.hpp>
-#include <xercesc/dom/DOMEntityReference.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNode.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMNotation.hpp>
-#include <xercesc/dom/DOMProcessingInstruction.hpp>
-#include <xercesc/dom/DOMText.hpp>
-#include <xercesc/dom/DOMRange.hpp>
-#include <xercesc/dom/DOMRangeException.hpp>
-#include <xercesc/dom/DOMNodeFilter.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMTreeWalker.hpp>
+public:
+    virtual ~DOMDocumentRange() {};
+
+
+  //@}
+  /** @name Factory methods to create new nodes for the Document */
+  //@{
+
+    /**
+	  * To create the range  consisting of boundary-points and offset of the
+      * selected contents
+      *
+      * @return The initial state of the Range such that both the boundary-points
+      * are positioned at the beginning of the corresponding DOMDOcument, before
+      * any content. The range returned can only be used to select content
+      * associated with this document, or with documentFragments and Attrs for
+      * which this document is the ownerdocument
+	  */
+    virtual DOMRange    *createRange() = 0;
+
+    //@}
+};
+
 
 #endif
