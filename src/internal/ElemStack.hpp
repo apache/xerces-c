@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/05/28 20:55:19  tng
+ * Schema: Store Grammar in ElemStack as well.
+ *
  * Revision 1.8  2001/05/11 13:26:16  tng
  * Copyright update.
  *
@@ -94,6 +97,7 @@
 #include <util/StringPool.hpp>
 #include <util/QName.hpp>
 class XMLElementDecl;
+class Grammar;
 
 //
 //  During the scan of content, we have to keep up with the nesting of
@@ -175,6 +179,7 @@ public :
 
         bool                fValidationFlag;
         int                 fCurrentScope;
+        Grammar*            fCurrentGrammar;
     };
 
     enum MapModes
@@ -213,6 +218,9 @@ public :
 
     void setCurrentScope(int currentScope);
     int getCurrentScope();
+
+    void setCurrentGrammar(Grammar* currentGrammar);
+    Grammar* getCurrentGrammar();
 
     // -----------------------------------------------------------------------
     //  Prefix map methods
@@ -338,6 +346,17 @@ inline int ElemStack::getCurrentScope()
 inline void ElemStack::setCurrentScope(int currentScope)
 {
     fStack[fStackTop-1]->fCurrentScope = currentScope;
+    return;
+}
+
+inline Grammar* ElemStack::getCurrentGrammar()
+{
+    return fStack[fStackTop-1]->fCurrentGrammar;
+}
+
+inline void ElemStack::setCurrentGrammar(Grammar* currentGrammar)
+{
+    fStack[fStackTop-1]->fCurrentGrammar = currentGrammar;
     return;
 }
 

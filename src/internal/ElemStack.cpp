@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/05/28 20:55:19  tng
+ * Schema: Store Grammar in ElemStack as well.
+ *
  * Revision 1.11  2001/05/11 13:26:16  tng
  * Copyright update.
  *
@@ -179,6 +182,7 @@ unsigned int ElemStack::addLevel()
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
+    fStack[fStackTop]->fCurrentGrammar = 0;
 
     // Bump the top of stack
     fStackTop++;
@@ -211,6 +215,7 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
+    fStack[fStackTop]->fCurrentGrammar = 0;
 
     // And store the new stuff
     fStack[fStackTop]->fThisElement = toSet;
