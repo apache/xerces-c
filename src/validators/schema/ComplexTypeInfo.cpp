@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/08/27 20:48:45  knoaman
+ * Make the UPA rename before the content model expansion.
+ *
  * Revision 1.13  2001/08/27 20:14:42  knoaman
  * Validate attributes in <all>, <redefine>, <group> and <attributeGroup> declarations.
  * Misc. fixes.
@@ -503,6 +506,15 @@ ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const 
     if (!curNode)
         return 0;
 
+    // When checking Unique Particle Attribution, rename leaf elements
+    if (checkUPA) {
+        fContentSpecOrgURI[fUniqueURI] = curNode->getElement()->getURI();
+        curNode->getElement()->setURI(fUniqueURI);
+        fUniqueURI++;
+        if (fUniqueURI == fContentSpecOrgURISize)
+            resizeContentSpecOrgURI();
+    }
+
     // Get the spec type of the passed node
     int minOccurs = curNode->getMinOccurs();
     int maxOccurs = curNode->getMaxOccurs();
@@ -555,15 +567,6 @@ ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const 
         }
 
         retNode =  expandContentModel(curNode, minOccurs, maxOccurs, toAdoptSpecNode);
-    }
-
-    // When checking Unique Particle Attribution, rename leaf elements
-    if (checkUPA) {
-        fContentSpecOrgURI[fUniqueURI] = curNode->getElement()->getURI();
-        curNode->getElement()->setURI(fUniqueURI);
-        fUniqueURI++;
-        if (fUniqueURI == fContentSpecOrgURISize)
-            resizeContentSpecOrgURI();
     }
 
     return retNode;
