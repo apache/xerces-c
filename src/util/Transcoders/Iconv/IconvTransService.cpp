@@ -325,20 +325,25 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
         return true;
     }
 
+    unsigned int  wLent = getWideCharLength(toTranscode);
     wchar_t       tmpWideCharArr[gTempBuffArraySize];
     wchar_t*      allocatedArray = 0;
     wchar_t*      wideCharBuf = 0;
+
+    if (wLent > maxBytes) {
+        wLent = maxBytes;
+    }
 
     if (maxBytes >= gTempBuffArraySize)
         wideCharBuf = allocatedArray = new wchar_t[maxBytes + 1];
     else
         wideCharBuf = tmpWideCharArr;
 
-    for (unsigned int i = 0; i < maxBytes; i++)
+    for (unsigned int i = 0; i < wLent; i++)
     {
         wideCharBuf[i] = toTranscode[i];
     }
-    wideCharBuf[maxBytes] = 0x00;
+    wideCharBuf[wLent] = 0x00;
 
     // Ok, go ahead and try the transcoding. If it fails, then ...
     if (::wcstombs(toFill, wideCharBuf, maxBytes) == -1)
@@ -348,7 +353,7 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     }
 
     // Cap it off just in case
-    toFill[maxBytes] = 0;
+    toFill[wLent] = 0;
     delete [] allocatedArray;
     return true;
 }
@@ -412,9 +417,14 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
         return true;
     }
 
+    unsigned int len = calcRequiredSize(toTranscode);
     wchar_t       tmpWideCharArr[gTempBuffArraySize];
     wchar_t*      allocatedArray = 0;
     wchar_t*      wideCharBuf = 0;
+
+    if (len > maxChars) {
+        len = maxChars;
+    }
 
     if (maxChars >= gTempBuffArraySize)
         wideCharBuf = allocatedArray = new wchar_t[maxChars + 1];
@@ -427,11 +437,11 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
         return false;
     }
 
-    for (unsigned int i = 0; i < maxChars; i++)
+    for (unsigned int i = 0; i < len; i++)
     {
         toFill[i] = (XMLCh) wideCharBuf[i];
     }
-    toFill[maxChars] = 0x00;
+    toFill[len] = 0x00;
     delete [] allocatedArray;
     return true;
 }
