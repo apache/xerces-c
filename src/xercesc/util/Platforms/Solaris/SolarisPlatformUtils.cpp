@@ -109,6 +109,11 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+
+#if defined (SOLARIS)
+extern "C" int ftime(struct timeb *); // Solaris headers missing this decl
+#endif
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -501,11 +506,6 @@ XMLCh* XMLPlatformUtils::weavePaths
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Timing Methods
 // ---------------------------------------------------------------------------
-
-#if defined (SOLARIS)
-extern "C" int ftime(struct timeb *); // Solaris headers missing this decl
-#endif
-
 unsigned long XMLPlatformUtils::getCurrentMillis()
 {
     timeb aTime;
