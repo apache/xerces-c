@@ -15,6 +15,7 @@
             <li><link anchor="ModifiedAPI">Modified Public API</link></li>
             <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
         </ul>
+        <li><link anchor="DirChange">Directory change in &XercesCName; &XercesCVersion;</link></li>
       </ul>
     </s2>
 
@@ -53,6 +54,28 @@
             </ul>
         </s3>
 
+    </s2>
+
+    <anchor name="DirChange"/>
+    <s2 title="Directory change in &XercesCName; &XercesCVersion;">
+      <ul>
+        <li>
+            A new directory, <em>src/xercesc</em> is created to be the new parent directory to
+			all src's direct subdirectories.</li>
+        <li>
+            Windows application, <br/>
+			shall either change the <em>additional include directories </em> setting,
+			to "..\..\..\..\..\src\<em>xercesc</em>" (Projects->settings->C/C++->Preprocessor). 
+			or <br/>
+			change the relevant #include instances, in the source/header files, accordingly, eg <br/>
+			#include &lt;util/XMLString.hpp&gt; be changed to <br/>
+			#include &lt;<em>xercesc</em>/util/XMLString.hpp&gt; </li>
+        <li>
+            Unix application, <br/>
+			shall either add the line to the Makefile " -I &lt;installroot&gt;/include/<em>xercesc</em>", 
+			or <br/>
+			change the relevant #include instances in the source/header files as shown above. </li>
+      </ul>
     </s2>
 
     <s2 title="Migration Archive">

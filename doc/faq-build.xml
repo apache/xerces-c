@@ -287,5 +287,14 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
+  <faq title="Fatal Error: Cannot open include file: XXX: No such file or directory">
+    <q>"Fatal Error: Cannot open include file: XXX: No such file or directory"?</q>
+    <a>
+      <p>
+	      Due to the recent directory change, you may need to either update your
+		  project file, makefile, or your source/header file, for details,
+          please refer to <jump href="migrate.html#DirChange">Directory Change. </jump></p>
+    </a>
+  </faq>
 
 </faqs>
