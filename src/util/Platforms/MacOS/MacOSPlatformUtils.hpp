@@ -55,20 +55,20 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2000/09/21 18:03:50  jberry
- * Change a couple of routine names to make them more orthagonal.
- *
- * Revision 1.1  2000/07/18 18:26:11  andyh
- * Mac OS update.
- * Contributed by James Berry <jberry@criticalpath.com>
- *
+ * $Id$
  */
  
 #pragma once
 
 #include <util/XercesDefs.hpp>
-#include <Files.h>
+#include <cstdlib>
+
+#if TARGET_API_MAC_CARBON
+	#include <Carbon.h>
+#else
+	#include <Files.h>
+#endif
+
 
 class XMLMacAbstractFile
 {
@@ -114,32 +114,11 @@ XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec);
 bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref);
 bool	XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec);
 
-
-
-
-/*		BROKEN LEGACY CODE UNLIKELY TO BE RESURRECTED
-#include <resources.h>
-
-class XMLResFile : public XMLMacAbstractFile
-{
-    public:
-        XMLResFile() : valid(0), type(0), id(0), pos(0), len(0) {}
-        virtual ~XMLResFile();
-        
-        unsigned int currPos();
-        void close();
-        unsigned int size();
-        void open(const char* const);
-        unsigned int read(const unsigned int, XMLByte* const);
-        void reset();
-        
-    protected:
-        short valid;
-        unsigned long type;
-        short id;
-        unsigned char name[300];
-        Handle data;
-        long pos;
-        long len;
-};
-*/
+//	These routines copy characters between their representation in the Unicode Converter
+//	and the representation used in the C library for the compiler. These representations
+//	are the same for Metrowerks and different for Project Builder.
+//	Each of these routines is safe to call for the case where the src and dst buffers are
+//	in the same location (a conversion in place). Other overlapping ranges are probably
+//	not safe.
+XMLCh*		CopyUniCharsToXMLChs(const UniChar* src, XMLCh* dst, std::size_t charCount, std::size_t maxChars);
+UniChar*	CopyXMLChsToUniChars(const XMLCh* src, UniChar* dst, std::size_t charCount, std::size_t maxChars);

@@ -55,60 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.14  2000/09/22 23:50:58  jberry
- * Change file access permissions to fsRdPerm. Since we never write, there's
- * no reason to request write access. Thanks to John Mostrom @ Adobe.
- * Also nuke a few spaces and the entire defunct support for reading
- * directly from MacOS resources.
- *
- * Revision 1.13  2000/09/21 18:03:50  jberry
- * Change a couple of routine names to make them more orthagonal.
- *
- * Revision 1.12  2000/09/06 23:51:21  jberry
- * Add support for new compile time options defined in prefix file. These
- * control the selection of the msgloader, transcoder, and netaccessor.
- * Add a tiny bit of robustness to the nasty panic method.
- *
- * Revision 1.11  2000/09/04 16:31:15  jberry
- * Fix atomic increment & decrement to return value after operation rather than before. Thanks to Michael Crawford.
- *
- * Revision 1.10  2000/08/14 17:51:48  jpolast
- * spelling updates (pointed about by Jesse Pelton)
- *
- * Revision 1.9  2000/07/30 05:18:31  jberry
- * Remove stray character
- *
- * Revision 1.8  2000/07/29 05:44:44  jberry
- * Incorporate new MacOSURLAccess net accessor
- *
- * Revision 1.7  2000/07/25 22:30:07  aruna1
- * Char definitions in XMLUni moved to XMLUniDefs
- *
- * Revision 1.6  2000/07/19 18:47:34  andyh
- * More Macintosh port tweaks, submitted by James Berry.
- *
- * Revision 1.5  2000/07/18 18:26:09  andyh
- * Mac OS update.
- * Contributed by James Berry <jberry@criticalpath.com>
- *
- * Revision 1.4  2000/03/02 21:10:37  abagchi
- * Added empty function platformTerm()
- *
- * Revision 1.3  2000/03/02 19:55:26  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:28  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:55  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:30  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -143,36 +90,57 @@
    #include <util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
 #endif
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <cctype>
+#include <cstdio>
 #include <memory>
+#include <algorithm>
 
-#include <Files.h>
-#include <Gestalt.h>
-#include <Traps.h>
-#include <TextUtils.h>
-#include <Multiprocessing.h>
-#include <DriverSynchronization.h>
+#if TARGET_API_MAC_CARBON
+	#include <Carbon.h>
+#else
+	#include <Files.h>
+	#include <Gestalt.h>
+	#include <Traps.h>
+	#include <TextUtils.h>
+	#include <TextEncodingConverter.h>
+	#include <Multiprocessing.h>
+	#include <DriverSynchronization.h>
+	#include <URLAccess.h>
+#endif
+
+
+
+//----------------------------------------------------------------------------
+//	Local Constants
+//----------------------------------------------------------------------------
+const std::size_t kMaxStaticPathChars = 512;		// Size of our statically allocated path buffers
 
 
 //----------------------------------------------------------------------------
 // Function Prototypes
 //----------------------------------------------------------------------------
-#if !TARGET_API_MAC_CARBON
-static bool  TrapAvailable(UInt16 trapWord);
-#endif
+XMLCh*	XMLCreateFullPathFromFSRef_X(const FSRef& startingRef);
+XMLCh*	XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef);
+XMLCh*	XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec);
+bool	XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref);
+bool	XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref);
+bool	XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec);
+
+std::size_t TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t maxChars);
+std::size_t TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars);
+
 
 //----------------------------------------------------------------------------
 //  Local Data
 //
-//  gGestaltAvail
-//    This flag indicates the presence of the gestalt manager.  This version
-//    of the MacOS port can not run without it.
+//	gIsClassic
+//	 True if we're in the "classic" environment, either under the blue blox
+//	 or on a real classic OS.
 //
 //  gFileSystemCompatible
-//    This flag indicates whether the file system APIs meet our minimum
+//   This flag indicates whether the file system APIs meet our minimum
 //   requirements.
 //
 // gHasFSSpecAPIs
@@ -187,19 +155,30 @@ static bool  TrapAvailable(UInt16 trapWord);
 //   new Fork calls are used, and all file name and path handling
 //   uses long unicode names. Note that once a file is opened with
 //   the fork calls, only fork calls may be used to access it.
+//
+// gHasFSPathAPIs
+//   True if the FS supports posix path creation APIs FSPathMakeRef and
+//	 FSRefMakePath. If so, these routines are used to support path creation
+//	 and  interpretation.
+//
+// gHasMPAPIs
+//	 True if the Multiprocessing APIs are available.
 //----------------------------------------------------------------------------
-static bool gGestaltAvail   		= false;
+static bool gIsClassic				= false;
 static bool gFileSystemCompatible	= false;
 static bool gHasFSSpecAPIs			= false;
 static bool gHasFS2TBAPIs			= false;
 static bool gHasHFSPlusAPIs			= false;
+static bool gHasFSPathAPIs			= false;
+static bool gHasMPAPIs				= false;
 
 
 //----------------------------------------------------------------------------
 // XMLMacFile methods
 //----------------------------------------------------------------------------
 
-unsigned int XMLMacFile::currPos()
+unsigned int
+XMLMacFile::currPos()
 {
     OSErr err = noErr;
     unsigned int pos = 0;
@@ -229,7 +208,8 @@ unsigned int XMLMacFile::currPos()
 }
 
 
-void XMLMacFile::close()
+void
+XMLMacFile::close()
 {
     OSErr err = noErr;
     if (!mFileValid)
@@ -278,7 +258,8 @@ XMLMacFile::size()
 }
 
 
-void XMLMacFile::open(const XMLCh* const fileName)
+void
+XMLMacFile::open(const XMLCh* const fileName)
 {
     OSErr err = noErr;
     
@@ -309,13 +290,14 @@ void XMLMacFile::open(const XMLCh* const fileName)
     }
     
     if (err != noErr)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
+        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
     
     mFileValid = true;
 }
 
 
-unsigned int XMLMacFile::read(const unsigned int toRead, XMLByte* const toFill)
+unsigned int
+XMLMacFile::read(const unsigned int toRead, XMLByte* const toFill)
 {
     unsigned int bytesRead = 0;
     OSErr err = noErr;
@@ -371,7 +353,8 @@ XMLMacFile::~XMLMacFile()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::panic(const PanicReasons reason)
+void
+XMLPlatformUtils::panic(const PanicReasons reason)
 {
     const char* reasonStr = "Unknown reason";
     if (reason == Panic_NoTransService)
@@ -396,36 +379,40 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     //	Replace this code to do whatever you need to do.
     //
     char text[256];
-    snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
+    std::snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
     
     Str255 pasText;
     CopyCStringToPascal(text, pasText);
     DebugStr(pasText);
     
-    exit(-1);
+    std::exit(-1);
 }
 
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
-unsigned int XMLPlatformUtils::curFilePos(const FileHandle theFile)
+unsigned int
+XMLPlatformUtils::curFilePos(const FileHandle theFile)
 {
     return theFile->currPos();
 }
 
-void XMLPlatformUtils::closeFile(const FileHandle theFile)
+void
+XMLPlatformUtils::closeFile(const FileHandle theFile)
 {
     theFile->close();
 }
 
-unsigned int XMLPlatformUtils::fileSize(const FileHandle theFile)
+unsigned int
+XMLPlatformUtils::fileSize(const FileHandle theFile)
 {
     return theFile->size();
 }
 
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+FileHandle
+XMLPlatformUtils::openFile(const char* const fileName)
 {
     const XMLCh* xmlPath = XMLString::transcode(fileName);
     ArrayJanitor<const XMLCh> jan(xmlPath);
@@ -433,7 +420,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 }
 
 
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+FileHandle
+XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
@@ -448,7 +436,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 }
 
 
-FileHandle XMLPlatformUtils::openStdInHandle()
+FileHandle
+XMLPlatformUtils::openStdInHandle()
 {
     ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
     return NULL;
@@ -464,7 +453,8 @@ XMLPlatformUtils::readFileBuffer(   const   FileHandle      theFile
 }
 
 
-void XMLPlatformUtils::resetFile(FileHandle theFile)
+void
+XMLPlatformUtils::resetFile(FileHandle theFile)
 {
     theFile->reset();
 }
@@ -473,7 +463,8 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLCh*
+XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
     XMLCh* path = NULL;
     
@@ -494,13 +485,15 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 }
 
 
-bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+bool
+XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 {
     return (toCheck[0] != L'/');
 }
 
 
-XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
+XMLCh*
+XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
                                     , const XMLCh* const    relativePath)
                                     
 {
@@ -512,11 +505,10 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     // path separators ':'.
     
     // Create a buffer as large as both parts and empty it
-    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
+    ArrayJanitor<XMLCh> tmpBuf(new XMLCh[XMLString::stringLen(basePath)
         + XMLString::stringLen(relativePath)
-        + 2];
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
-    *tmpBuf = 0;
+        + 2]);
+    tmpBuf[0] = 0;
     
     //
     //  If we have no base path, then just take the relative path as
@@ -524,16 +516,14 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     //
     if (!basePath)
     {
-        XMLString::copyString(tmpBuf, relativePath);
-        janBuf.orphan();
-        return tmpBuf;
+        XMLString::copyString(tmpBuf.get(), relativePath);
+        return tmpBuf.release();
     }
     
     if (!*basePath)
     {
-        XMLString::copyString(tmpBuf, relativePath);
-        janBuf.orphan();
-        return tmpBuf;
+        XMLString::copyString(tmpBuf.get(), relativePath);
+        return tmpBuf.release();
     }
     
     const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
@@ -546,9 +536,8 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     // There is no relevant base path, so just take the relative part
     if (basePtr < basePath)
     {
-        XMLString::copyString(tmpBuf, relativePath);
-        janBuf.orphan();
-        return tmpBuf;
+        XMLString::copyString(tmpBuf.get(), relativePath);
+        return tmpBuf.release();
     }
     
     //  We have some path part, so we need to check to see if we have to
@@ -590,7 +579,7 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     }
     
     // Copy the base part up to the base pointer
-    XMLCh* bufPtr = tmpBuf;
+    XMLCh* bufPtr = tmpBuf.get();
     const XMLCh* tmpPtr = basePath;
     while (tmpPtr <= basePtr)
         *bufPtr++ = *tmpPtr++;
@@ -599,17 +588,25 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     XMLString::copyString(bufPtr, pathPtr);
     
     // Orphan the buffer and return it
-    janBuf.orphan();
-    return tmpBuf;
+    return tmpBuf.release();
 }
 
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Timing Methods
 // ---------------------------------------------------------------------------
-unsigned long XMLPlatformUtils::getCurrentMillis()
+unsigned long
+XMLPlatformUtils::getCurrentMillis()
 {
-    return TickCount() * 100 / 6;
+	if ((void*)kUnresolvedCFragSymbolAddress != UpTime)
+	{
+		// Use Driver services routines, now in Carbon,
+		// to get the elapsed milliseconds.
+		AbsoluteTime time = UpTime();
+		return AbsoluteToDuration(time);
+	}
+	else
+		return TickCount() * 100 / 6;
 }
 
 
@@ -640,32 +637,59 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 // above will be resolved in time.
 // ---------------------------------------------------------------------------
 
-void* XMLPlatformUtils::makeMutex()
+void*
+XMLPlatformUtils::makeMutex()
 {
-    MPCriticalRegionID criticalRegion = NULL;
-    OSStatus status = MPCreateCriticalRegion(&criticalRegion);
-    return (status == noErr) ? static_cast<void*>(criticalRegion) : NULL;
+	if (gHasMPAPIs)
+	{
+		MPCriticalRegionID criticalRegion = NULL;
+		OSStatus status = MPCreateCriticalRegion(&criticalRegion);
+		return (status == noErr) ? (void*)(criticalRegion) : NULL;
+	}
+	else
+		return (void*)1;
 }
 
 
-void XMLPlatformUtils::closeMutex(void* const mtxHandle)
+void
+XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
-    MPCriticalRegionID criticalRegion = reinterpret_cast<MPCriticalRegionID>(mtxHandle);
-    OSStatus status = MPDeleteCriticalRegion(criticalRegion);
+	if (gHasMPAPIs)
+	{
+		MPCriticalRegionID criticalRegion = reinterpret_cast<MPCriticalRegionID>(mtxHandle);
+		OSStatus status = MPDeleteCriticalRegion(criticalRegion);
+		status = noErr;	// ignore any error and zap compiler warning
+	}
+	else
+		;
 }
 
 
-void XMLPlatformUtils::lockMutex(void* const mtxHandle)
+void
+XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-    MPCriticalRegionID criticalRegion = reinterpret_cast<MPCriticalRegionID>(mtxHandle);
-    OSStatus status = MPEnterCriticalRegion(criticalRegion, kDurationForever);
+	if (gHasMPAPIs)
+	{
+		MPCriticalRegionID criticalRegion = reinterpret_cast<MPCriticalRegionID>(mtxHandle);
+		OSStatus status = MPEnterCriticalRegion(criticalRegion, kDurationForever);
+		status = noErr;	// ignore any error and zap compiler warning
+	}
+	else
+		;
 }
 
 
-void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
+void
+XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
-    MPCriticalRegionID criticalRegion = reinterpret_cast<MPCriticalRegionID>(mtxHandle);
-    OSStatus status = MPExitCriticalRegion(criticalRegion);
+	if (gHasMPAPIs)
+	{
+		MPCriticalRegionID criticalRegion = reinterpret_cast<MPCriticalRegionID>(mtxHandle);
+		OSStatus status = MPExitCriticalRegion(criticalRegion);
+		status = noErr;	// ignore any error and zap compiler warning
+	}
+	else
+		;
 }
 
 
@@ -703,13 +727,15 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
 //	is after. So we perform the translation before returning
 //	the value.
 //
-int XMLPlatformUtils::atomicIncrement(int &location)
+int
+XMLPlatformUtils::atomicIncrement(int &location)
 {
     return IncrementAtomic(reinterpret_cast<long*>(&location)) + 1;
 }
 
 
-int XMLPlatformUtils::atomicDecrement(int &location)
+int
+XMLPlatformUtils::atomicDecrement(int &location)
 {
     return DecrementAtomic(reinterpret_cast<long*>(&location)) - 1;
 }
@@ -722,30 +748,28 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 //
 //  This method handles the MacOS basic init functions.
 //
-void XMLPlatformUtils::platformInit()
+void
+XMLPlatformUtils::platformInit()
 {
-    long value;
-    
-    // Figure out if we have the gestalt manager
-    // --we better have by now...this is a pre-system 7 feature!
-    gGestaltAvail =
+	//	Detect available functions by seeing if the symbols resolve
+	
+	long value = 0;
+	gIsClassic				= ((void*)kUnresolvedCFragSymbolAddress != Gestalt)
+								&& (noErr == Gestalt(gestaltSystemVersion, &value))
+								&& (value < 0x01000)
+								;
+	
+	gHasFSSpecAPIs			= ((void*)kUnresolvedCFragSymbolAddress != FSMakeFSSpec);
+	gHasFS2TBAPIs			= ((void*)kUnresolvedCFragSymbolAddress != PBXGetVolInfoSync);
+	gHasHFSPlusAPIs			= ((void*)kUnresolvedCFragSymbolAddress != FSOpenFork);
 #if TARGET_API_MAC_CARBON
-        true;
+	gHasFSPathAPIs			= ((void*)kUnresolvedCFragSymbolAddress != FSPathMakeRef);
 #else
-    	TrapAvailable(_Gestalt);
+	gHasFSPathAPIs			= false;
 #endif
+	gHasMPAPIs				= MPLibraryIsLoaded();
     
-    // Figure out which functions we have available
-    if (gGestaltAvail)
-    {
-        if (Gestalt(gestaltFSAttr, &value) == noErr)
-        {
-            gHasFSSpecAPIs	= (value & gestaltHasFSSpecCalls) != 0;
-            gHasFS2TBAPIs	= (value & gestaltFSSupports2TBVols) != 0;
-            gHasHFSPlusAPIs	= (value & gestaltHasHFSPlusAPIs) != 0;
-        }
-    }
-    
+	//	We require FSSpecs at a minimum
     gFileSystemCompatible = gHasFSSpecAPIs;
 }
 
@@ -753,7 +777,8 @@ void XMLPlatformUtils::platformInit()
 //
 //  This method handles the MacOS basic termination functions.
 //
-void XMLPlatformUtils::platformTerm()
+void
+XMLPlatformUtils::platformTerm()
 {
 }
 
@@ -767,13 +792,18 @@ void XMLPlatformUtils::platformTerm()
 //  during initialization. We have to create the type of net accessor that
 //  we want to use. If none, then just return zero.
 //
-XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
+XMLNetAccessor*
+XMLPlatformUtils::makeNetAccessor()
 {
 #if defined(XML_USE_NETACCESSOR_URLACCESS)
-	return new MacOSURLAccess;
-#else
-	return 0;
+	//	Only try to use URLAccess if it's actually available
+	if (URLAccessAvailable())
+		return new MacOSURLAccess;
 #endif
+
+	//	No netaccessor available--we can live with it, but you won't
+	//	get net access.
+	return 0;
 }
 
 
@@ -781,7 +811,8 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 //  This method is called by the platform independent part of this class
 //  when client code asks to have one of the supported message sets loaded.
 //
-XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
+XMLMsgLoader*
+XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
 #if defined(XML_USE_INMEMORY_MSGLOADER)
     return new InMemMsgLoader(msgDomain);
@@ -797,49 +828,166 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 //  methods, any transcoding services, throw any exceptions, etc... It just
 //  makes a transcoding service and returns it, or returns zero on failure.
 //
-XMLTransService* XMLPlatformUtils::makeTransService()
+XMLTransService*
+XMLPlatformUtils::makeTransService()
 {
 #if defined(XML_USE_MACOS_UNICODECONVERTER)
-    return new MacOSUnicodeConverter;
+	return new MacOSUnicodeConverter;
 #else
     #error You must provide a transcoding service implementation
 #endif
 }
 
 
-//---------------------------------------------------
-// Utility Functions
-//---------------------------------------------------
+// ---------------------------------------------------------------------------
+//	Utility Functions
+// ---------------------------------------------------------------------------
 
-// Routine to check to see if a system function is available
-#if !TARGET_API_MAC_CARBON
-static bool
-TrapAvailable (UInt16 trapWord)
+XMLCh*
+CopyUniCharsToXMLChs(const UniChar* src, XMLCh* dst, std::size_t charCount, std::size_t maxChars)
 {
-    TrapType trType;
-    
-    // first determine whether it is an Operating System or Toolbox routine
-    if ((trapWord & 0x0800) == 0)
-        trType = OSTrap;
-    else
-        trType = ToolTrap;
-    
-    // filter cases where older systems mask with 0x1FF rather than 0x3FF
-    if (trType == ToolTrap && ((trapWord & 0x03FF) >= 0x200) &&
-        (GetToolboxTrapAddress(0xA86E) == GetToolboxTrapAddress(0xAA6E)))
-        return false;
-    else
-        return (NGetTrapAddress(trapWord, trType) !=
-        GetToolboxTrapAddress(_Unimplemented));
+	//	Ensure we don't step on anybody's toes
+	std::size_t cnt = std::min(charCount, maxChars);
+	
+	//	Copy the characters. UniChar is unsigned, so we shouldn't have
+	//	any sign extension problems.
+	//	To allow copy within a identical range, we copy backwards,
+	//	since XMLCh (may be) larger than UniChar.
+	dst += cnt;
+	src += cnt;
+	for (; cnt > 0; --cnt)
+		*--dst = *--src;
+		
+	return dst;
 }
-#endif
+
+
+UniChar*
+CopyXMLChsToUniChars(const XMLCh* src, UniChar* dst, std::size_t charCount, std::size_t maxChars)
+{
+	UniChar* dstBegin = dst;
+	
+	//	Ensure we don't step on anybody's toes
+	std::size_t cnt = std::min(charCount, maxChars);
+	
+	//	Copy the characters. XMLCh's will be truncated on copy to UniChar's.
+	//	To allow copy within a identical range, we copy forwards,
+	//	since XMLCh (may be) larger than UniChar.
+	for (; cnt > 0; --cnt)
+		*dst++ = *src++;
+		
+	return dstBegin;
+}
 
 
 bool
 XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
 {
+	bool result;
+	
+	//	If FSPathMakeRef is available, we use it to parse the
+	//	path: this gives us "standard" path support under MacOS X.
+	//	Without this, our paths in that environment would always
+	//	have a volume name at their root...which would look
+	//	"normal" to Mac users, but not normal to unix users. Since
+	//	we're making "unix" paths, we'll stick with the unix
+	//	style paths. This also allows us to easilly take paths
+	//	off the command line.
+	//
+	//	FSPathMakeRef is available on Mac OS X and in CarbonLib 1.1
+	//	and greater. But on classic under CarbonLib, it expects paths
+	//	to contain ':' separators, for which we're not prepared. Since
+	//	this isn't a case where we need to use it, we drop back to the
+	//	classic case for this.
+		
+	if (TARGET_API_MAC_CARBON && !gIsClassic && gHasFSPathAPIs)
+		result = XMLParsePathToFSRef_X(pathName, ref);
+	else
+		result = XMLParsePathToFSRef_Classic(pathName, ref);
+		
+	return result;
+}
+
+
+bool
+XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
+{
+	//	Parse Path to FSRef using FSPathMakeRef as available under
+	//	Mac OS X and CarbonLib 1.1 and greater.
+	
+	OSStatus err = noErr;	
+	std::size_t pathLen = XMLString::stringLen(pathName);
+
+    //	Transcode XMLCh into UniChar
+	UniChar uniBuf[kMaxStaticPathChars];
+	CopyXMLChsToUniChars(pathName, uniBuf, pathLen, kMaxStaticPathChars);
+	
+	//	Transcode Unicode to UTF-8
+	char utf8Buf[kMaxStaticPathChars];
+	pathLen = TranscodeUniCharsToUTF8(uniBuf, utf8Buf, pathLen, kMaxStaticPathChars-1);
+	
+	//	Terminate the path
+	char* p = utf8Buf;
+	p[pathLen++] = '\0';
+	
+	//	If it's a relative path, pre-pend the path the current directory
+	//	FSPathMakeRef doesn't deal with relativity on the front of the path
+	if (*p == '.')
+	{
+		//	Right justify the user path to make room for the pre-pended path
+		std::memmove(p + kMaxStaticPathChars - pathLen, p, pathLen);
+				
+		//	Get the current directory
+        FSSpec spec;
+		if (err == noErr)
+			err = FSMakeFSSpec(0, 0, NULL, &spec);
+        if (err == noErr)
+            err = FSpMakeFSRef(&spec, &ref);
+		
+		//	Get pathname to the current directory
+		if (err == noErr)
+			err = FSRefMakePath(&ref, reinterpret_cast<UInt8*>(p), kMaxStaticPathChars - pathLen);
+		std::size_t prefixLen = std::strlen(p);
+			
+		//	Ensure we'll have enough room to add a separator '/'
+		if (err == noErr && prefixLen + pathLen >= kMaxStaticPathChars)
+			err = errFSNameTooLong;
+		
+		//	Now munge the two paths back together
+		if (err == noErr)
+		{
+			p[prefixLen++] = '/';
+			std::memmove(p + prefixLen, p + kMaxStaticPathChars - pathLen, pathLen);
+		}
+		
+		//	We now have a path from an absolute starting point
+	}
+	
+	//	Let the OS discover the location
+	Boolean isDirectory = false;
+	if (err == noErr)
+		err = FSPathMakeRef(reinterpret_cast<UInt8*>(p), &ref, &isDirectory);
+		
+	//	Return true on success
+	return (err == noErr);
+}
+
+
+bool
+XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
+{
+	//	Parse Path to FSRef by stepping manually through path components.
+	
+	//	Path's parsed in this way must always begin with a volume name.
+	//	This assumption would fail for standard unix paths under Mac OS X,
+	//	so for those cases we use the routine XMLParsePathToFSRef_Carbon
+	//	above.
+	
     const XMLCh* p = pathName;
     const XMLCh* pEnd;
+	
+	const std::size_t kXMLBufCount = 256;
+	XMLCh xmlBuf[kXMLBufCount];
     
     OSErr err = noErr;
     
@@ -849,7 +997,7 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
         
         // Find the end of the path segment
         for (pEnd = ++p; *pEnd && *pEnd != L'/'; ++pEnd) ;
-        size_t segLen = pEnd - p;
+        std::size_t segLen = pEnd - p;
         
         // Try to find a volume that matches this name
         for (ItemCount volIndex = 1; err == noErr; ++volIndex)
@@ -872,7 +1020,9 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
             if (err == noErr && segLen == hfsStr.length)
             {
             	//	Case-insensitive compare
-            	if (XMLString::compareNIString(reinterpret_cast<XMLCh*>(hfsStr.unicode), p, segLen) == 0)
+            	if (XMLString::compareNIString(
+									CopyUniCharsToXMLChs(hfsStr.unicode, xmlBuf, segLen, kXMLBufCount),
+									p, segLen) == 0)
                     break;  // we found our volume
             }
         }
@@ -929,13 +1079,13 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
         default:
             // Find the end of the path segment
             for (pEnd = p; *pEnd && *pEnd != L'/'; ++pEnd) ;
-            
+			
             // pEnd now points either to '/' or NUL
             // Create a new ref using this path segment
             err = FSMakeFSRefUnicode(
                 &ref,
                 pEnd - p,
-                reinterpret_cast<UniChar*>(const_cast<XMLCh*>(p)),
+                CopyXMLChsToUniChars(p, reinterpret_cast<UniChar*>(xmlBuf), pEnd - p, kXMLBufCount),
                 kTextEncodingUnknown,
                 &ref
                 );
@@ -952,12 +1102,49 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
 bool
 XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
 {
-    // Transcode the path into ascii
+	//	Parse Path to an FSSpec
+
+	//	If we've got HFS+ APIs, do this in terms of refs so that
+	//	we can grandfather in the use of FSPathMakeRef under Mac OS X 
+	//	and CarbonLib 1.1. Otherwise, do it the hard way.
+	
+	bool result = false;
+	
+	if (gHasHFSPlusAPIs)
+	{
+		//	Parse to a ref
+		FSRef ref;
+		result = XMLParsePathToFSRef(pathName, ref);
+		
+		//	Down convert to a spec
+		if (result)
+			result = (noErr == FSGetCatalogInfo(&ref,
+								kFSCatInfoNone,
+								static_cast<FSCatalogInfo*>(NULL),	// catalogInfo
+								static_cast<HFSUniStr255*>(NULL),	// outName
+								&spec,
+								static_cast<FSRef*>(NULL)			// parentRef
+								));
+	}
+	else
+		result = XMLParsePathToFSSpec_Classic(pathName, spec);
+		
+	//	Return true on success
+	return result;
+}
+
+
+bool
+XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
+{
+	//	Manually parse the path using FSSpec APIs.
+	
+    //	Transcode the path into ascii
     const char* p = XMLString::transcode(pathName);
     ArrayJanitor<const char> janPath(p);
     const char* pEnd;
     
-    OSErr err = noErr;
+    OSStatus err = noErr;
     Str255 name;  // Must be long enough for a partial pathname consisting of two segments (64 bytes)
     
     if (*p == '/')
@@ -966,7 +1153,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
         
         // Find the end of the path segment
         for (pEnd = ++p; *pEnd && *pEnd != '/'; ++pEnd) ;
-        size_t segLen = pEnd - p;
+        std::size_t segLen = pEnd - p;
         
         // Try to find a volume that matches this name
         for (ItemCount volIndex = 1; err == noErr; ++volIndex)
@@ -1096,180 +1283,372 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
 XMLCh*
 XMLCreateFullPathFromFSRef(const FSRef& startingRef)
 {
-    OSErr err = noErr;
+	XMLCh* result = NULL;
+	
+	//	If FSRefMakePath is available, we use it to create the
+	//	path: this gives us "standard" path support under MacOS X.
+	//	Without this, our paths in that environment would always
+	//	have a volume name at their root...which would look
+	//	"normal" to Mac users, but not normal to unix users. Since
+	//	we're making "unix" paths, we'll stick with the unix
+	//	style paths. This also allows us to easilly take paths
+	//	off the command line.
+	//
+	//	FSRefMakePath is available on Mac OS X and in CarbonLib 1.1
+	//	and greater. But we use it only on X since on Classic it
+	//	makes paths with ':' separators, which really confuses us!
+	
+	if (TARGET_API_MAC_CARBON && !gIsClassic && gHasFSPathAPIs)
+		result = XMLCreateFullPathFromFSRef_X(startingRef);
+	else
+		result = XMLCreateFullPathFromFSRef_Classic(startingRef);
+		
+	return result;
+}
+
+
+XMLCh*
+XMLCreateFullPathFromFSRef_X(const FSRef& startingRef)
+{
+	//	Create the path using FSRefMakePath as available on Mac OS X
+	//	and under CarbonLib 1.1 and greater.
+	OSStatus err = noErr;
+	
+	//	Make the path in utf8 form
+	char utf8Buf[kMaxStaticPathChars];
+	utf8Buf[0] = '\0';
+	
+	if (err == noErr)
+		err = FSRefMakePath(&startingRef, reinterpret_cast<UInt8*>(utf8Buf), kMaxStaticPathChars);
+		
+	//	Bail if path conversion failed
+	if (err != noErr)
+		return NULL;
+	
+	//	Transcode into UniChars
+	UniChar uniBuf[kMaxStaticPathChars];
+	std::size_t pathLen = TranscodeUTF8ToUniChars(utf8Buf, uniBuf, kMaxStaticPathChars-1);
+	uniBuf[pathLen++] = 0;
+	
+	//	Transcode into a dynamically allocated buffer of XMLChs
+	ArrayJanitor<XMLCh> result(new XMLCh[pathLen]);
+	if (result.get() != NULL)
+		CopyUniCharsToXMLChs(uniBuf, result.get(), pathLen, pathLen);
+		
+	return result.release();
+}
+
+
+XMLCh*
+XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
+{
+	//	Manually create the path using FSRef APIs.
+    OSStatus err = noErr;
     FSCatalogInfo catalogInfo;
     HFSUniStr255 name;
     FSRef ref = startingRef;
     
-    const size_t kBufSize = 512;
-    XMLCh buf[kBufSize];
-    size_t bufPos   = kBufSize;
-    size_t bufCnt   = 0;
+    XMLCh buf[kMaxStaticPathChars];
+    std::size_t bufPos   = kMaxStaticPathChars;
+    std::size_t bufCnt   = 0;
     
-    XMLCh* result = NULL;
-    size_t resultLen = 0;
+    ArrayJanitor<XMLCh> result(NULL);
+    std::size_t resultLen = 0;
     
     buf[--bufPos] = L'\0';
     ++bufCnt;
     
-    try  // help in cleaning up since ArrayJanitor doesn't handle assignment ;(
-    {
-        do
-        {
-            err = FSGetCatalogInfo(
-                &ref,
-                kFSCatInfoParentDirID,
-                &catalogInfo,
-                &name,
-                static_cast<FSSpec*>(NULL),
-                &ref
-                );
-            
-            if (err == noErr)
-            {
-                // If there's not room in our static buffer for the new
-                // name plus separator, dump it to the dynamic result buffer.
-                if (bufPos < name.length + 1)
-                {
-                    XMLCh* temp = new XMLCh[bufCnt + resultLen];
-                    
-                    // Copy in the static buffer
-                    memcpy(temp, &buf[bufPos], bufCnt * sizeof(XMLCh));
-                    
-                    // Copy in the old buffer
-                    if (resultLen > 0)
-                        memcpy(temp + bufCnt, result, resultLen);
-                    
-                    delete [] result;
-                    result = temp;
-                    resultLen += bufCnt;
-                    
-                    bufPos = kBufSize;
-                    bufCnt = 0;
-                }
-                
-                // Prepend our new name and a '/'
-                bufPos -= name.length;
-                memcpy(&buf[bufPos], name.unicode, name.length * sizeof(UniChar));
-                buf[--bufPos] = L'/';
-                bufCnt += (name.length + 1);
-            }
-        }
-        while (err == noErr && catalogInfo.parentDirID != fsRtParID);
-        
-        // Composite existing buffer with any previous result buffer
-        XMLCh* temp = new XMLCh[bufCnt + resultLen];
-        
-        // Copy in the static buffer
-        memcpy(temp, &buf[bufPos], bufCnt * sizeof(XMLCh));
-        
-        // Copy in the old buffer
-        if (resultLen > 0)
-            memcpy(temp + bufCnt, result, resultLen * sizeof(XMLCh));
-        
-        delete [] result;
-        result = temp;
-    }
-    catch (...)
-    {
-        delete [] result;
-        throw;
-    }
-    
-    return result;
+	do
+	{
+		err = FSGetCatalogInfo(
+			&ref,
+			kFSCatInfoParentDirID,
+			&catalogInfo,
+			&name,
+			static_cast<FSSpec*>(NULL),
+			&ref
+			);
+		
+		if (err == noErr)
+		{
+			// If there's not room in our static buffer for the new
+			// name plus separator, dump it to the dynamic result buffer.
+			if (bufPos < (std::size_t)name.length + 1)
+			{
+				ArrayJanitor<XMLCh> temp(new XMLCh[bufCnt + resultLen]);
+				
+				// Copy in the static buffer
+				std::memcpy(temp.get(), &buf[bufPos], bufCnt * sizeof(XMLCh));
+				
+				// Copy in the old buffer
+				if (resultLen > 0)
+					std::memcpy(temp.get() + bufCnt, result.get(), resultLen * sizeof(XMLCh));
+				
+				result.reset(temp.release());
+				resultLen += bufCnt;
+				
+				bufPos = kMaxStaticPathChars;
+				bufCnt = 0;
+			}
+			
+			// Prepend our new name and a '/'
+			bufPos -= name.length;
+			CopyUniCharsToXMLChs(name.unicode, &buf[bufPos], name.length, name.length);
+			buf[--bufPos] = L'/';
+			bufCnt += (name.length + 1);
+		}
+	}
+	while (err == noErr && catalogInfo.parentDirID != fsRtParID);
+	
+	// Composite existing buffer with any previous result buffer
+	ArrayJanitor<XMLCh> final(new XMLCh[bufCnt + resultLen]);
+	
+	// Copy in the static buffer
+	std::memcpy(final.get(), &buf[bufPos], bufCnt * sizeof(XMLCh));
+	
+	// Copy in the old buffer
+	if (resultLen > 0)
+		std::memcpy(final.get() + bufCnt, result.get(), resultLen * sizeof(XMLCh));
+	
+    return final.release();
 }
 
 
 XMLCh*
 XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec)
 {
-    OSErr err = noErr;
+	XMLCh* result = NULL;
+	
+	//	If FSRefs are available, do this operation in terms of refs...this
+	//	allows us to grandfather in the use of FSPathMakeRef and FSRefMakePath
+	//	if possible.
+	if (gHasHFSPlusAPIs)
+	{
+		OSStatus err = noErr;
+		FSRef ref;
+		
+		//	Up convert to FSRef
+		if (err == noErr)
+			err = FSpMakeFSRef(&startingSpec, &ref);
+			
+		//	Create the path
+		if (err == noErr)
+			result = XMLCreateFullPathFromFSRef(ref);
+	}
+	else
+	{
+		//	Create using FSSpecs only
+		result = XMLCreateFullPathFromFSSpec_Classic(startingSpec);
+	}
+		
+	return result;
+}
+
+
+XMLCh*
+XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
+{
+	//	Manually create the path using FSSpec APIs.
+    OSStatus err = noErr;
     FSSpec spec = startingSpec;
     
-    const size_t kBufSize = 512;
-    char buf[kBufSize];
-    size_t bufPos   = kBufSize;
-    size_t bufCnt   = 0;
+    char buf[kMaxStaticPathChars];
+    std::size_t bufPos   = kMaxStaticPathChars;
+    std::size_t bufCnt   = 0;
     
-    char* result = NULL;
-    size_t resultLen = 0;
+    ArrayJanitor<char> result(NULL);
+    std::size_t resultLen = 0;
     
     buf[--bufPos] = '\0';
     ++bufCnt;
     
-    try  // help in cleanup since array janitor can't handle assignment ;(
-    {
-        short index = 0;
-        do
-        {
-            CInfoPBRec catInfo;
-            catInfo.dirInfo.ioNamePtr = spec.name;
-            catInfo.dirInfo.ioVRefNum = spec.vRefNum;
-            catInfo.dirInfo.ioFDirIndex = index;
-            catInfo.dirInfo.ioDrDirID = spec.parID;
-            err = PBGetCatInfoSync(&catInfo);
-            
-            if (err == noErr)
-            {
-                size_t nameLen = StrLength(spec.name);
-                
-                // If there's not room in our static buffer for the new
-                // name plus separator, dump it to the dynamic result buffer.
-                if (bufPos < nameLen + 1)
-                {
-                    char* temp = new char[bufCnt + resultLen];
-                    
-                    // Copy in the static buffer
-                    memcpy(temp, &buf[bufPos], bufCnt);
-                    
-                    // Copy in the old buffer
-                    if (resultLen > 0)
-                        memcpy(temp + bufCnt, result, resultLen);
-                    
-                    delete [] result;
-                    result = temp;
-                    resultLen += bufCnt;
-                    
-                    bufPos = kBufSize;
-                    bufCnt = 0;
-                }
-                
-                // Prepend our new name and a '/'
-                bufPos -= nameLen;
-                memcpy(&buf[bufPos], &spec.name[1], nameLen);
-                buf[--bufPos] = '/';
-                bufCnt += (nameLen + 1);
-                
-                // From here on out, ignore the input file name
-                index = -1;
-                
-                // Move up to the parent
-                spec.parID = catInfo.dirInfo.ioDrParID;
-            }
-        }
-        while (err == noErr && spec.parID != fsRtParID);
-        
-        // Composite existing buffer with any previous result buffer
-        char* temp = new char[bufCnt + resultLen];
-        
-        // Copy in the static buffer
-        memcpy(temp, &buf[bufPos], bufCnt);
-        
-        // Copy in the old buffer
-        if (resultLen > 0)
-            memcpy(temp + bufCnt, result, resultLen);
-        
-        delete [] result;
-        result = temp;
-        resultLen += bufCnt;
-    }
-    catch (...)
-    {
-        delete [] result;
-        throw;
-    }
+	short index = 0;
+	do
+	{
+		CInfoPBRec catInfo;
+		catInfo.dirInfo.ioNamePtr = spec.name;
+		catInfo.dirInfo.ioVRefNum = spec.vRefNum;
+		catInfo.dirInfo.ioFDirIndex = index;
+		catInfo.dirInfo.ioDrDirID = spec.parID;
+		err = PBGetCatInfoSync(&catInfo);
+		
+		if (err == noErr)
+		{
+			std::size_t nameLen = StrLength(spec.name);
+			
+			// If there's not room in our static buffer for the new
+			// name plus separator, dump it to the dynamic result buffer.
+			if (bufPos < nameLen + 1)
+			{
+				ArrayJanitor<char> temp(new char[bufCnt + resultLen]);
+				
+				// Copy in the static buffer
+				std::memcpy(temp.get(), &buf[bufPos], bufCnt);
+				
+				// Copy in the old buffer
+				if (resultLen > 0)
+					std::memcpy(temp.get() + bufCnt, result.get(), resultLen);
+				
+				result.reset(temp.release());
+				resultLen += bufCnt;
+				
+				bufPos = kMaxStaticPathChars;
+				bufCnt = 0;
+			}
+			
+			// Prepend our new name and a '/'
+			bufPos -= nameLen;
+			std::memcpy(&buf[bufPos], &spec.name[1], nameLen);
+			buf[--bufPos] = '/';
+			bufCnt += (nameLen + 1);
+			
+			// From here on out, ignore the input file name
+			index = -1;
+			
+			// Move up to the parent
+			spec.parID = catInfo.dirInfo.ioDrParID;
+		}
+	}
+	while (err == noErr && spec.parID != fsRtParID);
+	
+	// Composite existing buffer with any previous result buffer
+	ArrayJanitor<char> final(new char[bufCnt + resultLen]);
+	
+	// Copy in the static buffer
+	std::memcpy(final.get(), &buf[bufPos], bufCnt);
+	
+	// Copy in the old buffer
+	if (resultLen > 0)
+		std::memcpy(final.get() + bufCnt, result.get(), resultLen);
     
     // Cleanup and transcode to unicode
-    ArrayJanitor<char> jan(result);
-    return XMLString::transcode(result);
+    return XMLString::transcode(final.get());
+}
+
+
+std::size_t
+TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t maxChars)
+{
+	std::size_t result = 0;
+	
+	if (gIsClassic || !TARGET_API_MAC_CARBON)
+	{
+		//	Use the text encoding converter to perform the format conversion.
+		//	Note that this is slightly heavyweight, but we're not in a performance
+		//	sensitive code-path.
+		
+		OSStatus err = noErr;
+		TECObjectRef tec = 0;
+		ByteCount bytesConsumed = 0;
+		ByteCount bytesProduced = 0;
+		
+		TextEncoding inputEncoding	= CreateTextEncoding(kTextEncodingUnicodeDefault,
+											kTextEncodingDefaultVariant,
+											kUnicode16BitFormat);
+											
+		TextEncoding outputEncoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
+											kTextEncodingDefaultVariant,
+											kUnicodeUTF8Format);
+		
+		if (err == noErr)
+			err = TECCreateConverter(&tec, inputEncoding, outputEncoding);
+			
+		if (err == noErr)
+			err = TECConvertText(tec,
+						(ConstTextPtr) src,
+						srcCnt * sizeof(UniChar),	// inputBufferLength
+						&bytesConsumed,				// actualInputLength
+						(TextPtr) dst,				// outputBuffer
+						maxChars * sizeof(char),	// outputBufferLength
+						&bytesProduced);			// actualOutputLength
+						
+		TECDisposeConverter(tec);
+		
+		result = bytesProduced;
+	}
+	else
+	{
+#if TARGET_API_MAC_CARBON
+		//	Build the string using the existing buffer of unicode characters
+		CFStringRef str = CFStringCreateWithCharactersNoCopy(
+								kCFAllocatorDefault,
+								src, srcCnt,
+								kCFAllocatorNull);
+								
+		//	Extract into UTF-8
+		if (CFStringGetCString(str, dst, maxChars, kCFStringEncodingUTF8))
+			result = std::strlen(dst);
+			
+		//	Release the string
+		CFRelease(str);
+#endif
+	}
+	
+	return result;
+}
+
+
+std::size_t
+TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
+{
+	std::size_t result = 0;
+	
+	if (gIsClassic || !TARGET_API_MAC_CARBON)
+	{
+		//	Use the text encoding converter to perform the format conversion.
+		//	Note that this is slightly heavyweight, but we're not in a performance
+		//	sensitive code-path.
+		
+		OSStatus err = noErr;
+		TECObjectRef tec = 0;
+		ByteCount bytesConsumed = 0;
+		ByteCount bytesProduced = 0;
+		
+		
+		TextEncoding inputEncoding	= CreateTextEncoding(kTextEncodingUnicodeDefault,
+											kTextEncodingDefaultVariant,
+											kUnicodeUTF8Format);
+											
+		TextEncoding outputEncoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
+											kTextEncodingDefaultVariant,
+											kUnicode16BitFormat);
+		
+		if (err == noErr)
+			err = TECCreateConverter(&tec, inputEncoding, outputEncoding);
+			
+		if (err == noErr)
+			err = TECConvertText(tec,
+						(ConstTextPtr) src,
+						std::strlen(src),			// inputBufferLength
+						&bytesConsumed,				// actualInputLength
+						(TextPtr) dst,				// outputBuffer
+						maxChars * sizeof(UniChar),	// outputBufferLength
+						&bytesProduced);			// actualOutputLength
+						
+		TECDisposeConverter(tec);
+		
+		result = bytesProduced;
+	}
+	else
+	{
+#if TARGET_API_MAC_CARBON
+		//	Build the string from existing buffer of UTF-8 characters
+		CFStringRef str = CFStringCreateWithCStringNoCopy(
+								kCFAllocatorDefault,
+								src,
+								kCFStringEncodingUTF8,
+								kCFAllocatorNull);
+		
+		//	Figure out how much we can convert back
+		result = std::min(static_cast<std::size_t>(CFStringGetLength(str)), maxChars);
+						
+		//	Convert to UniChars in our output buffer
+		CFStringGetCharacters(str, CFRangeMake(0, result), dst);
+			
+		//	Release the string
+		CFRelease(str);
+#endif
+	}
+	
+	return result;
 }
