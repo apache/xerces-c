@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/07/26 19:53:02  tng
+ * [Bug 2751] Several NameChar characters missing from internal tables .
+ *
  * Revision 1.3  2000/02/24 20:18:06  abagchi
  * Swat for removing Log from API docs
  *
@@ -140,7 +143,8 @@ static const XMLCh gCombiningChars[] =
 {
     // Ranges
         0x0300, 0x0345, 0x0360, 0x0361, 0x0483, 0x0486, 0x0591, 0x05A1
-    ,   0x05A3, 0x05B9, 0x05C1, 0x05C2, 0x06D6, 0x06DC, 0x06E0, 0x06E4
+    ,   0x05A3, 0x05B9, 0x05BB, 0x05BD, 0x05C1, 0x05C2, 0x064B, 0x0652
+    ,   0x06D6, 0x06DC, 0x06DD, 0x06DF, 0x06E0, 0x06E4
     ,   0x06E7, 0x06E8, 0x06EA, 0x06ED, 0x0901, 0x0903, 0x093E, 0x094C
     ,   0x0951, 0x0954, 0x0962, 0x0963, 0x0981, 0x0983, 0x09C0, 0x09C4
     ,   0x09C7, 0x09C8, 0x09CB, 0x09CD, 0x09E2, 0x09E3, 0x0A40, 0x0A42
@@ -158,8 +162,8 @@ static const XMLCh gCombiningChars[] =
     ,   0x00
 
     // Singles
-    ,   0x05BB, 0x05BD, 0x05BF, 0x05C4, 0x064B, 0x0652, 0x0670, 0x06DD
-    ,   0x06DF, 0x093C, 0x094D, 0x09BC, 0x09BE, 0x09BF, 0x09D7, 0x0A02
+    ,   0x05BF, 0x05C4, 0x0670
+    ,   0x093C, 0x094D, 0x09BC, 0x09BE, 0x09BF, 0x09D7, 0x0A02
     ,   0x0A3C, 0x0A3E, 0x0A3F, 0x0ABC, 0x0B3C, 0x0BD7, 0x0D57, 0x0E31
     ,   0x0EB1, 0x0F35, 0x0F37, 0x0F39, 0x0F3E, 0x0F3F, 0x0F97, 0x0FB9
     ,   0x20E1, 0x3099, 0x309A
