@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.15  2004/04/22 10:47:44  cargilld
+ * Misc fix to update fCount in the correct place.
+ *
  * Revision 1.14  2004/03/01 15:03:08  peiyongz
  * new getter: getHashModulus
  *
@@ -473,9 +476,8 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
     {
         newBucket = new (fMemoryManager) RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
+        fCount++;
     }
-
-    fCount++;
 }
 
 
