@@ -50,19 +50,19 @@
             <li>AIX</li>
             <ul>
               <li>&XercesCUnixLib;&XercesCUnixSoName;.so</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;&XercesCUnixSoName;.so</li>
+              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;&XercesCUnixVersion;.so</li>
               <li>symbolic link: &XercesCUnixLib;&XercesCUnixVersion;.so  ----&gt; &XercesCUnixLib;&XercesCUnixSoName;.so</li>
             </ul>
             <li>Solaris / Linux</li>
             <ul>
               <li>&XercesCUnixLib;.so.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;.so.&XercesCUnixSoName;</li>
+              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;.so.&XercesCUnixVersion;</li>
               <li>symbolic link: &XercesCUnixLib;.so.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.so.&XercesCUnixSoName;</li>
             </ul>
             <li>HP-UX</li>
             <ul>
               <li>&XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.sl                      ----&gt; &XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
+              <li>symbolic link: &XercesCUnixLib;.sl                      ----&gt; &XercesCUnixLib;.sl.&XercesCUnixVersion;</li>
               <li>symbolic link: &XercesCUnixLib;.sl.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
             </ul>
          </ul>
