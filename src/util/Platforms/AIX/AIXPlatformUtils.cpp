@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  1999/12/23 00:41:28  aruna1
+ * Library search path corrected
+ *
  * Revision 1.4  1999/12/03 02:35:22  aruna1
  * mutex recursive attribute introduced in makeMutex
  *
@@ -187,9 +190,8 @@ void XMLPlatformUtils::platformInit()
 				char *libPathName = new char[chars_to_extract + 1];
 				strncpy(libPathName, fileName, chars_to_extract);
 				libPathName[chars_to_extract] = 0;
-				libraryPath = new char[strlen(libPathName)+ strlen("/icu/data/")+1];
+				libraryPath = new char[strlen(libPathName)+1];
 				strcpy((char *) libraryPath, libPathName);
-				strcat((char *) libraryPath, "/icu/data/");
 				delete libPathName;
 				break;
 			}
