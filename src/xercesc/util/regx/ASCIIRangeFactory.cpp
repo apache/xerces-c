@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:28  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/05 13:20:06  tng
+ * [Bug 5716] Can't parse with Validation more than one file.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:28  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/05/11 13:26:39  tng
  * Copyright update.
@@ -93,16 +96,12 @@
 
 
 // ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-bool ASCIIRangeFactory::fRangesCreated = false;
-bool ASCIIRangeFactory::fKeywordsInitialized = false;
-
-// ---------------------------------------------------------------------------
 //  ASCIIRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ASCIIRangeFactory::ASCIIRangeFactory() {
-
+ASCIIRangeFactory::ASCIIRangeFactory() :
+   fRangesCreated(false)
+ , fKeywordsInitialized(false)
+{
 }
 
 ASCIIRangeFactory::~ASCIIRangeFactory() {

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:34  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/05 13:20:06  tng
+ * [Bug 5716] Can't parse with Validation more than one file.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:34  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/10/15 18:30:40  knoaman
  * Add support for 'Pi' and 'Pf'.
@@ -94,13 +97,6 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
-
-
-// ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-bool UnicodeRangeFactory::fRangesCreated       = false;
-bool UnicodeRangeFactory::fKeywordsInitialized = false;
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -158,8 +154,10 @@ const XMLCh uniCategNames[][UNICATEGSIZE] =
 // ---------------------------------------------------------------------------
 //  UnicodeRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-UnicodeRangeFactory::UnicodeRangeFactory() {
-
+UnicodeRangeFactory::UnicodeRangeFactory() :
+   fRangesCreated(false)
+ , fKeywordsInitialized(false)
+{
 }
 
 UnicodeRangeFactory::~UnicodeRangeFactory() {
