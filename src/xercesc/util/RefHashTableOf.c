@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:12  peiyongz
- * Initial revision
+ * Revision 1.2  2002/06/12 17:14:03  tng
+ * Add function cleanup, reinitialize and nextElementKey for ease of use.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
+ * sane_include
  *
  * Revision 1.9  2001/07/19 18:43:18  peiyongz
  * fix: detect null poiniter in enumerator's ctor.
@@ -111,7 +114,7 @@
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems) 
+template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems)
 	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
 {
     initialize(modulus);
@@ -123,23 +126,23 @@ template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int mo
 template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase)
 	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
 {
-	initialize(modulus);
-	// set hasher
-	fHash = hashBase;
+    initialize(modulus);
+    // set hasher
+    fHash = hashBase;
 }
 
 template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus)
 	: fAdoptedElems(true), fBucketList(0), fHashModulus(modulus)
 {
-	initialize(modulus);
+    initialize(modulus);
 
-	// create default hasher
-	fHash = new HashXMLCh();
+    // create default hasher
+    fHash = new HashXMLCh();
 }
 
 template <class TVal> void RefHashTableOf<TVal>::initialize(const unsigned int modulus)
 {
-	if (modulus == 0)
+    if (modulus == 0)
         ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
@@ -154,7 +157,7 @@ template <class TVal> RefHashTableOf<TVal>::~RefHashTableOf()
 
     // Then delete the bucket list & hasher
     delete [] fBucketList;
-	delete fHash;
+    delete fHash;
 }
 
 
@@ -201,7 +204,7 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
             nextElem = curElem->fNext;
 
             // If we adopted the data, then delete it too
-            //    (Note:  the userdata hash table instance has data type of void *. 
+            //    (Note:  the userdata hash table instance has data type of void *.
             //    This will generate compiler warnings here on some platforms, but they
             //    can be ignored since fAdoptedElements is false.
             if (fAdoptedElems)
@@ -215,6 +218,38 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
         // Clean out this entry
         fBucketList[buckInd] = 0;
     }
+}
+
+//
+// cleanup():
+//   similar to destructor
+//   called to cleanup the memory, in case destructor cannot be called
+//
+template <class TElem> void RefHashTableOf<TElem>::cleanup()
+{
+    removeAll();
+
+    // Then delete the bucket list & hasher
+    delete [] fBucketList;
+    delete fHash;
+}
+
+//
+// reinitialize():
+//   similar to constructor
+//   called to re-construct the fElemList from scratch again
+//
+template <class TElem> void RefHashTableOf<TElem>::reinitialize(HashBase* hashBase)
+{
+    if (fBucketList || fHash)
+        cleanup();
+
+    initialize(fHashModulus);
+
+    if (hashBase)
+        fHash = hashBase;
+    else
+        fHash = new HashXMLCh();   // create default hasher
 }
 
 
@@ -373,8 +408,8 @@ template <class TVal> RefHashTableOfEnumerator<TVal>::
 RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum, const bool adopt)
 	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
 {
-    if (!toEnum)  
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);        
+    if (!toEnum)
+        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
 
     //
     //  Find the next available bucket element in the hash table. If it
@@ -423,6 +458,21 @@ template <class TVal> TVal& RefHashTableOfEnumerator<TVal>::nextElement()
     return *saveElem->fData;
 }
 
+template <class TVal> void* RefHashTableOfEnumerator<TVal>::nextElementKey()
+{
+    // Make sure we have an element to return
+    if (!hasMoreElements())
+        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+
+    //
+    //  Save the current element, then move up to the next one for the
+    //  next time around.
+    //
+    RefHashTableBucketElem<TVal>* saveElem = fCurElem;
+    findNext();
+
+    return saveElem->fKey;
+}
 
 template <class TVal> void RefHashTableOfEnumerator<TVal>::Reset()
 {
