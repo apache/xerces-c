@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/08/19 14:40:31  tng
+ * Fix: public id / system id in entity decl should be null if empty
+ *
  * Revision 1.8  2002/07/26 13:33:44  knoaman
  * Public/System id for notations should be stored as NULL if missing.
  *
@@ -2262,8 +2265,10 @@ bool DTDScanner::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
         return false;
 
     // Fill in the id fields of the decl with the info we got
-    decl.setPublicId(bbPubId.getRawBuffer());
-    decl.setSystemId(bbSysId.getRawBuffer());
+    const XMLCh* publicId = bbPubId.getRawBuffer();
+    const XMLCh* systemId = bbSysId.getRawBuffer();        
+    decl.setPublicId((*publicId) ? publicId : 0);
+    decl.setSystemId((*systemId) ? systemId : 0);
 
     // If its a PE decl, we are done
     bool gotSpaces = checkForPERef(false, false, true);
