@@ -319,6 +319,7 @@ inline void  DecimalDatatypeValidator::setMinExclusive(XMLBigDecimal* const newM
 
 inline void  DecimalDatatypeValidator::setEnumeration(RefVectorOf<XMLBigDecimal>* newEnum)
 {
+    if (fEnumeration) delete fEnumeration;
     fEnumeration = newEnum;
 }
 

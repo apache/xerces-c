@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 17:17:23  tng
+ * Schema: DatatypeValidator fixes.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:27:28  tng
  * Copyright update.
  *
@@ -188,7 +191,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 }
                 setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);
             }
-            else if (XMLString::compareString(key, SchemaSymbols::fgELT_PRECISION)==0)
+            else if (XMLString::compareString(key, SchemaSymbols::fgELT_TOTALDIGITS)==0)
             {
                 try
                 {
@@ -532,11 +535,11 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     // we need to convert from fStrEnumeration to fEnumeration
                     try
                     {
-                        fEnumeration = new RefVectorOf<XMLBigDecimal>(enumLength, true);
-                        for ( ; i < enumLength; i++)
-                            fEnumeration->insertElementAt(new XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
-                    }
+                        setEnumeration( new RefVectorOf<XMLBigDecimal>(enumLength, true));
+                        for ( i = 0; i < enumLength; i++)
+                            getEnumeration()->insertElementAt(new XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
 
+                    }
                     catch ( NumberFormatException& )
                     {
                         ThrowXML1(InvalidDatatypeFacetException
@@ -553,16 +556,17 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
             ***/
 
                 // inherit enumeration
-                if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0 ) &&
-                     ((numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0 ))
+                if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
+                    (( getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
                 {
                     setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
                     // need to adopt the Vector
-                    RefVectorOf<XMLBigDecimal>*  fBaseEnumeration = numBase->fEnumeration;
+                    RefVectorOf<XMLBigDecimal>*  fBaseEnumeration = numBase->getEnumeration();
                     int enumLength = fBaseEnumeration->size();
-                    fEnumeration = new RefVectorOf<XMLBigDecimal>(enumLength, true);
+                    setEnumeration(new RefVectorOf<XMLBigDecimal>(enumLength, true));
                     for ( int i = 0; i < enumLength; i++)
-                        fEnumeration->insertElementAt(fBaseEnumeration->elementAt(i), i);
+                        //invoke XMLBigDecimal's copy ctor
+                        getEnumeration()->insertElementAt(new XMLBigDecimal(*(fBaseEnumeration->elementAt(i))), i);
 
                 }
 
@@ -618,20 +622,6 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     setFacetsDefined(DatatypeValidator::FACET_SCALE);
                 }
 
-                // inherit enumeration
-                if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
-                    (( getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
-                {
-                    setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-                    // need to adopt the Vector
-                    RefVectorOf<XMLBigDecimal>*  fBaseEnumeration = numBase->fEnumeration;
-                    int enumLength = fBaseEnumeration->size();
-                    fEnumeration = new RefVectorOf<XMLBigDecimal>(enumLength, true);
-                    for ( int i = 0; i < enumLength; i++)
-                        //invoke XMLBigDecimal's copy ctor
-                        fEnumeration->insertElementAt(new XMLBigDecimal(*(fBaseEnumeration->elementAt(i))), i);
-                }
-
         } //if baseValidator
 
     }// End of Facet setting
@@ -670,13 +660,13 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
     XMLBigDecimal theValue(content);
     XMLBigDecimal *theData = &theValue;
 
-    if (fEnumeration != 0)
+    if (getEnumeration() != 0)
     {
         int i=0;
-        int enumLength = fEnumeration->size();
+        int enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
-            if (XMLBigDecimal::compareValues(theData, fEnumeration->elementAt(i))==0)
+            if (XMLBigDecimal::compareValues(theData, getEnumeration()->elementAt(i))==0)
                 break;
         }
 

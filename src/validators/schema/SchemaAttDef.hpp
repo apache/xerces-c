@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 17:17:41  tng
+ * Schema: DatatypeValidator fixes.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:27:34  tng
  * Copyright update.
  *
@@ -70,6 +73,7 @@
 #include <framework/XMLAttDef.hpp>
 
 class DatatypeValidator;
+class QName;
 
 //
 //  This class is a derivative of the core XMLAttDef class. This class adds

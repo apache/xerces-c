@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/11 17:17:28  tng
+ * Schema: DatatypeValidator fixes.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:27:29  tng
  * Copyright update.
  *
@@ -97,6 +100,7 @@ StringDatatypeValidator::StringDatatypeValidator(
     catch (XMLException&)
     {
         cleanUp();
+        throw;
     }
 }
 
