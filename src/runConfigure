@@ -509,11 +509,14 @@ export CXX
 #
 # Set the extra C and C++ compiler flags
 #
-
-CXXFLAGS="$compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+#
+# include the user defined CXXFLAGS/CFLAGS first in case they have
+# set an platform spefic flags
+#
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
 export CXXFLAGS
 
-CFLAGS="$compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
 export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment

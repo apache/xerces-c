@@ -334,8 +334,11 @@ export CXX
 #
 # Set the extra C and C++ compiler flags
 #
-CXXFLAGS="$compileroptions $debugflag $threadingDefines"; export CXXFLAGS
-CFLAGS="$compileroptions $debugflag $threadingDefines"; export CFLAGS
+# include the user defined CXXFLAGS/CFLAGS first in case they have
+# set an platform spefic flags
+#
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $threadingDefines"; export CXXFLAGS
+CFLAGS="$CFLAGS $compileroptions $debugflag $threadingDefines"; export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment
 if [ $platform = "tru64" -a $CXX = "g++" ]; then
