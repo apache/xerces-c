@@ -7,9 +7,6 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 
-dnl Checks for libraries
-AC_CHECK_LIB(m, floor)
-
 dnl special pthread handling (AIX uses pthreads instead of pthread)
 AC_CHECK_LIB(pthread, pthread_create)
 if test $ac_cv_lib_pthread_pthread_create = no; then
@@ -31,12 +28,13 @@ AC_CANONICAL_HOST
 dnl Platform-specific Makefile setup
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
+        *-*-sco*)       platform=OPENSERVER ;;
         *-*-sysv5*)     platform=UNIXWARE ;;
         *-*-UnixWare*)  platform=UNIXWARE ;;
-        *-*-*unixware*)  platform=UNIXWARE ;;
+        *-*-*unixware*) platform=UNIXWARE ;;
         *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
-	*-*-freebsd*)	platform=FREEBSD ;;
+        *-*-freebsd*)   platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;
@@ -48,7 +46,7 @@ case "${host}" in
         *-*-mvs*)       platform=OS390 ;;
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
-		*-*-osf*)	platform=TRU64 ;;
+        *-*-osf*)       platform=TRU64 ;;
         *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
@@ -88,5 +86,5 @@ SEnumVal/Makefile \
 CreateDOMDocument/Makefile])
 
 echo
-echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
-
+echo Having build problems?
+echo   Read instructions at http://xml.apache.org/xerces-c/build.html

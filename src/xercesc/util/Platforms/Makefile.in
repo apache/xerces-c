@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.3  2002/02/27 22:38:42  peiyongz
+# Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
+#
 # Revision 1.2  2002/02/11 18:19:19  tng
 # [Bug 2715] Build recursion suppresses make failures.
 #
@@ -154,6 +157,9 @@ ifeq (${PLATFORM}, OS390)
 endif
 ifeq (${PLATFORM}, IRIX)
     SUBMODULE = IRIX
+endif
+ifeq (${PLATFORM}, OPENSERVER)
+    SUBMODULE = OpenServer
 endif
 ifeq (${PLATFORM}, UNIXWARE)
     SUBMODULE = UnixWare

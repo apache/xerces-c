@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/02/27 22:38:34  peiyongz
+ * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
+ *
  * Revision 1.3  2002/02/20 21:41:54  tng
  * project files changes for Xerces-C++ 1.7.
  *
@@ -213,6 +216,10 @@ const unsigned int   gXercesRevision   = 0;
 
 #if defined(XML_SOLARIS)
 #include    <xercesc/util/Platforms/Solaris/SolarisDefs.hpp>
+#endif
+
+#if defined(XML_OPENSERVER)
+#include    <xercesc/util/Platforms/OpenServer/OpenServerDefs.hpp>
 #endif
 
 #if defined(XML_UNIXWARE)

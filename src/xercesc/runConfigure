@@ -79,14 +79,20 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
-            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64', 'macosx' )"
+            'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
+            'ptx', 'tru64', 'macosx')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
     echo "       -d (specifies that you want to build debug version)"
-    echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
-    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD' or 'native'"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'"
+    echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or
+            'iconv'"
+    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 
+            'native'"
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 
+            'IconvFBSD' or 'native'"
+    echo "       -r <thread option> can be 'pthread', 
+            'dce' (only on aix, HP-11 and solaris),
+            'sproc' (only on IRIX) or 'none'"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
@@ -214,7 +220,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | freebsd | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx | tru64 | macosx)
+   aix | linux | freebsd | solaris | hp-10 | hp-11 | irix | openserver | unixware | os400 | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -274,9 +280,22 @@ else
                exit ${ERROR_EXIT_CODE};;
         esac
         fi
+	elif test $platform = "openserver"; then
+		case $thread in
+			pthread)
+				if test $cppcompiler = "g++"; then
+					threadingLibs="-Wl,-B,static,-l,pthread,-B,dynamic"
+				fi
+				;;
+			*)
+				echo "I do not recognize the thread option '$thread'."
+				echo "Please type '${0} -h' for help."
+				exit ${ERROR_EXIT_CODE}
+				;;
+		esac
     elif test $platform = "freebsd"; then
-	threadingLibs="-pthread -lc_r"
-	threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
+        threadingLibs="-pthread -lc_r"
+        threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
     elif test $platform = "aix"; then
         aix_version=`./config.guess`;
         echo Found host system to be $aix_version
@@ -445,7 +464,7 @@ case $netaccessor in
        NETACCESSOR=Socket
        netaccessorDefines="-DXML_USE_NETACCESSOR_SOCKET"
        case $platform in
-           unixware)
+           unixware|openserver)
                netaccessorLibs="-lnsl -lsocket";;
            hp-11)
                netaccessorLibs="-lnsl";;

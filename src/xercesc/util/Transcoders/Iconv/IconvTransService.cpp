@@ -67,7 +67,9 @@
 #include "IconvTransService.hpp"
 #include <wchar.h>
 #if defined (XML_GCC) || defined (XML_PTX) || defined (XML_IBMVAOS2)
-#include <wctype.h>
+    #if !defined(XML_OPENSERVER)
+        #include <wctype.h>
+    #endif
 #endif
 #include <string.h>
 #include <stdlib.h>

@@ -162,6 +162,31 @@ ifeq (${PLATFORM}, UNIXWARE)
   SHLIBSUFFIX=.so
 endif
 
+#=============== OPENSERVER SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OPENSERVER)
+  ifeq (${CXX}, g++)
+	COMMON_COMPILE_OPTIONS = -D${PLATFORM} -fPIC
+    ifeq (${THREADS}, none)
+      PLATFORM_COMPILE_OPTIONS = ${COMMON_COMPILE_OPTIONS}
+    else
+      PLATFORM_COMPILE_OPTIONS = ${COMMON_COMPILE_OPTIONS} -D_REENTRANT
+    endif
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -G ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
+	EXTRA_LINK_OPTIONS = -Wl,-h,${LIBNAME}${VER}${SHLIBSUFFIX}
+  else
+    PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -belf -KPIC
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -belf -G ${LDFLAGS} 
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -belf -G ${LDFLAGS}
+  endif
+  ifeq (${TRANSCODER}, ICU)
+    ALLLIBS = ${LIBS} -licu-uc -licudata
+  else
+    ALLLIBS = ${LIBS}
+  endif
+  SHLIBSUFFIX=.so
+endif
+
 #================= PTX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, PTX)
 

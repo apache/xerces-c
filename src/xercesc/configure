@@ -1250,6 +1250,7 @@ echo "$ac_t""$host" 1>&6
 
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
+        *-*-sco*)       platform=OPENSERVER ;;
         *-*-sysv5*)     platform=UNIXWARE ;;
         *-*-UnixWare*)  platform=UNIXWARE ;;
         *-*-unixware*)  platform=UNIXWARE ;;
@@ -1452,6 +1453,7 @@ util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \
 util/Platforms/IRIX/Makefile \
 util/Platforms/PTX/Makefile \
+util/Platforms/OpenServer/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
 util/Platforms/MacOS/Makefile \
@@ -1595,6 +1597,7 @@ util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \
 util/Platforms/IRIX/Makefile \
 util/Platforms/PTX/Makefile \
+util/Platforms/OpenServer/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
 util/Platforms/MacOS/Makefile \
@@ -1693,6 +1696,8 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 
 
 echo
-echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
-echo Still cannot resolve it? Find out if someone else had the same problem before.
-echo Go to http://marc.theaimsgroup.com/?l=xerces-c-dev
+echo Having build problems?
+echo   Read instructions at http://xml.apache.org/xerces-c/build.html
+echo Still cannot resolve it?
+echo   Find out if someone else had the same problem before.
+echo   Go to http://marc.theaimsgroup.com/?l=xerces-c-dev

@@ -68,8 +68,9 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'freebsd', 'solaris',
-'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64', 'macosx')"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
+            'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
+            'ptx', 'tru64', 'macosx')"
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
@@ -121,9 +122,6 @@ fi
 
 # Set up the default values for each parameter
 debug=off                # by default debug is off
-transcoder=native        # by default use native transcoder
-msgloader=iconv          # by default use native transcoder
-netaccessor=fileonly     # by default use fileonly
 compileroptions=""
 while [ $# -gt 0 ]
    do
@@ -178,7 +176,7 @@ echo "Extra link options: $linkeroptions"
 # Now check if the options are correct or not, bail out if incorrect
 #
 case $platform in
-   aix | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
+   aix | openserver | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -273,4 +271,3 @@ echo If the result of the above commands look OK to you, go to the directory
 echo ${XERCESCROOT}/samples and type \"gmake\" to make the samples.
 
 exit 0;
-

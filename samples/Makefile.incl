@@ -113,6 +113,16 @@ ifeq (${PLATFORM}, SOLARIS)
   SHLIBSUFFIX=.so
 endif
 
+#=============== OPENSERVER SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OPENSERVER)
+  CC=${COMPILER} -D${PLATFORM} -fPIC
+  CMP=-c ${CXXFLAGS}
+  LINK=${CC} ${LDFLAGS}
+  EXTRA_LINK_OPTIONS=-lc -lsocket
+  PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+  SHLIBSUFFIX=.so
+endif
+
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, UNIXWARE)
   CMP= -O2 -c ${CXXFLAGS} -pthread
