@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.21  2000/03/17 19:28:49  abagchi
+# Now generates object files in platform-specific directories
+#
 # Revision 1.20  2000/03/02 01:51:15  aruna1
 # Sun CC 5.0 related changes
 #
@@ -165,7 +168,7 @@ XML_BUILD_OPTIONS = ${CXXFLAGS}
 
 XML_LIB_DIR = $(XERCESCROOT)/lib
 XML_INC_DIR = $(XERCESCROOT)/include
-XML_OBJ_DIR = ${XERCESCROOT}/obj
+XML_OBJ_DIR = ${XERCESCROOT}/obj/${PLATFORM}
 XML_INCL    = -I$(XML_INC_DIR)
 ifeq (${SYSOVR},OS400)
 PLATFORM = OS400

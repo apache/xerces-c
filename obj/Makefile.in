@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.13  2000/03/17 19:28:28  abagchi
+# Now generates object files in platform-specific directories
+#
 # Revision 1.12  2000/03/01 22:30:00  abagchi
 # Object files are now created directly under obj directory
 #
@@ -222,7 +225,8 @@ endif
 
 
 distclean:	clean
-	rm -f Makefile
+	-rm -f Makefile
+	-rm -rf $(XML_OBJ_DIR)
 ifneq ($strip $(TEMPLATESREPOSITORY)),)
 	-rm -rf $(TEMPLATESREPOSITORY)
 endif

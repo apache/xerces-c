@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2000/03/17 19:28:49  abagchi
+# Now generates object files in platform-specific directories
+#
 # Revision 1.15  2000/03/01 22:30:00  abagchi
 # Object files are now created directly under obj directory
 #
@@ -132,6 +135,8 @@ CD=cd
 RM=rm
 CHMODE=chmod
 
+include Makefile.incl
+
 UTIL_DIR = util
 SAX_DIR = sax
 INTERNAL_DIR = internal
@@ -139,15 +144,10 @@ FRAMEWORK_DIR = framework
 DOM_DIR = dom
 PARSERS_DIR = parsers
 VALIDATORS_DTD_DIR = validators/DTD
-XML_OBJ_DIR = ${XERCESCROOT}/obj
-LIB_DIR = ${XERCESCROOT}/lib
 
-LIB = ${XERCESCROOT}/lib
 LIBNAME = libxerces-c
-THISLIB = ${LIB}/${LIBNAME}
+THISLIB = ${XML_LIB_DIR}/${LIBNAME}
 VER = 1_1
-
-ALL_OBJECTS = $(wildcard ${XML_OBJ_DIR}/*.o)
 
 #all these setting come from the arguments passed in to runConfigure.
 PLATFORM = @platform@
@@ -170,7 +170,7 @@ lib:: compile ${THISLIB}${VER}${SHLIBSUFFIX}
 Prepare::
 	@echo Preparing the directory structure for a build ...
 	-${MKDIR} -p ${XML_OBJ_DIR}
-	-${MKDIR} -p ${LIB_DIR}
+	-${MKDIR} -p ${XML_LIB_DIR}
 	${CD} $(UTIL_DIR) ; $(MAKE) includes ; ${CD} ..
 	${CD} $(SAX_DIR) ; $(MAKE) includes ; ${CD} ..
 	${CD} $(INTERNAL_DIR) ; $(MAKE) includes ; ${CD} ..
@@ -209,7 +209,7 @@ Validators::
 
 ${THISLIB}${VER}${SHLIBSUFFIX}::
 	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
-	${CD} $(XML_OBJ_DIR) ; $(MAKE) -k $(MAKE_FLAGS) ; ${CD} ..
+	${CD} $(XML_OBJ_DIR)/.. ; $(MAKE) -k $(MAKE_FLAGS) ; ${CD} ..
 
 install::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -219,7 +219,7 @@ install::
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
-	${CD} $(XML_OBJ_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(XML_OBJ_DIR)/.. && $(MAKE) $@ && ${CD} ..
 
 clean::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -229,7 +229,7 @@ clean::
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
-	${CD} $(XML_OBJ_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(XML_OBJ_DIR)/.. && $(MAKE) $@ && ${CD} ..
 
 distclean::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -239,7 +239,7 @@ distclean::
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
-	${CD} $(XML_OBJ_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(XML_OBJ_DIR)/.. && $(MAKE) $@ && ${CD} ..
 	rm -f Makefile config.cache config.log config.status
 	find . -name Makefile -print -exec rm -f {} \;
 	rm -f *~ core
