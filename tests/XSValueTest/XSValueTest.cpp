@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.4  2004/08/24 16:00:15  peiyongz
+* To build on AIX/Win2003-ecl
+*
 * Revision 1.3  2004/08/23 17:07:57  peiyongz
 * Minimum representable range on all platforms
 *
@@ -84,7 +87,6 @@
 
 #include <xercesc/framework/psvi/XSValue.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/XMLString.hpp>
 
 static const bool  EXP_RET_VALID_TRUE  = true;
 static const bool  EXP_RET_VALUE_TRUE  = true;

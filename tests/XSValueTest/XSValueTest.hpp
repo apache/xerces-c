@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2004/08/24 16:00:15  peiyongz
+ * To build on AIX/Win2003-ecl
+ *
  * Revision 1.1  2004/08/19 17:17:21  peiyongz
  * XSValueTest
  *
@@ -69,8 +72,8 @@
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
-#include <stdlib.h>
-#include <string.h>
+#include <xercesc/util/XercesDefs.hpp>
+
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
 #else
@@ -78,7 +81,6 @@
 #endif
 
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/framework/psvi/XSValue.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
