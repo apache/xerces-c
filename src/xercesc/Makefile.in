@@ -83,7 +83,6 @@ SAX2_DIR = sax2
 INTERNAL_DIR = internal
 FRAMEWORK_DIR = framework
 DOM_DIR = dom
-IDOM_DIR = idom
 PARSERS_DIR = parsers
 VALIDATORS_DIR = validators
 
@@ -103,7 +102,7 @@ BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
 
 all:: lib
 
-compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom IDom Validators
+compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators
 
 lib:: ${FQ_REAL_NAME}
 
@@ -119,7 +118,6 @@ Prepare::
 	${MAKE} -C $(PARSERS_DIR) includes
 	${MAKE} -C $(VALIDATORS_DIR) includes
 	${MAKE} -C $(DOM_DIR) includes
-	${MAKE} -C $(IDOM_DIR) includes
 
 Util::
 	@echo Building "util"
@@ -150,10 +148,6 @@ Dom::
 	@echo Building "dom"
 	${MAKE} -C $(DOM_DIR) $(MAKE_FLAGS)
 
-IDom::
-	@echo Building "idom"
-	${MAKE} -C $(IDOM_DIR) $(MAKE_FLAGS)
-
 Validators::
 	@echo Building "validators"
 	${MAKE} -C $(VALIDATORS_DIR) $(MAKE_FLAGS)
@@ -170,7 +164,6 @@ install::
 	${MAKE} -C $(FRAMEWORK_DIR) $@
 	${MAKE} -C $(PARSERS_DIR) $@
 	${MAKE} -C $(DOM_DIR) $@
-	${MAKE} -C $(IDOM_DIR) $@
 	${MAKE} -C $(VALIDATORS_DIR) $@
 	${MAKE} -C $(XML_OBJ) $@
 
@@ -182,7 +175,6 @@ clean::
 	${MAKE} -C $(FRAMEWORK_DIR) $@
 	${MAKE} -C $(PARSERS_DIR) $@
 	${MAKE} -C $(DOM_DIR) $@
-	${MAKE} -C $(IDOM_DIR) $@
 	${MAKE} -C $(VALIDATORS_DIR) $@
 	${MAKE} -C $(XML_OBJ) $@
 
@@ -194,7 +186,6 @@ distclean::
 	${MAKE} -C $(FRAMEWORK_DIR) $@
 	${MAKE} -C $(PARSERS_DIR) $@
 	${MAKE} -C $(DOM_DIR) $@
-	${MAKE} -C $(IDOM_DIR) $@
 	${MAKE} -C $(VALIDATORS_DIR) $@
 	${MAKE} -C $(XML_OBJ) $@
 	rm -f Makefile config.cache config.log config.status
@@ -225,7 +216,6 @@ endif
 	-${MKDIR} ${BINTARGETDIR}/include/xercesc/parsers
 	-${MKDIR} ${BINTARGETDIR}/include/xercesc/util
 	-${MKDIR} ${BINTARGETDIR}/include/xercesc/dom
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/idom
 
 	-${MKDIR} ${BINTARGETDIR}/samples
 	-${MKDIR} ${BINTARGETDIR}/samples/data
@@ -233,8 +223,6 @@ endif
 	-${MKDIR} ${BINTARGETDIR}/samples/SAXPrint
 	-${MKDIR} ${BINTARGETDIR}/samples/DOMCount
 	-${MKDIR} ${BINTARGETDIR}/samples/DOMPrint
-	-${MKDIR} ${BINTARGETDIR}/samples/IDOMCount
-	-${MKDIR} ${BINTARGETDIR}/samples/IDOMPrint
 	-${MKDIR} ${BINTARGETDIR}/samples/Redirect
 	-${MKDIR} ${BINTARGETDIR}/samples/MemParse
 	-${MKDIR} ${BINTARGETDIR}/doc
@@ -246,7 +234,7 @@ endif
 	-${CP} -Rf ${XERCESCROOT}/src/xercesc/sax2/*.hpp ${BINTARGETDIR}/include/xercesc/sax2
 	-${CP} -Rf ${XERCESCROOT}/src/xercesc/framework/*.hpp ${BINTARGETDIR}/include/xercesc/framework
 	-${CP} -Rf ${XERCESCROOT}/src/xercesc/dom/DOM*.hpp ${BINTARGETDIR}/include/xercesc/dom
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/idom/IDOM*.hpp ${BINTARGETDIR}/include/xercesc/idom
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/dom/deprecated/DOM*.hpp ${BINTARGETDIR}/include/xercesc/dom/deprecated
 	-${CP} -Rf ${XERCESCROOT}/src/xercesc/internal/*.hpp ${BINTARGETDIR}/include/xercesc/internal
 	-${CP} -Rf ${XERCESCROOT}/src/xercesc/internal/*.c ${BINTARGETDIR}/include/xercesc/internal
 	-${CP} -Rf ${XERCESCROOT}/src/xercesc/parsers/*.hpp ${BINTARGETDIR}/include/xercesc/parsers
@@ -290,8 +278,6 @@ endif
 	-${CP} -Rf ${XERCESCROOT}/samples/SAXPrint/* ${BINTARGETDIR}/samples/SAXPrint
 	-${CP} -Rf ${XERCESCROOT}/samples/DOMCount/* ${BINTARGETDIR}/samples/DOMCount
 	-${CP} -Rf ${XERCESCROOT}/samples/DOMPrint/* ${BINTARGETDIR}/samples/DOMPrint
-	-${CP} -Rf ${XERCESCROOT}/samples/IDOMCount/* ${BINTARGETDIR}/samples/IDOMCount
-	-${CP} -Rf ${XERCESCROOT}/samples/IDOMPrint/* ${BINTARGETDIR}/samples/IDOMPrint
 	-${CP} -Rf ${XERCESCROOT}/samples/Redirect/* ${BINTARGETDIR}/samples/Redirect
 	-${CP} -Rf ${XERCESCROOT}/samples/MemParse/* ${BINTARGETDIR}/samples/MemParse
 
