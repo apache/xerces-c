@@ -61,6 +61,10 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.5  2000/02/03 18:43:24  roddey
+* Incorrect use of 'inline' inside the cpp file. Its wrong, and it also prevents
+* export on some platforms.
+*
 * Revision 1.4  2000/01/19 21:40:57  andyh
 * Remove a few remaining dependencies on the (now defunct)
 * XML StdOut stream.
@@ -152,7 +156,7 @@ void DOMParser::reset()
 // ---------------------------------------------------------------------------
 //  DOMParser: Getter methods
 // ---------------------------------------------------------------------------
-inline const XMLValidator& DOMParser::getValidator() const
+const XMLValidator& DOMParser::getValidator() const
 {
     return *fValidator;
 }
