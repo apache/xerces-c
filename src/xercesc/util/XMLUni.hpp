@@ -300,6 +300,27 @@ public :
     // Default Exception String
     static const XMLCh  fgDefErrMsg[];
 
+    // Datatype
+    static const XMLCh fgValueZero[];
+    static const XMLCh fgNegOne[];
+    static const XMLCh fgValueOne[];
+    static const XMLCh fgLongMaxInc[];
+    static const XMLCh fgLongMinInc[];
+    static const XMLCh fgIntMaxInc[];
+    static const XMLCh fgIntMinInc[];
+    static const XMLCh fgShortMaxInc[];
+    static const XMLCh fgShortMinInc[];
+    static const XMLCh fgByteMaxInc[];
+    static const XMLCh fgByteMinInc[];
+    static const XMLCh fgULongMaxInc[];
+    static const XMLCh fgUIntMaxInc[];
+    static const XMLCh fgUShortMaxInc[];
+    static const XMLCh fgUByteMaxInc[];
+    static const XMLCh fgLangPattern[];
+
+    static const XMLCh fgBooleanValueSpace[][32];
+    static const unsigned int fgBooleanValueSpaceArraySize;
+        
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators

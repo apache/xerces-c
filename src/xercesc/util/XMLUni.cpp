@@ -1450,5 +1450,114 @@ const XMLCh XMLUni::fgDefErrMsg[] =
     ,   chLatin_g, chLatin_e, chNull
 };
 
+// Datatype 
+const XMLCh XMLUni::fgValueZero[] =
+{
+    chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgNegOne[] =
+{
+    chDash, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgValueOne[] =
+{
+    chDigit_1, chNull
+};
+
+//"9223372036854775807"
+const XMLCh XMLUni::fgLongMaxInc[] =
+{
+    chDigit_9, chDigit_2, chDigit_2, chDigit_3, chDigit_3, chDigit_7, chDigit_2,
+    chDigit_0, chDigit_3, chDigit_6, chDigit_8, chDigit_5, chDigit_4, chDigit_7,
+    chDigit_7, chDigit_5, chDigit_8, chDigit_0, chDigit_7, chNull
+};
+
+//"-9223372036854775808"
+const XMLCh XMLUni::fgLongMinInc[] =
+{
+    chDash, chDigit_9, chDigit_2, chDigit_2, chDigit_3, chDigit_3, chDigit_7,
+    chDigit_2, chDigit_0, chDigit_3, chDigit_6, chDigit_8, chDigit_5, chDigit_4,
+    chDigit_7, chDigit_7, chDigit_5, chDigit_8, chDigit_0, chDigit_8,  chNull
+};
+
+const XMLCh XMLUni::fgIntMaxInc[] =
+{
+    chDigit_2, chDigit_1, chDigit_4, chDigit_7, chDigit_4, chDigit_8,
+    chDigit_3, chDigit_6, chDigit_4, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIntMinInc[] =
+{
+    chDash, chDigit_2, chDigit_1, chDigit_4, chDigit_7, chDigit_4,
+    chDigit_8, chDigit_3, chDigit_6, chDigit_4, chDigit_8, chNull
+};
+
+const XMLCh XMLUni::fgShortMaxInc[] =
+{
+    chDigit_3, chDigit_2, chDigit_7, chDigit_6, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgShortMinInc[] =
+{
+    chDash, chDigit_3, chDigit_2, chDigit_7, chDigit_6, chDigit_8, chNull
+};
+
+const XMLCh XMLUni::fgByteMaxInc[] =
+{
+    chDigit_1, chDigit_2, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgByteMinInc[] =
+{
+    chDash, chDigit_1, chDigit_2, chDigit_8, chNull
+};
+
+const XMLCh XMLUni::fgULongMaxInc[] =
+{
+    chDigit_1, chDigit_8, chDigit_4, chDigit_4, chDigit_6, chDigit_7, chDigit_4,
+    chDigit_4, chDigit_0, chDigit_7, chDigit_3, chDigit_7, chDigit_0, chDigit_9,
+    chDigit_5, chDigit_5, chDigit_1, chDigit_6, chDigit_1, chDigit_5, chNull
+};
+
+const XMLCh XMLUni::fgUIntMaxInc[] =
+{
+    chDigit_4, chDigit_2, chDigit_9, chDigit_4, chDigit_9, chDigit_6,
+    chDigit_7, chDigit_2, chDigit_9, chDigit_5, chNull
+};
+
+const XMLCh XMLUni::fgUShortMaxInc[] =
+{
+    chDigit_6, chDigit_5, chDigit_5, chDigit_3, chDigit_5, chNull
+};
+
+const XMLCh XMLUni::fgUByteMaxInc[] =
+{
+    chDigit_2, chDigit_5, chDigit_5, chNull
+};
+
+// http://www.w3.org/2001/05/xmlschema-errata#Errata2
+// E2-25
+//"([a-zA-Z]{1,8})(-[a-zA-Z0-9]{1,8})*"
+const XMLCh XMLUni::fgLangPattern[] =
+{
+    chOpenParen,   chOpenSquare,  chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
+    chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8, chCloseCurly, chCloseParen,
+    chOpenParen,   chDash, chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
+	chDigit_0,     chDash, chDigit_9, chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8,
+    chCloseCurly,  chCloseParen, chAsterisk, chNull
+};
+
+const XMLCh XMLUni::fgBooleanValueSpace[][32] =
+{
+    { chLatin_f, chLatin_a, chLatin_l, chLatin_s, chLatin_e, chNull },
+    { chLatin_t, chLatin_r, chLatin_u, chLatin_e, chNull },
+    { chDigit_0, chNull },
+    { chDigit_1, chNull }
+};
+
+const unsigned int XMLUni::fgBooleanValueSpaceArraySize = sizeof XMLUni::fgBooleanValueSpace / sizeof (XMLCh*);
+
 XERCES_CPP_NAMESPACE_END
 
