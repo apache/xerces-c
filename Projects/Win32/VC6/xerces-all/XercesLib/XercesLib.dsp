@@ -1195,6 +1195,14 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSValue.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSValue.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp
 # End Source File
 # Begin Source File
