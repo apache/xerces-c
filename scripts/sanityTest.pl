@@ -181,6 +181,9 @@ system ("RangeTest");
 #  Run DOMTraversalTest
 system ("DOMTraversalTest");
 
+#  Run IDOMMemTest
+system ("IDOMMemTest");
+
 #  Run IDOMTest
 system ("IDOMTest");
 
@@ -191,6 +194,9 @@ system ("IRangeTest");
 system ("ITraversal");
 
 #  Run InitTestTerm
+system ("InitTermTest");
 system ("InitTermTest personal.xml");
+system ("InitTermTest -n -s personal-schema.xml");
+system ("InitTermTest -n -s -f personal-schema.xml");
 
 chdir "..".$pathsep."..";
