@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2003/01/20 19:04:48  knoaman
+ * Fix for particle derivation checking.
+ *
  * Revision 1.25  2003/01/13 20:16:51  knoaman
  * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
  *
@@ -1261,7 +1264,8 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                                                 const int derivedScope,
                                                 ContentSpecNode* const baseNode,
                                                 const int baseScope,
-                                                const ComplexTypeInfo* const baseInfo) {
+                                                const ComplexTypeInfo* const baseInfo,
+                                                const bool toCheckOccurence) {
 
     // Check for pointless occurrences of all, choice, sequence.  The result is
     // the contentspec which is not pointless. If the result is a non-pointless
@@ -1307,7 +1311,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::Any_Other:
             case ContentSpecNode::Any_NS:
                 {
-                    checkNSCompat(curSpecNode, baseSpecNode);
+                    checkNSCompat(curSpecNode, baseSpecNode, toCheckOccurence);
                     return;
                 }
             case ContentSpecNode::Choice:
@@ -1356,7 +1360,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::Any_Other:
             case ContentSpecNode::Any_NS:
                 {
-                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode, toCheckOccurence);
                     return;
                 }
             case ContentSpecNode::All:
@@ -1384,7 +1388,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::Any_Other:
             case ContentSpecNode::Any_NS:
                 {
-                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode, toCheckOccurence);
                     return;
                 }
             case ContentSpecNode::Choice:
@@ -1412,7 +1416,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::Any_Other:
             case ContentSpecNode::Any_NS:
                 {
-                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode, toCheckOccurence);
                     return;
                 }
             case ContentSpecNode::All:
@@ -1509,10 +1513,12 @@ void SchemaValidator::gatherChildren(const ContentSpecNode::NodeTypes parentNode
 
 void
 SchemaValidator::checkNSCompat(const ContentSpecNode* const derivedSpecNode,
-                               const ContentSpecNode* const baseSpecNode) {
+                               const ContentSpecNode* const baseSpecNode,
+                               const bool toCheckOccurence) {
 
     // check Occurrence ranges
-    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+    if (toCheckOccurence &&
+        !isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
         ThrowXML1(RuntimeException, XMLExcepts::PD_OccurRangeE,
                   derivedSpecNode->getElement()->getLocalPart());
@@ -1903,14 +1909,16 @@ SchemaValidator::checkNSRecurseCheckCardinality(SchemaGrammar* const currentGram
                                                 const ContentSpecNode* const derivedSpecNode,
                                                 ValueVectorOf<ContentSpecNode*>* const derivedNodes,
                                                 const int derivedScope,
-                                                ContentSpecNode* const baseSpecNode) {
+                                                ContentSpecNode* const baseSpecNode,
+                                                const bool toCheckOccurence) {
 
     // Implement total range check
     int derivedMin = derivedSpecNode->getMinTotalRange();
     int derivedMax = derivedSpecNode->getMaxTotalRange();
 
     // check Occurrence ranges
-    if (!isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
+    if (toCheckOccurence &&
+        !isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
                               baseSpecNode->getMaxOccurs())) {
         ThrowXML(RuntimeException, XMLExcepts::PD_NSRecurseCheckCardinality1);
     }
@@ -1919,7 +1927,7 @@ SchemaValidator::checkNSRecurseCheckCardinality(SchemaGrammar* const currentGram
     unsigned int nodesCount = derivedNodes->size();
 
     for (unsigned int i = 0; i < nodesCount; i++) {
-        checkParticleDerivationOk(currentGrammar, derivedNodes->elementAt(i), derivedScope, baseSpecNode, -1);
+        checkParticleDerivationOk(currentGrammar, derivedNodes->elementAt(i), derivedScope, baseSpecNode, -1, 0, false);
     }
 }
 

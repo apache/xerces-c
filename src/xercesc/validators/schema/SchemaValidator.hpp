@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/01/20 19:04:48  knoaman
+ * Fix for particle derivation checking.
+ *
  * Revision 1.12  2003/01/13 20:16:51  knoaman
  * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
  *
@@ -253,7 +256,8 @@ private:
                                    const int derivedScope,
                                    ContentSpecNode* const baseNode,
                                    const int baseScope,
-                                   const ComplexTypeInfo* const baseInfo = 0);
+                                   const ComplexTypeInfo* const baseInfo = 0,
+                                   const bool toCheckOccurrence = true);
     ContentSpecNode* checkForPointlessOccurrences(ContentSpecNode* const specNode,
                                                   const ContentSpecNode::NodeTypes nodeType,
                                                   ValueVectorOf<ContentSpecNode*>* const nodes);
@@ -262,7 +266,8 @@ private:
                         ValueVectorOf<ContentSpecNode*>* const nodes);
     bool isOccurrenceRangeOK(const int min1, const int max1, const int min2, const int max2);
     void checkNSCompat(const ContentSpecNode* const derivedSpecNode,
-                       const ContentSpecNode* const baseSpecNode);
+                       const ContentSpecNode* const baseSpecNode,
+                       const bool toCheckOccurence);
     bool wildcardEltAllowsNamespace(const ContentSpecNode* const baseSpecNode,
                                     const unsigned int derivedURI);
     void checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
@@ -307,7 +312,8 @@ private:
                                         const ContentSpecNode* const derivedSpecNode,
                                         ValueVectorOf<ContentSpecNode*>* const derivedNodes,
                                         const int derivedScope,
-                                        ContentSpecNode* const baseSpecNode);
+                                        ContentSpecNode* const baseSpecNode,
+                                        const bool toCheckOccurence);
     void checkRecurseUnordered(SchemaGrammar* const currentGrammar,
                                const ContentSpecNode* const derivedSpecNode,
                                ValueVectorOf<ContentSpecNode*>* const derivedNodes,
