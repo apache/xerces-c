@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/02/15 15:56:29  tng
+ * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
+ * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
+ * New data field  fSchemaValidation in XMLScanner as the flag.
+ *
  * Revision 1.14  2000/09/05 23:38:26  andyh
  * Added advanced callback support for XMLDecl()
  *
@@ -163,7 +168,7 @@ SAXParser::SAXParser(XMLValidator* const valToAdopt) :
 }
 
 
-SAXParser::~SAXParser() 
+SAXParser::~SAXParser()
 {
     delete [] fAdvDHList;
     delete fScanner;
@@ -294,6 +299,11 @@ SAXParser::ValSchemes SAXParser::getValidationScheme() const
     return Val_Auto;
 }
 
+bool SAXParser::getSchemaValidation() const
+{
+    return fScanner->getSchemaValidation();
+}
+
 
 // ---------------------------------------------------------------------------
 //  SAXParser: Setter methods
@@ -320,6 +330,10 @@ void SAXParser::setValidationScheme(const ValSchemes newScheme)
         fScanner->setValidationScheme(XMLScanner::Val_Auto);
 }
 
+void SAXParser::setSchemaValidation(const bool newState)
+{
+    fScanner->setSchemaValidation(newState);
+}
 
 
 // ---------------------------------------------------------------------------

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/02/15 15:56:29  tng
+ * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
+ * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
+ * New data field  fSchemaValidation in XMLScanner as the flag.
+ *
  * Revision 1.10  2001/01/12 21:23:41  tng
  * Documentation Enhancement: explain values of Val_Scheme
  *
@@ -225,7 +230,7 @@ public :
 
     /**
       * This method returns a reference to the parser's installed
-      * validator.  
+      * validator.
       *
       * @return A const reference to the installed validator object.
       */
@@ -239,6 +244,18 @@ public :
       * @see #setValidationScheme
       */
     ValSchemes getValidationScheme() const;
+
+    /** Get the 'schema validation' flag
+      *
+      * This method returns the state of the parser's schema support
+      * flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         support schema, false otherwise.
+      *
+      * @see #setSchemaValidation
+      */
+    bool getSchemaValidation() const;
 
     /**
       * This method returns the state of the parser's namespace
@@ -307,6 +324,25 @@ public :
       */
     void setValidationScheme(const ValSchemes newScheme);
 
+    /** Set the 'schema support' flag
+      *
+      * This method allows users to enable or disable the parser's
+      * schema support.
+      *
+      * The parser's default state is: true.
+      *
+      * This flag is ignored by the underlying scanner if the validation
+      * is disable.
+      *
+      * @param newState The value specifying whether schema support should
+      *                 be enforced or not.
+      *
+      * @see #getSchemaValidation
+      * @see #getValidationScheme
+      */
+    void setSchemaValidation(const bool newState);
+
+
     /**
       * This method allows users to set the parser's behaviour when it
       * encounters the first fatal error. If set to true, the parser
@@ -340,7 +376,7 @@ public :
       *
       * <p>The methods in the advanced callback interface represent
       * Xerces-C extensions. There is no specification for this interface.</p>
-      * 
+      *
       * @param toInstall A pointer to the users advanced callback handler.
       *
       * @see #removeAdvDocHandler
@@ -1028,7 +1064,7 @@ public :
       * This method is used to report the start of the parsing process.
       * The corresponding user installed SAX Document Handler's method
       * 'startDocument' is invoked.
-      * 
+      *
       * <p>If any advanced callback handlers are installed, then the
       * corresponding 'startDocument' method is also called.</p>
       *
@@ -1041,7 +1077,7 @@ public :
       * called at the end of the element, by which time all attributes
       * specified are also parsed. The corresponding user installed
       * SAX Document Handler's method 'startElement' is invoked.
-      * 
+      *
       * <p>If any advanced callback handlers are installed, then the
       * corresponding 'startElement' method is also called.</p>
       *
@@ -1198,7 +1234,7 @@ public :
       *                  the system id scanned by the parser.
       * @param toFill    A pointer to a buffer in which the application
       *                  processed system id is stored.
-      * @return 'true', if any processing is done, 'false' otherwise. 
+      * @return 'true', if any processing is done, 'false' otherwise.
       */
     virtual bool expandSystemId
     (
@@ -1243,7 +1279,7 @@ public :
       * implementation.</font></b>
       *
       * @param inputSource A const reference to the InputSource object
-      *                    which points to the external entity 
+      *                    which points to the external entity
       *                    being parsed.
       */
     virtual void startInputSource(const InputSource& inputSource);

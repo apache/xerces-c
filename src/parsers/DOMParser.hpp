@@ -223,6 +223,18 @@ public :
       */
     ValSchemes getValidationScheme() const;
 
+    /** Get the 'schema validation' flag
+      *
+      * This method returns the state of the parser's schema support
+      * flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         support schema, false otherwise.
+      *
+      * @see #setSchemaValidation
+      */
+    bool getSchemaValidation() const;
+
     /** Get the 'do namespaces' flag
       *
       * This method returns the state of the parser's namespace processing
@@ -267,7 +279,7 @@ public :
       * This flag  specifies whether the parser is
       * creating entity reference nodes in the DOM tree being produced.
       * When the 'create' flag is
-      * true, the DOM tree will contain entity reference nodes. 
+      * true, the DOM tree will contain entity reference nodes.
       * When the 'create' flag is false, no entity reference nodes
       * are included in the DOM tree.
       * <p>The replacement text
@@ -406,7 +418,7 @@ public :
       * This method allows the user to specify whether the parser should
       * create entity reference nodes in the DOM tree being produced.
       * When the 'create' flag is
-      * true, the DOM tree constains entity reference nodes. 
+      * true, the DOM tree constains entity reference nodes.
       * When the 'create' flag is false, no entity reference nodes
       * are included in the DOM tree.
       * <p>The replacement text
@@ -456,6 +468,24 @@ public :
       * @see #getValidationScheme
       */
     void setValidationScheme(const ValSchemes newScheme);
+
+    /** Set the 'schema support' flag
+      *
+      * This method allows users to enable or disable the parser's
+      * schema support.
+      *
+      * The parser's default state is: true.
+      *
+      * This flag is ignored by the underlying scanner if the validation
+      * is disable.
+      *
+      * @param newState The value specifying whether schema support should
+      *                 be enforced or not.
+      *
+      * @see #getSchemaValidation
+      * @see #getValidationScheme
+      */
+    void setSchemaValidation(const bool newState);
 
     /**
       * This method allows users to set the toCreateXMLDeclTypeNode flag

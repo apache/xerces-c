@@ -157,6 +157,7 @@ XMLScanner::XMLScanner(XMLValidator* const validator) :
     , fValidate(false)
     , fValidator(validator)
     , fValScheme(Val_Never)
+    , fSchemaValidation(false)
 {
     commonInit();
 }
@@ -183,6 +184,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const   docHandler
     , fValidate(false)
     , fValidator(validator)
     , fValScheme(Val_Never)
+    , fSchemaValidation(false)
 {
     commonInit();
 }

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -60,7 +60,7 @@
 *  are created and added to the DOM tree.
 *
 * $Id$
-* 
+*
 */
 
 
@@ -107,15 +107,15 @@ fErrorHandler(0)
 , fOldDocTypeHandler(0)
 , fValidator(valToAdopt)
 {
-    
+
     // Create the validator if one was not provided
     if (!fValidator)
         fValidator = new DTDValidator;
-    
+
     //If the user already registered the doctypehandler then chain it
 	fOldDocTypeHandler =  ((DTDValidator*)fValidator)->getDocTypeHandler();
 	
-	//register the new doctypehandler 
+	//register the new doctypehandler
 	((DTDValidator*)fValidator)->setDocTypeHandler(this);
     //
     //  Create a scanner and tell it what validator to use. Then set us
@@ -123,11 +123,11 @@ fErrorHandler(0)
     //
     fScanner = new XMLScanner(fValidator);
     fScanner->setDocHandler(this);
-    
+
     fNodeStack = new ValueStackOf<DOM_Node>(64);
     this->reset();
 
- 
+
 }
 
 
@@ -188,6 +188,10 @@ DOMParser::ValSchemes DOMParser::getValidationScheme() const
     return Val_Auto;
 }
 
+bool DOMParser::getSchemaValidation() const
+{
+    return fScanner->getSchemaValidation();
+}
 
 
 // ---------------------------------------------------------------------------
@@ -237,6 +241,11 @@ void DOMParser::setValidationScheme(const ValSchemes newScheme)
         fScanner->setValidationScheme(XMLScanner::Val_Auto);
 }
 
+void DOMParser::setSchemaValidation(const bool newState)
+{
+    fScanner->setSchemaValidation(newState);
+}
+
 
 
 // ---------------------------------------------------------------------------
@@ -247,9 +256,9 @@ void DOMParser::parse(const InputSource& source, const bool reuseValidator)
     // Avoid multiple entrance
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
-    
+
     try
-    { 
+    {
         fParseInProgress = true;
         fScanner->scanDocument(source, reuseValidator);
         fParseInProgress = false;
@@ -267,14 +276,14 @@ void DOMParser::parse(const XMLCh* const systemId, const bool reuseValidator)
     // Avoid multiple entrance
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
-    
+
     try
-    { 
+    {
         fParseInProgress = true;
         fScanner->scanDocument(systemId, reuseValidator);
         fParseInProgress = false;
     }
-    
+
     catch(...)
     {
         fParseInProgress = false;
@@ -287,14 +296,14 @@ void DOMParser::parse(const char* const systemId, const bool reuseValidator)
     // Avoid multiple entrance
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
-    
+
     try
-    { 
+    {
         fParseInProgress = true;
         fScanner->scanDocument(systemId, reuseValidator);
         fParseInProgress = false;
     }
-    
+
     catch(...)
     {
         fParseInProgress = false;
@@ -317,7 +326,7 @@ bool DOMParser::parseFirst( const   XMLCh* const    systemId
     //
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
-    
+
     return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
 
@@ -331,7 +340,7 @@ bool DOMParser::parseFirst( const   char* const         systemId
     //
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
-    
+
     return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
 
@@ -345,7 +354,7 @@ bool DOMParser::parseFirst( const   InputSource&    source
     //
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
-    
+
     return fScanner->scanFirst(source, toFill, reuseValidator);
 }
 
@@ -382,7 +391,7 @@ void DOMParser::error(  const   unsigned int                code
         , lineNum
         , colNum
         );
-    
+
     //
     //  If there is an error handler registered, call it, otherwise ignore
     //  all but the fatal errors.
@@ -393,7 +402,7 @@ void DOMParser::error(  const   unsigned int                code
             throw toThrow;
         return;
     }
-    
+
     if (errType == XMLErrorReporter::ErrType_Warning)
         fErrorHandler->warning(toThrow);
     else if (errType >= XMLErrorReporter::ErrType_Fatal)
@@ -434,7 +443,7 @@ void DOMParser::docCharacters(  const   XMLCh* const    chars
     // Ignore chars outside of content
     if (!fWithinElement)
         return;
-    
+
     if (cdataSection == true)
     {
         DOM_CDATASection node = fDocument.createCDATASection
@@ -508,7 +517,7 @@ void DOMParser::endElement( const   XMLElementDecl&     elemDecl
 {
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fNodeStack->pop();
-    
+
     // If we've hit the end of content, clear the flag
     if (fNodeStack->empty())
         fWithinElement = false;
@@ -522,7 +531,7 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
     // Ignore chars before the root element
     if (!fWithinElement || !fIncludeIgnorableWhitespace)
         return;
-    
+
     if (fCurrentNode.getNodeType() == DOM_Node::TEXT_NODE)
     {
         DOM_Text node = (DOM_Text&)fCurrentNode;
@@ -544,7 +553,7 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
 		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
 			fCurrentParent.fImpl->isReadOnly(oldReadFlag);
 		}
-        
+
         fCurrentNode = node;
     }
 }
@@ -553,7 +562,7 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
 void DOMParser::resetDocument()
 {
     //
-    //  The reset methods are called before a new parse event occurs. 
+    //  The reset methods are called before a new parse event occurs.
     //  Reset this parsers state to clear out anything that may be left
     //  from a previous use, in particular the DOM document itself.
     //
@@ -628,7 +637,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 
             attr->setSpecified(oneAttrib->getSpecified());
         }
-    } 
+    }
 	else {    //DOM Level 1
 			elem = fDocument.createElement(elemDecl.getFullName());
 			ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
@@ -650,7 +659,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 
 		}
     }
-    
+
     //If the node type is entityRef then set the readOnly flag to false before appending node
 	bool oldReadFlag;
 	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
@@ -667,7 +676,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     fCurrentParent = elem;
     fCurrentNode = elem;
     fWithinElement = true;
-    
+
     // If an empty element, do end right now (no endElement() will be called)
     if (isEmpty)
         endElement(elemDecl, urlId, isRoot);
@@ -686,8 +695,8 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         fCurrentNode = er;
 
 		// this entityRef needs to be stored in Entity map too.
-        // We'd decide later whether the entity nodes should be created by a 
-        // separated method in parser or not. For now just stick it in if 
+        // We'd decide later whether the entity nodes should be created by a
+        // separated method in parser or not. For now just stick it in if
         // the ref nodes are created
 		EntityImpl* entity = (EntityImpl*)fDocumentType->entities->getNamedItem(entName);
 		entity->setEntityRef((EntityReferenceImpl*)er.fImpl);
@@ -701,17 +710,17 @@ void DOMParser::XMLDecl(const   XMLCh* const version
                         , const XMLCh* const standalone
                         , const XMLCh* const actualEncStr)
 {
-    //This is a non-standard extension to creating XMLDecl type nodes and attching to DOM Tree 
+    //This is a non-standard extension to creating XMLDecl type nodes and attching to DOM Tree
     // currently this flag it set to false unless user explicitly asks for it
     // Needs to be revisited after W3C specs are laid out on this issue.
 
     if (fToCreateXMLDeclTypeNode) {
-        
+
         DOMString ver(version);
         DOMString enc(encoding);
         DOMString std(standalone);
         DOM_XMLDecl xmlDecl = fDocument.createXMLDecl(ver, enc, std);
-        
+
         fCurrentParent.appendChild(xmlDecl);
     }
 }
@@ -755,21 +764,21 @@ void DOMParser::attDef
     {
         fOldDocTypeHandler->attDef(elemDecl,attDef, ignoring );
     }
- 
+
     if (fDocumentType->isIntSubsetReading())
     {
         DOMString attString;
-        if (elemDecl.hasAttDefs()) 
+        if (elemDecl.hasAttDefs())
         {
             attString.appendData(chOpenAngle);
             attString.appendData(chBang);
             attString.appendData(XMLUni::fgAttListString);
             attString.appendData(chSpace);
             attString.appendData(elemDecl.getFullName());
-            
+
             attString.appendData(chSpace);
             attString.appendData(attDef.getFullName());
-            
+
             // Get the type and display it
             const XMLAttDef::AttTypes type = attDef.getType();
             switch(type)
@@ -806,21 +815,21 @@ void DOMParser::attDef
                 attString.appendData(chSpace);
                 attString.appendData(XMLUni::fgNmTokensString);
                 break;
-                
+
             case XMLAttDef::Notation :
                 attString.appendData(chSpace);
                 attString.appendData(XMLUni::fgNotationString);
                 break;
-                
+
             case XMLAttDef::Enumeration :
                 attString.appendData(chSpace);
                 //  attString.appendData(XMLUni::fgEnumerationString);
                 const XMLCh* enumString = attDef.getEnumeration();
                 int length = XMLString::stringLen(enumString);
                 if (length > 0) {
-                    
+
                     DOMString anotherEnumString;
-                    
+
                     anotherEnumString.appendData(chOpenParen );
                     for(int i=0; i<length; i++) {
                         if (enumString[i] == chSpace)
@@ -968,7 +977,7 @@ void DOMParser::elementDecl
     if (fDocumentType->isIntSubsetReading())
 	{
         DOMString elemDecl;
-        
+
         elemDecl.appendData(chOpenAngle);
         elemDecl.appendData(chBang);
         elemDecl.appendData(XMLUni::fgElemString);
@@ -981,7 +990,7 @@ void DOMParser::elementDecl
             elemDecl.appendData(chSpace);
             elemDecl.appendData(contentModel);
         }
-        
+
         elemDecl.appendData(chCloseAngle);
 		fDocumentType->internalSubset.appendData(elemDecl);
 	}
@@ -1072,7 +1081,7 @@ void DOMParser::entityDecl
 	entity->setNotationName(entityDecl.getNotationName());
 
     EntityImpl *previousDef = (EntityImpl *)
-	    fDocumentType->entities->setNamedItem( entity ); 
+	    fDocumentType->entities->setNamedItem( entity );
 
     //
     //  If this new entity node is replacing an entity node that was already
@@ -1092,7 +1101,7 @@ void DOMParser::entityDecl
         entityName.appendData(chBang);
 		entityName.appendData(XMLUni::fgEntityString);
         entityName.appendData(chSpace);
-        
+
         entityName.appendData(entityDecl.getName());
         DOMString id = entity->getPublicId();
         if (id != 0) {
@@ -1111,7 +1120,7 @@ void DOMParser::entityDecl
             entityName.appendData(chDoubleQuote);
             entityName.appendData(id);
             entityName.appendData(chDoubleQuote);
-            
+
         }
         id = entity->getNotationName();
         if (id != 0) {
@@ -1129,7 +1138,7 @@ void DOMParser::entityDecl
             entityName.appendData(id);
             entityName.appendData(chDoubleQuote);
         }
-        
+
         entityName.appendData(chCloseAngle);
         fDocumentType->internalSubset.appendData(entityName);
     }
@@ -1207,7 +1216,7 @@ void DOMParser::TextDecl
 // to populate the entities in the documentType
 void DOMParser::populateDocumentType()
 {
-	if (fDocumentType == null) 
+	if (fDocumentType == null)
 		return;
 	
 
@@ -1223,7 +1232,7 @@ void DOMParser::populateDocumentType()
 		entity->setSystemId(entityDecl->getSystemId());
 		entity->setNotationName(entityDecl->getNotationName());
 
-		fDocumentType->entities->setNamedItem( entity ); 
+		fDocumentType->entities->setNamedItem( entity );
 	}
 
 	NameIdPoolEnumerator<XMLNotationDecl> notationPoolEnum = ((DTDValidator*)fValidator)->getNotationEnumerator();

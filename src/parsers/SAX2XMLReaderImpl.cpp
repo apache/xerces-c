@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/02/15 15:56:29  tng
+ * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
+ * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
+ * New data field  fSchemaValidation in XMLScanner as the flag.
+ *
  * Revision 1.7  2001/01/15 21:26:33  tng
  * Performance Patches by David Bertoni.
  *
@@ -137,6 +142,7 @@
 #include <validators/DTD/DTDValidator.hpp>
 #include <string.h>
 
+// SAX2 Core: http://xml.org/sax/features/validation
 const XMLCh SAX2XMLReaderImpl::SAX_CORE_VALIDATION[] = {
 		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
 		chColon, chForwardSlash, chForwardSlash,
@@ -151,6 +157,7 @@ const XMLCh SAX2XMLReaderImpl::SAX_CORE_VALIDATION[] = {
 		chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+// SAX2 Core: http://xml.org/sax/features/namespaces
 const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES[] = {
 		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
 		chColon, chForwardSlash, chForwardSlash,
@@ -165,6 +172,7 @@ const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES[] = {
 		chLatin_c, chLatin_e, chLatin_s, chNull
 };
 
+//SAX2 Core: http://xml.org/sax/features/namespace-prefixes
 const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES[] = {
 		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
 		chColon, chForwardSlash, chForwardSlash,
@@ -176,12 +184,13 @@ const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES[] = {
 		chLatin_e, chLatin_s, chForwardSlash,
 		chLatin_n, chLatin_a, chLatin_m,
 		chLatin_e, chLatin_s, chLatin_p, chLatin_a,
-		chLatin_c, chLatin_e, 
+		chLatin_c, chLatin_e,
 		chDash, chLatin_p, chLatin_r, chLatin_e,
 		chLatin_f, chLatin_i, chLatin_x,
 		chLatin_e, chLatin_s, chNull
 };
 
+//Xerces: http://apache.org/xml/features/validation/dynamic
 const XMLCh SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC[] = {
 		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
 		chColon, chForwardSlash, chForwardSlash,
@@ -198,6 +207,7 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC[] = {
 		chLatin_m, chLatin_i, chLatin_c, chNull
 };
 
+//Xerces: http://apache.org/xml/features/validation/reuse-validator
 const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR[] = {
 		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
 		chColon, chForwardSlash, chForwardSlash,
@@ -211,12 +221,28 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR[] = {
 		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
 		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
 		chLatin_r, chLatin_e, chLatin_u, chLatin_s,
-		chLatin_e, chDash, chLatin_v, 
+		chLatin_e, chDash, chLatin_v,
 		chLatin_a, chLatin_l,
 		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
 		chLatin_o, chLatin_r, chNull
 };
 
+//Xerces: http://apache.org/xml/features/validation/schema
+const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA[] = {
+		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+		chColon, chForwardSlash, chForwardSlash,
+		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
+		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
+		chLatin_f, chLatin_e, chLatin_a,
+		chLatin_t, chLatin_u, chLatin_r,
+		chLatin_e, chLatin_s, chForwardSlash,
+		chLatin_v, chLatin_a, chLatin_l,
+		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
+		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
+		chLatin_s, chLatin_c, chLatin_h, chLatin_e,
+		chLatin_m, chLatin_a, chNull
+};
 
 SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
     fDocHandler(0)
@@ -255,6 +281,9 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 
 	// default: reuseValidator is off
 	freuseValidator = false;
+
+	// default: schema is on
+	setSchemaValidation(true);
 	
 	fPrefixes    = new RefStackOf<XMLBuffer> (10, false) ;
 	tempAttrVec  = new RefVectorOf<XMLAttr>  (10, false) ;
@@ -286,7 +315,7 @@ void SAX2XMLReaderImpl::setValidator(XMLValidator* valueToAdopt)
 //  SAX2XMLReader Interface
 // ---------------------------------------------------------------------------
 void SAX2XMLReaderImpl::setContentHandler(ContentHandler* const handler)
-{    
+{
 	fDocHandler = handler;
     if (fDocHandler)
     {
@@ -475,7 +504,7 @@ void SAX2XMLReaderImpl::docComment(const XMLCh* const commentText)
 }
 
 
-void SAX2XMLReaderImpl::XMLDecl(const   XMLCh* const 
+void SAX2XMLReaderImpl::XMLDecl(const   XMLCh* const
                         , const XMLCh* const
                         , const XMLCh* const
                         , const XMLCh* const)
@@ -591,7 +620,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 , const bool                    isEmpty
                 , const bool                    isRoot)
 {
- 
+
 	// Bump the element depth counter if not empty
     if (!isEmpty)
         fElemDepth++;
@@ -654,18 +683,18 @@ startElement(   const   XMLElementDecl&         elemDecl
 
 			fScanner->getValidator()->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
 			
-			fDocHandler->startElement(URIBuffer.getRawBuffer(), 
-										elemDecl.getBaseName(), 
-										elemDecl.getFullName(), 
-										fAttrList); 
+			fDocHandler->startElement(URIBuffer.getRawBuffer(),
+										elemDecl.getBaseName(),
+										elemDecl.getFullName(),
+										fAttrList);
 		}
 		else
 		{
 			fAttrList.setVector(&attrList, attrCount, fScanner->getValidator());
 			fDocHandler->startElement(XMLUni::fgZeroLenString,
-										elemDecl.getBaseName(), 
-										elemDecl.getFullName(), 
-										fAttrList); 
+										elemDecl.getBaseName(),
+										elemDecl.getFullName(),
+										fAttrList);
 		}
 
 
@@ -681,9 +710,9 @@ startElement(   const   XMLElementDecl&         elemDecl
 
 				fScanner->getValidator()->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
 			
-				fDocHandler->endElement(	URIBuffer.getRawBuffer(), 
-											elemDecl.getBaseName(), 
-											elemDecl.getFullName() ); 
+				fDocHandler->endElement(	URIBuffer.getRawBuffer(),
+											elemDecl.getBaseName(),
+											elemDecl.getFullName() );
 				unsigned int numPrefix = prefixCounts->pop();
 				for (unsigned int i = 0; i < numPrefix; ++i)
 				{
@@ -695,8 +724,8 @@ startElement(   const   XMLElementDecl&         elemDecl
 			else
 			{
 				fDocHandler->endElement(XMLUni::fgZeroLenString,
-							elemDecl.getBaseName(), 
-							elemDecl.getFullName() ); 
+							elemDecl.getBaseName(),
+							elemDecl.getFullName() );
 
 			}
 
@@ -737,9 +766,9 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 			XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
 
 			fScanner->getValidator()->getURIText(uriId, URIBuffer ) ;
-			fDocHandler->endElement(	URIBuffer.getRawBuffer(), 
-										elemDecl.getBaseName(), 
-										elemDecl.getFullName() ); 
+			fDocHandler->endElement(	URIBuffer.getRawBuffer(),
+										elemDecl.getBaseName(),
+										elemDecl.getFullName() );
 
 			unsigned int numPrefix = prefixCounts->pop();
 			for (unsigned int i = 0; i < numPrefix; i++)
@@ -752,8 +781,8 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 		else
 		{
 			fDocHandler->endElement(XMLUni::fgZeroLenString,
-										elemDecl.getBaseName(), 
-										elemDecl.getFullName() ); 
+										elemDecl.getBaseName(),
+										elemDecl.getFullName() );
 		}
 	
 	}
@@ -1065,6 +1094,12 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 		return;
 	}
 
+	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
+	{
+		setSchemaValidation(value);
+		return;
+	}
+
 	throw SAXNotRecognizedException("Unknown Feature");
 }
 
@@ -1080,6 +1115,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 		return fautoValidation;
 	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
         return freuseValidator;
+	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
+        return getSchemaValidation();
 
 	throw SAXNotRecognizedException("Unknown Feature");
 	return false;
@@ -1098,7 +1135,7 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
 {
 	throw SAXNotRecognizedException("Unknown Property");
-	// unimplemented 
+	// unimplemented
 	return 0;
 }
 
@@ -1125,4 +1162,14 @@ void SAX2XMLReaderImpl::setDoNamespaces(const bool newState)
 bool SAX2XMLReaderImpl::getDoNamespaces() const
 {
     return fScanner->getDoNamespaces();
+}
+
+void SAX2XMLReaderImpl::setSchemaValidation(const bool newState)
+{
+    fScanner->setSchemaValidation(newState);
+}
+
+bool SAX2XMLReaderImpl::getSchemaValidation() const
+{
+    return fScanner->getSchemaValidation();
 }

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/02/15 15:56:31  tng
+ * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
+ * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
+ * New data field  fSchemaValidation in XMLScanner as the flag.
+ *
  * Revision 1.5  2001/01/12 21:22:00  tng
  * Documentation Enhancement: Add list of SAX2 feature strings that are supported.
  *
@@ -117,11 +122,11 @@ public:
     // -----------------------------------------------------------------------
     //@{
     /** The default constructor */
-    SAX2XMLReader() 
+    SAX2XMLReader()
     {
     }
     /** The destructor */
-    virtual ~SAX2XMLReader() 
+    virtual ~SAX2XMLReader()
     {
     }
     //@}
@@ -147,14 +152,14 @@ public:
     virtual DTDHandler* getDTDHandler() const = 0;
 
     /**
-      * This method returns the installed entity resolver. 
+      * This method returns the installed entity resolver.
       *
       * @return A pointer to the installed entity resolver object.
       */
     virtual EntityResolver* getEntityResolver() const = 0 ;
 
     /**
-      * This method returns the installed error handler. 
+      * This method returns the installed error handler.
       *
       * @return A pointer to the installed error handler object.
       */
@@ -178,11 +183,11 @@ public:
 
 	/**
      * Query the current value of a property in a SAX2 XMLReader.
-      *
+     *
      * @param name The unique identifier (URI) of the property being set.
      * @return The current value of the property.
      * @exception SAXNotRecognizedException If the requested property is not known.
-      */
+     */
 	virtual void* getProperty(const XMLCh* const name) const = 0 ;
 
 
@@ -316,7 +321,7 @@ public:
     * @see DefaultHandler#DefaultHandler
     */
     virtual void setEntityResolver(EntityResolver* const resolver) = 0;
-    
+
   /**
     * Allow an application to register an error event handler.
     *
@@ -363,13 +368,14 @@ public:
     * <br>http://xml.org/sax/features/namespace-prefixes (default: true)
     * <br>http://apache.org/xml/features/validation/dynamic (default: false)
     * <br>http://apache.org/xml/features/validation/reuse-validator (default: false)
+    * <br>http://apache.org/xml/features/validation/schema (default: true)
     *
     * @param name The unique identifier (URI) of the feature.
     * @param value The requested state of the feature (true or false).
     * @exception SAXNotRecognizedException If the requested feature is not known.
     * @exception SAXNotSupportedException Property modification is not supported during parse
-	*
-	*/
+    *
+    */
 	virtual void setFeature(const XMLCh* const name, const bool value) = 0;
 
   /**
@@ -377,12 +383,12 @@ public:
     * Supported property in SAX2 for xerces-c are:
     *
     * <br>none
-	*
+    *
     * @param name The unique identifier (URI) of the property being set.
-	* @param value The requested value for the property.
+    * @param value The requested value for the property.
     * @exception SAXNotRecognizedException If the requested property is not known.
     * @exception SAXNotSupportedException Property modification is not supported during parse
-	*/
+    */
 	virtual void setProperty(const XMLCh* const name, void* value) = 0 ;
 
     //@}

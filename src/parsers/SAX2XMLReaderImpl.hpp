@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/02/15 15:56:29  tng
+ * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
+ * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
+ * New data field  fSchemaValidation in XMLScanner as the flag.
+ *
  * Revision 1.4  2000/12/22 15:16:53  tng
  * SAX2-ext's LexicalHandler support added by David Bertoni.
  *
@@ -107,7 +112,7 @@ class LexicalHandler;
   * <p>It can be used to instantiate a validating or non-validating
   * parser, by setting a member flag.</p>
   *
-  * we basically re-use the existing SAX1 parser code, but provide a 
+  * we basically re-use the existing SAX1 parser code, but provide a
   * new implementation of XMLContentHandler that raises the new
   * SAX2 style events
   *
@@ -128,6 +133,7 @@ public :
 	static const XMLCh SAX_CORE_NAMESPACES_PREFIXES[];
 	static const XMLCh SAX_XERCES_DYNAMIC[];
 	static const XMLCh SAX_XERCES_REUSEVALIDATOR[];
+	static const XMLCh SAX_XERCES_SCHEMA[];
 	
 	SAX2XMLReaderImpl() ;
 	~SAX2XMLReaderImpl() ;
@@ -286,7 +292,7 @@ public :
       * This method is used to report the start of the parsing process.
       * The corresponding user installed SAX Document Handler's method
       * 'startDocument' is invoked.
-      * 
+      *
       * <p>If any advanced callback handlers are installed, then the
       * corresponding 'startDocument' method is also called.</p>
       *
@@ -299,7 +305,7 @@ public :
       * called at the end of the element, by which time all attributes
       * specified are also parsed. The corresponding user installed
       * SAX Document Handler's method 'startElement' is invoked.
-      * 
+      *
       * <p>If any advanced callback handlers are installed, then the
       * corresponding 'startElement' method is also called.</p>
       *
@@ -379,28 +385,28 @@ public :
     //@{
 
     /**
-      * This method returns the installed content handler. 
+      * This method returns the installed content handler.
       *
       * @return A pointer to the installed content handler object.
       */
     virtual ContentHandler* getContentHandler() const;
 
     /**
-      * This method returns the installed DTD handler. 
+      * This method returns the installed DTD handler.
       *
       * @return A pointer to the installed DTD handler object.
       */
     virtual DTDHandler* getDTDHandler() const ;
 
     /**
-      * This method returns the installed entity resolver. 
+      * This method returns the installed entity resolver.
       *
       * @return A pointer to the installed entity resolver object.
       */
     virtual EntityResolver* getEntityResolver() const  ;
 
     /**
-      * This method returns the installed error handler. 
+      * This method returns the installed error handler.
       *
       * @return A pointer to the installed error handler object.
       */
@@ -486,7 +492,7 @@ public :
     * @see DefaultHandler#DefaultHandler
     */
     virtual void setEntityResolver(EntityResolver* const resolver) ;
-    
+
   /**
     * Allow an application to register an error event handler.
     *
@@ -524,37 +530,54 @@ public :
     */
     virtual void setLexicalHandler(LexicalHandler* const handler) ;
 
-   /**
-	  * This method sets a Feature as per the SAX2 spec (such as
-	  * do validation)
-	  *
-	  * @param name The name of the feature to be set
-	  * @param value true if the feature should be enabled.
-	  */
+  /**
+    * Set the state of any feature in a SAX2 XMLReader.
+    * Supported features in SAX2 for xerces-c are:
+    *
+    * <br>http://xml.org/sax/features/validation (default: true)
+    * <br>http://xml.org/sax/features/namespaces (default: true)
+    * <br>http://xml.org/sax/features/namespace-prefixes (default: true)
+    * <br>http://apache.org/xml/features/validation/dynamic (default: false)
+    * <br>http://apache.org/xml/features/validation/reuse-validator (default: false)
+    * <br>http://apache.org/xml/features/validation/schema (default: true)
+    *
+    * @param name The unique identifier (URI) of the feature.
+    * @param value The requested state of the feature (true or false).
+    * @exception SAXNotRecognizedException If the requested feature is not known.
+    * @exception SAXNotSupportedException Property modification is not supported during parse
+    *
+    */
 	virtual void setFeature(const XMLCh* const name, const bool value);
 
 	/**
-	  * This method gets a Feature as per the SAX2 spec (such as
-	  * do validation)
+     * Query the current state of any feature in a SAX2 XMLReader.
 	  *
-	  * @param name The name of the feature to be set
-	  * @param value true if the feature should be enabled.
+	  * @param name The unique identifier (URI) of the feature being set.
+	  * @return The current state of the feature.
+     * @exception SAXNotRecognizedException If the requested feature is not known.
 	  */
 	virtual bool getFeature(const XMLCh* const name) const;
 
-	/**
-	  * Set the value of a property.
-	  *
-	  * @param name The property name, which is any fully-qualified URI.
-	  * @param value The requested value for the property.
-	  */
+  /**
+    * Set the value of any property in a SAX2 XMLReader.
+    * Supported property in SAX2 for xerces-c are:
+    *
+    * <br>none
+    *
+    * @param name The unique identifier (URI) of the property being set.
+    * @param value The requested value for the property.
+    * @exception SAXNotRecognizedException If the requested property is not known.
+    * @exception SAXNotSupportedException Property modification is not supported during parse
+    */
 	virtual void setProperty(const XMLCh* const name, void* value);
 
 	/**
-	  * Gets the value of a property.
-	  *
-	  * @param name The property name, which is any fully-qualified URI.
-	  */
+     * Query the current value of a property in a SAX2 XMLReader.
+     *
+     * @param name The unique identifier (URI) of the property being set.
+     * @return The current value of the property.
+     * @exception SAXNotRecognizedException If the requested property is not known.
+     */
 	virtual void* getProperty(const XMLCh* const name) const;
 	//@}
 
@@ -642,7 +665,7 @@ public :
       *                  the system id scanned by the parser.
       * @param toFill    A pointer to a buffer in which the application
       *                  processed system id is stored.
-      * @return 'true', if any processing is done, 'false' otherwise. 
+      * @return 'true', if any processing is done, 'false' otherwise.
       */
     virtual bool expandSystemId
     (
@@ -687,7 +710,7 @@ public :
       * implementation.</font></b>
       *
       * @param inputSource A const reference to the InputSource object
-      *                    which points to the external entity 
+      *                    which points to the external entity
       *                    being parsed.
       */
     virtual void startInputSource(const InputSource& inputSource);
@@ -987,7 +1010,7 @@ private :
     //
 	//  fnamespacePrefix
 	//      Indicates whether the namespace-prefix feature is on or off.
-	//  
+	//
 	//  fautoValidation
 	//      Indicates whether automatic validation is on or off
 	//
@@ -1000,7 +1023,7 @@ private :
 	//	fStringBuffers
 	//		Any temporary strings we need are pulled out of this pool
 	//
-	//	fPrefixes 
+	//	fPrefixes
 	//		A Stack of the current namespace prefixes that need calls to
 	//		endPrefixMapping
 	//
@@ -1037,6 +1060,8 @@ private :
 	void setValidationScheme(const ValSchemes newScheme);
     void setDoNamespaces(const bool newState);
     bool getDoNamespaces() const;
+    void setSchemaValidation(const bool newState);
+    bool getSchemaValidation() const;
 
 };
 
@@ -1049,12 +1074,12 @@ inline ContentHandler* SAX2XMLReaderImpl::getContentHandler() const
     return fDocHandler;
 }
 
-inline DTDHandler* SAX2XMLReaderImpl::getDTDHandler() const 
+inline DTDHandler* SAX2XMLReaderImpl::getDTDHandler() const
 {
 	return fDTDHandler ;
 }
 
-inline EntityResolver* SAX2XMLReaderImpl::getEntityResolver() const  
+inline EntityResolver* SAX2XMLReaderImpl::getEntityResolver() const
 {
 	return fEntityResolver;
 }
@@ -1074,4 +1099,4 @@ inline XMLValidator* SAX2XMLReaderImpl::getValidator() const
 	return fValidator;
 }
 
-#endif 
+#endif
