@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMString.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 /**
   * Encapsulate a general DOM error or warning.
   *
@@ -158,6 +161,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

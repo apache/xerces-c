@@ -64,6 +64,9 @@
 #include "DOM_Node.hpp"
 #include "DOM_NodeFilter.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class TreeWalkerImpl;
 
 
@@ -268,5 +271,7 @@ class CDOM_EXPORT DOM_TreeWalker {
     private:
         TreeWalkerImpl*         fImpl;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

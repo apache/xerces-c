@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/07/11 18:21:20  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -109,6 +112,7 @@
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Constructors and Destructor
@@ -234,3 +238,4 @@ void SchemaGrammar::cleanUp()
     delete fIDRefList;
 }
 
+XERCES_CPP_NAMESPACE_END

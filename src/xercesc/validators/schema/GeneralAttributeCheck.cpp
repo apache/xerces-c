@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.8  2002/09/27 13:22:52  tng
  * [Bug 13073] GeneralAttributeCheck.cpp : compilation fails with Sun C++ 4.2 on Solaris2.7 system.
  *
@@ -147,6 +150,8 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -926,6 +931,8 @@ const XMLCh* GeneralAttributeCheck::fAttNames[A_Count] =
     SchemaSymbols::fgATT_VERSION,
     SchemaSymbols::fgATT_XPATH,
 };
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file GeneralAttributeCheck.cpp

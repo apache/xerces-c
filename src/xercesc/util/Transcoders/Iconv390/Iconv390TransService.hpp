@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:14:33  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/04/09 15:44:00  knoaman
  * Add lower case string support.
  *
@@ -82,6 +85,8 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/Mutexes.hpp>
 #include <iconv.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /* Max encoding name in characters. */
 #define UCNV_MAX_CONVERTER_NAME_LENGTH 60
@@ -238,5 +243,7 @@ private :
     void operator=(const Iconv390LCPTranscoder&);
     iconvconverter_t *converter;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

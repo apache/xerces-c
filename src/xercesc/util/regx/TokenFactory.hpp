@@ -70,6 +70,8 @@
 #include <xercesc/util/regx/Token.hpp>
 #include <xercesc/util/Mutexes.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -181,6 +183,7 @@ private:
 	Token*              fGrapheme;
 };
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

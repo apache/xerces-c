@@ -66,6 +66,9 @@
 #include "DOMString.hpp"
 #include "DOM_DocumentFragment.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class RangeImpl;
 
 //class RangeImpl;
@@ -140,5 +143,7 @@ protected:
 
 
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2002/11/04 14:57:03  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.13  2002/08/14 15:20:38  knoaman
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
  *
@@ -186,6 +189,9 @@
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class DocumentHandler;
 class EntityResolver;
@@ -491,7 +497,7 @@ public :
      *
      * @param uriId id of the string in the URI string pool.
      * @return URI string corresponding to the URI id.
-     */    
+     */
     const XMLCh* getURIText(unsigned int uriId);
 
     //@}
@@ -1896,5 +1902,7 @@ inline const XMLScanner& SAXParser::getScanner() const
 {
     return *fScanner;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

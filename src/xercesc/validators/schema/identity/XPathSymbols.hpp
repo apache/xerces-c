@@ -63,6 +63,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /*
  * Collection of symbols used to parse a Schema Grammar
  */
@@ -96,6 +98,8 @@ public :
     static const XMLCh fgSYMBOL_SELF[];
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/07/11 18:17:43  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -93,6 +96,8 @@
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/XMLEntityDecl.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 // This abstract class specifies the interface for a Grammar
@@ -231,5 +236,7 @@ protected :
     // -----------------------------------------------------------------------
     Grammar() {};
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

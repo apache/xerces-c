@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/24 19:48:39  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -212,6 +215,8 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/HashCMStateSet.hpp>
 #include <xercesc/util/XMLInteger.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 // ---------------------------------------------------------------------------
@@ -1273,4 +1278,6 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
         delete [] fConflictTable[i];
     delete [] fConflictTable;
 }
+
+XERCES_CPP_NAMESPACE_END
 

@@ -87,6 +87,8 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local declaration
 // ---------------------------------------------------------------------------
@@ -257,6 +259,8 @@ inline void DatatypeValidatorFactory::cleanUp() {
 	delete fUserDefinedRegistry;
 	fUserDefinedRegistry = 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

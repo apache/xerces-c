@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/09/24 19:48:39  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -90,6 +93,8 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  GrammarResolver: Constructor and Destructor
@@ -242,3 +247,5 @@ void GrammarResolver::cacheGrammarFromParse(const bool aValue) {
     fGrammarRegistry->removeAll();
     fGrammarRegistry->setAdoptElements(!fCacheGrammar);
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:07  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:56:25  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:07  peiyongz
+ * sane_include
  *
  * Revision 1.8  2000/03/02 19:54:34  roddey
  * This checkin includes many changes done while waiting for the
@@ -95,6 +98,8 @@
 #define ATTRIBUTELIST_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
   * Interface for an element's attribute specifications.
@@ -140,10 +145,10 @@
   * }
   * </pre>
   *
-  * The AttributeListImpl helper class provides a convenience 
+  * The AttributeListImpl helper class provides a convenience
   * implementation for use by parser or application writers.
   *
-  * @see DocumentHandler#startElement 
+  * @see DocumentHandler#startElement
   * @see AttributeListImpl#AttributeListImpl
   */
 
@@ -176,7 +181,7 @@ public:
     * declared or specified.  The number of attributes may be
     * zero.
     *
-    * @return The number of attributes in the list.  
+    * @return The number of attributes in the list.
     */
     virtual unsigned int getLength() const = 0;
 
@@ -194,7 +199,7 @@ public:
     * @param index The index of the attribute in the list (starting at 0).
     * @return The name of the indexed attribute, or null
     *         if the index is out of range.
-    * @see #getLength 
+    * @see #getLength
     */
     virtual const XMLCh* getName(const unsigned int index) const = 0;
 
@@ -216,7 +221,7 @@ public:
     * @param index The index of the attribute in the list (starting at 0).
     * @return The attribute type as a string, or
     *         null if the index is out of range.
-    * @see #getLength 
+    * @see #getLength
     * @see #getType(String)
     */
     virtual const XMLCh* getType(const unsigned int index) const = 0;
@@ -294,7 +299,9 @@ private :
     AttributeList(const AttributeList&);
     /* Assignment operator */
     void operator=(const AttributeList&);
-    
+
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:45:20  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/05/28 12:57:17  tng
  * Fix typo.
  *
@@ -111,7 +114,6 @@
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
 
-
 // ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
 //  where it is advantageous to use the L"" where it supported, to avoid
@@ -121,7 +123,13 @@
 // #define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
-//  Define our version of the XMLCh.
+//  Indicate that we support C++ namespace
+//  Do not define it if the compile cannot handle C++ namespace
+// ---------------------------------------------------------------------------
+// #define XERCES_HAS_CPP_NAMESPACE
+
+// ---------------------------------------------------------------------------
+//  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef unsigned short XMLCh;
 

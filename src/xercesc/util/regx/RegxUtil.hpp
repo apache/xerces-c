@@ -67,6 +67,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT RegxUtil {
 public:
 
@@ -122,6 +124,8 @@ inline bool RegxUtil::isWordChar(const XMLCh ch) {
 
 	return false;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

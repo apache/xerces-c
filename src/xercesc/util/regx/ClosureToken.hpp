@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ClosureToken : public Token {
 public:
@@ -141,6 +142,8 @@ inline void ClosureToken::setMin(const int minVal) {
 
 	fMin = minVal;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

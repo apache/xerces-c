@@ -74,6 +74,8 @@
 #include "ParentNode.hpp"
 #include "EntityReferenceImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT EntityImpl: public ParentNode {
 private:
@@ -112,6 +114,8 @@ public:
 	virtual void		setEntityRef(EntityReferenceImpl*);
 	virtual EntityReferenceImpl*	getEntityRef() const;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

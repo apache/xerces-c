@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:30  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:30  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/10/25 15:06:26  tng
  * Thread safe the static instance.
@@ -99,6 +102,8 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -301,6 +306,8 @@ void RangeTokenMap::reinitInstance() {
 	delete fInstance;
 	fInstance = 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file RangeTokenMap.cpp

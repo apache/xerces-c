@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:56:25  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/07/16 18:15:00  tng
  * [Bug 6070] warning unused variable in HandlerBase.hpp
  *
@@ -102,6 +105,8 @@
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class Locator;
 class AttributeList;
@@ -523,5 +528,7 @@ HandlerBase::startElement(  const   XMLCh* const
 inline void HandlerBase::warning(const SAXParseException&)
 {
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

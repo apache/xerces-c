@@ -92,6 +92,8 @@
 #include "NodeListImpl.hpp"
 #include "DOMString.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class NamedNodeMapImpl;
 class NodeListImpl;
@@ -303,5 +305,7 @@ public: // should really be protected - ALH
 
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

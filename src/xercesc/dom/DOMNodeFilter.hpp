@@ -63,6 +63,8 @@
 
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * Filters are objects that know how to "filter out" nodes. If a
@@ -241,5 +243,7 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

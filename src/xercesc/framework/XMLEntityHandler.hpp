@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.5  2002/11/04 15:00:21  tng
+  * C++ Namespace Support.
+  *
   * Revision 1.4  2002/06/06 20:41:51  tng
   * Regression fix: should assign the returned InputSource from resolveEntity to srcToFill.
   *
@@ -102,6 +105,8 @@
 #define XMLENTITYHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class InputSource;
 class XMLBuffer;
@@ -232,5 +237,7 @@ private:
     XMLEntityHandler(const XMLEntityHandler&);
     void operator=(const XMLEntityHandler&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:13:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/05/21 20:31:47  tng
  * Minor update: Remove obsolete code
  *
@@ -162,6 +165,7 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Private Static Methods
@@ -784,4 +788,5 @@ void XMLPlatformUtils::platformTerm()
     // We don't have any termination requirements at this time
 //}
 
+XERCES_CPP_NAMESPACE_END
 

@@ -76,6 +76,8 @@
 #include "DOMString.hpp"
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT NameNodeFilter : public NodeFilterImpl
 {
@@ -104,5 +106,7 @@ class CDOM_EXPORT NameNodeFilter : public NodeFilterImpl
     bool fMatch;
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

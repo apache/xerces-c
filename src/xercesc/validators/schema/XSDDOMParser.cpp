@@ -67,6 +67,7 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XSDDOMParser: Constructors and Destructor
@@ -144,3 +145,4 @@ InputSource* XSDDOMParser::resolveEntity(const XMLCh* const publicId,
     return 0;
 }
 
+XERCES_CPP_NAMESPACE_END

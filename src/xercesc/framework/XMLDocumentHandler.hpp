@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.4  2002/11/04 15:00:21  tng
+  * C++ Namespace Support.
+  *
   * Revision 1.3  2002/05/28 20:41:11  tng
   * [Bug 9104] prefixes dissapearing when schema validation turned on.
   *
@@ -103,6 +106,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLElementDecl;
 class XMLEntityDecl;
@@ -352,5 +357,7 @@ private:
     XMLDocumentHandler(const XMLDocumentHandler&);
     void operator=(const XMLDocumentHandler&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/10/15 18:11:02  knoaman
  * [Bug 13489]: missing 'return' in Token.cpp
  *
@@ -95,6 +98,8 @@
 #include <xercesc/util/regx/ModifierToken.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/util/regx/RegxUtil.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -482,6 +487,8 @@ bool Token::isShorterThan(Token* const tok) {
 
 	return length < tokLength;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   *	End of file Token.cpp

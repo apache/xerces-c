@@ -63,6 +63,9 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMNode;
 
 
@@ -134,6 +137,8 @@ public:
     virtual XMLSize_t getLength() const = 0;
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

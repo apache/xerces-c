@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:31  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:31  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:26:49  tng
  * Copyright update.
@@ -71,6 +74,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/StringToken.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
@@ -90,6 +95,8 @@ StringToken::~StringToken() {
 
 	delete [] fString;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   *	End of file StringToken.cpp

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/10/18 16:52:14  peiyongz
  * Patch to Bug#13640: Getter methods not public in
  *                                    DecimalDatatypeValidator
@@ -84,6 +87,8 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLNumber.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT AbstractNumericFacetValidator : public DatatypeValidator
 {
@@ -164,7 +169,7 @@ protected:
     //  Protected data members
     //
     //      Allow access to derived class
-    // 
+    //
     // -----------------------------------------------------------------------
     bool                     fMaxInclusiveInherited;
     bool                     fMaxExclusiveInherited;
@@ -189,7 +194,7 @@ private:
     void inspectFacetBase();
 
     void inheritFacet();
-    
+
 };
 
 // -----------------------------------------------------------------------
@@ -221,7 +226,10 @@ inline RefVectorOf<XMLNumber>* AbstractNumericFacetValidator::getEnumeration() c
     return fEnumeration;
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file AbstractNumericFacetValidator.hpp
   */
-#endif

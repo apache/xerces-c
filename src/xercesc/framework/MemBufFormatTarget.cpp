@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/08/12 21:38:22  peiyongz
  * Bug#11462: MemBufFormatTarget issue(2) .., proposed patch from
  *                      Esmond Pitt (pitte@anz.com)
@@ -75,6 +78,8 @@
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <string.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 MemBufFormatTarget::MemBufFormatTarget(int initCapacity)
     : fDataBuf(0)
@@ -145,4 +150,6 @@ void MemBufFormatTarget::insureCapacity(const unsigned int extraNeeded)
     fDataBuf = newBuf;
     fCapacity = newCap;
 }
+
+XERCES_CPP_NAMESPACE_END
 

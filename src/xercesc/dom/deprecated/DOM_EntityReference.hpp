@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class EntityReferenceImpl;
 
 /**
@@ -138,6 +141,8 @@ protected:
 
     friend class DOM_Document;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

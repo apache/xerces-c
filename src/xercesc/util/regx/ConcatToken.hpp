@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ConcatToken : public Token {
 public:
@@ -108,6 +109,8 @@ inline Token* ConcatToken::getChild(const int index) const {
 
 	return index == 0 ? fChild1 : fChild2;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

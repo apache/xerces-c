@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:58  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:58:18  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/05/11 13:26:16  tng
  * Copyright update.
@@ -88,6 +91,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLPARSER_EXPORT VecAttributesImpl : public Attributes
 {
@@ -169,5 +174,7 @@ private :
 	const XMLScanner *		fScanner ;
 	//XMLBuffer				    fURIBuffer ;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif // ! VECATTRIBUTESIMPL_HPP

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/04 14:55:45  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.6  2002/07/11 18:29:09  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -155,6 +158,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentHandler ;
 class DTDHandler;
@@ -609,7 +614,7 @@ public:
       *
       * @param uriId id of the string in the URI string pool.
       * @return URI string corresponding to the URI id.
-      */    
+      */
     virtual const XMLCh* getURIText(unsigned int uriId) = 0;
 
     //@}
@@ -982,5 +987,7 @@ private :
     void operator=(const SAX2XMLReader&);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

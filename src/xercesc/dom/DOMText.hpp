@@ -64,6 +64,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMCharacterData.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 /**
@@ -211,6 +212,8 @@ public:
 
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

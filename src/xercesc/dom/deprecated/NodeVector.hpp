@@ -71,6 +71,10 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NodeImpl;
 
 
@@ -96,5 +100,7 @@ public:
     void            removeElementAt(unsigned int index);
     void            reset();
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

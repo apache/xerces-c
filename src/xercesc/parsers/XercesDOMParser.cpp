@@ -75,6 +75,9 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 // ---------------------------------------------------------------------------
 //  XercesDOMParser: Constructors and Destructor
@@ -318,3 +321,6 @@ void XercesDOMParser::resetCachedGrammarPool()
 {
     getScanner()->resetCachedGrammarPool();
 }
+
+XERCES_CPP_NAMESPACE_END
+

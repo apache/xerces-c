@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:07:34  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/05/27 18:25:41  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -68,6 +71,9 @@
  */
 
 #include "DOMLocatorImpl.hpp"
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Constructors and Destructor
@@ -98,4 +104,6 @@ fLineNum(lineNum)
 DOMLocatorImpl::~DOMLocatorImpl()
 {
 }
+
+XERCES_CPP_NAMESPACE_END
 

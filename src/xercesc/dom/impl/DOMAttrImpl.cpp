@@ -67,6 +67,7 @@
 #include "DOMCasts.hpp"
 #include "DOMNodeIDMap.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 DOMAttrImpl::DOMAttrImpl(DOMDocument *ownerDoc, const XMLCh *aName)
     : fNode(ownerDoc), fParent (ownerDoc)
@@ -354,4 +355,5 @@ DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
            const XMLCh*     DOMAttrImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMAttrImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
+XERCES_CPP_NAMESPACE_END
 

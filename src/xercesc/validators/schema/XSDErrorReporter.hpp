@@ -62,6 +62,9 @@
 #if !defined(XSDERRORREPORTER_HPP)
 #define XSDERRORREPORTER_HPP
 
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class Locator;
 class XMLErrorReporter;
@@ -149,5 +152,6 @@ inline void XSDErrorReporter::setErrorReporter(XMLErrorReporter* const errorRepo
     fErrorReporter = errorReporter;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif

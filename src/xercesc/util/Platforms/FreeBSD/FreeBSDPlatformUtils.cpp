@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 15:13:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/07/05 21:29:58  peiyongz
  * Bug# 10250: patch from James Berry
  *
@@ -129,6 +132,7 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Private Static Methods
@@ -333,7 +337,7 @@ XMLPlatformUtils::readFileBuffer( FileHandle          theFile
     if (toRead == 0)
 	return 0;
     size_t noOfItemsRead = fread((void*) toFill, 1, toRead, (FILE*)theFile);
-    
+
     if(ferror((FILE*)theFile))
     {
         ThrowXML(XMLPlatformUtilsException,
@@ -723,3 +727,5 @@ void XMLPlatformUtils::platformTerm()
 	atomicOpsMutex.fHandle = 0;
 #endif
 }
+
+XERCES_CPP_NAMESPACE_END

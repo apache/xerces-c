@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ParenToken : public Token {
 public:
@@ -115,6 +116,8 @@ inline Token* ParenToken::getChild(const int) const {
 
     return fChild;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

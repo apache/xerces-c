@@ -73,6 +73,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMRange.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 class       DOMNode;
 class       DOMDocumentFragment;
@@ -197,5 +200,7 @@ private:
     DOMNode*    getSelectedNode( DOMNode *container, int offset );
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

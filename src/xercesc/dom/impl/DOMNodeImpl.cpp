@@ -77,6 +77,10 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <stdio.h>
 #include <assert.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 const unsigned short DOMNodeImpl::READONLY     = 0x1<<0;
 const unsigned short DOMNodeImpl::SYNCDATA     = 0x1<<1;
 const unsigned short DOMNodeImpl::SYNCCHILDREN = 0x1<<2;
@@ -976,4 +980,6 @@ void DOMNodeImpl::release()
     // shouldn't reach here
     throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 }
+
+XERCES_CPP_NAMESPACE_END
 

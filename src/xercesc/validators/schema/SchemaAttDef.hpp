@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/08/10 12:34:25  knoaman
  * Fix compilation error.
@@ -84,6 +87,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class DatatypeValidator;
 class QName;
@@ -241,5 +246,7 @@ inline void SchemaAttDef::setNamespaceList(const ValueVectorOf<unsigned int>* co
         resetNamespaceList();
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

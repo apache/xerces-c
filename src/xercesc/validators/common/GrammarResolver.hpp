@@ -66,6 +66,8 @@
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class DatatypeValidator;
 class DatatypeValidatorFactory;
@@ -234,5 +236,7 @@ GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey) {
 
     return fGrammarRegistry->orphanKey(nameSpaceKey);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

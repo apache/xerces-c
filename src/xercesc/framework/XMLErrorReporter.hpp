@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.4  2002/11/04 15:00:21  tng
+  * C++ Namespace Support.
+  *
   * Revision 1.3  2002/05/27 18:34:59  tng
   * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
   *
@@ -113,6 +116,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 /**
@@ -244,5 +249,7 @@ private:
     XMLErrorReporter(const XMLErrorReporter&);
     void operator=(const XMLErrorReporter&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

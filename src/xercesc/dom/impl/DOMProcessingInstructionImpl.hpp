@@ -75,6 +75,9 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class    DocumentImpl;
 
 
@@ -105,6 +108,8 @@ public:
     // NON-DOM: set base uri
     virtual void setBaseURI(const XMLCh* baseURI);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

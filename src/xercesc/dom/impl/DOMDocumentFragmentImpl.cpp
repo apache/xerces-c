@@ -65,6 +65,8 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 static const XMLCh * nam;   // Will be lazily initialized to "#document-fragment"
 
@@ -173,5 +175,7 @@ void DOMDocumentFragmentImpl::release()
            bool             DOMDocumentFragmentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
            const XMLCh*     DOMDocumentFragmentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMDocumentFragmentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
+XERCES_CPP_NAMESPACE_END
 
 

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:57  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:58:18  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:57  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/07/26 19:53:02  tng
  * [Bug 2751] Several NameChar characters missing from internal tables .
@@ -76,6 +79,12 @@
  *
  */
 
+#if !defined(CHARTYPETABLES_HPP)
+#define CHARTYPETABLES_HPP
+
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  These are character type lookup tables. They are included into XMLReader
@@ -254,3 +263,7 @@ static const XMLCh gXMLChars[] =
     ,   0x0009, 0x000D, 0x000A
     ,   0x00
 };
+
+XERCES_CPP_NAMESPACE_END
+
+#endif

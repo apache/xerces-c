@@ -75,6 +75,9 @@
 #include "DOMString.hpp"
 #include "NodeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NodeImpl;
 class NodeVector;
 
@@ -109,5 +112,7 @@ private:
     virtual NodeImpl    *nextMatchingElementAfter(NodeImpl *current);
     virtual void        unreferenced();
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

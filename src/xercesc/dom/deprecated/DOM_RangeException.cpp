@@ -60,6 +60,9 @@
 
 #include "DOM_RangeException.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 DOM_RangeException::DOM_RangeException()
 : DOM_DOMException()
@@ -85,3 +88,6 @@ DOM_RangeException::DOM_RangeException(const DOM_RangeException &other)
 DOM_RangeException::~DOM_RangeException()
 {
 };
+
+XERCES_CPP_NAMESPACE_END
+

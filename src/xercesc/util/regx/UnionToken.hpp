@@ -67,6 +67,7 @@
 #include <xercesc/util/regx/Token.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT UnionToken : public Token {
 public:
@@ -118,6 +119,8 @@ inline Token* UnionToken::getChild(const int index) const {
 
     return fChildren->elementAt(index);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

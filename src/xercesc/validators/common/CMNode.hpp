@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:38  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/05/11 13:27:17  tng
  * Copyright update.
@@ -100,6 +103,7 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class CMNode
 {
@@ -244,5 +248,7 @@ inline void CMNode::setMaxStates(const unsigned int maxStates)
 {
     fMaxStates = maxStates;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

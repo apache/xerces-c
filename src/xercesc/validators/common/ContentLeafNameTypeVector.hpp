@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:38  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/08/07 15:21:20  knoaman
  * The value of 'fLeafCount' was not set.
@@ -80,6 +83,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentLeafNameTypeVector
 {
@@ -159,5 +164,7 @@ inline void ContentLeafNameTypeVector::init(const unsigned int size)
 	fLeafTypes = new ContentSpecNode::NodeTypes [size];
 	fLeafCount = size;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

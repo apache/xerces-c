@@ -62,6 +62,7 @@
 #include "DOM_Text.hpp"
 #include "CDATASectionImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_CDATASection::DOM_CDATASection()
@@ -98,4 +99,6 @@ DOM_CDATASection & DOM_CDATASection::operator = (const DOM_NullPtr *other)
      return (DOM_CDATASection &) DOM_Node::operator = (other);
 };
 
+
+XERCES_CPP_NAMESPACE_END
 

@@ -83,6 +83,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMNode;
 
 class CDOM_EXPORT DOMNodeListImpl: public DOMNodeList
@@ -101,6 +104,8 @@ public:
     virtual DOMNode *  item(XMLSize_t index) const;
     virtual XMLSize_t getLength() const;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

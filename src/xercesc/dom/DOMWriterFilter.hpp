@@ -60,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2002/11/04 15:09:25  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.7  2002/08/22 15:04:57  tng
  * Remove unused parameter variables in inline functions.
  *
@@ -102,6 +105,9 @@
 
 
 #include <xercesc/dom/DOMNodeFilter.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT DOMWriterFilter : public DOMNodeFilter {
 protected :
@@ -193,5 +199,7 @@ private:
     // -----------------------------------------------------------------------
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

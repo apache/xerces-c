@@ -83,6 +83,8 @@
 #include <xercesc/validators/schema/GeneralAttributeCheck.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declarations
 // ---------------------------------------------------------------------------
@@ -946,13 +948,15 @@ inline void TraverseSchema::normalizeURI(const XMLCh* const systemURI,
         }
         else if (*pszSrc == 0xFFFF) { //escaped character
             pszSrc++;
-        } 
+        }
         else {
             normalizedURI.append(*pszSrc);
             pszSrc++;
         }
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

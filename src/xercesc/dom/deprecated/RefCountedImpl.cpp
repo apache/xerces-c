@@ -60,6 +60,8 @@
 
 #include "RefCountedImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 RefCountedImpl::RefCountedImpl()
 {
@@ -110,6 +112,8 @@ void RefCountedImpl::unreferenced()
 {
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 
 

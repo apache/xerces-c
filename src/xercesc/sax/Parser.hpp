@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:56:26  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/07/11 18:29:09  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -95,6 +98,10 @@
 
 #ifndef PARSER_HPP
 #define PARSER_HPP
+
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class DTDHandler;
 class EntityResolver;
@@ -309,5 +316,7 @@ private :
     /* The assignment operator, you cannot call this directly */
     void operator=(const Parser&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

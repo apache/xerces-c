@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_CharacterData.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class TextImpl;
 
 
@@ -188,6 +191,8 @@ protected:
 
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -67,6 +67,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -153,6 +155,8 @@ inline void OpFactory::reset() {
 
 	fOpVector->removeAllElements();
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:37  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
@@ -74,6 +77,8 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentSpecNode;
 
@@ -191,6 +196,8 @@ AllContentModel::getNextState(const unsigned int currentState,
 
     return XMLContentModel::gInvalidTrans;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

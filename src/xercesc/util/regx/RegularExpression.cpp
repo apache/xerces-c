@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/10/15 18:56:02  knoaman
  * [Bug 13604] while loop never terminates.
  *
@@ -112,6 +115,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/ParseException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -1308,6 +1312,8 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 
     return WT_OTHER;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   *	End of file RegularExpression.cpp

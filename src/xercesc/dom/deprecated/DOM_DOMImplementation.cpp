@@ -68,6 +68,9 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //
 //  Static constants.  These are lazily initialized on first usage.
 //                     (Static constructors can not be safely used because
@@ -243,3 +246,6 @@ void DOM_DOMImplementation::reinitDOM_DOMImplementation() {
     gCore = 0;
 
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -68,7 +68,6 @@
 //#include <limits.h>  // for MAX of size_t and ssize_t
 //#include <extras.h>
 
-
 // ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
 //  the export keyword is from the project's viewpoint or the client's.
@@ -78,13 +77,11 @@
 #define PLATFORM_EXPORT __declspec(export)
 #define PLATFORM_IMPORT __declspec(import)
 
-
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
 //  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
-
 
 // ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
@@ -94,13 +91,16 @@
 // ---------------------------------------------------------------------------
 // #define XML_LSTRSUPPORT
 
+// ---------------------------------------------------------------------------
+//  Indicate that we support C++ namespace
+//  Do not define it if the compile cannot handle C++ namespace
+// ---------------------------------------------------------------------------
+// #define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
-//  Define our version of the XMLCh.
+//  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLCh;
-typedef unsigned short  UTF16Ch;
-
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers

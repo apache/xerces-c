@@ -62,6 +62,7 @@
 #include "NodeIteratorImpl.hpp"
 #include "RefCountedImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 
@@ -179,3 +180,6 @@ DOM_Node            DOM_NodeIterator::nextNode() {
 DOM_Node            DOM_NodeIterator::previousNode() {
   return fImpl->previousNode();
 }
+
+XERCES_CPP_NAMESPACE_END
+

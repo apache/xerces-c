@@ -63,6 +63,9 @@
 #include "NamedNodeMapImpl.hpp"
 #include "ElementImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 const unsigned short DOM_NamedNodeMap::NNM_ELEMENT  = 0;
 const unsigned short DOM_NamedNodeMap::NNM_OTHER    = 1;
@@ -212,3 +215,6 @@ DOM_Node DOM_NamedNodeMap::removeNamedItemNS(const DOMString &namespaceURI,
 	return (flagElem == NNM_OTHER) ? DOM_Node(((NamedNodeMapImpl *)fImpl)->removeNamedItemNS(namespaceURI, localName)) :
                                      DOM_Node(((ElementImpl *)fImpl)->NNM_removeNamedItemNS(namespaceURI, localName));
 }
+
+XERCES_CPP_NAMESPACE_END
+

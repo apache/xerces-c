@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:36  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:14:33  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/06/25 16:19:14  tng
  * Rename iconv_cnv.c to iconv_cnv.cpp.  AS400 changes by Linda Swan.
@@ -85,6 +88,8 @@
 #include <iconv.h>
 #include <errno.h>
 #define CHUNK_SIZE 5*1024
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 void Convert_toUnicode(UConverter *,
 				     UChar **,
@@ -773,3 +778,5 @@ UChar getNextUChar(UConverter* converter,
       return myUChar;
     }
 }
+
+XERCES_CPP_NAMESPACE_END

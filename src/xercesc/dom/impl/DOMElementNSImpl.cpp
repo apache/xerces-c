@@ -64,6 +64,9 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUri.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
     DOMElementImpl(ownerDoc, nam)
 {
@@ -260,4 +263,6 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
         );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
 };
+
+XERCES_CPP_NAMESPACE_END
 

@@ -74,6 +74,8 @@
 #include <xercesc/util/regx/ConditionToken.hpp>
 #include <xercesc/util/regx/OpFactory.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -572,6 +574,8 @@ inline bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
     //REVISIT - for now we will return a case sensitive match
     return (ch1 == ch2);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 /**

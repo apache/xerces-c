@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:56:25  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/20 18:17:01  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -85,6 +88,10 @@
 
 #ifndef DTDHANDLER_HPP
 #define DTDHANDLER_HPP
+
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
   * Receive notification of basic DTD-related events.
@@ -213,5 +220,7 @@ private :
     void operator=(const DTDHandler&);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

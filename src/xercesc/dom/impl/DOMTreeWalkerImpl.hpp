@@ -72,6 +72,8 @@
 
 #include <xercesc/dom/DOMTreeWalker.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT DOMTreeWalkerImpl : public DOMTreeWalker {
     private:
@@ -199,5 +201,7 @@ protected:
 
     		
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

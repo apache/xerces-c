@@ -62,8 +62,7 @@
 #include "RefCountedImpl.hpp"
 #include "TreeWalkerImpl.hpp"
 
-
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_TreeWalker::DOM_TreeWalker()
@@ -199,5 +198,7 @@ DOM_Node								DOM_TreeWalker::previousNode() {
 DOM_Node								DOM_TreeWalker::nextNode() {
     return fImpl->nextNode();
 }
+
+XERCES_CPP_NAMESPACE_END
 
 

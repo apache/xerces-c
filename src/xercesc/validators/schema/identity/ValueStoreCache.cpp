@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/08/28 13:41:20  knoaman
  * missing type info.
  *
@@ -80,6 +83,8 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/util/HashPtr.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ValueStoreCache: Constructors and Destructor
@@ -200,6 +205,8 @@ void ValueStoreCache::transplant(IdentityConstraint* const ic, const int initial
         fGlobalICMap->put(ic, valueStore);
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file ValueStoreCache.cpp

@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * The <code>DOMCharacterData</code> interface extends DOMNode with a set of
@@ -237,6 +239,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

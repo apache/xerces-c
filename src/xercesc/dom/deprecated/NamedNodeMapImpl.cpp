@@ -64,6 +64,8 @@
 #include "DOM_DOMException.hpp"
 #include "DocumentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 int        NamedNodeMapImpl::gLiveNamedNodeMaps  = 0;
 int        NamedNodeMapImpl::gTotalNamedNodeMaps = 0;
@@ -455,3 +457,6 @@ void NamedNodeMapImpl::cloneContent(NamedNodeMapImpl *srcmap) {
 		}
 	}
 }
+
+XERCES_CPP_NAMESPACE_END
+

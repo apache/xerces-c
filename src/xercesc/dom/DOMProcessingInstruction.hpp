@@ -65,6 +65,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * The <code>DOMProcessingInstruction</code> interface represents a  "processing
@@ -144,6 +146,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

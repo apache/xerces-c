@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:23  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:11:39  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/10/25 16:26:39  tng
  * [Bug 4213] BinHTTPURLInputStream initialisation not thread safe.  By Mark Weaver.
@@ -104,6 +107,8 @@
 //
 struct hostent;
 struct sockaddr;
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT BinHTTPURLInputStream : public BinInputStream
 {
@@ -169,6 +174,6 @@ inline unsigned int BinHTTPURLInputStream::curPos() const
     return fBytesProcessed;
 }
 
-
+XERCES_CPP_NAMESPACE_END
 
 #endif // BINHTTPURLINPUTSTREAM_HPP

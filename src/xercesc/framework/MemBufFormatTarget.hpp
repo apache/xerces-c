@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/08/12 21:38:22  peiyongz
  * Bug#11462: MemBufFormatTarget issue(2) .., proposed patch from
  *                      Esmond Pitt (pitte@anz.com)
@@ -77,7 +80,8 @@
 
 #include <xercesc/framework/XMLFormatter.hpp>
 
-     
+XERCES_CPP_NAMESPACE_BEGIN
+
 /*
  * The MemBufFormatTarget is a derivative from XMLFormatTarget, which user code
  * may plug into DOMWriter to retrieve the serialized XML stream (from DOM Tree)
@@ -86,11 +90,11 @@
  * The MemBufFormatTarget is initalized to have a memory buffer of 1023 upon
  * construction, which grows as needed. The buffer will be deleted when
  * MemBufFormatTarget is destructed; or will be reset when the reset() function
- * is called. 
+ * is called.
  *
  * The MemBufFormatTarget returns a NULL terminated XMLByte stream upon request,
- * through the method getRawBuffer(), and user should make its own copy of the 
- * returned buffer if it intends to keep it independent on the state of the 
+ * through the method getRawBuffer(), and user should make its own copy of the
+ * returned buffer if it intends to keep it independent on the state of the
  * MemBufFormatTarget.
  */
 
@@ -176,6 +180,8 @@ private:
     unsigned int    fCapacity;
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

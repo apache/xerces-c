@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/09/24 19:44:40  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -97,6 +100,8 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 
@@ -797,6 +802,8 @@ const RefVectorOf<XMLCh>* AbstractNumericFacetValidator::getEnumString() const
 {
 	return (fEnumerationInherited? getBaseValidator()->getEnumString() : fStrEnumeration );
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file AbstractNumericFacetValidator::cpp

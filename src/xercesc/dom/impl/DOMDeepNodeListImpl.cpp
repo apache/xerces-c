@@ -66,6 +66,9 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <limits.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static const XMLCh kAstr[] = {chAsterisk, chNull};
 
 DOMDeepNodeListImpl::DOMDeepNodeListImpl(const DOMNode *rootNode,
@@ -249,4 +252,6 @@ DOMNode *DOMDeepNodeListImpl::nextMatchingElementAfter(DOMNode *current)
     // Fell out of tree-walk; no more instances found
     return 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:10:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/10/10 21:07:55  peiyongz
  * load resource files using environement vars and base name
  *
@@ -99,6 +102,7 @@
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include "unicode/ures.h"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This is the ICU specific implementation of the XMLMsgLoader interface.
@@ -165,12 +169,14 @@ private :
 	//              locale specific resource bundle unavailable.
     //
     //  fDomainBundle
-    //      pointer to the domain specific resource bundle with in the 
+    //      pointer to the domain specific resource bundle with in the
 	//              required locale specific (or default locale) resource bundle.
     //
     // -----------------------------------------------------------------------
     UResourceBundle*      fLocaleBundle;
     UResourceBundle*      fDomainBundle;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

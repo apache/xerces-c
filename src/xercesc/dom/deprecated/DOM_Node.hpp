@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMString.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class DOM_NodeList;
 class DOM_NamedNodeMap;
 class DOM_Document;
@@ -625,6 +627,7 @@ protected:
 
 };
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

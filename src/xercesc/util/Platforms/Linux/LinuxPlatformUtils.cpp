@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/11/04 15:13:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.7  2002/08/19 19:38:17  tng
  * [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
  *
@@ -212,6 +215,8 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Private Static Methods
@@ -778,4 +783,6 @@ void XMLPlatformUtils::platformTerm()
 	atomicOpsMutex.fHandle = 0;
 #endif
 }
+
+XERCES_CPP_NAMESPACE_END
 

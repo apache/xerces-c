@@ -119,6 +119,8 @@
 #include "DOM_Node.hpp"
 #include "NamedNodeMapImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
                                          const DOMString &entityName)
@@ -201,3 +203,6 @@ void EntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
     ParentNode::setReadOnly(readOnl,deep);
 }
+
+XERCES_CPP_NAMESPACE_END
+

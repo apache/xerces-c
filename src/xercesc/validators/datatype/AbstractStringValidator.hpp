@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/10/18 16:52:14  peiyongz
  * Patch to Bug#13640: Getter methods not public in
  *                                    DecimalDatatypeValidator
@@ -109,6 +112,8 @@
 #define ABSTRACT_STRING_VALIDATOR_HPP
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT AbstractStringValidator : public DatatypeValidator
 {
@@ -288,7 +293,10 @@ inline void AbstractStringValidator::setEnumeration(RefVectorOf<XMLCh>* enums
     }
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file AbstractStringValidator.hpp
   */
-#endif

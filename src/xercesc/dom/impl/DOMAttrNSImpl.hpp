@@ -72,6 +72,8 @@
 
 #include "DOMAttrImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT DOMAttrNSImpl: public DOMAttrImpl {
 protected:
@@ -100,5 +102,7 @@ public:
    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
    void setName(const XMLCh* namespaceURI, const XMLCh* name);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:40  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:40  peiyongz
+ * sane_include
  *
  * Revision 1.10  2001/10/10 14:18:26  peiyongz
  * no message
@@ -102,15 +105,17 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 //
 //http://www.template.com
 //
-static const XMLCh BASE_URI[] = 
+static const XMLCh BASE_URI[] =
 {
-    chLatin_h, chLatin_t, chLatin_t, chLatin_p, 
-    chColon, chForwardSlash, chForwardSlash, 
+    chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+    chColon, chForwardSlash, chForwardSlash,
     chLatin_w, chLatin_w, chLatin_w, chPeriod,
-    chLatin_t, chLatin_e, chLatin_m, chLatin_p, chLatin_l, 
+    chLatin_t, chLatin_e, chLatin_m, chLatin_p, chLatin_l,
     chLatin_a, chLatin_t, chLatin_e, chPeriod,
     chLatin_c, chLatin_o, chLatin_m, chNull
 };
@@ -141,7 +146,7 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
         init(enums);
     }
     catch (...)
-    { 
+    {
         cleanUp();
         throw;
     }
@@ -182,24 +187,24 @@ int AnyURIDatatypeValidator::getLength(const XMLCh* const content) const
 }
 
 void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
-{  
+{
 
     // check 3.2.17.c0 must: URI (rfc 2396/2723)
-    try 
+    try
     {
-        if (!fTempURI) 
+        if (!fTempURI)
             fTempURI = new XMLUri(BASE_URI);
 
         // Support for relative URLs
-        // According to Java 1.1: URLs may also be specified with a 
+        // According to Java 1.1: URLs may also be specified with a
         // String and the URL object that it is related to.
         //
-        if (XMLString::stringLen(content)) 
+        if (XMLString::stringLen(content))
         {
-            XMLUri  newURI(fTempURI, content );   
+            XMLUri  newURI(fTempURI, content );
         }
-    } 
-    catch (...) 
+    }
+    catch (...)
     {
         ThrowXML1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_URI_Malformed
@@ -207,6 +212,8 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
     }
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file AnyURIDatatypeValidator.cpp

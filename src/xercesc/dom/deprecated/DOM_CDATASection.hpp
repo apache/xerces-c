@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_Text.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDATASectionImpl;
 
 /**
@@ -141,6 +144,9 @@ protected:
     friend class DOM_Document;
 
 };
+
+XERCES_CPP_NAMESPACE_END
+
 #endif
 
 

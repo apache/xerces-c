@@ -78,6 +78,7 @@
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMNodeIterator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
     private:
@@ -153,5 +154,7 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
         bool acceptNode (DOMNode* node);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

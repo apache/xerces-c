@@ -78,6 +78,8 @@
 #include <xercesc/dom/DOMAttr.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class DOMElementImpl;
 
 class CDOM_EXPORT DOMAttrImpl: public DOMAttr {
@@ -111,5 +113,7 @@ public:
 private:
     void getTextValue(DOMNode* node, XMLBuffer& buf) const;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

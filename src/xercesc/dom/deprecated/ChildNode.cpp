@@ -62,6 +62,9 @@
 
 #include "ChildNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 ChildNode::ChildNode(DocumentImpl *ownerDoc)
   : NodeImpl(ownerDoc)
 {
@@ -99,3 +102,6 @@ NodeImpl * ChildNode::getPreviousSibling() {
     // parent's lastChild, but we hide that
     return isFirstChild() ? null : previousSibling;
 };
+
+XERCES_CPP_NAMESPACE_END
+

@@ -61,6 +61,7 @@
 #include "DOM_Text.hpp"
 #include "TextImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_Text::DOM_Text()
@@ -108,3 +109,6 @@ bool DOM_Text::isIgnorableWhitespace()
 {
         return ((TextImpl *)fImpl)->isIgnorableWhitespace();
 };
+
+XERCES_CPP_NAMESPACE_END
+

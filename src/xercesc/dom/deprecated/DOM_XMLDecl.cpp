@@ -62,6 +62,7 @@
 #include "DOM_XMLDecl.hpp"
 #include "XMLDeclImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_XMLDecl::DOM_XMLDecl() :
@@ -109,4 +110,6 @@ DOMString DOM_XMLDecl::getStandalone() const
 {
     return DOMString( ((XMLDeclImpl*)fImpl)->getStandalone());
 }
+
+XERCES_CPP_NAMESPACE_END
 

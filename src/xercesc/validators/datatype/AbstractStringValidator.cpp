@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/10/02 13:29:12  tng
  * Since the compare function return int, so use XMLString::compareString instead of XMLString::equals there.
  *
@@ -111,6 +114,8 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
@@ -669,6 +674,8 @@ const RefVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 {
 	return getEnumeration();
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file AbstractStringValidator.cpp

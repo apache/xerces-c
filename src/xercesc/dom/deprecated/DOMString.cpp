@@ -74,7 +74,7 @@
 #include <assert.h>
 #include <string.h>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 //----------------------------------------------
 //
@@ -1144,5 +1144,5 @@ static void reinitDomMutex()
 };
 
 
-
+XERCES_CPP_NAMESPACE_END
 

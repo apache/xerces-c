@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:36  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:14:33  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/06/25 16:20:08  tng
  * Rename iconv_util.h to iconv_util.hpp.  AS400 changes by Linda Swan.
@@ -66,6 +69,7 @@
  * Initial checkin
  *
  */
+
 
 const char* iconv_getDefaultCodepage(void);
 
@@ -158,3 +162,5 @@ UConverter* createNewConverter(const char *name, UErrorCode *err);
  */
 static void   initializeDataConverter (UConverter * myUConverter);
 UConverter *createConverter (const char *converterName, UErrorCode * err);
+
+XERCES_CPP_NAMESPACE_END

@@ -94,6 +94,8 @@
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Local static data
 // ---------------------------------------------------------------------------
@@ -4558,3 +4560,5 @@ void XMLScanner::resetCachedGrammarPool()
 {
     fGrammarResolver->resetCachedGrammar();
 }
+
+XERCES_CPP_NAMESPACE_END

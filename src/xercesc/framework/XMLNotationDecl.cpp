@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/22 19:27:41  tng
  * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
  *
@@ -79,6 +82,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLNotationDecl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLNotationDecl: Constructors and operators
@@ -144,3 +148,5 @@ void XMLNotationDecl::cleanUp()
     delete [] fSystemId;
     delete [] fBaseURI;
 }
+
+XERCES_CPP_NAMESPACE_END

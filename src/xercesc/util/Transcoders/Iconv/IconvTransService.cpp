@@ -75,6 +75,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local, const data
@@ -555,3 +556,5 @@ IconvTranscoder::transcodeXML(  const   XMLByte* const          srcData
     bytesEaten = countIn;
     return countOut;
 }
+
+XERCES_CPP_NAMESPACE_END

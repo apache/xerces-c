@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/24 19:57:20  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -84,6 +87,8 @@
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ValueStore: Constructors and Destructor
@@ -375,6 +380,8 @@ void ValueStore::duplicateValue() {
         }
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file ValueStore.cpp

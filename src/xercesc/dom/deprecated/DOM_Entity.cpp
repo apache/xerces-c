@@ -62,6 +62,7 @@
 #include "EntityImpl.hpp"
 #include "DOM_NodeList.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_Entity::DOM_Entity()
@@ -145,3 +146,6 @@ DOM_Node       DOM_Entity::getNextSibling() const
 {
     return DOM_Node(((EntityImpl*)fImpl)->getNextSibling());
 };
+
+XERCES_CPP_NAMESPACE_END
+

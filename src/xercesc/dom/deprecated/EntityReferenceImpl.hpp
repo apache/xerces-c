@@ -73,6 +73,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "ParentNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDOM_EXPORT EntityReferenceImpl: public ParentNode
 {
 private:
@@ -88,6 +91,8 @@ public:
     virtual bool isEntityReference();
     virtual void setReadOnly(bool readOnly,bool deep);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

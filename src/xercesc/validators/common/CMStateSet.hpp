@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/07/16 12:50:08  tng
  * [Bug 10651] CMStateSet.hpp includes both memory.h and string.h.
  *
@@ -114,6 +117,7 @@
 #include <xercesc/framework/XMLValidityCodes.hpp>
 #include <string.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class CMStateSet
 {
@@ -389,5 +393,7 @@ private :
     unsigned int    fBits2;
     XMLByte*        fByteArray;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

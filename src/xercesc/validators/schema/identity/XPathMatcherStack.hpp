@@ -67,6 +67,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/XPathMatcher.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT XPathMatcherStack
 {
@@ -154,13 +155,15 @@ inline void XPathMatcherStack::addMatcher(XPathMatcher* const matcher) {
 
     if (fMatchersCount == fMatchers->size()) {
 
-        fMatchers->addElement(matcher); 
+        fMatchers->addElement(matcher);
         fMatchersCount++;
     }
     else {
         fMatchers->setElementAt(matcher, fMatchersCount++);
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

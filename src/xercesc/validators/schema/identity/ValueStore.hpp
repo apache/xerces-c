@@ -62,7 +62,7 @@
 #define VALUESTORE_HPP
 
 /**
-  * This class stores values associated to an identity constraint. 
+  * This class stores values associated to an identity constraint.
   * Each value stored corresponds to a field declared for the identity
   * constraint.
   */
@@ -71,6 +71,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/FieldValueMap.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -114,7 +116,7 @@ public:
     // -----------------------------------------------------------------------
     void duplicateValue();
     void reportNilError(IdentityConstraint* const ic);
-    
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators
@@ -125,7 +127,7 @@ private:
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
-    /** 
+    /**
       * Returns whether a field associated <DatatypeValidator, String> value
       * is a duplicate of another associated value.
       * It is a duplicate only if either of these conditions are true:
@@ -156,6 +158,8 @@ inline IdentityConstraint*
 ValueStore::getIdentityConstraint() const {
     return fIdentityConstraint;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -75,6 +75,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "ParentNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NamedNodeMapImpl;
 
 class CDOM_EXPORT DocumentTypeImpl: public ParentNode {
@@ -121,5 +124,7 @@ public:
     virtual DOMString     getSystemId();
     virtual DOMString     getInternalSubset();
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -65,6 +65,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * OMDocumentFragment is a "lightweight" or "minimal"
@@ -132,5 +134,7 @@ public:
 	//@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

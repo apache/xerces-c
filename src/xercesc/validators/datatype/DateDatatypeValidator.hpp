@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:40  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:40  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/11/07 19:18:52  peiyongz
  * DateTime Port
@@ -69,6 +72,8 @@
 #define DATE_DATATYPE_VALIDATOR_HPP
 
 #include <xercesc/validators/datatype/DateTimeValidator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT DateDatatypeValidator : public DateTimeValidator
 {
@@ -108,8 +113,11 @@ protected:
     virtual XMLDateTime*          parse(const XMLCh* const);
 };
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file DateDatatypeValidator.hpp
   */
-#endif
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/11/04 14:57:03  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.11  2002/09/24 20:00:32  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -232,6 +235,9 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/parsers/SAX2XMLReaderImpl.hpp>
 #include <string.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 const XMLCh gDTDEntityStr[] =
 {
@@ -1571,3 +1577,6 @@ void SAX2XMLReaderImpl::resetCachedGrammarPool()
 {
     fScanner->resetCachedGrammarPool();
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -66,6 +66,7 @@
 #include "DOMDocumentRange.hpp"
 #include "DOMDocumentTraversal.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMDocumentType;
 class DOMElement;
@@ -1167,5 +1168,7 @@ protected:
     friend class DOMImplementation;
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -63,6 +63,9 @@
 #include "DOM_Node.hpp"
 #include <assert.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOM_NodeList::DOM_NodeList()
 {
     fImpl = 0;
@@ -146,3 +149,6 @@ unsigned int DOM_NodeList::getLength() const
 {
     return fImpl->getLength();
 };
+
+XERCES_CPP_NAMESPACE_END
+

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/10/09 20:48:39  peiyongz
  * init(): take 1 arg
@@ -75,6 +78,8 @@
 #define NAME_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT NameDatatypeValidator : public StringDatatypeValidator
 {
@@ -162,7 +167,11 @@ private:
 
 };
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file NameDatatypeValidator.hpp
   */
-#endif
+

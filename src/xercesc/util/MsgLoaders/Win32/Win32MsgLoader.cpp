@@ -70,6 +70,8 @@
 #include <windows.h>
 #include "Win32MsgLoader.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -267,3 +269,5 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     return bRet;
 }
+
+XERCES_CPP_NAMESPACE_END

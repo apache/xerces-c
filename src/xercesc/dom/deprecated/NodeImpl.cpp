@@ -74,6 +74,9 @@
 #include "stdio.h"
 #include "TextImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static DOMString *s_xml = null;
 static DOMString *s_xmlURI = null;
 static DOMString *s_xmlns = null;
@@ -531,3 +534,6 @@ void NodeImpl::reinitNodeImpl() {
     s_xmlnsURI = 0;
 
 }
+
+XERCES_CPP_NAMESPACE_END
+

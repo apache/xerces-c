@@ -72,6 +72,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -129,7 +130,7 @@ private:
 // ---------------------------------------------------------------------------
 //  FieldValueMap: Getter methods
 // ---------------------------------------------------------------------------
-inline DatatypeValidator* 
+inline DatatypeValidator*
 FieldValueMap::getDatatypeValidatorAt(const unsigned int index) const {
 
     if (fValidators) {
@@ -215,6 +216,7 @@ inline void FieldValueMap::put(IC_Field* const key,
     }
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

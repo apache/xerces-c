@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:55:45  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/20 18:17:02  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -96,6 +99,8 @@
 #define ATTRIBUTES_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
   * Interface for an element's attribute specifications.
@@ -351,5 +356,7 @@ private :
     void operator=(const Attributes&);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

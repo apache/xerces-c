@@ -64,6 +64,9 @@
 #include "DStringPool.hpp"
 #include "DocumentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static DOMString *gNam = 0;  // will be lazily initialized to "#xmldecl"
 static XMLRegisterCleanup gNamCleanup;
 
@@ -159,3 +162,6 @@ void XMLDeclImpl::reinitXMLDeclImpl() {
     gNam = 0;
 
 }
+
+XERCES_CPP_NAMESPACE_END
+

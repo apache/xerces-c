@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 14:45:20  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/08/08 16:40:16  tng
  * 390 Changes from Stephen Dulin.
  *
@@ -125,7 +128,10 @@
 #include <limits.h>  // for MAX of size_t and ssize_t
 
 // ---------------------------------------------------------------------------
-// Define these away for this platform
+//  A define in the build for each project is also used to control whether
+//  the export keyword is from the project's viewpoint or the client's.
+//  These defines provide the platform specific keywords that they need
+//  to do this.
 // ---------------------------------------------------------------------------
 #define PLATFORM_EXPORT _Export
 #define PLATFORM_IMPORT _Export
@@ -136,7 +142,6 @@
 // ---------------------------------------------------------------------------
 //#define NO_NATIVE_BOOL
 
-
 // ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
 //  where it is advantageous to use the L"" where it supported, to avoid
@@ -144,6 +149,12 @@
 //  If your compiler does not support it, don't define this.
 // ---------------------------------------------------------------------------
 #define XML_LSTRSUPPORT
+
+// ---------------------------------------------------------------------------
+//  Indicate that we support C++ namespace
+//  Do not define it if the compile cannot handle C++ namespace
+// ---------------------------------------------------------------------------
+// #define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character

@@ -63,6 +63,9 @@
 
 #include <xercesc/dom/DOMImplementationLS.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMDocument;
 class DOMDocumentType;
 
@@ -253,5 +256,7 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

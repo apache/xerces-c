@@ -66,6 +66,9 @@
 #include "DStringPool.hpp"
 #include "RangeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static DOMString *gText = 0;   // will be lazily initialized to point to "#text"
 static XMLRegisterCleanup gTextCleanup;
 
@@ -167,3 +170,6 @@ void TextImpl::reinitTextImpl() {
     gText = 0;
 
 }
+
+XERCES_CPP_NAMESPACE_END
+

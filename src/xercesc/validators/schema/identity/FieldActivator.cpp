@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/27 05:56:19  knoaman
  * Identity Constraint: handle case of recursive elements.
  *
@@ -74,6 +77,8 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  FieldActivator: Constructors and Destructor
@@ -145,6 +150,8 @@ void FieldActivator::endValueScopeFor(const IdentityConstraint* const ic, const 
 
     valueStore->endValueScope();
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file FieldActivator.cpp

@@ -97,7 +97,7 @@
 	 #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
 #endif
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 char* PackingRepText(const char * const repText1,
 		     const char * const repText2,
@@ -304,7 +304,7 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)                                   
+                                   , const XMLByte* const  toFlush)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
@@ -864,3 +864,5 @@ void XMLPlatformUtils::platformTerm()
 	cleanupDefaultConverter();
 #endif
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.1  2002/06/19 21:59:26  peiyongz
  * DOM3:DOMSave Interface support: LocalFileFormatTarget
  *
@@ -65,6 +68,8 @@
 
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 LocalFileFormatTarget::LocalFileFormatTarget(const XMLCh* const fileName)
 :fSource(0)
@@ -95,5 +100,7 @@ void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
     return;
 }
 
+
+XERCES_CPP_NAMESPACE_END
 
 

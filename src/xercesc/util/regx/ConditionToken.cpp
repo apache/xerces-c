@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -75,6 +78,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/ConditionToken.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  ConditionToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
@@ -93,6 +98,8 @@ ConditionToken::ConditionToken(const unsigned int refNo, Token* const condTok,
 ConditionToken::~ConditionToken() {
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   *	End of file ConditionToken.cpp

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:07:34  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/07/15 19:25:49  tng
  * DOM L3:  declare a dummy DOMError::set/getRelatedException
  *
@@ -72,6 +75,9 @@
 #define DOMERRORIMPL_HPP
 
 #include <xercesc/dom/DOMError.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
   * Introduced in DOM Level 3
@@ -263,5 +269,7 @@ inline void DOMErrorImpl::setAdoptLocation(const bool value)
     fAdoptLocation = value;
 }
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

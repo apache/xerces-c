@@ -64,6 +64,8 @@
 #include "DOMNode.hpp"
 #include "DOMNodeFilter.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * <code>DOMTreeWalker</code> objects are used to navigate a document tree or
@@ -297,5 +299,7 @@ public:
     virtual void              release() = 0;
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -66,6 +66,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT CharToken : public Token {
 public:
 	// -----------------------------------------------------------------------
@@ -114,6 +116,8 @@ inline bool CharToken::match(const XMLInt32 ch){
 
 	return ch == fCharData;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

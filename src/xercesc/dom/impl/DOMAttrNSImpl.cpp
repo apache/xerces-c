@@ -67,6 +67,8 @@
 
 #include "assert.h"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 DOMAttrNSImpl::DOMAttrNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
 DOMAttrImpl(ownerDoc, nam)
 {
@@ -253,4 +255,6 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
           );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
 };
+
+XERCES_CPP_NAMESPACE_END
 

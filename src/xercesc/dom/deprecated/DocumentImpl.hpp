@@ -78,6 +78,9 @@
 #include "xercesc/util/RefHashTableOf.hpp"
 #include "XMLDeclImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DocumentTypeImpl;
 class ElementImpl;
 class AttrImpl;
@@ -271,5 +274,7 @@ public:
 	static void reinitDocumentImpl();
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

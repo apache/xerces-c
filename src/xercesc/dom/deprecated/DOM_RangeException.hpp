@@ -63,6 +63,9 @@
 
 #include "DOM_DOMException.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 /**
   * Encapsulate range related DOM error or warning. DOM level 2 implementation.
   *
@@ -134,6 +137,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

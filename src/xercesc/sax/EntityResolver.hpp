@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:56:25  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/06/06 20:39:16  tng
  * Document Fix: document that the returned object from resolveEntity is owned by the parser
  *
@@ -92,6 +95,8 @@
 #define ENTITYRESOLVER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class InputSource;
 
@@ -226,5 +231,7 @@ private :
     void operator=(const EntityResolver&);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/25 21:18:53  tng
  * Schema Fix: Ensure no invalid uri index for UPA checking.
  *
@@ -120,6 +123,8 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentSpecNode;
 
@@ -272,4 +277,7 @@ inline void MixedContentModel::checkUniqueParticleAttribution
     // for mixed content model, it's only a sequence
     // UPA checking is not necessary
 }
+
+XERCES_CPP_NAMESPACE_END
+
 #endif

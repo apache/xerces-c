@@ -67,6 +67,9 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //
 //  DStringPoolEntry - one of these structs is allocated for each
 //                      DOMString in the pool.  Each slot in the
@@ -190,3 +193,6 @@ const DOMString &DStringPool::getStaticString(const char *in
     }
     return **loc;
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/11/15 17:09:23  peiyongz
  * catch(...) only. (the invoker need to cath XMLException to display proper message)
@@ -75,6 +78,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/DurationDatatypeValidator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -107,7 +112,7 @@ DatatypeValidator* DurationDatatypeValidator::newInstance(
 //
 // caller need to release the date created here
 //
-XMLDateTime* DurationDatatypeValidator::parse(const XMLCh* const content) 
+XMLDateTime* DurationDatatypeValidator::parse(const XMLCh* const content)
 {
     XMLDateTime *pRetDate = new XMLDateTime(content);
 
@@ -130,6 +135,8 @@ int DurationDatatypeValidator::compareDates(const XMLDateTime* const date1
 {
     return XMLDateTime::compare(date1, date2, strict);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file DurationDatatypeValidator::cpp

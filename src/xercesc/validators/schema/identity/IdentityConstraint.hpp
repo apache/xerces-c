@@ -72,6 +72,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declarations
 // ---------------------------------------------------------------------------
@@ -218,6 +220,8 @@ inline IC_Field* IdentityConstraint::getFieldAt(const unsigned int index) {
 
     return 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

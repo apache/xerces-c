@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/09/24 19:48:39  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -137,6 +140,8 @@
 #include <xercesc/validators/common/CMStateSet.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  MixedContentModel: Constructors and Destructor
@@ -481,4 +486,6 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
         buildChildList(leftNode, toFill, toType);
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 

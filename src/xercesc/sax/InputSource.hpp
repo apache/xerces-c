@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:56:26  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/30 18:26:18  tng
  * Since the derived class Wrapper4DOMInputSource has overwritten the set/getEncoding, SystemId, PublicId ... etc., these functions has to be virtual for them to work.
  *
@@ -108,6 +111,8 @@
 #define INPUTSOURCE_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class BinInputStream;
 
@@ -394,5 +399,7 @@ inline void InputSource::setIssueFatalErrorIfNotFound(const bool flag)
 {
     fFatalErrorIfNotFound = flag;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

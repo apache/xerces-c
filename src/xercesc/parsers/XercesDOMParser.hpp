@@ -65,6 +65,9 @@
 
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class EntityResolver;
 class ErrorHandler;
 class Grammar;
@@ -195,7 +198,7 @@ public :
      *
      * @param uriId id of the string in the URI string pool.
      * @return URI string corresponding to the URI id.
-     */    
+     */
     const XMLCh* getURIText(unsigned int uriId);
 
     //@}
@@ -631,5 +634,7 @@ inline const EntityResolver* XercesDOMParser::getEntityResolver() const
     return fEntityResolver;
 }
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

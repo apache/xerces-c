@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:29  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/01 14:15:36  knoaman
  * Add a return value to satisfy compilers that complain about
@@ -77,6 +80,8 @@
 #include <xercesc/util/regx/Op.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Op: Constructors and Destructors
 // ---------------------------------------------------------------------------
@@ -91,7 +96,7 @@ Op::Op(const short type) : fOpType(type),
 int Op::getSize() const {
 
 	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-    return 0; // for compilers that complain about no return value    
+    return 0; // for compilers that complain about no return value
 }
 
 XMLInt32 Op::getData() const {
@@ -314,6 +319,8 @@ const Op* ConditionOp::getNoFlow() const {
 
 	return fNoOp;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End file Op.cpp

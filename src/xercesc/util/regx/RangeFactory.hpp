@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT RangeFactory {
 
@@ -98,6 +99,8 @@ private:
     RangeFactory(const RangeFactory&);
     void operator=(const RangeFactory&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

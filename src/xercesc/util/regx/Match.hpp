@@ -67,6 +67,8 @@
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /**
   * An instance of this class has ranges captured in matching
   */
@@ -183,5 +185,7 @@ inline void Match::setEndPos(const int index, const int value) {
 
 	fEndPositions[index] = value;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -61,6 +61,9 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <stdio.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static const int gPrimes[] = {997, 9973, 99991, 999983, 0 };  // To do - add a few more.
 
 static const float gMaxFill = 0.8f;   // The maximum fraction of the total
@@ -268,5 +271,7 @@ void NodeIDMap::growTable()
 
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:49:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/09/24 20:12:48  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -100,6 +103,8 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMNode.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // Finds and returns the first child element node.
 DOMElement* XUtil::getFirstChildElement(const DOMNode* const parent)
@@ -189,3 +194,4 @@ DOMElement* XUtil::getNextSiblingElementNS(const DOMNode* const node
     return 0;
 }
 
+XERCES_CPP_NAMESPACE_END

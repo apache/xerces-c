@@ -71,6 +71,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Mutexes.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -315,6 +317,8 @@ inline int RegxParser::hexChar(const XMLInt32 ch) {
 
 	return ch - chLatin_a + 10;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

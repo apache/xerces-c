@@ -74,6 +74,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNamedNodeMapImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMNode;
 class DOMNamedNodeMap;
 
@@ -119,6 +122,8 @@ inline void DOMAttrMapImpl::hasDefaults(bool value)
 {
     attrDefaults = value;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 
 #endif

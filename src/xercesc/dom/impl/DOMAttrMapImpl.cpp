@@ -69,6 +69,8 @@
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 DOMAttrMapImpl::DOMAttrMapImpl(DOMNode *ownerNod)
 	: DOMNamedNodeMapImpl(ownerNod)
 {
@@ -245,4 +247,6 @@ void DOMAttrMapImpl::moveSpecifiedAttributes(DOMAttrMapImpl* srcmap) {
             setNamedItem(attr);
     }
 } // moveSpecifiedAttributes(AttributeMap):void
+
+XERCES_CPP_NAMESPACE_END
 

@@ -72,6 +72,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "NodeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DocumentImpl;
 
 class CDOM_EXPORT NotationImpl: public NodeImpl {
@@ -111,5 +114,7 @@ public:
     virtual void setSystemId(const DOMString &arg);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

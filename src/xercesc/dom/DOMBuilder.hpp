@@ -65,6 +65,9 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMErrorHandler;
 class DOMEntityResolver;
 class DOMInputSource;
@@ -701,5 +704,7 @@ public:
 
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

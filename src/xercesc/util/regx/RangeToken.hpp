@@ -66,6 +66,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -139,6 +141,7 @@ private:
     RangeToken*  fCaseIToken;
 };
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

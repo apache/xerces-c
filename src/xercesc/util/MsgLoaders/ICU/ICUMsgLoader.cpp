@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 15:10:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/10/10 21:07:55  peiyongz
  * load resource files using environement vars and base name
  *
@@ -115,6 +118,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Local static methods
 // ---------------------------------------------------------------------------
@@ -122,7 +127,7 @@
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
 // ---------------------------------------------------------------------------
-ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain) 
+ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 :fLocaleBundle(0)
 ,fDomainBundle(0)
 {
@@ -140,7 +145,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 
     if (location)
 		strcpy(tempBuf, location);
-  
+
     strcat(tempBuf, U_FILE_SEP_STRING);
     strcat(tempBuf, "XercescErrMsg");
 
@@ -150,7 +155,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
-    
+
     /***
         get the resource bundle for the domain
         strip off path information, if any
@@ -160,7 +165,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 	 err = U_ZERO_ERROR;
      fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
      delete [] domainName;
- 
+
      if (!U_SUCCESS(err) || fDomainBundle == NULL)
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
@@ -273,3 +278,5 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
     return bRet;
 }
+
+XERCES_CPP_NAMESPACE_END

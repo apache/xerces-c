@@ -64,6 +64,8 @@
 #include "ElementImpl.hpp"
 #include "DeepNodeListImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOM_Element::DOM_Element()
 : DOM_Node(null)
@@ -215,4 +217,6 @@ bool DOM_Element::hasAttributeNS(const DOMString &namespaceURI,
     return ((ElementImpl *)fImpl)->hasAttributeNS(namespaceURI, localName);
 }
 
+
+XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.8  2002/09/24 20:12:48  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -108,6 +111,8 @@
 #include <xercesc/validators/schema/XUtil.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/XMLString.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SchemaInfo: Constructors and Destructor
@@ -309,6 +314,8 @@ void SchemaInfo::updateImportingInfo(SchemaInfo* const importingInfo) {
         }
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file SchemaInfo.cpp

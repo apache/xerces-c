@@ -66,6 +66,9 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include "DOMImplementationImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 // -----------------------------------------------------------------------
 //  Static constants.  These are lazily initialized on first usage.
 //                     (Static constructors can not be safely used because
@@ -172,4 +175,6 @@ void DOMImplementationRegistry::addSource (DOMImplementationSource* source) {
     getDOMImplSrcVector()->addElement(source);
 }
 
+
+XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/24 19:48:39  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -130,6 +133,7 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XercesElementWildcard.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SimpleContentModel: Implementation of the ContentModel virtual interface
@@ -533,4 +537,6 @@ void SimpleContentModel::checkUniqueParticleAttribution
                                   fSecondChild->getRawName());
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:50:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/07/11 18:39:48  knoaman
  * Access entities through the DTDGrammar instead of the scanner.
  *
@@ -86,6 +89,8 @@
 
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /*
  * Default implementation of an XML DTD scanner.
@@ -338,5 +343,7 @@ inline void DTDScanner::setScannerInfo(XMLScanner* const      owningScanner
 inline bool DTDScanner::isReadingExternalEntity() {
     return (fDocTypeReaderId != fReaderMgr->getCurrentReaderNum());
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

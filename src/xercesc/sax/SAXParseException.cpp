@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:56:26  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/05/27 18:33:07  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -90,6 +93,7 @@
 #include    <xercesc/sax/Locator.hpp>
 #include    <xercesc/sax/SAXParseException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SAXParseException: Constructors and Destructor
@@ -181,3 +185,6 @@ XMLSSize_t SAXParseException::getColumnNumber() const
 {
     return fColumnNumber;
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -62,6 +62,9 @@
 #include "NamedNodeMapImpl.hpp"
 #include "NodeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 ElementDefinitionImpl::ElementDefinitionImpl(DocumentImpl *ownerDoc,
                                              const DOMString &nam)
@@ -110,5 +113,7 @@ NamedNodeMapImpl *ElementDefinitionImpl::getAttributes() {
     return attributes;
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 

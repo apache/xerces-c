@@ -61,7 +61,12 @@
 
 #include "NodeListImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 NodeListImpl::NodeListImpl() {};
 
 NodeListImpl::~NodeListImpl() {};
+
+XERCES_CPP_NAMESPACE_END
 

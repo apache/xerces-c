@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2002/11/04 15:07:35  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.18  2002/10/03 18:13:38  peiyongz
  * Bug#12560 Use const in DOMWriter - patch from Duncan Stodart
  *                                                              (Duncan_Stodart@insession.com )
@@ -127,6 +130,9 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -1337,4 +1343,6 @@ void DOMWriterImpl::release()
     DOMWriterImpl* writer = (DOMWriterImpl*) this;
     delete writer;
 }
+
+XERCES_CPP_NAMESPACE_END
 

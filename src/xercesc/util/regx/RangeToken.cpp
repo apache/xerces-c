@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/10/15 18:15:02  knoaman
  * [Bug 13490]: - new[]/delete mismatch in RangeToken.cpp
  *
@@ -103,6 +106,8 @@
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -666,6 +671,9 @@ void RangeToken::createMap() {
         }
     }
 }
+
+XERCES_CPP_NAMESPACE_END
+
 /**
   * End of file RangeToken.cpp
   */

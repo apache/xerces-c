@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:17:01  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/05 13:20:06  tng
  * [Bug 5716] Can't parse with Validation more than one file.
  *
@@ -97,6 +100,8 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -302,6 +307,8 @@ unsigned short UnicodeRangeFactory::getUniCategory(const unsigned short type)
 
     return 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file UnicodeRangeFactory.cpp

@@ -74,6 +74,9 @@
 #include "DOMParentNode.hpp"
 #include "DOMNodeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDOM_EXPORT DOMDocumentFragmentImpl: public DOMDocumentFragment {
 private:
     DOMNodeImpl     fNode;
@@ -94,6 +97,8 @@ public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

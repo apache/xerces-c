@@ -4,6 +4,9 @@
 #define ERRHEADER_XMLValid
 
 #include <xercesc/framework/XMLErrorReporter.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLValid
 {
@@ -150,5 +153,8 @@ public :
        return XMLErrorReporter::ErrTypes_Unknown;
     }
 };
+
+XERCES_CPP_NAMESPACE_END
+
 #endif
 

@@ -84,6 +84,8 @@
 #include "DOMParentNode.hpp"
 #include "DOMDeepNodeListPool.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class DOMAttrImpl;
 class DOMCDATASectionImpl;
@@ -370,6 +372,10 @@ private:
     bool                  errorChecking;    // Bypass error checking.
 
 };
+
+XERCES_CPP_NAMESPACE_END
+
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 //

@@ -67,6 +67,9 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc,
                                    const XMLCh *dat)
     : fNode(ownerDoc), fParent(ownerDoc), fCharacterData(ownerDoc, dat)
@@ -253,5 +256,7 @@ void DOMCDATASectionImpl::release()
                                                                                          {fCharacterData.replaceData(this, offset, count, arg);};
            void             DOMCDATASectionImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);};
            void             DOMCDATASectionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
+
+XERCES_CPP_NAMESPACE_END
 
 

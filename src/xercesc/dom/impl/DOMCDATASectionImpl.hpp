@@ -77,6 +77,8 @@
 #include "DOMParentNode.hpp"
 #include "DOMCharacterDataImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT DOMCDATASectionImpl: public DOMCDATASection {
 private:
@@ -123,6 +125,8 @@ public:
 
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

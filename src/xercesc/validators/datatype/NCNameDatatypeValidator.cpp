@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/09/24 19:44:40  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -79,6 +82,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/NCNameDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -151,6 +156,8 @@ void NCNameDatatypeValidator::checkValueSpace(const XMLCh* const content)
     }
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
  /**
   * End of file NCNameDatatypeValidator.cpp

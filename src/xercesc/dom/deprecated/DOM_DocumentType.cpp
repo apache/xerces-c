@@ -63,6 +63,7 @@
 #include "DOM_NamedNodeMap.hpp"
 #include <assert.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_DocumentType::DOM_DocumentType()
@@ -147,3 +148,6 @@ DOMString     DOM_DocumentType::getInternalSubset() const
 {
         return ((DocumentTypeImpl *)fImpl)->getInternalSubset().clone();
 }
+
+XERCES_CPP_NAMESPACE_END
+

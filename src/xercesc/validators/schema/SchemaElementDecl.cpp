@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/07/12 15:17:48  knoaman
  * For a given global element, store info about a substitution group element
  * as a SchemaElementDecl and not as a string.
@@ -139,6 +142,8 @@
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Constructors and Destructor
@@ -271,7 +276,7 @@ XMLAttDefList& SchemaElementDecl::getAttDefList() const
     if (fXsiComplexTypeInfo) {
         return fXsiComplexTypeInfo->getAttDefList();
     }
-    else if (!fComplexTypeInfo) 
+    else if (!fComplexTypeInfo)
 	{
         ThrowXML(RuntimeException, XMLExcepts::DV_InvalidOperation);
     }
@@ -385,3 +390,4 @@ SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const in
     return 0;
 }
 
+XERCES_CPP_NAMESPACE_END

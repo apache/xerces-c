@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/11/04 14:58:19  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.11  2002/08/27 05:56:39  knoaman
  * Identity Constraint: handle case of recursive elements.
  *
@@ -246,6 +249,8 @@
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class InputSource;
 class XMLDocumentHandler;
@@ -1404,5 +1409,7 @@ inline void XMLScanner::setDoValidation(const bool validate)
     else
         fValScheme = Val_Never;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

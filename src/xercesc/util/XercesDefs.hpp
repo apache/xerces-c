@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/11/04 14:40:12  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.7  2002/07/12 16:48:49  jberry
  * Remove reliance on XML_MACOSX. XML_MACOS is used solely. Where qualification
  * by compiler is required, look for the compiler explicitly such as with
@@ -400,6 +403,24 @@ typedef XMLUInt32           UCS4Ch;
 #endif
 
 
+// ---------------------------------------------------------------------------
+// Define namespace symbols if the compiler supports it.
+// ---------------------------------------------------------------------------
+#if defined(XERCES_HAS_CPP_NAMESPACE)
+    #define XERCES_CPP_NAMESPACE_BEGIN namespace XERCES_CPP_NAMESPACE {
+    #define XERCES_CPP_NAMESPACE_END  }
+    #define XERCES_CPP_NAMESPACE_USE using namespace XERCES_CPP_NAMESPACE;
+    #define XERCES_CPP_NAMESPACE_QUALIFIER XERCES_CPP_NAMESPACE::
+
+    namespace XERCES_CPP_NAMESPACE { }
+    namespace xercesc = XERCES_CPP_NAMESPACE;
+    XERCES_CPP_NAMESPACE_USE
+#else
+    #define XERCES_CPP_NAMESPACE_BEGIN
+    #define XERCES_CPP_NAMESPACE_END
+    #define XERCES_CPP_NAMESPACE_USE
+    #define XERCES_CPP_NAMESPACE_QUALIFIER
+#endif
 
 // ---------------------------------------------------------------------------
 //  Set up the import/export keyword  for our core projects. The

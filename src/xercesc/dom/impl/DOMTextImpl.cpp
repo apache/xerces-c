@@ -74,6 +74,9 @@
 
 #include <assert.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMDocument;
 
 DOMTextImpl::DOMTextImpl(DOMDocument *ownerDoc, const XMLCh *dat)
@@ -255,4 +258,6 @@ void DOMTextImpl::release()
                                                                                  {fCharacterData.replaceData(this, offset, count, arg);};
           void              DOMTextImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);};
           void              DOMTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
+
+XERCES_CPP_NAMESPACE_END
 

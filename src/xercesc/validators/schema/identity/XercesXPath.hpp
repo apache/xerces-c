@@ -69,6 +69,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declarations
 // ---------------------------------------------------------------------------
@@ -359,7 +361,7 @@ public:
     bool scanExpression(const XMLCh* const data, int currentOffset,
                         const int endOffset, ValueVectorOf<int>* const tokens);
 
-protected: 
+protected:
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
@@ -431,7 +433,7 @@ public:
     XPathScannerForSchema(XMLStringPool* const stringPool);
     ~XPathScannerForSchema() {}
 
-protected: 
+protected:
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
@@ -489,6 +491,8 @@ inline RefVectorOf<XercesLocationPath>* XercesXPath::getLocationPaths() const {
 
     return fLocationPaths;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

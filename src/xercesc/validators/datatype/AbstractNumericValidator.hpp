@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/22 20:23:20  peiyongz
  * _declspec(dllimport) and inline warning C4273
@@ -74,6 +77,8 @@
 #include <xercesc/validators/datatype/AbstractNumericFacetValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLNumber.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT AbstractNumericValidator : public AbstractNumericFacetValidator
 {
@@ -122,7 +127,10 @@ inline void AbstractNumericValidator::init(RefVectorOf<XMLCh>*  const enums)
     AbstractNumericFacetValidator::init(enums);
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file AbstractNumericValidator.hpp
   */
-#endif

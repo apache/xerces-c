@@ -74,6 +74,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -149,13 +150,13 @@ inline ContentSpecNode* XercesGroupInfo::getContentSpec() const {
     return fContentSpec;
 }
 
-inline SchemaElementDecl* 
+inline SchemaElementDecl*
 XercesGroupInfo::elementAt(const unsigned int index) {
 
     return fElements->elementAt(index);
 }
 
-inline const SchemaElementDecl* 
+inline const SchemaElementDecl*
 XercesGroupInfo::elementAt(const unsigned int index) const {
 
     return fElements->elementAt(index);
@@ -204,6 +205,8 @@ inline void XercesGroupInfo::setCheckElementConsistency(const bool aValue) {
 
     fCheckElementConsistency = aValue;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

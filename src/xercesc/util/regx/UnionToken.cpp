@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:17:01  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -96,6 +99,8 @@
 #include <xercesc/util/regx/RegxUtil.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/StringToken.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -209,6 +214,8 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
 
     ((StringToken*) previousTok)->setString(stringBuf.getRawBuffer());
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file UnionToken.cpp

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/10/09 21:16:31  peiyongz
  * . macro to simplify code
@@ -74,6 +77,8 @@
 #include <xercesc/validators/datatype/AbstractNumericValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 #define  REPORT_VALUE_ERROR(val1, val2, except_code)    \
   XMLCh* value1 = (val1)->toString();                   \
   ArrayJanitor<XMLCh> jan1(value1);                     \
@@ -82,7 +87,7 @@
   ThrowXML2(InvalidDatatypeValueException               \
           , except_code                                 \
           , value1                                      \
-          , value2);                            
+          , value2);
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -110,10 +115,10 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
     int thisFacetsDefined = getFacetsDefined();
     int result;
 
-    try 
+    try
     {
 
-        // must be < MaxExclusive       
+        // must be < MaxExclusive
         if ( (thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0 )
         {
             result = compareValues(theData, getMaxExclusive());
@@ -167,6 +172,8 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
     }
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file AbstractNumericValidator::cpp

@@ -74,6 +74,7 @@
 #include "DOM_TreeWalker.hpp"
 #include "RefCountedImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
 
@@ -200,5 +201,7 @@ private:
     // The expandEntity reference flag.
     bool fExpandEntityReferences;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

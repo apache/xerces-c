@@ -61,7 +61,7 @@
 #include "DOM_ProcessingInstruction.hpp"
 #include "ProcessingInstructionImpl.hpp"
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_ProcessingInstruction::DOM_ProcessingInstruction()
@@ -120,4 +120,6 @@ void      DOM_ProcessingInstruction::setData(const DOMString &data)
     ((ProcessingInstructionImpl *)fImpl)->setData(data.clone());
 };
 
+
+XERCES_CPP_NAMESPACE_END
 

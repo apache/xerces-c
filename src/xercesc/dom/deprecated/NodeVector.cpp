@@ -70,6 +70,9 @@
 #include "NodeVector.hpp"
 #include <assert.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 NodeVector::NodeVector()
 {
 	init(10);
@@ -168,4 +171,6 @@ unsigned int NodeVector::size() {
 	return nextFreeSlot;
 };
 		
+
+XERCES_CPP_NAMESPACE_END
 

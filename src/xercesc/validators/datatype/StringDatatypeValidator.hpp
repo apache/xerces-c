@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.10  2001/11/22 20:23:20  peiyongz
  * _declspec(dllimport) and inline warning C4273
@@ -81,6 +84,8 @@
 #define STRING_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT StringDatatypeValidator : public AbstractStringValidator
 {
@@ -164,7 +169,10 @@ inline void StringDatatypeValidator::setWhiteSpace(short newValue)
     fWhiteSpace = newValue;
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file StringDatatypeValidator.hpp
   */
-#endif

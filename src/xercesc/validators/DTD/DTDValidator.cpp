@@ -69,6 +69,8 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  DTDValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -621,3 +623,5 @@ void DTDValidator::postParseValidation()
     //  validator.
     //
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -70,6 +70,9 @@
 #include "NodeIDMap.hpp"
 #include "RangeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 /*
  * The handling of the value field being either the first child node (a
  * ChildNode*) or directly the value (a DOMString) is rather tricky. In the
@@ -687,3 +690,6 @@ void AttrImpl::normalize()
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };
+
+XERCES_CPP_NAMESPACE_END
+

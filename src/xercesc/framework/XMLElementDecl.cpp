@@ -66,6 +66,8 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  XMLElementDecl: Public, static data
 // ---------------------------------------------------------------------------
@@ -125,3 +127,6 @@ XMLElementDecl::XMLElementDecl() :
     , fExternalElement (false)
 {
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOM_NamedNodeMap;
 class DocumentTypeImpl;
 
@@ -204,6 +207,8 @@ protected:
     friend class DOM_Document;
     friend class DOM_DOMImplementation;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

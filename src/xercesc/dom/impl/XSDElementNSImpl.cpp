@@ -63,6 +63,9 @@
 #include "DOMDocumentImpl.hpp"
 #include "XSDElementNSImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 XSDElementNSImpl::XSDElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
     DOMElementNSImpl(ownerDoc, nam)
     , fLineNo(0)
@@ -95,4 +98,6 @@ DOMNode * XSDElementNSImpl::cloneNode(bool deep) const {
     return newNode;
 }
 
+
+XERCES_CPP_NAMESPACE_END
 

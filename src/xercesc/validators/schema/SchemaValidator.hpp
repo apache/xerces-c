@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/11/04 14:49:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.8  2002/09/04 18:17:41  tng
  * Do not set IDREF to used during prevalidation.
  *
@@ -126,6 +129,8 @@
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This is a derivative of the abstract validator interface. This class
@@ -427,5 +432,7 @@ SchemaValidator::isOccurrenceRangeOK(const int min1, const int max1,
     }
     return false;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

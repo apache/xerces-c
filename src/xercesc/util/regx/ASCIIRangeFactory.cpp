@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/05 13:20:06  tng
  * [Bug 5716] Can't parse with Validation more than one file.
  *
@@ -94,6 +97,7 @@
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ASCIIRangeFactory: Constructors and Destructor
@@ -178,6 +182,8 @@ void ASCIIRangeFactory::initializeKeywordMap() {
 
     fKeywordsInitialized = true;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file ASCIIRangeFactory.cpp

@@ -94,6 +94,9 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //
 //   Constructors.   Warning - be very careful with the ordering of initialization
 //                             of the heap.  Ordering depends on the order of declaration
@@ -1308,4 +1311,6 @@ void * DOMDocumentImpl::allocate(size_t amount, NodeObjectType type)
     return (void*) ptr->pop();
 
 }
+
+XERCES_CPP_NAMESPACE_END
 

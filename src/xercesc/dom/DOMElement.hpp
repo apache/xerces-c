@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMAttr;
 class DOMNodeList;
 
@@ -413,6 +416,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:25  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:13:01  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:25  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/04/12 20:34:49  abagchi
  * Now just includes the Solaris file directly since they are identical
@@ -75,4 +78,7 @@
 // and the Solaris implementation, so we will use that instead.
 #include "../Solaris/SolarisPlatformUtils.cpp"
 
+
+XERCES_CPP_NAMESPACE_BEGIN
+XERCES_CPP_NAMESPACE_END
 

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
@@ -89,6 +92,8 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -209,7 +214,7 @@ void  FloatDatatypeValidator::setEnumeration()
             {
                 numBase->checkContent(fStrEnumeration->elementAt(i), false);
             }
-        }              
+        }
         catch (XMLException&)
         {
             ThrowXML1(InvalidDatatypeFacetException
@@ -221,11 +226,11 @@ void  FloatDatatypeValidator::setEnumeration()
 
     // We put the this->checkContent in a separate loop
     // to not block original message with in that method.
-    // 
+    //
     for ( i = 0; i < enumLength; i++)
     {
         checkContent(fStrEnumeration->elementAt(i), false);
-    }              
+    }
 
     fEnumeration = new RefVectorOf<XMLNumber>(enumLength, true);
     fEnumerationInherited = false;
@@ -233,7 +238,7 @@ void  FloatDatatypeValidator::setEnumeration()
     for ( i = 0; i < enumLength; i++)
     {
         fEnumeration->insertElementAt(new XMLFloat(fStrEnumeration->elementAt(i)), i);
-    }              
+    }
 }
 
 // -----------------------------------------------------------------------
@@ -301,6 +306,8 @@ void FloatDatatypeValidator::checkContent( const XMLCh* const content, bool asBa
     }
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file FloatDatatypeValidator::cpp

@@ -83,6 +83,9 @@
 #include <xercesc/util/HashXMLCh.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 // This hash table is modified from RefHash3KeysIdPool with first key as object ptr (DOMNode),
 // second and third keys are both XMLCh* string
 
@@ -229,6 +232,8 @@ private:
     XMLSize_t                    fIdPtrsCount;
     XMLSize_t                    fIdCounter;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/dom/impl/DOMDeepNodeListPool.c>

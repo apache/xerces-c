@@ -79,6 +79,9 @@
 #include "DOMChildNode.hpp"
 #include "DOMCharacterDataImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDOM_EXPORT DOMCommentImpl: public DOMComment {
 public:
     DOMNodeImpl            fNode;
@@ -105,6 +108,8 @@ public:
     virtual const XMLCh * substringData(XMLSize_t offset, XMLSize_t count) const;
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:28  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:28  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:26:40  tng
  * Copyright update.
@@ -71,6 +74,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/CharToken.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
@@ -86,6 +91,8 @@ CharToken::CharToken(const unsigned short tokType, const XMLInt32 ch)
 CharToken::~CharToken() {
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   *	End of file CharToken.cpp

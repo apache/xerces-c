@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/08/27 05:56:19  knoaman
  * Identity Constraint: handle case of recursive elements.
  *
@@ -83,6 +86,8 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  XPathMatcher: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -109,7 +114,7 @@ XPathMatcher::XPathMatcher(XercesXPath* const xpath)
 }
 
 
-XPathMatcher::XPathMatcher(XercesXPath* const xpath, 
+XPathMatcher::XPathMatcher(XercesXPath* const xpath,
                            const bool shouldBufferContent,
                            IdentityConstraint* const ic)
     : fShouldBufferContent(shouldBufferContent)
@@ -196,7 +201,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
     for (int i = 0; i < (int) fLocationPathSize; i++) {
 
-        // push context 
+        // push context
         int startStep = fCurrentStep[i];
         fStepIndexes->elementAt(i)->push(startStep);
 
@@ -227,7 +232,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
             continue;
         }
-        
+
         // now if the current step is a descendant step, we let the next
         // step do its thing; if it fails, we reset ourselves
         // to look at this step for next time we're called.
@@ -364,7 +369,7 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl) {
 
             for(; j<i && !fMatched[j]; j++) ;
 
-            if (j < i) 
+            if (j < i)
 				continue;
 
             if (fBufferContent) {
@@ -419,6 +424,8 @@ int XPathMatcher::getInitialDepth() const
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
     return 0; // to make some compilers happy
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XPathMatcher.cpp

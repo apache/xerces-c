@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -105,6 +108,8 @@
 #include <xercesc/util/regx/RegxDefs.hpp>
 #include <xercesc/util/ParseException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ParserForXMLSchema: Constructors and Destructors
@@ -545,7 +550,7 @@ XMLInt32 ParserForXMLSchema::decodeEscaped() {
     case chCloseSquare:
         break;
     default:
-		{        
+		{
         XMLCh chString[] = {chBackSlash, ch, chNull};
         chString[1] = ch;
         ThrowXML1(ParseException,XMLExcepts::Parser_Process2, chString);
@@ -554,6 +559,8 @@ XMLInt32 ParserForXMLSchema::decodeEscaped() {
 
     return ch;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file ParserForXMLSchema.cpp

@@ -63,6 +63,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
   * Class for representing unicode characters
@@ -129,6 +130,8 @@ private :
     XMLUniCharacter();
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

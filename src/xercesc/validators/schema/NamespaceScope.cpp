@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/07/31 15:26:54  knoaman
  * Added support for <attributeGroup>.
@@ -77,6 +80,7 @@
 #include <xercesc/util/EmptyStackException.hpp>
 #include <xercesc/validators/schema/NamespaceScope.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  NamespaceScope: Constructors and Destructor
@@ -296,6 +300,7 @@ void NamespaceScope::expandStack()
     fStackCapacity = newCapacity;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file NamespaceScope.cpp

@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.6  2002/11/04 15:00:21  tng
+  * C++ Namespace Support.
+  *
   * Revision 1.5  2002/09/04 18:17:55  tng
   * Do not set IDREF to used during prevalidation.
   *
@@ -142,6 +145,8 @@
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ReaderMgr;
 class XMLBuffer;
@@ -547,5 +552,6 @@ inline XMLScanner* XMLValidator::getScanner()
     return fScanner;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif

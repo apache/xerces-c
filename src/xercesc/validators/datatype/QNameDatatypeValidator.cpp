@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.9  2001/10/09 20:47:05  peiyongz
  * init(): take 1 arg
@@ -93,6 +96,8 @@
 #include <xercesc/validators/datatype/QNameDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -159,7 +164,9 @@ int QNameDatatypeValidator::getLength(const XMLCh* const content) const
 {
     return XMLString::stringLen(content);
 }
-       
+
+XERCES_CPP_NAMESPACE_END
+
 /**
   * End of file QNameDatatypeValidator.cpp
   */

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/11/04 15:14:32  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.1  2002/08/19 18:35:56  tng
  * [Bug 6467] Installing Xerces C++ on cygwin environment.
  *
@@ -75,7 +78,7 @@
 #include <windows.h>
 #include <stdlib.h>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local, const data
@@ -1096,7 +1099,7 @@ bool CygwinLCPTranscoder::transcode( const  XMLCh* const    toTranscode
 }
 
 
-
+XERCES_CPP_NAMESPACE_END
 
 
 

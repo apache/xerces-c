@@ -68,6 +68,8 @@
 #include "DOMParentNode.hpp"
 #include "DOMCasts.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOMParentNode::DOMParentNode(DOMDocument *ownerDoc)
     : fOwnerDocument(ownerDoc), fChildNodeList(castToNode(this))
@@ -437,4 +439,6 @@ void DOMParentNode::release()
     }
 }
 
+
+XERCES_CPP_NAMESPACE_END
 

@@ -65,6 +65,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMCharacterData.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 /**
  * This interface inherits from <code>CharacterData</code> and represents the
  * content of a comment, i.e., all the characters between the starting '
@@ -99,6 +102,8 @@ public:
     virtual ~DOMComment() {};
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

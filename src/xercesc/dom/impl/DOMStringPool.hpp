@@ -72,6 +72,9 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 struct  DOMStringPoolEntry;
 class   DOMDocumentImpl;
 
@@ -197,5 +200,7 @@ private :
     unsigned int    fCapacity;
     DOMDocumentImpl* fDoc;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

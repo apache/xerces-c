@@ -72,6 +72,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "ParentNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDOM_EXPORT DocumentFragmentImpl: public ParentNode {
 protected:
     DocumentFragmentImpl(DocumentImpl *);
@@ -92,6 +95,8 @@ public:
     // -----------------------------------------------------------------------
 	static void reinitDocumentFragmentImpl();
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

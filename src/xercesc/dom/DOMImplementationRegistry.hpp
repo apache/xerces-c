@@ -74,6 +74,11 @@
   * @since DOM Level 3
   */
 
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMImplementation;
 class DOMImplementationSource;
 
@@ -114,5 +119,7 @@ public:
     static void addSource(DOMImplementationSource* source);
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

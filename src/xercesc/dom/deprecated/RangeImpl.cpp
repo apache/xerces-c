@@ -71,6 +71,8 @@
 #include "DOM_DOMException.hpp"
 #include "DOM_Text.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 //---------------------
 // C'tor and D'tor
@@ -1691,5 +1693,7 @@ void RangeImpl::updateSplitInfo(TextImpl* oldNode, TextImpl* startNode, unsigned
     }
 }
 
+
+XERCES_CPP_NAMESPACE_END
 
 

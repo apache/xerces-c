@@ -63,6 +63,9 @@
 #include "DOMNodeListImpl.hpp"
 #include "DOMCasts.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 // revisit
 //   this implementation is too stupid - needs a cache of some kind.
 //
@@ -104,5 +107,7 @@ DOMNode *DOMNodeListImpl::item(XMLSize_t index) const{
     return 0;
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 

@@ -92,6 +92,9 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 // ---------------------------------------------------------------------------
 //  DOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -1339,4 +1342,6 @@ void DOMParser::resetCachedGrammarPool()
 {
     fScanner->resetCachedGrammarPool();
 }
+
+XERCES_CPP_NAMESPACE_END
 

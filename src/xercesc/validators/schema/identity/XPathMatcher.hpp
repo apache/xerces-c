@@ -69,6 +69,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -99,7 +101,7 @@ public:
     // -----------------------------------------------------------------------
     //  Match methods
     // -----------------------------------------------------------------------
-    /** 
+    /**
       * Returns true if XPath has been matched.
       */
     bool isMatched();
@@ -137,7 +139,7 @@ private:
     void init(XercesXPath* const xpath);
     void cleanUp();
 
-    /** 
+    /**
       * Clears the match values.
       */
     void clear();
@@ -198,6 +200,7 @@ inline void XPathMatcher::cleanUp() {
     delete fStepIndexes;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

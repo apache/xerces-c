@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:27:34  tng
  * Copyright update.
@@ -73,6 +76,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SchemaAttDefList: Constructors and Destructor
@@ -152,3 +156,5 @@ void SchemaAttDefList::Reset()
 {
     fEnum->Reset();
 }
+
+XERCES_CPP_NAMESPACE_END

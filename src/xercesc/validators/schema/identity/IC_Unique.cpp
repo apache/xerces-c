@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
@@ -68,6 +71,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/IC_Unique.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  IC_Unique: Constructors and Destructor
@@ -82,6 +87,8 @@ IC_Unique::IC_Unique(const XMLCh* const identityConstraintName,
 IC_Unique::~IC_Unique()
 {
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file IC_Unique.cpp

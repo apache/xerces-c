@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/08/09 15:23:16  knoaman
  * add support for <anyAttribute> declaration.
@@ -79,6 +82,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Implementation of the XMLAttDef interface
@@ -138,7 +143,7 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fNamespaceList(0)
 {
     QName* otherName = other->getAttName();
-    fAttName = new QName(otherName->getPrefix(), 
+    fAttName = new QName(otherName->getPrefix(),
                          otherName->getLocalPart(), otherName->getURI());
 
     if (other->fNamespaceList && other->fNamespaceList->size()) {
@@ -162,3 +167,5 @@ void SchemaAttDef::setAttName(const XMLCh* const        prefix
 {
    fAttName->setName(prefix, localPart, uriId);
 }
+
+XERCES_CPP_NAMESPACE_END

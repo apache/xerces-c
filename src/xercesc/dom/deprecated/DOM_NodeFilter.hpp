@@ -67,6 +67,9 @@
 
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NodeFilterImpl;
 
 
@@ -173,5 +176,7 @@ class CDOM_EXPORT DOM_NodeFilter
         bool operator == (const DOM_NodeFilter &other) const;
         bool operator != (const DOM_NodeFilter &other) const;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

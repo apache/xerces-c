@@ -76,6 +76,9 @@
 #include "AttrMapImpl.hpp"
 #include "ParentNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DeepNodeListImpl;
 
 class CDOM_EXPORT ElementImpl: public ParentNode {
@@ -148,5 +151,7 @@ public:
     // -----------------------------------------------------------------------
 	static void reinitElementImpl();
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -62,6 +62,8 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <windows.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class CPMapEntry;
 
 
@@ -282,5 +284,7 @@ private :
     CygwinLCPTranscoder(const CygwinLCPTranscoder&);
     void operator=(const CygwinLCPTranscoder&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/20 18:17:01  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -104,6 +107,7 @@
 #include <xercesc/util/QName.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
  *  This class defines the information about an attribute that will come out
@@ -461,5 +465,7 @@ inline void XMLAttr::setSpecified(const bool newValue)
 {
     fSpecified = newValue;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -79,6 +79,9 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMCharacterDataImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDOM_EXPORT DOMTextImpl: public DOMText {
 public:
     DOMNodeImpl             fNode;
@@ -121,6 +124,8 @@ protected:
     virtual void            setIgnorableWhitespace(bool ignorable);
     friend class            AbstractDOMParser;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

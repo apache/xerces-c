@@ -65,6 +65,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT BMPattern {
 public:
 	// -----------------------------------------------------------------------
@@ -174,6 +176,8 @@ inline void BMPattern::cleanUp() {
 	delete [] fUppercasePattern;
 	delete [] fShiftTable;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

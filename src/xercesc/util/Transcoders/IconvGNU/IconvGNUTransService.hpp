@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/11/04 15:14:34  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.1  2002/08/19 19:38:18  tng
  * [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
  *
@@ -68,6 +71,8 @@
 
 
 #include <iconv.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Libiconv wrapper (low-level conversion utilities collection)
@@ -376,6 +381,8 @@ private :
     IconvGNULCPTranscoder(const IconvGNULCPTranscoder&);
     void operator=(const IconvGNULCPTranscoder&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* ICONVGNUTRANSSERVICE */
 

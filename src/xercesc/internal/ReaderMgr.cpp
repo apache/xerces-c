@@ -79,6 +79,8 @@
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/internal/ReaderMgr.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  ReaderMgr: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -1074,3 +1076,5 @@ bool ReaderMgr::popReader()
     }
     return true;
 }
+
+XERCES_CPP_NAMESPACE_END

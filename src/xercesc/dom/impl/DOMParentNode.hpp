@@ -85,6 +85,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNodeListImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMChildNode;
 class DOMDocument;
 class DOMNode;
@@ -136,5 +139,7 @@ public:
     DOMNode * lastChild() const;
     void lastChild(DOMNode *);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

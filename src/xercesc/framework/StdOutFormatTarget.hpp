@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/06/05 15:47:29  peiyongz
  * operator = modified
  *
@@ -69,6 +72,8 @@
 #define StdOutFormatTarget_HEADER_GUARD_
 
 #include <xercesc/framework/XMLFormatter.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLPARSER_EXPORT StdOutFormatTarget : public XMLFormatTarget {
 public:
@@ -93,5 +98,7 @@ private:
     StdOutFormatTarget(const StdOutFormatTarget&);
     StdOutFormatTarget& operator=(const StdOutFormatTarget&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

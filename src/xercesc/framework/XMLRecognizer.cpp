@@ -68,6 +68,7 @@
 #include <xercesc/framework/XMLRecognizer.hpp>
 #include <string.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -260,3 +261,5 @@ XMLRecognizer::nameForEncoding(const XMLRecognizer::Encodings theEncoding)
 
     return gEncodingNameMap[theEncoding];
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -63,6 +63,8 @@
 
 #include <xercesc/dom/DOMException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /**
  * Range operations may throw a <code>DOMRangeException</code> as specified in
  * their method descriptions.
@@ -152,6 +154,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

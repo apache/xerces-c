@@ -66,6 +66,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT ModifierToken : public Token {
 public:
 	// -----------------------------------------------------------------------
@@ -120,6 +122,8 @@ inline Token* ModifierToken::getChild(const int) const {
 
     return fChild;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

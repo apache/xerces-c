@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:55:45  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/08/20 16:53:56  tng
  * [Bug 6251] Info during compilation.
  *
@@ -102,6 +105,8 @@
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class Locator;
 class Attributes;
@@ -865,5 +870,7 @@ inline void DefaultHandler::internalEntityDecl(const XMLCh* const,
                                                const XMLCh* const)
 {
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif // ! DEFAULTHANDLER_HPP

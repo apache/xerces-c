@@ -65,6 +65,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMText.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * CDATA sections are used to escape blocks of text containing characters that
@@ -126,6 +128,9 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
+
 #endif
 
 

@@ -56,8 +56,11 @@
 
 /**
   * $Log$
-  * Revision 1.1  2002/02/01 22:21:52  peiyongz
-  * Initial revision
+  * Revision 1.2  2002/11/04 15:00:21  tng
+  * C++ Namespace Support.
+  *
+  * Revision 1.1.1.1  2002/02/01 22:21:52  peiyongz
+  * sane_include
   *
   * Revision 1.13  2001/11/30 22:18:18  peiyongz
   * cleanUp function made member function
@@ -126,6 +129,7 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local static functions
@@ -165,7 +169,7 @@ static XMLMsgLoader& getMsgLoader()
 
 	// Lock the mutex
 	XMLMutexLock lockInit(&gValidatorMutex());
-    
+
     if (!sMsgLoader)
 	{
 		sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
@@ -390,3 +394,5 @@ void XMLValidator::reinitMsgLoader()
 	delete sMsgLoader;
 	sMsgLoader = 0;
 }
+
+XERCES_CPP_NAMESPACE_END

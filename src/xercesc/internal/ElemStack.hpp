@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:58  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:58:18  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
+ * sane_include
  *
  * Revision 1.11  2001/12/12 14:29:50  tng
  * Remove obsolete code in ElemStack which can help performance.
@@ -105,6 +108,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/QName.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLElementDecl;
 class Grammar;
 
@@ -381,5 +387,7 @@ inline void ElemStack::setCurrentURI(unsigned int uri)
     fStack[fStackTop-1]->fCurrentURI = uri;
     return;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

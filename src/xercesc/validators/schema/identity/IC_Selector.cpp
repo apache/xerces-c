@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/27 05:56:19  knoaman
  * Identity Constraint: handle case of recursive elements.
  *
@@ -81,6 +84,8 @@
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 #include <xercesc/validators/schema/identity/FieldActivator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SelectorMatcher: Constructors and Destructor
@@ -183,6 +188,8 @@ XPathMatcher* IC_Selector::createMatcher(FieldActivator* const fieldActivator, c
 
     return new SelectorMatcher(fXPath, this, fieldActivator, initialDepth);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file IC_Selector.cpp

@@ -63,6 +63,9 @@
 #include "DOM_Node.hpp"
 
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 /**
 * Notations are how the Document Type Description (DTD) records hints
 * about the format of an XML "unparsed entity" -- in other words,
@@ -157,4 +160,6 @@ void NotationImpl::setSystemId(const DOMString &arg)
 
     systemId = arg.clone();
 };
+
+XERCES_CPP_NAMESPACE_END
 

@@ -101,6 +101,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "ChildNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class CDOM_EXPORT ParentNode: public ChildNode {
 public:
     DocumentImpl            *ownerDocument; // Document this node belongs to
@@ -145,5 +147,7 @@ protected:
     /** Last requested child index. */
     int fCachedChildIndex;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

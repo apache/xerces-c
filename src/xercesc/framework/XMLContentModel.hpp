@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
+ * sane_include
  *
  * Revision 1.14  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
@@ -115,6 +118,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/QName.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentLeafNameTypeVector;
 class GrammarResolver;
@@ -214,5 +219,7 @@ private :
     XMLContentModel(const XMLContentModel&);
     void operator=(const XMLContentModel&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

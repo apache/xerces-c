@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:58:18  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/09/24 20:02:20  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -96,6 +99,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/internal/VecAttributesImpl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -260,3 +264,4 @@ void VecAttributesImpl::setVector(const   RefVectorOf<XMLAttr>* const srcVec
     fScanner = scanner ;
 }
 
+XERCES_CPP_NAMESPACE_END

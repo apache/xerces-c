@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -97,6 +97,7 @@
     #include <CFString.h>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //	Typedefs
@@ -166,7 +167,7 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 		//	to allow for the case where the strings being compared
 		//	are larger than the static buffer.
 
-		UCCollateOptions collateOptions = 
+		UCCollateOptions collateOptions =
 								kUCCollateComposeInsensitiveMask
 								| kUCCollateWidthInsensitiveMask
 								| kUCCollateCaseInsensitiveMask
@@ -282,7 +283,7 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 		//	to allow for the case where the strings being compared
 		//	are larger than the static buffer.
 
-		UCCollateOptions collateOptions = 
+		UCCollateOptions collateOptions =
 								kUCCollateComposeInsensitiveMask
 								| kUCCollateWidthInsensitiveMask
 								| kUCCollateCaseInsensitiveMask
@@ -470,7 +471,7 @@ void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
         kCFAllocatorNull);
    CFStringUppercase(cfString, NULL);
    CFRelease(cfString);
-   
+
 #elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
 
 	// Use this if there's a reasonable c library available.
@@ -498,7 +499,7 @@ void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase) const
         kCFAllocatorNull);
    CFStringLowercase(cfString, NULL);
    CFRelease(cfString);
-   
+
 #elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
 
 	// Use this if there's a reasonable c library available.
@@ -627,7 +628,7 @@ MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
 {
     ByteCount	bytesConsumed = 0;
     ByteCount	bytesProduced = 0;
-    
+
     OSStatus status = ConvertFromTextToUnicode(
     	mTextToUnicodeInfo,
     	srcCount,
@@ -681,7 +682,7 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
 	
 	const XMLCh* src	= srcData;
 	std::size_t srcCnt	= srcCount;
-    
+
 	OptionBits controlFlags =
 		  0
 		// | kUnicodeUseFallbacksMask
@@ -1222,7 +1223,7 @@ MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
 	//	XMLCh in place within the output buffer.
 	if (UNICODE_SIZE_MISMATCH)
 		CopyUniCharsToXMLChs(reinterpret_cast<UniChar* const>(toFill), toFill, charsProduced, maxChars);
-		    
+		
     //	Zero terminate the output string
     toFill[charsProduced] = L'\0';
 
@@ -1309,3 +1310,5 @@ MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
 
 	return (status == noErr);
 }
+
+XERCES_CPP_NAMESPACE_END

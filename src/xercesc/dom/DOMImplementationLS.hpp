@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 15:09:24  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/08/22 15:04:57  tng
  * Remove unused parameter variables in inline functions.
  *
@@ -78,6 +81,9 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class DOMBuilder;
 class DOMWriter;
@@ -211,5 +217,7 @@ public:
     //@}
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:58:18  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/08/22 19:28:11  tng
  * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
  *
@@ -132,6 +135,8 @@
 #include <xercesc/sax/Locator.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/internal/XMLReader.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLBuffer;
 class XMLEntityDecl;
@@ -479,5 +484,7 @@ private :
     bool        fOld;
     ReaderMgr*  fMgr;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

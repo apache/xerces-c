@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOM_Attr;
 class DOM_NodeList;
 class ElementImpl;
@@ -442,6 +445,8 @@ public:
      friend class DOM_Attr;
      friend class TraverseSchema;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

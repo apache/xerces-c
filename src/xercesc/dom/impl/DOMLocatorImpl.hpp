@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:07:34  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/05/30 19:26:00  knoaman
  * documentation update
  *
@@ -72,6 +75,9 @@
 #define DOMLOCATORIMPL_HPP
 
 #include <xercesc/dom/DOMLocator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 
 /**
@@ -314,5 +320,7 @@ inline void DOMLocatorImpl::setURI(const XMLCh* const uri)
 {
     fURI = uri;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

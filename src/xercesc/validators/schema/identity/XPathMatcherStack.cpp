@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
@@ -69,6 +72,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XPathMatherStack: Constructors and Destructor
@@ -104,6 +108,7 @@ void XPathMatcherStack::clear() {
     fMatchersCount = 0;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XPathMatcherStack.cpp

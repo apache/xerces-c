@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:50:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/14 15:20:38  knoaman
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
  *
@@ -95,6 +98,7 @@
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This abstract class defines the document type handler API's which can be
@@ -205,5 +209,7 @@ private:
     DocTypeHandler(const DocTypeHandler&);
     void operator=(const DocTypeHandler&);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

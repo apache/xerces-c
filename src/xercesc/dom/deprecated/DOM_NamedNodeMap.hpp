@@ -64,6 +64,10 @@
 #include <xercesc/util/XercesDefs.hpp>
 
 #include "DOM_Node.hpp"
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NamedNodeMapImpl;
 
 /**
@@ -344,6 +348,8 @@ public:
 
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

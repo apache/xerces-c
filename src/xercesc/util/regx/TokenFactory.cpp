@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -103,6 +106,7 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  TokenFactory: Constructors and Destructor
@@ -504,6 +508,8 @@ void TokenFactory::printUnicode() {
 #endif
 }
 */
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file TokenFactory.cpp

@@ -67,6 +67,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -287,6 +289,8 @@ inline void Token::intersectRanges(RangeToken* const) {
 
     ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

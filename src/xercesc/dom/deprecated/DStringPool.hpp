@@ -75,6 +75,9 @@
 #include "DOMString.hpp"
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 struct DStringPoolEntry;
 
 //
@@ -106,5 +109,7 @@ private:
     DStringPoolEntry **fHashTable;
     int              fHashTableSize;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

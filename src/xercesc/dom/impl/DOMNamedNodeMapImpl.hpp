@@ -73,6 +73,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class       DOMNodeVector;
 class       DOMNode;
 class       DOMDocument;
@@ -116,6 +119,8 @@ public:
 	                                           const XMLCh *localName);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

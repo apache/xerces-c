@@ -67,6 +67,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT IC_Key: public IdentityConstraint
 {
@@ -100,6 +101,7 @@ inline short IC_Key::getType() const {
     return IdentityConstraint::KEY;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -67,6 +67,9 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
                                          const XMLCh *entityName)
     : fNode(ownerDoc), fParent(ownerDoc), fBaseURI(0)
@@ -224,4 +227,6 @@ const XMLCh* DOMEntityReferenceImpl::getBaseURI() const
            bool             DOMEntityReferenceImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
            const XMLCh*     DOMEntityReferenceImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMEntityReferenceImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
+XERCES_CPP_NAMESPACE_END
 

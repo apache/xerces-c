@@ -65,6 +65,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class XMLDeclImpl;
 /**
 * Class to refer to XML Declaration nodes in the DOM.
@@ -160,5 +163,7 @@ protected:
 
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

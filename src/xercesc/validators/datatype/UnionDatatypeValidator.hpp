@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/14 15:17:31  peiyongz
  * getEnumString()
  *
@@ -95,6 +98,8 @@
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT UnionDatatypeValidator : public DatatypeValidator
 {
@@ -328,7 +333,10 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
     return false;
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file UnionDatatypeValidator.hpp
   */
-#endif

@@ -65,6 +65,9 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(DOMDocument *ownerDoc,
                                                      const XMLCh *targt,
                                                      const XMLCh *dat)
@@ -225,4 +228,6 @@ const XMLCh* DOMProcessingInstructionImpl::getBaseURI() const
            bool             DOMProcessingInstructionImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
            const XMLCh*     DOMProcessingInstructionImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMProcessingInstructionImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
+XERCES_CPP_NAMESPACE_END
 

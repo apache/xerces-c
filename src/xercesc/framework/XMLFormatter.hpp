@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/07/30 16:29:16  tng
  * [Bug 8550] No explanation of XMLFormatter escape options.
  *
@@ -101,6 +104,8 @@
 #define XMLFORMATTER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLFormatTarget;
 class XMLTranscoder;
@@ -519,5 +524,6 @@ inline XMLFormatter& XMLFormatter::operator<<(const UnRepFlags newFlags)
     return *this;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif

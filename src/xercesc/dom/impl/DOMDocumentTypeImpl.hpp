@@ -78,6 +78,9 @@
 #include "DOMChildNode.hpp"
 #include "DOMParentNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NamedNodeMapImpl;
 
 class CDOM_EXPORT DOMDocumentTypeImpl: public DOMDocumentType {
@@ -130,5 +133,7 @@ public:
     virtual const XMLCh *     getSystemId() const;
     virtual const XMLCh *     getInternalSubset() const;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

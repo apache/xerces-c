@@ -65,6 +65,10 @@
 
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 #include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+
+
+XERCES_CPP_NAMESPACE_BEGIN
 
  /**
   * Introduced in DOM Level 3
@@ -872,5 +876,7 @@ inline const DOMBuilderFilter* DOMBuilderImpl::getFilter() const
     return fFilter;
 }
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

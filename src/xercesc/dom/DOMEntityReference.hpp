@@ -65,6 +65,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * <code>DOMEntityReference</code> objects may be inserted into the structure
@@ -118,6 +120,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

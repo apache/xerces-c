@@ -63,6 +63,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /*
  * Collection of symbols used to parse a Schema Grammar
  */
@@ -221,7 +223,7 @@ public :
 	static const XMLCh fgDT_USHORT[];
 	static const XMLCh fgDT_UBYTE[];
     static const XMLCh fgDT_POSITIVEINTEGER[];
-//datetime   
+//datetime
     static const XMLCh fgDT_DATETIME[];
     static const XMLCh fgDT_DATE[];
 	static const XMLCh fgDT_TIME[];
@@ -271,6 +273,8 @@ public :
     };
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

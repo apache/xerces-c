@@ -64,6 +64,9 @@
 #include "DOMStringPool.hpp"
 #include "DOMDocumentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //
 //  DStringPoolEntry - one of these structs is allocated for each
 //                      XMLCh String in the pool.  Each slot in the
@@ -219,4 +222,6 @@ void DOMBuffer::expandCapacity(const unsigned int extraNeeded)
     fBuffer = newBuf;
     fCapacity = newCap;
 }
+
+XERCES_CPP_NAMESPACE_END
 

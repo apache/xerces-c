@@ -64,6 +64,8 @@
 #include "DOM_DOMException.hpp"
 #include "DocumentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &dtName)
@@ -247,3 +249,6 @@ void        DocumentTypeImpl::setInternalSubset(const DOMString &value)
         return;
     internalSubset = value.clone();
 }
+
+XERCES_CPP_NAMESPACE_END
+

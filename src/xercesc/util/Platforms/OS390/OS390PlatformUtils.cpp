@@ -106,6 +106,8 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Static data
 // ---------------------------------------------------------------------------
@@ -1007,3 +1009,4 @@ void XMLPlatformUtils::platformTerm()
     // We don't have any termination requirements at this time
 }
 
+XERCES_CPP_NAMESPACE_END

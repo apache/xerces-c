@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/10/17 20:49:05  peiyongz
  * Patch to Bug#13640: Getter methods not public in DecimalDatatypeValidator
  *
@@ -83,6 +86,8 @@
 #include <xercesc/validators/datatype/AbstractNumericValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLBigDecimal.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT DecimalDatatypeValidator : public AbstractNumericValidator
 {
@@ -143,7 +148,7 @@ protected:
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericFacetValidator
 // -----------------------------------------------------------------------
-    
+
     virtual void assignAdditionalFacet(const XMLCh* const key
                                      , const XMLCh* const value);
 
@@ -228,7 +233,10 @@ inline void DecimalDatatypeValidator::setFractionDigits(unsigned int newFraction
     fFractionDigits = newFractionDigits;
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file DecimalDatatypeValidator.hpp
   */
-#endif

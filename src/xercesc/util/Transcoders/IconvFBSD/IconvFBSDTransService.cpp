@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 15:14:34  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/07/04 18:20:18  tng
  * [Bug 10253] Bugfix for the IconvFBSD transcoder.   Patch from Max Gotlib.
  *
@@ -96,6 +99,8 @@
 # include <iconv.h>
 # include <errno.h>
 # include <machine/endian.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -1549,5 +1554,7 @@ bool		IconvFBSDTranscoder::canTranscodeTo
     size_t	rc = iconvTo( srcBuf, &len, &pTmpBuf, 64);
     return (rc != (size_t)-1) && (len == 0);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* XML_USE_LIBICONV */

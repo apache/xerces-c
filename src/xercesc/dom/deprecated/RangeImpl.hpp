@@ -77,6 +77,8 @@
 #include "DOM_Document.hpp"
 #include <xercesc/util/RefVectorOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 typedef RefVectorOf<RangeImpl> Ranges;
 
@@ -200,5 +202,7 @@ private:
     DOM_Node        fRemoveChild;
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

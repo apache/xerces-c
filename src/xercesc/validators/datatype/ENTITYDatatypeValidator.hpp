@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/11/22 20:23:20  peiyongz
  * _declspec(dllimport) and inline warning C4273
@@ -89,6 +92,8 @@
 
 #include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT ENTITYDatatypeValidator : public StringDatatypeValidator
 {
@@ -197,7 +202,10 @@ inline void ENTITYDatatypeValidator::setEntityDeclPool(NameIdPool<DTDEntityDecl>
     fEntityDeclPool = entityDeclPool;
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file ENTITYDatatypeValidator.hpp
   */
-#endif

@@ -75,6 +75,9 @@
 #include <unistd.h>
 #endif
 #include <ctype.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 //
 //  Cannot use the OS/390 c/c++ towupper and towlower functions in the
 //  Unicode environment. We will use mytowupper and mytowlower here.
@@ -662,3 +665,5 @@ Iconv390Transcoder::transcodeXML(  const   XMLByte* const             srcData
     return maxChars-outByteLeft/2;
 
 }
+
+XERCES_CPP_NAMESPACE_END

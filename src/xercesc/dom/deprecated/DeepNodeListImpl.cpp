@@ -65,6 +65,9 @@
 #include "DStringPool.hpp"
 #include <limits.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static DOMString *kAstr = 0;
 static XMLRegisterCleanup kAstrCleanup;
 
@@ -240,3 +243,6 @@ void DeepNodeListImpl::reinitDeepNodeListImpl() {
 	delete kAstr;
 	kAstr = 0;
 }
+
+XERCES_CPP_NAMESPACE_END
+

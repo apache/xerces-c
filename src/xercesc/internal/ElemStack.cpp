@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:57  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:58:18  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:57  peiyongz
+ * sane_include
  *
  * Revision 1.17  2001/12/12 14:29:50  tng
  * Remove obsolete code in ElemStack which can help performance.
@@ -129,6 +132,7 @@
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ElemStack: Constructors and Destructor
@@ -524,3 +528,5 @@ void ElemStack::expandStack()
     fStack = newStack;
     fStackCapacity = newCapacity;
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -63,6 +63,9 @@
 #include "DocumentImpl.hpp"
 #include "DOM_DOMException.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 ElementNSImpl::ElementNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
     ElementImpl(ownerDoc, nam)
 {
@@ -160,3 +163,6 @@ void ElementNSImpl::setPrefix(const DOMString &prefix)
 
     name = prefix + chColon + localName; //nodeName is changed too
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -63,6 +63,7 @@
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT AnySimpleTypeDatatypeValidator : public DatatypeValidator
 {
@@ -190,6 +191,8 @@ AnySimpleTypeDatatypeValidator::validate(const XMLCh* const content)
 {
     return;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

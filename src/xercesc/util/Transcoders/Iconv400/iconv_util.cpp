@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:36  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:14:33  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/10/24 14:06:59  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
@@ -77,6 +80,9 @@
 #include <iconv_util.hpp>
 #include <iconv_cnv.hpp>
 #include <ctype.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 #define COPYRIGHT_STRING_LENGTH  200
 #define MAX_STRLEN 0x00FFFFF
 #define CHARCCSIDSIZE 5
@@ -290,3 +296,4 @@ UConverter* createNewConverter(const char *name, UErrorCode *err)
 
 }
 
+XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:07:34  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/07/15 19:25:49  tng
  * DOM L3:  declare a dummy DOMError::set/getRelatedException
  *
@@ -70,6 +73,9 @@
 #include "DOMErrorImpl.hpp"
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 // ---------------------------------------------------------------------------
 //  DOMErrorImpl: Constructors and Destructor
@@ -113,4 +119,6 @@ void DOMErrorImpl::setRelatedException(void* exception) const
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
+
+XERCES_CPP_NAMESPACE_END
 

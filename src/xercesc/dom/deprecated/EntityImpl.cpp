@@ -62,6 +62,8 @@
 #include "DOM_Node.hpp"
 #include "EntityImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
    : ParentNode(ownerDoc),
@@ -204,3 +206,6 @@ NodeImpl* EntityImpl::item(unsigned int index)
         node = node->nextSibling;
     return node;
 }
+
+XERCES_CPP_NAMESPACE_END
+

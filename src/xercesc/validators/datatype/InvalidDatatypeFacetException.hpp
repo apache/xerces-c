@@ -65,7 +65,10 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 MakeXMLException(InvalidDatatypeFacetException, XMLUTIL_EXPORT)
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

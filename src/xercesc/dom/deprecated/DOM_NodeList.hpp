@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NodeListImpl;
 
 /**
@@ -216,6 +219,8 @@ protected:
     friend class DOM_Entity;
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

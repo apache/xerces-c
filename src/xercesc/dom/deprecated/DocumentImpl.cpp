@@ -92,6 +92,9 @@
 #include "RangeImpl.hpp"
 #include "DOM_Document.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static DOMString *nam = 0;  // will be lazily initialized to "#document"
 static XMLRegisterCleanup namCleanup;
 
@@ -874,3 +877,6 @@ void DocumentImpl::reinitDocumentImpl() {
 	delete nam;
 	nam = 0;
 }
+
+XERCES_CPP_NAMESPACE_END
+

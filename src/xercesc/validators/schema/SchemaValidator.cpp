@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2002/11/04 14:49:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.16  2002/09/24 20:12:48  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -206,6 +209,8 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Constructors and Destructor
@@ -1895,3 +1900,4 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
 
 }
 
+XERCES_CPP_NAMESPACE_END

@@ -65,6 +65,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
  * This interface represents an entity, either parsed or unparsed, in an XML
@@ -231,6 +232,8 @@ public:
     virtual void                   setVersion(const XMLCh* version) = 0;
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

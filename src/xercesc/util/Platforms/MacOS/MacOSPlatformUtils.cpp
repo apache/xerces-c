@@ -115,7 +115,7 @@
     #include <URLAccess.h>
 #endif
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 //----------------------------------------------------------------------------
 //	Local Constants
@@ -309,7 +309,7 @@ void
 XMLMacFile::create(const XMLCh* const filePath)
 {
     OSErr err = noErr;
-    
+
     //	Split path into directory and filename components
     int posSlash = XMLString::lastIndexOf(filePath, '/', XMLString::stringLen(filePath) - 1);
     int posName = (posSlash == -1) ? 0 : posSlash+1;
@@ -366,7 +366,7 @@ XMLMacFile::create(const XMLCh* const filePath)
         {
             //	Transcode the unicode name to native encoding
             ArrayJanitor<const char> nativeName(XMLString::transcode(namePtr));
-            
+
             // Make a partial pathname from our current spec (parent directory) to the new file
             unsigned char name[31 * 2 + 1 * 2 + 1];
             unsigned char* partial = &name[1];
@@ -539,7 +539,7 @@ XMLPlatformUtils::panic(const PanicReasons reason)
     XMLCustomPanicProc(reason, reasonStr);
 #else
     char text[256];
-    
+
     #if defined(XML_METROWERKS) || defined(_GLIBCPP_USE_C99)
     std::snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
     #else
@@ -1893,3 +1893,5 @@ TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
     //	Return number of unicode characters in dst
 	return result;
 }
+
+XERCES_CPP_NAMESPACE_END

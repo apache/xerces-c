@@ -67,6 +67,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/XPathMatcher.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -163,6 +165,8 @@ private:
     IC_Selector*    fSelector;
     FieldActivator* fFieldActivator;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -68,6 +68,8 @@
 #include "NamedNodeMapImpl.hpp"
 #include "NodeVector.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 static DOMString *gEmptyString = 0;
 static XMLRegisterCleanup emptyStringCleanup;
@@ -532,3 +534,6 @@ void ElementImpl::reinitElementImpl() {
     gEmptyString = 0;
 
 }
+
+XERCES_CPP_NAMESPACE_END
+

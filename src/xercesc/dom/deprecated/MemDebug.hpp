@@ -61,6 +61,10 @@
  * $Id$
  */
 
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class DomMemDebug
 {
@@ -84,5 +88,7 @@ public:
     bool        operator != (const DOMMemDebug &other);
     bool        operator =  (const DOMMemDebug &other);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif // MemDebug_HEADER_GUARD_

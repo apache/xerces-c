@@ -73,6 +73,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "ChildNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMString;
 
 class CDOM_EXPORT XMLDeclImpl: public ChildNode {
@@ -87,7 +90,7 @@ private:
 
 public:
     XMLDeclImpl(DocumentImpl *ownerDoc);
-    XMLDeclImpl(DocumentImpl *ownerDoc, const DOMString& version, 
+    XMLDeclImpl(DocumentImpl *ownerDoc, const DOMString& version,
                     const DOMString& encoding, const DOMString& standalone);
     XMLDeclImpl(const XMLDeclImpl &other, bool deep=false);
     virtual ~XMLDeclImpl();
@@ -96,7 +99,7 @@ public:
     virtual DOMString getNodeName();
     virtual short getNodeType();
 
-  
+
     virtual DOMString getVersion() const;
     virtual DOMString getEncoding() const;
     virtual DOMString getStandalone() const;
@@ -108,8 +111,10 @@ public:
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitXMLDeclImpl();   
+	static void reinitXMLDeclImpl();
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 15:11:38  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/05/29 14:30:50  peiyongz
  * Bug9489: Malformed HTTP GET Requests in UnixHTTPUrlInputStream ,
  *                 patch from Gereon Steffens (gereon.steffens@web.de)
@@ -121,7 +124,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
@@ -336,4 +339,6 @@ unsigned int UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
     fBytesProcessed += len;
     return len;
 }
+
+XERCES_CPP_NAMESPACE_END
 

@@ -67,6 +67,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 const XMLCh fgXMLCategory[] =
 {
     chLatin_X, chLatin_M, chLatin_L, chNull
@@ -265,6 +267,8 @@ const XMLCh fgUniSymbol[] =
 {
     chLatin_S, chNull
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

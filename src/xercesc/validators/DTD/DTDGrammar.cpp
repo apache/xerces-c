@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:50:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/07/11 18:19:28  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -83,6 +86,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -205,3 +210,5 @@ void DTDGrammar::resetEntityDeclPool() {
     fEntityDeclPool->put(new DTDEntityDecl(gQuot, chDoubleQuote, true, true));
     fEntityDeclPool->put(new DTDEntityDecl(gApos, chSingleQuote, true, true));
 }
+
+XERCES_CPP_NAMESPACE_END

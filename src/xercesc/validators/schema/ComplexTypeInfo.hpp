@@ -79,6 +79,8 @@
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -517,6 +519,8 @@ inline bool ComplexTypeInfo::contains(const XMLCh* const attName) {
 
     return false;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

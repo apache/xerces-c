@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:37  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/05/11 13:27:16  tng
  * Copyright update.
@@ -94,6 +97,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/validators/common/CMNode.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class CMStateSet;
 
@@ -147,5 +152,7 @@ private :
     CMNode* fLeftChild;
     CMNode* fRightChild;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

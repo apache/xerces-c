@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:31  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:31  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/07 20:55:38  tng
  * Fix no newline at the end warning.  By Pei Yong Zhang.
@@ -75,6 +78,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RegxUtil.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 XMLCh* RegxUtil::decomposeToSurrogates(XMLInt32 ch) {
 
@@ -143,6 +148,9 @@ XMLCh* RegxUtil::stripExtendedComment(const XMLCh* const expression) {
 
 	return XMLString::replicate(buffer.getRawBuffer());
 }
+
+XERCES_CPP_NAMESPACE_END
+
 /**
   * End of file RegxUtil.cpp
   */

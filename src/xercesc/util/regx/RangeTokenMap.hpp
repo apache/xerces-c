@@ -67,6 +67,8 @@
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/Mutexes.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -264,6 +266,8 @@ inline TokenFactory* RangeTokenMap::getTokenFactory() const {
 
     return fTokenFactory;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/10/09 20:49:38  peiyongz
  * init(): take 1 arg
@@ -85,6 +88,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/IDREFDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -173,6 +178,8 @@ void IDREFDatatypeValidator::checkValueSpace(const XMLCh* const content)
     }
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file IDREFDatatypeValidator.cpp

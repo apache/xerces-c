@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:29  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/05/11 13:26:45  tng
  * Copyright update.
@@ -90,6 +93,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RangeFactory.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  RangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -100,6 +105,8 @@ RangeFactory::RangeFactory() {
 RangeFactory::~RangeFactory() {
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file RangeFactory.cpp

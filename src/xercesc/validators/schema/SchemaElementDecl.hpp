@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.6  2002/07/12 15:17:48  knoaman
  * For a given global element, store info about a substitution group element
  * as a SchemaElementDecl and not as a string.
@@ -133,6 +136,8 @@
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/ComplexTypeInfo.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentSpecNode;
 class SchemaAttDefList;
@@ -564,5 +569,7 @@ SchemaElementDecl::getIdentityConstraintAt(unsigned int index) const {
 
     return 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/12 20:37:57  peiyongz
  * SchemaDateTimeException defined
@@ -73,6 +76,8 @@
 
 #include <xercesc/validators/datatype/AbstractNumericFacetValidator.hpp>
 #include <xercesc/util/XMLDateTime.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT DateTimeValidator : public AbstractNumericFacetValidator
 {
@@ -136,7 +141,7 @@ protected:
 protected:
 
     // -----------------------------------------------------------------------
-    //  helper interface: to be implemented/overwritten by derived class  
+    //  helper interface: to be implemented/overwritten by derived class
     // -----------------------------------------------------------------------
     virtual XMLDateTime*   parse(const XMLCh* const) = 0;
 
@@ -147,9 +152,12 @@ protected:
 
 };
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file DateTimeValidator.hpp
   */
 
-#endif
 

@@ -68,6 +68,9 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -397,4 +400,6 @@ void DOMNodeIteratorImpl::release()
     // for performance reason, do not recycle pointer
     // chance that this is allocated again and again is not usual
 }
+
+XERCES_CPP_NAMESPACE_END
 

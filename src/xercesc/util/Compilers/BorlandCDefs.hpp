@@ -62,13 +62,6 @@
 #define BORLANDCDEFS_HPP
 
 // ---------------------------------------------------------------------------
-//  Include some runtime files that will be needed product wide
-// ---------------------------------------------------------------------------
-#include <sys/types.h>  // for size_t and ssize_t
-#include <limits.h>  // for MAX of size_t and ssize_t
-
-
-// ---------------------------------------------------------------------------
 // The following values represent various compiler version levels stored in
 // the precompiler macro __BORLANDC__, along with the associated C++Builder
 // IDE and compiler versions.
@@ -86,6 +79,12 @@
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
+//  Include some runtime files that will be needed product wide
+// ---------------------------------------------------------------------------
+#include <sys/types.h>  // for size_t and ssize_t
+#include <limits.h>  // for MAX of size_t and ssize_t
+
+// ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
 //  the export keyword is from the project's viewpoint or the client's.
 //  These defines provide the platform specific keywords that they need
@@ -94,14 +93,11 @@
 #define PLATFORM_EXPORT     __declspec(dllexport)
 #define PLATFORM_IMPORT     __declspec(dllimport)
 
-
-
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
 //  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
-
 
 // ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
@@ -111,6 +107,11 @@
 // ---------------------------------------------------------------------------
 #define XML_LSTRSUPPORT
 
+// ---------------------------------------------------------------------------
+//  Indicate that we support C++ namespace
+//  Do not define it if the compile cannot handle C++ namespace
+// ---------------------------------------------------------------------------
+// #define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:27:34  tng
  * Copyright update.
@@ -74,6 +77,7 @@
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This is a derivative of the framework abstract class which defines the
@@ -146,5 +150,7 @@ private :
     RefHash2KeysTableOfEnumerator<SchemaAttDef>*    fEnum;
     RefHash2KeysTableOf<SchemaAttDef>*              fList;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

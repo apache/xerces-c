@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:49:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/05/21 19:31:45  tng
  * DOM Reorganization: modify to use the new DOM interface and remove obsolete code in XUtil.
  *
@@ -83,6 +86,8 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMNode.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMNode;
 class DOMElement;
@@ -121,5 +126,7 @@ protected:
 	~XUtil() {};
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -61,6 +61,8 @@
 #include "DOM_DOMException.hpp"
 #include "DOMString.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOM_DOMException::DOM_DOMException()
 : msg(0)
@@ -86,3 +88,6 @@ DOM_DOMException::DOM_DOMException(const DOM_DOMException &other)
 DOM_DOMException::~DOM_DOMException()
 {
 };
+
+XERCES_CPP_NAMESPACE_END
+

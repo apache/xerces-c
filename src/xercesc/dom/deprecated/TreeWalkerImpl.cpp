@@ -63,6 +63,8 @@
 #include "DOM_DOMException.hpp"
 #include "DocumentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /** constructor */
 TreeWalkerImpl::TreeWalkerImpl (
@@ -548,4 +550,6 @@ short TreeWalkerImpl::acceptNode (DOM_Node node) {
         }
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 

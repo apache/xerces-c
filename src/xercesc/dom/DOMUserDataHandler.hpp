@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /**
  * When associating an object to a key on a node using <code>setUserData</code>
  *  the application can provide a handler that gets called when the node the
@@ -163,6 +165,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

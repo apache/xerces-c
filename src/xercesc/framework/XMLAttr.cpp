@@ -67,7 +67,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLAttr: Constructors and Destructor
@@ -158,3 +158,6 @@ void XMLAttr::cleanUp()
     delete fAttName;
     delete [] fValue;
 }
+
+XERCES_CPP_NAMESPACE_END
+

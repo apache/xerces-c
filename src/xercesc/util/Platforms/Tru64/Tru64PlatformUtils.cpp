@@ -112,6 +112,8 @@
 #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
@@ -303,7 +305,7 @@ unsigned int XMLPlatformUtils::readFileBuffer(FileHandle theFile,
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)                                   
+                                   , const XMLByte* const  toFlush)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
@@ -737,3 +739,5 @@ void XMLPlatformUtils::platformTerm()
 	gAtomicOpMutex = 0;
 #endif
 }
+
+XERCES_CPP_NAMESPACE_END

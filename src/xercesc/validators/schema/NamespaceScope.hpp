@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/StringPool.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 //
 // NamespaceScope provides a data structure for mapping namespace prefixes
 // to their URI's. The mapping accurately reflects the scoping of namespaces
@@ -191,6 +193,8 @@ inline bool NamespaceScope::isEmpty() const
 {
     return (fStackTop == 0);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

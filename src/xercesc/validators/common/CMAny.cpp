@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:37  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/08/08 13:23:27  knoaman
  * Fix condition check.
@@ -86,6 +89,8 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 #include <xercesc/validators/common/CMAny.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  CMUnaryOp: Constructors and Destructor
@@ -168,3 +173,5 @@ void CMAny::calcLastPos(CMStateSet& toSet) const
 
 	return;
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -65,6 +65,8 @@
 #include "NamedNodeMapImpl.hpp"
 #include <stdio.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DomMemDebug::DomMemDebug()
 {
@@ -157,3 +159,6 @@ void DomMemDebug::printDifference(const DomMemDebug &other)
 
     printf("\n");
 };
+
+XERCES_CPP_NAMESPACE_END
+

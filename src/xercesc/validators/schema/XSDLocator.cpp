@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.3  2002/11/04 14:49:42  tng
+  * C++ Namespace Support.
+  *
   * Revision 1.2  2002/05/27 18:44:07  tng
   * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
   *
@@ -70,6 +73,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XSDLocator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XSDLocator: Constructors and Destructor
@@ -96,3 +100,5 @@ void XSDLocator::setValues(const XMLCh* const systemId,
     fSystemId = systemId;
     fPublicId = publicId;
 }
+
+XERCES_CPP_NAMESPACE_END

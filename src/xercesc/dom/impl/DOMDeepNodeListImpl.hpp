@@ -73,6 +73,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMNode;
 
 
@@ -103,5 +106,7 @@ public:
 private:
     DOMNode*          nextMatchingElementAfter(DOMNode *current);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

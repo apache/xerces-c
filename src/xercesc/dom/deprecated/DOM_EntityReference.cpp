@@ -61,6 +61,8 @@
 #include "DOM_EntityReference.hpp"
 #include "EntityReferenceImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOM_EntityReference::DOM_EntityReference()
 : DOM_Node(null)
@@ -96,4 +98,6 @@ DOM_EntityReference & DOM_EntityReference::operator = (const DOM_NullPtr *other)
     return (DOM_EntityReference &) DOM_Node::operator = (other);
 };
 
+
+XERCES_CPP_NAMESPACE_END
 

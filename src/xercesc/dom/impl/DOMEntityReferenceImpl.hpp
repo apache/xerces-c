@@ -77,6 +77,9 @@
 #include "DOMChildNode.hpp"
 #include "DOMNodeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDOM_EXPORT DOMEntityReferenceImpl: public DOMEntityReference
 {
 private:
@@ -99,6 +102,8 @@ public:
 
     virtual void setReadOnly(bool readOnly,bool deep);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -64,6 +64,9 @@
 #include "DOM_NodeFilter.hpp"
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class NodeIteratorImpl;
 
 /**
@@ -219,5 +222,7 @@ class CDOM_EXPORT DOM_NodeIterator
     private:
         NodeIteratorImpl*                 fImpl;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

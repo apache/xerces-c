@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:47:41  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/15 17:10:19  knoaman
  * Particle derivation checking support.
@@ -74,6 +77,7 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  FieldMatcher: Constructors and Destructor
@@ -90,7 +94,7 @@ FieldMatcher::FieldMatcher(XercesXPath* const xpath, IC_Field* const aField,
 //  FieldMatcher: Match methods
 // ---------------------------------------------------------------------------
 void FieldMatcher::matched(const XMLCh* const content,
-                           DatatypeValidator* const dv, 
+                           DatatypeValidator* const dv,
                            const bool isNil) {
 
     if(isNil) {
@@ -141,6 +145,8 @@ XPathMatcher* IC_Field::createMatcher(ValueStore* const valueStore) {
 
     return new FieldMatcher(fXPath, this, valueStore);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file IC_Field.cpp

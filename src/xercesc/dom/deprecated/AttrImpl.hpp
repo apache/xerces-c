@@ -142,6 +142,9 @@
 #include "ChildNode.hpp"
 #include "DOM_Node.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class ElementImpl;
 
 class CDOM_EXPORT AttrImpl: public NodeImpl {
@@ -196,5 +199,7 @@ protected:
     void lastChild(ChildNode *);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -82,6 +82,9 @@
 //#include "AttrImpl.hpp"
 #include "DOMAttrMapImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMNodeList;
 class DOMAttrMapImpl;
 class DOMDocument;
@@ -148,5 +151,7 @@ protected:
     virtual void setupDefaultAttributes();
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

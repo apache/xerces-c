@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:43  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:50:40  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
+ * sane_include
  *
  * Revision 1.12  2001/09/05 20:49:10  knoaman
  * Fix for complexTypes with mixed content model.
@@ -109,6 +112,8 @@
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/DTD/DTDAttDef.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentSpecNode;
 class DTDAttDefList;
@@ -184,8 +189,8 @@ public :
     virtual ContentSpecNode* getContentSpec();
     virtual void setContentSpec(ContentSpecNode* toAdopt);
     virtual XMLContentModel* getContentModel();
-    virtual void setContentModel(XMLContentModel* const newModelToAdopt);      
-    virtual const XMLCh* getFormattedContentModel ()   const;     
+    virtual void setContentModel(XMLContentModel* const newModelToAdopt);
+    virtual const XMLCh* getFormattedContentModel ()   const;
 
     // -----------------------------------------------------------------------
     // Support keyed collections
@@ -215,10 +220,10 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    void faultInAttDefList() const;    
+    void faultInAttDefList() const;
     XMLContentModel* createChildModel() ;
     XMLContentModel* makeContentModel() ;
-    XMLCh* formatContentModel () const ;    
+    XMLCh* formatContentModel () const ;
 
 
     // -----------------------------------------------------------------------
@@ -247,19 +252,19 @@ private :
     //
     //  fContentModel
     //      The content model object for this element. It is stored here via
-    //      its abstract interface.    
+    //      its abstract interface.
     //
     //  fFormattedModel
     //      This is a faulted in member. When the outside world asks for
     //      our content model as a string, we format it and fault it into
-    //      this field (to avoid doing the formatted over and over.)    
+    //      this field (to avoid doing the formatted over and over.)
     // -----------------------------------------------------------------------
     RefHashTableOf<DTDAttDef>*  fAttDefs;
     DTDAttDefList*              fAttList;
     ContentSpecNode*            fContentSpec;
     ModelTypes                  fModelType;
-    XMLContentModel*            fContentModel;    
-    XMLCh*                      fFormattedModel;    
+    XMLContentModel*            fContentModel;
+    XMLCh*                      fFormattedModel;
 };
 
 // ---------------------------------------------------------------------------
@@ -314,5 +319,7 @@ DTDElementDecl::setModelType(const DTDElementDecl::ModelTypes toSet)
 {
     fModelType = toSet;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -63,6 +63,9 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //
 // This class aids in debugging memory management problems with the
 //  reference counted DOM classes - DOMStrings, Nodes (including subclasses),
@@ -99,5 +102,7 @@ public:
     void        operator =  (const DomMemDebug &other);
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

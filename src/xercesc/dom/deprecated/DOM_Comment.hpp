@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOM_CharacterData.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CommentImpl;
 
 /**
@@ -140,6 +143,8 @@ protected:
 
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

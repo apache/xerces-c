@@ -73,6 +73,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMNode;
 class DOMDocument;
 class DOMDocumentImpl;
@@ -109,6 +112,8 @@ public:
     void           releaseBuffer();
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 
 #endif

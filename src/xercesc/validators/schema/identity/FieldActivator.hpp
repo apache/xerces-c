@@ -71,6 +71,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
@@ -107,13 +109,13 @@ public:
     //  Activation methods
     // -----------------------------------------------------------------------
     /**
-      * Start the value scope for the specified identity constraint. This 
-      * method is called when the selector matches in order to initialize 
+      * Start the value scope for the specified identity constraint. This
+      * method is called when the selector matches in order to initialize
       * the value store.
       */
     void startValueScopeFor(const IdentityConstraint* const ic, const int initialDepth);
 
-    /** 
+    /**
       * Request to activate the specified field. This method returns the
       * matcher for the field.
       */
@@ -146,6 +148,8 @@ FieldActivator::setMatcherStack(XPathMatcherStack* const matcherStack) {
 
     fMatcherStack = matcherStack;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

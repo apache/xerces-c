@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/10/09 20:52:43  peiyongz
  * init():removed
@@ -85,6 +88,8 @@
 #include <xercesc/validators/datatype/AbstractNumericValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLDouble.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT DoubleDatatypeValidator : public AbstractNumericValidator
 {
@@ -145,7 +150,7 @@ protected:
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericFacetValidator
 // -----------------------------------------------------------------------
-    
+
     virtual void assignAdditionalFacet(const XMLCh* const key
                                      , const XMLCh* const value);
 
@@ -176,7 +181,10 @@ protected:
 
 };
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file DoubleDatatypeValidator.hpp
   */
-#endif

@@ -65,6 +65,8 @@
 #include <xercesc/util/QName.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class SchemaGrammar;
 
 class VALIDATORS_EXPORT SubstitutionGroupComparator
@@ -153,6 +155,8 @@ inline SubstitutionGroupComparator::SubstitutionGroupComparator(GrammarResolver*
 
 inline SubstitutionGroupComparator::~SubstitutionGroupComparator()
 {}
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

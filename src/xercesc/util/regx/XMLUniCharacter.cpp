@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:34  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:01  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:34  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:26:52  tng
  * Copyright update.
@@ -79,6 +82,8 @@
    #include <xercesc/util/regx/UniCharTable.hpp>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  XMLUniCharacter: Public static methods
 // ---------------------------------------------------------------------------
@@ -90,6 +95,8 @@ unsigned short XMLUniCharacter::getType(const XMLCh ch) {
 	return (unsigned short) fgUniCharsTable[ch];
 #endif
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XMLUniCharacter.cpp

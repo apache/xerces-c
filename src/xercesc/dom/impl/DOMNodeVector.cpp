@@ -71,6 +71,9 @@
 #include "DOMDocumentImpl.hpp"
 #include <assert.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOMNodeVector::DOMNodeVector(DOMDocument *doc)
 {
 	init(doc, 10);
@@ -176,4 +179,6 @@ XMLSize_t DOMNodeVector::size() {
 	return nextFreeSlot;
 };
 		
+
+XERCES_CPP_NAMESPACE_END
 

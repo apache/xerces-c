@@ -75,6 +75,9 @@
 #include "DOMParentNode.hpp"
 #include <xercesc/dom/DOMEntity.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class    DOMEntityReference;
 
 class CDOM_EXPORT DOMEntityImpl: public DOMEntity {
@@ -128,6 +131,8 @@ public:
     virtual void                   setVersion(const XMLCh* version);
     virtual void                   setBaseURI(const XMLCh *arg);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/07/19 14:57:28  knoaman
  * Add an adoptFlag parameter to the constructor and remove the setter method.
  * Documentation update.
@@ -73,6 +76,7 @@
 #include <xercesc/dom/DOMInputSource.hpp>
 #include <xercesc/util/NullPointerException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Wrapper4DOMInputSource: Constructor and Destructor
@@ -152,4 +156,5 @@ BinInputStream* Wrapper4DOMInputSource::makeStream() const
     return fInputSource->makeStream();
 }
 
+XERCES_CPP_NAMESPACE_END
 

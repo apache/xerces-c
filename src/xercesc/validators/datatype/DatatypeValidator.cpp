@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/10/15 18:04:31  knoaman
  * Bug [13485]: incorrect return from getWSstring
  *
@@ -92,6 +95,8 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -125,11 +130,14 @@ const XMLCh* DatatypeValidator::getWSstring(const short theType) const
          return SchemaSymbols::fgWS_REPLACE;
     case COLLAPSE:
          return SchemaSymbols::fgWS_COLLAPSE;
-    default: 
+    default:
          return SchemaSymbols::fgWS_PRESERVE;
     }
 
 }
+
+XERCES_CPP_NAMESPACE_END
+
 /**
   * End of file DatatypeValidator.cpp
   */

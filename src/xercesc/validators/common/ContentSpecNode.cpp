@@ -71,6 +71,8 @@
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Copy Constructor
 //
@@ -300,4 +302,6 @@ int ContentSpecNode::getMaxTotalRange() const {
 
     return max;
 }
+
+XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/04 15:13:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.6  2002/07/15 21:52:48  peiyongz
  * CouldNotWriteToFile
  *
@@ -199,7 +202,7 @@
 #endif
 
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 // ---------------------------------------------------------------------------
@@ -403,7 +406,7 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)                                   
+                                   , const XMLByte* const  toFlush)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
@@ -788,3 +791,4 @@ void XMLPlatformUtils::platformTerm()
 #endif
 }
 
+XERCES_CPP_NAMESPACE_END

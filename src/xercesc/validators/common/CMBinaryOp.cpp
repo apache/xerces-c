@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:37  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/05/11 13:27:15  tng
  * Copyright update.
@@ -96,6 +99,7 @@
 #include <xercesc/validators/common/CMBinaryOp.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  CMBinaryOp: Constructors
@@ -207,3 +211,5 @@ void CMBinaryOp::calcLastPos(CMStateSet& toSet) const
             toSet |= fLeftChild->getLastPos();
     }
 }
+
+XERCES_CPP_NAMESPACE_END

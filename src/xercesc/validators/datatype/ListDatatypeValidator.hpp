@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.11  2001/11/22 20:23:20  peiyongz
  * _declspec(dllimport) and inline warning C4273
@@ -100,6 +103,8 @@
 
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT ListDatatypeValidator : public AbstractStringValidator
 {
@@ -194,8 +199,8 @@ protected:
 
     virtual int  getLength(const XMLCh* const content) const;
 
-    // 
-    // Overwrite AbstractStringValidator's 
+    //
+    // Overwrite AbstractStringValidator's
     //
     virtual void inspectFacetBase();
 
@@ -249,7 +254,10 @@ inline void ListDatatypeValidator::setContent(const XMLCh* const content)
     fContent = content;
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file ListDatatypeValidator.hpp
   */
-#endif

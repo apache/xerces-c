@@ -71,6 +71,7 @@
 #include <xercesc/framework/XMLFormatter.hpp>
 #include <string.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -364,7 +365,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
 
                     const unsigned srcChars = srcCount > kTmpBufSize ?
                                               kTmpBufSize : srcCount;
-                
+
                     const unsigned int outBytes = fXCoder->transcodeTo
                     (
                         srcPtr
@@ -678,4 +679,6 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
         }
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 

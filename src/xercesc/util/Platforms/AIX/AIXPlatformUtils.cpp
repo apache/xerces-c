@@ -106,6 +106,8 @@
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
@@ -283,7 +285,7 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)                                   
+                                   , const XMLByte* const  toFlush)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
@@ -651,3 +653,6 @@ void XMLPlatformUtils::platformInit()
 {
 }
 ********************* End of code attic *******************************/
+
+XERCES_CPP_NAMESPACE_END
+

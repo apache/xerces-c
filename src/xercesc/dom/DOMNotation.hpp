@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 /**
  * This interface represents a notation declared in the DTD. A notation either
@@ -135,6 +137,8 @@ public:
 
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

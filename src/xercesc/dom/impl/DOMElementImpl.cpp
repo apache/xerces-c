@@ -77,6 +77,9 @@
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMNamedNodeMapImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMAttr;
 
 DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
@@ -628,4 +631,6 @@ DOMNode* DOMElementImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
         return newElem;
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 

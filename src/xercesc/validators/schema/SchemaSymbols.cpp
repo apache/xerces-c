@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:49:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/05/27 19:39:25  knoaman
  * remove unused constants.
  *
@@ -115,6 +118,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  SchemaSymbols: Static data
@@ -972,7 +976,7 @@ const XMLCh SchemaSymbols::fgDT_POSITIVEINTEGER[] =
 
 const XMLCh SchemaSymbols::fgDT_DATETIME[] =
 {
-    chLatin_d, chLatin_a, chLatin_t, chLatin_e, 
+    chLatin_d, chLatin_a, chLatin_t, chLatin_e,
     chLatin_T, chLatin_i, chLatin_m, chLatin_e, chNull
 };
 
@@ -988,7 +992,7 @@ const XMLCh SchemaSymbols::fgDT_TIME[] =
 
 const XMLCh SchemaSymbols::fgDT_DURATION[] =
 {
-    chLatin_d, chLatin_u, chLatin_r, chLatin_a, 
+    chLatin_d, chLatin_u, chLatin_r, chLatin_a,
     chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
@@ -1004,7 +1008,7 @@ const XMLCh SchemaSymbols::fgDT_MONTH[] =
 
 const XMLCh SchemaSymbols::fgDT_MONTHDAY[] =
 {
-    chLatin_g, chLatin_M, chLatin_o, chLatin_n, chLatin_t, chLatin_h, 
+    chLatin_g, chLatin_M, chLatin_o, chLatin_n, chLatin_t, chLatin_h,
     chLatin_D, chLatin_a, chLatin_y, chNull
 };
 
@@ -1015,7 +1019,7 @@ const XMLCh SchemaSymbols::fgDT_YEAR[] =
 
 const XMLCh SchemaSymbols::fgDT_YEARMONTH[] =
 {
-    chLatin_g, chLatin_Y, chLatin_e, chLatin_a, chLatin_r, 
+    chLatin_g, chLatin_Y, chLatin_e, chLatin_a, chLatin_r,
     chLatin_M, chLatin_o, chLatin_n, chLatin_t, chLatin_h, chNull
 };
 
@@ -1083,6 +1087,8 @@ const XMLCh SchemaSymbols::fgRedefIdentifier[] =
 const int SchemaSymbols::fgINT_MIN_VALUE = 0x80000000;
 
 const int SchemaSymbols::fgINT_MAX_VALUE = 0x7fffffff;
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file SchemaSymbols.cpp

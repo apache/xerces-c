@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 15:10:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/09/24 19:58:33  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -113,6 +116,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
@@ -243,3 +248,5 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     return bRet;
 }
+
+XERCES_CPP_NAMESPACE_END

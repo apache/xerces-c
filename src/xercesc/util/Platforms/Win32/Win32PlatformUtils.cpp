@@ -120,7 +120,7 @@
     #include <xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.hpp>
 #endif
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -935,3 +935,5 @@ void XMLPlatformUtils::platformTerm()
 {
     // We don't have any temrination requirements for win32 at this time
 }
+
+XERCES_CPP_NAMESPACE_END

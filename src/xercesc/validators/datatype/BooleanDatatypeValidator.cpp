@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/09/24 19:44:40  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -98,6 +101,8 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 const int   ARRAYSIZE = 4;
 const XMLCh fgValueSpace[][32] =
@@ -237,6 +242,8 @@ const RefVectorOf<XMLCh>* BooleanDatatypeValidator::getEnumString() const
 {
 	return 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file BooleanDatatypeValidator.cpp

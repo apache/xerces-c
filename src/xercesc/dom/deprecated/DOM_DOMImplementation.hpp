@@ -64,6 +64,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMString.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOM_Document;
 class DOM_DocumentType;
 
@@ -194,5 +197,7 @@ class CDOM_EXPORT DOM_DOMImplementation {
     // -----------------------------------------------------------------------
 	static void reinitDOM_DOMImplementation();
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -70,6 +70,9 @@
 //  name is substituded for the *.
 //
 
+#include <xercesc/util/XercesDefs.hpp>
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 //
 //  Class DOMNodeIDMap is a hash table that is used in the implementation of
@@ -118,5 +121,7 @@ private:
 
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

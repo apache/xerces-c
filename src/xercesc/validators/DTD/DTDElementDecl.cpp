@@ -73,6 +73,7 @@
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Constructors and Destructor
@@ -83,8 +84,8 @@ DTDElementDecl::DTDElementDecl() :
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(Any)
-    , fContentModel(0)  
-    , fFormattedModel(0)      
+    , fContentModel(0)
+    , fFormattedModel(0)
 {
 }
 
@@ -95,8 +96,8 @@ DTDElementDecl::DTDElementDecl( const   XMLCh* const              elemRawName
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(type)
-    , fContentModel(0)  
-    , fFormattedModel(0)        
+    , fContentModel(0)
+    , fFormattedModel(0)
 {
     setElementName(elemRawName, uriId);
 }
@@ -107,8 +108,8 @@ DTDElementDecl::DTDElementDecl( QName* const                elementName
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(type)
-    , fContentModel(0)      
-    , fFormattedModel(0)    
+    , fContentModel(0)
+    , fFormattedModel(0)
 {
     setElementName(elementName);
 }
@@ -118,8 +119,8 @@ DTDElementDecl::~DTDElementDecl()
     delete fAttDefs;
     delete fAttList;
     delete fContentSpec;
-    delete fContentModel;    
-    delete [] fFormattedModel;    
+    delete fContentModel;
+    delete [] fFormattedModel;
 }
 
 
@@ -436,3 +437,5 @@ void DTDElementDecl::faultInAttDefList() const
     // Use a hash modulus of 29 and tell it owns its elements
     ((DTDElementDecl*)this)->fAttDefs = new RefHashTableOf<DTDAttDef>(29, true);
 }
+
+XERCES_CPP_NAMESPACE_END

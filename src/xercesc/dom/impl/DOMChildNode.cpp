@@ -65,6 +65,9 @@
 #include "DOMChildNode.hpp"
 #include "DOMCasts.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOMChildNode::DOMChildNode()
 {
     this->previousSibling  = 0;
@@ -109,3 +112,6 @@ DOMNode * DOMChildNode::getPreviousSibling(const DOMNode *thisNode) const {
     // parent's lastChild, but we hide that
     return castToNodeImpl(thisNode)->isFirstChild() ? 0 : previousSibling;
 };
+
+XERCES_CPP_NAMESPACE_END
+

@@ -96,6 +96,7 @@
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Private helper methods
@@ -3216,10 +3217,12 @@ void XMLScanner::normalizeURI(const XMLCh* const systemURI,
         }
         else if (*pszSrc == 0xFFFF) { //escaped character
             pszSrc++;
-        } 
+        }
         else {
             normalizedURI.append(*pszSrc);
             pszSrc++;
         }
     }
 }
+
+XERCES_CPP_NAMESPACE_END

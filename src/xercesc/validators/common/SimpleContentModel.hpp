@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/10/30 21:52:00  tng
  * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
  *
@@ -120,6 +123,8 @@
 
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  SimpleContentModel is a derivative of the abstract content model base
@@ -270,5 +275,7 @@ SimpleContentModel::getNextState(const unsigned int currentState,
 
     return XMLContentModel::gInvalidTrans;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

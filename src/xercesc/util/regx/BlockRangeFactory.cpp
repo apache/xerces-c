@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/24 19:59:36  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -107,6 +110,7 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -445,6 +449,8 @@ void BlockRangeFactory::initializeKeywordMap() {
 
     fKeywordsInitialized = true;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file BlockRangeFactory.cpp

@@ -71,6 +71,10 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNotation.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 #include "DOMNodeImpl.hpp"
 
 class DOMDocument;
@@ -116,5 +120,7 @@ public:
     virtual void setBaseURI(const XMLCh *arg);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:49:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/04/01 15:47:06  knoaman
  * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
  *
@@ -79,6 +82,8 @@
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Constructors and Destructor
@@ -113,6 +118,8 @@ void XercesGroupInfo::setLocator(XSDLocator* const aLocator) {
 
     fLocator = aLocator;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XercesGroupInfo.cpp

@@ -67,6 +67,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLEntityDecl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLEntityDecl: Constructors and Destructor
@@ -174,3 +175,6 @@ void XMLEntityDecl::cleanUp()
     delete [] fSystemId;
     delete [] fBaseURI;
 }
+
+XERCES_CPP_NAMESPACE_END
+

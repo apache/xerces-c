@@ -65,7 +65,9 @@
 
 #ifdef XML_DEBUG
 #include "DOMStringImpl.hpp"
+XERCES_CPP_NAMESPACE_BEGIN
 #else
+XERCES_CPP_NAMESPACE_BEGIN
 class DOMStringHandle;
 #endif
 
@@ -478,5 +480,7 @@ DOMString CDOM_EXPORT operator + (const DOMString &lhs, XMLCh rhs);
   * @return The concatenated object
   */
 DOMString CDOM_EXPORT operator + (XMLCh lhs, const DOMString &rhs);
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

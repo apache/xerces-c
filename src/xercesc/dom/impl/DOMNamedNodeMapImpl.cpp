@@ -70,7 +70,7 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMNodeImpl.hpp"
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOMNamedNodeMapImpl::DOMNamedNodeMapImpl(DOMNode *ownerNod)
@@ -449,4 +449,6 @@ DOMNode * DOMNamedNodeMapImpl::removeNamedItemAt(XMLSize_t index)
     castToNodeImpl(n)->isOwned(false);
     return n;
 };
+
+XERCES_CPP_NAMESPACE_END
 

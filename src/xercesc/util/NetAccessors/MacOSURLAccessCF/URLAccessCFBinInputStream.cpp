@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -70,6 +70,7 @@
 #include <cstdlib>
 #include <cstring>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
       : mBytesProcessed(0),
@@ -78,7 +79,7 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
     //	Figure out what we're dealing with
     const XMLCh* urlText = urlSource.getURLText();
     unsigned int urlLength = XMLString::stringLen(urlText);
-    
+
     //	Create a CFString from the path
     CFStringRef stringRef = NULL;
     if (urlText)
@@ -89,18 +90,18 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
             urlLength
             );
     }
-        
+
     //	Create a URLRef from the CFString
     CFURLRef urlRef = NULL;
     if (stringRef)
     {
         urlRef = CFURLCreateWithString(
-            kCFAllocatorDefault, 
-            stringRef, 
+            kCFAllocatorDefault,
+            stringRef,
             NULL				// CFURLRef baseURL
             );
     }
-    
+
 	//	Fetch the data
     mDataRef = NULL;
     SInt32 errorCode = 0;
@@ -116,13 +117,13 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
             &errorCode
             );
     }
-    
+
     //	Cleanup temporary stuff
     if (stringRef)
         CFRelease(stringRef);
     if (urlRef)
         CFRelease(urlRef);
-    
+
     //	Check for an error in fetching the data
     if (!success || errorCode)
     {
@@ -132,28 +133,28 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
             CFRelease(mDataRef);
             mDataRef = NULL;
         }
-            
+
         //	Do a best attempt at mapping some errors
         switch (errorCode)
         {
             case kCFURLUnknownSchemeError:
                 ThrowXML(MalformedURLException, XMLExcepts::URL_UnsupportedProto);
                 break;
-                
+
             case kCFURLRemoteHostUnavailableError:
                 ThrowXML(NetAccessorException,  XMLExcepts::NetAcc_TargetResolution);
                 break;
-                
+
             case kCFURLUnknownError:
                 ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
                 break;
-                
+
             case kCFURLResourceNotFoundError:
             case kCFURLResourceAccessViolationError:
             case kCFURLTimeoutError:
                 ThrowXML(NetAccessorException, XMLExcepts::File_CouldNotOpenFile);
                 break;
-            
+
             case kCFURLImproperArgumentsError:
             case kCFURLUnknownPropertyKeyError:
             case kCFURLPropertyKeyUnavailableError:
@@ -184,24 +185,26 @@ URLAccessCFBinInputStream::readBytes(XMLByte* const    toFill
     //	If we don't have a dataRef, we can't return any data
     if (!mDataRef)
         return 0;
-    
+
     //	Get the length of the data we've fetched
     CFIndex dataLength = CFDataGetLength(mDataRef);
-    
+
     //	Calculate how much to return based on how much
     //	we've already returned, and how much the user wants
     CFIndex n = dataLength - mBytesProcessed;			// Amount remaining
     CFIndex desired = maxToRead & 0x7fffffff;			// CFIndex is signed
     if (n > desired)									// Amount desired
         n = desired;
-    
+
     //	Read the appropriate bytes into the user buffer
     CFRange range = CFRangeMake(mBytesProcessed, n);
     CFDataGetBytes(mDataRef, range, reinterpret_cast<UInt8*>(toFill));
 	
     //	Update bytes processed
     mBytesProcessed += n;
-    
+
     //	Return the number of bytes delivered
     return n;
 }
+
+XERCES_CPP_NAMESPACE_END

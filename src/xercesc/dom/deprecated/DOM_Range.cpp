@@ -64,6 +64,7 @@
 #include "DocumentImpl.hpp"
 #include "RangeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_Range::DOM_Range()
@@ -153,7 +154,7 @@ const DOM_Node DOM_Range::getCommonAncestorContainer() const
         return ((RangeImpl *)fImpl)->getCommonAncestorContainer();
 }
 
-//setter functions    
+//setter functions
 
 void DOM_Range::setStart(const DOM_Node& parent, unsigned int offset)
 {
@@ -198,11 +199,11 @@ bool DOM_Range::getCollapsed() const
 
 void DOM_Range::selectNode(const DOM_Node& node)
 {
-  ((RangeImpl *)fImpl)->selectNode(node); 
+  ((RangeImpl *)fImpl)->selectNode(node);
 }
 void DOM_Range::selectNodeContents(const DOM_Node& node)
 {
-    ((RangeImpl *)fImpl)->selectNodeContents(node); 
+    ((RangeImpl *)fImpl)->selectNodeContents(node);
 }
 
 //Functions related to comparing ange Boundrary-Points
@@ -251,4 +252,6 @@ void DOM_Range::detach()
 {
     ((RangeImpl *)fImpl)->detach();
 }
+
+XERCES_CPP_NAMESPACE_END
 

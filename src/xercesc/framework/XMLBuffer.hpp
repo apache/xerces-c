@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/21 18:54:52  tng
  * [Bug 11869] Add the const modifier (XMLBuffer.hpp).
  *
@@ -92,6 +95,8 @@
 #define XMLBUFFER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
  *  XMLBuffer is a lightweight, expandable Unicode text buffer. Since XML is
@@ -243,5 +248,7 @@ private :
     unsigned int    fCapacity;
     bool            fUsed;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -81,6 +81,9 @@
 #include "DOM_XMLDecl.hpp"
 #include "DOM_Range.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DocumentImpl;
 class NodeIteratorImpl;
 
@@ -609,5 +612,7 @@ protected:
 
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -63,6 +63,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
@@ -213,5 +214,7 @@ const XMLCh* DOMNotationImpl::getBaseURI() const
            const XMLCh*     DOMNotationImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMNotationImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
+
+XERCES_CPP_NAMESPACE_END
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:50:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/09/04 18:17:49  tng
  * Do not set IDREF to used during prevalidation.
  *
@@ -127,6 +130,8 @@
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLMsgLoader;
 
@@ -239,5 +244,7 @@ inline bool DTDValidator::handlesSchema() const
     // No Schema scanning
     return false;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

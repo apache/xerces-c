@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:29  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:26:44  tng
  * Copyright update.
@@ -71,6 +74,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/ParenToken.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ParenToken: Constructors and Destructors
@@ -88,6 +93,8 @@ ParenToken::ParenToken(const unsigned short tokType,
 ParenToken::~ParenToken() {
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   *	End of file ParenToken.cpp

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:47:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/10/30 21:52:01  tng
  * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
  *
@@ -86,11 +89,13 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 // ---------------------------------------------------------------------------
 //  Static data
 // ---------------------------------------------------------------------------
-const XMLByte XPathScanner::fASCIICharMap[128] = 
+const XMLByte XPathScanner::fASCIICharMap[128] =
 {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  2,  0,  0,  2,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -326,7 +331,7 @@ void XercesXPath::checkForSelectedAttributes() {
         if (stepSize) {
             if (locPath->getStep(stepSize - 1)->getAxisType() == XercesStep::ATTRIBUTE) {
                 ThrowXML(XPathException, XMLExcepts::XPath_NoAttrSelector);
-            }        
+            }
 		}
     }
 }
@@ -454,7 +459,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 firstTokenOfLocationPath=false;
                 break;
             }
-        case XercesXPath::EXPRTOKEN_DOUBLE_COLON: 
+        case XercesXPath::EXPRTOKEN_DOUBLE_COLON:
             {
                 // should never have a bare double colon
                 ThrowXML(XPathException, XMLExcepts::XPath_NoDoubleColon);
@@ -557,21 +562,21 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
             }
         case XercesXPath::EXPRTOKEN_OPERATOR_DOUBLE_SLASH:
             {
-                ThrowXML(XPathException, XMLExcepts::XPath_NoDoubleForwardSlash); 
+                ThrowXML(XPathException, XMLExcepts::XPath_NoDoubleForwardSlash);
             }
         case XercesXPath::EXPRTOKEN_OPERATOR_SLASH:
             {
                 if (i == 0) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_NoForwardSlashAtStart); 
+                    ThrowXML(XPathException, XMLExcepts::XPath_NoForwardSlashAtStart);
                 }
 
                 // keep on truckin'
                 if (firstTokenOfLocationPath) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_NoSelectionOfRoot); 
+                    ThrowXML(XPathException, XMLExcepts::XPath_NoSelectionOfRoot);
                 }
 
                 if (i == tokenCount - 1) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_ExpectedStep3); 
+                    ThrowXML(XPathException, XMLExcepts::XPath_ExpectedStep3);
                 }
 
                 firstTokenOfLocationPath=false;
@@ -881,7 +886,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
                 while (ch != qchar) {
                     if (++currentOffset == endOffset) {
                         return false; // REVISIT
-                    } 
+                    }
 
                     ch = data[currentOffset];
                 }
@@ -1008,7 +1013,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
             nameOffset = currentOffset;
             currentOffset = scanNCName(data, endOffset, currentOffset);
             if (currentOffset == nameOffset) {
-                return false; // REVISIT            
+                return false; // REVISIT
 			}
 
             if (currentOffset < endOffset) {
@@ -1306,6 +1311,8 @@ void XPathScannerForSchema::addToken(ValueVectorOf<int>* const tokens,
 
     ThrowXML(XPathException, XMLExcepts::XPath_TokenNotSupported);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XercesPath.cpp

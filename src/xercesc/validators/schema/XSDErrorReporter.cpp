@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.4  2002/11/04 14:49:42  tng
+  * C++ Namespace Support.
+  *
   * Revision 1.3  2002/09/24 20:12:48  tng
   * Performance: use XMLString::equals instead of XMLString::compareString
   *
@@ -84,6 +87,8 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -273,3 +278,4 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
         throw toEmit;
 }
 
+XERCES_CPP_NAMESPACE_END

@@ -65,6 +65,7 @@
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMElement;
 class XMLValidator;
@@ -159,5 +160,6 @@ inline bool XSDDOMParser::getSawFatal() const
     return fSawFatal;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif

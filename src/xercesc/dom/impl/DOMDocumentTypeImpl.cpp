@@ -67,6 +67,8 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMCasts.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    const XMLCh *dtName,
@@ -569,4 +571,6 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
 
     return fParent.isEqualNode(arg);
 };
+
+XERCES_CPP_NAMESPACE_END
 

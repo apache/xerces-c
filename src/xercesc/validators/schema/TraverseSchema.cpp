@@ -92,6 +92,8 @@
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/impl/XSDElementNSImpl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
 // ---------------------------------------------------------------------------
@@ -7711,6 +7713,8 @@ void TraverseSchema::cleanUp() {
     delete fLocator;
     delete fParser;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file TraverseSchema.cpp

@@ -67,6 +67,7 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -200,3 +201,6 @@ void XMLAttDef::cleanUp()
     delete [] fEnumeration;
     delete [] fValue;
 }
+
+XERCES_CPP_NAMESPACE_END
+

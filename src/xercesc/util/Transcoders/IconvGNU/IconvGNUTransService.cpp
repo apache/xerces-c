@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:14:34  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/09/27 13:33:43  tng
  * [Bug 12547] Xerces C++ 2.1 fails to build on Linux 64 bits arch with -tlinux.  Patch from Guillaume Morin.
  *
@@ -73,6 +76,8 @@
 #include <iconv.h>
 #include <errno.h>
 #include <endian.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -1180,4 +1185,6 @@ bool		IconvGNUTranscoder::canTranscodeTo
     size_t	rc = iconvTo( srcBuf, &len, &pTmpBuf, 64);
     return (rc != (size_t)-1) && (len == 0);
 }
+
+XERCES_CPP_NAMESPACE_END
 

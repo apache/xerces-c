@@ -65,6 +65,8 @@
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /**
   * DataTypeValidator defines the interface that data type validators must
   * obey. These validators can be supplied by the application writer and may
@@ -490,6 +492,8 @@ inline bool DatatypeValidator::isAtomic() const {
 
     return true;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

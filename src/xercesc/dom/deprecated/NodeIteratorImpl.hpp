@@ -75,6 +75,8 @@
 #include "DOM_NodeIterator.hpp"
 #include "RefCountedImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 	protected:
@@ -153,5 +155,7 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

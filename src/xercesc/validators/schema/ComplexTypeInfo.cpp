@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/03/21 15:34:40  knoaman
  * Add support for reporting line/column numbers of schema errors.
  *
@@ -161,6 +164,8 @@
 #include <xercesc/validators/common/MixedContentModel.hpp>
 #include <xercesc/validators/common/SimpleContentModel.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Constructors and Destructor
@@ -744,6 +749,7 @@ void ComplexTypeInfo::resizeContentSpecOrgURI() {
     fContentSpecOrgURISize = newSize;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file ComplexTypeInfo.cpp

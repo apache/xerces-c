@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:49:42  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/09/24 20:12:48  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -81,6 +84,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/util/QName.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XercesAttGroupInfo: Constructors and Destructor
@@ -152,6 +157,8 @@ const SchemaAttDef* XercesAttGroupInfo::getAttDef(const XMLCh* const baseName,
 
     return 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XercesAttGroupInfo.cpp

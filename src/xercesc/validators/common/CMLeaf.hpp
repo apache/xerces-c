@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:37  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/12/06 17:52:17  tng
  * Performance Enhancement.  The QName that was passed to the CMLeaf
@@ -116,6 +119,8 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/CMNode.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This class represents a leaf in the content spec node tree of an
@@ -310,5 +315,7 @@ inline void CMLeaf::calcLastPos(CMStateSet& toSet) const
     // Otherwise, its just the one bit of our position
     toSet.setBit(fPosition);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

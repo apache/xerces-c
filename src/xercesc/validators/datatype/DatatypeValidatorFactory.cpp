@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/05/08 12:25:30  tng
  * Schema Fix: re-add the ID, IDREF ... datatype validators only if they were not there.
  *
@@ -189,6 +192,8 @@
 #include <xercesc/validators/datatype/DurationDatatypeValidator.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local const data
@@ -751,6 +756,8 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
 
     return datatypeValidator;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file DatatypeValidatorFactory.cpp

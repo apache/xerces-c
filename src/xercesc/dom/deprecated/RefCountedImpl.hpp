@@ -73,6 +73,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class CDOM_EXPORT RefCountedImpl
 {
@@ -98,5 +100,7 @@ public:
                                     //  unreferenced state may switch many times
                                     //  over its life time.)
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

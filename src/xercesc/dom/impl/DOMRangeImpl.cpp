@@ -70,6 +70,9 @@
 
 #include <xercesc/framework/XMLBuffer.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //---------------------
 // C'tor and D'tor
 //---------------------
@@ -1829,4 +1832,6 @@ void DOMRangeImpl::updateSplitInfo(DOMText* oldNode, DOMText* startNode, XMLSize
 }
 
 
+
+XERCES_CPP_NAMESPACE_END
 

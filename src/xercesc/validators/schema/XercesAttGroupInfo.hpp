@@ -74,7 +74,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT XercesAttGroupInfo
 {
@@ -90,7 +90,7 @@ public:
     // -----------------------------------------------------------------------
     bool                containsTypeWithId() const;
     unsigned int        attributeCount() const;
-    unsigned int        anyAttributeCount() const; 
+    unsigned int        anyAttributeCount() const;
     SchemaAttDef*       attributeAt(const unsigned int index);
     const SchemaAttDef* attributeAt(const unsigned int index) const;
     SchemaAttDef*       anyAttributeAt(const unsigned int index);
@@ -98,7 +98,7 @@ public:
     SchemaAttDef*       getCompleteWildCard() const;
     const SchemaAttDef* getAttDef(const XMLCh* const baseName,
                                   const int uriId) const;
-    
+
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -164,7 +164,7 @@ XercesAttGroupInfo::attributeAt(const unsigned int index) {
     return 0;
 }
 
-inline const SchemaAttDef* 
+inline const SchemaAttDef*
 XercesAttGroupInfo::attributeAt(const unsigned int index) const {
 
     if (fAttributes) {
@@ -184,7 +184,7 @@ XercesAttGroupInfo::anyAttributeAt(const unsigned int index) {
     return 0;
 }
 
-inline const SchemaAttDef* 
+inline const SchemaAttDef*
 XercesAttGroupInfo::anyAttributeAt(const unsigned int index) const {
 
     if (fAnyAttributes) {
@@ -226,7 +226,7 @@ inline void XercesAttGroupInfo::addAttDef(SchemaAttDef* const toAdd,
 inline void XercesAttGroupInfo::addAnyAttDef(SchemaAttDef* const toAdd,
                                              const bool toClone) {
 
-    if (!fAnyAttributes) {   
+    if (!fAnyAttributes) {
         fAnyAttributes = new RefVectorOf<SchemaAttDef>(2);
     }
 
@@ -247,6 +247,8 @@ XercesAttGroupInfo::setCompleteWildCard(SchemaAttDef* const toSet) {
 
     fCompleteWildCard = toSet;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

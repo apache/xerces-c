@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:50:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/08/22 15:05:39  tng
  * Remove unused parameter variables in inline functions.
  *
@@ -96,6 +99,8 @@
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 // This class stores the DTD information
@@ -436,5 +441,7 @@ inline void DTDGrammar::setValidated(const bool newState)
 {
     fValidated = newState;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

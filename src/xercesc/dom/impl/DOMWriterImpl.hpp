@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2002/11/04 15:07:35  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.7  2002/06/25 16:17:16  tng
  * DOM L3: add release()
  *
@@ -303,6 +306,9 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMWriter.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class CDOM_EXPORT DOMWriterImpl:public DOMWriter {
 
 public:
@@ -451,5 +457,7 @@ inline void DOMWriterImpl::setURCharRef()
 {
     fFormatter->setUnRepFlags(XMLFormatter::UnRep_CharRef);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

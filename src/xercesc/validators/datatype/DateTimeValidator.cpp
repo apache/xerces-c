@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/12 20:37:57  peiyongz
  * SchemaDateTimeException defined
@@ -76,6 +79,8 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
 static XMLCh value2[BUF_LEN+1];
@@ -91,7 +96,7 @@ static XMLCh value2[BUF_LEN+1];
   ThrowXML2(InvalidDatatypeValueException               \
           , except_code                                 \
           , value1                                      \
-          , value2);   
+          , value2);
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -118,7 +123,7 @@ int DateTimeValidator::compare(const XMLCh* const value1
                              , const XMLCh* const value2)
 {
     try
-    {     
+    {
         XMLDateTime *pDate1 = parse(value1);
         Janitor<XMLDateTime> jName1(pDate1);
         XMLDateTime *pDate2 = parse(value2);
@@ -126,9 +131,9 @@ int DateTimeValidator::compare(const XMLCh* const value1
         int result = compareDates(pDate1, pDate2, true);
         return (result==INDETERMINATE)? -1 : result;
     }
-    catch (...) // RuntimeException e 
+    catch (...) // RuntimeException e
     {
-        return -1; // revisit after implement compareDates()      
+        return -1; // revisit after implement compareDates()
     }
 
 }
@@ -189,7 +194,7 @@ void DateTimeValidator::checkContent(const XMLCh* const content
     if (asBase)
         return;
 
-    try 
+    try
     {
         // the derived classes' parse() method constructs an
         // XMLDateTime object anc invokes appropriate XMLDateTime's
@@ -199,7 +204,7 @@ void DateTimeValidator::checkContent(const XMLCh* const content
 
         int result;
 
-        // must be < MaxExclusive       
+        // must be < MaxExclusive
         if ( (thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0 )
         {
             result = compareValues(theDate, getMaxExclusive());
@@ -215,12 +220,12 @@ void DateTimeValidator::checkContent(const XMLCh* const content
         if ( (thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0 )
         {
             result = compareValues(theDate, getMaxInclusive());
-            if ( result == XMLDateTime::GREATER_THAN || result == XMLDateTime::INDETERMINATE ) 
+            if ( result == XMLDateTime::GREATER_THAN || result == XMLDateTime::INDETERMINATE )
             {
                 REPORT_VALUE_ERROR(theDate
                     , getMaxInclusive()
                     , XMLExcepts::VALUE_exceed_maxIncl)
-            }       
+            }
         }
 
         // must be >= MinInclusive
@@ -262,7 +267,7 @@ void DateTimeValidator::checkContent(const XMLCh* const content
                 ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
         }
     }
-    catch (...) 
+    catch (...)
     {
             ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
             // new error message needed here
@@ -283,7 +288,7 @@ int DateTimeValidator::compareValues(const XMLNumber* const lValue
 /**
  * Compare algorithm described in dateDime (3.2.7).
  * Duration datatype overwrites this method
- * 
+ *
  * @param date1  normalized date representation of the first value
  * @param date2  normalized date representation of the second value
  * @param strict
@@ -335,7 +340,7 @@ void DateTimeValidator::setMinExclusive(const XMLCh* const value)
 void DateTimeValidator::setEnumeration()
 {
 // to do: do we need to check against base value space???
-    
+
     if (!fStrEnumeration)
         return;
 
@@ -347,6 +352,8 @@ void DateTimeValidator::setEnumeration()
         fEnumeration->insertElementAt(parse(fStrEnumeration->elementAt(i)), i);
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file DateTimeValidator::cpp

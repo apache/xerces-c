@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:49:41  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/08/22 15:42:10  tng
  * Remove unused parameter variables in inline functions.
  *
@@ -124,6 +127,8 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 // This class stores the Schema information
@@ -288,7 +293,7 @@ private:
     //
     //  fElemDeclPool
     //      This is the element decl pool. It contains all of the elements
-    //      declared in the Schema (and their associated attributes.) 
+    //      declared in the Schema (and their associated attributes.)
     //
     //  fElemNonDeclPool
     //      This is the element decl pool that is is populated as new elements
@@ -485,7 +490,7 @@ inline unsigned int SchemaGrammar::getElemId (const   unsigned int  uriId
 
 inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  uriId
                                               , const XMLCh* const    baseName
-                                              , const XMLCh* const  
+                                              , const XMLCh* const
                                               , unsigned int          scope )   const
 {
     const SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
@@ -503,7 +508,7 @@ inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  u
 
 inline XMLElementDecl* SchemaGrammar::getElemDecl (const   unsigned int  uriId
                                               , const XMLCh* const    baseName
-                                              , const XMLCh* const  
+                                              , const XMLCh* const
                                               , unsigned int          scope )
 {
     SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
@@ -581,5 +586,7 @@ inline void SchemaGrammar::setValidated(const bool newState)
 {
     fValidated = newState;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

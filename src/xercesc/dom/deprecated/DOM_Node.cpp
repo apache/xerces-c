@@ -66,6 +66,9 @@
 #include "NodeImpl.hpp"
 #include <assert.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 DOM_Node::DOM_Node()
 {
     fImpl = null;
@@ -305,4 +308,6 @@ bool              DOM_Node::hasAttributes() const
 {
     return fImpl->hasAttributes();
 }
+
+XERCES_CPP_NAMESPACE_END
 

@@ -74,6 +74,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Local functions
 // ---------------------------------------------------------------------------
@@ -1035,4 +1037,6 @@ bool Iconv400LCPTranscoder::transcode(   const   XMLCh* const    toTranscode
     toFill[targetCap] = 0;
     return true;
 }
+
+XERCES_CPP_NAMESPACE_END
 

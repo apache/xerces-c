@@ -79,6 +79,9 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/Wrapper4DOMInputSource.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 // ---------------------------------------------------------------------------
 //  DOMBuilderImpl: Constructors and Destructor
@@ -591,4 +594,6 @@ const XMLCh* DOMBuilderImpl::getURIText(unsigned int uriId) const
 {
     return getScanner()->getURIText(uriId);
 }
+
+XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2002/11/04 14:50:40  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.13  2002/09/24 20:10:30  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -195,6 +198,8 @@
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local methods
@@ -3742,3 +3747,5 @@ void DTDScanner::scanTextDecl()
             fScanner->emitError(XMLErrs::ContradictoryEncoding, bbEncoding.getRawBuffer());
     }
 }
+
+XERCES_CPP_NAMESPACE_END

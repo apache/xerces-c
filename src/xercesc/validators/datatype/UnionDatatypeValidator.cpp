@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/11/04 14:53:28  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/24 19:44:40  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -91,6 +94,8 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
@@ -395,6 +400,9 @@ const RefVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
 {
 	return getEnumeration();
 }
+
+XERCES_CPP_NAMESPACE_END
+
 /**
   * End of file UnionDatatypeValidator.cpp
   */

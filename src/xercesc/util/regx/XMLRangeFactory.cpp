@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:17:01  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/05/24 16:42:20  knoaman
  * Performance fixes: eliminate mulitple calls to addRange and sort.
  *
@@ -103,6 +106,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <string.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local static functions
@@ -233,7 +237,7 @@ void XMLRangeFactory::buildRanges() {
     tok->sortRanges();
     tok->compactRanges();
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok);
-    
+
     // Create word range
     tok = tokFactory->createRange();
     tok->setRangeValues(wordRange, wordRangeLen);
@@ -263,6 +267,8 @@ void XMLRangeFactory::initializeKeywordMap() {
 
     fKeywordsInitialized = true;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XMLRangeFactory.cpp

@@ -73,6 +73,9 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMImplementationSource.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMImplementationImpl: public DOMImplementation,
                              public DOMImplementationSource
 {
@@ -120,5 +123,7 @@ public:
 
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

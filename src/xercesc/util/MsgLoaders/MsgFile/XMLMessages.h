@@ -1,6 +1,10 @@
 #ifndef XML_ERROR_MESSAGES_H
 #define XML_ERROR_MESSAGES_H
 
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 // These are Fatal error messages
 
 #define E_ExpectedCommentOrCDATA					"XMLBE00"
@@ -177,7 +181,7 @@
 #define Mutex_CouldNotClose						"XMLBE9C"
 #define Mutex_CouldNotLock						"XMLBE9D"
 #define Mutex_CouldNotUnlock						"XMLBE9E"
-#define Mutex_CouldNotDestroy						"XMLBE9F" 
+#define Mutex_CouldNotDestroy						"XMLBE9F"
 #define Pool_ElemAlreadyExists						"XMLBEA0"
 #define Pool_BadHashFromKey						"XMLBEA1"
 #define Pool_InvalidId							"XMLBEA2"
@@ -231,7 +235,7 @@
 #define Val_InvalidElemId						"XMLBED2"
 
 // These are the new messages for 3.0 code base
-// Note ALL CAPITALIZED DEFINES ARE AS/400 UNIQUE MESSAGES 
+// Note ALL CAPITALIZED DEFINES ARE AS/400 UNIQUE MESSAGES
 #define FILE_OPEN_PROBLEMS						"XMLBED3"
 #define ICONV_CONVERT_PROBLEM						"XMLBED4"
 #define ICONV_CCSID_PROBLEM						"XMLBED5"
@@ -488,7 +492,7 @@ char Exceptions[][8]= {
  Reader_EOIInMultiSeq,
  Reader_BadUTF8Seq,
  Reader_BadSurrogateInUTF8,
- Reader_SrcOfsNotSupported, 
+ Reader_SrcOfsNotSupported,
  Scan_CouldNotOpenSource,
  Scan_UnbalancedStartEnd,
  Scan_BadPScanToken,
@@ -504,9 +508,9 @@ char Exceptions[][8]= {
  StrPool_IllegalId,
  Trans_CouldNotXCodeXMLData,
  Trans_CouldNotCreateDefCvtr,
- Trans_InvalidSizeReq,  
- Trans_Unrepresentable, 
- Trans_NotInSourceSet, 
+ Trans_InvalidSizeReq,
+ Trans_Unrepresentable,
+ Trans_NotInSourceSet,
  URL_MalformedURL,
  URL_UnsupportedProto,
  URL_UnsupportedProto1,
@@ -521,10 +525,8 @@ char Exceptions[][8]= {
  XMLRec_UnknownEncoding
 };
 
+XERCES_CPP_NAMESPACE_END
+
 #endif
-
-
-
-
 
 

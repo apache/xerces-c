@@ -96,6 +96,9 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -1384,4 +1387,6 @@ void AbstractDOMParser::TextDecl
         fCurrentEntity->setEncoding(encodingStr);
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 

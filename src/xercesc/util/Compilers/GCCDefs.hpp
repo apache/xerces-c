@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:45:20  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/05/28 12:57:17  tng
  * Fix typo.
  *
@@ -124,20 +127,20 @@
 #include <sys/types.h>  // for size_t and ssize_t
 #include <limits.h>  // for MAX of size_t and ssize_t
 
-
 // ---------------------------------------------------------------------------
-// Define these away for this platform
+//  A define in the build for each project is also used to control whether
+//  the export keyword is from the project's viewpoint or the client's.
+//  These defines provide the platform specific keywords that they need
+//  to do this.
 // ---------------------------------------------------------------------------
 #define PLATFORM_EXPORT
 #define PLATFORM_IMPORT
-
 
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
 //  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
-
 
 // ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
@@ -147,11 +150,15 @@
 // ---------------------------------------------------------------------------
 // #define XML_LSTRSUPPORT
 
+// ---------------------------------------------------------------------------
+//  Indicate that we support C++ namespace
+//  Do not define it if the compile cannot handle C++ namespace
+// ---------------------------------------------------------------------------
+#define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-// typedef wchar_t XMLCh; // is another option, now considered old
 typedef unsigned short XMLCh;
 
 // ---------------------------------------------------------------------------

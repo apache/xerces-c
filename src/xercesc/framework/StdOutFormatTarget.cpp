@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.1  2002/05/28 22:40:46  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -64,6 +67,8 @@
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 #include <iostream.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 StdOutFormatTarget::StdOutFormatTarget()
 {}
@@ -73,7 +78,7 @@ StdOutFormatTarget::~StdOutFormatTarget()
 
 void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
                                   , const unsigned int    count
-                                  , XMLFormatter* const   formatter)   
+                                  , XMLFormatter* const   formatter)
 {
         // Surprisingly, Solaris was the only platform on which
         // required the char* cast to print out the string correctly.
@@ -84,5 +89,5 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
 
 }
 
-
+XERCES_CPP_NAMESPACE_END
 

@@ -64,6 +64,8 @@
 
 #include "DOM_NodeFilter.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOM_NodeFilter::DOM_NodeFilter() {
 
@@ -73,5 +75,7 @@ DOM_NodeFilter::DOM_NodeFilter() {
 DOM_NodeFilter::~DOM_NodeFilter() {
 
 }
+
+XERCES_CPP_NAMESPACE_END
 
 

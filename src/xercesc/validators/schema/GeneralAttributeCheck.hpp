@@ -61,7 +61,6 @@
 #if !defined(GENERALATTRIBUTECHECK_HPP)
 #define GENERALATTRIBUTECHECK_HPP
 
-
 /**
   * A general purpose class to check for valid values of attributes, as well
   * as check for proper association with corresponding schema elements.
@@ -75,6 +74,8 @@
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Forward declaration
@@ -184,14 +185,14 @@ public:
         A_Value,
         A_Version,
         A_XPath,
-    
+
         A_Count,
         A_Invalid = -1
     };
 
     //Validators
     enum {
-    
+
         DV_String = 0,
         DV_AnyURI = 4,
         DV_NonNegInt = 8,
@@ -205,7 +206,7 @@ public:
         DV_Use = 2048,
         DV_WhiteSpace = 4096,
 
-        DV_Mask = (DV_AnyURI | DV_NonNegInt | DV_Boolean | DV_ID | DV_Form | 
+        DV_Mask = (DV_AnyURI | DV_NonNegInt | DV_Boolean | DV_ID | DV_Form |
                    DV_MaxOccurs | DV_MaxOccurs1 | DV_MinOccurs1 |
                    DV_ProcessContents | DV_Use | DV_WhiteSpace)
     };
@@ -307,6 +308,7 @@ GeneralAttributeCheck::setIDRefList(RefHashTableOf<XMLRefInfo>* const refList) {
     fIDRefList = refList;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

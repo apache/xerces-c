@@ -72,6 +72,9 @@
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include <xercesc/framework/XMLBufferMgr.hpp>
 
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLPScanToken;
 class XMLScanner;
 class XMLValidator;
@@ -1448,6 +1451,8 @@ inline void AbstractDOMParser::setParseInProgress(const bool toSet)
 {
     fParseInProgress = toSet;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/07/19 14:57:28  knoaman
  * Add an adoptFlag parameter to the constructor and remove the setter method.
  * Documentation update.
@@ -76,6 +79,7 @@
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/util/NullPointerException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Constructor and Destructor
@@ -163,4 +167,6 @@ void Wrapper4InputSource::release()
     Wrapper4InputSource* src = (Wrapper4InputSource*) this;
     delete src;
 }
+
+XERCES_CPP_NAMESPACE_END
 

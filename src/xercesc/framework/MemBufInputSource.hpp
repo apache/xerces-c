@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/20 18:17:01  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -94,6 +97,8 @@
 #define MEMBUFINPUTSOURCE_HPP
 
 #include <xercesc/sax/InputSource.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class BinInputStream;
 
@@ -270,5 +275,7 @@ inline void MemBufInputSource::setCopyBufToStream(const bool newState)
 {
     fCopyBufToStream = newState;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/04 14:45:20  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.6  2002/06/25 16:05:24  tng
  * DOM L3: move the operator delete to DOMDocumentImpl.hpp
  *
@@ -134,7 +137,6 @@
 #include <sys/types.h>  // for size_t and ssize_t
 #include <limits.h>  // for MAX of size_t and ssize_t
 
-
 // ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
 //  the export keyword is from the project's viewpoint or the client's.
@@ -144,13 +146,11 @@
 #define PLATFORM_EXPORT     __declspec(dllexport)
 #define PLATFORM_IMPORT     __declspec(dllimport)
 
-
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
 //  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
-
 
 // ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
@@ -160,14 +160,16 @@
 // ---------------------------------------------------------------------------
 #define XML_LSTRSUPPORT
 
+// ---------------------------------------------------------------------------
+//  Indicate that we support C++ namespace
+//  Do not define it if the compile cannot handle C++ namespace
+// ---------------------------------------------------------------------------
+#define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
-//  Define our version of the XMLCh. XMLCh should be mapped to the native
-//  wide char type (whatever wchar_t is.) In VC++, wchar_t is not an
-//  intrinsic type and is just mapped to unsigned short.
+//  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLCh;
-
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers

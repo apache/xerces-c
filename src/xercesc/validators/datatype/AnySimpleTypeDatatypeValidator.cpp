@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 14:53:27  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/14 15:17:31  peiyongz
  * getEnumString()
  *
@@ -76,6 +79,7 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  AnySimpleTypeDatatypeValidator: Constructors and Destructor
@@ -113,6 +117,8 @@ const RefVectorOf<XMLCh>* AnySimpleTypeDatatypeValidator::getEnumString() const
 {
 	return 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file AnySimpleTypeDatatypeValidator.cpp

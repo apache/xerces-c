@@ -64,6 +64,8 @@
 #include "DOMEntityImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
    : fNode(ownerDoc),
@@ -328,4 +330,6 @@ void DOMEntityImpl::setVersion(const XMLCh* version){
     DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
     fVersion = doc->cloneString(version);
 }
+
+XERCES_CPP_NAMESPACE_END
 

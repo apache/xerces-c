@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:17:00  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -79,6 +82,7 @@
 #include <xercesc/util/regx/OpFactory.hpp>
 #include <xercesc/util/regx/Op.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  OpFactory: Constructors and Destructor
@@ -230,6 +234,8 @@ ConditionOp* OpFactory::createConditionOp(const Op* const next, const int ref,
 	tmpOp->setNextOp(next);
 	return tmpOp;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file OpFactory.cpp

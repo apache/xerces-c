@@ -72,6 +72,9 @@
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/parsers/DOMBuilderImpl.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 // ------------------------------------------------------------
 //
 //  Static constants.  These are lazily initialized on first usage.
@@ -273,4 +276,6 @@ DOMImplementation* DOMImplementationImpl::getDOMImplementation(const XMLCh* feat
     return impl;
 }
 
+
+XERCES_CPP_NAMESPACE_END
 

@@ -76,6 +76,7 @@
 #include <xercesc/util/Mutexes.hpp>
 #include <stdio.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class   DOMStringData
 {
@@ -120,6 +121,7 @@ private:
     static inline  XMLMutex &getMutex();
 };
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

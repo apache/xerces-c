@@ -61,6 +61,9 @@
 #include "DOM_Attr.hpp"
 #include "AttrImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 DOM_Attr::DOM_Attr()
 : DOM_Node(null)
@@ -131,3 +134,6 @@ DOM_Element     DOM_Attr::getOwnerElement() const
 {
     return DOM_Element(((AttrImpl *)fImpl)->getOwnerElement());
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -65,6 +65,7 @@
 #include "NodeIteratorImpl.hpp"
 #include "TreeWalkerImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_Document::DOM_Document (DocumentImpl *impl) :
@@ -260,3 +261,6 @@ void DOM_Document::setErrorChecking(bool check) {
 bool DOM_Document::getErrorChecking() {
     return ((DocumentImpl *)fImpl)->getErrorChecking();
 }
+
+XERCES_CPP_NAMESPACE_END
+

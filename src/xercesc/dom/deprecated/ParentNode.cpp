@@ -68,6 +68,8 @@
 #include "DocumentImpl.hpp"
 #include "RangeImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 ParentNode::ParentNode(DocumentImpl *ownerDoc)
     : ChildNode(ownerDoc)
@@ -508,4 +510,6 @@ void ParentNode::normalize()
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };
+
+XERCES_CPP_NAMESPACE_END
 

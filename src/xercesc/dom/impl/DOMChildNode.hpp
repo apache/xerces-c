@@ -77,6 +77,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 class DOMDocument;
 class DOMNode;
@@ -97,5 +99,7 @@ public:
     DOMNode * getPreviousSibling(const DOMNode *thisNode) const;
 };
 
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

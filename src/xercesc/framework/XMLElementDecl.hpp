@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/20 16:55:33  tng
  * [Bug 6251] Info during compilation.
  *
@@ -130,6 +133,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLAttDefList.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentSpecNode;
 class XMLContentModel;
@@ -667,5 +672,7 @@ inline void XMLElementDecl::setExternalElemDeclaration(const bool aValue)
 {
     fExternalElement = aValue;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

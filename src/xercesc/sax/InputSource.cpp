@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:08  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:56:26  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/11/21 16:14:32  tng
  * Schema: New method InputSource::get/setIssueFatalErrorIfNotFound to tell the parser whether to issue fatal error or not if cannot find it (the InputSource).  This is required for schema processing as it shouldn't be a fatal error if the schema is not found.
@@ -89,7 +92,7 @@
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/sax/InputSource.hpp>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  InputSource: Destructor
@@ -176,3 +179,6 @@ InputSource::InputSource(const  char* const systemId
     , fFatalErrorIfNotFound(true)
 {
 }
+
+XERCES_CPP_NAMESPACE_END
+

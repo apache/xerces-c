@@ -72,6 +72,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "RefCountedImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class  NodeImpl;
 
 
@@ -84,6 +86,8 @@ public:
     virtual NodeImpl *  item(unsigned int index) = 0;
     virtual unsigned int getLength() = 0;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

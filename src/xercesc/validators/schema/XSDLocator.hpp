@@ -68,6 +68,7 @@
 
 #include <xercesc/sax/Locator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class VALIDATORS_EXPORT XSDLocator: public Locator
 {
@@ -173,5 +174,7 @@ inline const XMLCh* XSDLocator::getSystemId() const
 {
     return fSystemId;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

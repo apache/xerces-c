@@ -63,6 +63,9 @@
 #include "DocumentImpl.hpp"
 #include "DOM_DOMException.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
     AttrImpl(ownerDoc, nam)
@@ -173,3 +176,6 @@ void AttrNSImpl::setPrefix(const DOMString &prefix)
 
     name = prefix + chColon + localName; //nodeName is changed too
 }
+
+XERCES_CPP_NAMESPACE_END
+

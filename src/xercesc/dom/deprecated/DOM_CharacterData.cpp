@@ -61,6 +61,8 @@
 #include "DOM_CharacterData.hpp"
 #include "CharacterDataImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOM_CharacterData::DOM_CharacterData()
 : DOM_Node(null)
@@ -144,4 +146,6 @@ void DOM_CharacterData::replaceData(unsigned int offset, unsigned int count, con
     ((CharacterDataImpl *)fImpl)->replaceData(offset, count, arg);
 };
 
+
+XERCES_CPP_NAMESPACE_END
 

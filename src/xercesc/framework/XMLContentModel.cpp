@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:21:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/05/28 20:53:35  tng
  * Schema: move static data gInvalidTrans, gEOCFakeId, gEpsilonFakeId to XMLContentModel for others to access
@@ -79,10 +82,14 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLContentModel.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  public static data
 // ---------------------------------------------------------------------------
 const unsigned int   XMLContentModel::gInvalidTrans   = 0xFFFFFFFF;
 const unsigned int   XMLContentModel::gEOCFakeId      = 0xFFFFFFF1;
 const unsigned int   XMLContentModel::gEpsilonFakeId  = 0xFFFFFFF2;
+
+XERCES_CPP_NAMESPACE_END
 

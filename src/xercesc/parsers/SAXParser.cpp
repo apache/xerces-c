@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/11/04 14:57:03  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.8  2002/08/14 15:20:38  knoaman
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
  *
@@ -189,6 +192,8 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <string.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 // ---------------------------------------------------------------------------
@@ -1255,3 +1260,6 @@ void SAXParser::resetCachedGrammarPool()
 {
     fScanner->resetCachedGrammarPool();
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:36  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:14:33  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/06/25 16:19:34  tng
  * Rename iconv_cnv.h to iconv_cnv.hpp.  AS400 changes by Linda Swan.
@@ -71,6 +74,8 @@
 #define UCNV_H
 
 #include "utypes.h"
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
  * Creates a UConverter object with the names specified as a C string.
@@ -343,7 +348,7 @@ U_CAPI
 			int32_t sourceLength,
 			UErrorCode * err);
 
-
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

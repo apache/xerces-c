@@ -63,6 +63,9 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 /**
  * DOM operations only raise exceptions in "exceptional" circumstances, i.e.,
  * when an operation is impossible to perform (either for logical reasons,
@@ -245,6 +248,8 @@ public:
     //@}
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

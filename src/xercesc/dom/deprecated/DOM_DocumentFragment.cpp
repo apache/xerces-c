@@ -61,6 +61,7 @@
 #include "DOM_DocumentFragment.hpp"
 #include "DocumentFragmentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOM_DocumentFragment::DOM_DocumentFragment()
@@ -97,4 +98,6 @@ DOM_DocumentFragment & DOM_DocumentFragment::operator = (const DOM_NullPtr *othe
      return (DOM_DocumentFragment &) DOM_Node::operator = (other);
 };
 
+
+XERCES_CPP_NAMESPACE_END
 

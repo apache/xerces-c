@@ -63,6 +63,9 @@
 #include "DOM_DOMException.hpp"
 #include "DStringPool.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 static DOMString *nam = 0;   // Will be lazily initialized to "#document-fragment"
 static XMLRegisterCleanup namCleanup;
@@ -120,3 +123,6 @@ void DocumentFragmentImpl::reinitDocumentFragmentImpl() {
 	delete nam;
 	nam = 0;
 }
+
+XERCES_CPP_NAMESPACE_END
+

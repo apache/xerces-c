@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ConditionToken : public Token {
 public:
@@ -129,6 +130,8 @@ inline Token* ConditionToken::getConditionToken() const {
 
 	return fConditionToken;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

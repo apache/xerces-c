@@ -70,6 +70,10 @@
 //
 
 #include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class DOMNode;
 class DOMDocument;
 
@@ -96,5 +100,7 @@ public:
     void           removeElementAt(XMLSize_t index);
     void           reset();
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

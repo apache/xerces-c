@@ -62,11 +62,10 @@
 #define IBMVAOS2DEFS_HPP
 
 // ---------------------------------------------------------------------------
-//  Include some common headers that are needed product wide
+//  Include some runtime files that will be needed product wide
 // ---------------------------------------------------------------------------
 #include <sys/types.h>  // for size_t and ssize_t
 #include <limits.h>  // for MAX of size_t and ssize_t
-
 
 // ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
@@ -78,19 +77,10 @@
 #define PLATFORM_IMPORT
 
 // ---------------------------------------------------------------------------
-//  Supports L"" prefixed constants. There are places
-//  where it is advantageous to use the L"" where it supported, to avoid
-//  unnecessary transcoding.
-//  If your compiler does not support it, don't define this.
-// ---------------------------------------------------------------------------
-#define XML_LSTRSUPPORT
-
-// ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
 //  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
-
 
 // ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
@@ -98,13 +88,18 @@
 //  unnecessary transcoding.
 //  If your compiler does not support it, don't define this.
 // ---------------------------------------------------------------------------
-// #define XML_LSTRSUPPORT
+#define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
-//  Define our version of the XMLCh.
+//  Indicate that we support C++ namespace
+//  Do not define it if the compile cannot handle C++ namespace
+// ---------------------------------------------------------------------------
+// #define XERCES_HAS_CPP_NAMESPACE
+
+// ---------------------------------------------------------------------------
+//  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef unsigned short XMLCh;
-// typedef wchar_t XMLCh;
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers

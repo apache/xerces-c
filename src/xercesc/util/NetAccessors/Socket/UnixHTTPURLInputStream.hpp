@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:23  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:11:38  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/07/21 03:31:42  andyh
  * Improved (but still weak) http access by the parser.
@@ -87,7 +90,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/BinInputStream.hpp>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 // This class implements the BinInputStream interface specified by the XML
@@ -140,5 +143,6 @@ inline unsigned int UnixHTTPURLInputStream::curPos() const
     return fBytesProcessed;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif // UNIXHTTPURLINPUTSTREAM_HPP

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 14:58:19  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/27 12:56:23  tng
  * [Bug 12740] Extra include.  By Peter Volchek.
  *
@@ -139,6 +142,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLRecognizer.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class InputSource;
 class BinInputStream;
@@ -831,5 +836,7 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
     }
     return true;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -67,6 +67,9 @@
 #include "DOM_DOMException.hpp"
 #include "DocumentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -426,3 +429,6 @@ void NodeIteratorImpl::unreferenced()
     NodeIteratorImpl* ptr = this;
     delete ptr;
 }
+
+XERCES_CPP_NAMESPACE_END
+

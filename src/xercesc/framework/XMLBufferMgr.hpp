@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:00:21  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/21 18:54:52  tng
  * [Bug 11869] Add the const modifier (XMLBuffer.hpp).
  *
@@ -90,6 +93,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLBufBid;
 
@@ -237,5 +242,7 @@ private :
     XMLBuffer&          fBuffer;
     XMLBufferMgr* const fMgr;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

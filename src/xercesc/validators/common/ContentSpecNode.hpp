@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 14:54:58  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/10/30 21:52:00  tng
  * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
  *
@@ -155,8 +158,10 @@
 #if !defined(CONTENTSPECNODE_HPP)
 #define CONTENTSPECNODE_HPP
 
-#include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/framework/XMLElementDecl.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLBuffer;
 class Grammar;
@@ -524,5 +529,7 @@ inline bool ContentSpecNode::hasAllContent() {
 
     return (fType == ContentSpecNode::All);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

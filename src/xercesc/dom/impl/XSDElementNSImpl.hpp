@@ -74,6 +74,9 @@
 
 #include "DOMElementNSImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 
 class CDOM_EXPORT XSDElementNSImpl: public DOMElementNSImpl {
 protected:
@@ -95,5 +98,7 @@ public:
     XMLSSize_t getLineNo() const   { return fLineNo;   }
     XMLSSize_t getColumnNo() const { return fColumnNo; }
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

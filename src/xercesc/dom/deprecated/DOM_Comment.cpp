@@ -61,6 +61,8 @@
 #include "DOM_Comment.hpp"
 #include "CommentImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOM_Comment::DOM_Comment()
 : DOM_CharacterData(null)
@@ -95,4 +97,6 @@ DOM_Comment & DOM_Comment::operator = (const DOM_NullPtr *other)
      return (DOM_Comment &) DOM_Node::operator = (other);
 };
 
+
+XERCES_CPP_NAMESPACE_END
 

@@ -65,6 +65,9 @@
 #include "DOM_Node.hpp"
 #include "DOM_Element.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class AttrImpl;
 
 /**
@@ -204,6 +207,8 @@ protected:
     friend class DOM_Document;
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

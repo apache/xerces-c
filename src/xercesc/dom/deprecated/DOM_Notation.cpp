@@ -61,6 +61,8 @@
 #include "DOM_Notation.hpp"
 #include "NotationImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 DOM_Notation::DOM_Notation()
 : DOM_Node(null)
@@ -108,3 +110,6 @@ DOMString  DOM_Notation::getSystemId() const
 {
         return ((NotationImpl *)fImpl)->getSystemId();
 };
+
+XERCES_CPP_NAMESPACE_END
+

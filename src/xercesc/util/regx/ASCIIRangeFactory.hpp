@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RangeFactory.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ASCIIRangeFactory: public RangeFactory {
 
@@ -97,6 +98,8 @@ private:
     bool fRangesCreated;
     bool fKeywordsInitialized;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

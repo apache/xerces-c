@@ -64,6 +64,9 @@
 #include "DOMNodeFilter.hpp"
 #include "DOMNode.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 /**
  * <code>DOMNodeIterators</code> are used to step through a set of nodes, e.g.
  * the set of nodes in a <code>DOMNodeList</code>, the document subtree
@@ -216,5 +219,7 @@ public:
     virtual void               release() = 0;
     //@}
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

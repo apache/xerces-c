@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:25  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:13:01  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:25  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/06/25 16:27:05  tng
  * AS400 changes by Linda Swan.
@@ -70,6 +73,8 @@
 #ifndef _OS400PLATFORMUTILS_H
 #define _OS400PLATFORMUTILS_H
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 void  send_message (char * text, char * messageid, char type);
 void  convert_errno(char *,int);
 
@@ -77,6 +82,8 @@ void  convert_errno(char *,int);
 #define ICONV_CONVERT_PROBLEM	"XMLBED4" /* failed to convert ICONV     */
 #define ICONV_CCSID_PROBLEM     "XMLBED5"
 #define GENERAL_PANIC_MESSAGE   "XMLBEED" /* iconv initialization problem     */
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* _OS400PLATFORMUTILS_H */
 

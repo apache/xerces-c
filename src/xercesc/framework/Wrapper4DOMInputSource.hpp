@@ -64,6 +64,8 @@
 
 #include <xercesc/sax/InputSource.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class DOMInputSource;
 
 
@@ -78,11 +80,11 @@ public:
 
   /**
     * Constructor
-    *  
+    *
     * Wrap a DOMInputSource and pretend it to be a SAX InputSource.
     * By default, the wrapper will adopt the DOMInputSource that is wrapped.
     *
-    * @param  inputSource  The DOMInputSource to be wrapped 
+    * @param  inputSource  The DOMInputSource to be wrapped
     * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
     *                      DOMInputSource. Default is true.
     */
@@ -105,7 +107,7 @@ public:
     *
     * Makes the byte stream for this input source.
     *
-    * <p>The function will call the makeStream of the wrapped input source. 
+    * <p>The function will call the makeStream of the wrapped input source.
     * The returned stream becomes the parser's property.</p>
     *
     * @see BinInputStream
@@ -260,6 +262,8 @@ private:
     bool            fAdoptInputSource;
     DOMInputSource* fInputSource;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 
 #endif

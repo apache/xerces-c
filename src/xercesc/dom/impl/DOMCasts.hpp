@@ -118,6 +118,9 @@
 #include "DOMElementImpl.hpp"
 #include "DOMTextImpl.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 static inline DOMNodeImpl *castToNodeImpl(const DOMNode *p)
 {
     DOMElementImpl *pE = (DOMElementImpl *)p;
@@ -161,5 +164,7 @@ static inline DOMNodeImpl *castToNodeImpl(const DOMParentNode *p)
     char *retPtr = (char *)p - parentOffset + nodeImplOffset;
     return (DOMNodeImpl *)retPtr;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

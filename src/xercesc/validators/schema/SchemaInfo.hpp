@@ -81,6 +81,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class SchemaInfo
 {
 public:
@@ -433,6 +435,8 @@ inline void SchemaInfo::clearTopLevelComponents() {
         fTopLevelComponents[i] = 0;
     }
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

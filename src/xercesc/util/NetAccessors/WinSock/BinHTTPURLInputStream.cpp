@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:23  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:11:39  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
+ * sane_include
  *
  * Revision 1.12  2001/12/13 21:16:52  peiyongz
  * Fix: Invalid Argument to FreeLibrary (Hint: 0x0000000)
@@ -130,6 +133,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 HMODULE gWinsockLib = NULL;
 LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;
@@ -541,3 +545,5 @@ unsigned int BinHTTPURLInputStream::readBytes(XMLByte* const    toFill
     return len;
 }
 
+
+XERCES_CPP_NAMESPACE_END

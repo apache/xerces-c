@@ -1,4 +1,3 @@
-
 /*
  * The Apache Software License, Version 1.1
  *
@@ -57,16 +56,24 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:58  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 14:58:18  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/07/26 17:04:10  tng
  * Schema: Process should stop after fatal error, and user throws need to be rethrown.
  *
  */
 
+#if !defined(XMLINTERNALERRORHANDLER_HPP)
+#define XMLINTERNALERRORHANDLER_HPP
+
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLInternalErrorHandler : public ErrorHandler
 {
@@ -167,3 +174,7 @@ inline void XMLInternalErrorHandler::resetErrors()
     fSawError = false;
     fSawFatal = false;
 }
+
+XERCES_CPP_NAMESPACE_END
+
+#endif

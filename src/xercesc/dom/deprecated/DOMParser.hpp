@@ -73,6 +73,9 @@
 #include "DOM_Document.hpp"
 #include "DOM_DocumentType.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
+
 class EntityResolver;
 class ErrorHandler;
 class XMLPScanToken;
@@ -418,7 +421,7 @@ public :
       *
       * @param uriId id of the string in the URI string pool.
       * @return URI string corresponding to the URI id.
-      */    
+      */
     const XMLCh* getURIText(unsigned int uriId);
 
     //@}
@@ -1798,5 +1801,7 @@ inline void DOMParser::setDocument(DOM_Document toSet)
 {
     fDocument = toSet;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -63,6 +63,8 @@
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class VALIDATORS_EXPORT BooleanDatatypeValidator : public DatatypeValidator
 {
 public:
@@ -183,7 +185,11 @@ inline void BooleanDatatypeValidator::validate( const XMLCh* const content)
     checkContent(content, false);
 }
 
+XERCES_CPP_NAMESPACE_END
+
+#endif
+
 /**
   * End of file BooleanDatatypeValidator.hpp
   */
-#endif
+
