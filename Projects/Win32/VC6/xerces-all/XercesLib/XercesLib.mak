@@ -35,7 +35,7 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_5_0.dll"
+ALL : "$(OUTDIR)\xerces-c_2_5.dll"
 
 
 CLEAN :
@@ -331,10 +331,10 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\obj\xerces-c_2_5_0.map"
+	-@erase "$(OUTDIR)\obj\xerces-c_2_5.map"
 	-@erase "$(OUTDIR)\xerces-c_2.exp"
 	-@erase "$(OUTDIR)\xerces-c_2.lib"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0.dll"
+	-@erase "$(OUTDIR)\xerces-c_2_5.dll"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -384,7 +384,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-c_2_5_0.pdb" /map:"$(INTDIR)\xerces-c_2_5_0.map" /machine:I386 /out:"$(OUTDIR)\xerces-c_2_5_0.dll" /implib:"$(OUTDIR)\xerces-c_2.lib" /version:2.5.0 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-c_2_5.pdb" /map:"$(INTDIR)\xerces-c_2_5.map" /machine:I386 /out:"$(OUTDIR)\xerces-c_2_5.dll" /implib:"$(OUTDIR)\xerces-c_2.lib" /version:2.5.0 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
@@ -678,7 +678,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_5_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_2_5.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -691,7 +691,7 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_5_0D.dll"
+ALL : "$(OUTDIR)\xerces-c_2_5D.dll"
 
 
 CLEAN :
@@ -988,9 +988,9 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0D.dll"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0D.ilk"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-c_2_5D.dll"
+	-@erase "$(OUTDIR)\xerces-c_2_5D.ilk"
+	-@erase "$(OUTDIR)\xerces-c_2_5D.pdb"
 	-@erase "$(OUTDIR)\xerces-c_2D.exp"
 	-@erase "$(OUTDIR)\xerces-c_2D.lib"
 
@@ -1042,7 +1042,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_5_0D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-c_2_5_0D.dll" /implib:"$(OUTDIR)\xerces-c_2D.lib" /pdbtype:sept /version:2.5.0 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_5D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-c_2_5D.dll" /implib:"$(OUTDIR)\xerces-c_2D.lib" /pdbtype:sept /version:2.5.0 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
@@ -1336,7 +1336,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_5_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_2_5D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -1349,7 +1349,7 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Debug
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_5_0D.dll"
+ALL : "$(OUTDIR)\xerces-c_2_5D.dll"
 
 
 CLEAN :
@@ -1646,9 +1646,9 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0D.dll"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0D.ilk"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-c_2_5D.dll"
+	-@erase "$(OUTDIR)\xerces-c_2_5D.ilk"
+	-@erase "$(OUTDIR)\xerces-c_2_5D.pdb"
 	-@erase "$(OUTDIR)\xerces-c_2D.exp"
 	-@erase "$(OUTDIR)\xerces-c_2D.lib"
 
@@ -1700,7 +1700,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_5_0D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-c_2_5_0D.dll" /implib:"$(OUTDIR)\xerces-c_2D.lib" /pdbtype:sept /version:2.5.0 /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_5D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-c_2_5D.dll" /implib:"$(OUTDIR)\xerces-c_2D.lib" /pdbtype:sept /version:2.5.0 /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
@@ -1994,7 +1994,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_5_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_2_5D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -2007,7 +2007,7 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_5_0.dll"
+ALL : "$(OUTDIR)\xerces-c_2_5.dll"
 
 
 CLEAN :
@@ -2303,11 +2303,11 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\obj\xerces-c_2_5_0.map"
+	-@erase "$(OUTDIR)\obj\xerces-c_2_5.map"
 	-@erase "$(OUTDIR)\xerces-c_2.exp"
 	-@erase "$(OUTDIR)\xerces-c_2.lib"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0.dll"
-	-@erase "$(OUTDIR)\xerces-c_2_5_0.ilk"
+	-@erase "$(OUTDIR)\xerces-c_2_5.dll"
+	-@erase "$(OUTDIR)\xerces-c_2_5.ilk"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -2357,7 +2357,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_5_0.pdb" /map:"$(INTDIR)\xerces-c_2_5_0.map" /machine:IX86 /out:"$(OUTDIR)\xerces-c_2_5_0.dll" /implib:"$(OUTDIR)\xerces-c_2.lib" /version:2.5.0 /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_5.pdb" /map:"$(INTDIR)\xerces-c_2_5.map" /machine:IX86 /out:"$(OUTDIR)\xerces-c_2_5.dll" /implib:"$(OUTDIR)\xerces-c_2.lib" /version:2.5.0 /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
@@ -2651,7 +2651,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_5_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_2_5.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
