@@ -55,8 +55,8 @@
  */
 
 //
-//  Various IDOM tests.
-//     This is NOT a complete test of IDOM functionality.
+//  Various DOM tests.
+//     This is NOT a complete test of DOM functionality.
 //
 
 /*
@@ -65,7 +65,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <xercesc/idom/IDOM.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -87,7 +87,7 @@ void tassert(bool c, const char *file, int line)
     operation;                                                      \
     printf(" Error: no exception thrown at line %d\n", __LINE__);   \
 }                                                                   \
-    catch (IDOM_DOMException &e) {                                  \
+    catch (DOMException &e) {                                  \
     if (e.code != expected_exception)                       \
     printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
 }                                                                 \
@@ -106,10 +106,10 @@ XMLCh tempStr5[4000];
 
 //---------------------------------------------------------------------------------------
 //
-//   IDOMBasicTests    Basic IDOM Level 1 tests
+//   DOMBasicTests    Basic DOM Level 1 tests
 //
 //---------------------------------------------------------------------------------------
-void IDOMBasicTests()
+void DOMBasicTests()
 {
     //
     //  Test Doc01      Create a new empty document
@@ -117,8 +117,8 @@ void IDOMBasicTests()
     {
         //  First precondition, so that lazily created strings do not appear
         //  as memory leaks.
-        IDOM_Document*   doc;
-        doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc;
+        doc = DOMImplementation::getImplementation()->createDocument();
         delete doc;
     }
 
@@ -131,34 +131,34 @@ void IDOMBasicTests()
         //  Do all operations in a preconditioning step, to force the
         //  creation of implementation objects that are set up on first use.
         //  Don't watch for leaks in this block (no  / )
-        IDOM_Document* doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument* doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("Doc02Element", tempStr, 3999);
-        IDOM_Element*   el = doc->createElement(tempStr);
+        DOMElement*   el = doc->createElement(tempStr);
 
-        IDOM_DocumentFragment* frag = doc->createDocumentFragment ();
+        DOMDocumentFragment* frag = doc->createDocumentFragment ();
 
         XMLString::transcode("Doc02TextNode", tempStr, 3999);
-        IDOM_Text*  text = doc->createTextNode(tempStr);
+        DOMText*  text = doc->createTextNode(tempStr);
 
         XMLString::transcode("Doc02Comment", tempStr, 3999);
-        IDOM_Comment* comment = doc->createComment(tempStr);
+        DOMComment* comment = doc->createComment(tempStr);
 
         XMLString::transcode("Doc02CDataSection", tempStr, 3999);
-        IDOM_CDATASection*  cdataSec = doc->createCDATASection(tempStr);
+        DOMCDATASection*  cdataSec = doc->createCDATASection(tempStr);
 
         XMLString::transcode("Doc02DocumentType", tempStr, 3999);
-        IDOM_DocumentType*  docType = doc->createDocumentType(tempStr);
+        DOMDocumentType*  docType = doc->createDocumentType(tempStr);
 
         XMLString::transcode("Doc02Notation", tempStr, 3999);
-        IDOM_Notation* notation = doc->createNotation(tempStr);
+        DOMNotation* notation = doc->createNotation(tempStr);
 
         XMLString::transcode("Doc02PITarget", tempStr, 3999);
         XMLString::transcode("Doc02PIData", tempStr2, 3999);
-        IDOM_ProcessingInstruction* pi = doc->createProcessingInstruction(tempStr, tempStr2);
+        DOMProcessingInstruction* pi = doc->createProcessingInstruction(tempStr, tempStr2);
 
         XMLString::transcode("*", tempStr, 3999);
-        IDOM_NodeList*    nodeList = doc->getElementsByTagName(tempStr);
+        DOMNodeList*    nodeList = doc->getElementsByTagName(tempStr);
 
         delete doc;
     }
@@ -170,20 +170,20 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*   doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("Doc03RootElement", tempStr, 3999);
-        IDOM_Element*   rootEl = doc->createElement(tempStr);
+        DOMElement*   rootEl = doc->createElement(tempStr);
 
         doc->appendChild(rootEl);
 
         XMLString::transcode("Doc03 text stuff", tempStr, 3999);
-        IDOM_Text*       textNode = doc->createTextNode(tempStr);
+        DOMText*       textNode = doc->createTextNode(tempStr);
 
         rootEl->appendChild(textNode);
 
         XMLString::transcode("*", tempStr, 3999);
-        IDOM_NodeList*    nodeList = doc->getElementsByTagName(tempStr);
+        DOMNodeList*    nodeList = doc->getElementsByTagName(tempStr);
         delete doc;
     };
 
@@ -193,22 +193,22 @@ void IDOMBasicTests()
     //  Attr01
     //
     {
-        IDOM_Document*   doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("RootElement", tempStr, 3999);
-        IDOM_Element*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(tempStr);
 
         doc->appendChild(rootEl);
         {
             XMLString::transcode("Attr01", tempStr, 3999);
-            IDOM_Attr*        attr01  = doc->createAttribute(tempStr);
+            DOMAttr*        attr01  = doc->createAttribute(tempStr);
             rootEl->setAttributeNode(attr01);
         }
 
 
         {
             XMLString::transcode("Attr01", tempStr, 3999);
-            IDOM_Attr* attr02 = doc->createAttribute(tempStr);
+            DOMAttr* attr02 = doc->createAttribute(tempStr);
             rootEl->setAttributeNode(attr02);
         }
         delete doc;
@@ -220,19 +220,19 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*   doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("RootElement", tempStr, 3999);
-        IDOM_Element*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(tempStr);
 
         doc->appendChild(rootEl);
 
         XMLString::transcode("Attr02", tempStr, 3999);
-        IDOM_Attr*        attr01  = doc->createAttribute(tempStr);
+        DOMAttr*        attr01  = doc->createAttribute(tempStr);
 
         rootEl->setAttributeNode(attr01);
 
-        IDOM_Attr*        attr02 = doc->createAttribute(tempStr);
+        DOMAttr*        attr02 = doc->createAttribute(tempStr);
 
         rootEl->setAttributeNode(attr02);
         delete doc;
@@ -245,15 +245,15 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*   doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("RootElement", tempStr, 3999);
-        IDOM_Element*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(tempStr);
 
         doc->appendChild(rootEl);
 
         XMLString::transcode("Attr03", tempStr, 3999);
-        IDOM_Attr*        attr01  = doc->createAttribute(tempStr);
+        DOMAttr*        attr01  = doc->createAttribute(tempStr);
 
         rootEl->setAttributeNode(attr01);
 
@@ -272,22 +272,22 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*   doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("RootElement", tempStr, 3999);
-        IDOM_Element*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(tempStr);
 
         doc->appendChild(rootEl);
 
         XMLString::transcode("Attr04", tempStr, 3999);
-        IDOM_Attr*        attr01  = doc->createAttribute(tempStr);
+        DOMAttr*        attr01  = doc->createAttribute(tempStr);
 
         rootEl->setAttributeNode(attr01);
 
         XMLString::transcode("Attr04Value1", tempStr, 3999);
         attr01->setValue(tempStr);
 
-        IDOM_Node* value = attr01->getFirstChild();
+        DOMNode* value = attr01->getFirstChild();
         delete doc;
     }
 
@@ -299,15 +299,15 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*   doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("RootElement", tempStr, 3999);
-        IDOM_Element*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(tempStr);
 
         doc->appendChild(rootEl);
 
         XMLString::transcode("Hello Goodbye", tempStr, 3999);
-        IDOM_Text*        txt1 = doc->createTextNode(tempStr);
+        DOMText*        txt1 = doc->createTextNode(tempStr);
         rootEl->appendChild(txt1);
 
         txt1->splitText(6);
@@ -323,31 +323,31 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*       doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("DocType_for_Notation01", tempStr, 3999);
-        IDOM_DocumentType*   dt  = doc->createDocumentType(tempStr);
+        DOMDocumentType*   dt  = doc->createDocumentType(tempStr);
 
         doc->appendChild(dt);
 
 
-        IDOM_NamedNodeMap* notationMap = dt->getNotations();
+        DOMNamedNodeMap* notationMap = dt->getNotations();
 
         XMLString::transcode("Notation01", tempStr, 3999);
-        IDOM_Notation*    nt1 = doc->createNotation(tempStr);
+        DOMNotation*    nt1 = doc->createNotation(tempStr);
 
         notationMap->setNamedItem (nt1);
 
-        IDOM_Node*  abc1 = notationMap->getNamedItem(tempStr);
+        DOMNode*  abc1 = notationMap->getNamedItem(tempStr);
 
-        IDOM_Notation*    nt2 = (IDOM_Notation*) abc1;
+        DOMNotation*    nt2 = (DOMNotation*) abc1;
         TASSERT(nt1==nt2);
         nt2 = 0;
         nt1 = 0;
 
-        IDOM_Node* abc6 = notationMap->getNamedItem(tempStr);
+        DOMNode* abc6 = notationMap->getNamedItem(tempStr);
 
-        nt2 = (IDOM_Notation*) abc6;
+        nt2 = (DOMNotation*) abc6;
         delete doc;
     }
 
@@ -358,19 +358,19 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_NamedNodeMap*    nnm = 0;
+        DOMNamedNodeMap*    nnm = 0;
         TASSERT(nnm == 0);
 
-        IDOM_Document*       doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
         nnm = doc->getAttributes();    // Should be null, because node type
                                       //   is not Element.
         TASSERT(nnm == 0);
         TASSERT(!(nnm != 0));
 
         XMLString::transcode("NamedNodeMap01", tempStr, 3999);
-        IDOM_Element* el = doc->createElement(tempStr);
+        DOMElement* el = doc->createElement(tempStr);
 
-        IDOM_NamedNodeMap* nnm2 = el->getAttributes();    // Should be an empty, but non-null map.
+        DOMNamedNodeMap* nnm2 = el->getAttributes();    // Should be an empty, but non-null map.
         TASSERT(nnm2 != 0);
         TASSERT(nnm != nnm2);
         nnm = nnm2;
@@ -385,15 +385,15 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*   doc1 = IDOM_DOMImplementation::getImplementation()->createDocument();
-        IDOM_Document*   doc2 = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc1 = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc2 = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("abc", tempStr, 3999);
-        IDOM_Element*   el1  = doc1->createElement(tempStr);
+        DOMElement*   el1  = doc1->createElement(tempStr);
 
         doc1->appendChild(el1);
         TASSERT(el1->getParentNode() != 0);
-        IDOM_Node*        el2  = doc2->importNode(el1, true);
+        DOMNode*        el2  = doc2->importNode(el1, true);
         TASSERT(el2->getParentNode() == 0);
         const XMLCh*       tagName = el2->getNodeName();
 
@@ -408,7 +408,7 @@ void IDOMBasicTests()
 
     //
     //  getLength() tests.  Both Node CharacterData and NodeList implement
-    //                  getLength().  Early versions of the IDOM had a clash
+    //                  getLength().  Early versions of the DOM had a clash
     //                  between the two, originating in the implementation class
     //                  hirearchy, which has NodeList as a (distant) base class
     //                  of CharacterData.  This is a regression test to verify
@@ -416,20 +416,20 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*    doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*    doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("Hello", tempStr, 3999);
-        IDOM_Text*          tx = doc->createTextNode(tempStr);
+        DOMText*          tx = doc->createTextNode(tempStr);
 
         XMLString::transcode("abc", tempStr, 3999);
-        IDOM_Element*     el = doc->createElement(tempStr);
+        DOMElement*     el = doc->createElement(tempStr);
 
         el->appendChild(tx);
 
         int     textLength = tx->getLength();
         TASSERT(textLength == 5);
 
-        IDOM_NodeList*      nl = tx->getChildNodes();
+        DOMNodeList*      nl = tx->getChildNodes();
         int      nodeListLen = nl->getLength();
         TASSERT(nodeListLen == 0);
 
@@ -445,13 +445,13 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_NodeList*    nl = 0;
-        IDOM_NodeList*    nl2 = 0;
+        DOMNodeList*    nl = 0;
+        DOMNodeList*    nl2 = 0;
         TASSERT(nl == 0);
         TASSERT(!(nl != 0));
         TASSERT(nl == nl2);
 
-        IDOM_Document*       doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
         nl = doc->getChildNodes();    // Should be non-null, but empty
 
         TASSERT(nl != 0);
@@ -459,7 +459,7 @@ void IDOMBasicTests()
         TASSERT(len == 0);
 
         XMLString::transcode("NodeList01", tempStr, 3999);
-        IDOM_Element* el = doc->createElement(tempStr);
+        DOMElement* el = doc->createElement(tempStr);
 
         doc->appendChild(el);
         len = nl->getLength();
@@ -478,16 +478,16 @@ void IDOMBasicTests()
     //
 
     {
-         IDOM_Document*       doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+         DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
          try
          {
              XMLString::transcode("!@@ bad element name", tempStr, 3999);
-             IDOM_Element* el = doc->createElement(tempStr);
+             DOMElement* el = doc->createElement(tempStr);
              TASSERT(false);  // Exception above should prevent us reaching here.
          }
-         catch ( IDOM_DOMException e)
+         catch ( DOMException e)
          {
-             TASSERT(e.code == IDOM_DOMException::INVALID_CHARACTER_ERR);
+             TASSERT(e.code == DOMException::INVALID_CHARACTER_ERR);
          }
          catch (...)
          {
@@ -503,14 +503,14 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*       doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("NodeList01", tempStr, 3999);
-        IDOM_Element* el = doc->createElement(tempStr);
+        DOMElement* el = doc->createElement(tempStr);
 
         doc->appendChild(el);
 
-        IDOM_Element* n1, *n2, *n3;
+        DOMElement* n1, *n2, *n3;
 
         n1 = n2 = n3 = el;
         TASSERT(n1 == n2);
@@ -531,10 +531,10 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document*   doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("CTestRoot", tempStr, 3999);
-        IDOM_Element*   root = doc->createElement(tempStr);
+        DOMElement*   root = doc->createElement(tempStr);
 
         XMLString::transcode("CTestAttr", tempStr, 3999);
         XMLString::transcode("CTestAttrValue", tempStr2, 3999);
@@ -543,9 +543,9 @@ void IDOMBasicTests()
         const XMLCh* s = root->getAttribute(tempStr);
         TASSERT(!XMLString::compareString(s, tempStr2));
 
-        IDOM_Node* abc2 = root->cloneNode(true);
-        IDOM_Element*   cloned = (IDOM_Element*) abc2;
-        IDOM_Attr* a = cloned->getAttributeNode(tempStr);
+        DOMNode* abc2 = root->cloneNode(true);
+        DOMElement*   cloned = (DOMElement*) abc2;
+        DOMAttr* a = cloned->getAttributeNode(tempStr);
         TASSERT(a != 0);
         s = a->getValue();
         TASSERT(!XMLString::compareString(s, tempStr2));
@@ -567,9 +567,9 @@ void IDOMBasicTests()
     //
 
     {
-        IDOM_Document* doc;
-        doc = IDOM_DOMImplementation::getImplementation()->createDocument();
-        IDOM_Text* tn, *tn1, *tn2;
+        DOMDocument* doc;
+        doc = DOMImplementation::getImplementation()->createDocument();
+        DOMText* tn, *tn1, *tn2;
 
         XMLString::transcode("0123456789", tempStr, 3999);
         tn = doc->createTextNode (tempStr);
@@ -589,7 +589,7 @@ void IDOMBasicTests()
         XMLString::transcode("", tempStr2, 3999);
         TASSERT(!XMLString::compareString(tn2->getNodeValue(), tempStr2));
 
-        EXCEPTION_TEST(tn->splitText(6), IDOM_DOMException::INDEX_SIZE_ERR);
+        EXCEPTION_TEST(tn->splitText(6), DOMException::INDEX_SIZE_ERR);
         delete doc;
     }
 
@@ -600,14 +600,14 @@ void IDOMBasicTests()
 
 //---------------------------------------------------------------------------------------
 //
-//   IDOMNSTests    IDOM Name Space tests
+//   DOMNSTests    DOM Name Space tests
 //
 //---------------------------------------------------------------------------------------
-void IDOMNSTests()
+void DOMNSTests()
 {
 
     //
-    //  IDOM Level 2 tests.  These should be split out as a separate test.
+    //  DOM Level 2 tests.  These should be split out as a separate test.
     //
 
 
@@ -622,7 +622,7 @@ void IDOMNSTests()
     //
     {
 
-        IDOM_DOMImplementation*  impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation*  impl = DOMImplementation::getImplementation();
         XMLString::transcode("1.0", tempStr, 3999);
         XMLString::transcode("2.0", tempStr2, 3999);
         XMLString::transcode("3.0", tempStr3, 3999);
@@ -647,7 +647,7 @@ void IDOMNSTests()
 
 
     {
-        IDOM_DOMImplementation*  impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation*  impl = DOMImplementation::getImplementation();
         XMLString::transcode("1.0", tempStr, 3999);
         XMLString::transcode("2.0", tempStr2, 3999);
         XMLString::transcode("3.0", tempStr3, 3999);
@@ -728,8 +728,8 @@ void IDOMNSTests()
     //
 
     {
-        IDOM_Document* doc;
-        doc = IDOM_DOMImplementation::getImplementation()->createDocument();
+        DOMDocument* doc;
+        doc = DOMImplementation::getImplementation()->createDocument();
 
         XMLString::transcode("1.0", tempStr, 3999);
         XMLString::transcode("2.0", tempStr2, 3999);
@@ -811,16 +811,16 @@ void IDOMNSTests()
     //
 
     {
-        IDOM_DOMImplementation*  impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation*  impl = DOMImplementation::getImplementation();
 
         XMLString::transcode("foo:docName", tempStr, 3999);
         XMLString::transcode("pubId", tempStr2, 3999);
         XMLString::transcode( "http://sysId", tempStr3, 3999);
 
-        IDOM_DocumentType* dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
+        DOMDocumentType* dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
 
         TASSERT(dt != 0);
-        TASSERT(dt->getNodeType() == IDOM_Node::DOCUMENT_TYPE_NODE);
+        TASSERT(dt->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE);
         TASSERT(!XMLString::compareString(dt->getNodeName(), tempStr));
         TASSERT(dt->getNamespaceURI() == 0);
         TASSERT(dt->getPrefix() == 0);
@@ -830,7 +830,7 @@ void IDOMNSTests()
         TASSERT(dt->getInternalSubset() == 0);
         TASSERT(dt->getOwnerDocument() == 0);
 
-        IDOM_NamedNodeMap* nnm = dt->getEntities();
+        DOMNamedNodeMap* nnm = dt->getEntities();
         TASSERT(nnm->getLength() == 0);
         nnm = dt->getNotations();
         TASSERT(nnm->getLength() == 0);
@@ -843,7 +843,7 @@ void IDOMNSTests()
         dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
 
         TASSERT(dt != 0);
-        TASSERT(dt->getNodeType() == IDOM_Node::DOCUMENT_TYPE_NODE);
+        TASSERT(dt->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE);
         TASSERT(!XMLString::compareString(dt->getNodeName(), tempStr));
         TASSERT(dt->getNamespaceURI() == 0);
         TASSERT(dt->getPrefix() == 0);
@@ -855,19 +855,19 @@ void IDOMNSTests()
 
         // Creating a DocumentType with invalid or malformed qName should fail.
         XMLString::transcode("<docName", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), IDOM_DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::INVALID_CHARACTER_ERR);
 
         XMLString::transcode(":docName", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("docName:", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("doc::Name", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("doc:N:ame", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
         delete dt;
 
     }
@@ -875,18 +875,15 @@ void IDOMNSTests()
 
 
     //
-    //  IDOMImplementation::CreateDocument
+    //  DOMImplementation::CreateDocument
     {
-        // Preflight the operations that will lazily create IDOMStrings
-        // in the implementation.  This prevents incorrect reports of
-        // memory leaks in the real test.
 
-        IDOM_DOMImplementation*   impl = IDOM_DOMImplementation::getImplementation();
-        IDOM_DocumentType*       dt = 0;
+        DOMImplementation*   impl = DOMImplementation::getImplementation();
+        DOMDocumentType*       dt = 0;
 
         XMLString::transcode("", tempStr2, 3999);
         XMLString::transcode("a", tempStr, 3999);
-        IDOM_Document*           doc = impl->createDocument(tempStr2, tempStr, dt);
+        DOMDocument*           doc = impl->createDocument(tempStr2, tempStr, dt);
 
         doc->getNodeName();
         delete doc;
@@ -896,23 +893,23 @@ void IDOMNSTests()
 
     {
 
-        IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementation::getImplementation();
 
         XMLString::transcode("foo:docName", tempStr3, 3999);
         XMLString::transcode("pubId", tempStr2, 3999);
         XMLString::transcode( "http://sysId", tempStr, 3999);
 
 
-        IDOM_DocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
+        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
 
         XMLString::transcode("http://document.namespace", tempStr2, 3999);
 
-        IDOM_Document* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
 
         TASSERT(dt->getOwnerDocument() == doc);
         TASSERT(doc->getOwnerDocument() == 0);
 
-        TASSERT(doc->getNodeType() == IDOM_Node::DOCUMENT_NODE);
+        TASSERT(doc->getNodeType() == DOMNode::DOCUMENT_NODE);
         TASSERT(doc->getDoctype() == dt);
 
         XMLString::transcode("#document", tempStr, 3999);
@@ -923,7 +920,7 @@ void IDOMNSTests()
         TASSERT(doc->getPrefix() == 0);
         TASSERT(doc->getLocalName() == 0);
 
-        IDOM_Element* el = doc->getDocumentElement();
+        DOMElement* el = doc->getDocumentElement();
 
         XMLString::transcode("docName", tempStr, 3999);
         TASSERT(!XMLString::compareString(el->getLocalName(), tempStr));
@@ -945,12 +942,12 @@ void IDOMNSTests()
         //
         try
         {
-            IDOM_Document* doc2 = impl->createDocument(tempStr2, tempStr3, dt);
+            DOMDocument* doc2 = impl->createDocument(tempStr2, tempStr3, dt);
             TASSERT(false);  // should not reach here.
         }
-        catch ( IDOM_DOMException &e)
+        catch ( DOMException &e)
         {
-            TASSERT(e.code == IDOM_DOMException::WRONG_DOCUMENT_ERR);
+            TASSERT(e.code == DOMException::WRONG_DOCUMENT_ERR);
         }
         catch (...)
         {
@@ -978,26 +975,26 @@ void IDOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementation::getImplementation();
 
         XMLString::transcode("foo:docName", tempStr3, 3999);
         XMLString::transcode("pubId", tempStr2, 3999);
         XMLString::transcode( "http://sysId", tempStr, 3999);
 
 
-        IDOM_DocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
+        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
 
         XMLString::transcode("http://document.namespace", tempStr2, 3999);
 
-        IDOM_Document* doc = impl->createDocument(tempStr2, tempStr3, dt);
-        IDOM_Element* rootEl = doc->getDocumentElement();
+        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // CreateElementNS
         //
         XMLString::transcode("http://nsa", tempStr5, 3999);
         XMLString::transcode("a:ela", tempStr, 3999);
-        IDOM_Element* ela = doc->createElementNS(tempStr5, tempStr);  // prefix and URI
+        DOMElement* ela = doc->createElementNS(tempStr5, tempStr);  // prefix and URI
 
         TASSERT(!XMLString::compareString(ela->getNodeName(), tempStr));
         TASSERT(!XMLString::compareString(ela->getNamespaceURI(), tempStr5));
@@ -1011,7 +1008,7 @@ void IDOMNSTests()
         XMLString::transcode("", tempStr3, 3999);
         XMLString::transcode("http://nsb", tempStr2, 3999);
         XMLString::transcode("elb", tempStr, 3999);
-        IDOM_Element* elb = doc->createElementNS(tempStr2, tempStr);    //  URI, no prefix.
+        DOMElement* elb = doc->createElementNS(tempStr2, tempStr);    //  URI, no prefix.
 
         TASSERT(!XMLString::compareString(elb->getNodeName(), tempStr));
         TASSERT(!XMLString::compareString(elb->getNamespaceURI(), tempStr2));
@@ -1021,7 +1018,7 @@ void IDOMNSTests()
 
 
         XMLString::transcode("elc", tempStr, 3999);
-        IDOM_Element* elc = doc->createElementNS(tempStr3, tempStr);              // No URI, no prefix.
+        DOMElement* elc = doc->createElementNS(tempStr3, tempStr);              // No URI, no prefix.
 
         TASSERT(!XMLString::compareString(elc->getNodeName(), tempStr));
         TASSERT(!XMLString::compareString(elc->getNamespaceURI(), tempStr3));
@@ -1035,27 +1032,27 @@ void IDOMNSTests()
 
         // Badly formed qualified name
         XMLString::transcode("<a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), IDOM_DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::INVALID_CHARACTER_ERR);
 
         XMLString::transcode(":a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("a:", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("a::a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("a:a:a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
         XMLString::transcode("http://www.w3.org/XML/1998/namespace", tempStr4, 3999);
         XMLString::transcode("xml:a",tempStr2, 3999);
         TASSERT(!XMLString::compareString(doc->createElementNS(tempStr4, tempStr2)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr2), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(0,  tempStr2), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr2), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(0,  tempStr2), DOMException::NAMESPACE_ERR);
 
         //unlike Attribute, xmlns (no different from foo) can have any namespaceURI for Element
         XMLString::transcode("xmlns", tempStr2, 3999);
@@ -1070,17 +1067,17 @@ void IDOMNSTests()
         XMLString::transcode("xmlns:a", tempStr2, 3999);
         TASSERT(!XMLString::compareString(doc->createElementNS(tempStr5, tempStr2)->getNamespaceURI(), tempStr5));
         TASSERT(!XMLString::compareString(doc->createElementNS(tempStr4, tempStr2)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(0, tempStr2), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(0, tempStr2), DOMException::NAMESPACE_ERR);
 
         //In fact, any prefix != null should have a namespaceURI != 0 or != ""
         XMLString::transcode("foo:a", tempStr2, 3999);
         TASSERT(!XMLString::compareString(doc->createElementNS(tempStr5, tempStr2)->getNamespaceURI(), tempStr5));
-        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(0,  tempStr2), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(0,  tempStr2), DOMException::NAMESPACE_ERR);
 
         //Change prefix
-        IDOM_Element* elem = doc->createElementNS(tempStr5, tempStr2);
+        DOMElement* elem = doc->createElementNS(tempStr5, tempStr2);
         XMLString::transcode("bar", tempStr2, 3999);
         elem->setPrefix(tempStr2);
         XMLString::transcode("bar:a", tempStr4, 3999);
@@ -1107,7 +1104,7 @@ void IDOMNSTests()
         XMLString::transcode("xml", tempStr2, 3999);
         elem->setPrefix(tempStr2);
         elem = doc->createElementNS(tempStr5, tempStr);
-        EXCEPTION_TEST(elem->setPrefix(tempStr2), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(elem->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
         //However, there is no restriction on prefix xmlns
         XMLString::transcode("xmlns", tempStr4, 3999);
         elem->setPrefix(tempStr4);
@@ -1115,15 +1112,15 @@ void IDOMNSTests()
         XMLString::transcode("a", tempStr, 3999);
         XMLString::transcode("foo", tempStr2, 3999);
         elem = doc->createElementNS(0, tempStr);
-        EXCEPTION_TEST(elem->setPrefix(tempStr2), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(elem->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
         elem = doc->createElementNS(tempStr3, tempStr);
-        EXCEPTION_TEST(elem->setPrefix(tempStr2), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(elem->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
 
         //Only prefix of Element and Attribute can be changed
-        EXCEPTION_TEST(doc->setPrefix(tempStr2), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
 
         //Prefix of readonly Element can not be changed.
-        //However, there is no way to create such IDOM_Element* for testing yet.
+        //However, there is no way to create such DOMElement* for testing yet.
         delete doc;
         delete dt;
     }
@@ -1139,18 +1136,18 @@ void IDOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementation::getImplementation();
 
         XMLString::transcode("foo:docName", tempStr3, 3999);
         XMLString::transcode("pubId", tempStr2, 3999);
         XMLString::transcode( "http://sysId", tempStr, 3999);
 
 
-        IDOM_DocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
+        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
 
         XMLString::transcode("http://document.namespace", tempStr2, 3999);
-        IDOM_Document* doc = impl->createDocument(tempStr2, tempStr3, dt);
-        IDOM_Element* rootEl = doc->getDocumentElement();
+        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // CreateAttributeNS
@@ -1161,7 +1158,7 @@ void IDOMNSTests()
 
 
         XMLString::transcode("a:attra", tempStr, 3999);
-        IDOM_Attr* attra = doc->createAttributeNS(tempStr5, tempStr);       // prefix and URI
+        DOMAttr* attra = doc->createAttributeNS(tempStr5, tempStr);       // prefix and URI
         TASSERT(!XMLString::compareString(attra->getNodeName(), tempStr));
         TASSERT(!XMLString::compareString(attra->getNamespaceURI(), tempStr5));
 
@@ -1174,7 +1171,7 @@ void IDOMNSTests()
         TASSERT(attra->getOwnerElement() == 0);
 
         XMLString::transcode("attrb", tempStr2, 3999);
-        IDOM_Attr* attrb = doc->createAttributeNS(tempStr4, tempStr2);         //  URI, no prefix.
+        DOMAttr* attrb = doc->createAttributeNS(tempStr4, tempStr2);         //  URI, no prefix.
         TASSERT(!XMLString::compareString(attrb->getNodeName(), tempStr2));
         TASSERT(!XMLString::compareString(attrb->getNamespaceURI(), tempStr4));
         TASSERT(!XMLString::compareString(attrb->getPrefix(), tempStr3));
@@ -1185,7 +1182,7 @@ void IDOMNSTests()
 
 
         XMLString::transcode("attrc", tempStr2, 3999);
-        IDOM_Attr* attrc = doc->createAttributeNS(tempStr3, tempStr2);
+        DOMAttr* attrc = doc->createAttributeNS(tempStr3, tempStr2);
         TASSERT(!XMLString::compareString(attrc->getNodeName(), tempStr2));
         TASSERT(!XMLString::compareString(attrc->getNamespaceURI(), tempStr3));
         TASSERT(!XMLString::compareString(attrc->getPrefix(), tempStr3));
@@ -1195,53 +1192,53 @@ void IDOMNSTests()
 
         // Badly formed qualified name
         XMLString::transcode("<a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::INVALID_CHARACTER_ERR);
 
         XMLString::transcode(":a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("a:", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("a::a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
 
         XMLString::transcode("a:a:a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
         XMLString::transcode("http://www.w3.org/XML/1998/namespace", tempStr2, 3999);
         XMLString::transcode("xml:a", tempStr, 3999);
         TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr2, tempStr)->getNamespaceURI(), tempStr2));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns must have namespaceURI == "http://www.w3.org/2000/xmlns/"
         XMLString::transcode("http://www.w3.org/2000/xmlns/", tempStr4, 3999);
         XMLString::transcode("xmlns", tempStr, 3999);
         TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr4, tempStr)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr2, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr2, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns:a must have namespaceURI == "http://www.w3.org/2000/xmlns/"
         XMLString::transcode("xmlns:a", tempStr, 3999);
         TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr4, tempStr)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr2, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr2, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
 
         //In fact, any prefix != null should have a namespaceURI != 0 or != ""
         XMLString::transcode("foo:a", tempStr, 3999);
         TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr5, tempStr)->getNamespaceURI(), tempStr5));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
 
         //Change prefix
-        IDOM_Attr* attr = doc->createAttributeNS(tempStr5, tempStr);
+        DOMAttr* attr = doc->createAttributeNS(tempStr5, tempStr);
         XMLString::transcode("bar", tempStr4, 3999);
         XMLString::transcode("bar:a", tempStr, 3999);
         XMLString::transcode("a", tempStr2, 3999);
@@ -1271,7 +1268,7 @@ void IDOMNSTests()
         attr = doc->createAttributeNS(tempStr2, tempStr);
         attr->setPrefix(tempStr4);
         attr = doc->createAttributeNS(tempStr5, tempStr);
-        EXCEPTION_TEST(attr->setPrefix(tempStr4), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(tempStr4), DOMException::NAMESPACE_ERR);
         //Special case for xmlns:a where namespaceURI must be xmlURI
         XMLString::transcode("http://www.w3.org/2000/xmlns/", tempStr2, 3999);
         attr = doc->createAttributeNS(tempStr2, tempStr);
@@ -1279,25 +1276,25 @@ void IDOMNSTests()
         XMLString::transcode("xmlns", tempStr4, 3999);
         attr->setPrefix(tempStr4);
         attr = doc->createAttributeNS(tempStr5, tempStr);
-        EXCEPTION_TEST(attr->setPrefix(tempStr4), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(tempStr4), DOMException::NAMESPACE_ERR);
         //Special case for xmlns where no prefix can be set
         attr = doc->createAttributeNS(tempStr2, tempStr4);
 
         XMLString::transcode("foo", tempStr, 3999);
-        EXCEPTION_TEST(attr->setPrefix(tempStr), IDOM_DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(attr->setPrefix(tempStr4), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(tempStr4), DOMException::NAMESPACE_ERR);
         //Also an attribute can not have a prefix with namespaceURI == null or ""
         XMLString::transcode("a", tempStr4, 3999);
         attr = doc->createAttributeNS(0, tempStr4);
-        EXCEPTION_TEST(attr->setPrefix(tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
         attr = doc->createAttributeNS(tempStr3, tempStr4);
-        EXCEPTION_TEST(attr->setPrefix(tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
 
         //Only prefix of Element and Attribute can be changed
-        EXCEPTION_TEST(doc->setPrefix(tempStr), IDOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
 
         //Prefix of readonly Attribute can not be changed.
-        //However, there is no way to create such IDOM_Attribute for testing yet.
+        //However, there is no way to create such DOMAttribute for testing yet.
         delete doc;
         delete dt;
     }
@@ -1312,19 +1309,19 @@ void IDOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementation::getImplementation();
 
         XMLString::transcode("foo:docName", tempStr3, 3999);
         XMLString::transcode("pubId", tempStr2, 3999);
         XMLString::transcode( "http://sysId", tempStr, 3999);
 
 
-        IDOM_DocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
+        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
 
         XMLString::transcode("http://document.namespace", tempStr2, 3999);
-        IDOM_Document* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
 
-        IDOM_Element* rootEl = doc->getDocumentElement();
+        DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // Populate the document
@@ -1334,31 +1331,31 @@ void IDOMNSTests()
         XMLString::transcode("", tempStr3, 3999);
 
         XMLString::transcode("a:ela", tempStr, 3999);
-        IDOM_Element* ela = doc->createElementNS(tempStr5, tempStr);
+        DOMElement* ela = doc->createElementNS(tempStr5, tempStr);
         rootEl->appendChild(ela);
 
         XMLString::transcode("elb", tempStr2, 3999);
-        IDOM_Element* elb = doc->createElementNS(tempStr4, tempStr2);
+        DOMElement* elb = doc->createElementNS(tempStr4, tempStr2);
         rootEl->appendChild(elb);
 
         XMLString::transcode("elc", tempStr, 3999);
-        IDOM_Element* elc = doc->createElementNS(tempStr3, tempStr);
+        DOMElement* elc = doc->createElementNS(tempStr3, tempStr);
         rootEl->appendChild(elc);
 
         XMLString::transcode("d:ela", tempStr, 3999);
-        IDOM_Element* eld = doc->createElementNS(tempStr5, tempStr);
+        DOMElement* eld = doc->createElementNS(tempStr5, tempStr);
         rootEl->appendChild(eld);
 
         XMLString::transcode("http://nse", tempStr, 3999);
-        IDOM_Element* ele = doc->createElementNS(tempStr, tempStr2);
+        DOMElement* ele = doc->createElementNS(tempStr, tempStr2);
         rootEl->appendChild(ele);
 
 
         //
-        // Access with IDOM Level 1 getElementsByTagName
+        // Access with DOM Level 1 getElementsByTagName
         //
 
-        IDOM_NodeList* nl;
+        DOMNodeList* nl;
 
         XMLString::transcode("a:ela", tempStr, 3999);
         nl = doc->getElementsByTagName(tempStr);
@@ -1376,7 +1373,7 @@ void IDOMNSTests()
         TASSERT(nl->item(0) == eld);
 
         //
-        //  Access with IDOM Level 2 getElementsByTagNameNS
+        //  Access with DOM Level 2 getElementsByTagNameNS
         //
 
         XMLString::transcode("elc", tempStr, 3999);
@@ -1432,7 +1429,7 @@ void IDOMNSTests()
         //
 
         nl = doc->getElementsByTagNameNS(tempStr, tempStr);
-        IDOM_NodeList* nla = ela->getElementsByTagNameNS(tempStr, tempStr);
+        DOMNodeList* nla = ela->getElementsByTagNameNS(tempStr, tempStr);
 
         TASSERT(nl->getLength() == 6);
         TASSERT(nla->getLength() == 0);
@@ -1458,16 +1455,16 @@ void IDOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementation::getImplementation();
 
         XMLString::transcode("foo:docName", tempStr, 3999);
         XMLString::transcode("pubId", tempStr2, 3999);
         XMLString::transcode("http://sysId", tempStr3, 3999);
-        IDOM_DocumentType* dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
+        DOMDocumentType* dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
 
         XMLString::transcode("http://document.namespace", tempStr2, 3999);
-        IDOM_Document* doc = impl->createDocument(tempStr2, tempStr, dt);
-        IDOM_Element* rootEl = doc->getDocumentElement();
+        DOMDocument* doc = impl->createDocument(tempStr2, tempStr, dt);
+        DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // Create a set of attributes and hang them on the root element.
@@ -1477,24 +1474,24 @@ void IDOMNSTests()
         XMLString::transcode("", tempStr3, 3999);
         XMLString::transcode("a:attra", tempStr2, 3999);
 
-        IDOM_Attr* attra = doc->createAttributeNS(tempStr5, tempStr2);
+        DOMAttr* attra = doc->createAttributeNS(tempStr5, tempStr2);
         rootEl->setAttributeNodeNS(attra);
 
         XMLString::transcode("attrb", tempStr, 3999);
-        IDOM_Attr* attrb = doc->createAttributeNS(tempStr4, tempStr);
+        DOMAttr* attrb = doc->createAttributeNS(tempStr4, tempStr);
         rootEl->setAttributeNodeNS(attrb);
 
         XMLString::transcode("attrc", tempStr, 3999);
-        IDOM_Attr* attrc = doc->createAttributeNS(tempStr3, tempStr);
+        DOMAttr* attrc = doc->createAttributeNS(tempStr3, tempStr);
         rootEl->setAttributeNodeNS(attrc);
 
         XMLString::transcode("d:attra", tempStr, 3999);
-        IDOM_Attr* attrd = doc->createAttributeNS(tempStr5, tempStr);
+        DOMAttr* attrd = doc->createAttributeNS(tempStr5, tempStr);
         rootEl->setAttributeNodeNS(attrd);
 
         XMLString::transcode("http://nse", tempStr2, 3999);
         XMLString::transcode("attrb", tempStr, 3999);
-        IDOM_Attr* attre = doc->createAttributeNS(tempStr2, tempStr);
+        DOMAttr* attre = doc->createAttributeNS(tempStr2, tempStr);
         rootEl->setAttributeNodeNS(attre);
 
         //
@@ -1507,7 +1504,7 @@ void IDOMNSTests()
         XMLString::transcode("attra", tempStr, 3999);
         TASSERT(!XMLString::compareString(attra->getLocalName(), tempStr));
         TASSERT(!XMLString::compareString(attra->getName(), tempStr2));
-        TASSERT(attra->getNodeType() == IDOM_Node::ATTRIBUTE_NODE);
+        TASSERT(attra->getNodeType() == DOMNode::ATTRIBUTE_NODE);
         TASSERT(!XMLString::compareString(attra->getNodeValue(), tempStr3));
 
         XMLString::transcode("a", tempStr, 3999);
@@ -1517,7 +1514,7 @@ void IDOMNSTests()
         TASSERT(attra->getOwnerElement() == 0);
 
         // Test methods of NamedNodeMap
-        IDOM_NamedNodeMap* nnm = rootEl->getAttributes();
+        DOMNamedNodeMap* nnm = rootEl->getAttributes();
         TASSERT(nnm->getLength() == 4);
 
         XMLString::transcode("attra", tempStr2, 3999);
@@ -1577,8 +1574,8 @@ int  mymain()
         return -1;
     }
 
-    IDOMBasicTests();
-    IDOMNSTests();
+    DOMBasicTests();
+    DOMNSTests();
 
     //
     //  Print Final allocation stats for full set of tests

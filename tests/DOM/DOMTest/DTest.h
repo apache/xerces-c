@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.5  2002/05/21 18:46:44  tng
- * Test case update: this is original tests/IDom/IDTest/IDTest.h
+ * Revision 1.6  2002/05/21 18:50:16  tng
+ * Test case update: modify to use the latest DOM interface
  *
  * Revision 1.3  2002/03/14 21:59:29  tng
  * Run methods test[NodeType] in the IDOMTest and other fixes.
@@ -72,80 +72,80 @@
 
 
 /**
- * This class tests methods for XML IDOM implementation
+ * This class tests methods for XML DOM implementation
  *
- * IDOMException errors are tested by calls to IDOMExceptionsTest from: Main, docBuilder...
+ * DOMException errors are tested by calls to DOMExceptionsTest from: Main, docBuilder...
  *
  */
 
-#include <xercesc/idom/IDOM.hpp>
+#include <xercesc/dom/DOM.hpp>
 
 //  define null for compatibility with original Java source code.
 #define null 0
 
-class IDTest {
+class DOMTest {
 public:
-	static IDOM_Element           *testElementNode;
-	static IDOM_Attr              *testAttributeNode;
-	static IDOM_Text              *testTextNode;
-	static IDOM_CDATASection      *testCDATASectionNode;
-	static IDOM_EntityReference   *testEntityReferenceNode;
-	static IDOM_Entity            *testEntityNode;
-	static IDOM_ProcessingInstruction *testProcessingInstructionNode;
-	static IDOM_Comment           *testCommentNode;
-	static IDOM_Document          *testDocumentNode;
-	static IDOM_DocumentType      *testDocumentTypeNode;
-	static IDOM_DocumentFragment  *testDocumentFragmentNode;
-	static IDOM_Notation          *testNotationNode;
+	static DOMElement           *testElementNode;
+	static DOMAttr              *testAttributeNode;
+	static DOMText              *testTextNode;
+	static DOMCDATASection      *testCDATASectionNode;
+	static DOMEntityReference   *testEntityReferenceNode;
+	static DOMEntity            *testEntityNode;
+	static DOMProcessingInstruction *testProcessingInstructionNode;
+	static DOMComment           *testCommentNode;
+	static DOMDocument          *testDocumentNode;
+	static DOMDocumentType      *testDocumentTypeNode;
+	static DOMDocumentFragment  *testDocumentFragmentNode;
+	static DOMNotation          *testNotationNode;
 
 
-IDTest();
+DOMTest();
 
-IDOM_Document* createDocument();
-IDOM_DocumentType* createDocumentType(IDOM_Document* doc, XMLCh* name);
-IDOM_Entity* createEntity(IDOM_Document* doc, XMLCh* name);
-IDOM_Notation* createNotation(IDOM_Document* doc, XMLCh* name);
-bool docBuilder(IDOM_Document* document, XMLCh* name);
+DOMDocument* createDocument();
+DOMDocumentType* createDocumentType(DOMDocument* doc, XMLCh* name);
+DOMEntity* createEntity(DOMDocument* doc, XMLCh* name);
+DOMNotation* createNotation(DOMDocument* doc, XMLCh* name);
+bool docBuilder(DOMDocument* document, XMLCh* name);
 
-void findTestNodes(IDOM_Document* document);
-void findTestNodes(IDOM_Node* node);
+void findTestNodes(DOMDocument* document);
+void findTestNodes(DOMNode* node);
 
 
-bool testAttr(IDOM_Document* document);
-bool testCDATASection(IDOM_Document* document);
-bool testCharacterData(IDOM_Document* document);
-bool testChildNodeList(IDOM_Document* document);
-bool testComment(IDOM_Document* document);
-bool testDeepNodeList(IDOM_Document* document);
+bool testAttr(DOMDocument* document);
+bool testCDATASection(DOMDocument* document);
+bool testCharacterData(DOMDocument* document);
+bool testChildNodeList(DOMDocument* document);
+bool testComment(DOMDocument* document);
+bool testDeepNodeList(DOMDocument* document);
 
 /**
- **** ALL IDOM_Document create methods are run in docBuilder except createAttribute which is in testAttribute**
+ **** ALL DOMDocument create methods are run in docBuilder except createAttribute which is in testAttribute**
  */
-bool testDocument(IDOM_Document* document);
+bool testDocument(DOMDocument* document);
 
 
 /**
  ********This really isn't needed, only exists to throw NO_MODIFICATION_ALLOWED_ERR ********
  */
-bool testDocumentFragment(IDOM_Document* document);
+bool testDocumentFragment(DOMDocument* document);
 
-bool testDocumentType(IDOM_Document* document);
-bool testIDOMerrors(IDOM_Document* document);
-bool testIDOMImplementation(IDOM_Document* document);
-bool testElement(IDOM_Document* document);
-bool testEntity(IDOM_Document* document);
-bool testEntityReference(IDOM_Document* document);
+bool testDocumentType(DOMDocument* document);
+bool testDOMerrors(DOMDocument* document);
+bool testDOMImplementation(DOMDocument* document);
+bool testElement(DOMDocument* document);
+bool testEntity(DOMDocument* document);
+bool testEntityReference(DOMDocument* document);
 
 
 /**
  ********* This is only for a test of cloneNode "deep"*******
  ********* And for error tests*********
  */
-bool testNode(IDOM_Document* document);
+bool testNode(DOMDocument* document);
 
-bool testNotation(IDOM_Document* document);
-bool testPI(IDOM_Document* document);
-bool testText(IDOM_Document* document);
-bool treeCompare(IDOM_Node* node, IDOM_Node* node2);
+bool testNotation(DOMDocument* document);
+bool testPI(DOMDocument* document);
+bool testText(DOMDocument* document);
+bool treeCompare(DOMNode* node, DOMNode* node2);
 
 };
