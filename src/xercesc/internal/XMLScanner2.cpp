@@ -366,7 +366,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //
                 //  If we found an attdef for this one, then lets validate it.
                 //
-                if (fValidate && !skipThisOne)
+                if (fNormalizeData)
                 {
                     // normalize the attribute according to schema whitespace facet
                     XMLBufBid bbtemp(&fBufMgr);
@@ -375,7 +375,9 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
                     ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
                     normBuf.set(tempBuf.getRawBuffer());
+                }
 
+                if (fValidate && !skipThisOne) {
                     fValidator->validateAttrValue
                     (
                         attDefForWildCard
@@ -399,19 +401,19 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //
                 if (attDef->getCreateReason() != XMLAttDef::JustFaultIn)
                 {
+                    if (fNormalizeData && (fGrammarType == Grammar::SchemaGrammarType))
+                    {
+                        // normalize the attribute according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                        normBuf.set(tempBuf.getRawBuffer());
+                    }
+
                     if (fValidate && !skipThisOne)
                     {
-                        if (fGrammarType == Grammar::SchemaGrammarType)
-                        {
-                            // normalize the attribute according to schema whitespace facet
-                            XMLBufBid bbtemp(&fBufMgr);
-                            XMLBuffer& tempBuf = bbtemp.getBuffer();
-
-                            DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
-                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
-                            normBuf.set(tempBuf.getRawBuffer());
-                        }
-
                         fValidator->validateAttrValue
                         (
                             attDef
@@ -1077,10 +1079,17 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                     // original size, so this will avoid allocating way
                     // too much or too little memory.
                     XMLBuffer toFill(len+1);
+                    toFill.set(rawBuf);
 
-                    // normalize the character according to schema whitespace facet
-                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
+                    if (fNormalizeData) {
+                        // normalize the character according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
+                        toFill.set(tempBuf.getRawBuffer());
+                    }
 
                     // call all active identity constraints
                     unsigned int count = fMatcherStack->getMatcherCount();
@@ -1114,10 +1123,17 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                     // original size, so this will avoid allocating way
                     // too much or too little memory.
                     XMLBuffer toFill(len+1);
+                    toFill.set(rawBuf);
 
-                    // normalize the character according to schema whitespace facet
-                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
+                    if (fNormalizeData) {
+                        // normalize the character according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
+                        toFill.set(tempBuf.getRawBuffer());
+                    }
 
                     // call all active identity constraints
                     unsigned int count = fMatcherStack->getMatcherCount();

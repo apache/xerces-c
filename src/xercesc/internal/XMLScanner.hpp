@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/06/17 16:13:01  tng
+ * DOM L3: Add the flag fNormalizeData so that datatype normalization defined by schema is done only if asked.
+ *
  * Revision 1.6  2002/06/07 18:35:49  tng
  * Add getReaderMgr in XMLScanner so that the parser can query encoding information.
  *
@@ -404,6 +407,7 @@ public :
     XMLCh* getExternalSchemaLocation() const;
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
     bool getLoadExternalDTD() const;
+    bool getNormalizeData() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -501,6 +505,7 @@ public :
     void setExternalSchemaLocation(const char* const schemaLocation);
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
     void setLoadExternalDTD(const bool loadDTD);
+    void setNormalizeData(const bool normalizeData);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -921,6 +926,10 @@ private :
     //  fLoadExternalDTD
     //      This flag indicates whether the external DTD be loaded or not
     //
+    //  fNormalizeData
+    //      This flag indicates whether the parser should perform datatype
+    //      normalization that is defined in the schema.
+    //
     // -----------------------------------------------------------------------
     bool                        fDoNamespaces;
     bool                        fExitOnFirstFatal;
@@ -978,6 +987,7 @@ private :
     XMLCh*                      fExternalSchemaLocation;
     XMLCh*                      fExternalNoNamespaceSchemaLocation;
     bool                        fLoadExternalDTD;
+    bool                        fNormalizeData;
 };
 
 
@@ -1186,6 +1196,11 @@ inline bool XMLScanner::getLoadExternalDTD() const
     return fLoadExternalDTD;
 }
 
+inline bool XMLScanner::getNormalizeData() const
+{
+    return fNormalizeData;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1308,6 +1323,11 @@ inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const char* const n
 inline void XMLScanner::setLoadExternalDTD(const bool loadDTD)
 {
     fLoadExternalDTD = loadDTD;
+}
+
+inline void XMLScanner::setNormalizeData(const bool normalizeData)
+{
+    fNormalizeData = normalizeData;
 }
 
 
