@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/23 18:42:18  tng
+ * DOM L3: Support baseURI.   Add utility fixURI to transform an absolute path filename to standard URI form.
+ *
  * Revision 1.3  2002/08/27 19:24:43  peiyongz
  * Bug#12087: patch from Thomas Ford (tom@decisionsoft.com)
  *
@@ -194,6 +197,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 
 class XMLLCPTranscoder;
 
@@ -1305,6 +1309,15 @@ public:
       *        On return , this buffer also holds the converted string
       */
     static void collapseWS(XMLCh* const toConvert);
+
+    /**
+     * Fixes a platform dependent absolute path filename to standard URI form.
+     * 1. Windows: fix 'x:' to 'file:///x:' and convert any backslash to forward slash
+     * 2. UNIX: fix '/blah/blahblah' to 'file:///blah/blahblah'
+     * @param str    The string that has the absolute path filename
+     * @param toFill The XMLBuffer that will be filled with the URI
+     */
+    static void fixURI(const XMLCh* const str, XMLBuffer& toFill);
     //@}
 
 

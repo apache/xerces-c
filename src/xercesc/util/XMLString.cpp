@@ -1736,6 +1736,65 @@ void XMLString::collapseWS(XMLCh* const toConvert)
     return;
 }
 
+
+/**
+ * Fixes a platform dependent absolute path filename to standard URI form.
+ * 1. Windows: fix 'x:' to 'file:///x:' and convert any backslash to forward slash
+ * 2. UNIX: fix '/blah/blahblah' to 'file:///blah/blahblah'
+ */
+void XMLString::fixURI(const XMLCh* const str, XMLBuffer& toFill)
+{
+    toFill.reset();
+
+    if (!str || !*str)
+        return;
+
+    int colonIdx = XMLString::indexOf(str, chColon);
+    int slashIdx = XMLString::indexOf(str, chForwardSlash);
+
+    // If starts with a '/' we assume
+    // this is an absolute (UNIX) file path and prefix it with file://
+    if (colonIdx == -1 && XMLString::indexOf(str, chForwardSlash) == 0) {
+        const XMLCh FILE_SCHEME[] = {
+            chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon,
+            chForwardSlash, chForwardSlash, chNull};
+
+        toFill.set(FILE_SCHEME);
+
+        // copy the string
+        const XMLCh* inPtr = str;
+        while (*inPtr)
+            toFill.append(*inPtr++);
+
+        toFill.append(chNull);
+    }
+    else if (colonIdx == 1 && XMLString::isAlpha(*str)) {
+        // If starts with a driver letter 'x:' we assume
+        // this is an absolute (Windows) file path and prefix it with file:///
+        const XMLCh FILE_SCHEME[] = {
+            chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon,
+            chForwardSlash, chForwardSlash, chForwardSlash, chNull};
+
+        toFill.set(FILE_SCHEME);
+
+        // copy the string and fix any backward slash
+        const XMLCh* inPtr = str;
+        while (*inPtr) {
+            if (*inPtr == chYenSign ||
+                *inPtr == chWonSign ||
+                *inPtr == chBackSlash)
+                toFill.append(chForwardSlash);
+            else
+                toFill.append(*inPtr);
+            inPtr++;
+        }
+
+        // cap it with null
+        toFill.append(chNull);
+    }
+}
+
+
 // ---------------------------------------------------------------------------
 //  XMLString: Private static methods
 // ---------------------------------------------------------------------------
