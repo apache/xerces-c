@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2004/01/12 22:01:02  cargilld
+ * Minor performance change for handling reserved and unreserved characters.
+ *
  * Revision 1.15  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -425,6 +428,7 @@ public:
 
 private:
 
+    static const XMLCh MARK_OR_RESERVED_CHARACTERS[];
     static const XMLCh RESERVED_CHARACTERS[];
     static const XMLCh MARK_CHARACTERS[];
     static const XMLCh SCHEME_CHARACTERS[];
@@ -459,6 +463,13 @@ private:
      * @return true if the char is unreserved, false otherwise
      */
     static bool isUnreservedCharacter(const XMLCh theChar);
+
+    /**
+     * Determine whether a char is an reserved or unreserved character.
+     *
+     * @return true if the char is reserved or unreserved, false otherwise
+     */                
+    static bool isReservedOrUnreservedCharacter(const XMLCh theChar);
 
     /**
      * Determine whether a scheme conforms to the rules for a scheme name.
@@ -739,6 +750,12 @@ inline const XMLCh* XMLUri::getUriText() const
 // ---------------------------------------------------------------------------
 //  XMLUri: Helper methods
 // ---------------------------------------------------------------------------
+inline bool XMLUri::isReservedOrUnreservedCharacter(const XMLCh theChar)
+{
+   return (XMLString::isAlphaNum(theChar) ||
+           XMLString::indexOf(MARK_OR_RESERVED_CHARACTERS, theChar) != -1);
+}
+
 inline bool XMLUri::isReservedCharacter(const XMLCh theChar)
 {
     return (XMLString::indexOf(RESERVED_CHARACTERS, theChar) != -1);

@@ -94,6 +94,16 @@ const XMLCh XMLUri::MARK_CHARACTERS[] =
     chAsterisk, chSingleQuote, chOpenParen, chCloseParen, chNull
 };
 
+// combination of MARK and RESERVED
+const XMLCh XMLUri::MARK_OR_RESERVED_CHARACTERS[] =
+{
+    chDash, chUnderscore, chPeriod, chBang, chTilde,
+    chAsterisk, chSingleQuote, chOpenParen, chCloseParen,
+    chSemiColon, chForwardSlash, chQuestion, chColon, chAt,
+    chAmpersand, chEqual, chPlus, chDollarSign, chComma, chOpenSquare,
+    chCloseSquare, chNull
+};
+
 //
 //      scheme        = alpha *( alpha | digit | "+" | "-" | "." )
 //
@@ -970,8 +980,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 // I've interpreted as an error in the spec, since the 
                 // production should be equivalent to (uric - '/'), and uric
                 // contains '[' and ']'.
-                else if (!isUnreservedCharacter(testChar) &&
-                         !isReservedCharacter(testChar))
+                else if (!isReservedOrUnreservedCharacter(testChar))                    
                 {
                     XMLCh value1[BUF_LEN+1];
                     value1[0] = testChar;
@@ -1025,8 +1034,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                             , fMemoryManager);
                 }
             }
-            else if (!isUnreservedCharacter(testChar) &&
-                     !isReservedCharacter(testChar))
+            else if (!isReservedOrUnreservedCharacter(testChar))                
             {
                 XMLCh value1[BUF_LEN+1];
                 value1[0] = testChar;
@@ -1077,8 +1085,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                             , fMemoryManager);
                 }
             }
-            else if (!isUnreservedCharacter(testChar) &&
-                     !isReservedCharacter(testChar))
+            else if (!isReservedOrUnreservedCharacter(testChar))                
             {
                 XMLCh value1[BUF_LEN+1];
                 value1[0] = testChar;
@@ -1640,8 +1647,7 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
     const XMLCh* tmpStr = uricString;
     while (*tmpStr)
     {
-        if (isReservedCharacter(*tmpStr)    ||
-            isUnreservedCharacter(*tmpStr)   )
+        if (isReservedOrUnreservedCharacter(*tmpStr))            
         {
             tmpStr++;
         }
@@ -2525,8 +2531,7 @@ bool XMLUri::processPath(const XMLCh* const pathStr,
                         !XMLString::isHex(pathStr[index+2]))
                         return false;
                 }
-                else if (!isUnreservedCharacter(testChar) &&
-                         !isReservedCharacter(testChar))
+                else if (!isReservedOrUnreservedCharacter(testChar))                    
                 {
                     return false;
                 }
