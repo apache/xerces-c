@@ -268,7 +268,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
 
     <tr>
         <td>2003-11-21</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>insertElementAt was not checking if there was room for the new element (bug#24714)</td>
     </tr>
 
@@ -280,19 +280,19 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
                                                
     <tr>
         <td>2003-11-21</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Protect getEntityDeclPool from invoking a method on a NULL pointer (bug#24881)</td>
     </tr>
     
     <tr>
         <td>2003-11-21</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Updated COM for xerces-c_2_4_0</td>
     </tr>
     
     <tr>
         <td>2003-11-21</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Updated project to copy xerces-c_2_4_0, not xerces-c_2_3_0</td>
     </tr>
     
@@ -304,7 +304,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     
     <tr>
         <td>2003-11-20</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Updated Borland makefile</td>
     </tr>
     
@@ -352,7 +352,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     
     <tr>
         <td>2003-11-17</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Fixed documentation bug#24746</td>
     </tr>
     
@@ -376,7 +376,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     
     <tr>
         <td>2003-11-14</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>When invoking resolveEntity, specify the current document as the base URI</td>
     </tr>
     
@@ -418,7 +418,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
 
     <tr>
         <td>2003-11-10</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Fixed memory leak</td>
     </tr>
     
@@ -503,27 +503,27 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         
     <tr>
         <td>2003-11-04</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>When invoking resolveEntity, specify the base URI</td>
     </tr>
     
     <tr>
         <td>2003-11-04</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>When loading a grammar that's going to be cached, re-use the grammars already in the cache
             </td>
     </tr>
     
     <tr>
         <td>2003-11-03</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>A version of lastIndexOf would crash the application if the character to be 
             searched was not found in the string  </td>
     </tr>
     
     <tr>
         <td>2003-11-01</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td> Updated BCB6 project</td>
     </tr>
         
@@ -583,13 +583,13 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     
     <tr>
         <td>2003-10-21</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Fixed memory leak [bug 23073]</td>
     </tr>
     
     <tr>
         <td>2003-10-21</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Update COM project files</td>
     </tr>
     
@@ -601,7 +601,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         
     <tr>
         <td>2003-10-21</td>
-        <td>Alberto Massario</td>
+        <td>Alberto Massari</td>
         <td>Inside a schema, the properties "fixed" and "default" for a reference to an attribute
             were ignored unless the "required" property were also present [bug 11767]</td>
     </tr>
