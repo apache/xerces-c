@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.9  2000/10/19 23:52:41  andyh
+* SAXCount: Allow multiple files on command line
+*
 * Revision 1.8  2000/06/16 20:25:38  rahulj
 * Add the -v=always option to force validation checking. Need this
 * option for running the conformance tests.
@@ -149,14 +152,7 @@ int main(int argC, char* argV[])
     SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
     bool                     doNamespaces = false;
     
-    // See if non validating dom parser configuration is requested.
-    if ((argC == 2) && !strcmp(argV[1], "-?"))
-    {
-        usage();
-        XMLPlatformUtils::Terminate();
-        return 2;
-    }
-    
+
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
     {
@@ -194,73 +190,78 @@ int main(int argC, char* argV[])
     }
     
     //
-    //  There should be only one and only one parameter left, and that
-    //  should be the file name.
+    //  There should at least one parameter left, and that
+    //  should be the file name(s).
     //
-    if (argInd != argC - 1)
+    if (argInd == argC)
     {
         usage();
         XMLPlatformUtils::Terminate();
         return 1;
     }
-    xmlFile = argV[argInd];
-    
-    //
-    //  Create a SAX parser object. Then, according to what we were told on
-    //  the command line, set it to validate or not.
-    //
-    SAXParser parser;
-
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(doNamespaces);
-    
-    //
-    //  Create our SAX handler object and install it on the parser, as the
-    //  document and error handler.
-    //
-    SAXCountHandlers handler;
-    parser.setDocumentHandler(&handler);
-    parser.setErrorHandler(&handler);
-    
-
-   //
-    //  Get the starting time and kick off the parse of the indicated
-    //  file. Catch any exceptions that might propogate out of it.
-    //
-    unsigned long duration;
-    try
-    {
-        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        parser.parse(xmlFile);
-        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
-        duration = endMillis - startMillis;
-    }
-    
-    catch (const XMLException& e)
-    {
-        cerr << "\nError during parsing: '" << xmlFile << "'\n"
-            << "Exception message is:  \n"
-            << StrX(e.getMessage()) << "\n" << endl;
-        XMLPlatformUtils::Terminate();
-        return 4;
-    }
-
-    catch (...)
-    {
-        cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
-        XMLPlatformUtils::Terminate();
-        return 4;
-    }
 
     
-    // Print out the stats that we collected and time taken
-    if (!handler.getSawErrors())
+    for (; argInd < argC; argInd++)
     {
-        cout << xmlFile << ": " << duration << " ms ("
-            << handler.getElementCount() << " elems, "
-            << handler.getAttrCount() << " attrs, "
-            << handler.getSpaceCount() << " spaces, "
-            << handler.getCharacterCount() << " chars)" << endl;
+        xmlFile = argV[argInd];
+        
+        //
+        //  Create a SAX parser object. Then, according to what we were told on
+        //  the command line, set it to validate or not.
+        //
+        SAXParser parser;
+        
+        parser.setValidationScheme(valScheme);
+        parser.setDoNamespaces(doNamespaces);
+        
+        //
+        //  Create our SAX handler object and install it on the parser, as the
+        //  document and error handler.
+        //
+        SAXCountHandlers handler;
+        parser.setDocumentHandler(&handler);
+        parser.setErrorHandler(&handler);
+        
+        
+        //
+        //  Get the starting time and kick off the parse of the indicated
+        //  file. Catch any exceptions that might propogate out of it.
+        //
+        unsigned long duration;
+        try
+        {
+            const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
+            parser.parse(xmlFile);
+            const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
+            duration = endMillis - startMillis;
+        }
+        
+        catch (const XMLException& e)
+        {
+            cerr << "\nError during parsing: '" << xmlFile << "'\n"
+                << "Exception message is:  \n"
+                << StrX(e.getMessage()) << "\n" << endl;
+            XMLPlatformUtils::Terminate();
+            return 4;
+        }
+        
+        catch (...)
+        {
+            cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+            XMLPlatformUtils::Terminate();
+            return 4;
+        }
+        
+        
+        // Print out the stats that we collected and time taken
+        if (!handler.getSawErrors())
+        {
+            cout << xmlFile << ": " << duration << " ms ("
+                << handler.getElementCount() << " elems, "
+                << handler.getAttrCount() << " attrs, "
+                << handler.getSpaceCount() << " spaces, "
+                << handler.getCharacterCount() << " chars)" << endl;
+        }
     }
     
     // And call the termination method
