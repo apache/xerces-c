@@ -75,11 +75,6 @@ typedef RefVectorOf<DatatypeValidator> DVRefVector;
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local const data
 // ---------------------------------------------------------------------------
-const XMLCh fgXMLNS_Str[] =
-{
-    chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chColon, chNull
-};
-
 const XMLCh fgAnonSNamePrefix[] =
 {
     chLatin_S, chNull
@@ -4460,7 +4455,7 @@ void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot
         const XMLCh* attName = attribute->getNodeName();
 
         // starts with 'xmlns:'
-        if (XMLString::startsWith(attName, fgXMLNS_Str)) {
+        if (XMLString::startsWith(attName, XMLUni::fgXMLNSColonString)) {
 
             int offsetIndex = XMLString::indexOf(attName, chColon);
             const XMLCh* attValue = attribute->getNodeValue();
