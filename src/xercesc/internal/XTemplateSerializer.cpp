@@ -57,8 +57,9 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.7  2004/03/01 15:04:25  peiyongz
- * save/restore original fHashModulus
+ * Revision 1.8  2004/03/01 23:20:46  peiyongz
+ * For RefHashTableOf/RefHash2KeysTableOf/RefHashTable3KeysIdPool,
+ * resovle "key string" either from the data itself or the GrammarPool's StringPool.
  *
  * Revision 1.6  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
@@ -799,10 +800,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
-
-            KVStringPair* data = objToStore->get(key);
+            KVStringPair* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
     }
@@ -836,13 +834,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<KVStringPair>** objToLoad
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
-
             KVStringPair*  data;
             serEng>>data;
             
-            (*objToLoad)->put((void*)key, data);        
+            (*objToLoad)->put((void*)data->getKey(), data);        
         }
     }
 }
@@ -869,10 +864,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
-
-            XMLAttDef* data = objToStore->get(key);
+            XMLAttDef* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
     }
@@ -907,9 +899,6 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLAttDef>** objToLoad
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
-
             //This is used solely by SchemaGrammar and by all means it must be
             //SchemaAttDef, ideally we may change it to RefHashTableOf<SchemaAttDef>
             //later on.
@@ -918,7 +907,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLAttDef>** objToLoad
             SchemaAttDef*  data;
             serEng>>data;
             
-            (*objToLoad)->put((void*)key, data);        
+            (*objToLoad)->put((void*)data->getAttName()->getLocalPart(), data);        
         }
     }
 }
@@ -946,10 +935,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
-
-            DTDAttDef* data = objToStore->get(key);
+            DTDAttDef* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
     }
@@ -984,14 +970,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DTDAttDef>** objToLoad
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
-
             DTDAttDef*  data;
             serEng>>data;
             
-            //key==data->getFullName()
-            (*objToLoad)->put((void*)key, data);        
+            (*objToLoad)->put((void*)data->getFullName(), data);        
         }
     }
 }
@@ -1019,10 +1001,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
-
-            ComplexTypeInfo* data = objToStore->get(key);
+            ComplexTypeInfo* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
     }
@@ -1057,14 +1036,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<ComplexTypeInfo>** objToLoad
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
-
             ComplexTypeInfo*  data;
             serEng>>data;
 
-            //key==data->getTypeName()    
-            (*objToLoad)->put((void*)key, data);
+           (*objToLoad)->put((void*)data->getTypeName(), data);
         }
     }
 }
@@ -1092,8 +1067,23 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
+            XMLCh*       key = (XMLCh*) e.nextElementKey();           
+            unsigned int id  = serEng.getStringPool()->getId(key);
+                        
+           // key = StringPool->getValueForId(XercesGroupInfo::getNameSpaceId()) 
+           //     + chComma 
+           //     + StringPool->getValueForId(XercesGroupInfo::getNameId())
+           //
+           // and the key is guranteed in the StringPool
+           //
+           //
+           //  if (id == 0)
+           //  {
+           //      throw exception 
+           //   }
+           //
+
+            serEng<<id;            
 
             XercesGroupInfo* data = objToStore->get(key);
             serEng<<data;
@@ -1130,9 +1120,11 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesGroupInfo>** objToLoad
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
+            unsigned int id;
+            serEng>>id;
 
+            XMLCh* key = (XMLCh*) serEng.getStringPool()->getValueForId(id);
+            
             XercesGroupInfo*  data;
             serEng>>data;
 
@@ -1164,10 +1156,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
-
-            XercesAttGroupInfo* data = objToStore->get(key);
+            XercesAttGroupInfo* data = objToStore->get(e.nextElementKey());            
             serEng<<data;
         }
     }
@@ -1202,12 +1191,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesAttGroupInfo>** objToL
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
-
             XercesAttGroupInfo*  data;
             serEng>>data;
 
+           XMLCh* key = (XMLCh*) serEng.getStringPool()->getValueForId(data->getNameId());          
             (*objToLoad)->put((void*)key, data);
         }
     }
@@ -1308,10 +1295,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
-
-            DatatypeValidator* data = objToStore->get(key);
+            DatatypeValidator* data = objToStore->get(e.nextElementKey());            
             DatatypeValidator::storeDV(serEng, data);
         }
     }
@@ -1346,12 +1330,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
-
             DatatypeValidator*  data;
             data = DatatypeValidator::loadDV(serEng);
 
+            XMLCh*  key = (XMLCh*) data->getTypeName();
             (*objToLoad)->put((void*)key, data);
         }
     }
@@ -1380,10 +1362,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key  = (XMLCh*) e.nextElementKey();
-            serEng.writeString(key);
-
-            Grammar* data = objToStore->get(key);
+            Grammar* data = objToStore->get(e.nextElementKey());
             Grammar::storeGrammar(serEng, data);
         }
     }
@@ -1418,12 +1397,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<Grammar>** objToLoad
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
-            XMLCh*      key;
-            serEng.readString(key);
-
             Grammar*  data;
             data = Grammar::loadGrammar(serEng);
 
+            XMLCh* key = (XMLCh*) data->getGrammarDescription()->getGrammarKey();
             (*objToLoad)->put((void*)key, data);
         }
     }
@@ -1542,11 +1519,8 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
         while (e.hasMoreElements())
         {
             XMLCh*     key1;
-            int        key2;
-            
+            int        key2;           
             e.nextElementKey((void*&)key1, key2);
-            serEng.writeString(key1);
-            serEng<<key2;
 
             SchemaAttDef* data = objToStore->get(key1, key2);
             serEng<<data;
@@ -1586,16 +1560,11 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<SchemaAttDef>** objToLo
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {               
-            XMLCh*      key1;
-            serEng.readString(key1);
-
-            int         key2;
-            serEng>>key2;
-
             SchemaAttDef*  data;
             serEng>>data;
 
-            //key1==data->getAttName()->getLocalPart()
+            XMLCh* key1 = data->getAttName()->getLocalPart();
+            int    key2 = data->getAttName()->getURI();
             //key2==data->getId()
             (*objToLoad)->put((void*)key1, key2, data);        
 
@@ -1637,7 +1606,6 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
             serEng<<key2;
 
             ElemVector* data = objToStore->get(key1, key2);
-
             storeObject(data, serEng);
 
         }
@@ -1686,6 +1654,40 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
             //don't call destructor
             loadObject(&data, 8, false, serEng);
 
+            /***
+             *
+             *  There must be one element in the vector whose
+             *  susbititutionGroupElem matches the (key1,key2)
+             *
+             ***/
+            
+            // bool FOUND=false;
+
+            int vectorSize = data->size();
+            for ( int i = 0; i < vectorSize; i++)
+            {            
+                SchemaElementDecl*& elem   = data->elementAt(i);
+                SchemaElementDecl*  subElem = elem->getSubstitutionGroupElem();
+                XMLCh* elemName = subElem->getBaseName();
+                int    uri      = subElem->getURI();
+                if (XMLString::equals(elemName, key1) && 
+                    (uri == key2)                       )
+                {
+                    //release the temp 
+                    serEng.getMemoryManager()->deallocate(key1);
+                    key1 = elemName;
+                    //FOUND=true;
+                    break;
+                }
+            }
+
+            /***
+             * if (!FOUND)
+             * {
+             *     throw exception
+             * }
+             ***/
+
             (*objToLoad)->put((void*)key1, key2, data);        
 
         }
@@ -1728,9 +1730,6 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
         while (e.hasMoreKeys())
         {           
             e.nextElementKey((void*&)key1, key2, key3);
-            serEng.writeString(key1);
-            serEng<<key2;
-            serEng<<key3;
 
             SchemaElementDecl* data = objToStore->getByKey(key1, key2, key3);
             serEng<<data;
@@ -1768,21 +1767,14 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
         int itemNumber = 0;
         serEng>>itemNumber;
 
-        XMLCh*     key1;
-        int        key2;
-        int        key3;
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {                       
-            serEng.readString(key1);
-            serEng>>key2;
-            serEng>>key3;
-
             SchemaElementDecl*  elemDecl;
             serEng>>elemDecl;
-
-            (*objToLoad)->put(key1
-                            , key2
-                            , key3
+                    	           
+            (*objToLoad)->put(elemDecl->getBaseName()
+                            , elemDecl->getURI()
+                            , elemDecl->getEnclosingScope()
                             , elemDecl);
 
         }
