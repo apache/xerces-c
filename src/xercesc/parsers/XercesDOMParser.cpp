@@ -122,6 +122,15 @@ void XercesDOMParser::setEntityResolver(EntityResolver* const handler)
 
 
 // ---------------------------------------------------------------------------
+//  XercesDOMParser: Utilities
+// ---------------------------------------------------------------------------
+void XercesDOMParser::resetDocumentPool()
+{
+    resetPool();
+}
+
+
+// ---------------------------------------------------------------------------
 //  XercesDOMParser: Implementation of the XMLErrorReporter interface
 // ---------------------------------------------------------------------------
 void XercesDOMParser::error( const   unsigned int                code
