@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/29 16:18:41  peiyongz
+ * Implement serialization/deserialization
+ *
  * Revision 1.6  2003/10/09 13:49:30  neilg
  * make StringPool functions virtual so that we can implement a synchronized version of StringPool for thread-safe updates.
  *
@@ -99,6 +102,8 @@
 
 #include <xercesc/util/RefHashTableOf.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 //
@@ -114,7 +119,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  other than flushing it completely, and because ids are assigned
 //  sequentially from 1.
 //
-class XMLUTIL_EXPORT XMLStringPool : public XMemory
+class XMLUTIL_EXPORT XMLStringPool : public XSerializable, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -139,6 +144,12 @@ public :
     virtual const XMLCh* getValueForId(const unsigned int id) const;
     virtual unsigned int getStringCount() const;
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLStringPool)
+
+    XMLStringPool(MemoryManager* const manager);
 
 private :
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/29 16:18:41  peiyongz
+ * Implement serialization/deserialization
+ *
  * Revision 1.6  2003/10/09 13:49:30  neilg
  * make StringPool functions virtual so that we can implement a synchronized version of StringPool for thread-safe updates.
  *
@@ -104,7 +107,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/StringPool.hpp>
-
+#include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -268,6 +271,53 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
     // Bump the current id and return the id of the new elem we just added
     fCurId++;
     return newElem->fId;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLStringPool)
+
+void XMLStringPool::serialize(XSerializeEngine& serEng)
+{
+    /***
+     * Since we are pretty sure that fIdMap and fHashTable is 
+     * not shared by any other object, therefore there is no owned/referenced
+     * issue. Thus we can serialize the raw data only, rather than serializing 
+     * both fIdMap and fHashTable.
+     *
+     * And we can rebuild the fIdMap and fHashTable out of the raw data during
+     * deserialization.
+     *
+    ***/
+    if (serEng.isStoring())
+    {
+        serEng<<fCurId;
+        for (unsigned int index = 1; index < fCurId; index++)
+        {
+            const XMLCh* stringData = getValueForId(index);
+            serEng.writeString(stringData);
+        }
+    }
+    else
+    {
+        unsigned int mapSize;
+        serEng>>mapSize;
+        assert(1 == fCurId);  //make sure empty
+
+        for (unsigned int index = 1; index < mapSize; index++)
+        {
+            XMLCh* stringData;
+            serEng.readString(stringData);
+            addNewEntry(stringData);            
+        }
+    }
+}
+
+XMLStringPool::XMLStringPool(MemoryManager* const manager)
+{
+    XMLStringPool(109, manager);
 }
 
 XERCES_CPP_NAMESPACE_END
