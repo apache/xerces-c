@@ -71,6 +71,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/FieldValueMap.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

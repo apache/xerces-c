@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.5  2002/12/06 16:45:54  tng
  * header include cleanup.
  *
@@ -139,7 +142,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 UnionDatatypeValidator::UnionDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefVectorOf<XMLCh>*           const enums
+                        , RefArrayVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Union)
 ,fEnumerationInherited(false)
@@ -178,7 +181,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 
 void UnionDatatypeValidator::init(DatatypeValidator*            const baseValidator
                                 , RefHashTableOf<KVStringPair>* const facets
-                                , RefVectorOf<XMLCh>*           const enums)
+                                , RefArrayVectorOf<XMLCh>*           const enums)
 {
     if (enums)
         setEnumeration(enums, false);
@@ -352,7 +355,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
         // any of the member types, it is considerd valid.
         //
         RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();
-        RefVectorOf<XMLCh>* tmpEnum = getEnumeration();
+        RefArrayVectorOf<XMLCh>* tmpEnum = getEnumeration();
         unsigned int memberTypeNumber = memberDTV->size();
         unsigned int enumLength = tmpEnum->size();
 
@@ -398,7 +401,7 @@ int UnionDatatypeValidator::compare(const XMLCh* const lValue
     return -1;
 }
 
-const RefVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
+const RefArrayVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
 {
 	return getEnumeration();
 }

@@ -79,14 +79,14 @@ public:
 
     BooleanDatatypeValidator(DatatypeValidator*            const baseValidator
                            , RefHashTableOf<KVStringPair>* const facets
-                           , RefVectorOf<XMLCh>*           const enums
+                           , RefArrayVectorOf<XMLCh>*           const enums
                            , const int                           finalSet);
 
     virtual ~BooleanDatatypeValidator();
 
 	//@}
 
-	virtual const RefVectorOf<XMLCh>* getEnumString() const;
+	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const;
 
     // -----------------------------------------------------------------------
     // Getter methods
@@ -137,7 +137,7 @@ public:
 	  * Used by the DatatypeValidatorFactory.
       */
     DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
+                                 , RefArrayVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
 private:
@@ -174,7 +174,7 @@ inline BooleanDatatypeValidator::~BooleanDatatypeValidator()
 
 inline DatatypeValidator* BooleanDatatypeValidator::newInstance(
                                     RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
+                                    , RefArrayVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
     return (DatatypeValidator*) new BooleanDatatypeValidator(this, facets, enums, finalSet);

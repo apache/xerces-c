@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/18 14:17:54  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.9  2002/12/04 02:32:43  knoaman
  * #include cleanup.
  *
@@ -210,12 +213,11 @@
 #if !defined(XMLSTRING_HPP)
 #define XMLSTRING_HPP
 
-#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/BaseRefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLLCPTranscoder;
-
 /**
   * Class for representing native character strings and handling common string
   * operations
@@ -1259,7 +1261,7 @@ public:
       * @param tokenizeSrc String to be tokenized
       * @return a vector of all the tokenized string
       */
-    static RefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc);
+    static BaseRefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc);
 
     /** Find is the string appears in the enum list
       * @param toFind the string to be found

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.8  2002/12/02 16:01:24  gareth
  * Fix to bug #12188. NCNAME validator now has a base validator of NAME. Patch by Peter Volchek.
  *
@@ -680,7 +683,7 @@ DatatypeValidator*
 DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
 		                                          DatatypeValidator* const baseValidator,
                                                   RefHashTableOf<KVStringPair>* const facets,
-                                                  RefVectorOf<XMLCh>* const enums,
+                                                  RefArrayVectorOf<XMLCh>* const enums,
                                                   const bool derivedByList,
                                                   const int finalSet,
                                                   const bool userDefined)

@@ -61,7 +61,7 @@
 #if !defined(XMLSTRINGTOKENIZER_HPP)
 #define XMLSTRINGTOKENIZER_HPP
 
-#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -188,7 +188,7 @@ private:
     int                 fStringLen;
 	XMLCh*              fString;
     XMLCh*              fDelimeters;
-	RefVectorOf<XMLCh>* fTokens;
+	RefArrayVectorOf<XMLCh>* fTokens;
 };
 
 

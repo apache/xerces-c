@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/18 14:17:59  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.2  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -96,7 +99,7 @@ FieldValueMap::FieldValueMap(const FieldValueMap& other)
 
             fFields = new ValueVectorOf<IC_Field*>(*(other.fFields));
             fValidators = new ValueVectorOf<DatatypeValidator*>(*(other.fValidators));
-            fValues = new RefVectorOf<XMLCh>(other.fFields->curCapacity());
+            fValues = new RefArrayVectorOf<XMLCh>(other.fFields->curCapacity());
 
             for (unsigned int i=0; i<valuesSize; i++) {
                 fValues->addElement(XMLString::replicate(other.fValues->elementAt(i)));

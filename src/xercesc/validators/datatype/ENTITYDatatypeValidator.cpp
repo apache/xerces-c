@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.3  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -109,7 +112,7 @@ ENTITYDatatypeValidator::ENTITYDatatypeValidator()
 ENTITYDatatypeValidator::ENTITYDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefVectorOf<XMLCh>*           const enums
+                        , RefArrayVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ENTITY)
 ,fEntityDeclPool(0)
@@ -122,7 +125,7 @@ ENTITYDatatypeValidator::~ENTITYDatatypeValidator()
 
 DatatypeValidator* ENTITYDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
+                                    , RefArrayVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
     return (DatatypeValidator*) new ENTITYDatatypeValidator(this, facets, enums, finalSet);

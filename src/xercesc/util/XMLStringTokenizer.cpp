@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/18 14:17:54  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -97,7 +100,7 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr)
         fDelimeters = XMLString::replicate(fgDelimeters);
 
         if (fStringLen > 0) {
-            fTokens = new RefVectorOf<XMLCh>(4, true);
+            fTokens = new RefArrayVectorOf<XMLCh>(4, true);
         }
     }
     catch(...) {
@@ -117,7 +120,7 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
         fDelimeters = XMLString::replicate(delim);
 
         if (fStringLen > 0) {
-            fTokens = new RefVectorOf<XMLCh>(4, true);
+            fTokens = new RefArrayVectorOf<XMLCh>(4, true);
         }
     }
     catch(...) {

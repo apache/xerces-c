@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.2  2002/11/04 14:53:27  tng
  * C++ Namespace Support.
  *
@@ -103,7 +106,7 @@ protected:
                            , const int                           finalSet
                            , const ValidatorType                 type);
 
-    inline void init(RefVectorOf<XMLCh>*  const enums);
+    inline void init(RefArrayVectorOf<XMLCh>*  const enums);
 
     //
     // Abstract interface
@@ -122,7 +125,7 @@ private:
 
 };
 
-inline void AbstractNumericValidator::init(RefVectorOf<XMLCh>*  const enums)
+inline void AbstractNumericValidator::init(RefArrayVectorOf<XMLCh>*  const enums)
 {
     AbstractNumericFacetValidator::init(enums);
 }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.4  2002/11/04 14:53:27  tng
  * C++ Namespace Support.
  *
@@ -129,7 +132,7 @@ public:
 
 	//@}
 
-	virtual const RefVectorOf<XMLCh>* getEnumString() const;
+	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const;
 
     // -----------------------------------------------------------------------
     // Validation methods
@@ -166,7 +169,7 @@ protected:
                           , const int                           finalSet
                           , const ValidatorType                 type);
 
-    void init(RefVectorOf<XMLCh>*           const enums);
+    void init(RefArrayVectorOf<XMLCh>*           const enums);
 
     //
     // Abstract interface
@@ -204,7 +207,7 @@ public:
 
     inline unsigned int         getMinLength() const;
 
-    inline RefVectorOf<XMLCh>*  getEnumeration() const;
+    inline RefArrayVectorOf<XMLCh>*  getEnumeration() const;
 
 protected:
 // -----------------------------------------------------------------------
@@ -217,7 +220,7 @@ protected:
 
     inline void                 setMinLength(unsigned int);
 
-    inline void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
+    inline void                 setEnumeration(RefArrayVectorOf<XMLCh>*, bool);
 
 private:
 
@@ -233,7 +236,7 @@ private:
      unsigned int         fMaxLength;
      unsigned int         fMinLength;
      bool                 fEnumerationInherited;
-     RefVectorOf<XMLCh>*  fEnumeration;
+     RefArrayVectorOf<XMLCh>*  fEnumeration;
 };
 
 // -----------------------------------------------------------------------
@@ -255,7 +258,7 @@ inline unsigned int AbstractStringValidator::getMinLength() const
     return fMinLength;
 }
 
-inline RefVectorOf<XMLCh>* AbstractStringValidator:: getEnumeration() const
+inline RefArrayVectorOf<XMLCh>* AbstractStringValidator:: getEnumeration() const
 {
     return fEnumeration;
 }
@@ -279,7 +282,7 @@ inline void AbstractStringValidator::setMinLength(unsigned int newMinLength)
     fMinLength = newMinLength;
 }
 
-inline void AbstractStringValidator::setEnumeration(RefVectorOf<XMLCh>* enums
+inline void AbstractStringValidator::setEnumeration(RefArrayVectorOf<XMLCh>* enums
                                            , bool                inherited)
 {
     if (enums)

@@ -88,7 +88,7 @@ public:
 
 	//@}
 
-	virtual const RefVectorOf<XMLCh>* getEnumString() const;
+	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const;
 
     // -----------------------------------------------------------------------
     // Getter methods
@@ -154,7 +154,7 @@ public:
 	  * Used by the DatatypeValidatorFactory.
       */
 	DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const,
-                                   RefVectorOf<XMLCh>* const enums,
+                                   RefArrayVectorOf<XMLCh>* const enums,
                                    const int finalSet);
 };
 

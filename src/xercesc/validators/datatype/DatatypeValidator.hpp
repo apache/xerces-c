@@ -198,7 +198,7 @@ public:
       * Returns the datatype enumeration if any is set.
 	  * Derived class shall provide their own copy.
       */
-	virtual const RefVectorOf<XMLCh>* getEnumString() const = 0;
+	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const = 0;
 
     //@}
 
@@ -258,7 +258,7 @@ public:
 	  * Used by the DatatypeValidatorFactory.
       */
 	virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const,
-                                           RefVectorOf<XMLCh>* const enums,
+                                           RefArrayVectorOf<XMLCh>* const enums,
                                            const int finalSet) = 0;
 
 protected:

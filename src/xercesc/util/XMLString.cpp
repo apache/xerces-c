@@ -71,6 +71,7 @@
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/TranscodingException.hpp>
@@ -1466,13 +1467,13 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
     targetStr[copySize] = 0;
 }
 
-RefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc)
+BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc)
 {
     XMLCh* orgText = replicate(tokenizeSrc);
     ArrayJanitor<XMLCh> janText(orgText);
     XMLCh* tokenizeStr = orgText;
 
-    RefVectorOf<XMLCh>* tokenStack = new RefVectorOf<XMLCh>(16, true);
+    RefArrayVectorOf<XMLCh>* tokenStack = new RefArrayVectorOf<XMLCh>(16, true);
 
     unsigned int len = stringLen(tokenizeStr);
     unsigned int skip;

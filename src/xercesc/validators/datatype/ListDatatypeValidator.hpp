@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.4  2002/12/16 22:28:25  knoaman
  * Make isAtomic inline.
  *
@@ -126,7 +129,7 @@ public:
 
     ListDatatypeValidator(DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefVectorOf<XMLCh>*           const enums
+                        , RefArrayVectorOf<XMLCh>*           const enums
                         , const int                           finalSet);
 
     virtual ~ListDatatypeValidator();
@@ -181,7 +184,7 @@ public:
 	  * Used by the DatatypeValidatorFactory.
       */
     virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                         , RefVectorOf<XMLCh>*           const enums
+                                         , RefArrayVectorOf<XMLCh>*           const enums
                                          , const int                           finalSet);
 
     DatatypeValidator* getItemTypeDTV() const;
@@ -216,11 +219,11 @@ protected:
 
 private:
 
-    void checkContent(RefVectorOf<XMLCh>* tokenVector
+    void checkContent(BaseRefVectorOf<XMLCh>* tokenVector
                     , const XMLCh* const  content
                     , bool asBase);
 
-    bool valueSpaceCheck(RefVectorOf<XMLCh>* tokenVector
+    bool valueSpaceCheck(BaseRefVectorOf<XMLCh>* tokenVector
                        , const XMLCh* const  enumStr) const;
 
 // -----------------------------------------------------------------------

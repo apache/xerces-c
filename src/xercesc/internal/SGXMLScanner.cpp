@@ -2916,7 +2916,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>*
 
 void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 {
-    RefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr);
+    BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr);
     unsigned int size = schemaLocation->size();
     if (size % 2 != 0 ) {
         emitError(XMLErrs::BadSchemaLocation);

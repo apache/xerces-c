@@ -1661,7 +1661,7 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
     }
     else {
 
-        RefVectorOf<XMLCh>* nameSpaceTokens = XMLString::tokenizeString(nameSpace);
+        BaseRefVectorOf<XMLCh>* nameSpaceTokens = XMLString::tokenizeString(nameSpace);
         ValueVectorOf<unsigned int> uriList(8);
         ContentSpecNode* firstNode = 0;
         ContentSpecNode* secondNode = 0;
@@ -2861,7 +2861,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
         // Get facets if any existing
         RefHashTableOf<KVStringPair>* facets = 0;
-        RefVectorOf<XMLCh>*           enums = 0;
+        RefArrayVectorOf<XMLCh>*      enums = 0;
         XMLBuffer                     pattern(128);
         XMLCh                         fixedFlagStr[16];
         unsigned int                  fixedFlag = 0;
@@ -2898,7 +2898,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                     // to get the qualified name first before adding it to the
                     // enum buffer
                     if (!enums) {
-                        enums = new RefVectorOf<XMLCh>(8, true);
+                        enums = new RefArrayVectorOf<XMLCh>(8, true);
                     }
 
                     if (baseValidator->getType() == DatatypeValidator::NOTATION) {
@@ -3301,7 +3301,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             // Build up the facet info
             // ---------------------------------------------------------------
             RefHashTableOf<KVStringPair>*  facets = 0;
-            RefVectorOf<XMLCh>*            enums = 0;
+            RefArrayVectorOf<XMLCh>*       enums = 0;
             XMLBuffer                      pattern(128);
             XMLCh                          fixedFlagStr[16];
             unsigned int                   fixedFlag = 0;
@@ -3333,7 +3333,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     if (XMLString::equals(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
 
                         if (!enums) {
-                            enums = new RefVectorOf<XMLCh>(8, true);
+                            enums = new RefArrayVectorOf<XMLCh>(8, true);
                         }
 
                         enums->addElement(XMLString::replicate(attValue));

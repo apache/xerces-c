@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.6  2002/12/16 22:28:25  knoaman
  * Make isAtomic inline.
  *
@@ -128,7 +131,7 @@ ListDatatypeValidator::ListDatatypeValidator()
 ListDatatypeValidator::ListDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefVectorOf<XMLCh>*           const enums
+                        , RefArrayVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::List)
 ,fContent(0)
@@ -151,7 +154,7 @@ ListDatatypeValidator::~ListDatatypeValidator()
 
 DatatypeValidator* ListDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
+                                    , RefArrayVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
     return (DatatypeValidator*) new ListDatatypeValidator(this, facets, enums, finalSet);
@@ -162,10 +165,10 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
                                  , const XMLCh* const rValue)
 {
     DatatypeValidator* theItemTypeDTV = getItemTypeDTV();
-    RefVectorOf<XMLCh>* lVector = XMLString::tokenizeString(lValue);
-    Janitor<RefVectorOf<XMLCh> > janl(lVector);
-    RefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue);
-    Janitor<RefVectorOf<XMLCh> > janr(rVector);
+    BaseRefVectorOf<XMLCh>* lVector = XMLString::tokenizeString(lValue);
+    Janitor<BaseRefVectorOf<XMLCh> > janl(lVector);
+    BaseRefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue);
+    Janitor<BaseRefVectorOf<XMLCh> > janr(rVector);
 
     int lNumberOfTokens = lVector->size();
     int rNumberOfTokens = rVector->size();
@@ -190,23 +193,23 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
 void ListDatatypeValidator::validate( const XMLCh* const content)
 {
     setContent(content);
-    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
-    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
     checkContent(tokenVector, content, false);
 }
 
 void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
 {
     setContent(content);
-    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
-    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
     checkContent(tokenVector, content, asBase);
 }
 
 //
 // here content is a list of items
 //
-void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector
+void ListDatatypeValidator::checkContent( BaseRefVectorOf<XMLCh>* tokenVector
                                         , const XMLCh* const content
                                         , bool asBase)
 {
@@ -324,12 +327,12 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector
 
 }
 
-bool ListDatatypeValidator::valueSpaceCheck(RefVectorOf<XMLCh>* tokenVector
+bool ListDatatypeValidator::valueSpaceCheck(BaseRefVectorOf<XMLCh>* tokenVector
                                           , const XMLCh* const  enumStr) const
 {
     DatatypeValidator* theItemTypeDTV = getItemTypeDTV();
-    RefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(enumStr);
-    Janitor<RefVectorOf<XMLCh> > janName(enumVector);
+    BaseRefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(enumStr);
+    Janitor<BaseRefVectorOf<XMLCh> > janName(enumVector);
 
     if (tokenVector->size() != enumVector->size())
         return false;
@@ -378,8 +381,8 @@ void ListDatatypeValidator::checkValueSpace(const XMLCh* const content)
 
 int ListDatatypeValidator::getLength(const XMLCh* const content) const
 {
-    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
-    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
 
     return tokenVector->size();
 }
@@ -409,7 +412,7 @@ void ListDatatypeValidator::inspectFacetBase()
                 for ( i = 0; i < enumLength; i++)
                 {
                     // ask the itemType for a complete check
-                    RefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i));
+                    BaseRefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i));
                     int tokenNumber = tempList->size();
 
                     try

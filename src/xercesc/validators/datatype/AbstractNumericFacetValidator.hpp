@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.4  2002/11/04 14:53:27  tng
  * C++ Namespace Support.
  *
@@ -85,7 +88,7 @@
 #define ABSTRACT_NUMERIC_FACET_VALIDATOR_HPP
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/XMLNumber.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -104,7 +107,7 @@ public:
 
 	//@}
 
-	virtual const RefVectorOf<XMLCh>* getEnumString() const;
+	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const;
 
 protected:
 
@@ -113,7 +116,7 @@ protected:
                                 , const int                           finalSet
                                 , const ValidatorType                 type);
 
-    void init(RefVectorOf<XMLCh>*  const enums);
+    void init(RefArrayVectorOf<XMLCh>*  const enums);
 
     //
     // Abstract interface
@@ -183,7 +186,7 @@ protected:
     XMLNumber*               fMinExclusive;
 
     RefVectorOf<XMLNumber>*  fEnumeration;    // save the actual value
-    RefVectorOf<XMLCh>*      fStrEnumeration;
+    RefArrayVectorOf<XMLCh>*      fStrEnumeration;
 
 private:
 

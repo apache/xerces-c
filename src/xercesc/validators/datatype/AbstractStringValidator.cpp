@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.6  2002/11/04 14:53:27  tng
  * C++ Namespace Support.
  *
@@ -168,7 +171,7 @@ AbstractStringValidator::AbstractStringValidator(
     // assigneAdditionalFacet(), inheritAdditionalFacet().
 }
 
-void AbstractStringValidator::init(RefVectorOf<XMLCh>*           const enums)
+void AbstractStringValidator::init(RefArrayVectorOf<XMLCh>*           const enums)
 {
 
     if (enums)
@@ -670,7 +673,7 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
 
 }
 
-const RefVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
+const RefArrayVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 {
 	return getEnumeration();
 }

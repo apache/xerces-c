@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.17  2002/12/04 02:47:25  knoaman
  * scanner re-organization.
  *
@@ -709,7 +712,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
             const XMLCh fgDefault[] = { chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
             bool ok = false;
             if (decl->getType() == XMLAttDef::Enumeration) {
-                RefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(decl->getEnumeration());
+                BaseRefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(decl->getEnumeration());
                 int size = enumVector->size();
                 ok = (size == 1 &&
                      (XMLString::equals(enumVector->elementAt(0), fgDefault) ||

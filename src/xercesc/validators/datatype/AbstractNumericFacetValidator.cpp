@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.6  2002/11/26 22:19:15  peiyongz
  * Schema Errata E2-16 maxExclusive
  *
@@ -186,7 +189,7 @@ AbstractNumericFacetValidator::AbstractNumericFacetValidator(
 //
 //  P1. Enumeration
 //
-void AbstractNumericFacetValidator::init(RefVectorOf<XMLCh>* const enums)
+void AbstractNumericFacetValidator::init(RefArrayVectorOf<XMLCh>* const enums)
 {
 
     fStrEnumeration = enums; // save the literal value
@@ -839,7 +842,7 @@ void AbstractNumericFacetValidator::inheritFacet()
 
 }
 
-const RefVectorOf<XMLCh>* AbstractNumericFacetValidator::getEnumString() const
+const RefArrayVectorOf<XMLCh>* AbstractNumericFacetValidator::getEnumString() const
 {
 	return (fEnumerationInherited? getBaseValidator()->getEnumString() : fStrEnumeration );
 }

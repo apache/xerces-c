@@ -94,7 +94,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 typedef RefHashTableOf<KVStringPair> KVStringPairHashTable;
 typedef RefHashTableOf<DatatypeValidator> DVHashTable;
-typedef RefVectorOf<XMLCh> XMLChRefVector;
+typedef RefArrayVectorOf<XMLCh> XMLChRefVector;
 
 
 class VALIDATORS_EXPORT DatatypeValidatorFactory
@@ -190,7 +190,7 @@ public:
      DatatypeValidator* createDatatypeValidator(const XMLCh* const,
                                                DatatypeValidator* const,
                                                RefHashTableOf<KVStringPair>* const,
-                                               RefVectorOf<XMLCh>* const enums,
+                                               RefArrayVectorOf<XMLCh>* const enums,
                                                const bool,
                                                const int = 0,
                                                const bool = true);

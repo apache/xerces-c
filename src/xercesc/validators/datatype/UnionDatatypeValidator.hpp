@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/12/18 14:17:55  gareth
+ * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
+ *
  * Revision 1.3  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -133,14 +136,14 @@ public:
     //
     UnionDatatypeValidator(DatatypeValidator*            const baseValidator
                          , RefHashTableOf<KVStringPair>* const facets
-                         , RefVectorOf<XMLCh>*           const enums
+                         , RefArrayVectorOf<XMLCh>*           const enums
                          , const int                           finalSet);
 
     virtual ~UnionDatatypeValidator();
 
 	//@}
 
-	virtual const RefVectorOf<XMLCh>* getEnumString() const;
+	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const;
 
     // -----------------------------------------------------------------------
     // Getter methods
@@ -205,7 +208,7 @@ public:
 	  * Used by the DatatypeValidatorFactory.
       */
     DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
+                                 , RefArrayVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
     RefVectorOf<DatatypeValidator>* getMemberTypeValidators() const;
@@ -216,13 +219,13 @@ private:
 
     void init(DatatypeValidator*            const baseValidator
             , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
+            , RefArrayVectorOf<XMLCh>*           const enums);
 
     void cleanUp();
 
-    RefVectorOf<XMLCh>*  getEnumeration() const;
+    RefArrayVectorOf<XMLCh>*  getEnumeration() const;
 
-    void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
+    void                 setEnumeration(RefArrayVectorOf<XMLCh>*, bool);
 
 
     // -----------------------------------------------------------------------
@@ -236,13 +239,13 @@ private:
     //
     // -----------------------------------------------------------------------
      bool                 fEnumerationInherited;
-     RefVectorOf<XMLCh>*  fEnumeration;
+     RefArrayVectorOf<XMLCh>*  fEnumeration;
      RefVectorOf<DatatypeValidator>*  fMemberTypeValidators;
 };
 
 inline DatatypeValidator* UnionDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
+                                    , RefArrayVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
     return (DatatypeValidator*) new UnionDatatypeValidator(this, facets, enums, finalSet);
@@ -263,12 +266,12 @@ inline void UnionDatatypeValidator::cleanUp()
         delete fMemberTypeValidators;
 }
 
-inline RefVectorOf<XMLCh>* UnionDatatypeValidator:: getEnumeration() const
+inline RefArrayVectorOf<XMLCh>* UnionDatatypeValidator:: getEnumeration() const
 {
     return fEnumeration;
 }
 
-inline void UnionDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
+inline void UnionDatatypeValidator::setEnumeration(RefArrayVectorOf<XMLCh>* enums
                                                  , bool                inherited)
 {
     if (enums)

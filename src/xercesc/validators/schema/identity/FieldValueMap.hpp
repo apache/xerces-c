@@ -71,6 +71,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/util/RefArrayVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -123,7 +124,7 @@ private:
     // -----------------------------------------------------------------------
     ValueVectorOf<IC_Field*>*          fFields;
     ValueVectorOf<DatatypeValidator*>* fValidators;
-    RefVectorOf<XMLCh>*                fValues;
+    RefArrayVectorOf<XMLCh>*           fValues;
 };
 
 
@@ -199,7 +200,7 @@ inline void FieldValueMap::put(IC_Field* const key,
     if (!fFields) {
         fFields = new ValueVectorOf<IC_Field*>(4);
         fValidators = new ValueVectorOf<DatatypeValidator*>(4);
-        fValues = new RefVectorOf<XMLCh>(4);
+        fValues = new RefArrayVectorOf<XMLCh>(4);
     }
 
     int keyIndex = indexOf(key);
