@@ -56,8 +56,10 @@
 
 /**
  * $Log$
- * Revision 1.2  2000/02/06 07:48:24  rahulj
- * Year 2K copyright swat.
+ * Revision 1.1  2000/02/17 22:06:19  rahulj
+ * Moved the four LibWWW files to its own sub-directory in the
+ * NetAccessor directory.
+ *
  *
  * Revision 1.1  2000/01/15 01:08:04  rahulj
  * Added support for HTTP to the parser.
