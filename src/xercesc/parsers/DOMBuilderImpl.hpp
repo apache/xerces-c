@@ -297,7 +297,7 @@ public :
       * @see #setFeature
       * @see #canSetFeature
       */
-    bool getFeature(const XMLCh* const name);
+    bool getFeature(const XMLCh* const name) const;
 
     /**
       * <p><b>"Experimental - subject to change"</b></p>
@@ -314,7 +314,7 @@ public :
       * @see #getFeature
       * @see #setFeature
       */
-    bool canSetFeature(const XMLCh* const name, const bool state);
+    bool canSetFeature(const XMLCh* const name, const bool state) const;
 
     //@}
 
@@ -612,22 +612,22 @@ public :
      * @param  nameSpaceKey Namespace key
      * @return Grammar associated with the Namespace key.
      */
-    virtual Grammar* getGrammar(const XMLCh* const nameSpaceKey);
+    virtual Grammar* getGrammar(const XMLCh* const nameSpaceKey) const;
 
     /**
      * Retrieve the grammar where the root element is declared.
      *
      * @return Grammar where root element declared
      */
-    virtual Grammar* getRootGrammar();
+    virtual Grammar* getRootGrammar() const;
 
     /**
      * Returns the string corresponding to a URI id from the URI string pool.
      *
      * @param uriId id of the string in the URI string pool.
      * @return URI string corresponding to the URI id.
-     */    
-    virtual const XMLCh* getURIText(unsigned int uriId);
+     */
+    virtual const XMLCh* getURIText(unsigned int uriId) const;
 
     /**
       * Clear the cached grammar pool

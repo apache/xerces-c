@@ -347,7 +347,7 @@ public:
       * @see #canSetFeature
       * @since DOM Level 3
       */
-    virtual bool getFeature(const XMLCh* const name) = 0;
+    virtual bool getFeature(const XMLCh* const name) const = 0;
 
     /**
       * Query whether setting a feature to a specific value is supported.
@@ -365,7 +365,7 @@ public:
       * @see #setFeature
       * @since DOM Level 3
       */
-    virtual bool canSetFeature(const XMLCh* const name, const bool state) = 0;
+    virtual bool canSetFeature(const XMLCh* const name, const bool state) const = 0;
 
     // -----------------------------------------------------------------------
     //  Parsing methods
@@ -657,7 +657,7 @@ public:
       *                otherwise, no chaching. Default is <code>false</code>.
       * @return The preparsed schema grammar object (SchemaGrammar or
       *         DTDGrammar). That grammar object is owned by the parser.
-      *         
+      *
       *
       * @exception SAXException Any SAX exception, possibly
       *            wrapping another exception.
@@ -675,22 +675,22 @@ public:
      * @param  nameSpaceKey Namespace key
      * @return Grammar associated with the Namespace key.
      */
-    virtual Grammar* getGrammar(const XMLCh* const nameSpaceKey) = 0;
+    virtual Grammar* getGrammar(const XMLCh* const nameSpaceKey) const = 0;
 
     /**
      * Retrieve the grammar where the root element is declared.
      *
      * @return Grammar where root element declared
      */
-    virtual Grammar* getRootGrammar() = 0;
+    virtual Grammar* getRootGrammar() const = 0;
 
     /**
      * Returns the string corresponding to a URI id from the URI string pool.
      *
      * @param uriId id of the string in the URI string pool.
      * @return URI string corresponding to the URI id.
-     */    
-    virtual const XMLCh* getURIText(unsigned int uriId) = 0;
+     */
+    virtual const XMLCh* getURIText(unsigned int uriId) const = 0;
 
     /**
       * Clear the cached grammar pool

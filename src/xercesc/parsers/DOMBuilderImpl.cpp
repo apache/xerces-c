@@ -235,7 +235,7 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     }
 }
 
-bool DOMBuilderImpl::getFeature(const XMLCh* const name)
+bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
 {
     if (XMLString::compareIString(name, XMLUni::fgDOMEntities) == 0) {
         return getCreateEntityReferenceNodes();
@@ -308,7 +308,7 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name)
     return false;
 }
 
-bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state)
+bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) const
 {
     if ((XMLString::compareIString(name, XMLUni::fgDOMEntities) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgDOMComments) == 0) ||
@@ -525,7 +525,7 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
 
         // Release DOM tree - DTD
         DOMDocument* doc = adoptDocument();
-        if (doc) 
+        if (doc)
             doc->release();
 
         setParseInProgress(false);
@@ -579,17 +579,17 @@ void DOMBuilderImpl::resetCachedGrammarPool()
     getScanner()->resetCachedGrammarPool();
 }
 
-Grammar* DOMBuilderImpl::getGrammar(const XMLCh* const nameSpaceKey)
+Grammar* DOMBuilderImpl::getGrammar(const XMLCh* const nameSpaceKey) const
 {
     return getScanner()->getGrammar(nameSpaceKey);
 }
 
-Grammar* DOMBuilderImpl::getRootGrammar()
+Grammar* DOMBuilderImpl::getRootGrammar() const
 {
     return getScanner()->getRootGrammar();
 }
 
-const XMLCh* DOMBuilderImpl::getURIText(unsigned int uriId)
+const XMLCh* DOMBuilderImpl::getURIText(unsigned int uriId) const
 {
     return getScanner()->getURIText(uriId);
 }
