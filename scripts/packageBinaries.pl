@@ -876,8 +876,8 @@ sub change_windows_project_for_ICU() {
             }
 
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
-        $line =~ s[Debug/xerces-c_1D.lib"][Debug/xerces-c_1D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
-        $line =~ s[Release/xerces-c_1.lib"][Release/xerces-c_1.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
+        $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
+        $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
         $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
